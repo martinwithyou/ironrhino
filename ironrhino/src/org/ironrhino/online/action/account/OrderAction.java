@@ -7,7 +7,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.common.util.AuthzUtils;
-import org.ironrhino.core.annotation.PostMethod;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.Addressee;
@@ -18,6 +17,8 @@ import org.ironrhino.online.payment.PaymentManager;
 import org.ironrhino.online.service.OrderManager;
 import org.ironrhino.online.support.Cart;
 import org.springframework.beans.BeanUtils;
+
+import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
 public class OrderAction extends BaseAction {
 
@@ -121,7 +122,7 @@ public class OrderAction extends BaseAction {
 		return REDIRECT;
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	public String addressee() {
 		if (!order.isNew()) {
 			orderManager.save(order);
@@ -132,7 +133,7 @@ public class OrderAction extends BaseAction {
 		return REDIRECT;
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	public String payment() {
 		targetUrl = "/account/order/view/" + getUid();
 		return REDIRECT;

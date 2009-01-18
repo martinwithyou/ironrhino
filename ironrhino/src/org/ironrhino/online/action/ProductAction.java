@@ -19,7 +19,6 @@ import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.annotation.Captcha;
 import org.ironrhino.core.annotation.JsonConfig;
-import org.ironrhino.core.annotation.PostMethod;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.mail.MailService;
 import org.ironrhino.core.service.BaseManager;
@@ -35,6 +34,7 @@ import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.support.CategoryTreeControl;
 import org.springframework.mail.SimpleMailMessage;
 
+import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
@@ -304,7 +304,7 @@ public class ProductAction extends BaseAction {
 		return FEED;
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	@Captcha
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "comment.content", trim = true, key = "comment.content.required", message = "请输入评论内容") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "comment.email", key = "comment.email.invalid", message = "请输入正确的email") })
 	public String comment() {
@@ -317,7 +317,7 @@ public class ProductAction extends BaseAction {
 		return REFERER;
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	@Captcha
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "send.name", trim = true, key = "send.name.required", message = "请输入您的名字"),

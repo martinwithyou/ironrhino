@@ -4,19 +4,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.core.annotation.AutoConfig;
-import org.ironrhino.core.annotation.PostMethod;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
 
+import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.Validation;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
-@Validation
-@AutoConfig(namespace="/backend")
+@AutoConfig(namespace = "/backend")
 public class ChangePasswordAction extends BaseAction {
 
 	protected Log log = LogFactory.getLog(getClass());
@@ -57,7 +55,7 @@ public class ChangePasswordAction extends BaseAction {
 		this.userManager = userManager;
 	}
 
-	@PostMethod(resultCode = "input")
+	@InputConfig
 	@Validations(stringLengthFields = { @StringLengthFieldValidator(type = ValidatorType.FIELD, trim = true, minLength = "6", maxLength = "20", fieldName = "password", key = "password.required", message = "密码的长度为6-20") }, expressions = { @ExpressionValidator(expression = "password == confirmPassword", key = "confirmPassword.error", message = "两次输入密码不一致") })
 	public String execute() {
 		User user = AuthzUtils.getUserDetails(User.class);

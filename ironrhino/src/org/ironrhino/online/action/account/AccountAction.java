@@ -21,7 +21,6 @@ import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.annotation.Captcha;
-import org.ironrhino.core.annotation.PostMethod;
 import org.ironrhino.core.annotation.Redirect;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.mail.MailService;
@@ -51,6 +50,7 @@ import org.springframework.security.ui.savedrequest.SavedRequest;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
+import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
@@ -241,7 +241,7 @@ public class AccountAction extends BaseAction {
 	}
 
 	@Redirect
-	@PostMethod
+	@InputConfig(methodName="input")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "account.username", expression = "^\\w{3,20}$", key = "account.username.invalid", message = "username不合法") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error", message = "两次输入密码不一致") })
 	public String signup() {
 		if (account != null) {
@@ -289,7 +289,7 @@ public class AccountAction extends BaseAction {
 		addActionMessage(getText("activation.mail.send.success"));
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	@Captcha
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.username", trim = true, key = "account.username.required", message = "请输入用户名"),
@@ -344,7 +344,7 @@ public class AccountAction extends BaseAction {
 		return ACCESSDENIED;
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "password", trim = true, key = "password.required", message = "请输入6-20位密码") }, stringLengthFields = { @StringLengthFieldValidator(type = ValidatorType.FIELD, trim = true, minLength = "6", maxLength = "20", fieldName = "password", key = "password.required", message = "密码的长度为6-20") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error", message = "两次输入密码不一致") })
 	public String password() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
@@ -359,7 +359,7 @@ public class AccountAction extends BaseAction {
 		return "password";
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") })
 	public String email() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
@@ -386,7 +386,7 @@ public class AccountAction extends BaseAction {
 		return "email";
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	public String unbindopenid() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
 		if (!currentAccount.isPasswordValid(currentPassword)) {
@@ -398,7 +398,7 @@ public class AccountAction extends BaseAction {
 		return "unbindopenid";
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	public String profile() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
 		accountManager.lock(currentAccount, LockMode.NONE);
@@ -415,7 +415,7 @@ public class AccountAction extends BaseAction {
 		return "profile";
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") })
 	public String invite() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
@@ -434,7 +434,7 @@ public class AccountAction extends BaseAction {
 		return "invite";
 	}
 
-	@PostMethod
+	@InputConfig(methodName="input")
 	@Captcha
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") })
 	public String forgot() {

@@ -292,7 +292,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			if (action.equals(Object.class)) {
 				actionClass = cls.getName().replace("model", "action")
 						+ "Action";
-				if (!ClassUtils.isPresent(actionClass))
+				if (!ClassUtils.isPresent(actionClass,getClass().getClassLoader()))
 					actionClass = defaultActionClass;
 			} else {
 				actionClass = action.getName();

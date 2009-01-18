@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.core.annotation.Captcha;
-import org.ironrhino.core.annotation.PostMethod;
 import org.ironrhino.core.ext.captcha.CaptchaHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.userdetails.UserDetails;
@@ -19,6 +18,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.interceptor.annotations.Before;
 import com.opensymphony.xwork2.interceptor.annotations.BeforeResult;
+import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
 public class BaseAction extends ActionSupport {
 
@@ -137,14 +137,13 @@ public class BaseAction extends ActionSupport {
 
 	@Before
 	public String returnInputIfGetForm() throws Exception {
-		PostMethod annotation = getAnnotation(PostMethod.class);
+		InputConfig annotation = getAnnotation(InputConfig.class);
 		if (annotation == null)
 			return null;
 		if (!"POST".equalsIgnoreCase(ServletActionContext.getRequest()
 				.getMethod())) {
 			returnInput = true;
-
-			if (annotation.resultCode().equals("")) {
+			if (!annotation.methodName().equals("")) {
 				ActionInvocation ai = ActionContext.getContext()
 						.getActionInvocation();
 				originalActionName = ai.getProxy().getActionName();
@@ -154,7 +153,7 @@ public class BaseAction extends ActionSupport {
 						annotation.methodName());
 				return (String) method.invoke(this);
 			} else {
-				return annotation.resultCode();
+				return annotation.resultName();
 			}
 		} else {
 			return null;
