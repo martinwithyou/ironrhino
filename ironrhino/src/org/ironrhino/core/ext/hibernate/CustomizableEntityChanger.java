@@ -47,13 +47,13 @@ public class CustomizableEntityChanger {
 
 	private Map<String, List<PropertyChange>> changes = new HashMap<String, List<PropertyChange>>();
 
-	private static Map<String, Map<String, PropertyType>> customizableEntities;
+	public static Map<String, Map<String, PropertyType>> customizableEntities;
 
 	public Map<String, Map<String, PropertyType>> getCustomizableEntities() {
 		return customizableEntities;
 	}
 
-	public Map<String, PropertyType> getCustomizedProperties(
+	public static Map<String, PropertyType> getCustomizedProperties(
 			String entityClassName) {
 		Map<String, PropertyType> map = customizableEntities
 				.get(entityClassName);
@@ -290,7 +290,8 @@ public class CustomizableEntityChanger {
 					PersistentClass persistentClass = getPersistentClass(clazz);
 					simpleValue.setTable(persistentClass.getTable());
 					Column c = new Column();
-					c.setName(Customizable.CUSTOM_COMPONENT_NAME+"_"+change.getName());
+					c.setName(Customizable.CUSTOM_COMPONENT_NAME + "_"
+							+ change.getName());
 					simpleValue.addColumn(c);
 					Property property = new Property();
 					property.setName(change.getName());
@@ -315,36 +316,37 @@ public class CustomizableEntityChanger {
 	private void updateMappingFile() throws Exception {
 		for (String entityClass : changes.keySet()) {
 			Class clazz = Class.forName(entityClass);
-				String file = ctx.getResource(getMappingResource(clazz))
-						.getFile().getAbsolutePath();
-				Node node = null;
-				Document document = XMLUtils.loadDocument(file);
-				NodeList componentTags = document
-						.getElementsByTagName("dynamic-component");
-				if (componentTags.getLength() == 0) {
-					Element element = document
-							.createElement("dynamic-component");
-					element.setAttribute("name",
-							Customizable.CUSTOM_COMPONENT_NAME);
-					element.setAttribute("insert", "true");
-					element.setAttribute("update", "true");
-					element.setAttribute("optimistic-lock", "true");
-					document.getElementsByTagName("class").item(0).appendChild(
-							element);
-					node = element;
-				} else {
-					node = componentTags.item(0);
-					XMLUtils.removeChildren(node);
-				}
-				Iterator propertyIterator = getDynamicComponent(clazz)
-						.getPropertyIterator();
-				while (propertyIterator.hasNext()) {
-					Property property = (Property) propertyIterator.next();
-					Element element = createPropertyElement(document, property);
-					node.appendChild(element);
-				}
-				XMLUtils.saveDocument(document, file);
-				lsfb.getConfiguration().updateMapping(entityClass,ctx.getResource(getMappingResource(clazz)).getURL());
+			String file = ctx.getResource(getMappingResource(clazz)).getFile()
+					.getAbsolutePath();
+			Node node = null;
+			Document document = XMLUtils.loadDocument(file);
+			NodeList componentTags = document
+					.getElementsByTagName("dynamic-component");
+			if (componentTags.getLength() == 0) {
+				Element element = document.createElement("dynamic-component");
+				element
+						.setAttribute("name",
+								Customizable.CUSTOM_COMPONENT_NAME);
+				element.setAttribute("insert", "true");
+				element.setAttribute("update", "true");
+				element.setAttribute("optimistic-lock", "true");
+				document.getElementsByTagName("class").item(0).appendChild(
+						element);
+				node = element;
+			} else {
+				node = componentTags.item(0);
+				XMLUtils.removeChildren(node);
+			}
+			Iterator propertyIterator = getDynamicComponent(clazz)
+					.getPropertyIterator();
+			while (propertyIterator.hasNext()) {
+				Property property = (Property) propertyIterator.next();
+				Element element = createPropertyElement(document, property);
+				node.appendChild(element);
+			}
+			XMLUtils.saveDocument(document, file);
+			lsfb.getConfiguration().updateMapping(entityClass,
+					ctx.getResource(getMappingResource(clazz)).getURL());
 		}
 	}
 

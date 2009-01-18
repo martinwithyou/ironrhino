@@ -49,8 +49,6 @@ public class EntityAction extends BaseAction {
 
 	private BaseManager baseManager;
 
-	private CustomizableEntityChanger customizableEntityChanger;
-
 	private ResultPage resultPage;
 
 	private Entity entity;
@@ -71,11 +69,6 @@ public class EntityAction extends BaseAction {
 
 	public void setBaseManager(BaseManager baseManager) {
 		this.baseManager = baseManager;
-	}
-
-	public void setCustomizableEntityChanger(
-			CustomizableEntityChanger customizableEntityChanger) {
-		this.customizableEntityChanger = customizableEntityChanger;
 	}
 
 	private boolean readonly() {
@@ -357,8 +350,9 @@ public class EntityAction extends BaseAction {
 
 			if (customizable) {
 				map.remove(Customizable.CUSTOM_COMPONENT_NAME);
-				Map<String, PropertyType> customProperties = customizableEntityChanger
-						.getCustomizedProperties(clazz.getName());
+				Map<String, PropertyType> customProperties = CustomizableEntityChanger
+						.customizableEntities
+						.get(clazz.getName());;
 				if (customProperties != null && customProperties.size() > 0) {
 					for (String name : customProperties.keySet()) {
 						PropertyType pt = customProperties.get(name);

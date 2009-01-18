@@ -7,9 +7,7 @@
 	<bean type="com.opensymphony.xwork2.config.PackageProvider" name="ironrhino-autoconfig"
 		class="org.ironrhino.core.ext.struts.AutoConfigPackageProvider" />
 	<constant name="struts.devMode" value="false" />
-	<!--
-		<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
-	-->
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
 	<constant name="struts.mapper.class"
 		value="org.ironrhino.core.ext.struts.DelegateActionMapper" />
 	<constant name="struts.url.includeParams" value="none" />
