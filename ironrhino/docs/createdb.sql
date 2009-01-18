@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS ironrhino;
+
 CREATE DATABASE ironrhino DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 
 use ironrhino;

@@ -58,6 +58,10 @@ public class Region extends BaseTreeableEntity<Region> implements Secured {
 		}
 		return fullName;
 	}
+	
+	public String toString(){
+		return getFullName();
+	}
 
 	@NotInCopy
 	@NotInJson
