@@ -1,12 +1,11 @@
-/*
- * jQuery UI Effects 1.5
+﻿/*
+ * jQuery UI Effects 1.5.3
  *
  * Copyright (c) 2008 Aaron Eisenberger (aaronchi@gmail.com)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  * 
  * http://docs.jquery.com/UI/Effects/
- *
  */
 ;(function($) {
 
@@ -54,8 +53,8 @@ $.extend($.effects, {
 			wrapper.css({position: 'relative'});
 			el.css({position: 'relative'});
 		} else {
-			var top = parseInt(el.css('top'), 10); if(isNaN(top)) top = 'auto';
-			var left = parseInt(el.css('left'), 10); if(isNaN(top)) left = 'auto';
+			var top = el.css('top'); if(isNaN(parseInt(top))) top = 'auto';
+			var left = el.css('left'); if(isNaN(parseInt(left))) left = 'auto';
 			wrapper.css({ position: el.css('position'), top: top, left: left, zIndex: el.css('z-index') }).show();
 			el.css({position: 'relative', top:0, left:0});
 		}

@@ -1,7 +1,5 @@
 var HISTORY_ENABLED = true;
-var CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
-if (CONTEXT_PATH == '/')
-	CONTEXT_PATH = '';
+
 MessageBundle = {};
 MessageBundle['en'] = {
 	'indicator.loading' : 'loading...',
@@ -228,7 +226,12 @@ if (typeof(Initialization) == 'undefined')
 	Initialization = {};
 if (typeof(Observation) == 'undefined')
 	Observation = {};
+var CONTEXT_PATH = '';
 function _init() {
+	CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
+	if (CONTEXT_PATH == '/')
+		CONTEXT_PATH = '';
+	
 	var array = [];
 
 	for (var key in Initialization) {
@@ -520,7 +523,7 @@ Initialization.common = function() {
 	if ($('#q').length > 0)
 		$("#q").autocomplete(CONTEXT_PATH + "/search/suggest?decorator=none", {
 			minChars : 3,
-			mustMatch : true
+			delay: 1000
 		});
 }
 

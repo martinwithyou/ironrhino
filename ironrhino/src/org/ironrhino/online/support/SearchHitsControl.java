@@ -28,7 +28,6 @@ import org.ironrhino.online.model.SearchHitsHistory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-
 public class SearchHitsControl extends StringStore {
 
 	private BaseManager<SearchHits> baseManager;
@@ -189,7 +188,8 @@ public class SearchHitsControl extends StringStore {
 
 	public List<AggregateResult> suggest(String keyword) {
 		List<AggregateResult> result;
-		if (!searchSuggestionCache.isKeyInCache(keyword)) {
+		if (!searchSuggestionCache.isKeyInCache(keyword)
+				|| searchSuggestionCache.get(keyword) == null) {
 			baseManager.setEntityClass(SearchHits.class);
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.ilike("keyword", keyword, MatchMode.START));
