@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.util.AuthzUtils;
+import org.ironrhino.core.annotation.Authorize;
 import org.ironrhino.core.annotation.Captcha;
 import org.ironrhino.core.ext.captcha.CaptchaHelper;
 import org.springframework.beans.BeanUtils;
@@ -135,7 +136,50 @@ public class BaseAction extends ActionSupport {
 		return NONE;
 	}
 
-	@Before
+	@Before(priority = 20)
+	public String checkAccess() throws Exception {
+		boolean passed = false;
+		Authorize annotation = getAnnotation(Authorize.class);
+		if (annotation == null)
+			return null;
+		if (!annotation.ifNotGranted().equals("")) {
+			String[] roles = annotation.ifNotGranted().split(",");
+			boolean has = false;
+			for (String r : roles)
+				if (AuthzUtils.getRoleNames().contains(r)) {
+					has = true;
+					break;
+				}
+			passed = !has;
+		} else if (!annotation.ifAllGranted().equals("")) {
+			String[] roles = annotation.ifAllGranted().split(",");
+			boolean notHas = false;
+			for (String r : roles)
+				if (!AuthzUtils.getRoleNames().contains(r)) {
+					notHas = true;
+					break;
+				}
+
+			passed = !notHas;
+		} else if (!annotation.ifAnyGranted().equals("")) {
+			String[] roles = annotation.ifAnyGranted().split(",");
+			boolean has = false;
+			for (String r : roles)
+				if (AuthzUtils.getRoleNames().contains(r)) {
+					has = true;
+					break;
+				}
+
+			passed = has;
+		}
+		if (!passed) {
+			getActionErrors().add(getText("access.denied"));
+			return ACCESSDENIED;
+		}
+		return null;
+	}
+
+	@Before(priority = 10)
 	public String returnInputIfGetForm() throws Exception {
 		InputConfig annotation = getAnnotation(InputConfig.class);
 		if (annotation == null)
