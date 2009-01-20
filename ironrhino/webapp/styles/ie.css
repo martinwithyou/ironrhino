@@ -21,3 +21,7 @@ body {
 .tooltip {
 	width: 150px;
 }
+
+.nav li:hover ul,.nav li.sfHover ul {
+	top: 16px;
+}

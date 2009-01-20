@@ -78,7 +78,6 @@
 <div id="menu">
 <ul class="nav">
 	<authz:authorize ifNotGranted="ROLE_BUILTIN_ACCOUNT">
-		<li><a href="<c:url value="/account/login"/>" id="login_url">快速登录</a></li>
 		<li><a href="<c:url value="/account/login"/>">登录</a></li>
 		<li><a href="<c:url value="/account/signup"/>">注册</a></li>
 	</authz:authorize>
@@ -125,7 +124,7 @@
 <div id="footer">
 <div class="text">
 <p>© 2008 ironrhino.org</p>
-<ul>
+<ul class="footer">
 	<li><a href="<c:url value="/feedback"/>">问题反馈</a></li>
 	<li><a href="<c:url value="/about.html"/>">关于我们</a></li>
 	<li><a href="<c:url value="/contact.html"/>">联系我们</a></li>

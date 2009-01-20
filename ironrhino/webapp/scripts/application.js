@@ -476,9 +476,10 @@ Observation.common = function(container) {
 				})
 		});
 	}
-	$('div.tabs > ul', container).each(function() {
+	//TODO bug in jquery1.3 "div.tabs > ul"  selected all div ul,change to "div.tabs ul"
+	$('div.tabs ul', container).each(function() {
 		$(this).tabs().tabs('select', $(this).attr('tab'))
-	});;
+	});
 	$('.round_corner,.corner', container).css({
 		padding : '5px',
 		margin : '5px'
