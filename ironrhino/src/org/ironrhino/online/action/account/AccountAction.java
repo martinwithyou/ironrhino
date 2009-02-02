@@ -183,7 +183,7 @@ public class AccountAction extends BaseAction {
 						.parseByHost(ServletActionContext.getRequest()
 								.getRemoteAddr());
 				if (region != null)
-					account.setAddress(region.getFullName());
+					account.setAddress(region.getFullname());
 			}
 		} else if ("email".equals(originalActionName)) {
 			account = new Account();
@@ -210,7 +210,7 @@ public class AccountAction extends BaseAction {
 			Region region = regionTreeControl.parseByHost(ServletActionContext
 					.getRequest().getRemoteAddr());
 			if (region != null)
-				account.setAddress(region.getFullName());
+				account.setAddress(region.getFullname());
 		}
 		return "manage";
 	}

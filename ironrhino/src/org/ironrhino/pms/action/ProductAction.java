@@ -10,13 +10,10 @@ import java.util.List;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.ecside.common.util.RequestUtil;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Attribute;
@@ -184,7 +181,6 @@ public class ProductAction extends BaseAction {
 	}
 
 	public String execute() {
-		HttpServletRequest request = ServletActionContext.getRequest();
 		DetachedCriteria dc = productManager.detachedCriteria();
 		Category category = null;
 		if (categoryId != null) {
@@ -192,30 +188,13 @@ public class ProductAction extends BaseAction {
 			if (category != null)
 				dc.add(Restrictions.eq("category", category));
 		}
-		if (product != null) {
-			if (StringUtils.isNotBlank(product.getCode()))
-				dc.add(Restrictions.ilike("code", product.getCode(),
-						MatchMode.ANYWHERE));
-			if (StringUtils.isNotBlank(product.getName()))
-				dc.add(Restrictions.ilike("name", product.getName(),
-						MatchMode.ANYWHERE));
-		}
 		if (resultPage == null)
 			resultPage = new ResultPage<Product>();
 		resultPage.setDetachedCriteria(dc);
 		resultPage.addOrder(Order.asc("displayOrder"));
 		resultPage.addOrder(Order.desc("createDate"));
-		int totalRows = productManager.countResultPage(resultPage);
-		String pageSize = request.getParameter("ec_rd");
-		if (StringUtils.isNumeric(pageSize))
-			resultPage.setPageSize(Integer.parseInt(pageSize));
-		int[] rowStartEnd = RequestUtil.getRowStartEnd(request, totalRows,
-				resultPage.getPageSize());
-		resultPage.setStart(rowStartEnd[0]);
 		resultPage = productManager.getResultPage(resultPage);
-		request.setAttribute("recordList", resultPage.getResult());
-		request.setAttribute("totalRows", resultPage.getTotalRecord());
-		return "list";
+		return LIST;
 	}
 
 	public String input() {
@@ -306,7 +285,7 @@ public class ProductAction extends BaseAction {
 
 	public String view() {
 		product = productManager.get(getUid());
-		return "view";
+		return VIEW;
 	}
 
 	public String delete() {

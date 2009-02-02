@@ -14,13 +14,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import org.ecside.common.util.RequestUtil;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.ResultPage;
@@ -28,6 +24,7 @@ import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.annotation.FormElement;
 import org.ironrhino.core.annotation.NaturalId;
 import org.ironrhino.core.annotation.NotInCopy;
+import org.ironrhino.core.annotation.NotInUI;
 import org.ironrhino.core.ext.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.ext.hibernate.PropertyType;
 import org.ironrhino.core.model.Customizable;
@@ -79,21 +76,11 @@ public class EntityAction extends BaseAction {
 
 	public String list() {
 		baseManager.setEntityClass(getEntityClass());
-		HttpServletRequest request = ServletActionContext.getRequest();
 		DetachedCriteria dc = baseManager.detachedCriteria();
 		if (resultPage == null)
 			resultPage = new ResultPage();
 		resultPage.setDetachedCriteria(dc);
-		int totalRows = baseManager.countResultPage(resultPage);
-		String pageSize = request.getParameter("ec_rd");
-		if (StringUtils.isNumeric(pageSize))
-			resultPage.setPageSize(Integer.parseInt(pageSize));
-		int[] rowStartEnd = RequestUtil.getRowStartEnd(request, totalRows,
-				resultPage.getPageSize());
-		resultPage.setStart(rowStartEnd[0]);
 		resultPage = baseManager.getResultPage(resultPage);
-		request.setAttribute("recordList", resultPage.getResult());
-		request.setAttribute("totalRows", resultPage.getTotalRecord());
 		readonly = readonly();
 		return LIST;
 	}
@@ -286,8 +273,10 @@ public class EntityAction extends BaseAction {
 		String key = clazz.getName();
 		boolean customizable = Customizable.class.isAssignableFrom(clazz);
 		if (cache.get(key) == null) {
-			Set<String> notInCopies = AnnotationUtils
-					.getAnnotatedPropertyNames(clazz, NotInCopy.class);
+			Set<String> notInUIs = AnnotationUtils.getAnnotatedPropertyNames(
+					clazz, NotInUI.class);
+			notInUIs.addAll(AnnotationUtils.getAnnotatedPropertyNames(clazz,
+					NotInCopy.class));
 			Map<String, FormElementConfig> map = new HashMap<String, FormElementConfig>();
 			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
 					.getPropertyDescriptors(clazz);
@@ -296,7 +285,7 @@ public class EntityAction extends BaseAction {
 				if ("new".equals(pd.getName()) || "id".equals(pd.getName())
 						|| "class".equals(pd.getName())
 						|| pd.getReadMethod() == null
-						|| notInCopies.contains(pd.getName()))
+						|| notInUIs.contains(pd.getName()))
 					continue;
 				Class returnType = pd.getReadMethod().getReturnType();
 				if (returnType.isEnum()) {
@@ -321,7 +310,6 @@ public class EntityAction extends BaseAction {
 						if (f != null)
 							fe = f.getAnnotation(FormElement.class);
 					} catch (Exception e) {
-						log.error(e.getMessage(), e);
 					}
 				FormElementConfig fec = new FormElementConfig(fe);
 				if (returnType == Integer.TYPE || returnType == Integer.class
@@ -350,9 +338,9 @@ public class EntityAction extends BaseAction {
 
 			if (customizable) {
 				map.remove(Customizable.CUSTOM_COMPONENT_NAME);
-				Map<String, PropertyType> customProperties = CustomizableEntityChanger
-						.customizableEntities
-						.get(clazz.getName());;
+				Map<String, PropertyType> customProperties = CustomizableEntityChanger.customizableEntities
+						.get(clazz.getName());
+				;
 				if (customProperties != null && customProperties.size() > 0) {
 					for (String name : customProperties.keySet()) {
 						PropertyType pt = customProperties.get(name);

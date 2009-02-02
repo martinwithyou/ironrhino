@@ -4,13 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.ecside.common.util.RequestUtil;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.ResultPage;
@@ -71,36 +66,13 @@ public class GroupAction extends BaseAction {
 	}
 
 	public String execute() {
-		HttpServletRequest request = ServletActionContext.getRequest();
 		DetachedCriteria dc = groupManager.detachedCriteria();
-		if (group != null) {
-			if (StringUtils.isNotBlank(group.getName()))
-				dc.add(Restrictions.ilike("name", group.getName(),
-						MatchMode.ANYWHERE));
-			if (StringUtils.isNotBlank(group.getDescription()))
-				dc.add(Restrictions.ilike("description",
-						group.getDescription(), MatchMode.ANYWHERE));
-			String value = request.getParameter("group.enabled");
-			if ("true".equals(value))
-				dc.add(Restrictions.eq("enabled", true));
-			else if ("false".equals(value))
-				dc.add(Restrictions.eq("enabled", false));
-		}
 		if (resultPage == null)
 			resultPage = new ResultPage<Group>();
 		resultPage.setDetachedCriteria(dc);
 		resultPage.addOrder(Order.asc("name"));
-		int totalRows = groupManager.countResultPage(resultPage);
-		String pageSize = request.getParameter("ec_rd");
-		if (StringUtils.isNumeric(pageSize))
-			resultPage.setPageSize(Integer.parseInt(pageSize));
-		int[] rowStartEnd = RequestUtil.getRowStartEnd(request, totalRows,
-				resultPage.getPageSize());
-		resultPage.setStart(rowStartEnd[0]);
 		resultPage = groupManager.getResultPage(resultPage);
-		request.setAttribute("recordList", resultPage.getResult());
-		request.setAttribute("totalRows", resultPage.getTotalRecord());
-		return "list";
+		return LIST;
 	}
 
 	public String input() {

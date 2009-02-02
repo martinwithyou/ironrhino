@@ -5,28 +5,32 @@ MessageBundle['en'] = {
 	'indicator.loading' : 'loading...',
 	'indicator.error' : 'network error,please try later',
 	'required' : 'please input value',
+	'selection.required' : 'please select',
 	'email' : 'this field must be a valid email',
 	'integer' : 'this field must be integer',
 	'double' : 'this field must be double',
-	'confirm.delete' : 'are you sure to delete?'
+	'confirm.delete' : 'are you sure to delete?',
+	'save.and.create' : 'save and add'
 }
 MessageBundle['zh-cn'] = {
 	'indicator.loading' : '正在加载...',
 	'indicator.error' : '网络故障,请稍后再试',
 	'required' : '必填项,请填写',
+	'selection.required' : '必填项,请选择',
 	'email' : 'email不合法',
 	'integer' : '请填写整数',
 	'double' : '请填写数字',
-	'confirm.delete' : '确定要删除?'
+	'confirm.delete' : '确定要删除?',
+	'save.and.create' : '保存并新建'
 }
 MessageBundle.get = function() {
-	key = arguments[0];
-	lang = (navigator.language || navigator.browserLanguage || '')
+	var key = arguments[0];
+	var lang = (navigator.language || navigator.browserLanguage || '')
 			.toLowerCase();
 	if (!MessageBundle[lang])
 		lang = 'en';
-	msg = MessageBundle[lang][key];
-	for (i = 1; i < arguments.length; i++)
+	var msg = MessageBundle[lang][key];
+	for (var i = 1; i < arguments.length; i++)
 		msg = msg.replace('{' + i + '}', arguments[i]);
 	return msg;
 }
@@ -36,7 +40,7 @@ Indicator = {
 	show : function(iserror) {
 		if ($('#indicator').length == 0)
 			$('<div id="indicator"></div>').appendTo(document.body);
-		ind = $('#indicator');
+		var ind = $('#indicator');
 		if (iserror && ind.hasClass('loading'))
 			ind.removeClass('loading');
 		if (!iserror && !ind.hasClass('loading'))
@@ -63,7 +67,7 @@ function getMessage(message, className) {
 }
 
 function validateForm(form) {
-	valid = true;
+	var valid = true;
 	$('input', form).each(function() {
 		if ($(this).hasClass('required') && !$(this).val()) {
 			valid = false;
@@ -90,6 +94,15 @@ function validateForm(form) {
 			$(this)
 					.after(getMessage(MessageBundle.get('double'),
 							'field_error'));
+		}
+	});
+	$('select', form).each(function() {
+		if ($(this).hasClass('required')) {
+			if (!$(this).val()) {
+				valid = false;
+				$(this).after(getMessage(MessageBundle
+						.get('selection.required'), 'field_error'));
+			}
 		}
 	});
 	return valid;
@@ -133,9 +146,9 @@ function handleResponse(data, options) {
 		var replacement = {};
 		var entries = (options.replacement || $(target).attr('replacement') || 'content')
 				.split(',');
-		for (i = 0; i < entries.length; i++) {
-			entry = entries[i];
-			ss = entry.split(':', 2);
+		for (var i = 0; i < entries.length; i++) {
+			var entry = entries[i];
+			var ss = entry.split(':', 2);
 			replacement[ss[0]] = (ss.length == 2 ? ss[1] : ss[0]);
 		}
 		var div = $('<div style="display:none;"></div>')
@@ -163,12 +176,14 @@ function handleResponse(data, options) {
 		} else {
 			fire(target, 'onsuccess');
 		}
-
+		var message = '';
 		if (data.fieldErrors)
 			for (key in data.fieldErrors)
-				$(target[key]).after($(getMessage(data.fieldErrors[key],
-						'field_error')));
-		var message = '';
+				if (target && target[key])
+					$(target[key]).after($(getMessage(data.fieldErrors[key],
+							'field_error')));
+				else
+					message += getMessage(data.fieldErrors[key], 'action_error');
 		if (data.actionErrors)
 			for (var i = 0; i < data.actionErrors.length; i++)
 				message += getMessage(data.actionErrors[i], 'action_error');
@@ -231,7 +246,7 @@ function _init() {
 	CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
 	if (CONTEXT_PATH == '/')
 		CONTEXT_PATH = '';
-	
+
 	var array = [];
 
 	for (var key in Initialization) {
@@ -287,7 +302,7 @@ Observation.ajax = function(container) {
 	$('a.ajax,form.ajax', container).each(function() {
 		var target = this;
 		try {
-			_options = $(target).attr('options') ? eval('('
+			var _options = $(target).attr('options') ? eval('('
 					+ $(target).attr('options') + ')') : null;
 			if (_options)
 				$.each(_options, function(key, value) {
@@ -378,10 +393,10 @@ Observation.checkbox = function(container) {
 	$('input[type=checkbox]', container).each(function() {
 		this.onclick = function(event) {
 			if (!this.name) {
-				b = this.checked;
+				var b = this.checked;
 				$('input[type=checkbox][name]', this.form).each(function() {
 					this.checked = b;
-					tr = $(this).parents('tr').get(0);
+					var tr = $(this).parents('tr').get(0);
 					if (tr) {
 						if (b)
 							$(tr).addClass('selected');
@@ -391,7 +406,7 @@ Observation.checkbox = function(container) {
 				});
 			} else {
 				if (!(event || window.event).shiftKey) {
-					tr = $(this).parents('tr').get(0);
+					var tr = $(this).parents('tr').get(0);
 					if (tr) {
 						if (this.checked)
 							$(tr).addClass('selected');
@@ -400,10 +415,8 @@ Observation.checkbox = function(container) {
 
 					}
 				} else {
-					boxes = $('input[type=checkbox][name]', this.form);
-					start = -1;
-					end = -1;
-					checked = false;
+					var boxes = $('input[type=checkbox][name]', this.form);
+					var start = -1, end = -1, checked = false;
 					for (var i = 0; i < boxes.length; i++) {
 						if ($(boxes[i]).attr('lastClicked')) {
 							checked = boxes[i].checked;
@@ -414,7 +427,7 @@ Observation.checkbox = function(container) {
 						}
 					}
 					if (start > end) {
-						tmp = end;
+						var tmp = end;
 						end = start;
 						start = tmp;
 					}
@@ -446,7 +459,7 @@ Observation.checkbox = function(container) {
 							params.push(this.name + '=' + this.value)
 						}
 					});
-			url = $(this).attr('_href');
+			var url = $(this).attr('_href');
 			if (!url) {
 				url = this.href;
 				$(this).attr('_href', url);
@@ -476,7 +489,6 @@ Observation.common = function(container) {
 				})
 		});
 	}
-	//TODO bug in jquery1.3 "div.tabs > ul"  selected all div ul,change to "div.tabs ul"
 	$('div.tabs ul', container).each(function() {
 		$(this).tabs().tabs('select', $(this).attr('tab'))
 	});
@@ -491,16 +503,21 @@ Observation.common = function(container) {
 			dateFormat : 'yy-mm-dd'
 		});
 	$('input.captcha', container).focus(function() {
-		if($(this).attr('_captcha_'))
+		if ($(this).attr('_captcha_'))
 			return;
-		$(this).after('<img class="captcha" src="'+CONTEXT_PATH+'/captcha.jpg" alt="click to refresh"/>');
+		$(this).after('<img class="captcha" src="' + CONTEXT_PATH
+				+ '/captcha.jpg" alt="click to refresh"/>');
 		$('img.captcha', container).click(refreshCaptcha);
-		$(this).attr('_captcha_',true);
+		$(this).attr('_captcha_', true);
 	});
 
 }
 
 Initialization.common = function() {
+	if ($.browser.msie)
+		window.attachEvent('onunload', function() {
+			CollectGarbage()
+		});
 	if (typeof dwr != 'undefined') {
 		dwr.engine.setPreHook(Indicator.show);
 		dwr.engine.setPostHook(Indicator.hide);
@@ -511,7 +528,7 @@ Initialization.common = function() {
 	$().ajaxError(function() {
 		Indicator.showError()
 	});
-	$().ajaxSuccess(function(ev,xhr) {
+	$().ajaxSuccess(function(ev, xhr) {
 		Indicator.hide();
 		var url = xhr.getResponseHeader("X-Redirect-To");
 		if (url) {
@@ -519,12 +536,10 @@ Initialization.common = function() {
 			return;
 		}
 	});
-	if ($('#login_url').length > 0)
-		$('#login_url').click(login);
 	if ($('#q').length > 0)
 		$("#q").autocomplete(CONTEXT_PATH + "/search/suggest?decorator=none", {
 			minChars : 3,
-			delay: 1000
+			delay : 1000
 		});
 }
 
@@ -566,60 +581,57 @@ Initialization.categoryTree = function() {
 	});
 }
 
-function selectRegion(input, id) {
-	if ($('#region_window').length == 0) {
-		$('<div id="region_window" class="flora" title=""><div id="region_tree"></div></div>')
-				.appendTo(document.body);
+var Region = {
+	textid : '',
+	isfull : '',
+	hiddenid : '',
+	select : function(tid, f, hid) {
+		Region.textid = tid;
+		Region.isfull = f;
+		Region.hiddenid = hid;
 		var _click = function() {
-			document.getElementById(input).value = $(this).text();
+			if (Region.textid && $('#' + Region.textid)) {
+				var name = $(this).text();
+				if (Region.isfull) {
+					var p = this.parentNode.parentNode.parentNode.parentNode;
+					while (p && p.tagName.toLowerCase() == 'li') {
+						name = $('a span', p).get(0).innerHTML + name;
+						p = p.parentNode.parentNode;
+					}
+				}
+				if ($('#' + Region.textid)[0].tagName.toLowerCase() == 'input')
+					$('#' + Region.textid).val(name);
+				else
+					$('#' + Region.textid).text(name);
+			}
+			if (Region.hiddenid && $('#' + Region.hiddenid))
+				$('#' + Region.hiddenid).val($(this).parents('li')[0].id);
 			$("#region_window").dialog('close');
 		};
-		$("#region_window").dialog({
-			width : 350,
-			height : 300
-		});
-		$("#region_tree").treeview({
-			url : CONTEXT_PATH + '/region/children',
-			click : _click,
-			collapsed : true,
-			unique : true
-		});
-
-	} else {
-		$("#region_window").dialog('open');
+		if ($('#region_window').length == 0) {
+			$('<div id="region_window" class="flora" title="请选择"><div id="region_tree"></div></div>')
+					.appendTo(document.body);
+			$("#region_window").dialog({
+				width : 350,
+				height : 600
+			});
+			$("#region_tree").treeview({
+				url : CONTEXT_PATH + '/region/children',
+				click : _click,
+				collapsed : true,
+				unique : true
+			});
+		} else {
+			$("#region_window").dialog('open');
+		}
 	}
-	if (id)
-		$(id).parents("li.expandable").find(">div.hitarea").click();
 }
 
 function refreshCaptcha() {
-	var rand = Math.random();
 	$('img.captcha').each(function() {
 		var src = this.src;
 		if (src.lastIndexOf('?') > 0)
 			src = src.substring(0, src.lastIndexOf('?'));
-		this.src = src + '?' + rand;
+		this.src = src + '?' + Math.random();
 	});
-}
-
-function login() {
-	var url = $('#login_url').attr('href') + '?decorator=simple';
-	if ($('#login_window').length == 0) {
-		$('<div id="login_window" class="flora" title=""></div>')
-				.appendTo(document.body);
-		ajax({
-			url : url,
-			replacement : "login_window:content",
-			silence : true,
-			complete : function() {
-				$("#login_window").dialog({
-					width : 350,
-					height : 300
-				});
-			}
-		});
-	} else {
-		$("#login_window").dialog('open');
-	}
-	return false;
 }

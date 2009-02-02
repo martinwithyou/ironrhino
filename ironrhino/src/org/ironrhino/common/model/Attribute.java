@@ -1,10 +1,12 @@
 package org.ironrhino.common.model;
 
+import java.io.Serializable;
+
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 
 @Searchable(root = false, alias = "attribute")
-public class Attribute {
+public class Attribute implements Serializable {
 
 	private String name;
 
@@ -30,6 +32,7 @@ public class Attribute {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	@SearchableProperty
 	public String getValue() {
 		return value;

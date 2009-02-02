@@ -1,4 +1,5 @@
 @charset "utf-8";
+
 /*
 body {
 	overflow: hidden;
@@ -11,9 +12,10 @@ body {
 
 */
 #indicator {
-	position: absolute; 
+	position: absolute;
 	right: 21px;
 }
+
 #cart_items {
 	height: 200px;
 }
@@ -22,6 +24,26 @@ body {
 	width: 150px;
 }
 
+.nav li {
+	color: #000;
+	height: 20px;
+}
+
+.nav li.sfHover,.nav li.sfHover ul li {
+	background: #ccc;
+	height: 20px;
+}
+
+.nav ul li {
+	border: 1px solid #000;
+	border-bottom: 0;
+	padding-right: 20px;
+}
+
+.nav ul a {
+	border: 0;
+}
+
 .nav li:hover ul,.nav li.sfHover ul {
-	top: 16px;
+	top: 20px;
 }

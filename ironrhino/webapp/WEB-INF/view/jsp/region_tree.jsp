@@ -20,7 +20,6 @@ response.setHeader("Cache-Control", "max-age=86400");
 		<c:if test="${not empty param['input']}">
 		var id=$(this).parents('li')[0].id;
 		var name=$(this).text();
-		alert(window.top.document);
 		window.top.document.getElementById('${param['input']}').value=name;
 		//$('#${param['input']}',window.top.document).val($(this).text());
 		//window.close();

@@ -20,7 +20,7 @@
 <link href="<c:url value="/styles/main.css"/>" media="screen"
 	rel="stylesheet" type="text/css" />
 <link rel="stylesheet"
-	href="<c:url value="/themes/flora/flora.all.css"/>" type="text/css"
+	href="<c:url value="/themes/base/ui.all.css"/>" type="text/css"
 	media="screen" />
 <!--[if IE]>
 	<link href="<c:url value="/styles/ie.css"/>" media="all"

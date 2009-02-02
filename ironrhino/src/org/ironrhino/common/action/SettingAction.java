@@ -1,10 +1,8 @@
 package org.ironrhino.common.action;
 
+import java.util.Collection;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -12,12 +10,17 @@ import org.ironrhino.common.model.Setting;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.service.BaseManager;
 
-
 public class SettingAction extends BaseAction {
 
 	private Setting setting;
 
 	private BaseManager<Setting> baseManager;
+
+	private Collection<Setting> list;
+
+	public Collection<Setting> getList() {
+		return list;
+	}
 
 	public Setting getSetting() {
 		return setting;
@@ -33,11 +36,8 @@ public class SettingAction extends BaseAction {
 	}
 
 	public String execute() {
-		List<Setting> settings = baseManager.getAll(Order.asc("key"));
-		HttpServletRequest request = ServletActionContext.getRequest();
-		request.setAttribute("recordList", settings);
-		request.setAttribute("totalRows", settings.size());
-		return "list";
+		list = baseManager.getAll(Order.asc("key"));
+		return LIST;
 	}
 
 	public String input() {

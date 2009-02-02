@@ -222,7 +222,7 @@ form fieldset {
 }
 
 form input.required {
-	background: url(../images/required.gif) no-repeat right;
+	background: url(../images/required.png) no-repeat right;
 }
 
 form fieldset div.fieldset {
@@ -299,6 +299,14 @@ img {
 	cursor: pointer;
 	text-decoration: underline;
 	white-space: nowrap;
+}
+
+.treeview a:hover {
+	color: red;
+}
+
+.treeview a span {
+	cursor: pointer;
 }
 
 .blankline {
@@ -391,6 +399,12 @@ ul.product_list li a {
 	font-weight: bold;
 	text-decoration: none;
 	margin-bottom: 6px;
+}
+
+input.openid {
+	background: url(../images/openid.png) no-repeat;
+	background-position: 0 50%;
+	padding-left: 16px;
 }
 
 .unit-rating { /* the UL */
@@ -540,14 +554,370 @@ table.sortable tr.roweven {
 	overflow: hidden;
 }
 
-input.openid {
-	background: url(../images/openid.png) no-repeat;
-	background-position: 0 50%;
-	padding-left: 16px;
-}
-
 tr.selected {
 	background: #e6e8fa;
+}
+
+/*
+**eXtremeTable
+*/
+.eXtremeTable {
+	border: 0px solid red;
+	padding: 0px;
+	margin: 0px;
+}
+
+.eXtremeTable .inputtext {
+	border: 1px solid #cc9966;
+	font-size: 12px;
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+}
+
+.eXtremeTable .breakLine {
+	white-space: normal;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+.eXtremeTable .breakLine td {
+	white-space: normal;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+.eXtremeTable .noBreakLine {
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+}
+
+.eXtremeTable .noBreakLine td {
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+}
+
+.eXtremeTable input.radio {
+	font-size: 12px;
+	width: auto;
+}
+
+.eXtremeTable input.checkbox {
+	font-size: 12px;
+	width: auto;
+}
+
+.eXtremeTable select {
+	border: solid 1px #EEEEEE;
+	width: 75px;
+}
+
+.eXtremeTable button {
+	background-color: transparent;
+	background-image: url(../images/button.gif);
+	background-repeat: repeat-x;
+	border: outset 1px #bbbbbb;
+	border-collapse: separate;
+	vertical-align: bottom;
+	color: #333333;
+	cursor: pointer;
+	height: 22px;
+	width: 50px;
+	margin: 3px 4px 3px 4px;
+	padding: 3px 3px 0px 3px;
+}
+
+.eXtremeTable .tableRegion {
+	border: 0px #ff00ff solid;
+	padding: 0px;
+	margin: 0px;
+	border-collapse: collapse;
+	/* width:100%; */
+	table-layout: fixed;
+}
+
+.eXtremeTable .tableRegion td {
+	color: #000000;
+	border: 1px #cccccc solid;
+	padding: 2px;
+	height: 23px;
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+	overflow: hidden;
+}
+
+.eXtremeTable .tableHeader,.eXtremeTable .tableRegion .tableHeader td {
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+	color: #3A3A3A;
+	font-weight: bolder;
+	height: 24px;
+	text-align: center;
+	overflow: visible;
+}
+
+.eXtremeTable .resizeTitle {
+	float: left;
+	width: 90%;
+	text-align: center;
+}
+
+.eXtremeTable .resizeBar {
+	padding: 0px;
+	margin: 0px;
+	float: right;
+	cursor: e-resize;
+	width: 3px;
+	height: 15px;
+	font-size: 1px;
+	vertical-align: top;
+	background-color: #cccccc;
+	display: inline;
+}
+
+.eXtremeTable .tableRegion .editableColumn {
+	color: #883A3A;
+}
+
+.eXtremeTable .odd a,.even a {
+	color: Black;
+}
+
+.eXtremeTable .odd td {
+	background-color: #FFFFFF;
+}
+
+.eXtremeTable .even td {
+	background-color: #f3f4f3;
+}
+
+.eXtremeTable .selected td {
+	background-color: #ddeeff;
+}
+
+.eXtremeTable .selected a,.highlight a {
+	color: black;
+}
+
+.eXtremeTable .selected td {
+	background-color: #ffeedd;
+}
+
+.eXtremeTable .selected a,.selectlight a {
+	color: black;
+}
+
+.eXtremeTable .odd div.ellipsis,.eXtremeTable .even div.ellipsis,.eXtremeTable.highlight div.ellipsis       
+	              ,.eXtremeTable .selectlight DIV.ellipsis {
+	text-align: left;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color: #3a3a3a;
+	width: 100%;
+}
+
+.eXtremeTable .odd .editedCell,.eXtremeTable .even .editedCell,.eXtremeTable .highlight .editedCell,.eXtremeTable .selectlight .editedCell
+	{
+	background-color: #fff3f0;
+}
+
+.eXtremeTable .titleRow {
+	color: #444444;
+	font-weight: bold;
+	font-size: 12px;
+	vertical-align: middle;
+}
+
+.eXtremeTable div.title {
+	color: #333333;
+	font-weight: bold;
+	font-size: 14px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.eXtremeTable .titleRow span {
+	width: 100%;
+	text-align: center;
+}
+
+.eXtremeTable .formButton {
+	background-color: transparent;
+	background-image: url(../images/button.gif);
+	background-repeat: repeat-x;
+	border: outset 1px #bbbbbb;
+	border-collapse: separate;
+	vertical-align: bottom;
+	color: #333333;
+	cursor: pointer;
+	height: 22px;
+	width: 50px;
+	margin: 3px 4px 3px 4px;
+	padding: 3px 3px 0px 3px;
+}
+
+.eXtremeTable .pageNav {
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center;
+	border: 0px #dddddd none;
+	width: 24px;
+	height: 25px;
+	cursor: pointer;
+	vertical-align: -2px;
+}
+
+.eXtremeTable .jumpPage {
+	background-image: url(../images/gotoPage.gif);
+}
+
+.eXtremeTable .firstPage {
+	background-image: url(../images/firstPage.gif);
+}
+
+.eXtremeTable .prevPage {
+	background-image: url(../images/prevPage.gif);
+}
+
+.eXtremeTable .nextPage {
+	background-image: url(../images/nextPage.gif);
+}
+
+.eXtremeTable .lastPage {
+	background-image: url(../images/lastPage.gif);
+}
+
+.eXtremeTable .firstPageD {
+	background-image: url(../images/firstPageDisabled.gif);
+}
+
+.eXtremeTable .prevPageD {
+	background-image: url(../images/prevPageDisabled.gif);
+}
+
+.eXtremeTable .nextPageD {
+	background-image: url(../images/nextPageDisabled.gif);
+}
+
+.eXtremeTable .lastPageD {
+	background-image: url(../images/lastPageDisabled.gif);
+}
+
+.eXtremeTable .toolbar select {
+	width: 50px;
+	font-size: 11px;
+	font-family: Verdana;
+}
+
+.eXtremeTable .toolbar .toolbarTable {
+	border: 0px red solid;
+	width: 100%;
+}
+
+.eXtremeTable .toolbar .toolbarTable td {
+	border: 0px none red;
+}
+
+.eXtremeTable .toolbar .toolbarTable .statusTool {
+	border: 0px solid red;
+	padding-top: 2px;
+	text-align: right;
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+}
+
+.eXtremeTable .pageNavigationNearPageTool {
+	width: 230px;
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+}
+
+.eXtremeTable .pageNavigationNearPageTool A {
+	width: 12px;
+}
+
+.eXtremeTable .pageJumpTool {
+	width: 95px;
+}
+
+.eXtremeTable .jumpPageInput {
+	height: 19px;
+	width: 25px;
+	margin-top: 0px;
+	/* border:1px solid #aaaaaa; */
+}
+
+.eXtremeTable .pageSizeTool {
+	padding-top: 2px;
+	width: 90px;
+}
+
+.eXtremeTable .extendTool A {
+	display: inline;
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+}
+
+.eXtremeTable .separatorTool {
+	font-size: 1px;
+}
+
+.eXtremeTable .blankTool {
+	width: 10%;
+}
+
+.eXtremeTable .hideListRow {
+	height: 0px;
+	font-size: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	border-top: 0px;
+	border-bottom: 0px;
+}
+
+.eXtremeTable .hideListRow td {
+	font-size: 0px;
+	height: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	border-top: 0px;
+	border-bottom: 0px;
+}
+
+.eXtremeTable .headerScrollX {
+	overflow: hidden;
+	padding: 0px;
+	margin: 0px;
+	border: 0px red solid;
+}
+
+.eXtremeTable .bodyScrollY {
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 0px;
+	padding-right: 0px;
+	margin: 0px;
+	border: 0px red solid;
+}
+
+.eXtremeTable .bodyScrollX {
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 0px;
+	margin: 0px;
+	border: 0px red solid;
 }
 
 /**

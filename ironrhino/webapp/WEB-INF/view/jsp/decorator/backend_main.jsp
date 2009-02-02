@@ -18,16 +18,12 @@
 <link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" />
 <link href="<c:url value="/styles/main.css"/>" media="all"
 	rel="stylesheet" type="text/css" />
-<link rel="stylesheet"
-	href="<c:url value="/themes/flora/flora.all.css"/>" type="text/css"
-	media="screen" />
+<link rel="stylesheet" href="<c:url value="/themes/base/ui.all.css"/>"
+	type="text/css" media="screen" />
 <!--[if IE]>
 	<link href="<c:url value="/styles/ie.css"/>" media="all"
 		rel="stylesheet" type="text/css" />
 	<![endif]-->
-<link media="all"
-	href="<c:url value="/components/ecside/styles/td_style_ec.css"/>"
-	type="text/css" rel="stylesheet" />
 <script src="<c:url value="/scripts/jquery.js"/>" type="text/javascript"></script>
 <script src="<c:url value="/scripts/ui.core.js"/>"
 	type="text/javascript"></script>
@@ -49,13 +45,11 @@
 	type="text/javascript"></script>
 <script src="<c:url value="/scripts/application.js"/>"
 	type="text/javascript"></script>
+<script type="text/javascript" src="<c:url value="/scripts/ecside.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
 <script type="text/javascript"
 	src="<c:url value="/dwr/interface/ApplicationContextConsole.js"/>"></script>
-<script type="text/javascript"
-	src="<c:url value="/components/ecside/scripts/ecside.js"/>"></script>
-<script type="text/javascript"
-	src="<c:url value="/components/ecside/scripts/ecsidex.js"/>"></script>
+
 <decorator:head />
 </head>
 
@@ -106,8 +100,7 @@
 <decorator:body /></div>
 </div>
 
-<div id="footer">
-</div>
+<div id="footer"></div>
 </div>
 </body>
 </html>

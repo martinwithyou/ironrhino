@@ -3,10 +3,7 @@ package org.ironrhino.pms.action;
 import java.util.Collection;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -27,7 +24,7 @@ public class CategoryAction extends BaseAction {
 
 	private CategoryManager categoryManager;
 
-	private Collection<Category> children;
+	private Collection<Category> list;
 
 	private CategoryTreeControl categoryTreeControl;
 
@@ -51,8 +48,8 @@ public class CategoryAction extends BaseAction {
 		this.async = async;
 	}
 
-	public Collection<Category> getChildren() {
-		return children;
+	public Collection<Category> getList() {
+		return list;
 	}
 
 	public void setCategoryTreeControl(CategoryTreeControl categoryTreeControl) {
@@ -98,10 +95,8 @@ public class CategoryAction extends BaseAction {
 			dc.addOrder(Order.asc("name"));
 			category.setChildren(categoryManager.getListByCriteria(dc));
 		}
-		HttpServletRequest request = ServletActionContext.getRequest();
-		request.setAttribute("recordList", category.getChildren());
-		request.setAttribute("totalRows", category.getChildren().size());
-		return "list";
+		list = category.getChildren();
+		return LIST;
 	}
 
 	public String input() {
@@ -184,12 +179,12 @@ public class CategoryAction extends BaseAction {
 			else
 				category = categoryTreeControl.getCategoryTree()
 						.getDescendantOrSelfById(root);
-			children = category.getChildren();
+			list = category.getChildren();
 		}
 		return "tree";
 	}
 
-	@JsonConfig(top = "children")
+	@JsonConfig(top = "list")
 	public String children() {
 		Category category;
 		if (root < 1)
@@ -197,11 +192,11 @@ public class CategoryAction extends BaseAction {
 		else
 			category = categoryTreeControl.getCategoryTree()
 					.getDescendantOrSelfById(root);
-		children = category.getChildren();
+		list = category.getChildren();
 		return JSON;
 	}
 
 	public String getTreeViewHtml() {
-		return HtmlUtils.getTreeViewHtml(children, async);
+		return HtmlUtils.getTreeViewHtml(list, async);
 	}
 }

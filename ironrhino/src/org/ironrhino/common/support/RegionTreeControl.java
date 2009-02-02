@@ -46,8 +46,6 @@ public class RegionTreeControl implements ApplicationListener {
 			public boolean accept(Object object) {
 				Region region = (Region) object;
 				List<String> roleNames = AuthzUtils.getRoleNames();
-				if (roleNames.size() == 0)
-					return false;
 				for (SimpleElement n : region.getRoles()) {
 					if (roleNames.contains(n.getValue()))
 						return true;

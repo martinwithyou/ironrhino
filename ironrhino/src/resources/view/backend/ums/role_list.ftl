@@ -6,6 +6,6 @@
 </head>
 <body>
 <#assign config={"name":{},"enabled":{"cellEdit":"select,select_template_boolean"},"description":{"cellEdit":"input"}}>
-<@ectable entityName="role" config=config/></div>
+<@ectable entityName="role" config=config/>
 </body>
 </html>

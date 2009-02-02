@@ -141,7 +141,10 @@ public class BaseAction extends ActionSupport {
 		boolean passed = false;
 		Authorize annotation = getAnnotation(Authorize.class);
 		if (annotation == null)
+			annotation = getClass().getAnnotation(Authorize.class);
+		if (annotation == null)
 			return null;
+
 		if (!annotation.ifNotGranted().equals("")) {
 			String[] roles = annotation.ifNotGranted().split(",");
 			boolean has = false;

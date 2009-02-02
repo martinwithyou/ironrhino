@@ -23,11 +23,16 @@
 	<link href="<c:url value="/styles/ie.css"/>" media="all"
 		rel="stylesheet" type="text/css" />
 	<![endif]-->
+<link rel="stylesheet" href="<s:url value="/themes/base/ui.all.css"/>"
+	type="text/css" media="screen" />
 <script src="<c:url value="/scripts/jquery.js"/>" type="text/javascript"></script>
 <script src="<c:url value="/scripts/jquery.form.js"/>"
 	type="text/javascript"></script>
+<script src="<c:url value="/scripts/datagridtable.js"/>"
+	type="text/javascript"></script>
 <script src="<c:url value="/scripts/application.js"/>"
 	type="text/javascript"></script>
+<script type="text/javascript" src="<c:url value="/scripts/ecside.js"/>"></script>
 <decorator:head />
 </head>
 <body>

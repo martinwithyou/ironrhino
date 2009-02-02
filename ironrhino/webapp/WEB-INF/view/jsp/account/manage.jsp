@@ -47,7 +47,7 @@
 		name="account.address">
 		<s:param name="after">
 			<span class="link"
-				onclick="selectRegion('account.address','<s:property value="account.region.id"/>')">select</span>
+				onclick="Region.select('account.address')">select</span>
 		</s:param>
 	</s:textfield>
 	<s:textfield label="%{getText('account.zip')}" name="account.zip" />

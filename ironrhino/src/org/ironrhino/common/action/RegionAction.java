@@ -3,9 +3,6 @@ package org.ironrhino.common.action;
 import java.util.Collection;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -24,7 +21,7 @@ public class RegionAction extends BaseAction {
 
 	private BaseManager<Region> baseManager;
 
-	private Collection<Region> regions;
+	private Collection<Region> list;
 
 	private String southWest;
 
@@ -48,8 +45,8 @@ public class RegionAction extends BaseAction {
 		this.northEast = northEast;
 	}
 
-	public Collection<Region> getRegions() {
-		return regions;
+	public Collection<Region> getList() {
+		return list;
 	}
 
 	public String getRolesAsString() {
@@ -92,10 +89,8 @@ public class RegionAction extends BaseAction {
 			dc.addOrder(Order.asc("name"));
 			region.setChildren(baseManager.getListByCriteria(dc));
 		}
-		HttpServletRequest request = ServletActionContext.getRequest();
-		request.setAttribute("recordList", region.getChildren());
-		request.setAttribute("totalRows", region.getChildren().size());
-		return "list";
+		list = region.getChildren();
+		return LIST;
 	}
 
 	public String input() {
@@ -161,7 +156,7 @@ public class RegionAction extends BaseAction {
 		return "map";
 	}
 
-	@JsonConfig(top = "regions")
+	@JsonConfig(top = "list")
 	public String mark() {
 		String[] array = southWest.split(",");
 		Double bottom = new Double(array[0]);
@@ -175,7 +170,7 @@ public class RegionAction extends BaseAction {
 			dc.add(Restrictions.in("level", levels));
 		dc.add(Restrictions.and(Restrictions.between("latitude", bottom, top),
 				Restrictions.between("longitude", left, right)));
-		regions = baseManager.getListByCriteria(dc);
+		list = baseManager.getListByCriteria(dc);
 		return JSON;
 	}
 

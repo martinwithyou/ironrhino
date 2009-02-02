@@ -50,17 +50,17 @@ public class Region extends BaseTreeableEntity<Region> implements Secured {
 		this.displayOrder = displayOrder;
 	}
 
-	public String getFullName() {
-		String fullName = name;
+	public String getFullname() {
+		String fullname = name;
 		Region r = this;
 		while ((r = r.getParent()) != null) {
-			fullName = r.getName() + fullName;
+			fullname = r.getName() + fullname;
 		}
-		return fullName;
+		return fullname;
 	}
 	
 	public String toString(){
-		return getFullName();
+		return getFullname();
 	}
 
 	@NotInCopy

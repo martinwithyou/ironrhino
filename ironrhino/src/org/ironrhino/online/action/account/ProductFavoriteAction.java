@@ -37,7 +37,7 @@ public class ProductFavoriteAction extends BaseAction {
 		dc.add(Restrictions.eq("username", AuthzUtils.getUsername()));
 		dc.addOrder(Order.desc("addDate"));
 		list = baseManager.getListByCriteria(dc);
-		return "list";
+		return LIST;
 	}
 
 	@SkipValidation

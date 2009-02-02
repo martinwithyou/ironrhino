@@ -65,7 +65,7 @@ public class OrderAction extends BaseAction {
 		}
 		resultPage.addOrder(org.hibernate.criterion.Order.desc("orderDate"));
 		resultPage = orderManager.getResultPage(resultPage);
-		return "list";
+		return LIST;
 	}
 
 	public String reject() {
@@ -102,7 +102,7 @@ public class OrderAction extends BaseAction {
 				order = orderManager.get(order.getId());
 			else if (order.getCode() != null)
 				order = orderManager.getByNaturalId("code", order.getCode());
-		return "view";
+		return VIEW;
 	}
 
 	public String delete() {

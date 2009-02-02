@@ -2,15 +2,9 @@ package org.ironrhino.ums.action;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
-import org.ecside.common.util.RequestUtil;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.ResultPage;
@@ -55,37 +49,14 @@ public class RoleAction extends BaseAction {
 	}
 
 	public String execute() {
-		HttpServletRequest request = ServletActionContext.getRequest();
 		DetachedCriteria dc = roleManager.detachedCriteria();
-		if (role != null) {
-			if (StringUtils.isNotBlank(role.getName()))
-				dc.add(Restrictions.ilike("name", role.getName(),
-						MatchMode.ANYWHERE));
-			if (StringUtils.isNotBlank(role.getDescription()))
-				dc.add(Restrictions.ilike("description", role.getDescription(),
-						MatchMode.ANYWHERE));
-			String value = request.getParameter("role.enabled");
-			if ("true".equals(value))
-				dc.add(Restrictions.eq("enabled", true));
-			else if ("false".equals(value))
-				dc.add(Restrictions.eq("enabled", false));
-		}
 		if (resultPage == null)
 			resultPage = new ResultPage<Role>();
 		resultPage.setDetachedCriteria(dc);
 		resultPage.addOrder(Order.desc("enabled"));
 		resultPage.addOrder(Order.asc("name"));
-		int totalRows = roleManager.countResultPage(resultPage);
-		String pageSize = request.getParameter("ec_rd");
-		if (StringUtils.isNumeric(pageSize))
-			resultPage.setPageSize(Integer.parseInt(pageSize));
-		int[] rowStartEnd = RequestUtil.getRowStartEnd(request, totalRows,
-				resultPage.getPageSize());
-		resultPage.setStart(rowStartEnd[0]);
 		resultPage = roleManager.getResultPage(resultPage);
-		request.setAttribute("recordList", resultPage.getResult());
-		request.setAttribute("totalRows", resultPage.getTotalRecord());
-		return "list";
+		return LIST;
 	}
 
 	public String input() {

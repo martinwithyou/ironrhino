@@ -40,7 +40,7 @@ public class CartAction extends BaseAction {
 	}
 
 	public String execute() {
-		return "view";
+		return VIEW;
 	}
 
 	public String facade() {

@@ -11,7 +11,6 @@ import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.userdetails.UserDetails;
 
-
 public class AuthzUtils {
 	public static List<String> getRoleNames() {
 		List<String> roleNames = new ArrayList<String>();
@@ -20,20 +19,17 @@ public class AuthzUtils {
 					.getAuthentication().getAuthorities();
 			if (authz != null)
 				for (GrantedAuthority var : authz)
-					if (!var.getAuthority().contains("ANONYMOUS"))
-						roleNames.add(var.getAuthority());
+					roleNames.add(var.getAuthority());
 		}
 		return roleNames;
 	}
 
 	public static boolean hasPermission(Secured entity) {
-		if(entity==null)
+		if (entity == null)
 			return false;
 		if (entity.getRoles() == null || entity.getRoles().size() == 0)
 			return true;
 		List<String> roleNames = getRoleNames();
-		if (roleNames.size() == 0)
-			return false;
 		for (SimpleElement n : entity.getRoles()) {
 			if (roleNames.contains(n.getValue()))
 				return true;

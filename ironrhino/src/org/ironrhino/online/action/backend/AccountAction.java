@@ -2,13 +2,8 @@ package org.ironrhino.online.action.backend;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.ServletActionContext;
-import org.ecside.common.util.RequestUtil;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.ResultPage;
@@ -81,43 +76,18 @@ public class AccountAction extends BaseAction {
 	}
 
 	public String execute() {
-		HttpServletRequest request = ServletActionContext.getRequest();
 		DetachedCriteria dc = accountManager.detachedCriteria();
-
-		if (account != null) {
-			if (StringUtils.isNotBlank(account.getUsername()))
-				dc.add(Restrictions.ilike("username", account.getUsername(),
-						MatchMode.ANYWHERE));
-			if (StringUtils.isNotBlank(account.getName()))
-				dc.add(Restrictions.ilike("name", account.getName(),
-						MatchMode.ANYWHERE));
-			String value = ServletActionContext.getRequest().getParameter(
-					"account.enabled");
-			if ("true".equals(value))
-				dc.add(Restrictions.eq("enabled", true));
-			else if ("false".equals(value))
-				dc.add(Restrictions.eq("enabled", false));
-		}
 		if (resultPage == null)
 			resultPage = new ResultPage<Account>();
 		resultPage.setDetachedCriteria(dc);
 		resultPage.addOrder(Order.asc("username"));
-		int totalRows = accountManager.countResultPage(resultPage);
-		String pageSize = request.getParameter("ec_rd");
-		if (StringUtils.isNumeric(pageSize))
-			resultPage.setPageSize(Integer.parseInt(pageSize));
-		int[] rowStartEnd = RequestUtil.getRowStartEnd(request, totalRows,
-				resultPage.getPageSize());
-		resultPage.setStart(rowStartEnd[0]);
 		resultPage = accountManager.getResultPage(resultPage);
-		request.setAttribute("recordList", resultPage.getResult());
-		request.setAttribute("totalRows", resultPage.getTotalRecord());
-		return "list";
+		return LIST;
 	}
 
 	public String view() {
 		account = accountManager.get(getUid());
-		return "view";
+		return VIEW;
 	}
 
 	public String save() {

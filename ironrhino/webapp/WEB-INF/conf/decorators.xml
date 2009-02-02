@@ -16,7 +16,6 @@
 		<pattern type="regex">/product/.*\.html</pattern>
 		</decorator>
 	-->
-	<decorator name="backend_simple" page="backend_simple.jsp" />
 	<decorator name="backend_main" page="backend_main.jsp">
 		<pattern>/backend/*</pattern>
 	</decorator>

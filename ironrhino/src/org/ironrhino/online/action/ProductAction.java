@@ -187,7 +187,7 @@ public class ProductAction extends BaseAction {
 		if (StringUtils.isNotBlank(cateCode))
 			category = categoryTreeControl.getCategoryTree()
 					.getDescendantOrSelfByCode(cateCode);
-		return "list";
+		return LIST;
 	}
 
 	@SkipValidation
@@ -206,7 +206,7 @@ public class ProductAction extends BaseAction {
 		resultPage.setTotalPage(1);
 		resultPage.setTotalRecord(list.size());
 		setUid(PSEUDO_CATEGORY_CODE_HISTORY);
-		return "list";
+		return LIST;
 	}
 
 	@SkipValidation
@@ -215,7 +215,7 @@ public class ProductAction extends BaseAction {
 			resultPage = new ResultPage<Product>();
 		String tag = getUid();
 		resultPage = productFacade.getResultPageByTag(resultPage, tag);
-		return "list";
+		return LIST;
 	}
 
 	@SkipValidation
@@ -254,7 +254,7 @@ public class ProductAction extends BaseAction {
 				comment.setEmail(account.getEmail());
 			}
 		}
-		return "view";
+		return VIEW;
 	}
 
 	@SkipValidation

@@ -44,7 +44,7 @@ public class CategoryTreeControl implements ApplicationListener {
 	}
 
 	public Category getCategoryTree() {
-		if (AuthzUtils.getRoleNames().size() == 0)
+		if (AuthzUtils.getRoleNames().size() == 1)
 			return getPublicCategoryTree();
 		else
 			return getProtectedCategoryTree();
