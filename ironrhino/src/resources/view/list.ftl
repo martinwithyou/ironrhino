@@ -19,7 +19,7 @@
 <#assign index=0>
 <#list resultPage.result as entity>
 <#assign index=index+1>
-<@ectbodytrstart recordKey="${entity.id}" odd=(index%2==1) readonly="${readonly}"/>
+<@ectbodytrstart rowid="${entity.id}" odd=(index%2==1) readonly="${readonly}"/>
 	<#list naturalIds?keys as name>
 		<#if (readonly=='false')&&!naturalIdsImmatuable>
 		<#call ectbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="input"/>
@@ -44,7 +44,7 @@
 			</#if>
 		</#if>
 	</#list>	
-<@ectbodytrend  recordKey="${entity.id}" readonly="${readonly}"/>
+<@ectbodytrend  rowid="${entity.id}" readonly="${readonly}"/>
 </#list>
 <@ecend readonly="${readonly}"/>
 

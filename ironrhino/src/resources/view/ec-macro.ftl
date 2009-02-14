@@ -1,4 +1,4 @@
-<#macro ecstart id action="" readonly="false">
+<#macro ecstart id="ec" action="" readonly="false">
 <form id="${id}"  action="${action}"  method="post" class="eXtremeTable ajax view" replacement="${id}_main_content" canResizeColWidth="true"  minColWidth="40">
 <div class="eXtremeTable"  id="${id}_main_content"  style="width:100%;" >
 <#list Parameters?keys as name>
