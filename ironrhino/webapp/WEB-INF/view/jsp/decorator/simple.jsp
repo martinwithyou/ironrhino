@@ -32,7 +32,7 @@
 	type="text/javascript"></script>
 <script src="<c:url value="/scripts/application.js"/>"
 	type="text/javascript"></script>
-<script type="text/javascript" src="<c:url value="/scripts/ecside.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/scripts/richtable.js"/>"></script>
 <decorator:head />
 </head>
 <body>

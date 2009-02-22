@@ -35,6 +35,8 @@
 	type="text/javascript"></script>
 <script src="<c:url value="/scripts/ui.tabs.js"/>"
 	type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.history.js"/>"
+	type="text/javascript"></script>
 <script src="<c:url value="/scripts/jquery.form.js"/>"
 	type="text/javascript"></script>
 <script src="<c:url value="/scripts/jquery.corner.js"/>"
@@ -45,7 +47,7 @@
 	type="text/javascript"></script>
 <script src="<c:url value="/scripts/application.js"/>"
 	type="text/javascript"></script>
-<script type="text/javascript" src="<c:url value="/scripts/ecside.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/scripts/richtable.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
 <script type="text/javascript"
 	src="<c:url value="/dwr/interface/ApplicationContextConsole.js"/>"></script>

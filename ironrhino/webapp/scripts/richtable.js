@@ -164,13 +164,7 @@ ECSideUtil.updateCell = function(cellEditObj, editType) {
 	$(cellObj).addClass("editedCell");
 };
 
-ECSideX = {
-	id : 'ec',
-	inputUrl : '',
-	saveUrl : '',
-	viewUrl : '',
-	deleteUrl : '',
-	enterUrl : '',
+Richtable = {
 	getBaseUrl : function() {
 		var url = document.location.href;
 		if (url.indexOf('?') > 0)
@@ -178,9 +172,9 @@ ECSideX = {
 		return url;
 	},
 	getUrl : function(type, id, includeParams) {
-		var url = eval('ECSideX.' + type + 'Url');
+		var url = eval('Richtable.' + type + 'Url');
 		if (!url)
-			url = ECSideX.getBaseUrl() + '/' + type;
+			url = Richtable.getBaseUrl() + '/' + type;
 		if (includeParams)
 			url += document.location.search;
 		url += (url.indexOf('?') > 0 ? '&' : '?') + 'decorator=simple';
@@ -193,19 +187,15 @@ ECSideX = {
 		return url;
 	},
 	reload : function() {
-		$('#' + ECSideX.id).submit();
-	},
-	gotoPage : function(pageno) {
-		$('#' + ECSideX.id + ' input.jumpPageInput').val(pageno);
-		ECSideX.reload();
+		$('form.richtable').submit();
 	},
 	input : function(id) {
-		ECSideX.open(ECSideX.getUrl('input', id, true));
+		Richtable.open(Richtable.getUrl('input', id, true));
 	},
 	view : function(id) {
 		if (!id)
 			return;
-		ECSideX.open(ECSideX.getUrl('view', id));
+		Richtable.open(Richtable.getUrl('view', id));
 	},
 	open : function(url, reloadonclose) {
 		if ($('#_window_').length == 0)
@@ -222,16 +212,13 @@ ECSideX = {
 			width : 630,
 			height : 660,
 			close : (reloadonclose ? function() {
-				ECSideX.reload();
+				Richtable.reload();
 			} : null)
 		});
 	},
 	enter : function(parentId, url) {
-		if (!url) {
-			url = ECSideX.enterUrl;
-			if (!url)
-				url = ECSideX.getBaseUrl();
-		}
+		if (!url) 
+				url = Richtable.getBaseUrl();
 		if (parentId) {
 			if (url.indexOf('{parentId}') > 0)
 				url = url.replace('{parentId}', parentId);
@@ -246,19 +233,19 @@ ECSideX = {
 		if (id)
 			arr[0] = id;
 		else
-			$.each($('#' + ECSideX.id + ' tbody')[0].rows, function() {
+			$.each($('form.richtable tbody')[0].rows, function() {
 				if ($(this).attr("edited") == "true")
 					arr.push($(this).attr('rowid'))
 			});
 		$.each(arr, function() {
-			var rows = $('#' + ECSideX.id + ' tbody')[0].rows;
+			var rows = $('form.richtable tbody')[0].rows;
 			var row;
 			for (var i = 0; i < rows.length; i++)
 				if ($(rows[i]).attr('rowid') == this)
 					row = rows[i];
 			if (row && row.getAttribute('edited') == 'true') {
 				var params = {};
-				var entity = ECSideX.getBaseUrl();
+				var entity = Richtable.getBaseUrl();
 				entity = entity.substring(entity.lastIndexOf('/') + 1);
 				params[entity + '.id'] = this;
 				$.each(row.cells, function() {
@@ -272,9 +259,7 @@ ECSideX = {
 						value = window.isIE ? this.innerText : this.textContent;
 					params[name] = value;
 				});
-				var url = ECSideX.saveUrl;
-				if (!url)
-					url = ECSideX.getBaseUrl() + '/save';
+				url = Richtable.getBaseUrl() + '/save';
 				ajax({
 					url : url,
 					type : 'POST',
@@ -285,14 +270,12 @@ ECSideX = {
 		});
 	},
 	del : function(id) {
-		var url = ECSideX.deleteUrl;
-		if (!url)
-			url = ECSideX.getBaseUrl() + '/delete';
+		url = Richtable.getBaseUrl() + '/delete';
 		if (id) {
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
 		} else {
 			var arr = [];
-			$('#' + ECSideX.id + ' tbody input[type="checkbox"]')
+			$('form.richtable tbody input[type="checkbox"]')
 					.each(function() {
 						if (this.checked)
 							arr.push('id='
@@ -307,17 +290,17 @@ ECSideX = {
 			url : url,
 			type : 'POST',
 			dataType : 'json',
-			complete : ECSideX.reload
+			complete : Richtable.reload
 		});
 	},
 	execute : function(operation, id) {
-		var url = ECSideX.getBaseUrl() + '/' + operation;
+		var url = Richtable.getBaseUrl() + '/' + operation;
 		url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
 		ajax({
 			url : url,
 			type : 'POST',
 			dataType : 'json',
-			complete : ECSideX.reload
+			complete : Richtable.reload
 		});
 	},
 	updatePasswordCell : function(cellEditObj) {
@@ -330,13 +313,21 @@ ECSideX = {
 		ECSideUtil.addClass(cellObj, "editedCell");
 	}
 }
-
-Initialization.initECSideX = function() {
-	if ($('form.eXtremeTable').length > 0) {
-		ECSideX.id = $('form.eXtremeTable')[0].id || 'ec';
-		var canResizeColWidth = $('#' + ECSideX.id).attr('canResizeColWidth');
+Observation.richtable=function(){
+	if ($('form.richtable').length > 0){
+		$('form.richtable .pageNav.firstPage').click(function(){$('form.richtable input.jumpPageInput').val(1);Richtable.reload()});
+		$('form.richtable .pageNav.prevPage').click(function(){$('form.richtable input.jumpPageInput').val(parseInt($('form.richtable input.jumpPageInput').val())-1);Richtable.reload()});
+		$('form.richtable .pageNav.nextPage').click(function(){$('form.richtable input.jumpPageInput').val(parseInt($('form.richtable input.jumpPageInput').val())+1);Richtable.reload()});
+		$('form.richtable .pageNav.lastPage').click(function(){$('form.richtable input.jumpPageInput').val($("form.richtable .totalPage").text());Richtable.reload()});
+		$('form.richtable .pageNav.jumpPage').click(function(){Richtable.reload()});
+		$('form.richtable input[name="resultPage.pageNo"]').keydown(function(){if(event.keyCode && event.keyCode==13){Richtable.reload()}});
+		$('form.richtable select[name="resultPage.pageSize"]').change(function(){Richtable.reload()});
+	}
+}
+Initialization.richtable = function() {
+	if ($('form.richtable').length > 0) {
+		var canResizeColWidth = $('form.richtable').attr('canResizeColWidth');
 		if (canResizeColWidth == "true") {
-			// $('#' + ECSideX.id + " table")[0].style.tableLayout = "fixed";
 			document.onmousemove = ECSideUtil.DoResize;
 			document.onmouseup = ECSideUtil.EndResize;
 			document.body.ondrag = function() {
@@ -359,7 +350,7 @@ Initialization.initECSideX = function() {
 		if (create) {
 			if ($('form.ajax input[type="hidden"][name="id"]').val())
 				create = false;
-			var entity = ECSideX.getBaseUrl();
+			var entity = Richtable.getBaseUrl();
 			entity = entity.substring(0, entity.lastIndexOf('/'));
 			entity = entity.substring(entity.lastIndexOf('/') + 1);
 			if ($('form.ajax input[type="hidden"][name="' + entity + '.id"]')
@@ -382,6 +373,6 @@ setInterval(function() {
 	if (_close_window_ && $('#_window_')) {
 		$("#_window_").dialog('close');
 		_close_window_ = false;
-		ECSideX.reload();
+		Richtable.reload();
 	}
 }, 2000);

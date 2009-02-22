@@ -559,15 +559,15 @@ tr.selected {
 }
 
 /*
-**eXtremeTable
+**richtable
 */
-.eXtremeTable {
+.richtable {
 	border: 0px solid red;
 	padding: 0px;
 	margin: 0px;
 }
 
-.eXtremeTable .inputtext {
+.richtable .inputtext {
 	border: 1px solid #cc9966;
 	font-size: 12px;
 	padding: 0px;
@@ -575,46 +575,46 @@ tr.selected {
 	width: 100%;
 }
 
-.eXtremeTable .breakLine {
+.richtable .breakLine {
 	white-space: normal;
 	word-break: break-all;
 	word-wrap: break-word;
 }
 
-.eXtremeTable .breakLine td {
+.richtable .breakLine td {
 	white-space: normal;
 	word-break: break-all;
 	word-wrap: break-word;
 }
 
-.eXtremeTable .noBreakLine {
+.richtable .noBreakLine {
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
 }
 
-.eXtremeTable .noBreakLine td {
+.richtable .noBreakLine td {
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
 }
 
-.eXtremeTable input.radio {
+.richtable input.radio {
 	font-size: 12px;
 	width: auto;
 }
 
-.eXtremeTable input.checkbox {
+.richtable input.checkbox {
 	font-size: 12px;
 	width: auto;
 }
 
-.eXtremeTable select {
+.richtable select {
 	border: solid 1px #EEEEEE;
 	width: 75px;
 }
 
-.eXtremeTable button {
+.richtable button {
 	background-color: transparent;
 	background-image: url(../images/button.gif);
 	background-repeat: repeat-x;
@@ -629,7 +629,7 @@ tr.selected {
 	padding: 3px 3px 0px 3px;
 }
 
-.eXtremeTable .tableRegion {
+.richtable .tableRegion {
 	border: 0px #ff00ff solid;
 	padding: 0px;
 	margin: 0px;
@@ -638,7 +638,7 @@ tr.selected {
 	table-layout: fixed;
 }
 
-.eXtremeTable .tableRegion td {
+.richtable .tableRegion td {
 	color: #000000;
 	border: 1px #cccccc solid;
 	padding: 2px;
@@ -649,7 +649,7 @@ tr.selected {
 	overflow: hidden;
 }
 
-.eXtremeTable .tableHeader,.eXtremeTable .tableRegion .tableHeader td {
+.richtable .tableHeader,.richtable .tableRegion .tableHeader td {
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
@@ -660,13 +660,13 @@ tr.selected {
 	overflow: visible;
 }
 
-.eXtremeTable .resizeTitle {
+.richtable .resizeTitle {
 	float: left;
 	width: 90%;
 	text-align: center;
 }
 
-.eXtremeTable .resizeBar {
+.richtable .resizeBar {
 	padding: 0px;
 	margin: 0px;
 	float: right;
@@ -679,40 +679,40 @@ tr.selected {
 	display: inline;
 }
 
-.eXtremeTable .tableRegion .editableColumn {
+.richtable .tableRegion .editableColumn {
 	color: #883A3A;
 }
 
-.eXtremeTable .odd a,.even a {
+.richtable .odd a,.even a {
 	color: Black;
 }
 
-.eXtremeTable .odd td {
+.richtable .odd td {
 	background-color: #FFFFFF;
 }
 
-.eXtremeTable .even td {
+.richtable .even td {
 	background-color: #f3f4f3;
 }
 
-.eXtremeTable .selected td {
+.richtable .selected td {
 	background-color: #ddeeff;
 }
 
-.eXtremeTable .selected a,.highlight a {
+.richtable .selected a,.highlight a {
 	color: black;
 }
 
-.eXtremeTable .selected td {
+.richtable .selected td {
 	background-color: #ffeedd;
 }
 
-.eXtremeTable .selected a,.selectlight a {
+.richtable .selected a,.selectlight a {
 	color: black;
 }
 
-.eXtremeTable .odd div.ellipsis,.eXtremeTable .even div.ellipsis,.eXtremeTable.highlight div.ellipsis       
-	              ,.eXtremeTable .selectlight DIV.ellipsis {
+.richtable .odd div.ellipsis,.richtable .even div.ellipsis,.richtable.highlight div.ellipsis       
+	              ,.richtable .selectlight DIV.ellipsis {
 	text-align: left;
 	overflow: hidden;
 	white-space: nowrap;
@@ -721,19 +721,19 @@ tr.selected {
 	width: 100%;
 }
 
-.eXtremeTable .odd .editedCell,.eXtremeTable .even .editedCell,.eXtremeTable .highlight .editedCell,.eXtremeTable .selectlight .editedCell
+.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .selectlight .editedCell
 	{
 	background-color: #fff3f0;
 }
 
-.eXtremeTable .titleRow {
+.richtable .titleRow {
 	color: #444444;
 	font-weight: bold;
 	font-size: 12px;
 	vertical-align: middle;
 }
 
-.eXtremeTable div.title {
+.richtable div.title {
 	color: #333333;
 	font-weight: bold;
 	font-size: 14px;
@@ -741,12 +741,12 @@ tr.selected {
 	text-align: center;
 }
 
-.eXtremeTable .titleRow span {
+.richtable .titleRow span {
 	width: 100%;
 	text-align: center;
 }
 
-.eXtremeTable .formButton {
+.richtable .formButton {
 	background-color: transparent;
 	background-image: url(../images/button.gif);
 	background-repeat: repeat-x;
@@ -761,7 +761,7 @@ tr.selected {
 	padding: 3px 3px 0px 3px;
 }
 
-.eXtremeTable .pageNav {
+.richtable .pageNav {
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -772,58 +772,58 @@ tr.selected {
 	vertical-align: -2px;
 }
 
-.eXtremeTable .jumpPage {
+.richtable .jumpPage {
 	background-image: url(../images/gotoPage.gif);
 }
 
-.eXtremeTable .firstPage {
+.richtable .firstPage {
 	background-image: url(../images/firstPage.gif);
 }
 
-.eXtremeTable .prevPage {
+.richtable .prevPage {
 	background-image: url(../images/prevPage.gif);
 }
 
-.eXtremeTable .nextPage {
+.richtable .nextPage {
 	background-image: url(../images/nextPage.gif);
 }
 
-.eXtremeTable .lastPage {
+.richtable .lastPage {
 	background-image: url(../images/lastPage.gif);
 }
 
-.eXtremeTable .firstPageD {
+.richtable .firstPageD {
 	background-image: url(../images/firstPageDisabled.gif);
 }
 
-.eXtremeTable .prevPageD {
+.richtable .prevPageD {
 	background-image: url(../images/prevPageDisabled.gif);
 }
 
-.eXtremeTable .nextPageD {
+.richtable .nextPageD {
 	background-image: url(../images/nextPageDisabled.gif);
 }
 
-.eXtremeTable .lastPageD {
+.richtable .lastPageD {
 	background-image: url(../images/lastPageDisabled.gif);
 }
 
-.eXtremeTable .toolbar select {
+.richtable .toolbar select {
 	width: 50px;
 	font-size: 11px;
 	font-family: Verdana;
 }
 
-.eXtremeTable .toolbar .toolbarTable {
+.richtable .toolbar .toolbarTable {
 	border: 0px red solid;
 	width: 100%;
 }
 
-.eXtremeTable .toolbar .toolbarTable td {
+.richtable .toolbar .toolbarTable td {
 	border: 0px none red;
 }
 
-.eXtremeTable .toolbar .toolbarTable .statusTool {
+.richtable .toolbar .toolbarTable .statusTool {
 	border: 0px solid red;
 	padding-top: 2px;
 	text-align: right;
@@ -832,49 +832,49 @@ tr.selected {
 	word-wrap: normal;
 }
 
-.eXtremeTable .pageNavigationNearPageTool {
+.richtable .pageNavigationNearPageTool {
 	width: 230px;
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
 }
 
-.eXtremeTable .pageNavigationNearPageTool A {
+.richtable .pageNavigationNearPageTool A {
 	width: 12px;
 }
 
-.eXtremeTable .pageJumpTool {
+.richtable .pageJumpTool {
 	width: 95px;
 }
 
-.eXtremeTable .jumpPageInput {
+.richtable .jumpPageInput {
 	height: 19px;
 	width: 25px;
 	margin-top: 0px;
 	/* border:1px solid #aaaaaa; */
 }
 
-.eXtremeTable .pageSizeTool {
+.richtable .pageSizeTool {
 	padding-top: 2px;
 	width: 90px;
 }
 
-.eXtremeTable .extendTool A {
+.richtable .extendTool A {
 	display: inline;
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
 }
 
-.eXtremeTable .separatorTool {
+.richtable .separatorTool {
 	font-size: 1px;
 }
 
-.eXtremeTable .blankTool {
+.richtable .blankTool {
 	width: 10%;
 }
 
-.eXtremeTable .hideListRow {
+.richtable .hideListRow {
 	height: 0px;
 	font-size: 0px;
 	padding-top: 0px;
@@ -885,7 +885,7 @@ tr.selected {
 	border-bottom: 0px;
 }
 
-.eXtremeTable .hideListRow td {
+.richtable .hideListRow td {
 	font-size: 0px;
 	height: 0px;
 	padding-top: 0px;
@@ -896,14 +896,14 @@ tr.selected {
 	border-bottom: 0px;
 }
 
-.eXtremeTable .headerScrollX {
+.richtable .headerScrollX {
 	overflow: hidden;
 	padding: 0px;
 	margin: 0px;
 	border: 0px red solid;
 }
 
-.eXtremeTable .bodyScrollY {
+.richtable .bodyScrollY {
 	overflow-x: hidden;
 	overflow-y: auto;
 	padding: 0px;
@@ -912,7 +912,7 @@ tr.selected {
 	border: 0px red solid;
 }
 
-.eXtremeTable .bodyScrollX {
+.richtable .bodyScrollX {
 	overflow-x: auto;
 	overflow-y: hidden;
 	padding: 0px;
