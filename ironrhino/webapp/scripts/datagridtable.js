@@ -1,8 +1,8 @@
 var DataGridTable = {
 	addRow : function(event) {
 		event = event || window.event;
-		row = $(event.srcElement || event.target).parents('tr').get(0);
-		table = $(row).parents('table').get(0);
+		row = $(event.srcElement || event.target).closest('tr').get(0);
+		table = $(row).closest('table').get(0);
 		cells = table.tHead.rows[0].cells;
 		html = '<tr>';
 		for (var i = 0; i < cells.length; i++) {
@@ -30,8 +30,8 @@ var DataGridTable = {
 	},
 	deleteRow : function(event) {
 		event = event || window.event;
-		row = $(event.srcElement || event.target).parents('tr').get(0);
-		table = $(row).parents('table').get(0);
+		row = $(event.srcElement || event.target).closest('tr').get(0);
+		table = $(row).closest('table').get(0);
 		$(row).remove();
 		DataGridTable.setRows(table);
 	},

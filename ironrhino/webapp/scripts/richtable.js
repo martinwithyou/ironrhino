@@ -279,7 +279,7 @@ Richtable = {
 					.each(function() {
 						if (this.checked)
 							arr.push('id='
-									+ $(this).parents('tr').attr('rowid'));
+									+ $(this).closest('tr').attr('rowid'));
 					});
 			if (arr.length == 0)
 				return;

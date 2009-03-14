@@ -8,11 +8,11 @@
 <#assign readonly="${readonly?string}"/>
 <@rtstart action="${entityName}" readonly="${readonly}"/>
 	<#list naturalIds?keys as name>
-		<#call rttheadtd name="${name}" editable=(readonly=='false')&&!naturalIdsImmatuable/>
+		<@rttheadtd name="${name}" editable=(readonly=='false')&&!naturalIdsImmatuable/>
 	</#list>
 	<#list formElements?keys as name>
 		<#if !(naturalIds?keys?seq_contains(name))>
-			<#call rttheadtd name="${name}" editable=(readonly=='false')&&!formElements[name].readonly/>
+			<@rttheadtd name="${name}" editable=(readonly=='false')&&!formElements[name].readonly/>
 		</#if>
 	</#list>
 <@rtmiddle readonly="${readonly}"/>
@@ -22,25 +22,25 @@
 <@rttbodytrstart rowid="${entity.id}" odd=(index%2==1) readonly="${readonly}"/>
 	<#list naturalIds?keys as name>
 		<#if (readonly=='false')&&!naturalIdsImmatuable>
-		<#call rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="input"/>
+		<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="input"/>
 		<#else>
-		<#call rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}"/>
+		<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}"/>
 		</#if>
 	</#list>
 	<#list formElements?keys as name>
 		<#if !(naturalIds?keys?seq_contains(name))>
 			<#if (readonly=='false')&&!formElements[name].readonly>
 				<#if formElements[name].type=='input'||formElements[name].type=='textarea'>
-					<#call rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="input"/>
+					<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="input"/>
 				</#if>
 				<#if formElements[name].type=='checkbox'>
-					<#call rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="select" cellEditTemplate="select_template_boolean"/>
+					<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="select" cellEditTemplate="select_template_boolean"/>
 				</#if>
 				<#if formElements[name].type=='select'>
-					<#call rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="select" cellEditTemplate="select_template_${name}"/>
+					<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="select" cellEditTemplate="select_template_${name}"/>
 				</#if>
 			<#else>
-				<#call rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}"/>
+				<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}"/>
 			</#if>
 		</#if>
 	</#list>	

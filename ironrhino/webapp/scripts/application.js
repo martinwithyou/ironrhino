@@ -151,17 +151,14 @@ function handleResponse(data, options) {
 			var ss = entry.split(':', 2);
 			replacement[ss[0]] = (ss.length == 2 ? ss[1] : ss[0]);
 		}
-		var div = $('<div style="display:none;"></div>')
-				.appendTo(document.body);
-		div.html(data.replace(new RegExp('<script[^>]*>([\\S\\s]*?)<\/script>',
-				'img'), ''));
+		var div=$("<div/>").append(data.replace(/<script(.|\s)*?\/script>/g, ""));
 		// others
 		for (var key in replacement) {
 			if (!options.silence)
 				$('html,body').animate({
 					scrollTop : $('#' + key).offset().top
 				}, 100);
-			$('#' + key).html($('#' + replacement[key], div).html());
+			$('#' + key).html(div.find('#' + replacement[key]));
 			if (!options.silence && (typeof $.effects != 'undefined'))
 				$('#' + key).effect('highlight');
 			_observe($('#' + key));
@@ -396,23 +393,22 @@ Observation.checkbox = function(container) {
 				var b = this.checked;
 				$('input[type=checkbox][name]', this.form).each(function() {
 					this.checked = b;
-					var tr = $(this).parents('tr').get(0);
+					var tr = $(this).closest('tr');
 					if (tr) {
 						if (b)
-							$(tr).addClass('selected');
+							tr.addClass('selected');
 						else
-							$(tr).removeClass('selected');
+							tr.removeClass('selected');
 					}
 				});
 			} else {
 				if (!(event || window.event).shiftKey) {
-					var tr = $(this).parents('tr').get(0);
+					var tr = $(this).closest('tr');
 					if (tr) {
 						if (this.checked)
-							$(tr).addClass('selected');
+							tr.addClass('selected');
 						else
-							$(tr).removeClass('selected');
-
+							tr.removeClass('selected');
 					}
 				} else {
 					var boxes = $('input[type=checkbox][name]', this.form);
@@ -433,12 +429,12 @@ Observation.checkbox = function(container) {
 					}
 					for (var i = start; i <= end; i++) {
 						boxes[i].checked = checked;
-						tr = $(boxes[i]).parents('tr').get(0);
+						tr = $(boxes[i]).closest('tr');
 						if (tr) {
 							if (boxes[i].checked)
-								$(tr).addClass('selected');
+								tr.addClass('selected');
 							else
-								$(tr).removeClass('selected');
+								tr.removeClass('selected');
 						}
 					}
 				}
@@ -453,7 +449,7 @@ Observation.checkbox = function(container) {
 	$('a.delete_selected').each(function() {
 		this.onprepare = function() {
 			var params = [];
-			$('input[type=checkbox]', $(this).parents('form').get(0))
+			$('input[type=checkbox]', $(this).closest('form'))
 					.each(function() {
 						if (this.name && this.checked) {
 							params.push(this.name + '=' + this.value)
@@ -605,7 +601,7 @@ var Region = {
 					$('#' + Region.textid).text(name);
 			}
 			if (Region.hiddenid && $('#' + Region.hiddenid))
-				$('#' + Region.hiddenid).val($(this).parents('li')[0].id);
+				$('#' + Region.hiddenid).val($(this).closest('li').attr('id'));
 			$("#region_window").dialog('close');
 		};
 		if ($('#region_window').length == 0) {

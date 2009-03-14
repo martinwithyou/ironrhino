@@ -126,7 +126,7 @@ var SortableTable = {
 		SortableTable.sort(null, this);
 	},
 	_sortScroll : function(e) {
-		var hdiv = $(this).parents('div.scroll-table-head').get(0);
+		var hdiv = $(this).closest('div.scroll-table-head').get(0);
 		var id = hdiv.id.match(/^(.*)-head$/);
 		SortableTable.sort($('#' + id[1]).get(0), this);
 	},
@@ -143,7 +143,7 @@ var SortableTable = {
 					: $(table.rows[0].cells[index]);
 		} else {
 			cell = index;
-			table = table ? $(table) : table = $(cell).parents('table').get(0);
+			table = table ? $(table) : table = $(cell).closest('table').get(0);
 			index = SortableTable.getCellIndex(cell)
 		}
 		var op = SortableTable.options;
@@ -396,7 +396,7 @@ var SortableTable = {
 	},
 	getHeaderCells : function(table, cell) {
 		if (!table)
-			table = $(cell).parents('table').get(0);
+			table = $(cell).closest('table').get(0);
 		return (table.tHead && table.tHead.rows.length > 0)
 				? table.tHead.rows[table.tHead.rows.length - 1].cells
 				: table.rows[0].cells;
@@ -421,7 +421,7 @@ var SortableTable = {
 					return SortableTable.types[j];
 
 		var i = index ? index : SortableTable.getCellIndex(cell);
-		var tbl = table ? table : $(cell).parents('table').get(0);
+		var tbl = table ? table : $(cell).closest('table').get(0);
 		if (tbl.tBodies[0].rows.length == 0)
 			return 'text';
 		cell = tbl.tBodies[0].rows[0].cells[i]; // grab same index cell from
