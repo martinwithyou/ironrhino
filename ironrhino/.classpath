@@ -93,6 +93,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/person-directory-api-1.1.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/person-directory-impl-1.1.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/pinyin4j-2.5.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/sitemesh-2.4.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/sitemesh-2.4.1.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
