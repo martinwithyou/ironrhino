@@ -485,7 +485,7 @@ Observation.common = function(container) {
 				})
 		});
 	}
-	$('div.tabs ul', container).each(function() {
+	$('div.tabs', container).each(function() {
 		$(this).tabs().tabs('select', $(this).attr('tab'))
 	});
 	$('.round_corner,.corner', container).css({
@@ -506,7 +506,8 @@ Observation.common = function(container) {
 		$('img.captcha', container).click(refreshCaptcha);
 		$(this).attr('_captcha_', true);
 	});
-
+	if (typeof $.EmptyOnClick != 'undefined')
+		$('input.emptyonclick, textarea.emptyonclick').emptyonclick();
 }
 
 Initialization.common = function() {
