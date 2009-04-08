@@ -1,5 +1,5 @@
 /*
- * jQuery UI Droppable 1.7
+ * jQuery UI Droppable 1.7.1
  *
  * Copyright (c) 2009 AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -51,7 +51,7 @@ $.widget("ui.droppable", {
 
 		if(key == 'accept') {
 			this.options.accept = value && $.isFunction(value) ? value : function(d) {
-				return d.is(accept);
+				return d.is(value);
 			};
 		} else {
 			$.widget.prototype._setData.apply(this, arguments);
@@ -133,7 +133,7 @@ $.widget("ui.droppable", {
 });
 
 $.extend($.ui.droppable, {
-	version: "1.7",
+	version: "1.7.1",
 	eventPrefix: 'drop',
 	defaults: {
 		accept: '*',

@@ -1,5 +1,5 @@
 /*
- * jQuery UI Dialog 1.7
+ * jQuery UI Dialog 1.7.1
  *
  * Copyright (c) 2009 AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -483,7 +483,7 @@ $.widget("ui.dialog", {
 });
 
 $.extend($.ui.dialog, {
-	version: "1.7",
+	version: "1.7.1",
 	defaults: {
 		autoOpen: true,
 		bgiframe: false,

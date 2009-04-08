@@ -1,5 +1,5 @@
 /*
- * jQuery UI Effects 1.7
+ * jQuery UI Effects 1.7.1
  *
  * Copyright (c) 2009 AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -10,7 +10,7 @@
 ;jQuery.effects || (function($) {
 
 $.effects = {
-	version: "1.7",
+	version: "1.7.1",
 
 	// Saves a set of properties in a data storage
 	save: function(element, set) {
