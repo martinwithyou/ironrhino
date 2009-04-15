@@ -12,13 +12,12 @@ public class RoundRobinPolicy<T> extends AbstractPolicy<T> {
 			if (!isUsable(tempTarget))
 				continue;
 			AtomicLong tempStat = tempTarget.getStat();
-			long oldStat = tempStat.get();
-			oldStat += tempTarget.getWeight();
+			long newStat = tempStat.get();
+			newStat += tempTarget.getWeight();
 			totalWeight += tempTarget.getWeight();
-			tempStat.set(oldStat);
-			if (tw == null || oldStat > tw.getStat().get()) {
+			tempStat.set(newStat);
+			if (tw == null || newStat > tw.getStat().get()) 
 				tw = tempTarget;
-			}
 		}
 		tw.getCount().incrementAndGet();
 		tw.getStat().addAndGet(-totalWeight);
