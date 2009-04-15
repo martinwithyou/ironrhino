@@ -6,6 +6,8 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -31,6 +33,12 @@ public class StringStore implements BeanNameAware {
 	private ResourceLoader resourceLoader;
 
 	private File file;
+
+	private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+
+	private final Lock r = rwl.readLock();
+
+	private final Lock w = rwl.writeLock();
 
 	public String getDirectory() {
 		return directory.endsWith("/") ? directory : directory + "/";
@@ -85,9 +93,10 @@ public class StringStore implements BeanNameAware {
 			flush();
 	}
 
-	public synchronized void flush() {
+	public void flush() {
 		if (buffer.size() == 0)
 			return;
+		w.lock();
 		try {
 			RandomAccessFile raf = new RandomAccessFile(file, "rw");
 			raf.seek(raf.length());
@@ -97,23 +106,29 @@ public class StringStore implements BeanNameAware {
 			raf.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			w.unlock();
 		}
 	}
 
-	private synchronized void clear() {
+	private void clear() {
+		w.lock();
 		try {
 			RandomAccessFile raf = new RandomAccessFile(file, "rw");
 			raf.setLength(0);
 			raf.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			w.unlock();
 		}
 	}
 
-	public synchronized List<String> read() {
+	public  List<String> read() {
 		List<String> list = new ArrayList<String>();
 		if (!file.canRead() || file.length() == 0)
 			return list;
+		r.lock();
 		LineIterator it = null;
 		try {
 			it = FileUtils.lineIterator(file, "UTF-8");
@@ -122,6 +137,7 @@ public class StringStore implements BeanNameAware {
 		} catch (IOException e) {
 		} finally {
 			LineIterator.closeQuietly(it);
+			r.unlock();
 		}
 		return list;
 	}

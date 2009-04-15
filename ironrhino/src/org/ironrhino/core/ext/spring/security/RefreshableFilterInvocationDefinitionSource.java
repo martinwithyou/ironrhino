@@ -1,6 +1,8 @@
 package org.ironrhino.core.ext.spring.security;
 
 import java.io.IOException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -29,6 +31,12 @@ public class RefreshableFilterInvocationDefinitionSource extends
 
 	private ResourceLoader resourceLoader;
 
+	private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+	
+	private final Lock r = rwl.readLock();
+	
+	private final Lock w = rwl.writeLock();
+
 	public String getDirectory() {
 		return directory.endsWith("/") ? directory : directory + "/";
 	}
@@ -51,27 +59,34 @@ public class RefreshableFilterInvocationDefinitionSource extends
 				+ beanName + ".conf");
 	}
 
-	public synchronized void setDefinitionAsText(String definition) {
+	public void setDefinitionAsText(String definition) {
+		w.lock();
 		try {
 			FileUtils.writeStringToFile(resourceLoader.getResource(
 					getDirectory() + beanName + ".conf").getFile(), definition,
 					"UTF-8");
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
+		} finally {
+			w.unlock();
 		}
 	}
 
-	public synchronized String getDefinitionAsText() {
+	public String getDefinitionAsText() {
+		r.lock();
 		try {
 			return FileUtils.readFileToString(definitionResource.getFile(),
 					"UTF-8");
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 			return "";
+		} finally {
+			r.unlock();
 		}
 	}
 
-	protected synchronized Object freshTarget() {
+	protected Object freshTarget() {
+		r.lock();
 		StringBuilder sb = new StringBuilder();
 		LineIterator it = null;
 		try {
@@ -81,11 +96,13 @@ public class RefreshableFilterInvocationDefinitionSource extends
 				if (!line.startsWith("#"))
 					sb.append(line + "\n");
 			}
-			logger.info("loaded Spring Security FilterInvocationDefinition config file["
-					+ definitionResource.getURL() + "]");
+			logger
+					.info("loaded Spring Security FilterInvocationDefinition config file["
+							+ definitionResource.getURL() + "]");
 		} catch (IOException e) {
 		} finally {
 			LineIterator.closeQuietly(it);
+			r.unlock();
 		}
 		FilterInvocationDefinitionSourceEditor configEditor = new FilterInvocationDefinitionSourceEditor();
 		configEditor.setAsText(sb.toString());
