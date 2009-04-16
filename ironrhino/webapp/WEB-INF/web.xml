@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app id="WebApp_ID" version="2.4"
-	xmlns="http://java.sun.com/xml/ns/j2ee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
@@ -19,21 +18,15 @@
 	</context-param>
 	<filter>
 		<filter-name>filterChainProxy</filter-name>
-		<filter-class>
-			org.springframework.web.filter.DelegatingFilterProxy
-		</filter-class>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
 	<filter>
 		<filter-name>staticResourceFilter</filter-name>
-		<filter-class>
-			org.springframework.web.filter.DelegatingFilterProxy
-		</filter-class>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
 	<filter>
 		<filter-name>CharacterEncodingFilter</filter-name>
-		<filter-class>
-			org.springframework.web.filter.CharacterEncodingFilter
-		</filter-class>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
 		<init-param>
 			<param-name>encoding</param-name>
 			<param-value>UTF-8</param-value>
@@ -46,8 +39,7 @@
 	<filter>
 		<filter-name>OpenSessionInViewFilter</filter-name>
 		<filter-class>
-			org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
-		</filter-class>
+			org.springframework.orm.hibernate3.support.OpenSessionInViewFilter</filter-class>
 		<init-param>
 			<param-name>singleSession</param-name>
 			<param-value>true</param-value>
@@ -55,21 +47,11 @@
 	</filter>
 	<filter>
 		<filter-name>struts-cleanup</filter-name>
-		<filter-class>
-			org.apache.struts2.dispatcher.ActionContextCleanUp
-		</filter-class>
-	</filter>
-	<filter>
-		<filter-name>FluxOptimizationFilter</filter-name>
-		<filter-class>
-			org.ironrhino.core.performance.FluxOptimizationFilter
-		</filter-class>
+		<filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
 	</filter>
 	<filter>
 		<filter-name>sitemesh</filter-name>
-		<filter-class>
-			com.opensymphony.module.sitemesh.filter.PageFilter
-		</filter-class>
+		<filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
 		<init-param>
 			<param-name>configFile</param-name>
 			<param-value>/WEB-INF/conf/sitemesh.xml</param-value>
@@ -77,9 +59,7 @@
 	</filter>
 	<filter>
 		<filter-name>Struts2</filter-name>
-		<filter-class>
-			org.apache.struts2.dispatcher.FilterDispatcher
-		</filter-class>
+		<filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>filterChainProxy</filter-name>
@@ -104,11 +84,6 @@
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>FluxOptimizationFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping>
-	<filter-mapping>
 		<filter-name>sitemesh</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
@@ -124,36 +99,26 @@
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<listener>
-		<listener-class>
-			org.springframework.web.util.Log4jConfigListener
-		</listener-class>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	<listener>
 		<listener-class>
-			org.springframework.web.context.ContextLoaderListener
-		</listener-class>
+			org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>
 	<listener>
 		<listener-class>
-			org.springframework.web.context.request.RequestContextListener
-		</listener-class>
-	</listener>
-	<listener>
-		<listener-class>
-			org.springframework.web.util.IntrospectorCleanupListener
-		</listener-class>
+			org.springframework.web.util.IntrospectorCleanupListener</listener-class>
 	</listener>
 	<servlet>
 		<servlet-name>dwr</servlet-name>
-		<servlet-class>
-			org.springframework.web.servlet.DispatcherServlet
-		</servlet-class>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>cas</servlet-name>
-		<servlet-class>
-			org.springframework.web.servlet.DispatcherServlet
-		</servlet-class>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>publishContext</param-name>
 			<param-value>false</param-value>
@@ -162,9 +127,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>captcha</servlet-name>
-		<servlet-class>
-			org.ironrhino.core.ext.captcha.ImageCaptchaServlet
-		</servlet-class>
+		<servlet-class>org.ironrhino.core.ext.captcha.ImageCaptchaServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
 	<servlet-mapping>

@@ -72,7 +72,6 @@ public class SecurityUtils {
 		KeyPairGenerator elgKpg = KeyPairGenerator.getInstance("ELGAMAL", "BC");
 
 		if (iStrength > 0) {
-
 			ElGamalParametersGenerator paramGen = new ElGamalParametersGenerator();
 			paramGen.init(iKeySize, iStrength, new SecureRandom());
 			ElGamalParameters genParams = paramGen.generateParameters();
@@ -93,15 +92,18 @@ public class SecurityUtils {
 		KeyPair elgKp = elgKpg.generateKeyPair();
 
 		PGPKeyPair dsaKeyPair = new PGPKeyPair(PGPPublicKey.DSA, dsaKp,
-				new Date(), "BC");
+				new Date(),"BC");
 		PGPKeyPair elgKeyPair = new PGPKeyPair(PGPPublicKey.ELGAMAL_ENCRYPT,
-				elgKp, new Date(), "BC");
+				elgKp, new Date(),"BC");
 
 		PGPKeyRingGenerator keyRingGen = new PGPKeyRingGenerator(
 				PGPSignature.POSITIVE_CERTIFICATION, dsaKeyPair, keyId,
-				PGPEncryptedData.AES_256, password.toCharArray(),
-				true /* Use SHA1 */, null /* hashedPcks */,
-				null /* unhashedPcks */, new SecureRandom(), "BC");
+				PGPEncryptedData.AES_256, password.toCharArray(), true /*
+																		 * Use
+																		 * SHA1
+																		 */,
+				null /* hashedPcks */, null /* unhashedPcks */,
+				new SecureRandom(), "BC");
 		keyRingGen.addSubKey(elgKeyPair);
 
 		OutputStream ostream = new ArmoredOutputStream(pub);
@@ -359,9 +361,19 @@ public class SecurityUtils {
 			return false;
 	}
 
+	public static String encrypt(String key, String input) {
+		// TODO impl
+		return CodecUtils.encode(input);
+	}
+
+	public static String decrypt(String key, String input) {
+		// TODO impl
+		return CodecUtils.decode(input);
+	}
+
 	public static void main(String[] args) throws Exception {
 
-		SecurityUtils.generatorKeyPair("zhouyanming", "linuxfans",
+		SecurityUtils.generatorKeyPair("zhouyanming", "haha",
 				new FileOutputStream("pub.key"),
 				new FileOutputStream("pri.key"));
 
