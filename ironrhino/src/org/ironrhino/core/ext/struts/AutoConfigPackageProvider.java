@@ -100,7 +100,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 				return;
 			packageLoader = new PackageLoader();
 			for (Class clazz : entityClasses) {
-				processEntityClass(clazz, defaultNamespace);
+				processAutoConfigClass(clazz, defaultNamespace);
 			}
 			for (PackageConfig config : packageLoader.createPackageConfigs()) {
 				PackageConfig pc = configuration.getPackageConfig(config
@@ -147,7 +147,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		initialized = true;
 	}
 
-	protected void processEntityClass(Class cls, String defaultNamespace) {
+	protected void processAutoConfigClass(Class cls, String defaultNamespace) {
 		AutoConfig ac = (AutoConfig) cls.getAnnotation(AutoConfig.class);
 		String[] arr = getNamespaceAndActionName(cls, defaultNamespace);
 		String namespace = arr[0];
