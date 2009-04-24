@@ -43,11 +43,11 @@
 		listValue="displayName" />
 	<s:textfield label="%{getText('account.birthDate')}"
 		name="account.birthDate" cssClass="date" />
-	<s:textfield id="account.address" label="%{getText('account.address')}"
+	<s:textfield id="address" label="%{getText('account.address')}"
 		name="account.address">
 		<s:param name="after">
 			<span class="link"
-				onclick="Region.select('account.address')">select</span>
+				onclick="Region.select('address',true)">select</span>
 		</s:param>
 	</s:textfield>
 	<s:textfield label="%{getText('account.zip')}" name="account.zip" />

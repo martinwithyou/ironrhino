@@ -17,10 +17,10 @@
 	<s:textfield label="%{getText('order.addressee.name')}"
 		name="order.addressee.name" cssClass="required" />
 	<s:textfield label="%{getText('order.addressee.address')}"
-		name="order.addressee.address" id="order.addressee.address"
+		name="address" id="order.addressee.address"
 		cssClass="required">
 		<s:param name="after">
-			<span class="link" onclick="Region.select('order.addressee.address')">select</span>
+			<span class="link" onclick="Region.select('address')">select</span>
 		</s:param>
 	</s:textfield>
 	<s:textfield label="%{getText('order.addressee.zip')}"
