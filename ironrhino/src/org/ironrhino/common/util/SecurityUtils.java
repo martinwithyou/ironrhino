@@ -92,9 +92,9 @@ public class SecurityUtils {
 		KeyPair elgKp = elgKpg.generateKeyPair();
 
 		PGPKeyPair dsaKeyPair = new PGPKeyPair(PGPPublicKey.DSA, dsaKp,
-				new Date(),"BC");
+				new Date());
 		PGPKeyPair elgKeyPair = new PGPKeyPair(PGPPublicKey.ELGAMAL_ENCRYPT,
-				elgKp, new Date(),"BC");
+				elgKp, new Date());
 
 		PGPKeyRingGenerator keyRingGen = new PGPKeyRingGenerator(
 				PGPSignature.POSITIVE_CERTIFICATION, dsaKeyPair, keyId,
