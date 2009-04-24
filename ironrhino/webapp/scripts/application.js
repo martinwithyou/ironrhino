@@ -471,6 +471,11 @@ Observation.checkbox = function(container) {
 }
 
 Observation.common = function(container) {
+	// beautify buttons
+	$('form input[type="submit"],form input[type="button"]', container).each( function() {
+		var htm = '<button'+($(this).id?' id="'+$(this).id+'"':"")+' class="btn"><span><span>' + $(this).val() + '</span></span></button>';		
+		$(this).replaceWith(htm);
+	});
 	$('ul.nav>li', container).hover(function() {
 		$("ul", this).fadeIn("fast");
 	}, function() {
