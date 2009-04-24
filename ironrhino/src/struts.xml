@@ -52,7 +52,8 @@
 			</result>
 			<result name="redirect" type="redirect"> ${targetUrl}</result>
 			<result name="suggest"> /WEB-INF/view/jsp/suggest.jsp</result>
-			<result name="accessDenied">/accessDenied.jsp</result>
+			<result name="accessDenied">/WEB-INF/view/jsp/error/403.jsp
+			</result>
 		</global-results>
 	</package>
 	<include file="resources/struts/struts-*.xml" />
