@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="filterChainProxy"
-		class="org.springframework.security.util.FilterChainProxy">
+	<bean id="filterChainProxy" class="org.springframework.security.util.FilterChainProxy">
 		<property name="filterInvocationDefinitionSource">
 			<value>
 				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
@@ -21,7 +19,8 @@
 		class="org.springframework.security.providers.anonymous.AnonymousProcessingFilter">
 		<property name="key" value="anonymous" />
 		<property name="userAttribute">
-			<value>anonymousUser,ROLE_BUILTIN_ANONYMOUS</value>
+			<value>anonymousUser,ROLE_BUILTIN_ANONYMOUS
+			</value>
 		</property>
 	</bean>
 
@@ -31,7 +30,7 @@
 	</bean>
 
 	<bean id="httpSessionContextIntegrationFilter"
-		class="org.springframework.security.context.HttpSessionContextIntegrationFilter"/>
+		class="org.springframework.security.context.HttpSessionContextIntegrationFilter" />
 
 	<bean id="securityContextLogoutHandler"
 		class="org.springframework.security.ui.logout.SecurityContextLogoutHandler" />
@@ -39,8 +38,7 @@
 	<bean id="securityContextHolderAwareRequestFilter"
 		class="org.springframework.security.wrapper.SecurityContextHolderAwareRequestFilter" />
 
-	<bean id="httpRequestAccessDecisionManager"
-		class="org.springframework.security.vote.AffirmativeBased">
+	<bean id="httpRequestAccessDecisionManager" class="org.springframework.security.vote.AffirmativeBased">
 		<property name="allowIfAllAbstainDecisions" value="false" />
 		<property name="decisionVoters">
 			<list>
@@ -52,10 +50,8 @@
 	<bean id="roleVoter" class="org.springframework.security.vote.RoleVoter"
 		p:rolePrefix="" />
 
-	<bean id="accessDeniedHandler"
-		class="org.springframework.security.ui.AccessDeniedHandlerImpl">
-		<property name="errorPage"
-			value="/accessDenied.jsp" />
+	<bean id="accessDeniedHandler" class="org.springframework.security.ui.AccessDeniedHandlerImpl">
+		<property name="errorPage" value="/WEB-INF/view/jsp/error/403.jsp" />
 	</bean>
 
 	<bean id="filterInvocationInterceptorObjectDefinitionSource"
@@ -65,11 +61,9 @@
 		class="org.ironrhino.core.ext.spring.security.RefreshableFilterInvocationDefinitionSource" />
 	<bean id="channelProcessingFilter"
 		class="org.springframework.security.securechannel.ChannelProcessingFilter">
-		<property name="channelDecisionManager"
-			ref="channelDecisionManager" />
+		<property name="channelDecisionManager" ref="channelDecisionManager" />
 		<property name="filterInvocationDefinitionSource">
-			<bean
-				class="org.springframework.aop.framework.ProxyFactoryBean">
+			<bean class="org.springframework.aop.framework.ProxyFactoryBean">
 				<property name="targetSource"
 					ref="channelProcessingFilterInvocationDefinitionSource" />
 			</bean>
