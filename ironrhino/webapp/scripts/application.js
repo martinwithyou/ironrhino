@@ -476,6 +476,7 @@ Observation.common = function(container) {
 		var htm = '<button'+($(this).id?' id="'+$(this).id+'"':"")+' class="btn"><span><span>' + $(this).val() + '</span></span></button>';		
 		$(this).replaceWith(htm);
 	});
+	$('input.autocomplete_off').attr('autocomplete','off');
 	$('ul.nav>li', container).hover(function() {
 		$("ul", this).fadeIn("fast");
 	}, function() {
