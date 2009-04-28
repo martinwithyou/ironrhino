@@ -507,8 +507,7 @@ Observation.common = function(container) {
 	$('input.captcha', container).focus(function() {
 		if ($(this).attr('_captcha_'))
 			return;
-		$(this).after('<img class="captcha" src="' + CONTEXT_PATH
-				+ '/captcha.jpg" alt="click to refresh"/>');
+		$(this).after('<img class="captcha" src="' + CONTEXT_PATH + '/captcha.jpg"/>');
 		$('img.captcha', container).click(refreshCaptcha);
 		$(this).attr('_captcha_', true);
 	});

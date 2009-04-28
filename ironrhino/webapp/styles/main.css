@@ -322,6 +322,7 @@ img {
 
 img.captcha {
 	cursor: pointer;
+	vertical-align: middle;
 }
 
 .clear {
