@@ -56,20 +56,13 @@ public class JsonResult implements Result {
 			ValidationAware validationAwareAction = (ValidationAware) action;
 			if (validationAwareAction.hasErrors()) {
 				hasErrors = true;
-				map.put("hasErrors", true);
 				if (validationAwareAction.hasActionErrors()) {
-					map.put("hasActionErrors", true);
 					map.put("actionErrors", validationAwareAction
 							.getActionErrors());
-				} else {
-					map.put("hasActionErrors", false);
 				}
 				if (validationAwareAction.hasFieldErrors()) {
-					map.put("hasFieldErrors", true);
 					map.put("fieldErrors", validationAwareAction
 							.getFieldErrors());
-				} else {
-					map.put("hasFieldErrors", false);
 				}
 				return JSONUtils.mapToJSON(map);
 			} else {
