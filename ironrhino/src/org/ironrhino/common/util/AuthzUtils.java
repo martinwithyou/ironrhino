@@ -3,12 +3,16 @@ package org.ironrhino.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.model.Secured;
 import org.springframework.security.Authentication;
 import org.springframework.security.GrantedAuthority;
+import org.springframework.security.context.HttpSessionContextIntegrationFilter;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
+import org.springframework.security.context.SecurityContextImpl;
+import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.userdetails.UserDetails;
 
 public class AuthzUtils {
@@ -60,5 +64,18 @@ public class AuthzUtils {
 		if (clazz.isAssignableFrom(principal.getClass()))
 			return (T) principal;
 		return null;
+	}
+
+	public static void autoLogin(UserDetails ud) {
+		SecurityContext sc = new SecurityContextImpl();
+		Authentication auth = new UsernamePasswordAuthenticationToken(ud, ud
+				.getPassword(), ud.getAuthorities());
+		sc.setAuthentication(auth);
+		ServletActionContext
+				.getRequest()
+				.getSession()
+				.setAttribute(
+						HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY,
+						sc);
 	}
 }

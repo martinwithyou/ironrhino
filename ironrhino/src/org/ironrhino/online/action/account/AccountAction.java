@@ -328,16 +328,7 @@ public class AccountAction extends BaseAction {
 				// auto login
 				UserDetails ud = accountManager.loadUserByUsername(account
 						.getUsername());
-				SecurityContext sc = new SecurityContextImpl();
-				Authentication auth = new UsernamePasswordAuthenticationToken(
-						ud, ud.getPassword(), ud.getAuthorities());
-				sc.setAuthentication(auth);
-				ServletActionContext
-						.getRequest()
-						.getSession()
-						.setAttribute(
-								HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY,
-								sc);
+				AuthzUtils.autoLogin(ud);	
 				return "activate";
 			}
 		}
@@ -584,13 +575,7 @@ public class AccountAction extends BaseAction {
 
 	private void doLogin() {
 		HttpServletRequest request = ServletActionContext.getRequest();
-		SecurityContext sc = new SecurityContextImpl();
-		Authentication auth = new UsernamePasswordAuthenticationToken(account,
-				account.getPassword(), account.getAuthorities());
-		sc.setAuthentication(auth);
-		ServletActionContext.getRequest().getSession().setAttribute(
-				HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY,
-				sc);
+		AuthzUtils.autoLogin(account);
 		accountManager.lock(account, LockMode.NONE);
 		account.setLoginTimes(account.getLoginTimes() + 1);
 		account.setLastLoginDate(new Date());
