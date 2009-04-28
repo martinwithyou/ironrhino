@@ -215,7 +215,7 @@ public class BaseAction extends ActionSupport {
 				&& AuthzUtils.getUserDetails(UserDetails.class) != null)
 			return;
 		if (!CaptchaHelper.validate(ServletActionContext.getRequest()))
-			addFieldError("captcha", getText("captcha.error"));
+			addFieldError(CaptchaHelper.KEY_CAPTCHA, getText("captcha.error"));
 		return;
 	}
 
