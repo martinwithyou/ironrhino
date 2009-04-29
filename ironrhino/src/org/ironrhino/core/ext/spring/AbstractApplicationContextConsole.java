@@ -6,8 +6,6 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,8 +18,6 @@ import org.springframework.beans.factory.support.AbstractBeanFactory;
 import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 import org.springframework.context.ApplicationContext;
 
-import bsh.Interpreter;
-
 public abstract class AbstractApplicationContextConsole implements
 		ApplicationContextConsole {
 
@@ -29,8 +25,6 @@ public abstract class AbstractApplicationContextConsole implements
 
 	@Autowired
 	private ApplicationContext ctx;
-
-	private Interpreter interpreter;
 
 	private BeanWrapper bw;
 
@@ -54,26 +48,12 @@ public abstract class AbstractApplicationContextConsole implements
 					.next();
 			registrar.registerCustomEditors(bw);
 		}
-		for (Iterator it = bf.getCustomEditors().entrySet().iterator(); it
+		for (Iterator it = bf.getCustomEditors().keySet().iterator(); it
 				.hasNext();) {
-			Map.Entry entry = (Map.Entry) it.next();
-			Class clazz = (Class) entry.getKey();
-			PropertyEditor editor = (PropertyEditor) entry.getValue();
+			Class clazz = (Class) it.next();
+			PropertyEditor editor = (PropertyEditor) bf.getCustomEditors().get(
+					clazz);
 			bw.registerCustomEditor(clazz, editor);
-		}
-	}
-
-	@PostConstruct
-	public void afterPropertiesSet() {
-		try {
-			interpreter = new Interpreter();
-			interpreter.set("_this", this);
-			interpreter.eval("set(path,value){_this.set(path,value);}");
-			interpreter.eval("get(path){return _this.get(path);}");
-			interpreter
-					.eval("call(path,params){return _this.call(path,params);}");
-		} catch (Exception e) {
-
 		}
 	}
 

@@ -1,5 +1,7 @@
 package org.ironrhino.core.ext.spring;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang.StringUtils;
 
 import bsh.Interpreter;
@@ -9,7 +11,8 @@ public class BeanShellApplicationContextConsole extends
 
 	private Interpreter interpreter;
 
-	public BeanShellApplicationContextConsole() {
+	@PostConstruct
+	public void afterPropertiesSet() {
 		try {
 			interpreter = new Interpreter();
 			interpreter.set("_this", this);
