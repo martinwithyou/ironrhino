@@ -11,7 +11,7 @@
 		<li id="li_<@s.property value="#status.index" />"><img
 			src='<@s.url value="%{'/pic/'+#pictureName+'.jpg'}"/>'
 			style="height: 300px; width: 300px" alt="picture" /><a
-			href="picture?actionType=delete&pictureName=%{#pictureName}"
+			href="picture?actionType=delete&pictureName=${pictureName}"
 			class="ajax view" method="post"
 			options="{replacement:'product_pic_list'}">delete</a></li>
 	</@s.iterator>
@@ -24,7 +24,7 @@
 	<@s.checkbox label="%{getText('useWaterMark')}" name="useWaterMark" />
 	<@s.checkbox id="overrideDefault" label="%{getText('overrideDefault')}"
 		name="overrideDefault" />
-	<@s.submit />
+	<@s.submit value="%{getText('save')}"/>
 </@s.form>
 </body>
 </html>

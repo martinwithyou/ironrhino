@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.common.support.SettingControl;
-import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Product;
 
@@ -101,8 +100,7 @@ public class StaticResourceFilter implements Filter {
 		Product product = productFacade.getProductByCode(productCode);
 		boolean notFound = (product == null)
 				|| (product.getOpen() != null ? !product.getOpen() : true);
-		if (notFound && !AuthzUtils.hasPermission(product)
-				&& !AuthzUtils.getRoleNames().contains("ROLE_SUPERVISOR")) {
+		if (notFound) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
