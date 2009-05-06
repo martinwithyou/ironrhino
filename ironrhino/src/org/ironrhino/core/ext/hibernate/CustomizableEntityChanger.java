@@ -25,7 +25,7 @@ import org.hibernate.mapping.SimpleValue;
 import org.hibernate.type.Type;
 import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.core.model.Customizable;
-import org.ironrhino.core.util.XMLUtils;
+import org.ironrhino.core.util.XmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
@@ -319,7 +319,7 @@ public class CustomizableEntityChanger {
 			String file = ctx.getResource(getMappingResource(clazz)).getFile()
 					.getAbsolutePath();
 			Node node = null;
-			Document document = XMLUtils.loadDocument(file);
+			Document document = XmlUtils.loadDocument(file);
 			NodeList componentTags = document
 					.getElementsByTagName("dynamic-component");
 			if (componentTags.getLength() == 0) {
@@ -335,7 +335,7 @@ public class CustomizableEntityChanger {
 				node = element;
 			} else {
 				node = componentTags.item(0);
-				XMLUtils.removeChildren(node);
+				XmlUtils.removeChildren(node);
 			}
 			Iterator propertyIterator = getDynamicComponent(clazz)
 					.getPropertyIterator();
@@ -344,7 +344,7 @@ public class CustomizableEntityChanger {
 				Element element = createPropertyElement(document, property);
 				node.appendChild(element);
 			}
-			XMLUtils.saveDocument(document, file);
+			XmlUtils.saveDocument(document, file);
 			lsfb.getConfiguration().updateMapping(entityClass,
 					ctx.getResource(getMappingResource(clazz)).getURL());
 		}

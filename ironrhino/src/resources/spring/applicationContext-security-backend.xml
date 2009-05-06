@@ -72,7 +72,7 @@
 		<property name="authenticationManager"
 			ref="backendAuthenticationManager" />
 		<property name="authenticationFailureUrl"
-			value="/accessDenied.jsp" />
+			value="/WEB-INF/view/jsp/error/403.jsp" />
 		<property name="defaultTargetUrl" value="/backend" />
 		<property name="filterProcessesUrl" value="/backend/check" />
 	</bean>

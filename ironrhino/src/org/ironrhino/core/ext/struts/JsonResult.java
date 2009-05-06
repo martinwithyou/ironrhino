@@ -17,7 +17,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.annotation.JsonConfig;
 import org.ironrhino.core.annotation.Redirect;
-import org.ironrhino.core.util.JSONUtils;
+import org.ironrhino.core.util.JsonUtils;
 import org.springframework.beans.BeanUtils;
 
 import com.opensymphony.xwork2.ActionInvocation;
@@ -48,7 +48,7 @@ public class JsonResult implements Result {
 		JsonConfig annotation = method.getAnnotation(JsonConfig.class);
 		if (annotation != null && StringUtils.isNotBlank(annotation.top())) {
 			Object value = invocation.getStack().findValue(annotation.top());
-			return JSONUtils.objectToJSON(value);
+			return JsonUtils.toJson(value);
 		}
 		boolean hasErrors = false;
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -64,7 +64,7 @@ public class JsonResult implements Result {
 					map.put("fieldErrors", validationAwareAction
 							.getFieldErrors());
 				}
-				return JSONUtils.mapToJSON(map);
+				return JsonUtils.toJson(map);
 			} else {
 				map.put("hasErrors", false);
 			}
@@ -111,7 +111,7 @@ public class JsonResult implements Result {
 			} else {
 				if (annotation == null || annotation.propertyName() == null
 						|| annotation.propertyName().length == 0) {
-					return JSONUtils.mapToJSON(map);
+					return JsonUtils.toJson(map);
 				}
 				String[] propertyNameArray = annotation.propertyName();
 				if (propertyNameArray != null && propertyNameArray.length > 0) {
@@ -123,7 +123,7 @@ public class JsonResult implements Result {
 				}
 			}
 		}
-		return JSONUtils.mapToJSON(map);
+		return JsonUtils.toJson(map);
 	}
 
 	public void execute(ActionInvocation invocation) throws Exception {
