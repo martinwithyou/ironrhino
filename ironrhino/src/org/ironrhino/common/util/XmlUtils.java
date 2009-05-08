@@ -1,4 +1,4 @@
-package org.ironrhino.core.util;
+package org.ironrhino.common.util;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -6,11 +6,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.Map;
 import java.util.Set;
 
+import org.ironrhino.common.util.AnnotationUtils;
 import org.ironrhino.core.annotation.NaturalId;
 import org.ironrhino.core.annotation.NotInCopy;
 import org.ironrhino.core.annotation.NotInJson;
 import org.ironrhino.core.model.Model;
-import org.ironrhino.core.util.AnnotationUtils;
 import org.junit.Test;
 
 public class AnnotationUtilsTest {

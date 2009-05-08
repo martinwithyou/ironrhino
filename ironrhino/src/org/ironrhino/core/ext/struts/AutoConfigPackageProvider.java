@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ironrhino.common.util.ClassScaner;
 import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.model.Entity;
-import org.ironrhino.core.util.ClassScaner;
 import org.springframework.util.ClassUtils;
 
 import com.opensymphony.xwork2.Action;

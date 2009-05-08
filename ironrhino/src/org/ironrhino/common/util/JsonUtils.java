@@ -1,4 +1,4 @@
-package org.ironrhino.core.util;
+package org.ironrhino.common.util;
 
 import org.ironrhino.core.annotation.NotInJson;
 

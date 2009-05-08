@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * properties are ignored in JsonUtils
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.util.JsonUtils
+ * @see org.ironrhino.common.util.JsonUtils
  */
 @Target( { METHOD, FIELD })
 @Retention(RUNTIME)

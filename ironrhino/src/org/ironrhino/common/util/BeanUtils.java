@@ -1,4 +1,4 @@
-package org.ironrhino.core.util;
+package org.ironrhino.common.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.common.util.ObjectFilter;
 import org.ironrhino.core.annotation.NotInCopy;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.springframework.aop.framework.ProxyFactory;

@@ -8,12 +8,12 @@ import javax.annotation.PostConstruct;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.common.util.AuthzUtils;
+import org.ironrhino.common.util.BeanUtils;
 import org.ironrhino.common.util.ObjectFilter;
 import org.ironrhino.common.util.RegionUtils;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.service.BaseManager;
-import org.ironrhino.core.util.BeanUtils;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 

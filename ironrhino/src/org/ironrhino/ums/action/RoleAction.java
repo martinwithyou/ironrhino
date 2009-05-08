@@ -8,8 +8,8 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.ResultPage;
+import org.ironrhino.common.util.BeanUtils;
 import org.ironrhino.core.ext.struts.BaseAction;
-import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.ums.model.Role;
 import org.ironrhino.ums.service.RoleManager;
 

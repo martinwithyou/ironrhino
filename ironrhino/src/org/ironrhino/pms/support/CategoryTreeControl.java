@@ -6,10 +6,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.ironrhino.common.util.AuthzUtils;
+import org.ironrhino.common.util.BeanUtils;
 import org.ironrhino.common.util.ObjectFilter;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
-import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.service.CategoryManager;
 import org.springframework.beans.factory.annotation.Required;

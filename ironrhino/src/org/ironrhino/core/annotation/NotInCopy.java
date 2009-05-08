@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * properties are ignored in BeanUtils.copyProperties()
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.util.BeanUtils
+ * @see org.ironrhino.common.util.BeanUtils
  */
 @Target( { METHOD, FIELD })
 @Retention(RUNTIME)

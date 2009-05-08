@@ -1,4 +1,4 @@
-package org.ironrhino.core.util;
+package org.ironrhino.common.util;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
