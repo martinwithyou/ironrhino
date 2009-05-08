@@ -15,6 +15,7 @@ import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.Tag;
+import org.htmlparser.util.NodeIterator;
 import org.ironrhino.core.model.BaseTreeableEntity;
 
 public class HtmlUtils {
@@ -68,6 +69,22 @@ public class HtmlUtils {
 				return false;
 			}
 		});
+	}
+
+	public static String tidy(String src) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		String head = "<div>";
+		String foot = "</div>";
+		sb.append(head);
+		sb.append(src);
+		sb.append(foot);
+		Parser p = Parser.createParser(sb.toString(), "UTF-8");
+		NodeIterator nl = p.elements();
+		if(nl.hasMoreNodes()){
+			src = nl.nextNode().toHtml();
+			src = src.substring(head.length(),src.length()-foot.length());
+		}
+		return src;
 	}
 
 	// http://www.bitscn.com/hack/young/200708/108278.html
