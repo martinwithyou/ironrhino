@@ -473,8 +473,14 @@ Observation.checkbox = function(container) {
 Observation.common = function(container) {
 	// beautify buttons
 	$('form input[type="submit"],form input[type="button"]', container).each( function() {
-		var htm = '<button'+($(this).id?' id="'+$(this).id+'"':"")+' class="btn"><span><span>' + $(this).val() + '</span></span></button>';		
+		var htm = '<button'+($(this).id?' id="'+$(this).id+'"':"")+' class="btn'+($(this).hasClass('primary')?' primary':'')+'"><span><span>' + $(this).val() + '</span></span></button>';		
 		$(this).replaceWith(htm);
+	});
+	$('a.btn',container).each(function(){
+		var htm = $(this).html();
+		htm = htm.replace(/(^\s*)|(\s*$)/g,'');
+		if(htm.indexOf('<span>') != 0)
+			$(this).html('<span><span>'+htm+'</span></span>');
 	});
 	$('input.autocomplete_off').attr('autocomplete','off');
 	$('ul.nav>li', container).hover(function() {
