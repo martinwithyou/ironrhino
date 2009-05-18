@@ -201,7 +201,7 @@ function handleResponse(data, options) {
 	}
 	if (target && target.tagName.toLowerCase() == 'form') {
 		setTimeout(function() {
-			$('input[type="submit"]', target).removeAttr('disabled');
+			$('button[type="submit"]', target).removeAttr('disabled');
 			refreshCaptcha()
 		}, 100);
 		if (!hasError && $(target).hasClass('reset')) {
@@ -323,13 +323,13 @@ Observation.ajax = function(container) {
 					if (!validateForm(target))
 						return false;
 					Indicator.text = $(target).attr('indicator');
-					$('input[type="submit"]', target).attr('disabled', true);
+					$('button[type="submit"]', target).attr('disabled', true);
 					fire(target, 'onloading');
 				},
 				error : function() {
 					if (target && target.tagName.toLowerCase() == 'form')
 						setTimeout(function() {
-							$('input[type="submit"]', target)
+							$('button[type="submit"]', target)
 									.removeAttr('disabled');
 						}, 100);
 					fire(target, 'onerror');
@@ -472,14 +472,10 @@ Observation.checkbox = function(container) {
 
 Observation.common = function(container) {
 	// beautify buttons
-	$('form input[type="submit"],form input[type="button"]', container).each( function() {
-		var htm = '<button'+($(this).id?' id="'+$(this).id+'"':"")+' class="btn'+($(this).hasClass('primary')?' primary':'')+'"><span><span>' + $(this).val() + '</span></span></button>';		
-		$(this).replaceWith(htm);
-	});
-	$('a.btn',container).each(function(){
+	$('.btn',container).each(function(){
 		var htm = $(this).html();
 		htm = htm.replace(/(^\s*)|(\s*$)/g,'');
-		if(htm.indexOf('<span>') != 0)
+		if(htm.indexOf('<span><span>') != 0)
 			$(this).html('<span><span>'+htm+'</span></span>');
 	});
 	$('input.autocomplete_off').attr('autocomplete','off');

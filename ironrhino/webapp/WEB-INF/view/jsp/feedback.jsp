@@ -23,7 +23,7 @@
 		<s:textfield label="%{getText('captcha')}" name="captcha" size="6"
 			cssClass="autocomplete_off required captcha"/>
 	</authz:authorize>
-	<s:submit value="submit" />
+	<s:submit value="%{getText('save')}" />
 </s:form>
 </body>
 </html>
