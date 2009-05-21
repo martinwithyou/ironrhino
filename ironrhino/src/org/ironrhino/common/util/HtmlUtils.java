@@ -71,34 +71,48 @@ public class HtmlUtils {
 		});
 	}
 
-	public static String tidy(String src) throws Exception {
-		StringBuilder sb = new StringBuilder();
-		String head = "<div>";
-		String foot = "</div>";
-		sb.append(head);
-		sb.append(src);
-		sb.append(foot);
-		Parser p = Parser.createParser(sb.toString(), "UTF-8");
-		NodeIterator nl = p.elements();
-		if(nl.hasMoreNodes()){
-			src = nl.nextNode().toHtml();
-			src = src.substring(head.length(),src.length()-foot.length());
+	/**
+	 * 补全标签
+	 */
+	public static String tidy(String src) {
+		try {
+			StringBuilder sb = new StringBuilder();
+			String head = "<div>";
+			String foot = "</div>";
+			sb.append(head);
+			sb.append(src);
+			sb.append(foot);
+			Parser p = Parser.createParser(sb.toString(), "UTF-8");
+			NodeIterator nl = p.elements();
+			if (nl.hasMoreNodes()) {
+				src = nl.nextNode().toHtml();
+				src = src
+						.substring(head.length(), src.length() - foot.length());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return src;
 	}
 
 	// http://www.bitscn.com/hack/young/200708/108278.html
-	public static String antiXSS(String content) {
+	/**
+	 * 去掉xss代码
+	 */
+	public static String antiXss(String content) {
 		String old = content;
-		String ret = _antiXSS(content);
+		String ret = _antiXss(content);
 		while (!ret.equals(old)) {
 			old = ret;
-			ret = _antiXSS(ret);
+			ret = _antiXss(ret);
 		}
 		return ret;
 	}
 
-	public static boolean hasXSS(String content) {
+	/**
+	 * 是否含xss代码
+	 */
+	public static boolean hasXss(String content) {
 		try {
 			return hasScriptTag(content) || hasEvent(content)
 					|| hasAsciiAndHex(content) || hasCssExpression(content)
@@ -109,7 +123,7 @@ public class HtmlUtils {
 		}
 	}
 
-	private static String _antiXSS(String content) {
+	private static String _antiXss(String content) {
 		try {
 			return stripAllowScriptAccess(stripProtocol(stripCssExpression(stripAsciiAndHex(stripEvent(stripScriptTag(content))))));
 		} catch (Exception e) {
@@ -126,7 +140,7 @@ public class HtmlUtils {
 
 	private static boolean hasScriptTag(String content) {
 		Matcher m = SCRIPT_TAG_PATTERN.matcher(content);
-		return m.matches();
+		return m.find();
 	}
 
 	private static String stripEvent(String content) throws Exception {
@@ -140,10 +154,8 @@ public class HtmlUtils {
 		for (String event : events) {
 			org.apache.oro.text.regex.Pattern p = pc.compile("(<[^>]*)("
 					+ event + ")([^>]*>)", Perl5Compiler.CASE_INSENSITIVE_MASK);
-			if (null != p)
-				content = Util.substitute(matcher, p, new Perl5Substitution(
-						"$1" + event.substring(2) + "$3"), content,
-						Util.SUBSTITUTE_ALL);
+			content = Util.substitute(matcher, p, new Perl5Substitution("$1"
+					+ event.substring(2) + "$3"), content, Util.SUBSTITUTE_ALL);
 
 		}
 		return content;
@@ -160,7 +172,7 @@ public class HtmlUtils {
 		for (String event : events) {
 			org.apache.oro.text.regex.Pattern p = pc.compile("(<[^>]*)("
 					+ event + ")([^>]*>)", Perl5Compiler.CASE_INSENSITIVE_MASK);
-			if (null != p)
+			if (matcher.contains(content, p))
 				return true;
 		}
 		return false;
@@ -170,10 +182,8 @@ public class HtmlUtils {
 		org.apache.oro.text.regex.Pattern p = pc.compile(
 				"(<[^>]*)(&#|\\\\00)([^>]*>)",
 				Perl5Compiler.CASE_INSENSITIVE_MASK);
-		if (null != p)
-			content = Util
-					.substitute(matcher, p, new Perl5Substitution("$1$3"),
-							content, Util.SUBSTITUTE_ALL);
+		content = Util.substitute(matcher, p, new Perl5Substitution("$1$3"),
+				content, Util.SUBSTITUTE_ALL);
 		return content;
 	}
 
@@ -181,42 +191,34 @@ public class HtmlUtils {
 		org.apache.oro.text.regex.Pattern p = pc.compile(
 				"(<[^>]*)(&#|\\\\00)([^>]*>)",
 				Perl5Compiler.CASE_INSENSITIVE_MASK);
-		return p != null;
+		return matcher.contains(content, p);
 	}
 
 	private static String stripCssExpression(String content) throws Exception {
 		org.apache.oro.text.regex.Pattern p = pc.compile(
 				"(<[^>]*style=.*)/\\*.*\\*/([^>]*>)",
 				Perl5Compiler.CASE_INSENSITIVE_MASK);
-		if (null != p)
-			content = Util
-					.substitute(matcher, p, new Perl5Substitution("$1$2"),
-							content, Util.SUBSTITUTE_ALL);
+		content = Util.substitute(matcher, p, new Perl5Substitution("$1$2"),
+				content, Util.SUBSTITUTE_ALL);
 
 		p = pc
 				.compile(
 						"(<[^>]*style=[^>]+)(expression|javascript|vbscript|-moz-binding)([^>]*>)",
 						Perl5Compiler.CASE_INSENSITIVE_MASK);
-		if (null != p)
-			content = Util
-					.substitute(matcher, p, new Perl5Substitution("$1$3"),
-							content, Util.SUBSTITUTE_ALL);
+		content = Util.substitute(matcher, p, new Perl5Substitution("$1$3"),
+				content, Util.SUBSTITUTE_ALL);
 
 		p = pc.compile("(<style[^>]*>.*)/\\*.*\\*/(.*</style[^>]*>)",
 				Perl5Compiler.CASE_INSENSITIVE_MASK);
-		if (null != p)
-			content = Util
-					.substitute(matcher, p, new Perl5Substitution("$1$2"),
-							content, Util.SUBSTITUTE_ALL);
+		content = Util.substitute(matcher, p, new Perl5Substitution("$1$2"),
+				content, Util.SUBSTITUTE_ALL);
 
 		p = pc
 				.compile(
 						"(<style[^>]*>[^>]+)(expression|javascript|vbscript|-moz-binding)(.*</style[^>]*>)",
 						Perl5Compiler.CASE_INSENSITIVE_MASK);
-		if (null != p)
-			content = Util
-					.substitute(matcher, p, new Perl5Substitution("$1$3"),
-							content, Util.SUBSTITUTE_ALL);
+		content = Util.substitute(matcher, p, new Perl5Substitution("$1$3"),
+				content, Util.SUBSTITUTE_ALL);
 		return content;
 	}
 
@@ -224,28 +226,23 @@ public class HtmlUtils {
 		org.apache.oro.text.regex.Pattern p = pc.compile(
 				"(<[^>]*style=.*)/\\*.*\\*/([^>]*>)",
 				Perl5Compiler.CASE_INSENSITIVE_MASK);
-		if (null != p)
-			content = Util
-					.substitute(matcher, p, new Perl5Substitution("$1$2"),
-							content, Util.SUBSTITUTE_ALL);
-
+		if (matcher.contains(content, p))
+			return true;
 		p = pc
 				.compile(
 						"(<[^>]*style=[^>]+)(expression|javascript|vbscript|-moz-binding)([^>]*>)",
 						Perl5Compiler.CASE_INSENSITIVE_MASK);
-		if (null != p)
+		if (matcher.contains(content, p))
 			return true;
 		p = pc.compile("(<style[^>]*>.*)/\\*.*\\*/(.*</style[^>]*>)",
 				Perl5Compiler.CASE_INSENSITIVE_MASK);
-		if (null != p)
-			content = Util
-					.substitute(matcher, p, new Perl5Substitution("$1$2"),
-							content, Util.SUBSTITUTE_ALL);
+		if (matcher.contains(content, p))
+			return true;
 		p = pc
 				.compile(
 						"(<style[^>]*>[^>]+)(expression|javascript|vbscript|-moz-binding)(.*</style[^>]*>)",
 						Perl5Compiler.CASE_INSENSITIVE_MASK);
-		if (null != p)
+		if (matcher.contains(content, p))
 			return true;
 		return false;
 	}
@@ -257,9 +254,9 @@ public class HtmlUtils {
 			org.apache.oro.text.regex.Pattern p = pc.compile("(<[^>]*)"
 					+ protocol + ":([^>]*>)",
 					Perl5Compiler.CASE_INSENSITIVE_MASK);
-			if (null != p)
-				content = Util.substitute(matcher, p, new Perl5Substitution(
-						"$1/$2"), content, Util.SUBSTITUTE_ALL);
+			content = Util.substitute(matcher, p,
+					new Perl5Substitution("$1/$2"), content,
+					Util.SUBSTITUTE_ALL);
 		}
 		return content;
 	}
@@ -271,7 +268,7 @@ public class HtmlUtils {
 			org.apache.oro.text.regex.Pattern p = pc.compile("(<[^>]*)"
 					+ protocol + ":([^>]*>)",
 					Perl5Compiler.CASE_INSENSITIVE_MASK);
-			if (null != p)
+			if (matcher.contains(content, p))
 				return true;
 		}
 		return false;
@@ -282,9 +279,8 @@ public class HtmlUtils {
 		org.apache.oro.text.regex.Pattern p = pc.compile(
 				"(<[^>]*)AllowScriptAccess([^>]*>)",
 				Perl5Compiler.CASE_INSENSITIVE_MASK);
-		if (null != p)
-			content = Util.substitute(matcher, p, new Perl5Substitution(
-					"$1Allow_Script_Access$2"), content, Util.SUBSTITUTE_ALL);
+		content = Util.substitute(matcher, p, new Perl5Substitution(
+				"$1Allow_Script_Access$2"), content, Util.SUBSTITUTE_ALL);
 		return content;
 	}
 
@@ -293,7 +289,7 @@ public class HtmlUtils {
 		org.apache.oro.text.regex.Pattern p = pc.compile(
 				"(<[^>]*)AllowScriptAccess([^>]*>)",
 				Perl5Compiler.CASE_INSENSITIVE_MASK);
-		return p != null;
+		return matcher.contains(content, p);
 	}
 
 }
