@@ -9,6 +9,290 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 
 public class StringUtils {
 
+	private abstract static class WordTokenizer {
+		protected static final char UNDERSCORE = '_';
+
+		/**
+		 * Parse sentence。
+		 */
+		public String parse(String str) {
+			if (org.apache.commons.lang.StringUtils.isEmpty(str)) {
+				return str;
+			}
+
+			int length = str.length();
+			StringBuffer buffer = new StringBuffer(length);
+
+			for (int index = 0; index < length; index++) {
+				char ch = str.charAt(index);
+
+				// 忽略空白。
+				if (Character.isWhitespace(ch)) {
+					continue;
+				}
+
+				// 大写字母开始：UpperCaseWord或是TitleCaseWord。
+				if (Character.isUpperCase(ch)) {
+					int wordIndex = index + 1;
+
+					while (wordIndex < length) {
+						char wordChar = str.charAt(wordIndex);
+
+						if (Character.isUpperCase(wordChar)) {
+							wordIndex++;
+						} else if (Character.isLowerCase(wordChar)) {
+							wordIndex--;
+							break;
+						} else {
+							break;
+						}
+					}
+
+					// 1. wordIndex == length，说明最后一个字母为大写，以upperCaseWord处理之。
+					// 2. wordIndex == index，说明index处为一个titleCaseWord。
+					// 3. wordIndex > index，说明index到wordIndex -
+					// 1处全部是大写，以upperCaseWord处理。
+					if ((wordIndex == length) || (wordIndex > index)) {
+						index = parseUpperCaseWord(buffer, str, index,
+								wordIndex);
+					} else {
+						index = parseTitleCaseWord(buffer, str, index);
+					}
+
+					continue;
+				}
+
+				// 小写字母开始：LowerCaseWord。
+				if (Character.isLowerCase(ch)) {
+					index = parseLowerCaseWord(buffer, str, index);
+					continue;
+				}
+
+				// 数字开始：DigitWord。
+				if (Character.isDigit(ch)) {
+					index = parseDigitWord(buffer, str, index);
+					continue;
+				}
+
+				// 非字母数字开始：Delimiter。
+				inDelimiter(buffer, ch);
+			}
+
+			return buffer.toString();
+		}
+
+		private int parseUpperCaseWord(StringBuffer buffer, String str,
+				int index, int length) {
+			char ch = str.charAt(index++);
+
+			// 首字母，必然存在且为大写。
+			if (buffer.length() == 0) {
+				startSentence(buffer, ch);
+			} else {
+				startWord(buffer, ch);
+			}
+
+			// 后续字母，必为小写。
+			for (; index < length; index++) {
+				ch = str.charAt(index);
+				inWord(buffer, ch);
+			}
+
+			return index - 1;
+		}
+
+		private int parseLowerCaseWord(StringBuffer buffer, String str,
+				int index) {
+			char ch = str.charAt(index++);
+
+			// 首字母，必然存在且为小写。
+			if (buffer.length() == 0) {
+				startSentence(buffer, ch);
+			} else {
+				startWord(buffer, ch);
+			}
+
+			// 后续字母，必为小写。
+			int length = str.length();
+
+			for (; index < length; index++) {
+				ch = str.charAt(index);
+
+				if (Character.isLowerCase(ch)) {
+					inWord(buffer, ch);
+				} else {
+					break;
+				}
+			}
+
+			return index - 1;
+		}
+
+		private int parseTitleCaseWord(StringBuffer buffer, String str,
+				int index) {
+			char ch = str.charAt(index++);
+
+			// 首字母，必然存在且为大写。
+			if (buffer.length() == 0) {
+				startSentence(buffer, ch);
+			} else {
+				startWord(buffer, ch);
+			}
+
+			// 后续字母，必为小写。
+			int length = str.length();
+
+			for (; index < length; index++) {
+				ch = str.charAt(index);
+
+				if (Character.isLowerCase(ch)) {
+					inWord(buffer, ch);
+				} else {
+					break;
+				}
+			}
+
+			return index - 1;
+		}
+
+		private int parseDigitWord(StringBuffer buffer, String str, int index) {
+			char ch = str.charAt(index++);
+
+			// 首字符，必然存在且为数字。
+			if (buffer.length() == 0) {
+				startDigitSentence(buffer, ch);
+			} else {
+				startDigitWord(buffer, ch);
+			}
+
+			// 后续字符，必为数字。
+			int length = str.length();
+
+			for (; index < length; index++) {
+				ch = str.charAt(index);
+
+				if (Character.isDigit(ch)) {
+					inDigitWord(buffer, ch);
+				} else {
+					break;
+				}
+			}
+
+			return index - 1;
+		}
+
+		protected boolean isDelimiter(char ch) {
+			return !Character.isUpperCase(ch) && !Character.isLowerCase(ch)
+					&& !Character.isDigit(ch);
+		}
+
+		protected abstract void startSentence(StringBuffer buffer, char ch);
+
+		protected abstract void startWord(StringBuffer buffer, char ch);
+
+		protected abstract void inWord(StringBuffer buffer, char ch);
+
+		protected abstract void startDigitSentence(StringBuffer buffer, char ch);
+
+		protected abstract void startDigitWord(StringBuffer buffer, char ch);
+
+		protected abstract void inDigitWord(StringBuffer buffer, char ch);
+
+		protected abstract void inDelimiter(StringBuffer buffer, char ch);
+	}
+
+	private static final WordTokenizer CAMEL_CASE_TOKENIZER = new WordTokenizer() {
+		protected void startSentence(StringBuffer buffer, char ch) {
+			buffer.append(Character.toLowerCase(ch));
+		}
+
+		protected void startWord(StringBuffer buffer, char ch) {
+			if (!isDelimiter(buffer.charAt(buffer.length() - 1))) {
+				buffer.append(Character.toUpperCase(ch));
+			} else {
+				buffer.append(Character.toLowerCase(ch));
+			}
+		}
+
+		protected void inWord(StringBuffer buffer, char ch) {
+			buffer.append(Character.toLowerCase(ch));
+		}
+
+		protected void startDigitSentence(StringBuffer buffer, char ch) {
+			buffer.append(ch);
+		}
+
+		protected void startDigitWord(StringBuffer buffer, char ch) {
+			buffer.append(ch);
+		}
+
+		protected void inDigitWord(StringBuffer buffer, char ch) {
+			buffer.append(ch);
+		}
+
+		protected void inDelimiter(StringBuffer buffer, char ch) {
+			if (ch != UNDERSCORE) {
+				buffer.append(ch);
+			}
+		}
+	};
+
+	private static final WordTokenizer UPPER_CASE_WITH_UNDERSCORES_TOKENIZER = new WordTokenizer() {
+		protected void startSentence(StringBuffer buffer, char ch) {
+			buffer.append(Character.toUpperCase(ch));
+		}
+
+		protected void startWord(StringBuffer buffer, char ch) {
+			if (!isDelimiter(buffer.charAt(buffer.length() - 1))) {
+				buffer.append(UNDERSCORE);
+			}
+
+			buffer.append(Character.toUpperCase(ch));
+		}
+
+		protected void inWord(StringBuffer buffer, char ch) {
+			buffer.append(Character.toUpperCase(ch));
+		}
+
+		protected void startDigitSentence(StringBuffer buffer, char ch) {
+			buffer.append(ch);
+		}
+
+		protected void startDigitWord(StringBuffer buffer, char ch) {
+			if (!isDelimiter(buffer.charAt(buffer.length() - 1))) {
+				buffer.append(UNDERSCORE);
+			}
+
+			buffer.append(ch);
+		}
+
+		protected void inDigitWord(StringBuffer buffer, char ch) {
+			buffer.append(ch);
+		}
+
+		protected void inDelimiter(StringBuffer buffer, char ch) {
+			buffer.append(ch);
+		}
+	};
+
+	public static String toCamelCase(String str) {
+		if (str == null)
+			return null;
+		return CAMEL_CASE_TOKENIZER.parse(str);
+	}
+
+	public static String toUpperCaseWithUnderscores(String str) {
+		if (str == null)
+			return null;
+		return UPPER_CASE_WITH_UNDERSCORES_TOKENIZER.parse(str);
+	}
+
+	public static String toLowerCaseWithUnderscores(String str) {
+		if (str == null)
+			return null;
+		return toUpperCaseWithUnderscores(str).toLowerCase();
+	}
+
 	public static boolean matchesWildcard(String text, String pattern) {
 		text += '\0';
 		pattern += '\0';
