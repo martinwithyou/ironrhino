@@ -44,7 +44,7 @@ public class RuleProvider {
 	}
 
 	public void insert(StatefulSession statefulSession, Object element) {
-		statefulSession.insert(element);
+		statefulSession.asyncInsert(element);
 	}
 
 	public void insertOrUpdate(StatefulSession statefulSession, Object element) {
@@ -52,9 +52,9 @@ public class RuleProvider {
 			return;
 		FactHandle fact = statefulSession.getFactHandle(element);
 		if (fact == null) {
-			statefulSession.insert(element);
+			statefulSession.asyncInsert(element);
 		} else {
-			statefulSession.update(fact, element);
+			statefulSession.asyncUpdate(fact, element);
 		}
 	}
 
@@ -63,7 +63,7 @@ public class RuleProvider {
 			return;
 		FactHandle fact = statefulSession.getFactHandle(element);
 		if (fact != null) {
-			statefulSession.retract(fact);
+			statefulSession.asyncRetract(fact);
 		}
 	}
 
