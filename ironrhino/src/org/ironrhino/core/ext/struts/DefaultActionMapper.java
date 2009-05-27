@@ -48,6 +48,8 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		String methodAndUid = null;
 		// Find the longest matching namespace and name
 		uri = uri.replace("//", "/");
+		if (uri.indexOf(';') > 0)
+			uri = uri.substring(0, uri.indexOf(';'));
 		for (Object var : config.getPackageConfigs().values()) {
 			PackageConfig pc = (PackageConfig) var;
 			String ns = pc.getNamespace();
@@ -59,7 +61,8 @@ public class DefaultActionMapper extends AbstractActionMapper {
 					if ("".equals(temp) || "/".equals(temp))
 						continue;
 					String[] array = StringUtils.split(temp, "/", 2);
-					name = org.ironrhino.common.util.StringUtils.toCamelCase(array[0]);
+					name = org.ironrhino.common.util.StringUtils
+							.toCamelCase(array[0]);
 					if (pc.getActionConfigs().containsKey(name))
 						namespace = ns;
 				}
@@ -67,7 +70,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		}
 
 		if (namespace == null) {
-			 return null;
+			return null;
 		}
 
 		String str = uri.substring(namespace.length());
@@ -78,7 +81,9 @@ public class DefaultActionMapper extends AbstractActionMapper {
 
 		ActionMapping mapping = new ActionMapping();
 		mapping.setNamespace(namespace);
-		mapping.setName(org.ironrhino.common.util.StringUtils.toCamelCase(name));
+		mapping
+				.setName(org.ironrhino.common.util.StringUtils
+						.toCamelCase(name));
 		Map<String, String> params = new HashMap<String, String>(3);
 		// process resultPage.pageNo and resultPage.pageSize
 		String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);

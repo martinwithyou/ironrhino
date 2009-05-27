@@ -2,19 +2,24 @@ package org.ironrhino.common.util;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Util;
+import org.htmlparser.Attribute;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.Tag;
+import org.htmlparser.Text;
+import org.htmlparser.nodes.TagNode;
 import org.htmlparser.util.NodeIterator;
 import org.ironrhino.core.model.BaseTreeableEntity;
 
@@ -101,7 +106,7 @@ public class HtmlUtils {
 			Vector<Attribute> attrs = ((TagNode) node).getAttributesEx();
 			for (Attribute attr : attrs) {
 				String text = attr.getRawValue();
-				if (StringUtils.isNotBlank(text)) {
+				if (org.apache.commons.lang.StringUtils.isNotBlank(text)) {
 					text = text.replaceAll("&nbsp;", "&");
 					text = text.replaceAll("&", "&nbsp;");
 					attr.setRawValue(text);
@@ -115,9 +120,6 @@ public class HtmlUtils {
 	}
 
 	// http://www.bitscn.com/hack/young/200708/108278.html
-	/**
-	 * È¥µôxss´úÂë,²¢ÇÒ²¹È«±êÇ©×ªÒåÌØÊâ×Ö·û
-	 */
 	public static String antiXss(String content) {
 		String old = content;
 		String ret = _antiXss(content);
@@ -129,7 +131,7 @@ public class HtmlUtils {
 	}
 
 	/**
-	 * ÊÇ·ñº¬xss´úÂë
+	 * ï¿½Ç·ï¿½xssï¿½ï¿½ï¿½ï¿½
 	 */
 	public static boolean hasXss(String content) {
 		try {
