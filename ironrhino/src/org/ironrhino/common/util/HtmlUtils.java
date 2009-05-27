@@ -71,9 +71,6 @@ public class HtmlUtils {
 		});
 	}
 
-	/**
-	 * 补全标签
-	 */
 	public static String tidy(String src) {
 		try {
 			StringBuilder sb = new StringBuilder();
@@ -85,7 +82,9 @@ public class HtmlUtils {
 			Parser p = Parser.createParser(sb.toString(), "UTF-8");
 			NodeIterator nl = p.elements();
 			if (nl.hasMoreNodes()) {
-				src = nl.nextNode().toHtml();
+				Node node = nl.nextNode();
+				escapeHtml(node);
+				src = node.toHtml();
 				src = src
 						.substring(head.length(), src.length() - foot.length());
 			}
@@ -95,9 +94,29 @@ public class HtmlUtils {
 		return src;
 	}
 
+	private static void escapeHtml(Node node) {
+		if (node instanceof Text) {
+			node.setText(StringEscapeUtils.escapeHtml(node.getText()));
+		} else if (node instanceof TagNode) {
+			Vector<Attribute> attrs = ((TagNode) node).getAttributesEx();
+			for (Attribute attr : attrs) {
+				String text = attr.getRawValue();
+				if (StringUtils.isNotBlank(text)) {
+					text = text.replaceAll("&nbsp;", "&");
+					text = text.replaceAll("&", "&nbsp;");
+					attr.setRawValue(text);
+				}
+			}
+		}
+		if (node.getChildren() != null && node.getChildren().size() > 0)
+			for (int i = 0; i < node.getChildren().size(); i++)
+				escapeHtml(node.getChildren().elementAt(i));
+
+	}
+
 	// http://www.bitscn.com/hack/young/200708/108278.html
 	/**
-	 * 去掉xss代码
+	 * 去掉xss代码,并且补全标签转义特殊字符
 	 */
 	public static String antiXss(String content) {
 		String old = content;
@@ -106,7 +125,7 @@ public class HtmlUtils {
 			old = ret;
 			ret = _antiXss(ret);
 		}
-		return ret;
+		return tidy(ret);
 	}
 
 	/**
