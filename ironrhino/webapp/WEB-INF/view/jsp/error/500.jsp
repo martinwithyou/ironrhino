@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" isErrorPage="true"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="authz"%>
 <%@ page import="org.apache.commons.logging.LogFactory"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
@@ -25,7 +27,9 @@
 <button class="goback">返回</button>
 <br />
 <authz:authorize ifAnyGranted="ROLE_SUPERVISOR">
-	<p><span class="link"onclick"$('#detail_error_msg').toggle()">开发人员点击此处获取详细错误信息</span></p>
+	<p><span class="link" onclick=
+	$('#detail_error_msg').toggle();
+>开发人员点击此处获取详细错误信息</span></p>
 	<div id="detail_error_msg" style="display: none"><pre>
 <%
 	exception.printStackTrace(new java.io.PrintWriter(out));

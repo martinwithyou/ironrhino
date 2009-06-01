@@ -471,13 +471,6 @@ Observation.checkbox = function(container) {
 }
 
 Observation.common = function(container) {
-	// beautify buttons
-	$('.btn',container).each(function(){
-		var htm = $(this).html();
-		htm = htm.replace(/(^\s*)|(\s*$)/g,'');
-		if(htm.indexOf('<span><span>') != 0)
-			$(this).html('<span><span>'+htm+'</span></span>');
-	});
 	$('input.autocomplete_off').attr('autocomplete','off');
 	$('ul.nav>li', container).hover(function() {
 		$("ul", this).fadeIn("fast");
