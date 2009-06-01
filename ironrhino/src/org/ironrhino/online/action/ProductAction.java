@@ -357,7 +357,7 @@ public class ProductAction extends BaseAction {
 		String code = getUid();
 		Account account = AuthzUtils.getUserDetails(Account.class);
 		if (account == null) {
-			addActionError("not.login");
+			addActionError(getText("not.login"));
 		} else if (StringUtils.isNotBlank(code)) {
 			baseManager.setEntityClass(ProductFavorite.class);
 			ProductFavorite favor = (ProductFavorite) baseManager
@@ -386,7 +386,7 @@ public class ProductAction extends BaseAction {
 		String code = getUid();
 		Account account = AuthzUtils.getUserDetails(Account.class);
 		if (account == null) {
-			addActionError("not.login");
+			addActionError(getText("not.login"));
 		} else if (StringUtils.isNotBlank(code) && (score >= 1 && score <= 5)) {
 			String username = AuthzUtils.getUsername();
 			baseManager.setEntityClass(ProductScore.class);

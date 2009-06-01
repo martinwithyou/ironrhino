@@ -79,7 +79,7 @@
 <div id="menu">
 <ul class="nav">
 	<authz:authorize ifNotGranted="ROLE_BUILTIN_ACCOUNT">
-		<li><a href="<c:url value="/account/login"/>">登录</a></li>
+		<li><a id="login_link" href="<c:url value="/account/login"/>">登录</a></li>
 		<li><a href="<c:url value="/account/signup"/>">注册</a></li>
 	</authz:authorize>
 	<authz:authorize ifAnyGranted="ROLE_BUILTIN_ACCOUNT">

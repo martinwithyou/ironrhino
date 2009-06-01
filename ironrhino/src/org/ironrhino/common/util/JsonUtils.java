@@ -1,118 +1,187 @@
 package org.ironrhino.common.util;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.core.annotation.NotInJson;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class JsonUtils {
 
-	private static Gson gson = new GsonBuilder().excludeFieldsWithAnnotations(
-			NotInJson.class).setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-
-	public static String toJson(Object src) {
-		return gson.toJson(src);
+	public static String mapToJson(Map<String, ?> map) {
+		if (map == null)
+			return null;
+		JSONObject jo = new JSONObject();
+		try {
+			for (String key : map.keySet()) {
+				Object value = map.get(key);
+				if (isSimple(value))
+					jo.put(key, simpleObjectToJSON(value));
+				else if (isArray(value)) {
+					jo.put(key, arrayObjectToJSON(value));
+				} else if (isMap(value)) {
+					jo.put(key, mapObjectToJSON(value));
+				} else {
+					jo.put(key, complexObjectToJson(value));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jo.toString();
 	}
 
-	public static <T> T fromJson(String json, Class<T> clazz) {
-		return gson.fromJson(json, clazz);
+	public static String toJson(Object object) {
+		if (object == null)
+			return "";
+		if (isSimple(object))
+			return simpleObjectToJSON(object).toString();
+		else if (isArray(object)) {
+			return arrayObjectToJSON(object).toString();
+		} else if (isMap(object)) {
+			return mapObjectToJSON(object).toString();
+		} else {
+			return complexObjectToJson(object).toString();
+		}
 	}
 
-	public static <T> T fromJson(String json, Type type) {
-		return gson.fromJson(json, type);
+	public static JSONObject complexObjectToJson(Object o) {
+		if (o == null)
+			return null;
+		Set<String> ignoreProperties = AnnotationUtils
+				.getAnnotatedPropertyNames(o.getClass(), NotInJson.class);
+		JSONObject jo = new JSONObject();
+		try {
+
+			PropertyDescriptor[] pds = Introspector.getBeanInfo(o.getClass())
+					.getPropertyDescriptors();
+			for (PropertyDescriptor pd : pds)
+				if (pd.getReadMethod() != null && !pd.getName().equals("class")
+						&& !ignoreProperties.contains(pd.getName())) {
+					Object value = pd.getReadMethod()
+							.invoke(o, new Object[] {});
+					if (isSimple(value))
+						jo.put(pd.getName(), simpleObjectToJSON(value));
+					else if (isArray(value)) {
+						jo.put(pd.getName(), arrayObjectToJSON(value));
+					} else if (isMap(value)) {
+						jo.put(pd.getName(), mapObjectToJSON(value));
+					} else {
+						jo.put(pd.getName(), complexObjectToJson(value));
+					}
+				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jo;
 	}
 
-	/**
-	 * 
-	 * @param <T>
-	 * @param json
-	 * @param clazz
-	 *            support
-	 *            Short,Integer,Long,Float,Double,BigDecimal,Boolean,Date
-	 *            ,default String
-	 * @return
-	 */
-	public static <T> List<T> listFromJson(String json, Class<T> clazz) {
-		Type type;
-		if (Short.class.equals(clazz))
-			type = new TypeToken<List<Short>>() {
-			}.getType();
-		else if (Integer.class.equals(clazz))
-			type = new TypeToken<List<Integer>>() {
-			}.getType();
-		else if (Long.class.equals(clazz))
-			type = new TypeToken<List<Long>>() {
-			}.getType();
-		else if (Float.class.equals(clazz))
-			type = new TypeToken<List<Float>>() {
-			}.getType();
-		else if (Double.class.equals(clazz))
-			type = new TypeToken<List<Double>>() {
-			}.getType();
-		else if (BigDecimal.class.equals(clazz))
-			type = new TypeToken<List<BigDecimal>>() {
-			}.getType();
-		else if (Boolean.class.equals(clazz))
-			type = new TypeToken<List<Boolean>>() {
-			}.getType();
-		else if (Date.class.equals(clazz))
-			type = new TypeToken<List<Date>>() {
-			}.getType();
-		else
-			type = new TypeToken<List<String>>() {
-			}.getType();
-		return gson.fromJson(json, type);
+	public static JSONArray arrayObjectToJSON(Object o) {
+		if (o == null || !isArray(o))
+			return null;
+		JSONArray ja = new JSONArray();
+		Object[] array;
+		try {
+			if (o instanceof Collection) {
+				array = ((Collection) o).toArray();
+			} else {
+				array = (Object[]) o;
+			}
+			for (int i = 0; i < array.length; i++) {
+				if (isSimple(array[i])) {
+					ja.put(simpleObjectToJSON(array[i]));
+				} else if (isArray(array[i])) {
+					ja.put(arrayObjectToJSON(array[i]));
+				} else if (isMap(array[i])) {
+					ja.put(mapObjectToJSON(array[i]));
+				} else {
+					ja.put(complexObjectToJson(array[i]));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ja;
 	}
 
-	/**
-	 * keyClass is String
-	 * 
-	 * @param <T>
-	 * @param json
-	 * @param valueClass
-	 *            support
-	 *            Short,Integer,Long,Float,Double,BigDecimal,Boolean,Date
-	 *            ,default String
-	 * @return
-	 */
-	public static <T> Map<String, T> mapFromJson(String json,
-			Class<T> valueClass) {
-		Type type;
-		if (Short.class.equals(valueClass))
-			type = new TypeToken<Map<String, Short>>() {
-			}.getType();
-		else if (Integer.class.equals(valueClass))
-			type = new TypeToken<Map<String, Integer>>() {
-			}.getType();
-		else if (Long.class.equals(valueClass))
-			type = new TypeToken<Map<String, Long>>() {
-			}.getType();
-		else if (Float.class.equals(valueClass))
-			type = new TypeToken<Map<String, Float>>() {
-			}.getType();
-		else if (Double.class.equals(valueClass))
-			type = new TypeToken<Map<String, Double>>() {
-			}.getType();
-		else if (BigDecimal.class.equals(valueClass))
-			type = new TypeToken<Map<String, BigDecimal>>() {
-			}.getType();
-		else if (Boolean.class.equals(valueClass))
-			type = new TypeToken<Map<String, Boolean>>() {
-			}.getType();
-		else if (Date.class.equals(valueClass))
-			type = new TypeToken<Map<String, Date>>() {
-			}.getType();
-		else
-			type = new TypeToken<Map<String, String>>() {
-			}.getType();
-		return gson.fromJson(json, type);
+	public static Object simpleObjectToJSON(Object o) {
+		if (o instanceof Date)
+			return DateUtils.getDate10((Date) o);
+		return o;
 	}
+
+	public static JSONObject mapObjectToJSON(Object o) {
+		if (o == null)
+			return null;
+		JSONObject jo = new JSONObject();
+		Map map = (Map) o;
+		try {
+			for (Object key : map.keySet()) {
+				Object value = map.get(key);
+				if (isSimple(value))
+					jo.put(key.toString(), simpleObjectToJSON(value));
+				else if (isArray(value)) {
+					jo.put(key.toString(), arrayObjectToJSON(value));
+				} else if (isMap(value)) {
+					jo.put(key.toString(), mapObjectToJSON(value));
+				} else {
+					jo.put(key.toString(), complexObjectToJson(value));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jo;
+	}
+
+	private static boolean isSimple(Object o) {
+		if (o == null)
+			return true;
+		if (o instanceof Number)
+			return true;
+		if (o instanceof String)
+			return true;
+		if (o instanceof Boolean)
+			return true;
+		if (o instanceof Character)
+			return true;
+		if (o.getClass().isEnum())
+			return true;
+		if (o instanceof Date)
+			return true;
+		if (o instanceof JSONArray)
+			return true;
+		if (o instanceof JSONObject)
+			return true;
+		return false;
+	}
+
+	private static boolean isArray(Object o) {
+		if (o == null)
+			return false;
+		if (o instanceof Collection)
+			return true;
+		if (o.getClass().isArray())
+			return true;
+		return false;
+	}
+
+	private static boolean isMap(Object o) {
+		if (o == null)
+			return false;
+		if (o instanceof Map)
+			return true;
+		return false;
+	}
+
+	// private static boolean isComplex(Object o) {
+	// return !(isSimple(o) || isArray(o) || isMap(o));
+	// }
 
 }

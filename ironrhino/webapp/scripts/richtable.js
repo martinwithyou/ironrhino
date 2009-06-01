@@ -199,7 +199,7 @@ Richtable = {
 	open : function(url, reloadonclose) {
 		if ($('#_window_').length == 0)
 			$(
-					'<div id="_window_" class="flora" title=""><iframe style="width:600px;height:600px;"/></div>')
+					'<div id="_window_" class="base" title=""><iframe style="width:600px;height:600px;"/></div>')
 					.appendTo(document.body);
 		url += (url.indexOf('?') > 0 ? '&' : '?') + Math.random();
 		$('#_window_ > iframe')[0].src = url;

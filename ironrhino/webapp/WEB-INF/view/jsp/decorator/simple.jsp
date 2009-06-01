@@ -26,13 +26,42 @@
 <link rel="stylesheet" href="<s:url value="/themes/base/ui.all.css"/>"
 	type="text/css" media="screen" />
 <script src="<c:url value="/scripts/jquery.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.cookie.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/effects.core.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/effects.highlight.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/ui.core.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/ui.dialog.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/ui.resizable.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/ui.draggable.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/ui.tabs.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.history.js"/>"
+	type="text/javascript"></script>
 <script src="<c:url value="/scripts/jquery.form.js"/>"
 	type="text/javascript"></script>
-<script src="<c:url value="/scripts/datagridtable.js"/>"
+<script src="<c:url value="/scripts/jquery.corner.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.bgiframe.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.autocomplete.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.emptyonclick.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/jquery.dragable.js"/>"
+	type="text/javascript"></script>
+<script src="<c:url value="/scripts/sortabletable.js"/>"
 	type="text/javascript"></script>
 <script src="<c:url value="/scripts/application.js"/>"
 	type="text/javascript"></script>
-<script type="text/javascript" src="<c:url value="/scripts/richtable.js"/>"></script>
+<script type="text/javascript"
+	src="<c:url value="/scripts/richtable.js"/>"></script>
 <decorator:head />
 </head>
 <body>
