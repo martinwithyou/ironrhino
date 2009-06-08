@@ -1,21 +1,9 @@
 @charset "utf-8";
 
-/*
-body {
-	overflow: hidden;
-}
-
-#wrapper {
-	height: 100%;
-	overflow: auto;
-}
-
-*/
 #indicator {
 	position: absolute;
-	right: 21px;
+	top: expression(eval(document.compatMode&&document.compatMode =='CSS1Compat')?documentElement.scrollTop:document.body.scrollTop);
 }
-
 #cart_items {
 	height: 200px;
 }
