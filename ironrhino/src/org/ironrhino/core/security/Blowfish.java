@@ -64,7 +64,7 @@ public class Blowfish {
 			return null;
 		try {
 			return new String(Base64.encodeBase64(get().encrypt(
-					str.getBytes("UTF-8"))));
+					str.getBytes("UTF-8"))), "UTF-8");
 		} catch (Exception ex) {
 			log.error("encrypt exception!", ex);
 			return "";
@@ -91,6 +91,25 @@ public class Blowfish {
 	public byte[] decrypt(byte[] bytes) throws IllegalBlockSizeException,
 			BadPaddingException {
 		return deCipher.doFinal(bytes);
+	}
+
+	public static String encryptBytesToString(byte[] bytes) {
+		try {
+			return new String(Base64.encodeBase64(get().encrypt(bytes)),
+					"UTF-8");
+		} catch (Exception ex) {
+			log.error("decrypt exception!", ex);
+			return "";
+		}
+	}
+
+	public static byte[] decryptStringToBytes(String str) {
+		try {
+			return get().decrypt(Base64.decodeBase64(str.getBytes("UTF-8")));
+		} catch (Exception ex) {
+			log.error("decrypt exception!", ex);
+			return new byte[0];
+		}
 	}
 
 	public static void main(String... strings) {

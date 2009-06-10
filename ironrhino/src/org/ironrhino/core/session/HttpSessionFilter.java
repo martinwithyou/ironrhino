@@ -31,22 +31,30 @@ public class HttpSessionFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
+		// non struts action
+		HttpServletRequest req = (HttpServletRequest) request;
+		String uri = req.getRequestURI();
+		if (uri.indexOf('.') > 0) {
+			chain.doFilter(request, response);
+			return;
+		}
+
 		HttpContext httpContext = new HttpContext((HttpServletRequest) request,
 				(HttpServletResponse) response, servletContext);
-		HttpRequest req = new HttpRequest((HttpServletRequest) request,
-				httpContext, sessionManager);
+		HttpRequest httpRequest = new HttpRequest(req, httpContext,
+				sessionManager);
 		BufferableResponseWrapper res = new BufferableResponseWrapper(
 				(HttpServletResponse) response);
-		chain.doFilter(req, res);
+		chain.doFilter(httpRequest, res);
 		byte[] bytes = res.getContents();
-		if (bytes != null) {
-			sessionManager.save();
-			response.setContentLength(bytes.length);
-			ServletOutputStream sos = response.getOutputStream();
-			sos.write(bytes);
-			sos.flush();
-			sos.close();
-		}
+		if (bytes == null)
+			bytes = new byte[0];
+		sessionManager.save();
+		response.setContentLength(bytes.length);
+		ServletOutputStream sos = response.getOutputStream();
+		sos.write(bytes);
+		sos.flush();
+		sos.close();
 	}
 
 	public void destroy() {

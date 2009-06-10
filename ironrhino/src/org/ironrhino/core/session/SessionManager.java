@@ -21,16 +21,20 @@ public class SessionManager implements BeanFactoryAware {
 		return (Session) this.session.get();
 	}
 
-	public Object getAttribute(String key) {
-		return sessionStore.getAttribute(getHttpSession(), key);
-	}
-
 	public void save() {
 		sessionStore.save(getHttpSession());
 	}
 
+	public void initialize() {
+		sessionStore.initialize(getHttpSession());
+	}
+
 	public void invalidate() {
 		sessionStore.invalidate(getHttpSession());
+	}
+
+	public SessionStore getSessionStore() {
+		return sessionStore;
 	}
 
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {

@@ -24,8 +24,6 @@ public class Session implements HttpSession {
 
 	private Map attrMap = new HashMap();
 
-	private Map changeMark;
-
 	private long createTime;
 
 	private int maxInactiveInterval = 1800;
@@ -36,6 +34,7 @@ public class Session implements HttpSession {
 		this.httpContext = context;
 		this.sessionManager = sessionManager;
 		this.sessionManager.setHttpSession(this);
+		sessionManager.initialize();
 		createTime = System.currentTimeMillis();
 		sessionId = (String) getAttribute(SESSION_ID);
 		if (StringUtils.isBlank(sessionId)) {
@@ -88,9 +87,6 @@ public class Session implements HttpSession {
 
 	public void setAttribute(String key, Object object) {
 		attrMap.put(key, object);
-		if (changeMark == null)
-			changeMark = new HashMap();
-		changeMark.put(key, Boolean.TRUE);
 	}
 
 	public void putValue(String key, Object object) {
@@ -99,9 +95,6 @@ public class Session implements HttpSession {
 
 	public void removeAttribute(String key) {
 		attrMap.remove(key);
-		if (changeMark == null)
-			changeMark = new HashMap();
-		changeMark.put(key, Boolean.TRUE);
 	}
 
 	public void removeValue(String key) {
@@ -117,12 +110,7 @@ public class Session implements HttpSession {
 	}
 
 	public Object getAttribute(String key) {
-		if (attrMap.containsKey(key))
-			return attrMap.get(key);
-		Object attribute = sessionManager.getAttribute(key);
-		attrMap.put(key, attribute);
-		return attribute;
-
+		return attrMap.get(key);
 	}
 
 	@Deprecated
@@ -141,10 +129,6 @@ public class Session implements HttpSession {
 
 	public void setAttrMap(Map attrMap) {
 		this.attrMap = attrMap;
-	}
-
-	public Map getChangeMark() {
-		return changeMark;
 	}
 
 	public void save() {
