@@ -8,13 +8,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ho.yaml.Yaml;
 import org.ironrhino.common.util.RequestUtils;
-import org.ironrhino.common.util.SecurityUtils;
+import org.ironrhino.core.security.Blowfish;
 
 public class CookieSessionStore implements SessionStore {
 
 	private Log log = LogFactory.getLog(CookieSessionStore.class);
-
-	private String encryptkey = "alkdfjalkgjalgjalkgadklfajdkfald";
 
 	private String cookieName = "_s_";
 
@@ -29,7 +27,7 @@ public class CookieSessionStore implements SessionStore {
 			String value = RequestUtils.getCookieValue(session.getHttpContext()
 					.getRequest(), cookieName);
 			if (StringUtils.isNotBlank(value)) {
-				value = SecurityUtils.decrypt(encryptkey, value);
+				value = Blowfish.encrypt(value);
 				try {
 					attrMap = (Map) Yaml.load(value);
 					session.setAttrMap(attrMap);
@@ -44,7 +42,7 @@ public class CookieSessionStore implements SessionStore {
 
 	public void save(Session session) {
 		// TODO some object like webflow.conversation can't be dump,and some
-		// attribute losed
+		// attribute losed maybe use serialization?
 		Map attrMap = session.getAttrMap();
 		Map toDump = new HashMap();
 		for (Object key : attrMap.keySet())
@@ -60,7 +58,7 @@ public class CookieSessionStore implements SessionStore {
 				if (value.length() > 4 * 1024)
 					throw new RuntimeException("cookie length > 4k");
 				if (StringUtils.isNotBlank(value)) {
-					value = SecurityUtils.encrypt(encryptkey, value);
+					value = Blowfish.encrypt(value);
 					RequestUtils.saveCookie(session.getHttpContext()
 							.getRequest(), session.getHttpContext()
 							.getResponse(), cookieName, value);

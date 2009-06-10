@@ -1,6 +1,7 @@
-package org.ironrhino.common.util;
+package org.ironrhino.core.security;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,6 +21,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.lf5.util.StreamUtils;
 import org.bouncycastle.bcpg.ArmoredInputStream;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.BCPGOutputStream;
@@ -54,26 +59,174 @@ import org.bouncycastle.openpgp.PGPSignatureList;
 import org.bouncycastle.openpgp.PGPSignatureSubpacketGenerator;
 import org.bouncycastle.openpgp.PGPUtil;
 
-public class SecurityUtils {
+public class PGP {
+	private static Log log = LogFactory.getLog(PGP.class);
+
+	public static final int kEY_SIZE = 1024, STRENGTH = 0;
+
+	public static final String PASSWORD_LOCATION = "/resources/key/pgp-password";
+	public static final String PUBLIC_KEY_LOCATION = "/resources/key/pgp-public";
+	public static final String PRIVATE_KEY_LOCATION = "/resources/key/pgp-private";
+	private static String PASSWORD = "haha";
 
 	static {
 		Security.addProvider(new BouncyCastleProvider());
+		try {
+			PASSWORD = new String(StreamUtils.getBytes(PGP.class
+					.getResourceAsStream(PASSWORD_LOCATION)), "UTF-8");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
+
+	public static void encrypt(InputStream in, OutputStream out) {
+		try {
+			encrypt(in, out, PGP.class.getResourceAsStream(PUBLIC_KEY_LOCATION));
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	public static void decrypt(InputStream in, OutputStream out) {
+		try {
+			decrypt(in, out, PGP.class
+					.getResourceAsStream(PRIVATE_KEY_LOCATION), PASSWORD);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	public static void sign(InputStream in, OutputStream out) {
+		try {
+			sign(in, out, PGP.class.getResourceAsStream(PRIVATE_KEY_LOCATION),
+					PASSWORD);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	public static boolean verify(InputStream in, InputStream sign) {
+		try {
+			return verify(in, sign, PGP.class
+					.getResourceAsStream(PUBLIC_KEY_LOCATION));
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return false;
+		}
+	}
+
+	public static String encrypt(String str) {
+		try {
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(str
+					.getBytes("UTF-8"));
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			encrypt(inputStream, outputStream);
+			return new String(Base64.encodeBase64(outputStream.toByteArray()),
+					"UTF-8");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return "";
+		}
+	}
+
+	public static String decrypt(String str) {
+		try {
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64
+					.decodeBase64(str.getBytes("UTF-8")));
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			decrypt(inputStream, outputStream);
+			return new String(outputStream.toByteArray(), "UTF-8");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return "";
+		}
+	}
+
+	public static String sign(String str) {
+		try {
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(str
+					.getBytes("UTF-8"));
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			sign(inputStream, outputStream);
+			return new String(Base64.encodeBase64(outputStream.toByteArray()),
+					"UTF-8");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return "";
+		}
+	}
+
+	public static boolean verify(String input, String sign) {
+		try {
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(input
+					.getBytes("UTF-8"));
+			ByteArrayInputStream signInputStream = new ByteArrayInputStream(
+					Base64.decodeBase64(sign.getBytes("UTF-8")));
+			return verify(inputStream, signInputStream);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return false;
+		}
+	}
+
+	/***********************************************/
+	/***********************************************/
+	/***********************************************/
+	/***********************************************/
+	/***********************************************/
+	/***********************************************/
+
+	public static void main(String... strings) throws Exception {
+
+		String keyId = "zhouyanming", password = PASSWORD;
+		generatorKeyPair(keyId, password, new FileOutputStream("pub.key"),
+				new FileOutputStream("pri.key"));
+
+		encrypt(new FileInputStream("build.xml"), new FileOutputStream(
+				"build.xml.crpt"), new FileInputStream("pub.key"));
+
+		decrypt(new FileInputStream("build.xml.crpt"), new FileOutputStream(
+				"build2.xml"), new FileInputStream("pri.key"), password);
+
+		sign(new FileInputStream("build.xml"), new FileOutputStream(
+				"build.xml.sign"), new FileInputStream("pri.key"), password);
+
+		boolean is = verify(new FileInputStream("build.xml"),
+				new FileInputStream("build.xml.sign"), new FileInputStream(
+						"pub.key"));
+
+		System.out.println(is);
+
+		String s = "this is a test";
+		s = encrypt(s);
+		System.out.println(s);
+		s = decrypt(s);
+		System.out.println(s);
+		String sign = sign(s);
+		System.out.println(verify(s, sign));
+	}
+
+	/***********************************************/
+	/***********************************************/
+	/***********************************************/
+	/***********************************************/
+	/***********************************************/
+	/***********************************************/
 
 	public static void generatorKeyPair(String keyId, String password,
 			OutputStream pub, OutputStream pri)
 			throws NoSuchAlgorithmException, NoSuchProviderException,
 			InvalidAlgorithmParameterException, PGPException, IOException {
-		int iKeySize = 1024, iStrength = 0;
+
 		KeyPairGenerator dsaKpg = KeyPairGenerator.getInstance("DSA", "BC");
-		dsaKpg.initialize(iKeySize);
+		dsaKpg.initialize(kEY_SIZE);
 
 		KeyPair dsaKp = dsaKpg.generateKeyPair();
 		KeyPairGenerator elgKpg = KeyPairGenerator.getInstance("ELGAMAL", "BC");
 
-		if (iStrength > 0) {
+		if (STRENGTH > 0) {
 			ElGamalParametersGenerator paramGen = new ElGamalParametersGenerator();
-			paramGen.init(iKeySize, iStrength, new SecureRandom());
+			paramGen.init(kEY_SIZE, STRENGTH, new SecureRandom());
 			ElGamalParameters genParams = paramGen.generateParameters();
 			ElGamalParameterSpec elParams = new ElGamalParameterSpec(genParams
 					.getP(), genParams.getG());
@@ -98,12 +251,8 @@ public class SecurityUtils {
 
 		PGPKeyRingGenerator keyRingGen = new PGPKeyRingGenerator(
 				PGPSignature.POSITIVE_CERTIFICATION, dsaKeyPair, keyId,
-				PGPEncryptedData.AES_256, password.toCharArray(), true /*
-																		 * Use
-																		 * SHA1
-																		 */,
-				null /* hashedPcks */, null /* unhashedPcks */,
-				new SecureRandom(), "BC");
+				PGPEncryptedData.AES_256, password.toCharArray(), true, null,
+				null, new SecureRandom(), "BC");
 		keyRingGen.addSubKey(elgKeyPair);
 
 		OutputStream ostream = new ArmoredOutputStream(pub);
@@ -194,7 +343,7 @@ public class SecurityUtils {
 	}
 
 	public static void decrypt(InputStream data, OutputStream out,
-			InputStream keyIs, char[] passwd) throws Exception {
+			InputStream keyIs, String password) throws Exception {
 		PGPSecretKeyRingCollection secring = parsePGPSecretKeyRingCollection(keyIs);
 		PGPPublicKeyEncryptedData pbe = null;
 		InputStream in = PGPUtil.getDecoderStream(data);
@@ -222,7 +371,7 @@ public class SecurityUtils {
 
 		PGPPrivateKey sKey = null;
 		PGPSecretKey secretKey = secring.getSecretKey(pbe.getKeyID());
-		sKey = secretKey.extractPrivateKey(passwd, "BC");
+		sKey = secretKey.extractPrivateKey(password.toCharArray(), "BC");
 		// sKey = findSecretKey(it, passwd);
 
 		InputStream clear = pbe.getDataStream(sKey, "BC");
@@ -277,7 +426,7 @@ public class SecurityUtils {
 	}
 
 	public static void sign(InputStream in, OutputStream out,
-			InputStream keyIs, char[] pass) throws IOException,
+			InputStream keyIs, String password) throws IOException,
 			NoSuchAlgorithmException, NoSuchProviderException, PGPException,
 			SignatureException {
 		// PGPSecretKey key = null;
@@ -286,7 +435,8 @@ public class SecurityUtils {
 		iStream.mark(1024 * 128);
 		ring = new PGPSecretKeyRing(new ArmoredInputStream(iStream));
 		PGPSecretKey key = ring.getSecretKey();
-		PGPPrivateKey priK = key.extractPrivateKey(pass, "BC");
+		PGPPrivateKey priK = key
+				.extractPrivateKey(password.toCharArray(), "BC");
 
 		PGPSignatureGenerator sGen = new PGPSignatureGenerator(key
 				.getPublicKey().getAlgorithm(), PGPUtil.SHA1, "BC");
@@ -361,39 +511,4 @@ public class SecurityUtils {
 			return false;
 	}
 
-	public static String encrypt(String key, String input) {
-		// TODO impl
-		return CodecUtils.encode(input);
-	}
-
-	public static String decrypt(String key, String input) {
-		// TODO impl
-		return CodecUtils.decode(input);
-	}
-
-	public static void main(String[] args) throws Exception {
-
-		SecurityUtils.generatorKeyPair("zhouyanming", "haha",
-				new FileOutputStream("pub.key"),
-				new FileOutputStream("pri.key"));
-
-		SecurityUtils.encrypt(new FileInputStream("build.xml"),
-				new FileOutputStream("build.xml.crpt"), new FileInputStream(
-						"pub.key"));
-
-		SecurityUtils.decrypt(new FileInputStream("build.xml.crpt"),
-				new FileOutputStream("build2.xml"), new FileInputStream(
-						"pri.key"), "linuxfans".toCharArray());
-
-		SecurityUtils.sign(new FileInputStream("build.xml"),
-				new FileOutputStream("build.xml.sign"), new FileInputStream(
-						"pri.key"), "linuxfans".toCharArray());
-
-		boolean is = SecurityUtils.verify(new FileInputStream("build.xml"),
-				new FileInputStream("build.xml.sign"), new FileInputStream(
-						"pub.key"));
-
-		System.out.println(is);
-
-	}
 }
