@@ -5,6 +5,11 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="httpSessionFilter" class="org.ironrhino.core.session.HttpSessionFilter" />
 	<bean id="sessionManager" class="org.ironrhino.core.session.SessionManager" />
-	<bean id="sessionStore" class="org.ironrhino.core.session.CookieSessionStore"
-		scope="prototype" />
+	<!--
+		bean id="sessionStore"
+		class="org.ironrhino.core.session.CookieSessionStore"
+		scope="prototype" /
+	-->
+	<bean id="sessionStore" class="org.ironrhino.core.session.CacheSessionStore" />
+	<bean id="sessionCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean" />
 </beans>

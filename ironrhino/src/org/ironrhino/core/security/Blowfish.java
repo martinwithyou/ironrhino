@@ -88,15 +88,36 @@ public class Blowfish {
 		return enCipher.doFinal(bytes);
 	}
 
+	public byte[] encrypt(byte[] bytes, int offset, int length)
+			throws IllegalBlockSizeException, BadPaddingException {
+		return enCipher.doFinal(bytes, offset, length);
+	}
+
 	public byte[] decrypt(byte[] bytes) throws IllegalBlockSizeException,
 			BadPaddingException {
 		return deCipher.doFinal(bytes);
+	}
+
+	public byte[] decrypt(byte[] bytes, int offset, int length)
+			throws IllegalBlockSizeException, BadPaddingException {
+		return deCipher.doFinal(bytes, offset, length);
 	}
 
 	public static String encryptBytesToString(byte[] bytes) {
 		try {
 			return new String(Base64.encodeBase64(get().encrypt(bytes)),
 					"UTF-8");
+		} catch (Exception ex) {
+			log.error("decrypt exception!", ex);
+			return "";
+		}
+	}
+
+	public static String encryptBytesToString(byte[] bytes, int offset,
+			int length) {
+		try {
+			return new String(Base64.encodeBase64(get().encrypt(bytes, offset,
+					length)), "UTF-8");
 		} catch (Exception ex) {
 			log.error("decrypt exception!", ex);
 			return "";

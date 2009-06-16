@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.common.util.RequestUtils;
 
 public class Session implements HttpSession {
 
@@ -28,19 +29,22 @@ public class Session implements HttpSession {
 
 	private int maxInactiveInterval = 1800;
 
-	private static String SESSION_ID = "_sid_";
+	private static String SESSION_ID = "sid";
 
 	public Session(HttpContext context, SessionManager sessionManager) {
+		createTime = System.currentTimeMillis();
+		sessionId = RequestUtils.getCookieValue(context.getRequest(),
+				SESSION_ID);
+		if (StringUtils.isBlank(sessionId)) {
+			sessionId = DigestUtils.md5Hex(UUID.randomUUID().toString());
+			setAttribute(SESSION_ID, sessionId);
+			RequestUtils.saveCookie(context.getRequest(),
+					context.getResponse(), SESSION_ID, sessionId);
+		}
 		this.httpContext = context;
 		this.sessionManager = sessionManager;
 		this.sessionManager.setHttpSession(this);
 		sessionManager.initialize();
-		createTime = System.currentTimeMillis();
-		sessionId = (String) getAttribute(SESSION_ID);
-		if (StringUtils.isBlank(sessionId)) {
-			sessionId = DigestUtils.md5Hex(UUID.randomUUID().toString());
-			setAttribute(SESSION_ID, sessionId);
-		}
 	}
 
 	public long getCreationTime() {
