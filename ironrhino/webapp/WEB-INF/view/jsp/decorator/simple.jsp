@@ -56,12 +56,14 @@
 	type="text/javascript"></script>
 <script src="<c:url value="/scripts/jquery.dragable.js"/>"
 	type="text/javascript"></script>
-<script src="<c:url value="/scripts/sortabletable.js"/>"
+<script src="<c:url value="/scripts/ironrhino.core.js"/>"
 	type="text/javascript"></script>
-<script src="<c:url value="/scripts/application.js"/>"
+<script src="<c:url value="/scripts/ironrhino.sortabletable.js"/>"
 	type="text/javascript"></script>
 <script type="text/javascript"
-	src="<c:url value="/scripts/richtable.js"/>"></script>
+	src="<c:url value="/scripts/ironrhino.richtable.js"/>"></script>
+<script type="text/javascript"
+	src="<c:url value="/scripts/ironrhino.datagridtable.js"/>"></script>
 <decorator:head />
 </head>
 <body>
