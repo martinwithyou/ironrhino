@@ -1,11 +1,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:amq="http://activemq.apache.org/schema/core"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
-<!--
-	<amq:broker useJmx="false" persistent="true"
-		brokerName="localhost">
+	<amq:broker useJmx="false" persistent="true" brokerName="localhost">
 		<amq:persistenceAdapter>
 			<amq:jdbcPersistenceAdapter id="jdbcAdapter"
 				dataSource="#dataSource" createTablesOnStartup="true"
@@ -15,36 +12,27 @@
 			<amq:transportConnector uri="vm://localhost" />
 		</amq:transportConnectors>
 	</amq:broker>
-	<bean id="destination"
-		class="org.apache.activemq.command.ActiveMQQueue"
+	<bean id="destination" class="org.apache.activemq.command.ActiveMQQueue"
 		p:physicalName="org.ironrhino.intranet" />
-	<bean id="jmsConnectionFactory"
-		class="org.apache.activemq.ActiveMQConnectionFactory"
+	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
 		p:brokerURL="vm://localhost" />
-	<bean id="jmsTemplate"
-		class="org.springframework.jms.core.JmsTemplate">
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory">
-			<bean id="jmsFactory"
-				class="org.apache.activemq.pool.PooledConnectionFactory">
-				<property name="connectionFactory"
-					ref="jmsConnectionFactory" />
+			<bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory">
+				<property name="connectionFactory" ref="jmsConnectionFactory" />
 			</bean>
 		</property>
 		<property name="messageConverter" ref="messageConverterManager" />
 	</bean>
-	<bean id="messageConverterManager"
-		class="org.ironrhino.core.jms.MessageConverterManager" />
-	<bean id="messageProducer"
-		class="org.ironrhino.core.jms.MessageProducer">
+	<bean id="messageConverterManager" class="org.ironrhino.core.jms.MessageConverterManager" />
+	<bean id="messageProducer" class="org.ironrhino.core.jms.MessageProducer">
 		<property name="template" ref="jmsTemplate" />
 		<property name="destination" ref="destination" />
 	</bean>
-	<bean id="messageConsumerManager"
-		class="org.ironrhino.core.jms.MessageConsumerManager">
+	<bean id="messageConsumerManager" class="org.ironrhino.core.jms.MessageConsumerManager">
 		<property name="consumers">
 			<list>
-				<bean
-					class="org.ironrhino.core.mail.SimpleMailMessageConsumer"
+				<bean class="org.ironrhino.core.mail.SimpleMailMessageConsumer"
 					autowire="byName" />
 			</list>
 		</property>
@@ -63,5 +51,4 @@
 		<property name="destination" ref="destination" />
 		<property name="messageListener" ref="messageListener" />
 	</bean>
-	-->
 </beans>

@@ -2,7 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-<!--
 	<bean id="compass" class="org.compass.spring.LocalCompassBean">
 		<property name="classMappings">
 			<list>
@@ -28,26 +27,23 @@
 		</property>
 		<property name="transactionManager" ref="transactionManager" />
 	</bean>
-	<bean id="hibernateGpsDevice"
-		class="org.compass.gps.device.hibernate.HibernateGpsDevice">
+	<bean id="hibernateGpsDevice" class="org.compass.gps.device.hibernate.HibernateGpsDevice">
 		<property name="name" value="hibernateDevice" />
 		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="nativeExtractor">
+			<bean class="org.compass.spring.device.hibernate.SpringNativeHibernateExtractor" />
+		</property>
 	</bean>
 	<bean id="compassGps" class="org.compass.gps.impl.SingleCompassGps"
 		init-method="start" destroy-method="stop">
 		<property name="compass" ref="compass" />
 		<property name="gpsDevices">
 			<list>
-				<bean
-					class="org.compass.spring.device.SpringSyncTransactionGpsDeviceWrapper">
-					<property name="gpsDevice" ref="hibernateGpsDevice" />
-				</bean>
+				<ref bean="hibernateGpsDevice" />
 			</list>
 		</property>
 	</bean>
-	<bean id="compassSearchService"
-		class="org.ironrhino.core.search.CompassSearchService">
+	<bean id="compassSearchService" class="org.ironrhino.core.search.CompassSearchService">
 		<property name="compass" ref="compass" />
 	</bean>
-	-->
 </beans>

@@ -12,7 +12,6 @@ import org.compass.core.CompassQuery;
 import org.compass.core.CompassQueryFilterBuilder;
 import org.compass.core.CompassSession;
 import org.compass.core.CompassTemplate;
-import org.compass.core.CompassTransaction;
 import org.compass.core.support.search.CompassSearchResults;
 import org.springframework.util.Assert;
 
@@ -27,14 +26,12 @@ public class CompassSearchService {
 	public CompassSearchResults search(final CompassCriteria criteria) {
 		if (criteria == null)
 			return null;
-		return (CompassSearchResults) getCompassTemplate()
-				.execute(
-						CompassTransaction.TransactionIsolation.READ_ONLY_READ_COMMITTED,
-						new CompassCallback() {
-							public Object doInCompass(CompassSession session) {
-								return performSearch(criteria, session);
-							}
-						});
+		return (CompassSearchResults) getCompassTemplate().execute(
+				new CompassCallback() {
+					public Object doInCompass(CompassSession session) {
+						return performSearch(criteria, session);
+					}
+				});
 	}
 
 	protected CompassSearchResults performSearch(CompassCriteria criteria,
@@ -183,6 +180,7 @@ public class CompassSearchService {
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(compass);
 		this.compassTemplate = new CompassTemplate(compass);
+		this.compassTemplate.setReadOnly(true);
 	}
 
 	public void setCompass(Compass compass) {
