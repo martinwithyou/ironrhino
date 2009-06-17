@@ -104,10 +104,9 @@ public class SearchAction extends ActionSupport {
 		if (score > 0.999)
 			return "100%";
 		else
-			return NumberUtils.round(
+			return NumberUtils.format(NumberUtils.round(
 					new BigDecimal(score).multiply(new BigDecimal(100)), 1)
-					.toPlainString()
+					.doubleValue(), 1)
 					+ "%";
 	}
-
 }

@@ -625,22 +625,24 @@ var Region = {
 }
 
 function login(){
-	if ($('#_login_window_').length == 0)
-		$(
-				'<div id="_login_window_" class="base" title=""><iframe style="width:400px;height:240px;border:no;"/></div>')
-				.appendTo(document.body);
-	if ($('#_login_window_').attr('_dialoged_')) {
-		$("#_login_window_").dialog('open');
-		return;
-	}
-	var url = $('#login_link').attr('href');
-	url += (url.indexOf('?') > 0 ? '&' : '?')+'decorator=simple';
-	$('#_login_window_ > iframe')[0].src = url;
-	$('#_login_window_').attr('_dialoged_', true);
-	$("#_login_window_").dialog( {
-		width :430,
-		height :300
-	});
+//  http和https跨域不好处理
+//	if ($('#_login_window_').length == 0)
+//		$(
+//				'<div id="_login_window_" class="base" title=""><iframe style="width:400px;height:240px;border:no;"/></div>')
+//				.appendTo(document.body);
+//	if ($('#_login_window_').attr('_dialoged_')) {
+//		$("#_login_window_").dialog('open');
+//		return;
+//	}
+//	var url = $('#login_link').attr('href');
+//	url += (url.indexOf('?') > 0 ? '&' : '?')+'decorator=simple';
+//	$('#_login_window_ > iframe')[0].src = url;
+//	$('#_login_window_').attr('_dialoged_', true);
+//	$("#_login_window_").dialog( {
+//		width :430,
+//		height :300,
+//		close : function(){document.location.href=document.location.href}
+//	});
 }
 
 function refreshCaptcha() {

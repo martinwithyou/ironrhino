@@ -23,6 +23,9 @@
 				<prop key="compass.transaction.factory">
 					org.compass.spring.transaction.SpringSyncTransactionFactory
 				</prop>
+				<prop key="compass.engine.analyzer.default.type">
+					org.apache.lucene.analysis.cn.ChineseAnalyzer
+				</prop>
 			</props>
 		</property>
 		<property name="transactionManager" ref="transactionManager" />
@@ -31,7 +34,8 @@
 		<property name="name" value="hibernateDevice" />
 		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="nativeExtractor">
-			<bean class="org.compass.spring.device.hibernate.SpringNativeHibernateExtractor" />
+			<bean
+				class="org.compass.spring.device.hibernate.SpringNativeHibernateExtractor" />
 		</property>
 	</bean>
 	<bean id="compassGps" class="org.compass.gps.impl.SingleCompassGps"
