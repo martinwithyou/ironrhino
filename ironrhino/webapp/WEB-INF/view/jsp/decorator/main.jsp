@@ -17,7 +17,7 @@
 <meta http-equiv="Expires" content="0" />
 <meta name="context_path" content="${pageContext.request.contextPath}" />
 <link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" />
-<link href="<c:url value="/styles/all.css"/>" media="screen"
+<link href="<c:url value="/styles/all-min.css"/>" media="screen"
 	rel="stylesheet" type="text/css" />
 <!--[if IE]>
 	<link href="<c:url value="/styles/ie.css"/>" media="all"
@@ -25,7 +25,7 @@
 	<![endif]-->
 <link rel="alternate" href="<c:url value="/product/feed"/>"
 	title="ironrhino products" type="application/atom+xml" />
-<script src="<c:url value="/scripts/all.js"/>"
+<script src="<c:url value="/scripts/all-min.js"/>"
 	type="text/javascript"></script>
 <c:if
 	test="${fn:startsWith(pageContext.request.servletPath,'/product/')&&fn:endsWith(pageContext.request.servletPath,'.html')}">

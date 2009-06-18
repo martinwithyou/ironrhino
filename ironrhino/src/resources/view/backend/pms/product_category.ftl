@@ -2,14 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Product Category</title>
-<link href="${base}/styles/jquery.treeview.css" media="screen"
-	rel="stylesheet" type="text/css" />
-<script type="text/javascript"
-	src="${base}/scripts/jquery.treeview.js"></script>
-<#if async?if_exists>
-	<script type="text/javascript"
-		src="${base}/scripts/jquery.treeview.async.my.js"></script>
-</#if>
 <script type="text/javascript">
 	function _click(){
 		var id=$(this).parents('li')[0].id;

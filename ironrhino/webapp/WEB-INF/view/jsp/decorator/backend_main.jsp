@@ -16,14 +16,14 @@
 <meta http-equiv="Expires" content="0" />
 <meta name="context_path" content="${pageContext.request.contextPath}" />
 <link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" />
-<link href="<c:url value="/styles/all.css"/>" media="all"
+<link href="<c:url value="/styles/all-min.css"/>" media="all"
 	rel="stylesheet" type="text/css" />
 <!--[if IE]>
 	<link href="<c:url value="/styles/ie.css"/>" media="all"
 		rel="stylesheet" type="text/css" />
 	<![endif]-->
 <script type="text/javascript"
-	src="<c:url value="/scripts/all.js"/>"></script>
+	src="<c:url value="/scripts/all-min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
 <script type="text/javascript"
 	src="<c:url value="/dwr/interface/ApplicationContextConsole.js"/>"></script>

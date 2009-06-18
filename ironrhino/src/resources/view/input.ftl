@@ -2,12 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Create/Edit ${entityName?cap_first}</title>
-<link rel="stylesheet" href="${request.contextPath}/themes/ui.datepicker.css"
-	type="text/css" media="screen" />
-<script type="text/javascript"
-	src="${request.contextPath}/scripts/ui.datepicker.js"></script>
-<script type="text/javascript"
-	src="${request.contextPath}/scripts/ui.datepicker-zh-CN.js"></script>
 </head>
 <body>
 <@s.form action="save" method="post" cssClass="ajax">

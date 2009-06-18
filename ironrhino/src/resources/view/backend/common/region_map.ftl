@@ -2,12 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Region Map</title>
-<link href="${base}/styles/jquery.treeview.css" media="screen"
-	rel="stylesheet" type="text/css" />
-<script type="text/javascript"
-	src="${base}/scripts/jquery.treeview.js"></script>
-<script type="text/javascript"
-	src="${base}/scripts/jquery.treeview.async.my.js"></script>
 <#if Parameters.type?if_exists=='satellite'>
 	<script src="http://maps.google.com/maps?file=api&amp;v=2"
 		type="text/javascript"></script>

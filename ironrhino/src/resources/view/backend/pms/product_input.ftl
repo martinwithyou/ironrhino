@@ -2,12 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Create/Edit Product</title>
-<link rel="stylesheet" href="${base}/themes/ui.datepicker.css"
-	type="text/css" media="screen" />
-<script type="text/javascript"
-	src="${base}/scripts/ui.datepicker.js"></script>
-<script type="text/javascript"
-	src="${base}/scripts/ui.datepicker-zh-CN.js"></script>
 </head>
 <body>
 <@s.form action="save2" method="post" cssClass="ajax">

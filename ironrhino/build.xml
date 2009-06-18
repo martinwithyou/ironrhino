@@ -132,6 +132,8 @@
 				<file name="${webapp.dir}/scripts/ui.resizable.js" />
 				<file name="${webapp.dir}/scripts/ui.draggable.js" />
 				<file name="${webapp.dir}/scripts/ui.tabs.js" />
+				<file name="${webapp.dir}/scripts/ui.datepicker.js" />
+				<file name="${webapp.dir}/scripts/ui.datepicker-zh-CN.js" />
 				<file name="${webapp.dir}/scripts/jquery.history.js" />
 				<file name="${webapp.dir}/scripts/jquery.form.js" />
 				<file name="${webapp.dir}/scripts/jquery.corner.js" />
@@ -173,18 +175,12 @@
 				<file name="${webapp.dir}/styles/app.css" />
 			</filelist>
 		</concat>
-
-		<!--
-		<property name="input" value=""/>
-		<property name="output" value=""/>
-		<java jar="lib/rhino/custom_rhino.jar" fork="true">
-			<arg value="-c"/>
-			<arg file="${input}"/>
-			<redirector output="${output}"/>
+		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
+			<arg line=" --charset utf-8 --type js -o ${webapp.dir}/scripts/all-min.js ${webapp.dir}/scripts/all.js" />
 		</java>
--->
+		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
+			<arg line=" --charset utf-8 --type css -o ${webapp.dir}/styles/all-min.css ${webapp.dir}/styles/all.css" />
+		</java>
 	</target>
-
-
 
 </project>

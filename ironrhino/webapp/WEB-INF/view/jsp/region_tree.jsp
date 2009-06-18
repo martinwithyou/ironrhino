@@ -7,14 +7,6 @@ response.setHeader("Cache-Control", "max-age=86400");
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>region</title>
-<link href="<c:url value="/styles/jquery.treeview.css"/>" media="screen"
-	rel="stylesheet" type="text/css" />
-<script type="text/javascript"
-	src="<c:url value="/scripts/jquery.treeview.js"/>"></script>
-<s:if test="async">
-	<script type="text/javascript"
-		src="<c:url value="/scripts/jquery.treeview.async.my.js"/>"></script>
-</s:if>
 <script type="text/javascript">
 	function _click(){
 		<c:if test="${not empty param['input']}">
