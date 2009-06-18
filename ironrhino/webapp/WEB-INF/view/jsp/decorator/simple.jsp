@@ -17,16 +17,14 @@
 <meta http-equiv="Expires" content="0" />
 <meta name="context_path" content="${pageContext.request.contextPath}" />
 <link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" />
-<link href="<c:url value="/styles/main.css"/>" media="all"
+<link href="<c:url value="/styles/all-min.css"/>" media="all"
 	rel="stylesheet" type="text/css" />
 <!--[if IE]>
 	<link href="<c:url value="/styles/ie.css"/>" media="all"
 		rel="stylesheet" type="text/css" />
 	<![endif]-->
-<link rel="stylesheet" href="<s:url value="/themes/base/ui.all.css"/>"
-	type="text/css" media="screen" />
 <script type="text/javascript"
-	src="<c:url value="/scripts/ironrhino.js"/>"></script>
+	src="<c:url value="/scripts/all-min.js"/>"></script>
 <decorator:head />
 </head>
 <body>
