@@ -76,7 +76,7 @@ Observation.common = function(container) {
 					});
 	if (typeof $.EmptyOnClick != 'undefined')
 		$('input.emptyonclick, textarea.emptyonclick').emptyonclick();
-}
+};
 
 Initialization.common = function() {
 	if ($.browser.msie)
@@ -106,7 +106,7 @@ Initialization.common = function() {
 			minChars :3,
 			delay :1000
 		});
-}
+};
 
 MessageBundle = {
 	'en' : {
@@ -166,7 +166,7 @@ Indicator = {
 		if ($('#indicator'))
 			$('#indicator').hide()
 	}
-}
+};
 
 Message = {
 	get : function(message, className) {
@@ -175,7 +175,7 @@ Message = {
 				+ '"><div class="close" onclick="$(this.parentNode).remove()"></div>'
 				+ message + '</div>';
 	}
-}
+};
 
 Form = {
 	validate : function(form) {
@@ -236,7 +236,7 @@ Form = {
 				});
 		return valid;
 	}
-}
+};
 
 Ajax = {
 
@@ -397,7 +397,7 @@ Initialization.history = function() {
 			}
 		});
 	}
-}
+};
 
 Observation.ajax = function(container) {
 	$('a.ajax,form.ajax', container)
@@ -527,7 +527,7 @@ Observation.ajax = function(container) {
 											});
 						}
 					});
-}
+};
 
 var Region = {
 	textid :'',
@@ -574,7 +574,7 @@ var Region = {
 			$("#region_window").dialog('open');
 		}
 	}
-}
+};
 
 Captcha = {
 	refresh : function() {
@@ -585,4 +585,4 @@ Captcha = {
 			this.src = src + '?' + Math.random();
 		});
 	}
-}
+};

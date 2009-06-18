@@ -1,0 +1,84 @@
+@charset "utf-8";
+
+#indicator {
+	position: fixed;
+	z-index: 10;
+	right: 0px;
+	top: 0px;
+	height: 20px;
+	float: right;
+	color: #FFF;
+	background: #F00;
+}
+
+#indicator.loading {
+	padding: 0px 0px 0px 25px;
+	background: #F00 url(../images/indicator.gif) 0px 0px no-repeat;
+}
+
+.field_error,.action_error {
+	height: 1.5em;
+	line-height: 1.5em;
+	padding: 2px 2px 1px 20px;
+	border: 1px solid #F60;
+	vertical-align: middle;
+	background: #FFF2E9 url(../images/warning.png) 1px 1px no-repeat;
+	color: #000;
+}
+
+.action_message {
+	height: 1.5em;
+	line-height: 1.5em;
+	padding: 2px 2px 1px 20px;
+	border: 1px solid #669eff;
+	vertical-align: middle;
+	background: #e8eef7 url(../images/information.png) 1px 1px no-repeat;
+	color: #000;
+}
+
+.field_error .close,.action_error .close {
+	width: 15px;
+	height: 15px;
+	float: right;
+	background: url(../images/warning_close.png) 4px 4px no-repeat;
+}
+
+.action_message .close {
+	width: 15px;
+	height: 15px;
+	float: right;
+	background: url(../images/information_close.png) 4px 4px no-repeat;
+}
+
+.highlight {
+	background: #FF6;
+}
+
+.link {
+	color: #00C;
+	cursor: pointer;
+	text-decoration: underline;
+	white-space: nowrap;
+}
+
+
+.draggable {
+	cursor: move;
+}
+
+img.captcha {
+	height: 25px;
+	width: 100px;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+.ondrop {
+	border: 1px dashed #b00;
+}
+
+input.openid {
+	background: url(../images/openid.png) no-repeat;
+	background-position: 0 50%;
+	padding-left: 16px;
+}

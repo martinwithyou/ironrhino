@@ -17,7 +17,7 @@
 </s:iterator></div>
 
 <s:if test="resultPage.totalPage>1">
-	<div align="left" class="clear">total records:<s:property
+	<div align="left" style="clear:both;">total records:<s:property
 		value="resultPage.totalRecord" /> | <s:if
 		test="%{!resultPage.isFirst()}">
 		<a

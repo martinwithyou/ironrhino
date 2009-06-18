@@ -8,7 +8,7 @@
 		addHistory();
 		// load();
 		hit();
-	}
+	};
 
 	function addHistory() {
 		var name = 'HISTORY';

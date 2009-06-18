@@ -3,7 +3,7 @@
 		$(this).keydown( function() {
 			combox(this)
 		});
-	}
+	};
 	function combox(ele) {
 		var name = $(ele).attr('name');
 		var value = $(ele).val();
@@ -45,8 +45,6 @@
 	}
 })(jQuery);
 
-if (typeof (Observation) == 'undefined')
-	Observation = {};
 Observation.combox = function(container) {
 	$('select.combox', container).combox();
-}
+};

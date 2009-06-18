@@ -12,7 +12,7 @@
 <!--ehcache:cache key="products"-->
 <s:set name="pl" value="productFacade.recommendedProducts" />
 <s:if test="%{#pl!=null&&#pl.size()>0}">
-	<div class="clear">
+	<div style="clear:both;">
 	<div class="round_corner" style="background: #fcc;">
 	<h1>每周精选</h1>
 	</div>
@@ -35,7 +35,7 @@
 </s:if>
 <s:set name="pl" value="productFacade.getTopSaleProducts(4)" />
 <s:if test="%{#pl!=null&&#pl.size()>0}">
-	<div class="clear">
+	<div style="clear:both;">
 	<div class="round_corner" style="background: #fcc;">
 	<h1>畅销排行</h1>
 	</div>
@@ -57,7 +57,7 @@
 </s:if>
 <s:set name="pl" value="productFacade.getTopScoreProducts(4)" />
 <s:if test="%{#pl!=null&&#pl.size()>0}">
-	<div class="clear">
+	<div style="clear:both;">
 	<div class="round_corner" style="background: #fcc;">
 	<h1>得分排行</h1>
 	</div>
@@ -79,7 +79,7 @@
 </s:if>
 <s:set name="pl" value="productFacade.getTopFavoriteProducts(4)" />
 <s:if test="%{#pl!=null&&#pl.size()>0}">
-	<div class="clear">
+	<div style="clear:both;">
 	<div class="round_corner" style="background: #fcc;">
 	<h1>收藏排行</h1>
 	</div>
@@ -100,7 +100,7 @@
 </s:if>
 <s:set name="pl" value="productFacade.getTopSendProducts(4)" />
 <s:if test="%{#pl!=null&&#pl.size()>0}">
-	<div class="clear">
+	<div style="clear:both;">
 	<div class="round_corner" style="background: #fcc;">
 	<h1>推荐排行</h1>
 	</div>

@@ -22,7 +22,7 @@ Initialization.cart = function() {
 			}
 		});
 	});
-}
+};
 
 Initialization.categoryTree = function() {
 	$('a.category').each( function() {
@@ -34,7 +34,7 @@ Initialization.categoryTree = function() {
 		};
 		this.cache = true;
 	});
-}
+};
 
 function login() {
 	// http和https跨域不好处理
@@ -56,4 +56,4 @@ function login() {
 	// height :300,
 	// close : function(){document.location.href=document.location.href}
 	// });
-}
+};

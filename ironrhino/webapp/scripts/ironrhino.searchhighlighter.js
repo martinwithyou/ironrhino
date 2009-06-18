@@ -59,7 +59,7 @@ highlight : function(node, word) {
 		}
 	}
 }
-	}
+	};
 
 	$( function() {
 		SearchHighlighter.init()

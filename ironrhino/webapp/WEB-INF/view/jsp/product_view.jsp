@@ -40,14 +40,14 @@
 	</s:iterator>
 </ul>
 
-<ul class="clear">
+<ul style="clear:both;">
 	<s:iterator value="scoreResult.details">
 		<li><s:property value="key" />分:<s:property value="value" />次</li>
 	</s:iterator>
 </ul>
 </div>
 
-<ul class="related_products" class="clear">
+<ul class="related_products" style="clear:both;">
 	<s:iterator value="product.relatedProducts">
 		<li><img src="<s:url value="%{'/pic/' + code + '.small.jpg'}"/>"
 			alt="<s:property value="code" />" class="product_list" /> <a
@@ -65,7 +65,7 @@
 	</s:iterator>
 </ul>
 <s:if test="resultPage.totalPage>1">
-	<div align="left" class="clear">total records:<s:property
+	<div align="left" style="clear:both;">total records:<s:property
 		value="resultPage.totalRecord" /> | <s:if
 		test="%{!resultPage.isFirst()}">
 		<a

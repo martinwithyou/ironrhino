@@ -5,7 +5,7 @@
 			SortableTable.init(this[0], {
 				tableScroll :SortableTable.options.tableScroll
 			});
-	}
+	};
 
 	var SortableTable = {
 		init : function(table, o) {
@@ -478,12 +478,10 @@
 		tableScrollClass :'scroll'
 	},
 	_count :0
-	}
+	};
 
 })(jQuery);
 
-if (typeof (Observation) == 'undefined')
-	Observation = {};
 Observation.sortableTable = function(container) {
 	$('table.sortable', container).sortableTable();
-}
+};

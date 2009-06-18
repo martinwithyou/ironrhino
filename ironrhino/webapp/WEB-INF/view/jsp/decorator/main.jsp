@@ -17,56 +17,16 @@
 <meta http-equiv="Expires" content="0" />
 <meta name="context_path" content="${pageContext.request.contextPath}" />
 <link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" />
-<link href="<c:url value="/styles/main.css"/>" media="screen"
+<link href="<c:url value="/styles/all.css"/>" media="screen"
 	rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="<c:url value="/themes/base/ui.all.css"/>"
-	type="text/css" media="screen" />
 <!--[if IE]>
 	<link href="<c:url value="/styles/ie.css"/>" media="all"
 		rel="stylesheet" type="text/css" />
 	<![endif]-->
 <link rel="alternate" href="<c:url value="/product/feed"/>"
 	title="ironrhino products" type="application/atom+xml" />
-<script src="<c:url value="/scripts/jquery.js"/>" type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.cookie.js"/>"
+<script src="<c:url value="/scripts/all.js"/>"
 	type="text/javascript"></script>
-<script src="<c:url value="/scripts/effects.core.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/effects.highlight.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ui.core.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ui.dialog.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ui.resizable.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ui.draggable.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ui.tabs.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.history.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.form.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.corner.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.bgiframe.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.autocomplete.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.emptyonclick.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.dragable.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ironrhino.core.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ironrhino.checkbox.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ironrhino.sortabletable.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ironrhino.combox.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/app.js"/>" type="text/javascript"></script>
 <c:if
 	test="${fn:startsWith(pageContext.request.servletPath,'/product/')&&fn:endsWith(pageContext.request.servletPath,'.html')}">
 	<script type="text/javascript"

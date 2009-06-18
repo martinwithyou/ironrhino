@@ -12,7 +12,7 @@
 				return true
 			}
 		});
-	}
+	};
 	var DataGridTable = {
 		addRow : function(event) {
 			event = event || window.event;
@@ -68,11 +68,9 @@
 				this.name = ''
 			});
 		}
-	}
+	};
 })(jQuery);
 
-if (typeof (Observation) == 'undefined')
-	Observation = {};
 Observation.datagridTable = function(container) {
 	$('table.datagrid', container).datagridTable();
-}
+};

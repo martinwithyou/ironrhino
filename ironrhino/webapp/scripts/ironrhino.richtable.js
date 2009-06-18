@@ -312,7 +312,7 @@ Richtable = {
 		cellObj.setAttribute("editing", "false");
 		ECSideUtil.addClass(cellObj, "editedCell");
 	}
-}
+};
 Observation.richtable = function() {
 	if ($('form.richtable').length > 0) {
 		$('form.richtable .pageNav.firstPage').click( function() {
@@ -353,7 +353,7 @@ Observation.richtable = function() {
 					Richtable.reload()
 				});
 	}
-}
+};
 Initialization.richtable = function() {
 	if ($('form.richtable').length > 0) {
 		var canResizeColWidth = $('form.richtable').attr('canResizeColWidth');
@@ -399,7 +399,7 @@ Initialization.richtable = function() {
 			});
 		}
 	}
-}
+};
 _close_window_ = false;
 setInterval( function() {
 	if (_close_window_ && $('#_window_')) {

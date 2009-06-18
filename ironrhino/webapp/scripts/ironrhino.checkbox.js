@@ -1,7 +1,7 @@
 ( function($) {
 	$.fn.checkbox = function() {
 		checkbox(this);
-	}
+	};
 	function checkbox(container) {
 		$('input[type=checkbox]', container).each(
 				function() {
@@ -95,8 +95,6 @@
 	}
 })(jQuery);
 
-if (typeof (Observation) == 'undefined')
-	Observation = {};
 Observation.checkbox = function(container) {
 	$(container).checkbox();
-}
+};

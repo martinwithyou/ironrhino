@@ -16,45 +16,17 @@
 <meta http-equiv="Expires" content="0" />
 <meta name="context_path" content="${pageContext.request.contextPath}" />
 <link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" />
-<link href="<c:url value="/styles/main.css"/>" media="all"
+<link href="<c:url value="/styles/all.css"/>" media="all"
 	rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="<c:url value="/themes/base/ui.all.css"/>"
-	type="text/css" media="screen" />
 <!--[if IE]>
 	<link href="<c:url value="/styles/ie.css"/>" media="all"
 		rel="stylesheet" type="text/css" />
 	<![endif]-->
-<script src="<c:url value="/scripts/jquery.js"/>" type="text/javascript"></script>
-<script src="<c:url value="/scripts/ui.core.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ui.dialog.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ui.resizable.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ui.draggable.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ui.tabs.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.history.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.form.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.corner.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/jquery.dragable.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ironrhino.core.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ironrhino.sortabletable.js"/>"
-	type="text/javascript"></script>
-<script src="<c:url value="/scripts/ironrhino.combox.js"/>"
-	type="text/javascript"></script>
 <script type="text/javascript"
-	src="<c:url value="/scripts/ironrhino.richtable.js"/>"></script>
+	src="<c:url value="/scripts/all.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
 <script type="text/javascript"
 	src="<c:url value="/dwr/interface/ApplicationContextConsole.js"/>"></script>
-
 <decorator:head />
 </head>
 

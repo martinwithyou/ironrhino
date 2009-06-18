@@ -1,0 +1,358 @@
+.richtable {
+	border: 0px solid red;
+	padding: 0px;
+	margin: 0px;
+}
+
+.richtable .inputtext {
+	border: 1px solid #cc9966;
+	font-size: 12px;
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+}
+
+.richtable .breakLine {
+	white-space: normal;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+.richtable .breakLine td {
+	white-space: normal;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+.richtable .noBreakLine {
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+}
+
+.richtable .noBreakLine td {
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+}
+
+.richtable input.radio {
+	font-size: 12px;
+	width: auto;
+}
+
+.richtable input.checkbox {
+	font-size: 12px;
+	width: auto;
+}
+
+.richtable select {
+	border: solid 1px #EEEEEE;
+	width: 75px;
+}
+
+.richtable button {
+	background-color: transparent;
+	background-image: url(../images/button.gif);
+	background-repeat: repeat-x;
+	border: outset 1px #bbbbbb;
+	border-collapse: separate;
+	vertical-align: bottom;
+	color: #333333;
+	cursor: pointer;
+	height: 22px;
+	width: 50px;
+	margin: 3px 4px 3px 4px;
+	padding: 3px 3px 0px 3px;
+}
+
+.richtable .tableRegion {
+	border: 0px #ff00ff solid;
+	padding: 0px;
+	margin: 0px;
+	border-collapse: collapse;
+	/* width:100%; */
+	table-layout: fixed;
+}
+
+.richtable .tableRegion td {
+	color: #000000;
+	border: 1px #cccccc solid;
+	padding: 2px;
+	height: 23px;
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+	overflow: hidden;
+}
+
+.richtable .tableHeader,.richtable .tableRegion .tableHeader td {
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+	color: #3A3A3A;
+	font-weight: bolder;
+	height: 24px;
+	text-align: center;
+	overflow: visible;
+}
+
+.richtable .resizeTitle {
+	float: left;
+	width: 90%;
+	text-align: center;
+}
+
+.richtable .resizeBar {
+	padding: 0px;
+	margin: 0px;
+	float: right;
+	cursor: e-resize;
+	width: 3px;
+	height: 15px;
+	font-size: 1px;
+	vertical-align: top;
+	background-color: #cccccc;
+	display: inline;
+}
+
+.richtable .tableRegion .editableColumn {
+	color: #883A3A;
+}
+
+.richtable .odd a,.even a {
+	color: Black;
+}
+
+.richtable .odd td {
+	background-color: #FFFFFF;
+}
+
+.richtable .even td {
+	background-color: #f3f4f3;
+}
+
+.richtable .selected td {
+	background-color: #ddeeff;
+}
+
+.richtable .selected a,.highlight a {
+	color: black;
+}
+
+.richtable .selected td {
+	background-color: #ffeedd;
+}
+
+.richtable .selected a,.selectlight a {
+	color: black;
+}
+
+.richtable .odd div.ellipsis,.richtable .even div.ellipsis,.richtable.highlight div.ellipsis,.richtable .selectlight DIV.ellipsis
+	{
+	text-align: left;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color: #3a3a3a;
+	width: 100%;
+}
+
+.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .selectlight .editedCell
+	{
+	background-color: #fff3f0;
+}
+
+.richtable .titleRow {
+	color: #444444;
+	font-weight: bold;
+	font-size: 12px;
+	vertical-align: middle;
+}
+
+.richtable div.title {
+	color: #333333;
+	font-weight: bold;
+	font-size: 14px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.richtable .titleRow span {
+	width: 100%;
+	text-align: center;
+}
+
+.richtable .formButton {
+	background-color: transparent;
+	background-image: url(../images/button.gif);
+	background-repeat: repeat-x;
+	border: outset 1px #bbbbbb;
+	border-collapse: separate;
+	vertical-align: bottom;
+	color: #333333;
+	cursor: pointer;
+	height: 22px;
+	width: 50px;
+	margin: 3px 4px 3px 4px;
+	padding: 3px 3px 0px 3px;
+}
+
+.richtable .pageNav {
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center;
+	border: 0px #dddddd none;
+	width: 24px;
+	height: 25px;
+	cursor: pointer;
+	vertical-align: -2px;
+}
+
+.richtable .jumpPage {
+	background-image: url(../images/gotoPage.gif);
+}
+
+.richtable .firstPage {
+	background-image: url(../images/firstPage.gif);
+}
+
+.richtable .prevPage {
+	background-image: url(../images/prevPage.gif);
+}
+
+.richtable .nextPage {
+	background-image: url(../images/nextPage.gif);
+}
+
+.richtable .lastPage {
+	background-image: url(../images/lastPage.gif);
+}
+
+.richtable .firstPageD {
+	background-image: url(../images/firstPageDisabled.gif);
+}
+
+.richtable .prevPageD {
+	background-image: url(../images/prevPageDisabled.gif);
+}
+
+.richtable .nextPageD {
+	background-image: url(../images/nextPageDisabled.gif);
+}
+
+.richtable .lastPageD {
+	background-image: url(../images/lastPageDisabled.gif);
+}
+
+.richtable .toolbar select {
+	width: 50px;
+	font-size: 11px;
+	font-family: Verdana;
+}
+
+.richtable .toolbar .toolbarTable {
+	border: 0px red solid;
+	width: 100%;
+}
+
+.richtable .toolbar .toolbarTable td {
+	border: 0px none red;
+}
+
+.richtable .toolbar .toolbarTable .statusTool {
+	border: 0px solid red;
+	padding-top: 2px;
+	text-align: right;
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+}
+
+.richtable .pageNavigationNearPageTool {
+	width: 230px;
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+}
+
+.richtable .pageNavigationNearPageTool A {
+	width: 12px;
+}
+
+.richtable .pageJumpTool {
+	width: 95px;
+}
+
+.richtable .jumpPageInput {
+	height: 19px;
+	width: 25px;
+	margin-top: 0px;
+	/* border:1px solid #aaaaaa; */
+}
+
+.richtable .pageSizeTool {
+	padding-top: 2px;
+	width: 90px;
+}
+
+.richtable .extendTool A {
+	display: inline;
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+}
+
+.richtable .separatorTool {
+	font-size: 1px;
+}
+
+.richtable .blankTool {
+	width: 10%;
+}
+
+.richtable .hideListRow {
+	height: 0px;
+	font-size: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	border-top: 0px;
+	border-bottom: 0px;
+}
+
+.richtable .hideListRow td {
+	font-size: 0px;
+	height: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	border-top: 0px;
+	border-bottom: 0px;
+}
+
+.richtable .headerScrollX {
+	overflow: hidden;
+	padding: 0px;
+	margin: 0px;
+	border: 0px red solid;
+}
+
+.richtable .bodyScrollY {
+	overflow-x: hidden;
+	overflow-y: auto;
+	padding: 0px;
+	padding-right: 0px;
+	margin: 0px;
+	border: 0px red solid;
+}
+
+.richtable .bodyScrollX {
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 0px;
+	margin: 0px;
+	border: 0px red solid;
+}

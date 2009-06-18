@@ -1,0 +1,82 @@
+.nav,.nav ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav {
+	font-size: 11px;
+	z-index: 100;
+	position: relative;
+}
+
+.nav li {
+	border-right: 1px solid #000;
+	float: left;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+.nav li.last {
+	border-right: 0px;
+}
+
+.nav li a,.nav li a:link,.nav li a:active,.nav li a:visited {
+	font: bold 1.3em/ 25px arial, sans-serif;
+	color: #959595;
+	display: block;
+	padding: 0 9px;
+	text-decoration: none;
+}
+
+.nav li a:hover {
+	background: #ccc;
+	color: #000;
+}
+
+.nav li:hover a,.nav li.sfHover a {
+	background: #ccc;
+	color: #000;
+}
+
+.nav li:hover ul a,.nav li.sfHover ul a {
+	color: #959595;
+}
+
+.nav li:hover ul a:hover,.nav li.sfHover ul a:hover {
+	background: #ccc;
+	color: #000;
+}
+
+.nav ul {
+	border-bottom: 1px solid #000;
+	list-style: none;
+	margin: 0;
+	width: 120px;
+	position: absolute;
+	top: -999em;
+	left: -1px;
+}
+
+.nav li:hover ul,.nav li.sfHover ul {
+	top: 25px;
+}
+
+.nav ul li {
+	border: 0;
+	float: none;
+}
+
+.nav ul a {
+	border: 1px solid #000;
+	border-bottom: 0;
+	padding-right: 20px;
+	width: 100px;
+	white-space: nowrap;
+}
+
+.nav ul a:hover {
+	background: #ccc;
+	color: #000;
+}

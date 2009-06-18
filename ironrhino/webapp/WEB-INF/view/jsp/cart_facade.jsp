@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" language="java"%>
 <%@ taglib uri="/struts-tags" prefix="s"%>
-<div id="cart" class="clear round_corner">
+<div id="cart" class="round_corner" style="clear:both;">
 <div id="cart_header">购物车</div>
 <div class="round_corner container" corners="top">
 <div id="cart_items"><s:if test="%{cart.order.items.size()>0}">
