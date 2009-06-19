@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -20,8 +21,6 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class StringStore implements BeanNameAware {
 
@@ -133,7 +132,7 @@ public class StringStore implements BeanNameAware {
 
 	public List<String> read() {
 		if (!file.canRead() || file.length() == 0)
-			return Collections.emptyList();
+			return Collections.EMPTY_LIST;
 		r.lock();
 		try {
 			List<String> list = new ArrayList<String>();
@@ -144,7 +143,7 @@ public class StringStore implements BeanNameAware {
 			return list;
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
-			return Collections.emptyList();
+			return Collections.EMPTY_LIST;
 		} finally {
 			r.unlock();
 		}
