@@ -52,16 +52,22 @@ public class CategoryTreeControl implements ApplicationListener {
 
 	private Category getPublicCategoryTree() {
 		if (publicCategoryTree == null)
-			return BeanUtils.deepClone(categoryTree, new ObjectFilter() {
-				public boolean accept(Object object) {
-					Category cate = (Category) object;
-					if (cate.getRoles() == null || cate.getRoles().size() == 0)
-						return true;
-					else
-						return false;
-				}
-			});
+			buildPublicCategoryTree();
 		return publicCategoryTree;
+	}
+
+	private void buildPublicCategoryTree() {
+		publicCategoryTree = BeanUtils.deepClone(categoryTree,
+				new ObjectFilter() {
+					public boolean accept(Object object) {
+						Category cate = (Category) object;
+						if (cate.getRoles() == null
+								|| cate.getRoles().size() == 0)
+							return true;
+						else
+							return false;
+					}
+				});
 	}
 
 	private Category getProtectedCategoryTree() {

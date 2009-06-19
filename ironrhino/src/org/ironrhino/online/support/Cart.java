@@ -1,5 +1,6 @@
 package org.ironrhino.online.support;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang.StringUtils;
@@ -8,7 +9,7 @@ import org.ironrhino.online.model.OrderItem;
 import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Product;
 
-public class Cart {
+public class Cart implements Serializable {
 
 	private Order order;
 

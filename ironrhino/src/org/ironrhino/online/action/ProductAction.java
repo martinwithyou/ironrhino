@@ -56,8 +56,6 @@ public class ProductAction extends BaseAction {
 
 	private ProductFacade productFacade;
 
-	private CategoryTreeControl categoryTreeControl;
-
 	private Product product;
 
 	private ResultPage<Product> resultPage;
@@ -80,11 +78,13 @@ public class ProductAction extends BaseAction {
 
 	private ProductSend send;
 
-	private BaseManager baseManager;
+	private transient CategoryTreeControl categoryTreeControl;
 
-	private ProductHitsControl productHitsControl;
+	private transient BaseManager baseManager;
 
-	private MailService mailService;
+	private transient ProductHitsControl productHitsControl;
+
+	private transient MailService mailService;
 
 	public Product getProduct() {
 		return this.product;
@@ -304,7 +304,7 @@ public class ProductAction extends BaseAction {
 		return FEED;
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	@Captcha
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "comment.content", trim = true, key = "comment.content.required", message = "请输入评论内容") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "comment.email", key = "comment.email.invalid", message = "请输入正确的email") })
 	public String comment() {
@@ -317,7 +317,7 @@ public class ProductAction extends BaseAction {
 		return REFERER;
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	@Captcha
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "send.name", trim = true, key = "send.name.required", message = "请输入您的名字"),
@@ -332,23 +332,21 @@ public class ProductAction extends BaseAction {
 		baseManager.setEntityClass(ProductSend.class);
 		if (account != null) {
 			send.setUsername(account.getUsername());
+			SimpleMailMessage smm = new SimpleMailMessage();
+			if (StringUtils.isNotBlank(send.getEmail()))
+				smm.setFrom(send.getName() + "<" + send.getEmail() + ">");
+			smm.setTo(send.getDestination());
+			smm.setSubject(getText("send.subject", "your friend "
+					+ account.getFriendlyName()
+					+ " recommend our product to you", new String[] { account
+					.getFriendlyName() }));
+			Map<String, Object> model = new HashMap<String, Object>(2);
+			model.put("message", send.getMessage());
+			model.put("product", productFacade.getProductByCode(code));
+			mailService.send(smm, "product_send.ftl", model);
+			addActionMessage(getText("send.successfully"));
 		}
-		SimpleMailMessage smm = new SimpleMailMessage();
 		baseManager.save(send);
-		if (StringUtils.isBlank(send.getName())) {
-			send.setName("");
-		}
-		if (StringUtils.isNotBlank(send.getEmail()))
-			smm.setFrom(send.getName() + "<" + send.getEmail() + ">");
-		smm.setTo(send.getDestination());
-		smm.setSubject(getText("send.subject", "your friend "
-				+ account.getFriendlyName() + " recommend our product to you",
-				new String[] { account.getFriendlyName() }));
-		Map<String, Object> model = new HashMap<String, Object>(2);
-		model.put("message", send.getMessage());
-		model.put("product", productFacade.getProductByCode(code));
-		mailService.send(smm, "product_send.ftl", model);
-		addActionMessage(getText("send.successfully"));
 		return REFERER;
 	}
 

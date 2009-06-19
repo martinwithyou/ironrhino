@@ -25,9 +25,9 @@ public class PaymentAction extends BaseAction {
 
 	public static final Log log = LogFactory.getLog(PaymentAction.class);
 
-	private OrderManager orderManager;
+	private transient OrderManager orderManager;
 
-	private Paypal paypal;
+	private transient Paypal paypal;
 
 	public void setOrderManager(OrderManager orderManager) {
 		this.orderManager = orderManager;
@@ -74,7 +74,7 @@ public class PaymentAction extends BaseAction {
 		String paymentAmount = request.getParameter("mc_gross");
 		String paymentCurrency = request.getParameter("mc_currency");
 		String receiverEmail = request.getParameter("receiver_email");
-		if (res.equals("VERIFIED")) {
+		if ("VERIFIED".equals(res)) {
 			if (!"Completed".equals(paymentStatus)) {
 				log.error("payment not completed,orderCode=" + orderCode);
 				return NONE;

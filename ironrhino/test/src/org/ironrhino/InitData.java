@@ -97,7 +97,7 @@ public class InitData {
 					p.setPrice(new BigDecimal(0.01));
 				p.setStatus(ProductStatus.ACTIVE);
 				p.setCategory(categories[i]);
-				if (j % 2 == 1) {
+				if ((j & 1) == 1) {
 					p.setReleased(true);
 					p.setReleaseDate(new Date());
 					if (j % 4 == 1) {

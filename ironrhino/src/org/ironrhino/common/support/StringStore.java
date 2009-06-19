@@ -14,12 +14,18 @@ import javax.annotation.PreDestroy;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
 
+import edu.emory.mathcs.backport.java.util.Collections;
+
 public class StringStore implements BeanNameAware {
+
+	private static Log log = LogFactory.getLog(StringStore.class);
 
 	private List<String> buffer = new ArrayList<String>(100);
 
@@ -62,7 +68,8 @@ public class StringStore implements BeanNameAware {
 		file = resourceLoader.getResource(getDirectory() + beanName + ".dat")
 				.getFile();
 		if (!file.exists())
-			file.createNewFile();
+			if (!file.createNewFile())
+				log.warn("create file [" + file + "] error");
 	}
 
 	@PreDestroy
@@ -124,22 +131,23 @@ public class StringStore implements BeanNameAware {
 		}
 	}
 
-	public  List<String> read() {
-		List<String> list = new ArrayList<String>();
+	public List<String> read() {
 		if (!file.canRead() || file.length() == 0)
-			return list;
+			return Collections.emptyList();
 		r.lock();
-		LineIterator it = null;
 		try {
-			it = FileUtils.lineIterator(file, "UTF-8");
+			List<String> list = new ArrayList<String>();
+			LineIterator it = FileUtils.lineIterator(file, "UTF-8");
 			while (it.hasNext())
 				list.add(it.nextLine());
-		} catch (IOException e) {
-		} finally {
 			LineIterator.closeQuietly(it);
+			return list;
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+			return Collections.emptyList();
+		} finally {
 			r.unlock();
 		}
-		return list;
 	}
 
 	public void consume() {

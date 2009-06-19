@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
@@ -23,7 +25,6 @@ import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Product;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.orm.hibernate3.HibernateCallback;
-
 
 import freemarker.template.Template;
 
@@ -44,6 +45,8 @@ public class NewArrivalProductNotifier {
 	private MailService mailService;
 
 	private AccountManager accountManager;
+
+	private Lock lock = new ReentrantLock();
 
 	public int getBatchSize() {
 		return batchSize;
@@ -93,39 +96,45 @@ public class NewArrivalProductNotifier {
 		this.accountManager = accountManager;
 	}
 
-	public synchronized void send() throws IOException {
-		List<String> result = getTo();
-		if (result.size() == 0)
-			return;
-		Template template = templateProvider.getTemplate(templateName);
-		Map<String, List<Product>> model = new HashMap<String, List<Product>>(1);
-		model.put("productList", productFacade.getNewArrivalProducts(
-				Integer.MAX_VALUE, 7));
-		StringWriter writer = new StringWriter();
+	public void send() throws IOException {
+		lock.lock();
 		try {
-			template.process(model, writer);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String text = writer.toString();
-		SimpleMailMessage smm = new SimpleMailMessage();
-		smm.setSubject(subject);
-		smm.setText(text);
-		String[] to = new String[batchSize];
-		int index = -1;
-		for (int i = 0; i < result.size(); i++) {
-			index++;
-			to[index] = result.get(i);
-			if (index == batchSize - 1) {
-				smm.setTo(to);
-				mailService.send(smm);
+			List<String> result = getTo();
+			if (result.size() == 0)
+				return;
+			Template template = templateProvider.getTemplate(templateName);
+			Map<String, List<Product>> model = new HashMap<String, List<Product>>(
+					1);
+			model.put("productList", productFacade.getNewArrivalProducts(
+					Integer.MAX_VALUE, 7));
+			StringWriter writer = new StringWriter();
+			try {
+				template.process(model, writer);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if (i == result.size() - 1) {
-				String[] array = new String[index + 1];
-				System.arraycopy(to, 0, array, 0, index + 1);
-				smm.setTo(array);
-				mailService.send(smm);
+			String text = writer.toString();
+			SimpleMailMessage smm = new SimpleMailMessage();
+			smm.setSubject(subject);
+			smm.setText(text);
+			String[] to = new String[batchSize];
+			int index = -1;
+			for (int i = 0; i < result.size(); i++) {
+				index++;
+				to[index] = result.get(i);
+				if (index == batchSize - 1) {
+					smm.setTo(to);
+					mailService.send(smm);
+				}
+				if (i == result.size() - 1) {
+					String[] array = new String[index + 1];
+					System.arraycopy(to, 0, array, 0, index + 1);
+					smm.setTo(array);
+					mailService.send(smm);
+				}
 			}
+		} finally {
+			lock.unlock();
 		}
 	}
 

@@ -48,14 +48,14 @@ public class CaptchaHelper {
 	}
 
 	private static Point getPoint(int index) {
-		return new Point(5 + (index * ((int) (Math.random() * 10) + 40)), 40);
+		return new Point(5 + (index * (random.nextInt(10) + 40)), 40);
 	}
 
 	private static Paint getPaint(Point p, int size) {
-		GradientPaint gp = new GradientPaint(p.x, p.y, new Color((int) (Math
-				.random() * 256), 0, (int) (Math.random() * 256)), p.x, p.y
-				- size, new Color((int) (Math.random() * 256), (int) (Math
-				.random() * 256), (int) (Math.random() * 256)));
+		GradientPaint gp = new GradientPaint(p.x, p.y, new Color(random
+				.nextInt(256), 0, random.nextInt(256)), p.x, p.y - size,
+				new Color(random.nextInt(256), random.nextInt(256), random
+						.nextInt(256)));
 		return gp;
 	}
 
@@ -95,15 +95,15 @@ public class CaptchaHelper {
 		g.setStroke(new BasicStroke(1.0f));
 		g.setPaint(null);
 		for (int i = 0; i < use.length; i++) {
-			g.setColor(new Color((int) (Math.random() * 0x00FFFFFFF)));
-			g.drawLine((int) (Math.random() * 200), (int) (Math.random() * 50),
-					(int) (Math.random() * 200), (int) (Math.random() * 50));
+			g.setColor(new Color(random.nextInt(0x00FFFFFFF)));
+			g.drawLine(random.nextInt(200), random.nextInt(50), random
+					.nextInt(200), random.nextInt(50));
 		}
 		Random random = new Random();
 		for (int i = 0; i < 88; i++) {
 			int x = random.nextInt(200);
 			int y = random.nextInt(50);
-			g.setColor(new Color((int) (Math.random() * 0x00FFFFFFF)));
+			g.setColor(new Color(random.nextInt(0x00FFFFFFF)));
 			g.setStroke(getStroke());
 			g.drawLine(x, y, x, y);
 		}

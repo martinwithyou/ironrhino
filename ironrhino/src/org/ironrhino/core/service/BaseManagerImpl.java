@@ -417,7 +417,7 @@ public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
 				queryObject.setParameter(i, values[i]);
 			}
 		}
-		return new Integer(queryObject.executeUpdate());
+		return queryObject.executeUpdate();
 	}
 
 	@Transactional

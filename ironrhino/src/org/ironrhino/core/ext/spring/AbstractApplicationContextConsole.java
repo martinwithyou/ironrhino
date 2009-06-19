@@ -74,7 +74,7 @@ public abstract class AbstractApplicationContextConsole implements
 
 	public Object get(String path) throws Exception {
 		if (path == null)
-			throw new IllegalArgumentException("no path:" + path);
+			throw new IllegalArgumentException("no path");
 		Object result;
 		if (path.indexOf('.') < 0) {
 			result = ctx.getBean(path);

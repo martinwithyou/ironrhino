@@ -13,7 +13,7 @@ public class RegionTreeAction extends BaseAction {
 
 	private Collection<Region> children;
 
-	private RegionTreeControl regionTreeControl;
+	private transient RegionTreeControl regionTreeControl;
 
 	private boolean async = true;
 
@@ -52,7 +52,8 @@ public class RegionTreeAction extends BaseAction {
 			region = regionTreeControl.getRegionTree().getDescendantOrSelfById(
 					root);
 		children = region.getChildren();
-		 ServletActionContext.getResponse().setHeader("Cache-Control","max-age=86400");
+		ServletActionContext.getResponse().setHeader("Cache-Control",
+				"max-age=86400");
 		return JSON;
 	}
 

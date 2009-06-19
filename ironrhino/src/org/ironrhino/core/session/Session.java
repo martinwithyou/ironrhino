@@ -23,7 +23,7 @@ public class Session implements HttpSession {
 
 	private HttpContext httpContext;
 
-	private Map attrMap = new HashMap();
+	private Map<String, Object> attrMap = new HashMap<String, Object>();
 
 	private long createTime;
 
@@ -127,11 +127,11 @@ public class Session implements HttpSession {
 		return httpContext;
 	}
 
-	public Map getAttrMap() {
+	public Map<String, Object> getAttrMap() {
 		return attrMap;
 	}
 
-	public void setAttrMap(Map attrMap) {
+	public void setAttrMap(Map<String, Object> attrMap) {
 		this.attrMap = attrMap;
 	}
 

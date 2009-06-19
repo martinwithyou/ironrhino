@@ -14,12 +14,13 @@ import org.json.JSONObject;
 
 public class JsonUtils {
 
-	public static String mapToJson(Map<String, ?> map) {
+	public static String mapToJson(Map<Object, Object> map) {
 		if (map == null)
 			return null;
 		JSONObject jo = new JSONObject();
 		try {
-			for (String key : map.keySet()) {
+			for (Map.Entry<Object, Object> entry : map.entrySet()) {
+				String key = entry.getKey().toString();
 				Object value = map.get(key);
 				if (isSimple(value))
 					jo.put(key, simpleObjectToJSON(value));
@@ -120,18 +121,19 @@ public class JsonUtils {
 		if (o == null)
 			return null;
 		JSONObject jo = new JSONObject();
-		Map map = (Map) o;
+		Map<Object, Object> map = (Map) o;
 		try {
-			for (Object key : map.keySet()) {
-				Object value = map.get(key);
+			for (Map.Entry entry : map.entrySet()) {
+				String key = entry.getKey().toString();
+				Object value = entry.getValue();
 				if (isSimple(value))
-					jo.put(key.toString(), simpleObjectToJSON(value));
+					jo.put(key, simpleObjectToJSON(value));
 				else if (isArray(value)) {
-					jo.put(key.toString(), arrayObjectToJSON(value));
+					jo.put(key, arrayObjectToJSON(value));
 				} else if (isMap(value)) {
-					jo.put(key.toString(), mapObjectToJSON(value));
+					jo.put(key, mapObjectToJSON(value));
 				} else {
-					jo.put(key.toString(), complexObjectToJson(value));
+					jo.put(key, complexObjectToJson(value));
 				}
 			}
 		} catch (Exception e) {

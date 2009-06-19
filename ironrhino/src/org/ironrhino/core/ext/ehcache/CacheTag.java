@@ -16,8 +16,6 @@ public class CacheTag extends BodyTagSupport {
 
 	private String actualKey;
 
-	private Cache cache = null;
-
 	private String key = null;
 
 	private int timeToLive;
@@ -25,6 +23,8 @@ public class CacheTag extends BodyTagSupport {
 	private int timeToIdle;
 
 	private String scope = "application";
+
+	private transient Cache cache = null;
 
 	public void setKey(String key) {
 		this.key = key;
@@ -54,9 +54,11 @@ public class CacheTag extends BodyTagSupport {
 					element.setTimeToLive(timeToLive);
 				cache.put(element);
 			}
-			bodyContent.clearBody();
-			bodyContent.write(body);
-			bodyContent.writeOut(bodyContent.getEnclosingWriter());
+			if (bodyContent != null) {
+				bodyContent.clearBody();
+				bodyContent.write(body);
+				bodyContent.writeOut(bodyContent.getEnclosingWriter());
+			}
 		} catch (java.io.IOException e) {
 			throw new JspTagException("IO Error: " + e.getMessage());
 		}

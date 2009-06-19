@@ -29,8 +29,8 @@ public class RoundRobinPolicyFactory<T> implements PolicyFactory<T> {
 			UsableChecker usableChecker) {
 		List<TargetWrapper<T>> ts = new ArrayList<TargetWrapper<T>>(targets
 				.size());
-		for (T t : targets.keySet())
-			ts.add(new TargetWrapper(t, targets.get(t)));
+		for (Map.Entry<T, Integer> entry : targets.entrySet())
+			ts.add(new TargetWrapper(entry.getKey(), entry.getValue()));
 		RoundRobinPolicy rrp = new RoundRobinPolicy();
 		rrp.setTargetWrappers(ts);
 		rrp.setUsableChecker(usableChecker);

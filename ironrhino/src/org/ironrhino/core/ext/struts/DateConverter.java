@@ -10,7 +10,7 @@ import org.apache.struts2.util.StrutsTypeConverter;
 
 public class DateConverter extends StrutsTypeConverter {
 	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-	public static final DateFormat[] ACCEPT_DATE_FORMATS = {
+	public DateFormat[] ACCEPT_DATE_FORMATS = {
 			new SimpleDateFormat(DEFAULT_DATE_FORMAT),
 			new SimpleDateFormat("yyyy/MM/dd"),
 			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss") };

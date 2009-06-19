@@ -22,11 +22,11 @@ public class CategoryAction extends BaseAction {
 
 	private String rolesAsString;
 
-	private CategoryManager categoryManager;
-
 	private Collection<Category> list;
 
-	private CategoryTreeControl categoryTreeControl;
+	private transient CategoryManager categoryManager;
+
+	private transient CategoryTreeControl categoryTreeControl;
 
 	private boolean async;
 

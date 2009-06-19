@@ -2,6 +2,8 @@ package org.ironrhino.core.rule;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 
@@ -27,6 +29,8 @@ public class RuleProvider {
 	private RuleBase ruleBase;
 
 	private Resource[] ruleFiles;
+
+	private Lock lock = new ReentrantLock();
 
 	public StatefulSession getStatefulSession(Object... assertObjects) {
 		for (Object object : assertObjects) {
@@ -67,29 +71,35 @@ public class RuleProvider {
 		}
 	}
 
-	public synchronized void compileRuleBase() throws Exception {
-		PackageBuilder builder = new PackageBuilder();
-		ruleBase = RuleBaseFactory.newRuleBase();
-		if (ruleFiles != null) {
-			Reader dslReader = null;
-			if (dslFile != null)
-				dslReader = new InputStreamReader(dslFile.getInputStream(),
-						"UTF-8");
-			for (Resource ruleFile : ruleFiles) {
-				PackageDescr packageDescr;
-				Reader drlReader = new InputStreamReader(ruleFile
-						.getInputStream(), "UTF-8");
+	public void compileRuleBase() throws Exception {
+		lock.lock();
+		try {
+			PackageBuilder builder = new PackageBuilder();
+			ruleBase = RuleBaseFactory.newRuleBase();
+			if (ruleFiles != null) {
+				Reader dslReader = null;
 				if (dslFile != null)
-					packageDescr = new DrlParser().parse(drlReader, dslReader);
-				else
-					packageDescr = new DrlParser().parse(drlReader);
-				builder.addPackage(packageDescr);
-			}
-			ruleBase.addPackage(builder.getPackage());
-			log.info("compiled rule base");
-			currentStatefulSession = ruleBase.newStatefulSession();
-		} else
-			log.warn("didn't set the rule files");
+					dslReader = new InputStreamReader(dslFile.getInputStream(),
+							"UTF-8");
+				for (Resource ruleFile : ruleFiles) {
+					PackageDescr packageDescr;
+					Reader drlReader = new InputStreamReader(ruleFile
+							.getInputStream(), "UTF-8");
+					if (dslFile != null)
+						packageDescr = new DrlParser().parse(drlReader,
+								dslReader);
+					else
+						packageDescr = new DrlParser().parse(drlReader);
+					builder.addPackage(packageDescr);
+				}
+				ruleBase.addPackage(builder.getPackage());
+				log.info("compiled rule base");
+				currentStatefulSession = ruleBase.newStatefulSession();
+			} else
+				log.warn("didn't set the rule files");
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	public void setDslFile(Resource dslFile) {

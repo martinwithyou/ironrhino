@@ -66,8 +66,10 @@ public class CustomizableEntityChanger {
 					.getClass().getName());
 			Map<String, Serializable> customProperties = entity
 					.getCustomProperties();
-			for (String name : customProperties.keySet()) {
-				Object o = customProperties.get(name);
+			for (Map.Entry<String, Serializable> entry : customProperties
+					.entrySet()) {
+				String name = entry.getKey();
+				Object o = entry.getValue();
 				if (o == null || !(o instanceof String[]))
 					continue;
 				String array[] = (String[]) o;
@@ -93,7 +95,7 @@ public class CustomizableEntityChanger {
 					else if (PropertyType.SHORT == map.get(name))
 						customProperties.put(name, new Short(value));
 					else if (PropertyType.BOOLEAN == map.get(name))
-						customProperties.put(name, new Boolean(value));
+						customProperties.put(name, Boolean.valueOf(value));
 					else
 						customProperties.put(name, value);
 				} catch (Exception e) {

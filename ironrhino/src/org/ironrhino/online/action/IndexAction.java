@@ -12,12 +12,11 @@ import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.support.CategoryTreeControl;
 
-
 public class IndexAction extends BaseAction {
 
 	private ProductFacade productFacade;
 
-	private CategoryTreeControl categoryTreeControl;
+	private transient CategoryTreeControl categoryTreeControl;
 
 	private Product relatedProduct;
 

@@ -28,9 +28,9 @@ public class OrderAction extends BaseAction {
 
 	private ResultPage<Order> resultPage;
 
-	private OrderManager orderManager;
+	private transient OrderManager orderManager;
 
-	private PaymentManager paymentManager;
+	private transient PaymentManager paymentManager;
 
 	public ResultPage<Order> getResultPage() {
 		return resultPage;
@@ -122,7 +122,7 @@ public class OrderAction extends BaseAction {
 		return REDIRECT;
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	public String addressee() {
 		if (!order.isNew()) {
 			orderManager.save(order);
@@ -133,7 +133,7 @@ public class OrderAction extends BaseAction {
 		return REDIRECT;
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	public String payment() {
 		targetUrl = "/account/order/view/" + getUid();
 		return REDIRECT;

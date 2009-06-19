@@ -47,8 +47,8 @@ public class LocationParser {
 			start = readLong4(0);
 			end = readLong4(4);
 			if (start == -1 || end == -1) {
-				file = null;
 				file.close();
+				file = null;
 			}
 			available = true;
 		} catch (Exception e) {

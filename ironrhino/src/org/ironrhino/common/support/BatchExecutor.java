@@ -10,7 +10,6 @@ import org.ironrhino.core.ext.spring.ApplicationContextConsole;
 import org.ironrhino.core.mail.MailService;
 import org.springframework.mail.SimpleMailMessage;
 
-
 public class BatchExecutor {
 
 	protected final Log log = LogFactory.getLog(getClass());
@@ -51,6 +50,7 @@ public class BatchExecutor {
 						smm.setText(ExceptionUtils.getStackTraceAsString(e));
 						mailService.send(smm, false);
 					} catch (Exception ee) {
+						log.warn("send email failed", ee);
 					}
 				}
 			}

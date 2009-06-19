@@ -13,7 +13,7 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 @AutoConfig
 public class CustomizeEntityAction extends BaseAction {
 
-	private CustomizableEntityChanger customizableEntityChanger;
+	private transient CustomizableEntityChanger customizableEntityChanger;
 
 	private String entityClassName;
 

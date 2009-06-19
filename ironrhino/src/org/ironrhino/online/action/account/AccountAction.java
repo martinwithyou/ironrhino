@@ -29,12 +29,15 @@ import org.ironrhino.online.model.Account;
 import org.ironrhino.online.service.AccountManager;
 import org.ironrhino.online.servlet.AuthenticationProcessingFilter;
 import org.openid4java.OpenIDException;
+import org.openid4java.association.AssociationException;
 import org.openid4java.consumer.ConsumerManager;
 import org.openid4java.consumer.VerificationResult;
+import org.openid4java.discovery.DiscoveryException;
 import org.openid4java.discovery.DiscoveryInformation;
 import org.openid4java.discovery.Identifier;
 import org.openid4java.message.AuthRequest;
 import org.openid4java.message.AuthSuccess;
+import org.openid4java.message.MessageException;
 import org.openid4java.message.ParameterList;
 import org.openid4java.message.ax.AxMessage;
 import org.openid4java.message.ax.FetchRequest;
@@ -64,12 +67,6 @@ public class AccountAction extends BaseAction {
 
 	protected Log log = LogFactory.getLog(getClass());
 
-	private RegionTreeControl regionTreeControl;
-
-	private AccountManager accountManager;
-
-	private MailService mailService;
-
 	private Account account;
 
 	private String currentPassword;
@@ -84,9 +81,15 @@ public class AccountAction extends BaseAction {
 
 	private String openid;
 
-	private AuthRequest authRequest;
+	private transient RegionTreeControl regionTreeControl;
 
-	private ConsumerManager consumerManager;
+	private transient AccountManager accountManager;
+
+	private transient MailService mailService;
+
+	private transient AuthRequest authRequest;
+
+	private transient ConsumerManager consumerManager;
 
 	public String getOpenid() {
 		return openid;
@@ -215,13 +218,18 @@ public class AccountAction extends BaseAction {
 		if (StringUtils.isNotBlank(error))
 			addActionError(getText(error));
 		HttpServletRequest request = ServletActionContext.getRequest();
-		SavedRequest savedRequest = (SavedRequest) request.getSession()
-				.getAttribute(AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
+		SavedRequest savedRequest = (SavedRequest) request
+				.getSession()
+				.getAttribute(
+						AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
 		if (savedRequest != null) {
 			targetUrl = savedRequest.getFullRequestUrl();
 			if (isUseJson())
-				ServletActionContext.getRequest().getSession().removeAttribute(
-						AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
+				ServletActionContext
+						.getRequest()
+						.getSession()
+						.removeAttribute(
+								AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
 		}
 		if (StringUtils.isBlank(targetUrl))
 			targetUrl = request.getHeader("Referer");
@@ -236,7 +244,7 @@ public class AccountAction extends BaseAction {
 	}
 
 	@Redirect
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "account.username", expression = "^\\w{3,20}$", key = "account.username.invalid", message = "username不合法") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error", message = "两次输入密码不一致") })
 	public String signup() {
 		if (account != null) {
@@ -284,7 +292,7 @@ public class AccountAction extends BaseAction {
 		addActionMessage(getText("activation.mail.send.success"));
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	@Captcha
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.username", trim = true, key = "account.username.required", message = "请输入用户名"),
@@ -323,14 +331,14 @@ public class AccountAction extends BaseAction {
 				// auto login
 				UserDetails ud = accountManager.loadUserByUsername(account
 						.getUsername());
-				AuthzUtils.autoLogin(ud);	
+				AuthzUtils.autoLogin(ud);
 				return "activate";
 			}
 		}
 		return ACCESSDENIED;
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "password", trim = true, key = "password.required", message = "请输入6-20位密码") }, stringLengthFields = { @StringLengthFieldValidator(type = ValidatorType.FIELD, trim = true, minLength = "6", maxLength = "20", fieldName = "password", key = "password.required", message = "密码的长度为6-20") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error", message = "两次输入密码不一致") })
 	public String password() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
@@ -345,7 +353,7 @@ public class AccountAction extends BaseAction {
 		return "password";
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") })
 	public String email() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
@@ -372,7 +380,7 @@ public class AccountAction extends BaseAction {
 		return "email";
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	public String unbindopenid() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
 		if (!currentAccount.isPasswordValid(currentPassword)) {
@@ -384,7 +392,7 @@ public class AccountAction extends BaseAction {
 		return "unbindopenid";
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	public String profile() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
 		accountManager.lock(currentAccount, LockMode.NONE);
@@ -401,7 +409,7 @@ public class AccountAction extends BaseAction {
 		return "profile";
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") })
 	public String invite() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
@@ -420,7 +428,7 @@ public class AccountAction extends BaseAction {
 		return "invite";
 	}
 
-	@InputConfig(methodName="input")
+	@InputConfig(methodName = "input")
 	@Captcha
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") })
 	public String forgot() {
@@ -556,12 +564,18 @@ public class AccountAction extends BaseAction {
 						doLogin();
 					}
 					return REDIRECT;
-				}else{
+				} else {
 					addActionError(getText("openid.login.failed"));
 					return "openid";
 				}
 			}
-		} catch (Exception e) {
+		} catch (DiscoveryException e) {
+			log.error(e.getMessage(), e);
+			addActionError(getText("openid.invalid"));
+		} catch (AssociationException e) {
+			log.error(e.getMessage(), e);
+			addActionError(getText("openid.invalid"));
+		} catch (MessageException e) {
 			log.error(e.getMessage(), e);
 			addActionError(getText("openid.invalid"));
 		}

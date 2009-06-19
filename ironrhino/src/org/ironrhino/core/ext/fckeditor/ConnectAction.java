@@ -64,7 +64,9 @@ public class ConnectAction extends UploadAction {
 				.getRealPath(currentPath);
 		File currentDir = new File(currentDirPath);
 		if (!currentDir.exists()) {
-			currentDir.mkdir();
+			if (!currentDir.mkdir())
+				throw new Exception("mkdir error for:"
+						+ currentDir.getAbsolutePath());
 		}
 		Document document = null;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

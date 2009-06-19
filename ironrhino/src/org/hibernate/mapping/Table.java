@@ -93,6 +93,8 @@ public class Table implements RelationalModel, Serializable {
 		}
 
 		public boolean equals(Object other) {
+			if(!(other instanceof ForeignKeyKey))
+				return false;
 			ForeignKeyKey fkk = (ForeignKeyKey) other;
 			return fkk.columns.equals( columns ) &&
 					fkk.referencedClassName.equals( referencedClassName ) && fkk.referencedColumns
@@ -548,12 +550,6 @@ public class Table implements RelationalModel, Serializable {
 	}
 
 	public UniqueKey addUniqueKey(UniqueKey uniqueKey) {
-		//
-		UniqueKey current = (UniqueKey) uniqueKeys.get( uniqueKey.getName() );
-		if ( current != null ) {
-			//TODO comment by zhouyanming,duplicated when customize entity
-			//throw new MappingException( "UniqueKey " + uniqueKey.getName() + " already exists!" );
-		}
 		uniqueKeys.put( uniqueKey.getName(), uniqueKey );
 		return uniqueKey;
 	}

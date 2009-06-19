@@ -19,29 +19,35 @@ public class Statist {
 	private static Lock startLock = new ReentrantLock();
 	private static Lock lock = new ReentrantLock();
 	private static Condition condition = lock.newCondition();
-	private static Thread writeThread;
+	private static Thread writeThread = newWriteThread();
 	private static Map<String, AtomicLong> data = new ConcurrentHashMap<String, AtomicLong>();
+
+	static {
+		writeThread.start();
+	}
+
+	private static Thread newWriteThread() {
+		return new Thread(new Runnable() {
+			public void run() {
+				while (true) {
+					lock.lock();
+					try {
+						condition.await(INTERVAL, TimeUnit.MILLISECONDS);
+						doWrite();
+					} catch (Exception e) {
+					} finally {
+						lock.unlock();
+					}
+				}
+			}
+		});
+	}
 
 	private static void runWriteThread() {
 		startLock.lock();
 		try {
-			if (writeThread != null) {
-				writeThread.interrupt();
-			}
-			writeThread = new Thread(new Runnable() {
-				public void run() {
-					while (true) {
-						lock.lock();
-						try {
-							condition.await(INTERVAL, TimeUnit.MILLISECONDS);
-							doWrite();
-						} catch (Exception e) {
-						} finally {
-							lock.unlock();
-						}
-					}
-				}
-			});
+			writeThread.interrupt();
+			writeThread = newWriteThread();
 			writeThread.start();
 		} finally {
 			startLock.unlock();
@@ -67,7 +73,7 @@ public class Statist {
 			data.put(label, new AtomicLong(count));
 		else
 			c = data.get(label).addAndGet(count);
-		if (writeThread == null || !writeThread.isAlive())
+		if (!writeThread.isAlive())
 			runWriteThread();
 		return c;
 	}

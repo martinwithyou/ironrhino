@@ -12,6 +12,8 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -34,6 +36,8 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 public class ProductAction extends BaseAction {
+
+	private static Log log = LogFactory.getLog(ProductAction.class);
 
 	public static final String SETTING_NAME_DEFAULT_NEW_ARRIVAL_DAYS = "product.defaultNewArrivalDays";
 
@@ -63,17 +67,17 @@ public class ProductAction extends BaseAction {
 
 	private String tagsAsString;
 
-	private WaterMark waterMark;
+	private transient WaterMark waterMark;
 
-	private Thumbnail smallThumbnail;
+	private transient Thumbnail smallThumbnail;
 
-	private Thumbnail mediumThumbnail;
+	private transient Thumbnail mediumThumbnail;
 
-	private CategoryManager categoryManager;
+	private transient CategoryManager categoryManager;
 
-	private ProductManager productManager;
+	private transient ProductManager productManager;
 
-	private SettingControl settingControl;
+	private transient SettingControl settingControl;
 
 	public ResultPage<Product> getResultPage() {
 		return resultPage;
@@ -402,7 +406,9 @@ public class ProductAction extends BaseAction {
 			fos.flush();
 			fos.close();
 		} else {
-			picture.renameTo(target);
+			if (!picture.renameTo(target))
+				log.error("failed rename " + picture.getAbsolutePath() + " to "
+						+ target.getAbsolutePath());
 		}
 		bufferedImage = smallThumbnail.resizeFix(pictureImage);
 		fos = new FileOutputStream(path.replace(".jpg", ".small.jpg"));
@@ -420,19 +426,35 @@ public class ProductAction extends BaseAction {
 
 	private void deletePictureFile(String filename) {
 		String path = getPicturePath(filename);
-		new File(path).delete();
-		new File(path.replace(".jpg", ".small.jpg")).delete();
-		new File(path.replace(".jpg", ".medium.jpg")).delete();
+		File f = new File(path);
+		if (!f.delete())
+			log.error("failed to delete " + f.getAbsolutePath());
+		f = new File(path.replace(".jpg", ".small.jpg"));
+		if (!f.delete())
+			log.error("failed to delete " + f.getAbsolutePath());
+		f = new File(path.replace(".jpg", ".medium.jpg"));
+		if (!f.delete())
+			log.error("failed to delete " + f.getAbsolutePath());
 	}
 
 	private void renamePictureFile(String filename, String newfilename) {
 		String path1 = getPicturePath(filename);
 		String path2 = getPicturePath(newfilename);
-		new File(path1).renameTo(new File(path2));
-		new File(path1.replace(".jpg", ".small.jpg")).renameTo(new File(path2
-				.replace(".jpg", ".small.jpg")));
-		new File(path1.replace(".jpg", ".medium.jpg")).renameTo(new File(path2
-				.replace(".jpg", ".medium.jpg")));
+		File f1 = new File(path1);
+		File f2 = new File(path2);
+		if (!f1.renameTo(f2))
+			log.error("failed rename " + f1.getAbsolutePath() + " to "
+					+ f2.getAbsolutePath());
+		f1 = new File(path1.replace(".jpg", ".small.jpg"));
+		f2 = new File(path2.replace(".jpg", ".small.jpg"));
+		if (!f1.renameTo(f2))
+			log.error("failed rename " + f1.getAbsolutePath() + " to "
+					+ f2.getAbsolutePath());
+		f1 = new File(path1.replace(".jpg", ".medium.jpg"));
+		f2 = new File(path2.replace(".jpg", ".medium.jpg"));
+		if (!f1.renameTo(f2))
+			log.error("failed rename " + f1.getAbsolutePath() + " to "
+					+ f2.getAbsolutePath());
 	}
 
 	private String getPicturePath(String filename) {

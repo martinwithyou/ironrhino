@@ -342,9 +342,10 @@ public class EntityAction extends BaseAction {
 						.get(clazz.getName());
 				;
 				if (customProperties != null && customProperties.size() > 0) {
-					for (String name : customProperties.keySet()) {
-						PropertyType pt = customProperties.get(name);
-
+					for (Map.Entry<String, PropertyType> entry : customProperties
+							.entrySet()) {
+						String name = entry.getKey();
+						PropertyType pt = entry.getValue();
 						FormElementConfig fec = new FormElementConfig();
 						if (pt == PropertyType.SHORT
 								|| pt == PropertyType.INTEGER
@@ -478,9 +479,8 @@ public class EntityAction extends BaseAction {
 					.getParameterMap();
 			ValueStack temp = valueStackFactory.createValueStack();
 			temp.set(getEntityName(), entity);
-			for (String key : map.keySet()) {
-				temp.setValue(key, map.get(key));
-			}
+			for (Map.Entry<String, String[]> entry : map.entrySet())
+				temp.setValue(entry.getKey(), entry.getValue());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

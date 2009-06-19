@@ -61,11 +61,11 @@ public class CookieSessionStore implements SessionStore {
 	}
 
 	public void save(Session session) {
-		Map attrMap = session.getAttrMap();
-		Map toDump = new HashMap();
-		for (Object key : attrMap.keySet())
-			if (attrMap.get(key) != null)
-				toDump.put(key, attrMap.get(key));
+		Map<String, Object> attrMap = session.getAttrMap();
+		Map<String, Object> toDump = new HashMap();
+		for (Map.Entry<String, Object> entry : attrMap.entrySet())
+			if (entry.getValue() != null)
+				toDump.put(entry.getKey(), entry.getValue());
 		if (toDump.size() == 0)
 			RequestUtils.deleteCookie(session.getHttpContext().getRequest(),
 					session.getHttpContext().getResponse(),

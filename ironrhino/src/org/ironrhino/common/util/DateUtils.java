@@ -1,42 +1,33 @@
 package org.ironrhino.common.util;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
-	private static final DateFormat date10 = new SimpleDateFormat("yyyy-MM-dd");
+	private static final String DATE10 = "yyyy-MM-dd";
 
-	private static final DateFormat date8 = new SimpleDateFormat("yyyyMMdd");
+	private static final String DATE8 = "yyyyMMdd";
 
-	private static final DateFormat time6 = new SimpleDateFormat("HHmmss");
+	private static final String DATETIME = "yyyy-MM-dd HH:mm:ss";
 
-	private static final DateFormat datetime = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss");
-
-	private static final DateFormat timestamp = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm:ss.SSSS");
+	private static final String TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSSS";
 
 	public static String getDate10(Date date) {
-		return date10.format(date);
+		return new SimpleDateFormat(DATE10).format(date);
 	}
 
 	public static String getDate8(Date date) {
-		return date8.format(date);
-	}
-
-	public static String getTime6(Date date) {
-		return time6.format(date);
+		return new SimpleDateFormat(DATE8).format(date);
 	}
 
 	public static String getTimestamp(Date date) {
-		return timestamp.format(date);
+		return new SimpleDateFormat(TIMESTAMP).format(date);
 	}
 
 	public static String getDatetime(Date date) {
-		return datetime.format(date);
+		return new SimpleDateFormat(DATETIME).format(date);
 	}
 
 	public static Date addDays(Date date, int days) {
@@ -48,7 +39,7 @@ public class DateUtils {
 
 	public static Date parseDate10(String string) {
 		try {
-			return date10.parse(string);
+			return new SimpleDateFormat(DATE10).parse(string);
 		} catch (ParseException e) {
 			return null;
 		}
@@ -56,7 +47,7 @@ public class DateUtils {
 
 	public static Date parseDatetime(String string) {
 		try {
-			return datetime.parse(string);
+			return new SimpleDateFormat(DATETIME).parse(string);
 		} catch (ParseException e) {
 			return null;
 		}

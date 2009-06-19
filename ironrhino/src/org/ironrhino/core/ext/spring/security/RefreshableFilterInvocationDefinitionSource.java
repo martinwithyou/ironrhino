@@ -6,8 +6,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.aop.target.dynamic.AbstractRefreshableTargetSource;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
@@ -21,8 +19,6 @@ public class RefreshableFilterInvocationDefinitionSource extends
 		AbstractRefreshableTargetSource implements ResourceLoaderAware,
 		BeanNameAware, InitializingBean {
 
-	protected Log logger = LogFactory.getLog(getClass());
-
 	private Resource definitionResource;
 
 	private String beanName;
@@ -32,9 +28,9 @@ public class RefreshableFilterInvocationDefinitionSource extends
 	private ResourceLoader resourceLoader;
 
 	private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
-	
+
 	private final Lock r = rwl.readLock();
-	
+
 	private final Lock w = rwl.writeLock();
 
 	public String getDirectory() {
@@ -87,26 +83,29 @@ public class RefreshableFilterInvocationDefinitionSource extends
 
 	protected Object freshTarget() {
 		r.lock();
-		StringBuilder sb = new StringBuilder();
-		LineIterator it = null;
 		try {
-			it = FileUtils.lineIterator(definitionResource.getFile(), "UTF-8");
+			StringBuilder sb = new StringBuilder();
+			LineIterator it = FileUtils.lineIterator(definitionResource
+					.getFile(), "UTF-8");
 			while (it.hasNext()) {
 				String line = it.nextLine();
 				if (!line.startsWith("#"))
 					sb.append(line + "\n");
 			}
+			LineIterator.closeQuietly(it);
 			logger
 					.info("loaded Spring Security FilterInvocationDefinition config file["
 							+ definitionResource.getURL() + "]");
+			FilterInvocationDefinitionSourceEditor configEditor = new FilterInvocationDefinitionSourceEditor();
+			configEditor.setAsText(sb.toString());
+			return configEditor.getValue();
 		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			return null;
 		} finally {
-			LineIterator.closeQuietly(it);
 			r.unlock();
 		}
-		FilterInvocationDefinitionSourceEditor configEditor = new FilterInvocationDefinitionSourceEditor();
-		configEditor.setAsText(sb.toString());
-		return configEditor.getValue();
+
 	}
 
 }

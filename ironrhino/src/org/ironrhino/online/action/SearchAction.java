@@ -16,19 +16,19 @@ import com.opensymphony.xwork2.ActionSupport;
 
 public class SearchAction extends ActionSupport {
 
-	private CompassSearchService compassSearchService;
-
 	private String q;
 
 	private int pn;
 
 	private int ps = 10;
 
-	private CompassSearchResults searchResults;
-
-	private SearchHitsControl searchHitsControl;
-
 	private List<AggregateResult> suggestions;
+
+	private transient CompassSearchResults searchResults;
+
+	private transient SearchHitsControl searchHitsControl;
+
+	private transient CompassSearchService compassSearchService;
 
 	public List<AggregateResult> getSuggestions() {
 		return suggestions;

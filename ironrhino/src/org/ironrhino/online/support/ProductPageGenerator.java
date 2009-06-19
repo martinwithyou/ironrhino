@@ -13,6 +13,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 
@@ -55,6 +57,8 @@ public class ProductPageGenerator implements ApplicationListener {
 	private ResourceLoader resourceLoader;
 
 	private Template template;
+
+	private Lock lock = new ReentrantLock();
 
 	public String getSiteBaseUrl() {
 		return siteBaseUrl;
@@ -103,17 +107,22 @@ public class ProductPageGenerator implements ApplicationListener {
 		template = templateProvider.getTemplate(templateName);
 	}
 
-	public synchronized void generate() throws IOException {
+	public void generate() throws IOException {
 		if (!enabled)
 			return;
-		int totalRecord = productManager.countAll();
-		int totalPage = totalRecord % batchSize == 0 ? totalRecord / batchSize
-				: totalRecord / batchSize + 1;
-		long time = System.currentTimeMillis();
-		for (int i = 1; i <= totalPage; i++)
-			generate(i);
-		log.info("generated " + totalRecord + " product page in "
-				+ (System.currentTimeMillis() - time) + "ms");
+		lock.lock();
+		try {
+			int totalRecord = productManager.countAll();
+			int totalPage = totalRecord % batchSize == 0 ? totalRecord
+					/ batchSize : totalRecord / batchSize + 1;
+			long time = System.currentTimeMillis();
+			for (int i = 1; i <= totalPage; i++)
+				generate(i);
+			log.info("generated " + totalRecord + " product page in "
+					+ (System.currentTimeMillis() - time) + "ms");
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	private void generate(int pageNo) throws IOException {

@@ -11,7 +11,7 @@ import org.springframework.aop.support.DelegatingIntroductionInterceptor;
 public class EditAwareMixin extends DelegatingIntroductionInterceptor implements
 		EditAware {
 
-	private transient Map map = new HashMap();
+	private Map map = new HashMap();
 
 	public Object getOldValue(String propertyName) {
 		return map.get(propertyName);
@@ -37,9 +37,8 @@ public class EditAwareMixin extends DelegatingIntroductionInterceptor implements
 	public static boolean isEquals(Object oldValue, Object newValue) {
 		if (oldValue == null && newValue == null)
 			return true;
-		if (oldValue != null)
-			return oldValue.equals(newValue);
-		else
-			return newValue.equals(oldValue);
+		if (oldValue == null || newValue == null)
+			return false;
+		return oldValue.equals(newValue);
 	}
 }

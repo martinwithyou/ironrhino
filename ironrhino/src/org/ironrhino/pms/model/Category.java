@@ -67,7 +67,7 @@ public class Category extends BaseTreeableEntity<Category> implements Secured {
 		if (code.equals(this.getCode()))
 			return this;
 		for (Category c : getChildren()) {
-			if (code.equals(c.getId())) {
+			if (code.equals(c.getCode())) {
 				return c;
 			} else {
 				Category cc = c.getDescendantOrSelfByCode(code);
