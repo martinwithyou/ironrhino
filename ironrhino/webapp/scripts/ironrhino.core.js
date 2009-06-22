@@ -186,13 +186,14 @@ Form = {
 		var arr = $('input,select', form).get();
 		for ( var i = 0; i < arr.length; i++) {
 			if ($('.field_error', $(arr[i]).parent()).size() > 0) {
-				$(arr[i]).focus();
+				setTimeout(function(){$(arr[i]).focus();},1000);
 				break;
 			}
 		}
 	},
 	validate : function(target) {
 		if ($(target).attr('tagName') != 'FORM') {
+			$('.field_error', $(target).parent()).remove();
 			if ($(target).hasClass('required') && !$(target).val()) {
 				if ($(target).attr('tagName') == 'SELECT')
 					Message.showError(target, 'selection.required');
@@ -217,7 +218,6 @@ Form = {
 				Message.showError(target, 'double');
 				return false;
 			}else{
-				$('.field_error', $(target).parent()).remove();
 				return true;
 			}
 		} else {
@@ -226,7 +226,6 @@ Form = {
 				if (!Form.validate(this))
 					valid = false;
 			});
-		
 			if (!valid)
 				Form.focus(target);
 			return valid;
@@ -235,7 +234,6 @@ Form = {
 };
 
 Ajax = {
-
 	fire : function(target, funcName) {
 		if (!target)
 			return true;
@@ -297,7 +295,6 @@ Ajax = {
 			window._jsonResult_ = data;
 			if (data.fieldErrors || data.actionErrors) {
 				hasError = true;
-				Form.focus(target);
 				Ajax.fire(target, 'onerror');
 			} else {
 				Ajax.fire(target, 'onsuccess');
@@ -312,6 +309,8 @@ Ajax = {
 					else
 						message += Message.get(data.fieldErrors[key],
 								'action_error');
+			if(data.fieldErrors)
+				Form.focus(target);
 			if (data.actionErrors)
 				for ( var i = 0; i < data.actionErrors.length; i++)
 					message += Message
@@ -453,6 +452,7 @@ Observation.ajax = function(container) {
 								$(this).ajaxSubmit(options);
 								return false;
 							});
+							$('input,select',this).blur(function(){Form.validate(this)});
 							return;
 						} else {
 							$(this)
