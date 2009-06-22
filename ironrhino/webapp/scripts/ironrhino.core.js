@@ -174,67 +174,63 @@ Message = {
 				+ className
 				+ '"><div class="close" onclick="$(this.parentNode).remove()"></div>'
 				+ message + '</div>';
+	},
+	showError : function(field, errorType) {
+		$(field).parent().append(
+				Message.get(MessageBundle.get(errorType), 'field_error'));
 	}
 };
 
 Form = {
-	validate : function(form) {
-		var valid = true;
-		$('input', form)
-				.each(
-						function() {
-							if ($(this).hasClass('required') && !$(this).val()) {
-								valid = false;
-								$(this).after(
-										Message
-												.get(MessageBundle
-														.get('required'),
-														'field_error'));
-							}
-							if ($(this).hasClass('email')
-									&& $(this).val()
-									&& !$(this)
-											.val()
-											.match(
-													/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-								valid = false;
-								$(this).after(
-										Message.get(MessageBundle.get('email'),
-												'field_error'));
-							}
-							if ($(this).hasClass('integer') && $(this).val()
-									&& !$(this).val().match(/^[-+]?\d*$/)) {
-								valid = false;
-								$(this)
-										.after(
-												Message.get(MessageBundle
-														.get('integer'),
-														'field_error'));
-							}
-							if ($(this).hasClass('double')
-									&& $(this).val()
-									&& !$(this).val().match(
-											/^[-\+]?\d+(\.\d+)?$/)) {
-								valid = false;
-								$(this).after(
-										Message.get(
-												MessageBundle.get('double'),
-												'field_error'));
-							}
-						});
-		$('select', form).each(
-				function() {
-					if ($(this).hasClass('required')) {
-						if (!$(this).val()) {
-							valid = false;
-							$(this).after(
-									Message.get(MessageBundle
-											.get('selection.required'),
-											'field_error'));
-						}
-					}
-				});
-		return valid;
+	focus : function(form) {
+		var arr = $('input,select', form).get();
+		for ( var i = 0; i < arr.length; i++) {
+			if ($('.field_error', $(arr[i]).parent()).size() > 0) {
+				$(arr[i]).focus();
+				break;
+			}
+		}
+	},
+	validate : function(target) {
+		if ($(target).attr('tagName') != 'FORM') {
+			if ($(target).hasClass('required') && !$(target).val()) {
+				if ($(target).attr('tagName') == 'SELECT')
+					Message.showError(target, 'selection.required');
+				else
+					Message.showError(target, 'required');
+				return false;
+			}
+			else if ($(target).hasClass('email')
+					&& $(target).val()
+					&& !$(target).val().match(
+							/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
+				Message.showError(target, 'email');
+				return false;
+			}
+			else if ($(target).hasClass('integer') && $(target).val()
+					&& !$(target).val().match(/^[-+]?\d*$/)) {
+				Message.showError(target, 'integer');
+				return false;
+			}
+			else if ($(target).hasClass('double') && $(target).val()
+					&& !$(target).val().match(/^[-\+]?\d+(\.\d+)?$/)) {
+				Message.showError(target, 'double');
+				return false;
+			}else{
+				$('.field_error', $(target).parent()).remove();
+				return true;
+			}
+		} else {
+			var valid = true;
+			$('input,select', target).each( function() {
+				if (!Form.validate(this))
+					valid = false;
+			});
+		
+			if (!valid)
+				Form.focus(target);
+			return valid;
+		}
 	}
 };
 
@@ -301,6 +297,7 @@ Ajax = {
 			window._jsonResult_ = data;
 			if (data.fieldErrors || data.actionErrors) {
 				hasError = true;
+				Form.focus(target);
 				Ajax.fire(target, 'onerror');
 			} else {
 				Ajax.fire(target, 'onsuccess');
@@ -309,7 +306,7 @@ Ajax = {
 			if (data.fieldErrors)
 				for (key in data.fieldErrors)
 					if (target && target[key])
-						$(target[key]).after(
+						$(target[key]).parent().append(
 								$(Message.get(data.fieldErrors[key],
 										'field_error')));
 					else
@@ -437,6 +434,7 @@ Observation.ajax = function(container) {
 									Ajax.fire(target, 'onloading');
 								},
 								error : function() {
+									Form.focus(target);
 									if (target
 											&& target.tagName.toLowerCase() == 'form')
 										setTimeout( function() {
@@ -451,7 +449,10 @@ Observation.ajax = function(container) {
 									});
 								}
 							};
-							$(this).ajaxForm(options);
+							$(this).bind('submit', function() {
+								$(this).ajaxSubmit(options);
+								return false;
+							});
 							return;
 						} else {
 							$(this)
@@ -584,5 +585,6 @@ Captcha = {
 				src = src.substring(0, src.lastIndexOf('?'));
 			this.src = src + '?' + Math.random();
 		});
+		$('input.captcha').val('');
 	}
 };
