@@ -229,8 +229,11 @@ public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
 			end = resultPage.getTotalRecord() - (resultPage.getPageNo() - 1)
 					* resultPage.getPageSize();
 		}
-		resultPage.setResult(getBetweenListByCriteria(resultPage
-				.getDetachedCriteria(), start, end));
+		if (totalRecord > 0)
+			resultPage.setResult(getBetweenListByCriteria(resultPage
+					.getDetachedCriteria(), start, end));
+		else
+			resultPage.setResult(Collections.EMPTY_LIST);
 		resultPage.setStart(start);
 		return resultPage;
 	}
