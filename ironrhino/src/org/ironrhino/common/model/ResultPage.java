@@ -10,6 +10,8 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 
 public class ResultPage<T> implements Serializable {
+	
+	public static final int MAX_RECORDS_PER_PAGE = 1000;
 
 	public static final int DEFAULT_PAGE_SIZE = 10;
 

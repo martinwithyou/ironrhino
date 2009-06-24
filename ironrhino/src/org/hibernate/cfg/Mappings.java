@@ -143,6 +143,12 @@ public class Mappings implements Serializable {
 	}
 	public void addCollection(Collection collection) throws MappingException {
 		 collections.put( collection.getRole(), collection );
+		 /** comment by zhouyanming
+		 Object old = collections.put( collection.getRole(), collection );
+			if ( old!=null ) {
+				throw new DuplicateMappingException( "collection role", collection.getRole() );
+			}
+			*/
 	}
 	public PersistentClass getClass(String className) {
 		return (PersistentClass) classes.get(className);

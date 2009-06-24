@@ -550,6 +550,12 @@ public class Table implements RelationalModel, Serializable {
 	}
 
 	public UniqueKey addUniqueKey(UniqueKey uniqueKey) {
+		/** comment by zhouyanming
+		UniqueKey current = (UniqueKey) uniqueKeys.get( uniqueKey.getName() );
+		if ( current != null ) {
+			throw new MappingException( "UniqueKey " + uniqueKey.getName() + " already exists!" );
+		}
+		*/
 		uniqueKeys.put( uniqueKey.getName(), uniqueKey );
 		return uniqueKey;
 	}

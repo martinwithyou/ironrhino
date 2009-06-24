@@ -104,7 +104,7 @@ public class RestfulActionMapper extends AbstractActionMapper {
 		ActionMapping mapping = new ActionMapping();
 		mapping.setNamespace(namespace);
 		mapping.setName(name);
-		Map<String, String> params = new HashMap<String, String>(3);
+		Map<String, Object> params = new HashMap<String, Object>(3);
 		params.put(REST_STYLE, "true");
 		if (StringUtils.isNotBlank(id)) {
 			try {

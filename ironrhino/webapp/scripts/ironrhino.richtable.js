@@ -343,7 +343,7 @@ Observation.richtable = function() {
 			Richtable.reload()
 		});
 		$('form.richtable input[name="resultPage.pageNo"]').keydown(
-				function() {
+				function(event) {
 					if (event.keyCode && event.keyCode == 13) {
 						Richtable.reload()
 					}

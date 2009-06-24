@@ -84,7 +84,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		mapping
 				.setName(org.ironrhino.common.util.StringUtils
 						.toCamelCase(name));
-		Map<String, String> params = new HashMap<String, String>(3);
+		Map<String, Object> params = new HashMap<String, Object>(3);
 		// process resultPage.pageNo and resultPage.pageSize
 		String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);
 		if (StringUtils.isNumeric(pn))
