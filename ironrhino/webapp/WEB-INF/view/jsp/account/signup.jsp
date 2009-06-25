@@ -7,9 +7,9 @@
 </head>
 <body>
 <s:form action="signup" method="post" cssClass="ajax">
-	<s:textfield label="%{getText('account.email')}" name="account.email"
+	<s:textfield label="%{getText('email')}" name="account.email"
 		size="24" cssClass="required email" />
-	<s:textfield label="%{getText('account.username')}"
+	<s:textfield label="%{getText('username')}"
 		name="account.username" size="24" />
 	<s:password label="%{getText('password')}" name="password" size="24" />
 	<s:password label="%{getText('confirmPassword')}"

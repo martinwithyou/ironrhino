@@ -53,10 +53,10 @@
 	method="post" cssClass="ajax reset">
 	<@s.hidden name="id" value="${product.code}" />
 	<@s.textfield id="comment.displayName"
-		label="${action.getText('comment.displayName')}" name="comment.displayName" />
-	<@s.textfield id="comment.email" label="${action.getText('comment.email')}"
+		label="${action.getText('displayName')}" name="comment.displayName" />
+	<@s.textfield id="comment.email" label="${action.getText('email')}"
 		name="comment.email" />
-	<@s.textarea id="comment.content" label="${action.getText('comment.content')}"
+	<@s.textarea id="comment.content" label="${action.getText('content')}"
 		name="comment.content" cols="50" rows="4" />
 	<@s.textfield label="${action.getText('captcha')}" name="captcha" size="6" cssClass="autocomplete_off required" />
 	<@s.submit id="comment_submit" value="submit" />
@@ -67,11 +67,11 @@
 <@s.form id="send" name="send" action="product!send" method="post"
 	cssClass="ajax reset">
 	<@s.hidden name="id" value="${product.code}" />
-	<@s.textfield label="${action.getText('send.name')}" name="send.name" />
-	<@s.textfield label="${action.getText('send.email')}" name="send.email" />
-	<@s.textfield label="${action.getText('send.destination')}"
+	<@s.textfield label="${action.getText('name')}" name="send.name" />
+	<@s.textfield label="${action.getText('email')}" name="send.email" />
+	<@s.textfield label="${action.getText('destination')}"
 		name="send.destination" />
-	<@s.textfield label="${action.getText('send.message')}" name="send.message"
+	<@s.textfield label="${action.getText('message')}" name="send.message"
 		size="50" />
 	<@s.textfield label="${action.getText('captcha')}" name="captcha" size="6" cssClass="autocomplete_off required"  />
 	<@s.submit id="send_submit" value="submit" />

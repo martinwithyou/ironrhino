@@ -8,22 +8,20 @@
 <body>
 <s:form id="addressee" namespace="/account" action="order!addressee"
 	method="post">
-	<s:textfield label="%{getText('order.addressee.name')}"
-		name="order.addressee.name" cssClass="required" />
-	<s:textfield label="%{getText('order.addressee.address')}"
-		name="address" id="order.addressee.address"
-		cssClass="required">
+	<s:textfield label="%{getText('name')}" name="order.addressee.name"
+		cssClass="required" />
+	<s:textfield label="%{getText('address')}" name="address"
+		id="order.addressee.address" cssClass="required">
 		<s:param name="after">
 			<span class="link" onclick="Region.select('address')">select</span>
 		</s:param>
 	</s:textfield>
-	<s:textfield label="%{getText('order.addressee.zip')}"
-		name="order.addressee.zip" cssClass="required" />
-	<s:textfield label="%{getText('order.addressee.telephone')}"
-		name="order.addressee.telephone" cssClass="required" />
-	<s:textarea label="%{getText('order.description')}"
-		name="order.description" />
-	<s:submit value="Save" />
+	<s:textfield label="%{getText('postcode')}"
+		name="order.addressee.postcode" cssClass="required" />
+	<s:textfield label="%{getText('phone')}" name="phone"
+		cssClass="required" />
+	<s:textarea label="%{getText('description')}" name="order.description" />
+	<s:submit value="%{getText('save')}" />
 </s:form>
 </body>
 </html>

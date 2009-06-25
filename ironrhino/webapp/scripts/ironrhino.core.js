@@ -326,7 +326,7 @@ Ajax = {
 					message += Message.get(data.actionMessages[i],
 							'action_message');
 			if (message)
-				if (target && target.tagName.toLowerCase() == 'form') {
+				if (target && target.tagName == 'FORM') {
 					if ($('#' + target.id + '_message').length == 0)
 						$(target).before(
 								'<div id="' + target.id + '_message"></div>');
@@ -337,7 +337,7 @@ Ajax = {
 					$('#message').html(message);
 				}
 		}
-		if (target && target.tagName.toLowerCase() == 'form') {
+		if (target && target.tagName == 'FORM') {
 			setTimeout( function() {
 				$('button[type="submit"]', target).removeAttr('disabled');
 				Captcha.refresh()
@@ -417,7 +417,7 @@ Observation.ajax = function(container) {
 						} catch (e) {
 						}
 
-						if (this.tagName.toLowerCase() == 'form') {
+						if (this.tagName == 'FORM') {
 							var options = {
 								data : {
 									_transport_type_ :'XMLHttpRequest',
@@ -441,7 +441,7 @@ Observation.ajax = function(container) {
 								error : function() {
 									Form.focus(target);
 									if (target
-											&& target.tagName.toLowerCase() == 'form')
+											&& target.tagName == 'FORM')
 										setTimeout( function() {
 											$('button[type="submit"]', target)
 													.removeAttr('disabled');
@@ -551,12 +551,12 @@ var Region = {
 				var name = $(this).text();
 				if (Region.isfull) {
 					var p = this.parentNode.parentNode.parentNode.parentNode;
-					while (p && p.tagName.toLowerCase() == 'li') {
+					while (p && p.tagName == 'LI') {
 						name = $('a span', p).get(0).innerHTML + name;
 						p = p.parentNode.parentNode;
 					}
 				}
-				if ($('#' + Region.textid)[0].tagName.toLowerCase() == 'input')
+				if ($('#' + Region.textid)[0].tagName == 'INPUT')
 					$('#' + Region.textid).val(name);
 				else
 					$('#' + Region.textid).text(name);

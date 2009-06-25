@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.common.model.Addressee;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.annotation.NaturalId;

@@ -163,15 +163,7 @@
 				<file name="${webapp.dir}/styles/ironrhino.richtable.css" />
 				<file name="${webapp.dir}/styles/jquery.autocomplete.css" />
 				<file name="${webapp.dir}/styles/jquery.treeview.my.css" />
-				<file name="${webapp.dir}/styles/ui.core.css" />
-				<file name="${webapp.dir}/styles/ui.accordion.css" />
-				<file name="${webapp.dir}/styles/ui.datepicker.css" />
-				<file name="${webapp.dir}/styles/ui.dialog.css" />
-				<file name="${webapp.dir}/styles/ui.progressbar.css" />
-				<file name="${webapp.dir}/styles/ui.resizable.css" />
-				<file name="${webapp.dir}/styles/ui.slider.css" />
-				<file name="${webapp.dir}/styles/ui.tabs.css" />
-				<file name="${webapp.dir}/styles/ui.theme.css" />
+				<file name="${webapp.dir}/styles/jquery.ui.css" />
 				<file name="${webapp.dir}/styles/app.css" />
 			</filelist>
 		</concat>

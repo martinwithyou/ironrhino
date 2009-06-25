@@ -94,10 +94,10 @@
 	method="post" cssClass="ajax reset">
 	<s:hidden name="id" value="%{product.code}" />
 	<s:textfield id="comment.displayName"
-		label="%{getText('comment.displayName')}" name="comment.displayName" />
-	<s:textfield id="comment.email" label="%{getText('comment.email')}"
+		label="%{getText('displayName')}" name="comment.displayName" />
+	<s:textfield id="comment.email" label="%{getText('email')}"
 		name="comment.email" />
-	<s:textarea id="comment.content" label="%{getText('comment.content')}"
+	<s:textarea id="comment.content" label="%{getText('content')}"
 		name="comment.content" cols="50" rows="4" />
 	<authz:authorize ifNotGranted="ROLE_BUILTIN_ACCOUNT">
 		<s:textfield label="%{getText('captcha')}" name="captcha" size="6"
@@ -110,11 +110,11 @@
 <s:form action="product!send" namespace="/" method="post"
 	cssClass="ajax reset">
 	<s:hidden name="id" value="%{product.code}" />
-	<s:textfield label="%{getText('send.name')}" name="send.name" />
-	<s:textfield label="%{getText('send.email')}" name="send.email" />
-	<s:textfield label="%{getText('send.destination')}"
+	<s:textfield label="%{getText('name')}" name="send.name" />
+	<s:textfield label="%{getText('email')}" name="send.email" />
+	<s:textfield label="%{getText('destination')}"
 		name="send.destination" />
-	<s:textfield label="%{getText('send.message')}" name="send.message"
+	<s:textfield label="%{getText('message')}" name="send.message"
 		size="50" />
 	<authz:authorize ifNotGranted="ROLE_BUILTIN_ACCOUNT">
 		<s:textfield label="%{getText('captcha')}" name="captcha" size="6"

@@ -398,11 +398,11 @@ public class AccountAction extends BaseAction {
 		accountManager.lock(currentAccount, LockMode.NONE);
 		currentAccount.setNickname(account.getNickname());
 		currentAccount.setSex(account.getSex());
-		currentAccount.setBirthDate(account.getBirthDate());
+		currentAccount.setBirthday(account.getBirthday());
 		currentAccount.setName(account.getName());
 		currentAccount.setAddress(account.getAddress());
-		currentAccount.setZip(account.getZip());
-		currentAccount.setTelephone(account.getTelephone());
+		currentAccount.setPostcode(account.getPostcode());
+		currentAccount.setPhone(account.getPhone());
 		currentAccount.setSubscribed(account.isSubscribed());
 		accountManager.save(currentAccount);
 		addActionMessage(getText("profile.edit.success"));

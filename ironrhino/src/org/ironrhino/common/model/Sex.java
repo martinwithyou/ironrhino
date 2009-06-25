@@ -1,4 +1,4 @@
-package org.ironrhino.online.model;
+package org.ironrhino.common.model;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;

@@ -7,40 +7,40 @@
 <@s.form action="save2" method="post" cssClass="ajax">
 	<@s.if test="%{!product.isNew()}">
 		<@s.hidden name="product.id" />
-		<@s.textfield label="%{getText('product.code')}" name="product.code"
+		<@s.textfield label="%{getText('code')}" name="product.code"
 			readonly="true" />
 	</@s.if>
 	<@s.else>
 		<@s.hidden name="categoryId" />
-		<@s.textfield label="%{getText('product.code')}" name="product.code" />
+		<@s.textfield label="%{getText('code')}" name="product.code" />
 	</@s.else>
-	<@s.textfield label="%{getText('product.name')}" name="product.name" />
-	<@s.textfield label="%{getText('product.spec')}" name="product.spec" />
-	<@s.textfield label="%{getText('product.material')}"
+	<@s.textfield label="%{getText('name')}" name="product.name" />
+	<@s.textfield label="%{getText('spec')}" name="product.spec" />
+	<@s.textfield label="%{getText('material')}"
 		name="product.material" />
-	<@s.textfield label="%{getText('product.size')}" name="product.size" />
-	<@s.select label="%{getText('product.color')}" name="product.color"
+	<@s.textfield label="%{getText('size')}" name="product.size" />
+	<@s.select label="%{getText('color')}" name="product.color"
 		list="@org.ironrhino.pms.model.Color@values()" listKey="name"
 		listValue="displayName" />
-	<@s.textfield label="%{getText('product.inventory')}"
+	<@s.textfield label="%{getText('inventory')}"
 		name="product.inventory" />
-	<@s.textfield label="%{getText('product.price')}" name="product.price" />
-	<@s.textarea label="%{getText('product.description')}"
+	<@s.textfield label="%{getText('price')}" name="product.price" />
+	<@s.textarea label="%{getText('description')}"
 		name="product.description" />
-	<@s.select label="%{getText('product.status')}" name="product.status"
+	<@s.select label="%{getText('status')}" name="product.status"
 		list="@org.ironrhino.pms.model.ProductStatus@values()" listKey="name"
 		listValue="displayName" />
-	<@s.textfield label="%{getText('product.displayOrder')}"
+	<@s.textfield label="%{getText('displayOrder')}"
 		name="product.displayOrder" />
-	<@s.checkbox label="%{getText('product.released')}"
+	<@s.checkbox label="%{getText('released')}"
 		name="product.released" />
-	<@s.checkbox label="%{getText('product.newArrival')}"
+	<@s.checkbox label="%{getText('newArrival')}"
 		name="product.newArrival" />
-	<@s.textfield label="%{getText('product.newArrivalTimeLimit')}"
+	<@s.textfield label="%{getText('newArrivalTimeLimit')}"
 		name="product.newArrivalTimeLimit" cssClass="date" />
 	<@s.iterator
 		value="@org.ironrhino.core.ext.hibernate.CustomizableEntityChanger@getCustomizedProperties('org.ironrhino.pms.model.Product')">
-		<@s.textfield label="%{getText('product.'+key)}"
+		<@s.textfield label="%{getText(key)}"
 			name="%{'product.customProperties.'+key}"
 			cssClass="%{value.name=='DATE'?'date':''}" />
 	</@s.iterator>

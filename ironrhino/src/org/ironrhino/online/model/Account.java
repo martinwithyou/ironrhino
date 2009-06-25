@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.common.model.Addressee;
 import org.ironrhino.common.model.Region;
+import org.ironrhino.common.model.Sex;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.core.annotation.NaturalId;
@@ -37,15 +39,15 @@ public class Account extends BaseEntity implements UserDetails {
 
 	private Sex sex;
 
-	private Date birthDate;
+	private Date birthday;
 
 	private String email;
 
 	private String address;
 
-	private String zip;
+	private String postcode;
 
-	private String telephone;
+	private String phone;
 
 	private boolean subscribed;
 
@@ -115,20 +117,28 @@ public class Account extends BaseEntity implements UserDetails {
 		this.address = address;
 	}
 
-	public String getTelephone() {
-		return telephone;
+	public Date getBirthday() {
+		return birthday;
 	}
 
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
 
-	public String getZip() {
-		return zip;
+	public String getPostcode() {
+		return postcode;
 	}
 
-	public void setZip(String zip) {
-		this.zip = zip;
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public int getCumulatePoint() {
@@ -185,14 +195,6 @@ public class Account extends BaseEntity implements UserDetails {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
-	}
-
-	public Date getBirthDate() {
-		return birthDate;
-	}
-
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
 	}
 
 	public Sex getSex() {
@@ -350,8 +352,8 @@ public class Account extends BaseEntity implements UserDetails {
 		Addressee defaultAddressee = new Addressee();
 		defaultAddressee.setName(name);
 		defaultAddressee.setAddress(address);
-		defaultAddressee.setZip(zip);
-		defaultAddressee.setTelephone(telephone);
+		defaultAddressee.setPostcode(postcode);
+		defaultAddressee.setPhone(phone);
 		return defaultAddressee;
 	}
 }

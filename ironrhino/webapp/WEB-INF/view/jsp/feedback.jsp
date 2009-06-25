@@ -9,15 +9,15 @@
 </head>
 <body>
 <s:form id="feedback" action="feedback" method="post" cssClass="ajax">
-	<s:textfield label="%{getText('feedback.name')}" name="feedback.name"
+	<s:textfield label="%{getText('name')}" name="feedback.name"
 		cssClass="required" />
-	<s:textfield label="%{getText('feedback.telephone')}"
-		name="feedback.telephone" />
-	<s:textfield label="%{getText('feedback.email')}" name="feedback.email"
+	<s:textfield label="%{getText('phone')}"
+		name="feedback.phone" />
+	<s:textfield label="%{getText('email')}" name="feedback.email"
 		cssClass="email" />
-	<s:textfield label="%{getText('feedback.subject')}"
+	<s:textfield label="%{getText('subject')}"
 		name="feedback.subject" size="50" cssClass="required" />
-	<s:textarea label="%{getText('feedback.content')}" cols="50" rows="4"
+	<s:textarea label="%{getText('content')}" cols="50" rows="4"
 		name="feedback.content" />
 	<authz:authorize ifNotGranted="ROLE_BUILTIN_ACCOUNT">
 		<s:textfield label="%{getText('captcha')}" name="captcha" size="6"

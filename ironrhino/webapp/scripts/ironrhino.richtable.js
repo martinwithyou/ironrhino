@@ -204,7 +204,7 @@ Richtable = {
 					'<div id="_window_" class="base" title=""><div id="_window_content"></div></div>')
 					.appendTo(document.body);
 		if (!useiframe) {
-			//ajax replace
+			// ajax replace
 			$('#_window_content').html('');
 			var target = $('#_window_').get(0);
 			target.onsuccess = function() {
@@ -219,17 +219,18 @@ Richtable = {
 				form.attr('action', action);
 				if (form.hasClass('view'))
 					form.attr('replacement', '_window_content:content');
-				if (!$('#_window_ form.ajax').hasClass('keepopen')) {
-					$('#_window_ form.ajax button[type="submit"]').click(
-							function() {
-								$('#_window_ form.ajax').attr('onsuccess',
-										function() {
+				if (!$('#_window_ form.ajax').hasClass('keepopen')
+						&& !$('#_window_ form.ajax').hasClass('view')) {
+					$('#_window_ form.ajax button[type="submit"]')
+							.click(
+									function() {
+										$('#_window_ form.ajax')[0].onsuccess = function() {
 											setTimeout( function() {
 												$("#_window_").dialog('close');
 											}, 1000);
 
-										});
-							});
+										};
+									});
 				}
 				if (url.indexOf('?') > 0)
 					url = url.substring(0, url.indexOf('?'));
@@ -264,12 +265,18 @@ Richtable = {
 				replacement :'_window_content:content'
 			});
 		} else {
-			//embed iframe
-			$('#_window_content').html('<iframe style="width:650px;height:650px;"/>');
-			url += (url.indexOf('?') > 0 ? '&' : '?') +'decorator=simple&'+ Math.random();
+			// embed iframe
+			$('#_window_content').html(
+					'<iframe style="width:650px;height:650px;"/>');
+			url += (url.indexOf('?') > 0 ? '&' : '?') + 'decorator=simple&'
+					+ Math.random();
 			$('#_window_content > iframe')[0].src = url;
 		}
 		if ($('#_window_').attr('_dialoged_')) {
+			$("#_window_").dialog('option', 'close',
+					(reloadonclose ? function() {
+						Richtable.reload();
+					} : null));
 			$("#_window_").dialog('open');
 			return;
 		}

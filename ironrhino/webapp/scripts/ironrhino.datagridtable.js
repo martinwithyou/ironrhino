@@ -34,7 +34,7 @@ var DataGridTable = {
 			}
 		}
 		html += '</tr>';
-		if (row.parentNode.tagName.toLowerCase() == 'tfoot')
+		if (row.parentNode.tagName == 'TFOOT')
 			$(html).appendTo($(table.tBodies[0]));
 		else
 			$(row).after($(html));

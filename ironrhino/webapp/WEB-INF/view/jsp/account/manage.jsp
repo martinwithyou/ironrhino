@@ -9,8 +9,8 @@
 <title>ironrhino</title>
 </head>
 <body>
-<div class="tabs">
-<ul tab="#${param['tab']}">
+<div class="tabs" tab="#${param['tab']}">
+<ul>
 	<li><a href="#profile"><span>基本信息</span></a></li>
 	<li><a href="#password"><span>修改密码</span></a></li>
 	<li><a href="#email"><span>修改email</span></a></li>
@@ -23,27 +23,24 @@
 </ul>
 <div id="profile"><s:form id="profile_form" action="profile"
 	method="post" cssClass="ajax">
-	<s:textfield label="%{getText('account.nickname')}"
-		name="account.nickname" cssClass="required" />
-	<s:textfield label="%{getText('account.name')}" name="account.name" />
-	<s:select label="%{getText('account.sex')}" name="account.sex"
-		list="@org.ironrhino.online.model.Sex@values()" listKey="name"
+	<s:textfield label="%{getText('nickname')}" name="account.nickname"
+		cssClass="required" />
+	<s:textfield label="%{getText('name')}" name="account.name" />
+	<s:select label="%{getText('sex')}" name="account.sex"
+		list="@org.ironrhino.common.model.Sex@values()" listKey="name"
 		listValue="displayName" />
-	<s:textfield label="%{getText('account.birthDate')}"
-		name="account.birthDate" cssClass="date" />
-	<s:textfield id="address" label="%{getText('account.address')}"
+	<s:textfield label="%{getText('birthday')}" name="account.birthday"
+		cssClass="date" />
+	<s:textfield id="address" label="%{getText('address')}"
 		name="account.address">
 		<s:param name="after">
-			<span class="link"
-				onclick="Region.select('address',true)">select</span>
+			<span class="link" onclick="Region.select('address',true)">select</span>
 		</s:param>
 	</s:textfield>
-	<s:textfield label="%{getText('account.zip')}" name="account.zip" />
-	<s:textfield label="%{getText('account.telephone')}"
-		name="account.telephone" />
-	<s:checkbox label="%{getText('account.subscribed')}"
-		name="account.subscribed" />
-	<s:submit value="Save" />
+	<s:textfield label="%{getText('postcode')}" name="account.postcode" />
+	<s:textfield label="%{getText('phone')}" name="account.phone" />
+	<s:checkbox label="%{getText('subscribed')}" name="account.subscribed" />
+	<s:submit value="%{getText('save')}" />
 </s:form></div>
 <div id="password"><s:form id="password_form" action="password"
 	method="post" cssClass="ajax">
@@ -53,29 +50,29 @@
 		cssClass="required" />
 	<s:password label="%{getText('confirmPassword')}"
 		name="confirmPassword" cssClass="required" />
-	<s:submit value="Save" />
+	<s:submit value="%{getText('save')}" />
 </s:form></div>
 <div id="email"><s:form id="email_form" action="email"
 	method="post" cssClass="ajax">
 	<s:password label="%{getText('currentPassword')}"
 		name="currentPassword" cssClass="required" />
-	<s:textfield label="%{getText('account.email')}" name="account.email"
+	<s:textfield label="%{getText('email')}" name="account.email"
 		cssClass="required email" />
-	<s:submit value="Save" />
+	<s:submit value="%{getText('save')}" />
 </s:form></div>
 <c:if test="${not empty openid}">
 	<div id="unbindopenid"><s:form id="unbindopenid_form"
 		action="unbindopenid" method="post" cssClass="ajax">
 		<s:password label="%{getText('currentPassword')}"
 			name="currentPassword" cssClass="required" />
-		<s:submit value="Save" />
+		<s:submit value="%{getText('save')}" />
 	</s:form></div>
 </c:if>
 <div id="invite"><s:form id="invite_form" action="invite"
 	method="post" cssClass="ajax">
-	<s:textfield label="%{getText('account.email')}" name="account.email"
-		value="" cssClass="required email" />
-	<s:submit value="Save" />
+	<s:textfield label="%{getText('email')}" name="account.email" value=""
+		cssClass="required email" />
+	<s:submit value="%{getText('save')}" />
 </s:form></div>
 </div>
 </body>

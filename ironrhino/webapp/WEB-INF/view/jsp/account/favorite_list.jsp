@@ -12,8 +12,8 @@
 	<thead>
 		<tr>
 			<th class="nosort"><input type="checkbox" /></th>
-			<th><s:property value="getText('productFavorite.productName')" /></th>
-			<th><s:property value="getText('productFavorite.addDate')" /></th>
+			<th><s:property value="getText('productName')" /></th>
+			<th><s:property value="getText('addDate')" /></th>
 			<th class="nosort">Actions</th>
 		</tr>
 	</thead>

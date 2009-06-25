@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.ironrhino.core.model.BaseEntity;
 
-
 public class Feedback extends BaseEntity {
 
 	private String username;
@@ -13,7 +12,7 @@ public class Feedback extends BaseEntity {
 
 	private String email;
 
-	private String telephone;
+	private String phone;
 
 	private String subject;
 
@@ -52,12 +51,12 @@ public class Feedback extends BaseEntity {
 		this.subject = subject;
 	}
 
-	public String getTelephone() {
-		return telephone;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getContent() {

@@ -7,8 +7,8 @@
 <body>
 <@s.form action="save" method="post" cssClass="ajax">
 	<@s.hidden name="setting.id" />
-	<@s.textfield label="%{getText('setting.key')}" name="setting.key" />
-	<@s.textfield label="%{getText('setting.value')}" name="setting.value" />
+	<@s.textfield label="%{getText('key')}" name="setting.key" />
+	<@s.textfield label="%{getText('value')}" name="setting.value" />
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>

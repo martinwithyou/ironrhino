@@ -8,11 +8,11 @@
 <body>
 <table>
 	<tr>
-		<th><s:property value="getText('order.code')" /></th>
-		<th><s:property value="getText('order.account.username')" /></th>
-		<th><s:property value="getText('order.account.name')" /></th>
-		<th><s:property value="getText('order.status')" /></th>
-		<th><s:property value="getText('order.orderDate')" /></th>
+		<th><s:property value="getText('code')" /></th>
+		<th><s:property value="getText('username')" /></th>
+		<th><s:property value="getText('name')" /></th>
+		<th><s:property value="getText('status')" /></th>
+		<th><s:property value="getText('orderDate')" /></th>
 		<th>Actions</th>
 	</tr>
 	<s:iterator value="resultPage.result">

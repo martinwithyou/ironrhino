@@ -1,4 +1,4 @@
-package org.ironrhino.online.model;
+package org.ironrhino.common.model;
 
 import java.io.Serializable;
 
@@ -12,9 +12,9 @@ public class Addressee implements Serializable {
 
 	private String address;
 
-	private String zip;
+	private String postcode;
 
-	private String telephone;
+	private String phone;
 
 	public String getAddress() {
 		return address;
@@ -32,20 +32,20 @@ public class Addressee implements Serializable {
 		this.name = name;
 	}
 
-	public String getTelephone() {
-		return telephone;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
-	public String getZip() {
-		return zip;
+	public String getPostcode() {
+		return postcode;
 	}
 
-	public void setZip(String zip) {
-		this.zip = zip;
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
 	}
 
 	public int hashCode() {
