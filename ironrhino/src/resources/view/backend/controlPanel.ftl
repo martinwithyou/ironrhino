@@ -15,14 +15,31 @@ $('#execute').click(function(){ApplicationContextConsole.execute($('cmd').value,
 </script>
 </head>
 <body>
-<div><input type="button" id="rebuild_category_tree"
-	value="rebuild category tree" /><input type="button"
-	id="generate_static_page" value="generate static page" /><input
-	type="button" id="send_newArrived_product"
-	value="send newArrived product" /><input type="button"
-	id="compile_rulebase" value="compile rulebase" /><input type="button"
-	id="compass_index" value="compass index" /></div>
-<div><input id="cmd" type="text" name="cmd" size="80" /><input
-	type="button" id="execute" value="execute" /></div>
+<div><button type="button" id="rebuild_category_tree" class="btn">
+	<span><span>rebuild category tree</span></span>
+	</button>
+	<button type="button"
+	id="generate_static_page"  class="btn">
+	<span><span>generate static page</span></span>
+	</button>
+	<button type="button"
+	id="send_newArrived_product"  class="btn">
+	<span><span>send newArrived product</span></span>
+	</button>
+	<button type="button"
+	id="compile_rulebase"  class="btn">
+	<span><span>compile rulebase</span></span>
+	</button>
+	<button type="button"
+	id="compass_index"  class="btn">
+	<span><span>compass index</span></span>
+	</button>
+</div>
+<div><input id="cmd" type="text" name="cmd" size="80" />
+<button type="button"
+	id="execute"  class="btn">
+	<span><span>execute</span></span>
+	</button>
+</div>
 </body>
 </html>

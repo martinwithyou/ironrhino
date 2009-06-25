@@ -176,12 +176,12 @@ Richtable = {
 			url = Richtable.getBaseUrl() + '/' + type;
 		if (includeParams)
 			url += document.location.search;
-		url += (url.indexOf('?') > 0 ? '&' : '?') + 'decorator=simple';
 		if (id) {
+			url += (url.indexOf('?') > 0 ? '&' : '?');
 			if (url.indexOf('{id}') > 0)
 				url = url.replace('{id}', id);
 			else
-				url += '&id=' + id;
+				url += 'id=' + id;
 		}
 		return url;
 	},
@@ -196,21 +196,87 @@ Richtable = {
 			return;
 		Richtable.open(Richtable.getUrl('view', id));
 	},
-	open : function(url, reloadonclose) {
+	open : function(url, reloadonclose, useiframe) {
+		reloadonclose = reloadonclose || false;
+		useiframe = useiframe || false;
 		if ($('#_window_').length == 0)
 			$(
-					'<div id="_window_" class="base" title=""><iframe style="width:600px;height:600px;"/></div>')
+					'<div id="_window_" class="base" title=""><div id="_window_content"></div></div>')
 					.appendTo(document.body);
-		url += (url.indexOf('?') > 0 ? '&' : '?') + Math.random();
-		$('#_window_ > iframe')[0].src = url;
+		if (!useiframe) {
+			//ajax replace
+			$('#_window_content').html('');
+			var target = $('#_window_').get(0);
+			target.onsuccess = function() {
+				var form = $('#_window_ form.ajax');
+				var action = form.attr('action');
+				if (!action || action == document.location.pathname)
+					action = url;
+				else if (!action.indexOf('/') == 0)
+					action = document.location.pathname
+							+ (document.location.pathname.indexOf('/') == (document.location.pathname.length - 1) ? ''
+									: '/') + action;
+				form.attr('action', action);
+				if (form.hasClass('view'))
+					form.attr('replacement', '_window_content:content');
+				if (!$('#_window_ form.ajax').hasClass('keepopen')) {
+					$('#_window_ form.ajax button[type="submit"]').click(
+							function() {
+								$('#_window_ form.ajax').attr('onsuccess',
+										function() {
+											setTimeout( function() {
+												$("#_window_").dialog('close');
+											}, 1000);
+
+										});
+							});
+				}
+				if (url.indexOf('?') > 0)
+					url = url.substring(0, url.indexOf('?'));
+				var create = url.lastIndexOf('input') == url.length - 5;
+				if (create) {
+					if ($('#_window_ form.ajax input[type="hidden"][name="id"]')
+							.val())
+						create = false;
+					var entity = Richtable.getBaseUrl();
+					entity = entity.substring(0, entity.lastIndexOf('/'));
+					entity = entity.substring(entity.lastIndexOf('/') + 1);
+					if ($(
+							'#_window_ form.ajax input[type="hidden"][name="' + entity + '.id"]')
+							.val())
+						create = false;
+				}
+				if (create) {
+					$('#_window_ form.ajax button[type="submit"]')
+							.after(
+									'<button type="submit" class="btn save_and_create"><span><span>' + MessageBundle
+											.get('save.and.create') + '</span></span></button>');
+					$('#_window_ form.ajax .save_and_create').click(
+							function() {
+								$('form.ajax').addClass('reset');
+							});
+				}
+			};
+			ajax( {
+				url :url,
+				cache :false,
+				target :target,
+				replacement :'_window_content:content'
+			});
+		} else {
+			//embed iframe
+			$('#_window_content').html('<iframe style="width:650px;height:650px;"/>');
+			url += (url.indexOf('?') > 0 ? '&' : '?') +'decorator=simple&'+ Math.random();
+			$('#_window_content > iframe')[0].src = url;
+		}
 		if ($('#_window_').attr('_dialoged_')) {
 			$("#_window_").dialog('open');
 			return;
 		}
 		$('#_window_').attr('_dialoged_', true);
 		$("#_window_").dialog( {
-			width :630,
-			height :660,
+			width :700,
+			height :700,
 			close :(reloadonclose ? function() {
 				Richtable.reload();
 			} : null)
@@ -368,43 +434,4 @@ Initialization.richtable = function() {
 			};
 		}
 	}
-	if (document.location.href.indexOf('decorator=simple') > 0) {
-		if (!$('form.ajax').hasClass('keepopen')) {
-			$('form.ajax button[type="submit"]')
-					.click(
-							function() {
-								$('form.ajax')
-										.attr('onsuccess',
-												'if(window.parent!=window){window.parent._close_window_=true;}');
-							});
-		}
-		var create = document.location.href.indexOf('input') > 0;
-		if (create) {
-			if ($('form.ajax input[type="hidden"][name="id"]').val())
-				create = false;
-			var entity = Richtable.getBaseUrl();
-			entity = entity.substring(0, entity.lastIndexOf('/'));
-			entity = entity.substring(entity.lastIndexOf('/') + 1);
-			if ($('form.ajax input[type="hidden"][name="' + entity + '.id"]')
-					.val())
-				create = false;
-		}
-		if (create) {
-			$('form.ajax button[type="submit"]')
-					.after(
-							'<button type="submit" class="btn save_and_create"><span><span>' + MessageBundle
-									.get('save.and.create') + '</span></span></button>');
-			$('form.ajax .save_and_create').click( function() {
-				$('form.ajax').addClass('reset');
-			});
-		}
-	}
 };
-_close_window_ = false;
-setInterval( function() {
-	if (_close_window_ && $('#_window_')) {
-		$("#_window_").dialog('close');
-		_close_window_ = false;
-		Richtable.reload();
-	}
-}, 2000);

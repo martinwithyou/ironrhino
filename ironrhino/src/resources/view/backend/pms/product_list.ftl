@@ -6,6 +6,7 @@
 </head>
 <body>
 <#assign config={"code":{},"name":{},"tagsAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"},"relatedProductsAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"},"rolesAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"}}>
-<@richtable entityName="product" config=config actionColumnWidth="380px" actionColumnButtons='<button type="button" onclick="Richtable.save(\'#id\')">保存</button><button type="button" onclick="Richtable.input(\'#id\')">编辑</button><button type="button" onclick="Richtable.open(Richtable.getUrl(\'picture\',\'#id\'))">图片</button><button type="button" onclick="Richtable.open(Richtable.getUrl(\'attribute\',\'#id\'))">属性</button><button type="button" onclick="Richtable.open(Richtable.getUrl(\'category\',\'#id\'),true)">目录</button><button type="button" onclick="Richtable.del(\'#id\')">删除</button>'/>
+<#assign actionColumnButtons=btn("Richtable.save('#id')",action.getText('save'))+btn("Richtable.input('#id')",action.getText('edit'))+btn("Richtable.open(Richtable.getUrl('picture','#id'))","图片")+btn("Richtable.open(Richtable.getUrl('attribute','#id'))","属性")+btn("Richtable.open(Richtable.getUrl('category','#id'),true,true)","目录")+btn("Richtable.del('#id')",action.getText('delete'))>
+<@richtable entityName="product" config=config actionColumnWidth="250px" actionColumnButtons=actionColumnButtons/>
 </body>
 </html>

@@ -9,7 +9,7 @@
 	<@s.hidden name="setting.id" />
 	<@s.textfield label="%{getText('setting.key')}" name="setting.key" />
 	<@s.textfield label="%{getText('setting.value')}" name="setting.value" />
-	<@s.submit value="Save" />
+	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>
 </html>

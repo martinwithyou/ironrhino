@@ -32,6 +32,9 @@ import org.ironrhino.pms.service.CategoryManager;
 import org.ironrhino.pms.service.ProductManager;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
@@ -211,6 +214,9 @@ public class ProductAction extends BaseAction {
 		return INPUT;
 	}
 
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "product.code", trim = true, key = "product.code.required", message = "请输入编号"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "product.name", trim = true, key = "product.name.required", message = "请输入名字"), })
 	public String save2() {
 		if (product == null)
 			return INPUT;

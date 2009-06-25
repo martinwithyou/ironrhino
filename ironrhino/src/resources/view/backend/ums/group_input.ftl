@@ -16,7 +16,7 @@
 	<@s.textfield label="%{getText('group.description')}"
 		name="group.description" />
 	<@s.checkbox label="%{getText('group.enabled')}" name="group.enabled" />
-	<@s.submit value="Save" />
+	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>
 </html>

@@ -6,6 +6,7 @@
 </head>
 <body>
 <#assign config={"code":{},"name":{"cellEdit":"input"},"description":{"cellEdit":"input"},"displayOrder":{"cellEdit":"input"},"rolesAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"}}>
-<@richtable entityName="category" config=config actionColumnWidth="320px" actionColumnButtons='<button type="button" onclick="Richtable.enter(\'#id\')">进入</button><button type="button" onclick="Richtable.save(\'#id\')">保存</button><button type="button" onclick="Richtable.del(\'#id\')">删除</button><button type="button" onclick="Richtable.open(Richtable.getUrl(\'tree\',\'#id\'),true)">移动</button><button type="button" onclick="Richtable.enter(\'#id\',\'product?categoryId={parentId}\')">产品</button>'/>
+<#assign actionColumnButtons=btn("Richtable.enter('#id')",action.getText('enter'))+btn("Richtable.save('#id')",action.getText('save'))+btn("Richtable.del('#id')",action.getText('delete'))+btn("Richtable.open(Richtable.getUrl('tree','#id'),true,true)",action.getText('move'))+btn("Richtable.enter('#id','product?categoryId={parentId}')","产品")>
+<@richtable entityName="category" config=config actionColumnWidth="220px" actionColumnButtons=actionColumnButtons/>
 </body>
 </html>

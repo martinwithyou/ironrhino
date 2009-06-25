@@ -76,6 +76,7 @@ Observation.common = function(container) {
 					});
 	if (typeof $.EmptyOnClick != 'undefined')
 		$('input.emptyonclick, textarea.emptyonclick').emptyonclick();
+	$('.action_error,.action_message,.field_error').prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
 };
 
 Initialization.common = function() {
@@ -118,7 +119,9 @@ MessageBundle = {
 		'integer' :'this field must be integer',
 		'double' :'this field must be double',
 		'confirm.delete' :'are you sure to delete?',
-		'save.and.create' :'save and add'
+		'save.and.create' :'save and add',
+		'add' :'add',
+		'remove' :'remove'
 	},
 	'zh-cn' : {
 		'indicator.loading' :'正在加载...',
@@ -129,7 +132,9 @@ MessageBundle = {
 		'integer' :'请填写整数',
 		'double' :'请填写数字',
 		'confirm.delete' :'确定要删除?',
-		'save.and.create' :'保存并新建'
+		'save.and.create' :'保存并新建',
+		'add' :'添加',
+		'remove' :'删除'
 	},
 	get : function() {
 		var key = arguments[0];
@@ -138,6 +143,8 @@ MessageBundle = {
 		if (!MessageBundle[lang])
 			lang = 'en';
 		var msg = MessageBundle[lang][key];
+		if (typeof (msg) == 'undefined')
+			msg = key;
 		for ( var i = 1; i < arguments.length; i++)
 			msg = msg.replace('{' + i + '}', arguments[i]);
 		return msg;
@@ -186,7 +193,9 @@ Form = {
 		var arr = $('input,select', form).get();
 		for ( var i = 0; i < arr.length; i++) {
 			if ($('.field_error', $(arr[i]).parent()).size() > 0) {
-				setTimeout(function(){$(arr[i]).focus();},1000);
+				setTimeout( function() {
+					$(arr[i]).focus();
+				}, 1000);
 				break;
 			}
 		}
@@ -200,24 +209,21 @@ Form = {
 				else
 					Message.showError(target, 'required');
 				return false;
-			}
-			else if ($(target).hasClass('email')
+			} else if ($(target).hasClass('email')
 					&& $(target).val()
 					&& !$(target).val().match(
 							/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
 				Message.showError(target, 'email');
 				return false;
-			}
-			else if ($(target).hasClass('integer') && $(target).val()
+			} else if ($(target).hasClass('integer') && $(target).val()
 					&& !$(target).val().match(/^[-+]?\d*$/)) {
 				Message.showError(target, 'integer');
 				return false;
-			}
-			else if ($(target).hasClass('double') && $(target).val()
+			} else if ($(target).hasClass('double') && $(target).val()
 					&& !$(target).val().match(/^[-\+]?\d+(\.\d+)?$/)) {
 				Message.showError(target, 'double');
 				return false;
-			}else{
+			} else {
 				return true;
 			}
 		} else {
@@ -284,7 +290,7 @@ Ajax = {
 					$('html,body').animate( {
 						scrollTop :$('#' + key).offset().top
 					}, 100);
-				$('#' + key).html(div.find('#' + replacement[key]));
+				$('#' + key).html(div.find('#' + replacement[key]).html());
 				if (!options.silence && (typeof $.effects != 'undefined'))
 					$('#' + key).effect('highlight');
 				_observe($('#' + key));
@@ -309,7 +315,7 @@ Ajax = {
 					else
 						message += Message.get(data.fieldErrors[key],
 								'action_error');
-			if(data.fieldErrors)
+			if (data.fieldErrors)
 				Form.focus(target);
 			if (data.actionErrors)
 				for ( var i = 0; i < data.actionErrors.length; i++)
@@ -452,7 +458,9 @@ Observation.ajax = function(container) {
 								$(this).ajaxSubmit(options);
 								return false;
 							});
-							$('input,select',this).blur(function(){Form.validate(this)});
+							$('input,select', this).blur( function() {
+								Form.validate(this)
+							});
 							return;
 						} else {
 							$(this)

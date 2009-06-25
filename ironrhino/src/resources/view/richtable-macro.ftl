@@ -1,5 +1,13 @@
 <#setting number_format="0.##">
 
+<#function btn onclick="" text="" type="button">
+  <#return '<button type="'+type+'" class="btn" onclick="'+onclick+'"><span><span>'+text+'</span></span></button>'>
+</#function>
+
+<#macro button onclick="" text="" type="button">
+${btn(onclick,text)}
+</#macro>
+
 <#macro rtstart action="" readonly="false">
 <form action="${action}" method="post" class="richtable ajax view" replacement="richtable_main_content" canResizeColWidth="true" minColWidth="40">
 <div class="richtable" id="richtable_main_content" style="width:100%;">
@@ -20,7 +28,7 @@
 <td class="tableHeader<#if editable> editableColumn</#if>"><span class="resizeTitle">${action.getText(name)}</span>
 <span class="resizeBar" onmousedown="ECSideUtil.StartResize(event);" onmouseup="ECSideUtil.EndResize(event);"></span></td>
 </#macro>
-<#macro rtmiddle width="200px" readonly="false">
+<#macro rtmiddle width="150px" readonly="false">
 <#if readonly=="false">
 <td class="nosort" width="${width}"></td>
 </#if>
@@ -31,7 +39,7 @@
 
 <#macro rttbodytrstart rowid,odd,readonly="false">
 <tr class="${odd?string("odd","even")}" rowid="${rowid}" >
-<#if readonly=="false"><td width="22px"><input type="checkbox" name="deleteFlag" value="1" class="checkbox"/></td></#if>
+<#if readonly=="false"><td><input type="checkbox" name="deleteFlag" value="1" class="checkbox"/></td></#if>
 </#macro>
 
 <#macro rttbodytd cellName,value,entity="",template="",renderLink="false",cellEdit="",cellEditTemplate="rt_edit_template_input",cellEditAction="ondblclick",class="">
@@ -55,18 +63,18 @@ ${value?xhtml}
 </td>
 </#macro>
 
-<#macro rttbodytrend rowid width="200px" buttons="" readonly="false" celleditable="true" deleteable="true">
+<#macro rttbodytrend rowid buttons="" readonly="false" celleditable="true" deleteable="true">
 <#if readonly=="false">
-<td class="include_if_edited" width="${width}">
+<td class="include_if_edited">
 <#if buttons!="">
 ${buttons?replace("#id",rowid)}
 <#else>
 <#if celleditable=="true">
-<button type="button" onclick="Richtable.save('${rowid}')">${action.getText('save')}</button>
+<@button onclick="Richtable.save('${rowid}')" text="${action.getText('save')}"/>
 </#if>
-<button type="button" onclick="Richtable.input('${rowid}')">${action.getText('edit')}</button>
+<@button onclick="Richtable.input('${rowid}')" text="${action.getText('edit')}"/>
 <#if deleteable=="true">
-<button type="button" onclick="Richtable.del('${rowid}')">${action.getText('delete')}</button>
+<@button onclick="Richtable.del('${rowid}')" text="${action.getText('delete')}"/>
 </#if>
 </#if>
 </td>
@@ -103,10 +111,10 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 ${buttons}
 <#else>
 <#if readonly=="false">
-<#if createable=="true"><button type="button" onclick="Richtable.input()">${action.getText('create')}</button></#if>
-<#if celleditable=="true"><button type="button" onclick="Richtable.save()">${action.getText('save')}</button></#if>
-<#if deleteable=="true"><button type="button" onclick="Richtable.del()">${action.getText('delete')}</button></#if>
-</#if><button type="button" onclick="Richtable.reload()">${action.getText('reload')}</button></#if>
+<#if createable=="true"><@button onclick="Richtable.input()" text="${action.getText('create')}"/></#if>
+<#if celleditable=="true"><@button onclick="Richtable.save()" text="${action.getText('save')}"/></#if>
+<#if deleteable=="true"><@button onclick="Richtable.del()" text="${action.getText('delete')}"/></#if>
+</#if><@button onclick="Richtable.reload()" text="${action.getText('reload')}"/></#if>
 </div>
 </td>
 <td class="statusTool" width="33%">
@@ -135,7 +143,7 @@ ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!
 </#if>
 </#macro>
 
-<#macro richtable config entityName action="" actionColumnWidth="200px" actionColumnButtons="" bottomButtons="" readonly=false createable=true celleditable=true deleteable=true>
+<#macro richtable config entityName action="" actionColumnWidth="150px" actionColumnButtons="" bottomButtons="" readonly=false createable=true celleditable=true deleteable=true>
 <@rtstart action="${action?has_content?string(action,entityName)}" readonly="${readonly?string}"/>
 <#list config?keys as name>
 <@rttheadtd name="${name}" editable=(!readonly)&&(config[name]["cellEdit"]?exists)/>
@@ -156,7 +164,7 @@ ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!
 		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']?if_exists}" renderLink="${config[name]['renderLink']?if_exists?string}" class="${config[name]['class']?if_exists}"/>
 		</#if>
 	</#list>
-	<@rttbodytrend rowid="${entity.id}" width="${actionColumnWidth}" buttons="${actionColumnButtons}" readonly="${readonly?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
+	<@rttbodytrend rowid="${entity.id}" buttons="${actionColumnButtons}" readonly="${readonly?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
 </#list>
 <@rtend buttons="${bottomButtons}" readonly="${readonly?string}" createable="${createable?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
 </#macro>

@@ -17,7 +17,7 @@
 	<@s.textfield label="%{getText('role.description')}"
 		name="role.description" />
 	<@s.checkbox label="%{getText('role.enabled')}" name="role.enabled" />
-	<@s.submit value="Save" />
+	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>
 </html>

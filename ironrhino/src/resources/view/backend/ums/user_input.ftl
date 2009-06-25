@@ -29,7 +29,7 @@
 		name="user.accountExpireDate" cssClass="date" />
 	<@s.textfield label="%{getText('user.passwordExpireDate')}"
 		name="user.passwordExpireDate" cssClass="date" />
-	<@s.submit value="Save" />
+	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>
 </html>

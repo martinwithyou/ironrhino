@@ -6,6 +6,7 @@
 </head>
 <body>
 <#assign config={"name":{"cellEdit":"input"},"displayOrder":{"cellEdit":"input"},"rolesAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"}}>
-<@richtable entityName="region" config=config actionColumnButtons='<button type="button" onclick="Richtable.enter(\'#id\')">进入</button><button type="button" onclick="Richtable.save(\'#id\')">保存</button><button type="button" onclick="Richtable.del(\'#id\')">删除</button>'/>
+<#assign actionColumnButtons=btn("Richtable.enter('#id')",action.getText('enter'))+btn("Richtable.save('#id')",action.getText('save'))+btn("Richtable.del('#id')",action.getText('delete'))>
+<@richtable entityName="region" config=config actionColumnButtons=actionColumnButtons/>
 </body>
 </html>

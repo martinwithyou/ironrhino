@@ -60,7 +60,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.SessionFactoryObserver;
 import org.hibernate.EntityNameResolver;
-import org.hibernate.EntityNameResolver;
 import org.hibernate.tuple.entity.EntityTuplizer;
 import org.hibernate.cache.CacheKey;
 import org.hibernate.cache.CollectionRegion;

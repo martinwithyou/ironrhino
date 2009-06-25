@@ -15,17 +15,26 @@ Initialization.init = function(){
 <textarea id="fsource"
 	name="filterInvocationInterceptorObjectDefinitionSource" rows="15"
 	cols="100"></textarea> <br />
-<input type="button" id="saveFilterInvocationButton" value="save"
-	onclick="ApplicationContextConsole.set('filterInvocationInterceptorObjectDefinitionSource.definitionAsText',$('#fsource').val(),function(){alert('success')})" />
-<input type="button" id="refreshFilterInvocationButton" value="refresh"
-	onclick="ApplicationContextConsole.call('filterInvocationInterceptorObjectDefinitionSource.refresh()',null,function(){alert('success');})" /></div>
+<button type="button" id="saveFilterInvocationButton" class="btn"
+	onclick="ApplicationContextConsole.set('filterInvocationInterceptorObjectDefinitionSource.definitionAsText',$('#fsource').val(),function(){alert('success')})" >
+	<span><span>${action.getText('save')}</span></span>
+	</button>
+<button type="button" id="refreshFilterInvocationButton" class="btn"
+	onclick="ApplicationContextConsole.call('filterInvocationInterceptorObjectDefinitionSource.refresh()',null,function(){alert('success');})">
+	<span><span>${action.getText('reload')}</span></span>
+	</button>
+	</div>
 <div>ChannelProcessingFilterInvocationDefinitionSource<br />
 <textarea id="csource"
 	name="channelProcessingFilterInvocationDefinitionSource" rows="15"
 	cols="100"></textarea> <br />
-<input type="button" id="saveChannelProcessingButton" value="save"
-	onclick="ApplicationContextConsole.set('channelProcessingFilterInvocationDefinitionSource.definitionAsText',$('#csource').val(),function(){alert('success')})" />
-<input type="button" id="refreshChannelProcessingButton" value="refresh"
-	onclick="ApplicationContextConsole.call('channelProcessingFilterInvocationDefinitionSource.refresh()',null,function(){alert('success');})" /></div>
+<button type="button" id="saveChannelProcessingButton" class="btn"
+	onclick="ApplicationContextConsole.set('channelProcessingFilterInvocationDefinitionSource.definitionAsText',$('#csource').val(),function(){alert('success')})" >
+	<span><span>${action.getText('save')}</span></span>
+	</button>
+<button type="button" id="refreshChannelProcessingButton" class="btn"
+	onclick="ApplicationContextConsole.call('channelProcessingFilterInvocationDefinitionSource.refresh()',null,function(){alert('success');})" >
+	<span><span>${action.getText('reload')}</span></span>
+	</button></div>
 </body>
 </html>

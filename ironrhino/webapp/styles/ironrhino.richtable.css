@@ -51,21 +51,6 @@
 	width: 75px;
 }
 
-.richtable button {
-	background-color: transparent;
-	background-image: url(../images/button.gif);
-	background-repeat: repeat-x;
-	border: outset 1px #bbbbbb;
-	border-collapse: separate;
-	vertical-align: bottom;
-	color: #333333;
-	cursor: pointer;
-	height: 22px;
-	width: 50px;
-	margin: 3px 4px 3px 4px;
-	padding: 3px 3px 0px 3px;
-}
-
 .richtable .tableRegion {
 	border: 0px #ff00ff solid;
 	padding: 0px;
@@ -181,21 +166,6 @@
 .richtable .titleRow span {
 	width: 100%;
 	text-align: center;
-}
-
-.richtable .formButton {
-	background-color: transparent;
-	background-image: url(../images/button.gif);
-	background-repeat: repeat-x;
-	border: outset 1px #bbbbbb;
-	border-collapse: separate;
-	vertical-align: bottom;
-	color: #333333;
-	cursor: pointer;
-	height: 22px;
-	width: 50px;
-	margin: 3px 4px 3px 4px;
-	padding: 3px 3px 0px 3px;
 }
 
 .richtable .pageNav {
