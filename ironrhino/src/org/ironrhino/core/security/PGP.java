@@ -28,8 +28,6 @@ import org.apache.log4j.lf5.util.StreamUtils;
 import org.bouncycastle.bcpg.ArmoredInputStream;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.BCPGOutputStream;
-import org.bouncycastle.crypto.generators.ElGamalParametersGenerator;
-import org.bouncycastle.crypto.params.ElGamalParameters;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ElGamalParameterSpec;
 import org.bouncycastle.openpgp.PGPCompressedData;
@@ -224,14 +222,14 @@ public class PGP {
 		KeyPair dsaKp = dsaKpg.generateKeyPair();
 		KeyPairGenerator elgKpg = KeyPairGenerator.getInstance("ELGAMAL", "BC");
 
-		if (STRENGTH > 0) {
-			ElGamalParametersGenerator paramGen = new ElGamalParametersGenerator();
-			paramGen.init(kEY_SIZE, STRENGTH, new SecureRandom());
-			ElGamalParameters genParams = paramGen.generateParameters();
-			ElGamalParameterSpec elParams = new ElGamalParameterSpec(genParams
-					.getP(), genParams.getG());
-			elgKpg.initialize(elParams);
-		} else {
+//		if (STRENGTH > 0) {
+//			ElGamalParametersGenerator paramGen = new ElGamalParametersGenerator();
+//			paramGen.init(kEY_SIZE, STRENGTH, new SecureRandom());
+//			ElGamalParameters genParams = paramGen.generateParameters();
+//			ElGamalParameterSpec elParams = new ElGamalParameterSpec(genParams
+//					.getP(), genParams.getG());
+//			elgKpg.initialize(elParams);
+//		} else {
 			BigInteger g = new BigInteger(
 					"153d5d6172adb43045b68ae8e1de1070b6137005686d29d3d73a7749199681ee5b212c9b96bfdcfa5b20cd5e3fd2044895d609cf9b410b7a0f12ca1cb9a428cc",
 					16);
@@ -240,7 +238,7 @@ public class PGP {
 					16);
 			ElGamalParameterSpec elParams = new ElGamalParameterSpec(p, g);
 			elgKpg.initialize(elParams);
-		}
+//		}
 
 		KeyPair elgKp = elgKpg.generateKeyPair();
 

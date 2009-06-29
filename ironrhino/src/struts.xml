@@ -17,7 +17,7 @@
 		value="/backend/common:org.ironrhino.common;/backend/ums:org.ironrhino.ums;/backend/pms:org.ironrhino.pms;/backend/online:org.ironrhino.online" />
 	<package name="ironrhino-default" extends="struts-default">
 		<result-types>
-			<result-type name="autoConfig"
+			<result-type name="autoconfig"
 				class="org.ironrhino.core.ext.struts.AutoConfigResult" />
 			<result-type name="json"
 				class="org.ironrhino.core.ext.struts.JsonResult" />

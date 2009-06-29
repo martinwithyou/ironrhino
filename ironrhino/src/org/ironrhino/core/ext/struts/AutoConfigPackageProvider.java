@@ -29,7 +29,6 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 
@@ -221,11 +220,6 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			return packageConfigBuilders.get(name);
 		}
 
-		public void registerChildToParent(PackageConfig.Builder child,
-				PackageConfig.Builder parent) {
-			childToParent.put(child, parent);
-		}
-
 		public void registerPackage(PackageConfig.Builder builder) {
 			packageConfigBuilders.put(builder.getName(), builder);
 		}
@@ -264,16 +258,6 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			return builders;
 		}
 
-		public ResultTypeConfig getDefaultResultType(
-				PackageConfig.Builder pkgConfig) {
-			PackageConfig.Builder parent;
-			PackageConfig.Builder current = pkgConfig;
-
-			while ((parent = childToParent.get(current)) != null) {
-				current = parent;
-			}
-			return current.getResultType(current.getFullDefaultResultType());
-		}
 	}
 
 	private Map<String, Class> entityClassURLMapping = new ConcurrentHashMap<String, Class>();
@@ -292,7 +276,8 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			if (action.equals(Object.class)) {
 				actionClass = cls.getName().replace("model", "action")
 						+ "Action";
-				if (!ClassUtils.isPresent(actionClass,getClass().getClassLoader()))
+				if (!ClassUtils.isPresent(actionClass, getClass()
+						.getClassLoader()))
 					actionClass = defaultActionClass;
 			} else {
 				actionClass = action.getName();

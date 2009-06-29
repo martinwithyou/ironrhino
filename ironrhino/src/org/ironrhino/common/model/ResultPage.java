@@ -6,11 +6,12 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 
 public class ResultPage<T> implements Serializable {
-	
+
 	public static final int MAX_RECORDS_PER_PAGE = 1000;
 
 	public static final int DEFAULT_PAGE_SIZE = 10;
@@ -139,17 +140,26 @@ public class ResultPage<T> implements Serializable {
 		return this.pageSize == DEFAULT_PAGE_SIZE;
 	}
 
-	public String renderUrl(int pageNo) {
+	public String renderUrl(int pn) {
+		String requestURI = (String) ServletActionContext.getRequest()
+				.getAttribute("struts.request_uri");
+		if (requestURI == null) {
+			requestURI = (String) ServletActionContext.getRequest()
+					.getAttribute("javax.servlet.forward.request_uri");
+		}
+		if (requestURI == null) {
+			requestURI = ServletActionContext.getRequest().getRequestURI();
+		}
 		if (isDefaultPageSize()) {
-			if (pageNo <= 1)
-				return "";
+			if (pn <= 1)
+				return requestURI;
 			else
-				return "?" + PAGENO_PARAM_NAME + "=" + pageNo;
+				return requestURI + "?" + PAGENO_PARAM_NAME + "=" + pn;
 		} else {
-			if (pageNo <= 1)
-				return "?" + PAGESIZE_PARAM_NAME + "=" + pageSize;
+			if (pn <= 1)
+				return requestURI + "?" + PAGESIZE_PARAM_NAME + "=" + pageSize;
 			else
-				return "?" + PAGENO_PARAM_NAME + "=" + pageNo + "&"
+				return requestURI + "?" + PAGENO_PARAM_NAME + "=" + pn + "&"
 						+ PAGESIZE_PARAM_NAME + "=" + pageSize;
 		}
 	}

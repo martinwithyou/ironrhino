@@ -155,6 +155,7 @@
 		<concat destfile="${dest.style}" encoding="utf-8" fixlastline="yes">
 			<filelist>
 				<file name="${webapp.dir}/styles/ironrhino.core.css" />
+				<file name="${webapp.dir}/styles/ironrhino.pagination.css" />
 				<file name="${webapp.dir}/styles/ironrhino.button.css" />
 				<file name="${webapp.dir}/styles/ironrhino.form.css" />
 				<file name="${webapp.dir}/styles/ironrhino.menu.css" />
