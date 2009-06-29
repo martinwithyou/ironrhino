@@ -40,7 +40,7 @@ function login() {
 	// http和https跨域不好处理
 	// if ($('#_login_window_').length == 0)
 	// $(
-	// '<div id="_login_window_" class="base" title=""><iframe
+	// '<div id="_login_window_" title=""><iframe
 	// style="width:400px;height:240px;border:no;"/></div>')
 	// .appendTo(document.body);
 	// if ($('#_login_window_').attr('_dialoged_')) {

@@ -195,7 +195,7 @@ Form = {
 			if ($('.field_error', $(arr[i]).parent()).size() > 0) {
 				setTimeout( function() {
 					$(arr[i]).focus();
-				}, 1000);
+				}, 50);
 				break;
 			}
 		}

@@ -201,7 +201,7 @@ Richtable = {
 		useiframe = useiframe || false;
 		if ($('#_window_').length == 0)
 			$(
-					'<div id="_window_" class="base" title=""><div id="_window_content"></div></div>')
+					'<div id="_window_" title=""><div id="_window_content"></div></div>')
 					.appendTo(document.body);
 		if (!useiframe) {
 			// ajax replace
