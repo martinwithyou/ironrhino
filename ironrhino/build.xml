@@ -131,6 +131,7 @@
 				<file name="${webapp.dir}/scripts/ui.dialog.js" />
 				<file name="${webapp.dir}/scripts/ui.resizable.js" />
 				<file name="${webapp.dir}/scripts/ui.draggable.js" />
+				<file name="${webapp.dir}/scripts/ui.droppable.js" />
 				<file name="${webapp.dir}/scripts/ui.tabs.js" />
 				<file name="${webapp.dir}/scripts/ui.datepicker.js" />
 				<file name="${webapp.dir}/scripts/ui.datepicker-zh-CN.js" />
@@ -140,9 +141,10 @@
 				<file name="${webapp.dir}/scripts/jquery.bgiframe.js" />
 				<file name="${webapp.dir}/scripts/jquery.autocomplete.js" />
 				<file name="${webapp.dir}/scripts/jquery.emptyonclick.js" />
-				<file name="${webapp.dir}/scripts/jquery.dragable.js" />
 				<file name="${webapp.dir}/scripts/jquery.treeview.js" />
 				<file name="${webapp.dir}/scripts/jquery.treeview.async.my.js" />
+				<file name="${webapp.dir}/scripts/jquery.uploadify.js" />
+				<file name="${webapp.dir}/scripts/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/scripts/ironrhino.core.js" />
 				<file name="${webapp.dir}/scripts/ironrhino.checkbox.js" />
 				<file name="${webapp.dir}/scripts/ironrhino.sortabletable.js" />
@@ -164,6 +166,7 @@
 				<file name="${webapp.dir}/styles/ironrhino.richtable.css" />
 				<file name="${webapp.dir}/styles/jquery.autocomplete.css" />
 				<file name="${webapp.dir}/styles/jquery.treeview.my.css" />
+				<file name="${webapp.dir}/styles/jquery.uploadify.css" />
 				<file name="${webapp.dir}/styles/jquery.ui.css" />
 				<file name="${webapp.dir}/styles/app.css" />
 			</filelist>

@@ -13,7 +13,7 @@ public class UploadAction extends ActionSupport {
 
 	protected String baseDir = "/uploadfiles/";
 
-	protected String type;
+	protected String type = "file";
 
 	protected String newFileFileName;
 
@@ -71,6 +71,9 @@ public class UploadAction extends ActionSupport {
 
 		String currentDirPath = ServletActionContext.getServletContext()
 				.getRealPath(baseDir + type);
+		File dir = new File(currentDirPath);
+		if(!dir.exists()&&!dir.mkdirs())
+			return NONE;
 		String retVal = "0";
 		String newName = "";
 		String fileUrl = "";

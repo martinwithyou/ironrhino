@@ -1,39 +1,36 @@
 Initialization.cart = function() {
-	$('img.product_list').addClass('draggable').each( function() {
-		var code = this.alt;
-		$(this).dragable( {
-			clone :false,
-			opacity :0.5,
-			zIndex :-10,
-			target :'#cart_items',
-			over : function(obj, target) {
-				$(target).addClass('ondrop')
-			},
-			out : function(obj, target) {
-				$(target).removeClass('ondrop')
-			},
-			drop : function(obj, target) {
-				$(target).removeClass('ondrop');
-				ajax( {
-					url :CONTEXT_PATH + '/cart/add/' + code,
-					type :'POST',
-					replacement :'cart_items'
-				});
-			}
-		});
-	});
+	$('img.product_list').addClass('draggable').each(function() {
+				var code = this.alt;
+				$(this).draggable({
+							helper : 'clone',
+							opacity : 0.5,
+							zIndex : 10
+						});
+			});
+	$("#cart_items").droppable({
+				accept : 'img.product_list',
+				hoverClass : 'ondrop',
+				drop : function(event, ui) {
+					var code = ui.draggable.attr('alt');
+					ajax({
+								url : CONTEXT_PATH + '/cart/add/' + code,
+								type : 'POST',
+								replacement : 'cart_items'
+							});
+				}
+			});
 };
 
 Initialization.categoryTree = function() {
-	$('a.category').each( function() {
-		this.onsuccess = function() {
-			$('a.category').each( function() {
-				$(this).removeClass('selected')
+	$('a.category').each(function() {
+				this.onsuccess = function() {
+					$('a.category').each(function() {
+								$(this).removeClass('selected')
+							});
+					$(this).addClass('selected');
+				};
+				this.cache = true;
 			});
-			$(this).addClass('selected');
-		};
-		this.cache = true;
-	});
 };
 
 function login() {
