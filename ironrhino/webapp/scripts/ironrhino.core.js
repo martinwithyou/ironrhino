@@ -373,33 +373,23 @@ function ajax(options) {
 	$.ajax(options);
 }
 
-var _init_content_ = '';
-var _init_ = true;
 Initialization.history = function() {
-	if (HISTORY_ENABLED && (typeof $.history != 'undefined')) {
-		_init_content_ = $('#content').html();
-		$.history.init( function(hash) {
-			if (hash && hash != '#') {
-				if ($.browser.mozilla && hash.indexOf('%') == 0)
-					return;
-				hash = decodeURIComponent(hash);
-				_init_ = false;
-				if (CONTEXT_PATH)
-					hash = CONTEXT_PATH + hash;
-				ajax( {
-					url :hash,
-					cache :true,
-					success :Ajax.handleResponse
-				});
-			} else if (!hash || hash == '#') {
-				if (_init_content_ && !_init_) {
-					$('#content').html(_init_content_);
-					_observe($('#content'));
-				}
-			}
-		});
+if (!HISTORY_ENABLED || (typeof $.historyInit == 'undefined'))
+	return;
+$.historyInit(function (hash) {
+	var url=document.location.pathname;
+	if(hash) {
+		if (CONTEXT_PATH)
+				hash = CONTEXT_PATH + hash;
+		url = hash;	
 	}
-};
+	ajax( {
+		url :url,
+		cache :true,
+		success :Ajax.handleResponse
+	});
+}, '');
+}
 
 Observation.ajax = function(container) {
 	$('a.ajax,form.ajax', container)
@@ -479,8 +469,8 @@ Observation.ajax = function(container) {
 													if (CONTEXT_PATH)
 														hash = hash
 																.substring(CONTEXT_PATH.length);
-													hash = encodeURIComponent(hash);
-													$.history.load(hash);
+													hash = hash.replace(/^.*#/, '');
+													$.historyLoad(hash);
 													return false;
 												}
 												if (!Ajax.fire(target,
