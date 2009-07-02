@@ -18,20 +18,33 @@ import com.opensymphony.xwork2.inject.Inject;
 
 public class AutoConfigResult extends FreemarkerResult {
 
+	public static final String DEFAULT_JSP_LOCATION = "/WEB-INF/view/jsp";
+
+	public static final String DEFAULT_FTL_LOCATION = "/WEB-INF/view/ftl";
+
+	public static final String DEFAULT_FTL_CLASSPATH = "/resources/view";
+
 	private static ServletDispatcherResult servletDispatcherResult = new ServletDispatcherResult();
 
-	private String pageLocation = "/WEB-INF/view/jsp";
+	private String jspLocation = DEFAULT_JSP_LOCATION;
 
-	private String freemarkerPageLocation = "/resources/view";
+	private String ftlLocation = DEFAULT_FTL_LOCATION;
 
-	@Inject(value = "ironrhino.autoconfig.page.location", required = false)
-	public void setPageLocation(String val) {
-		this.pageLocation = val;
+	private String ftlClasspath = DEFAULT_FTL_CLASSPATH;
+
+	@Inject(value = "ironrhino.autoconfig.jsp.location", required = false)
+	public void setJspLocation(String val) {
+		this.jspLocation = val;
 	}
 
-	@Inject(value = "ironrhino.autoconfig.freemarker.page.location", required = false)
-	public void setFreemarkerPageLocation(String val) {
-		this.freemarkerPageLocation = val;
+	@Inject(value = "ironrhino.autoconfig.ftl.location", required = false)
+	public void setFtlLocation(String val) {
+		this.ftlLocation = val;
+	}
+
+	@Inject(value = "ironrhino.autoconfig.ftl.location", required = false)
+	public void setFtlClasspath(String val) {
+		this.ftlClasspath = val;
 	}
 
 	public void execute(ActionInvocation invocation) throws Exception {
@@ -58,7 +71,7 @@ public class AutoConfigResult extends FreemarkerResult {
 		String actionName = invocation.getProxy().getActionName();
 		if (namespace.equals("/"))
 			namespace = "";
-		String location = pageLocation + namespace + "/"
+		String location = jspLocation + namespace + "/"
 				+ getTemplateName(actionName, result) + ".jsp";
 		ServletContext context = ServletActionContext.getServletContext();
 		URL url = null;
@@ -68,13 +81,22 @@ public class AutoConfigResult extends FreemarkerResult {
 			e.printStackTrace();
 		}
 		if (url == null) {
-			location = freemarkerPageLocation + namespace + "/"
+			location = ftlLocation + namespace + "/"
+					+ getTemplateName(actionName, result) + ".ftl";
+			try {
+				url = context.getResource(location);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+		if (url == null) {
+			location = ftlClasspath + namespace + "/"
 					+ getTemplateName(actionName, result) + ".ftl";
 			url = ClassLoaderUtil.getResource(location.substring(1),
 					AutoConfigResult.class);
 		}
 		if (url == null) {
-			location = pageLocation + "/" + result + ".jsp";
+			location = jspLocation + "/" + result + ".jsp";
 			try {
 				url = context.getResource(location);
 			} catch (MalformedURLException e) {
@@ -82,7 +104,7 @@ public class AutoConfigResult extends FreemarkerResult {
 			}
 		}
 		if (url == null)
-			location = freemarkerPageLocation + "/" + result + ".ftl";
+			location = ftlClasspath + "/" + result + ".ftl";
 		return location;
 	}
 

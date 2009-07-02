@@ -1,3 +1,3 @@
 <div>
-url:<a href="${siteBaseUrl}${url}" target="_blank">${siteBaseUrl}${url}</a>
+url:<a href="${base+url}" target="_blank">${base+url}</a>
 </div>

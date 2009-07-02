@@ -2,16 +2,16 @@
 <div id="score"><span id="score_average" class="loading">loading....</span>/10(<span id="score_count" class="loading">loading...</span> votes) 
 <#assign x=10>
 <#list 1..x as i>
-  <a href="${siteBaseUrl}/product/score/${product.code}?score=${i}"
+  <a href="${base}/product/score/${product.code}?score=${i}"
 		class="ajax" onsuccess="updateScore()" onerror="login()">${i}</a>
 </#list> 
 </div>
 
 <div id="related_products"  class="loading">
 <#list product.relatedProducts as relatedProduct>
-	<div><a href="${siteBaseUrl}/product/${relatedProduct.code}.html"><img
+	<div><a href="${base}/product/${relatedProduct.code}.html"><img
 		width="133" height="100" style=""
-		src="${siteBaseUrl}/pic/${relatedProduct.code}.small.jpg" />${relatedProduct.name}</a></div>
+		src="${base}/pic/${relatedProduct.code}.small.jpg" />${relatedProduct.name}</a></div>
 </#list>
 </div>
 
@@ -20,7 +20,7 @@ loading......
 </div>
 
 <div id="comment_result"></div>			
-<form id="comment" name="comment" onsubmit="return true;" action="${siteBaseUrl}/product/comment" method="post" class="ajax reset">
+<form id="comment" name="comment" onsubmit="return true;" action="${base}/product/comment" method="post" class="ajax reset">
 <table class="ajax"><input type="hidden" name="id" value="${product.code}" id="comment_code"/>
 <tr>
     <td class="tdLabel"><label for="comment.displayName" class="label">comment.displayName:</label></td>
@@ -58,11 +58,11 @@ loading......
 
 
 
-<div><img id="captcha" src="${siteBaseUrl}/captcha.jpg"/><a
+<div><img id="captcha" src="${base}/captcha.jpg"/><a
 	id="refreshCaptcha" href="#">refresh</a></div>
 <div id="send_result"></div>
 			
-<form id="send" name="send" onsubmit="return true;" action="${siteBaseUrl}/product/send" method="post" class="ajax reset">
+<form id="send" name="send" onsubmit="return true;" action="${base}/product/send" method="post" class="ajax reset">
 <table class="ajax"><input type="hidden" name="id" value="${product.code}" id="send_code"/>
 <tr>
     <td class="tdLabel"><label for="send_send_name" class="label">send.name:</label></td>

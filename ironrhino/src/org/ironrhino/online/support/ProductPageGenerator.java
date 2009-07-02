@@ -43,7 +43,7 @@ public class ProductPageGenerator implements ApplicationListener {
 
 	private boolean enabled = false;
 
-	private String siteBaseUrl;
+	private String base;
 
 	private String templateName = "product.ftl";
 
@@ -60,12 +60,12 @@ public class ProductPageGenerator implements ApplicationListener {
 
 	private Lock lock = new ReentrantLock();
 
-	public String getSiteBaseUrl() {
-		return siteBaseUrl;
+	public String getBase() {
+		return base;
 	}
 
-	public void setSiteBaseUrl(String siteBaseUrl) {
-		this.siteBaseUrl = siteBaseUrl;
+	public void setBase(String base) {
+		this.base = base;
 	}
 
 	public boolean isEnabled() {
@@ -108,8 +108,7 @@ public class ProductPageGenerator implements ApplicationListener {
 	}
 
 	public void generate() throws IOException {
-		if (!enabled)
-			return;
+
 		lock.lock();
 		try {
 			int totalRecord = productManager.countAll();
@@ -161,8 +160,7 @@ public class ProductPageGenerator implements ApplicationListener {
 		BufferedReader reader = null;
 		BufferedWriter writer = null;
 		try {
-			URL url = new URL(siteBaseUrl + "/product/view/"
-					+ product.getCode());
+			URL url = new URL(base + "/product/view/" + product.getCode());
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.connect();
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK)

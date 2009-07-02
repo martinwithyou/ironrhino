@@ -293,6 +293,10 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			if (StringUtils.isBlank(namespace))
 				namespace = defaultNamespace;
 		}
+		if (namespace == null)
+			namespace = "";
+		log.info("mapping " + actionClass + " to " + namespace
+				+ (namespace.endsWith("/") ? "" : "/") + actionName);
 		return new String[] { namespace, actionName, actionClass };
 	}
 

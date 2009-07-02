@@ -6,9 +6,13 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.ironrhino.core.ext.struts.AutoConfigResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 
+import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.ext.beans.SimpleMapModel;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -17,7 +21,9 @@ import freemarker.template.TemplateHashModelEx;
 
 public class TemplateProvider {
 
-	private String templateDirectory = "/WEB-INF/view/ftl";
+	private String ftlLocation = AutoConfigResult.DEFAULT_FTL_LOCATION;
+
+	private String ftlClasspath = AutoConfigResult.DEFAULT_FTL_CLASSPATH;
 
 	private Configuration configuration;
 
@@ -30,19 +36,24 @@ public class TemplateProvider {
 		this.allSharedVariables = allSharedVariables;
 	}
 
-	public String getTemplateDirectory() {
-		return templateDirectory;
+	public void setFtlLocation(String ftlLocation) {
+		this.ftlLocation = ftlLocation;
 	}
 
-	public void setTemplateDirectory(String templateDirectory) {
-		this.templateDirectory = templateDirectory;
+	public void setFtlClasspath(String ftlClasspath) {
+		this.ftlClasspath = ftlClasspath;
 	}
 
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
 		configuration = new Configuration();
-		configuration.setDirectoryForTemplateLoading(resourceLoader
-				.getResource(templateDirectory).getFile());
+		TemplateLoader ftlLocation = new FileTemplateLoader(resourceLoader
+				.getResource(this.ftlLocation).getFile());
+		TemplateLoader ftlClasspath = new FileTemplateLoader(resourceLoader
+				.getResource("classpath:" + this.ftlClasspath).getFile());
+		MultiTemplateLoader templateLoader = new MultiTemplateLoader(
+				new TemplateLoader[] { ftlLocation, ftlClasspath });
+		configuration.setTemplateLoader(templateLoader);
 		DefaultObjectWrapper wrapper = new DefaultObjectWrapper();
 		configuration.setObjectWrapper(wrapper);
 		configuration.setDefaultEncoding("UTF-8");

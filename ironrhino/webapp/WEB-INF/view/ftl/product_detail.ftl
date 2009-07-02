@@ -10,7 +10,7 @@
 	</tr>
 </table>
 
-<a href="<#if siteBaseUrl?exists>${siteBaseUrl}<#else>${base}</#if>/cart/add/${product.code}" class="ajax view" replacement="cart_items">add to cart</a>
-<a href="<#if siteBaseUrl?exists>${siteBaseUrl}<#else>${base}</#if>/product/favorite/${product.code}" class="ajax" onerror="login()">add to favorite</a>
+<a href="<#if base?exists>${base}<#else>${base}</#if>/cart/add/${product.code}" class="ajax view" replacement="cart_items">add to cart</a>
+<a href="<#if base?exists>${base}<#else>${base}</#if>/product/favorite/${product.code}" class="ajax" onerror="login()">add to favorite</a>
 </div>
 

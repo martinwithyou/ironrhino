@@ -1,7 +1,7 @@
 <div id="dynamic">
 
 <div id="score">
-<div>当前平均分:<span id="score_average">${scoreResult.average}</span>(<span id="score_count">${scoreResult.count}</span>次打分)
+<div>当前平均分:<span id="score_average">${scoreResult.average?if_exists}</span>(<span id="score_count">${scoreResult.count?if_exists}</span>次打分)
 </div>
 <ul class="unit-rating">
 <#assign x=10>

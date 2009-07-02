@@ -11,7 +11,7 @@
 		class="org.ironrhino.common.support.TemplateProvider">
 		<property name="allSharedVariables">
 			<map>
-				<entry key="siteBaseUrl" value="${siteBaseUrl}" />
+				<entry key="base" value="${base}" />
 			</map>
 		</property>
 	</bean>
