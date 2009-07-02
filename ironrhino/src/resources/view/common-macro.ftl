@@ -1,4 +1,5 @@
 <#macro pagination class="" options="">
+<#if resultPage.totalPage gt 1>
 <div class="pagination" style="clear:both;">
 <#if resultPage.first>
 <span class="disabled">${action.getText('firstpage')}</span>
@@ -18,4 +19,5 @@
 <a href="${resultPage.renderUrl(resultPage.totalPage)}"<#if class!=''> class="${class}"</#if><#if options!=''> options="${options}"</#if>>${action.getText('lastpage')}</a>
 </#if>
 </div>
+</#if>
 </#macro>
