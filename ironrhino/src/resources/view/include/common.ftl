@@ -1,3 +1,11 @@
+<#function btn onclick="" text="" type="button">
+  <#return '<button type="'+type+'" class="btn" onclick="'+onclick+'"><span><span>'+text+'</span></span></button>'>
+</#function>
+
+<#macro button onclick="" text="" type="button">
+${btn(onclick,text)}
+</#macro>
+
 <#macro pagination class="" options="">
 <#if resultPage.totalPage gt 1>
 <div class="pagination" style="clear:both;">
@@ -19,5 +27,12 @@
 <a href="${resultPage.renderUrl(resultPage.totalPage)}"<#if class!=''> class="${class}"</#if><#if options!=''> options="${options}"</#if>>${action.getText('lastpage')}</a>
 </#if>
 </div>
+</#if>
+</#macro>
+
+<#macro authorize ifNotGranted="" ifAllGranted="" ifAnyGranted="">
+<#assign test=false>
+<#if test>
+<#nested>
 </#if>
 </#macro>

@@ -343,7 +343,7 @@ public class ProductAction extends BaseAction {
 			Map<String, Object> model = new HashMap<String, Object>(2);
 			model.put("message", send.getMessage());
 			model.put("product", productFacade.getProductByCode(code));
-			mailService.send(smm, "product_send.ftl", model);
+			mailService.send(smm, "template/product_send.ftl", model);
 			addActionMessage(getText("send.successfully"));
 		}
 		baseManager.save(send);

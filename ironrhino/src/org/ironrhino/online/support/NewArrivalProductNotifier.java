@@ -34,7 +34,7 @@ public class NewArrivalProductNotifier {
 
 	private String subject;
 
-	private String templateName = "product_list.ftl";
+	private String templateName = "template/product_list.ftl";
 
 	private String extraEmails;
 

@@ -288,7 +288,7 @@ public class AccountAction extends BaseAction {
 		smm.setTo(account.getFriendlyName() + "<" + account.getEmail() + ">");
 		smm.setSubject(getText("activation.mail.subject",
 				"activate your account"));
-		mailService.send(smm, "account_activate.ftl", model);
+		mailService.send(smm, "template/account_activate.ftl", model);
 		addActionMessage(getText("activation.mail.send.success"));
 	}
 
@@ -423,7 +423,7 @@ public class AccountAction extends BaseAction {
 		Map<String, Object> model = new HashMap<String, Object>(1);
 		String url = "/account/signup?account.email=" + account.getEmail();
 		model.put("url", url);
-		mailService.send(smm, "account_invite.ftl", model);
+		mailService.send(smm, "template/account_invite.ftl", model);
 		addActionMessage(getText("invite.successfully"));
 		return "invite";
 	}
@@ -447,7 +447,7 @@ public class AccountAction extends BaseAction {
 			smm.setTo(account.getFriendlyName() + "<" + account.getEmail()
 					+ ">");
 			smm.setSubject("this is your username and password");
-			mailService.send(smm, "account_forgot.ftl", model);
+			mailService.send(smm, "template/account_forgot.ftl", model);
 			addActionMessage(getText("find.success"));
 		}
 		return "forgot";

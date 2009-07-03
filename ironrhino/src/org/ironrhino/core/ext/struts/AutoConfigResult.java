@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
@@ -32,17 +33,17 @@ public class AutoConfigResult extends FreemarkerResult {
 
 	private String ftlClasspath = DEFAULT_FTL_CLASSPATH;
 
-	@Inject(value = "ironrhino.autoconfig.jsp.location", required = false)
+	@Inject(value = "ironrhino.view.jsp.location", required = false)
 	public void setJspLocation(String val) {
 		this.jspLocation = val;
 	}
 
-	@Inject(value = "ironrhino.autoconfig.ftl.location", required = false)
+	@Inject(value = "ironrhino.view.ftl.location", required = false)
 	public void setFtlLocation(String val) {
 		this.ftlLocation = val;
 	}
 
-	@Inject(value = "ironrhino.autoconfig.ftl.location", required = false)
+	@Inject(value = "ironrhino.view.ftl.classpath", required = false)
 	public void setFtlClasspath(String val) {
 		this.ftlClasspath = val;
 	}
@@ -52,11 +53,14 @@ public class AutoConfigResult extends FreemarkerResult {
 				&& !invocation.getProxy().getMethod().equals("")
 				&& !invocation.getProxy().getMethod().equals("execute")) {
 			ActionContext ctx = invocation.getInvocationContext();
+			HttpServletRequest request = (HttpServletRequest) ctx
+					.get(ServletActionContext.HTTP_REQUEST);
 			HttpServletResponse response = (HttpServletResponse) ctx
 					.get(ServletActionContext.HTTP_RESPONSE);
-			String url = invocation.getProxy().getNamespace() + "/"
+			String namespace = invocation.getProxy().getNamespace();
+			String url = namespace + (namespace.endsWith("/") ? "" : "/")
 					+ invocation.getProxy().getActionName();
-			response.sendRedirect(url);
+			response.sendRedirect(request.getContextPath() + url);
 		}
 		String finalLocation = conditionalParse(location, invocation);
 		if (finalLocation.endsWith(".jsp"))

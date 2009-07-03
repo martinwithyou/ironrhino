@@ -3,12 +3,14 @@ package org.ironrhino.online.action;
 import java.util.List;
 
 import org.apache.struts2.interceptor.validation.SkipValidation;
+import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.online.model.OrderItem;
 import org.ironrhino.online.support.Cart;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
 
+@AutoConfig(namespace = "/")
 public class CartAction extends BaseAction {
 
 	// quantity
@@ -40,7 +42,7 @@ public class CartAction extends BaseAction {
 	}
 
 	public String execute() {
-		return VIEW;
+		return SUCCESS;
 	}
 
 	public String facade() {

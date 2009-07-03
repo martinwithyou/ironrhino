@@ -1,13 +1,3 @@
-<#setting number_format="0.##">
-
-<#function btn onclick="" text="" type="button">
-  <#return '<button type="'+type+'" class="btn" onclick="'+onclick+'"><span><span>'+text+'</span></span></button>'>
-</#function>
-
-<#macro button onclick="" text="" type="button">
-${btn(onclick,text)}
-</#macro>
-
 <#macro rtstart action="" readonly="false">
 <form action="${action}" method="post" class="richtable ajax view" replacement="richtable_main_content" canResizeColWidth="true" minColWidth="40">
 <div class="richtable" id="richtable_main_content" style="width:100%;">

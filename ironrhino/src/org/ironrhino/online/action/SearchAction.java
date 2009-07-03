@@ -4,16 +4,19 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.compass.core.support.search.CompassSearchResults;
 import org.ironrhino.common.model.AggregateResult;
 import org.ironrhino.common.util.NumberUtils;
+import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.online.support.SearchHitsControl;
 
 import com.opensymphony.xwork2.ActionSupport;
 
+@AutoConfig(namespace = "/")
 public class SearchAction extends ActionSupport {
 
 	private String q;
@@ -83,16 +86,20 @@ public class SearchAction extends ActionSupport {
 				cc.setPageNo(pn);
 			if (ps > 0)
 				cc.setPageSize(ps);
+			if (ps > 100)
+				cc.setPageSize(100);
 			searchResults = compassSearchService.search(cc);
 			if (searchHitsControl != null) {
 				searchHitsControl.put(query, searchResults.getTotalHits());
 			}
 		}
-		return "result";
+		return SUCCESS;
 	}
 
 	@SkipValidation
 	public String suggest() {
+		ServletActionContext.getResponse().setHeader("Cache-Control",
+				"max-age=86400");
 		if (StringUtils.isNotBlank(q)) {
 			String keyword = q.trim();
 			suggestions = searchHitsControl.suggest(keyword);

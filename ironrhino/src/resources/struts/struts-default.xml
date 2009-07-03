@@ -16,21 +16,11 @@
 			<result>/WEB-INF/view/jsp/right.jsp
 			</result>
 		</action>
-		<action name="search" class="org.ironrhino.online.action.SearchAction">
-			<result name="result"> /WEB-INF/view/jsp/search_result.jsp</result>
-			<result name="suggestion"> /WEB-INF/view/jsp/search_suggest.jsp</result>
-		</action>
 		<action name="product" class="org.ironrhino.online.action.ProductAction">
 			<result name="input" type="redirect">/product/${uid}.html</result>
 			<result name="success" type="redirect">/product/${uid}.html</result>
 			<result name="list" type="autoconfig"/>
 			<result name="view" type="autoconfig"/>
-		</action>
-		<action name="cart" class="org.ironrhino.online.action.CartAction">
-			<result name="success" type="redirectAction">cart</result>
-			<result name="view">/WEB-INF/view/jsp/cart.jsp
-			</result>
-			<result name="facade"> /WEB-INF/view/jsp/cart_facade.jsp</result>
 		</action>
 		<action name="feedback" class="org.ironrhino.online.action.FeedbackAction">
 			<result name="input">/WEB-INF/view/jsp/feedback.jsp

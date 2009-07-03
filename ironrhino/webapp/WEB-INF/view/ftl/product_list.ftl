@@ -1,23 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>ironrhino</title>
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 </head>
 <body>
-<table>
-<tr>
-	<th>code</th>
-	<th>name</th>
-</tr>
-		
-<#list productList as product>
-<tr>
-	<td>${product.code}</td>
-	<td>${product.name}</td>
-</tr>
+<div id="${list?if_exists}_list_detail">
+<div class="product_list">
+<#list resultPage.result as var>
+	<p><img src="${base}/pic/${var.code}.small.jpg"
+		alt="${var.code}" class="product_list" /> <a
+		href="${base}/product/${var.code}.html">${var.name}</a> 
+		<a href="${base}/cart/add/${var.code}"
+		class="ajax view" options="{replacement:'cart_items'}">放入购物车</a></p>
 </#list>
-</table>
+</div>
+<@pagination class="ajax view" options="{replacement:'${list?if_exists}_list_detail',cache:true}"/>
+</div>
 </body>
 </html>

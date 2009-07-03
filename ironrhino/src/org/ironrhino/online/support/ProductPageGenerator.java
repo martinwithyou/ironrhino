@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.FetchMode;
@@ -45,7 +43,7 @@ public class ProductPageGenerator implements ApplicationListener {
 
 	private String base;
 
-	private String templateName = "product.ftl";
+	private String templateName = "template/product.ftl";
 
 	private String directory = "/product";
 
@@ -55,8 +53,6 @@ public class ProductPageGenerator implements ApplicationListener {
 
 	@Autowired
 	private ResourceLoader resourceLoader;
-
-	private Template template;
 
 	private Lock lock = new ReentrantLock();
 
@@ -102,9 +98,8 @@ public class ProductPageGenerator implements ApplicationListener {
 		this.templateProvider = templateProvider;
 	}
 
-	@PostConstruct
-	public void afterPropertiesSet() throws Exception {
-		template = templateProvider.getTemplate(templateName);
+	private Template getTemplate() throws IOException {
+		return templateProvider.getTemplate(templateName);
 	}
 
 	public void generate() throws IOException {
@@ -145,7 +140,7 @@ public class ProductPageGenerator implements ApplicationListener {
 							product.getCode() + ".html")), "UTF-8"));
 			Map<String, Product> model = new HashMap<String, Product>(1);
 			model.put("product", product);
-			template.process(model, out);
+			getTemplate().process(model, out);
 		} catch (Exception ex) {
 			log.error("Error when generate static page for product["
 					+ product.getCode() + "]", ex);
