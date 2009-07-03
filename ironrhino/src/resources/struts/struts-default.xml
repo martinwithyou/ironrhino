@@ -22,13 +22,9 @@
 			<result name="list" type="autoconfig"/>
 			<result name="view" type="autoconfig"/>
 		</action>
-		<action name="feedback" class="org.ironrhino.online.action.FeedbackAction">
-			<result name="input">/WEB-INF/view/jsp/feedback.jsp
-			</result>
-		</action>
 		<action name="payment" class="org.ironrhino.online.action.PaymentAction" />
 		<action name="region" class="org.ironrhino.common.action.RegionTreeAction">
-			<result name="success"> /WEB-INF/view/jsp/region_tree.jsp</result>
+			<result name="success" type="autoconfig"/>
 		</action>
 	</package>
 </struts>

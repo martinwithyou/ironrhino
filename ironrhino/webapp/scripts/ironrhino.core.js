@@ -281,7 +281,7 @@ Ajax = {
 			for (var key in replacement) {
 				if (!options.silence)
 					$('html,body').animate({
-								scrollTop : $('#' + key).offset().top
+								scrollTop : $('#' + key).offset().top-50
 							}, 100);
 				$('#' + key).html(div.find('#' + replacement[key]).html());
 				if (!options.silence && (typeof $.effects != 'undefined'))

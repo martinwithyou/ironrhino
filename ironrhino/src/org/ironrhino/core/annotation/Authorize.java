@@ -11,9 +11,9 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface Authorize {
 	// equals to tag security:authorize
-	String ifNotGranted() default "";
-
 	String ifAllGranted() default "";
 
 	String ifAnyGranted() default "";
+
+	String ifNotGranted() default "";
 }

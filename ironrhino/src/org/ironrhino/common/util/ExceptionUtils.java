@@ -1,6 +1,7 @@
 package org.ironrhino.common.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
 public class ExceptionUtils {
@@ -15,7 +16,7 @@ public class ExceptionUtils {
 			os.flush();
 			os.close();
 			return s;
-		} catch (Exception e) {
+		} catch (IOException e) {
 			return t.getCause().toString();
 		}
 	}

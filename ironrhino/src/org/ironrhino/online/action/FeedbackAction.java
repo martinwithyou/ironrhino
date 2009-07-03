@@ -1,6 +1,7 @@
 package org.ironrhino.online.action;
 
 import org.ironrhino.common.util.AuthzUtils;
+import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.annotation.Captcha;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.service.BaseManager;
@@ -13,6 +14,7 @@ import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
+@AutoConfig(namespace = "/")
 public class FeedbackAction extends BaseAction {
 
 	private Feedback feedback;
@@ -39,7 +41,7 @@ public class FeedbackAction extends BaseAction {
 			feedback.setEmail(account.getEmail());
 			feedback.setPhone(account.getPhone());
 		}
-		return INPUT;
+		return SUCCESS;
 	}
 
 	@Captcha
@@ -55,6 +57,6 @@ public class FeedbackAction extends BaseAction {
 			baseManager.save(feedback);
 			addActionMessage(getText("feedback.successfully"));
 		}
-		return REFERER;
+		return SUCCESS;
 	}
 }

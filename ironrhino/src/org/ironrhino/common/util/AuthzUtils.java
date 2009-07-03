@@ -3,6 +3,8 @@ package org.ironrhino.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.jsp.tagext.Tag;
+
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.model.Secured;
@@ -13,9 +15,24 @@ import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.context.SecurityContextImpl;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
+import org.springframework.security.taglibs.authz.AuthorizeTag;
 import org.springframework.security.userdetails.UserDetails;
 
 public class AuthzUtils {
+
+	public static boolean authorize(String ifAllGranted, String ifAnyGranted,
+			String ifNotGranted) {
+		try {
+			AuthorizeTag tag = new AuthorizeTag();
+			tag.setIfAllGranted(ifAllGranted);
+			tag.setIfAnyGranted(ifAnyGranted);
+			tag.setIfNotGranted(ifNotGranted);
+			return tag.doStartTag() == Tag.EVAL_BODY_INCLUDE;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	public static List<String> getRoleNames() {
 		List<String> roleNames = new ArrayList<String>();
 		if (SecurityContextHolder.getContext().getAuthentication() != null) {

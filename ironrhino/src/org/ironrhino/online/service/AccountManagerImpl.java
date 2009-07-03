@@ -110,8 +110,8 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 					roles.addAll(group.getRoles());
 		}
 		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
-		auths.add(new GrantedAuthorityImpl("ROLE_BUILTIN_ANONYMOUS"));
-		auths.add(new GrantedAuthorityImpl("ROLE_BUILTIN_ACCOUNT"));
+		auths.add(new GrantedAuthorityImpl(ROLE_BUILTIN_ANONYMOUS));
+		auths.add(new GrantedAuthorityImpl(ROLE_BUILTIN_ACCOUNT));
 		for (Role role : roles)
 			if (role.isEnabled())
 				auths.add(new GrantedAuthorityImpl(role.getName()));

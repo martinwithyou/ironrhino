@@ -30,9 +30,8 @@ ${btn(onclick,text)}
 </#if>
 </#macro>
 
-<#macro authorize ifNotGranted="" ifAllGranted="" ifAnyGranted="">
-<#assign test=false>
-<#if test>
+<#macro authorize ifAllGranted="" ifAnyGranted="" ifNotGranted="">
+<#if statics['org.ironrhino.common.util.AuthzUtils'].authorize(ifAllGranted,ifAnyGranted,ifNotGranted)>
 <#nested>
 </#if>
 </#macro>

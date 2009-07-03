@@ -138,43 +138,13 @@ public class BaseAction extends ActionSupport {
 
 	@Before(priority = 20)
 	public String checkAccess() throws Exception {
-		boolean passed = false;
 		Authorize annotation = getAnnotation(Authorize.class);
 		if (annotation == null)
 			annotation = getClass().getAnnotation(Authorize.class);
 		if (annotation == null)
 			return null;
-
-		if (!annotation.ifNotGranted().equals("")) {
-			String[] roles = annotation.ifNotGranted().split(",");
-			boolean has = false;
-			for (String r : roles)
-				if (AuthzUtils.getRoleNames().contains(r)) {
-					has = true;
-					break;
-				}
-			passed = !has;
-		} else if (!annotation.ifAllGranted().equals("")) {
-			String[] roles = annotation.ifAllGranted().split(",");
-			boolean notHas = false;
-			for (String r : roles)
-				if (!AuthzUtils.getRoleNames().contains(r)) {
-					notHas = true;
-					break;
-				}
-
-			passed = !notHas;
-		} else if (!annotation.ifAnyGranted().equals("")) {
-			String[] roles = annotation.ifAnyGranted().split(",");
-			boolean has = false;
-			for (String r : roles)
-				if (AuthzUtils.getRoleNames().contains(r)) {
-					has = true;
-					break;
-				}
-
-			passed = has;
-		}
+		boolean passed = AuthzUtils.authorize(annotation.ifAllGranted(),
+				annotation.ifAnyGranted(), annotation.ifNotGranted());
 		if (!passed) {
 			getActionErrors().add(getText("access.denied"));
 			return ACCESSDENIED;

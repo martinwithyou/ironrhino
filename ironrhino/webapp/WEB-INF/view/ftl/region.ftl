@@ -9,35 +9,35 @@ response.setHeader("Cache-Control", "max-age=86400");
 <title>region</title>
 <script type="text/javascript">
 	function _click(){
-		<c:if test="${not empty param['input']}">
+		<#if Parameters.input?exists>
 		var id=$(this).parents('li')[0].id;
 		var name=$(this).text();
-		window.top.document.getElementById('${param['input']}').value=name;
-		//$('#${param['input']}',window.top.document).val($(this).text());
+		window.top.document.getElementById('${Parameters.input}').value=name;
+		//$('#${Parameters.input}',window.top.document).val($(this).text());
 		//window.close();
-		</c:if>
+		</#if>
 	}
 	
 	Initialization.treeview= function(){
 		$("#treeview").treeview({
-			<s:if test="async">
-			url: "<c:url value="/region/children"/>",
+			<#if async>
+			url: '${base}/region/children',
 			click:_click,
-			</s:if>
+			</#if>
 			collapsed: true,
 			unique: true
 
 		});
-		<s:if test="!async">
+		<#if !async>
 			$("#treeview span").click(_click);
 			var id=document.location.hash;
 			if(id)
 				$(id).parents("li.expandable").find(">div.hitarea").click();
-		</s:if>
+		</#if>
 	};
 </script>
 </head>
 <body>
-<s:property value="treeViewHtml" escape="false" />
+${treeViewHtml}
 </body>
 </html>
