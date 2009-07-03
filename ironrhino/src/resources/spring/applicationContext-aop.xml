@@ -12,4 +12,6 @@
 		p:order="0" />
 	<aop:aspectj-autoproxy />
 	<tx:annotation-driven order="1" />
+	<bean id="cacheAspect" class="org.ironrhino.core.cache.CacheAspect"
+		p:order="-1" />
 </beans>

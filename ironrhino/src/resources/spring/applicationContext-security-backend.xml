@@ -44,14 +44,7 @@
 		<property name="statelessTicketCache">
 			<bean
 				class="org.springframework.security.providers.cas.cache.EhCacheBasedTicketCache">
-				<property name="cache">
-					<bean
-						class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-						<property name="cacheManager"
-							ref="cacheManager" />
-						<property name="cacheName" value="ticketCache" />
-					</bean>
-				</property>
+				<property name="cache" ref="ticketCache"/>
 			</bean>
 		</property>
 		<property name="serviceProperties" ref="serviceProperties" />

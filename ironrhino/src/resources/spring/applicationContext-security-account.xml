@@ -18,19 +18,9 @@
 	<bean id="daoAuthenticationProvider"
 		class="org.springframework.security.providers.dao.DaoAuthenticationProvider">
 		<property name="userDetailsService" ref="accountManager" />
-		<property name="userCache" ref="accountCache" />
 		<property name="passwordEncoder" ref="passwordEncoder" />
 	</bean>
-	<bean id="accountCache"
-		class="org.springframework.security.providers.dao.cache.EhCacheBasedUserCache">
-		<property name="cache">
-			<bean
-				class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-				<property name="cacheManager" ref="cacheManager" />
-				<property name="cacheName" value="accountCache" />
-			</bean>
-		</property>
-	</bean>
+
 	<bean id="rememberMeProcessingFilter"
 		class="org.springframework.security.ui.rememberme.RememberMeProcessingFilter">
 		<property name="authenticationManager"

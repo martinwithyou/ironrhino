@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
+import net.sf.ehcache.Cache;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -23,14 +25,13 @@ import org.ironrhino.ums.model.Role;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.GrantedAuthorityImpl;
-import org.springframework.security.providers.dao.UserCache;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 		AccountManager {
 
-	private UserCache accountCache;
+	private Cache accountCache;
 
 	private RegionTreeControl regionTreeControl;
 
@@ -44,7 +45,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 		this.regionTreeControl = regionTreeControl;
 	}
 
-	public void setAccountCache(UserCache accountCache) {
+	public void setAccountCache(Cache accountCache) {
 		this.accountCache = accountCache;
 	}
 
@@ -55,8 +56,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 					.getAddress()));
 		super.save(account);
 		if (accountCache != null) {
-			populateAuthorities(account);
-			accountCache.putUserInCache(account);
+			accountCache.remove(account.getUsername());
 		}
 	}
 

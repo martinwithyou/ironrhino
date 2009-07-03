@@ -41,7 +41,9 @@ public class PageFragmentCacheHelper {
 					FORCE_FLUSH_PARAM_NAME) != null)
 				return null;
 			Element element = getCache().get(completeKey(key, scope));
-			return (String) element.getValue();
+			if (element != null)
+				return (String) element.getValue();
+			return null;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			return null;

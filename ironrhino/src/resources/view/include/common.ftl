@@ -36,11 +36,11 @@ ${btn(onclick,text)}
 </#if>
 </#macro>
 
-<#macro cache key scope="application" timeToLive=36000 timeToIdle=3600>
-<#assign content=statics['org.ironrhino.core.ext.ehcache.CacheTag'].check(key,timeToLive,timeToIdle)>
-<#if content?exists&&content.length() gt 0>
-
-<#else>
+<#macro cache key scope="application" timeToLive=3600*24 timeToIdle=3600>
+<#assign content=statics['org.ironrhino.core.cache.PageFragmentCacheHelper'].get(key,scope)?if_exists>
+<#if content?exists&&content?length gt 0>${content}<#else>
 <#nested>
+<#assign content=nested><!--//TODO-->
+${statics['org.ironrhino.core.cache.PageFragmentCacheHelper'].put(key,content,scope,timeToLive,timeToIdle)}
 </#if>
 </#macro>

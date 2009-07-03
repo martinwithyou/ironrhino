@@ -25,11 +25,4 @@
 		class="org.ironrhino.online.support.ProductHitsControl" />
 	<bean id="searchHitsControl"
 		class="org.ironrhino.online.support.SearchHitsControl" />
-	<bean id="productCache"
-		class="org.springframework.cache.ehcache.EhCacheFactoryBean"
-		p:timeToLive="600" />
-	<bean id="searchSuggestionCache"
-		class="org.springframework.cache.ehcache.EhCacheFactoryBean" />
-	<bean id="pageFragmentCache"
-		class="org.springframework.cache.ehcache.EhCacheFactoryBean" />
 </beans>
