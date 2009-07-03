@@ -156,7 +156,7 @@ public class RegionAction extends BaseAction {
 		return "map";
 	}
 
-	@JsonConfig(top = "list")
+	@JsonConfig(root = "list")
 	public String mark() {
 		String[] array = southWest.split(",");
 		Double bottom = new Double(array[0]);

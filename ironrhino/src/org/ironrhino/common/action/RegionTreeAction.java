@@ -43,7 +43,7 @@ public class RegionTreeAction extends BaseAction {
 		this.regionTreeControl = regionTreeControl;
 	}
 
-	@JsonConfig(top = "children")
+	@JsonConfig(root = "children")
 	public String children() {
 		Region region;
 		if (root < 1)

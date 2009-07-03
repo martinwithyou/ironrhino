@@ -10,13 +10,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-public class PageFragmentCacheHelper {
+public class PageFragmentCacheContext {
 
-	private static Log log = LogFactory.getLog(PageFragmentCacheHelper.class);
-
-	public static final String CACHE_NAME = "pageFragmentCache";
-
-	public static final String FORCE_FLUSH_PARAM_NAME = "_ff_";
+	private static Log log = LogFactory.getLog(PageFragmentCacheContext.class);
 
 	public static final int DEFAULT_TIME_TO_LIVE = 3600 * 24;
 
@@ -24,21 +20,11 @@ public class PageFragmentCacheHelper {
 
 	public static final String DEFAULT_SCOPE = "application";
 
-	private static String completeKey(String key, String scope) {
-		HttpServletRequest request = ServletActionContext.getRequest();
-		StringBuilder sb = new StringBuilder();
-		sb.append(request.getRequestURL());
-		sb.append(",");
-		sb.append(key);
-		if (scope.equalsIgnoreCase("session"))
-			sb.append("," + request.getSession(true).getId());
-		return sb.toString();
-	}
+	public static final String PAGE_FRAGMENT_CACHE_NAME = "pageFragmentCache";
 
 	public static String get(String key, String scope) {
 		try {
-			if (ServletActionContext.getRequest().getParameter(
-					FORCE_FLUSH_PARAM_NAME) != null)
+			if (CacheContext.forceFlush())
 				return null;
 			Element element = getCache().get(completeKey(key, scope));
 			if (element != null)
@@ -63,11 +49,22 @@ public class PageFragmentCacheHelper {
 		}
 	}
 
-	public static Cache getCache() {
+	private static String completeKey(String key, String scope) {
+		HttpServletRequest request = ServletActionContext.getRequest();
+		StringBuilder sb = new StringBuilder();
+		sb.append(request.getRequestURL());
+		sb.append(",");
+		sb.append(key);
+		if (scope.equalsIgnoreCase("session"))
+			sb.append("," + request.getSession(true).getId());
+		return sb.toString();
+	}
+
+	private static Cache getCache() {
 		try {
 			return (Cache) WebApplicationContextUtils.getWebApplicationContext(
 					ServletActionContext.getServletContext()).getBean(
-					CACHE_NAME);
+					PAGE_FRAGMENT_CACHE_NAME);
 		} catch (Throwable e) {
 			log.error("get cache error:" + e.getMessage(), e);
 			return null;

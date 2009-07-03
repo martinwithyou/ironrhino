@@ -46,8 +46,8 @@ public class JsonResult implements Result {
 		Method method = BeanUtils.findDeclaredMethod(action.getClass(),
 				invocation.getProxy().getMethod(), null);
 		JsonConfig annotation = method.getAnnotation(JsonConfig.class);
-		if (annotation != null && StringUtils.isNotBlank(annotation.top())) {
-			Object value = invocation.getStack().findValue(annotation.top());
+		if (annotation != null && StringUtils.isNotBlank(annotation.root())) {
+			Object value = invocation.getStack().findValue(annotation.root());
 			return JsonUtils.toJson(value);
 		}
 		boolean hasErrors = false;

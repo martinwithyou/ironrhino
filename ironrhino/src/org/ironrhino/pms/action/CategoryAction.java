@@ -184,7 +184,7 @@ public class CategoryAction extends BaseAction {
 		return "tree";
 	}
 
-	@JsonConfig(top = "list")
+	@JsonConfig(root = "list")
 	public String children() {
 		Category category;
 		if (root < 1)

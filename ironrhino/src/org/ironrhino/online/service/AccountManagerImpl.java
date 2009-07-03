@@ -18,6 +18,8 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.common.support.RegionTreeControl;
 import org.ironrhino.common.util.DateUtils;
+import org.ironrhino.core.annotation.CheckCache;
+import org.ironrhino.core.annotation.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.online.model.Account;
 import org.ironrhino.ums.model.Group;
@@ -50,6 +52,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 	}
 
 	@Transactional
+	@FlushCache("account_username_${args[0].username},account_email_${args[0].email}")
 	public void save(Account account) {
 		if (regionTreeControl != null && account.getRegion() == null)
 			account.setRegion(regionTreeControl.parseByAddress(account
@@ -61,6 +64,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 	}
 
 	@Transactional(readOnly = true)
+	@CheckCache("account_username_${args[0]}")
 	public Account loadUserByUsername(String username) {
 		if (StringUtils.isEmpty(username))
 			return null;
@@ -119,11 +123,17 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 				.toArray(new GrantedAuthority[auths.size()]));
 	}
 
+	@CheckCache("account_username_${args[0]}")
 	public Account getAccountByUsername(String username) {
+		if (StringUtils.isEmpty(username))
+			return null;
 		return getByNaturalId(true, "username", username);
 	}
 
+	@CheckCache("account_email_${args[0]}")
 	public Account getAccountByEmail(String email) {
+		if (StringUtils.isEmpty(email))
+			return null;
 		return getByNaturalId(true, "email", email);
 	}
 
