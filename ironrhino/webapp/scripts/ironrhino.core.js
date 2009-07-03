@@ -440,6 +440,8 @@ Observation.ajax = function(container) {
 			return;
 		} else {
 			$(this).click(function() {
+				if (!Ajax.fire(target, 'onprepare'))
+					return false;
 				if (HISTORY_ENABLED && $(this).hasClass('view')
 						&& !$(this).attr('replacement')) {
 					var hash = this.href;
@@ -451,8 +453,6 @@ Observation.ajax = function(container) {
 					$.historyLoad(hash);
 					return false;
 				}
-				if (!Ajax.fire(target, 'onprepare'))
-					return false;
 				$.ajax({
 							url : this.href,
 							type : $(this).attr('method') || 'GET',

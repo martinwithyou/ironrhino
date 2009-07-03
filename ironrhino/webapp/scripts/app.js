@@ -23,13 +23,12 @@ Initialization.cart = function() {
 
 Initialization.categoryTree = function() {
 	$('a.category').each(function() {
-				this.onsuccess = function() {
+				this.onprepare = function() {
 					$('a.category').each(function() {
 								$(this).removeClass('selected')
 							});
 					$(this).addClass('selected');
 				};
-				this.cache = true;
 			});
 };
 

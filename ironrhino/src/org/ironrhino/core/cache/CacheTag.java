@@ -1,30 +1,23 @@
-package org.ironrhino.core.ext.ehcache;
+package org.ironrhino.core.cache;
 
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.Element;
-
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.apache.struts2.ServletActionContext;
 
 public class CacheTag extends BodyTagSupport {
-	public static final String CACHE_NAME = "pageFragmentCache";
-
-	private String actualKey;
 
 	private String key = null;
 
-	private int timeToLive;
+	private int timeToLive = PageFragmentCacheHelper.DEFAULT_TIME_TO_LIVE;
 
-	private int timeToIdle;
+	private int timeToIdle = PageFragmentCacheHelper.DEFAULT_TIME_TO_IDLE;
 
-	private String scope = "application";
-
-	private transient Cache cache = null;
+	private String scope = PageFragmentCacheHelper.DEFAULT_SCOPE;
 
 	public void setKey(String key) {
 		this.key = key;
@@ -47,12 +40,8 @@ public class CacheTag extends BodyTagSupport {
 		try {
 			if ((bodyContent != null)
 					&& ((body = bodyContent.getString()) != null)) {
-				Element element = new Element(actualKey, body);
-				if (timeToIdle > 0)
-					element.setTimeToIdle(timeToIdle);
-				if (timeToLive > 0)
-					element.setTimeToLive(timeToLive);
-				cache.put(element);
+				PageFragmentCacheHelper.put(key, body, scope, timeToLive,
+						timeToIdle);
 			}
 			if (bodyContent != null) {
 				bodyContent.clearBody();
@@ -66,23 +55,16 @@ public class CacheTag extends BodyTagSupport {
 	}
 
 	public int doStartTag() throws JspTagException {
-		if (cache == null)
-			cache = getCache();
-		HttpServletRequest request = (HttpServletRequest) pageContext
-				.getRequest();
-		StringBuilder sb = new StringBuilder();
-		sb.append(request.getRequestURL());
-		sb.append("?");
-		sb.append(request.getQueryString());
-		sb.append(",");
-		sb.append(key);
-		if (scope.equalsIgnoreCase("session"))
-			sb.append("," + request.getSession(true).getId());
-		actualKey = sb.toString();
-		Element element = cache.get(actualKey);
-		String content = null;
-		if (element != null)
-			content = (String) element.getValue();
+		if (ServletActionContext.getRequest() == null)
+			ServletActionContext.setRequest((HttpServletRequest) pageContext
+					.getRequest());
+		if (ServletActionContext.getResponse() == null)
+			ServletActionContext.setResponse((HttpServletResponse) pageContext
+					.getResponse());
+		if (ServletActionContext.getServletContext() == null)
+			ServletActionContext.setServletContext(pageContext
+					.getServletContext());
+		String content = PageFragmentCacheHelper.get(key, scope);
 		if ((content != null)) {
 			try {
 				pageContext.getOut().write(content);
@@ -96,11 +78,6 @@ public class CacheTag extends BodyTagSupport {
 
 	public int doEndTag() throws JspTagException {
 		return EVAL_PAGE;
-	}
-
-	protected Cache getCache() {
-		return (Cache) WebApplicationContextUtils.getWebApplicationContext(
-				pageContext.getServletContext()).getBean(CACHE_NAME);
 	}
 
 }

@@ -2,14 +2,14 @@
 <%@ taglib uri="/struts-tags" prefix="s"%>
 <%@ taglib uri="http://www.springframework.org/security/tags"
 	prefix="authz"%>
-<%@ taglib uri="http://ehcache.sourceforge.net" prefix="ehcache"%>
+<%@ taglib uri="http://code.google.com/p/ironrhino" prefix="ir"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>ironrhino</title>
 </head>
 <body>
-<!--ehcache:cache key="products"-->
+<ir:cache key="products">
 <s:set name="pl" value="productFacade.recommendedProducts" />
 <s:if test="%{#pl!=null&&#pl.size()>0}">
 	<div style="clear:both;">
@@ -119,6 +119,6 @@
 	</ul>
 	</div>
 </s:if>
-<!--/ehcache:cache-->
+</ir:cache>
 </body>
 </html>

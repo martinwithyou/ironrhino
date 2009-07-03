@@ -5,13 +5,13 @@
 <taglib>
     <tlib-version>1.0</tlib-version>
     <jsp-version>1.2</jsp-version>
-    <short-name>ehcache</short-name>
-    <uri>http://ehcache.sourceforge.net</uri>
-    <display-name>EHCache Tag Library</display-name>
-    <description>EHCache - see http://ehcache.sourceforge.net</description>
+    <short-name>cache</short-name>
+    <uri>http://code.google.com/p/ironrhino</uri>
+    <display-name>Cache Tag Library</display-name>
+    <description>see http://code.google.com/p/ironrhino</description>
     <tag>
         <name>cache</name>
-        <tag-class>org.ironrhino.core.ext.ehcache.CacheTag</tag-class>
+        <tag-class>org.ironrhino.core.cache.CacheTag</tag-class>
         <body-content>JSP</body-content>
         <description>A tag to cache post-processed JSP contents</description>
 

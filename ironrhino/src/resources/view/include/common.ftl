@@ -35,3 +35,12 @@ ${btn(onclick,text)}
 <#nested>
 </#if>
 </#macro>
+
+<#macro cache key scope="application" timeToLive=36000 timeToIdle=3600>
+<#assign content=statics['org.ironrhino.core.ext.ehcache.CacheTag'].check(key,timeToLive,timeToIdle)>
+<#if content?exists&&content.length() gt 0>
+
+<#else>
+<#nested>
+</#if>
+</#macro>

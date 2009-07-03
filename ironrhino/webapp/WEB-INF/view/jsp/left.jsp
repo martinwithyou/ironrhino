@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="/struts-tags" prefix="s"%>
-<%@ taglib uri="http://ehcache.sourceforge.net" prefix="ehcache"%>
+<%@ taglib uri="http://code.google.com/p/ironrhino" prefix="ir"%>
 <c:if
 	test="${(pageContext.request.scheme!='https')&&fn:indexOf(pageContext.request.servletPath,'cart')<0}">
 	<s:set name="current" value="uid" />
