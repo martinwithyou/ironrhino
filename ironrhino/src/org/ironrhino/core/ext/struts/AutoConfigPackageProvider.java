@@ -101,34 +101,45 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			for (Class clazz : entityClasses) {
 				processAutoConfigClass(clazz, defaultNamespace);
 			}
-			for (PackageConfig config : packageLoader.createPackageConfigs()) {
-				PackageConfig pc = configuration.getPackageConfig(config
+			for (PackageConfig packageConfig : packageLoader
+					.createPackageConfigs()) {
+				PackageConfig pc = configuration.getPackageConfig(packageConfig
 						.getName());
 				if (pc == null) {
-					configuration.addPackageConfig(config.getName(), config);
+					// add package
+					configuration.addPackageConfig(packageConfig.getName(),
+							packageConfig);
+					for (ActionConfig ac : packageConfig.getActionConfigs()
+							.values())
+						log
+								.info("mapping "
+										+ ac.getClassName()
+										+ " to "
+										+ packageConfig.getNamespace()
+										+ (packageConfig.getNamespace()
+												.endsWith("/") ? "" : "/")
+										+ ac.getName());
 				} else {
 					Map<String, ActionConfig> actionConfigs = new LinkedHashMap<String, ActionConfig>(
 							pc.getActionConfigs());
-					for (String key : config.getActionConfigs().keySet()) {
-						if (actionConfigs.containsKey(key)) {
-							ActionConfig ac = actionConfigs.get(key);
-							Map<String, ResultConfig> results = new HashMap<String, ResultConfig>();
-							results.putAll(config.getActionConfigs().get(key)
-									.getResults());
-							results.putAll(ac.getResults());
-							// this is a trick
-							try {
-								Field field = ActionConfig.class
-										.getDeclaredField("results");
-								field.setAccessible(true);
-								field.set(ac, results);
-							} catch (Exception e) {
-								log.error(e.getMessage(), e);
-							}
+					for (String actionName : packageConfig.getActionConfigs().keySet()) {
+						if (actionConfigs.containsKey(actionName)) {
+							// ignore if action already exists
+							log.warn(actionConfigs.get(actionName)
+									+ " exists for action class '"
+									+ actionConfigs.get(actionName).getClassName()
+									+ "',ignore autoconfig on action class '"
+									+ packageConfig.getActionConfigs().get(actionName)
+											.getClassName() + "'");
 							continue;
 						}
-						actionConfigs.put(key, config.getActionConfigs().get(
-								key));
+						ActionConfig ac = packageConfig.getActionConfigs().get(
+								actionName);
+						actionConfigs.put(actionName, ac);
+						log.info("mapping " + ac.getClassName() + " to "
+								+ pc.getNamespace()
+								+ (pc.getNamespace().endsWith("/") ? "" : "/")
+								+ ac.getName());
 					}
 					// this is a trick
 					try {
@@ -272,7 +283,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			namespace = ac.namespace();
 			if (StringUtils.isBlank(namespace))
 				namespace = defaultNamespace;
-			Class action = ac.action();
+			Class action = ac.actionClass();
 			if (action.equals(Object.class)) {
 				actionClass = cls.getName().replace("model", "action")
 						+ "Action";
@@ -282,7 +293,6 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			} else {
 				actionClass = action.getName();
 			}
-
 			entityClassURLMapping.put(namespace + "/" + actionName, cls);
 		} else if (Action.class.isAssignableFrom(cls)) {
 			actionName = StringUtils.uncapitalize(cls.getSimpleName());
@@ -295,8 +305,8 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		}
 		if (namespace == null)
 			namespace = "";
-		log.info("mapping " + actionClass + " to " + namespace
-				+ (namespace.endsWith("/") ? "" : "/") + actionName);
+		if (!ac.actionName().equals(""))
+			actionName = ac.actionName();
 		return new String[] { namespace, actionName, actionClass };
 	}
 

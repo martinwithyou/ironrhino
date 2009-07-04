@@ -23,8 +23,5 @@
 			<result name="view" type="autoconfig"/>
 		</action>
 		<action name="payment" class="org.ironrhino.online.action.PaymentAction" />
-		<action name="region" class="org.ironrhino.common.action.RegionTreeAction">
-			<result name="success" type="autoconfig"/>
-		</action>
 	</package>
 </struts>
