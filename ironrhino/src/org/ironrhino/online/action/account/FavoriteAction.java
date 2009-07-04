@@ -6,24 +6,26 @@ import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.common.util.AuthzUtils;
+import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.model.ProductFavorite;
 
+@AutoConfig(namespace = "/account")
+public class FavoriteAction extends BaseAction {
 
-public class ProductFavoriteAction extends BaseAction {
-
-	private List<ProductFavorite> list;
+	private ResultPage<ProductFavorite> resultPage;
 
 	private BaseManager<ProductFavorite> baseManager;
 
-	public List<ProductFavorite> getList() {
-		return list;
+	public ResultPage<ProductFavorite> getResultPage() {
+		return resultPage;
 	}
 
-	public void setList(List<ProductFavorite> list) {
-		this.list = list;
+	public void setResultPage(ResultPage<ProductFavorite> resultPage) {
+		this.resultPage = resultPage;
 	}
 
 	public void setBaseManager(BaseManager<ProductFavorite> baseManager) {
@@ -33,11 +35,14 @@ public class ProductFavoriteAction extends BaseAction {
 
 	@SkipValidation
 	public String execute() {
+		if (resultPage == null)
+			resultPage = new ResultPage<ProductFavorite>();
 		DetachedCriteria dc = baseManager.detachedCriteria();
 		dc.add(Restrictions.eq("username", AuthzUtils.getUsername()));
-		dc.addOrder(Order.desc("addDate"));
-		list = baseManager.getListByCriteria(dc);
-		return LIST;
+		resultPage.setDetachedCriteria(dc);
+		resultPage.addOrder(Order.desc("addDate"));
+		resultPage = baseManager.getResultPage(resultPage);
+		return SUCCESS;
 	}
 
 	@SkipValidation
@@ -47,7 +52,7 @@ public class ProductFavoriteAction extends BaseAction {
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.eq("username", AuthzUtils.getUsername()));
 			dc.add(Restrictions.in("id", id));
-			list = baseManager.getListByCriteria(dc);
+			List<ProductFavorite> list = baseManager.getListByCriteria(dc);
 			if (list.size() > 0) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("(");

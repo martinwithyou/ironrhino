@@ -8,6 +8,8 @@ import javax.servlet.jsp.tagext.Tag;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.model.Secured;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.BeansException;
 import org.springframework.security.Authentication;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.context.HttpSessionContextIntegrationFilter;
@@ -19,6 +21,19 @@ import org.springframework.security.taglibs.authz.AuthorizeTag;
 import org.springframework.security.userdetails.UserDetails;
 
 public class AuthzUtils {
+
+	public static Object authentication(String property) {
+		Authentication auth = SecurityContextHolder.getContext()
+				.getAuthentication();
+		if (auth.getPrincipal() == null)
+			return null;
+		try {
+			BeanWrapperImpl wrapper = new BeanWrapperImpl(auth);
+			return wrapper.getPropertyValue(property);
+		} catch (BeansException e) {
+			return null;
+		}
+	}
 
 	public static boolean authorize(String ifAllGranted, String ifAnyGranted,
 			String ifNotGranted) {

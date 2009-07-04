@@ -7,7 +7,7 @@
 		<img class="cart_item draggable"
 			src="${base}/pic/${var.productCode}.small.jpg"
 			alt="${var.productCode}" />
-		<span>${var.productName}<#if var.quantity gt 1>${var.quantity}</#if><</span>
+		<span>${var.productName}<#if var.quantity gt 1>(${var.quantity})</#if></span>
 	</#list>
 <#else>
 您的购物车是空的,您可以拖动图片到这里加入购物车

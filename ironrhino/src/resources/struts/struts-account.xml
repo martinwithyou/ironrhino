@@ -1,21 +1,24 @@
 <!DOCTYPE struts PUBLIC
-        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-        "http://struts.apache.org/dtds/struts-2.0.dtd">
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 	<package name="account" namespace="/" extends="ironrhino-default">
 		<action name="account"
 			class="org.ironrhino.online.action.account.AccountAction">
-			<result name="success">
-				/WEB-INF/view/jsp/account/index.jsp
+			<result name="success" type="freemarker">
+				/WEB-INF/view/ftl/account/index.ftl
 			</result>
-			<result name="signup">
-				/WEB-INF/view/jsp/account/signup.jsp
+			<result name="signup" type="freemarker">
+				/WEB-INF/view/ftl/account/signup.ftl
 			</result>
-			<result name="login">
-				/WEB-INF/view/jsp/account/login.jsp
+			<result name="login" type="freemarker">
+				/WEB-INF/view/ftl/account/login.ftl
 			</result>
-			<result name="openid-form-redirect">
-				/WEB-INF/view/jsp/account/openid.jsp
+			<result name="manage" type="freemarker">
+				/WEB-INF/view/ftl/account/manage.ftl
+			</result>
+			<result name="openid-form-redirect" type="freemarker">
+				/WEB-INF/view/ftl/account/openid.ftl
 			</result>
 			<result name="openid" type="redirect">
 				/account/login?tab=openid
@@ -28,9 +31,6 @@
 			</result>
 			<result name="activate" type="redirect">
 				/account/manage?tab=profile
-			</result>
-			<result name="manage">
-				/WEB-INF/view/jsp/account/manage.jsp
 			</result>
 			<result name="profile" type="redirect">
 				/account/manage?tab=profile
@@ -51,29 +51,17 @@
 	</package>
 	<package name="account-other" namespace="/account"
 		extends="ironrhino-default">
-		<action name="switch_user">
-			<result>/WEB-INF/view/jsp/account/switch_user.jsp</result>
+		<action name="switchUser">
+			<result name="success" type="autoconfig"/>
+		</action>
+		<action name="favorite" class="org.ironrhino.online.action.account.FavoriteAction">
+			<result name="success" type="autoconfig"/>
 		</action>
 		<action name="order"
 			class="org.ironrhino.online.action.account.OrderAction">
-			<result name="list">
-				/WEB-INF/view/jsp/account/order_list.jsp
-			</result>
-			<result name="addressee">
-				/WEB-INF/view/jsp/account/order_addressee.jsp
-			</result>
-			<result name="view">
-				/WEB-INF/view/jsp/account/order_view.jsp
-			</result>
-		</action>
-		<action name="favorite"
-			class="org.ironrhino.online.action.account.ProductFavoriteAction">
-			<result name="success" type="redirectAction">
-				favorite
-			</result>
-			<result name="list">
-				/WEB-INF/view/jsp/account/favorite_list.jsp
-			</result>
+			<result name="success" type="autoconfig"/>
+			<result name="view" type="autoconfig"/>
+			<result name="addressee" type="autoconfig"/>
 		</action>
 	</package>
 

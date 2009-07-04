@@ -1,4 +1,4 @@
-Initialization.cart = function() {
+Observation.cart = function() {
 	$('img.product_list').addClass('draggable').each(function() {
 				var code = this.alt;
 				$(this).draggable({

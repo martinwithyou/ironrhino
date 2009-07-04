@@ -89,7 +89,7 @@ public class OrderAction extends BaseAction {
 				.getUserDetails(Account.class)));
 		resultPage.addOrder(org.hibernate.criterion.Order.desc("orderDate"));
 		resultPage = orderManager.getResultPage(resultPage);
-		return LIST;
+		return SUCCESS;
 	}
 
 	public String view() {

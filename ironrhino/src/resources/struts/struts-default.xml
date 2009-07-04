@@ -4,17 +4,15 @@
 <struts>
 	<package name="default" namespace="/" extends="ironrhino-default">
 		<action name="index" class="org.ironrhino.online.action.IndexAction">
-			<result>/WEB-INF/view/jsp/index.jsp
-			</result>
+			<result type="autoconfig"/>
 		</action>
 		<action name="left" class="org.ironrhino.online.action.IndexAction"
 			method="left">
-			<result>/WEB-INF/view/jsp/left.jsp</result>
+			<result type="autoconfig"/>
 		</action>
 		<action name="right" class="org.ironrhino.online.action.IndexAction"
 			method="right">
-			<result>/WEB-INF/view/jsp/right.jsp
-			</result>
+			<result type="autoconfig"/>
 		</action>
 		<action name="product" class="org.ironrhino.online.action.ProductAction">
 			<result name="input" type="redirect">/product/${uid}.html</result>

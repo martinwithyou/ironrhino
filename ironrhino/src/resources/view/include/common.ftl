@@ -3,7 +3,7 @@
 </#function>
 
 <#macro button onclick="" text="" type="button">
-${btn(onclick,text)}
+${btn(onclick,text,type)}
 </#macro>
 
 <#macro pagination class="" options="">
@@ -35,6 +35,10 @@ ${btn(onclick,text)}
 <#nested>
 </#if>
 </#macro>
+
+<#function authentication property>
+  <#return statics['org.ironrhino.common.util.AuthzUtils'].authentication(property)>
+</#function>
 
 <#macro cache key scope="application" timeToLive=3600*24 timeToIdle=3600>
 <#assign content=statics['org.ironrhino.core.cache.PageFragmentCacheContext'].get(key,scope)?if_exists>

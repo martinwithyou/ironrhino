@@ -7,7 +7,7 @@
 </head>
 <body>
 <h1>Switch to User</h1>
-<form action="<s:url value="/account/switch"/>" method="POST">
+<form action="switch" method="POST">
 <table>
 	<tr>
 		<td>User:</td>
