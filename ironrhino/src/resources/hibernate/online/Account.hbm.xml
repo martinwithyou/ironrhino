@@ -22,7 +22,9 @@
 				<param name="enumClass">
 					org.ironrhino.common.model.Sex
 				</param>
-				<param name="type">12</param>
+				<!-- if set type=12 then use name not ordinal
+					<param name="type">12</param>
+					-->
 			</type>
 		</property>
 		<property name="birthday" />

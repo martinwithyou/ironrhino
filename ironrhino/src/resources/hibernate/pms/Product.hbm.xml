@@ -22,7 +22,9 @@
 				<param name="enumClass">
 					org.ironrhino.pms.model.Color
 				</param>
-				<param name="type">12</param>
+				<!-- if set type=12 then use name not ordinal
+					<param name="type">12</param>
+					-->
 			</type>
 		</property>
 		<property name="size" />
@@ -34,7 +36,9 @@
 				<param name="enumClass">
 					org.ironrhino.pms.model.ProductStatus
 				</param>
-				<param name="type">12</param>
+				<!-- if set type=12 then use name not ordinal
+					<param name="type">12</param>
+					-->
 			</type>
 		</property>
 		<property name="displayOrder" />

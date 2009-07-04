@@ -30,13 +30,11 @@ public class InitData {
 
 	public static void main(String... strings) {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-				new String[] {
-						"resources/spring/applicationContext-base.xml",
+				new String[] { "applicationContext-base.xml",
 						"resources/spring/applicationContext-hibernate.xml",
 						"resources/spring/applicationContext-service-ums.xml",
 						"resources/spring/applicationContext-service-pms.xml",
-						"resources/spring/applicationContext-service-online.xml",
-						"resources/spring/applicationContext-aop.xml" });
+						"resources/spring/applicationContext-service-online.xml" });
 
 		UserManager userManager = (UserManager) ctx.getBean("userManager");
 		RoleManager roleManager = (RoleManager) ctx.getBean("roleManager");

@@ -52,7 +52,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 	}
 
 	@Transactional
-	@FlushCache("account_${args[0].username},account_${args[0].email,account_${args[0].openid}")
+	@FlushCache("account_${args[0].username},account_${args[0].email},account_${args[0].openid}")
 	public void save(Account account) {
 		if (regionTreeControl != null && account.getRegion() == null)
 			account.setRegion(regionTreeControl.parseByAddress(account
