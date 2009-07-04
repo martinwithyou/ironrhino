@@ -1,8 +1,8 @@
 package org.ironrhino.core.cache;
 
-import javax.annotation.PostConstruct;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.script.ScriptException;
 
 import net.sf.ehcache.Cache;
@@ -15,6 +15,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.ironrhino.common.util.ExpressionUtils;
 import org.ironrhino.core.annotation.CheckCache;
 import org.ironrhino.core.annotation.FlushCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,24 +38,6 @@ public class CacheAspect implements Ordered {
 
 	@Autowired
 	private ApplicationContext applicationContext;
-
-	private ScriptEngine scriptEngine;
-
-	private ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-
-	@PostConstruct
-	public void init() {
-		ScriptEngine engine = getScriptEngine();
-		// threadsafe
-		if (engine.getFactory().getParameter("THREADING") != null)
-			scriptEngine = engine;
-	}
-
-	public ScriptEngine getScriptEngine() {
-		if (scriptEngine != null)
-			return scriptEngine;
-		return scriptEngineManager.getEngineByName("JavaScript");
-	}
 
 	@Around("@annotation(checkCache)")
 	public Object get(ProceedingJoinPoint call, CheckCache checkCache)
@@ -117,22 +100,10 @@ public class CacheAspect implements Ordered {
 	private String eval(String template, Object[] args) throws ScriptException {
 		if (template.indexOf('$') < 0)
 			return template;
-		ScriptEngine engine = getScriptEngine();
-		engine.put("args", args);
-		int begin = 0, start = template.indexOf("${"), end = template
-				.indexOf("}");
-		// TODO opt
-		StringBuilder sb = new StringBuilder();
-		while (end > 0) {
-			sb.append(template.substring(begin, start));
-			String ex = template.substring(start + 2, end);
-			sb.append(engine.eval(ex));
-			begin = end + 1;
-			start = template.indexOf("${", begin);
-			end = template.indexOf("}", begin);
-		}
-		sb.append(template.substring(begin));
-		return sb.toString();
+		Map<String, Object> context = new HashMap<String, Object>();
+		context.put("args", args);
+		context.put("arguments", args);
+		return ExpressionUtils.render(template, context);
 	}
 
 	public int getOrder() {
@@ -145,24 +116,6 @@ public class CacheAspect implements Ordered {
 
 	public Cache getCache(String namespace) {
 		return (Cache) applicationContext.getBean(namespace);
-	}
-
-	public static void main(String... strings) {
-		String template = "this is ${test} and ${haha}";
-		int begin = 0, start = template.indexOf("${"), end = template
-				.indexOf("}");
-		StringBuilder sb = new StringBuilder();
-		while (end > 0) {
-			sb.append(template.substring(begin, start));
-			String ex = template.substring(start + 2, end);
-			// TODO ex
-			sb.append("'" + ex + "'");
-			begin = end + 1;
-			start = template.indexOf("${", begin);
-			end = template.indexOf("}", begin);
-		}
-		sb.append(template.substring(begin));
-		System.out.println(sb.toString());
 	}
 
 }
