@@ -52,8 +52,6 @@ public class PageFragmentCacheContext {
 	private static String completeKey(String key, String scope) {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		StringBuilder sb = new StringBuilder();
-		sb.append(request.getRequestURL());
-		sb.append(",");
 		sb.append(key);
 		if (scope.equalsIgnoreCase("session"))
 			sb.append("," + request.getSession(true).getId());

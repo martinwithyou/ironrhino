@@ -4,6 +4,7 @@
 <title>search</title>
 </head>
 <body>
+<@cache key='search'+Parameters.q>
 <div id="search_result">
 <#if searchResults?exists>
  Search took ${searchResults.searchTime}ms
@@ -29,5 +30,6 @@
 	</#if>
 </#if>
 </div>
+</@cache>
 </body>
 </html>

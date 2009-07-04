@@ -52,7 +52,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 	}
 
 	@Transactional
-	@FlushCache("account_username_${args[0].username},account_email_${args[0].email}")
+	@FlushCache("account_${args[0].username},account_${args[0].email,account_${args[0].openid}")
 	public void save(Account account) {
 		if (regionTreeControl != null && account.getRegion() == null)
 			account.setRegion(regionTreeControl.parseByAddress(account
@@ -64,7 +64,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 	}
 
 	@Transactional(readOnly = true)
-	@CheckCache("account_username_${args[0]}")
+	@CheckCache("account_${args[0]}")
 	public Account loadUserByUsername(String username) {
 		if (StringUtils.isEmpty(username))
 			return null;
@@ -123,20 +123,21 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 				.toArray(new GrantedAuthority[auths.size()]));
 	}
 
-	@CheckCache("account_username_${args[0]}")
+	@CheckCache("account_${args[0]}")
 	public Account getAccountByUsername(String username) {
 		if (StringUtils.isEmpty(username))
 			return null;
 		return getByNaturalId(true, "username", username);
 	}
 
-	@CheckCache("account_email_${args[0]}")
+	@CheckCache("account_${args[0]}")
 	public Account getAccountByEmail(String email) {
 		if (StringUtils.isEmpty(email))
 			return null;
 		return getByNaturalId(true, "email", email);
 	}
 
+	@CheckCache("account_${args[0]}")
 	public Account getAccountByOpenid(String openid) {
 		if (StringUtils.isEmpty(openid))
 			return null;
