@@ -15,12 +15,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.util.NumberUtils;
+import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.online.model.Order;
 import org.ironrhino.online.model.OrderStatus;
 import org.ironrhino.online.payment.Paypal;
 import org.ironrhino.online.service.OrderManager;
 
+@AutoConfig(namespace = "/")
 public class PaymentAction extends BaseAction {
 
 	public static final Log log = LogFactory.getLog(PaymentAction.class);
