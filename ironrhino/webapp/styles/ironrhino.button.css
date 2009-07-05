@@ -59,6 +59,7 @@ html:not          ([lang *=""]          ) button.btn {
 	padding: 3px 0;
 	border-left: 1px solid #bbb;
 	border-right: 1px solid #aaa;
+	color: #000;
 }
 
 * html .btn span {

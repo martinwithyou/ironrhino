@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<decorators defaultdir="/WEB-INF/view/jsp/decorator">
+<decorators defaultdir="/WEB-INF/view/ftl/decorator">
 	<excludes>
 		<pattern>/cas/*</pattern>
 		<pattern>/scripts/*</pattern>
@@ -10,16 +10,16 @@
 		<pattern>/dwr/*</pattern>
 	</excludes>
 	<decorator name="none" />
-	<decorator name="simple" page="simple.jsp" />
+	<decorator name="simple" page="simple.ftl" />
 	<!-- 
 		<decorator name="product" page="product.jsp">
 		<pattern type="regex">/product/.*\.html</pattern>
 		</decorator>
 	-->
-	<decorator name="backend_main" page="backend_main.jsp">
+	<decorator name="backend_main" page="backend_main.ftl">
 		<pattern>/backend/*</pattern>
 	</decorator>
-	<decorator name="main" page="main.jsp">
+	<decorator name="main" page="main.ftl">
 		<pattern>/*</pattern>
 	</decorator>
 </decorators>
