@@ -7,16 +7,9 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd">
 	<bean id="cacheManager"
 		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
-	<!--spring security account cache-->
-	<bean id="accountCache"
-		class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
 	<!--cas cache-->
 	<bean id="ticketCache"
 		class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
-	<bean id="productCache"
-		class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
-	<bean id="searchSuggestionCache"
-		class="org.springframework.cache.ehcache.EhCacheFactoryBean" />
 	<bean id="pageFragmentCache"
 		class="org.springframework.cache.ehcache.EhCacheFactoryBean" />
 	<bean id="methodCache"
