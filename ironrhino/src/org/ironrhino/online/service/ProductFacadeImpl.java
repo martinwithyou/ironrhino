@@ -37,6 +37,7 @@ import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.common.util.NumberUtils;
+import org.ironrhino.core.annotation.CheckCache;
 import org.ironrhino.core.annotation.NativeSql;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.action.ProductAction;
@@ -223,6 +224,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return resultPage;
 	}
 
+	@CheckCache("product_${args[0]}")
 	public Product getProductByCode(String code) {
 		Element element;
 		if (productCache != null && (element = productCache.get(code)) != null)

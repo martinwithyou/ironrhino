@@ -12,7 +12,6 @@
 <!--[if IE]>
 	<link href="${base}/styles/ie.css" media="all" rel="stylesheet" type="text/css" />
 <![endif]-->
-<link rel="alternate" href="${base}/product/feed" title="ironrhino products" type="application/atom+xml" />
 <script src="${base}/scripts/all-min.js" type="text/javascript"></script>
 <#if request.servletPath?starts_with('/product/')>
 <script type="text/javascript" src="${base}/scripts/app.product.js"></script>

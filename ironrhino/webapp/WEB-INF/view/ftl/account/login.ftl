@@ -12,14 +12,14 @@
 		<#if targetUrl?exists>
 			top.location.href = '<#if !targetUrl?string?contains('://')>${base}</#if>${targetUrl}';
 		<#else>
-			top.location.href = '<s:url value="/"/>';
+			top.location.href = '${base}';
 		</#if>
 	}
 </script>
 </head>
 
 <body>
-<div class="tabs" tab="#${Parameters.tab}">
+<div class="tabs" tab="#${Parameters.tab?if_exists}">
 <ul>
 	<li><a href="#login"><span>${action.getText('login')}</span></a></li>
 	<li><a href="#openid"><span>${action.getText('login.openid')}</span></a></li>

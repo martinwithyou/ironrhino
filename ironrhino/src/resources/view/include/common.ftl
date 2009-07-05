@@ -41,10 +41,10 @@ ${btn(onclick,text,type)}
 </#function>
 
 <#macro cache key scope="application" timeToLive=3600*24 timeToIdle=3600>
-<#assign content=statics['org.ironrhino.core.cache.PageFragmentCacheContext'].get(key,scope)?if_exists>
+<#assign content=statics['org.ironrhino.core.cache.CacheContext'].getPageFragment(key,scope)?if_exists>
 <#if content?exists&&content?length gt 0>${content}<#else>
 <#assign content><#nested/></#assign>  
 ${content}
-${statics['org.ironrhino.core.cache.PageFragmentCacheContext'].put(key,content,scope,timeToLive,timeToIdle)}
+${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,scope,timeToLive,timeToIdle)}
 </#if>
 </#macro>

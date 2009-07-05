@@ -42,6 +42,8 @@ public class CacheAspect implements Ordered {
 	@Around("@annotation(checkCache)")
 	public Object get(ProceedingJoinPoint call, CheckCache checkCache)
 			throws Throwable {
+		if (CacheContext.isBypass())
+			return call.proceed();
 		String key = checkKey(call, checkCache);
 		if (key == null)
 			return call.proceed();
@@ -66,6 +68,8 @@ public class CacheAspect implements Ordered {
 
 	@AfterReturning("@annotation(flushCache)")
 	public void remove(JoinPoint jp, FlushCache flushCache) {
+		if (CacheContext.isBypass())
+			return;
 		String[] keys = flushKeys(jp, flushCache);
 		if (keys == null)
 			return;

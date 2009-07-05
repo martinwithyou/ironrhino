@@ -4,7 +4,7 @@
 <title>search</title>
 </head>
 <body>
-<@cache key='search'+Parameters.q>
+<@cache key='search'+Parameters.q?if_exists>
 <div id="search_result">
 <#if searchResults?exists>
  Search took ${searchResults.searchTime}ms

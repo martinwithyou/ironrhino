@@ -24,6 +24,16 @@
 
 
 <div id="score">
+<#if scoreResult.details?exists>
+<div>当前平均分:<span id="score_average">${scoreResult.average}</span>(<span id="score_count">${scoreResult.count}</span>次打分)</div>
+<ul style="clear:both;">
+	<#list scoreResult.details.entrySet() as var>
+		<li>${var.key}分:${var.value}次</li>
+	</#list>
+</ul>
+<#else>
+<div>当前还没有评分</div>
+</#if>
 <ul class="unit-rating">
 	<li class="current-rating" style="width: 150px;"></li>
 	<#list 1..5 as index>
@@ -34,16 +44,6 @@
 			options="{onsuccess:'updateScore()',onerror:'login()'}">${index}</a></li>
 	</#list>
 </ul>
-<#if scoreResult?exists>
-<div>当前平均分:<span id="score_average">${scoreResult.average}</span>(<span id="score_count">${scoreResult.count}</span>次打分)</div>
-<ul style="clear:both;">
-	<#list scoreResult.details.entrySet() as var>
-		<li>${var.key}分:${var.value}次</li>
-	</#list>
-</ul>
-<#else>
-<div>当前还没有评分</div>
-</#if>
 </div>
 
 

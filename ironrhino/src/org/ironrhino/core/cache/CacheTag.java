@@ -13,11 +13,11 @@ public class CacheTag extends BodyTagSupport {
 
 	private String key = null;
 
-	private int timeToLive = PageFragmentCacheContext.DEFAULT_TIME_TO_LIVE;
+	private int timeToLive = CacheContext.DEFAULT_TIME_TO_LIVE;
 
-	private int timeToIdle = PageFragmentCacheContext.DEFAULT_TIME_TO_IDLE;
+	private int timeToIdle = CacheContext.DEFAULT_TIME_TO_IDLE;
 
-	private String scope = PageFragmentCacheContext.DEFAULT_SCOPE;
+	private String scope = CacheContext.DEFAULT_SCOPE;
 
 	public void setKey(String key) {
 		this.key = key;
@@ -40,7 +40,7 @@ public class CacheTag extends BodyTagSupport {
 		try {
 			if ((bodyContent != null)
 					&& ((body = bodyContent.getString()) != null)) {
-				PageFragmentCacheContext.put(key, body, scope, timeToLive,
+				CacheContext.putPageFragment(key, body, scope, timeToLive,
 						timeToIdle);
 			}
 			if (bodyContent != null) {
@@ -64,7 +64,7 @@ public class CacheTag extends BodyTagSupport {
 		if (ServletActionContext.getServletContext() == null)
 			ServletActionContext.setServletContext(pageContext
 					.getServletContext());
-		String content = PageFragmentCacheContext.get(key, scope);
+		String content = CacheContext.getPageFragment(key, scope);
 		if ((content != null)) {
 			try {
 				pageContext.getOut().write(content);

@@ -2,6 +2,7 @@ package org.ironrhino.pms.service;
 
 import java.util.Date;
 
+import org.ironrhino.core.annotation.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.pms.model.Product;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,7 @@ public class ProductManagerImpl extends BaseManagerImpl<Product> implements
 		ProductManager {
 
 	@Transactional(readOnly = false)
+	@FlushCache("product_${args[0].code}")
 	public void save(Product product) {
 		product.setOpen(null);// rejudge if it's open
 		super.save(product);

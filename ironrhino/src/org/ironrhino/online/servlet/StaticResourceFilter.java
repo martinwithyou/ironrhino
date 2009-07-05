@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -34,6 +35,8 @@ public class StaticResourceFilter implements Filter {
 	private ProductFacade productFacade;
 
 	private SettingControl settingControl;
+
+	private ServletContext servletContext;
 
 	public String getPicPrefix() {
 		return picPrefix;
@@ -105,7 +108,7 @@ public class StaticResourceFilter implements Filter {
 			return;
 		}
 
-		if (!settingControl.getBooleanValue(SETTING_KEY_USESTATICPAGE)
+		if (settingControl.getBooleanValue(SETTING_KEY_USESTATICPAGE)
 				|| viewPicture) {
 			if (viewPicture && !product.isPictured())
 				response.sendRedirect(request.getContextPath()
@@ -115,40 +118,39 @@ public class StaticResourceFilter implements Filter {
 			return;
 		}
 
-		File file = new File(request.getSession().getServletContext()
-				.getRealPath(productPrefix + productCode + ".html"));
-		if (!file.exists()) {
+		File file = new File(servletContext.getRealPath(productPrefix
+				+ productCode + ".html"));
+		if (file.exists()) {
+			// static page
+			response.setContentType("text/html");
+			// httpResponse.setHeader("Cache-Control", "no-cache");
+			// httpResponse.setHeader("Pragma", "no-cache");
+			// httpResponse.setHeader("Expires", "-1");
+			InputStream in = null;
+			OutputStream out = response.getOutputStream();
+			try {
+				in = new FileInputStream(file);
+				final byte[] buffer = new byte[4096];
+				int n;
+				while (-1 != (n = in.read(buffer))) {
+					out.write(buffer, 0, n);
+				}
+			} finally {
+				if (in != null)
+					in.close();
+				out.flush();
+				out.close();
+			}
+		} else {
 			log.warn("product[" + productCode
 					+ "] has not generated static page");
-			request.getRequestDispatcher(productPrefix+"view/"+productCode).forward(request, response);
+			request.getRequestDispatcher(productPrefix + "view/" + productCode)
+					.forward(request, response);
 			return;
 		}
-
-		// static page
-
-		response.setContentType("text/html");
-		// httpResponse.setHeader("Cache-Control", "no-cache");
-		// httpResponse.setHeader("Pragma", "no-cache");
-		// httpResponse.setHeader("Expires", "-1");
-		InputStream in = null;
-		OutputStream out = response.getOutputStream();
-		try {
-			in = new FileInputStream(file);
-			final byte[] buffer = new byte[4096];
-			int n;
-			while (-1 != (n = in.read(buffer))) {
-				out.write(buffer, 0, n);
-			}
-		} finally {
-			if (in != null)
-				in.close();
-			out.flush();
-			out.close();
-		}
-
 	}
 
-	public void init(FilterConfig arg0) throws ServletException {
-
+	public void init(FilterConfig config) throws ServletException {
+		servletContext = config.getServletContext();
 	}
 }

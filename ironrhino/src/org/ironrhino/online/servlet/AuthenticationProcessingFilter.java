@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.HibernateException;
-import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.common.util.RequestUtils;
+import org.ironrhino.core.cache.CacheContext;
 import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.LoginRecord;
 import org.ironrhino.online.service.AccountManager;
@@ -39,10 +39,10 @@ org.springframework.security.ui.webapp.AuthenticationProcessingFilter {
 		RequestUtils.saveCookie(request, response, USERNAME_IN_COOKIE,
 				username, 365 * 24 * 3600);
 		Account account = (Account) authResult.getPrincipal();
-		accountManager.lock(account, LockMode.NONE);
 		account.setLoginTimes(account.getLoginTimes() + 1);
 		account.setLastLoginDate(new Date());
 		account.setLastLoginAddress(request.getRemoteAddr());
+		CacheContext.setBypass();
 		accountManager.save(account);
 
 		LoginRecord loginRecord = new LoginRecord();

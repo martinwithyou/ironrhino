@@ -17,23 +17,10 @@ public class RightAction extends BaseAction {
 
 	private ProductFacade productFacade;
 
-	private Product relatedProduct;
-
 	public Product getRelatedProduct() {
-		return relatedProduct;
-	}
-
-	public ProductFacade getProductFacade() {
-		return productFacade;
-	}
-
-	public void setProductFacade(ProductFacade productFacade) {
-		this.productFacade = productFacade;
-	}
-
-	public String execute() {
 		String history = RequestUtils.getCookieValue(ServletActionContext
 				.getRequest(), "HISTORY");
+		Product relatedProduct = null;
 		if (StringUtils.isNotBlank(history)) {
 			String[] array = history.split(",");
 			Random random = new Random();
@@ -53,6 +40,19 @@ public class RightAction extends BaseAction {
 		}
 		if (relatedProduct == null)
 			relatedProduct = productFacade.getRandomProduct();
+		return relatedProduct;
+	}
+
+	public ProductFacade getProductFacade() {
+		return productFacade;
+	}
+
+	public void setProductFacade(ProductFacade productFacade) {
+		this.productFacade = productFacade;
+	}
+
+	public String execute() {
+
 		return SUCCESS;
 	}
 }
