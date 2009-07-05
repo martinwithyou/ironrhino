@@ -61,6 +61,8 @@ public class CacheAspect implements Ordered {
 		Object result = call.proceed();
 		if (cache != null) {
 			Element element = new Element(key, result);
+			element.setTimeToLive(checkCache.timeToLive());
+			element.setTimeToIdle(checkCache.timeToIdle());
 			cache.put(element);
 		}
 		return result;

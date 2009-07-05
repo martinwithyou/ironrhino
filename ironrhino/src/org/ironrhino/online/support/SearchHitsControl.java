@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.Element;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -22,6 +19,7 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.AggregateResult;
 import org.ironrhino.common.support.StringStore;
 import org.ironrhino.common.util.DateUtils;
+import org.ironrhino.core.annotation.CheckCache;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.model.SearchHits;
 import org.ironrhino.online.model.SearchHitsHistory;
@@ -31,13 +29,6 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 public class SearchHitsControl extends StringStore {
 
 	private BaseManager<SearchHits> baseManager;
-
-	private Cache searchSuggestionCache;
-
-	@Required
-	public void setSearchSuggestionCache(Cache searchSuggestionCache) {
-		this.searchSuggestionCache = searchSuggestionCache;
-	}
 
 	@Required
 	public void setBaseManager(BaseManager<SearchHits> baseManager) {
@@ -186,27 +177,21 @@ public class SearchHitsControl extends StringStore {
 		}
 	}
 
+	@CheckCache(value = "search_suggest_${args[0]}")
 	public List<AggregateResult> suggest(String keyword) {
-		List<AggregateResult> result;
-		if (!searchSuggestionCache.isKeyInCache(keyword)
-				|| searchSuggestionCache.get(keyword) == null) {
-			baseManager.setEntityClass(SearchHits.class);
-			DetachedCriteria dc = baseManager.detachedCriteria();
-			dc.add(Restrictions.ilike("keyword", keyword, MatchMode.START));
-			dc.add(Restrictions.gt("totalHits", 0));
-			dc.addOrder(Order.desc("totalHits"));
-			List<SearchHits> list = baseManager.getListByCriteria(dc, 1, 10);
-			result = new ArrayList<AggregateResult>(list.size());
-			for (SearchHits sh : list) {
-				AggregateResult ar = new AggregateResult();
-				ar.setPrincipal(sh.getKeyword());
-				ar.setCount(sh.getTotalHits());
-				result.add(ar);
-			}
-			searchSuggestionCache.put(new Element(keyword, result));
-		} else {
-			Element element = searchSuggestionCache.get(keyword);
-			result = (List<AggregateResult>) element.getValue();
+		baseManager.setEntityClass(SearchHits.class);
+		DetachedCriteria dc = baseManager.detachedCriteria();
+		dc.add(Restrictions.ilike("keyword", keyword, MatchMode.START));
+		dc.add(Restrictions.gt("totalHits", 0));
+		dc.addOrder(Order.desc("totalHits"));
+		List<SearchHits> list = baseManager.getListByCriteria(dc, 1, 10);
+		List<AggregateResult> result = new ArrayList<AggregateResult>(list
+				.size());
+		for (SearchHits sh : list) {
+			AggregateResult ar = new AggregateResult();
+			ar.setPrincipal(sh.getKeyword());
+			ar.setCount(sh.getTotalHits());
+			result.add(ar);
 		}
 		return result;
 	}

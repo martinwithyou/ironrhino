@@ -12,9 +12,6 @@ import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.Element;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,8 +56,6 @@ public class ProductFacadeImpl implements ProductFacade {
 
 	private SettingControl settingControl;
 
-	private Cache productCache;
-
 	private Random random;
 
 	private CategoryTreeControl categoryTreeControl;
@@ -77,10 +72,6 @@ public class ProductFacadeImpl implements ProductFacade {
 
 	public void setSettingControl(SettingControl settingControl) {
 		this.settingControl = settingControl;
-	}
-
-	public void setProductCache(Cache productCache) {
-		this.productCache = productCache;
 	}
 
 	public void setCategoryTreeControl(CategoryTreeControl categoryTreeControl) {
@@ -153,8 +144,6 @@ public class ProductFacadeImpl implements ProductFacade {
 					list.add(p);
 					break;
 				}
-		for (Product p : list)
-			productCache.put(new Element(p.getCode(), p));
 		return list;
 	}
 
@@ -226,9 +215,7 @@ public class ProductFacadeImpl implements ProductFacade {
 
 	@CheckCache("product_${args[0]}")
 	public Product getProductByCode(String code) {
-		Element element;
-		if (productCache != null && (element = productCache.get(code)) != null)
-			return (Product) element.getValue();
+
 		DetachedCriteria dc = productManager.detachedCriteria();
 		dc.setFetchMode("attributes", FetchMode.JOIN);
 		dc.setFetchMode("roles", FetchMode.JOIN);
@@ -240,8 +227,6 @@ public class ProductFacadeImpl implements ProductFacade {
 		if (product == null)
 			return null;
 		evaluateRelatedProducts(product);
-		if (productCache != null)
-			productCache.put(new Element(code, product));
 		return product;
 	}
 
@@ -292,7 +277,6 @@ public class ProductFacadeImpl implements ProductFacade {
 		List<Product> list = productManager.getBetweenListByCriteria(dc, rand,
 				rand + 1);
 		Product product = list.get(0);
-		productCache.put(new Element(product.getCode(), product));
 		return product;
 	}
 
@@ -499,7 +483,4 @@ public class ProductFacadeImpl implements ProductFacade {
 		return dc;
 	}
 
-	public void evictCache(String key) {
-		productCache.remove(key);
-	}
 }

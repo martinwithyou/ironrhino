@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-import net.sf.ehcache.Cache;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -33,8 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 		AccountManager {
 
-	private Cache accountCache;
-
 	private RegionTreeControl regionTreeControl;
 
 	private Random random;
@@ -47,10 +43,6 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 		this.regionTreeControl = regionTreeControl;
 	}
 
-	public void setAccountCache(Cache accountCache) {
-		this.accountCache = accountCache;
-	}
-
 	@Transactional
 	@FlushCache("account_${args[0].username},account_${args[0].email},account_${args[0].openid}")
 	public void save(Account account) {
@@ -58,9 +50,6 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 			account.setRegion(regionTreeControl.parseByAddress(account
 					.getAddress()));
 		super.save(account);
-		if (accountCache != null) {
-			accountCache.remove(account.getUsername());
-		}
 	}
 
 	@Transactional(readOnly = true)
