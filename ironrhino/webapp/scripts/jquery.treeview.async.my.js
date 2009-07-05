@@ -12,12 +12,13 @@
  * Revision: $Id$
  *
  */
-/**
+/*
  * changes by zhouyanming
  * 1.change "source" to "0";
  * 2.change this.text to (this.text||this.name)
  * 3.add <a> out of <span> 
  * 4.add setting.onclick to <span>
+ * 5.if settings.unique=true will call toggle on siblings,if not add $this.hasClass('collapsable') will load siblings's data
  */
 ;(function($) {
 
@@ -38,7 +39,7 @@ function load(settings, root, child, container) {
 				if ( this.hasChildren) {
 					current.addClass("hasChildren");
 					createNode.call({
-						text:"placeholder",
+						text:settings.placeholder||"placeholder",
 						id:"placeholder",
 						children:[]
 					}, branch);
@@ -65,7 +66,7 @@ $.fn.treeview = function(settings) {
 		collapsed: true,
 		toggle: function() {
 			var $this = $(this);
-			if ($this.hasClass("hasChildren")) {
+			if ($this.hasClass('collapsable')&&$this.hasClass("hasChildren")) {
 				var childList = $this.removeClass("hasChildren").find("ul");
 				childList.empty();
 				load(settings, this.id, childList, container);

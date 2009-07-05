@@ -1,7 +1,7 @@
 MessageBundle = {
 	'en' : {
-		'indicator.loading' : 'loading...',
-		'indicator.error' : 'network error,please try later',
+		'ajax.loading' : 'loading...',
+		'ajax.error' : 'network error,please try later',
 		'required' : 'please input value',
 		'selection.required' : 'please select',
 		'email' : 'this field must be a valid email',
@@ -13,8 +13,8 @@ MessageBundle = {
 		'remove' : 'remove'
 	},
 	'zh-cn' : {
-		'indicator.loading' : '正在加载...',
-		'indicator.error' : '网络故障,请稍后再试',
+		'ajax.loading' : '正在加载...',
+		'ajax.error' : '网络故障,请稍后再试',
 		'required' : '必填项,请填写',
 		'selection.required' : '必填项,请选择',
 		'email' : 'email不合法',

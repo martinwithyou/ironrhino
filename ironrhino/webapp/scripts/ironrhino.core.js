@@ -153,11 +153,11 @@ Indicator = {
 			ind.removeClass('loading');
 		if (!iserror && !ind.hasClass('loading'))
 			ind.addClass('loading');
-		ind.html(Indicator.text || MessageBundle.get('indicator.loading'));
+		ind.html(Indicator.text || MessageBundle.get('ajax.loading'));
 		ind.show();
 	},
 	showError : function() {
-		Indicator.text = MessageBundle.get('indicator.error');
+		Indicator.text = MessageBundle.get('ajax.error');
 		Indicator.show(true);
 	},
 	hide : function() {
@@ -516,12 +516,13 @@ var Region = {
 					.appendTo(document.body);
 			$("#region_window").dialog({
 						width : 350,
-						height : 600
+						height : 750
 					});
 			$("#region_tree").treeview({
 						url : CONTEXT_PATH + '/region/children',
 						click : _click,
 						collapsed : true,
+						placeholder : MessageBundle.get('ajax.loading'),
 						unique : true
 					});
 		} else {
