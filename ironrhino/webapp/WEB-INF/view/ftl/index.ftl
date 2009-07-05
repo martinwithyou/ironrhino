@@ -3,7 +3,7 @@
 <#if info!="">
 <div>${info}</div>
 </#if>
-<a	href="${base}/product/${product.code}.html" class="ajax view tooltip product_view" title="${product.shortDescription}">
+<a href="${base}/product/${product.code}.html" class="ajax view tooltip product_view">
 ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view" options="{replacement:'cart_items'}">放入购物车</a></li>
 </#macro>
 
@@ -13,27 +13,28 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 <title>ironrhino</title>
 </head>
 <body>
-<@cache key="products">
-<#if productFacade.recommendedProducts?exists&&productFacade.recommendedProducts.size() gt 0>
+<@cache key="index_page">
+<#assign list=productFacade.getRecommendedProducts()>
+<#if  list?exists && list.size() gt 0>
 	<div style="clear:both;">
 	<div class="round_corner" style="background: #fcc;">
 	<h1>每周精选</h1>
 	</div>
 	<ul class="product_list">
-		<#list productFacade.recommendedProducts as product>
+		<#list list as product>
 			<@detail product=product/>
 		</#list>
 	</ul>
 	</div>
 </#if>
-<assign pl=productFacade.getTopSaleProducts(4)>
-<#if pl.size() gt 0>
+<#assign list=productFacade.getTopSaleProducts(4)>
+<#if list?exists && list.size() gt 0>
 	<div style="clear:both;">
 	<div class="round_corner" style="background: #fcc;">
 	<h1>畅销排行</h1>
 	</div>
 	<ul class="product_list">
-		<#list pl as var>
+		<#list list as var>
 		<#assign info=var.count+' sales'>
 		<@detail product=var.principal info=info/>
 		</#list>
@@ -41,14 +42,14 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 	</div>
 </#if>
 
-<assign pl=productFacade.getTopScoreProducts(4)>
-<#if pl.size() gt 0>
+<#assign list=productFacade.getTopScoreProducts(4)>
+<#if list?exists && list.size() gt 0>
 	<div style="clear:both;">
 	<div class="round_corner" style="background: #fcc;">
 	<h1>得分排行</h1>
 	</div>
 	<ul class="product_list">
-		<#list pl as var>
+		<#list list as var>
 		<#assign info=var.average+'/5('+var.count+' votes)'>
 		<@detail product=var.principal info=info/>
 		</#list>
@@ -56,14 +57,14 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 	</div>
 </#if>
 
-<assign pl=productFacade.getTopFavoriteProducts(4)>
-<#if pl.size() gt 0>
+<#assign list=productFacade.getTopFavoriteProducts(4)>
+<#if list?exists && list.size() gt 0>
 	<div style="clear:both;">
 	<div class="round_corner" style="background: #fcc;">
 	<h1>收藏排行</h1>
 	</div>
 	<ul class="product_list">
-		<#list pl as var>
+		<#list list as var>
 		<#assign info=var.count+' favorites)'>
 		<@detail product=var.principal info=info/>
 		</#list>
@@ -71,21 +72,20 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 	</div>
 </#if>
 
-<assign pl=productFacade.getTopSendProducts(4)>
-<#if pl.size() gt 0>
+<#assign list=productFacade.getTopSendProducts(4)>
+<#if list?exists && list.size() gt 0>
 	<div style="clear:both;">
 	<div class="round_corner" style="background: #fcc;">
 	<h1>推荐排行</h1>
 	</div>
 	<ul class="product_list">
-		<#list pl as var>
+		<#list list as var>
 		<#assign info=var.count+' sendings)'>
 		<@detail product=var.principal info=info/>
 		</#list>
 	</ul>
 	</div>
 </#if>
-
 </@cache>
 </body>
 </html>
