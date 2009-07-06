@@ -25,16 +25,17 @@ public class SearchAction extends ActionSupport {
 
 	private int ps = 10;
 
-	private List<AggregateResult> suggestions;
-
-	private transient CompassSearchResults searchResults;
-
 	private transient SearchHitsControl searchHitsControl;
 
 	private transient CompassSearchService compassSearchService;
 
 	public List<AggregateResult> getSuggestions() {
-		return suggestions;
+
+		if (StringUtils.isNotBlank(q)) {
+			String keyword = q.trim();
+			return searchHitsControl.suggest(keyword);
+		}
+		return null;
 	}
 
 	public void setSearchHitsControl(SearchHitsControl searchHitsControl) {
@@ -42,7 +43,26 @@ public class SearchAction extends ActionSupport {
 	}
 
 	public CompassSearchResults getSearchResults() {
+		// put logic here for <@cache> in page
+		if (StringUtils.isBlank(q))
+			return null;
+		String query = q.trim();
+		CompassCriteria cc = new CompassCriteria();
+		cc.setQuery(query);
+		cc.setAliases(new String[] { "product" });
+		cc.ge("product.open", Boolean.TRUE);
+		if (pn > 0)
+			cc.setPageNo(pn);
+		if (ps > 0)
+			cc.setPageSize(ps);
+		if (ps > 100)
+			cc.setPageSize(100);
+		CompassSearchResults searchResults = compassSearchService.search(cc);
+		if (searchHitsControl != null) {
+			searchHitsControl.put(query, searchResults.getTotalHits());
+		}
 		return searchResults;
+
 	}
 
 	public void setCompassSearchService(
@@ -76,23 +96,7 @@ public class SearchAction extends ActionSupport {
 
 	@SkipValidation
 	public String execute() {
-		if (StringUtils.isNotBlank(q)) {
-			String query = q.trim();
-			CompassCriteria cc = new CompassCriteria();
-			cc.setQuery(query);
-			cc.setAliases(new String[] { "product" });
-			cc.ge("product.open", Boolean.TRUE);
-			if (pn > 0)
-				cc.setPageNo(pn);
-			if (ps > 0)
-				cc.setPageSize(ps);
-			if (ps > 100)
-				cc.setPageSize(100);
-			searchResults = compassSearchService.search(cc);
-			if (searchHitsControl != null) {
-				searchHitsControl.put(query, searchResults.getTotalHits());
-			}
-		}
+
 		return SUCCESS;
 	}
 
@@ -100,10 +104,6 @@ public class SearchAction extends ActionSupport {
 	public String suggest() {
 		ServletActionContext.getResponse().setHeader("Cache-Control",
 				"max-age=86400");
-		if (StringUtils.isNotBlank(q)) {
-			String keyword = q.trim();
-			suggestions = searchHitsControl.suggest(keyword);
-		}
 		return "suggest";
 	}
 

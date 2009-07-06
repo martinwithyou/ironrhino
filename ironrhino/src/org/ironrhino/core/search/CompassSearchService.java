@@ -12,6 +12,7 @@ import org.compass.core.CompassQuery;
 import org.compass.core.CompassQueryFilterBuilder;
 import org.compass.core.CompassSession;
 import org.compass.core.CompassTemplate;
+import org.compass.core.engine.SearchEngineQueryParseException;
 import org.compass.core.support.search.CompassSearchResults;
 import org.springframework.util.Assert;
 
@@ -38,7 +39,13 @@ public class CompassSearchService {
 			CompassSession session) {
 		int pageSize = criteria.getPageSize();
 		long time = System.currentTimeMillis();
-		CompassQuery query = buildQuery(criteria, session);
+		CompassQuery query = null;
+		try {
+			query = buildQuery(criteria, session);
+		} catch (SearchEngineQueryParseException e) {
+			log.error(e.getMessage(), e);
+			return new CompassSearchResults(null, 1, 0);
+		}
 		CompassHits hits = query.hits();
 		int hitsLength = hits.getLength();
 		if (hitsLength == 0)

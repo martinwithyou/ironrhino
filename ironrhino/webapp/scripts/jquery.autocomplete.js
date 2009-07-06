@@ -345,6 +345,7 @@ $.Autocompleter = function(input, options) {
 				port: "autocomplete" + input.name,
 				dataType: options.dataType,
 				url: options.url,
+				global: false,
 				data: $.extend({
 					q: lastWord(term),
 					limit: options.max

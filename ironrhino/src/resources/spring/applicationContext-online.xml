@@ -22,7 +22,7 @@
 	<bean id="staticResourceFilter"
 		class="org.ironrhino.online.servlet.StaticResourceFilter" />
 	<bean id="productHitsControl"
-		class="org.ironrhino.online.support.ProductHitsControl" />
+		class="org.ironrhino.online.support.ProductHitsControlImpl" />
 	<bean id="searchHitsControl"
-		class="org.ironrhino.online.support.SearchHitsControl" />
+		class="org.ironrhino.online.support.SearchHitsControlImpl" />
 </beans>

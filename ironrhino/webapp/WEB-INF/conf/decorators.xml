@@ -11,11 +11,6 @@
 	</excludes>
 	<decorator name="none" />
 	<decorator name="simple" page="simple.ftl" />
-	<!-- 
-		<decorator name="product" page="product.jsp">
-		<pattern type="regex">/product/.*\.html</pattern>
-		</decorator>
-	-->
 	<decorator name="backend_main" page="backend_main.ftl">
 		<pattern>/backend/*</pattern>
 	</decorator>

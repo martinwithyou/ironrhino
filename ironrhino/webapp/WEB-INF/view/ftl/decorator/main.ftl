@@ -3,9 +3,6 @@
 <head>
 <title>${title}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Cache-Control" content="no-store" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
 <meta name="context_path" content="${request.contextPath}" />
 <link rel="shortcut icon" href="${base}/images/favicon.ico" />
 <link href="${base}/styles/all-min.css" media="screen" rel="stylesheet" type="text/css" />
@@ -45,7 +42,7 @@ ${head}
 <div id="search">
 <form id="search_form" action="${base}/search" method="get">
 <span><input id="q" type="text" name="q" size="20"
-	class="autocomplete_off" value="${request.getParameter('q')?if_exists}" /></span>
+	class="autocomplete_off" value="${request.getParameter('q')?if_exists?html}" /></span>
 <div id="q_update"
 	style="display: none; border: 1px solid black; background-color: white;"></div>
 <span><@s.submit value="搜索" theme="simple" /></span></form>

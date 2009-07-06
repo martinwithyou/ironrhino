@@ -51,8 +51,7 @@
 			<result name="feed" type="feed">
 				<param name="feedType">${uid}</param>
 			</result>
-			<result name="redirect" type="redirect"> ${targetUrl}</result>
-			<result name="suggest"> /WEB-INF/view/jsp/suggest.jsp</result>
+			<result name="redirect" type="redirect">${targetUrl}</result>
 			<result name="accessDenied">/WEB-INF/view/jsp/error/403.jsp
 			</result>
 		</global-results>

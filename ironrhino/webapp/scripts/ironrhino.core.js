@@ -136,11 +136,6 @@ Initialization.common = function() {
 					return;
 				}
 			});
-	if (typeof $.fn.autocomplete != 'undefined' && $('#q').length > 0)
-		$("#q").autocomplete(CONTEXT_PATH + "/search/suggest?decorator=none", {
-					minChars : 3,
-					delay : 1000
-				});
 };
 
 Indicator = {
@@ -281,7 +276,7 @@ Ajax = {
 			for (var key in replacement) {
 				if (!options.quiet)
 					$('html,body').animate({
-								scrollTop : $('#' + key).offset().top-50
+								scrollTop : $('#' + key).offset().top - 50
 							}, 100);
 				$('#' + key).html(div.find('#' + replacement[key]).html());
 				if (!options.quiet && (typeof $.effects != 'undefined'))
