@@ -1,10 +1,15 @@
 package org.ironrhino.core.cache;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
+import net.sf.ehcache.jcache.JCache;
+import net.sf.jsr107cache.Cache;
+import net.sf.jsr107cache.CacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,29 +31,42 @@ public class CacheContext {
 
 	public static final String PAGE_FRAGMENT_CACHE_NAME = "_page_fragment_";
 
+	private static Lock lock = new ReentrantLock();
+
 	private static ThreadLocal<Boolean> bypass = new ThreadLocal<Boolean>();
-
-	static CacheManager cacheManager;
-
-	public static void setCacheManager(CacheManager cm) {
-		cacheManager = cm;
-	}
 
 	public static Cache getCache(String name) {
 		return getCache(name, true);
 	}
 
 	public static Cache getCache(String name, boolean autoCreate) {
-		if (cacheManager == null)
+		Cache cache = null;
+		CacheManager singletonManager = net.sf.jsr107cache.CacheManager
+				.getInstance();
+		cache = singletonManager.getCache(name);
+		if (!autoCreate && cache == null)
 			return null;
-		Cache cache = cacheManager.getCache(name);
-		if (autoCreate && cache == null) {
-			cache = new Cache(name, 100000, true, true, DEFAULT_TIME_TO_LIVE,
-					DEFAULT_TIME_TO_IDLE);
-			if (!cacheManager.cacheExists(name))
-				cacheManager.addCache(cache);
+		if (cache != null)
+			return cache;
+		Map config = new HashMap();
+		config.put("name", name);
+		config.put("maxElementsInMemory", String.valueOf(1000000));
+		config.put("timeToLiveSeconds", String.valueOf(DEFAULT_TIME_TO_LIVE));
+		config.put("timeToIdleSeconds", String.valueOf(DEFAULT_TIME_TO_IDLE));
+		try {
+			lock.lock();
+			cache = singletonManager.getCache(name);
+			if (cache == null) {
+				cache = singletonManager.getCacheFactory().createCache(config);
+				singletonManager.registerCache(name, cache);
+			}
+			return cache;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return null;
+		} finally {
+			lock.unlock();
 		}
-		return cache;
 	}
 
 	public static void setBypass() {
@@ -77,9 +95,9 @@ public class CacheContext {
 			Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAME);
 			if (CacheContext.forceFlush() || cache == null)
 				return null;
-			Element element = cache.get(completeKey(key, scope));
-			if (element != null)
-				return (String) element.getValue();
+			String content = (String) cache.get(completeKey(key, scope));
+			if (content != null)
+				return content;
 			return null;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -93,12 +111,9 @@ public class CacheContext {
 		if (cache == null)
 			return;
 		try {
-			Element element = new Element(completeKey(key, scope), content);
-			if (timeToIdle > 0)
-				element.setTimeToIdle(timeToIdle);
-			if (timeToLive > 0)
-				element.setTimeToLive(timeToLive);
-			cache.put(element);
+			JCache jcache = (JCache) cache;
+			// TODO timeToIdle
+			jcache.put(completeKey(key, scope), content, timeToLive);
 		} catch (Throwable e) {
 		}
 	}

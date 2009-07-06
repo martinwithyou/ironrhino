@@ -19,7 +19,7 @@
 </head>
 
 <body>
-<div class="tabs" tab="#${Parameters.tab?if_exists}">
+<div class="tabs" tab="#${Parameters.tab?if_exists?html}">
 <ul>
 	<li><a href="#login"><span>${action.getText('login')}</span></a></li>
 	<li><a href="#openid"><span>${action.getText('login.openid')}</span></a></li>

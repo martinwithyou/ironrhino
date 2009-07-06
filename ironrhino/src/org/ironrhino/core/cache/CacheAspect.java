@@ -3,12 +3,9 @@ package org.ironrhino.core.cache;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.script.ScriptException;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
+import net.sf.ehcache.jcache.JCache;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +15,6 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.common.util.ExpressionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 
 /**
@@ -35,42 +31,33 @@ public class CacheAspect implements Ordered {
 
 	private int order;
 
-	@Autowired(required = false)
-	private CacheManager cacheManager;
-
-	@PostConstruct
-	public void init() {
-		if (cacheManager == null)
-			log.warn("No CacheManager congfigured");
-		CacheContext.setCacheManager(cacheManager);
-	}
-
 	@Around("@annotation(checkCache)")
 	public Object get(ProceedingJoinPoint call, CheckCache checkCache)
 			throws Throwable {
-		Cache cache = CacheContext.getCache(checkCache.name());
+		net.sf.jsr107cache.Cache cache = CacheContext.getCache(checkCache
+				.name());
 		String key = checkKey(call, checkCache);
 		if (CacheContext.isBypass() || cache == null || key == null)
 			return call.proceed();
 		if (CacheContext.forceFlush()) {
 			cache.remove(key);
 		} else {
-			Element element = cache.get(key);
-			if (element != null) {
-				return element.getValue();
+			Object value = cache.get(key);
+			if (value != null) {
+				return value;
 			}
 		}
 		Object result = call.proceed();
-		Element element = new Element(key, result);
-		element.setTimeToLive(checkCache.timeToLive());
-		element.setTimeToIdle(checkCache.timeToIdle());
-		cache.put(element);
+		JCache jcache = (JCache) cache;
+		// TODO timeToIdle
+		jcache.put(key, result, checkCache.timeToLive());
 		return result;
 	}
 
 	@AfterReturning("@annotation(flushCache)")
 	public void remove(JoinPoint jp, FlushCache flushCache) {
-		Cache cache = CacheContext.getCache(flushCache.name(), false);
+		net.sf.jsr107cache.Cache cache = CacheContext.getCache(flushCache
+				.name(), false);
 		String[] keys = flushKeys(jp, flushCache);
 		if (CacheContext.isBypass() || cache == null || keys == null)
 			return;
