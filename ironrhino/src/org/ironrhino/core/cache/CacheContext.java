@@ -3,12 +3,12 @@ package org.ironrhino.core.cache;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class CacheContext {
 
@@ -22,9 +22,34 @@ public class CacheContext {
 
 	public static final String DEFAULT_SCOPE = "application";
 
-	public static final String PAGE_FRAGMENT_CACHE_NAME = "pageFragmentCache";
+	public static final String DEFAULT_CACHE_NAME = "_default_";
+
+	public static final String PAGE_FRAGMENT_CACHE_NAME = "_page_fragment_";
 
 	private static ThreadLocal<Boolean> bypass = new ThreadLocal<Boolean>();
+
+	static CacheManager cacheManager;
+
+	public static void setCacheManager(CacheManager cm) {
+		cacheManager = cm;
+	}
+
+	public static Cache getCache(String name) {
+		return getCache(name, true);
+	}
+
+	public static Cache getCache(String name, boolean autoCreate) {
+		if (cacheManager == null)
+			return null;
+		Cache cache = cacheManager.getCache(name);
+		if (autoCreate && cache == null) {
+			cache = new Cache(name, 100000, true, true, DEFAULT_TIME_TO_LIVE,
+					DEFAULT_TIME_TO_IDLE);
+			if (!cacheManager.cacheExists(name))
+				cacheManager.addCache(cache);
+		}
+		return cache;
+	}
 
 	public static void setBypass() {
 		bypass.set(true);
@@ -49,10 +74,10 @@ public class CacheContext {
 
 	public static String getPageFragment(String key, String scope) {
 		try {
-			if (CacheContext.forceFlush())
+			Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAME);
+			if (CacheContext.forceFlush() || cache == null)
 				return null;
-			Element element = getPageFragmentCache().get(
-					completeKey(key, scope));
+			Element element = cache.get(completeKey(key, scope));
 			if (element != null)
 				return (String) element.getValue();
 			return null;
@@ -64,13 +89,16 @@ public class CacheContext {
 
 	public static void putPageFragment(String key, String content,
 			String scope, int timeToLive, int timeToIdle) {
+		Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAME);
+		if (cache == null)
+			return;
 		try {
 			Element element = new Element(completeKey(key, scope), content);
 			if (timeToIdle > 0)
 				element.setTimeToIdle(timeToIdle);
 			if (timeToLive > 0)
 				element.setTimeToLive(timeToLive);
-			getPageFragmentCache().put(element);
+			cache.put(element);
 		} catch (Throwable e) {
 		}
 	}
@@ -82,17 +110,6 @@ public class CacheContext {
 		if (scope.equalsIgnoreCase("session"))
 			sb.append("," + request.getSession(true).getId());
 		return sb.toString();
-	}
-
-	private static Cache getPageFragmentCache() {
-		try {
-			return (Cache) WebApplicationContextUtils.getWebApplicationContext(
-					ServletActionContext.getServletContext()).getBean(
-					PAGE_FRAGMENT_CACHE_NAME);
-		} catch (Throwable e) {
-			log.error("get cache error:" + e.getMessage(), e);
-			return null;
-		}
 	}
 
 }

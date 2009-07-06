@@ -279,12 +279,12 @@ Ajax = {
 					/<script(.|\s)*?\/script>/g, ""));
 			// others
 			for (var key in replacement) {
-				if (!options.silence)
+				if (!options.quiet)
 					$('html,body').animate({
 								scrollTop : $('#' + key).offset().top-50
 							}, 100);
 				$('#' + key).html(div.find('#' + replacement[key]).html());
-				if (!options.silence && (typeof $.effects != 'undefined'))
+				if (!options.quiet && (typeof $.effects != 'undefined'))
 					$('#' + key).effect('highlight');
 				_observe($('#' + key));
 			}

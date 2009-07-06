@@ -10,8 +10,4 @@
 	<!--cas cache-->
 	<bean id="ticketCache"
 		class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
-	<bean id="pageFragmentCache"
-		class="org.springframework.cache.ehcache.EhCacheFactoryBean" />
-	<bean id="methodCache"
-		class="org.springframework.cache.ehcache.EhCacheFactoryBean" />
 </beans>

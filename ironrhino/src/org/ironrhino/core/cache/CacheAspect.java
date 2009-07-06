@@ -3,9 +3,11 @@ package org.ironrhino.core.cache;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.script.ScriptException;
 
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
 import org.apache.commons.logging.Log;
@@ -16,18 +18,15 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.common.util.ExpressionUtils;
-import org.ironrhino.core.annotation.CheckCache;
-import org.ironrhino.core.annotation.FlushCache;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 
 /**
  * cache some data
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.annotation.CheckCache
- * @see org.ironrhino.core.annotation.FlushCache
+ * @see org.ironrhino.core.cache.CheckCache
+ * @see org.ironrhino.core.cache.FlushCache
  */
 @Aspect
 public class CacheAspect implements Ordered {
@@ -36,50 +35,47 @@ public class CacheAspect implements Ordered {
 
 	private int order;
 
-	@Autowired
-	private ApplicationContext applicationContext;
+	@Autowired(required = false)
+	private CacheManager cacheManager;
+
+	@PostConstruct
+	public void init() {
+		if (cacheManager == null)
+			log.warn("No CacheManager congfigured");
+		CacheContext.setCacheManager(cacheManager);
+	}
 
 	@Around("@annotation(checkCache)")
 	public Object get(ProceedingJoinPoint call, CheckCache checkCache)
 			throws Throwable {
-		if (CacheContext.isBypass())
-			return call.proceed();
+		Cache cache = CacheContext.getCache(checkCache.name());
 		String key = checkKey(call, checkCache);
-		if (key == null)
+		if (CacheContext.isBypass() || cache == null || key == null)
 			return call.proceed();
-		Cache cache = getCache(checkCache.namespace());
-		if (cache != null) {
-			if (CacheContext.forceFlush()) {
-				cache.remove(key);
-			} else {
-				Element element = cache.get(key);
-				if (element != null) {
-					return element.getValue();
-				}
+		if (CacheContext.forceFlush()) {
+			cache.remove(key);
+		} else {
+			Element element = cache.get(key);
+			if (element != null) {
+				return element.getValue();
 			}
 		}
 		Object result = call.proceed();
-		if (cache != null) {
-			Element element = new Element(key, result);
-			element.setTimeToLive(checkCache.timeToLive());
-			element.setTimeToIdle(checkCache.timeToIdle());
-			cache.put(element);
-		}
+		Element element = new Element(key, result);
+		element.setTimeToLive(checkCache.timeToLive());
+		element.setTimeToIdle(checkCache.timeToIdle());
+		cache.put(element);
 		return result;
 	}
 
 	@AfterReturning("@annotation(flushCache)")
 	public void remove(JoinPoint jp, FlushCache flushCache) {
-		if (CacheContext.isBypass())
-			return;
+		Cache cache = CacheContext.getCache(flushCache.name(), false);
 		String[] keys = flushKeys(jp, flushCache);
-		if (keys == null)
+		if (CacheContext.isBypass() || cache == null || keys == null)
 			return;
-		Cache cache = getCache(flushCache.namespace());
-		if (cache != null)
-			for (String key : keys) {
-				cache.remove(key.trim());
-			}
+		for (String key : keys)
+			cache.remove(key.trim());
 	}
 
 	private String checkKey(JoinPoint jp, CheckCache cache) {
@@ -118,10 +114,6 @@ public class CacheAspect implements Ordered {
 
 	public void setOrder(int order) {
 		this.order = order;
-	}
-
-	public Cache getCache(String namespace) {
-		return (Cache) applicationContext.getBean(namespace);
 	}
 
 }

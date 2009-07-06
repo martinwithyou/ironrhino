@@ -19,7 +19,7 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.AggregateResult;
 import org.ironrhino.common.support.StringStore;
 import org.ironrhino.common.util.DateUtils;
-import org.ironrhino.core.annotation.CheckCache;
+import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.model.SearchHits;
 import org.ironrhino.online.model.SearchHitsHistory;
