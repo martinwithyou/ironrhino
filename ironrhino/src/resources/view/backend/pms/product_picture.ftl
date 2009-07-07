@@ -11,7 +11,7 @@
 		<li id="li_<@s.property value="#status.index" />"><img
 			src='<@s.url value="%{'/pic/'+#pictureName+'.jpg'}"/>'
 			style="height: 300px; width: 300px" alt="picture" /><a
-			href="picture?actionType=delete&pictureName=${pictureName}"
+			href="picture?actionType=delete&pictureName=${pictureName?html}"
 			class="ajax view" method="post"
 			options="{replacement:'product_pic_list'}">delete</a></li>
 	</@s.iterator>

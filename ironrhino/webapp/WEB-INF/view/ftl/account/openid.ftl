@@ -7,7 +7,7 @@
 <#if authRequest?exists>
 	<form id="openid-form-redirection" action="${authRequest.OPEndpoint}" method="post" accept-charset="utf-8">
 	<#list authRequest.parameterMap.entrySet as entry>
-		<input type="hidden" name="${entry.key}" value="${entry.value}" />
+		<input type="hidden" name="${entry.key?html}" value="${entry.value?html}" />
 	</#list>
 	<button type="submit">Continue...</button>
 	</form>

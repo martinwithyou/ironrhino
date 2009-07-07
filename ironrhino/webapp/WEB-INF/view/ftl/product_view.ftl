@@ -60,7 +60,7 @@
 <div id="comments">
 <ul>
 	<#list resultPage.result as var>
-		<li>${var.displayName} says:${var.content}</li>
+		<li>${var.displayName?html} says:${var.content?html}</li>
 	</#list>
 </ul>
 <@pagination class="ajax view" options="{replacement:'comments'}"/>

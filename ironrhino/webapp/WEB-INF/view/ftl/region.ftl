@@ -12,8 +12,8 @@ response.setHeader("Cache-Control", "max-age=86400");
 		<#if Parameters.input?exists>
 		var id=$(this).parents('li')[0].id;
 		var name=$(this).text();
-		window.top.document.getElementById('${Parameters.input}').value=name;
-		//$('#${Parameters.input}',window.top.document).val($(this).text());
+		window.top.document.getElementById('${Parameters.input?html}').value=name;
+		//$('#${Parameters.input?html}',window.top.document).val($(this).text());
 		//window.close();
 		</#if>
 	}

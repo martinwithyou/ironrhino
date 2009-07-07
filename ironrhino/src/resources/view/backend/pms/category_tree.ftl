@@ -20,7 +20,7 @@
 		<#if !(async?if_exists)>
 			$("#treeview span").click(_click);
 			<#if Parameters.focus?exists>
-			$("#${Parameters.focus}").parents("li.expandable").find(">div.hitarea").click();
+			$("#${Parameters.focus?html}").parents("li.expandable").find(">div.hitarea").click();
 			</#if>
 		</#if>
 	};

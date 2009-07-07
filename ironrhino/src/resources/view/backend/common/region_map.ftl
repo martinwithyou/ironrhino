@@ -10,9 +10,9 @@
 		type="text/javascript"></script>
 </#if>
 <script type="text/javascript">
-var lat = ${Parameters.lat?default(22.5162)};
-var lng = ${Parameters.lng?default(114.050128)};
-var zoom = ${Parameters.zoom?default(8)};
+var lat = ${Parameters.lat?default(22.5162)?html};
+var lng = ${Parameters.lng?default(114.050128)?html};
+var zoom = ${Parameters.zoom?default(8)?html};
 var map;
 var mgr;
 $(window).unload(GUnload);

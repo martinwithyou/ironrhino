@@ -8,7 +8,7 @@
 		var name=$(this).text();
 		if(!confirm('change to '+name+'?'))
 		return;
-		var url='${base}/backend/pms/product/category/${Parameters.id}?categoryId='+id;
+		var url='${base}/backend/pms/product/category/${Parameters.id?html}?categoryId='+id;
 		ajax({url:url,dataType:'json'});
 	}
 	Initialization.treeview= function(){
