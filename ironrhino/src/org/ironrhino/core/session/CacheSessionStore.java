@@ -9,7 +9,7 @@ import org.ironrhino.core.cache.CacheContext;
 
 public class CacheSessionStore implements SessionStore {
 
-	public static final String CACHE_NAME = "_session_";
+	public static final String CACHE_NAME = "session";
 
 	public void initialize(Session session) {
 		Cache sessionCache = CacheContext.getCache(CACHE_NAME);

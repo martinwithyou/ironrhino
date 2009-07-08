@@ -27,9 +27,9 @@ public class CacheContext {
 
 	public static final String DEFAULT_SCOPE = "application";
 
-	public static final String DEFAULT_CACHE_NAME = "_default_";
+	public static final String DEFAULT_CACHE_NAME = "default";
 
-	public static final String PAGE_FRAGMENT_CACHE_NAME = "_page_fragment_";
+	public static final String PAGE_FRAGMENT_CACHE_NAME = "page";
 
 	private static Lock lock = new ReentrantLock();
 

@@ -11,7 +11,6 @@
 		java.io.tmpdir - Default temp file path -->
 	<diskStore path="java.io.tmpdir" />
 
-
 	<!--Default Cache configuration. These will applied to caches programmatically created through
 		the CacheManager.
 		
@@ -43,9 +42,5 @@
 	<defaultCache maxElementsInMemory="10000" eternal="false"
 		overflowToDisk="true" timeToIdleSeconds="0" timeToLiveSeconds="0"
 		diskPersistent="false" diskExpiryThreadIntervalSeconds="120" />
-
-	<!-- spring security cache-->
-	<cache name="accountCache" maxElementsInMemory="10000" eternal="true"
-		overflowToDisk="true" />
 
 </ehcache>
