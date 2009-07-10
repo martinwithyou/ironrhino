@@ -267,7 +267,7 @@ Richtable = {
 		} else {
 			// embed iframe
 			$('#_window_content').html(
-					'<iframe style="width:650px;height:650px;"/>');
+					'<iframe style="width:750px;height:750px;border:0;"/>');
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'decorator=simple&'
 					+ Math.random();
 			$('#_window_content > iframe')[0].src = url;
@@ -282,8 +282,8 @@ Richtable = {
 		}
 		$('#_window_').attr('_dialoged_', true);
 		$("#_window_").dialog( {
-			width :700,
-			height :700,
+			width :800,
+			height :800,
 			close :(reloadonclose ? function() {
 				Richtable.reload();
 			} : null)
