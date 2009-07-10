@@ -42,9 +42,9 @@ function addHistory() {
  */
 
 function updateScore() {
-	if (window._jsonResult_) {
-		$('#score_average').text(window._jsonResult_.scoreResult.average);
-		$('#score_count').text(window._jsonResult_.scoreResult.count);
+	if (Ajax.jsonResult) {
+		$('#score_average').text(Ajax.jsonResult.scoreResult.average);
+		$('#score_count').text(Ajax.jsonResult.scoreResult.count);
 	}
 }
 

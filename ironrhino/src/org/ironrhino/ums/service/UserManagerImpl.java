@@ -27,7 +27,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		UserManager {
 
 	@Transactional
-	@FlushCache("user_${args[0]}")
+	@FlushCache("user_${args[0].username}")
 	public void save(User user) {
 		super.save(user);
 	}
@@ -38,16 +38,12 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		User user = getUserByUsername(username);
 		if (user == null)
 			throw new UsernameNotFoundException("No such Username");
-
+		populateAuthorities(user);
 		return user;
 	}
 
-	@CheckCache("user_${args[0]}")
 	public User getUserByUsername(String username) {
-		User user = getByNaturalId(true, "username", username);
-		if (user != null)
-			populateAuthorities(user);
-		return user;
+		return getByNaturalId(true, "username", username);
 	}
 
 	private void populateAuthorities(User user) {

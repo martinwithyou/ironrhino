@@ -10,7 +10,9 @@ MessageBundle = {
 		'confirm.delete' : 'are you sure to delete?',
 		'save.and.create' : 'save and add',
 		'add' : 'add',
-		'remove' : 'remove'
+		'remove' : 'remove',
+		'browse' : 'browse',
+		'select' : 'please select'
 	},
 	'zh-cn' : {
 		'ajax.loading' : '正在加载...',
@@ -24,7 +26,8 @@ MessageBundle = {
 		'save.and.create' : '保存并新建',
 		'add' : '添加',
 		'remove' : '删除',
-		'browse' : '浏览文件'
+		'browse' : '浏览文件',
+		'select' : '请选择'
 	},
 	get : function() {
 		var key = arguments[0];

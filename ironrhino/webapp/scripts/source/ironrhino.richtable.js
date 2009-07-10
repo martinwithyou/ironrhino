@@ -36,7 +36,8 @@ ECSideUtil.escapeRegExp = function(str) {
 			/([\f\b\n\t\r[\^$|?*+(){}])/gm, "\\$1");
 };
 ECSideUtil.escapeString = function(str) {
-	return !str ? '' + str
+	return !str
+			? '' + str
 			: ('"' + ('' + str).replace(/(["\\])/g, '\\$1') + '"').replace(
 					/[\f]/g, "\\f").replace(/[\b]/g, "\\b").replace(/[\n]/g,
 					"\\n").replace(/[\t]/g, "\\t").replace(/[\r]/g, "\\r");
@@ -134,12 +135,13 @@ ECSideUtil.editCell = function(cellObj, editType, templateId) {
 		cellObj.innerHTML = ECSideUtil.replaceAll(templateText, "value=\"\"",
 				"value=\"" + value + "\"");
 	} else if (editType == "select") {
-		cellObj.innerHTML = ECSideUtil
-				.replaceAll(templateText, "value=\"" + value + "\"", "value=\""
-						+ value + "\" selected=\"selected\"");
+		cellObj.innerHTML = ECSideUtil.replaceAll(templateText, "value=\""
+						+ value + "\"", "value=\"" + value
+						+ "\" selected=\"selected\"");
 	} else if (editType == "checkbox" || editType == "radio") {
 		cellObj.innerHTML = ECSideUtil.replaceAll(templateText, "value=\""
-				+ value + "\"", "value=\"" + value + "\" checked=\"checked\"");
+						+ value + "\"", "value=\"" + value
+						+ "\" checked=\"checked\"");
 	}
 	$('input,select,checkbox', cellObj).focus();
 };
@@ -200,37 +202,36 @@ Richtable = {
 		reloadonclose = reloadonclose || false;
 		useiframe = useiframe || false;
 		if ($('#_window_').length == 0)
-			$(
-					'<div id="_window_" title=""><div id="_window_content"></div></div>')
-					.appendTo(document.body);
+			$('<div id="_window_"></div>').appendTo(document.body);
 		if (!useiframe) {
 			// ajax replace
-			$('#_window_content').html('');
+			$('#_window_').html('');
 			var target = $('#_window_').get(0);
 			target.onsuccess = function() {
+				Dialog.adapt($('#_window_'));
 				var form = $('#_window_ form.ajax');
 				var action = form.attr('action');
 				if (!action || action == document.location.pathname)
 					action = url;
 				else if (!action.indexOf('/') == 0)
 					action = document.location.pathname
-							+ (document.location.pathname.indexOf('/') == (document.location.pathname.length - 1) ? ''
+							+ (document.location.pathname.indexOf('/') == (document.location.pathname.length - 1)
+									? ''
 									: '/') + action;
 				form.attr('action', action);
 				if (form.hasClass('view'))
-					form.attr('replacement', '_window_content:content');
+					form.attr('replacement', '_window_:content');
 				if (!$('#_window_ form.ajax').hasClass('keepopen')
 						&& !$('#_window_ form.ajax').hasClass('view')) {
-					$('#_window_ form.ajax button[type="submit"]')
-							.click(
-									function() {
-										$('#_window_ form.ajax')[0].onsuccess = function() {
-											setTimeout( function() {
+					$('#_window_ form.ajax button[type="submit"]').click(
+							function() {
+								$('#_window_ form.ajax')[0].onsuccess = function() {
+									setTimeout(function() {
 												$("#_window_").dialog('close');
 											}, 1000);
 
-										};
-									});
+								};
+							});
 				}
 				if (url.indexOf('?') > 0)
 					url = url.substring(0, url.indexOf('?'));
@@ -242,35 +243,34 @@ Richtable = {
 					var entity = Richtable.getBaseUrl();
 					entity = entity.substring(0, entity.lastIndexOf('/'));
 					entity = entity.substring(entity.lastIndexOf('/') + 1);
-					if ($(
-							'#_window_ form.ajax input[type="hidden"][name="' + entity + '.id"]')
-							.val())
+					if ($('#_window_ form.ajax input[type="hidden"][name="'
+							+ entity + '.id"]').val())
 						create = false;
 				}
 				if (create) {
 					$('#_window_ form.ajax button[type="submit"]')
-							.after(
-									'<button type="submit" class="btn save_and_create"><span><span>' + MessageBundle
-											.get('save.and.create') + '</span></span></button>');
-					$('#_window_ form.ajax .save_and_create').click(
-							function() {
+							.after('<button type="submit" class="btn save_and_create"><span><span>'
+									+ MessageBundle.get('save.and.create')
+									+ '</span></span></button>');
+					$('#_window_ form.ajax .save_and_create').click(function() {
 								$('form.ajax').addClass('reset');
 							});
 				}
 			};
-			ajax( {
-				url :url,
-				cache :false,
-				target :target,
-				replacement :'_window_content:content'
-			});
+			ajax({
+						url : url,
+						cache : false,
+						target : target,
+						replacement : '_window_:content',
+						quiet : true
+					});
 		} else {
 			// embed iframe
-			$('#_window_content').html(
-					'<iframe style="width:750px;height:750px;border:0;"/>');
+			$('#_window_')
+					.html('<iframe style="width:650px;border:0;" onload="Dialog.adapt($(\'#_window_\'),this);"/>');
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'decorator=simple&'
 					+ Math.random();
-			$('#_window_content > iframe')[0].src = url;
+			$('#_window_ > iframe')[0].src = url;
 		}
 		if ($('#_window_').attr('_dialoged_')) {
 			$("#_window_").dialog('option', 'close',
@@ -281,13 +281,16 @@ Richtable = {
 			return;
 		}
 		$('#_window_').attr('_dialoged_', true);
-		$("#_window_").dialog( {
-			width :800,
-			height :800,
-			close :(reloadonclose ? function() {
-				Richtable.reload();
-			} : null)
-		});
+		$("#_window_").dialog({
+					minHeight : 500,
+					width : 700,
+					modal : true,
+					bgiframe : true,
+					closeOnEscape : false,
+					close : (reloadonclose ? function() {
+						Richtable.reload();
+					} : null)
+				});
 	},
 	enter : function(parentId, url) {
 		if (!url)
@@ -307,13 +310,13 @@ Richtable = {
 			arr[0] = id;
 		else
 			$.each($('form.richtable tbody')[0].rows, function() {
-				if ($(this).attr("edited") == "true")
-					arr.push($(this).attr('rowid'))
-			});
+						if ($(this).attr("edited") == "true")
+							arr.push($(this).attr('rowid'))
+					});
 		$.each(arr, function() {
 			var rows = $('form.richtable tbody')[0].rows;
 			var row;
-			for ( var i = 0; i < rows.length; i++)
+			for (var i = 0; i < rows.length; i++)
 				if ($(rows[i]).attr('rowid') == this)
 					row = rows[i];
 			if (row && row.getAttribute('edited') == 'true') {
@@ -321,26 +324,24 @@ Richtable = {
 				var entity = Richtable.getBaseUrl();
 				entity = entity.substring(entity.lastIndexOf('/') + 1);
 				params[entity + '.id'] = this;
-				$.each(row.cells,
-						function() {
-							var name = $(this).attr("cellName");
-							if (!name || name == 'null'
-									|| $(this).attr('edited') != 'true'
-									&& $(this).hasClass('include_if_edited'))
-								return;
-							var value = $(this).attr('cellValue');
-							if (!value || value == 'null')
-								value = window.isIE ? this.innerText
-										: this.textContent;
-							params[name] = value;
-						});
-				url = Richtable.getBaseUrl() + '/save';
-				ajax( {
-					url :url,
-					type :'POST',
-					data :params,
-					dataType :'json'
+				$.each(row.cells, function() {
+					var name = $(this).attr("cellName");
+					if (!name || name == 'null'
+							|| $(this).attr('edited') != 'true'
+							&& $(this).hasClass('include_if_edited'))
+						return;
+					var value = $(this).attr('cellValue');
+					if (!value || value == 'null')
+						value = window.isIE ? this.innerText : this.textContent;
+					params[name] = value;
 				});
+				url = Richtable.getBaseUrl() + '/save';
+				ajax({
+							url : url,
+							type : 'POST',
+							data : params,
+							dataType : 'json'
+						});
 			}
 		});
 	},
@@ -350,31 +351,32 @@ Richtable = {
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
 		} else {
 			var arr = [];
-			$('form.richtable tbody input[type="checkbox"]').each( function() {
-				if (this.checked)
-					arr.push('id=' + $(this).closest('tr').attr('rowid'));
-			});
+			$('form.richtable tbody input[type="checkbox"]').each(function() {
+						if (this.checked)
+							arr.push('id='
+									+ $(this).closest('tr').attr('rowid'));
+					});
 			if (arr.length == 0)
 				return;
 			url += (url.indexOf('?') > 0 ? '&' : '?') + arr.join('&');
 		}
 
-		ajax( {
-			url :url,
-			type :'POST',
-			dataType :'json',
-			complete :Richtable.reload
-		});
+		ajax({
+					url : url,
+					type : 'POST',
+					dataType : 'json',
+					complete : Richtable.reload
+				});
 	},
 	execute : function(operation, id) {
 		var url = Richtable.getBaseUrl() + '/' + operation;
 		url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
-		ajax( {
-			url :url,
-			type :'POST',
-			dataType :'json',
-			complete :Richtable.reload
-		});
+		ajax({
+					url : url,
+					type : 'POST',
+					dataType : 'json',
+					complete : Richtable.reload
+				});
 	},
 	updatePasswordCell : function(cellEditObj) {
 		var cellObj = cellEditObj.parentNode;
@@ -388,33 +390,30 @@ Richtable = {
 };
 Observation.richtable = function() {
 	if ($('form.richtable').length > 0) {
-		$('form.richtable .pageNav.firstPage').click( function() {
-			$('form.richtable input.jumpPageInput').val(1);
+		$('form.richtable .pageNav.firstPage').click(function() {
+					$('form.richtable input.jumpPageInput').val(1);
+					Richtable.reload()
+				});
+		$('form.richtable .pageNav.prevPage').click(function() {
+			$('form.richtable input.jumpPageInput')
+					.val(parseInt($('form.richtable input.jumpPageInput').val())
+							- 1);
 			Richtable.reload()
 		});
-		$('form.richtable .pageNav.prevPage').click(
-				function() {
-					$('form.richtable input.jumpPageInput').val(
-							parseInt($('form.richtable input.jumpPageInput')
-									.val()) - 1);
-					Richtable.reload()
-				});
-		$('form.richtable .pageNav.nextPage').click(
-				function() {
-					$('form.richtable input.jumpPageInput').val(
-							parseInt($('form.richtable input.jumpPageInput')
-									.val()) + 1);
-					Richtable.reload()
-				});
-		$('form.richtable .pageNav.lastPage').click(
-				function() {
-					$('form.richtable input.jumpPageInput').val(
-							$("form.richtable .totalPage").text());
-					Richtable.reload()
-				});
-		$('form.richtable .pageNav.jumpPage').click( function() {
+		$('form.richtable .pageNav.nextPage').click(function() {
+			$('form.richtable input.jumpPageInput')
+					.val(parseInt($('form.richtable input.jumpPageInput').val())
+							+ 1);
 			Richtable.reload()
 		});
+		$('form.richtable .pageNav.lastPage').click(function() {
+			$('form.richtable input.jumpPageInput')
+					.val($("form.richtable .totalPage").text());
+			Richtable.reload()
+		});
+		$('form.richtable .pageNav.jumpPage').click(function() {
+					Richtable.reload()
+				});
 		$('form.richtable input[name="resultPage.pageNo"]').keydown(
 				function(event) {
 					if (event.keyCode && event.keyCode == 13) {

@@ -236,9 +236,13 @@ Ajax = {
 			func = $(target).attr(funcName);
 		if (typeof func == 'undefined' || !func)
 			return true;
+		var args = [];
+		if (arguments.length > 2)
+			for (var i = 2; i < arguments.length; i++)
+				args[i - 2] = arguments[i];
 		var ret;
 		if (typeof(func) == 'function') {
-			ret = func.call(target);
+			ret = func.apply(target, args);
 		} else {
 			if (func.indexOf('return') > -1)
 				func = func.replace('return', '');
@@ -272,6 +276,7 @@ Ajax = {
 			}
 			var div = $("<div/>").append(data.replace(
 					/<script(.|\s)*?\/script>/g, ""));
+			Ajax.title = $('title', div).text();
 			// others
 			for (var key in replacement) {
 				if (!options.quiet)
@@ -284,14 +289,14 @@ Ajax = {
 				_observe($('#' + key));
 			}
 			div.remove();
-			Ajax.fire(target, 'onsuccess');
+			Ajax.fire(target, 'onsuccess', data);
 		} else {
-			window._jsonResult_ = data;
+			Ajax.jsonResult = data;
 			if (data.fieldErrors || data.actionErrors) {
 				hasError = true;
-				Ajax.fire(target, 'onerror');
+				Ajax.fire(target, 'onerror', data);
 			} else {
-				Ajax.fire(target, 'onsuccess');
+				Ajax.fire(target, 'onsuccess', data);
 			}
 			var message = '';
 			if (data.fieldErrors)
@@ -337,8 +342,10 @@ Ajax = {
 			}
 		}
 		Indicator.text = '';
-		Ajax.fire(target, 'oncomplete');
-	}
+		Ajax.fire(target, 'oncomplete', data);
+	},
+	jsonResult : null,
+	title : ''
 };
 
 function ajax(options) {
@@ -479,6 +486,29 @@ Observation.ajax = function(container) {
 	});
 };
 
+var Dialog = {
+	adapt : function(d, iframe) {
+		var useiframe = iframe != null;
+		if (!iframe) {
+			$(d).dialog('option', 'title', Ajax.title);
+		} else {
+			var doc = iframe.document;
+			if (iframe.contentDocument) {
+				doc = iframe.contentDocument;
+			} else if (iframe.contentWindow) {
+				doc = iframe.contentWindow.document;
+			}
+			$(d).dialog('option', 'title', doc.title);
+		}
+		var position = d.dialog('option', 'position');
+		var height = d.height();
+		if (height > 600 && position != 'top')
+			d.dialog('option', 'position', 'top');
+		if (height <= 600 && position != 'center')
+			d.dialog('option', 'position', 'center');
+	}
+}
+
 var Region = {
 	textid : '',
 	isfull : '',
@@ -507,11 +537,12 @@ var Region = {
 			$("#region_window").dialog('close');
 		};
 		if ($('#region_window').length == 0) {
-			$('<div id="region_window" class="flora" title="请选择"><div id="region_tree"></div></div>')
+			$('<div id="region_window" title="' + MessageBundle.get('select')
+					+ '"><div id="region_tree"></div></div>')
 					.appendTo(document.body);
 			$("#region_window").dialog({
-						width : 350,
-						height : 750
+						width : 500,
+						minHeight : 500
 					});
 			$("#region_tree").treeview({
 						url : CONTEXT_PATH + '/region/children',
