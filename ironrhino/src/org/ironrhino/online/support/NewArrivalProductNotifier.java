@@ -23,6 +23,7 @@ import org.ironrhino.online.model.Account;
 import org.ironrhino.online.service.AccountManager;
 import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
@@ -38,12 +39,16 @@ public class NewArrivalProductNotifier {
 
 	private String extraEmails;
 
+	@Autowired
 	private ProductFacade productFacade;
 
+	@Autowired
 	private TemplateProvider templateProvider;
 
+	@Autowired
 	private MailService mailService;
 
+	@Autowired
 	private AccountManager accountManager;
 
 	private Lock lock = new ReentrantLock();
@@ -78,22 +83,6 @@ public class NewArrivalProductNotifier {
 
 	public void setSubject(String subject) {
 		this.subject = subject;
-	}
-
-	public void setMailService(MailService mailService) {
-		this.mailService = mailService;
-	}
-
-	public void setProductFacade(ProductFacade productFacade) {
-		this.productFacade = productFacade;
-	}
-
-	public void setTemplateProvider(TemplateProvider templateProvider) {
-		this.templateProvider = templateProvider;
-	}
-
-	public void setAccountManager(AccountManager accountManager) {
-		this.accountManager = accountManager;
 	}
 
 	public void send() throws IOException {

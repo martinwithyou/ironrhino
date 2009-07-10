@@ -5,31 +5,21 @@ import java.util.Map;
 
 import org.ironrhino.common.support.TemplateProvider;
 import org.ironrhino.core.jms.MessageProducer;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 
 import freemarker.template.Template;
 
 public class MailService {
 
+	@Autowired(required = false)
 	private TemplateProvider templateProvider;
 
+	@Autowired(required = false)
 	private MessageProducer messageProducer;
 
+	@Autowired
 	private MailSender mailSender;
-
-	@Required
-	public void setMailSender(MailSender mailSender) {
-		this.mailSender = mailSender;
-	}
-
-	public void setMessageProducer(MessageProducer messageProducer) {
-		this.messageProducer = messageProducer;
-	}
-
-	public void setTemplateProvider(TemplateProvider templateProvider) {
-		this.templateProvider = templateProvider;
-	}
 
 	public void send(SimpleMailMessage smm) {
 		send(smm, true);
@@ -52,6 +42,8 @@ public class MailService {
 
 	public void send(SimpleMailMessage smm, String templateName, Map model,
 			boolean useHtmlFormat) {
+		if (templateProvider == null)
+			throw new RuntimeException("No templateProvider setted");
 		model.put("sendmail", true);
 		StringWriter writer = new StringWriter();
 		try {

@@ -8,11 +8,13 @@ import org.ironrhino.online.model.Order;
 import org.ironrhino.online.model.OrderItem;
 import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Cart implements Serializable {
 
 	private Order order;
 
+	@Autowired
 	private transient ProductFacade productFacade;
 
 	public Order getOrder() {
@@ -21,10 +23,6 @@ public class Cart implements Serializable {
 
 	public void setOrder(Order order) {
 		this.order = order;
-	}
-
-	public void setProductFacade(ProductFacade productFacade) {
-		this.productFacade = productFacade;
 	}
 
 	public boolean contains(String productCode) {

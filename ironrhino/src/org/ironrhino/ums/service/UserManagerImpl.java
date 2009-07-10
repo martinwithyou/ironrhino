@@ -11,6 +11,8 @@ import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.SimpleElement;
+import org.ironrhino.core.cache.CheckCache;
+import org.ironrhino.core.cache.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.ums.model.Group;
 import org.ironrhino.ums.model.Role;
@@ -18,34 +20,33 @@ import org.ironrhino.ums.model.User;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.GrantedAuthorityImpl;
-import org.springframework.security.providers.dao.UserCache;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 public class UserManagerImpl extends BaseManagerImpl<User> implements
 		UserManager {
 
-	private UserCache userCache;
-
-	public void setUserCache(UserCache userCache) {
-		this.userCache = userCache;
-	}
-
 	@Transactional
+	@FlushCache("user_${args[0]}")
 	public void save(User user) {
 		super.save(user);
-		if (userCache != null) {
-			populateAuthorities(user);
-			userCache.putUserInCache(user);
-		}
 	}
 
 	@Transactional(readOnly = true)
+	@CheckCache("user_${args[0]}")
 	public User loadUserByUsername(String username) {
 		User user = getUserByUsername(username);
 		if (user == null)
 			throw new UsernameNotFoundException("No such Username");
-		populateAuthorities(user);
+
+		return user;
+	}
+
+	@CheckCache("user_${args[0]}")
+	public User getUserByUsername(String username) {
+		User user = getByNaturalId(true, "username", username);
+		if (user != null)
+			populateAuthorities(user);
 		return user;
 	}
 
@@ -88,10 +89,6 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 			if (role.isEnabled())
 				auths.add(new GrantedAuthorityImpl(role.getName()));
 		user.setAuthorities(auths.toArray(new GrantedAuthority[auths.size()]));
-	}
-
-	public User getUserByUsername(String username) {
-		return getByNaturalId(true, "username", username);
 	}
 
 }

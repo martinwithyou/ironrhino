@@ -26,7 +26,6 @@ import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.service.ProductManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.ResourceLoader;
@@ -47,8 +46,10 @@ public class ProductPageGenerator implements ApplicationListener {
 
 	private String directory = "/product";
 
+	@Autowired
 	private ProductManager productManager;
 
+	@Autowired
 	private TemplateProvider templateProvider;
 
 	@Autowired
@@ -80,22 +81,12 @@ public class ProductPageGenerator implements ApplicationListener {
 		this.batchSize = batchSize;
 	}
 
-	@Required
-	public void setProductManager(ProductManager productManager) {
-		this.productManager = productManager;
-	}
-
 	public void setDirectory(String directory) {
 		this.directory = directory;
 	}
 
 	public void setTemplateName(String templateName) {
 		this.templateName = templateName;
-	}
-
-	@Required
-	public void setTemplateProvider(TemplateProvider templateProvider) {
-		this.templateProvider = templateProvider;
 	}
 
 	private Template getTemplate() throws IOException {

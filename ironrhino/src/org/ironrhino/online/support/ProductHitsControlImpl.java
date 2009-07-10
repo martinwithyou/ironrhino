@@ -16,22 +16,15 @@ import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.model.ProductHits;
 import org.ironrhino.online.model.ProductHitsHistory;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+public class ProductHitsControlImpl extends StringStore implements
+		ProductHitsControl {
 
-public class ProductHitsControlImpl extends StringStore implements ProductHitsControl {
-
+	@Autowired
 	private BaseManager<ProductHits> baseManager;
 
-	@Required
-	public void setBaseManager(BaseManager<ProductHits> baseManager) {
-		this.baseManager = baseManager;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.ironrhino.online.support.Test#put(java.lang.String)
-	 */
 	public void put(String productCode) {
 		store(productCode + "," + DateUtils.getDatetime(new Date()));
 	}

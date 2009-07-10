@@ -9,6 +9,7 @@ import javax.mail.internet.MimeUtility;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -28,6 +29,7 @@ public class MailSender {
 
 	private String defaultTo = "zhouyanming@gmail.com";
 
+	@Autowired
 	private JavaMailSenderImpl javaMailSender;
 
 	public String getDefaultFrom() {
@@ -44,10 +46,6 @@ public class MailSender {
 
 	public void setDefaultTo(String defaultTo) {
 		this.defaultTo = defaultTo;
-	}
-
-	public void setJavaMailSender(JavaMailSenderImpl javaMailSender) {
-		this.javaMailSender = javaMailSender;
 	}
 
 	public void send(final SimpleMailMessage smm) {

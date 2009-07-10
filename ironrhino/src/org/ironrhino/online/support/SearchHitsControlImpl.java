@@ -23,18 +23,14 @@ import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.model.SearchHits;
 import org.ironrhino.online.model.SearchHitsHistory;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 public class SearchHitsControlImpl extends StringStore implements
 		SearchHitsControl {
 
+	@Autowired
 	private BaseManager<SearchHits> baseManager;
-
-	@Required
-	public void setBaseManager(BaseManager<SearchHits> baseManager) {
-		this.baseManager = baseManager;
-	}
 
 	public void put(String keywords, int totalHits) {
 		if (!StringUtils.isBlank(keywords))

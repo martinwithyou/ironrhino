@@ -24,6 +24,11 @@ public class SettingControl implements ApplicationListener {
 
 	private Map<String, Setting> settings;
 
+	/**
+	 * Autowired will cause exception when
+	 * org.ironrhino.online.servlet.AuthenticationProcessingFilter.save(final
+	 * LoginRecord loginRecord),bloody weird
+	 */
 	private BaseManager<Setting> baseManager;
 
 	public void setBaseManager(BaseManager<Setting> baseManager) {

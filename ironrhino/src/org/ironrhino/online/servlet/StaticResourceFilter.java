@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class StaticResourceFilter implements Filter {
 
@@ -32,8 +33,10 @@ public class StaticResourceFilter implements Filter {
 
 	private String productPrefix = "/product/";
 
+	@Autowired
 	private ProductFacade productFacade;
 
+	@Autowired
 	private SettingControl settingControl;
 
 	private ServletContext servletContext;
@@ -52,14 +55,6 @@ public class StaticResourceFilter implements Filter {
 
 	public void setProductPrefix(String productPrefix) {
 		this.productPrefix = productPrefix;
-	}
-
-	public void setProductFacade(ProductFacade productFacade) {
-		this.productFacade = productFacade;
-	}
-
-	public void setSettingControl(SettingControl settingControl) {
-		this.settingControl = settingControl;
 	}
 
 	public void destroy() {

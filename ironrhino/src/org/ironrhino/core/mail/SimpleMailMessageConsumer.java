@@ -1,17 +1,12 @@
 package org.ironrhino.core.mail;
 
 import org.ironrhino.core.jms.MessageConsumer;
-import org.springframework.beans.factory.annotation.Required;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SimpleMailMessageConsumer implements MessageConsumer {
 
+	@Autowired
 	private MailSender mailSender;
-
-	@Required
-	public void setMailSender(MailSender mailSender) {
-		this.mailSender = mailSender;
-	}
 
 	public void consume(Object object) {
 		SimpleMailMessageWrapper smmw = (SimpleMailMessageWrapper) object;

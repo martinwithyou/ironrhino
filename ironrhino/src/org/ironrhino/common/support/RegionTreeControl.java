@@ -14,6 +14,7 @@ import org.ironrhino.common.util.RegionUtils;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.service.BaseManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
@@ -21,11 +22,8 @@ public class RegionTreeControl implements ApplicationListener {
 
 	private Region regionTree;
 
+	@Autowired
 	private BaseManager<Region> baseManager;
-
-	public void setBaseManager(BaseManager baseManager) {
-		this.baseManager = baseManager;
-	}
 
 	public void buildRegionTree() {
 		baseManager.setEntityClass(Region.class);

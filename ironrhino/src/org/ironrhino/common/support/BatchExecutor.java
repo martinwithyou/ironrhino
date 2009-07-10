@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.ironrhino.common.util.ExceptionUtils;
 import org.ironrhino.core.ext.spring.ApplicationContextConsole;
 import org.ironrhino.core.mail.MailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 
 public class BatchExecutor {
@@ -16,8 +17,10 @@ public class BatchExecutor {
 
 	private List<String> commands = Collections.EMPTY_LIST;
 
+	@Autowired
 	private ApplicationContextConsole applicationContextConsole;
 
+	@Autowired(required = false)
 	MailService mailService;
 
 	public List<String> getCommands() {
@@ -26,15 +29,6 @@ public class BatchExecutor {
 
 	public void setCommands(List<String> commands) {
 		this.commands = commands;
-	}
-
-	public void setMailService(MailService mailService) {
-		this.mailService = mailService;
-	}
-
-	public void setApplicationContextConsole(
-			ApplicationContextConsole applicationContextConsole) {
-		this.applicationContextConsole = applicationContextConsole;
 	}
 
 	public void execute() {

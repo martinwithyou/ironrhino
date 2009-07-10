@@ -43,40 +43,26 @@ import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.service.ProductManager;
 import org.ironrhino.pms.support.CategoryTreeControl;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 public class ProductFacadeImpl implements ProductFacade {
 
 	protected final Log log = LogFactory.getLog(ProductFacadeImpl.class);
 
+	@Autowired
 	private ProductManager productManager;
 
+	@Autowired
 	private BaseManager baseManager;
 
+	@Autowired
 	private SettingControl settingControl;
 
-	private Random random;
-
+	@Autowired
 	private CategoryTreeControl categoryTreeControl;
 
-	@Required
-	public void setProductManager(ProductManager productManager) {
-		this.productManager = productManager;
-	}
-
-	@Required
-	public void setBaseManager(BaseManager baseManager) {
-		this.baseManager = baseManager;
-	}
-
-	public void setSettingControl(SettingControl settingControl) {
-		this.settingControl = settingControl;
-	}
-
-	public void setCategoryTreeControl(CategoryTreeControl categoryTreeControl) {
-		this.categoryTreeControl = categoryTreeControl;
-	}
+	private Random random;
 
 	@PostConstruct
 	public void afterPropertiesSet() {

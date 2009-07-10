@@ -22,6 +22,7 @@ import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.online.model.Account;
 import org.ironrhino.ums.model.Group;
 import org.ironrhino.ums.model.Role;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.GrantedAuthorityImpl;
@@ -31,16 +32,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 		AccountManager {
 
+	@Autowired(required = false)
 	private RegionTreeControl regionTreeControl;
 
 	private Random random;
 
 	public AccountManagerImpl() {
 		random = new Random();
-	}
-
-	public void setRegionTreeControl(RegionTreeControl regionTreeControl) {
-		this.regionTreeControl = regionTreeControl;
 	}
 
 	@Transactional

@@ -17,22 +17,17 @@ import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.Order;
 import org.ironrhino.online.model.OrderStatus;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 		OrderManager {
 
+	@Autowired(required = false)
 	private RegionTreeControl regionTreeControl;
 
+	@Autowired
 	private RuleProvider ruleProvider;
-
-	public void setRegionTreeControl(RegionTreeControl regionTreeControl) {
-		this.regionTreeControl = regionTreeControl;
-	}
-
-	public void setRuleProvider(RuleProvider ruleProvider) {
-		this.ruleProvider = ruleProvider;
-	}
 
 	@Transactional
 	public void save(Order order) {
@@ -64,7 +59,7 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 		order.setAccount(AuthzUtils.getUserDetails(Account.class));
 		order.setCreateDate(new Date());
 		if (order.getClass() == Order.class) {
-			//not proxy
+			// not proxy
 			StatefulSession session = ruleProvider.getStatefulSession();
 			ruleProvider.insert(session, order);
 			session.fireAllRules();

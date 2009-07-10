@@ -14,16 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ironrhino.core.performance.BufferableResponseWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class HttpSessionFilter implements Filter {
 
 	ServletContext servletContext;
 
+	@Autowired
 	SessionManager sessionManager;
-
-	public void setSessionManager(SessionManager sessionManager) {
-		this.sessionManager = sessionManager;
-	}
 
 	public void init(FilterConfig filterConfig) {
 		servletContext = filterConfig.getServletContext();
