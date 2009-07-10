@@ -11,7 +11,7 @@
 		<th>${action.getText('username')}</th>
 		<th>${action.getText('name')}</th>
 		<th>${action.getText('status')}</th>
-		<th>${action.getText('orderDate')}</th>
+		<th>${action.getText('createDate')}</th>
 		<th>Actions</th>
 	</tr>
 	<#list resultPage.result as var>
@@ -20,7 +20,7 @@
 			<td>${var.account.username}</td>
 			<td>${var.account.name}</td>
 			<td>${var.status.displayName}</td>
-			<td>${var.orderDate}</td>
+			<td>${var.createDate}</td>
 			<td><a href="${base}/account/order/view/${var.code}">view</a>
 			<#if var.status.getName()=='INITIAL'>
 				<a href="${base}/account/order/view/${var.code}">pay</a>

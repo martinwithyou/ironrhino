@@ -2,11 +2,10 @@ package org.ironrhino.online.model;
 
 import java.util.Date;
 
-import org.ironrhino.core.annotation.Recordable;
+import org.ironrhino.core.annotation.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 
-
-@Recordable
+@RecordAware
 public class Announcement extends BaseEntity {
 
 	private String title;
@@ -19,18 +18,7 @@ public class Announcement extends BaseEntity {
 
 	private Date releaseDate;
 
-	private Date createDate;
-
 	public Announcement() {
-		createDate = new Date();
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
 	}
 
 	public boolean isReleased() {

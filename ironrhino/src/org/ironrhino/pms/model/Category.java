@@ -11,13 +11,13 @@ import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.annotation.NaturalId;
 import org.ironrhino.core.annotation.NotInCopy;
-import org.ironrhino.core.annotation.Publishable;
-import org.ironrhino.core.annotation.Recordable;
+import org.ironrhino.core.annotation.PublishAware;
+import org.ironrhino.core.annotation.RecordAware;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Secured;
 
-@Recordable
-@Publishable
+@RecordAware
+@PublishAware
 @Searchable(root = false, alias = "category")
 @AutoConfig
 public class Category extends BaseTreeableEntity<Category> implements Secured {

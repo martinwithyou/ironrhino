@@ -10,15 +10,15 @@ import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.annotation.NaturalId;
 import org.ironrhino.core.annotation.NotInCopy;
-import org.ironrhino.core.annotation.Recordable;
+import org.ironrhino.core.annotation.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.model.Recordable;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.userdetails.UserDetails;
 
-
-@Recordable
+@RecordAware
 @AutoConfig
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity implements UserDetails, Recordable {
 	@NaturalId
 	private String username;
 
@@ -45,6 +45,9 @@ public class User extends BaseEntity implements UserDetails {
 	private Date createDate;
 
 	@NotInCopy
+	private Date modifyDate;
+
+	@NotInCopy
 	private Set<SimpleElement> roles = new HashSet<SimpleElement>(0);
 
 	@NotInCopy
@@ -61,6 +64,14 @@ public class User extends BaseEntity implements UserDetails {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
 	}
 
 	public boolean isLocked() {

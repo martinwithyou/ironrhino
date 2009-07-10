@@ -12,13 +12,14 @@ import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.annotation.NaturalId;
 import org.ironrhino.core.annotation.NotInCopy;
 import org.ironrhino.core.annotation.NotInJson;
-import org.ironrhino.core.annotation.Recordable;
+import org.ironrhino.core.annotation.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.model.Recordable;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
 
-@Recordable
-public class Order extends BaseEntity {
+@RecordAware
+public class Order extends BaseEntity implements Recordable {
 
 	@NaturalId
 	private String code;
@@ -26,8 +27,6 @@ public class Order extends BaseEntity {
 	private BigDecimal discount;
 
 	private BigDecimal shipcost;
-
-	private Date orderDate;
 
 	private String payment;
 
@@ -53,6 +52,12 @@ public class Order extends BaseEntity {
 	@NotInCopy
 	@NotInJson
 	private Region region;
+
+	@NotInCopy
+	private Date createDate;
+
+	@NotInCopy
+	private Date modifyDate;
 
 	public Order() {
 		status = OrderStatus.INITIAL;
@@ -121,12 +126,20 @@ public class Order extends BaseEntity {
 		this.items = items;
 	}
 
-	public Date getOrderDate() {
-		return orderDate;
+	public Date getCreateDate() {
+		return createDate;
 	}
 
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
 	}
 
 	public String getShipment() {

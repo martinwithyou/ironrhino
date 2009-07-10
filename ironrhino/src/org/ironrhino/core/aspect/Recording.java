@@ -9,7 +9,9 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.common.model.Record;
 import org.ironrhino.common.util.AuthzUtils;
+import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.model.Entity;
+import org.ironrhino.core.model.Recordable;
 import org.springframework.core.Ordered;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.security.userdetails.UserDetails;
@@ -18,30 +20,39 @@ import org.springframework.security.userdetails.UserDetails;
  * Use for record model's CRUD operations
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.annotation.Recordable
+ * @see org.ironrhino.core.annotation.RecordAware
  */
 @Aspect
 public class Recording extends HibernateDaoSupport implements Ordered {
 
 	private int order;
 
-	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(org.ironrhino.core.annotation.Recordable)")
+	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(org.ironrhino.core.annotation.RecordAware)")
 	public void save(ProceedingJoinPoint call, Entity entity) throws Throwable {
 		boolean isNew = entity.isNew();
 		try {
+			if (entity instanceof Recordable) {
+				Recordable r = (Recordable) entity;
+				Date date = new Date();
+				r.setModifyDate(date);
+				if (isNew)
+					r.setCreateDate(date);
+			}
 			call.proceed();
-			record(entity, isNew ? "CREATE" : "UPDATE");
+			record(entity, isNew ? EntityOperationType.CREATE
+					: EntityOperationType.UPDATE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(org.ironrhino.core.annotation.Recordable)")
+	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(org.ironrhino.core.annotation.RecordAware)")
 	public void delete(Entity entity) {
-		record(entity, "DELETE");
+		record(entity, EntityOperationType.DELETE);
 	}
 
-	private void record(Entity entity, String action) {
+	// record to database,may change to use logger system
+	private void record(Entity entity, EntityOperationType action) {
 		final Record record = new Record();
 		UserDetails ud = AuthzUtils.getUserDetails(UserDetails.class);
 		if (ud != null) {
@@ -55,8 +66,10 @@ public class Recording extends HibernateDaoSupport implements Ordered {
 		}
 		record.setEntityClass(entity.getClass().getName());
 		record.setEntityToString(String.valueOf(entity));
-		record.setAction(action);
+		record.setAction(action.name());
 		record.setRecordDate(new Date());
+		// important! no transaction,inserted before actual save entity and
+		// ignore transaction rollback
 		getHibernateTemplate().save(record);
 	}
 

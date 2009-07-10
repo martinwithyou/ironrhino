@@ -11,8 +11,8 @@
 		<td>${order.code}</td>
 	</tr>
 	<tr>
-		<td>${action.getText('orderDate')}</td>
-		<td>${order.orderDate}</td>
+		<td>${action.getText('createDate')}</td>
+		<td>${order.createDate}</td>
 	</tr>
 	<tr>
 		<td>${action.getText('status')}</td>

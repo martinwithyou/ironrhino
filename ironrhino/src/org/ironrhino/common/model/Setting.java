@@ -1,13 +1,14 @@
 package org.ironrhino.common.model;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.annotation.NaturalId;
-import org.ironrhino.core.annotation.Publishable;
-import org.ironrhino.core.annotation.Recordable;
+import org.ironrhino.core.annotation.PublishAware;
+import org.ironrhino.core.annotation.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 
-@Recordable
-@Publishable
+@RecordAware
+@PublishAware
 @AutoConfig
 public class Setting extends BaseEntity {
 
@@ -41,4 +42,7 @@ public class Setting extends BaseEntity {
 		this.value = value;
 	}
 
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 }

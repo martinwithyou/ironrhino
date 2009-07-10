@@ -8,27 +8,24 @@ import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.model.Entity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
-
 
 /**
  * Use for record model's CRUD operations
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.annotation.Publishable
+ * @see org.ironrhino.core.annotation.PublishAware
  */
 @Aspect
 public class Publishing implements Ordered {
 
+	@Autowired
 	private EventPublisher eventPublisher;
 
 	private int order;
 
-	public void setEventPublisher(EventPublisher eventPublisher) {
-		this.eventPublisher = eventPublisher;
-	}
-
-	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(org.ironrhino.core.annotation.Publishable)")
+	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(org.ironrhino.core.annotation.PublishAware)")
 	public void save(ProceedingJoinPoint call, Entity entity) throws Throwable {
 		boolean isNew = entity.isNew();
 		try {
@@ -42,7 +39,7 @@ public class Publishing implements Ordered {
 		}
 	}
 
-	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(org.ironrhino.core.annotation.Publishable)")
+	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(org.ironrhino.core.annotation.PublishAware)")
 	public void delete(Entity entity) {
 		if (eventPublisher != null)
 			eventPublisher.publish(new EntityOperationEvent(entity,

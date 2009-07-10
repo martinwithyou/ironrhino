@@ -16,5 +16,5 @@ import java.lang.annotation.Target;
 @Target(TYPE)
 @Retention(RUNTIME)
 @Inherited
-public @interface Recordable {
+public @interface RecordAware {
 }

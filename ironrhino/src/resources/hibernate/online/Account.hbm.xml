@@ -40,6 +40,7 @@
 		<property name="lastLoginDate" />
 		<property name="lastLoginAddress" />
 		<property name="createDate" />
+		<property name="modifyDate" />
 		<list name="addressees" table="online_addressee" cascade="all"
 			lazy="false">
 			<key column="accountId" />

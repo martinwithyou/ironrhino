@@ -48,6 +48,7 @@
 		<property name="released" />
 		<property name="releaseDate" />
 		<property name="createDate" />
+		<property name="modifyDate" />
 		<property name="open" />
 		<dynamic-component name="customProperties" insert="true"
 			update="true" optimistic-lock="true">

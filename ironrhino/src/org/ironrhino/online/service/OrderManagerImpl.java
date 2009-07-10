@@ -62,7 +62,7 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 	public void doCalculateOrder(Order order) {
 		// calculate and set discount,shipcost
 		order.setAccount(AuthzUtils.getUserDetails(Account.class));
-		order.setOrderDate(new Date());
+		order.setCreateDate(new Date());
 		if (order.getClass() == Order.class) {
 			//not proxy
 			StatefulSession session = ruleProvider.getStatefulSession();

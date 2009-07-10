@@ -72,7 +72,8 @@ public class Cart implements Serializable {
 		order.setDescription(null);
 		order.setDiscount(null);
 		order.setShipcost(null);
-		order.setOrderDate(null);
+		order.setCreateDate(null);
+		order.setModifyDate(null);
 		order.getItems().clear();
 	}
 

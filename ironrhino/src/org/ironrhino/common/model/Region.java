@@ -7,11 +7,11 @@ import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.annotation.NotInCopy;
 import org.ironrhino.core.annotation.NotInJson;
-import org.ironrhino.core.annotation.Publishable;
+import org.ironrhino.core.annotation.PublishAware;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Secured;
 
-@Publishable
+@PublishAware
 @AutoConfig
 public class Region extends BaseTreeableEntity<Region> implements Secured {
 

@@ -15,15 +15,16 @@ import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.core.annotation.NaturalId;
 import org.ironrhino.core.annotation.NotInCopy;
 import org.ironrhino.core.annotation.NotInJson;
-import org.ironrhino.core.annotation.Recordable;
+import org.ironrhino.core.annotation.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.model.Recordable;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.userdetails.UserDetails;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
 
-@Recordable
-public class Account extends BaseEntity implements UserDetails {
+@RecordAware
+public class Account extends BaseEntity implements UserDetails, Recordable {
 	@NaturalId
 	private String username;
 
@@ -75,6 +76,9 @@ public class Account extends BaseEntity implements UserDetails {
 
 	@NotInCopy
 	private Date createDate;
+
+	@NotInCopy
+	private Date modifyDate;
 
 	@NotInCopy
 	@NotInJson
@@ -195,6 +199,14 @@ public class Account extends BaseEntity implements UserDetails {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
 	}
 
 	public Sex getSex() {

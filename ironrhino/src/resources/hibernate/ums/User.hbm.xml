@@ -21,6 +21,7 @@
 		<property name="passwordExpireDate" />
 		<property name="enabled" />
 		<property name="createDate" />
+		<property name="modifyDate" />
 		<set name="roles" table="ums_userRole" cascade="all"
 			fetch="subselect">
 			<key column="userId" />

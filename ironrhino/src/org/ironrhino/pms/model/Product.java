@@ -22,21 +22,22 @@ import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.annotation.NaturalId;
 import org.ironrhino.core.annotation.NotInCopy;
-import org.ironrhino.core.annotation.Publishable;
-import org.ironrhino.core.annotation.Recordable;
+import org.ironrhino.core.annotation.PublishAware;
+import org.ironrhino.core.annotation.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Ordered;
+import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.Secured;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
 
-@Recordable
-@Publishable
+@RecordAware
+@PublishAware
 @Searchable(alias = "product")
-@AutoConfig( fileupload = "image/pjpeg,image/jpeg")
+@AutoConfig(fileupload = "image/pjpeg,image/jpeg")
 public class Product extends BaseEntity implements Ordered, Secured,
-		Customizable {
+		Recordable, Customizable {
 
 	private static final int SHORT_DESC_LENGTH = 200;
 
@@ -85,6 +86,9 @@ public class Product extends BaseEntity implements Ordered, Secured,
 
 	@NotInCopy
 	private Date createDate;
+
+	@NotInCopy
+	private Date modifyDate;
 
 	@NotInCopy
 	@SearchableComponent
@@ -163,6 +167,14 @@ public class Product extends BaseEntity implements Ordered, Secured,
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
 	}
 
 	public Date getCreateDate() {
