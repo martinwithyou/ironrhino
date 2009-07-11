@@ -11,7 +11,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.common.util.RequestUtils;
-import org.ironrhino.core.cache.CacheContext;
+import org.ironrhino.core.aspect.AopContext;
+import org.ironrhino.core.cache.CacheAspect;
 import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.LoginRecord;
 import org.ironrhino.online.service.AccountManager;
@@ -19,9 +20,8 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
 
-
 public class AuthenticationProcessingFilter extends
-org.springframework.security.ui.webapp.AuthenticationProcessingFilter {
+		org.springframework.security.ui.webapp.AuthenticationProcessingFilter {
 
 	public final static String USERNAME_IN_COOKIE = "UIC";
 
@@ -42,7 +42,7 @@ org.springframework.security.ui.webapp.AuthenticationProcessingFilter {
 		account.setLoginTimes(account.getLoginTimes() + 1);
 		account.setLastLoginDate(new Date());
 		account.setLastLoginAddress(request.getRemoteAddr());
-		CacheContext.setBypass();
+		AopContext.setBypass(CacheAspect.class);
 		accountManager.save(account);
 
 		LoginRecord loginRecord = new LoginRecord();

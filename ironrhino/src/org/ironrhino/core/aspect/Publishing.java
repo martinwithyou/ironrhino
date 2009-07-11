@@ -26,21 +26,23 @@ public class Publishing implements Ordered {
 	private int order;
 
 	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(org.ironrhino.core.annotation.PublishAware)")
-	public void save(ProceedingJoinPoint call, Entity entity) throws Throwable {
+	public Object save(ProceedingJoinPoint call, Entity entity)
+			throws Throwable {
+		if (AopContext.isBypass(this.getClass()))
+			return call.proceed();
 		boolean isNew = entity.isNew();
-		try {
-			call.proceed();
-			if (eventPublisher != null)
-				eventPublisher.publish(new EntityOperationEvent(entity,
-						isNew ? EntityOperationType.CREATE
-								: EntityOperationType.UPDATE));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Object result = call.proceed();
+		if (eventPublisher != null)
+			eventPublisher.publish(new EntityOperationEvent(entity,
+					isNew ? EntityOperationType.CREATE
+							: EntityOperationType.UPDATE));
+		return result;
 	}
 
 	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(org.ironrhino.core.annotation.PublishAware)")
 	public void delete(Entity entity) {
+		if (AopContext.isBypass(this.getClass()))
+			return;
 		if (eventPublisher != null)
 			eventPublisher.publish(new EntityOperationEvent(entity,
 					EntityOperationType.DELETE));

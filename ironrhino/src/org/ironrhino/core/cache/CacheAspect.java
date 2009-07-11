@@ -15,6 +15,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.common.util.ExpressionUtils;
+import org.ironrhino.core.aspect.AopContext;
 import org.springframework.core.Ordered;
 
 /**
@@ -37,7 +38,8 @@ public class CacheAspect implements Ordered {
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(checkCache
 				.name());
 		String key = checkKey(call, checkCache);
-		if (CacheContext.isBypass() || cache == null || key == null)
+		if (AopContext.isBypass(this.getClass()) || cache == null
+				|| key == null)
 			return call.proceed();
 		if (CacheContext.forceFlush()) {
 			cache.remove(key);
@@ -59,7 +61,8 @@ public class CacheAspect implements Ordered {
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(flushCache
 				.name(), false);
 		String[] keys = flushKeys(jp, flushCache);
-		if (CacheContext.isBypass() || cache == null || keys == null)
+		if (AopContext.isBypass(this.getClass()) || cache == null
+				|| keys == null)
 			return;
 		for (String key : keys)
 			cache.remove(key.trim());

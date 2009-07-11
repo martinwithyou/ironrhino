@@ -28,26 +28,28 @@ public class Recording extends HibernateDaoSupport implements Ordered {
 	private int order;
 
 	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(org.ironrhino.core.annotation.RecordAware)")
-	public void save(ProceedingJoinPoint call, Entity entity) throws Throwable {
+	public Object save(ProceedingJoinPoint call, Entity entity)
+			throws Throwable {
+		if (AopContext.isBypass(this.getClass()))
+			return call.proceed();
 		boolean isNew = entity.isNew();
-		try {
-			if (entity instanceof Recordable) {
-				Recordable r = (Recordable) entity;
-				Date date = new Date();
-				r.setModifyDate(date);
-				if (isNew)
-					r.setCreateDate(date);
-			}
-			call.proceed();
-			record(entity, isNew ? EntityOperationType.CREATE
-					: EntityOperationType.UPDATE);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (entity instanceof Recordable) {
+			Recordable r = (Recordable) entity;
+			Date date = new Date();
+			r.setModifyDate(date);
+			if (isNew)
+				r.setCreateDate(date);
 		}
+		Object result = call.proceed();
+		record(entity, isNew ? EntityOperationType.CREATE
+				: EntityOperationType.UPDATE);
+		return result;
 	}
 
 	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(org.ironrhino.core.annotation.RecordAware)")
 	public void delete(Entity entity) {
+		if (AopContext.isBypass(this.getClass()))
+			return;
 		record(entity, EntityOperationType.DELETE);
 	}
 

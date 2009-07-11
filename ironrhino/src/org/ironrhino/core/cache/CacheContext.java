@@ -33,8 +33,6 @@ public class CacheContext {
 
 	private static Lock lock = new ReentrantLock();
 
-	private static ThreadLocal<Boolean> bypass = new ThreadLocal<Boolean>();
-
 	public static Cache getCache(String name) {
 		return getCache(name, true);
 	}
@@ -67,17 +65,6 @@ public class CacheContext {
 		} finally {
 			lock.unlock();
 		}
-	}
-
-	public static void setBypass() {
-		bypass.set(true);
-	}
-
-	public static boolean isBypass() {
-		Boolean b = bypass.get();
-		boolean bl = b != null && b.booleanValue();
-		bypass.set(false);
-		return bl;
 	}
 
 	public static boolean forceFlush() {
