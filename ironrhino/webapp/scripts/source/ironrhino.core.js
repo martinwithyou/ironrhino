@@ -55,7 +55,7 @@ Observation.common = function(container) {
 					$(this).tabs().tabs('select', $(this).attr('tab'))
 				});
 	if (typeof $.fn.corner != 'undefined')
-		$('.round_corner,.corner', container).css({
+		$('.rounded', container).css({
 					padding : '5px',
 					margin : '5px'
 				}).each(function() {

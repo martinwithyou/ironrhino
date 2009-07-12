@@ -52,14 +52,14 @@ ${head}
 
 
 <div id="left" style="float: left; width: 20%;">
-<div style="margin: 0px 20px;"><@s.action name="left" executeResult="true" /></div>
+<div style="margin: 0 10px;"><@s.action name="left" executeResult="true" /></div>
 </div>
 <div id="content" style="float: left; width: 60%;">
 <div id="message">
 <@s.actionerror cssClass="action_error" /><@s.actionmessage cssClass="action_message" /></div>
 ${body}</div>
 <div id="right" style="float: left; width: 20%;">
-<div style="margin: 0px 20px;"><@s.action name="right" executeResult="true" /></div>
+<div style="margin: 0 10px;"><@s.action name="right" executeResult="true" /></div>
 </div>
 
 <div id="footer">
