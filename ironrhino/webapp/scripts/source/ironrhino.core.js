@@ -266,6 +266,12 @@ Ajax = {
 				&& (data.indexOf('{') == 0 || data.indexOf('[') == 0))
 			data = eval('(' + data + ')');
 		if (typeof data == 'string') {
+			if (data.indexOf('<title>') > 0 && data.indexOf('</title>') > 0) {
+				Ajax.title = data.substring(data.indexOf('<title>') + 7, data
+								.indexOf('</title>'));
+				if (options.replaceTitle)
+					document.title = Ajax.title;
+			}
 			var replacement = {};
 			var entries = (options.replacement || $(target).attr('replacement') || 'content')
 					.split(',');
@@ -276,7 +282,6 @@ Ajax = {
 			}
 			var div = $("<div/>").append(data.replace(
 					/<script(.|\s)*?\/script>/g, ""));
-			Ajax.title = $('title', div).text();
 			// others
 			for (var key in replacement) {
 				if (!options.quiet)
@@ -372,6 +377,8 @@ Initialization.history = function() {
 	if (!HISTORY_ENABLED || (typeof $.historyInit == 'undefined'))
 		return;
 	$.historyInit(function(hash) {
+				if (hash && hash.indexOf('/') < 0)
+					return;
 				var url = document.location.pathname;
 				if (hash) {
 					if (CONTEXT_PATH)
@@ -381,7 +388,7 @@ Initialization.history = function() {
 				ajax({
 							url : url,
 							cache : true,
-							success : Ajax.handleResponse
+							replaceTitle : true
 						});
 			}, '');
 }
