@@ -1,3 +1,9 @@
+(function() {
+	var d = document.domain.split('.');
+	if (d.length > 2)
+		document.domain = d[d.length - 2] + '.' + d[d.length - 1];
+})();
+
 var HISTORY_ENABLED = true;
 
 if (typeof(Initialization) == 'undefined')
