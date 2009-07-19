@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="DemoProcess" xmlns="http://jbpm.org/4.0/jpdl">
+
+	<start g="100,16,48,48">
+		<transition g="4,-8" name="准备分叉" to="fork1"/>
+	</start>
+
+	<java expr="#{echoService}" g="16,176,92,52" method="sayHello" name="echo">
+		<transition g="-80,11" name="echo到accept结合点" to="join1"/>
+	</java>
+
+	<java expr="#{echoService}" g="140,176,92,52" method="sayHelloWithExecution" name="echo2">
+		<arg>
+			<env type="org.jbpm.pvm.internal.history.HistorySession"/>
+		</arg>
+		<transition g="-1,-14" name="echo2到accept结合点" to="join1"/>
+	</java>
+	<state g="95,369,122,52" name="accept">
+		<transition g="-64,-10" name="transition" to="grant access"/>
+		<transition g="2,-10" name="to timeout" to="timed out">
+         <timer duedate="10 seconds"/>
+			<timer duedate="10 seconds"/>
+			<timer duedate="10 seconds"/>
+			<timer duedate="10 seconds"/>
+		</transition>
+	</state>
+	<state g="55,460,92,52" name="grant access">
+		<transition g="-62,-21" name="transition" to="finish"/>
+	</state>
+	<state g="271,461,92,52" name="timed out">
+		<transition g="-60,-13" name="transition" to="timed out2">
+         <timer duedate="20 seconds"/>
+			<timer duedate="20 seconds"/>
+			<timer duedate="20 seconds"/>
+			<timer duedate="20 seconds"/>
+			<timer duedate="20 seconds"/>
+		</transition>
+	</state>
+	<state g="222,546,92,52" name="timed out2">
+		<transition g="-65,-12" name="transition" to="timed out3">
+         <timer duedate="30 seconds"/>
+			<timer duedate="30 seconds"/>
+			<timer duedate="30 seconds"/>
+			<timer duedate="30 seconds"/>
+			<timer duedate="30 seconds"/>
+		</transition>
+	</state>
+	<state g="188,654,92,52" name="timed out3">
+		<transition g="-54,-22" name="transition" to="finish"/>
+	</state>
+
+	<end g="109,777,48,48" name="finish"/>
+	<fork g="100,96,48,48" name="fork1">
+		<transition g="-65,-11" name="分叉到echo" to="echo"/>
+		<transition g="6,-10" name="分叉到echo2" to="echo2"/>
+	</fork>
+	<join g="221,283,48,48" multiplicity="2" name="join1">
+		<transition g="-2,5" name="echo和echo2合并到accept" to="accept"/>
+	</join>
+
+</process>

@@ -2,14 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:p="http://www.springframework.org/schema/p"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-	<!-- Message source for this context, loaded from localized "messages_xx" files -->
-	<!-- commented by zhouyanming
-			<bean id="messageSource"
-			class="org.springframework.context.support.ResourceBundleMessageSource"
-			p:basename="messages" />
-		-->
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<!-- ID Generators -->
 	<bean id="ticketGrantingTicketUniqueIdGenerator"
@@ -22,14 +16,6 @@
 		<constructor-arg index="0" ref="serviceRegistryDao" />
 	</bean>
 
-	<!-- commented by zhouyanming
-			<bean id="attributeRegistry"
-			class="org.jasig.cas.services.LdapAttributeRepository">
-			<constructor-arg index="0" value="uid=battags,ou=people" />
-			<constructor-arg index="1"
-			value="ldap://ldap.rutgers.edu:389/dc=rutgers,dc=edu" />
-			</bean>
-		-->
 
 	<bean id="serviceRegistryDao"
 		class="org.jasig.cas.services.InMemoryServiceRegistryDaoImpl" />
@@ -41,13 +27,6 @@
 		class="org.jasig.cas.util.DefaultUniqueTicketIdGenerator">
 		<constructor-arg index="0" value="20" />
 	</bean>
-
-	<!-- commented by zhouyanming
-			<bean id="samlServiceTicketUniqueIdGenerator"
-			class="org.jasig.cas.util.SamlCompliantUniqueTicketIdGenerator">
-			<constructor-arg index="0" value="https://localhost:8443" />
-			</bean>
-		-->
 
 	<!-- Expiration policies -->
 	<bean id="serviceTicketExpirationPolicy"
@@ -84,14 +63,6 @@
 				<entry
 					key="org.jasig.cas.authentication.principal.SimpleWebApplicationServiceImpl"
 					value-ref="serviceTicketUniqueIdGenerator" />
-				<entry
-					key="org.jasig.cas.authentication.principal.OpenIdService"
-					value-ref="serviceTicketUniqueIdGenerator" />
-				<!-- commented by zhouyanming
-						<entry
-						key="org.jasig.cas.authentication.principal.SamlService"
-						value-ref="samlServiceTicketUniqueIdGenerator" />
-					-->
 			</map>
 		</property>
 	</bean>
@@ -128,6 +99,28 @@
 	<bean id="proxy20Handler"
 		class="org.jasig.cas.ticket.proxy.support.Cas20ProxyHandler"
 		p:httpClient-ref="casHttpClient" />
+	
+	<bean
+		id="casArgumentExtractor"
+		class="org.jasig.cas.web.support.CasArgumentExtractor"
+		p:httpClient-ref="casHttpClient" />
+
+	<util:list id="argumentExtractors">
+		<ref bean="casArgumentExtractor" />
+	</util:list>
+
+	
+	<bean id="ticketGrantingTicketCookieGenerator" class="org.jasig.cas.web.support.CookieRetrievingCookieGenerator"
+		p:cookieSecure="true"
+		p:cookieMaxAge="-1"
+		p:cookieName="CASTGC"
+		p:cookiePath="/cas" />
+		
+	<bean id="warnCookieGenerator" class="org.jasig.cas.web.support.CookieRetrievingCookieGenerator"
+		p:cookieSecure="true"
+		p:cookieMaxAge="-1"
+		p:cookieName="CASPRIVACY"
+		p:cookiePath="/cas" />
 
 	<!-- Ticket Registry -->
 	<bean id="ticketRegistry"
@@ -152,21 +145,5 @@
 		<property name="startDelay" value="20000" />
 		<property name="repeatInterval" value="5000000" />
 	</bean>
-	<!-- ADVISORS -->
-	<!-- commented by zhouyanming
-			<bean id="advisorAutoProxyCreator"
-			class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 
-			<bean id="notNullAnnotationBeanPostProcessor"
-			class="org.jasig.cas.util.annotation.NotNullAnnotationBeanPostProcessor" />
-
-			<bean id="greaterThanAnnotationBeanPostProcessor"
-			class="org.jasig.cas.util.annotation.GreaterThanAnnotationBeanPostProcessor" />
-
-			<bean id="notEmptyAnnotationBeanPostProcessor"
-			class="org.jasig.cas.util.annotation.NotEmptyAnnotationBeanPostProcessor" />
-
-			<bean id="isInAnnotationBeanPostProcessor"
-			class="org.jasig.cas.util.annotation.IsInAnnotationBeanPostProcessor" />
-		-->
 </beans>
