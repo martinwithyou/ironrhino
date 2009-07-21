@@ -1,7 +1,18 @@
 (function() {
 	var d = document.domain.split('.');
-	if (d.length > 2)
-		document.domain = d[d.length - 2] + '.' + d[d.length - 1];
+	try {
+		if (d.length > 2)
+			document.domain = d[d.length - 2] + '.' + d[d.length - 1];
+	} catch (e) {
+		if (d.length > 3)
+			document.domain = d[d.length - 3] + '.' + d[d.length - 2] + '.'
+					+ d[d.length - 1];
+	}
+	var $ajax = $.ajax;
+	$.ajax = function(options) {
+		options.url = UrlUtils.makeSameOrigin(options.url);
+		return $ajax(options);
+	}
 })();
 
 var HISTORY_ENABLED = true;
@@ -168,6 +179,34 @@ Indicator = {
 	}
 };
 
+UrlUtils = {
+	isSameOrigin : function(a, b) {
+		b = b || document.location.href;
+		var index = a.indexOf('://');
+		if (index == 4 || index == 5) {
+			if (a.indexOf(':80/') > 0)
+				a = a.replace(':80/', '/');
+			var ad = a.substring(0, a.indexOf('/', index + 3));
+			if (b.indexOf(':80/') > 0)
+				b = b.replace(':80/', '/');
+			var bd = b.substring(0, b.indexOf('/', b.indexOf('://') + 3));
+			if (ad != bd)
+				return false;
+		}
+		return true;
+	},
+	makeSameOrigin : function(url, referrer) {
+		referrer = referrer || document.location.href;
+		if (!UrlUtils.isSameOrigin(url, referrer))
+			return referrer.substring(0, referrer.indexOf('/', referrer
+									.indexOf('://')
+									+ 3))
+					+ CONTEXT_PATH + '/webproxy/' + url;
+		else
+			return url;
+	}
+}
+
 Message = {
 	get : function(message, className) {
 		return '<div class="'
@@ -294,7 +333,10 @@ Ajax = {
 					$('html,body').animate({
 								scrollTop : $('#' + key).offset().top - 50
 							}, 100);
-				$('#' + key).html(div.find('#' + replacement[key]).html());
+				if(div.find('#' + replacement[key]).size()>0)
+					$('#' + key).html(div.find('#' + replacement[key]).html());
+				else
+					$('body').html(div.find('body').html());
 				if (!options.quiet && (typeof $.effects != 'undefined'))
 					$('#' + key).effect('highlight');
 				_observe($('#' + key));
@@ -387,9 +429,12 @@ Initialization.history = function() {
 					return;
 				var url = document.location.pathname;
 				if (hash) {
-					if (CONTEXT_PATH)
-						hash = CONTEXT_PATH + hash;
+					if (UrlUtils.isSameOrigin(hash)) {
+						if (CONTEXT_PATH)
+							hash = CONTEXT_PATH + hash;
+					}
 					url = hash;
+
 				}
 				ajax({
 							url : url,
@@ -460,10 +505,12 @@ Observation.ajax = function(container) {
 				if (HISTORY_ENABLED && $(this).hasClass('view')
 						&& !$(this).attr('replacement')) {
 					var hash = this.href;
-					hash = hash.substring(hash.indexOf('//') + 2);
-					hash = hash.substring(hash.indexOf('/'));
-					if (CONTEXT_PATH)
-						hash = hash.substring(CONTEXT_PATH.length);
+					if (UrlUtils.isSameOrigin(hash)) {
+						hash = hash.substring(hash.indexOf('//') + 2);
+						hash = hash.substring(hash.indexOf('/'));
+						if (CONTEXT_PATH)
+							hash = hash.substring(CONTEXT_PATH.length);
+					}
 					hash = hash.replace(/^.*#/, '');
 					$.historyLoad(hash);
 					return false;
