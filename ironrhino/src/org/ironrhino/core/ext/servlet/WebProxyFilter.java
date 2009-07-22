@@ -86,6 +86,7 @@ public class WebProxyFilter implements Filter {
 				method.setQueryString(queryString);
 			}
 			HttpMethodParams params = new HttpMethodParams();
+			params.setSoTimeout(5000);
 			Enumeration<String> en = request.getParameterNames();
 			while (en.hasMoreElements()) {
 				String name = en.nextElement();
