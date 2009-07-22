@@ -325,8 +325,9 @@ Ajax = {
 				var ss = entry.split(':', 2);
 				replacement[ss[0]] = (ss.length == 2 ? ss[1] : ss[0]);
 			}
-			var div = $("<div/>").append(data.replace(
-					/<script(.|\s)*?\/script>/g, ""));
+			var html = data.replace(
+					/<script(.|\s)*?\/script>/g, "");
+			var div = $("<div/>").append(html);
 			// others
 			for (var key in replacement) {
 				if (!options.quiet)
@@ -335,8 +336,14 @@ Ajax = {
 							}, 100);
 				if(div.find('#' + replacement[key]).size()>0)
 					$('#' + key).html(div.find('#' + replacement[key]).html());
-				else
-					$('body').html(div.find('body').html());
+				else{
+					var start = html.indexOf('>',html.indexOf('<body'))+1;
+					var end = html.indexOf('</body>');
+					if(end>0)
+						$('body').html(html.substring(start,end));
+					else
+						$('body').html(html.substring(start));
+				}
 				if (!options.quiet && (typeof $.effects != 'undefined'))
 					$('#' + key).effect('highlight');
 				_observe($('#' + key));

@@ -31,7 +31,7 @@ public class WebProxyFilter implements Filter {
 
 	private HttpClient httpClient = new HttpClient();
 
-	private boolean checkSameOrigin = true;
+	private boolean checkSameOrigin = false;
 
 	public void destroy() {
 	}
@@ -79,7 +79,7 @@ public class WebProxyFilter implements Filter {
 			if (queryString != null) {
 				if (queryString.startsWith("_"))
 					queryString = "&" + queryString;
-				queryString = queryString.replaceAll("\\&_\\w+_=[^&]+", "");
+				queryString = queryString.replaceAll("\\&_\\w+_=[^&]*", "");
 				if (queryString.startsWith("&"))
 					queryString = queryString.substring(1);
 				method.setQueryString(queryString);
