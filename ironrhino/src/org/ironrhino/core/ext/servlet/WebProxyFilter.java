@@ -55,11 +55,7 @@ public class WebProxyFilter implements Filter {
 						|| url.getPort() != requestURL.getPort())
 					return;
 			}
-			String uri = StringUtils.substringAfter(path, WEB_PROXY);
-			if (!uri.startsWith("http"))
-				uri = "http://" + uri;
-			if (uri.indexOf("://") < 0 && uri.indexOf(":/") >= 0)
-				uri = uri.replace(":/", "://");
+			String uri = StringUtils.substringAfter(requestURL.toString(), WEB_PROXY);
 			HttpMethod method;
 			if ("GET".equalsIgnoreCase(request.getMethod())) {
 				method = new GetMethod(uri);
