@@ -21,6 +21,7 @@ import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.lf5.util.StreamUtils;
 
@@ -29,6 +30,8 @@ public class WebProxyFilter implements Filter {
 	public static final String WEB_PROXY = "/webproxy/";
 
 	private HttpClient httpClient = new HttpClient();
+
+	private boolean checkSameOrigin = true;
 
 	public void destroy() {
 	}
@@ -41,32 +44,21 @@ public class WebProxyFilter implements Filter {
 		String path = request.getServletPath();
 		URL requestURL = new URL(request.getRequestURL().toString());
 		if (path.startsWith(WEB_PROXY)) {
-			String referer = request.getHeader("Referer");
-			if (StringUtils.isBlank(referer))
-				return;
-			URL url = new URL(referer);
-			if (!url.getProtocol().equalsIgnoreCase(requestURL.getProtocol())
-					|| !url.getHost().equalsIgnoreCase(requestURL.getHost())
-					|| url.getPort() != requestURL.getPort())
-				return;
-			StringBuilder sb = new StringBuilder();
-			sb.append(StringUtils.substringAfter(path, WEB_PROXY));
-			Enumeration<String> en = request.getParameterNames();
-			int i = 0;
-			while (en.hasMoreElements()) {
-				String name = en.nextElement();
-				if (name.startsWith("_") && name.endsWith("_"))
-					continue;
-				if (en.hasMoreElements())
-					sb.append(i == 0 ? "?" : "&");
-				for (String value : request.getParameterValues(name)) {
-					sb.append(name);
-					sb.append('=');
-					sb.append(value);
-				}
-				i++;
+			if (checkSameOrigin) {
+				String referer = request.getHeader("Referer");
+				if (StringUtils.isBlank(referer))
+					return;
+				URL url = new URL(referer);
+				if (!url.getProtocol().equalsIgnoreCase(
+						requestURL.getProtocol())
+						|| !url.getHost()
+								.equalsIgnoreCase(requestURL.getHost())
+						|| url.getPort() != requestURL.getPort())
+					return;
 			}
-			String uri = sb.toString();
+			String uri = StringUtils.substringAfter(path, WEB_PROXY);
+			if (!uri.startsWith("http"))
+				uri = "http://" + uri;
 			if (uri.indexOf("http://") < 0 && uri.indexOf("http:/") >= 0)
 				uri = uri.replace("http:/", "http://");
 			HttpMethod method;
@@ -83,6 +75,28 @@ public class WebProxyFilter implements Filter {
 			} else {
 				method = new GetMethod(uri);
 			}
+			method.setFollowRedirects(true);
+			String queryString = request.getQueryString();
+			if (queryString != null) {
+				if (queryString.startsWith("_"))
+					queryString = "&" + queryString;
+				queryString = queryString.replaceAll("\\&_\\w+_=[^&]+", "");
+				if (queryString.startsWith("&"))
+					queryString = queryString.substring(1);
+				method.setQueryString(queryString);
+			}
+			HttpMethodParams params = new HttpMethodParams();
+			Enumeration<String> en = request.getParameterNames();
+			while (en.hasMoreElements()) {
+				String name = en.nextElement();
+				if (name.startsWith("_") && name.endsWith("_")
+						|| queryString != null
+						&& queryString.contains(name + "="))
+					continue;
+				for (String value : request.getParameterValues(name))
+					params.setParameter(name, value);
+			}
+			method.setParams(params);
 			try {
 				int code = httpClient.executeMethod(method);
 				if (code >= 400) {
@@ -106,6 +120,10 @@ public class WebProxyFilter implements Filter {
 	}
 
 	public void init(FilterConfig config) throws ServletException {
-
+		String s = config.getInitParameter("checkSameOrigin");
+		if (StringUtils.isBlank(s))
+			return;
+		checkSameOrigin = Boolean.parseBoolean(s.trim());
 	}
+
 }
