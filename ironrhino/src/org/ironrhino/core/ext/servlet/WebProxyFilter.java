@@ -38,7 +38,6 @@ public class WebProxyFilter implements Filter {
 
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
-
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 		String path = request.getServletPath();
@@ -59,8 +58,8 @@ public class WebProxyFilter implements Filter {
 			String uri = StringUtils.substringAfter(path, WEB_PROXY);
 			if (!uri.startsWith("http"))
 				uri = "http://" + uri;
-			if (uri.indexOf("http://") < 0 && uri.indexOf("http:/") >= 0)
-				uri = uri.replace("http:/", "http://");
+			if (uri.indexOf("://") < 0 && uri.indexOf(":/") >= 0)
+				uri = uri.replace(":/", "://");
 			HttpMethod method;
 			if ("GET".equalsIgnoreCase(request.getMethod())) {
 				method = new GetMethod(uri);
