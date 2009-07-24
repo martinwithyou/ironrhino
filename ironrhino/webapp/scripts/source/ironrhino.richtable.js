@@ -241,7 +241,6 @@ Richtable = {
 							.val())
 						create = false;
 					var entity = Richtable.getBaseUrl();
-					entity = entity.substring(0, entity.lastIndexOf('/'));
 					entity = entity.substring(entity.lastIndexOf('/') + 1);
 					if ($('#_window_ form.ajax input[type="hidden"][name="'
 							+ entity + '.id"]').val())

@@ -24,7 +24,7 @@
 					org.compass.spring.transaction.SpringSyncTransactionFactory
 				</prop>
 				<prop key="compass.engine.analyzer.default.type">
-					org.apache.lucene.analysis.cn.ChineseAnalyzer
+					com.chenlb.mmseg4j.analysis.MaxWordAnalyzer
 				</prop>
 			</props>
 		</property>
