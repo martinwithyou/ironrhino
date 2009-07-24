@@ -325,8 +325,7 @@ Ajax = {
 				var ss = entry.split(':', 2);
 				replacement[ss[0]] = (ss.length == 2 ? ss[1] : ss[0]);
 			}
-			var html = data.replace(
-					/<script(.|\s)*?\/script>/g, "");
+			var html = data.replace(/<script(.|\s)*?\/script>/g, "");
 			var div = $("<div/>").append(html);
 			// others
 			for (var key in replacement) {
@@ -334,13 +333,13 @@ Ajax = {
 					$('html,body').animate({
 								scrollTop : $('#' + key).offset().top - 50
 							}, 100);
-				if(div.find('#' + replacement[key]).size()>0)
+				if (div.find('#' + replacement[key]).size() > 0)
 					$('#' + key).html(div.find('#' + replacement[key]).html());
-				else{
-					var start = html.indexOf('>',html.indexOf('<body'))+1;
+				else {
+					var start = html.indexOf('>', html.indexOf('<body')) + 1;
 					var end = html.indexOf('</body>');
-					if(end>0)
-						$('body').html(html.substring(start,end));
+					if (end > 0)
+						$('body').html(html.substring(start, end));
 					else
 						$('body').html(html.substring(start));
 				}
@@ -427,14 +426,18 @@ function ajax(options) {
 			});
 	$.ajax(options);
 }
-
+var _history_ = false;
 Initialization.history = function() {
 	if (!HISTORY_ENABLED || (typeof $.historyInit == 'undefined'))
 		return;
 	$.historyInit(function(hash) {
+				if (!hash && !_history_)
+					return;
 				if (hash && hash.indexOf('/') < 0)
 					return;
-				var url = document.location.pathname;
+				var url = document.location.href;
+				if(url.indexOf('#')>0)
+					url = url.substring(0,url.indexOf('#'));
 				if (hash) {
 					if (UrlUtils.isSameOrigin(hash)) {
 						if (CONTEXT_PATH)
@@ -443,6 +446,7 @@ Initialization.history = function() {
 					url = hash;
 
 				}
+				_history_ = true;
 				ajax({
 							url : url,
 							cache : true,
