@@ -118,8 +118,8 @@ Observation.obs = function(){
 	<tfoot>
 		<tr>
 			<td align="center" colspan="2">
-			<button id="discard">discard</button>
-			<button id="apply">apply</button>
+			<button id="discard" class="btn"><span><span>${action.getText('discard')}</span></span></button>
+			<button id="apply" class="btn"><span><span>${action.getText('apply')}</span></span></button>
 			</td>
 		</tr>
 	</tfoot>
