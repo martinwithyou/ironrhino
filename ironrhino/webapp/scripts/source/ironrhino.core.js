@@ -431,13 +431,11 @@ Initialization.history = function() {
 	if (!HISTORY_ENABLED || (typeof $.historyInit == 'undefined'))
 		return;
 	$.historyInit(function(hash) {
-				if (!hash && !_history_)
-					return;
-				if (hash && hash.indexOf('/') < 0)
+				if ((!hash && !_history_) || (hash && hash.indexOf('/') < 0))
 					return;
 				var url = document.location.href;
-				if(url.indexOf('#')>0)
-					url = url.substring(0,url.indexOf('#'));
+				if (url.indexOf('#') > 0)
+					url = url.substring(0, url.indexOf('#'));
 				if (hash) {
 					if (UrlUtils.isSameOrigin(hash)) {
 						if (CONTEXT_PATH)
