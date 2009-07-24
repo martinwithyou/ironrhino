@@ -30,14 +30,6 @@
 				<prop key="hibernate.jdbc.batch_size">
 					${hibernate.jdbc.batch_size}
 				</prop>
-				<!--
-					<prop key="hibernate.cache.use_query_cache">
-						${hibernate.cache.use_query_cache}
-					</prop>
-					<prop key="hibernate.cache.provider_class">
-						${hibernate.cache.provider_class}
-					</prop>
-					-->
 				<prop key="hibernate.show_sql">
 					${hibernate.show_sql}
 				</prop>
