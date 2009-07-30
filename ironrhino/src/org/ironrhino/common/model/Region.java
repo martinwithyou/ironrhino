@@ -50,19 +50,6 @@ public class Region extends BaseTreeableEntity<Region> implements Secured {
 		this.displayOrder = displayOrder;
 	}
 
-	public String getFullname() {
-		String fullname = name;
-		Region r = this;
-		while ((r = r.getParent()) != null) {
-			fullname = r.getName() + fullname;
-		}
-		return fullname;
-	}
-	
-	public String toString(){
-		return getFullname();
-	}
-
 	@NotInCopy
 	@NotInJson
 	public Set<SimpleElement> getRoles() {
@@ -81,6 +68,10 @@ public class Region extends BaseTreeableEntity<Region> implements Secured {
 
 	public void setRolesAsString(String rolesAsString) {
 		SimpleElement.fillCollectionWithString(roles, rolesAsString);
+	}
+
+	public String toString() {
+		return getFullname();
 	}
 
 }

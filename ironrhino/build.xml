@@ -140,9 +140,9 @@
 				<file name="${webapp.dir}/scripts/source/jquery.corner.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.bgiframe.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.autocomplete.js" />
-				<file name="${webapp.dir}/scripts/source/jquery.emptyonclick.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.treeview.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.treeview.async.my.js" />
+				<file name="${webapp.dir}/scripts/source/jquery.treeTable.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.uploadify.js" />
 				<file name="${webapp.dir}/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/scripts/source/ironrhino.core.js" />
@@ -167,6 +167,7 @@
 				<file name="${webapp.dir}/styles/source/ironrhino.richtable.css" />
 				<file name="${webapp.dir}/styles/source/jquery.autocomplete.css" />
 				<file name="${webapp.dir}/styles/source/jquery.treeview.my.css" />
+				<file name="${webapp.dir}/styles/source/jquery.treeTable.css" />
 				<file name="${webapp.dir}/styles/source/jquery.uploadify.css" />
 				<file name="${webapp.dir}/styles/source/jquery.ui.css" />
 				<file name="${webapp.dir}/styles/app.css" />

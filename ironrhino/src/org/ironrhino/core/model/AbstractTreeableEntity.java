@@ -55,4 +55,13 @@ public abstract class AbstractTreeableEntity<T extends AbstractTreeableEntity>
 		this.name = name;
 	}
 
+	public String getFullname() {
+		String fullname = name;
+		AbstractTreeableEntity e = this;
+		while ((e = (AbstractTreeableEntity) e.getParent()) != null) {
+			fullname = e.getName() + fullname;
+		}
+		return fullname;
+	}
+
 }

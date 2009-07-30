@@ -72,6 +72,14 @@ public class RegionTreeAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String table() {
+		return "table";
+	}
+
+	public Region getRegionTree() {
+		return regionTreeControl.getRegionTree();
+	}
+
 	public String getTreeViewHtml() {
 		return HtmlUtils.getTreeViewHtml(children, async);
 	}

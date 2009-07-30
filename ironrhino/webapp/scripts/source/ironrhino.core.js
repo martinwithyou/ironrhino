@@ -52,6 +52,8 @@ function _observe(container) {
 $(_init);
 
 Observation.common = function(container) {
+	$('.action_error,.action_message,.field_error')
+			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
 	$('input.autocomplete_off').attr('autocomplete', 'off');
 	$('ul.nav>li', container).hover(function() {
 				$("ul", this).fadeIn("fast");
@@ -90,10 +92,8 @@ Observation.common = function(container) {
 		$('img.captcha', container).click(Captcha.refresh);
 		$(this).attr('_captcha_', true);
 	});
-	if (typeof $.fn.emptyonclick != 'undefined')
-		$('input.emptyonclick, textarea.emptyonclick').emptyonclick();
-	$('.action_error,.action_message,.field_error')
-			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
+	if (typeof $.fn.treeTable != 'undefined')
+		$('.treeTable').treeTable();
 	if (typeof $.fn.fileUpload != 'undefined')
 		$('.uploadify').each(function() {
 			var options = {
