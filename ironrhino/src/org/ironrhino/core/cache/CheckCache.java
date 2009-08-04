@@ -6,7 +6,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface CheckCache {
@@ -15,6 +14,8 @@ public @interface CheckCache {
 	String value();
 
 	String name() default CacheContext.DEFAULT_CACHE_NAME;
+
+	String when() default "";
 
 	int timeToLive() default CacheContext.DEFAULT_TIME_TO_LIVE;
 

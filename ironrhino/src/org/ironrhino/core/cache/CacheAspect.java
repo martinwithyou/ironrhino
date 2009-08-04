@@ -28,7 +28,7 @@ import org.springframework.core.Ordered;
 @Aspect
 public class CacheAspect implements Ordered {
 
-	private Log log = LogFactory.getLog(CacheAspect.class);
+	private static Log log = LogFactory.getLog(CacheAspect.class);
 
 	private int order;
 
@@ -38,8 +38,8 @@ public class CacheAspect implements Ordered {
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(checkCache
 				.name());
 		String key = checkKey(call, checkCache);
-		if (AopContext.isBypass(this.getClass()) || cache == null
-				|| key == null)
+		if (cache == null || key == null
+				|| AopContext.isBypass(this.getClass()))
 			return call.proceed();
 		if (CacheContext.forceFlush()) {
 			cache.remove(key);
@@ -68,8 +68,13 @@ public class CacheAspect implements Ordered {
 			cache.remove(key.trim());
 	}
 
-	private String checkKey(JoinPoint jp, CheckCache cache) {
+	private static String checkKey(JoinPoint jp, CheckCache cache) {
 		try {
+			// need not cache
+			if (eval(cache.when(), jp.getArgs()).trim()
+					.equalsIgnoreCase("true"))
+				return null;
+
 			return eval(cache.value(), jp.getArgs()).trim();
 		} catch (ScriptException e) {
 			log.error(e.getMessage(), e);
@@ -77,7 +82,7 @@ public class CacheAspect implements Ordered {
 		}
 	}
 
-	private String[] flushKeys(JoinPoint jp, FlushCache cache) {
+	private static String[] flushKeys(JoinPoint jp, FlushCache cache) {
 		String keys;
 		try {
 			keys = eval(cache.value(), jp.getArgs());
@@ -89,7 +94,8 @@ public class CacheAspect implements Ordered {
 
 	}
 
-	private String eval(String template, Object[] args) throws ScriptException {
+	private static String eval(String template, Object[] args)
+			throws ScriptException {
 		if (template.indexOf('$') < 0)
 			return template;
 		Map<String, Object> context = new HashMap<String, Object>();
