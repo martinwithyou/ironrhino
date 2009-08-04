@@ -94,6 +94,8 @@ Observation.common = function(container) {
 	});
 	if (typeof $.fn.treeTable != 'undefined')
 		$('.treeTable').treeTable();
+	if (typeof $.fn.sexyCombo != 'undefined')
+		$('select.combox', container).sexyCombo({emptyText:MessageBundle.get('select'),triggerSelected:true});
 	if (typeof $.fn.fileUpload != 'undefined')
 		$('.uploadify').each(function() {
 			var options = {

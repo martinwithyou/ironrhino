@@ -138,6 +138,7 @@
 				<file name="${webapp.dir}/scripts/source/jquery.history.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.form.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.corner.js" />
+				<file name="${webapp.dir}/scripts/source/jquery.sexyCombo.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.bgiframe.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.autocomplete.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.treeview.js" />
@@ -149,10 +150,10 @@
 				<file name="${webapp.dir}/scripts/source/ironrhino.checkbox.js" />
 				<file name="${webapp.dir}/scripts/source/ironrhino.sortabletable.js" />
 				<file name="${webapp.dir}/scripts/source/ironrhino.datagridtable.js" />
-				<file name="${webapp.dir}/scripts/source/ironrhino.combox.js" />
+				<!--file name="${webapp.dir}/scripts/source/ironrhino.combox.js" /-->
 				<file name="${webapp.dir}/scripts/source/ironrhino.richtable.js" />
 				<file name="${webapp.dir}/scripts/source/ironrhino.searchhighlighter.js" />
-				<file name="${webapp.dir}/scripts/source/ironrhino.corsor.js" />
+				<file name="${webapp.dir}/scripts/source/ironrhino.cursor.js" />
 				<file name="${webapp.dir}/scripts/app.js" />
 			</filelist>
 		</concat>
@@ -167,6 +168,7 @@
 				<file name="${webapp.dir}/styles/source/ironrhino.sortabletable.css" />
 				<file name="${webapp.dir}/styles/source/ironrhino.richtable.css" />
 				<file name="${webapp.dir}/styles/source/jquery.autocomplete.css" />
+				<file name="${webapp.dir}/styles/source/jquery.sexyCombo.css" />
 				<file name="${webapp.dir}/styles/source/jquery.treeview.my.css" />
 				<file name="${webapp.dir}/styles/source/jquery.treeTable.css" />
 				<file name="${webapp.dir}/styles/source/jquery.uploadify.css" />
