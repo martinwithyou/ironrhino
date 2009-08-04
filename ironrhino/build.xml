@@ -152,6 +152,7 @@
 				<file name="${webapp.dir}/scripts/source/ironrhino.combox.js" />
 				<file name="${webapp.dir}/scripts/source/ironrhino.richtable.js" />
 				<file name="${webapp.dir}/scripts/source/ironrhino.searchhighlighter.js" />
+				<file name="${webapp.dir}/scripts/source/ironrhino.corsor.js" />
 				<file name="${webapp.dir}/scripts/app.js" />
 			</filelist>
 		</concat>
