@@ -1,6 +1,8 @@
 package org.ironrhino.core.cache;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.script.ScriptException;
@@ -63,7 +65,7 @@ public class CacheAspect implements Ordered {
 	public void remove(JoinPoint jp, FlushCache flushCache) {
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(flushCache
 				.name(), false);
-		String[] keys = flushKeys(jp, flushCache);
+		List<String> keys = flushKeys(jp, flushCache);
 		if (AopContext.isBypass(this.getClass()) || cache == null
 				|| keys == null)
 			return;
@@ -76,7 +78,8 @@ public class CacheAspect implements Ordered {
 			// need not cache
 			String when = checkCache.when();
 			if (StringUtils.isBlank(when)
-					|| eval(when, jp, result).trim().equalsIgnoreCase("true"))
+					|| String.valueOf(eval(when, jp, result)).equalsIgnoreCase(
+							"true"))
 				return true;
 		} catch (ScriptException e) {
 			log.error(e.getMessage(), e);
@@ -86,18 +89,26 @@ public class CacheAspect implements Ordered {
 
 	private static String checkKey(JoinPoint jp, CheckCache cache) {
 		try {
-			return eval(cache.value(), jp, null).trim();
+			Object key = eval(cache.value(), jp, null);
+			if (key == null)
+				return null;
+			return key.toString().trim();
 		} catch (ScriptException e) {
 			log.error(e.getMessage(), e);
 			return null;
 		}
 	}
 
-	private static String[] flushKeys(JoinPoint jp, FlushCache cache) {
-		String keys;
+	private static List<String> flushKeys(JoinPoint jp, FlushCache cache) {
 		try {
-			keys = eval(cache.value(), jp, null);
-			return keys.split(",");
+			Object keys = eval(cache.value(), jp, null);
+			if (keys == null)
+				return null;
+			if (keys instanceof List)
+				return (List<String>) keys;
+			if (keys.getClass().isArray())
+				return Arrays.asList((String[]) keys);
+			return Arrays.asList(keys.toString().split(","));
 		} catch (ScriptException e) {
 			log.error(e.getMessage(), e);
 			return null;
@@ -105,8 +116,11 @@ public class CacheAspect implements Ordered {
 
 	}
 
-	private static String eval(String template, JoinPoint jp, Object retval)
+	private static Object eval(String template, JoinPoint jp, Object retval)
 			throws ScriptException {
+		if (template == null)
+			return null;
+		template = template.trim();
 		if (template.indexOf('$') < 0)
 			return template;
 		Map<String, Object> context = new HashMap<String, Object>();
@@ -114,7 +128,13 @@ public class CacheAspect implements Ordered {
 		if (retval != null)
 			context.put("retval", retval);
 		context.put("args", jp.getArgs());
-		return ExpressionUtils.render(template, context);
+		Object value;
+		if (template.startsWith("${") && template.endsWith("}"))
+			value = ExpressionUtils.eval(template.substring(2, template
+					.length() - 1), context);
+		else
+			value = ExpressionUtils.render(template, context);
+		return value;
 	}
 
 	public int getOrder() {
