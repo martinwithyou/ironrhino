@@ -7,6 +7,7 @@ import javax.script.ScriptException;
 
 import net.sf.ehcache.jcache.JCache;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
@@ -50,9 +51,11 @@ public class CacheAspect implements Ordered {
 			}
 		}
 		Object result = call.proceed();
-		JCache jcache = (JCache) cache;
-		// TODO timeToIdle
-		jcache.put(key, result, checkCache.timeToLive());
+		if (result != null && needCache(checkCache, call, result)) {
+			JCache jcache = (JCache) cache;
+			// TODO timeToIdle
+			jcache.put(key, result, checkCache.timeToLive());
+		}
 		return result;
 	}
 
@@ -68,12 +71,22 @@ public class CacheAspect implements Ordered {
 			cache.remove(key.trim());
 	}
 
-	private static String checkKey(JoinPoint jp, CheckCache cache) {
+	private boolean needCache(CheckCache checkCache, JoinPoint jp, Object result) {
 		try {
 			// need not cache
-			if (eval(cache.when(), jp).trim().equalsIgnoreCase("true"))
-				return null;
-			return eval(cache.value(), jp).trim();
+			String when = checkCache.when();
+			if (StringUtils.isBlank(when)
+					|| eval(when, jp, result).trim().equalsIgnoreCase("true"))
+				return true;
+		} catch (ScriptException e) {
+			log.error(e.getMessage(), e);
+		}
+		return false;
+	}
+
+	private static String checkKey(JoinPoint jp, CheckCache cache) {
+		try {
+			return eval(cache.value(), jp, null).trim();
 		} catch (ScriptException e) {
 			log.error(e.getMessage(), e);
 			return null;
@@ -83,7 +96,7 @@ public class CacheAspect implements Ordered {
 	private static String[] flushKeys(JoinPoint jp, FlushCache cache) {
 		String keys;
 		try {
-			keys = eval(cache.value(), jp);
+			keys = eval(cache.value(), jp, null);
 			return keys.split(",");
 		} catch (ScriptException e) {
 			log.error(e.getMessage(), e);
@@ -92,12 +105,14 @@ public class CacheAspect implements Ordered {
 
 	}
 
-	private static String eval(String template, JoinPoint jp)
+	private static String eval(String template, JoinPoint jp, Object retval)
 			throws ScriptException {
 		if (template.indexOf('$') < 0)
 			return template;
 		Map<String, Object> context = new HashMap<String, Object>();
 		context.put("_this", jp.getThis());
+		if (retval != null)
+			context.put("retval", retval);
 		context.put("args", jp.getArgs());
 		return ExpressionUtils.render(template, context);
 	}
