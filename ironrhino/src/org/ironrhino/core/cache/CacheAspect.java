@@ -71,11 +71,9 @@ public class CacheAspect implements Ordered {
 	private static String checkKey(JoinPoint jp, CheckCache cache) {
 		try {
 			// need not cache
-			if (eval(cache.when(), jp.getArgs()).trim()
-					.equalsIgnoreCase("true"))
+			if (eval(cache.when(), jp).trim().equalsIgnoreCase("true"))
 				return null;
-
-			return eval(cache.value(), jp.getArgs()).trim();
+			return eval(cache.value(), jp).trim();
 		} catch (ScriptException e) {
 			log.error(e.getMessage(), e);
 			return null;
@@ -85,7 +83,7 @@ public class CacheAspect implements Ordered {
 	private static String[] flushKeys(JoinPoint jp, FlushCache cache) {
 		String keys;
 		try {
-			keys = eval(cache.value(), jp.getArgs());
+			keys = eval(cache.value(), jp);
 			return keys.split(",");
 		} catch (ScriptException e) {
 			log.error(e.getMessage(), e);
@@ -94,13 +92,13 @@ public class CacheAspect implements Ordered {
 
 	}
 
-	private static String eval(String template, Object[] args)
+	private static String eval(String template, JoinPoint jp)
 			throws ScriptException {
 		if (template.indexOf('$') < 0)
 			return template;
 		Map<String, Object> context = new HashMap<String, Object>();
-		context.put("args", args);
-		context.put("arguments", args);
+		context.put("_this", jp.getThis());
+		context.put("args", jp.getArgs());
 		return ExpressionUtils.render(template, context);
 	}
 
