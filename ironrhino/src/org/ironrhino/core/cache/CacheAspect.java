@@ -31,7 +31,7 @@ import org.springframework.core.Ordered;
 @Aspect
 public class CacheAspect implements Ordered {
 
-	private static Log log = LogFactory.getLog(CacheAspect.class);
+	private Log log = LogFactory.getLog(CacheAspect.class);
 
 	private int order;
 
@@ -87,7 +87,7 @@ public class CacheAspect implements Ordered {
 		return false;
 	}
 
-	private static String checkKey(JoinPoint jp, CheckCache cache) {
+	private String checkKey(JoinPoint jp, CheckCache cache) {
 		try {
 			Object key = eval(cache.value(), jp, null);
 			if (key == null)
@@ -99,7 +99,7 @@ public class CacheAspect implements Ordered {
 		}
 	}
 
-	private static List flushKeys(JoinPoint jp, FlushCache cache) {
+	private List flushKeys(JoinPoint jp, FlushCache cache) {
 		try {
 			Object keys = eval(cache.value(), jp, null);
 			if (keys == null)
@@ -114,7 +114,7 @@ public class CacheAspect implements Ordered {
 
 	}
 
-	private static Object eval(String template, JoinPoint jp, Object retval)
+	private Object eval(String template, JoinPoint jp, Object retval)
 			throws ScriptException {
 		if (template == null)
 			return null;
@@ -123,6 +123,8 @@ public class CacheAspect implements Ordered {
 			return template;
 		Map<String, Object> context = new HashMap<String, Object>();
 		context.put("_this", jp.getThis());
+		context.put("target", jp.getTarget());
+		context.put("aspect", this);
 		if (retval != null)
 			context.put("retval", retval);
 		context.put("args", jp.getArgs());
