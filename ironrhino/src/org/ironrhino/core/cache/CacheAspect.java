@@ -65,12 +65,12 @@ public class CacheAspect implements Ordered {
 	public void remove(JoinPoint jp, FlushCache flushCache) {
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(flushCache
 				.name(), false);
-		List<String> keys = flushKeys(jp, flushCache);
+		List keys = flushKeys(jp, flushCache);
 		if (AopContext.isBypass(this.getClass()) || cache == null
 				|| keys == null)
 			return;
-		for (String key : keys)
-			cache.remove(key.trim());
+		for (Object key : keys)
+			cache.remove(key.toString().trim());
 	}
 
 	private boolean needCache(CheckCache checkCache, JoinPoint jp, Object result) {
@@ -99,15 +99,13 @@ public class CacheAspect implements Ordered {
 		}
 	}
 
-	private static List<String> flushKeys(JoinPoint jp, FlushCache cache) {
+	private static List flushKeys(JoinPoint jp, FlushCache cache) {
 		try {
 			Object keys = eval(cache.value(), jp, null);
 			if (keys == null)
 				return null;
 			if (keys instanceof List)
-				return (List<String>) keys;
-			if (keys.getClass().isArray())
-				return Arrays.asList((String[]) keys);
+				return (List) keys;
 			return Arrays.asList(keys.toString().split(","));
 		} catch (ScriptException e) {
 			log.error(e.getMessage(), e);
