@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -63,10 +65,12 @@ public class ExpressionUtils {
 	public static Object eval(String expression, Map<String, Object> context,
 			boolean stateless) throws ScriptException {
 		ScriptEngine engine = getScriptEngine(stateless);
+		Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
 		if (context != null)
 			for (Map.Entry<String, Object> entry : context.entrySet())
-				engine.put(entry.getKey(), entry.getValue());
+				bindings.put(entry.getKey(), entry.getValue());
 		Object obj = engine.eval(expression);
+		bindings.clear();
 		if (obj instanceof NativeArray) {
 			NativeArray array = (NativeArray) obj;
 			long length = array.getLength();
@@ -84,9 +88,9 @@ public class ExpressionUtils {
 		} else if (obj instanceof Double) {
 			Double d = (Double) obj;
 			if (d.doubleValue() == d.intValue())
-				return new Integer(d.intValue());
+				return Integer.valueOf(d.intValue());
 			else if (d.doubleValue() == d.longValue())
-				return new Long(d.longValue());
+				return Long.valueOf(d.longValue());
 		}
 		return obj;
 	}
