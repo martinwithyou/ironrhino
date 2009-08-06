@@ -1,10 +1,16 @@
 package org.ironrhino.common.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
+import sun.org.mozilla.javascript.internal.NativeArray;
+import sun.org.mozilla.javascript.internal.NativeObject;
 
 public class ExpressionUtils {
 
@@ -57,9 +63,32 @@ public class ExpressionUtils {
 	public static Object eval(String expression, Map<String, Object> context,
 			boolean stateless) throws ScriptException {
 		ScriptEngine engine = getScriptEngine(stateless);
-		for (Map.Entry<String, Object> entry : context.entrySet())
-			engine.put(entry.getKey(), entry.getValue());
-		return engine.eval(expression);
+		if (context != null)
+			for (Map.Entry<String, Object> entry : context.entrySet())
+				engine.put(entry.getKey(), entry.getValue());
+		Object obj = engine.eval(expression);
+		if (obj instanceof NativeArray) {
+			NativeArray array = (NativeArray) obj;
+			long length = array.getLength();
+			List<Object> list = new ArrayList<Object>((int) length);
+			for (int i = 0; i < length; i++)
+				list.add(array.get(i, null));
+			return list;
+		} else if (obj instanceof NativeObject) {
+			NativeObject object = (NativeObject) obj;
+			Map<String, Object> map = new HashMap<String, Object>(object
+					.getIds().length);
+			for (Object id : object.getIds())
+				map.put(id.toString(), object.get(id.toString(), null));
+			return map;
+		} else if (obj instanceof Double) {
+			Double d = (Double) obj;
+			if (d.doubleValue() == d.intValue())
+				return new Integer(d.intValue());
+			else if (d.doubleValue() == d.longValue())
+				return new Long(d.longValue());
+		}
+		return obj;
 	}
 
 	public static String render(String template, Map<String, Object> context)
