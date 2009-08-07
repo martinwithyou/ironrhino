@@ -9,15 +9,18 @@ import java.lang.annotation.Target;
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface CheckCache {
-	// javascript expression in ${}
-	// like "product_code_${args[0].code}"
-	String value();
+	// mvel expression
+	String key();
 
+	// mvel expression
 	String name() default CacheContext.DEFAULT_CACHE_NAME;
 
+	// mvel expression
 	String when() default "";
 
-	int timeToLive() default CacheContext.DEFAULT_TIME_TO_LIVE;
+	// mvel expression
+	String timeToLive() default CacheContext.DEFAULT_TIME_TO_LIVE;
 
-	int timeToIdle() default CacheContext.DEFAULT_TIME_TO_IDLE;
+	// mvel expression
+	String timeToIdle() default CacheContext.DEFAULT_TIME_TO_IDLE;
 }

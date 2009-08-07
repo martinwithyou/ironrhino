@@ -40,9 +40,10 @@ ${btn(onclick,text,type)}
   <#return statics['org.ironrhino.common.util.AuthzUtils'].authentication(property)>
 </#function>
 
-<#macro cache key scope="application" timeToLive=3600*24 timeToIdle=3600>
+<#macro cache key scope="application" timeToLive="900" timeToIdle="900">
+<#assign keyExists=statics['org.ironrhino.core.cache.CacheContext'].eval(key)?exists>
 <#assign content=statics['org.ironrhino.core.cache.CacheContext'].getPageFragment(key,scope)?if_exists>
-<#if content?exists&&content?length gt 0>${content}<#else>
+<#if keyExists&&content?exists&&content?length gt 0>${content}<#else>
 <#assign content><#nested/></#assign>  
 ${content}
 ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,scope,timeToLive,timeToIdle)}

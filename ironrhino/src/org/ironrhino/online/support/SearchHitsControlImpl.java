@@ -180,7 +180,7 @@ public class SearchHitsControlImpl extends StringStore implements
 	 * @see
 	 * org.ironrhino.online.support.SearchSuggestion#suggest(java.lang.String)
 	 */
-	@CheckCache(value = "search_suggest_${args[0]}")
+	@CheckCache(key = "search_suggest_${args[0]}")
 	public List<AggregateResult> suggest(String keyword) {
 		baseManager.setEntityClass(SearchHits.class);
 		DetachedCriteria dc = baseManager.detachedCriteria();

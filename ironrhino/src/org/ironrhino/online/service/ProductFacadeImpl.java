@@ -199,7 +199,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return resultPage;
 	}
 
-	@CheckCache("product_${args[0]}")
+	@CheckCache(key = "product_${args[0]}")
 	public Product getProductByCode(String code) {
 
 		DetachedCriteria dc = productManager.detachedCriteria();

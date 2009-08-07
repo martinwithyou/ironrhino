@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.script.ScriptException;
-
 import net.sf.ehcache.jcache.JCache;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,8 +15,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.ironrhino.common.util.ExpressionUtils;
 import org.ironrhino.core.aspect.AopContext;
+import org.mvel2.templates.TemplateRuntime;
 import org.springframework.core.Ordered;
 
 /**
@@ -36,15 +34,15 @@ public class CacheAspect implements Ordered {
 	private int order;
 
 	@Around("@annotation(checkCache)")
-	public Object get(ProceedingJoinPoint call, CheckCache checkCache)
+	public Object get(ProceedingJoinPoint jp, CheckCache checkCache)
 			throws Throwable {
-		net.sf.jsr107cache.Cache cache = CacheContext.getCache(checkCache
-				.name());
-		String key = checkKey(call, checkCache);
+		String name = eval(checkCache.name(), jp, null).toString();
+		String key = checkKey(jp, checkCache);
+		net.sf.jsr107cache.Cache cache = CacheContext.getCache(name);
 		if (cache == null || key == null
 				|| AopContext.isBypass(this.getClass()))
-			return call.proceed();
-		if (CacheContext.forceFlush()) {
+			return jp.proceed();
+		if (CacheContext.isForceFlush()) {
 			cache.remove(key);
 		} else {
 			Object value = cache.get(key);
@@ -52,19 +50,21 @@ public class CacheAspect implements Ordered {
 				return value;
 			}
 		}
-		Object result = call.proceed();
-		if (result != null && needCache(checkCache, call, result)) {
+		Object result = jp.proceed();
+		if (result != null && needCache(checkCache, jp, result)) {
 			JCache jcache = (JCache) cache;
 			// TODO timeToIdle
-			jcache.put(key, result, checkCache.timeToLive());
+			int timeToLive = Integer.valueOf(eval(checkCache.timeToLive(), jp,
+					result).toString());
+			jcache.put(key, result, timeToLive);
 		}
 		return result;
 	}
 
 	@AfterReturning("@annotation(flushCache)")
 	public void remove(JoinPoint jp, FlushCache flushCache) {
-		net.sf.jsr107cache.Cache cache = CacheContext.getCache(flushCache
-				.name(), false);
+		String name = eval(flushCache.name(), jp, null).toString();
+		net.sf.jsr107cache.Cache cache = CacheContext.getCache(name, false);
 		List keys = flushKeys(jp, flushCache);
 		if (AopContext.isBypass(this.getClass()) || cache == null
 				|| keys == null)
@@ -81,7 +81,7 @@ public class CacheAspect implements Ordered {
 					|| String.valueOf(eval(when, jp, result)).equalsIgnoreCase(
 							"true"))
 				return true;
-		} catch (ScriptException e) {
+		} catch (RuntimeException e) {
 			log.error(e.getMessage(), e);
 		}
 		return false;
@@ -89,11 +89,11 @@ public class CacheAspect implements Ordered {
 
 	private String checkKey(JoinPoint jp, CheckCache cache) {
 		try {
-			Object key = eval(cache.value(), jp, null);
+			Object key = eval(cache.key(), jp, null);
 			if (key == null)
 				return null;
 			return key.toString().trim();
-		} catch (ScriptException e) {
+		} catch (RuntimeException e) {
 			log.error(e.getMessage(), e);
 			return null;
 		}
@@ -101,26 +101,23 @@ public class CacheAspect implements Ordered {
 
 	private List flushKeys(JoinPoint jp, FlushCache cache) {
 		try {
-			Object keys = eval(cache.value(), jp, null);
+			Object keys = eval(cache.key(), jp, null);
 			if (keys == null)
 				return null;
 			if (keys instanceof List)
 				return (List) keys;
 			return Arrays.asList(keys.toString().split(","));
-		} catch (ScriptException e) {
+		} catch (RuntimeException e) {
 			log.error(e.getMessage(), e);
 			return null;
 		}
 
 	}
 
-	private Object eval(String template, JoinPoint jp, Object retval)
-			throws ScriptException {
+	private Object eval(String template, JoinPoint jp, Object retval) {
 		if (template == null)
 			return null;
 		template = template.trim();
-		if (template.indexOf('$') < 0)
-			return template;
 		Map<String, Object> context = new HashMap<String, Object>();
 		context.put("_this", jp.getThis());
 		context.put("target", jp.getTarget());
@@ -128,12 +125,7 @@ public class CacheAspect implements Ordered {
 		if (retval != null)
 			context.put("retval", retval);
 		context.put("args", jp.getArgs());
-		Object value;
-		if (template.startsWith("${") && template.endsWith("}"))
-			value = ExpressionUtils.eval(template.substring(2, template
-					.length() - 1), context);
-		else
-			value = ExpressionUtils.render(template, context);
+		Object value = TemplateRuntime.eval(template, context);
 		return value;
 	}
 

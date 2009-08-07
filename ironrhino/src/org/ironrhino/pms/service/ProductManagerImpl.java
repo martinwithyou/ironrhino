@@ -11,7 +11,7 @@ public class ProductManagerImpl extends BaseManagerImpl<Product> implements
 		ProductManager {
 
 	@Transactional(readOnly = false)
-	@FlushCache("product_${args[0].code}")
+	@FlushCache(key = "product_${args[0].code}")
 	public void save(Product product) {
 		product.setOpen(null);// rejudge if it's open
 		super.save(product);

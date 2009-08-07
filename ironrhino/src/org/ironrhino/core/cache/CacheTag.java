@@ -13,9 +13,9 @@ public class CacheTag extends BodyTagSupport {
 
 	private String key = null;
 
-	private int timeToLive = CacheContext.DEFAULT_TIME_TO_LIVE;
+	private String timeToLive = CacheContext.DEFAULT_TIME_TO_LIVE;
 
-	private int timeToIdle = CacheContext.DEFAULT_TIME_TO_IDLE;
+	private String timeToIdle = CacheContext.DEFAULT_TIME_TO_IDLE;
 
 	private String scope = CacheContext.DEFAULT_SCOPE;
 
@@ -27,11 +27,11 @@ public class CacheTag extends BodyTagSupport {
 		this.scope = scope;
 	}
 
-	public void setTimeToLive(int timeToLive) {
+	public void setTimeToLive(String timeToLive) {
 		this.timeToLive = timeToLive;
 	}
 
-	public void setTimeToIdle(int timeToIdle) {
+	public void setTimeToIdle(String timeToIdle) {
 		this.timeToIdle = timeToIdle;
 	}
 
@@ -64,14 +64,17 @@ public class CacheTag extends BodyTagSupport {
 		if (ServletActionContext.getServletContext() == null)
 			ServletActionContext.setServletContext(pageContext
 					.getServletContext());
-		String content = CacheContext.getPageFragment(key, scope);
-		if ((content != null)) {
-			try {
-				pageContext.getOut().write(content);
-			} catch (IOException e) {
-				throw new JspTagException("IO Error: " + e.getMessage());
+		Object actualkey = CacheContext.eval(key);
+		if (actualkey != null) {
+			String content = CacheContext.getPageFragment(key, scope);
+			if (content != null && content.length() > 0) {
+				try {
+					pageContext.getOut().write(content);
+				} catch (IOException e) {
+					throw new JspTagException("IO Error: " + e.getMessage());
+				}
+				return SKIP_BODY;
 			}
-			return SKIP_BODY;
 		}
 		return EVAL_BODY_BUFFERED;
 	}

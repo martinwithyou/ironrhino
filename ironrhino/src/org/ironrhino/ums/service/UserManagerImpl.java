@@ -27,13 +27,13 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		UserManager {
 
 	@Transactional
-	@FlushCache("user_${args[0].username}")
+	@FlushCache(key = "user_${args[0].username}")
 	public void save(User user) {
 		super.save(user);
 	}
 
 	@Transactional(readOnly = true)
-	@CheckCache("user_${args[0]}")
+	@CheckCache(key = "user_${args[0]}")
 	public User loadUserByUsername(String username) {
 		User user = getUserByUsername(username);
 		if (user == null)

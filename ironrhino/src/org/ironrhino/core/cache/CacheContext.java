@@ -10,10 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import net.sf.ehcache.jcache.JCache;
 import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheManager;
+import ognl.OgnlContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.mvel2.templates.TemplateRuntime;
+
+import com.opensymphony.xwork2.ActionContext;
 
 public class CacheContext {
 
@@ -21,9 +25,9 @@ public class CacheContext {
 
 	public static final String FORCE_FLUSH_PARAM_NAME = "_ff_";
 
-	public static final int DEFAULT_TIME_TO_LIVE = 3600 * 24;
+	public static final String DEFAULT_TIME_TO_LIVE = "900";
 
-	public static final int DEFAULT_TIME_TO_IDLE = 3600;
+	public static final String DEFAULT_TIME_TO_IDLE = "900";
 
 	public static final String DEFAULT_SCOPE = "application";
 
@@ -49,8 +53,8 @@ public class CacheContext {
 		Map config = new HashMap();
 		config.put("name", name);
 		config.put("maxElementsInMemory", String.valueOf(1000000));
-		config.put("timeToLiveSeconds", String.valueOf(DEFAULT_TIME_TO_LIVE));
-		config.put("timeToIdleSeconds", String.valueOf(DEFAULT_TIME_TO_IDLE));
+		config.put("timeToLiveSeconds", DEFAULT_TIME_TO_LIVE);
+		config.put("timeToIdleSeconds", DEFAULT_TIME_TO_IDLE);
 		try {
 			lock.lock();
 			cache = singletonManager.getCache(name);
@@ -67,7 +71,7 @@ public class CacheContext {
 		}
 	}
 
-	public static boolean forceFlush() {
+	public static boolean isForceFlush() {
 		try {
 			return ServletActionContext.getRequest() != null
 					&& ServletActionContext.getRequest().getParameter(
@@ -79,9 +83,13 @@ public class CacheContext {
 
 	public static String getPageFragment(String key, String scope) {
 		try {
+			Object actualKey = eval(key);
 			Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAME);
-			if (CacheContext.forceFlush() || cache == null)
+			if (actualKey == null || CacheContext.isForceFlush()
+					|| cache == null)
 				return null;
+			key = actualKey.toString();
+			scope = eval(scope).toString();
 			String content = (String) cache.get(completeKey(key, scope));
 			if (content != null)
 				return content;
@@ -93,14 +101,18 @@ public class CacheContext {
 	}
 
 	public static void putPageFragment(String key, String content,
-			String scope, int timeToLive, int timeToIdle) {
+			String scope, String timeToLive, String timeToIdle) {
 		Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAME);
-		if (cache == null)
+		Object actualKey = eval(key);
+		if (actualKey == null || cache == null)
 			return;
 		try {
 			JCache jcache = (JCache) cache;
+			key = actualKey.toString();
+			scope = eval(scope).toString();
+			int _timeToLive = Integer.valueOf(eval(timeToLive).toString());
 			// TODO timeToIdle
-			jcache.put(completeKey(key, scope), content, timeToLive);
+			jcache.put(completeKey(key, scope), content, _timeToLive);
 		} catch (Throwable e) {
 		}
 	}
@@ -112,6 +124,16 @@ public class CacheContext {
 		if (scope.equalsIgnoreCase("session"))
 			sb.append("," + request.getSession(true).getId());
 		return sb.toString();
+	}
+
+	public static Object eval(String template) {
+		if (template == null)
+			return null;
+		template = template.trim();
+		OgnlContext ognl = (OgnlContext) ActionContext.getContext()
+				.getContextMap();
+		Object value = TemplateRuntime.eval(template, ognl.getValues());
+		return value;
 	}
 
 }
