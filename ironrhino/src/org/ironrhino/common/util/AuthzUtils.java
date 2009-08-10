@@ -5,9 +5,13 @@ import java.util.List;
 
 import javax.servlet.jsp.tagext.Tag;
 
+import ognl.OgnlContext;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.model.Secured;
+import org.mvel2.templates.TemplateRuntime;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.security.Authentication;
@@ -19,6 +23,8 @@ import org.springframework.security.context.SecurityContextImpl;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.taglibs.authz.AuthorizeTag;
 import org.springframework.security.userdetails.UserDetails;
+
+import com.opensymphony.xwork2.ActionContext;
 
 public class AuthzUtils {
 
@@ -36,7 +42,13 @@ public class AuthzUtils {
 	}
 
 	public static boolean authorize(String ifAllGranted, String ifAnyGranted,
-			String ifNotGranted) {
+			String ifNotGranted, String expression) {
+		if (StringUtils.isNotBlank(expression)) {
+			OgnlContext ognl = (OgnlContext) ActionContext.getContext()
+					.getContextMap();
+			Object o = TemplateRuntime.eval(expression, ognl.getValues());
+			return o != null && o.toString().equals("true");
+		}
 		try {
 			AuthorizeTag tag = new AuthorizeTag();
 			tag.setIfAllGranted(ifAllGranted);

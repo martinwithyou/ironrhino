@@ -16,4 +16,7 @@ public @interface Authorize {
 	String ifAnyGranted() default "";
 
 	String ifNotGranted() default "";
+
+	// MVEL expression
+	String expression() default "";
 }

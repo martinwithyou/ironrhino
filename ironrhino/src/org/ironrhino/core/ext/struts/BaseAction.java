@@ -144,7 +144,8 @@ public class BaseAction extends ActionSupport {
 		if (annotation == null)
 			return null;
 		boolean passed = AuthzUtils.authorize(annotation.ifAllGranted(),
-				annotation.ifAnyGranted(), annotation.ifNotGranted());
+				annotation.ifAnyGranted(), annotation.ifNotGranted(),
+				annotation.expression());
 		if (!passed) {
 			getActionErrors().add(getText("access.denied"));
 			return ACCESSDENIED;
