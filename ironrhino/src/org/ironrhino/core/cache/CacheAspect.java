@@ -33,7 +33,7 @@ public class CacheAspect implements Ordered {
 
 	private int order;
 
-	@Around("@annotation(checkCache)")
+	@Around("execution(public java.io.Serializable+ *(..)) and @annotation(checkCache)")
 	public Object get(ProceedingJoinPoint jp, CheckCache checkCache)
 			throws Throwable {
 		String name = eval(checkCache.name(), jp, null).toString();
@@ -47,7 +47,10 @@ public class CacheAspect implements Ordered {
 		} else {
 			Object value = cache.get(key);
 			if (value != null) {
+				eval(checkCache.onHit(), jp, value);
 				return value;
+			} else {
+				eval(checkCache.onMiss(), jp, null);
 			}
 		}
 		Object result = jp.proceed();
@@ -57,6 +60,7 @@ public class CacheAspect implements Ordered {
 			int timeToLive = Integer.valueOf(eval(checkCache.timeToLive(), jp,
 					result).toString());
 			jcache.put(key, result, timeToLive);
+			eval(checkCache.onPut(), jp, result);
 		}
 		return result;
 	}
@@ -71,6 +75,7 @@ public class CacheAspect implements Ordered {
 			return;
 		for (Object key : keys)
 			cache.remove(key.toString().trim());
+		eval(flushCache.onFlush(), jp, null);
 	}
 
 	private boolean needCache(CheckCache checkCache, JoinPoint jp, Object result) {
@@ -118,6 +123,8 @@ public class CacheAspect implements Ordered {
 		if (template == null)
 			return null;
 		template = template.trim();
+		if (template.length() == 0)
+			return "";
 		Map<String, Object> context = new HashMap<String, Object>();
 		context.put("_this", jp.getThis());
 		context.put("target", jp.getTarget());

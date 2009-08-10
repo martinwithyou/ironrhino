@@ -23,4 +23,14 @@ public @interface CheckCache {
 
 	// mvel expression
 	String timeToIdle() default CacheContext.DEFAULT_TIME_TO_IDLE;
+
+	// mvel expression
+	String onHit() default "";
+
+	// mvel expression
+	String onMiss() default "";
+
+	// mvel expression
+	String onPut() default "";
+
 }

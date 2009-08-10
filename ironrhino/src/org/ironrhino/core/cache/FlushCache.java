@@ -16,4 +16,7 @@ public @interface FlushCache {
 	// mvel expression
 	String name() default CacheContext.DEFAULT_CACHE_NAME;
 
+	// mvel expression
+	String onFlush() default "";
+
 }
