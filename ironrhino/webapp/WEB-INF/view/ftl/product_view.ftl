@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>ironrhino</title>
 </head>
@@ -60,7 +60,7 @@
 <div id="comments">
 <ul>
 	<#list resultPage.result as var>
-		<li>${var.displayName?html} says:${var.content?html}</li>
+		<li>${var.displayName} says:${var.content}</li>
 	</#list>
 </ul>
 <@pagination class="ajax view" options="{replacement:'comments'}"/>
@@ -98,5 +98,5 @@
 	<@s.submit value="submit" />
 </@s.form>
 </body>
-</html>
+</html></#escape>
 

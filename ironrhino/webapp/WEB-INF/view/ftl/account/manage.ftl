@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>ironrhino</title>
 </head>
 <body>
-<div class="tabs" tab="#${Parameters.tab?if_exists?html}">
+<div class="tabs" tab="#${Parameters.tab?if_exists}">
 <ul>
 	<li><a href="#profile"><span>基本信息</span></a></li>
 	<li><a href="#password"><span>修改密码</span></a></li>
@@ -73,5 +73,5 @@
 </@s.form></div>
 </div>
 </body>
-</html>
+</html></#escape>
 

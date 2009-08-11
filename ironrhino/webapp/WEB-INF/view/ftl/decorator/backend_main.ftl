@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
-<title>${title}</title>
+<title><#noescape>${title}</#noescape></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Cache-Control" content="no-store" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -16,7 +16,7 @@
 <script src="${base}/scripts/all-min.js" type="text/javascript"></script>
 <script type="text/javascript" src="${base}/dwr/engine.js"></script>
 <script type="text/javascript" src="${base}/dwr/interface/ApplicationContextConsole.js"></script>
-${head}
+<#noescape>${head}</#noescape>
 </head>
 
 <body>
@@ -65,10 +65,10 @@ ${head}
 <@s.actionerror cssClass="action_error" />
 <@s.actionmessage cssClass="action_message" />
 </div>
-${body}
+<#noescape>${body}</#noescape>
 </div>
 </div>
 <div id="footer"></div>
 </div>
 </body>
-</html>
+</html></#escape>

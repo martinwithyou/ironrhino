@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Product Category</title>
 <script type="text/javascript">
@@ -8,7 +8,7 @@
 		var name=$(this).text();
 		if(!confirm('change to '+name+'?'))
 		return;
-		var url='${base}/backend/pms/product/category/${Parameters.id?html}?categoryId='+id;
+		var url='${base}/backend/pms/product/category/${Parameters.id}?categoryId='+id;
 		ajax({url:url,dataType:'json'});
 	}
 	Initialization.treeview= function(){
@@ -34,4 +34,4 @@
 <@s.action var="category" name="category!tree" executeResult="false"/>
 <@s.property value="#attr.category.treeViewHtml" escape="false" />
 </body>
-</html>
+</html></#escape>

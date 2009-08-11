@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Product Picture</title>
 </head>
@@ -11,7 +11,7 @@
 		<li id="li_<@s.property value="#status.index" />"><img
 			src='<@s.url value="%{'/pic/'+#pictureName+'.jpg'}"/>'
 			style="height: 300px; width: 300px" alt="picture" /><a
-			href="picture?actionType=delete&pictureName=${pictureName?html}"
+			href="picture?actionType=delete&pictureName=${pictureName}"
 			class="ajax view" method="post"
 			options="{replacement:'product_pic_list'}">delete</a></li>
 	</@s.iterator>
@@ -27,4 +27,4 @@
 	<@s.submit value="%{getText('save')}"/>
 </@s.form>
 </body>
-</html>
+</html></#escape>

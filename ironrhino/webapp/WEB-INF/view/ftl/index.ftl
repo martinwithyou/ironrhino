@@ -8,7 +8,7 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 </#macro>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>ironrhino</title>
 </head>
@@ -88,4 +88,4 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 </#if>
 </@cache>
 </body>
-</html>
+</html></#escape>

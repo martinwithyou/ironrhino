@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Region Map</title>
 <#if Parameters.type?if_exists=='satellite'>
@@ -10,9 +10,9 @@
 		type="text/javascript"></script>
 </#if>
 <script type="text/javascript">
-var lat = ${Parameters.lat?default(22.5162)?html};
-var lng = ${Parameters.lng?default(114.050128)?html};
-var zoom = ${Parameters.zoom?default(8)?html};
+var lat = ${Parameters.lat?default(22.5162)};
+var lng = ${Parameters.lng?default(114.050128)};
+var zoom = ${Parameters.zoom?default(8)};
 var map;
 var mgr;
 $(window).unload(GUnload);
@@ -121,4 +121,4 @@ window.location.href=url;
 <div id="map_container" style="height: 600px;"></div>
 </div>
 </body>
-</html>
+</html></#escape>
