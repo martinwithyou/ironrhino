@@ -13,6 +13,8 @@ public class Key implements Serializable {
 	// minutes
 	private int interval = 1;
 
+	private boolean cumulative = true;
+
 	private long lastWriteTime = System.currentTimeMillis();
 
 	public Key(String... strings) {
@@ -34,6 +36,15 @@ public class Key implements Serializable {
 		names = strings;
 	}
 
+	public Key(String namespace, int interval, boolean cumulative,
+			String... strings) {
+		if (interval > 0)
+			this.interval = interval;
+		this.namespace = namespace;
+		this.cumulative = cumulative;
+		names = strings;
+	}
+
 	public int getInterval() {
 		return interval;
 	}
@@ -44,6 +55,10 @@ public class Key implements Serializable {
 
 	public String getNamespace() {
 		return namespace;
+	}
+
+	public boolean isCumulative() {
+		return cumulative;
 	}
 
 	public Key fork(String subkey) {
@@ -73,21 +88,25 @@ public class Key implements Serializable {
 
 	public String toString() {
 		return (StringUtils.isNotBlank(namespace) ? namespace + ":" : "")
-				+ StringUtils.join(names, '>');
+				+ StringUtils.join(names, '>') + (cumulative ? "" : ",0");
 	}
 
 	public static Key fromString(String s) {
 		if (StringUtils.isBlank(s))
 			return null;
-		String[] array = s.split(":");
+		String[] array1 = s.split(",");
+		boolean cum = true;
+		if (array1.length > 1)
+			cum = !array1[1].equals("0");
+		String[] array2 = array1[0].split(":");
 		String namespace = null;
 		String names = null;
-		if (array.length == 1) {
-			names = array[0];
+		if (array2.length == 1) {
+			names = array2[0];
 		} else {
-			namespace = array[0];
-			names = array[1];
+			namespace = array2[0];
+			names = array2[1];
 		}
-		return new Key(namespace, 0, names.split(">"));
+		return new Key(namespace, 0, cum, names.split(">"));
 	}
 }

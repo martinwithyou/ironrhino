@@ -8,8 +8,6 @@ import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,21 +26,21 @@ import org.apache.log4j.PatternLayout;
 
 public class Monitor {
 
-	public static final long INTERVAL_UNIT = 10; // 10senconds
+	public static final long INTERVAL_UNIT = 60; // 60senconds
 
 	public static final String WRITETHREAD_NAME = "MONITOR-WRITE";
 
 	public static final String ENCODING = "UTF-8";
 
-	private static final String DATE_STYLE = "'.'yyyy-MM-dd";
+	public static final String DATE_STYLE = "'.'yyyy-MM-dd";
 
-	private static final String LAYOUT = "%m%n";
+	public static final String LAYOUT = "%m%n";
 
 	public static final String TOKEN = "|";
 
-	public static final String FILE_NAME = "monitor.log";
+	public static final String FILE_DIRECTORY = "logs";
 
-	public static String host = "localhost";
+	public static final String FILE_NAME = "monitor.log";
 
 	private static Logger statLog = Logger.getLogger("Sampling");
 
@@ -59,16 +57,11 @@ public class Monitor {
 	private static Map<Key, Value> data = new ConcurrentHashMap<Key, Value>(50);
 
 	static {
-		// add log
-		File dir = new File(System.getProperty("user.home"), "logs");
-		if (!dir.exists() && dir.mkdirs())
-			log.error("mkdir error:" + dir.getAbsolutePath());
-		File file = new File(dir, FILE_NAME);
 		PatternLayout layout = new PatternLayout(LAYOUT);
 		FileAppender appender = null;
 		try {
-			appender = new DailyRollingFileAppender(layout, file
-					.getAbsolutePath(), DATE_STYLE);
+			appender = new DailyRollingFileAppender(layout, getPath(),
+					DATE_STYLE);
 			appender.setAppend(true);
 			appender.setEncoding(ENCODING);
 			statLog.addAppender(appender);
@@ -77,18 +70,27 @@ public class Monitor {
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
-		// get host name
-		try {
-			host = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			log.error(e.getMessage(), e);
-		}
+
 		runWriteThread();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				write(false);
 			}
 		});
+	}
+
+	public static String getPath() {
+		String host = "localhost";
+		try {
+			host = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			log.error(e.getMessage(), e);
+		}
+		// add log
+		File dir = new File(System.getProperty("user.home"), FILE_DIRECTORY);
+		if (!dir.exists() && dir.mkdirs())
+			log.error("mkdir error:" + dir.getAbsolutePath());
+		return new File(dir, host + "_" + FILE_NAME).getAbsolutePath();
 	}
 
 	private static void runWriteThread() {
@@ -153,13 +155,11 @@ public class Monitor {
 		sb.append(value);
 		sb.append(TOKEN);
 		sb.append(sysdate());
-		sb.append(TOKEN);
-		sb.append(host);
 		statLog.info(sb.toString());
 	}
 
 	private static String sysdate() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		return String.valueOf(System.currentTimeMillis());
 	}
 
 	private static Value getValue(Key key) {
@@ -206,17 +206,18 @@ public class Monitor {
 	private static void printJvmInfo() {
 		MemoryUsage memoryUsage = memoryMXBean.getHeapMemoryUsage();
 		// MEMORY
-		Key key = new Key("JVM", "MEMORY", "SITUATION");
-		// Value value = new Value(memoryUsage.getMax());
-		Value value = new Value(memoryUsage.getUsed());
+		Key key = new Key("SYSTEM", 0, false, "JVM", "MEMORY", "SITUATION");
+		Value value = new Value(memoryUsage.getMax(), memoryUsage.getUsed());
 		output(key, value);
 		// CPU
-		key = new Key("JVM", "CPU", "USAGE");
-		value = new Value(threadMXBean.getCurrentThreadCpuTime());
+		key = new Key("SYSTEM", 0, false, "JVM", "CPU", "USAGE");
+		value = new Value(threadMXBean.getCurrentThreadCpuTime(), threadMXBean
+				.getCurrentThreadUserTime());
 		output(key, value);
 		// THREAD
-		key = new Key("JVM", "THREAD", "TOTAL");
-		value = new Value(threadMXBean.getDaemonThreadCount());
+		key = new Key("SYSTEM", 0, false, "JVM", "THREAD", "TOTAL");
+		value = new Value(threadMXBean.getPeakThreadCount(), threadMXBean
+				.getDaemonThreadCount());
 		output(key, value);
 	}
 
