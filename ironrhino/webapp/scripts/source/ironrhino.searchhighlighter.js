@@ -24,7 +24,7 @@
 		if (keywords) {
 			if ($('q'))
 				$('q').value = keywords;
-			keywords = keywords.replace(/<|>/, ' ');
+			keywords = $.trim(keywords.replace(/<|>|\//g, ' '));
 			keywords = keywords.split(/\s+/);
 			for (i = 0; i < keywords.length; i++)
 				SearchHighlighter.highlight(document.body, keywords[i]);
