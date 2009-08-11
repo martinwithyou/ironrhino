@@ -9,7 +9,7 @@ $('#generate_static_page').click(function(){ApplicationContextConsole.call('prod
 $('#send_newArrived_product').click(function(){ApplicationContextConsole.call('newArrivedProductNotifier.send()',null,function(){alert('success');});});
 $('#compile_rulebase').click(function(){ApplicationContextConsole.call('ruleProvider.compileRuleBase()',null,function(){alert('success');});});
 $('#compass_index').click(function(){ApplicationContextConsole.call('compassGps.index()',null,function(){alert('success');});});
-$('#execute').click(function(){ApplicationContextConsole.execute($('cmd').value,function(result){alert(result);});});
+$('#execute').click(function(){ApplicationContextConsole.execute($('#cmd').val(),function(result){alert(result);});});
 }
 
 </script>
@@ -36,10 +36,7 @@ $('#execute').click(function(){ApplicationContextConsole.execute($('cmd').value,
 	</button>
 </div>
 <div><input id="cmd" type="text" name="cmd" size="80" />
-<button type="button"
-	id="execute"  class="btn">
-	<span><span>execute</span></span>
-	</button>
+<button type="button" id="execute"  class="btn"><span><span>execute</span></span></button>
 </div>
 </body>
 </html></#escape>
