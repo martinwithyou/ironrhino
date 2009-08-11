@@ -9,20 +9,25 @@ public class Value implements Serializable {
 
 	private final AtomicLong longValue;
 
-	private double doubleValue;
+	private final AtomicLong doubleValue;
+
+	public static final int PRECISION = 1000;
+
+	// private double doubleValue;
 
 	public Value(long c) {
 		longValue = new AtomicLong(c);
+		doubleValue = new AtomicLong(0);
 	}
 
 	public Value(double d) {
 		longValue = new AtomicLong(0);
-		doubleValue = d;
+		doubleValue = new AtomicLong((long) (d * PRECISION));
 	}
 
 	public Value(long c, double d) {
 		longValue = new AtomicLong(c);
-		doubleValue = d;
+		doubleValue = new AtomicLong((long) (d * PRECISION));
 	}
 
 	public Number[] add(long c, double d) {
@@ -40,11 +45,12 @@ public class Value implements Serializable {
 	}
 
 	public double addDouble(double value) {
-		return doubleValue += value;
+		return ((double) doubleValue.getAndAdd((long) (value * PRECISION)))
+				/ PRECISION;
 	}
 
 	public double getDouble() {
-		return doubleValue;
+		return ((double) doubleValue.get()) / PRECISION;
 	}
 
 	public String toString() {
@@ -57,4 +63,5 @@ public class Value implements Serializable {
 		String[] array = s.split(",");
 		return new Value(Long.valueOf(array[0]), Double.valueOf(array[1]));
 	}
+
 }
