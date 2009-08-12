@@ -21,6 +21,8 @@ import org.ironrhino.core.annotation.Captcha;
 import org.ironrhino.core.annotation.JsonConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.mail.MailService;
+import org.ironrhino.core.monitor.Key;
+import org.ironrhino.core.monitor.Monitor;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.ProductComment;
@@ -28,7 +30,6 @@ import org.ironrhino.online.model.ProductFavorite;
 import org.ironrhino.online.model.ProductScore;
 import org.ironrhino.online.model.ProductSend;
 import org.ironrhino.online.service.ProductFacade;
-import org.ironrhino.online.support.ProductHitsControl;
 import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.support.CategoryTreeControl;
@@ -81,8 +82,6 @@ public class ProductAction extends BaseAction {
 	private transient CategoryTreeControl categoryTreeControl;
 
 	private transient BaseManager baseManager;
-
-	private transient ProductHitsControl productHitsControl;
 
 	private transient MailService mailService;
 
@@ -152,10 +151,6 @@ public class ProductAction extends BaseAction {
 
 	public CategoryTreeControl getCategoryTreeControl() {
 		return categoryTreeControl;
-	}
-
-	public void setProductHitsControl(ProductHitsControl productHitsControl) {
-		this.productHitsControl = productHitsControl;
 	}
 
 	public void setBaseManager(BaseManager baseManager) {
@@ -254,6 +249,7 @@ public class ProductAction extends BaseAction {
 				comment.setEmail(account.getEmail());
 			}
 		}
+		Monitor.add(new Key("查看产品", product.getCode()));
 		return VIEW;
 	}
 
@@ -261,14 +257,6 @@ public class ProductAction extends BaseAction {
 	public String random() {
 		setUid(productFacade.getRandomProduct().getCode());
 		return "success";
-	}
-
-	@SkipValidation
-	public String hit() {
-		String code = getUid();
-		if (productHitsControl != null && StringUtils.isNotBlank(code))
-			productHitsControl.put(code);
-		return NONE;
 	}
 
 	@SkipValidation

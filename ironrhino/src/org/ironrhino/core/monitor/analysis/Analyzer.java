@@ -1,4 +1,4 @@
-package org.ironrhino.core.monitor;
+package org.ironrhino.core.monitor.analysis;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,14 +7,14 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-public class Analyzer {
+import org.ironrhino.core.monitor.Key;
+import org.ironrhino.core.monitor.Monitor;
+import org.ironrhino.core.monitor.Value;
 
-	private File[] files;
+public abstract class Analyzer {
 
-	private Map<Key, Value> cumulativeData = new HashMap<Key, Value>(50);
+	protected File[] files;
 
 	public Analyzer() {
 		this.files = new File[] { new File(Monitor.getPath()) };
@@ -69,35 +69,39 @@ public class Analyzer {
 
 	private void parse() {
 		String line = null;
+		FileInputStream fis = null;
+		BufferedReader br = null;
 		try {
 			for (File file : files) {
-				FileInputStream fis = new FileInputStream(file);
-				BufferedReader br = new BufferedReader(new InputStreamReader(
-						fis, Monitor.ENCODING));
+				fis = new FileInputStream(file);
+				br = new BufferedReader(new InputStreamReader(fis,
+						Monitor.ENCODING));
 				while ((line = br.readLine()) != null)
 					parseLine(line);
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		} finally {
+			try {
+				if (br != null)
+					br.close();
+				if (fis != null)
+					fis.close();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		}
 
-	}
-
-	public Map<Key, Value> getCumulativeData() {
-		return cumulativeData;
 	}
 
 	private void parseLine(String line) {
 		String[] array = line.split("\\|");
 		Key key = Key.fromString(array[0]);
 		Value value = Value.fromString(array[1]);
-		if (key.isCumulative()) {
-			Value v = cumulativeData.get(key);
-			if (v == null)
-				cumulativeData.put(key, value);
-			else
-				v.cumulate(value);
-		}
+		Date date = new Date(Long.valueOf(array[2]));
+		process(key, value, date);
 	}
+
+	protected abstract void process(Key key, Value value, Date date);
 
 }

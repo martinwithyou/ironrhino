@@ -21,8 +21,6 @@
 		p:subject="${newArrivalProductNotifier.subject}" />
 	<bean id="staticResourceFilter"
 		class="org.ironrhino.online.servlet.StaticResourceFilter" />
-	<bean id="productHitsControl"
-		class="org.ironrhino.online.support.ProductHitsControlImpl" />
 	<bean id="searchHitsControl"
 		class="org.ironrhino.online.support.SearchHitsControlImpl" />
 </beans>

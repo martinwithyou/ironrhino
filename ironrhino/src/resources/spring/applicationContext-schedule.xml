@@ -22,7 +22,7 @@
 				<property name="targetMethod" value="execute" />
 			</bean>
 		</property>
-		<property name="cronExpression" value="0 55 23 * * ?" />
+		<property name="cronExpression" value="0 5 0 * * ?" />
 	</bean>
 
 	<bean id="dailyBatchExecutor" autowire="byName"
@@ -30,7 +30,7 @@
 		<property name="commands">
 			<list>
 				<value>call("productPageGenerator.generate()")</value>
-				<value>call("productHitsControl.consume()")</value>
+				<value>call("statControl.archive()")</value>
 				<value>call("searchHitsControl.consume()")</value>
 			</list>
 		</property>

@@ -2,19 +2,16 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="org.ironrhino.online.model"
+<hibernate-mapping package="org.ironrhino.common.model"
 	default-lazy="true">
-	<class name="ProductHits" table="online_productHits">
+	<class name="Stat" table="common_stat">
 		<id name="id" type="java.lang.String" length="32"
 			unsaved-value="null">
 			<generator class="uuid" />
 		</id>
-		<natural-id>
-			<property name="productCode" />
-		</natural-id>
-		<property name="daily" />
-		<property name="monthly" />
-		<property name="yearly" />
-		<property name="total" />
+		<property name="key" column="_key" not-null="true" />
+		<property name="longValue" />
+		<property name="doubleValue" />
+		<property name="statDate" />
 	</class>
 </hibernate-mapping>

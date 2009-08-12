@@ -6,7 +6,6 @@ Initialization.initPage = function() {
 		return;
 	addHistory();
 	// load();
-	hit();
 	$('#comment_form').attr('replacement','comments');
 };
 
@@ -46,15 +45,6 @@ function updateScore() {
 		$('#score_average').text(Ajax.jsonResult.scoreResult.average);
 		$('#score_count').text(Ajax.jsonResult.scoreResult.count);
 	}
-}
-
-function hit() {
-	var url = document.location.href;
-	url = url.substring(0, url.lastIndexOf('/')) + '/hit/' + getCode();
-	$.ajax({
-				url : url,
-				cache : false
-			});
 }
 
 function getCode() {

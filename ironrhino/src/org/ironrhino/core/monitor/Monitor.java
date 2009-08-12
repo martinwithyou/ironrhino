@@ -26,7 +26,7 @@ import org.apache.log4j.PatternLayout;
 
 public class Monitor {
 
-	public static final long INTERVAL_UNIT = 60; // 60senconds
+	public static final long INTERVAL_UNIT = 10; // senconds
 
 	public static final String WRITETHREAD_NAME = "MONITOR-WRITE";
 
