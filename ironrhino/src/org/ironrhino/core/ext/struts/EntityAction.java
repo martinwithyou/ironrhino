@@ -6,12 +6,17 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
@@ -335,6 +340,24 @@ public class EntityAction extends BaseAction {
 					fec.setRequired(true);
 				map.put(pd.getName(), fec);
 			}
+			List<Map.Entry<String, FormElementConfig>> list = new ArrayList<Map.Entry<String, FormElementConfig>>();
+			list.addAll(map.entrySet());
+			Collections.sort(list,
+					new Comparator<Map.Entry<String, FormElementConfig>>() {
+						public int compare(Entry<String, FormElementConfig> o1,
+								Entry<String, FormElementConfig> o2) {
+							int i = Integer.valueOf(
+									o1.getValue().getDisplayOrder()).compareTo(
+									o2.getValue().getDisplayOrder());
+							if (i == 0)
+								return o1.getKey().compareTo(o2.getKey());
+							else
+								return i;
+						}
+					});
+			map = new LinkedHashMap<String, FormElementConfig>();
+			for (Map.Entry<String, FormElementConfig> entry : list)
+				map.put(entry.getKey(), entry.getValue());
 
 			if (customizable) {
 				map.remove(Customizable.CUSTOM_COMPONENT_NAME);
@@ -383,6 +406,7 @@ public class EntityAction extends BaseAction {
 		private Enum[] enumValues;
 		private String cssClass = "";
 		private boolean readonly;
+		private int displayOrder;
 
 		public FormElementConfig() {
 		}
@@ -395,6 +419,15 @@ public class EntityAction extends BaseAction {
 			this.readonly = fe.readonly();
 			if (fe.required())
 				this.setRequired(true);
+			this.displayOrder = fe.displayOrder();
+		}
+
+		public int getDisplayOrder() {
+			return displayOrder;
+		}
+
+		public void setDisplayOrder(int displayOrder) {
+			this.displayOrder = displayOrder;
 		}
 
 		public String getType() {

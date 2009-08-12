@@ -17,6 +17,8 @@ public @interface FormElement {
 
 	int size() default 0;
 
+	int displayOrder() default Integer.MAX_VALUE;
+
 	boolean required() default false;
 
 	boolean readonly() default false;
