@@ -4,17 +4,22 @@ import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.ironrhino.core.annotation.AutoConfig;
+import org.ironrhino.core.annotation.FormElement;
 import org.ironrhino.core.model.BaseEntity;
 
-@AutoConfig
+@AutoConfig(readonly = true)
 public class Stat extends BaseEntity {
 
+	@FormElement(displayOrder = 0)
 	private String key;
 
+	@FormElement(displayOrder = 1)
 	private long longValue;
 
+	@FormElement(displayOrder = 2)
 	private double doubleValue;
 
+	@FormElement(displayOrder = 3)
 	private Date statDate;
 
 	public Stat() {

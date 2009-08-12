@@ -28,8 +28,9 @@ public class StatControl {
 		try {
 			new Analyzer(yesterday) {
 				protected void process(Key key, Value value, Date date) {
-					baseManager.save(new Stat(key.toString(), value.getLong(),
-							value.getDouble(), date));
+					if (key.isCumulative())
+						baseManager.save(new Stat(key.toString(), value
+								.getLong(), value.getDouble(), date));
 				}
 			};
 		} catch (RuntimeException e) {
