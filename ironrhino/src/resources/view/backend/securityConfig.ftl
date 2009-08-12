@@ -4,8 +4,8 @@
 <title>Security Config</title>
 <script>
 Initialization.init = function(){
-	ApplicationContextConsole.get('filterInvocationInterceptorObjectDefinitionSource.definitionAsText',function(text){$('#fsource').val(text)});
-	ApplicationContextConsole.get('channelProcessingFilterInvocationDefinitionSource.definitionAsText',function(text){$('#csource').val(text)});
+	ApplicationContextConsole.execute('filterInvocationInterceptorObjectDefinitionSource.definitionAsText',function(text){$('#fsource').val(text)});
+	ApplicationContextConsole.execute('channelProcessingFilterInvocationDefinitionSource.definitionAsText',function(text){$('#csource').val(text)});
 }
 </script>
 </head>
@@ -16,11 +16,11 @@ Initialization.init = function(){
 	name="filterInvocationInterceptorObjectDefinitionSource" rows="15"
 	cols="100"></textarea> <br />
 <button type="button" id="saveFilterInvocationButton" class="btn"
-	onclick="ApplicationContextConsole.set('filterInvocationInterceptorObjectDefinitionSource.definitionAsText',$('#fsource').val(),function(){alert('success')})" >
+	onclick="ApplicationContextConsole.execute('filterInvocationInterceptorObjectDefinitionSource.definitionAsText=\''+$('#fsource').val().replace(/#/g,'\#').replace(/\\/g,'\\\\')+'\'',function(){alert('success')})" >
 	<span><span>${action.getText('save')}</span></span>
 	</button>
 <button type="button" id="refreshFilterInvocationButton" class="btn"
-	onclick="ApplicationContextConsole.call('filterInvocationInterceptorObjectDefinitionSource.refresh()',null,function(){alert('success');})">
+	onclick="ApplicationContextConsole.execute('filterInvocationInterceptorObjectDefinitionSource.refresh()',function(){alert('success');})">
 	<span><span>${action.getText('reload')}</span></span>
 	</button>
 	</div>
@@ -29,11 +29,11 @@ Initialization.init = function(){
 	name="channelProcessingFilterInvocationDefinitionSource" rows="15"
 	cols="100"></textarea> <br />
 <button type="button" id="saveChannelProcessingButton" class="btn"
-	onclick="ApplicationContextConsole.set('channelProcessingFilterInvocationDefinitionSource.definitionAsText',$('#csource').val(),function(){alert('success')})" >
+	onclick="ApplicationContextConsole.execute('channelProcessingFilterInvocationDefinitionSource.definitionAsText=\''+$('#csource').val().replace(/\\/g,'\\\\')+'\'',function(){alert('success')})" >
 	<span><span>${action.getText('save')}</span></span>
 	</button>
 <button type="button" id="refreshChannelProcessingButton" class="btn"
-	onclick="ApplicationContextConsole.call('channelProcessingFilterInvocationDefinitionSource.refresh()',null,function(){alert('success');})" >
+	onclick="ApplicationContextConsole.execute('channelProcessingFilterInvocationDefinitionSource.refresh()',function(){alert('success');})" >
 	<span><span>${action.getText('reload')}</span></span>
 	</button></div>
 </body>

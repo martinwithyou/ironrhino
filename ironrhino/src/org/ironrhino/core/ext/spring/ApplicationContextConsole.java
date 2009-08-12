@@ -1,18 +1,42 @@
 package org.ironrhino.core.ext.spring;
 
+import java.util.HashMap;
 import java.util.Map;
 
-public interface ApplicationContextConsole {
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mvel2.MVEL;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
-	public Object execute(String cmd) throws Exception;
+public class ApplicationContextConsole {
 
-	public void set(String path, String value) throws Exception;
+	protected Log log = LogFactory.getLog(getClass());
 
-	public Object get(String path) throws Exception;
+	@Autowired
+	private ApplicationContext ctx;
 
-	public Object call(String path, String[] params) throws Exception;
+	private Map<String, Object> beans;
 
-	public Object callWithMap(String path, Map<String, String> properties)
-			throws Exception;
-
+	public Object execute(String expression) throws Exception {
+		if (beans == null) {
+			beans = new HashMap<String, Object>();
+			String[] beanNames = ctx.getBeanDefinitionNames();
+			for (String beanName : beanNames) {
+				if (StringUtils.isAlphanumeric(beanName)
+						&& ctx.isSingleton(beanName))
+					beans.put(beanName, ctx.getBean(beanName));
+			}
+		}
+		try {
+			return MVEL.eval(expression, beans);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	public static void main(String...strings){
+		System.out.println(MVEL.eval("a='haha\nhaha\n';a",new HashMap()));
+	}
 }

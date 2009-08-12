@@ -28,6 +28,4 @@
 			<bean class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager"/>
 		</constructor-arg>
 	</bean>
-	<bean
-		class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
 </beans>

@@ -4,11 +4,11 @@
 <title>Control Panel</title>
 <script>
 Initialization.init = function(){
-$('#rebuild_category_tree').click(function(){ApplicationContextConsole.call('categoryTreeControl.buildCategoryTree()',null,function(){alert('success')})});
-$('#generate_static_page').click(function(){ApplicationContextConsole.call('productPageGenerator.generate()',null,function(){alert('success');});});
-$('#send_newArrived_product').click(function(){ApplicationContextConsole.call('newArrivedProductNotifier.send()',null,function(){alert('success');});});
-$('#compile_rulebase').click(function(){ApplicationContextConsole.call('ruleProvider.compileRuleBase()',null,function(){alert('success');});});
-$('#compass_index').click(function(){ApplicationContextConsole.call('compassGps.index()',null,function(){alert('success');});});
+$('#rebuild_category_tree').click(function(){ApplicationContextConsole.execute('categoryTreeControl.buildCategoryTree()',function(){alert('success')})});
+$('#generate_static_page').click(function(){ApplicationContextConsole.execute('productPageGenerator.generate()',function(){alert('success');});});
+$('#send_newArrived_product').click(function(){ApplicationContextConsole.execute('newArrivedProductNotifier.send()',function(){alert('success');});});
+$('#compile_rulebase').click(function(){ApplicationContextConsole.execute('ruleProvider.compileRuleBase()',function(){alert('success');});});
+$('#compass_index').click(function(){ApplicationContextConsole.execute('compassGps.index()',function(){alert('success');});});
 $('#execute').click(function(){ApplicationContextConsole.execute($('#cmd').val(),function(result){alert(result);});});
 }
 

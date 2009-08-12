@@ -16,18 +16,10 @@
 	<bean id="eventPublisher"
 		class="org.ironrhino.core.event.EventPublisher" />
 	<bean id="applicationContextConsole"
-		class="org.ironrhino.core.ext.spring.BeanShellApplicationContextConsole">
+		class="org.ironrhino.core.ext.spring.ApplicationContextConsole">
 		<dwr:remote javascript="ApplicationContextConsole">
 			<dwr:include method="execute" />
-			<dwr:include method="set" />
-			<dwr:include method="get" />
-			<dwr:include method="call" />
-			<dwr:include method="callWithMap" />
 			<dwr:auth method="execute" role="ROLE_SUPERVISOR" />
-			<dwr:auth method="set" role="ROLE_SUPERVISOR" />
-			<dwr:auth method="get" role="ROLE_SUPERVISOR" />
-			<dwr:auth method="call" role="ROLE_SUPERVISOR" />
-			<dwr:auth method="callWithMap" role="ROLE_SUPERVISOR" />
 		</dwr:remote>
 	</bean>
 	<bean id="settingControl"
