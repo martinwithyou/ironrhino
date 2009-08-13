@@ -64,9 +64,9 @@ public class Value implements Serializable {
 		return new Value(Long.valueOf(array[0]), Double.valueOf(array[1]));
 	}
 
-	public void cumulate(Value that) {
-		this.addLong(that.getLong());
-		this.addDouble(that.getDouble());
+	public void cumulate(Value value) {
+		this.addLong(value.getLong());
+		this.addDouble(value.getDouble());
 	}
 
 }

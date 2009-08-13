@@ -249,7 +249,7 @@ public class ProductAction extends BaseAction {
 				comment.setEmail(account.getEmail());
 			}
 		}
-		Monitor.add(new Key("查看产品", product.getCode()));
+		Monitor.add(new Key("view","product", product.getCode()));
 		return VIEW;
 	}
 

@@ -150,6 +150,7 @@ public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
 	public T getByCriteria(DetachedCriteria dc) {
 		Criteria c = dc.getExecutableCriteria(sessionFactory
 				.getCurrentSession());
+		c.setMaxResults(1);
 		c.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return (T) c.uniqueResult();
 	}

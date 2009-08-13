@@ -20,7 +20,7 @@ public class IndexAction extends BaseAction {
 	}
 
 	public String execute() {
-		Monitor.add(new Key("首页", "访问"));
+		Monitor.add(new Key("view","index"));
 		return SUCCESS;
 	}
 

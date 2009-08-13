@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang.StringUtils;
 
-public class Key implements Serializable {
+public class Key implements Serializable, Comparable<Key> {
 
 	private String namespace;
 
@@ -76,6 +76,13 @@ public class Key implements Serializable {
 		this.lastWriteTime = lastWriteTime;
 	}
 
+	@Override
+	public int compareTo(Key o) {
+		if (o == null)
+			return 1;
+		return this.toString().compareTo(o.toString());
+	}
+
 	public int hashCode() {
 		return toString().hashCode();
 	}
@@ -109,4 +116,5 @@ public class Key implements Serializable {
 		}
 		return new Key(namespace, 0, cum, names.split(">"));
 	}
+
 }

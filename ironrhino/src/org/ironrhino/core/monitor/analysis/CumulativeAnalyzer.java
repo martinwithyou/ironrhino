@@ -8,7 +8,7 @@ import java.util.Map;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.Value;
 
-public class CumulativeAnalyzer extends Analyzer {
+public class CumulativeAnalyzer extends StatAnalyzer {
 
 	private Map<Key, Value> cumulativeData = new HashMap<Key, Value>(50);
 
