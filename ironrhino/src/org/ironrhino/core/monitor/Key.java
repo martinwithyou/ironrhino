@@ -61,11 +61,41 @@ public class Key implements Serializable, Comparable<Key> {
 		return cumulative;
 	}
 
-	public Key fork(String subkey) {
+	public int getLevel() {
+		return names.length;
+	}
+
+	public boolean isParentOf(Key key) {
+		return this.equals(key.parent());
+	}
+
+	public boolean isChildOf(Key key) {
+		return this.parent().equals(key);
+	}
+
+	public Key top() {
+		return parent(1);
+	}
+
+	public Key parent() {
+		return parent(getLevel() - 1);
+	}
+
+	public Key parent(int level) {
+		if (level < 1)
+			return parent(1);
+		if (level > getLevel() - 1)
+			return this;
+		String[] newkeys = new String[level];
+		System.arraycopy(names, 0, newkeys, 0, level);
+		return new Key(namespace, interval, cumulative, newkeys);
+	}
+
+	public Key child(String subkey) {
 		String[] newkeys = new String[this.names.length + 1];
 		System.arraycopy(names, 0, newkeys, 0, names.length);
 		newkeys[this.names.length] = subkey;
-		return new Key(newkeys);
+		return new Key(namespace, interval, cumulative, newkeys);
 	}
 
 	public long getLastWriteTime() {

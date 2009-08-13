@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.monitor.Key;
-import org.ironrhino.core.monitor.Monitor;
+import org.ironrhino.core.monitor.MonitorSettings;
 import org.ironrhino.core.monitor.Value;
 
 public abstract class StatAnalyzer implements Analyzer {
@@ -22,21 +22,23 @@ public abstract class StatAnalyzer implements Analyzer {
 	protected File[] files;
 
 	public StatAnalyzer() {
-		this.files = new File[] { new File(Monitor
-				.getLogFile(Monitor.STAT_LOG_FILE)) };
+		this.files = new File[] { new File(MonitorSettings
+				.getLogFile(MonitorSettings.STAT_LOG_FILE)) };
 	}
 
 	public StatAnalyzer(Date date) {
-		this.files = new File[] { new File(Monitor
-				.getLogFile(Monitor.STAT_LOG_FILE)
-				+ new SimpleDateFormat(Monitor.DATE_STYLE).format(date)) };
+		this.files = new File[] { new File(MonitorSettings
+				.getLogFile(MonitorSettings.STAT_LOG_FILE)
+				+ new SimpleDateFormat(MonitorSettings.DATE_STYLE).format(date)) };
 	}
 
 	public StatAnalyzer(Date[] dates) {
 		this.files = new File[dates.length];
 		for (int i = 0; i < dates.length; i++)
-			this.files[i] = new File(Monitor.getLogFile(Monitor.STAT_LOG_FILE)
-					+ new SimpleDateFormat(Monitor.DATE_STYLE).format(dates[i]));
+			this.files[i] = new File(MonitorSettings
+					.getLogFile(MonitorSettings.STAT_LOG_FILE)
+					+ new SimpleDateFormat(MonitorSettings.DATE_STYLE)
+							.format(dates[i]));
 	}
 
 	public StatAnalyzer(Date start, Date end) {
@@ -55,9 +57,10 @@ public abstract class StatAnalyzer implements Analyzer {
 		this.files = new File[endDay - startDay + 1];
 		for (int i = 0; i < files.length; i++) {
 			cal.add(Calendar.DAY_OF_YEAR, i);
-			this.files[i] = new File(Monitor.getLogFile(Monitor.STAT_LOG_FILE)
-					+ new SimpleDateFormat(Monitor.DATE_STYLE).format(cal
-							.getTime()));
+			this.files[i] = new File(MonitorSettings
+					.getLogFile(MonitorSettings.STAT_LOG_FILE)
+					+ new SimpleDateFormat(MonitorSettings.DATE_STYLE)
+							.format(cal.getTime()));
 		}
 	}
 
@@ -83,7 +86,7 @@ public abstract class StatAnalyzer implements Analyzer {
 			for (File file : files) {
 				fis = new FileInputStream(file);
 				br = new BufferedReader(new InputStreamReader(fis,
-						Monitor.ENCODING));
+						MonitorSettings.ENCODING));
 				while (StringUtils.isNotBlank((line = br.readLine())))
 					if (StringUtils.isNotBlank(line))
 						processLine(line);

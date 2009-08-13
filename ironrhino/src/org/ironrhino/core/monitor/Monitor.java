@@ -1,13 +1,10 @@
 package org.ironrhino.core.monitor;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,22 +23,6 @@ import org.apache.log4j.PatternLayout;
 
 public class Monitor {
 
-	public static final String WRITETHREAD_NAME = "MONITOR-WRITE";
-
-	public static final String ENCODING = "UTF-8";
-
-	public static final String DATE_STYLE = "'.'yyyy-MM-dd";
-
-	public static final String LAYOUT = "%m%n";
-
-	public static final String TOKEN = "|";
-
-	public static final String FILE_DIRECTORY = "logs";
-
-	public static final String STAT_LOG_FILE = "stat.log";
-
-	public static final String SYSTEM_LOG_FILE = "system.log";
-
 	private static final Logger statLogger = Logger.getLogger("Stat");
 
 	private static final Logger systemLogger = Logger.getLogger("System");
@@ -57,40 +38,26 @@ public class Monitor {
 	private static final Map<Key, Value> data = new ConcurrentHashMap<Key, Value>(
 			50);
 
-	private static long intervalUnit = 10; // senconds
-
-	private static long systemIntervalMultiple = 10; // system.log
-	// SYSTEM_INTERVAL_MULTIPLE*INTERVAL_UNIT
-	// senconds
-
 	private static Thread writeThread = null;
 
 	private static int currentSystemInterval;
 
-	public static final String HOST;
-
 	static {
-
-		String host = "localhost";
-		try {
-			host = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			log.error(e.getMessage(), e);
-		}
-		HOST = host;
-		PatternLayout layout = new PatternLayout(LAYOUT);
+		PatternLayout layout = new PatternLayout(MonitorSettings.LAYOUT);
 		FileAppender appender = null;
 		try {
-			appender = new DailyRollingFileAppender(layout,
-					getLogFile(STAT_LOG_FILE), ENCODING, DATE_STYLE);
+			appender = new DailyRollingFileAppender(layout, MonitorSettings
+					.getLogFile(MonitorSettings.STAT_LOG_FILE),
+					MonitorSettings.ENCODING, MonitorSettings.DATE_STYLE);
 			appender.setAppend(true);
 			// appender.setEncoding(ENCODING);//doesn't works
 			statLogger.addAppender(appender);
 			statLogger.setLevel(Level.INFO);
 			statLogger.setAdditivity(false);
 
-			appender = new DailyRollingFileAppender(layout,
-					getLogFile(SYSTEM_LOG_FILE), ENCODING, DATE_STYLE);
+			appender = new DailyRollingFileAppender(layout, MonitorSettings
+					.getLogFile(MonitorSettings.SYSTEM_LOG_FILE),
+					MonitorSettings.ENCODING, MonitorSettings.DATE_STYLE);
 			appender.setAppend(true);
 			systemLogger.addAppender(appender);
 			systemLogger.setLevel(Level.INFO);
@@ -107,31 +74,6 @@ public class Monitor {
 		});
 	}
 
-	public static long getIntervalUnit() {
-		return intervalUnit;
-	}
-
-	public static void setIntervalUnit(long intervalUnit) {
-		if (intervalUnit > 0)
-			Monitor.intervalUnit = intervalUnit;
-	}
-
-	public static long getSystemIntervalMultiple() {
-		return systemIntervalMultiple;
-	}
-
-	public static void setSystemIntervalMultiple(long systemIntervalMultiple) {
-		if (systemIntervalMultiple > 0)
-			Monitor.systemIntervalMultiple = systemIntervalMultiple;
-	}
-
-	public static String getLogFile(String logfile) {
-		File dir = new File(System.getProperty("user.home"), FILE_DIRECTORY);
-		if (!dir.exists() && dir.mkdirs())
-			log.error("mkdir error:" + dir.getAbsolutePath());
-		return new File(dir, HOST + "_" + logfile).getAbsolutePath();
-	}
-
 	private static void runWriteThread() {
 		if (writeThread != null) {
 			try {
@@ -145,7 +87,8 @@ public class Monitor {
 				while (true) {
 					try {
 						timerLock.lock();
-						condition.await(intervalUnit, TimeUnit.SECONDS);
+						condition.await(MonitorSettings.getIntervalUnit(),
+								TimeUnit.SECONDS);
 					} catch (Exception e) {
 						log.error("wait error", e);
 					} finally {
@@ -155,7 +98,7 @@ public class Monitor {
 				}
 			}
 
-		}, WRITETHREAD_NAME);
+		}, MonitorSettings.WRITETHREAD_NAME);
 		writeThread.start();
 
 	}
@@ -171,7 +114,7 @@ public class Monitor {
 			Key key = entry.getKey();
 			Value value = entry.getValue();
 			if (((!checkInterval || (current - key.getLastWriteTime())
-					/ intervalUnit > key.getInterval()))
+					/ MonitorSettings.getIntervalUnit() > key.getInterval()))
 					&& (value.getLong() > 0 || value.getDouble() > 0)) {
 				key.setLastWriteTime(current);
 				output(statLogger, key, value);
@@ -184,19 +127,20 @@ public class Monitor {
 			value.add(-entry.getValue().getLong(), -entry.getValue()
 					.getDouble());
 		}
-		if (currentSystemInterval % systemIntervalMultiple == 0)
+		if (currentSystemInterval % MonitorSettings.getSystemIntervalMultiple() == 0)
 			printSystemInfo();
 		currentSystemInterval++;
-		if (currentSystemInterval > systemIntervalMultiple)
-			currentSystemInterval -= systemIntervalMultiple;
+		if (currentSystemInterval > MonitorSettings.getSystemIntervalMultiple())
+			currentSystemInterval -= MonitorSettings
+					.getSystemIntervalMultiple();
 	}
 
 	private static void output(Logger logger, Key key, Value value) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(key);
-		sb.append(TOKEN);
+		sb.append(MonitorSettings.TOKEN);
 		sb.append(value);
-		sb.append(TOKEN);
+		sb.append(MonitorSettings.TOKEN);
 		sb.append(sysdate());
 		logger.info(sb.toString());
 	}
