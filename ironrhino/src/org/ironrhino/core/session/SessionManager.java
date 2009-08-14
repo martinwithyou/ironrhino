@@ -8,33 +8,26 @@ public class SessionManager implements BeanFactoryAware {
 
 	private BeanFactory beanFactory;
 
-	private SessionStore sessionStore;
-
-	private ThreadLocal session = new ThreadLocal();
-
-	public void setHttpSession(Session s) {
-		this.session.set(s);
-		sessionStore = (SessionStore) beanFactory.getBean("sessionStore");
+	public void save(Session sesion) {
+		SessionStore sessionStore = (SessionStore) beanFactory
+				.getBean("sessionStore");
+		sessionStore.save(sesion);
 	}
 
-	public Session getHttpSession() {
-		return (Session) this.session.get();
+	public void initialize(Session session) {
+		SessionStore sessionStore = (SessionStore) beanFactory
+				.getBean("sessionStore");
+		sessionStore.initialize(session);
 	}
 
-	public void save() {
-		sessionStore.save(getHttpSession());
-	}
-
-	public void initialize() {
-		sessionStore.initialize(getHttpSession());
-	}
-
-	public void invalidate() {
-		sessionStore.invalidate(getHttpSession());
+	public void invalidate(Session sesion) {
+		SessionStore sessionStore = (SessionStore) beanFactory
+				.getBean("sessionStore");
+		sessionStore.invalidate(sesion);
 	}
 
 	public SessionStore getSessionStore() {
-		return sessionStore;
+		return (SessionStore) beanFactory.getBean("sessionStore");
 	}
 
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {

@@ -12,6 +12,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.ironrhino.core.performance.BufferableResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,10 @@ public class HttpSessionFilter implements Filter {
 		byte[] bytes = res.getContents();
 		if (bytes == null)
 			bytes = new byte[0];
-		sessionManager.save();
+		HttpSession session = httpRequest.getSession();
+		if (session instanceof Session) {
+			((Session) session).save();
+		}
 		response.setContentLength(bytes.length);
 		ServletOutputStream sos = response.getOutputStream();
 		sos.write(bytes);

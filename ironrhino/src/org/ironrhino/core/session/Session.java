@@ -1,5 +1,8 @@
 package org.ironrhino.core.session;
 
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -8,20 +11,26 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.common.util.RequestUtils;
 
-public class Session implements HttpSession {
+public class Session implements Serializable, HttpSession {
+
+	private static final String salt = "awpeqaidasdfaioiaoduifayzuxyaaokadoaifaodiaoi";
+
+	public static final String SESSION_ID = "sid";
+
+	public static final int SESSION_TIMEOUT = 1800;
 
 	private String sessionId;
 
-	SessionManager sessionManager;
+	private transient SessionManager sessionManager;
 
-	private HttpContext httpContext;
+	private transient HttpContext httpContext;
 
 	private Map<String, Object> attrMap = new HashMap<String, Object>();
 
@@ -29,22 +38,35 @@ public class Session implements HttpSession {
 
 	private int maxInactiveInterval = 1800;
 
-	private static String SESSION_ID = "sid";
-
-	public Session(HttpContext context, SessionManager sessionManager) {
-		createTime = System.currentTimeMillis();
-		sessionId = RequestUtils.getCookieValue(context.getRequest(),
-				SESSION_ID);
-		if (StringUtils.isBlank(sessionId)) {
-			sessionId = DigestUtils.md5Hex(UUID.randomUUID().toString());
-			setAttribute(SESSION_ID, sessionId);
-			RequestUtils.saveCookie(context.getRequest(),
-					context.getResponse(), SESSION_ID, sessionId);
-		}
+	public Session(HttpContext context, SessionManager sessionManager,
+			String sid) {
 		this.httpContext = context;
 		this.sessionManager = sessionManager;
-		this.sessionManager.setHttpSession(this);
-		sessionManager.initialize();
+		this.sessionId = sid;
+		if (StringUtils.isBlank(sessionId)) {
+			createTime = System.currentTimeMillis();
+			sessionId = DigestUtils.md5Hex(salt + UUID.randomUUID().toString());
+		}
+		sessionManager.initialize(this);
+	}
+
+	public void save() {
+		sessionManager.save(this);
+		Cookie cookie = new Cookie(SESSION_ID, getId());
+		cookie.setMaxAge(getMaxInactiveInterval());
+		try {
+			String[] array = new URL(httpContext.getRequest().getRequestURL()
+					.toString()).getHost().split("\\.");
+			StringBuilder domain = new StringBuilder();
+			domain.append('.');
+			domain.append(array[array.length - 2]);
+			domain.append('.');
+			domain.append(array[array.length - 1]);
+			cookie.setDomain(domain.toString());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		httpContext.getResponse().addCookie(cookie);
 	}
 
 	public long getCreationTime() {
@@ -106,7 +128,7 @@ public class Session implements HttpSession {
 	}
 
 	public void invalidate() {
-		sessionManager.invalidate();
+		sessionManager.invalidate(this);
 	}
 
 	public boolean isNew() {
@@ -135,7 +157,4 @@ public class Session implements HttpSession {
 		this.attrMap = attrMap;
 	}
 
-	public void save() {
-		sessionManager.save();
-	}
 }

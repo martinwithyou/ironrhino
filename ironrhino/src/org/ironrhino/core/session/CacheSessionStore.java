@@ -21,8 +21,8 @@ public class CacheSessionStore implements SessionStore {
 	public void save(Session session) {
 		Cache sessionCache = CacheContext.getCache(CACHE_NAME);
 		JCache jcache = (JCache) sessionCache;
-		// TODO timeToIdle
-		jcache.put(session.getId(), session.getAttrMap(), 30 * 60);
+		jcache.put(session.getId(), session.getAttrMap(), session
+				.getMaxInactiveInterval());
 	}
 
 	public void invalidate(Session session) {
