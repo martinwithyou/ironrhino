@@ -93,9 +93,18 @@ Observation.common = function(container) {
 		$(this).attr('_captcha_', true);
 	});
 	if (typeof $.fn.treeTable != 'undefined')
-		$('.treeTable').treeTable();
+		$('.treeTable', container).each(function() {
+			$(this).treeTable({
+				initialState : $(this).hasClass('expanded')
+						? 'expanded'
+						: 'collapsed'
+			});
+		});
 	if (typeof $.fn.sexyCombo != 'undefined')
-		$('select.combox', container).sexyCombo({emptyText:MessageBundle.get('select'),triggerSelected:true});
+		$('select.combox', container).sexyCombo({
+					emptyText : MessageBundle.get('select'),
+					triggerSelected : true
+				});
 	if (typeof $.fn.fileUpload != 'undefined')
 		$('.uploadify').each(function() {
 			var options = {

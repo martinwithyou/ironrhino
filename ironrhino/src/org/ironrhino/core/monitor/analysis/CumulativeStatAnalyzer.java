@@ -2,18 +2,17 @@ package org.ironrhino.core.monitor.analysis;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.Value;
-import org.ironrhino.core.monitor.analysis.model.TreeNode;
 
 public class CumulativeStatAnalyzer extends StatAnalyzer {
 
-	private List<TreeNode> topLevel = new ArrayList<TreeNode>();
-
-	private int index = 0;
+	private List<TreeNode> topTreeNodes = new ArrayList<TreeNode>();
 
 	public CumulativeStatAnalyzer() {
 		super();
@@ -43,55 +42,73 @@ public class CumulativeStatAnalyzer extends StatAnalyzer {
 		super(file);
 	}
 
-	public List<TreeNode> getList() {
-		return topLevel;
+	public List<TreeNode> getTopTreeNodes() {
+		return topTreeNodes;
 	}
 
 	protected void process(Key key, Value value, Date date) {
 		if (!key.isCumulative())
 			return;
-		// TreeNode parent = null;
-		List<TreeNode> list = topLevel;
-		for (int i = 1; i <= key.getLevel(); i++) {
+		List<TreeNode> list = topTreeNodes;
+		int level = key.getLevel();
+		for (int i = 1; i <= level; i++) {
 			Key cur = key.parent(i);
 			TreeNode node = null;
 			boolean contains = false;
 			for (int j = 0; j < list.size(); j++) {
 				node = list.get(j);
 				if (cur.equals(node.getKey())) {
-					node.getValue().cumulate(value);
+					if (i == level)
+						node.getValue().cumulate(value);
 					contains = true;
 					break;
 				}
 			}
 			if (!contains) {
 				node = new TreeNode();
-				node.setId(++index);
 				node.setKey(cur);
-				node.setValue(value);
+				node.setValue(i == level ? value : new Value());
 				list.add(node);
 			}
-			// parent = node;
 			list = node.getChildren();
 		}
 
 	}
 
 	protected void postAnalyze() {
-		// TODO sort;
+		for (TreeNode topNode : topTreeNodes) {
+			TreeWalker.walk(topNode, new TreeWalker.Visitor() {
+				public void visit(TreeNode node) {
+					if (!node.isLeaf()) {
+						Value v = node.getValue();
+						if (v == null) {
+							v = new Value();
+							node.setValue(v);
+						}
+						List<TreeNode> children = node.getChildren();
+						Collections.sort(children, new Comparator<TreeNode>() {
+							public int compare(TreeNode o1, TreeNode o2) {
+								return o1.getKey().compareTo(o2.getKey());
+							}
+						});
+						for (TreeNode n : children){
+							n.setParent(node);
+							v.cumulate(n.getValue());
+						}
+					}
+				}
+			}, true);
+		}
+
+		for (TreeNode topNode : topTreeNodes) {
+			TreeWalker.walk(topNode, new TreeWalker.Visitor() {
+				int id;
+
+				public void visit(TreeNode node) {
+					node.setId(++id);
+				}
+			});
+		}
 	}
 
-	public static void main(String... strings) {
-
-		CumulativeStatAnalyzer ana = new CumulativeStatAnalyzer();
-		ana.analyze();
-		walk(ana.getList().get(0));
-
-	}
-
-	public static void walk(TreeNode node) {
-		System.out.println(node.getKey() + "=" + node.getValue());
-		for (TreeNode tn : node.getChildren())
-			walk(tn);
-	}
 }

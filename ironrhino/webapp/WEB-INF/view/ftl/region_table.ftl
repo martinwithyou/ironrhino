@@ -17,11 +17,11 @@
 <title>region table</title>
 </head>
 <body>
-<table class="treeTable">
+<table class="treeTable" width="100%">
   <thead>
     <tr>
-      <th>name</th>
-      <th>fullname</th>
+      <th width="30%">name</th>
+      <th width="70%">fullname</th>
     </tr>
   </thead>
   <tbody>

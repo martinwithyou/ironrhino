@@ -87,7 +87,7 @@ public abstract class StatAnalyzer implements Analyzer {
 				fis = new FileInputStream(file);
 				br = new BufferedReader(new InputStreamReader(fis,
 						MonitorSettings.ENCODING));
-				while (StringUtils.isNotBlank((line = br.readLine())))
+				while ((line = br.readLine()) != null)
 					if (StringUtils.isNotBlank(line))
 						processLine(line);
 			}

@@ -15,6 +15,11 @@ public class Value implements Serializable {
 
 	// private double doubleValue;
 
+	public Value() {
+		longValue = new AtomicLong(0);
+		doubleValue = new AtomicLong(0);
+	}
+
 	public Value(long c) {
 		longValue = new AtomicLong(c);
 		doubleValue = new AtomicLong(0);

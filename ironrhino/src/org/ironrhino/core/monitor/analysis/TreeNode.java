@@ -1,4 +1,4 @@
-package org.ironrhino.core.monitor.analysis.model;
+package org.ironrhino.core.monitor.analysis;
 
 import java.io.Serializable;
 import java.util.ArrayList;
