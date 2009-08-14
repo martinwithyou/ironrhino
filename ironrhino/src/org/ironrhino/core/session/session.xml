@@ -11,5 +11,4 @@
 		scope="prototype" /
 	-->
 	<bean id="sessionStore" class="org.ironrhino.core.session.CacheSessionStore" />
-	<bean id="sessionCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean" />
 </beans>
