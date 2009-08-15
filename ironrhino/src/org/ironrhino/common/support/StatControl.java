@@ -1,5 +1,6 @@
 package org.ironrhino.common.support;
 
+import java.io.FileNotFoundException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,9 +19,10 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Stat;
 import org.ironrhino.core.monitor.Key;
+import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
-import org.ironrhino.core.monitor.analysis.StatAnalyzer;
 import org.ironrhino.core.monitor.analysis.Analyzer;
+import org.ironrhino.core.monitor.analysis.FileAnalyzer;
 import org.ironrhino.core.service.BaseManager;
 
 public class StatControl {
@@ -37,9 +39,9 @@ public class StatControl {
 		return archive(false);
 	}
 
-	public boolean archive(boolean tody) {
+	public boolean archive(boolean today) {
 		Calendar cal = Calendar.getInstance();
-		if (!tody)
+		if (!today)
 			cal.add(Calendar.DAY_OF_YEAR, -1);
 		final Date statDay = cal.getTime();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -62,7 +64,7 @@ public class StatControl {
 			lastStatDate = null;
 
 		try {
-			Analyzer analyzer = new StatAnalyzer(statDay) {
+			Analyzer analyzer = new FileAnalyzer(statDay) {
 				Calendar calendar = Calendar.getInstance();
 				int currentHour = 0;
 				Map<Key, Value> map = new HashMap<Key, Value>();
@@ -79,50 +81,50 @@ public class StatControl {
 							});
 					for (Map.Entry<Key, Value> entry : list)
 						baseManager.save(new Stat(entry.getKey().toString(),
-								entry.getValue().getLong(), entry.getValue()
-										.getDouble(), new Timestamp(entry
+								entry.getValue().getLongValue(), entry.getValue()
+										.getDoubleValue(), new Timestamp(entry
 										.getKey().getLastWriteTime())));
 					map.clear();
 				}
 
-				protected void process(Key key, Value value, Date date) {
-					if (!key.isCumulative())
+				protected void process(KeyValuePair pair) {
+					if (!pair.getKey().isCumulative())
 						return;
 					if (lastStatDate != null) {
 						long time = lastStatDate.getTime();
-						//hibernate doesn't handle mysql's timestamp
+						// hibernate doesn't handle mysql's timestamp
 						if (time % 1000 == 0)
 							time += 999;
-						if (date.getTime() <= time)
+						if (pair.getDate().getTime() <= time)
 							return;
 					}
 					Key lastKey = null;
 					Value lastValue = null;
 					for (Map.Entry<Key, Value> entry : map.entrySet()) {
-						if (key.equals(entry.getKey())) {
+						if (pair.getKey().equals(entry.getKey())) {
 							lastKey = entry.getKey();
 							lastValue = entry.getValue();
 							break;
 						}
 					}
 					if (lastValue == null) {
-						lastKey = key;
-						lastValue = value;
-						lastKey.setLastWriteTime(date.getTime());
+						lastKey = pair.getKey();
+						lastValue = pair.getValue();
+						lastKey.setLastWriteTime(pair.getDate().getTime());
 						map.put(lastKey, lastValue);
 					} else {
 						if (calendar.get(Calendar.HOUR_OF_DAY) == currentHour) {
-							lastKey.setLastWriteTime(date.getTime());
-							lastValue.cumulate(value);
+							lastKey.setLastWriteTime(pair.getDate().getTime());
+							lastValue.cumulate(pair.getValue());
 						} else {
 							save();
-							lastKey = key;
-							lastValue = value;
-							lastKey.setLastWriteTime(date.getTime());
+							lastKey = pair.getKey();
+							lastValue = pair.getValue();
+							lastKey.setLastWriteTime(pair.getDate().getTime());
 							map.put(lastKey, lastValue);
 						}
 					}
-					calendar.setTime(date);
+					calendar.setTime(pair.getDate());
 					currentHour = calendar.get(Calendar.HOUR_OF_DAY);
 				}
 
@@ -131,7 +133,7 @@ public class StatControl {
 				}
 			};
 			analyzer.analyze();
-		} catch (RuntimeException e) {
+		} catch (FileNotFoundException e) {
 			log.error(e.getMessage(), e);
 			return false;
 		}

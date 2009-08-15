@@ -53,6 +53,22 @@ public class DateUtils {
 		}
 	}
 
+	public static boolean isToday(Date date) {
+		return isSameDay(date, new Date());
+	}
+
+	public static boolean isSameDay(Date date1, Date date2) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date1);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		cal.setTime(date2);
+		return year == cal.get(Calendar.YEAR)
+				&& month == cal.get(Calendar.MONTH)
+				&& day == cal.get(Calendar.DAY_OF_MONTH);
+	}
+
 	public static boolean isMonthEnd(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);

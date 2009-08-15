@@ -36,30 +36,30 @@ public class Value implements Serializable {
 	}
 
 	public Number[] add(long c, double d) {
-		c = addLong(c);
-		d = addDouble(d);
+		c = addLongValue(c);
+		d = addDoubleValue(d);
 		return new Number[] { c, d };
 	}
 
-	public long addLong(long value) {
+	public long addLongValue(long value) {
 		return longValue.addAndGet(value);
 	}
 
-	public long getLong() {
+	public long getLongValue() {
 		return longValue.get();
 	}
 
-	public double addDouble(double value) {
+	public double addDoubleValue(double value) {
 		return ((double) doubleValue.getAndAdd((long) (value * PRECISION)))
 				/ PRECISION;
 	}
 
-	public double getDouble() {
+	public double getDoubleValue() {
 		return ((double) doubleValue.get()) / PRECISION;
 	}
 
 	public String toString() {
-		return String.valueOf(getLong()) + "," + String.valueOf(getDouble());
+		return String.valueOf(getLongValue()) + "," + String.valueOf(getDoubleValue());
 	}
 
 	public static Value fromString(String s) {
@@ -70,8 +70,8 @@ public class Value implements Serializable {
 	}
 
 	public void cumulate(Value value) {
-		this.addLong(value.getLong());
-		this.addDouble(value.getDouble());
+		this.addLongValue(value.getLongValue());
+		this.addDoubleValue(value.getDoubleValue());
 	}
 
 }

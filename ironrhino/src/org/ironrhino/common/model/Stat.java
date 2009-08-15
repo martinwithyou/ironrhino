@@ -6,6 +6,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.annotation.FormElement;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.monitor.Key;
+import org.ironrhino.core.monitor.KeyValuePair;
+import org.ironrhino.core.monitor.Value;
 
 @AutoConfig(readonly = true)
 public class Stat extends BaseEntity {
@@ -68,5 +71,10 @@ public class Stat extends BaseEntity {
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public KeyValuePair toKeyValuePair() {
+		return new KeyValuePair(Key.fromString(getKey()), new Value(longValue,
+				doubleValue), statDate);
 	}
 }

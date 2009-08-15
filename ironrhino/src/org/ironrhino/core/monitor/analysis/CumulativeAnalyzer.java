@@ -1,72 +1,54 @@
 package org.ironrhino.core.monitor.analysis;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.monitor.Key;
+import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
 
-public class CumulativeStatAnalyzer extends StatAnalyzer {
+public class CumulativeAnalyzer extends AbstractAnalyzer {
 
 	private Map<String, List<TreeNode>> data = new HashMap<String, List<TreeNode>>();
 
-	public CumulativeStatAnalyzer() {
-		super();
-	}
+	private Iterator<KeyValuePair> iterator;
 
-	public CumulativeStatAnalyzer(Date start, Date end, boolean excludeEnd) {
-		super(start, end, excludeEnd);
-	}
-
-	public CumulativeStatAnalyzer(Date start, Date end) {
-		super(start, end);
-	}
-
-	public CumulativeStatAnalyzer(Date date) {
-		super(date);
-	}
-
-	public CumulativeStatAnalyzer(Date[] dates) {
-		super(dates);
-	}
-
-	public CumulativeStatAnalyzer(File... files) {
-		super(files);
-	}
-
-	public CumulativeStatAnalyzer(File file) {
-		super(file);
+	public CumulativeAnalyzer(Iterator<KeyValuePair> iterator) {
+		this.iterator = iterator;
 	}
 
 	public Map<String, List<TreeNode>> getData() {
 		return data;
 	}
 
-	protected void process(Key key, Value value, Date date) {
-		if (!key.isCumulative())
+	public Iterator<KeyValuePair> iterate() {
+		return iterator;
+	}
+
+	protected void process(KeyValuePair pair) {
+		if (!pair.getKey().isCumulative())
 			return;
-		List<TreeNode> list = data.get(key.getNamespace());
+		List<TreeNode> list = data.get(pair.getKey().getNamespace());
 		if (list == null)
 			list = new ArrayList<TreeNode>();
-		data.put(key.getNamespace(), list);
-		int level = key.getLevel();
+		data.put(pair.getKey().getNamespace(), list);
+		int level = pair.getKey().getLevel();
 		for (int i = 1; i <= level; i++) {
-			Key cur = key.parent(i);
+			Key cur = pair.getKey().parent(i);
 			TreeNode node = null;
 			boolean contains = false;
 			for (int j = 0; j < list.size(); j++) {
 				node = list.get(j);
 				if (cur.equals(node.getKey())) {
 					if (i == level)
-						node.getValue().cumulate(value);
+						node.getValue().cumulate(pair.getValue());
 					contains = true;
 					break;
 				}
@@ -74,7 +56,7 @@ public class CumulativeStatAnalyzer extends StatAnalyzer {
 			if (!contains) {
 				node = new TreeNode();
 				node.setKey(cur);
-				node.setValue(i == level ? value : new Value());
+				node.setValue(i == level ? pair.getValue() : new Value());
 				list.add(node);
 			}
 			list = node.getChildren();
@@ -124,17 +106,15 @@ public class CumulativeStatAnalyzer extends StatAnalyzer {
 							return;
 						for (TreeNode n : node.getChildren()) {
 							n.setParent(node);
-							if (n.getValue().getLong() > 0)
-								n
-										.setLongPercent(NumberUtils
-												.formatPercent(((double) n
-														.getValue().getLong())
-														/ node.getValue()
-																.getLong(), 2));
-							if (n.getValue().getDouble() > 0)
+							if (n.getValue().getLongValue() > 0)
+								n.setLongPercent(NumberUtils.formatPercent(
+										((double) n.getValue().getLongValue())
+												/ node.getValue()
+														.getLongValue(), 2));
+							if (n.getValue().getDoubleValue() > 0)
 								n.setDoublePercent(NumberUtils.formatPercent(n
-										.getValue().getDouble()
-										/ node.getValue().getDouble(), 2));
+										.getValue().getDoubleValue()
+										/ node.getValue().getDoubleValue(), 2));
 						}
 					}
 				});
@@ -144,15 +124,15 @@ public class CumulativeStatAnalyzer extends StatAnalyzer {
 		Map<String, List<TreeNode>> linked = new LinkedHashMap<String, List<TreeNode>>();
 		List<String> namespaces = new ArrayList();
 		namespaces.addAll(data.keySet());
-		Collections.sort(namespaces,new Comparator<String>(){
+		Collections.sort(namespaces, new Comparator<String>() {
 			public int compare(String o1, String o2) {
-				if(o1 == null)
+				if (o1 == null)
 					return -1;
-				if(o2 ==null)
+				if (o2 == null)
 					return 1;
 				return o1.compareTo(o2);
 			}
-			
+
 		});
 		for (String namespace : namespaces)
 			linked.put(namespace, data.get(namespace));

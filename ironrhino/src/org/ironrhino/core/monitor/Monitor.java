@@ -115,17 +115,18 @@ public class Monitor {
 			Value value = entry.getValue();
 			if (((!checkInterval || (current - key.getLastWriteTime())
 					/ MonitorSettings.getIntervalUnit() > key.getInterval()))
-					&& (value.getLong() > 0 || value.getDouble() > 0)) {
+					&& (value.getLongValue() > 0 || value.getDoubleValue() > 0)) {
 				key.setLastWriteTime(current);
 				output(statLogger, key, value);
-				temp.put(key, new Value(value.getLong(), value.getDouble()));
+				temp.put(key, new Value(value.getLongValue(), value
+						.getDoubleValue()));
 			}
 		}
 		for (Map.Entry<Key, Value> entry : temp.entrySet()) {
 			Key key = entry.getKey();
 			Value value = data.get(key);
-			value.add(-entry.getValue().getLong(), -entry.getValue()
-					.getDouble());
+			value.add(-entry.getValue().getLongValue(), -entry.getValue()
+					.getDoubleValue());
 		}
 		if (currentSystemInterval % MonitorSettings.getSystemIntervalMultiple() == 0)
 			printSystemInfo();
