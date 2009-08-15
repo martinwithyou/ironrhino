@@ -13,7 +13,7 @@ public @interface CheckCache {
 	String key();
 
 	// mvel expression
-	String name() default CacheContext.DEFAULT_CACHE_NAME;
+	String namespace() default CacheContext.DEFAULT_CACHE_NAMESPACE;
 
 	// mvel expression
 	String when() default "";

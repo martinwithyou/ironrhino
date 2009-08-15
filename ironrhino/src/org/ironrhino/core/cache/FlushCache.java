@@ -10,11 +10,11 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface FlushCache {
 
-	// mvel expression "product_code_${args[0].code},product_id_${args[0].id}"
+	// mvel expression
 	String key();
 
 	// mvel expression
-	String name() default CacheContext.DEFAULT_CACHE_NAME;
+	String namespace() default CacheContext.DEFAULT_CACHE_NAMESPACE;
 
 	// mvel expression
 	String onFlush() default "";

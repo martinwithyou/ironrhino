@@ -1,16 +1,28 @@
 package org.ironrhino.core.aspect;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AopContext {
 
-	private static ThreadLocal<Class> bypass = new ThreadLocal<Class>();
+	private static ThreadLocal<List<Class>> bypass = new ThreadLocal<List<Class>>();
 
 	public static void setBypass(Class clazz) {
-		bypass.set(clazz);
+		List<Class> list = bypass.get();
+		if (list == null)
+			list = new ArrayList<Class>(5);
+		list.add(clazz);
+		bypass.set(list);
 	}
 
 	public static boolean isBypass(Class clazz) {
-		boolean bl = (bypass.get() != null && bypass.get().equals(clazz));
-		bypass.set(null);
+		List<Class> list = bypass.get();
+		if (list == null) {
+			return false;
+		}
+		boolean bl = list.contains(clazz);
+		if (bl)
+			list.remove(clazz);
 		return bl;
 	}
 

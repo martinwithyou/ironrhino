@@ -49,7 +49,7 @@ span.percent{
 <#list data.entrySet() as entry>
 <table class="treeTable expanded highlightrow" width="100%">
   <#if entry.key?exists>
-  <caption>${entry.key}</caption>
+  <caption><h3>${entry.key}</h3></caption>
   </#if>
   <thead>
     <tr>

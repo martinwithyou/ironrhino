@@ -199,9 +199,8 @@ public class ProductFacadeImpl implements ProductFacade {
 		return resultPage;
 	}
 
-	@CheckCache(key = "product_${args[0]}")
+	@CheckCache(key = "${args[0]}", namespace = "product", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','product','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','product','miss'})}")
 	public Product getProductByCode(String code) {
-
 		DetachedCriteria dc = productManager.detachedCriteria();
 		dc.setFetchMode("attributes", FetchMode.JOIN);
 		dc.setFetchMode("roles", FetchMode.JOIN);

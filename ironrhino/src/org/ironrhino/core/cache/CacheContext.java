@@ -31,9 +31,9 @@ public class CacheContext {
 
 	public static final String DEFAULT_SCOPE = "application";
 
-	public static final String DEFAULT_CACHE_NAME = "default";
+	public static final String DEFAULT_CACHE_NAMESPACE = "default";
 
-	public static final String PAGE_FRAGMENT_CACHE_NAME = "page";
+	public static final String PAGE_FRAGMENT_CACHE_NAMESPACE = "page";
 
 	private static Lock lock = new ReentrantLock();
 
@@ -84,7 +84,7 @@ public class CacheContext {
 	public static String getPageFragment(String key, String scope) {
 		try {
 			Object actualKey = eval(key);
-			Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAME);
+			Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAMESPACE);
 			if (actualKey == null || CacheContext.isForceFlush()
 					|| cache == null)
 				return null;
@@ -102,7 +102,7 @@ public class CacheContext {
 
 	public static void putPageFragment(String key, String content,
 			String scope, String timeToLive, String timeToIdle) {
-		Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAME);
+		Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAMESPACE);
 		Object actualKey = eval(key);
 		if (actualKey == null || cache == null)
 			return;

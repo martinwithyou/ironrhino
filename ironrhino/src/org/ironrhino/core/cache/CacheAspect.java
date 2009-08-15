@@ -36,7 +36,7 @@ public class CacheAspect implements Ordered {
 	@Around("execution(public java.io.Serializable+ *(..)) and @annotation(checkCache)")
 	public Object get(ProceedingJoinPoint jp, CheckCache checkCache)
 			throws Throwable {
-		String name = eval(checkCache.name(), jp, null).toString();
+		String name = eval(checkCache.namespace(), jp, null).toString();
 		String key = checkKey(jp, checkCache);
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(name);
 		if (cache == null || key == null
@@ -67,14 +67,15 @@ public class CacheAspect implements Ordered {
 
 	@AfterReturning("@annotation(flushCache)")
 	public void remove(JoinPoint jp, FlushCache flushCache) {
-		String name = eval(flushCache.name(), jp, null).toString();
+		String name = eval(flushCache.namespace(), jp, null).toString();
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(name, false);
 		List keys = flushKeys(jp, flushCache);
 		if (AopContext.isBypass(this.getClass()) || cache == null
 				|| keys == null)
 			return;
 		for (Object key : keys)
-			cache.remove(key.toString().trim());
+			if (key != null)
+				cache.remove(key.toString().trim());
 		eval(flushCache.onFlush(), jp, null);
 	}
 

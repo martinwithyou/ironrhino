@@ -182,6 +182,10 @@ public class Monitor {
 		return (Double) add(key, 0, d)[1];
 	}
 
+	public static long add(String... names) {
+		return add(new Key(names), 1);
+	}
+
 	public static long add(Key key) {
 		return add(key, 1);
 	}

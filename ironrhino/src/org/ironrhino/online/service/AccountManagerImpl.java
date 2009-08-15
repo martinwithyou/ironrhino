@@ -42,7 +42,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 	}
 
 	@Transactional
-	@FlushCache(key = "account_${args[0].username},account_${args[0].email},account_${args[0].openid}")
+	@FlushCache(key = "${[args[0].username,args[0].email,args[0].openid]}", namespace = "account")
 	public void save(Account account) {
 		if (regionTreeControl != null && account.getRegion() == null)
 			account.setRegion(regionTreeControl.parseByAddress(account
@@ -51,7 +51,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 	}
 
 	@Transactional(readOnly = true)
-	@CheckCache(key = "account_${args[0]}")
+	@CheckCache(key = "${args[0]}", namespace = "account", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','miss'})}")
 	public Account loadUserByUsername(String username) {
 		if (StringUtils.isEmpty(username))
 			return null;
@@ -110,21 +110,21 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 				.toArray(new GrantedAuthority[auths.size()]));
 	}
 
-	@CheckCache(key = "account_${args[0]}")
+	@CheckCache(key = "${args[0]}", namespace = "account", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','miss'})}")
 	public Account getAccountByUsername(String username) {
 		if (StringUtils.isEmpty(username))
 			return null;
 		return getByNaturalId(true, "username", username);
 	}
 
-	@CheckCache(key = "account_${args[0]}")
+	@CheckCache(key = "${args[0]}", namespace = "account", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','miss'})}")
 	public Account getAccountByEmail(String email) {
 		if (StringUtils.isEmpty(email))
 			return null;
 		return getByNaturalId(true, "email", email);
 	}
 
-	@CheckCache(key = "account_${args[0]}")
+	@CheckCache(key = "${args[0]}", namespace = "account", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','miss'})}")
 	public Account getAccountByOpenid(String openid) {
 		if (StringUtils.isEmpty(openid))
 			return null;
