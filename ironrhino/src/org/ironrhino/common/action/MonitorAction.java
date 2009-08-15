@@ -1,6 +1,7 @@
 package org.ironrhino.common.action;
 
 import java.util.List;
+import java.util.Map;
 
 import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
@@ -10,16 +11,16 @@ import org.ironrhino.core.monitor.analysis.TreeNode;
 @AutoConfig
 public class MonitorAction extends BaseAction {
 
-	private List<TreeNode> list;
+	private Map<String, List<TreeNode>> data;
 
-	public List<TreeNode> getList() {
-		return list;
+	public Map<String, List<TreeNode>> getData() {
+		return data;
 	}
 
 	public String execute() {
 		CumulativeStatAnalyzer ana = new CumulativeStatAnalyzer();
 		ana.analyze();
-		list = ana.getTopTreeNodes();
+		data = ana.getData();
 		return SUCCESS;
 	}
 

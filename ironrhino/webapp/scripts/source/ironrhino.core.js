@@ -69,6 +69,11 @@ Observation.common = function(container) {
 								})
 				});
 	}
+	$('.highlightrow tr').hover(function(){
+		$(this).addClass('highlight');
+	},function(){
+		$(this).removeClass('highlight');
+	});
 	if (typeof $.fn.tabs != 'undefined')
 		$('div.tabs', container).each(function() {
 					$(this).tabs().tabs('select', $(this).attr('tab'))

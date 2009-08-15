@@ -1,8 +1,8 @@
 <#macro renderTR node>
 <tr id="node-${node.id}"<#if node.parent?exists&&node.parent.id gt 0> class="child-of-node-${node.parent.id}"</#if>>
         <td>${node.name}</td>
-        <td>${node.value.long}</td>
-        <td>${node.value.double}</td>
+        <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.long gt 0><span class="number">${node.value.long}</span><span class="perccent">${node.longPercent?if_exists}</span></#if></td>
+        <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.double gt 0><span class="number">${node.value.double}</span><span  class="perccent">${node.doublePercent?if_exists}</span></#if></td>
         <td><a href="#">detail</a></td>
 </tr>
 <#if node.leaf>
@@ -17,22 +17,39 @@
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Monitor</title>
+<style>
+span.number{
+	float: left;
+	display: block;
+	width: 80px;
+}
+span.percent{
+	float: left;
+	display: block;
+	width: 20px;
+}
+</style>
 </head>
 <body>
-<table class="treeTable expanded" width="100%">
+<#list data.entrySet() as entry>
+<table class="treeTable expanded highlightrow" width="100%">
+  <#if entry.key?exists>
+  <caption>${entry.key}</caption>
+  </#if>
   <thead>
     <tr>
       <th>name</th>
-      <th width="10%">longValue</th>
-      <th width="10%">doubleValue</th>
-      <th width="20%"></th>
+      <th width="20%">longValue</th>
+      <th width="20%">doubleValue</th>
+      <th width="10%"></th>
     </tr>
   </thead>
   <tbody>
-    <#list list as var>
+    <#list entry.value as var>
       <@renderTR var/>
     </#list>
   </tbody>
 </table>
+</#list>
 </body>
 </html></#escape>

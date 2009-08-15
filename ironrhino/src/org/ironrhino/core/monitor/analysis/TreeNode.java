@@ -19,6 +19,26 @@ public class TreeNode implements Serializable {
 
 	private Value value;
 
+	private String longPercent;
+
+	private String doublePercent;
+
+	public String getLongPercent() {
+		return longPercent;
+	}
+
+	public void setLongPercent(String longPercent) {
+		this.longPercent = longPercent;
+	}
+
+	public String getDoublePercent() {
+		return doublePercent;
+	}
+
+	public void setDoublePercent(String doublePercent) {
+		this.doublePercent = doublePercent;
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -36,4 +36,13 @@ public class NumberUtils {
 				new MathContext(precision, RoundingMode.HALF_UP)).doubleValue());
 	}
 
+	public static String formatPercent(double value, int fractionDigits) {
+		value *= 100;
+		return format(value, fractionDigits) + "%";
+	}
+	
+	public static void main(String...strings){
+		System.out.println(formatPercent(0.1234567, 2));
+	}
+
 }

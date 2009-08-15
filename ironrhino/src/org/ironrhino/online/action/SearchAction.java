@@ -1,6 +1,5 @@
 package org.ironrhino.online.action;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -111,9 +110,6 @@ public class SearchAction extends ActionSupport {
 		if (score > 0.999)
 			return "100%";
 		else
-			return NumberUtils.format(NumberUtils.round(
-					new BigDecimal(score).multiply(new BigDecimal(100)), 1)
-					.doubleValue(), 1)
-					+ "%";
+			return NumberUtils.formatPercent(score, 1) + "%";
 	}
 }
