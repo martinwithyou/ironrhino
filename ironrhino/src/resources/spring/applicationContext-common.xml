@@ -24,8 +24,8 @@
 	</bean>
 	<bean id="settingControl"
 		class="org.ironrhino.common.support.SettingControl" />
-	<bean id="statControl"
-		class="org.ironrhino.common.support.StatControl" />
+	<bean id="monitorControl"
+		class="org.ironrhino.common.support.DefaultMonitorControl" />
 	<bean id="regionTreeControl"
 		class="org.ironrhino.common.support.RegionTreeControl" />
 	<!--  

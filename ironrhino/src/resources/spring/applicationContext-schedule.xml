@@ -30,7 +30,7 @@
 		<property name="commands">
 			<list>
 				<value>productPageGenerator.generate()</value>
-				<value>statControl.archive()</value>
+				<value>monitorControl.archive()</value>
 				<value>searchHitsControl.consume()</value>
 			</list>
 		</property>
