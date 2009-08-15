@@ -21,7 +21,6 @@ import org.ironrhino.core.annotation.Captcha;
 import org.ironrhino.core.annotation.JsonConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.mail.MailService;
-import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.Monitor;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.model.Account;
@@ -182,6 +181,10 @@ public class ProductAction extends BaseAction {
 		if (StringUtils.isNotBlank(cateCode))
 			category = categoryTreeControl.getCategoryTree()
 					.getDescendantOrSelfByCode(cateCode);
+		if (StringUtils.isNotBlank(cateCode))
+			Monitor.add("view", "list", cateCode);
+		else
+			Monitor.add("view", "list", "all");
 		return LIST;
 	}
 
@@ -249,7 +252,7 @@ public class ProductAction extends BaseAction {
 				comment.setEmail(account.getEmail());
 			}
 		}
-		Monitor.add(new Key("view","product", product.getCode()));
+		Monitor.add("view", "detail", product.getCode());
 		return VIEW;
 	}
 
