@@ -19,8 +19,10 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Stat;
+import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
+import org.ironrhino.core.monitor.MonitorSettings;
 import org.ironrhino.core.monitor.Value;
 import org.ironrhino.core.monitor.analysis.Analyzer;
 import org.ironrhino.core.monitor.analysis.CumulativeAnalyzer;
@@ -147,32 +149,52 @@ public class DefaultMonitorControl implements MonitorControl {
 		return true;
 	}
 
-	public Map<String, List<TreeNode>> getData(Date date) {
+	public Map<String, List<TreeNode>> getData(Date date)
+			throws FileNotFoundException {
+		return getData(date, date);
+	}
+
+	public Map<String, List<TreeNode>> getData(Date from, Date to)
+			throws FileNotFoundException {
 		Date today = new Date();
-		if (date == null || date.after(today))
-			date = today;
-		try {
-			CumulativeFileAnalyzer ana = new CumulativeFileAnalyzer(date);
+		if (from == null)
+			throw new IllegalArgumentException("from is null");
+		if (to == null || to.after(today))
+			to = today;
+		if (to.before(from))
+			throw new IllegalArgumentException("to is before of from");
+		Date criticalDate = getCriticalDate(from, to);
+		boolean allInFile = DateUtils.isSameDay(criticalDate, from);
+		if (allInFile) {
+			CumulativeFileAnalyzer ana = new CumulativeFileAnalyzer(from, to);
 			ana.analyze();
 			return ana.getData();
-		} catch (FileNotFoundException e) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
-			cal.set(Calendar.HOUR_OF_DAY, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.SECOND, 0);
-			Date start = cal.getTime();
-			cal.set(Calendar.HOUR_OF_DAY, 23);
-			cal.set(Calendar.MINUTE, 59);
-			cal.set(Calendar.SECOND, 59);
-			Date end = cal.getTime();
-			baseManager.setEntityClass(Stat.class);
-			DetachedCriteria dc = baseManager.detachedCriteria();
-			dc.add(Restrictions.between("statDate", start, end));
+		}
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(from);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		Date start = cal.getTime();
+		if (criticalDate == null) {
+			cal.setTime(to);
+		} else {
+			cal.setTime(criticalDate);
+			cal.add(Calendar.DAY_OF_YEAR, -1);
+		}
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		Date end = cal.getTime();
+		baseManager.setEntityClass(Stat.class);
+		DetachedCriteria dc = baseManager.detachedCriteria();
+		dc.add(Restrictions.between("statDate", start, end));
+		List<Stat> list = baseManager.getListByCriteria(dc);
+		if (list.size() > 0) {
 			final Iterator<Stat> it = baseManager.getListByCriteria(dc)
 					.iterator();
 			Iterator<KeyValuePair> iterator = new Iterator<KeyValuePair>() {
-
 				public boolean hasNext() {
 					return it.hasNext();
 				}
@@ -184,11 +206,40 @@ public class DefaultMonitorControl implements MonitorControl {
 				public void remove() {
 					it.remove();
 				}
-
 			};
-			CumulativeAnalyzer ana = new CumulativeAnalyzer(iterator);
+
+			CumulativeAnalyzer ana;
+			if (criticalDate != null) {
+				ana = new CumulativeAnalyzer(new CumulativeFileAnalyzer(
+						criticalDate, to).iterate(), iterator);
+			} else {
+				ana = new CumulativeAnalyzer(iterator);
+			}
 			ana.analyze();
 			return ana.getData();
+		} else {
+			if (criticalDate != null) {
+				CumulativeFileAnalyzer cfa = new CumulativeFileAnalyzer(
+						criticalDate, to);
+				cfa.analyze();
+				return cfa.getData();
+			} else {
+				return new HashMap<String, List<TreeNode>>();
+			}
 		}
+
 	}
+
+	private Date getCriticalDate(Date from, Date to) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(to);
+		Date criticalDate = null;
+		while (MonitorSettings.hasLogFile(cal.getTime())
+				&& !DateUtils.isSameDay(criticalDate, from)) {
+			criticalDate = cal.getTime();
+			cal.add(Calendar.DAY_OF_YEAR, -1);
+		}
+		return criticalDate;
+	}
+
 }

@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ironrhino.common.util.CompositeIterator;
 import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
@@ -20,8 +21,11 @@ public class CumulativeAnalyzer extends AbstractAnalyzer {
 
 	private Iterator<KeyValuePair> iterator;
 
-	public CumulativeAnalyzer(Iterator<KeyValuePair> iterator) {
-		this.iterator = iterator;
+	public CumulativeAnalyzer(Iterator<KeyValuePair>... iterators) {
+//		if (iterators.length == 1)
+//			this.iterator = iterators[0];
+//		else
+			this.iterator = new CompositeIterator<KeyValuePair>(iterators);
 	}
 
 	public Map<String, List<TreeNode>> getData() {

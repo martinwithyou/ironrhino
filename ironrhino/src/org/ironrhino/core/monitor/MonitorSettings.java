@@ -3,9 +3,12 @@ package org.ironrhino.core.monitor;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ironrhino.common.util.DateUtils;
 
 public class MonitorSettings {
 
@@ -70,4 +73,10 @@ public class MonitorSettings {
 		return new File(dir, HOST + "_" + logfile).getAbsolutePath();
 	}
 
+	public static boolean hasLogFile(Date date) {
+		return new File(MonitorSettings
+				.getLogFile(MonitorSettings.STAT_LOG_FILE)
+				+ (DateUtils.isToday(date) ? "" : new SimpleDateFormat(
+						MonitorSettings.DATE_STYLE).format(date))).exists();
+	}
 }

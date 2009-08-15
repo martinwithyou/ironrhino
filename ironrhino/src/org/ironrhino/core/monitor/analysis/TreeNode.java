@@ -99,19 +99,4 @@ public class TreeNode implements Serializable {
 		return key.getNames()[getLevel() - 1];
 	}
 
-	public TreeNode getDescendantOrSelfByKey(Key key) {
-		if (key.equals(this.getKey()))
-			return this;
-		for (TreeNode t : getChildren()) {
-			if (key.equals(t.getKey())) {
-				return t;
-			} else {
-				TreeNode tt = t.getDescendantOrSelfByKey(key);
-				if (tt != null)
-					return tt;
-			}
-		}
-		return null;
-	}
-
 }

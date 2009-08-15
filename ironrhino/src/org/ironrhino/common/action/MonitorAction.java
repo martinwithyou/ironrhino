@@ -1,6 +1,7 @@
 package org.ironrhino.common.action;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,10 +17,30 @@ public class MonitorAction extends BaseAction {
 
 	private Date date;
 
+	private Date from;
+
+	private Date to;
+
 	private transient MonitorControl monitorControl;
 
 	public Map<String, List<TreeNode>> getData() {
 		return data;
+	}
+
+	public Date getFrom() {
+		return from;
+	}
+
+	public void setFrom(Date from) {
+		this.from = from;
+	}
+
+	public Date getTo() {
+		return to;
+	}
+
+	public void setTo(Date to) {
+		this.to = to;
 	}
 
 	public Date getDate() {
@@ -35,11 +56,18 @@ public class MonitorAction extends BaseAction {
 	}
 
 	public String execute() {
-		// TODO date range
-		Date today = new Date();
-		if (date == null || date.after(today))
-			date = today;
-		data = monitorControl.getData(date);
+		try {
+			if (from != null && to != null) {
+				data = monitorControl.getData(from, to);
+			} else {
+				Date today = new Date();
+				if (date == null || date.after(today))
+					date = today;
+				data = monitorControl.getData(date);
+			}
+		} catch (Exception e) {
+			data = new HashMap<String, List<TreeNode>>();
+		}
 		return SUCCESS;
 	}
 
