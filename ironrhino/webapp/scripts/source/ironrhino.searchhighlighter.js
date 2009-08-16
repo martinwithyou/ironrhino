@@ -41,7 +41,7 @@ highlight : function(node, word) {
 		word = word.toLowerCase();
 		if (text.indexOf(word) != -1) {
 			pn = node.parentNode;
-			if (pn.className != "highlight") {
+			if (pn.className != "bold") {
 				nv = node.nodeValue;
 				ni = text.indexOf(word);
 				before = document.createTextNode(nv.substr(0, ni));
@@ -49,7 +49,7 @@ highlight : function(node, word) {
 				after = document.createTextNode(nv.substr(ni + word.length));
 				hiwordtext = document.createTextNode(docWordVal);
 				hiword = document.createElement("span");
-				hiword.className = "highlight";
+				hiword.className = "bold";
 				hiword.appendChild(hiwordtext);
 				pn.insertBefore(before, node);
 				pn.insertBefore(hiword, node);
