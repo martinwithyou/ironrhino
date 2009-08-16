@@ -1,7 +1,7 @@
 package org.ironrhino.online.action;
 
-import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
+import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.monitor.Monitor;
 import org.ironrhino.online.service.ProductFacade;
 

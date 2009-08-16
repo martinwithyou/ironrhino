@@ -1,6 +1,6 @@
 package org.ironrhino.online.model;
 
-import org.ironrhino.core.annotation.NaturalId;
+import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.BaseEntity;
 
 public class SearchHits extends BaseEntity {

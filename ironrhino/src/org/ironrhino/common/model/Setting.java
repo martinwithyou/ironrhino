@@ -1,10 +1,10 @@
 package org.ironrhino.common.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.ironrhino.core.annotation.AutoConfig;
-import org.ironrhino.core.annotation.NaturalId;
-import org.ironrhino.core.annotation.PublishAware;
-import org.ironrhino.core.annotation.RecordAware;
+import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.PublishAware;
+import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 
 @RecordAware

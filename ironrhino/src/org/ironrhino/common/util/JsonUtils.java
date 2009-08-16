@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ironrhino.common.util.DateUtils;
-import org.ironrhino.core.annotation.JsonSerializerType;
-import org.ironrhino.core.annotation.NotInJson;
+import org.ironrhino.core.metadata.JsonSerializerType;
+import org.ironrhino.core.metadata.NotInJson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

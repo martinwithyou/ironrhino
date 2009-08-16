@@ -8,8 +8,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.common.util.AuthzUtils;
-import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
+import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.model.ProductFavorite;
 

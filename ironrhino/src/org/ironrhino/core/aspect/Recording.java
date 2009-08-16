@@ -9,20 +9,20 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.common.model.Record;
 import org.ironrhino.common.util.AuthzUtils;
+import org.ironrhino.common.util.JsonUtils;
 import org.ironrhino.core.event.EntityOperationType;
+import org.ironrhino.core.metadata.JsonSerializerType;
 import org.ironrhino.core.model.Entity;
 import org.ironrhino.core.model.Recordable;
 import org.springframework.core.Ordered;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.security.userdetails.UserDetails;
 
-import com.google.gson.Gson;
-
 /**
  * Use for record model's CRUD operations
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.annotation.RecordAware
+ * @see org.ironrhino.core.metadata.RecordAware
  */
 @Aspect
 public class Recording extends HibernateDaoSupport implements Ordered {
@@ -69,7 +69,8 @@ public class Recording extends HibernateDaoSupport implements Ordered {
 		} catch (Exception e) {
 		}
 		record.setEntityClass(entity.getClass().getName());
-		record.setEntityToString(new Gson().toJson(entity));
+		record.setEntityToString(JsonUtils.toJson(entity,
+				JsonSerializerType.GSON));
 		record.setAction(action.name());
 		record.setRecordDate(new Date());
 		// important! no transaction,inserted before actual save entity and

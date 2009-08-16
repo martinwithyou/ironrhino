@@ -8,11 +8,11 @@ import org.apache.commons.lang.StringUtils;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 import org.ironrhino.common.model.SimpleElement;
-import org.ironrhino.core.annotation.AutoConfig;
-import org.ironrhino.core.annotation.NaturalId;
-import org.ironrhino.core.annotation.NotInCopy;
-import org.ironrhino.core.annotation.PublishAware;
-import org.ironrhino.core.annotation.RecordAware;
+import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.PublishAware;
+import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Secured;
 

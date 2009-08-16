@@ -3,8 +3,8 @@ package org.ironrhino.common.model;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.ironrhino.core.annotation.AutoConfig;
-import org.ironrhino.core.annotation.FormElement;
+import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.FormElement;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;

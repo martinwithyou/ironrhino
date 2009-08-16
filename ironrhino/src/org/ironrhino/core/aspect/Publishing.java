@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Use for record model's CRUD operations
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.annotation.PublishAware
+ * @see org.ironrhino.core.metadata.PublishAware
  */
 @Aspect
 public class Publishing extends BaseAspect {

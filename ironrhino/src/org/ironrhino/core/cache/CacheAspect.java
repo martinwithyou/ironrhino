@@ -14,13 +14,15 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.aspect.BaseAspect;
+import org.ironrhino.core.metadata.CheckCache;
+import org.ironrhino.core.metadata.FlushCache;
 
 /**
  * cache some data
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.cache.CheckCache
- * @see org.ironrhino.core.cache.FlushCache
+ * @see org.ironrhino.core.metadata.CheckCache
+ * @see org.ironrhino.core.metadata.FlushCache
  */
 @Aspect
 public class CacheAspect extends BaseAspect {

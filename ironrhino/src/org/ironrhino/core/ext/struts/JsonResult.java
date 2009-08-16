@@ -16,8 +16,8 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.ironrhino.common.util.JsonUtils;
 import org.ironrhino.common.util.RequestUtils;
-import org.ironrhino.core.annotation.JsonConfig;
-import org.ironrhino.core.annotation.Redirect;
+import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.metadata.Redirect;
 import org.springframework.beans.BeanUtils;
 
 import com.opensymphony.xwork2.ActionInvocation;

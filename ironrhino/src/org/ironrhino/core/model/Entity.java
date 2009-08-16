@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.ironrhino.common.util.AnnotationUtils;
-import org.ironrhino.core.annotation.NaturalId;
+import org.ironrhino.core.metadata.NaturalId;
 
 public abstract class Entity implements Serializable {
 

@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ironrhino.common.util.AnnotationUtils;
-import org.ironrhino.core.annotation.NaturalId;
-import org.ironrhino.core.annotation.NotInCopy;
-import org.ironrhino.core.annotation.NotInJson;
+import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.Model;
 import org.junit.Test;
 

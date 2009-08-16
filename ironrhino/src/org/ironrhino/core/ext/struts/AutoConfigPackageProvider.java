@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.common.util.ClassScaner;
-import org.ironrhino.core.annotation.AutoConfig;
+import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.Entity;
 import org.springframework.util.ClassUtils;
 

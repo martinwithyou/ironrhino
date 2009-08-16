@@ -8,7 +8,7 @@ import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.compass.core.support.search.CompassSearchResults;
 import org.ironrhino.common.model.AggregateResult;
 import org.ironrhino.common.util.NumberUtils;
-import org.ironrhino.core.annotation.AutoConfig;
+import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.online.support.SearchHitsControl;

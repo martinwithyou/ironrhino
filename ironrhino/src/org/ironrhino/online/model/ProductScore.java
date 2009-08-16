@@ -2,7 +2,7 @@ package org.ironrhino.online.model;
 
 import java.util.Date;
 
-import org.ironrhino.core.annotation.NaturalId;
+import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.BaseEntity;
 
 

@@ -4,10 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.core.annotation.AutoConfig;
-import org.ironrhino.core.annotation.NotInCopy;
-import org.ironrhino.core.annotation.NotInJson;
-import org.ironrhino.core.annotation.PublishAware;
+import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Secured;
 

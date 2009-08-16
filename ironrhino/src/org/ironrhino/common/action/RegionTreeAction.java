@@ -6,9 +6,9 @@ import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.support.RegionTreeControl;
 import org.ironrhino.common.util.HtmlUtils;
-import org.ironrhino.core.annotation.AutoConfig;
-import org.ironrhino.core.annotation.JsonConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
+import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.JsonConfig;
 
 @AutoConfig(namespace = "/", actionName = "region")
 public class RegionTreeAction extends BaseAction {

@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.util.AuthzUtils;
-import org.ironrhino.core.annotation.Authorize;
-import org.ironrhino.core.annotation.Captcha;
 import org.ironrhino.core.ext.captcha.CaptchaHelper;
+import org.ironrhino.core.metadata.Authorize;
+import org.ironrhino.core.metadata.Captcha;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.userdetails.UserDetails;
 

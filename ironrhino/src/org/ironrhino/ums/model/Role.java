@@ -3,10 +3,10 @@ package org.ironrhino.ums.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.ironrhino.core.annotation.AutoConfig;
-import org.ironrhino.core.annotation.NaturalId;
-import org.ironrhino.core.annotation.NotInCopy;
-import org.ironrhino.core.annotation.RecordAware;
+import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 
 @RecordAware

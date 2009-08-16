@@ -1,4 +1,4 @@
-package org.ironrhino.core.annotation;
+package org.ironrhino.core.metadata;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -8,12 +8,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * properties are ignored in BeanUtils.copyProperties()
+ * properties are ignored in JsonUtils
  * 
  * @author zhouyanming
- * @see org.ironrhino.common.util.BeanUtils
+ * @see org.ironrhino.common.util.JsonUtils
  */
 @Target( { METHOD, FIELD })
 @Retention(RUNTIME)
-public @interface NotInUI {
+public @interface NotInJson {
 }

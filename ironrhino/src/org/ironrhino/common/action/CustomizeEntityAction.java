@@ -3,10 +3,10 @@ package org.ironrhino.common.action;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.ext.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.ext.hibernate.PropertyChange;
 import org.ironrhino.core.ext.struts.BaseAction;
+import org.ironrhino.core.metadata.AutoConfig;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
 

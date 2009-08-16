@@ -2,7 +2,7 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
-import org.ironrhino.core.annotation.AutoConfig;
+import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.BaseEntity;
 
 @AutoConfig(readonly=true)

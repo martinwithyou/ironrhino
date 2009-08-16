@@ -1,4 +1,4 @@
-package org.ironrhino.core.annotation;
+package org.ironrhino.core.metadata;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;

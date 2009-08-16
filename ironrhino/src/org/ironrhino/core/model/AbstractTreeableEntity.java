@@ -2,8 +2,8 @@ package org.ironrhino.core.model;
 
 import org.compass.annotations.SearchableId;
 import org.compass.annotations.SearchableProperty;
-import org.ironrhino.core.annotation.NaturalId;
-import org.ironrhino.core.annotation.NotInCopy;
+import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.NotInCopy;
 
 public abstract class AbstractTreeableEntity<T extends AbstractTreeableEntity>
 		extends Entity implements Treeable<T> {

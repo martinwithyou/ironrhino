@@ -7,8 +7,8 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Region;
-import org.ironrhino.core.annotation.JsonConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
+import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.service.BaseManager;
 
 public class RegionAction extends BaseAction {

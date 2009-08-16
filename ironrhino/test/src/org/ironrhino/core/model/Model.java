@@ -3,9 +3,9 @@ package org.ironrhino.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ironrhino.core.annotation.NaturalId;
-import org.ironrhino.core.annotation.NotInCopy;
-import org.ironrhino.core.annotation.NotInJson;
+import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
 
 import com.opensymphony.xwork2.util.CreateIfNull;

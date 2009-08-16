@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.ironrhino.common.support.MonitorControl;
-import org.ironrhino.core.annotation.AutoConfig;
-import org.ironrhino.core.annotation.JsonConfig;
-import org.ironrhino.core.annotation.JsonSerializerType;
 import org.ironrhino.core.ext.openflashchart.model.Chart;
 import org.ironrhino.core.ext.openflashchart.model.Text;
 import org.ironrhino.core.ext.openflashchart.model.axis.XAxis;
 import org.ironrhino.core.ext.openflashchart.model.axis.YAxis;
 import org.ironrhino.core.ext.openflashchart.model.elements.BarChart;
 import org.ironrhino.core.ext.struts.BaseAction;
+import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.metadata.JsonSerializerType;
 import org.ironrhino.core.monitor.analysis.TreeNode;
 
 @AutoConfig

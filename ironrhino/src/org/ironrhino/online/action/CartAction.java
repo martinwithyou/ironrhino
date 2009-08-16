@@ -3,8 +3,8 @@ package org.ironrhino.online.action;
 import java.util.List;
 
 import org.apache.struts2.interceptor.validation.SkipValidation;
-import org.ironrhino.core.annotation.AutoConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
+import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.online.model.OrderItem;
 import org.ironrhino.online.support.Cart;
 

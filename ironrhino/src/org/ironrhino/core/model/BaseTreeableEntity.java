@@ -3,8 +3,8 @@ package org.ironrhino.core.model;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.ironrhino.core.annotation.NotInCopy;
-import org.ironrhino.core.annotation.NotInJson;
+import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.NotInJson;
 
 public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		AbstractTreeableEntity<T> implements Ordered {

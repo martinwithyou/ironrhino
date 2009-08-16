@@ -2,7 +2,7 @@ package org.ironrhino.online.model;
 
 import java.util.Date;
 
-import org.ironrhino.core.annotation.RecordAware;
+import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 
 @RecordAware

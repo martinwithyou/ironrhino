@@ -2,7 +2,7 @@ package org.ironrhino.pms.service;
 
 import java.util.Date;
 
-import org.ironrhino.core.cache.FlushCache;
+import org.ironrhino.core.metadata.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.pms.model.Product;
 import org.springframework.transaction.annotation.Transactional;
