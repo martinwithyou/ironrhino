@@ -110,13 +110,20 @@ Observation.common = function(container) {
 					emptyText : MessageBundle.get('select'),
 					triggerSelected : true
 				});
+	if (typeof $.fn.truncatable != 'undefined')
+		$('.truncatable', container).each(function() {
+					$(this).truncatable({
+								limit : $(this).attr('limit') || 100
+							});
+				});
+
 	if (typeof swfobject.embedSWF != 'undefined') {
 		$('.chart', container).each(function() {
 			var id = this.id;
 			var width = $(this).width();
 			var height = $(this).height();
 			var data = $(this).attr('data');
-			if(!id||!width||!height||!data)
+			if (!id || !width || !height || !data)
 				alert('id,width,height,data all required');
 			swfobject.embedSWF(CONTEXT_PATH + '/images/open-flash-chart.swf',
 					id, width, height, '9.0.0', CONTEXT_PATH
