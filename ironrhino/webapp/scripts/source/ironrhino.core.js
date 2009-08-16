@@ -69,7 +69,7 @@ Observation.common = function(container) {
 								})
 				});
 	}
-	$('.highlightrow tr').hover(function(){
+	$('.highlightrow tbody tr').hover(function(){
 		$(this).addClass('highlight');
 	},function(){
 		$(this).removeClass('highlight');
