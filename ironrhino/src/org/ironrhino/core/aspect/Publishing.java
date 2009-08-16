@@ -7,6 +7,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.event.EventPublisher;
+import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,9 +23,9 @@ public class Publishing extends BaseAspect {
 	@Autowired
 	private EventPublisher eventPublisher;
 
-	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(org.ironrhino.core.annotation.PublishAware)")
-	public Object save(ProceedingJoinPoint call, Entity entity)
-			throws Throwable {
+	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(publishAware)")
+	public Object save(ProceedingJoinPoint call, Entity entity,
+			PublishAware publishAware) throws Throwable {
 		if (isBypass())
 			return call.proceed();
 		boolean isNew = entity.isNew();
@@ -36,8 +37,8 @@ public class Publishing extends BaseAspect {
 		return result;
 	}
 
-	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(org.ironrhino.core.annotation.PublishAware)")
-	public void delete(Entity entity) {
+	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(publishAware)")
+	public void delete(Entity entity, PublishAware publishAware) {
 		if (isBypass())
 			return;
 		if (eventPublisher != null)

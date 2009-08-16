@@ -12,6 +12,7 @@ import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.common.util.JsonUtils;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.metadata.JsonSerializerType;
+import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.Entity;
 import org.ironrhino.core.model.Recordable;
 import org.springframework.core.Ordered;
@@ -29,9 +30,9 @@ public class Recording extends HibernateDaoSupport implements Ordered {
 
 	private int order;
 
-	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(org.ironrhino.core.annotation.RecordAware)")
-	public Object save(ProceedingJoinPoint call, Entity entity)
-			throws Throwable {
+	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(recordAware)")
+	public Object save(ProceedingJoinPoint call, Entity entity,
+			RecordAware recordAware) throws Throwable {
 		if (AopContext.isBypass(this.getClass()))
 			return call.proceed();
 		boolean isNew = entity.isNew();
@@ -48,8 +49,8 @@ public class Recording extends HibernateDaoSupport implements Ordered {
 		return result;
 	}
 
-	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(org.ironrhino.core.annotation.RecordAware)")
-	public void delete(Entity entity) {
+	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(recordAware)")
+	public void delete(Entity entity, RecordAware recordAware) {
 		if (AopContext.isBypass(this.getClass()))
 			return;
 		record(entity, EntityOperationType.DELETE);
