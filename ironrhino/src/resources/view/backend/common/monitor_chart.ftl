@@ -2,9 +2,6 @@
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Monitor</title>
-<script type="text/javascript">
-swfobject.embedSWF('${base}/images/open-flash-chart.swf', 'chart', '1024', '300', '9.0.0','${base}/images/expressInstall.swf',{'data-file':'bar'},{wmode:"transparent"});
-</script>
 </head>
 <body>
 <form action="monitor" class="ajax view" replacement="data">
@@ -18,7 +15,7 @@ swfobject.embedSWF('${base}/images/open-flash-chart.swf', 'chart', '1024', '300'
 <@s.textfield label="%{getText('to')}" theme="simple" name="to" cssClass="date"  size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
-<div id="chart">
+<div id="chart" class="chart" data="../data" style="width:1024px; height:300px;">
 </div>
 </body>
 </html></#escape>

@@ -79,14 +79,14 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/cas-server-core-3.3.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/drools-api-5.0.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-1.6.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-core-2.1.7.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-spring-plugin-2.1.7.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-core-2.1.8.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-spring-plugin-2.1.8.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xwork-core-2.1.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjrt-1.6.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjweaver-1.6.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-3.3.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javassist-3.10.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-sitemesh-plugin-2.1.7.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-sitemesh-plugin-2.1.8.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/sitemesh-2.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-jcache-1.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jsr107cache-1.1.jar"/>

@@ -29,6 +29,7 @@
 		<li><a href="${base}/backend/controlPanel">控制面板</a></li>
 		<li><a href="${base}/backend/securityConfig">安全配置</a></li>
 		<li><a href="${base}/backend/common/setting">参数设置</a></li>
+		<li><a href="${base}/backend/common/monitor">系统监控</a></li>
 		<li><a href="${base}/backend/common/customizeEntity">属性定制</a></li>
 	</ul>
 	</li>

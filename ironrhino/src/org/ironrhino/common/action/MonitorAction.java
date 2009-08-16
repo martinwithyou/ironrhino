@@ -85,11 +85,13 @@ public class MonitorAction extends BaseAction {
 	}
 
 	public String chart() {
+//		String key = getUid();
 		return "chart";
 	}
 
 	@JsonConfig(root = "chart", serializer = JsonSerializerType.GSON)
 	public String bar() {
+		String key = getUid();
 		chart = new Chart();
 		chart.setTitle(new Text("I am title"));
 		XAxis x = new XAxis();

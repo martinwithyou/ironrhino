@@ -3,7 +3,7 @@
         <td>${node.name}</td>
         <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.longValue gt 0><span class="number">${node.value.longValue}</span><span class="perccent">${node.longPercent?if_exists}</span></#if></td>
         <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.doubleValue gt 0><span class="number">${node.value.doubleValue}</span><span  class="perccent">${node.doublePercent?if_exists}</span></#if></td>
-        <td><a href="#">detail</a></td>
+        <td><a href="monitor/chart/${node.key?string}<#if Parameters.date?exists>?date=${Parameters.date}</#if>">${action.getText('detail')}</a></td>
 </tr>
 <#if node.leaf>
 	<#return>
