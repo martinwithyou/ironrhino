@@ -12,6 +12,7 @@ public abstract class Entity implements Serializable {
 
 	public abstract boolean isNew();
 
+	@Override
 	public int hashCode() {
 		Map<String, Object> map = AnnotationUtils
 				.getAnnotatedPropertyNameAndValues(this, NaturalId.class);
@@ -22,6 +23,7 @@ public abstract class Entity implements Serializable {
 		return builder.toHashCode();
 	}
 
+	@Override
 	public boolean equals(Object object) {
 		if (object == null)
 			return false;
@@ -40,6 +42,7 @@ public abstract class Entity implements Serializable {
 				+ map.toString() + "}";
 	}
 
+	@Override
 	public String toString() {
 		Map<String, Object> map = AnnotationUtils
 				.getAnnotatedPropertyNameAndValues(this, NaturalId.class);

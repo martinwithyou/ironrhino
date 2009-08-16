@@ -187,6 +187,7 @@ public class ProductAction extends BaseAction {
 		this.waterMark = waterMark;
 	}
 
+	@Override
 	public String execute() {
 		DetachedCriteria dc = productManager.detachedCriteria();
 		Category category = null;
@@ -204,6 +205,7 @@ public class ProductAction extends BaseAction {
 		return LIST;
 	}
 
+	@Override
 	public String input() {
 		product = productManager.get(getUid());
 		if (product == null) {
@@ -259,6 +261,7 @@ public class ProductAction extends BaseAction {
 	}
 
 	// save related products and roles
+	@Override
 	public String save() {
 		if (product != null && product.getId() != null) {
 			product = productManager.get(product.getId());
@@ -293,11 +296,13 @@ public class ProductAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String view() {
 		product = productManager.get(getUid());
 		return VIEW;
 	}
 
+	@Override
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {

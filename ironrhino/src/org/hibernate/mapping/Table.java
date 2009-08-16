@@ -88,10 +88,12 @@ public class Table implements RelationalModel, Serializable {
 			}
 		}
 
+		@Override
 		public int hashCode() {
 			return columns.hashCode() + referencedColumns.hashCode();
 		}
 
+		@Override
 		public boolean equals(Object other) {
 			if(!(other instanceof ForeignKeyKey))
 				return false;
@@ -207,7 +209,7 @@ public class Table implements RelationalModel, Serializable {
 	}
 
 	public void addColumn(Column column) {
-		Column old = (Column) getColumn( column );
+		Column old = getColumn( column );
 		if ( old == null ) {
 			columns.put( column.getCanonicalName(), column );
 			column.uniqueInteger = columns.size();
@@ -700,6 +702,7 @@ public class Table implements RelationalModel, Serializable {
 		this.rowId = rowId;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buf = new StringBuffer().append( getClass().getName() )
 				.append( '(' );

@@ -375,6 +375,7 @@ public class Product extends BaseEntity implements Ordered, Secured,
 		return product.getCreateDate().compareTo(this.getCreateDate());
 	}
 
+	@Override
 	public String toString() {
 		return this.code;
 	}

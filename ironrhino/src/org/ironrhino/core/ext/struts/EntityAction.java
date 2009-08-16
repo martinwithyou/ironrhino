@@ -79,6 +79,7 @@ public class EntityAction extends BaseAction {
 		return (ac != null) && ac.readonly();
 	}
 
+	@Override
 	public String list() {
 		baseManager.setEntityClass(getEntityClass());
 		DetachedCriteria dc = baseManager.detachedCriteria();
@@ -90,6 +91,7 @@ public class EntityAction extends BaseAction {
 		return LIST;
 	}
 
+	@Override
 	public String input() {
 		if (readonly())
 			return NONE;
@@ -107,6 +109,7 @@ public class EntityAction extends BaseAction {
 		return INPUT;
 	}
 
+	@Override
 	public String save() {
 		if (readonly())
 			return NONE;
@@ -204,6 +207,7 @@ public class EntityAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String view() {
 		baseManager.setEntityClass(getEntityClass());
 		if (getUid() != null)
@@ -212,6 +216,7 @@ public class EntityAction extends BaseAction {
 		return VIEW;
 	}
 
+	@Override
 	public String delete() {
 		if (readonly())
 			return NONE;

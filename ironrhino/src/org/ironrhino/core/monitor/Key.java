@@ -97,16 +97,19 @@ public class Key implements Serializable, Comparable<Key> {
 		return this.toString().compareTo(o.toString());
 	}
 
+	@Override
 	public int hashCode() {
 		return toString().hashCode();
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == null)
 			return false;
 		return this.toString().equals(o.toString());
 	}
 
+	@Override
 	public String toString() {
 		return (StringUtils.isNotBlank(namespace) ? namespace + ":" : "")
 				+ StringUtils.join(names, '>') + (cumulative ? "" : ",0");

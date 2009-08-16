@@ -36,13 +36,13 @@ public class Thumbnail {
 
 	public static BufferedImage resizeByHeight(Image image, int h)
 			throws IOException {
-		int w = (int) (image.getWidth(null) * h / image.getHeight(null));
+		int w = (image.getWidth(null) * h / image.getHeight(null));
 		return resize(image, w, h);
 	}
 
 	public static BufferedImage resizeByWidth(Image image, int w)
 			throws IOException {
-		int h = (int) (image.getHeight(null) * w / image.getWidth(null));
+		int h = (image.getHeight(null) * w / image.getWidth(null));
 		return resize(image, w, h);
 	}
 

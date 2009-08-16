@@ -64,6 +64,7 @@ public class Role extends BaseEntity {
 		this.groups = groups;
 	}
 
+	@Override
 	public String toString() {
 		return this.name;
 	}

@@ -68,6 +68,7 @@ public class Monitor {
 
 		runWriteThread();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				write(false);
 			}

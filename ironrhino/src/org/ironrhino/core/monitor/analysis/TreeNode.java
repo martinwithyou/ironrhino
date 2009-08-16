@@ -9,6 +9,8 @@ import org.ironrhino.core.monitor.Value;
 
 public class TreeNode implements Serializable {
 
+	private static final long serialVersionUID = 5312284581467948055L;
+
 	private int id;
 
 	// make transient for json serialization

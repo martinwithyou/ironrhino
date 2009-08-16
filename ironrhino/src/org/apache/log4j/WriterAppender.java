@@ -122,7 +122,8 @@ public class WriterAppender extends AppenderSkeleton {
   /**
      Does nothing.
   */
-  public
+  @Override
+public
   void activateOptions() {
   }
 
@@ -139,7 +140,8 @@ public class WriterAppender extends AppenderSkeleton {
      layout.
 
   */
-  public
+  @Override
+public
   void append(LoggingEvent event) {
 
     // Reminder: the nesting of calls is:
@@ -263,7 +265,8 @@ public class WriterAppender extends AppenderSkeleton {
   /**
      Set the {@link ErrorHandler} for this WriterAppender and also the
      underlying {@link QuietWriter} if any. */
-  public synchronized void setErrorHandler(ErrorHandler eh) {
+  @Override
+public synchronized void setErrorHandler(ErrorHandler eh) {
     if(eh == null) {
       LogLog.warn("You have tried to set a null error-handler.");
     } else {

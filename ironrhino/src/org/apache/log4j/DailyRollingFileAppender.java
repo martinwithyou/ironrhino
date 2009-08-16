@@ -226,7 +226,8 @@ public class DailyRollingFileAppender extends FileAppender {
     return datePattern;
   }
 
-  public void activateOptions() {
+  @Override
+public void activateOptions() {
     super.activateOptions();
     if(datePattern != null && fileName != null) {
       now.setTime(System.currentTimeMillis());
@@ -358,7 +359,8 @@ public class DailyRollingFileAppender extends FileAppender {
    * time to do a rollover. If it is, it will schedule the next
    * rollover time and then rollover.
    * */
-  protected void subAppend(LoggingEvent event) {
+  @Override
+protected void subAppend(LoggingEvent event) {
     long n = System.currentTimeMillis();
     if (n >= nextCheck) {
       now.setTime(n);

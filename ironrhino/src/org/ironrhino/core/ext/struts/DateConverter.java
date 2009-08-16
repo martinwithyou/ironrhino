@@ -15,6 +15,7 @@ public class DateConverter extends StrutsTypeConverter {
 			new SimpleDateFormat("yyyy/MM/dd"),
 			new SimpleDateFormat("yyyy-MM-dd HH:mm:ss") };
 
+	@Override
 	public Object convertFromString(Map context, String[] values, Class toClass) {
 		if (values[0] == null || values[0].trim().equals(""))
 			return null;
@@ -30,6 +31,7 @@ public class DateConverter extends StrutsTypeConverter {
 		return null;
 	}
 
+	@Override
 	public String convertToString(Map arg0, Object o) {
 		if (o instanceof Date) {
 			SimpleDateFormat format = new SimpleDateFormat(DEFAULT_DATE_FORMAT);

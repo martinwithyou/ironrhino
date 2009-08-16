@@ -353,7 +353,7 @@ public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
 			} else {
 				loadTree2(root);
 			}
-			return (TE) root;
+			return root;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return null;

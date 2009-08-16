@@ -321,7 +321,7 @@ public class ProductFacadeImpl implements ProductFacade {
 						List<Object[]> result = q.list();
 						for (Object[] array : result) {
 							AggregateResult sr = new AggregateResult();
-							sr.setPrincipal((String) array[0]);
+							sr.setPrincipal(array[0]);
 							sr.setCount(((Number) array[1]).intValue());
 							if (array[2] != null)
 								sr.setAverage(NumberUtils.round(
@@ -351,7 +351,7 @@ public class ProductFacadeImpl implements ProductFacade {
 						List<Object[]> result = q.list();
 						for (Object[] array : result) {
 							AggregateResult sr = new AggregateResult();
-							sr.setPrincipal((String) array[0]);
+							sr.setPrincipal(array[0]);
 							sr.setCount(((Number) array[1]).intValue());
 							list.add(sr);
 						}
@@ -376,7 +376,7 @@ public class ProductFacadeImpl implements ProductFacade {
 						List<Object[]> result = q.list();
 						for (Object[] array : result) {
 							AggregateResult sr = new AggregateResult();
-							sr.setPrincipal((String) array[0]);
+							sr.setPrincipal(array[0]);
 							sr.setCount(((Number) array[1]).intValue());
 							list.add(sr);
 						}
@@ -401,7 +401,7 @@ public class ProductFacadeImpl implements ProductFacade {
 						List<Object[]> result = q.list();
 						for (Object[] array : result) {
 							AggregateResult sr = new AggregateResult();
-							sr.setPrincipal((String) array[0]);
+							sr.setPrincipal(array[0]);
 							sr.setCount(((Number) array[1]).intValue());
 							list.add(sr);
 						}
@@ -433,7 +433,7 @@ public class ProductFacadeImpl implements ProductFacade {
 				for (Object[] array : list) {
 					AggregateResult ar = new AggregateResult();
 					ar.setCount(((Number) array[0]).intValue());
-					ar.setPrincipal((String) array[1]);
+					ar.setPrincipal(array[1]);
 					tags.add(ar);
 				}
 				return null;

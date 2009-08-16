@@ -70,6 +70,7 @@ public class Region extends BaseTreeableEntity<Region> implements Secured {
 		SimpleElement.fillCollectionWithString(roles, rolesAsString);
 	}
 
+	@Override
 	public String toString() {
 		return getFullname();
 	}

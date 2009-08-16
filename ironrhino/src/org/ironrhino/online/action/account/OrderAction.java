@@ -80,6 +80,7 @@ public class OrderAction extends BaseAction {
 		this.paymentManager = paymentManager;
 	}
 
+	@Override
 	public String execute() {
 		if (resultPage == null)
 			resultPage = new ResultPage<Order>();
@@ -92,12 +93,14 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String view() {
 		order = getOrder();
 		orderManager.calculateOrder(order);
 		return VIEW;
 	}
 
+	@Override
 	public String input() {
 		if ("addressee".equals(originalMethod)) {
 			Addressee add = cart.getOrder().getAddressee();
@@ -155,6 +158,7 @@ public class OrderAction extends BaseAction {
 		return REFERER;
 	}
 
+	@Override
 	public String delete() {
 		Order order = getOrder();
 		if (!order.isNew()
@@ -201,6 +205,7 @@ public class OrderAction extends BaseAction {
 		return REDIRECT;
 	}
 
+	@Override
 	public String update() {
 		// adjust quantity,remove item status must be INITIAL
 		return NONE;

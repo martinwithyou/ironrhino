@@ -32,6 +32,7 @@ public abstract class AbstractTreeableEntity<T extends AbstractTreeableEntity>
 		this.id = id;
 	}
 
+	@Override
 	public boolean isNew() {
 		return id == null || id == 0;
 	}

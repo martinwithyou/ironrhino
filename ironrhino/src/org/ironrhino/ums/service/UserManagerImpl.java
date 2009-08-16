@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserManagerImpl extends BaseManagerImpl<User> implements
 		UserManager {
 
+	@Override
 	@Transactional
 	@FlushCache(key = "user_${args[0].username}")
 	public void save(User user) {

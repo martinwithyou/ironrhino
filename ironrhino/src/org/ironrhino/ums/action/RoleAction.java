@@ -48,6 +48,7 @@ public class RoleAction extends BaseAction {
 		this.roleManager = roleManager;
 	}
 
+	@Override
 	public String execute() {
 		DetachedCriteria dc = roleManager.detachedCriteria();
 		if (resultPage == null)
@@ -59,6 +60,7 @@ public class RoleAction extends BaseAction {
 		return LIST;
 	}
 
+	@Override
 	public String input() {
 		role = roleManager.get(getUid());
 		if (role == null)
@@ -66,6 +68,7 @@ public class RoleAction extends BaseAction {
 		return INPUT;
 	}
 
+	@Override
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "role.name", trim = true, key = "role.name.required", message = "请输入名字") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "role.name", expression = "^\\w+$", key = "role.name.invalid", message = "必须为数字或者字母或者下划线") })
 	public String save() {
 		if (role.isNew()) {
@@ -86,6 +89,7 @@ public class RoleAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {

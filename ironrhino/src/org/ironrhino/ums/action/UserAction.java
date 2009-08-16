@@ -87,6 +87,7 @@ public class UserAction extends BaseAction {
 		this.userManager = userManager;
 	}
 
+	@Override
 	public String execute() {
 		DetachedCriteria dc = userManager.detachedCriteria();
 		if (resultPage == null)
@@ -97,6 +98,7 @@ public class UserAction extends BaseAction {
 		return LIST;
 	}
 
+	@Override
 	public String input() {
 		user = userManager.get(getUid());
 		if (user == null)
@@ -126,6 +128,7 @@ public class UserAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String save() {
 		if (user != null && user.getId() != null) {
 			user = userManager.get(user.getId());
@@ -147,12 +150,14 @@ public class UserAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String view() {
 		if (user != null && user.getId() != null)
 			user = userManager.get(user.getId());
 		return VIEW;
 	}
 
+	@Override
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {

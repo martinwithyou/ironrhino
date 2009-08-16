@@ -33,6 +33,7 @@ public class FeedbackAction extends BaseAction {
 		this.baseManager = baseManager;
 	}
 
+	@Override
 	public String input() {
 		Account account = AuthzUtils.getUserDetails(Account.class);
 		if (account != null) {
@@ -44,6 +45,7 @@ public class FeedbackAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	@Captcha
 	@InputConfig(methodName = "input")
 	@Validations(requiredStrings = {

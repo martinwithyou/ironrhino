@@ -38,6 +38,7 @@ public class SearchHitsControlImpl extends StringStore implements
 					+ DateUtils.getDatetime(new Date()));
 	}
 
+	@Override
 	protected void doConsume(List<String> list) {
 		Map<String, SearchHits> map = new HashMap<String, SearchHits>();
 		Date d = new Date();

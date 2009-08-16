@@ -81,6 +81,7 @@ public class RefreshableFilterInvocationDefinitionSource extends
 		}
 	}
 
+	@Override
 	protected Object freshTarget() {
 		r.lock();
 		try {

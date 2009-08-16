@@ -21,6 +21,7 @@ public class EditAwareMixin extends DelegatingIntroductionInterceptor implements
 		return map.containsKey(propertyName);
 	}
 
+	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		if (invocation.getMethod().getName().indexOf("set") == 0) {
 			Object _this = invocation.getThis();

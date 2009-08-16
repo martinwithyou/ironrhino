@@ -14,6 +14,7 @@ public enum Status {
 				.getContext().getLocale(), name(), null);
 	}
 	
+	@Override
 	public String toString(){
 		return getDisplayName();
 	}

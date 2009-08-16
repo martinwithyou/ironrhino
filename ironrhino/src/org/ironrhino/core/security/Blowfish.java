@@ -51,7 +51,7 @@ public class Blowfish {
 	}
 
 	public static Blowfish get() {
-		Blowfish encrypter = (Blowfish) pool.get();
+		Blowfish encrypter = pool.get();
 		if (encrypter == null) {
 			encrypter = new Blowfish();
 			pool.set(encrypter);

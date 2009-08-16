@@ -58,6 +58,7 @@ public class Buffer {
 			}
 			bufferedStream = new ByteArrayOutputStream(SIZE);
 			exposedStream = new ServletOutputStream() {
+				@Override
 				public void write(int b) {
 					bufferedStream.write(b);
 				}

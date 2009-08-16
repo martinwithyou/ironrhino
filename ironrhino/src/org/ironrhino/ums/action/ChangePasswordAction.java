@@ -55,6 +55,7 @@ public class ChangePasswordAction extends BaseAction {
 		this.userManager = userManager;
 	}
 
+	@Override
 	@InputConfig
 	@Validations(stringLengthFields = { @StringLengthFieldValidator(type = ValidatorType.FIELD, trim = true, minLength = "6", maxLength = "20", fieldName = "password", key = "password.required", message = "密码的长度为6-20") }, expressions = { @ExpressionValidator(expression = "password == confirmPassword", key = "confirmPassword.error", message = "两次输入密码不一致") })
 	public String execute() {

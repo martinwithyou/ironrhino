@@ -60,7 +60,8 @@ public class FilterInvocationDefinitionSourceEditor extends PropertyEditorSuppor
 
     //~ Methods ========================================================================================================
 
-    public void setAsText(String s) throws IllegalArgumentException {
+    @Override
+	public void setAsText(String s) throws IllegalArgumentException {
         if ((s == null) || "".equals(s)) {
             // Leave target object empty
             setValue(new DefaultFilterInvocationDefinitionSource(new RegexUrlPathMatcher()));

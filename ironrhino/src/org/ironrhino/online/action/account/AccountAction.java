@@ -167,10 +167,12 @@ public class AccountAction extends BaseAction {
 		this.consumerManager = consumerManager;
 	}
 
+	@Override
 	public String execute() {
 		return SUCCESS;
 	}
 
+	@Override
 	public String input() {
 		if ("profile".equals(originalActionName)) {
 			account = new Account();

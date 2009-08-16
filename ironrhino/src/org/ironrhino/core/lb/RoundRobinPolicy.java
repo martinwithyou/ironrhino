@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class RoundRobinPolicy<T> extends AbstractPolicy<T> {
 
+	@Override
 	public TargetWrapper<T> pickTargetWrapper() {
 		int totalWeight = 0;
 		TargetWrapper<T> tw = null;

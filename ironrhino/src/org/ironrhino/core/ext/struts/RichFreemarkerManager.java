@@ -45,6 +45,7 @@ public class RichFreemarkerManager extends
 		this.ftlClasspath = val;
 	}
 
+	@Override
 	protected freemarker.template.Configuration createConfiguration(
 			ServletContext servletContext) throws TemplateException {
 		configuration = super.createConfiguration(servletContext);

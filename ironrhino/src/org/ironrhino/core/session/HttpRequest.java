@@ -49,22 +49,27 @@ public class HttpRequest extends HttpServletRequestWrapper {
 		session = new Session(context, sessionManager, sessionId);
 	}
 
+	@Override
 	public HttpSession getSession() {
 		return session;
 	}
 
+	@Override
 	public HttpSession getSession(boolean create) {
 		return session;
 	}
 
+	@Override
 	public boolean isRequestedSessionIdFromCookie() {
 		return requestedSessionIdFromCookie;
 	}
 
+	@Override
 	public boolean isRequestedSessionIdFromURL() {
 		return requestedSessionIdFromURL;
 	}
 
+	@Override
 	@Deprecated
 	public boolean isRequestedSessionIdFromUrl() {
 		return requestedSessionIdFromURL;

@@ -42,6 +42,7 @@ public class Setting extends BaseEntity {
 		this.value = value;
 	}
 
+	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}

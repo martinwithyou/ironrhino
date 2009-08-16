@@ -45,6 +45,7 @@ public class CustomizeEntityAction extends BaseAction {
 		return customizableEntityChanger;
 	}
 
+	@Override
 	public String execute() {
 		try {
 			if (StringUtils.isNotBlank(entityClassName)) {

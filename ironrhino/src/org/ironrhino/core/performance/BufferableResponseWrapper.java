@@ -37,6 +37,7 @@ public class BufferableResponseWrapper extends HttpServletResponseWrapper {
 
 	}
 
+	@Override
 	public void setContentType(String type) {
 		super.setContentType(type);
 
@@ -85,16 +86,19 @@ public class BufferableResponseWrapper extends HttpServletResponseWrapper {
 				});
 	}
 
+	@Override
 	public void setContentLength(int contentLength) {
 		if (!parseablePage)
 			super.setContentLength(contentLength);
 	}
 
+	@Override
 	public void flushBuffer() throws IOException {
 		if (!parseablePage)
 			super.flushBuffer();
 	}
 
+	@Override
 	public void setHeader(String name, String value) {
 		if (name.toLowerCase().equals("content-type")) {
 			setContentType(value);
@@ -104,6 +108,7 @@ public class BufferableResponseWrapper extends HttpServletResponseWrapper {
 		}
 	}
 
+	@Override
 	public void addHeader(String name, String value) {
 		if (name.toLowerCase().equals("content-type")) {
 			setContentType(value);
@@ -113,6 +118,7 @@ public class BufferableResponseWrapper extends HttpServletResponseWrapper {
 		}
 	}
 
+	@Override
 	public void setStatus(int sc) {
 		if (sc == HttpServletResponse.SC_NOT_MODIFIED) {
 			aborted = true;
@@ -121,24 +127,29 @@ public class BufferableResponseWrapper extends HttpServletResponseWrapper {
 		super.setStatus(sc);
 	}
 
+	@Override
 	public ServletOutputStream getOutputStream() {
 		return routableServletOutputStream;
 	}
 
+	@Override
 	public PrintWriter getWriter() {
 		return routablePrintWriter;
 	}
 
+	@Override
 	public void sendError(int sc) throws IOException {
 		aborted = true;
 		super.sendError(sc);
 	}
 
+	@Override
 	public void sendError(int sc, String msg) throws IOException {
 		aborted = true;
 		super.sendError(sc, msg);
 	}
 
+	@Override
 	public void sendRedirect(String location) throws IOException {
 		aborted = true;
 		super.sendRedirect(location);

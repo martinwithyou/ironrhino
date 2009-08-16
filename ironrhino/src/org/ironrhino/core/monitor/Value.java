@@ -58,6 +58,7 @@ public class Value implements Serializable {
 		return ((double) doubleValue.get()) / PRECISION;
 	}
 
+	@Override
 	public String toString() {
 		return String.valueOf(getLongValue()) + "," + String.valueOf(getDoubleValue());
 	}

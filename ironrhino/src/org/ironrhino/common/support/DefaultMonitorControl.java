@@ -94,6 +94,7 @@ public class DefaultMonitorControl implements MonitorControl {
 					map.clear();
 				}
 
+				@Override
 				protected void process(KeyValuePair pair) {
 					if (!pair.getKey().isCumulative())
 						return;
@@ -135,6 +136,7 @@ public class DefaultMonitorControl implements MonitorControl {
 					currentHour = calendar.get(Calendar.HOUR_OF_DAY);
 				}
 
+				@Override
 				protected void postAnalyze() {
 					save();
 				}
@@ -234,7 +236,7 @@ public class DefaultMonitorControl implements MonitorControl {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(to);
 		Date criticalDate = null;
-		while (CumulativeAnalyzer.hasLogFile(cal.getTime())
+		while (FileAnalyzer.hasLogFile(cal.getTime())
 				&& !DateUtils.isSameDay(criticalDate, from)) {
 			criticalDate = cal.getTime();
 			cal.add(Calendar.DAY_OF_YEAR, -1);

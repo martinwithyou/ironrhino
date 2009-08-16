@@ -40,6 +40,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		return sb.toString();
 	}
 
+	@Override
 	public ActionMapping getActionMappingFromRequest(
 			HttpServletRequest request, String uri, Configuration config) {
 

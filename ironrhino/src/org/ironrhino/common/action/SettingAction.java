@@ -35,11 +35,13 @@ public class SettingAction extends BaseAction {
 		this.baseManager = baseManager;
 	}
 
+	@Override
 	public String execute() {
 		list = baseManager.getAll(Order.asc("key"));
 		return LIST;
 	}
 
+	@Override
 	public String input() {
 		setting = baseManager.get(getUid());
 		if (setting == null)
@@ -47,6 +49,7 @@ public class SettingAction extends BaseAction {
 		return INPUT;
 	}
 
+	@Override
 	public String save() {
 		if (setting != null) {
 			baseManager.save(setting);
@@ -56,6 +59,7 @@ public class SettingAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {

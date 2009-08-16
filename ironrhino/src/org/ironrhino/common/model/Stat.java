@@ -69,6 +69,7 @@ public class Stat extends BaseEntity {
 		this.statDate = statDate;
 	}
 
+	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}

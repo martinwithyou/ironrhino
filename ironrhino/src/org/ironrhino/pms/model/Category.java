@@ -87,6 +87,7 @@ public class Category extends BaseTreeableEntity<Category> implements Secured {
 		SimpleElement.fillCollectionWithString(roles, rolesAsString);
 	}
 
+	@Override
 	@NotInCopy
 	// @NotInJson
 	public Collection<Category> getChildren() {

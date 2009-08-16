@@ -49,6 +49,7 @@ public class ConnectAction extends UploadAction {
 		this.currentFolder = currentFolder;
 	}
 
+	@Override
 	public String execute() throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		HttpServletResponse response = ServletActionContext.getResponse();

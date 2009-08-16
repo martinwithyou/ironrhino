@@ -160,15 +160,18 @@ public class ProductAction extends BaseAction {
 		this.mailService = mailService;
 	}
 
+	@Override
 	public String input() {
 		return INPUT;
 	}
 
+	@Override
 	@SkipValidation
 	public String execute() {
 		return list();
 	}
 
+	@Override
 	@SkipValidation
 	public String list() {
 		if (resultPage == null)
@@ -223,6 +226,7 @@ public class ProductAction extends BaseAction {
 		return SUGGEST;
 	}
 
+	@Override
 	@SkipValidation
 	public String view() {
 		String code = getUid();

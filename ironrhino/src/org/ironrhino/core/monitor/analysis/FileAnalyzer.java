@@ -91,6 +91,7 @@ public abstract class FileAnalyzer extends AbstractAnalyzer {
 				throw new FileNotFoundException(f.getAbsolutePath());
 		this.iterator = new TextFileIterator<KeyValuePair>(
 				MonitorSettings.ENCODING, files) {
+			@Override
 			protected KeyValuePair transform(String line) {
 				String[] array = line.split("\\|");
 				Key key = Key.fromString(array[0]);

@@ -78,6 +78,7 @@ public class RegionAction extends BaseAction {
 		this.baseManager = baseManager;
 	}
 
+	@Override
 	public String execute() {
 		if (parentId != null && parentId > 0) {
 			region = baseManager.get(parentId);
@@ -93,6 +94,7 @@ public class RegionAction extends BaseAction {
 		return LIST;
 	}
 
+	@Override
 	public String input() {
 		if (getUid() != null)
 			region = baseManager.get(new Integer(getUid()));
@@ -101,6 +103,7 @@ public class RegionAction extends BaseAction {
 		return INPUT;
 	}
 
+	@Override
 	public String save() {
 		if (region.isNew()) {
 			if (parentId != null) {
@@ -126,6 +129,7 @@ public class RegionAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String delete() {
 		String[] arr = getId();
 		Integer[] id = new Integer[arr.length];

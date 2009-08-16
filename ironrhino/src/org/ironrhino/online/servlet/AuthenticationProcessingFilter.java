@@ -31,6 +31,7 @@ public class AuthenticationProcessingFilter extends
 		this.accountManager = accountManager;
 	}
 
+	@Override
 	protected void onSuccessfulAuthentication(HttpServletRequest request,
 			HttpServletResponse response, Authentication authResult)
 			throws IOException {
@@ -51,6 +52,7 @@ public class AuthenticationProcessingFilter extends
 		save(loginRecord);
 	}
 
+	@Override
 	protected void onUnsuccessfulAuthentication(HttpServletRequest request,
 			HttpServletResponse response, AuthenticationException failed)
 			throws IOException {

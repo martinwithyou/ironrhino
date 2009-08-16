@@ -108,6 +108,7 @@ public class BaseAction extends ActionSupport {
 				"_transport_type_");
 	}
 
+	@Override
 	public String execute() {
 		return list();
 	}
@@ -178,6 +179,7 @@ public class BaseAction extends ActionSupport {
 		}
 	}
 
+	@Override
 	public void validate() {
 		Captcha annotation = getAnnotation(Captcha.class);
 		if (annotation == null)

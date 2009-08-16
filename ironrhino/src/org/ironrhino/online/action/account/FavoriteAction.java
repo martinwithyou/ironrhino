@@ -33,6 +33,7 @@ public class FavoriteAction extends BaseAction {
 		this.baseManager.setEntityClass(ProductFavorite.class);
 	}
 
+	@Override
 	@SkipValidation
 	public String execute() {
 		if (resultPage == null)
@@ -45,6 +46,7 @@ public class FavoriteAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	@SkipValidation
 	public String delete() {
 		String[] id = getId();

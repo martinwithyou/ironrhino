@@ -84,6 +84,7 @@ public class CategoryAction extends BaseAction {
 		this.categoryManager = categoryManager;
 	}
 
+	@Override
 	public String execute() {
 		if (parentId != null && parentId > 0) {
 			category = categoryManager.get(parentId);
@@ -99,6 +100,7 @@ public class CategoryAction extends BaseAction {
 		return LIST;
 	}
 
+	@Override
 	public String input() {
 		if (getUid() != null)
 			category = categoryManager.get(new Integer(getUid()));
@@ -107,6 +109,7 @@ public class CategoryAction extends BaseAction {
 		return INPUT;
 	}
 
+	@Override
 	public String save() {
 		if (category.isNew()) {
 			if (categoryManager.getByNaturalId("code", category.getCode()) != null) {
@@ -146,6 +149,7 @@ public class CategoryAction extends BaseAction {
 		return "tree";
 	}
 
+	@Override
 	public String delete() {
 		String[] arr = getId();
 		Integer[] id = new Integer[arr.length];

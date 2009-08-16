@@ -41,6 +41,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 		random = new Random();
 	}
 
+	@Override
 	@Transactional
 	@FlushCache(key = "${[args[0].username,args[0].email,args[0].openid]}", namespace = "account")
 	public void save(Account account) {

@@ -29,6 +29,7 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 	@Autowired
 	private RuleProvider ruleProvider;
 
+	@Override
 	@Transactional
 	public void save(Order order) {
 		if (regionTreeControl != null && order.getRegion() == null)

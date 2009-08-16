@@ -201,7 +201,8 @@ public class FileAppender extends WriterAppender {
      <b>Append</b> properties.
 
      @since 0.8.1 */
-  public
+  @Override
+public
   void activateOptions() {
     if(fileName != null) {
       try {
@@ -381,7 +382,8 @@ public class FileAppender extends WriterAppender {
   /**
      Close any previously opened file and call the parent's
      <code>reset</code>.  */
-  protected
+  @Override
+protected
   void reset() {
     closeFile();
     this.fileName = null;

@@ -222,7 +222,8 @@ public class RollingFileAppender extends FileAppender {
     }
   }
 
-  public
+  @Override
+public
   synchronized
   void setFile(String fileName, boolean append, boolean bufferedIO, int bufferSize)
                                                                  throws IOException {
@@ -282,7 +283,8 @@ public class RollingFileAppender extends FileAppender {
     maxFileSize = OptionConverter.toFileSize(value, maxFileSize + 1);
   }
 
-  protected
+  @Override
+protected
   void setQWForFiles(Writer writer) {
      this.qw = new CountingQuietWriter(writer, errorHandler);
   }
@@ -293,7 +295,8 @@ public class RollingFileAppender extends FileAppender {
 
      @since 0.9.0
   */
-  protected
+  @Override
+protected
   void subAppend(LoggingEvent event) {
     super.subAppend(event);
     if(fileName != null && qw != null) {

@@ -51,6 +51,7 @@ public class RightAction extends BaseAction {
 		this.productFacade = productFacade;
 	}
 
+	@Override
 	public String execute() {
 
 		return SUCCESS;

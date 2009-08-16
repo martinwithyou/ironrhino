@@ -31,6 +31,7 @@ public final class CasAuthenticationHandler extends
 		Assert.notNull(userManager, "userManager cannot be null.");
 	}
 
+	@Override
 	protected boolean authenticateUsernamePasswordInternal(
 			UsernamePasswordCredentials credentials)
 			throws AuthenticationException {

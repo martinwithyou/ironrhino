@@ -71,14 +71,17 @@ class CompassCondition {
 		this.value = value;
 	}
 
+	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
+	@Override
 	public boolean equals(Object object) {
 		return EqualsBuilder.reflectionEquals(this, object);
 	}
 
+	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}

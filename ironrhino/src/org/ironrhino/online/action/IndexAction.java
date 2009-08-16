@@ -18,6 +18,7 @@ public class IndexAction extends BaseAction {
 		this.productFacade = productFacade;
 	}
 
+	@Override
 	public String execute() {
 		Monitor.add("view", "index");
 		return SUCCESS;

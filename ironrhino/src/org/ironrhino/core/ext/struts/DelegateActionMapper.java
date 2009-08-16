@@ -20,6 +20,7 @@ public class DelegateActionMapper extends AbstractActionMapper {
 		restfulActionMapper = new RestfulActionMapper();
 	}
 
+	@Override
 	public ActionMapping getMapping(HttpServletRequest request,
 			ConfigurationManager configManager) {
 		String uri = getUri(request);
@@ -42,6 +43,7 @@ public class DelegateActionMapper extends AbstractActionMapper {
 		return defaultActionMapper.getUriFromActionMapping(mapping);
 	}
 
+	@Override
 	public ActionMapping getActionMappingFromRequest(
 			HttpServletRequest request, String uri, Configuration config) {
 		return defaultActionMapper.getActionMappingFromRequest(request, uri,

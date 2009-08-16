@@ -35,6 +35,7 @@ public class CacheTag extends BodyTagSupport {
 		this.timeToIdle = timeToIdle;
 	}
 
+	@Override
 	public int doAfterBody() throws JspTagException {
 		String body = null;
 		try {
@@ -54,6 +55,7 @@ public class CacheTag extends BodyTagSupport {
 		return SKIP_BODY;
 	}
 
+	@Override
 	public int doStartTag() throws JspTagException {
 		if (ServletActionContext.getRequest() == null)
 			ServletActionContext.setRequest((HttpServletRequest) pageContext
@@ -79,6 +81,7 @@ public class CacheTag extends BodyTagSupport {
 		return EVAL_BODY_BUFFERED;
 	}
 
+	@Override
 	public int doEndTag() throws JspTagException {
 		return EVAL_PAGE;
 	}

@@ -116,6 +116,7 @@ public class Tooltip implements Serializable {
 			return value;
 		}
 
+		@Override
 		public String toString() {
 			return String.valueOf(value);
 		}

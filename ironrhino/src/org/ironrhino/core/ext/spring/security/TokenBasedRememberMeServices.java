@@ -7,6 +7,7 @@ import org.springframework.util.StringUtils;
 
 public class TokenBasedRememberMeServices extends
 		org.springframework.security.ui.rememberme.TokenBasedRememberMeServices {
+	@Override
 	protected int calculateLoginLifetime(HttpServletRequest request,
 			Authentication authentication) {
 		String value = request.getParameter(getParameter());
@@ -22,6 +23,7 @@ public class TokenBasedRememberMeServices extends
 		return getTokenValiditySeconds();
 	}
 
+	@Override
 	protected boolean rememberMeRequested(HttpServletRequest request,
 			String parameter) {
 		if (StringUtils.hasText(request.getParameter(parameter)))

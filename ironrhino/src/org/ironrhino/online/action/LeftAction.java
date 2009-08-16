@@ -17,6 +17,7 @@ public class LeftAction extends BaseAction {
 		this.categoryTreeControl = categoryTreeControl;
 	}
 
+	@Override
 	public String execute() {
 		return SUCCESS;
 	}

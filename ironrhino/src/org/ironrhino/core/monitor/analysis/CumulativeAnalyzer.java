@@ -59,10 +59,12 @@ public class CumulativeAnalyzer extends FileAnalyzer {
 		return data;
 	}
 
+	@Override
 	public Iterator<KeyValuePair> iterate() {
 		return iterator;
 	}
 
+	@Override
 	protected void process(KeyValuePair pair) {
 		if (!pair.getKey().isCumulative())
 			return;
@@ -95,6 +97,7 @@ public class CumulativeAnalyzer extends FileAnalyzer {
 
 	}
 
+	@Override
 	protected void postAnalyze() {
 
 		for (List<TreeNode> topTreeNodes : data.values()) {

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 
@@ -48,15 +49,16 @@ public class AutoConfigResult extends FreemarkerResult {
 		this.ftlClasspath = val;
 	}
 
+	@Override
 	public void execute(ActionInvocation invocation) throws Exception {
 		if (invocation.getResultCode().equals(Action.SUCCESS)
 				&& !invocation.getProxy().getMethod().equals("")
 				&& !invocation.getProxy().getMethod().equals("execute")) {
 			ActionContext ctx = invocation.getInvocationContext();
 			HttpServletRequest request = (HttpServletRequest) ctx
-					.get(ServletActionContext.HTTP_REQUEST);
+					.get(StrutsStatics.HTTP_REQUEST);
 			HttpServletResponse response = (HttpServletResponse) ctx
-					.get(ServletActionContext.HTTP_RESPONSE);
+					.get(StrutsStatics.HTTP_RESPONSE);
 			String namespace = invocation.getProxy().getNamespace();
 			String url = namespace + (namespace.endsWith("/") ? "" : "/")
 					+ invocation.getProxy().getActionName();
@@ -69,6 +71,7 @@ public class AutoConfigResult extends FreemarkerResult {
 			doExecute(finalLocation, invocation);
 	}
 
+	@Override
 	protected String conditionalParse(String param, ActionInvocation invocation) {
 		String result = invocation.getResultCode();
 		String namespace = invocation.getProxy().getNamespace();

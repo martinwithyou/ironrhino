@@ -65,6 +65,7 @@ public class GroupAction extends BaseAction {
 		this.roleManager = roleManager;
 	}
 
+	@Override
 	public String execute() {
 		DetachedCriteria dc = groupManager.detachedCriteria();
 		if (resultPage == null)
@@ -75,6 +76,7 @@ public class GroupAction extends BaseAction {
 		return LIST;
 	}
 
+	@Override
 	public String input() {
 		group = groupManager.get(getUid());
 		if (group == null)
@@ -82,6 +84,7 @@ public class GroupAction extends BaseAction {
 		return INPUT;
 	}
 
+	@Override
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "group.name", trim = true, key = "group.name.required", message = "请输入名字") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "group.name", expression = "^\\w+$", key = "group.name.invalid", message = "必须为数字或者字母或者下划线") })
 	public String save() {
 		if (group.isNew()) {
@@ -118,6 +121,7 @@ public class GroupAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {

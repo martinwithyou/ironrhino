@@ -75,6 +75,7 @@ public class AccountAction extends BaseAction {
 		this.resultPage = resultPage;
 	}
 
+	@Override
 	public String execute() {
 		DetachedCriteria dc = accountManager.detachedCriteria();
 		if (resultPage == null)
@@ -85,11 +86,13 @@ public class AccountAction extends BaseAction {
 		return LIST;
 	}
 
+	@Override
 	public String view() {
 		account = accountManager.get(getUid());
 		return VIEW;
 	}
 
+	@Override
 	public String save() {
 		if (account != null && account.getId() != null) {
 			Account temp = account;
@@ -112,6 +115,7 @@ public class AccountAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {

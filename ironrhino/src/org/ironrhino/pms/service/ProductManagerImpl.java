@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductManagerImpl extends BaseManagerImpl<Product> implements
 		ProductManager {
 
+	@Override
 	@Transactional(readOnly = false)
 	@FlushCache(key = "product_${args[0].code}")
 	public void save(Product product) {

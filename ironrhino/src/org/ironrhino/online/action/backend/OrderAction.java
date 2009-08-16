@@ -44,6 +44,7 @@ public class OrderAction extends BaseAction {
 		this.resultPage = resultPage;
 	}
 
+	@Override
 	public String execute() {
 		if (resultPage == null)
 			resultPage = new ResultPage<Order>();
@@ -96,6 +97,7 @@ public class OrderAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	public String view() {
 		if (order != null)
 			if (order.getId() != null)
@@ -105,6 +107,7 @@ public class OrderAction extends BaseAction {
 		return VIEW;
 	}
 
+	@Override
 	public String delete() {
 		if (order != null)
 			if (order.getId() != null)

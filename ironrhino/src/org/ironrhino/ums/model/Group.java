@@ -69,6 +69,7 @@ public class Group extends BaseEntity {
 		return StringUtils.join(roles.iterator(), ",");
 	}
 
+	@Override
 	public String toString() {
 		return this.name;
 	}

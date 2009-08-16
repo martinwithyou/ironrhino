@@ -28,6 +28,10 @@ import org.apache.log4j.lf5.util.StreamUtils;
 import org.bouncycastle.bcpg.ArmoredInputStream;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.BCPGOutputStream;
+import org.bouncycastle.bcpg.CompressionAlgorithmTags;
+import org.bouncycastle.bcpg.HashAlgorithmTags;
+import org.bouncycastle.bcpg.PublicKeyAlgorithmTags;
+import org.bouncycastle.bcpg.SymmetricKeyAlgorithmTags;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ElGamalParameterSpec;
 import org.bouncycastle.openpgp.PGPCompressedData;
@@ -242,14 +246,14 @@ public class PGP {
 
 		KeyPair elgKp = elgKpg.generateKeyPair();
 
-		PGPKeyPair dsaKeyPair = new PGPKeyPair(PGPPublicKey.DSA, dsaKp,
+		PGPKeyPair dsaKeyPair = new PGPKeyPair(PublicKeyAlgorithmTags.DSA, dsaKp,
 				new Date());
-		PGPKeyPair elgKeyPair = new PGPKeyPair(PGPPublicKey.ELGAMAL_ENCRYPT,
+		PGPKeyPair elgKeyPair = new PGPKeyPair(PublicKeyAlgorithmTags.ELGAMAL_ENCRYPT,
 				elgKp, new Date());
 
 		PGPKeyRingGenerator keyRingGen = new PGPKeyRingGenerator(
 				PGPSignature.POSITIVE_CERTIFICATION, dsaKeyPair, keyId,
-				PGPEncryptedData.AES_256, password.toCharArray(), true, null,
+				SymmetricKeyAlgorithmTags.AES_256, password.toCharArray(), true, null,
 				null, new SecureRandom(), "BC");
 		keyRingGen.addSubKey(elgKeyPair);
 
@@ -324,13 +328,13 @@ public class PGP {
 		PGPPublicKey encKey = parsePGPPublicKey(keyIs);
 		ByteArrayOutputStream bOut = new ByteArrayOutputStream();
 		PGPCompressedDataGenerator comData = new PGPCompressedDataGenerator(
-				PGPCompressedData.ZIP);
+				CompressionAlgorithmTags.ZIP);
 		writeStreamToLiteralData(comData.open(bOut), PGPLiteralData.BINARY, in);
 		// PGPUtil.writeFileToLiteralData(comData.open(bOut),
 		// PGPLiteralData.BINARY, file);
 		comData.close();
 		PGPEncryptedDataGenerator cPk = new PGPEncryptedDataGenerator(
-				PGPEncryptedData.CAST5, withIntegrityCheck, new SecureRandom(),
+				SymmetricKeyAlgorithmTags.CAST5, withIntegrityCheck, new SecureRandom(),
 				"BC");
 		cPk.addMethod(encKey);
 		byte[] bytes = bOut.toByteArray();
@@ -437,7 +441,7 @@ public class PGP {
 				.extractPrivateKey(password.toCharArray(), "BC");
 
 		PGPSignatureGenerator sGen = new PGPSignatureGenerator(key
-				.getPublicKey().getAlgorithm(), PGPUtil.SHA1, "BC");
+				.getPublicKey().getAlgorithm(), HashAlgorithmTags.SHA1, "BC");
 
 		sGen.initSign(PGPSignature.BINARY_DOCUMENT, priK);
 

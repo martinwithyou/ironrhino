@@ -61,6 +61,7 @@ public class UploadAction extends ActionSupport {
 		this.type = type;
 	}
 
+	@Override
 	public String execute() throws Exception {
 		if (newFile == null || newFileFileName.endsWith(".jsp"))
 			return NONE;

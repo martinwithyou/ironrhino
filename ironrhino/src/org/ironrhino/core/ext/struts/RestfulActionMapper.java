@@ -18,6 +18,7 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 public class RestfulActionMapper extends AbstractActionMapper {
 
+	@Override
 	public ActionMapping getMapping(HttpServletRequest request,
 			ConfigurationManager configManager) {
 		String uri = getUri(request);
@@ -56,6 +57,7 @@ public class RestfulActionMapper extends AbstractActionMapper {
 		return sb.toString();
 	}
 
+	@Override
 	public ActionMapping getActionMappingFromRequest(
 			HttpServletRequest request, String uri, Configuration config) {
 		String namespace = null;
