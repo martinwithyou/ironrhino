@@ -13,4 +13,7 @@ public @interface JsonConfig {
 	String root() default "";
 
 	String[] propertyName() default {};
+
+	JsonSerializerType serializer() default JsonSerializerType.DEFAULT;
+
 }

@@ -48,8 +48,9 @@ public class JsonResult implements Result {
 		JsonConfig annotation = method.getAnnotation(JsonConfig.class);
 		if (annotation != null && StringUtils.isNotBlank(annotation.root())) {
 			Object value = invocation.getStack().findValue(annotation.root());
-			return JsonUtils.toJson(value);
+			return JsonUtils.toJson(value, annotation.serializer());
 		}
+
 		boolean hasErrors = false;
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (action instanceof ValidationAware) {

@@ -123,6 +123,7 @@
 		<property name="dest.style" value="${webapp.dir}/styles/all.css" />
 		<concat destfile="${dest.script}" encoding="utf-8" fixlastline="yes">
 			<filelist>
+				<file name="${webapp.dir}/scripts/source/swfobject.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.cookie.js" />
 				<file name="${webapp.dir}/scripts/source/effects.core.js" />

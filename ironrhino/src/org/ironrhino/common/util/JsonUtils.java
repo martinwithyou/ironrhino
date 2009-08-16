@@ -8,11 +8,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ironrhino.common.util.DateUtils;
+import org.ironrhino.core.annotation.JsonSerializerType;
 import org.ironrhino.core.annotation.NotInJson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+
 public class JsonUtils {
+
+	private static Gson gson = new Gson();
 
 	public static String mapToJson(Map<Object, Object> map) {
 		if (map == null)
@@ -50,6 +55,12 @@ public class JsonUtils {
 		} else {
 			return complexObjectToJson(object).toString();
 		}
+	}
+
+	public static String toJson(Object object, JsonSerializerType type) {
+		if (type == JsonSerializerType.GSON)
+			return gson.toJson(object);
+		return toJson(object);
 	}
 
 	public static JSONObject complexObjectToJson(Object o) {
