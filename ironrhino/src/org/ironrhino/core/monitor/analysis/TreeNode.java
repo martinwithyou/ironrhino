@@ -11,7 +11,8 @@ public class TreeNode implements Serializable {
 
 	private int id;
 
-	private TreeNode parent;
+	// make transient for json serialization
+	private transient TreeNode parent;
 
 	private List<TreeNode> children = new ArrayList<TreeNode>();
 

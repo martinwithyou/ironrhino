@@ -22,11 +22,9 @@ import org.ironrhino.common.model.Stat;
 import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
-import org.ironrhino.core.monitor.MonitorSettings;
 import org.ironrhino.core.monitor.Value;
 import org.ironrhino.core.monitor.analysis.Analyzer;
 import org.ironrhino.core.monitor.analysis.CumulativeAnalyzer;
-import org.ironrhino.core.monitor.analysis.CumulativeFileAnalyzer;
 import org.ironrhino.core.monitor.analysis.FileAnalyzer;
 import org.ironrhino.core.monitor.analysis.TreeNode;
 import org.ironrhino.core.service.BaseManager;
@@ -165,76 +163,78 @@ public class DefaultMonitorControl implements MonitorControl {
 			throw new IllegalArgumentException("to is before of from");
 		Date criticalDate = getCriticalDate(from, to);
 		boolean allInFile = DateUtils.isSameDay(criticalDate, from);
+		CumulativeAnalyzer analyzer = null;
 		if (allInFile) {
-			CumulativeFileAnalyzer ana = new CumulativeFileAnalyzer(from, to);
-			ana.analyze();
-			return ana.getData();
-		}
-
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(from);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		Date start = cal.getTime();
-		if (criticalDate == null) {
-			cal.setTime(to);
-		} else {
-			cal.setTime(criticalDate);
-			cal.add(Calendar.DAY_OF_YEAR, -1);
-		}
-		cal.set(Calendar.HOUR_OF_DAY, 23);
-		cal.set(Calendar.MINUTE, 59);
-		cal.set(Calendar.SECOND, 59);
-		Date end = cal.getTime();
-		baseManager.setEntityClass(Stat.class);
-		DetachedCriteria dc = baseManager.detachedCriteria();
-		dc.add(Restrictions.between("statDate", start, end));
-		List<Stat> list = baseManager.getListByCriteria(dc);
-		if (list.size() > 0) {
-			final Iterator<Stat> it = baseManager.getListByCriteria(dc)
-					.iterator();
-			Iterator<KeyValuePair> iterator = new Iterator<KeyValuePair>() {
-				public boolean hasNext() {
-					return it.hasNext();
-				}
-
-				public KeyValuePair next() {
-					return it.next().toKeyValuePair();
-				}
-
-				public void remove() {
-					it.remove();
-				}
-			};
-
-			CumulativeAnalyzer ana;
-			if (criticalDate != null) {
-				ana = new CumulativeAnalyzer(new CumulativeFileAnalyzer(
-						criticalDate, to).iterate(), iterator);
-			} else {
-				ana = new CumulativeAnalyzer(iterator);
+			try{
+			analyzer = new CumulativeAnalyzer(from, to);
+			}catch(Exception e){
+				e.printStackTrace();
+				log.error(e);
 			}
-			ana.analyze();
-			return ana.getData();
 		} else {
-			if (criticalDate != null) {
-				CumulativeFileAnalyzer cfa = new CumulativeFileAnalyzer(
-						criticalDate, to);
-				cfa.analyze();
-				return cfa.getData();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(from);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			Date start = cal.getTime();
+			if (criticalDate == null) {
+				cal.setTime(to);
 			} else {
-				return new HashMap<String, List<TreeNode>>();
+				cal.setTime(criticalDate);
+				cal.add(Calendar.DAY_OF_YEAR, -1);
+			}
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			Date end = cal.getTime();
+			baseManager.setEntityClass(Stat.class);
+			DetachedCriteria dc = baseManager.detachedCriteria();
+			dc.add(Restrictions.between("statDate", start, end));
+			List<Stat> list = baseManager.getListByCriteria(dc);
+			if (list.size() > 0) {
+				final Iterator<Stat> it = baseManager.getListByCriteria(dc)
+						.iterator();
+				Iterator<KeyValuePair> iterator = new Iterator<KeyValuePair>() {
+					public boolean hasNext() {
+						return it.hasNext();
+					}
+
+					public KeyValuePair next() {
+						return it.next().toKeyValuePair();
+					}
+
+					public void remove() {
+						it.remove();
+					}
+				};
+
+				if (criticalDate != null) {
+					analyzer = new CumulativeAnalyzer(new CumulativeAnalyzer(
+							criticalDate, to).iterate(), iterator);
+				} else {
+					analyzer = new CumulativeAnalyzer(iterator);
+				}
+
+			} else {
+				if (criticalDate != null) {
+					analyzer = new CumulativeAnalyzer(criticalDate, to);
+				}
 			}
 		}
-
+		if (analyzer != null) {
+			analyzer.analyze();
+			return analyzer.getData();
+		} else {
+			return new HashMap<String, List<TreeNode>>();
+		}
 	}
 
 	private Date getCriticalDate(Date from, Date to) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(to);
 		Date criticalDate = null;
-		while (MonitorSettings.hasLogFile(cal.getTime())
+		while (CumulativeAnalyzer.hasLogFile(cal.getTime())
 				&& !DateUtils.isSameDay(criticalDate, from)) {
 			criticalDate = cal.getTime();
 			cal.add(Calendar.DAY_OF_YEAR, -1);

@@ -1,11 +1,14 @@
 package org.ironrhino.core.monitor.analysis;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -23,56 +26,51 @@ public abstract class FileAnalyzer extends AbstractAnalyzer {
 
 	protected File[] files;
 
+	public FileAnalyzer(Iterator<KeyValuePair>... iterators) {
+		super(iterators);
+	}
+
 	public FileAnalyzer() throws FileNotFoundException {
-		this.files = new File[] { new File(MonitorSettings
-				.getLogFile(MonitorSettings.STAT_LOG_FILE)) };
-		checkFiles();
+		this(new Date());
 	}
 
 	public FileAnalyzer(Date date) throws FileNotFoundException {
-		boolean isToday = DateUtils.isToday(date);
-		this.files = new File[] { new File(MonitorSettings
-				.getLogFile(MonitorSettings.STAT_LOG_FILE)
-				+ (isToday ? "" : new SimpleDateFormat(
-						MonitorSettings.DATE_STYLE).format(date))) };
-		checkFiles();
+		this.files = getLogFile(date);
+		newIterator();
 	}
 
 	public FileAnalyzer(Date[] dates) throws FileNotFoundException {
-		this.files = new File[dates.length];
+		List<File> list = new ArrayList<File>();
 		for (int i = 0; i < dates.length; i++) {
-			boolean isToday = DateUtils.isToday(dates[i]);
-			this.files[i] = new File(MonitorSettings
-					.getLogFile(MonitorSettings.STAT_LOG_FILE)
-					+ (isToday ? "" : new SimpleDateFormat(
-							MonitorSettings.DATE_STYLE).format(dates[i])));
+			File[] array = getLogFile(dates[i]);
+			if (array != null)
+				for (File f : array)
+					list.add(f);
 		}
-		checkFiles();
+		this.files = list.toArray(new File[0]);
+		newIterator();
 	}
 
 	public FileAnalyzer(Date start, Date end, boolean excludeEnd)
 			throws FileNotFoundException {
+		List<File> list = new ArrayList<File>();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(end);
 		int endDay = cal.get(Calendar.DAY_OF_YEAR);
 		if (excludeEnd)
 			endDay--;
-
 		cal.setTime(start);
 		int startDay = cal.get(Calendar.DAY_OF_YEAR);
 		this.files = new File[endDay - startDay + 1];
 		for (int i = 0; i < files.length; i++) {
 			cal.add(Calendar.DAY_OF_YEAR, i);
-			{
-				Date date = cal.getTime();
-				boolean isToday = DateUtils.isToday(date);
-				this.files[i] = new File(MonitorSettings
-						.getLogFile(MonitorSettings.STAT_LOG_FILE)
-						+ (isToday ? "" : new SimpleDateFormat(
-								MonitorSettings.DATE_STYLE).format(date)));
-			}
+			File[] array = getLogFile(cal.getTime());
+			if (array != null)
+				for (File f : array)
+					list.add(f);
 		}
-		checkFiles();
+		this.files = list.toArray(new File[0]);
+		newIterator();
 	}
 
 	public FileAnalyzer(Date start, Date end) throws FileNotFoundException {
@@ -87,15 +85,12 @@ public abstract class FileAnalyzer extends AbstractAnalyzer {
 		this.files = files;
 	}
 
-	private void checkFiles() throws FileNotFoundException {
+	private void newIterator() throws FileNotFoundException {
 		for (File f : files)
 			if (!f.exists())
 				throw new FileNotFoundException(f.getAbsolutePath());
-	}
-
-	public Iterator<KeyValuePair> iterate() {
-		return new TextFileIterator<KeyValuePair>(MonitorSettings.ENCODING,
-				files) {
+		this.iterator = new TextFileIterator<KeyValuePair>(
+				MonitorSettings.ENCODING, files) {
 			protected KeyValuePair transform(String line) {
 				String[] array = line.split("\\|");
 				Key key = Key.fromString(array[0]);
@@ -114,6 +109,30 @@ public abstract class FileAnalyzer extends AbstractAnalyzer {
 				return new KeyValuePair(key, value, date);
 			}
 		};
+	}
+
+	public static File[] getLogFile(Date date) {
+		boolean today = DateUtils.isToday(date);
+		StringBuilder sb = new StringBuilder();
+		sb.append('_');
+		sb.append(MonitorSettings.STAT_LOG_FILE_NAME);
+		if (!today)
+			sb.append(new SimpleDateFormat(MonitorSettings.DATE_STYLE)
+					.format(date));
+		final String suffix = sb.toString();
+		File dir = MonitorSettings.getLogFileDirectory();
+		return dir.listFiles(new FileFilter() {
+			public boolean accept(File f) {
+				if (f.getName().endsWith(suffix))
+					return true;
+				return false;
+			}
+		});
+	}
+
+	public static boolean hasLogFile(Date date) {
+		File[] files = getLogFile(date);
+		return files != null && files.length > 0;
 	}
 
 }

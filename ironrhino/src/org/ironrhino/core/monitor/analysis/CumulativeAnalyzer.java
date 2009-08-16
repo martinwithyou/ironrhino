@@ -1,31 +1,58 @@
 package org.ironrhino.core.monitor.analysis;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ironrhino.common.util.CompositeIterator;
 import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
 
-public class CumulativeAnalyzer extends AbstractAnalyzer {
+public class CumulativeAnalyzer extends FileAnalyzer {
 
 	private Map<String, List<TreeNode>> data = new HashMap<String, List<TreeNode>>();
 
-	private Iterator<KeyValuePair> iterator;
+	public CumulativeAnalyzer() throws FileNotFoundException {
+		super();
+	}
+
+	public CumulativeAnalyzer(Date start, Date end, boolean excludeEnd)
+			throws FileNotFoundException {
+		super(start, end, excludeEnd);
+	}
+
+	public CumulativeAnalyzer(Date start, Date end)
+			throws FileNotFoundException {
+		super(start, end);
+	}
+
+	public CumulativeAnalyzer(Date date) throws FileNotFoundException {
+		super(date);
+	}
+
+	public CumulativeAnalyzer(Date[] dates) throws FileNotFoundException {
+		super(dates);
+	}
+
+	public CumulativeAnalyzer(File... files) {
+		super(files);
+	}
+
+	public CumulativeAnalyzer(File file) {
+		super(file);
+	}
 
 	public CumulativeAnalyzer(Iterator<KeyValuePair>... iterators) {
-//		if (iterators.length == 1)
-//			this.iterator = iterators[0];
-//		else
-			this.iterator = new CompositeIterator<KeyValuePair>(iterators);
+		super(iterators);
 	}
 
 	public Map<String, List<TreeNode>> getData() {

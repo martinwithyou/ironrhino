@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.ironrhino.common.support.MonitorControl;
 import org.ironrhino.core.annotation.AutoConfig;
+import org.ironrhino.core.annotation.JsonConfig;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.monitor.analysis.TreeNode;
 
@@ -69,6 +70,27 @@ public class MonitorAction extends BaseAction {
 			data = new HashMap<String, List<TreeNode>>();
 		}
 		return SUCCESS;
+	}
+
+	public String chart() {
+		return "chart";
+	}
+
+	@JsonConfig(root = "data")
+	public String bar() {
+		try {
+			if (from != null && to != null) {
+				data = monitorControl.getData(from, to);
+			} else {
+				Date today = new Date();
+				if (date == null || date.after(today))
+					date = today;
+				data = monitorControl.getData(date);
+			}
+		} catch (Exception e) {
+			data = new HashMap<String, List<TreeNode>>();
+		}
+		return JSON;
 	}
 
 }

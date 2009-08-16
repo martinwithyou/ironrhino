@@ -3,12 +3,9 @@ package org.ironrhino.core.monitor;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.common.util.DateUtils;
 
 public class MonitorSettings {
 
@@ -24,9 +21,9 @@ public class MonitorSettings {
 
 	public static final String FILE_DIRECTORY = "logs";
 
-	public static final String STAT_LOG_FILE = "stat.log";
+	public static final String STAT_LOG_FILE_NAME = "stat.log";
 
-	public static final String SYSTEM_LOG_FILE = "system.log";
+	public static final String SYSTEM_LOG_FILE_NAME = "system.log";
 
 	private static final Log log = LogFactory.getLog(MonitorSettings.class);
 
@@ -66,17 +63,16 @@ public class MonitorSettings {
 			MonitorSettings.systemIntervalMultiple = systemIntervalMultiple;
 	}
 
-	public static String getLogFile(String logfile) {
+	public static File getLogFileDirectory() {
 		File dir = new File(System.getProperty("user.home"), FILE_DIRECTORY);
 		if (!dir.exists() && dir.mkdirs())
 			log.error("mkdir error:" + dir.getAbsolutePath());
-		return new File(dir, HOST + "_" + logfile).getAbsolutePath();
+		return dir;
 	}
 
-	public static boolean hasLogFile(Date date) {
-		return new File(MonitorSettings
-				.getLogFile(MonitorSettings.STAT_LOG_FILE)
-				+ (DateUtils.isToday(date) ? "" : new SimpleDateFormat(
-						MonitorSettings.DATE_STYLE).format(date))).exists();
+	public static String getLogFile(String filename) {
+		return new File(getLogFileDirectory(), HOST + "_" + filename)
+				.getAbsolutePath();
 	}
+
 }

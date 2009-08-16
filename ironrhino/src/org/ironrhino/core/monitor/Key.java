@@ -11,7 +11,7 @@ public class Key implements Serializable, Comparable<Key> {
 	private String[] names;
 
 	// minutes
-	private int interval = 1;
+	private int intervalMultiple = 1;
 
 	private boolean cumulative = true;
 
@@ -22,31 +22,31 @@ public class Key implements Serializable, Comparable<Key> {
 		names = strings;
 	}
 
-	public Key(int interval, String... strings) {
-		if (interval > 0)
-			this.interval = interval;
+	public Key(int intervalMultiple, String... strings) {
+		if (intervalMultiple > 0)
+			this.intervalMultiple = intervalMultiple;
 		namespace = null;
 		names = strings;
 	}
 
-	public Key(String namespace, int interval, String... strings) {
-		if (interval > 0)
-			this.interval = interval;
+	public Key(String namespace, int intervalMultiple, String... strings) {
+		if (intervalMultiple > 0)
+			this.intervalMultiple = intervalMultiple;
 		this.namespace = namespace;
 		names = strings;
 	}
 
-	public Key(String namespace, int interval, boolean cumulative,
+	public Key(String namespace, int intervalMultiple, boolean cumulative,
 			String... strings) {
-		if (interval > 0)
-			this.interval = interval;
+		if (intervalMultiple > 0)
+			this.intervalMultiple = intervalMultiple;
 		this.namespace = namespace;
 		this.cumulative = cumulative;
 		names = strings;
 	}
 
-	public int getInterval() {
-		return interval;
+	public int getIntervalMultiple() {
+		return intervalMultiple;
 	}
 
 	public String[] getNames() {
@@ -65,22 +65,6 @@ public class Key implements Serializable, Comparable<Key> {
 		return names.length;
 	}
 
-	public boolean isParentOf(Key key) {
-		return this.equals(key.parent());
-	}
-
-	public boolean isChildOf(Key key) {
-		return this.parent().equals(key);
-	}
-
-	public Key top() {
-		return parent(1);
-	}
-
-	public Key parent() {
-		return parent(getLevel() - 1);
-	}
-
 	public Key parent(int level) {
 		if (level < 1)
 			return parent(1);
@@ -88,14 +72,14 @@ public class Key implements Serializable, Comparable<Key> {
 			return this;
 		String[] newkeys = new String[level];
 		System.arraycopy(names, 0, newkeys, 0, level);
-		return new Key(namespace, interval, cumulative, newkeys);
+		return new Key(namespace, intervalMultiple, cumulative, newkeys);
 	}
 
 	public Key child(String subkey) {
 		String[] newkeys = new String[this.names.length + 1];
 		System.arraycopy(names, 0, newkeys, 0, names.length);
 		newkeys[this.names.length] = subkey;
-		return new Key(namespace, interval, cumulative, newkeys);
+		return new Key(namespace, intervalMultiple, cumulative, newkeys);
 	}
 
 	public long getLastWriteTime() {

@@ -47,7 +47,7 @@ public class Monitor {
 		FileAppender appender = null;
 		try {
 			appender = new DailyRollingFileAppender(layout, MonitorSettings
-					.getLogFile(MonitorSettings.STAT_LOG_FILE),
+					.getLogFile(MonitorSettings.STAT_LOG_FILE_NAME),
 					MonitorSettings.ENCODING, MonitorSettings.DATE_STYLE);
 			appender.setAppend(true);
 			// appender.setEncoding(ENCODING);//doesn't works
@@ -56,7 +56,7 @@ public class Monitor {
 			statLogger.setAdditivity(false);
 
 			appender = new DailyRollingFileAppender(layout, MonitorSettings
-					.getLogFile(MonitorSettings.SYSTEM_LOG_FILE),
+					.getLogFile(MonitorSettings.SYSTEM_LOG_FILE_NAME),
 					MonitorSettings.ENCODING, MonitorSettings.DATE_STYLE);
 			appender.setAppend(true);
 			systemLogger.addAppender(appender);
@@ -114,7 +114,7 @@ public class Monitor {
 			Key key = entry.getKey();
 			Value value = entry.getValue();
 			if (((!checkInterval || (current - key.getLastWriteTime())
-					/ MonitorSettings.getIntervalUnit() > key.getInterval()))
+					/ MonitorSettings.getIntervalUnit() > key.getIntervalMultiple()))
 					&& (value.getLongValue() > 0 || value.getDoubleValue() > 0)) {
 				key.setLastWriteTime(current);
 				output(statLogger, key, value);
