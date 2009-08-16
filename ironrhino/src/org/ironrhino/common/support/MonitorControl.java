@@ -13,9 +13,9 @@ public interface MonitorControl {
 
 	public boolean archive(Date date);
 
-	public Map<String, List<TreeNode>> getData(Date date)
+	public Map<String, List<TreeNode>> getResult(Date date)
 			throws FileNotFoundException;
 
-	public Map<String, List<TreeNode>> getData(Date from, Date to)
+	public Map<String, List<TreeNode>> getResult(Date from, Date to)
 			throws FileNotFoundException;
 }

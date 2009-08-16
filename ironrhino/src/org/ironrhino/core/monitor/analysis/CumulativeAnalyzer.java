@@ -1,6 +1,5 @@
 package org.ironrhino.core.monitor.analysis;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,17 +16,13 @@ import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
 
-public class CumulativeAnalyzer extends FileAnalyzer {
+public class CumulativeAnalyzer extends
+		AbstractAnalyzer<Map<String, List<TreeNode>>> {
 
-	private Map<String, List<TreeNode>> data = new HashMap<String, List<TreeNode>>();
+	private Map<String, List<TreeNode>> result = new HashMap<String, List<TreeNode>>();
 
 	public CumulativeAnalyzer() throws FileNotFoundException {
 		super();
-	}
-
-	public CumulativeAnalyzer(Date start, Date end, boolean excludeEnd)
-			throws FileNotFoundException {
-		super(start, end, excludeEnd);
 	}
 
 	public CumulativeAnalyzer(Date start, Date end)
@@ -43,35 +38,23 @@ public class CumulativeAnalyzer extends FileAnalyzer {
 		super(dates);
 	}
 
-	public CumulativeAnalyzer(File... files) {
-		super(files);
-	}
-
-	public CumulativeAnalyzer(File file) {
-		super(file);
-	}
-
 	public CumulativeAnalyzer(Iterator<KeyValuePair>... iterators) {
 		super(iterators);
 	}
 
-	public Map<String, List<TreeNode>> getData() {
-		return data;
-	}
-
 	@Override
-	public Iterator<KeyValuePair> iterate() {
-		return iterator;
+	public Map<String, List<TreeNode>> getResult() {
+		return result;
 	}
 
 	@Override
 	protected void process(KeyValuePair pair) {
 		if (!pair.getKey().isCumulative())
 			return;
-		List<TreeNode> list = data.get(pair.getKey().getNamespace());
+		List<TreeNode> list = result.get(pair.getKey().getNamespace());
 		if (list == null)
 			list = new ArrayList<TreeNode>();
-		data.put(pair.getKey().getNamespace(), list);
+		result.put(pair.getKey().getNamespace(), list);
 		int level = pair.getKey().getLevel();
 		for (int i = 1; i <= level; i++) {
 			Key cur = pair.getKey().parent(i);
@@ -100,7 +83,7 @@ public class CumulativeAnalyzer extends FileAnalyzer {
 	@Override
 	protected void postAnalyze() {
 
-		for (List<TreeNode> topTreeNodes : data.values()) {
+		for (List<TreeNode> topTreeNodes : result.values()) {
 			// sort children,set and cumulate to parent
 			for (TreeNode topNode : topTreeNodes) {
 				TreeWalker.walk(topNode, new TreeWalker.Visitor() {
@@ -157,7 +140,7 @@ public class CumulativeAnalyzer extends FileAnalyzer {
 		// sort map by namespace
 		Map<String, List<TreeNode>> linked = new LinkedHashMap<String, List<TreeNode>>();
 		List<String> namespaces = new ArrayList();
-		namespaces.addAll(data.keySet());
+		namespaces.addAll(result.keySet());
 		Collections.sort(namespaces, new Comparator<String>() {
 			public int compare(String o1, String o2) {
 				if (o1 == null)
@@ -169,8 +152,8 @@ public class CumulativeAnalyzer extends FileAnalyzer {
 
 		});
 		for (String namespace : namespaces)
-			linked.put(namespace, data.get(namespace));
-		data = linked;
+			linked.put(namespace, result.get(namespace));
+		result = linked;
 	}
 
 }

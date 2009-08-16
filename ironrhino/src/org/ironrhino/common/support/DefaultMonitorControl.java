@@ -23,9 +23,9 @@ import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
+import org.ironrhino.core.monitor.analysis.AbstractAnalyzer;
 import org.ironrhino.core.monitor.analysis.Analyzer;
 import org.ironrhino.core.monitor.analysis.CumulativeAnalyzer;
-import org.ironrhino.core.monitor.analysis.FileAnalyzer;
 import org.ironrhino.core.monitor.analysis.TreeNode;
 import org.ironrhino.core.service.BaseManager;
 
@@ -69,7 +69,7 @@ public class DefaultMonitorControl implements MonitorControl {
 		else
 			lastStatDate = null;
 		try {
-			Analyzer analyzer = new FileAnalyzer(statDay) {
+			Analyzer analyzer = new AbstractAnalyzer(statDay) {
 				Calendar calendar = Calendar.getInstance();
 				int currentHour = 0;
 				Map<Key, Value> map = new HashMap<Key, Value>();
@@ -140,6 +140,11 @@ public class DefaultMonitorControl implements MonitorControl {
 				protected void postAnalyze() {
 					save();
 				}
+
+				@Override
+				public Object getResult() {
+					return null;
+				}
 			};
 			analyzer.analyze();
 		} catch (FileNotFoundException e) {
@@ -149,12 +154,12 @@ public class DefaultMonitorControl implements MonitorControl {
 		return true;
 	}
 
-	public Map<String, List<TreeNode>> getData(Date date)
+	public Map<String, List<TreeNode>> getResult(Date date)
 			throws FileNotFoundException {
-		return getData(date, date);
+		return getResult(date, date);
 	}
 
-	public Map<String, List<TreeNode>> getData(Date from, Date to)
+	public Map<String, List<TreeNode>> getResult(Date from, Date to)
 			throws FileNotFoundException {
 		Date today = new Date();
 		if (from == null)
@@ -167,9 +172,9 @@ public class DefaultMonitorControl implements MonitorControl {
 		boolean allInFile = DateUtils.isSameDay(criticalDate, from);
 		CumulativeAnalyzer analyzer = null;
 		if (allInFile) {
-			try{
-			analyzer = new CumulativeAnalyzer(from, to);
-			}catch(Exception e){
+			try {
+				analyzer = new CumulativeAnalyzer(from, to);
+			} catch (Exception e) {
 				e.printStackTrace();
 				log.error(e);
 			}
@@ -226,7 +231,7 @@ public class DefaultMonitorControl implements MonitorControl {
 		}
 		if (analyzer != null) {
 			analyzer.analyze();
-			return analyzer.getData();
+			return analyzer.getResult();
 		} else {
 			return new HashMap<String, List<TreeNode>>();
 		}
@@ -236,7 +241,7 @@ public class DefaultMonitorControl implements MonitorControl {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(to);
 		Date criticalDate = null;
-		while (FileAnalyzer.hasLogFile(cal.getTime())
+		while (AbstractAnalyzer.hasLogFile(cal.getTime())
 				&& !DateUtils.isSameDay(criticalDate, from)) {
 			criticalDate = cal.getTime();
 			cal.add(Calendar.DAY_OF_YEAR, -1);

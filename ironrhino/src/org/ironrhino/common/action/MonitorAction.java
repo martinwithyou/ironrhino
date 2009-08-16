@@ -20,13 +20,15 @@ import org.ironrhino.core.monitor.analysis.TreeNode;
 @AutoConfig
 public class MonitorAction extends BaseAction {
 
+	private static final long serialVersionUID = -8946871669998582841L;
+
 	private Date date;
 
 	private Date from;
 
 	private Date to;
 
-	private Map<String, List<TreeNode>> data;
+	private Map<String, List<TreeNode>> result;
 
 	private Chart chart;
 
@@ -36,8 +38,8 @@ public class MonitorAction extends BaseAction {
 		return chart;
 	}
 
-	public Map<String, List<TreeNode>> getData() {
-		return data;
+	public Map<String, List<TreeNode>> getResult() {
+		return result;
 	}
 
 	public Date getFrom() {
@@ -72,21 +74,21 @@ public class MonitorAction extends BaseAction {
 	public String execute() {
 		try {
 			if (from != null && to != null) {
-				data = monitorControl.getData(from, to);
+				result = monitorControl.getResult(from, to);
 			} else {
 				Date today = new Date();
 				if (date == null || date.after(today))
 					date = today;
-				data = monitorControl.getData(date);
+				result = monitorControl.getResult(date);
 			}
 		} catch (Exception e) {
-			data = new HashMap<String, List<TreeNode>>();
+			result = new HashMap<String, List<TreeNode>>();
 		}
 		return SUCCESS;
 	}
 
 	public String chart() {
-//		String key = getUid();
+		// String key = getUid();
 		return "chart";
 	}
 
@@ -96,7 +98,7 @@ public class MonitorAction extends BaseAction {
 		chart = new Chart();
 		chart.setTitle(new Text("I am title"));
 		XAxis x = new XAxis();
-		x.setLabels("1月","2月","3月","4月");
+		x.setLabels("1月", "2月", "3月", "4月");
 		YAxis y = new YAxis();
 		y.setMax(50);
 		y.setLabels("ylabel");
