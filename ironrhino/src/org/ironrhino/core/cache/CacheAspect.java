@@ -1,9 +1,7 @@
 package org.ironrhino.core.cache;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.sf.ehcache.jcache.JCache;
 
@@ -15,9 +13,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.ironrhino.core.aspect.AopContext;
-import org.mvel2.templates.TemplateRuntime;
-import org.springframework.core.Ordered;
+import org.ironrhino.core.aspect.BaseAspect;
 
 /**
  * cache some data
@@ -27,11 +23,9 @@ import org.springframework.core.Ordered;
  * @see org.ironrhino.core.cache.FlushCache
  */
 @Aspect
-public class CacheAspect implements Ordered {
+public class CacheAspect extends BaseAspect {
 
 	private Log log = LogFactory.getLog(CacheAspect.class);
-
-	private int order;
 
 	@Around("execution(public java.io.Serializable+ *(..)) and @annotation(checkCache)")
 	public Object get(ProceedingJoinPoint jp, CheckCache checkCache)
@@ -39,8 +33,7 @@ public class CacheAspect implements Ordered {
 		String name = eval(checkCache.namespace(), jp, null).toString();
 		String key = checkKey(jp, checkCache);
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(name);
-		if (cache == null || key == null
-				|| AopContext.isBypass(this.getClass()))
+		if (cache == null || key == null || isBypass())
 			return jp.proceed();
 		if (CacheContext.isForceFlush()) {
 			cache.remove(key);
@@ -70,8 +63,7 @@ public class CacheAspect implements Ordered {
 		String name = eval(flushCache.namespace(), jp, null).toString();
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(name, false);
 		List keys = flushKeys(jp, flushCache);
-		if (AopContext.isBypass(this.getClass()) || cache == null
-				|| keys == null)
+		if (isBypass() || cache == null || keys == null)
 			return;
 		for (Object key : keys)
 			if (key != null)
@@ -118,31 +110,6 @@ public class CacheAspect implements Ordered {
 			return null;
 		}
 
-	}
-
-	private Object eval(String template, JoinPoint jp, Object retval) {
-		if (template == null)
-			return null;
-		template = template.trim();
-		if (template.length() == 0)
-			return "";
-		Map<String, Object> context = new HashMap<String, Object>();
-		context.put("_this", jp.getThis());
-		context.put("target", jp.getTarget());
-		context.put("aspect", this);
-		if (retval != null)
-			context.put("retval", retval);
-		context.put("args", jp.getArgs());
-		Object value = TemplateRuntime.eval(template, context);
-		return value;
-	}
-
-	public int getOrder() {
-		return order;
-	}
-
-	public void setOrder(int order) {
-		this.order = order;
 	}
 
 }

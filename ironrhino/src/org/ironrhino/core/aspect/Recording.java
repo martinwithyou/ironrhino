@@ -16,6 +16,8 @@ import org.springframework.core.Ordered;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.security.userdetails.UserDetails;
 
+import com.google.gson.Gson;
+
 /**
  * Use for record model's CRUD operations
  * 
@@ -67,7 +69,7 @@ public class Recording extends HibernateDaoSupport implements Ordered {
 		} catch (Exception e) {
 		}
 		record.setEntityClass(entity.getClass().getName());
-		record.setEntityToString(String.valueOf(entity));
+		record.setEntityToString(new Gson().toJson(entity));
 		record.setAction(action.name());
 		record.setRecordDate(new Date());
 		// important! no transaction,inserted before actual save entity and

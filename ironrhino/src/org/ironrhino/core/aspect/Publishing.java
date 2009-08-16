@@ -9,7 +9,6 @@ import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.model.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 
 /**
  * Use for record model's CRUD operations
@@ -18,17 +17,15 @@ import org.springframework.core.Ordered;
  * @see org.ironrhino.core.annotation.PublishAware
  */
 @Aspect
-public class Publishing implements Ordered {
+public class Publishing extends BaseAspect {
 
 	@Autowired
 	private EventPublisher eventPublisher;
 
-	private int order;
-
 	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(org.ironrhino.core.annotation.PublishAware)")
 	public Object save(ProceedingJoinPoint call, Entity entity)
 			throws Throwable {
-		if (AopContext.isBypass(this.getClass()))
+		if (isBypass())
 			return call.proceed();
 		boolean isNew = entity.isNew();
 		Object result = call.proceed();
@@ -41,19 +38,11 @@ public class Publishing implements Ordered {
 
 	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(org.ironrhino.core.annotation.PublishAware)")
 	public void delete(Entity entity) {
-		if (AopContext.isBypass(this.getClass()))
+		if (isBypass())
 			return;
 		if (eventPublisher != null)
 			eventPublisher.publish(new EntityOperationEvent(entity,
 					EntityOperationType.DELETE));
-	}
-
-	public int getOrder() {
-		return order;
-	}
-
-	public void setOrder(int order) {
-		this.order = order;
 	}
 
 }
