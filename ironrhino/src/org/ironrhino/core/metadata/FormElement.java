@@ -21,6 +21,4 @@ public @interface FormElement {
 
 	boolean required() default false;
 
-	boolean readonly() default false;
-
 }

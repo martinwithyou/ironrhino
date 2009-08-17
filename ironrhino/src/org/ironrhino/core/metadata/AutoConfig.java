@@ -18,6 +18,4 @@ public @interface AutoConfig {
 
 	String fileupload() default "";
 
-	boolean readonly() default false;
-
 }

@@ -1,18 +1,15 @@
 package org.ironrhino.core.metadata;
 
+import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target(METHOD)
+@Target( { METHOD, FIELD, TYPE })
 @Retention(RUNTIME)
-public @interface Captcha {
-	/**
-	 * always validate in despite of logged in user if true
-	 * 
-	 * @return
-	 */
-	boolean always() default false;
+public @interface Readonly {
+
 }
