@@ -5,12 +5,14 @@ import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.FormElement;
+import org.ironrhino.core.metadata.Readonly;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
 
-@AutoConfig(readonly = true)
+@Readonly
+@AutoConfig
 public class Stat extends BaseEntity {
 
 	private static final long serialVersionUID = 5933509155833960220L;

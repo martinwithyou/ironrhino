@@ -3,10 +3,14 @@ package org.ironrhino.common.model;
 import java.util.Date;
 
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.Readonly;
 import org.ironrhino.core.model.BaseEntity;
 
-@AutoConfig(readonly=true)
+@Readonly
+@AutoConfig
 public class Record extends BaseEntity {
+
+	private static final long serialVersionUID = -8287907984213799302L;
 
 	private String operatorId;
 

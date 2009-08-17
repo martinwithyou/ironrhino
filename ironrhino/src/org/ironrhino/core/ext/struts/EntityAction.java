@@ -28,11 +28,11 @@ import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.common.util.AnnotationUtils;
 import org.ironrhino.core.ext.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.ext.hibernate.PropertyType;
-import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.FormElement;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInUI;
+import org.ironrhino.core.metadata.Readonly;
 import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Entity;
 import org.ironrhino.core.service.BaseManager;
@@ -47,9 +47,11 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 
 public class EntityAction extends BaseAction {
 
+	private static final long serialVersionUID = -7192083480214722933L;
+
 	protected static Log log = LogFactory.getLog(EntityAction.class);
 
-	private BaseManager baseManager;
+	private transient BaseManager baseManager;
 
 	private ResultPage resultPage;
 
@@ -74,9 +76,7 @@ public class EntityAction extends BaseAction {
 	}
 
 	private boolean readonly() {
-		AutoConfig ac = (AutoConfig) getEntityClass().getAnnotation(
-				AutoConfig.class);
-		return (ac != null) && ac.readonly();
+		return getEntityClass().isAnnotationPresent(Readonly.class);
 	}
 
 	@Override
@@ -321,7 +321,8 @@ public class EntityAction extends BaseAction {
 							fe = f.getAnnotation(FormElement.class);
 					} catch (Exception e) {
 					}
-				FormElementConfig fec = new FormElementConfig(fe);
+				FormElementConfig fec = new FormElementConfig(fe, pd
+						.getReadMethod().isAnnotationPresent(Readonly.class));
 				if (returnType == Integer.TYPE || returnType == Integer.class
 						|| returnType == Short.TYPE
 						|| returnType == Short.class || returnType == Long.TYPE
@@ -416,12 +417,12 @@ public class EntityAction extends BaseAction {
 		public FormElementConfig() {
 		}
 
-		public FormElementConfig(FormElement fe) {
+		public FormElementConfig(FormElement fe, boolean readonly) {
 			if (fe == null)
 				return;
 			this.type = fe.type();
 			this.size = fe.size();
-			this.readonly = fe.readonly();
+			this.readonly = readonly;
 			if (fe.required())
 				this.setRequired(true);
 			this.displayOrder = fe.displayOrder();
@@ -530,13 +531,13 @@ public class EntityAction extends BaseAction {
 		this.valueStackFactory = valueStackFactory;
 	}
 
-	private ValueStackFactory valueStackFactory;
+	private transient ValueStackFactory valueStackFactory;
 
 	@Inject("ironrhino-autoconfig")
 	public void setPackageProvider(PackageProvider packageProvider) {
 		this.packageProvider = packageProvider;
 	}
 
-	private PackageProvider packageProvider;
+	private transient PackageProvider packageProvider;
 
 }
