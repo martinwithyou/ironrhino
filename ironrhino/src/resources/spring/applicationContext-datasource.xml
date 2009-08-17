@@ -5,21 +5,32 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="dataSource"
 		class="org.ironrhino.core.ext.spring.ReadWriteRouteDataSource">
-		<property name="writeDataSourceNames">
-			<map>
-				<!-- dataSource beanName and RoundRobin weight -->
-				<entry  key="defaultDataSource" value="1"/>
-			</map>
-		</property>
 		<property name="readDataSourceNames">
 			<map>
-				<entry  key="defaultDataSource" value="1"/>
-				<entry  key="defaultDataSource" value="2"/>
-				<entry  key="defaultDataSource" value="3"/>
+				<!-- dataSource beanName and RoundRobin weight -->
+				<entry  key="readDataSource" value="1"/>
 			</map>
 		</property>
+		<property name="writeDataSourceNames">
+			<map>
+				<entry  key="writeDataSource" value="1"/>
+			</map>
+		</property>
+
 	</bean>
 	<bean id="defaultDataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+	<bean id="readDataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+	<bean id="writeDataSource"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}"

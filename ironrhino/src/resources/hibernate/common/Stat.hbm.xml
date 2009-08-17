@@ -13,5 +13,6 @@
 		<property name="longValue" />
 		<property name="doubleValue" />
 		<property name="statDate" />
+		<property name="host" />
 	</class>
 </hibernate-mapping>

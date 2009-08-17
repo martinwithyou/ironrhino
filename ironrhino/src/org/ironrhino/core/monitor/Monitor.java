@@ -42,6 +42,10 @@ public class Monitor {
 
 	private static int currentSystemInterval;
 
+	private static FileAppender statLogAppender;
+
+	private static FileAppender systemLogAppender;
+
 	static {
 		PatternLayout layout = new PatternLayout(MonitorSettings.LAYOUT);
 		FileAppender appender = null;
@@ -71,6 +75,10 @@ public class Monitor {
 			@Override
 			public void run() {
 				write(false);
+				if (systemLogAppender != null)
+					systemLogAppender.close();
+				if (systemLogAppender != null)
+					statLogAppender.close();
 			}
 		});
 	}
@@ -115,7 +123,8 @@ public class Monitor {
 			Key key = entry.getKey();
 			Value value = entry.getValue();
 			if (((!checkInterval || (current - key.getLastWriteTime())
-					/ MonitorSettings.getIntervalUnit() > key.getIntervalMultiple()))
+					/ MonitorSettings.getIntervalUnit() > key
+					.getIntervalMultiple()))
 					&& (value.getLongValue() > 0 || value.getDoubleValue() > 0)) {
 				key.setLastWriteTime(current);
 				output(statLogger, key, value);

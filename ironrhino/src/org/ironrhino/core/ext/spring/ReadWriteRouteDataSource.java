@@ -18,6 +18,7 @@ import org.ironrhino.core.lb.UsableChecker;
 import org.ironrhino.core.monitor.Monitor;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 
 public class ReadWriteRouteDataSource extends AbstractDataSource {
@@ -41,6 +42,7 @@ public class ReadWriteRouteDataSource extends AbstractDataSource {
 	private Map<String, Integer> readDataSourceNames;
 
 	@Autowired
+	@Qualifier(DEFAULT_DATASOURCE_NAME)
 	private DataSource defaultDataSource;
 
 	private Map<String, DataSource> writeDataSources = new HashMap<String, DataSource>();

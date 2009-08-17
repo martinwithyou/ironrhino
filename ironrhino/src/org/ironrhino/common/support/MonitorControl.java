@@ -9,9 +9,9 @@ import org.ironrhino.core.monitor.analysis.TreeNode;
 
 public interface MonitorControl {
 
-	public boolean archive();
+	public void archive() throws FileNotFoundException;
 
-	public boolean archive(Date date);
+	public void archive(Date date) throws FileNotFoundException;
 
 	public Map<String, List<TreeNode>> getResult(Date date)
 			throws FileNotFoundException;
