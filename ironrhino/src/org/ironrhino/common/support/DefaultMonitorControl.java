@@ -26,6 +26,7 @@ import org.ironrhino.core.monitor.Value;
 import org.ironrhino.core.monitor.analysis.AbstractAnalyzer;
 import org.ironrhino.core.monitor.analysis.Analyzer;
 import org.ironrhino.core.monitor.analysis.CumulativeAnalyzer;
+import org.ironrhino.core.monitor.analysis.PeriodAnalyzer;
 import org.ironrhino.core.monitor.analysis.TreeNode;
 import org.ironrhino.core.service.BaseManager;
 
@@ -248,6 +249,22 @@ public class DefaultMonitorControl implements MonitorControl {
 			cal.add(Calendar.DAY_OF_YEAR, -1);
 		}
 		return criticalDate;
+	}
+
+	public List<Value> getResult(Key key, Date date) {
+		try {
+			PeriodAnalyzer analyzer = new PeriodAnalyzer(key);
+			analyzer.analyze();
+			return analyzer.getResult();
+		} catch (FileNotFoundException e) {
+			// TODO: read from databse
+			return null;
+		}
+	}
+
+	public Map<String, Value> getResultPerHost(Key key, Date date) {
+		// TODO
+		return null;
 	}
 
 }

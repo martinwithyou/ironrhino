@@ -78,7 +78,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		return new TextFileIterator<KeyValuePair>(MonitorSettings.ENCODING,
 				files) {
 			@Override
-			protected KeyValuePair transform(String line) {
+			protected KeyValuePair transform(String line, File f) {
 				String[] array = line.split("\\|");
 				Key key = Key.fromString(array[0]);
 				Value value = Value.fromString(array[1]);
@@ -93,7 +93,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
 					}
 				}
-				return new KeyValuePair(key, value, date);
+				return new KeyValuePair(key, value, date, getHost(f));
 			}
 		};
 	}
@@ -132,7 +132,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		final Map<String, File> map = new LinkedHashMap<String, File>();
 		boolean today = DateUtils.isToday(date);
 		StringBuilder sb = new StringBuilder();
-		sb.append('_');
+		sb.append(MonitorSettings.SEPARATOR);
 		sb.append(MonitorSettings.STAT_LOG_FILE_NAME);
 		if (!today)
 			sb.append(new SimpleDateFormat(MonitorSettings.DATE_STYLE)
@@ -154,5 +154,10 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
 	public static boolean hasLogFile(Date date) {
 		return getLogFile(date).size() > 0;
+	}
+
+	public static String getHost(File file) {
+		String name = file.getName();
+		return name.substring(0, name.lastIndexOf(MonitorSettings.SEPARATOR));
 	}
 }

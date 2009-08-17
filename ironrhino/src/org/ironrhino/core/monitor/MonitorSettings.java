@@ -19,6 +19,8 @@ public class MonitorSettings {
 
 	public static final String TOKEN = "|";
 
+	public static final String SEPARATOR = "_";
+
 	public static final String FILE_DIRECTORY = "logs";
 
 	public static final String STAT_LOG_FILE_NAME = "stat.log";
@@ -71,7 +73,7 @@ public class MonitorSettings {
 	}
 
 	public static String getLogFile(String filename) {
-		return new File(getLogFileDirectory(), HOST + "_" + filename)
+		return new File(getLogFileDirectory(), HOST + SEPARATOR + filename)
 				.getAbsolutePath();
 	}
 

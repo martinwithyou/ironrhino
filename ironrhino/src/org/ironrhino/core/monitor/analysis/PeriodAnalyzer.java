@@ -11,38 +11,36 @@ import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
 
-public class TestAnalyzer extends AbstractAnalyzer<List<Value>> {
+public class PeriodAnalyzer extends AbstractAnalyzer<List<Value>> {
 
-	private List<Value> result = new ArrayList<Value>();
-
-	Calendar calendar = Calendar.getInstance();
-
-	int currentHour = 0;
+	private List<Value> result = new ArrayList<Value>(24);
 
 	private Key key;
 
-	public TestAnalyzer(Key key) throws FileNotFoundException {
+	private Calendar calendar = Calendar.getInstance();
+
+	public PeriodAnalyzer(Key key) throws FileNotFoundException {
 		super();
 		this.key = key;
 	}
 
-	public TestAnalyzer(Key key, Date date) throws FileNotFoundException {
+	public PeriodAnalyzer(Key key, Date date) throws FileNotFoundException {
 		super(date);
 		this.key = key;
 	}
 
-	public TestAnalyzer(Key key, Date[] dates) throws FileNotFoundException {
+	public PeriodAnalyzer(Key key, Date[] dates) throws FileNotFoundException {
 		super(dates);
 		this.key = key;
 	}
 
-	public TestAnalyzer(Key key, Date start, Date end)
+	public PeriodAnalyzer(Key key, Date start, Date end)
 			throws FileNotFoundException {
 		super(start, end);
 		this.key = key;
 	}
 
-	public TestAnalyzer(Key key, Iterator<KeyValuePair>... iterators) {
+	public PeriodAnalyzer(Key key, Iterator<KeyValuePair>... iterators) {
 		super(iterators);
 		this.key = key;
 	}
@@ -51,26 +49,22 @@ public class TestAnalyzer extends AbstractAnalyzer<List<Value>> {
 		return result;
 	}
 
-	public void dosomething() {
-		// TODO;
-	}
-
 	@Override
 	protected void preAnalyze() {
 		if (key == null)
 			throw new IllegalArgumentException("key is null");
+		for (int i = 0; i < 24; i++) {
+			result.add(new Value());
+		}
 	}
 
 	@Override
 	protected void process(KeyValuePair pair) {
 		if (!key.equals(pair.getKey()))
 			return;
-		// TODO
-	}
-
-	@Override
-	protected void postAnalyze() {
-		dosomething();
+		calendar.setTime(pair.getDate());
+		Value v = result.get(calendar.get(Calendar.HOUR_OF_DAY));
+		v.cumulate(pair.getValue());
 	}
 
 }

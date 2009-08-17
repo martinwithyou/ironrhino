@@ -93,6 +93,6 @@ public class Stat extends BaseEntity {
 
 	public KeyValuePair toKeyValuePair() {
 		return new KeyValuePair(Key.fromString(getKey()), new Value(longValue,
-				doubleValue), statDate);
+				doubleValue), statDate, host);
 	}
 }

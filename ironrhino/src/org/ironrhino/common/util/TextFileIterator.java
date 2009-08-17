@@ -10,7 +10,9 @@ import java.util.List;
 
 public class TextFileIterator<T> implements Iterator<T> {
 
-	int index;
+	int currentIndex;
+
+	File currentFile;
 
 	List<File> files = new ArrayList<File>();
 
@@ -42,7 +44,8 @@ public class TextFileIterator<T> implements Iterator<T> {
 
 	private void openFile() {
 		try {
-			fis = new FileInputStream(files.get(index));
+			currentFile = files.get(currentIndex);
+			fis = new FileInputStream(currentFile);
 			if (encoding == null)
 				br = new BufferedReader(new InputStreamReader(fis));
 			else
@@ -54,13 +57,13 @@ public class TextFileIterator<T> implements Iterator<T> {
 	}
 
 	public boolean hasNext() {
-		return nextline != null || index < files.size() - 1;
+		return nextline != null || currentIndex < files.size() - 1;
 	}
 
 	public T next() {
 		try {
-			if (nextline == null && index < files.size() - 1) {
-				index++;
+			if (nextline == null && currentIndex < files.size() - 1) {
+				currentIndex++;
 				openFile();
 			}
 			String result = nextline;
@@ -71,7 +74,7 @@ public class TextFileIterator<T> implements Iterator<T> {
 					fis.close();
 				}
 			}
-			return transform(result);
+			return transform(result, currentFile);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -81,9 +84,9 @@ public class TextFileIterator<T> implements Iterator<T> {
 		throw new UnsupportedOperationException();
 	}
 
-	protected T transform(String s) {
+	protected T transform(String line, File f) {
 		// hook to be override
-		return (T) s;
+		return (T) line;
 	}
 
 }

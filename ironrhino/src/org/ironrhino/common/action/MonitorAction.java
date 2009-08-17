@@ -15,6 +15,8 @@ import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.metadata.JsonSerializerType;
+import org.ironrhino.core.monitor.Key;
+import org.ironrhino.core.monitor.Value;
 import org.ironrhino.core.monitor.analysis.TreeNode;
 
 @AutoConfig
@@ -93,19 +95,29 @@ public class MonitorAction extends BaseAction {
 	}
 
 	@JsonConfig(root = "chart", serializer = JsonSerializerType.GSON)
-	public String bar() {
-		String key = getUid();
+	public String data() {
+		//TODO
+		Key key = Key.fromString("view>detail>productCode800");
+		if (date == null)
+			date = new Date();
+		List<Value> list = monitorControl.getResult(key, date);
 		chart = new Chart();
-		chart.setTitle(new Text("I am title"));
+		chart.setTitle(new Text("title"));
 		XAxis x = new XAxis();
-		x.setLabels("1月", "2月", "3月", "4月");
 		YAxis y = new YAxis();
 		y.setMax(50);
 		y.setLabels("ylabel");
 		chart.setXAxis(x);
 		chart.setYAxis(y);
+		String[] labels = new String[list.size()];
+		Number[] values = new Number[list.size()];
 		BarChart bc = new BarChart();
-		bc.addValues(12, 23, 34, 45);
+		for (int i = 0; i < list.size(); i++) {
+			labels[i] = String.valueOf(i);
+			values[i] = list.get(i).getLongValue();
+		}
+		x.setLabels(labels);
+		bc.addValues(values);
 		chart.addElements(bc);
 		return JSON;
 	}
