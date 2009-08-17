@@ -13,6 +13,8 @@ import org.ironrhino.core.monitor.Value;
 @AutoConfig(readonly = true)
 public class Stat extends BaseEntity {
 
+	private static final long serialVersionUID = 5933509155833960220L;
+
 	@FormElement(displayOrder = 0)
 	private String key;
 
@@ -25,16 +27,21 @@ public class Stat extends BaseEntity {
 	@FormElement(displayOrder = 3)
 	private Date statDate;
 
+	@FormElement(displayOrder = 4)
+	private String host;
+
 	public Stat() {
 
 	}
 
-	public Stat(String key, long longValue, double doubleValue, Date statDate) {
+	public Stat(String key, long longValue, double doubleValue, Date statDate,
+			String host) {
 		super();
 		this.key = key;
 		this.longValue = longValue;
 		this.doubleValue = doubleValue;
 		this.statDate = statDate;
+		this.host = host;
 	}
 
 	public String getKey() {
@@ -67,6 +74,14 @@ public class Stat extends BaseEntity {
 
 	public void setStatDate(Date statDate) {
 		this.statDate = statDate;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
 	}
 
 	@Override

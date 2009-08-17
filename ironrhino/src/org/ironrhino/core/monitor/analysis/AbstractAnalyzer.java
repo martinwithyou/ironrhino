@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -32,17 +34,18 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 	}
 
 	public AbstractAnalyzer(Date date) throws FileNotFoundException {
-		this.iterator = newIterator(getLogFile(date));
+		this.iterator = newIterator(getLogFile(date).values().toArray(
+				new File[0]));
+	}
+
+	public AbstractAnalyzer(File file) throws FileNotFoundException {
+		this.iterator = newIterator(new File[] { file });
 	}
 
 	public AbstractAnalyzer(Date[] dates) throws FileNotFoundException {
 		List<File> list = new ArrayList<File>();
-		for (int i = 0; i < dates.length; i++) {
-			File[] array = getLogFile(dates[i]);
-			if (array != null)
-				for (File f : array)
-					list.add(f);
-		}
+		for (int i = 0; i < dates.length; i++)
+			list.addAll(getLogFile(dates[i]).values());
 		this.iterator = newIterator(list.toArray(new File[0]));
 	}
 
@@ -55,10 +58,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		int startDay = cal.get(Calendar.DAY_OF_YEAR);
 		for (int i = 0; i < (endDay - startDay + 1); i++) {
 			cal.add(Calendar.DAY_OF_YEAR, i);
-			File[] array = getLogFile(cal.getTime());
-			if (array != null)
-				for (File f : array)
-					list.add(f);
+			list.addAll(getLogFile(cal.getTime()).values());
 		}
 		this.iterator = newIterator(list.toArray(new File[0]));
 	}
@@ -127,7 +127,9 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
 	protected abstract void process(KeyValuePair pair);
 
-	public static File[] getLogFile(Date date) {
+	// host,file pair
+	public static Map<String, File> getLogFile(Date date) {
+		final Map<String, File> map = new LinkedHashMap<String, File>();
 		boolean today = DateUtils.isToday(date);
 		StringBuilder sb = new StringBuilder();
 		sb.append('_');
@@ -137,17 +139,20 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 					.format(date));
 		final String suffix = sb.toString();
 		File dir = MonitorSettings.getLogFileDirectory();
-		return dir.listFiles(new FileFilter() {
+		dir.listFiles(new FileFilter() {
 			public boolean accept(File f) {
-				if (f.getName().endsWith(suffix))
+				String name = f.getName();
+				if (name.endsWith(suffix)) {
+					map.put(name.substring(0, name.lastIndexOf(suffix)), f);
 					return true;
+				}
 				return false;
 			}
 		});
+		return map;
 	}
 
 	public static boolean hasLogFile(Date date) {
-		File[] files = getLogFile(date);
-		return files != null && files.length > 0;
+		return getLogFile(date).size() > 0;
 	}
 }
