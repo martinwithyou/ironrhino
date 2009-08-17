@@ -69,5 +69,7 @@ public interface BaseManager<T extends Entity> {
 	public int bulkUpdate(String hql, Object... args);
 
 	public Object execute(HibernateCallback callback);
+	
+	public Object executeQuery(HibernateCallback callback);
 
 }

@@ -51,8 +51,8 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 		super.save(account);
 	}
 
-	@Transactional(readOnly = true)
 	@CheckCache(key = "${args[0]}", namespace = "account", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','miss'})}")
+	@Transactional(readOnly = true)
 	public Account loadUserByUsername(String username) {
 		if (StringUtils.isEmpty(username))
 			return null;
@@ -77,7 +77,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 		if (names.size() > 0) {
 			final DetachedCriteria dc = DetachedCriteria.forClass(Role.class);
 			dc.add(Restrictions.in("name", names));
-			Collection<Role> userRoles = (Collection<Role>) execute(new HibernateCallback() {
+			Collection<Role> userRoles = (Collection<Role>) executeQuery(new HibernateCallback() {
 				public Object doInHibernate(Session session)
 						throws HibernateException, SQLException {
 					return dc.getExecutableCriteria(session).list();
@@ -91,7 +91,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 		if (names.size() > 0) {
 			final DetachedCriteria dc = DetachedCriteria.forClass(Group.class);
 			dc.add(Restrictions.in("name", names));
-			Collection<Group> userGroups = (Collection<Group>) execute(new HibernateCallback() {
+			Collection<Group> userGroups = (Collection<Group>) executeQuery(new HibernateCallback() {
 				public Object doInHibernate(Session session)
 						throws HibernateException, SQLException {
 					return dc.getExecutableCriteria(session).list();
@@ -112,6 +112,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 	}
 
 	@CheckCache(key = "${args[0]}", namespace = "account", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','miss'})}")
+	@Transactional(readOnly = true)
 	public Account getAccountByUsername(String username) {
 		if (StringUtils.isEmpty(username))
 			return null;
@@ -119,6 +120,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 	}
 
 	@CheckCache(key = "${args[0]}", namespace = "account", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','miss'})}")
+	@Transactional(readOnly = true)
 	public Account getAccountByEmail(String email) {
 		if (StringUtils.isEmpty(email))
 			return null;
@@ -126,6 +128,7 @@ public class AccountManagerImpl extends BaseManagerImpl<Account> implements
 	}
 
 	@CheckCache(key = "${args[0]}", namespace = "account", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','account','miss'})}")
+	@Transactional(readOnly = true)
 	public Account getAccountByOpenid(String openid) {
 		if (StringUtils.isEmpty(openid))
 			return null;

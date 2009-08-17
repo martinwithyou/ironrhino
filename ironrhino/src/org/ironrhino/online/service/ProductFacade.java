@@ -5,9 +5,7 @@ import java.util.List;
 import org.ironrhino.common.model.AggregateResult;
 import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.pms.model.Product;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 public interface ProductFacade {
 
 	public static final String SETTING_KEY_RECOMMENDED_PRODUCT = "product.recommanded";
@@ -29,9 +27,9 @@ public interface ProductFacade {
 	public ResultPage getResultPageByTag(ResultPage<Product> resultPage,
 			String tag);
 
-	public Product getProductByCode(String code);
-
 	public Product getRandomProduct();
+
+	public Product getProductByCode(String code);
 
 	public AggregateResult getScoreResult(String productCode);
 

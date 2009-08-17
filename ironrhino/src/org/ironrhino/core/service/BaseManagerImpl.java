@@ -105,6 +105,11 @@ public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
 		session.saveOrUpdate(obj);
 	}
 
+	@Transactional
+	public void delete(T obj) {
+		sessionFactory.getCurrentSession().delete(obj);
+	}
+
 	@Transactional(readOnly = true)
 	public T get(Serializable id) {
 		if (id == null)
@@ -120,11 +125,6 @@ public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
 	@Transactional(readOnly = true)
 	public void evict(T obj) {
 		sessionFactory.getCurrentSession().evict(obj);
-	}
-
-	@Transactional
-	public void delete(T obj) {
-		sessionFactory.getCurrentSession().delete(obj);
 	}
 
 	@Transactional(readOnly = true)
@@ -188,12 +188,14 @@ public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public List<T> getListByCriteria(DetachedCriteria dc, int pageNo,
 			int pageSize) {
 		return getBetweenListByCriteria(dc, (pageNo - 1) * pageSize, pageNo
 				* pageSize);
 	}
 
+	@Transactional(readOnly = true)
 	public int countResultPage(ResultPage<T> resultPage) {
 		if (resultPage.getTotalRecord() < 0) {
 			int totalRecord = countByCriteria(resultPage.getDetachedCriteria());
@@ -202,6 +204,7 @@ public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
 		return resultPage.getTotalRecord();
 	}
 
+	@Transactional(readOnly = true)
 	public ResultPage<T> getResultPage(ResultPage<T> resultPage) {
 		countResultPage(resultPage);
 		int totalRecord = resultPage.getTotalRecord();
@@ -241,6 +244,7 @@ public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
 		return resultPage;
 	}
 
+	@Transactional(readOnly = true)
 	public int countAll() {
 		return countByCriteria(detachedCriteria());
 	}
@@ -434,6 +438,11 @@ public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
 			log.error(e.getMessage(), e);
 			return null;
 		}
+	}
+
+	@Transactional(readOnly = true)
+	public Object executeQuery(HibernateCallback callback) {
+		return execute(callback);
 	}
 
 }

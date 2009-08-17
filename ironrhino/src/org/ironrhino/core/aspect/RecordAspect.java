@@ -26,7 +26,7 @@ import org.springframework.security.userdetails.UserDetails;
  * @see org.ironrhino.core.metadata.RecordAware
  */
 @Aspect
-public class Recording extends HibernateDaoSupport implements Ordered {
+public class RecordAspect extends HibernateDaoSupport implements Ordered {
 
 	private int order;
 

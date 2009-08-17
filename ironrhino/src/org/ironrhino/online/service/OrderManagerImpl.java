@@ -77,7 +77,6 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 
 	}
 
-	@Transactional
 	public void calculateOrder(Order order) {
 		if (order.getStatus() != OrderStatus.INITIAL)
 			return;

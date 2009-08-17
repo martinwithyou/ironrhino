@@ -43,6 +43,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		return user;
 	}
 
+	@Transactional(readOnly = true)
 	public User getUserByUsername(String username) {
 		return getByNaturalId(true, "username", username);
 	}
@@ -55,7 +56,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		if (names.size() > 0) {
 			final DetachedCriteria dc = DetachedCriteria.forClass(Role.class);
 			dc.add(Restrictions.in("name", names));
-			Collection<Role> userRoles = (Collection<Role>) execute(new HibernateCallback() {
+			Collection<Role> userRoles = (Collection<Role>) executeQuery(new HibernateCallback() {
 				public Object doInHibernate(Session session)
 						throws HibernateException, SQLException {
 					return dc.getExecutableCriteria(session).list();
@@ -69,7 +70,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		if (names.size() > 0) {
 			final DetachedCriteria dc = DetachedCriteria.forClass(Group.class);
 			dc.add(Restrictions.in("name", names));
-			Collection<Group> userGroups = (Collection<Group>) execute(new HibernateCallback() {
+			Collection<Group> userGroups = (Collection<Group>) executeQuery(new HibernateCallback() {
 				public Object doInHibernate(Session session)
 						throws HibernateException, SQLException {
 					return dc.getExecutableCriteria(session).list();

@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @see org.ironrhino.core.metadata.PublishAware
  */
 @Aspect
-public class Publishing extends BaseAspect {
+public class PublishAspect extends BaseAspect {
 
 	@Autowired
 	private EventPublisher eventPublisher;

@@ -1,4 +1,4 @@
-package org.ironrhino.core.cache;
+package org.ironrhino.core.aspect;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.ironrhino.core.aspect.BaseAspect;
+import org.ironrhino.core.cache.CacheContext;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
 

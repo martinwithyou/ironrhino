@@ -12,7 +12,7 @@ import org.hibernate.Session;
 import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.aspect.AopContext;
-import org.ironrhino.core.cache.CacheAspect;
+import org.ironrhino.core.aspect.CacheAspect;
 import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.LoginRecord;
 import org.ironrhino.online.service.AccountManager;

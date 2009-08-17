@@ -129,7 +129,7 @@ public class NewArrivalProductNotifier {
 
 	private List<String> getTo() {
 		List<String> emails = (List<String>) accountManager
-				.execute(new HibernateCallback() {
+				.executeQuery(new HibernateCallback() {
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						List<String> emails = new ArrayList<String>();

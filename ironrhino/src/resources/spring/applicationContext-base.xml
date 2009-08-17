@@ -7,12 +7,6 @@
 	<context:property-placeholder
 		location="/WEB-INF/conf/applicationContext.properties" />
 	<context:annotation-config />
-	<bean id="dataSource"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" />
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">

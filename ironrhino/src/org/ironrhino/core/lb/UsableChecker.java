@@ -1,7 +1,7 @@
 package org.ironrhino.core.lb;
 
-public interface UsableChecker {
+public interface UsableChecker<T> {
 
-	boolean isUsable(TargetWrapper targetWrapper);
+	boolean isUsable(TargetWrapper<T> targetWrapper);
 
 }

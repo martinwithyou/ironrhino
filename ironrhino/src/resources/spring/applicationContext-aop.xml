@@ -6,11 +6,10 @@
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
-	<bean id="recording" class="org.ironrhino.core.aspect.Recording"
-		p:order="2" />
-	<bean id="publishing" class="org.ironrhino.core.aspect.Publishing"
-		p:order="0" />
 	<aop:aspectj-autoproxy />
-	<bean id="cacheAspect" class="org.ironrhino.core.cache.CacheAspect"
-		p:order="-1" />
+	<bean class="org.ironrhino.core.aspect.CacheAspect" p:order="-100" />
+	<bean class="org.ironrhino.core.aspect.ReadWriteRouteAspect" p:order="-2"/>
+	<bean class="org.ironrhino.core.aspect.PublishAspect" p:order="-1" />
+	<tx:annotation-driven order="0" />
+	<bean class="org.ironrhino.core.aspect.RecordAspect" p:order="1" />
 </beans>

@@ -222,7 +222,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		final int maxResults = count - list.size();
 		if (product.getTags().size() > 0) {
 			list.addAll((List<Product>) productManager
-					.execute(new HibernateCallback() {
+					.executeQuery(new HibernateCallback() {
 						public Object doInHibernate(Session session)
 								throws HibernateException, SQLException {
 							List<SimpleElement> tags = product.getTags();
@@ -265,6 +265,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return product;
 	}
 
+	@CheckCache(key = "score_${args[0]}", namespace = "product")
 	public AggregateResult getScoreResult(final String productCode) {
 		baseManager.setEntityClass(ProductScore.class);
 		final DetachedCriteria dc = baseManager.detachedCriteria();
@@ -272,7 +273,7 @@ public class ProductFacadeImpl implements ProductFacade {
 				Projections.count("score")).add(Projections.avg("score")));
 		dc.add(Restrictions.eq("productCode", productCode));
 		Object[] array = (Object[]) baseManager
-				.execute(new HibernateCallback() {
+				.executeQuery(new HibernateCallback() {
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						return dc.getExecutableCriteria(session).uniqueResult();
@@ -290,7 +291,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		}
 		if (sr.getCount().intValue() > 0) {
 			sr.setDetails((Map<Number, Number>) baseManager
-					.execute(new HibernateCallback() {
+					.executeQuery(new HibernateCallback() {
 						public Object doInHibernate(Session session)
 								throws HibernateException, SQLException {
 							Query q = session
@@ -311,7 +312,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	public List<AggregateResult> getTopScoreProducts(final int maxResults) {
 		List<AggregateResult> list;
 		list = (List<AggregateResult>) baseManager
-				.execute(new HibernateCallback() {
+				.executeQuery(new HibernateCallback() {
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
@@ -341,7 +342,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	public List<AggregateResult> getTopFavoriteProducts(final int maxResults) {
 		List<AggregateResult> list;
 		list = (List<AggregateResult>) baseManager
-				.execute(new HibernateCallback() {
+				.executeQuery(new HibernateCallback() {
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
@@ -366,7 +367,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	public List<AggregateResult> getTopSendProducts(final int maxResults) {
 		List<AggregateResult> list;
 		list = (List<AggregateResult>) baseManager
-				.execute(new HibernateCallback() {
+				.executeQuery(new HibernateCallback() {
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
@@ -391,7 +392,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	public List<AggregateResult> getTopSaleProducts(final int maxResults) {
 		List<AggregateResult> list;
 		list = (List<AggregateResult>) baseManager
-				.execute(new HibernateCallback() {
+				.executeQuery(new HibernateCallback() {
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
@@ -415,7 +416,7 @@ public class ProductFacadeImpl implements ProductFacade {
 
 	public List<AggregateResult> getTags(final String... prefix) {
 		final List<AggregateResult> tags = new ArrayList<AggregateResult>();
-		baseManager.execute(new HibernateCallback() {
+		baseManager.executeQuery(new HibernateCallback() {
 			public Object doInHibernate(Session session)
 					throws HibernateException, SQLException {
 				SQLQuery q;

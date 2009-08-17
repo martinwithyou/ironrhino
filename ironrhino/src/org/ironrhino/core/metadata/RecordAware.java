@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * Use for record model's CRUD operations
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.aspect.Recording
+ * @see org.ironrhino.core.aspect.RecordAspect
  */
 @Target(TYPE)
 @Retention(RUNTIME)
