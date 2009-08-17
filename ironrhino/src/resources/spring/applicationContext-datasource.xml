@@ -5,15 +5,21 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="dataSource"
 		class="org.ironrhino.core.ext.spring.ReadWriteRouteDataSource">
-		<property name="masterDataSource" ref="masterDataSource"/>
-		<property name="slaveDataSources">
+		<property name="writeDataSourceNames">
 			<map>
-				<entry  key-ref="masterDataSource" value="1"/>
-				<entry  key-ref="masterDataSource" value="2"/>
+				<!-- dataSource beanName and RoundRobin weight -->
+				<entry  key="defaultDataSource" value="1"/>
+			</map>
+		</property>
+		<property name="readDataSourceNames">
+			<map>
+				<entry  key="defaultDataSource" value="1"/>
+				<entry  key="defaultDataSource" value="2"/>
+				<entry  key="defaultDataSource" value="3"/>
 			</map>
 		</property>
 	</bean>
-	<bean id="masterDataSource"
+	<bean id="defaultDataSource"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}"

@@ -29,6 +29,9 @@ public abstract class AbstractPolicy<T> implements Policy<T> {
 	}
 
 	public T pick() {
+		TargetWrapper tw = pickTargetWrapper();
+		if (tw == null)
+			return null;
 		return pickTargetWrapper().getTarget();
 	}
 

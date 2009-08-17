@@ -7,11 +7,11 @@ public interface PolicyFactory<T> {
 
 	public Policy<T> getPolicy(List<T> targets);
 
-	public Policy<T> getPolicy(List<T> targets, UsableChecker usableChecker);
+	public Policy<T> getPolicy(List<T> targets, UsableChecker<T> usableChecker);
 
 	public Policy<T> getPolicy(Map<T, Integer> targets);
 
 	public Policy<T> getPolicy(Map<T, Integer> targets,
-			UsableChecker usableChecker);
+			UsableChecker<T> usableChecker);
 
 }

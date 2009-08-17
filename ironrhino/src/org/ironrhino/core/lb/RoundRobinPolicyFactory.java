@@ -10,7 +10,7 @@ public class RoundRobinPolicyFactory<T> implements PolicyFactory<T> {
 		return getPolicy(targets, null);
 	}
 
-	public Policy<T> getPolicy(List<T> targets, UsableChecker usableChecker) {
+	public Policy<T> getPolicy(List<T> targets, UsableChecker<T> usableChecker) {
 		List<TargetWrapper> ts = new ArrayList<TargetWrapper>(targets.size());
 		for (T t : targets)
 			ts.add(new TargetWrapper(t));
@@ -26,7 +26,7 @@ public class RoundRobinPolicyFactory<T> implements PolicyFactory<T> {
 	}
 
 	public Policy<T> getPolicy(Map<T, Integer> targets,
-			UsableChecker usableChecker) {
+			UsableChecker<T> usableChecker) {
 		List<TargetWrapper<T>> ts = new ArrayList<TargetWrapper<T>>(targets
 				.size());
 		for (Map.Entry<T, Integer> entry : targets.entrySet())

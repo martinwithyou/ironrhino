@@ -20,6 +20,8 @@ public class RoundRobinPolicy<T> extends AbstractPolicy<T> {
 			if (tw == null || newStat > tw.getStat().get()) 
 				tw = tempTarget;
 		}
+		if(tw == null)
+			return null;
 		tw.getCount().incrementAndGet();
 		tw.getStat().addAndGet(-totalWeight);
 		return tw;
