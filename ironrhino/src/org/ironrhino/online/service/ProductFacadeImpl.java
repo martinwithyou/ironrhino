@@ -59,7 +59,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	@Autowired
 	private SettingControl settingControl;
 
-	@Autowired
+	@Autowired(required = false)
 	private CategoryTreeControl categoryTreeControl;
 
 	private Random random;

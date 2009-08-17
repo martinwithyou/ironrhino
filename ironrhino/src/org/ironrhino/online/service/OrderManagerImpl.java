@@ -26,7 +26,7 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 	@Autowired(required = false)
 	private RegionTreeControl regionTreeControl;
 
-	@Autowired
+	@Autowired(required = false)
 	private RuleProvider ruleProvider;
 
 	@Override
