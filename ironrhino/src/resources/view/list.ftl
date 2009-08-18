@@ -6,12 +6,22 @@
 <body>
 <#assign readonly="${readonly?string}"/>
 <@rtstart action="${entityName}" readonly="${readonly}"/>
-	<#list naturalIds?keys as name>
-		<@rttheadtd name="${name}" editable=(readonly=='false')&&!naturalIdsImmatuable/>
+	<#list naturalIds?keys as key>
+		<#assign config=uiConfigs[key]>
+		<#assign label=key>
+		<#if config.displayName?exists>
+			<#assign label=config.displayName>
+		</#if>
+		<@rttheadtd name="${label}" editable=(readonly=='false')&&!naturalIdsImmatuable/>
 	</#list>
-	<#list formElements?keys as name>
-		<#if !(naturalIds?keys?seq_contains(name))>
-			<@rttheadtd name="${name}" editable=(readonly=='false')&&!formElements[name].readonly/>
+	<#list uiConfigs?keys as key>
+		<#if !(naturalIds?keys?seq_contains(key))>
+			<#assign config=uiConfigs[key]>
+			<#assign label=key>
+			<#if config.displayName?exists>
+				<#assign label=config.displayName>
+			</#if>
+			<@rttheadtd name="${label}" editable=(readonly=='false')&&!uiConfigs[key].readonly/>
 		</#if>
 	</#list>
 <@rtmiddle readonly="${readonly}"/>
@@ -19,27 +29,27 @@
 <#list resultPage.result as entity>
 <#assign index=index+1>
 <@rttbodytrstart rowid="${entity.id}" odd=(index%2==1) readonly="${readonly}"/>
-	<#list naturalIds?keys as name>
+	<#list naturalIds?keys as key>
 		<#if (readonly=='false')&&!naturalIdsImmatuable>
-		<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="input"/>
+		<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?if_exists?string}" cellEdit="input"/>
 		<#else>
-		<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}"/>
+		<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?if_exists?string}"/>
 		</#if>
 	</#list>
-	<#list formElements?keys as name>
-		<#if !(naturalIds?keys?seq_contains(name))>
-			<#if (readonly=='false')&&!formElements[name].readonly>
-				<#if formElements[name].type=='input'||formElements[name].type=='textarea'>
-					<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="input"/>
+	<#list uiConfigs?keys as key>
+		<#if !(naturalIds?keys?seq_contains(key))>
+			<#if (readonly=='false')&&!uiConfigs[key].readonly>
+				<#if uiConfigs[key].type=='input'||uiConfigs[key].type=='textarea'>
+					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?if_exists?string}" cellEdit="input"/>
 				</#if>
-				<#if formElements[name].type=='checkbox'>
-					<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="select" cellEditTemplate="select_template_boolean"/>
+				<#if uiConfigs[key].type=='checkbox'>
+					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?if_exists?string}" cellEdit="select" cellEditTemplate="select_template_boolean"/>
 				</#if>
-				<#if formElements[name].type=='select'>
-					<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}" cellEdit="select" cellEditTemplate="select_template_${name}"/>
+				<#if uiConfigs[key].type=='select'>
+					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?if_exists?string}" cellEdit="select" cellEditTemplate="select_template_${key}"/>
 				</#if>
 			<#else>
-				<@rttbodytd cellName="${entityName}.${name}" value="${entity[name]?if_exists?string}"/>
+				<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?if_exists?string}"/>
 			</#if>
 		</#if>
 	</#list>	
@@ -48,12 +58,12 @@
 <@rtend readonly="${readonly}"/>
 <#if readonly=='false'>
 <div style="display: none">
-<#list formElements?keys as key>
-	<#if formElements[key].type=='select'>
+<#list uiConfigs?keys as key>
+	<#if uiConfigs[key].type=='select'>
 		<textarea id="select_template_${key}">
 	<select onblur="ECSideUtil.updateCell(this,'select')"
 			style="width: 100%;" name="${entityName}.${key}">
-			<#list formElements[key].enumValues as en>
+			<#list uiConfigs[key].enumValues as en>
 			<option value="${en.getName()}">${en.displayName}</option>
 			</#list>
 	</select>

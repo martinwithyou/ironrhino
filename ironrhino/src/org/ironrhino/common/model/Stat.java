@@ -2,10 +2,10 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.FormElement;
-import org.ironrhino.core.metadata.NotInUI;
+import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
@@ -18,10 +18,10 @@ public class Stat extends KeyValuePair implements Persistable {
 
 	private String id;
 
-	@NotInUI
+	@UiConfig(hide = true)
 	private String keyAsString;
 
-	@NotInUI
+	@UiConfig(hide = true)
 	private String valueAsString;
 
 	public Stat() {
@@ -37,7 +37,7 @@ public class Stat extends KeyValuePair implements Persistable {
 	}
 
 	public boolean isNew() {
-		return this.id != null;
+		return StringUtils.isNotBlank(id);
 	}
 
 	public String getId() {
@@ -48,26 +48,17 @@ public class Stat extends KeyValuePair implements Persistable {
 		this.id = id;
 	}
 
-	@FormElement(displayOrder = 0)
+	@UiConfig(hide = true)
 	public Key getKey() {
 		return key;
 	}
 
-	@FormElement(displayOrder = 1)
+	@UiConfig(hide = true)
 	public Value getValue() {
 		return value;
 	}
 
-	@FormElement(displayOrder = 2)
-	public Date getDate() {
-		return date;
-	}
-
-	@FormElement(displayOrder = 3)
-	public String getHost() {
-		return host;
-	}
-
+	@UiConfig(displayOrder = 0, displayName = "key")
 	public String getKeyAsString() {
 		if (keyAsString != null)
 			return keyAsString;
@@ -82,6 +73,7 @@ public class Stat extends KeyValuePair implements Persistable {
 			key = Key.fromString(keyAsString);
 	}
 
+	@UiConfig(displayOrder = 1, displayName = "value")
 	public String getValueAsString() {
 		if (valueAsString != null)
 			return valueAsString;
@@ -94,6 +86,16 @@ public class Stat extends KeyValuePair implements Persistable {
 		this.valueAsString = valueAsString;
 		if (value == null)
 			value = Value.fromString(valueAsString);
+	}
+
+	@UiConfig(displayOrder = 2)
+	public Date getDate() {
+		return date;
+	}
+
+	@UiConfig(displayOrder = 3)
+	public String getHost() {
+		return host;
 	}
 
 	@Override

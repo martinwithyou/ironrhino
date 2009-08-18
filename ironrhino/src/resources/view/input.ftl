@@ -5,34 +5,44 @@
 </head>
 <body>
 <@s.form action="save" method="post" cssClass="ajax">
+	<#if entity?exists&&!entity.new>
 	<@s.hidden name="${entityName}.id" />
-	<#list naturalIds?keys as name>
-		<#assign config=formElements[name]>
-		<@s.textfield label="%{getText('${name}')}" name="${entityName}.${name}" 
+	</#if>
+	<#list naturalIds?keys as key>
+		<#assign config=uiConfigs[key]>
+		<#assign label=key>
+		<#if config.displayName?exists>
+			<#assign label=config.displayName>
+		</#if>
+		<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" 
 		readonly="${(naturalIdsImmatuable&&!action.isNew())?string}"
 		 cssClass="${config.cssClass}" 
 		 size="${(config.size>0)?string(config.size,20)}"/>
 	</#list>
 
-	<#list formElements?keys as key>
+	<#list uiConfigs?keys as key>
 		<#if !naturalIds?keys?seq_contains(key)>
-			<#assign config=formElements[key]>
+			<#assign config=uiConfigs[key]>
+			<#assign label=key>
+			<#if config.displayName?exists>
+				<#assign label=config.displayName>
+			</#if>
 			<#if config.type=='input'>
-				<@s.textfield label="%{getText('${key}')}" name="${entityName}.${key}"
+				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}"
 					readonly="config.readonly" cssClass="${config.cssClass}"
 					size="${(config.size>0)?string(config.size,20)}" />
 			</#if>
 			<#if config.type=='textarea'>
-				<@s.textarea label="%{getText('${key}')}" name="${entityName}.${key}"
+				<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}"
 					readonly="${config.readonly?string}" cssClass="${config.cssClass}"
 					cols="50" rows="10" />
 			</#if>
 			<#if config.type=='checkbox'>
-				<@s.checkbox label="%{getText('${key}')}" name="${entityName}.${key}"
+				<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}"
 					cssClass="${config.cssClass}" />
 			</#if>
 			<#if config.type=='select'>
-				<@s.select label="%{getText('${key}')}" name="${entityName}.${key}"
+				<@s.select label="%{getText('${label}')}" name="${entityName}.${key}"
 					list="@${config.enumClass}@values()" listKey="name" listValue="displayName" />
 			</#if>
 		</#if>

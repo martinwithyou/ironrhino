@@ -9,9 +9,11 @@ import java.lang.annotation.Target;
 
 @Target( { METHOD, FIELD })
 @Retention(RUNTIME)
-public @interface FormElement {
+public @interface UiConfig {
 
 	public static final String DEFAULT_TYPE = "input";
+
+	String displayName() default "";
 
 	String type() default DEFAULT_TYPE;
 
@@ -20,5 +22,9 @@ public @interface FormElement {
 	int displayOrder() default Integer.MAX_VALUE;
 
 	boolean required() default false;
+
+	boolean readonly() default false;
+
+	boolean hide() default false;
 
 }

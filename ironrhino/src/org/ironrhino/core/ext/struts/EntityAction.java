@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
@@ -29,10 +31,9 @@ import org.ironrhino.common.util.AnnotationUtils;
 import org.ironrhino.core.ext.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.ext.hibernate.PropertyType;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.FormElement;
+import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
-import org.ironrhino.core.metadata.NotInUI;
 import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
@@ -185,7 +186,7 @@ public class EntityAction extends BaseAction {
 					persisted = baseManager.get((Serializable) bw
 							.getPropertyValue("id"));
 				BeanWrapperImpl bwp = new BeanWrapperImpl(persisted);
-				Set<String> names = getFormElements().keySet();
+				Set<String> names = getUiConfigs().keySet();
 				if (naturalIdImmutable)
 					names.removeAll(naturalIds.keySet());
 				for (String name : names) {
@@ -280,28 +281,37 @@ public class EntityAction extends BaseAction {
 						.immutable();
 	}
 
-	public Map<String, FormElementConfig> getFormElements() {
+	public Map<String, UiConfigImpl> getUiConfigs() {
 		Class clazz = getEntityClass();
 		String key = clazz.getName();
 		boolean customizable = Customizable.class.isAssignableFrom(clazz);
 		if (cache.get(key) == null) {
-			Set<String> notInUIs = AnnotationUtils.getAnnotatedPropertyNames(
-					clazz, NotInUI.class);
-			notInUIs.addAll(AnnotationUtils.getAnnotatedPropertyNames(clazz,
+			Set<String> hides = new HashSet<String>();
+			hides.addAll(AnnotationUtils.getAnnotatedPropertyNames(clazz,
 					NotInCopy.class));
-			Map<String, FormElementConfig> map = new HashMap<String, FormElementConfig>();
+			Map<String, UiConfigImpl> map = new HashMap<String, UiConfigImpl>();
 			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
 					.getPropertyDescriptors(clazz);
-
 			for (PropertyDescriptor pd : pds) {
+				UiConfig uiConfig = pd.getReadMethod().getAnnotation(
+						UiConfig.class);
+				if (uiConfig == null)
+					try {
+						Field f = clazz.getDeclaredField(pd.getName());
+						if (f != null)
+							uiConfig = f.getAnnotation(UiConfig.class);
+					} catch (Exception e) {
+					}
+				if (uiConfig != null && uiConfig.hide())
+					continue;
 				if ("new".equals(pd.getName()) || "id".equals(pd.getName())
 						|| "class".equals(pd.getName())
 						|| pd.getReadMethod() == null
-						|| notInUIs.contains(pd.getName()))
+						|| hides.contains(pd.getName()))
 					continue;
 				Class returnType = pd.getReadMethod().getReturnType();
 				if (returnType.isEnum()) {
-					FormElementConfig fes = new FormElementConfig();
+					UiConfigImpl fes = new UiConfigImpl();
 					try {
 						Method method = pd.getReadMethod().getReturnType()
 								.getMethod("values", new Class[0]);
@@ -314,16 +324,7 @@ public class EntityAction extends BaseAction {
 					map.put(pd.getName(), fes);
 					continue;
 				}
-				FormElement fe = pd.getReadMethod().getAnnotation(
-						FormElement.class);
-				if (fe == null)
-					try {
-						Field f = clazz.getDeclaredField(pd.getName());
-						if (f != null)
-							fe = f.getAnnotation(FormElement.class);
-					} catch (Exception e) {
-					}
-				FormElementConfig fec = new FormElementConfig(fe);
+				UiConfigImpl fec = new UiConfigImpl(uiConfig);
 				if (returnType == Integer.TYPE || returnType == Integer.class
 						|| returnType == Short.TYPE
 						|| returnType == Short.class || returnType == Long.TYPE
@@ -347,12 +348,12 @@ public class EntityAction extends BaseAction {
 					fec.setRequired(true);
 				map.put(pd.getName(), fec);
 			}
-			List<Map.Entry<String, FormElementConfig>> list = new ArrayList<Map.Entry<String, FormElementConfig>>();
+			List<Map.Entry<String, UiConfigImpl>> list = new ArrayList<Map.Entry<String, UiConfigImpl>>();
 			list.addAll(map.entrySet());
 			Collections.sort(list,
-					new Comparator<Map.Entry<String, FormElementConfig>>() {
-						public int compare(Entry<String, FormElementConfig> o1,
-								Entry<String, FormElementConfig> o2) {
+					new Comparator<Map.Entry<String, UiConfigImpl>>() {
+						public int compare(Entry<String, UiConfigImpl> o1,
+								Entry<String, UiConfigImpl> o2) {
 							int i = Integer.valueOf(
 									o1.getValue().getDisplayOrder()).compareTo(
 									o2.getValue().getDisplayOrder());
@@ -362,8 +363,8 @@ public class EntityAction extends BaseAction {
 								return i;
 						}
 					});
-			map = new LinkedHashMap<String, FormElementConfig>();
-			for (Map.Entry<String, FormElementConfig> entry : list)
+			map = new LinkedHashMap<String, UiConfigImpl>();
+			for (Map.Entry<String, UiConfigImpl> entry : list)
 				map.put(entry.getKey(), entry.getValue());
 
 			if (customizable) {
@@ -376,7 +377,7 @@ public class EntityAction extends BaseAction {
 							.entrySet()) {
 						String name = entry.getKey();
 						PropertyType pt = entry.getValue();
-						FormElementConfig fec = new FormElementConfig();
+						UiConfigImpl fec = new UiConfigImpl();
 						if (pt == PropertyType.SHORT
 								|| pt == PropertyType.INTEGER
 								|| pt == PropertyType.LONG) {
@@ -404,29 +405,41 @@ public class EntityAction extends BaseAction {
 		return cache.get(key);
 	}
 
-	private static Map<String, Map<String, FormElementConfig>> cache = new ConcurrentHashMap<String, Map<String, FormElementConfig>>();
+	private static Map<String, Map<String, UiConfigImpl>> cache = new ConcurrentHashMap<String, Map<String, UiConfigImpl>>();
 
-	public static class FormElementConfig {
-		private String type = FormElement.DEFAULT_TYPE;
+	public static class UiConfigImpl {
+
+		private String type = UiConfig.DEFAULT_TYPE;
 		private int size;
 		private String enumClass;
 		private Enum[] enumValues;
 		private String cssClass = "";
 		private boolean readonly;
 		private int displayOrder;
+		private String displayName;
 
-		public FormElementConfig() {
+		public UiConfigImpl() {
 		}
 
-		public FormElementConfig(FormElement fe) {
-			if (fe == null)
+		public UiConfigImpl(UiConfig config) {
+			if (config == null)
 				return;
-			this.type = fe.type();
-			this.size = fe.size();
-			this.readonly = fe.readonly();
-			if (fe.required())
+			this.type = config.type();
+			this.size = config.size();
+			this.readonly = config.readonly();
+			if (config.required())
 				this.setRequired(true);
-			this.displayOrder = fe.displayOrder();
+			this.displayOrder = config.displayOrder();
+			if (StringUtils.isNotBlank(config.displayName()))
+				this.displayName = config.displayName();
+		}
+
+		public String getDisplayName() {
+			return displayName;
+		}
+
+		public void setDisplayName(String displayName) {
+			this.displayName = displayName;
 		}
 
 		public int getDisplayOrder() {
