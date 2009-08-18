@@ -19,6 +19,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Stat;
+import org.ironrhino.common.util.CompositeIterator;
 import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
@@ -67,12 +68,12 @@ public class DefaultMonitorControl implements MonitorControl {
 			baseManager.setEntityClass(Stat.class);
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.eq("host", host));
-			dc.add(Restrictions.between("statDate", start, end));
-			dc.addOrder(Order.desc("statDate"));
+			dc.add(Restrictions.between("date", start, end));
+			dc.addOrder(Order.desc("date"));
 			Stat stat = baseManager.getByCriteria(dc);
 			final Date lastStatDate;
 			if (stat != null)
-				lastStatDate = stat.getStatDate();
+				lastStatDate = stat.getDate();
 			else
 				lastStatDate = null;
 			try {
@@ -93,12 +94,9 @@ public class DefaultMonitorControl implements MonitorControl {
 									}
 								});
 						for (Map.Entry<Key, Value> entry : list)
-							baseManager
-									.save(new Stat(entry.getKey().toString(),
-											entry.getValue().getLongValue(),
-											entry.getValue().getDoubleValue(),
-											new Date(entry.getKey()
-													.getLastWriteTime()), host));
+							baseManager.save(new Stat(entry.getKey(), entry
+									.getValue(), new Date(entry.getKey()
+									.getLastWriteTime()), host));
 						map.clear();
 					}
 
@@ -209,28 +207,14 @@ public class DefaultMonitorControl implements MonitorControl {
 			List<Stat> list = baseManager.getListByCriteria(dc);
 			try {
 				if (list.size() > 0) {
-					final Iterator<Stat> it = baseManager.getListByCriteria(dc)
-							.iterator();
-					Iterator<KeyValuePair> iterator = new Iterator<KeyValuePair>() {
-						public boolean hasNext() {
-							return it.hasNext();
-						}
-
-						public KeyValuePair next() {
-							return it.next().toKeyValuePair();
-						}
-
-						public void remove() {
-							it.remove();
-						}
-					};
-
+					Iterator<? extends KeyValuePair> it1 = list.iterator();
 					if (criticalDate != null) {
+						Iterator<? extends KeyValuePair> it2 = new CumulativeAnalyzer(
+								criticalDate, to).iterate();
 						analyzer = new CumulativeAnalyzer(
-								new CumulativeAnalyzer(criticalDate, to)
-										.iterate(), iterator);
+								new CompositeIterator(it1, it2));
 					} else {
-						analyzer = new CumulativeAnalyzer(iterator);
+						analyzer = new CumulativeAnalyzer(it1);
 					}
 
 				} else {
@@ -264,8 +248,9 @@ public class DefaultMonitorControl implements MonitorControl {
 	}
 
 	public List<Value> getResult(Key key, Date date) {
+		PeriodAnalyzer analyzer;
 		try {
-			PeriodAnalyzer analyzer = new PeriodAnalyzer(key);
+			 analyzer = new PeriodAnalyzer(key);
 			analyzer.analyze();
 			return analyzer.getResult();
 		} catch (FileNotFoundException e) {

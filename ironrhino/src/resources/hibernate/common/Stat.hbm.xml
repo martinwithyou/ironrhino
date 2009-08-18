@@ -9,10 +9,9 @@
 			unsaved-value="null">
 			<generator class="uuid" />
 		</id>
-		<property name="key" column="_key" not-null="true" />
-		<property name="longValue" />
-		<property name="doubleValue" />
-		<property name="statDate" />
-		<property name="host" />
+		<property name="keyAsString" not-null="true" />
+		<property name="valueAsString" not-null="true" />
+		<property name="date" not-null="true"/>
+		<property name="host" not-null="true"/>
 	</class>
 </hibernate-mapping>

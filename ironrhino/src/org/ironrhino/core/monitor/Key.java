@@ -6,6 +6,8 @@ import org.apache.commons.lang.StringUtils;
 
 public class Key implements Serializable, Comparable<Key> {
 
+	private static final long serialVersionUID = -4752654130307409656L;
+
 	private String namespace;
 
 	private String[] names;
@@ -80,6 +82,16 @@ public class Key implements Serializable, Comparable<Key> {
 		System.arraycopy(names, 0, newkeys, 0, names.length);
 		newkeys[this.names.length] = subkey;
 		return new Key(namespace, intervalMultiple, cumulative, newkeys);
+	}
+	
+	public boolean isAncestorOf(Key descendant) {
+		return isAncestorOf(descendant,false);
+	}
+
+	public boolean isAncestorOf(Key descendant, boolean excludeSelf) {
+		String d = descendant.toString();
+		String a = this.toString();
+		return d.startsWith(a) && !(excludeSelf && d.equals(a));
 	}
 
 	public long getLastWriteTime() {

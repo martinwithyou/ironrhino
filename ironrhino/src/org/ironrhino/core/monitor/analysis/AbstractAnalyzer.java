@@ -15,7 +15,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.common.util.CompositeIterator;
 import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.common.util.TextFileIterator;
 import org.ironrhino.core.monitor.Key;
@@ -27,7 +26,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
 	protected Log log = LogFactory.getLog(getClass());
 
-	protected Iterator<KeyValuePair> iterator;
+	protected Iterator<? extends KeyValuePair> iterator;
 
 	public AbstractAnalyzer() throws FileNotFoundException {
 		this(new Date());
@@ -63,11 +62,8 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		this.iterator = newIterator(list.toArray(new File[0]));
 	}
 
-	public AbstractAnalyzer(Iterator<KeyValuePair>... iterators) {
-		if (iterators.length == 1)
-			this.iterator = iterators[0];
-		else
-			this.iterator = new CompositeIterator<KeyValuePair>(iterators);
+	public AbstractAnalyzer(Iterator<? extends KeyValuePair> iterator) {
+		this.iterator = iterator;
 	}
 
 	private Iterator<KeyValuePair> newIterator(File[] files)
@@ -102,7 +98,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 	public void analyze() {
 		preAnalyze();
 		try {
-			Iterator<KeyValuePair> it = iterate();
+			Iterator<? extends KeyValuePair> it = iterate();
 			while (it.hasNext())
 				process(it.next());
 			postAnalyze();
@@ -113,7 +109,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 	}
 
 	@Override
-	public Iterator<KeyValuePair> iterate() {
+	public Iterator<? extends KeyValuePair> iterate() {
 		return this.iterator;
 	}
 

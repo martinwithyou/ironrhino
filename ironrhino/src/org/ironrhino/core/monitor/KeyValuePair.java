@@ -7,13 +7,13 @@ public class KeyValuePair implements Serializable {
 
 	private static final long serialVersionUID = 1939944128282158865L;
 
-	private Key key;
+	protected Key key;
 
-	private Value value;
+	protected Value value;
 
-	private Date date;
+	protected Date date;
 
-	private String host;
+	protected String host;
 
 	public KeyValuePair() {
 

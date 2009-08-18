@@ -8,7 +8,7 @@ public interface Analyzer<T> {
 
 	public void analyze();
 
-	public Iterator<KeyValuePair> iterate();
+	public Iterator<? extends KeyValuePair> iterate();
 
 	public T getResult();
 

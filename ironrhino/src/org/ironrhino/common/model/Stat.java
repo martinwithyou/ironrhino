@@ -5,83 +5,95 @@ import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.FormElement;
-import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.metadata.NotInUI;
+import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
 
-@AutoConfig(readonly=true)
-public class Stat extends BaseEntity {
+@AutoConfig(readonly = true)
+public class Stat extends KeyValuePair implements Persistable {
 
-	private static final long serialVersionUID = 5933509155833960220L;
+	private static final long serialVersionUID = -1795832273603877285L;
 
-	@FormElement(displayOrder = 0)
-	private String key;
+	private String id;
 
-	@FormElement(displayOrder = 1)
-	private long longValue;
+	@NotInUI
+	private String keyAsString;
 
-	@FormElement(displayOrder = 2)
-	private double doubleValue;
-
-	@FormElement(displayOrder = 3)
-	private Date statDate;
-
-	@FormElement(displayOrder = 4)
-	private String host;
+	@NotInUI
+	private String valueAsString;
 
 	public Stat() {
 
 	}
 
-	public Stat(String key, long longValue, double doubleValue, Date statDate,
-			String host) {
+	public Stat(Key key, Value value, Date date, String host) {
 		super();
 		this.key = key;
-		this.longValue = longValue;
-		this.doubleValue = doubleValue;
-		this.statDate = statDate;
+		this.value = value;
+		this.date = date;
 		this.host = host;
 	}
 
-	public String getKey() {
+	public boolean isNew() {
+		return this.id != null;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	@FormElement(displayOrder = 0)
+	public Key getKey() {
 		return key;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	@FormElement(displayOrder = 1)
+	public Value getValue() {
+		return value;
 	}
 
-	public long getLongValue() {
-		return longValue;
+	@FormElement(displayOrder = 2)
+	public Date getDate() {
+		return date;
 	}
 
-	public void setLongValue(long longValue) {
-		this.longValue = longValue;
-	}
-
-	public double getDoubleValue() {
-		return doubleValue;
-	}
-
-	public void setDoubleValue(double doubleValue) {
-		this.doubleValue = doubleValue;
-	}
-
-	public Date getStatDate() {
-		return statDate;
-	}
-
-	public void setStatDate(Date statDate) {
-		this.statDate = statDate;
-	}
-
+	@FormElement(displayOrder = 3)
 	public String getHost() {
 		return host;
 	}
 
-	public void setHost(String host) {
-		this.host = host;
+	public String getKeyAsString() {
+		if (keyAsString != null)
+			return keyAsString;
+		if (key != null)
+			return key.toString();
+		return null;
+	}
+
+	public void setKeyAsString(String keyAsString) {
+		this.keyAsString = keyAsString;
+		if (key == null)
+			key = Key.fromString(keyAsString);
+	}
+
+	public String getValueAsString() {
+		if (valueAsString != null)
+			return valueAsString;
+		if (value != null)
+			return value.toString();
+		return null;
+	}
+
+	public void setValueAsString(String valueAsString) {
+		this.valueAsString = valueAsString;
+		if (value == null)
+			value = Value.fromString(valueAsString);
 	}
 
 	@Override
@@ -89,8 +101,4 @@ public class Stat extends BaseEntity {
 		return ToStringBuilder.reflectionToString(this);
 	}
 
-	public KeyValuePair toKeyValuePair() {
-		return new KeyValuePair(Key.fromString(getKey()), new Value(longValue,
-				doubleValue), statDate, host);
-	}
 }

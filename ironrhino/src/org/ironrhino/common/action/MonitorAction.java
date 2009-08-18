@@ -96,8 +96,7 @@ public class MonitorAction extends BaseAction {
 
 	@JsonConfig(root = "chart", serializer = JsonSerializerType.GSON)
 	public String data() {
-		//TODO
-		Key key = Key.fromString("view>detail>productCode800");
+		Key key = Key.fromString(getUid());
 		if (date == null)
 			date = new Date();
 		List<Value> list = monitorControl.getResult(key, date);

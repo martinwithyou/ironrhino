@@ -38,8 +38,8 @@ public class CumulativeAnalyzer extends
 		super(dates);
 	}
 
-	public CumulativeAnalyzer(Iterator<KeyValuePair>... iterators) {
-		super(iterators);
+	public CumulativeAnalyzer(Iterator<? extends KeyValuePair> iterator) {
+		super(iterator);
 	}
 
 	@Override

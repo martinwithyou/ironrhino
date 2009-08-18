@@ -17,7 +17,7 @@ public class PeriodAnalyzer extends AbstractAnalyzer<List<Value>> {
 
 	private Key key;
 
-	private Calendar calendar = Calendar.getInstance();
+	Calendar calendar = Calendar.getInstance();
 
 	public PeriodAnalyzer(Key key) throws FileNotFoundException {
 		super();
@@ -40,8 +40,8 @@ public class PeriodAnalyzer extends AbstractAnalyzer<List<Value>> {
 		this.key = key;
 	}
 
-	public PeriodAnalyzer(Key key, Iterator<KeyValuePair>... iterators) {
-		super(iterators);
+	public PeriodAnalyzer(Key key, Iterator<? extends KeyValuePair> iterator) {
+		super(iterator);
 		this.key = key;
 	}
 
@@ -60,7 +60,7 @@ public class PeriodAnalyzer extends AbstractAnalyzer<List<Value>> {
 
 	@Override
 	protected void process(KeyValuePair pair) {
-		if (!key.equals(pair.getKey()))
+		if (!key.isAncestorOf(pair.getKey()))
 			return;
 		calendar.setTime(pair.getDate());
 		Value v = result.get(calendar.get(Calendar.HOUR_OF_DAY));
