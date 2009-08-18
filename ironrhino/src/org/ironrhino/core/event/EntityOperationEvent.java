@@ -1,22 +1,23 @@
 package org.ironrhino.core.event;
 
-import org.ironrhino.core.model.Entity;
+import org.ironrhino.core.model.Persistable;
 import org.springframework.context.ApplicationEvent;
-
 
 public class EntityOperationEvent extends ApplicationEvent {
 
-	private Entity entity;
+	private static final long serialVersionUID = -3336231774669978161L;
+
+	private Persistable entity;
 
 	private EntityOperationType type;
 
-	public EntityOperationEvent(Entity entity, EntityOperationType type) {
+	public EntityOperationEvent(Persistable entity, EntityOperationType type) {
 		super(entity);
 		this.entity = entity;
 		this.type = type;
 	}
 
-	public Entity getEntity() {
+	public Persistable getEntity() {
 		return entity;
 	}
 

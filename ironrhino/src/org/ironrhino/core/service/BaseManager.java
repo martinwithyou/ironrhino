@@ -9,16 +9,15 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.core.model.BaseTreeableEntity;
-import org.ironrhino.core.model.Entity;
+import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Treeable;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-
-public interface BaseManager<T extends Entity> {
+public interface BaseManager<T extends Persistable> {
 
 	public void setSessionFactory(SessionFactory sessionFactory);
-	
-	public void setEntityClass(Class<? extends Entity> clazz);
+
+	public void setEntityClass(Class<? extends Persistable> clazz);
 
 	public void save(T obj);
 
@@ -69,7 +68,7 @@ public interface BaseManager<T extends Entity> {
 	public int bulkUpdate(String hql, Object... args);
 
 	public Object execute(HibernateCallback callback);
-	
+
 	public Object executeQuery(HibernateCallback callback);
 
 }

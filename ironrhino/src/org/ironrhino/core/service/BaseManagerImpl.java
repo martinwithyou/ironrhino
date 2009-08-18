@@ -31,7 +31,7 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.AbstractTreeableEntity;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Customizable;
-import org.ironrhino.core.model.Entity;
+import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Treeable;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -40,7 +40,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class BaseManagerImpl<T extends Entity> implements BaseManager<T> {
+public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	protected Log log = LogFactory.getLog(BaseManagerImpl.class);
 

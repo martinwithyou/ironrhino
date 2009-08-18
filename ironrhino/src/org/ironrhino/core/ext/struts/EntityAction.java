@@ -34,7 +34,7 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInUI;
 import org.ironrhino.core.model.Customizable;
-import org.ironrhino.core.model.Entity;
+import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -47,13 +47,15 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 
 public class EntityAction extends BaseAction {
 
+	private static final long serialVersionUID = -8442983706126047413L;
+
 	protected static Log log = LogFactory.getLog(EntityAction.class);
 
-	private BaseManager baseManager;
+	private transient BaseManager<Persistable> baseManager;
 
 	private ResultPage resultPage;
 
-	private Entity entity;
+	private Persistable entity;
 
 	private boolean readonly;
 
@@ -101,7 +103,7 @@ public class EntityAction extends BaseAction {
 		if (entity == null)
 			try {
 				// for fetch default value by construct
-				entity = (Entity) getEntityClass().newInstance();
+				entity = (Persistable) getEntityClass().newInstance();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
@@ -116,7 +118,7 @@ public class EntityAction extends BaseAction {
 		baseManager.setEntityClass(getEntityClass());
 		entity = getEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
-		Entity persisted = null;
+		Persistable persisted = null;
 		Map<String, Annotation> naturalIds = getNaturalIds();
 		boolean naturalIdImmutable = isNaturalIdsImmatuable();
 		boolean caseInsensitive = naturalIds.size() > 0
@@ -240,7 +242,7 @@ public class EntityAction extends BaseAction {
 			List list = baseManager.getListByCriteria(dc);
 			if (list.size() > 0) {
 				for (Object obj : list)
-					baseManager.delete((Entity) obj);
+					baseManager.delete((Persistable) obj);
 				addActionMessage(getText("delete.success",
 						"delete  successfully", new String[] { "" }));
 			}
@@ -504,15 +506,15 @@ public class EntityAction extends BaseAction {
 
 	private Class entityClass;
 
-	private void setEntity(Entity entity) {
+	private void setEntity(Persistable entity) {
 		ValueStack vs = ActionContext.getContext().getValueStack();
 		vs.set(getEntityName(), entity);
 	}
 
-	private Entity getEntity() {
-		Entity entity = null;
+	private Persistable getEntity() {
+		Persistable entity = null;
 		try {
-			entity = (Entity) getEntityClass().newInstance();
+			entity = (Persistable) getEntityClass().newInstance();
 			Map<String, String[]> map = ServletActionContext.getRequest()
 					.getParameterMap();
 			ValueStack temp = valueStackFactory.createValueStack();
@@ -530,13 +532,13 @@ public class EntityAction extends BaseAction {
 		this.valueStackFactory = valueStackFactory;
 	}
 
-	private ValueStackFactory valueStackFactory;
+	private transient ValueStackFactory valueStackFactory;
 
 	@Inject("ironrhino-autoconfig")
 	public void setPackageProvider(PackageProvider packageProvider) {
 		this.packageProvider = packageProvider;
 	}
 
-	private PackageProvider packageProvider;
+	private transient PackageProvider packageProvider;
 
 }

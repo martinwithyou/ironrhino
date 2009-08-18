@@ -17,7 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.common.util.ClassScaner;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.model.Entity;
+import org.ironrhino.core.model.Persistable;
 import org.springframework.util.ClassUtils;
 
 import com.opensymphony.xwork2.Action;
@@ -122,15 +122,17 @@ public class AutoConfigPackageProvider implements PackageProvider {
 				} else {
 					Map<String, ActionConfig> actionConfigs = new LinkedHashMap<String, ActionConfig>(
 							pc.getActionConfigs());
-					for (String actionName : packageConfig.getActionConfigs().keySet()) {
+					for (String actionName : packageConfig.getActionConfigs()
+							.keySet()) {
 						if (actionConfigs.containsKey(actionName)) {
 							// ignore if action already exists
 							log.warn(actionConfigs.get(actionName)
 									+ " exists for action class '"
-									+ actionConfigs.get(actionName).getClassName()
+									+ actionConfigs.get(actionName)
+											.getClassName()
 									+ "',ignore autoconfig on action class '"
-									+ packageConfig.getActionConfigs().get(actionName)
-											.getClassName() + "'");
+									+ packageConfig.getActionConfigs().get(
+											actionName).getClassName() + "'");
 							continue;
 						}
 						ActionConfig ac = packageConfig.getActionConfigs().get(
@@ -278,7 +280,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		String namespace = null;
 		String actionClass = null;
 		AutoConfig ac = (AutoConfig) cls.getAnnotation(AutoConfig.class);
-		if (Entity.class.isAssignableFrom(cls)) {
+		if (Persistable.class.isAssignableFrom(cls)) {
 			actionName = StringUtils.uncapitalize(cls.getSimpleName());
 			namespace = ac.namespace();
 			if (StringUtils.isBlank(namespace))

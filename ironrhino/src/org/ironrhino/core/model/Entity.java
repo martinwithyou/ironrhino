@@ -8,9 +8,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.ironrhino.common.util.AnnotationUtils;
 import org.ironrhino.core.metadata.NaturalId;
 
-public abstract class Entity implements Serializable {
-
-	public abstract boolean isNew();
+public abstract class Entity implements Persistable {
 
 	@Override
 	public int hashCode() {

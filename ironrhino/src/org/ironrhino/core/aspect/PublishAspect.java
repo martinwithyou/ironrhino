@@ -8,7 +8,7 @@ import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.PublishAware;
-import org.ironrhino.core.model.Entity;
+import org.ironrhino.core.model.Persistable;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -24,7 +24,7 @@ public class PublishAspect extends BaseAspect {
 	private EventPublisher eventPublisher;
 
 	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(publishAware)")
-	public Object save(ProceedingJoinPoint call, Entity entity,
+	public Object save(ProceedingJoinPoint call, Persistable entity,
 			PublishAware publishAware) throws Throwable {
 		if (isBypass())
 			return call.proceed();
@@ -38,7 +38,7 @@ public class PublishAspect extends BaseAspect {
 	}
 
 	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(publishAware)")
-	public void delete(Entity entity, PublishAware publishAware) {
+	public void delete(Persistable entity, PublishAware publishAware) {
 		if (isBypass())
 			return;
 		if (eventPublisher != null)

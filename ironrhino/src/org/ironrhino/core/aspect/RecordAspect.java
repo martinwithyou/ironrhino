@@ -11,7 +11,7 @@ import org.ironrhino.common.model.Record;
 import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.metadata.RecordAware;
-import org.ironrhino.core.model.Entity;
+import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.springframework.core.Ordered;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -29,7 +29,7 @@ public class RecordAspect extends HibernateDaoSupport implements Ordered {
 	private int order;
 
 	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(recordAware)")
-	public Object save(ProceedingJoinPoint call, Entity entity,
+	public Object save(ProceedingJoinPoint call, Persistable entity,
 			RecordAware recordAware) throws Throwable {
 		if (AopContext.isBypass(this.getClass()))
 			return call.proceed();
@@ -48,14 +48,14 @@ public class RecordAspect extends HibernateDaoSupport implements Ordered {
 	}
 
 	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(recordAware)")
-	public void delete(Entity entity, RecordAware recordAware) {
+	public void delete(Persistable entity, RecordAware recordAware) {
 		if (AopContext.isBypass(this.getClass()))
 			return;
 		record(entity, EntityOperationType.DELETE);
 	}
 
 	// record to database,may change to use logger system
-	private void record(Entity entity, EntityOperationType action) {
+	private void record(Persistable entity, EntityOperationType action) {
 		final Record record = new Record();
 		UserDetails ud = AuthzUtils.getUserDetails(UserDetails.class);
 		if (ud != null) {
