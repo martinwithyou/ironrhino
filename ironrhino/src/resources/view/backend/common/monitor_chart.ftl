@@ -15,7 +15,7 @@
 <@s.textfield label="%{getText('to')}" theme="simple" name="to" cssClass="date"  size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
-<div id="chart" class="chart" data="../data" style="width:1024px; height:300px;">
+<div id="chart" class="chart" data="../data/${uid}<#if Parameters.date?exists>?date=${Parameters.date}</#if>" style="width:1024px; height:300px;">
 </div>
 </body>
 </html></#escape>

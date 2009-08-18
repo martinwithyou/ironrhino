@@ -40,14 +40,14 @@ public class DefaultMonitorControl implements MonitorControl {
 		this.baseManager = baseManager;
 	}
 
-	public void archive() throws FileNotFoundException {
+	public void archive() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, -1);
 		Date yesterday = cal.getTime();
 		archive(yesterday);
 	}
 
-	public void archive(Date date) throws FileNotFoundException {
+	public void archive(Date date) {
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -75,94 +75,100 @@ public class DefaultMonitorControl implements MonitorControl {
 				lastStatDate = stat.getStatDate();
 			else
 				lastStatDate = null;
+			try {
+				Analyzer analyzer = new AbstractAnalyzer(file) {
+					Calendar calendar = Calendar.getInstance();
+					int currentHour = 0;
+					Map<Key, Value> map = new HashMap<Key, Value>();
 
-			Analyzer analyzer = new AbstractAnalyzer(file) {
-				Calendar calendar = Calendar.getInstance();
-				int currentHour = 0;
-				Map<Key, Value> map = new HashMap<Key, Value>();
+					private void save() {
+						List<Map.Entry<Key, Value>> list = new ArrayList<Map.Entry<Key, Value>>();
+						list.addAll(map.entrySet());
+						Collections.sort(list,
+								new Comparator<Map.Entry<Key, Value>>() {
+									public int compare(Entry<Key, Value> o1,
+											Entry<Key, Value> o2) {
+										return o1.getKey().compareTo(
+												o2.getKey());
+									}
+								});
+						for (Map.Entry<Key, Value> entry : list)
+							baseManager
+									.save(new Stat(entry.getKey().toString(),
+											entry.getValue().getLongValue(),
+											entry.getValue().getDoubleValue(),
+											new Date(entry.getKey()
+													.getLastWriteTime()), host));
+						map.clear();
+					}
 
-				private void save() {
-					List<Map.Entry<Key, Value>> list = new ArrayList<Map.Entry<Key, Value>>();
-					list.addAll(map.entrySet());
-					Collections.sort(list,
-							new Comparator<Map.Entry<Key, Value>>() {
-								public int compare(Entry<Key, Value> o1,
-										Entry<Key, Value> o2) {
-									return o1.getKey().compareTo(o2.getKey());
-								}
-							});
-					for (Map.Entry<Key, Value> entry : list)
-						baseManager.save(new Stat(entry.getKey().toString(),
-								entry.getValue().getLongValue(), entry
-										.getValue().getDoubleValue(), new Date(
-										entry.getKey().getLastWriteTime()),
-								host));
-					map.clear();
-				}
-
-				@Override
-				protected void process(KeyValuePair pair) {
-					if (!pair.getKey().isCumulative())
-						return;
-					if (lastStatDate != null) {
-						long time = lastStatDate.getTime();
-						// hibernate doesn't handle mysql's timestamp
-						if (time % 1000 == 0)
-							time += 999;
-						if (pair.getDate().getTime() <= time)
+					@Override
+					protected void process(KeyValuePair pair) {
+						if (!pair.getKey().isCumulative())
 							return;
-					}
-					Key lastKey = null;
-					Value lastValue = null;
-					for (Map.Entry<Key, Value> entry : map.entrySet()) {
-						if (pair.getKey().equals(entry.getKey())) {
-							lastKey = entry.getKey();
-							lastValue = entry.getValue();
-							break;
+						if (lastStatDate != null) {
+							long time = lastStatDate.getTime();
+							// hibernate doesn't handle mysql's timestamp
+							if (time % 1000 == 0)
+								time += 999;
+							if (pair.getDate().getTime() <= time)
+								return;
 						}
-					}
-					if (lastValue == null) {
-						lastKey = pair.getKey();
-						lastValue = pair.getValue();
-						lastKey.setLastWriteTime(pair.getDate().getTime());
-						map.put(lastKey, lastValue);
-					} else {
-						if (calendar.get(Calendar.HOUR_OF_DAY) == currentHour) {
-							lastKey.setLastWriteTime(pair.getDate().getTime());
-							lastValue.cumulate(pair.getValue());
-						} else {
-							save();
+						Key lastKey = null;
+						Value lastValue = null;
+						for (Map.Entry<Key, Value> entry : map.entrySet()) {
+							if (pair.getKey().equals(entry.getKey())) {
+								lastKey = entry.getKey();
+								lastValue = entry.getValue();
+								break;
+							}
+						}
+						if (lastValue == null) {
 							lastKey = pair.getKey();
 							lastValue = pair.getValue();
 							lastKey.setLastWriteTime(pair.getDate().getTime());
 							map.put(lastKey, lastValue);
+						} else {
+							if (calendar.get(Calendar.HOUR_OF_DAY) == currentHour) {
+								lastKey.setLastWriteTime(pair.getDate()
+										.getTime());
+								lastValue.cumulate(pair.getValue());
+							} else {
+								save();
+								lastKey = pair.getKey();
+								lastValue = pair.getValue();
+								lastKey.setLastWriteTime(pair.getDate()
+										.getTime());
+								map.put(lastKey, lastValue);
+							}
 						}
+						calendar.setTime(pair.getDate());
+						currentHour = calendar.get(Calendar.HOUR_OF_DAY);
 					}
-					calendar.setTime(pair.getDate());
-					currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-				}
 
-				@Override
-				protected void postAnalyze() {
-					save();
-				}
+					@Override
+					protected void postAnalyze() {
+						save();
+					}
 
-				@Override
-				public Object getResult() {
-					return null;
-				}
-			};
-			analyzer.analyze();
+					@Override
+					public Object getResult() {
+						return null;
+					}
+				};
+				analyzer.analyze();
+			} catch (FileNotFoundException e) {
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
-	public Map<String, List<TreeNode>> getResult(Date date)
-			throws FileNotFoundException {
+	public Map<String, List<TreeNode>> getResult(Date date) {
 		return getResult(date, date);
 	}
 
-	public Map<String, List<TreeNode>> getResult(Date from, Date to)
-			throws FileNotFoundException {
+	public Map<String, List<TreeNode>> getResult(Date from, Date to) {
 		Date today = new Date();
 		if (from == null)
 			throw new IllegalArgumentException("from is null");
@@ -201,34 +207,40 @@ public class DefaultMonitorControl implements MonitorControl {
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.between("statDate", start, end));
 			List<Stat> list = baseManager.getListByCriteria(dc);
-			if (list.size() > 0) {
-				final Iterator<Stat> it = baseManager.getListByCriteria(dc)
-						.iterator();
-				Iterator<KeyValuePair> iterator = new Iterator<KeyValuePair>() {
-					public boolean hasNext() {
-						return it.hasNext();
+			try {
+				if (list.size() > 0) {
+					final Iterator<Stat> it = baseManager.getListByCriteria(dc)
+							.iterator();
+					Iterator<KeyValuePair> iterator = new Iterator<KeyValuePair>() {
+						public boolean hasNext() {
+							return it.hasNext();
+						}
+
+						public KeyValuePair next() {
+							return it.next().toKeyValuePair();
+						}
+
+						public void remove() {
+							it.remove();
+						}
+					};
+
+					if (criticalDate != null) {
+						analyzer = new CumulativeAnalyzer(
+								new CumulativeAnalyzer(criticalDate, to)
+										.iterate(), iterator);
+					} else {
+						analyzer = new CumulativeAnalyzer(iterator);
 					}
 
-					public KeyValuePair next() {
-						return it.next().toKeyValuePair();
-					}
-
-					public void remove() {
-						it.remove();
-					}
-				};
-
-				if (criticalDate != null) {
-					analyzer = new CumulativeAnalyzer(new CumulativeAnalyzer(
-							criticalDate, to).iterate(), iterator);
 				} else {
-					analyzer = new CumulativeAnalyzer(iterator);
+					if (criticalDate != null) {
+						analyzer = new CumulativeAnalyzer(criticalDate, to);
+					}
 				}
-
-			} else {
-				if (criticalDate != null) {
-					analyzer = new CumulativeAnalyzer(criticalDate, to);
-				}
+			} catch (FileNotFoundException e) {
+				log.error(e.getMessage(), e);
+				throw new RuntimeException(e);
 			}
 		}
 		if (analyzer != null) {
