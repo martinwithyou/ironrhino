@@ -18,7 +18,8 @@ public interface MonitorControl {
 
 	public Map<String, List<TreeNode>> getResult(Date from, Date to);
 
-	public List<Value> getResult(Key key, Date date);
+	public List<Value> getPeriodResult(Key key, Date date, boolean cumulative);
 
-	public Map<String, Value> getResultPerHost(Key key, Date date);
+	public Map<String, List<Value>> getPerHostPeriodResult(Key key, Date date,
+			boolean cumulative);
 }

@@ -99,13 +99,13 @@ public class MonitorAction extends BaseAction {
 		Key key = Key.fromString(getUid());
 		if (date == null)
 			date = new Date();
-		List<Value> list = monitorControl.getResult(key, date);
+		List<Value> list = monitorControl.getPeriodResult(key, date, false);
 		chart = new Chart();
-		chart.setTitle(new Text("title"));
+		chart.setTitle(new Text(key.toString()));
 		XAxis x = new XAxis();
 		YAxis y = new YAxis();
-		y.setMax(50);
-		y.setLabels("ylabel");
+		y.setMax(500);
+		//y.setLabels("ylabel");
 		chart.setXAxis(x);
 		chart.setYAxis(y);
 		String[] labels = new String[list.size()];

@@ -49,11 +49,9 @@ public class DefaultMonitorControl implements MonitorControl {
 	}
 
 	public void archive(Date date) {
-
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		final Date statDay = cal.getTime();
-		Map<String, File> map = AbstractAnalyzer.getLogFile(statDay);
+		Map<String, File> map = AbstractAnalyzer.getLogFile(date);
 		for (Map.Entry<String, File> entry : map.entrySet()) {
 			final String host = entry.getKey();
 			final File file = entry.getValue();
@@ -247,21 +245,47 @@ public class DefaultMonitorControl implements MonitorControl {
 		return criticalDate;
 	}
 
-	public List<Value> getResult(Key key, Date date) {
-		PeriodAnalyzer analyzer;
-		try {
-			 analyzer = new PeriodAnalyzer(key);
-			analyzer.analyze();
-			return analyzer.getResult();
-		} catch (FileNotFoundException e) {
-			// TODO: read from databse
-			return null;
-		}
+	public List<Value> getPeriodResult(Key key, Date date, boolean cumulative) {
+		return (List<Value>) getPeriodResult(key, date, cumulative, false);
 	}
 
-	public Map<String, Value> getResultPerHost(Key key, Date date) {
-		// TODO
-		return null;
+	public Map<String, List<Value>> getPerHostPeriodResult(Key key, Date date,
+			boolean cumulative) {
+		return (Map<String, List<Value>>) getPeriodResult(key, date,
+				cumulative, true);
+	}
+
+	private Object getPeriodResult(Key key, Date date, boolean cumulative,
+			boolean perHost) {
+		PeriodAnalyzer analyzer;
+		try {
+			analyzer = new PeriodAnalyzer(key);
+			analyzer.setCumulative(cumulative);
+		} catch (FileNotFoundException e) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			Date start = cal.getTime();
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			Date end = cal.getTime();
+			baseManager.setEntityClass(Stat.class);
+			DetachedCriteria dc = baseManager.detachedCriteria();
+			dc.add(Restrictions.eq("keyAsString", key.toString()));
+			dc.add(Restrictions.between("date", start, end));
+			List<Stat> list = baseManager.getListByCriteria(dc);
+			analyzer = new PeriodAnalyzer(key, list.iterator());
+			analyzer.setCumulative(cumulative);
+		}
+		if (perHost)
+			analyzer.setPerHostEnabled(true);
+		analyzer.analyze();
+		if (perHost)
+			return analyzer.getPerHostResult();
+		return analyzer.getResult();
 	}
 
 }

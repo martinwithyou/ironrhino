@@ -113,28 +113,30 @@ public class CumulativeAnalyzer extends
 
 			}
 			// set Id and caculate percent
-			for (TreeNode topNode : topTreeNodes) {
-				TreeWalker.walk(topNode, new TreeWalker.Visitor() {
-					int id;
-
-					public void visit(TreeNode node) {
-						node.setId(++id);
-						if (node.isLeaf())
-							return;
-						for (TreeNode n : node.getChildren()) {
-							n.setParent(node);
-							if (n.getValue().getLongValue() > 0)
-								n.setLongPercent(NumberUtils.formatPercent(
-										((double) n.getValue().getLongValue())
-												/ node.getValue()
-														.getLongValue(), 2));
-							if (n.getValue().getDoubleValue() > 0)
-								n.setDoublePercent(NumberUtils.formatPercent(n
-										.getValue().getDoubleValue()
-										/ node.getValue().getDoubleValue(), 2));
-						}
+			final CumulativeAnalyzer ca = this;
+			TreeWalker.Visitor vistor = new TreeWalker.Visitor() {
+				public void visit(TreeNode node) {
+					node.setId(ca.generateId());
+					if (node.isLeaf())
+						return;
+					for (TreeNode n : node.getChildren()) {
+						n.setParent(node);
+						if (n.getValue().getLongValue() > 0)
+							n
+									.setLongPercent(NumberUtils.formatPercent(
+											((double) n.getValue()
+													.getLongValue())
+													/ node.getValue()
+															.getLongValue(), 2));
+						if (n.getValue().getDoubleValue() > 0)
+							n.setDoublePercent(NumberUtils.formatPercent(n
+									.getValue().getDoubleValue()
+									/ node.getValue().getDoubleValue(), 2));
 					}
-				});
+				}
+			};
+			for (TreeNode topNode : topTreeNodes) {
+				TreeWalker.walk(topNode, vistor);
 			}
 		}
 		// sort map by namespace
@@ -154,6 +156,12 @@ public class CumulativeAnalyzer extends
 		for (String namespace : namespaces)
 			linked.put(namespace, result.get(namespace));
 		result = linked;
+	}
+
+	int id;
+
+	public int generateId() {
+		return ++id;
 	}
 
 }
