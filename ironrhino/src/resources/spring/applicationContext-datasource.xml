@@ -8,12 +8,15 @@
 		<property name="readDataSourceNames">
 			<map>
 				<!-- dataSource beanName and RoundRobin weight -->
-				<entry  key="readDataSource" value="1"/>
+				<entry  key="readDataSource1" value="1"/>
+				<entry  key="readDataSource2" value="2"/>
+				<entry  key="readDataSource3" value="3"/>
 			</map>
 		</property>
 		<property name="writeDataSourceNames">
 			<map>
-				<entry  key="writeDataSource" value="1"/>
+				<entry  key="writeDataSource1" value="1"/>
+				<entry  key="writeDataSource2" value="2"/>
 			</map>
 		</property>
 
@@ -24,13 +27,31 @@
 		p:password="${jdbc.password}"
 		p:driverClassName="${jdbc.driverClassName}"
 		p:poolPreparedStatements="true" />
-	<bean id="readDataSource"
+	<bean id="readDataSource1"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}"
 		p:driverClassName="${jdbc.driverClassName}"
 		p:poolPreparedStatements="true" />
-	<bean id="writeDataSource"
+	<bean id="readDataSource2"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+	<bean id="readDataSource3"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+	<bean id="writeDataSource1"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+	<bean id="writeDataSource2"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}"

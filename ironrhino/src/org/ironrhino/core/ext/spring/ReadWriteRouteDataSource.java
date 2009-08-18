@@ -10,11 +10,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.lb.Policy;
-import org.ironrhino.core.lb.PolicyFactory;
-import org.ironrhino.core.lb.RoundRobinPolicyFactory;
-import org.ironrhino.core.lb.TargetWrapper;
-import org.ironrhino.core.lb.UsableChecker;
+import org.ironrhino.common.util.RoundRobin;
 import org.ironrhino.core.monitor.Monitor;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +26,9 @@ public class ReadWriteRouteDataSource extends AbstractDataSource {
 
 	private static ThreadLocal<Boolean> readonly = new ThreadLocal<Boolean>();
 
-	private Policy<String> readPolicy;
+	private RoundRobin<String> readRoundRobin;
 
-	private Policy<String> writePolicy;
+	private RoundRobin<String> writeRoundRobin;
 
 	@Autowired
 	private BeanFactory beanFactory;
@@ -81,19 +77,16 @@ public class ReadWriteRouteDataSource extends AbstractDataSource {
 
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
-		PolicyFactory<String> pf = new RoundRobinPolicyFactory<String>();
 		if (writeDataSourceNames != null && writeDataSourceNames.size() > 0) {
 			writeDataSourceNames.put(DEFAULT_DATASOURCE_NAME,
 					DEFAULT_DATASOURCE_WEIGHT);
 			for (String name : writeDataSourceNames.keySet())
 				writeDataSources.put(name, (DataSource) beanFactory
 						.getBean(name));
-			writePolicy = pf.getPolicy(writeDataSourceNames,
-					new UsableChecker<String>() {
-						public boolean isUsable(
-								TargetWrapper<String> targetWrapper) {
-							DataSource ds = writeDataSources.get(targetWrapper
-									.getTarget());
+			writeRoundRobin = new RoundRobin(writeDataSourceNames,
+					new RoundRobin.UsableChecker<String>() {
+						public boolean isUsable(String target) {
+							DataSource ds = writeDataSources.get(target);
 							return ds != null;
 						}
 					});
@@ -102,12 +95,10 @@ public class ReadWriteRouteDataSource extends AbstractDataSource {
 			for (String name : readDataSourceNames.keySet())
 				readDataSources.put(name, (DataSource) beanFactory
 						.getBean(name));
-			readPolicy = pf.getPolicy(readDataSourceNames,
-					new UsableChecker<String>() {
-						public boolean isUsable(
-								TargetWrapper<String> targetWrapper) {
-							DataSource ds = readDataSources.get(targetWrapper
-									.getTarget());
+			readRoundRobin = new RoundRobin(readDataSourceNames,
+					new RoundRobin.UsableChecker<String>() {
+						public boolean isUsable(String target) {
+							DataSource ds = readDataSources.get(target);
 							return ds != null;
 						}
 					});
@@ -118,14 +109,14 @@ public class ReadWriteRouteDataSource extends AbstractDataSource {
 			throws SQLException {
 		DataSource ds = null;
 		String dbname = null;
-		if (isReadonly() && readPolicy != null) {
-			dbname = readPolicy.pick();
+		if (isReadonly() && readRoundRobin != null) {
+			dbname = readRoundRobin.pick();
 			if (dbname != null)
 				ds = readDataSources.get(dbname);
 		}
 		if (ds == null) {
-			if (writePolicy != null) {
-				dbname = writePolicy.pick();
+			if (writeRoundRobin != null) {
+				dbname = writeRoundRobin.pick();
 				if (dbname != null)
 					ds = writeDataSources.get(dbname);
 			}
@@ -144,13 +135,13 @@ public class ReadWriteRouteDataSource extends AbstractDataSource {
 			// retry once
 			Monitor.add("dbconnection", dbname, "success");
 			log.error(ds.toString(), ex);
-			if (isReadonly() && readPolicy != null) {
-				dbname = readPolicy.pick();
+			if (isReadonly() && readRoundRobin != null) {
+				dbname = readRoundRobin.pick();
 				ds = readDataSources.get(dbname);
 			}
 			if (ds == null) {
-				if (writePolicy != null) {
-					dbname = writePolicy.pick();
+				if (writeRoundRobin != null) {
+					dbname = writeRoundRobin.pick();
 					ds = readDataSources.get(dbname);
 				}
 				if (ds == null) {
