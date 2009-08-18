@@ -60,12 +60,12 @@ ECSideUtil.StartResize = function(event) {
 	obj.oldSiblingRight = ECSideUtil.getPosRight(sibling);
 	ECSideUtil.Dragobj = obj;
 	ECSideUtil.DragobjSibling = sibling;
-	ECSideUtil.MinColWidth = $('#' + ECSideX.id).attr('minColWidth') || '30';
+	ECSideUtil.MinColWidth = $('#' + Richtable.id).attr('minColWidth') || '30';
 	ECSideUtil.Dragobj.style.backgroundColor = "#3366ff";
 	ECSideUtil.Dragobj.parentTdW -= ECSideUtil.Dragobj.mouseDownX;
 	var cellIndex = ECSideUtil.Dragobj.parentNode.cellIndex;
 	try {
-		ECSideUtil.DragobjBodyCell = $('#' + ECSideX.id + ' tbody')[0].rows[0].cells[cellIndex];
+		ECSideUtil.DragobjBodyCell = $('#' + Richtable.id + ' tbody')[0].rows[0].cells[cellIndex];
 		ECSideUtil.DragobjBodyCellSibling = ECSideUtil
 				.getNextElement(ECSideUtil.DragobjBodyCell);
 	} catch (e) {
