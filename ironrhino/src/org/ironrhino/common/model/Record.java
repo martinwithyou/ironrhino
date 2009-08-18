@@ -3,11 +3,9 @@ package org.ironrhino.common.model;
 import java.util.Date;
 
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.Readonly;
 import org.ironrhino.core.model.BaseEntity;
 
-@Readonly
-@AutoConfig
+@AutoConfig(readonly = true)
 public class Record extends BaseEntity {
 
 	private static final long serialVersionUID = -8287907984213799302L;
