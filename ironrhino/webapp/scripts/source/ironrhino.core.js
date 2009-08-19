@@ -74,6 +74,8 @@ Observation.common = function(container) {
 			}, function() {
 				$(this).removeClass('highlight');
 			});
+	if (typeof $.fn.elastic != 'undefined')
+		$('textarea').elastic();
 	if (typeof $.fn.tabs != 'undefined')
 		$('div.tabs', container).each(function() {
 					$(this).tabs().tabs('select', $(this).attr('tab'))

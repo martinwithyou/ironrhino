@@ -50,7 +50,7 @@
 	    autoFill: false,
 	
 	    //if true, selected option of the selectbox will be the initial value of the combo
-	    triggerSelected: false,
+	    triggerSelected: true,
 	
 	    //function for options filtering
 	    filterFn: null,
@@ -122,6 +122,9 @@
 	    appendTo(this.wrapper).
 	    //addClass("invisible").
 	    addClass("list-wrapper"); 
+		if ("function" == typeof this.listWrapper.bgiframe) {
+		    this.listWrapper.bgiframe({height: 1000});
+		}
 	    this.updateDrop();
 	
 	    this.list = $("<ul />").appendTo(this.listWrapper); 
@@ -130,18 +133,32 @@
 	        var optionText = $.trim($(this).text());
 	        $("<li />").
 	        appendTo(self.list).
-	        text(optionText).
+	        html("<span>" + optionText + "</span>").
 	        addClass("visible");
 	    
 	    });  
 		
-		
 	
 	    this.listItems = this.list.children();
+		
+		//alert(this.listItems.find("span").outerWidth());
+		
+		var optWidths = [];
+		
+		this.listItems.find("span").each(function() {
+		    optWidths.push($(this).outerWidth());										  
+		});
+		
+		optWidths = optWidths.sort(function(a, b) {
+		    return a - b;									
+		});
+		var maxOptionWidth = optWidths[optWidths.length - 1];
+		
 
-        this.singleItemHeight = this.listItems.height();
+        this.singleItemHeight = this.listItems.outerHeight();
 		this.listWrapper.addClass("invisible");
-
+		
+       
 	    if ($.browser.opera) {
 	        this.wrapper.css({position: "relative", left: "0", top: "0"});
 	    } 
@@ -151,7 +168,7 @@
 	    this.filterFn = ("function" == typeof(this.config.filterFn)) ? this.config.filterFn : this.filterFn;
 	
 	    this.lastKey = null;
-	    this.overflowCSS = "overflowY";
+	    //this.overflowCSS = "overflow";
 	
 	    this.multiple = this.selectbox.attr("multiple");
 	
@@ -159,9 +176,13 @@
 	
 	    this.wrapper.data("sc:lastEvent", "click");
 	
+	    this.overflowCSS = "overflowY";
 	
-	
-
+	    if (this.listWrapper.innerWidth() < maxOptionWidth) {
+		    this.overflowCSS = "overflow";	
+		}
+        
+		
 
 	    this.notify("init");
 	    this.initEvents();
@@ -195,11 +216,15 @@
 	            self.listItemClick($(e.target));
 	        });
 		
-		
+			this.input.bind("keyup", function(e) {
+				self.wrapper.data("sc:lastEvent", "key");							                //alert(self.wrapper.data("sc:lastEvent"));
+			});		
 	    
 	        this.input.bind("keyup", function(e) {
 	            self.keyUp(e);
 	        });
+			
+
 	    
 	        this.input.bind("keypress", function(e) {
 	            if ($sc.KEY.RETURN == e.keyCode) {
@@ -245,7 +270,8 @@
 			            return;	
 			        }
 		        }
-	            self.wrapper.data("sc:lastEvent", "key");								   
+	            self.wrapper.data("sc:lastEvent", "key");	
+				//$sc.log("Last evt is key");
 	        });	
 	
 	        this.input.bind("click", function() {
@@ -361,7 +387,6 @@
 		
 	        this.highlightFirst();
 	        this.listWrapper.scrollTop(0);
-
 	        this.notify("showList");
 	    },
 	
@@ -680,7 +705,7 @@
 			/*if ($.browser.opera)
 			    ++beforeActive;*/
 	    
-	    var minScroll = this.listItems.height() * beforeActive - this.listWrapper.height();
+	    var minScroll = this.listItems.outerHeight() * beforeActive - this.listWrapper.height();
         
 		if ($.browser.msie)
             minScroll += beforeActive;
@@ -716,7 +741,7 @@
 	    if ("scroll" != this.listWrapper.css(this.overflowCSS))
 	        return;
 		
-	    var maxScroll = this.getActiveIndex() * this.listItems.height();
+	    var maxScroll = this.getActiveIndex() * this.listItems.outerHeight();
 	    
 	    if (this.listWrapper.scrollTop() > maxScroll) {
 	        this.listWrapper.scrollTop(maxScroll);
@@ -762,12 +787,14 @@
 	        return;
 		
 	    var self = this;	
+		var set = false;
 	    this.options.each(function() {
 	        if ($(this).attr("selected")) {
-		    
+		    set = true;
 		    self.setComboValue($(this).text(), false, true);    
 		}
 	    });	
+		//alert(set.toSource());
 		
 	},
 	
