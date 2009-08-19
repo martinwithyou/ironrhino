@@ -22,6 +22,8 @@ import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
 public class OrderAction extends BaseAction {
 
+	private static final long serialVersionUID = 3927567371955750570L;
+
 	private Cart cart;
 
 	private Order order;
@@ -88,7 +90,7 @@ public class OrderAction extends BaseAction {
 		resultPage.setDetachedCriteria(dc);
 		dc.add(Restrictions.eq("account", AuthzUtils
 				.getUserDetails(Account.class)));
-		resultPage.addOrder(org.hibernate.criterion.Order.desc("orderDate"));
+		resultPage.addOrder(org.hibernate.criterion.Order.desc("createDate"));
 		resultPage = orderManager.getResultPage(resultPage);
 		return SUCCESS;
 	}
