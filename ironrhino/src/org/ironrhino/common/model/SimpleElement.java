@@ -9,8 +9,10 @@ import org.apache.commons.lang.StringUtils;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 
-@Searchable(root = false, alias = "simpleElement")
+@Searchable(root = false, alias = "simpleElement", boost = 3)
 public class SimpleElement implements Serializable {
+
+	private static final long serialVersionUID = -2465127797400483349L;
 
 	private String value;
 

@@ -96,8 +96,7 @@ public class StaticResourceFilter implements Filter {
 			return;
 		}
 		Product product = productFacade.getProductByCode(productCode);
-		boolean notFound = (product == null)
-				|| (product.getOpen() != null ? !product.getOpen() : true);
+		boolean notFound = (product == null);
 		if (notFound) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;

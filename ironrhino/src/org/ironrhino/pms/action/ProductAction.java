@@ -4,10 +4,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -20,9 +17,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Attribute;
 import org.ironrhino.common.model.ResultPage;
-import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.common.util.BeanUtils;
-import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.common.util.Thumbnail;
 import org.ironrhino.common.util.WaterMark;
 import org.ironrhino.core.ext.struts.BaseAction;
@@ -40,9 +35,9 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 public class ProductAction extends BaseAction {
 
-	private static Log log = LogFactory.getLog(ProductAction.class);
+	private static final long serialVersionUID = -5904974740762964365L;
 
-	public static final String SETTING_NAME_DEFAULT_NEW_ARRIVAL_DAYS = "product.defaultNewArrivalDays";
+	private static Log log = LogFactory.getLog(ProductAction.class);
 
 	private Product product;
 
@@ -51,8 +46,6 @@ public class ProductAction extends BaseAction {
 	private Integer categoryId;
 
 	private List<Attribute> attributes;
-
-	private String relatedProductsAsString;
 
 	private File picture;
 
@@ -66,8 +59,6 @@ public class ProductAction extends BaseAction {
 
 	private String actionType;
 
-	private String rolesAsString;
-
 	private String tagsAsString;
 
 	private transient WaterMark waterMark;
@@ -79,8 +70,6 @@ public class ProductAction extends BaseAction {
 	private transient CategoryManager categoryManager;
 
 	private transient ProductManager productManager;
-
-	private transient SettingControl settingControl;
 
 	public ResultPage<Product> getResultPage() {
 		return resultPage;
@@ -97,10 +86,6 @@ public class ProductAction extends BaseAction {
 
 	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
-	}
-
-	public void setRolesAsString(String rolesAsString) {
-		this.rolesAsString = rolesAsString;
 	}
 
 	public void setTagsAsString(String tagsAsString) {
@@ -143,10 +128,6 @@ public class ProductAction extends BaseAction {
 		this.picture = picture;
 	}
 
-	public void setRelatedProductsAsString(String relatedProductCodes) {
-		this.relatedProductsAsString = relatedProductCodes;
-	}
-
 	public Integer getCategoryId() {
 		return categoryId;
 	}
@@ -179,10 +160,6 @@ public class ProductAction extends BaseAction {
 		this.productManager = productManager;
 	}
 
-	public void setSettingControl(SettingControl settingControl) {
-		this.settingControl = settingControl;
-	}
-
 	public void setWaterMark(WaterMark waterMark) {
 		this.waterMark = waterMark;
 	}
@@ -210,8 +187,6 @@ public class ProductAction extends BaseAction {
 		product = productManager.get(getUid());
 		if (product == null) {
 			product = new Product();
-			product.setReleased(true);
-			product.setNewArrival(true);
 		}
 		return INPUT;
 	}
@@ -231,28 +206,10 @@ public class ProductAction extends BaseAction {
 				Category category = categoryManager.get(categoryId);
 				product.setCategory(category);
 			}
-			if (product.isReleased())
-				product.setReleaseDate(new Date());
-			if (product.isNewArrival()
-					&& product.getNewArrivalTimeLimit() == null) {
-				int defaultNewArrivalDays = 14;
-				if (settingControl != null)
-					defaultNewArrivalDays = settingControl.getIntValue(
-							SETTING_NAME_DEFAULT_NEW_ARRIVAL_DAYS, 14);
-				product.setNewArrivalTimeLimit(DateUtils.addDays(new Date(),
-						defaultNewArrivalDays));
-			}
 		} else {
 			Product temp = product;
 			product = productManager.get(temp.getId());
-			if (product.isReleased() && !temp.isReleased())
-				product.setReleaseDate(null);
-			// release
-			if (!product.isReleased() && temp.isReleased())
-				product.setReleaseDate(new Date());
-			BeanUtils.copyProperties(temp, product, "releaseDate");
-			if (!product.isNewArrival())
-				product.setNewArrivalTimeLimit(null);
+			BeanUtils.copyProperties(temp, product);
 		}
 		productManager.save(product);
 		addActionMessage(getText("save.success", "save {0} successfully",
@@ -266,25 +223,6 @@ public class ProductAction extends BaseAction {
 		if (product != null && product.getId() != null) {
 			product = productManager.get(product.getId());
 			if (product != null) {
-				if (relatedProductsAsString != null) {
-					product.getRelatedProducts().clear();
-					productManager.save(product);
-					Set<String> set = new HashSet<String>();
-					String[] array = StringUtils.split(relatedProductsAsString,
-							",");
-					for (String name : array) {
-						name = name.trim();
-						if (!"".equals(name))
-							set.add(name);
-					}
-					for (String code : set) {
-						Product p = productManager.getByNaturalId("code", code);
-						if (p != null)
-							product.getRelatedProducts().add(p);
-					}
-				}
-				if (rolesAsString != null)
-					product.setRolesAsString(rolesAsString);
 				if (tagsAsString != null)
 					product.setTagsAsString(tagsAsString);
 				productManager.save(product);

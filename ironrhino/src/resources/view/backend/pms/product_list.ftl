@@ -4,7 +4,7 @@
 <title>List Products</title>
 </head>
 <body>
-<#assign config={"code":{},"name":{},"tagsAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"},"relatedProductsAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"},"rolesAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"}}>
+<#assign config={"code":{},"name":{},"tagsAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"}}>
 <#assign actionColumnButtons=btn("Richtable.save('#id')",action.getText('save'))+btn("Richtable.input('#id')",action.getText('edit'))+btn("Richtable.open(Richtable.getUrl('picture','#id'))",action.getText('picture'))+btn("Richtable.open(Richtable.getUrl('attribute','#id'))",action.getText('attribute'))+btn("Richtable.open(Richtable.getUrl('category','#id'),true,true)",action.getText('category'))+btn("Richtable.del('#id')",action.getText('delete'))>
 <@richtable entityName="product" config=config actionColumnWidth="250px" actionColumnButtons=actionColumnButtons/>
 </body>

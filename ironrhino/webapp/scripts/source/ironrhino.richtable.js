@@ -213,7 +213,7 @@ Richtable = {
 				var action = form.attr('action');
 				if (!action || action == document.location.pathname)
 					action = url;
-				else if (!action.indexOf('/') == 0)
+				else if (action.indexOf('http')!=0&&action.indexOf('/') != 0)
 					action = document.location.pathname
 							+ (document.location.pathname.indexOf('/') == (document.location.pathname.length - 1)
 									? ''

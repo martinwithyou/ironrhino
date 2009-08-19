@@ -4,7 +4,7 @@
 <title>Product Attribute</title>
 </head>
 <body>
-<form action="attribute" method="post" class="ajax view keepopen"><@s.hidden
+<form action="attribute" method="post" class="ajax view"><@s.hidden
 	name="id" />
 <table class="datagrid">
 	<thead>
@@ -32,7 +32,6 @@
 		<tr>
 			<td colspan="3">
 			<button type="button" class="add_row btn"><span><span>添加</span></span></button>
-			<button type="button" class="reset btn"><span><span>取消</span></span></button>
 			<button type="submit" class="btn"><span><span>保存</span></span></button>
 			</td>
 		</tr>

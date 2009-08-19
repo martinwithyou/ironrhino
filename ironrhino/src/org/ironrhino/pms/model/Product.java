@@ -3,13 +3,10 @@ package org.ironrhino.pms.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.compass.annotations.Index;
@@ -28,7 +25,6 @@ import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Recordable;
-import org.ironrhino.core.model.Secured;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
 
@@ -36,8 +32,10 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 @PublishAware
 @Searchable(alias = "product")
 @AutoConfig(fileupload = "image/pjpeg,image/jpeg")
-public class Product extends BaseEntity implements Ordered, Secured,
-		Recordable, Customizable {
+public class Product extends BaseEntity implements Ordered, Recordable,
+		Customizable {
+
+	private static final long serialVersionUID = 6787762149959503752L;
 
 	private static final int SHORT_DESC_LENGTH = 200;
 
@@ -49,23 +47,11 @@ public class Product extends BaseEntity implements Ordered, Secured,
 	private String name;
 
 	@SearchableProperty
-	private String spec;
-
-	@SearchableProperty
-	private String material;
-
-	private Color color;
-
-	private String size;
-
-	@SearchableProperty
 	private String description;
 
 	private int inventory;
 
 	private BigDecimal price;
-
-	private BigDecimal marketPrice;
 
 	private ProductStatus status;
 
@@ -74,15 +60,6 @@ public class Product extends BaseEntity implements Ordered, Secured,
 
 	@NotInCopy
 	private int pictureQuantity;
-
-	private boolean newArrival;
-
-	private Date newArrivalTimeLimit;
-
-	private boolean released;
-
-	@SearchableProperty(index = Index.NO, store = Store.YES)
-	private Date releaseDate;
 
 	@NotInCopy
 	private Date createDate;
@@ -95,15 +72,6 @@ public class Product extends BaseEntity implements Ordered, Secured,
 	private Category category;
 
 	@NotInCopy
-	private Collection<Product> relatedProducts = new HashSet<Product>(0);
-
-	@NotInCopy
-	private Set<Product> reverseRelatedProducts = new HashSet<Product>(0);
-
-	@NotInCopy
-	private Set<SimpleElement> roles = new HashSet<SimpleElement>(0);
-
-	@NotInCopy
 	@CreateIfNull
 	@SearchableComponent
 	private List<Attribute> attributes = new ArrayList<Attribute>(0);
@@ -112,29 +80,9 @@ public class Product extends BaseEntity implements Ordered, Secured,
 	@SearchableComponent
 	private List<SimpleElement> tags = new ArrayList<SimpleElement>(0);
 
-	@NotInCopy
-	@SearchableProperty
-	private Boolean open;
-
 	public Product() {
 		createDate = new Date();
 		displayOrder = 100;
-	}
-
-	public Color getColor() {
-		return color;
-	}
-
-	public void setColor(Color color) {
-		this.color = color;
-	}
-
-	public String getSize() {
-		return size;
-	}
-
-	public void setSize(String size) {
-		this.size = size;
 	}
 
 	public int getInventory() {
@@ -143,22 +91,6 @@ public class Product extends BaseEntity implements Ordered, Secured,
 
 	public void setInventory(int inventory) {
 		this.inventory = inventory;
-	}
-
-	public boolean isNewArrival() {
-		return newArrival;
-	}
-
-	public void setNewArrival(boolean newArrival) {
-		this.newArrival = newArrival;
-	}
-
-	public Date getNewArrivalTimeLimit() {
-		return newArrivalTimeLimit;
-	}
-
-	public void setNewArrivalTimeLimit(Date newArrivalTimeLimit) {
-		this.newArrivalTimeLimit = newArrivalTimeLimit;
 	}
 
 	public BigDecimal getPrice() {
@@ -193,23 +125,6 @@ public class Product extends BaseEntity implements Ordered, Secured,
 		this.attributes = attributes;
 	}
 
-	public Set<SimpleElement> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<SimpleElement> roles) {
-		this.roles = roles;
-	}
-
-	@NotInCopy
-	public String getRolesAsString() {
-		return StringUtils.join(roles.iterator(), ',');
-	}
-
-	public void setRolesAsString(String rolesAsString) {
-		SimpleElement.fillCollectionWithString(roles, rolesAsString);
-	}
-
 	public List<SimpleElement> getTags() {
 		return tags;
 	}
@@ -225,27 +140,6 @@ public class Product extends BaseEntity implements Ordered, Secured,
 
 	public void setTagsAsString(String tagsAsString) {
 		SimpleElement.fillCollectionWithString(tags, tagsAsString);
-	}
-
-	public Collection<Product> getRelatedProducts() {
-		return relatedProducts;
-	}
-
-	public void setRelatedProducts(Collection<Product> relatedProducts) {
-		this.relatedProducts = relatedProducts;
-	}
-
-	@NotInCopy
-	public String getRelatedProductsAsString() {
-		return StringUtils.join(this.relatedProducts.iterator(), ",");
-	}
-
-	public Set<Product> getReverseRelatedProducts() {
-		return reverseRelatedProducts;
-	}
-
-	public void setReverseRelatedProducts(Set<Product> reverseRelatedProducts) {
-		this.reverseRelatedProducts = reverseRelatedProducts;
 	}
 
 	public int getDisplayOrder() {
@@ -270,22 +164,6 @@ public class Product extends BaseEntity implements Ordered, Secured,
 
 	public void setCode(String code) {
 		this.code = code;
-	}
-
-	public String getMaterial() {
-		return material;
-	}
-
-	public void setMaterial(String material) {
-		this.material = material;
-	}
-
-	public String getSpec() {
-		return spec;
-	}
-
-	public void setSpec(String spec) {
-		this.spec = spec;
 	}
 
 	public String getDescription() {
@@ -322,44 +200,6 @@ public class Product extends BaseEntity implements Ordered, Secured,
 
 	public boolean isPictured() {
 		return pictureQuantity > 0;
-	}
-
-	public BigDecimal getMarketPrice() {
-		return marketPrice;
-	}
-
-	public void setMarketPrice(BigDecimal marketPrice) {
-		this.marketPrice = marketPrice;
-	}
-
-	public boolean isReleased() {
-		return released;
-	}
-
-	public void setReleased(boolean released) {
-		this.released = released;
-	}
-
-	public Date getReleaseDate() {
-		return releaseDate;
-	}
-
-	public void setReleaseDate(Date releaseDate) {
-		this.releaseDate = releaseDate;
-	}
-
-	public Boolean getOpen() {
-		if (open == null) {
-			if (this.released && this.roles.size() == 0)
-				open = Boolean.TRUE;
-			else
-				open = Boolean.FALSE;
-		}
-		return open;
-	}
-
-	public void setOpen(Boolean open) {
-		this.open = open;
 	}
 
 	public String getShortDescription() {

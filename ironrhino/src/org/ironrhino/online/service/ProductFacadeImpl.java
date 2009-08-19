@@ -26,12 +26,10 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.Type;
 import org.ironrhino.common.model.AggregateResult;
 import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.common.support.SettingControl;
-import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.metadata.CheckCache;
@@ -71,9 +69,8 @@ public class ProductFacadeImpl implements ProductFacade {
 
 	public List<Product> getNewArrivalProducts(int... parameters) {
 		DetachedCriteria dc = prepareDetachedCriteria();
-		dc.add(Restrictions.eq("newArrival", true));
 		dc.addOrder(Order.asc("displayOrder"));
-		dc.addOrder(Order.desc("releaseDate"));
+		dc.addOrder(Order.desc("modifyDate"));
 		Integer maxResults = null;
 		Integer beforeDays = null;
 		if (parameters.length >= 1)
@@ -84,7 +81,7 @@ public class ProductFacadeImpl implements ProductFacade {
 			maxResults = Integer.MAX_VALUE;
 		if (beforeDays != null) {
 			Date date = new Date();
-			dc.add(Restrictions.between("releaseDate", DateUtils.addDays(date,
+			dc.add(Restrictions.between("modifyDate", DateUtils.addDays(date,
 					-beforeDays), date));
 		}
 		return productManager.getListByCriteria(dc, 1, maxResults);
@@ -93,7 +90,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	public List<Product> getProducts(int max) {
 		DetachedCriteria dc = prepareDetachedCriteria();
 		dc.addOrder(Order.asc("displayOrder"));
-		dc.addOrder(Order.desc("releaseDate"));
+		dc.addOrder(Order.desc("modifyDate"));
 		return productManager.getListByCriteria(dc, 1, max);
 	}
 
@@ -105,22 +102,6 @@ public class ProductFacadeImpl implements ProductFacade {
 		dc.setFetchMode("roles", FetchMode.JOIN);
 		dc.setFetchMode("relatedProducts", FetchMode.JOIN);
 		dc.add(Restrictions.in("code", codeArray));
-		List<String> roleNames = AuthzUtils.getRoleNames();
-		if (roleNames.size() > 0) {
-			dc.add(Restrictions.eq("released", true));
-			Type[] typeArray = new Type[roleNames.size()];
-			String[] array = new String[roleNames.size()];
-			for (int i = 0; i < roleNames.size(); i++) {
-				array[i] = "?";
-				typeArray[i] = Hibernate.STRING;
-			}
-			String sql = "{alias}.id in (select p.id from pms_product p left join pms_productRole pr on p.id = pr.productId where pr.value is null or pr.value in ("
-					+ StringUtils.join(array, ',') + "))";
-			dc.add(Restrictions.sqlRestriction(sql, roleNames.toArray(),
-					typeArray));
-		} else {
-			dc.add(Restrictions.eq("open", true));
-		}
 		List<Product> result = productManager.getListByCriteria(dc);
 		List<Product> list = new ArrayList<Product>(result.size());
 		// sort by array
@@ -162,7 +143,7 @@ public class ProductFacadeImpl implements ProductFacade {
 			else
 				dc.add(Restrictions.isNull("category"));
 		resultPage.addOrder(Order.asc("displayOrder"));
-		resultPage.addOrder(Order.desc("releaseDate"));
+		resultPage.addOrder(Order.desc("modifyDate"));
 		resultPage = productManager.getResultPage(resultPage);
 		return resultPage;
 	}
@@ -194,59 +175,17 @@ public class ProductFacadeImpl implements ProductFacade {
 		String sql = "{alias}.id in (select p.id from pms_product p left join pms_productTag pt on p.id = pt.productId where pt.value =?)";
 		dc.add(Restrictions.sqlRestriction(sql, tag, Hibernate.STRING));
 		resultPage.addOrder(Order.asc("displayOrder"));
-		resultPage.addOrder(Order.desc("releaseDate"));
+		resultPage.addOrder(Order.desc("modifyDate"));
 		resultPage = productManager.getResultPage(resultPage);
 		return resultPage;
 	}
 
 	@CheckCache(key = "${args[0]}", namespace = "product", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','product','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','product','miss'})}")
 	public Product getProductByCode(String code) {
-		DetachedCriteria dc = productManager.detachedCriteria();
-		dc.setFetchMode("attributes", FetchMode.JOIN);
-		dc.setFetchMode("roles", FetchMode.JOIN);
-		dc.setFetchMode("relatedProducts", FetchMode.JOIN);
-		dc.setFetchMode("category", FetchMode.JOIN);
+		DetachedCriteria dc = prepareDetachedCriteria();
 		dc.add(Restrictions.naturalId().set("code", code));
-		dc.add(Restrictions.eq("released", true));
 		Product product = productManager.getByCriteria(dc);
-		if (product == null)
-			return null;
-		evaluateRelatedProducts(product);
 		return product;
-	}
-
-	private void evaluateRelatedProducts(final Product product) {
-		int count = 5;
-		List<Product> list = new ArrayList<Product>(count);
-		list.addAll(product.getRelatedProducts());
-		final int maxResults = count - list.size();
-		if (product.getTags().size() > 0) {
-			list.addAll((List<Product>) productManager
-					.executeQuery(new HibernateCallback() {
-						public Object doInHibernate(Session session)
-								throws HibernateException, SQLException {
-							List<SimpleElement> tags = product.getTags();
-							String[] ar = new String[tags.size()];
-							for (int i = 0; i < ar.length; i++)
-								ar[i] = "?";
-							String hql = "from Product p join p.tags tag where tag.value in ("
-									+ StringUtils.join(ar, ",")
-									+ ") and p.open=? and p.code<>? order by p.displayOrder,p.releaseDate desc";
-
-							Query q = session.createQuery(hql.toString());
-							q.setParameter(0, Arrays.asList(product
-									.getTagsAsString().split(",")));
-							for (int i = 0; i < tags.size(); i++)
-								q.setString(i, tags.get(i).getValue());
-							q.setParameter(tags.size() + 0, true);
-							q.setParameter(tags.size() + 1, product.getCode());
-							q.setMaxResults(maxResults);
-							return q.list();
-
-						}
-					}));
-		}
-		product.setRelatedProducts(list);
 	}
 
 	public Product getRandomProduct() {
@@ -256,8 +195,6 @@ public class ProductFacadeImpl implements ProductFacade {
 		int rand = random.nextInt(count);
 		DetachedCriteria dc = prepareDetachedCriteria();
 		dc.setFetchMode("attributes", FetchMode.JOIN);
-		dc.setFetchMode("roles", FetchMode.JOIN);
-		dc.setFetchMode("relatedProducts", FetchMode.JOIN);
 		dc.setFetchMode("category", FetchMode.JOIN);
 		List<Product> list = productManager.getBetweenListByCriteria(dc, rand,
 				rand + 1);
@@ -316,7 +253,7 @@ public class ProductFacadeImpl implements ProductFacade {
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
-								.createQuery("select ps.productCode,count(ps.score),avg(ps.score) from ProductScore ps,Product p where ps.productCode=p.code and p.open=true group by ps.productCode order by avg(ps.score) desc");
+								.createQuery("select ps.productCode,count(ps.score),avg(ps.score) from ProductScore ps,Product p where ps.productCode=p.code group by ps.productCode order by avg(ps.score) desc");
 						q.setMaxResults(maxResults);
 						List<AggregateResult> list = new ArrayList<AggregateResult>();
 						List<Object[]> result = q.list();
@@ -346,7 +283,7 @@ public class ProductFacadeImpl implements ProductFacade {
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
-								.createQuery("select pf.productCode,count(pf.username) from ProductFavorite pf,Product p where pf.productCode=p.code and p.open=true group by pf.productCode order by count(pf.username) desc");
+								.createQuery("select pf.productCode,count(pf.username) from ProductFavorite pf,Product p where pf.productCode=p.code group by pf.productCode order by count(pf.username) desc");
 						q.setMaxResults(maxResults);
 						List<AggregateResult> list = new ArrayList<AggregateResult>();
 						List<Object[]> result = q.list();
@@ -371,7 +308,7 @@ public class ProductFacadeImpl implements ProductFacade {
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
-								.createQuery("select ps.productCode,count(ps.destination) from ProductSend ps,Product p where ps.productCode=p.code and p.open=true group by ps.productCode order by count(ps.destination) desc");
+								.createQuery("select ps.productCode,count(ps.destination) from ProductSend ps,Product p where ps.productCode=p.code group by ps.productCode order by count(ps.destination) desc");
 						q.setMaxResults(maxResults);
 						List<AggregateResult> list = new ArrayList<AggregateResult>();
 						List<Object[]> result = q.list();
@@ -396,7 +333,7 @@ public class ProductFacadeImpl implements ProductFacade {
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
-								.createQuery("select oi.productCode,sum(oi.quantity) from Product p,Order o right join o.items oi where o.status in('PAID','SHIPPED','COMPLETED') and oi.productCode=p.code and p.open=true  group by oi.productCode order by sum(oi.quantity) desc");
+								.createQuery("select oi.productCode,sum(oi.quantity) from Product p,Order o right join o.items oi where o.status in('PAID','SHIPPED','COMPLETED') and oi.productCode=p.code  group by oi.productCode order by sum(oi.quantity) desc");
 						q.setMaxResults(maxResults);
 						List<AggregateResult> list = new ArrayList<AggregateResult>();
 						List<Object[]> result = q.list();
@@ -447,26 +384,41 @@ public class ProductFacadeImpl implements ProductFacade {
 	private DetachedCriteria prepareDetachedCriteria() {
 		DetachedCriteria dc = productManager.detachedCriteria();
 		dc.setFetchMode("category", FetchMode.JOIN);
-		List<String> roleNames = AuthzUtils.getRoleNames();
-		if (roleNames.size() > 0) {
-			dc.add(Restrictions.eq("released", true));
-			// this cannot query by Criteria directly,this is hibernate bug,we
-			// could use hql,but we need ResultPage so use Criteria and sql
-			Type[] typeArray = new Type[roleNames.size()];
-			String[] array = new String[roleNames.size()];
-			for (int i = 0; i < roleNames.size(); i++) {
-				array[i] = "?";
-				typeArray[i] = Hibernate.STRING;
-			}
-			@NativeSql
-			String sql = "{alias}.id in (select p.id from pms_product p left join pms_productRole pr on p.id = pr.productId where pr.value is null or pr.value in ("
-					+ StringUtils.join(array, ',') + "))";
-			dc.add(Restrictions.sqlRestriction(sql, roleNames.toArray(),
-					typeArray));
-		} else {
-			dc.add(Restrictions.eq("open", true));
-		}
+		dc.setFetchMode("attributes", FetchMode.JOIN);
+		dc.setFetchMode("tags", FetchMode.JOIN);
 		return dc;
 	}
 
+	public List<Product> getRelatedProducts(final Product product) {
+		int count = 5;
+		List<Product> list = new ArrayList<Product>(count);
+		final int maxResults = count - list.size();
+		if (product.getTags().size() > 0) {
+			list.addAll((List<Product>) productManager
+					.executeQuery(new HibernateCallback() {
+						public Object doInHibernate(Session session)
+								throws HibernateException, SQLException {
+							List<SimpleElement> tags = product.getTags();
+							String[] ar = new String[tags.size()];
+							for (int i = 0; i < ar.length; i++)
+								ar[i] = "?";
+							String hql = "from Product p join p.tags tag where tag.value in ("
+									+ StringUtils.join(ar, ",")
+									+ ") and p.code<>? order by p.displayOrder,p.modifyDate desc";
+
+							Query q = session.createQuery(hql.toString());
+							q.setParameter(0, Arrays.asList(product
+									.getTagsAsString().split(",")));
+							for (int i = 0; i < tags.size(); i++)
+								q.setString(i, tags.get(i).getValue());
+							q.setParameter(tags.size() + 0, true);
+							q.setParameter(tags.size() + 1, product.getCode());
+							q.setMaxResults(maxResults);
+							return q.list();
+
+						}
+					}));
+		}
+		return list;
+	}
 }

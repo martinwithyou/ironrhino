@@ -15,22 +15,8 @@
 		</natural-id>
 		<property name="name" not-null="true" />
 		<property name="description" />
-		<property name="spec" />
-		<property name="material" />
-		<property name="color">
-			<type name="org.hibernate.type.EnumType">
-				<param name="enumClass">
-					org.ironrhino.pms.model.Color
-				</param>
-				<!-- if set type=12 then use name not ordinal
-					<param name="type">12</param>
-					-->
-			</type>
-		</property>
-		<property name="size" />
 		<property name="inventory" />
 		<property name="price" />
-		<property name="marketPrice" />
 		<property name="status">
 			<type name="org.hibernate.type.EnumType">
 				<param name="enumClass">
@@ -43,35 +29,12 @@
 		</property>
 		<property name="displayOrder" />
 		<property name="pictureQuantity" />
-		<property name="newArrival" />
-		<property name="newArrivalTimeLimit" />
-		<property name="released" />
-		<property name="releaseDate" />
 		<property name="createDate" />
 		<property name="modifyDate" />
-		<property name="open" />
 		<dynamic-component name="customProperties" insert="true"
 			update="true" optimistic-lock="true">
 		</dynamic-component>
 		<many-to-one name="category" column="categoryId" />
-		<set name="relatedProducts" table="pms_relatedProduct"
-			cascade="none" inverse="false" fetch="subselect">
-			<key column="productId" />
-			<many-to-many class="Product" column="relatedProductId" />
-		</set>
-		<set name="reverseRelatedProducts" table="pms_relatedProduct"
-			cascade="none" inverse="false" lazy="true">
-			<key column="relatedProductId" />
-			<many-to-many class="Product" column="productId" />
-		</set>
-		<set name="roles" table="pms_productRole" fetch="subselect"
-			cascade="all">
-			<key column="productId" />
-			<composite-element
-				class="org.ironrhino.common.model.SimpleElement">
-				<property name="value" not-null="true" />
-			</composite-element>
-		</set>
 		<list name="tags" table="pms_productTag" fetch="subselect"
 			cascade="all">
 			<key column="productId" />

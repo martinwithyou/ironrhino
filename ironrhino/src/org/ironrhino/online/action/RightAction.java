@@ -1,7 +1,7 @@
 package org.ironrhino.online.action;
 
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
@@ -15,7 +15,9 @@ import org.ironrhino.pms.model.Product;
 @AutoConfig(namespace = "/")
 public class RightAction extends BaseAction {
 
-	private ProductFacade productFacade;
+	private static final long serialVersionUID = -6441264436887308502L;
+
+	private transient ProductFacade productFacade;
 
 	public Product getRelatedProduct() {
 		String history = RequestUtils.getCookieValue(ServletActionContext
@@ -28,8 +30,8 @@ public class RightAction extends BaseAction {
 			String code = array[index];
 			relatedProduct = productFacade.getProductByCode(code);
 			if (relatedProduct != null) {
-				Collection<Product> relatedProducts = relatedProduct
-						.getRelatedProducts();
+				List<Product> relatedProducts = productFacade
+						.getRelatedProducts(relatedProduct);
 				if (relatedProducts.size() > 0) {
 					index = random.nextInt(relatedProducts.size());
 					Iterator<Product> it = relatedProducts.iterator();

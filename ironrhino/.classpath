@@ -77,7 +77,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-1.6.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-core-2.1.8.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-spring-plugin-2.1.8.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xwork-core-2.1.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjrt-1.6.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjweaver-1.6.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-3.3.2.jar"/>
@@ -94,5 +93,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-commons-annotations-3.3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javassist-3.11.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jdom-1.1.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xwork-core-2.1.5.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>

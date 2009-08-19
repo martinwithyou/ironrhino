@@ -3,11 +3,7 @@ package org.ironrhino.online.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Date;
-
 import org.ironrhino.common.model.ResultPage;
-import org.ironrhino.common.model.SimpleElement;
-import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.service.CategoryManager;
@@ -48,9 +44,6 @@ public class ProductFacadeTest {
 	@Autowired
 	ProductFacade productFacade;
 
-	@Autowired
-	BaseManager baseManager;
-
 	@Before
 	public void doSetUp() {
 		category = new Category();
@@ -63,17 +56,6 @@ public class ProductFacadeTest {
 			products[i].setName("productName" + i);
 			products[i].setDisplayOrder(i - 100);
 			products[i].setCategory(category);
-			if (i % 2 == 0) {
-				products[i].setReleased(true);
-				products[i].setReleaseDate(new Date());
-			}
-			if (i % 3 == 0) {
-				products[i].getRoles().add(new SimpleElement("ROLE_TEST"));
-			}
-			if (i % 4 == 0) {
-				products[i].setNewArrival(true);
-				products[i].setNewArrivalTimeLimit(new Date());
-			}
 			productManager.save(products[i]);
 		}
 	}

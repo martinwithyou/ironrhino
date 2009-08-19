@@ -2,14 +2,12 @@ package org.ironrhino;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.common.model.SimpleElement;
-import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.model.Account;
 import org.ironrhino.online.service.AccountManager;
@@ -99,19 +97,7 @@ public class InitData {
 				p.setStatus(ProductStatus.ACTIVE);
 				p.setCategory(categories[i]);
 				if ((j & 1) == 1) {
-					p.setReleased(true);
-					p.setReleaseDate(new Date());
-					if (j % 4 == 1) {
-						p.setNewArrival(true);
-						p.setNewArrivalTimeLimit(DateUtils.addDays(new Date(),
-								14));
-					}
-					if (j == 1) {
-						SimpleElement pr = new SimpleElement("ROLE_ADVANCED");
-						p.getRoles().add(pr);
-					}
-					if (recommendedProducts.size() < 4
-							&& p.getRoles().size() == 0)
+					if (recommendedProducts.size() < 4)
 						recommendedProducts.add(p.getCode());
 				}
 				productManager.save(p);

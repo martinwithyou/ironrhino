@@ -50,11 +50,13 @@ import com.sun.syndication.feed.synd.SyndFeedImpl;
 
 public class ProductAction extends BaseAction {
 
+	private static final long serialVersionUID = -8852182926785568727L;
+
 	public static final String PSEUDO_CATEGORY_CODE_HISTORY = "history";
 
 	public static final String PSEUDO_CATEGORY_CODE_NULL = "null";
 
-	private ProductFacade productFacade;
+	private transient ProductFacade productFacade;
 
 	private Product product;
 
@@ -232,8 +234,6 @@ public class ProductAction extends BaseAction {
 		String code = getUid();
 		if (StringUtils.isNotBlank(code)) {
 			product = productFacade.getProductByCode(code);
-			if (product != null && !AuthzUtils.hasPermission(product))
-				return ACCESSDENIED;
 			scoreResult = productFacade.getScoreResult(code);
 			if (resultPage == null)
 				resultPage = new ResultPage();
@@ -282,7 +282,7 @@ public class ProductAction extends BaseAction {
 			SyndEntry entry = new SyndEntryImpl();
 			entry.setTitle(product.getName());
 			entry.setLink(siteUrl + "/product/" + product.getCode() + ".html");
-			entry.setPublishedDate(product.getReleaseDate());
+			entry.setPublishedDate(product.getCreateDate());
 			SyndCategory cat = new SyndCategoryImpl();
 			cat.setName(product.getCategory().getName());
 			List<SyndCategory> cats = new ArrayList<SyndCategory>();
