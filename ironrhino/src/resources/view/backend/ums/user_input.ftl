@@ -2,6 +2,7 @@
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Create/Edit User</title>
+</head>
 <body>
 <@s.form action="save2" method="post" cssClass="ajax">
 	<@s.if test="%{!user.isNew()}">
