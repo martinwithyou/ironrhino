@@ -73,7 +73,7 @@
 	<@s.textfield id="comment.email" label="%{getText('email')}"
 		name="comment.email" />
 	<@s.textarea id="comment.content" label="%{getText('content')}"
-		name="comment.content" cols="50" rows="4" />
+		name="comment.content" cols="50" rows="5" />
 	<@authorize ifNotGranted="ROLE_BUILTIN_ACCOUNT">
 		<@s.textfield label="%{getText('captcha')}" name="captcha" size="6"
 			cssClass="autocomplete_off required captcha" />

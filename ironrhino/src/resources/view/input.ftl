@@ -35,7 +35,7 @@
 			<#if config.type=='textarea'>
 				<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}"
 					readonly="${config.readonly?string}" cssClass="${config.cssClass}"
-					cols="50" rows="10" />
+					cols="50" rows="5" />
 			</#if>
 			<#if config.type=='checkbox'>
 				<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}"

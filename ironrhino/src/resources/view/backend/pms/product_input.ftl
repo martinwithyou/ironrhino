@@ -18,8 +18,7 @@
 	<@s.textfield label="%{getText('inventory')}"
 		name="product.inventory" />
 	<@s.textfield label="%{getText('price')}" name="product.price" />
-	<@s.textarea label="%{getText('description')}"
-		name="product.description" />
+	<@s.textarea label="%{getText('description')}" name="product.description" cols="50" rows="5"/>
 	<@s.select label="%{getText('status')}" name="product.status"
 		list="@org.ironrhino.pms.model.ProductStatus@values()" listKey="name"
 		listValue="displayName" />

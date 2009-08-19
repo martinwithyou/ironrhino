@@ -13,7 +13,7 @@
 		cssClass="email" />
 	<@s.textfield label="%{getText('subject')}"
 		name="feedback.subject" size="50" cssClass="required" />
-	<@s.textarea label="%{getText('content')}" cols="50" rows="4"
+	<@s.textarea label="%{getText('content')}" cols="50" rows="5"
 		name="feedback.content" />
 	<@authorize ifNotGranted="ROLE_BUILTIN_ACCOUNT">
 		<@s.textfield label="%{getText('captcha')}" name="captcha" size="6"
