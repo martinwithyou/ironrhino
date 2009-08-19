@@ -74,7 +74,7 @@ Observation.common = function(container) {
 			}, function() {
 				$(this).removeClass('highlight');
 			});
-	if (typeof $.fn.elastic != 'undefined')
+	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
 		$('textarea').elastic();
 	if (typeof $.fn.tabs != 'undefined')
 		$('div.tabs', container).each(function() {

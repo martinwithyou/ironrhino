@@ -40,6 +40,7 @@
 	width: 15px;
 	height: 15px;
 	float: right;
+	cursor: pointer;
 	background: url(../images/warning_close.png) 4px 4px no-repeat;
 }
 
@@ -47,6 +48,7 @@
 	width: 15px;
 	height: 15px;
 	float: right;
+	cursor: pointer;
 	background: url(../images/information_close.png) 4px 4px no-repeat;
 }
 
