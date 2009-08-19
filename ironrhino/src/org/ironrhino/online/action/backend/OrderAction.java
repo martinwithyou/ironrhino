@@ -64,7 +64,7 @@ public class OrderAction extends BaseAction {
 							.getName(), MatchMode.ANYWHERE));
 			}
 		}
-		resultPage.addOrder(org.hibernate.criterion.Order.desc("orderDate"));
+		resultPage.addOrder(org.hibernate.criterion.Order.desc("createDate"));
 		resultPage = orderManager.getResultPage(resultPage);
 		return LIST;
 	}
