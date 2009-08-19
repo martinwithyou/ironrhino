@@ -87,7 +87,8 @@ Observation.common = function(container) {
 				});
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({
-					dateFormat : 'yy-mm-dd'
+					dateFormat : 'yy-mm-dd',
+					zIndex : 2000
 				});
 	$('input.captcha', container).focus(function() {
 		if ($(this).attr('_captcha_'))
