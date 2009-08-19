@@ -4,4 +4,4 @@ ${parameters.after?if_exists}
 <div class="field_error">${error?html}</div><#t/>
 </#list>
 </#if>
-</div>
+</p>

@@ -1,20 +1,21 @@
-form fieldset {
-	border: 0px;
-}
-
 form input.required {
 	background: url(../images/required.png) no-repeat right;
 }
 
-form fieldset div.fieldset {
+form p {
 	margin: 10px;
 }
 
-form fieldset div.label {
+label {
+	display: block;
 	float: left;
-	width: 100px;
+	width: 80px;
 }
 
-form fieldset div label.field_error {
+p.top label {
+	float: none;
+}
+
+.field_error {
 	color: red;
 }

@@ -254,7 +254,7 @@ Message = {
 	get : function(message, className) {
 		return '<div class="'
 				+ className
-				+ '"><div class="close" onclick="$(this.parentNode).remove()"></div>'
+				+ '"><span class="close" onclick="$(this.parentNode).remove()"></span>'
 				+ message + '</div>';
 	},
 	showError : function(field, errorType) {
@@ -547,7 +547,8 @@ Observation.ajax = function(container) {
 						return false;
 					});
 			$('input,select', this).blur(function() {
-						Form.validate(this)
+						Form.validate(this);
+						return true;
 					});
 			return;
 		} else {
