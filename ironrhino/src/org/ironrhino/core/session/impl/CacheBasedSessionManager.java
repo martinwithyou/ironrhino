@@ -1,4 +1,4 @@
-package org.ironrhino.core.session;
+package org.ironrhino.core.session.impl;
 
 import java.util.Map;
 
@@ -6,26 +6,28 @@ import net.sf.ehcache.jcache.JCache;
 import net.sf.jsr107cache.Cache;
 
 import org.ironrhino.core.cache.CacheContext;
+import org.ironrhino.core.session.HttpWrappedSession;
+import org.ironrhino.core.session.HttpSessionManager;
 
-public class CacheSessionStore implements SessionStore {
+public class CacheBasedSessionManager implements HttpSessionManager {
 
 	public static final String CACHE_NAME = "session";
 
-	public void initialize(Session session) {
+	public void initialize(HttpWrappedSession session) {
 		Cache sessionCache = CacheContext.getCache(CACHE_NAME);
 		Map attrMap = (Map) sessionCache.get(session.getId());
 		if (attrMap != null)
 			session.setAttrMap(attrMap);
 	}
 
-	public void save(Session session) {
+	public void save(HttpWrappedSession session) {
 		Cache sessionCache = CacheContext.getCache(CACHE_NAME);
 		JCache jcache = (JCache) sessionCache;
 		jcache.put(session.getId(), session.getAttrMap(), session
 				.getMaxInactiveInterval());
 	}
 
-	public void invalidate(Session session) {
+	public void invalidate(HttpWrappedSession session) {
 		CacheContext.getCache(CACHE_NAME).remove(session.getId());
 	}
 

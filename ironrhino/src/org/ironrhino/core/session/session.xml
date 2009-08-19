@@ -4,11 +4,8 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="httpSessionFilter" class="org.ironrhino.core.session.HttpSessionFilter" />
-	<bean id="sessionManager" class="org.ironrhino.core.session.SessionManager" />
 	<!--
-		bean id="sessionStore"
-		class="org.ironrhino.core.session.CookieSessionStore"
-		scope="prototype" /
+	<bean id="httpSessionManager" class="org.ironrhino.core.session.impl.CookieBasedSessionManager"/>
 	-->
-	<bean id="sessionStore" class="org.ironrhino.core.session.CacheSessionStore" />
+	<bean id="httpSessionManager" class="org.ironrhino.core.session.impl.CacheBasedSessionManager" />
 </beans>

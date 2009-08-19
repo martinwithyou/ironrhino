@@ -22,7 +22,7 @@ public class HttpSessionFilter implements Filter {
 	ServletContext servletContext;
 
 	@Autowired
-	SessionManager sessionManager;
+	HttpSessionManager httpSessionManager;
 
 	public void init(FilterConfig filterConfig) {
 		servletContext = filterConfig.getServletContext();
@@ -40,8 +40,8 @@ public class HttpSessionFilter implements Filter {
 
 		HttpContext httpContext = new HttpContext((HttpServletRequest) request,
 				(HttpServletResponse) response, servletContext);
-		HttpRequest httpRequest = new HttpRequest(req, httpContext,
-				sessionManager);
+		HttpWrappedRequest httpRequest = new HttpWrappedRequest(req,
+				httpContext, httpSessionManager);
 		BufferableResponseWrapper res = new BufferableResponseWrapper(
 				(HttpServletResponse) response);
 		chain.doFilter(httpRequest, res);
@@ -49,8 +49,8 @@ public class HttpSessionFilter implements Filter {
 		if (bytes == null)
 			bytes = new byte[0];
 		HttpSession session = httpRequest.getSession();
-		if (session instanceof Session) {
-			((Session) session).save();
+		if (session instanceof HttpWrappedSession) {
+			((HttpWrappedSession) session).save();
 		}
 		response.setContentLength(bytes.length);
 		ServletOutputStream sos = response.getOutputStream();

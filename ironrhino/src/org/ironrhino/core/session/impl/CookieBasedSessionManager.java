@@ -1,4 +1,4 @@
-package org.ironrhino.core.session;
+package org.ironrhino.core.session.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,19 +15,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.security.Blowfish;
+import org.ironrhino.core.session.HttpWrappedSession;
+import org.ironrhino.core.session.HttpSessionManager;
 
-public class CookieSessionStore implements SessionStore {
+public class CookieBasedSessionManager implements HttpSessionManager {
 
-	private Log log = LogFactory.getLog(CookieSessionStore.class);
+	private Log log = LogFactory.getLog(CookieBasedSessionManager.class);
 
 	public static final String SESSION_COOKIE_PREFIX = "s_";
 
 	public static final int SINGLE_COOKIE_SIZE = 4 * 1024;
 
 	// cookies
-	private Map<String, String> cookieMap = new HashMap<String, String>(3);
 
-	public void initialize(Session session) {
+	public void initialize(HttpWrappedSession session) {
+		Map<String, String> cookieMap = new HashMap<String, String>(3);
 		Map attrMap = null;
 		Cookie[] cookies = session.getHttpContext().getRequest().getCookies();
 		if (cookies != null) {
@@ -60,7 +62,7 @@ public class CookieSessionStore implements SessionStore {
 		session.setAttrMap(attrMap);
 	}
 
-	public void save(Session session) {
+	public void save(HttpWrappedSession session) {
 		Map<String, Object> attrMap = session.getAttrMap();
 		Map<String, Object> toDump = new HashMap();
 		for (Map.Entry<String, Object> entry : attrMap.entrySet())
@@ -95,11 +97,20 @@ public class CookieSessionStore implements SessionStore {
 		}
 	}
 
-	public void invalidate(Session session) {
-		for (int i = 0; i < cookieMap.size(); i++)
-			RequestUtils.deleteCookie(session.getHttpContext().getRequest(),
-					session.getHttpContext().getResponse(),
-					SESSION_COOKIE_PREFIX + i);
+	public void invalidate(HttpWrappedSession session) {
+		Cookie[] cookies = session.getHttpContext().getRequest().getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies)
+				if (cookie.getName().startsWith(SESSION_COOKIE_PREFIX)) {
+					try {
+						RequestUtils.deleteCookie(session.getHttpContext()
+								.getRequest(), session.getHttpContext()
+								.getResponse(), cookie.getName());
+					} catch (Exception e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+		}
 	}
 
 }

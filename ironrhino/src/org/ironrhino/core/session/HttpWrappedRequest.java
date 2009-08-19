@@ -7,23 +7,23 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.util.RequestUtils;
 
-public class HttpRequest extends HttpServletRequestWrapper {
+public class HttpWrappedRequest extends HttpServletRequestWrapper {
 
-	private Session session;
+	private HttpWrappedSession session;
 
 	private boolean requestedSessionIdFromCookie;
 
 	private boolean requestedSessionIdFromURL;
 
-	public HttpRequest(HttpServletRequest request, HttpContext context,
-			SessionManager sessionManager) {
+	public HttpWrappedRequest(HttpServletRequest request, HttpContext context,
+			HttpSessionManager sessionManager) {
 		super(request);
 		String sessionId = RequestUtils.getCookieValue(context.getRequest(),
-				Session.SESSION_ID);
+				HttpWrappedSession.SESSION_ID);
 		if (StringUtils.isNotBlank(sessionId)) {
 			requestedSessionIdFromCookie = true;
 		} else {
-			sessionId = request.getParameter(Session.SESSION_ID);
+			sessionId = request.getParameter(HttpWrappedSession.SESSION_ID);
 			if (StringUtils.isBlank(sessionId)) {
 				String requestURL = request.getRequestURL().toString();
 				if (requestURL.indexOf(';') > -1) {
@@ -33,7 +33,7 @@ public class HttpRequest extends HttpServletRequestWrapper {
 					for (String pair : array) {
 						if (pair.indexOf('=') > 0) {
 							String k = pair.substring(0, pair.indexOf('='));
-							if (k.equals(Session.SESSION_ID)) {
+							if (k.equals(HttpWrappedSession.SESSION_ID)) {
 								sessionId = pair
 										.substring(pair.indexOf('=') + 1);
 								break;
@@ -46,7 +46,7 @@ public class HttpRequest extends HttpServletRequestWrapper {
 				requestedSessionIdFromURL = true;
 			}
 		}
-		session = new Session(context, sessionManager, sessionId);
+		session = new HttpWrappedSession(context, sessionManager, sessionId);
 	}
 
 	@Override

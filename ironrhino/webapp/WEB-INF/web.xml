@@ -5,7 +5,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath*:resources/spring/applicationContext-*.xml
+			classpath*:resources/spring/applicationContext-*.xml,classpath*:org/ironrhino/core/session/session.xml
 		</param-value>
 	</context-param>
 	<context-param>
@@ -19,6 +19,10 @@
 	<filter>
 		<filter-name>WebProxy</filter-name>
 		<filter-class>org.ironrhino.core.ext.servlet.WebProxyFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>httpSessionFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
 	<filter>
 		<filter-name>filterChainProxy</filter-name>
@@ -73,6 +77,10 @@
 		<filter-name>WebProxy</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>httpSessionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>filterChainProxy</filter-name>
