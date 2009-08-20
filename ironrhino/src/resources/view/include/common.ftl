@@ -1,9 +1,49 @@
-<#function btn onclick="" text="" type="button">
-  <#return '<button type="'+type+'" class="btn" onclick="'+onclick+'"><span><span>'+text+'</span></span></button>'>
+<#function btn id="" text="" onclick="" type="" class="" href="">
+	<#if id!=''>
+	<#local _id=' id="'+id+'"'>
+	<#if text==''>
+		<#local text=id?replace('_', ' ')>
+	</#if>
+	</#if>
+	<#if type!=''>
+	<#local _type=' type="'+type+'"'>
+	<#else>
+	<#local _type=' type="button"'>
+	</#if>
+	<#if onclick!=''>
+	<#local _onclick=' onclick="'+onclick+'"'>
+	</#if>
+	<#if class!=''>
+	<#local _class=' class="btn '+class+'"'>
+	<#else>
+	<#local _class=' class="btn"'>
+	</#if>
+<#if type=='link'>
+  <#return '<a'+_id?if_exists+_onclick?if_exists+_class+' href="'+href+'"><span><span>'+text+'</span></span></a>'>
+</#if>
+  <#return '<button'+_id?if_exists+_type?if_exists+_onclick?if_exists+_class+'><span><span>'+text+'</span></span></button>'>
 </#function>
 
-<#macro button onclick="" text="" type="button">
-${btn(onclick,text,type)}
+<#macro button text="" type="" class="" extra...>
+<#if text==''>
+	<#local text=extra['id']?default('')?replace('_', ' ')>
+</#if>
+<#if class!=''>
+	<#local class='btn '+class>
+<#else>
+	<#local class='btn'>
+</#if>
+<#local tag='button'>
+<#if type=='link'>
+<#local tag='a'>
+<#else>
+<#if type==''>
+<#local _type=' type="button"'>
+<#else>
+<#local _type=' type="'+type+'"'>
+</#if>
+</#if>
+<${tag} <#list extra?keys as attr>${attr}="${extra[attr]?html}" </#list>${_type?if_exists} class="${class}"><span><span>${text}</span></span></${tag}>
 </#macro>
 
 <#macro pagination class="" options="">

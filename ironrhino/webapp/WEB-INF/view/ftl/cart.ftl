@@ -47,14 +47,12 @@
 	</tbody>
 </table>
 </div>
-<div id="actions"><a class="btn goback"><span><span>继续购物</span></span></a>
-<span><@s.submit value="更新购物车" theme="simple" /></span> <a
-	href="${base}/cart/remove"
-	class="btn ajax view delete_selected" options="{replacement:'detail'}"><span><span>删除选中</span></span></a>
-<a id="clear" href="${base}/cart/clear" class="btn ajax view"
-	options="{replacement:'detail',onprepare:'confirm(\'are you sure to clear cart\')'}"><span><span>清空</span></span></a>
-<a id="checkout"
-	href="${base}/account/order/addressee" class="btn"><span><span>结算</span></span></a> </div>
+<div id="actions">
+<@button class="goback" text="继续购物"/>
+<@s.submit value="更新购物车" theme="simple" />
+<@button type="link" text="删除选中" href="${base}/cart/remove" class="ajax view delete_selected" options="{replacement:'detail'}"/>
+<@button type="link" text="清空" href="${base}/cart/clear" class="ajax view" options="{replacement:'detail',onprepare:'confirm(\'are you sure to clear cart\')'}"/>
+<@button type="link" text="结算" href="${base}/account/order/addressee"/>
 </form>
 </body>
 </html></#escape>

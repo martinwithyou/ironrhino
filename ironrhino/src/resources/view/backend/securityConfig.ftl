@@ -6,6 +6,18 @@
 Initialization.init = function(){
 	ApplicationContextConsole.execute('filterInvocationInterceptorObjectDefinitionSource.definitionAsText',function(text){$('#fsource').val(text)});
 	ApplicationContextConsole.execute('channelProcessingFilterInvocationDefinitionSource.definitionAsText',function(text){$('#csource').val(text)});
+	$('#fsave').click(function(){
+		ApplicationContextConsole.execute('filterInvocationInterceptorObjectDefinitionSource.definitionAsText=\''+$('#fsource').val().replace(/#/g,'\#').replace(/\\/g,'\\\\')+'\'',function(){alert('success')});
+	});
+	$('#ffresh').click(function(){
+		ApplicationContextConsole.execute('filterInvocationInterceptorObjectDefinitionSource.refresh()',function(){alert('success');});
+	});
+	$('#csave').click(function(){
+		ApplicationContextConsole.execute('channelProcessingFilterInvocationDefinitionSource.definitionAsText=\''+$('#csource').val().replace(/\\/g,'\\\\')+'\'',function(){alert('success')});
+	});
+	$('#cfresh').click(function(){
+		ApplicationContextConsole.execute('channelProcessingFilterInvocationDefinitionSource.refresh()',function(){alert('success');});
+	});
 }
 </script>
 </head>
@@ -15,26 +27,15 @@ Initialization.init = function(){
 <textarea id="fsource"
 	name="filterInvocationInterceptorObjectDefinitionSource" rows="15"
 	cols="100"></textarea> <br />
-<button type="button" id="saveFilterInvocationButton" class="btn"
-	onclick="ApplicationContextConsole.execute('filterInvocationInterceptorObjectDefinitionSource.definitionAsText=\''+$('#fsource').val().replace(/#/g,'\#').replace(/\\/g,'\\\\')+'\'',function(){alert('success')})" >
-	<span><span>${action.getText('save')}</span></span>
-	</button>
-<button type="button" id="refreshFilterInvocationButton" class="btn"
-	onclick="ApplicationContextConsole.execute('filterInvocationInterceptorObjectDefinitionSource.refresh()',function(){alert('success');})">
-	<span><span>${action.getText('reload')}</span></span>
-	</button>
-	</div>
+<@button id="fsave" text="${action.getText('save')}" />
+<@button id="ffresh" text="${action.getText('reload')}"/>
+</div>
 <div>ChannelProcessingFilterInvocationDefinitionSource<br />
 <textarea id="csource"
 	name="channelProcessingFilterInvocationDefinitionSource" rows="15"
 	cols="100"></textarea> <br />
-<button type="button" id="saveChannelProcessingButton" class="btn"
-	onclick="ApplicationContextConsole.execute('channelProcessingFilterInvocationDefinitionSource.definitionAsText=\''+$('#csource').val().replace(/\\/g,'\\\\')+'\'',function(){alert('success')})" >
-	<span><span>${action.getText('save')}</span></span>
-	</button>
-<button type="button" id="refreshChannelProcessingButton" class="btn"
-	onclick="ApplicationContextConsole.execute('channelProcessingFilterInvocationDefinitionSource.refresh()',function(){alert('success');})" >
-	<span><span>${action.getText('reload')}</span></span>
-	</button></div>
+<@button id="csave" text="${action.getText('save')}"/>
+<@button id="cfresh" text="${action.getText('reload')}"/>
+</div>
 </body>
 </html></#escape>

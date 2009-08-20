@@ -16,7 +16,7 @@ Observation.obs = function(){
 	alert('no changes');
 	return;
 	}
-	ApplicationContextConsole.call('customizableEntityChanger.discardChanges()',null,function(){
+	ApplicationContextConsole.execute('customizableEntityChanger.discardChanges()',null,function(){
 		ajax({url:document.location.href});
 	})});
 	$('#apply').click(function(){
@@ -24,7 +24,7 @@ Observation.obs = function(){
 	alert('no changes');
 	return;
 	}
-	ApplicationContextConsole.call('customizableEntityChanger.applyChanges()',null,function(){
+	ApplicationContextConsole.execute('customizableEntityChanger.applyChanges()',null,function(){
 		ajax({url:document.location.href});
 	})});
 }
@@ -68,8 +68,8 @@ Observation.obs = function(){
 					<tfoot>
 						<tr>
 							<td align="center" colspan="3">
-							<button class="add" type="button">add</button>
-							<button>save</button>
+							<@button class="add" text="${action.getText('add')}"/>
+							<@button text="${action.getText('save')}" type="submit"/>
 							</td>
 						</tr>
 					</tfoot>
@@ -118,8 +118,8 @@ Observation.obs = function(){
 	<tfoot>
 		<tr>
 			<td align="center" colspan="2">
-			<button id="discard" class="btn"><span><span>${action.getText('discard')}</span></span></button>
-			<button id="apply" class="btn"><span><span>${action.getText('apply')}</span></span></button>
+			<@button id="discard" text="${action.getText('discard')}"/>
+			<@button id="apply" text="${action.getText('apply')}"/>
 			</td>
 		</tr>
 	</tfoot>

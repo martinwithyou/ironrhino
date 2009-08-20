@@ -22,8 +22,8 @@
 				<td><@s.textfield name="%{'attributes['+#stat.index+'].value'}"
 					value="%{value}" theme="simple" /></td>
 				<td>
-				<button type="button" class="delete_row btn"><span><span>删除</span></span></button>
-				<button type="button" class="add_row btn"><span><span>添加</span></span></button>
+				<@button class="delete_row" text="${action.getText('delete')}"/>
+				<@button class="add_row" text="${action.getText('add')}"/>
 				</td>
 			</tr>
 		</@s.iterator>
@@ -31,8 +31,8 @@
 	<tfoot>
 		<tr>
 			<td colspan="3">
-			<button type="button" class="add_row btn"><span><span>添加</span></span></button>
-			<button type="submit" class="btn"><span><span>保存</span></span></button>
+			<@button class="add_row" text="${action.getText('add')}"/>
+			<@button type="submit" text="${action.getText('save')}"/>
 			</td>
 		</tr>
 	</tfoot>

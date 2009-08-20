@@ -5,7 +5,7 @@
 </head>
 <body>
 <#assign config={"code":{},"name":{"cellEdit":"input"},"description":{"cellEdit":"input"},"displayOrder":{"cellEdit":"input"},"rolesAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"}}>
-<#assign actionColumnButtons=btn("Richtable.enter('#id')",action.getText('enter'))+btn("Richtable.save('#id')",action.getText('save'))+btn("Richtable.del('#id')",action.getText('delete'))+btn("Richtable.open(Richtable.getUrl('tree','#id'),true,true)",action.getText('move'))+btn("Richtable.enter('#id','product?categoryId={parentId}')",action.getText('product'))>
+<#assign actionColumnButtons=btn("",action.getText('enter'),"Richtable.enter('#id')")+btn("",action.getText('save'),"Richtable.save('#id')")+btn("",action.getText('delete'),"Richtable.del('#id')")+btn("",action.getText('move'),"Richtable.open(Richtable.getUrl('tree','#id'),true,true)")+btn("",action.getText('product'),"Richtable.enter('#id','product?categoryId={parentId}')")>
 <@richtable entityName="category" config=config actionColumnWidth="220px" actionColumnButtons=actionColumnButtons/>
 </body>
 </html></#escape>

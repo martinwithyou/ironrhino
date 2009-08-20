@@ -15,28 +15,13 @@ $('#execute').click(function(){ApplicationContextConsole.execute($('#cmd').val()
 </script>
 </head>
 <body>
-<div><button type="button" id="rebuild_category_tree" class="btn">
-	<span><span>rebuild category tree</span></span>
-	</button>
-	<button type="button"
-	id="generate_static_page"  class="btn">
-	<span><span>generate static page</span></span>
-	</button>
-	<button type="button"
-	id="send_newArrived_product"  class="btn">
-	<span><span>send newArrived product</span></span>
-	</button>
-	<button type="button"
-	id="compile_rulebase"  class="btn">
-	<span><span>compile rulebase</span></span>
-	</button>
-	<button type="button"
-	id="compass_index"  class="btn">
-	<span><span>compass index</span></span>
-	</button>
+<div>
+<@button id="rebuild_category_tree"/>
+<@button id="compile_rulebase"/>
+<@button id="compass_index"/>
 </div>
 <div><input id="cmd" type="text" name="cmd" size="80" />
-<button type="button" id="execute"  class="btn"><span><span>execute</span></span></button>
+<@button id="execute"/>
 </div>
 </body>
 </html></#escape>
