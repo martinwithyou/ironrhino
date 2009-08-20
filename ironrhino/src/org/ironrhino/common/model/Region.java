@@ -15,6 +15,8 @@ import org.ironrhino.core.model.Secured;
 @AutoConfig
 public class Region extends BaseTreeableEntity<Region> implements Secured {
 
+	private static final long serialVersionUID = 8878381261391688086L;
+
 	private Set<SimpleElement> roles = new HashSet<SimpleElement>(0);
 
 	private Double latitude;

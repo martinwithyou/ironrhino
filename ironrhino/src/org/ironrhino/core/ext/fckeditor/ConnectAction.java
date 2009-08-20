@@ -19,6 +19,8 @@ import org.w3c.dom.Node;
 
 public class ConnectAction extends UploadAction {
 
+	private static final long serialVersionUID = -8800258885212850632L;
+
 	private String command;
 
 	private String newFolderName;

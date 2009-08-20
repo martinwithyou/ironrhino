@@ -16,6 +16,8 @@ import org.ironrhino.pms.support.CategoryTreeControl;
 
 public class CategoryAction extends BaseAction {
 
+	private static final long serialVersionUID = 8576058148393322253L;
+
 	private Category category;
 
 	private Integer parentId;

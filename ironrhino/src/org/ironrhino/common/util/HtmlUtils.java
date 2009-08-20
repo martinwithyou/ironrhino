@@ -58,6 +58,9 @@ public class HtmlUtils {
 	public static void parseInnerHTML(final Map<String, String> map, String html)
 			throws Exception {
 		Parser.createParser(html, "UTF-8").parse(new NodeFilter() {
+
+			private static final long serialVersionUID = 5669597261933421020L;
+
 			public boolean accept(Node node) {
 				if (node instanceof Tag) {
 					Tag tag = (Tag) node;

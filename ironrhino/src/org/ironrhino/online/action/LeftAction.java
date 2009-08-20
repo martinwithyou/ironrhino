@@ -7,6 +7,8 @@ import org.ironrhino.pms.support.CategoryTreeControl;
 @AutoConfig(namespace = "/")
 public class LeftAction extends BaseAction {
 
+	private static final long serialVersionUID = 6640138055634199058L;
+
 	private transient CategoryTreeControl categoryTreeControl;
 
 	public CategoryTreeControl getCategoryTreeControl() {

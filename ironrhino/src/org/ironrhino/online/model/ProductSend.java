@@ -4,8 +4,9 @@ import java.util.Date;
 
 import org.ironrhino.core.model.BaseEntity;
 
-
 public class ProductSend extends BaseEntity {
+
+	private static final long serialVersionUID = 3514967763784546633L;
 
 	private String username;
 

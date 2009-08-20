@@ -25,6 +25,9 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 
 @RecordAware
 public class Account extends BaseEntity implements UserDetails, Recordable {
+
+	private static final long serialVersionUID = -6696796299386961371L;
+
 	@NaturalId
 	private String username;
 

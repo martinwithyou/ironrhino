@@ -8,6 +8,8 @@ import org.ironrhino.core.model.BaseEntity;
 @RecordAware
 public class Announcement extends BaseEntity {
 
+	private static final long serialVersionUID = 749266475464604388L;
+
 	private String title;
 
 	private String content;

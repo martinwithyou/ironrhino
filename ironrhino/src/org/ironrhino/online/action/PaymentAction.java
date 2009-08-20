@@ -25,6 +25,8 @@ import org.ironrhino.online.service.OrderManager;
 @AutoConfig(namespace = "/")
 public class PaymentAction extends BaseAction {
 
+	private static final long serialVersionUID = 3198870174459303159L;
+
 	public static final Log log = LogFactory.getLog(PaymentAction.class);
 
 	private transient OrderManager orderManager;

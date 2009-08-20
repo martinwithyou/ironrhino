@@ -23,15 +23,17 @@ import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 public class GroupAction extends BaseAction {
 
+	private static final long serialVersionUID = 4914071051406345784L;
+
 	private Group group;
 
 	private ResultPage<Group> resultPage;
 
 	private String rolesAsString;
 
-	private GroupManager groupManager;
+	private transient GroupManager groupManager;
 
-	private RoleManager roleManager;
+	private transient RoleManager roleManager;
 
 	public Group getGroup() {
 		return group;

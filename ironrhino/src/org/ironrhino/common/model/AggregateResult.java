@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class AggregateResult implements Serializable {
 
+	private static final long serialVersionUID = -4526897485932692316L;
+
 	private Object principal;
 
 	private Number average;

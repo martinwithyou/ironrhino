@@ -6,6 +6,8 @@ import org.springframework.mail.SimpleMailMessage;
 
 public class SimpleMailMessageWrapper implements Serializable {
 
+	private static final long serialVersionUID = 1654838401432724325L;
+
 	private SimpleMailMessage simpleMailMessage;
 
 	private boolean useHtmlFormat = true;

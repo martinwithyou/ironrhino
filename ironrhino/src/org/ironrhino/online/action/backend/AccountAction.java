@@ -15,6 +15,8 @@ import org.ironrhino.online.service.AccountManager;
 @AutoConfig
 public class AccountAction extends BaseAction {
 
+	private static final long serialVersionUID = 4785815961966655174L;
+
 	private Account account;
 
 	private ResultPage<Account> resultPage;
@@ -25,7 +27,7 @@ public class AccountAction extends BaseAction {
 
 	private String password;
 
-	private AccountManager accountManager;
+	private transient AccountManager accountManager;
 
 	public String getPassword() {
 		return password;

@@ -14,11 +14,13 @@ import org.ironrhino.online.service.OrderManager;
 @AutoConfig
 public class OrderAction extends BaseAction {
 
-	private OrderManager orderManager;
+	private static final long serialVersionUID = 2943946788569857928L;
 
 	private Order order;
 
 	private ResultPage<Order> resultPage;
+
+	private transient OrderManager orderManager;
 
 	public Order getOrder() {
 		return order;

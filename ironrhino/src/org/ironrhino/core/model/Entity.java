@@ -1,6 +1,5 @@
 package org.ironrhino.core.model;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -9,6 +8,8 @@ import org.ironrhino.common.util.AnnotationUtils;
 import org.ironrhino.core.metadata.NaturalId;
 
 public abstract class Entity implements Persistable {
+
+	private static final long serialVersionUID = 5366738895214161098L;
 
 	@Override
 	public int hashCode() {

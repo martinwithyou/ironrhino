@@ -17,9 +17,11 @@ import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 @AutoConfig(namespace = "/")
 public class FeedbackAction extends BaseAction {
 
+	private static final long serialVersionUID = 7297247656451307758L;
+
 	private Feedback feedback;
 
-	private BaseManager<Feedback> baseManager;
+	private transient BaseManager<Feedback> baseManager;
 
 	public Feedback getFeedback() {
 		return feedback;

@@ -13,6 +13,9 @@ import org.ironrhino.core.model.BaseEntity;
 @RecordAware
 @AutoConfig
 public class Group extends BaseEntity {
+
+	private static final long serialVersionUID = 4843366757458708882L;
+
 	@NaturalId
 	private String name;
 

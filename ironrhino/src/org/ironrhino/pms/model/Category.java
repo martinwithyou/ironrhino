@@ -21,6 +21,9 @@ import org.ironrhino.core.model.Secured;
 @Searchable(root = false, alias = "category")
 @AutoConfig
 public class Category extends BaseTreeableEntity<Category> implements Secured {
+
+	private static final long serialVersionUID = 6550078798855703442L;
+
 	@NaturalId
 	@SearchableProperty
 	private String code;

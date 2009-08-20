@@ -17,7 +17,9 @@ import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 @AutoConfig(namespace = "/backend")
 public class ChangePasswordAction extends BaseAction {
 
-	protected Log log = LogFactory.getLog(getClass());
+	private static final long serialVersionUID = -3252241995437692335L;
+
+	protected static Log log = LogFactory.getLog(ChangePasswordAction.class);
 
 	private String currentPassword;
 
@@ -25,7 +27,7 @@ public class ChangePasswordAction extends BaseAction {
 
 	private String confirmPassword;
 
-	private UserManager userManager;
+	private transient UserManager userManager;
 
 	public String getConfirmPassword() {
 		return confirmPassword;

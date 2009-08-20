@@ -4,6 +4,9 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.BaseEntity;
 
 public class SearchHitsHistory extends BaseEntity {
+
+	private static final long serialVersionUID = -7107753132364748415L;
+
 	@NaturalId
 	private String keyword;
 

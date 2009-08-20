@@ -21,6 +21,8 @@ import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 public class UserAction extends BaseAction {
 
+	private static final long serialVersionUID = -302766917154104461L;
+
 	private User user;
 
 	private ResultPage<User> resultPage;
@@ -33,7 +35,7 @@ public class UserAction extends BaseAction {
 
 	private String confirmPassword;
 
-	private UserManager userManager;
+	private transient UserManager userManager;
 
 	public String getGroupsAsString() {
 		return groupsAsString;

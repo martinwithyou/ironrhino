@@ -16,9 +16,11 @@ import org.ironrhino.online.model.ProductFavorite;
 @AutoConfig(namespace = "/account")
 public class FavoriteAction extends BaseAction {
 
+	private static final long serialVersionUID = 4990217703473816737L;
+
 	private ResultPage<ProductFavorite> resultPage;
 
-	private BaseManager<ProductFavorite> baseManager;
+	private transient BaseManager<ProductFavorite> baseManager;
 
 	public ResultPage<ProductFavorite> getResultPage() {
 		return resultPage;

@@ -11,6 +11,8 @@ import com.opensymphony.xwork2.ActionSupport;
 
 public class UploadAction extends ActionSupport {
 
+	private static final long serialVersionUID = 790083153516670340L;
+
 	protected String baseDir = "/uploadfiles/";
 
 	protected String type = "file";
@@ -73,7 +75,7 @@ public class UploadAction extends ActionSupport {
 		String currentDirPath = ServletActionContext.getServletContext()
 				.getRealPath(baseDir + type);
 		File dir = new File(currentDirPath);
-		if(!dir.exists()&&!dir.mkdirs())
+		if (!dir.exists() && !dir.mkdirs())
 			return NONE;
 		String retVal = "0";
 		String newName = "";

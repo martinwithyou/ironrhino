@@ -9,6 +9,8 @@ import org.ironrhino.core.metadata.NotInJson;
 public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		AbstractTreeableEntity<T> implements Ordered {
 
+	private static final long serialVersionUID = 2462271646391940930L;
+
 	protected int displayOrder;
 
 	protected T parent;

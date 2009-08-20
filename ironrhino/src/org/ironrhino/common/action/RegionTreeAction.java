@@ -13,6 +13,8 @@ import org.ironrhino.core.metadata.JsonConfig;
 @AutoConfig(namespace = "/", actionName = "region")
 public class RegionTreeAction extends BaseAction {
 
+	private static final long serialVersionUID = -1333891551369466096L;
+
 	private Collection<Region> children;
 
 	private transient RegionTreeControl regionTreeControl;

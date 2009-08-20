@@ -20,6 +20,8 @@ import com.opensymphony.xwork2.inject.Inject;
 
 public class AutoConfigResult extends FreemarkerResult {
 
+	private static final long serialVersionUID = -2277156996891287055L;
+
 	public static final String DEFAULT_JSP_LOCATION = "/WEB-INF/view/jsp";
 
 	public static final String DEFAULT_FTL_LOCATION = "/WEB-INF/view/ftl";

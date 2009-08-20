@@ -5,8 +5,10 @@ import java.util.Date;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.BaseEntity;
 
-
 public class ProductScore extends BaseEntity {
+
+	private static final long serialVersionUID = 398695275541790536L;
+
 	@NaturalId
 	private String username;
 

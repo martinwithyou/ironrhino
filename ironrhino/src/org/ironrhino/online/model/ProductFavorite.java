@@ -5,8 +5,10 @@ import java.util.Date;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.BaseEntity;
 
-
 public class ProductFavorite extends BaseEntity {
+
+	private static final long serialVersionUID = 2682396354291685790L;
+
 	@NaturalId
 	private String username;
 

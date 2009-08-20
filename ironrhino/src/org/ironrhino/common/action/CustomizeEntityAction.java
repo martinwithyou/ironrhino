@@ -13,6 +13,8 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 @AutoConfig
 public class CustomizeEntityAction extends BaseAction {
 
+	private static final long serialVersionUID = 1273888244881893724L;
+
 	private transient CustomizableEntityChanger customizableEntityChanger;
 
 	private String entityClassName;

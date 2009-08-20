@@ -21,6 +21,8 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 @RecordAware
 public class Order extends BaseEntity implements Recordable {
 
+	private static final long serialVersionUID = 4871379552237131341L;
+
 	@NaturalId
 	private String code;
 

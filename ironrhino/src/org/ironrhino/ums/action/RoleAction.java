@@ -20,13 +20,15 @@ import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 public class RoleAction extends BaseAction {
 
+	private static final long serialVersionUID = -3477615141477502279L;
+
 	protected static final Log log = LogFactory.getLog(RoleAction.class);
 
 	private Role role;
 
 	private ResultPage<Role> resultPage;
 
-	private RoleManager roleManager;
+	private transient RoleManager roleManager;
 
 	public Role getRole() {
 		return role;

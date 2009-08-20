@@ -10,6 +10,8 @@ import org.hibernate.criterion.Restrictions;
 
 public class QueryForm implements Serializable {
 
+	private static final long serialVersionUID = 834165502921095177L;
+
 	private String keyword;
 
 	private Status status;

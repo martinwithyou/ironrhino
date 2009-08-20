@@ -13,6 +13,8 @@ import org.ironrhino.core.model.BaseEntity;
 @AutoConfig
 public class Role extends BaseEntity {
 
+	private static final long serialVersionUID = -7214914651138459820L;
+
 	@NaturalId
 	private String name;
 

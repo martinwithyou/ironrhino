@@ -8,15 +8,16 @@ import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.compass.core.support.search.CompassSearchResults;
 import org.ironrhino.common.model.AggregateResult;
 import org.ironrhino.common.util.NumberUtils;
+import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.online.support.SearchHitsControl;
 
-import com.opensymphony.xwork2.ActionSupport;
-
 @AutoConfig(namespace = "/")
-public class SearchAction extends ActionSupport {
+public class SearchAction extends BaseAction {
+
+	private static final long serialVersionUID = -605092283512211959L;
 
 	private String q;
 

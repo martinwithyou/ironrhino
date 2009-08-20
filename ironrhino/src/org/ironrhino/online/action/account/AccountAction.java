@@ -59,13 +59,15 @@ import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 public class AccountAction extends BaseAction {
 
+	private static final long serialVersionUID = 5768065836650582081L;
+
 	public static final String TARGET_URL_IN_SESSION = "targetUrl";
 	public static final String OPENID_DISCOVERY_IN_SESSION = "openid_discovry";
 	public static final String OPENID_IN_SESSION = "openid";
 	public static final String EMAIL_IN_SESSION = "email";
 	public static final String OPENID_IN_COOKIE = "OIC";
 
-	protected Log log = LogFactory.getLog(getClass());
+	protected static Log log = LogFactory.getLog(AccountAction.class);
 
 	private Account account;
 

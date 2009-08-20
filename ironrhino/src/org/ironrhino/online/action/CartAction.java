@@ -13,6 +13,8 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 @AutoConfig(namespace = "/")
 public class CartAction extends BaseAction {
 
+	private static final long serialVersionUID = 2090481459995236536L;
+
 	// quantity
 	private int quantity = 1;
 

@@ -12,6 +12,8 @@ import org.hibernate.criterion.Order;
 
 public class ResultPage<T> implements Serializable {
 
+	private static final long serialVersionUID = -3653886488085413894L;
+
 	public static final int MAX_RECORDS_PER_PAGE = 1000;
 
 	public static final int DEFAULT_PAGE_SIZE = 10;

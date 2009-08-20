@@ -4,8 +4,9 @@ import java.util.Date;
 
 import org.ironrhino.core.model.BaseEntity;
 
-
 public class LoginRecord extends BaseEntity {
+
+	private static final long serialVersionUID = 7951996396426076387L;
 
 	private String username;
 

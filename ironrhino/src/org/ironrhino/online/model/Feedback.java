@@ -6,6 +6,8 @@ import org.ironrhino.core.model.BaseEntity;
 
 public class Feedback extends BaseEntity {
 
+	private static final long serialVersionUID = -6411648866122045952L;
+
 	private String username;
 
 	private String name;

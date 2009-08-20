@@ -23,6 +23,7 @@ import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
 public class BaseAction extends ActionSupport {
 
+	private static final long serialVersionUID = -3183957331611790404L;
 	public static final String LIST = "list";
 	public static final String VIEW = "view";
 	public static final String REFERER = "referer";

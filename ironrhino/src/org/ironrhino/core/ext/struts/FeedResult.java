@@ -15,6 +15,8 @@ import com.sun.syndication.io.SyndFeedOutput;
 
 public class FeedResult implements Result {
 
+	private static final long serialVersionUID = -488409829847617499L;
+
 	private String feedName = "feed";
 
 	private String feedType;

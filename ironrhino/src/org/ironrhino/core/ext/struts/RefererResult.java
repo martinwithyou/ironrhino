@@ -12,6 +12,8 @@ import com.opensymphony.xwork2.Result;
 
 public class RefererResult implements Result {
 
+	private static final long serialVersionUID = 6487995341022610712L;
+
 	public static final String INCLUDE_QUERY_STRING = "_include_query_string_";
 
 	private boolean includeQueryString = false;

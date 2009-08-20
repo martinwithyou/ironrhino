@@ -11,6 +11,7 @@ import org.springframework.aop.support.DelegatingIntroductionInterceptor;
 public class EditAwareMixin extends DelegatingIntroductionInterceptor implements
 		EditAware {
 
+	private static final long serialVersionUID = 3115852395270650841L;
 	private Map map = new HashMap();
 
 	public Object getOldValue(String propertyName) {

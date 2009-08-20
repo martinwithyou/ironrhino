@@ -20,6 +20,8 @@ import java.io.Serializable;
 import com.google.gson.annotations.SerializedName;
 
 public class Tooltip implements Serializable {
+
+	private static final long serialVersionUID = 3867120511555479609L;
 	@SerializedName(value = "mouse")
 	private Type type = null;
 	private Boolean shadow;

@@ -7,6 +7,8 @@ import org.apache.commons.lang.StringUtils;
 
 public class Value implements Serializable {
 
+	private static final long serialVersionUID = 3432914727431442150L;
+
 	private final AtomicLong longValue;
 
 	private final AtomicLong doubleValue;
@@ -60,7 +62,8 @@ public class Value implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.valueOf(getLongValue()) + "," + String.valueOf(getDoubleValue());
+		return String.valueOf(getLongValue()) + ","
+				+ String.valueOf(getDoubleValue());
 	}
 
 	public static Value fromString(String s) {

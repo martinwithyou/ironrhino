@@ -12,6 +12,8 @@ import org.ironrhino.core.model.BaseEntity;
 @AutoConfig
 public class Setting extends BaseEntity {
 
+	private static final long serialVersionUID = -8352037603261222984L;
+
 	@NaturalId
 	private String key = "";
 

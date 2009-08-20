@@ -11,6 +11,8 @@ import org.apache.struts2.ServletActionContext;
 
 public class CacheTag extends BodyTagSupport {
 
+	private static final long serialVersionUID = -6340831801836525319L;
+
 	private String key = null;
 
 	private String timeToLive = CacheContext.DEFAULT_TIME_TO_LIVE;

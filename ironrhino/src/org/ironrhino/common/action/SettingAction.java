@@ -12,9 +12,11 @@ import org.ironrhino.core.service.BaseManager;
 
 public class SettingAction extends BaseAction {
 
+	private static final long serialVersionUID = -7824355496392523420L;
+
 	private Setting setting;
 
-	private BaseManager<Setting> baseManager;
+	private transient BaseManager<Setting> baseManager;
 
 	private Collection<Setting> list;
 

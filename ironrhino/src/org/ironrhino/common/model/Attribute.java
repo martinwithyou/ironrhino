@@ -8,6 +8,8 @@ import org.compass.annotations.SearchableProperty;
 @Searchable(root = false, alias = "attribute")
 public class Attribute implements Serializable {
 
+	private static final long serialVersionUID = 3709022318256011161L;
+
 	private String name;
 
 	private String value;

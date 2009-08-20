@@ -13,13 +13,15 @@ import org.ironrhino.core.service.BaseManager;
 
 public class RegionAction extends BaseAction {
 
+	private static final long serialVersionUID = -4643055307938016102L;
+
 	private Region region;
 
 	private Integer parentId;
 
 	private String rolesAsString;
 
-	private BaseManager<Region> baseManager;
+	private transient BaseManager<Region> baseManager;
 
 	private Collection<Region> list;
 

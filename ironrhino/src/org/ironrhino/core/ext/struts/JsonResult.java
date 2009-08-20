@@ -27,9 +27,11 @@ import com.opensymphony.xwork2.inject.Inject;
 
 public class JsonResult implements Result {
 
+	private static final long serialVersionUID = 5984356746581381755L;
+
 	private String encoding = "UTF-8";
 
-	protected ActionMapper actionMapper;
+	protected transient ActionMapper actionMapper;
 
 	@Inject(StrutsConstants.STRUTS_I18N_ENCODING)
 	public void setEncoding(String val) {

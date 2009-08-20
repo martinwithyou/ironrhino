@@ -19,6 +19,9 @@ import org.springframework.security.userdetails.UserDetails;
 @RecordAware
 @AutoConfig
 public class User extends BaseEntity implements UserDetails, Recordable {
+
+	private static final long serialVersionUID = -2173119394276547080L;
+
 	@NaturalId
 	private String username;
 

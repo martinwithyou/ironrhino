@@ -8,7 +8,9 @@ import org.ironrhino.online.service.ProductFacade;
 @AutoConfig(namespace = "/")
 public class IndexAction extends BaseAction {
 
-	private ProductFacade productFacade;
+	private static final long serialVersionUID = -8007101751932155905L;
+	
+	private transient ProductFacade productFacade;
 
 	public ProductFacade getProductFacade() {
 		return productFacade;

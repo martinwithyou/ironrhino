@@ -7,6 +7,9 @@ import org.ironrhino.core.metadata.NotInCopy;
 
 public abstract class AbstractTreeableEntity<T extends AbstractTreeableEntity>
 		extends Entity implements Treeable<T> {
+
+	private static final long serialVersionUID = -1883496335563461601L;
+
 	private Integer id;
 
 	private String fullId;
