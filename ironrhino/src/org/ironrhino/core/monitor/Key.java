@@ -8,7 +8,7 @@ public class Key implements Serializable, Comparable<Key> {
 
 	private static final long serialVersionUID = -4752654130307409656L;
 
-	private String namespace;
+	private String namespace = "";
 
 	private String[] names;
 
@@ -135,7 +135,7 @@ public class Key implements Serializable, Comparable<Key> {
 		if (array1.length > 1)
 			cum = !array1[1].equals("0");
 		String[] array2 = array1[0].split(":");
-		String namespace = null;
+		String namespace = "";
 		String names = null;
 		if (array2.length == 1) {
 			names = array2[0];
