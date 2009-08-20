@@ -8,8 +8,7 @@
 	method="post">
 	<@s.textfield label="%{getText('name')}" name="order.addressee.name"
 		cssClass="required" />
-	<@s.textfield label="%{getText('address')}" name="address"
-		id="order.addressee.address" cssClass="required">
+	<@s.textfield label="%{getText('address')}" id="address" name="order.addressee.address" cssClass="required">
 		<@s.param name="after">
 			<span class="link" onclick="Region.select('address')">select</span>
 		</@s.param>
@@ -23,5 +22,4 @@
 </@s.form>
 </body>
 </html></#escape>
-
 
