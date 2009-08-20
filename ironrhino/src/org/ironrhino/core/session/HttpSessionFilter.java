@@ -35,12 +35,6 @@ public class HttpSessionFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 		// non struts action
 		HttpServletRequest req = (HttpServletRequest) request;
-		String uri = req.getRequestURI();
-		if (uri.indexOf('.') > 0) {
-			chain.doFilter(request, response);
-			return;
-		}
-
 		HttpContext httpContext = new HttpContext((HttpServletRequest) request,
 				(HttpServletResponse) response, servletContext);
 		HttpWrappedRequest httpRequest = new HttpWrappedRequest(req,
