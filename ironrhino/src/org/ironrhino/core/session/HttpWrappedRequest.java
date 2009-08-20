@@ -75,4 +75,9 @@ public class HttpWrappedRequest extends HttpServletRequestWrapper {
 		return requestedSessionIdFromURL;
 	}
 
+	@Override
+	public boolean isRequestedSessionIdValid() {
+		return true;
+	}
+
 }
