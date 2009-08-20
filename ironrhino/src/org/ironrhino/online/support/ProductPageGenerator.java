@@ -57,6 +57,12 @@ public class ProductPageGenerator implements ApplicationListener {
 
 	private Lock lock = new ReentrantLock();
 
+	private boolean serverSide;
+
+	public void setServerSide(boolean serverSide) {
+		this.serverSide = serverSide;
+	}
+
 	public String getBase() {
 		return base;
 	}
@@ -123,51 +129,53 @@ public class ProductPageGenerator implements ApplicationListener {
 
 	// use freemarker template
 	public void generate(Product product) throws IOException {
-		Writer out = null;
-		try {
-			out = new BufferedWriter(
-					new OutputStreamWriter(new FileOutputStream(new File(
-							resourceLoader.getResource(directory).getFile(),
-							product.getCode() + ".html")), "UTF-8"));
-			Map<String, Product> model = new HashMap<String, Product>(1);
-			model.put("product", product);
-			getTemplate().process(model, out);
-		} catch (Exception ex) {
-			log.error("Error when generate static page for product["
-					+ product.getCode() + "]", ex);
-		} finally {
-			if (out != null)
-				out.close();
-		}
-	}
-
-	// use jsp template
-	public void generate2(Product product) throws IOException {
-		BufferedReader reader = null;
-		BufferedWriter writer = null;
-		try {
-			URL url = new URL(base + "/product/view/" + product.getCode());
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.connect();
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK)
-				return;
-			reader = new BufferedReader(new InputStreamReader(conn
-					.getInputStream(), "UTF-8"));
-			writer = new BufferedWriter(
-					new OutputStreamWriter(new FileOutputStream(new File(
-							resourceLoader.getResource(directory).getFile(),
-							product.getCode() + ".html")), "UTF-8"));
-			String line = null;
-			while ((line = reader.readLine()) != null)
-				writer.write(line + "\n");
-		} catch (Exception ex) {
-			log.error("Error when generate static page for product["
-					+ product.getCode() + "]", ex);
-		} finally {
-			if (reader != null)
-				reader.close();
-			if (writer != null)
-				writer.close();
+		if (!serverSide) {
+			Writer out = null;
+			try {
+				out = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(new File(resourceLoader
+								.getResource(directory).getFile(), product
+								.getCode()
+								+ ".html")), "UTF-8"));
+				Map<String, Product> model = new HashMap<String, Product>(1);
+				model.put("product", product);
+				getTemplate().process(model, out);
+			} catch (Exception ex) {
+				log.error("Error when generate static page for product["
+						+ product.getCode() + "]", ex);
+			} finally {
+				if (out != null)
+					out.close();
+			}
+		} else {
+			BufferedReader reader = null;
+			BufferedWriter writer = null;
+			try {
+				URL url = new URL(base + "/product/view/" + product.getCode());
+				HttpURLConnection conn = (HttpURLConnection) url
+						.openConnection();
+				conn.connect();
+				if (conn.getResponseCode() != HttpURLConnection.HTTP_OK)
+					return;
+				reader = new BufferedReader(new InputStreamReader(conn
+						.getInputStream(), "UTF-8"));
+				writer = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(new File(resourceLoader
+								.getResource(directory).getFile(), product
+								.getCode()
+								+ ".html")), "UTF-8"));
+				String line = null;
+				while ((line = reader.readLine()) != null)
+					writer.write(line + "\n");
+			} catch (Exception ex) {
+				log.error("Error when generate static page for product["
+						+ product.getCode() + "]", ex);
+			} finally {
+				if (reader != null)
+					reader.close();
+				if (writer != null)
+					writer.close();
+			}
 		}
 	}
 

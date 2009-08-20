@@ -29,7 +29,6 @@
 		class="org.ironrhino.common.support.BatchExecutor">
 		<property name="commands">
 			<list>
-				<value>productPageGenerator.generate()</value>
 				<value>monitorControl.archive()</value>
 				<value>searchHitsControl.consume()</value>
 			</list>
@@ -53,10 +52,7 @@
 		<property name="commands">
 			<list>
 				<value>productManager.updateNewArrival()</value>
-				<value>newArrivalProductNotifier.send()</value>
-				<value>
-					accountManager.deleteDisabledAccount()
-				</value>
+				<value>accountManager.deleteDisabledAccount()</value>
 			</list>
 		</property>
 	</bean>

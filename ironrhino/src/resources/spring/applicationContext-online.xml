@@ -13,9 +13,6 @@
 		scope="session">
 		<aop:scoped-proxy />
 	</bean>
-	<bean id="productPageGenerator"
-		class="org.ironrhino.online.support.ProductPageGenerator"
-		p:base="${base}" />
 	<bean id="newArrivalProductNotifier"
 		class="org.ironrhino.online.support.NewArrivalProductNotifier"
 		p:subject="${newArrivalProductNotifier.subject}" />
