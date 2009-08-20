@@ -5,11 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.monitor.Key;
@@ -19,7 +18,7 @@ import org.ironrhino.core.monitor.Value;
 public class CumulativeAnalyzer extends
 		AbstractAnalyzer<Map<String, List<TreeNode>>> {
 
-	private Map<String, List<TreeNode>> result = new HashMap<String, List<TreeNode>>();
+	private Map<String, List<TreeNode>> result = new TreeMap<String, List<TreeNode>>();
 
 	public CumulativeAnalyzer() throws FileNotFoundException {
 		super();
@@ -139,23 +138,6 @@ public class CumulativeAnalyzer extends
 				TreeWalker.walk(topNode, vistor);
 			}
 		}
-		// sort map by namespace
-		Map<String, List<TreeNode>> linked = new LinkedHashMap<String, List<TreeNode>>();
-		List<String> namespaces = new ArrayList();
-		namespaces.addAll(result.keySet());
-		Collections.sort(namespaces, new Comparator<String>() {
-			public int compare(String o1, String o2) {
-				if (o1 == null)
-					return -1;
-				if (o2 == null)
-					return 1;
-				return o1.compareTo(o2);
-			}
-
-		});
-		for (String namespace : namespaces)
-			linked.put(namespace, result.get(namespace));
-		result = linked;
 	}
 
 	int id;

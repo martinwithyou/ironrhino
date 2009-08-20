@@ -3,13 +3,11 @@ package org.ironrhino.core.monitor.analysis;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
@@ -19,7 +17,7 @@ public class PeriodAnalyzer extends AbstractAnalyzer<List<Value>> {
 
 	private List<Value> result = new ArrayList<Value>(24);
 
-	private Map<String, List<Value>> perHostResult = new HashMap<String, List<Value>>();
+	private Map<String, List<Value>> perHostResult = new TreeMap<String, List<Value>>();
 
 	private Key key;
 
@@ -113,17 +111,4 @@ public class PeriodAnalyzer extends AbstractAnalyzer<List<Value>> {
 		}
 	}
 
-	@Override
-	protected void postAnalyze() {
-		if (!perHostEnabled)
-			return;
-		// sort map;
-		Map<String, List<Value>> map = new LinkedHashMap<String, List<Value>>();
-		List<String> hosts = new ArrayList<String>(perHostResult.size());
-		hosts.addAll(perHostResult.keySet());
-		Collections.sort(hosts);
-		for (String host : hosts)
-			map.put(host, perHostResult.get(host));
-		perHostResult = map;
-	}
 }

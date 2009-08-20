@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -125,7 +125,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
 	// host,file pair
 	public static Map<String, File> getLogFile(Date date) {
-		final Map<String, File> map = new LinkedHashMap<String, File>();
+		final Map<String, File> map = new TreeMap<String, File>();
 		boolean today = DateUtils.isToday(date);
 		StringBuilder sb = new StringBuilder();
 		sb.append(MonitorSettings.SEPARATOR);
