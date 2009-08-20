@@ -1,4 +1,4 @@
-<#function btn id="" text="" onclick="" type="" class="" href="">
+<#function btn text="" onclick="" type="" id="" class="" href="">
 	<#if id!=''>
 	<#local _id=' id="'+id+'"'>
 	<#if text==''>
