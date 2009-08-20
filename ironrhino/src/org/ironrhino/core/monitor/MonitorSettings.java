@@ -21,7 +21,7 @@ public class MonitorSettings {
 
 	public static final String SEPARATOR = "_";
 
-	public static final String FILE_DIRECTORY = "logs";
+	public static final String FILE_DIRECTORY = "/logs/monitor";
 
 	public static final String STAT_LOG_FILE_NAME = "stat.log";
 
@@ -66,7 +66,7 @@ public class MonitorSettings {
 	}
 
 	public static File getLogFileDirectory() {
-		File dir = new File(System.getProperty("user.home"), FILE_DIRECTORY);
+		File dir = new File(System.getProperty("user.home") + FILE_DIRECTORY);
 		if (!dir.exists() && dir.mkdirs())
 			log.error("mkdir error:" + dir.getAbsolutePath());
 		return dir;

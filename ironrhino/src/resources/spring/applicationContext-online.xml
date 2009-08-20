@@ -13,9 +13,6 @@
 		scope="session">
 		<aop:scoped-proxy />
 	</bean>
-	<bean id="newArrivalProductNotifier"
-		class="org.ironrhino.online.support.NewArrivalProductNotifier"
-		p:subject="${newArrivalProductNotifier.subject}" />
 	<bean id="staticResourceFilter"
 		class="org.ironrhino.online.servlet.StaticResourceFilter" />
 	<bean id="searchHitsControl"
