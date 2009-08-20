@@ -42,6 +42,8 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	private boolean darty;
 
+	private boolean isnew;
+
 	private HttpSession target;
 
 	public HttpWrappedSession(HttpContext context,
@@ -51,7 +53,7 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 		this.sessionStoreManager = sessionStoreManager;
 		this.sessionId = sid;
 		if (StringUtils.isBlank(sessionId)) {
-			darty = true;
+			isnew = true;
 			createTime = System.currentTimeMillis();
 			sessionId = DigestUtils.md5Hex(salt + UUID.randomUUID().toString());
 		}
@@ -59,8 +61,9 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 	}
 
 	public void save() {
-		if (darty) {
+		if (darty) 
 			sessionStoreManager.save(this);
+		if (isnew) {
 			Cookie cookie = new Cookie(SESSION_ID, getId());
 			try {
 				String host = new URL(httpContext.getRequest().getRequestURL()
@@ -130,7 +133,7 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 	public boolean isNew() {
 		if (target != null)
 			return target.isNew();
-		return true;
+		return isnew;
 	}
 
 	public long getLastAccessedTime() {
