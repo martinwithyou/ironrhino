@@ -51,17 +51,18 @@
 </div>
 </div>
 
-
-<div id="left" style="float: left; width: 20%;">
-<div style="margin: 0 10px;"><@s.action name="left" executeResult="true" /></div>
-</div>
+<#if request.servletPath?starts_with('/product/') || request.servletPath?starts_with('/index')>
+<div id="left" style="float: left; width: 20%;"><div style="margin: 0 10px;"><@s.action name="left" executeResult="true" /></div></div>
+</#if>
 <div id="content" style="float: left; width: 60%;">
 <div id="message">
 <@s.actionerror cssClass="action_error" /><@s.actionmessage cssClass="action_message" /></div>
 <#noescape>${body}</#noescape></div>
+<#if request.servletPath?starts_with('/product/') || request.servletPath?starts_with('/index')>
 <div id="right" style="float: left; width: 20%;">
 <div style="margin: 0 10px;"><@s.action name="right" executeResult="true" /></div>
 </div>
+</#if>
 
 <div id="footer">
 <div class="text">

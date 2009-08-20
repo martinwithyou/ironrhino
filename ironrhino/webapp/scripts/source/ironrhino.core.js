@@ -640,7 +640,7 @@ var Region = {
 						p = p.parentNode.parentNode;
 					}
 				}
-				if ($('#' + Region.textid)[0].tagName == 'INPUT')
+				if ($('#' + Region.textid).attr('tagName') == 'INPUT')
 					$('#' + Region.textid).val(name);
 				else
 					$('#' + Region.textid).text(name);
