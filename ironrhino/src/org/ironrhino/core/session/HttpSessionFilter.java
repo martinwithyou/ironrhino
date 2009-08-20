@@ -41,15 +41,17 @@ public class HttpSessionFilter implements Filter {
 				httpContext, httpSessionManager);
 		BufferableResponseWrapper res = new BufferableResponseWrapper(
 				(HttpServletResponse) response);
-		//copy from org.springframework.web.context.request.ServletRequestListener 
+		// copy from
+		// org.springframework.web.context.request.ServletRequestListener
 		ServletRequestAttributes attributes = new ServletRequestAttributes(
 				httpRequest);
 		LocaleContextHolder.setLocale(request.getLocale());
 		RequestContextHolder.setRequestAttributes(attributes);
-		
+
 		chain.doFilter(httpRequest, res);
 
-		//copy from org.springframework.web.context.request.ServletRequestListener 
+		// copy from
+		// org.springframework.web.context.request.ServletRequestListener
 		ServletRequestAttributes threadAttributes = (ServletRequestAttributes) RequestContextHolder
 				.getRequestAttributes();
 		if (threadAttributes != null) {
@@ -63,7 +65,7 @@ public class HttpSessionFilter implements Filter {
 		if (attributes != null) {
 			attributes.requestCompleted();
 		}
-		
+
 		byte[] bytes = res.getContents();
 		if (bytes == null)
 			bytes = new byte[0];
@@ -73,7 +75,8 @@ public class HttpSessionFilter implements Filter {
 		}
 		response.setContentLength(bytes.length);
 		ServletOutputStream sos = response.getOutputStream();
-		sos.write(bytes);
+		if (bytes.length > 0)
+			sos.write(bytes);
 		sos.flush();
 		sos.close();
 	}
