@@ -12,6 +12,8 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 
 public class Model extends BaseEntity {
 
+	private static final long serialVersionUID = 2262572451135688507L;
+
 	@NaturalId
 	private String name;
 
