@@ -175,7 +175,7 @@ public class DailyRollingFileAppender extends FileAppender {
 
   RollingCalendar rc = new RollingCalendar();
 
-  int checkPeriod = TOP_OF_TROUBLE;
+//  int checkPeriod = TOP_OF_TROUBLE;
 
   // The gmtTimeZone is used only in computeCheckPeriod() method.
   static final TimeZone gmtTimeZone = TimeZone.getTimeZone("GMT");
@@ -328,8 +328,8 @@ public void activateOptions() {
     this.closeFile();
 
     File target  = new File(scheduledFilename);
-    if (target.exists()) {
-      target.delete();
+    if (target.exists()&&!target.delete()) {
+    	 LogLog.error("Failed to delete ["+target+"].");
     }
 
     File file = new File(fileName);
@@ -459,5 +459,11 @@ class RollingCalendar extends GregorianCalendar {
 	throw new IllegalStateException("Unknown periodicity type.");
     }
     return getTime();
+  }
+  public int hashCode(){
+	  return super.hashCode();
+  }
+  public boolean equals(Object obj){
+	  return super.equals(obj);
   }
 }

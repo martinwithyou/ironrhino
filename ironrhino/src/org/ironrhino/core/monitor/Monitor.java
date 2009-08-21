@@ -69,8 +69,7 @@ public class Monitor {
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
-
-		runWriteThread();
+		startNewThread();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -84,20 +83,25 @@ public class Monitor {
 	}
 
 	private static void runWriteThread() {
-		if (writeThread != null) {
-			try {
-				writeThread.interrupt();
-			} catch (Exception e) {
-				log.error("interrupt write thread error", e);
-			}
+		if (writeThread.isAlive())
+			return;
+		try {
+			writeThread.interrupt();
+		} catch (Exception e) {
+			log.error("interrupt write thread error", e);
 		}
+		startNewThread();
+	}
+
+	private static void startNewThread() {
 		writeThread = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
 					try {
 						timerLock.lock();
-						condition.await(MonitorSettings.getIntervalUnit(),
-								TimeUnit.SECONDS);
+						if (condition.await(MonitorSettings.getIntervalUnit(),
+								TimeUnit.SECONDS))
+							log.debug("await returns true");
 					} catch (Exception e) {
 						log.error("wait error", e);
 					} finally {
@@ -109,7 +113,6 @@ public class Monitor {
 
 		}, MonitorSettings.WRITETHREAD_NAME);
 		writeThread.start();
-
 	}
 
 	private static void write() {

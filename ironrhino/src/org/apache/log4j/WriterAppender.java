@@ -236,7 +236,7 @@ public
     if(enc != null) {
       try {
 	retval = new OutputStreamWriter(os, enc);
-      } catch(IOException e) {
+      } catch(Exception e) {
           if (e instanceof InterruptedIOException) {
               Thread.currentThread().interrupt();
           }

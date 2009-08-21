@@ -56,6 +56,9 @@ import org.hibernate.util.StringHelper;
  */
 public class Mappings implements Serializable {
 
+	
+	private static final long serialVersionUID = -4307984865523340463L;
+
 	private static final Logger log = LoggerFactory.getLogger(Mappings.class);
 
 	protected final Map classes;
@@ -369,6 +372,8 @@ public class Mappings implements Serializable {
 	}
 
 	static final class PropertyReference implements Serializable {
+		
+		private static final long serialVersionUID = 3889176656874121410L;
 		String referencedClass;
 		String propertyName;
 		boolean unique;
@@ -548,6 +553,8 @@ public class Mappings implements Serializable {
 	}
 
 	static public class ColumnNames implements Serializable {
+		
+		private static final long serialVersionUID = 6577622875363667180L;
 		//<String, String>
 		public Map logicalToPhysical = new HashMap();
 		//<String, String>
@@ -557,6 +564,8 @@ public class Mappings implements Serializable {
 	}
 
 	static public class TableDescription implements Serializable {
+		
+		private static final long serialVersionUID = -6667492832091103542L;
 		public TableDescription(String logicalName, Table denormalizedSupertable) {
 			this.logicalName = logicalName;
 			this.denormalizedSupertable = denormalizedSupertable;

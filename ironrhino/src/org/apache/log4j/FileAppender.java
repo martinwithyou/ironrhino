@@ -189,11 +189,7 @@ public class FileAppender extends WriterAppender {
   }
 
 
-  /** Returns the value of the <b>File</b> option. */
-  public
-  String getFile() {
-    return fileName;
-  }
+ 
 
   /**
      If the value of <b>File</b> is not <code>null</code>, then {@link

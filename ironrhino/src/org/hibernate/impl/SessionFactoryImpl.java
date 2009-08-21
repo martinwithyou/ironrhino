@@ -144,6 +144,7 @@ import org.hibernate.util.EmptyIterator;
  */
 public final class SessionFactoryImpl implements SessionFactory, SessionFactoryImplementor {
 
+	private static final long serialVersionUID = 300262210156139815L;
 	private static final Logger log = LoggerFactory.getLogger(SessionFactoryImpl.class);
 	private static final IdentifierGenerator UUID_GENERATOR = new UUIDHexGenerator();
 
@@ -198,6 +199,8 @@ public final class SessionFactoryImpl implements SessionFactory, SessionFactoryI
 		this.sqlFunctionRegistry = new SQLFunctionRegistry(settings.getDialect(), cfg.getSqlFunctions());
         this.eventListeners = listeners;
 		this.observer = observer != null ? observer : new SessionFactoryObserver() {
+			
+			private static final long serialVersionUID = -7573346933307506703L;
 			public void sessionFactoryCreated(SessionFactory factory) {
 			}
 			public void sessionFactoryClosed(SessionFactory factory) {

@@ -149,6 +149,9 @@ import org.hibernate.util.XMLHelper;
  */
 public class Configuration implements Serializable {
 
+	
+	private static final long serialVersionUID = -5719948705817315018L;
+
 	private static Logger log = LoggerFactory.getLogger( Configuration.class );
 
 	protected Map classes;
@@ -160,7 +163,7 @@ public class Configuration implements Serializable {
 	protected Map namedQueries;
 	protected Map namedSqlQueries;
 
-	private EntityTuplizerFactory entityTuplizerFactory;
+	private transient EntityTuplizerFactory entityTuplizerFactory;
 //	private ComponentTuplizerFactory componentTuplizerFactory; todo : HHH-3517 and HHH-1907
 
 	/**
@@ -177,7 +180,7 @@ public class Configuration implements Serializable {
 	private Interceptor interceptor;
 	private Properties properties;
 	private EntityResolver entityResolver;
-	private EntityNotFoundDelegate entityNotFoundDelegate;
+	private transient EntityNotFoundDelegate entityNotFoundDelegate;
 
 	protected transient XMLHelper xmlHelper;
 	protected transient Map typeDefs;

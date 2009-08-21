@@ -47,6 +47,8 @@ import org.hibernate.util.CollectionHelper;
  */
 public class Table implements RelationalModel, Serializable {
 
+	
+	private static final long serialVersionUID = -1458264361862795239L;
 	private String name;
 	private String schema;
 	private String catalog;
@@ -71,6 +73,8 @@ public class Table implements RelationalModel, Serializable {
 	private String comment;
 
 	static class ForeignKeyKey implements Serializable {
+		
+		private static final long serialVersionUID = 841825021874596460L;
 		String referencedClassName;
 		List columns;
 		List referencedColumns;
