@@ -5,12 +5,14 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.DataRoute;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
 
+@DataRoute("miscGroup")
 @AutoConfig(readonly = true)
 public class Stat extends KeyValuePair implements Persistable {
 

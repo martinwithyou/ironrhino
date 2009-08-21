@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface DataRoute {
 
-	String groupName();
+	String value();
 
 }

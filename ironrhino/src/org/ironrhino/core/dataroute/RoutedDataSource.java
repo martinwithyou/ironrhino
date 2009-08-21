@@ -45,7 +45,7 @@ public class RoutedDataSource extends AbstractDataSource {
 	public Connection getConnection(String username, String password)
 			throws SQLException {
 		DataSource ds = null;
-		String groupName = DataRouteContext.getGroupName();
+		String groupName = DataRouteContext.getName();
 		if (groupName != null) {
 			ds = routingMap.get(groupName);
 		} else {

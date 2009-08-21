@@ -6,7 +6,7 @@ public class DataRouteContext {
 
 	private static ThreadLocal<Boolean> readonly = new ThreadLocal<Boolean>();
 
-	private static ThreadLocal<String> groupName = new ThreadLocal<String>();
+	private static ThreadLocal<String> name = new ThreadLocal<String>();
 
 	public static void setReadonly(boolean bl) {
 		readonly.set(bl);
@@ -17,12 +17,12 @@ public class DataRouteContext {
 		return bl != null && bl.booleanValue();
 	}
 
-	public static void setGroupName(String s) {
-		groupName.set(s);
+	public static void setName(String s) {
+		name.set(s);
 	}
 
-	public static String getGroupName() {
-		return groupName.get();
+	public static String getName() {
+		return name.get();
 	}
 
 }
