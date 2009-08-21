@@ -2,7 +2,9 @@ package org.ironrhino.core.dataroute;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -12,23 +14,32 @@ import org.springframework.util.Assert;
 
 public class RoutedDataSource extends AbstractDataSource {
 
-	private GroupedDataSource mainGroup;
+	private DataSource mainGroup;
 
-	private List<GroupedDataSource> groups;
+	private Map<String, DataSource> routingMap;
 
-	public void setMainGroup(GroupedDataSource mainGroup) {
-		this.mainGroup = mainGroup;
+	// inject DataSource with groupName
+	public void setRoutingMap(Map<String, DataSource> map) {
+		if (routingMap != null)
+			throw new IllegalArgumentException("already injected by groupList");
+		this.routingMap = map;
 	}
 
-	public void setGroups(List<GroupedDataSource> groups) {
-		this.groups = groups;
+	// inject GroupedDataSource included groupName
+	public void setGroups(List<GroupedDataSource> list) {
+		if (routingMap != null)
+			throw new IllegalArgumentException("already injected by routingMap");
+		routingMap = new LinkedHashMap<String, DataSource>();
+		for (GroupedDataSource gds : list)
+			routingMap.put(gds.getGroupName(), gds);
+		mainGroup = list.get(0);
 	}
 
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
+		Assert.notEmpty(routingMap);
+		mainGroup = routingMap.values().iterator().next();
 		Assert.notNull(mainGroup);
-		if (groups != null)
-			groups.add(0, mainGroup);
 	}
 
 	public Connection getConnection(String username, String password)
@@ -36,12 +47,7 @@ public class RoutedDataSource extends AbstractDataSource {
 		DataSource ds = null;
 		String groupName = DataRouteContext.getGroupName();
 		if (groupName != null) {
-			for (GroupedDataSource d : groups) {
-				if (groupName.equals(d.getGroupName())) {
-					ds = d;
-					break;
-				}
-			}
+			ds = routingMap.get(groupName);
 		} else {
 			ds = mainGroup;
 		}

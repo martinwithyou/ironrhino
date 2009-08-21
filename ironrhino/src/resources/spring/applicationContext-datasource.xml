@@ -6,12 +6,22 @@
 
 	<bean id="dataSource"
 		class="org.ironrhino.core.dataroute.RoutedDataSource">
-		<property name="mainGroup" ref="mainGroup"/>
+		<!-- for GroupedDataSource-->
 		<property name="groups">
 			<list>
+				<ref local="mainGroup"/>
 				<ref local="miscGroup"/>
 			</list>
 		</property>
+		<!-- for general DataSource-->
+		<!--
+				<property name="routingMap">
+					<map>
+						<entry key="mainGroup" value-ref="mainGroup"/>
+						<entry key="miscGroup" value-ref="miscGroup"/>
+					</map>
+				</property>
+			-->
 	</bean>
 	
 	<bean id="mainGroup"
