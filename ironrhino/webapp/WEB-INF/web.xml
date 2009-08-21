@@ -88,7 +88,7 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>OpenSessionInViewFilter</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/backend/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CharacterEncodingFilter</filter-name>

@@ -46,18 +46,7 @@
 </ul>
 </div>
 
-
-<ul class="related_products" style="clear:both;">
-	<#list product.relatedProducts as var>
-		<li><img src="${base}/pic/${var.code}.small.jpg"
-			alt="${var.code}" class="product_list" /> <a
-			href="${base}/product/${var.code}.html">
-			${var.name}</a> <a href="${base}/cart/add/${var.code}"
-			class="ajax view" options="{replacement:'cart_items'}">放入购物车</a></li>
-	</#list>
-</ul>
-
-<div id="comments">
+<div id="comments" style="clear:both;">
 <ul>
 	<#list resultPage.result as var>
 		<li>${var.displayName} says:${var.content}</li>
