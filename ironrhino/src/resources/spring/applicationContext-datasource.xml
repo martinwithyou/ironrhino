@@ -3,58 +3,120 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="dataSource"
-		class="org.ironrhino.core.ext.spring.ReadWriteRouteDataSource">
-		<property name="readDataSourceNames">
-			<map>
-				<!-- dataSource beanName and RoundRobin weight -->
-				<entry  key="readDataSource1" value="1"/>
-				<entry  key="readDataSource2" value="2"/>
-				<entry  key="readDataSource3" value="3"/>
-			</map>
-		</property>
-		<property name="writeDataSourceNames">
-			<map>
-				<entry  key="writeDataSource1" value="1"/>
-				<entry  key="writeDataSource2" value="2"/>
-			</map>
-		</property>
 
+	<bean id="dataSource"
+		class="org.ironrhino.core.dataroute.RoutedDataSource">
+		<property name="mainGroup" ref="mainGroup"/>
+		<property name="groups">
+			<list>
+				<ref local="miscGroup"/>
+			</list>
+		</property>
 	</bean>
-	<bean id="defaultDataSource"
+	
+	<bean id="mainGroup"
+		class="org.ironrhino.core.dataroute.GroupedDataSource">
+		<property name="masterName" value="mainGroupMaster"/>
+		<property name="readSlaveNames">
+			<map>
+				<entry  key="mainGroupRead1" value="1"/>
+				<entry  key="mainGroupRead2" value="2"/>
+				<entry  key="mainGroupRead3" value="3"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="miscGroup"
+		class="org.ironrhino.core.dataroute.GroupedDataSource">
+		<property name="masterName" value="miscGroupMaster"/>
+		<property name="readSlaveNames">
+			<map>
+				<entry  key="miscGroupRead1" value="1"/>
+				<entry  key="miscGroupRead2" value="2"/>
+				<entry  key="miscGroupRead3" value="3"/>
+			</map>
+		</property>
+		<property name="writeSlaveNames">
+			<map>
+				<entry  key="miscGroupWrite1" value="1"/>
+				<entry  key="miscGroupWrite2" value="1"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="mainGroupMaster"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}"
 		p:driverClassName="${jdbc.driverClassName}"
 		p:poolPreparedStatements="true" />
-	<bean id="readDataSource1"
+	<bean id="mainGroupRead1"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}"
 		p:driverClassName="${jdbc.driverClassName}"
 		p:poolPreparedStatements="true" />
-	<bean id="readDataSource2"
+	<bean id="mainGroupRead2"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}"
 		p:driverClassName="${jdbc.driverClassName}"
 		p:poolPreparedStatements="true" />
-	<bean id="readDataSource3"
+	<bean id="mainGroupRead3"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}"
 		p:driverClassName="${jdbc.driverClassName}"
 		p:poolPreparedStatements="true" />
-	<bean id="writeDataSource1"
+	<bean id="mainGroupWrite1"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}"
 		p:driverClassName="${jdbc.driverClassName}"
 		p:poolPreparedStatements="true" />
-	<bean id="writeDataSource2"
+	<bean id="mainGroupWrite2"
 		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}"
 		p:driverClassName="${jdbc.driverClassName}"
 		p:poolPreparedStatements="true" />
+		
+		
+	<bean id="miscGroupMaster"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+	<bean id="miscGroupRead1"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+	<bean id="miscGroupRead2"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+	<bean id="miscGroupRead3"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+	<bean id="miscGroupWrite1"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+	<bean id="miscGroupWrite2"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+		p:url="${jdbc.url}" p:username="${jdbc.username}"
+		p:password="${jdbc.password}"
+		p:driverClassName="${jdbc.driverClassName}"
+		p:poolPreparedStatements="true" />
+
 </beans>

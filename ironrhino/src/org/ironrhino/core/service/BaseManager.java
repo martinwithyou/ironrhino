@@ -17,7 +17,9 @@ public interface BaseManager<T extends Persistable> {
 
 	public void setSessionFactory(SessionFactory sessionFactory);
 
-	public void setEntityClass(Class<? extends Persistable> clazz);
+	public Class<T> getEntityClass();
+
+	public void setEntityClass(Class<T> clazz);
 
 	public void save(T obj);
 

@@ -36,7 +36,7 @@
 		</dynamic-component>
 		<many-to-one name="category" column="categoryId" />
 		<list name="tags" table="pms_productTag" fetch="subselect"
-			cascade="all">
+			cascade="all" lazy="false">
 			<key column="productId" />
 			<list-index column="lineNumber" />
 			<composite-element
@@ -45,7 +45,7 @@
 			</composite-element>
 		</list>
 		<list name="attributes" table="pms_productAttribute"
-			fetch="subselect" cascade="all">
+			fetch="subselect" cascade="all" lazy="false">
 			<key column="productId" />
 			<list-index column="lineNumber" />
 			<composite-element

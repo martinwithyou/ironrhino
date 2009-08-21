@@ -47,6 +47,12 @@ public class Key implements Serializable, Comparable<Key> {
 		names = strings;
 	}
 
+	public Key(String namespace, boolean cumulative, String... strings) {
+		this.namespace = namespace;
+		this.cumulative = cumulative;
+		names = strings;
+	}
+
 	public int getIntervalMultiple() {
 		return intervalMultiple;
 	}
@@ -83,9 +89,9 @@ public class Key implements Serializable, Comparable<Key> {
 		newkeys[this.names.length] = subkey;
 		return new Key(namespace, intervalMultiple, cumulative, newkeys);
 	}
-	
+
 	public boolean isAncestorOf(Key descendant) {
-		return isAncestorOf(descendant,false);
+		return isAncestorOf(descendant, false);
 	}
 
 	public boolean isAncestorOf(Key descendant, boolean excludeSelf) {

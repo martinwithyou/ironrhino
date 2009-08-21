@@ -46,7 +46,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	protected Class<T> entityClass;
 
-	private ThreadLocal<Class> entityClassHolder = new ThreadLocal<Class>();
+	private ThreadLocal<Class<T>> entityClassHolder = new ThreadLocal<Class<T>>();
 
 	protected SessionFactory sessionFactory;
 
@@ -61,15 +61,15 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			entityClass = clazz;
 	}
 
-	public BaseManagerImpl(Class clazz) {
+	public BaseManagerImpl(Class<T> clazz) {
 		entityClass = clazz;
 	}
 
-	public void setEntityClass(Class clazz) {
+	public void setEntityClass(Class<T> clazz) {
 		entityClassHolder.set(clazz);
 	}
 
-	private Class getEntityClass() {
+	public Class<T> getEntityClass() {
 		if (entityClass != null)
 			return entityClass;
 		return entityClassHolder.get();
