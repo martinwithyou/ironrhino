@@ -1,23 +1,14 @@
 package org.ironrhino.common.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.NotInCopy;
-import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.BaseTreeableEntity;
-import org.ironrhino.core.model.Secured;
 
 @PublishAware
 @AutoConfig
-public class Region extends BaseTreeableEntity<Region> implements Secured {
+public class Region extends BaseTreeableEntity<Region> {
 
 	private static final long serialVersionUID = 8878381261391688086L;
-
-	private Set<SimpleElement> roles = new HashSet<SimpleElement>(0);
 
 	private Double latitude;
 
@@ -50,26 +41,6 @@ public class Region extends BaseTreeableEntity<Region> implements Secured {
 	public Region(String name, int displayOrder) {
 		this.name = name;
 		this.displayOrder = displayOrder;
-	}
-
-	@NotInCopy
-	@NotInJson
-	public Set<SimpleElement> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<SimpleElement> roles) {
-		this.roles = roles;
-	}
-
-	@NotInCopy
-	@NotInJson
-	public String getRolesAsString() {
-		return StringUtils.join(roles.iterator(), ',');
-	}
-
-	public void setRolesAsString(String rolesAsString) {
-		SimpleElement.fillCollectionWithString(roles, rolesAsString);
 	}
 
 	@Override

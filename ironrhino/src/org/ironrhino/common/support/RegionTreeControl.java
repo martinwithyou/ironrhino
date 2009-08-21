@@ -6,10 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.ironrhino.common.model.Region;
-import org.ironrhino.common.model.SimpleElement;
-import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.common.util.BeanUtils;
-import org.ironrhino.common.util.ObjectFilter;
 import org.ironrhino.common.util.RegionUtils;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
@@ -37,24 +34,6 @@ public class RegionTreeControl implements ApplicationListener {
 
 	public Region getRegionTree() {
 		return regionTree;
-	}
-
-	public Region getPrivateRegionTree() {
-		return BeanUtils.deepClone(regionTree, new ObjectFilter() {
-			public boolean accept(Object object) {
-				Region region = (Region) object;
-				List<String> roleNames = AuthzUtils.getRoleNames();
-				for (SimpleElement n : region.getRoles()) {
-					if (roleNames.contains(n.getValue()))
-						return true;
-				}
-				return false;
-			}
-		});
-	}
-
-	public boolean checkPermission(Integer id) {
-		return getPrivateRegionTree().getDescendantOrSelfById(id) != null;
 	}
 
 	public Region parseByHost(String host) {

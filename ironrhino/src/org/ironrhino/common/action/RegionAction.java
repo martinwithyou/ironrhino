@@ -121,8 +121,6 @@ public class RegionAction extends BaseAction {
 			} else {
 				region.setName(temp.getName());
 				region.setDisplayOrder(temp.getDisplayOrder());
-				if (rolesAsString != null)
-					region.setRolesAsString(rolesAsString);
 			}
 		}
 		baseManager.save(region);

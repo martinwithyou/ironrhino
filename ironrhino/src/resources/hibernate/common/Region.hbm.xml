@@ -22,13 +22,5 @@
 			<key column="parentId" />
 			<one-to-many class="Region" />
 		</set>
-		<set name="roles" table="common_regionRole" cascade="all"
-			fetch="subselect">
-			<key column="regionId" />
-			<composite-element
-				class="org.ironrhino.common.model.SimpleElement">
-				<property name="value" not-null="true" />
-			</composite-element>
-		</set>
 	</class>
 </hibernate-mapping>
