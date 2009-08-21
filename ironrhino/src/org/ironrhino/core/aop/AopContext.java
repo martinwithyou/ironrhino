@@ -1,4 +1,4 @@
-package org.ironrhino.core.aspect;
+package org.ironrhino.core.aop;
 
 import java.util.ArrayList;
 import java.util.List;

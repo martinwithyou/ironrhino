@@ -1,4 +1,4 @@
-package org.ironrhino.core.aspect;
+package org.ironrhino.core.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

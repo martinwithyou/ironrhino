@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * Use for publish model's CRUD operations
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.aspect.PublishAspect
+ * @see org.ironrhino.core.aop.PublishAspect
  * @see org.ironrhino.core.event.EventPublisher
  */
 @Target(TYPE)
