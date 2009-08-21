@@ -19,9 +19,10 @@ import org.ironrhino.online.service.AccountManager;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
+import org.springframework.security.ui.webapp.AuthenticationProcessingFilter;
 
-public class AuthenticationProcessingFilter extends
-		org.springframework.security.ui.webapp.AuthenticationProcessingFilter {
+public class AccountAuthenticationProcessingFilter extends
+		AuthenticationProcessingFilter {
 
 	public final static String USERNAME_IN_COOKIE = "UIC";
 

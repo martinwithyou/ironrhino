@@ -27,7 +27,7 @@ import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
 import org.ironrhino.online.model.Account;
 import org.ironrhino.online.service.AccountManager;
-import org.ironrhino.online.servlet.AuthenticationProcessingFilter;
+import org.ironrhino.online.servlet.AccountAuthenticationProcessingFilter;
 import org.openid4java.OpenIDException;
 import org.openid4java.association.AssociationException;
 import org.openid4java.consumer.ConsumerManager;
@@ -238,7 +238,7 @@ public class AccountAction extends BaseAction {
 		if (StringUtils.isBlank(targetUrl))
 			targetUrl = request.getHeader("Referer");
 		username = RequestUtils.getCookieValue(request,
-				AuthenticationProcessingFilter.USERNAME_IN_COOKIE);
+				AccountAuthenticationProcessingFilter.USERNAME_IN_COOKIE);
 		if (StringUtils.isNotBlank(username))
 			username = CodecUtils.decode(username);
 		openid = RequestUtils.getCookieValue(request, OPENID_IN_COOKIE);

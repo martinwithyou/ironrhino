@@ -28,7 +28,7 @@
 		<property name="rememberMeServices" ref="rememberMeServices" />
 	</bean>
 	<bean id="rememberMeServices"
-		class="org.ironrhino.core.ext.spring.security.TokenBasedRememberMeServices">
+		class="org.ironrhino.core.ext.spring.security.CustomizableTokenBasedRememberMeServices">
 		<property name="userDetailsService" ref="accountManager" />
 		<property name="key" value="youcannotguessme" />
 		<property name="parameter" value="rememberme" />
@@ -56,7 +56,7 @@
 		<property name="accessDeniedHandler" ref="accessDeniedHandler" />
 	</bean>
 	<bean id="authenticationProcessingFilter"
-		class="org.ironrhino.online.servlet.AuthenticationProcessingFilter">
+		class="org.ironrhino.online.servlet.AccountAuthenticationProcessingFilter">
 		<property name="usernameParameter" value="username" />
 		<property name="passwordParameter" value="password" />
 		<property name="authenticationManager"
@@ -66,7 +66,7 @@
 		<property name="defaultTargetUrl" value="/account/index" />
 		<property name="targetUrlResolver">
 			<bean
-				class="org.ironrhino.core.ext.spring.security.TargetUrlResolver" />
+				class="org.ironrhino.core.ext.spring.security.GracefulTargetUrlResolver" />
 		</property>
 		<property name="filterProcessesUrl" value="/account/check" />
 		<property name="rememberMeServices" ref="rememberMeServices" />

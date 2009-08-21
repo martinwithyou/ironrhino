@@ -3,10 +3,11 @@ package org.ironrhino.core.ext.spring.security;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.Authentication;
+import org.springframework.security.ui.rememberme.TokenBasedRememberMeServices;
 import org.springframework.util.StringUtils;
 
-public class TokenBasedRememberMeServices extends
-		org.springframework.security.ui.rememberme.TokenBasedRememberMeServices {
+public class CustomizableTokenBasedRememberMeServices extends
+		TokenBasedRememberMeServices {
 	@Override
 	protected int calculateLoginLifetime(HttpServletRequest request,
 			Authentication authentication) {

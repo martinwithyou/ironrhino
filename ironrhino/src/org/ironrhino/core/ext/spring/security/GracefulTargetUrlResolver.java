@@ -3,11 +3,11 @@ package org.ironrhino.core.ext.spring.security;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.Authentication;
+import org.springframework.security.ui.TargetUrlResolver;
 import org.springframework.security.ui.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
 
-public class TargetUrlResolver implements
-		org.springframework.security.ui.TargetUrlResolver {
+public class GracefulTargetUrlResolver implements TargetUrlResolver {
 
 	public String determineTargetUrl(SavedRequest arg0,
 			HttpServletRequest request, Authentication arg2) {
