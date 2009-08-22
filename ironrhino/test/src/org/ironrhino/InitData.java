@@ -86,7 +86,6 @@ public class InitData {
 		baseManager.save(new Setting(
 				ProductFacade.SETTING_KEY_RECOMMENDED_PRODUCT, StringUtils
 						.join(recommendedProducts, ",")));
-		baseManager.save(new Setting("product.defaultNewArrivalDays", "14"));
 
 		Region[] regions = new Region[10];
 		for (int i = 0; i < regions.length; i++) {
