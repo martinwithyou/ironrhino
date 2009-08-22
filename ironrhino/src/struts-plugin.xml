@@ -50,8 +50,7 @@
 				<param name="feedType">${uid}</param>
 			</result>
 			<result name="redirect" type="redirect">${targetUrl}</result>
-			<result name="accessDenied">/WEB-INF/view/jsp/error/403.jsp
-			</result>
+			<result name="accessDenied" type="autoconfig"/>
 		</global-results>
 	</package>
 </struts>
