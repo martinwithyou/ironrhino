@@ -51,15 +51,15 @@ public class FeedbackAction extends BaseAction {
 	@Captcha
 	@InputConfig(methodName = "input")
 	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "feedback.name", trim = true, key = "feedback.name.required", message = "请输入您的名字"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "feedback.subject", trim = true, key = "feedback.subject.required", message = "请输入主题") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "feedback.email", key = "feedback.email.invalid", message = "请输入正确的email") })
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "feedback.name", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "feedback.title", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "feedback.email", key = "validation.invalid") })
 	public String execute() {
 		if (feedback != null) {
 			Account account = AuthzUtils.getUserDetails(Account.class);
 			if (account != null)
 				feedback.setUsername(account.getUsername());
 			baseManager.save(feedback);
-			addActionMessage(getText("feedback.successfully"));
+			addActionMessage(getText("save.success"));
 		}
 		return SUCCESS;
 	}

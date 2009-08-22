@@ -192,14 +192,15 @@ public class ProductAction extends BaseAction {
 	}
 
 	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "product.code", trim = true, key = "product.code.required", message = "请输入编号"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "product.name", trim = true, key = "product.name.required", message = "请输入名字"), })
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "product.code", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "product.name", trim = true, key = "validation.required") })
 	public String save2() {
 		if (product == null)
 			return INPUT;
 		if (product.isNew()) {
 			if (productManager.getByNaturalId("code", product.getCode()) != null) {
-				addFieldError("product.code", getText("product.code.exists"));
+				addFieldError("product.code",
+						getText("validation.already.exists"));
 				return INPUT;
 			}
 			if (categoryId != null) {
@@ -212,8 +213,7 @@ public class ProductAction extends BaseAction {
 			BeanUtils.copyProperties(temp, product);
 		}
 		productManager.save(product);
-		addActionMessage(getText("save.success", "save {0} successfully",
-				new String[] { product.getCode() }));
+		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
 
@@ -226,9 +226,7 @@ public class ProductAction extends BaseAction {
 				if (tagsAsString != null)
 					product.setTagsAsString(tagsAsString);
 				productManager.save(product);
-				addActionMessage(getText("save.success",
-						"save {0} successfully", new String[] { product
-								.getCode() }));
+				addActionMessage(getText("save.success"));
 			}
 		}
 		return SUCCESS;
@@ -248,17 +246,9 @@ public class ProductAction extends BaseAction {
 			dc.add(Restrictions.in("id", id));
 			List<Product> list = productManager.getListByCriteria(dc);
 			if (list.size() > 0) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("(");
-				for (Product product : list) {
+				for (Product product : list)
 					productManager.delete(product);
-					sb.append(product.getCode() + ",");
-				}
-				sb.deleteCharAt(sb.length() - 1);
-				sb.append(")");
-				addActionMessage(getText("delete.success",
-						"delete {0} successfully",
-						new String[] { sb.toString() }));
+				addActionMessage(getText("delete.success"));
 			}
 		}
 		return SUCCESS;
@@ -273,8 +263,7 @@ public class ProductAction extends BaseAction {
 					if (attr != null && StringUtils.isNotBlank(attr.getName()))
 						product.getAttributes().add(attr);
 				productManager.save(product);
-				addActionMessage(getText("save.attributes.success",
-						"save attributes successfully"));
+				addActionMessage(getText("save.success"));
 			}
 			attributes = product.getAttributes();
 		}
@@ -286,9 +275,7 @@ public class ProductAction extends BaseAction {
 		if (product != null && categoryId != null) {
 			product.setCategory(categoryManager.get(categoryId));
 			productManager.save(product);
-			addActionMessage(getText("change.category.success",
-					"change category to {0} successfully",
-					new String[] { product.getCategory().getName() }));
+			addActionMessage(getText("operation.success"));
 		}
 		return "category";
 	}

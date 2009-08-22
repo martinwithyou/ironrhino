@@ -249,17 +249,18 @@ public class AccountAction extends BaseAction {
 
 	@Redirect
 	@InputConfig(methodName = "input")
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "account.username", expression = "^\\w{3,20}$", key = "account.username.invalid", message = "username不合法") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error", message = "两次输入密码不一致") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "validation.required") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "account.username", expression = "^\\w{3,20}$", key = "validation.invalid") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
 	public String signup() {
 		if (account != null) {
 			if (accountManager.getAccountByEmail(account.getEmail()) != null)
-				addFieldError("account.email", getText("account.email.exists"));
+				addFieldError("account.email",
+						getText("validation.already.exists"));
 			if (StringUtils.isBlank(account.getUsername()))
 				account.setUsername(accountManager.suggestUsername(account
 						.getEmail()));
 			else if (accountManager.getAccountByUsername(account.getUsername()) != null)
 				addFieldError("account.username",
-						getText("account.username.exists"));
+						getText("validation.already.exists"));
 			if (hasErrors())
 				return INPUT;
 			if (StringUtils.isBlank(password))
@@ -290,17 +291,16 @@ public class AccountAction extends BaseAction {
 								+ account.getEmail()));
 		SimpleMailMessage smm = new SimpleMailMessage();
 		smm.setTo(account.getFriendlyName() + "<" + account.getEmail() + ">");
-		smm.setSubject(getText("activation.mail.subject",
-				"activate your account"));
+		smm.setSubject(getText("activation.mail.subject"));
 		mailService.send(smm, "template/account_activate.ftl", model);
-		addActionMessage(getText("activation.mail.send.success"));
+		addActionMessage(getText("operation.success"));
 	}
 
 	@InputConfig(methodName = "input")
 	@Captcha
 	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.username", trim = true, key = "account.username.required", message = "请输入用户名"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") })
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.username", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "validation.invalid") })
 	// if have not receive activate email,can retry it
 	public String resend() {
 		String email = account.getEmail();
@@ -316,8 +316,7 @@ public class AccountAction extends BaseAction {
 					sendActivationMail(account);
 			}
 		} else {
-			addFieldError("account.username",
-					getText("account.username.nonexist"));
+			addFieldError("account.username", getText("validation.not.exists"));
 		}
 		return "resend";
 	}
@@ -343,7 +342,7 @@ public class AccountAction extends BaseAction {
 	}
 
 	@InputConfig(methodName = "input")
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "password", trim = true, key = "password.required", message = "请输入6-20位密码") }, stringLengthFields = { @StringLengthFieldValidator(type = ValidatorType.FIELD, trim = true, minLength = "6", maxLength = "20", fieldName = "password", key = "password.required", message = "密码的长度为6-20") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error", message = "两次输入密码不一致") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "password", trim = true, key = "validation.required") }, stringLengthFields = { @StringLengthFieldValidator(type = ValidatorType.FIELD, trim = true, minLength = "6", maxLength = "20", fieldName = "password", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
 	public String password() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
 		if (!currentAccount.isPasswordValid(currentPassword)) {
@@ -353,12 +352,12 @@ public class AccountAction extends BaseAction {
 		currentAccount.setLegiblePassword(password);
 		log.info("'" + currentAccount.getUsername() + "' edited password");
 		accountManager.save(currentAccount);
-		addActionMessage(getText("password.edit.success"));
+		addActionMessage(getText("save.success"));
 		return "password";
 	}
 
 	@InputConfig(methodName = "input")
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "validation.invalid") })
 	public String email() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
 		if (!currentAccount.getEmail().equalsIgnoreCase(account.getEmail())) {
@@ -369,17 +368,15 @@ public class AccountAction extends BaseAction {
 			}
 			Account acc = accountManager.getAccountByEmail(account.getEmail());
 			if (acc != null) {
-				addActionError(getText("account.email.exists"));
+				addActionError(getText("validation.already.exists"));
 				return SUCCESS;
 			} else {
 				currentAccount.setEmail(account.getEmail());
 				currentAccount.setEnabled(false);
 				accountManager.save(currentAccount);
-				addActionMessage(getText("account.email.modified"));
+				addActionMessage(getText("save.success"));
 				sendActivationMail(currentAccount);
 			}
-		} else {
-			addActionError(getText("account.email.not.modified"));
 		}
 		return "email";
 	}
@@ -409,12 +406,12 @@ public class AccountAction extends BaseAction {
 		currentAccount.setPhone(account.getPhone());
 		currentAccount.setSubscribed(account.isSubscribed());
 		accountManager.save(currentAccount);
-		addActionMessage(getText("profile.edit.success"));
+		addActionMessage(getText("save.success"));
 		return "profile";
 	}
 
 	@InputConfig(methodName = "input")
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "validation.invalid") })
 	public String invite() {
 		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
 		SimpleMailMessage smm = new SimpleMailMessage();
@@ -428,17 +425,17 @@ public class AccountAction extends BaseAction {
 		String url = "/account/signup?account.email=" + account.getEmail();
 		model.put("url", url);
 		mailService.send(smm, "template/account_invite.ftl", model);
-		addActionMessage(getText("invite.successfully"));
+		addActionMessage(getText("operation.success"));
 		return "invite";
 	}
 
 	@InputConfig(methodName = "input")
 	@Captcha
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "account.email.required", message = "请输入email") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "account.email.invalid", message = "请输入正确的email") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "validation.invalid") })
 	public String forgot() {
 		account = accountManager.getAccountByEmail(account.getEmail());
 		if (account == null) {
-			addActionError(getText("account.email.nonexists"));
+			addActionError(getText("validation.not.exists"));
 		} else {
 			password = CodecUtils.randomString(10);
 			account.setLegiblePassword(password);
@@ -452,7 +449,7 @@ public class AccountAction extends BaseAction {
 					+ ">");
 			smm.setSubject("this is your username and password");
 			mailService.send(smm, "template/account_forgot.ftl", model);
-			addActionMessage(getText("find.success"));
+			addActionMessage(getText("operation.success"));
 		}
 		return "forgot";
 	}
@@ -514,7 +511,7 @@ public class AccountAction extends BaseAction {
 			// return "openid-form-redirect";
 			// }
 		} catch (OpenIDException e) {
-			addActionError(getText("openid.invalid"));
+			addActionError(getText("validation.invalid"));
 			return "openid";
 		}
 
@@ -569,19 +566,19 @@ public class AccountAction extends BaseAction {
 					}
 					return REDIRECT;
 				} else {
-					addActionError(getText("openid.login.failed"));
+					addActionError(getText("operation.failed"));
 					return "openid";
 				}
 			}
 		} catch (DiscoveryException e) {
 			log.error(e.getMessage(), e);
-			addActionError(getText("openid.invalid"));
+			addActionError(getText("validation.invalid"));
 		} catch (AssociationException e) {
 			log.error(e.getMessage(), e);
-			addActionError(getText("openid.invalid"));
+			addActionError(getText("validation.invalid"));
 		} catch (MessageException e) {
 			log.error(e.getMessage(), e);
-			addActionError(getText("openid.invalid"));
+			addActionError(getText("validation.invalid"));
 		}
 		return ERROR;
 	}

@@ -3,9 +3,7 @@ package org.ironrhino.online.action;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -18,7 +16,6 @@ import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.ext.struts.BaseAction;
-import org.ironrhino.core.mail.MailService;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.monitor.Monitor;
@@ -27,12 +24,10 @@ import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.ProductComment;
 import org.ironrhino.online.model.ProductFavorite;
 import org.ironrhino.online.model.ProductScore;
-import org.ironrhino.online.model.ProductSend;
 import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.support.CategoryTreeControl;
-import org.springframework.mail.SimpleMailMessage;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
@@ -78,24 +73,12 @@ public class ProductAction extends BaseAction {
 
 	private ProductComment comment;
 
-	private ProductSend send;
-
 	private transient CategoryTreeControl categoryTreeControl;
 
 	private transient BaseManager baseManager;
 
-	private transient MailService mailService;
-
 	public Product getProduct() {
 		return this.product;
-	}
-
-	public ProductSend getSend() {
-		return send;
-	}
-
-	public void setSend(ProductSend send) {
-		this.send = send;
 	}
 
 	public void setComment(ProductComment comment) {
@@ -156,21 +139,6 @@ public class ProductAction extends BaseAction {
 
 	public void setBaseManager(BaseManager baseManager) {
 		this.baseManager = baseManager;
-	}
-
-	public void setMailService(MailService mailService) {
-		this.mailService = mailService;
-	}
-
-	@Override
-	public String input() {
-		return INPUT;
-	}
-
-	@Override
-	@SkipValidation
-	public String execute() {
-		return list();
 	}
 
 	@Override
@@ -243,18 +211,6 @@ public class ProductAction extends BaseAction {
 			resultPage.setDetachedCriteria(dc);
 			resultPage.addOrder(Order.desc("commentDate"));
 			resultPage = baseManager.getResultPage(resultPage);
-
-			Account account = AuthzUtils.getUserDetails(Account.class);
-			if (account != null) {
-				if (send == null)
-					send = new ProductSend();
-				send.setName(account.getName());
-				send.setEmail(account.getEmail());
-				if (comment == null)
-					comment = new ProductComment();
-				comment.setDisplayName(account.getNickname());
-				comment.setEmail(account.getEmail());
-			}
 		}
 		Monitor.add("view", "detail", product.getCode());
 		return VIEW;
@@ -301,7 +257,7 @@ public class ProductAction extends BaseAction {
 
 	@InputConfig(methodName = "input")
 	@Captcha
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "comment.content", trim = true, key = "comment.content.required", message = "请输入评论内容") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "comment.email", key = "comment.email.invalid", message = "请输入正确的email") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "comment.content", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "comment.email", key = "validation.invalid") })
 	public String comment() {
 		String code = getUid();
 		if (StringUtils.isNotBlank(code) && comment != null) {
@@ -309,39 +265,6 @@ public class ProductAction extends BaseAction {
 			comment.setUsername(AuthzUtils.getUsername());
 			baseManager.save(comment);
 		}
-		return REFERER;
-	}
-
-	@InputConfig(methodName = "input")
-	@Captcha
-	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "send.name", trim = true, key = "send.name.required", message = "请输入您的名字"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "send.email", trim = true, key = "send.email.required", message = "请输入您的email"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "send.destination", trim = true, key = "send.destination.required", message = "请输入对方的email") }, emails = {
-			@EmailValidator(type = ValidatorType.FIELD, fieldName = "send.email", key = "send.email.invalid", message = "请输入正确的email"),
-			@EmailValidator(type = ValidatorType.FIELD, fieldName = "send.destination", key = "send.destination.invalid", message = "请输入正确的email") })
-	public String send() {
-		String code = getUid();
-		send.setProductCode(code);
-		Account account = AuthzUtils.getUserDetails(Account.class);
-		baseManager.setEntityClass(ProductSend.class);
-		if (account != null) {
-			send.setUsername(account.getUsername());
-			SimpleMailMessage smm = new SimpleMailMessage();
-			if (StringUtils.isNotBlank(send.getEmail()))
-				smm.setFrom(send.getName() + "<" + send.getEmail() + ">");
-			smm.setTo(send.getDestination());
-			smm.setSubject(getText("send.subject", "your friend "
-					+ account.getFriendlyName()
-					+ " recommend our product to you", new String[] { account
-					.getFriendlyName() }));
-			Map<String, Object> model = new HashMap<String, Object>(2);
-			model.put("message", send.getMessage());
-			model.put("product", productFacade.getProductByCode(code));
-			mailService.send(smm, "template/product_send.ftl", model);
-			addActionMessage(getText("send.successfully"));
-		}
-		baseManager.save(send);
 		return REFERER;
 	}
 

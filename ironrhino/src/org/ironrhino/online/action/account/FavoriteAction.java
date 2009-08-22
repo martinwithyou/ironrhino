@@ -58,17 +58,9 @@ public class FavoriteAction extends BaseAction {
 			dc.add(Restrictions.in("id", id));
 			List<ProductFavorite> list = baseManager.getListByCriteria(dc);
 			if (list.size() > 0) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("(");
-				for (ProductFavorite pf : list) {
+				for (ProductFavorite pf : list)
 					baseManager.delete(pf);
-					sb.append(pf.getProductName() + ",");
-				}
-				sb.deleteCharAt(sb.length() - 1);
-				sb.append(")");
-				addActionMessage(getText("delete.success",
-						"delete {0} successfully",
-						new String[] { sb.toString() }));
+				addActionMessage(getText("delete.success"));
 			}
 		}
 		return SUCCESS;

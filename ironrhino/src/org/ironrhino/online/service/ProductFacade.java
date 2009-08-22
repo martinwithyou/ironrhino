@@ -37,12 +37,10 @@ public interface ProductFacade {
 
 	public List<AggregateResult> getTopFavoriteProducts(int maxResults);
 
-	public List<AggregateResult> getTopSendProducts(int maxResults);
-
 	public List<AggregateResult> getTopSaleProducts(int maxResults);
 
 	public List<AggregateResult> getTags(String... prefix);
-	
+
 	public List<Product> getRelatedProducts(Product product);
 
 }

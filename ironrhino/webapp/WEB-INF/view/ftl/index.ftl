@@ -72,20 +72,6 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 	</div>
 </#if>
 
-<#assign list=productFacade.getTopSendProducts(4)>
-<#if list?exists && list.size() gt 0>
-	<div style="clear:both;">
-	<div class="rounded" style="background: #fcc;">
-	<h1>推荐排行</h1>
-	</div>
-	<ul class="product_list">
-		<#list list as var>
-		<#assign info=var.count+' sendings)'>
-		<@detail product=var.principal info=info/>
-		</#list>
-	</ul>
-	</div>
-</#if>
 </@cache>
 </body>
 </html></#escape>

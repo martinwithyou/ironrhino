@@ -109,9 +109,7 @@ public class AccountAction extends BaseAction {
 				if (groupsAsString != null)
 					account.setGroupsAsString(groupsAsString);
 				accountManager.save(account);
-				addActionMessage(getText("save.success",
-						"save {0} successfully", new String[] { account
-								.getUsername() }));
+				addActionMessage(getText("save.success"));
 			}
 		}
 		return SUCCESS;
@@ -125,17 +123,9 @@ public class AccountAction extends BaseAction {
 			dc.add(Restrictions.in("id", id));
 			List<Account> list = accountManager.getListByCriteria(dc);
 			if (list.size() > 0) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("(");
-				for (Account ac : list) {
+				for (Account ac : list)
 					accountManager.delete(ac);
-					sb.append(ac.getUsername() + ",");
-				}
-				sb.deleteCharAt(sb.length() - 1);
-				sb.append(")");
-				addActionMessage(getText("delete.success",
-						"delete {0} successfully",
-						new String[] { sb.toString() }));
+				addActionMessage(getText("delete.success"));
 			}
 		}
 		return SUCCESS;

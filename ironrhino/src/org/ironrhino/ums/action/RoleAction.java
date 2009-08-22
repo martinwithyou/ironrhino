@@ -71,13 +71,13 @@ public class RoleAction extends BaseAction {
 	}
 
 	@Override
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "role.name", trim = true, key = "role.name.required", message = "请输入名字") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "role.name", expression = "^\\w+$", key = "role.name.invalid", message = "必须为数字或者字母或者下划线") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "role.name", trim = true, key = "validation.required") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "role.name", expression = "^\\w+$", key = "validation.invalid") })
 	public String save() {
 		if (role.isNew()) {
 			role.setName(role.getName().toUpperCase());
 			if (role.getName().startsWith("ROLE_BUILTIN_")
 					|| roleManager.getByNaturalId("name", role.getName()) != null) {
-				addFieldError("role.name", getText("role.name.exists"));
+				addFieldError("role.name", getText("validation.already.exists"));
 				return INPUT;
 			}
 		} else {
@@ -86,8 +86,7 @@ public class RoleAction extends BaseAction {
 			BeanUtils.copyProperties(temp, role);
 		}
 		roleManager.save(role);
-		addActionMessage(getText("save.success", "save {0} successfully",
-				new String[] { role.getName() }));
+		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
 
@@ -99,17 +98,9 @@ public class RoleAction extends BaseAction {
 			dc.add(Restrictions.in("id", id));
 			List<Role> list = roleManager.getListByCriteria(dc);
 			if (list.size() > 0) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("(");
-				for (Role role : list) {
+				for (Role role : list)
 					roleManager.delete(role);
-					sb.append(role.getName() + ",");
-				}
-				sb.deleteCharAt(sb.length() - 1);
-				sb.append(")");
-				addActionMessage(getText("delete.success",
-						"delete {0} successfully",
-						new String[] { sb.toString() }));
+				addActionMessage(getText("delete.success"));
 			}
 		}
 		return SUCCESS;

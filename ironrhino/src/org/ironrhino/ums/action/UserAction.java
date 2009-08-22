@@ -109,14 +109,15 @@ public class UserAction extends BaseAction {
 	}
 
 	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.username", trim = true, key = "user.username.required", message = "请输入用户名"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "user.name.required", message = "请输入姓名"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "user.email.required", message = "请输入email") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "user.username", expression = "^\\w{3,20}$", key = "user.username.invalid", message = "username不合法") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "user.email.invalid", message = "请输入正确的email") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error", message = "两次输入密码不一致") })
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.username", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "user.username", expression = "^\\w{3,20}$", key = "validation.invalid") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
 	public String save2() {
 		if (user.isNew()) {
 			user.setUsername(user.getUsername().toLowerCase());
 			if (userManager.getByNaturalId("username", user.getUsername()) != null) {
-				addFieldError("user.username", getText("user.username.exists"));
+				addFieldError("user.username",
+						getText("validation.already.exists"));
 				return INPUT;
 			}
 			user.setLegiblePassword(password);
@@ -143,9 +144,7 @@ public class UserAction extends BaseAction {
 				if (groupsAsString != null)
 					user.setGroupsAsString(groupsAsString);
 				userManager.save(user);
-				addActionMessage(getText("save.success",
-						"save {0} successfully", new String[] { user
-								.getUsername() }));
+				addActionMessage(getText("save.success"));
 			}
 		}
 		addActionMessage(getText("save.success"));
@@ -167,17 +166,9 @@ public class UserAction extends BaseAction {
 			dc.add(Restrictions.in("id", id));
 			List<User> list = userManager.getListByCriteria(dc);
 			if (list.size() > 0) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("(");
-				for (User user : list) {
+				for (User user : list)
 					userManager.delete(user);
-					sb.append(user.getUsername() + ",");
-				}
-				sb.deleteCharAt(sb.length() - 1);
-				sb.append(")");
-				addActionMessage(getText("delete.success",
-						"delete {0} successfully",
-						new String[] { sb.toString() }));
+				addActionMessage(getText("delete.success"));
 			}
 		}
 		return SUCCESS;

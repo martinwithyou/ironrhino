@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="ironrhino" default="compress" basedir=".">
+<project name="ironrhino" default="jar" basedir=".">
 
+	<property name="version" value="1.0" />
 	<property name="src.dir" location="${basedir}/src" />
 	<property name="webapp.dir" location="${basedir}/webapp" />
 	<property name="lib.dir" location="${basedir}/lib" />
@@ -11,8 +12,8 @@
 	<property name="test.classes.dir" location="${basedir}/test/classes" />
 	<property name="test.results.dir" location="${basedir}/test/results" />
 	<property name="jar.name" value="ironrhino.jar" />
-	<property name="core-jar.name" value="ironrhino-core.jar" />
-	<property name="ums-jar.name" value="ironrhino-ums.jar" />
+	<property name="core-jar.name" value="ironrhino-core-${version}.jar" />
+	<property name="ums-jar.name" value="ironrhino-ums-${version}.jar" />
 	<property name="war.name" value="ironrhino.war" />
 
 	<path id="lib.classpath">
@@ -71,7 +72,7 @@
 
 	<target name="test" depends="compile">
 		<mkdir dir="${test.classes.dir}" />
-		<javac srcdir="${test.src.dir}" destdir="${test.classes.dir}">
+		<javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" encoding="UTF-8">
 			<classpath>
 				<path refid="lib.classpath" />
 				<pathelement location="${classes.dir}" />
@@ -98,24 +99,13 @@
 		</junit>
 	</target>
 
-	<target name="jar">
+	<target name="jar" depends="compile">
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${jar.name}" />
 		<jar jarfile="${target.dir}/${jar.name}" basedir="${classes.dir}" includes="com/**,org/**" />
 		<delete file="${target.dir}/${core-jar.name}" />
 		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/core/**,org/ironrhino/common/**,resources/hibernate/common/**,resources/view/*.ftl,,resources/view/import/*.ftl,,resources/view/include/*.ftl" />
 		<jar jarfile="${target.dir}/${ums-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/ums/**,resources/struts/struts-ums.xml,resources/hibernate/ums/**,resources/view/backend/ums/*.ftl,resources/spring/applicationContext-service-ums.xml" />
-	</target>
-
-	<target name="war">
-		<mkdir dir="${target.dir}" />
-		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}" webxml="${webapp.dir}/WEB-INF/web.xml" />
-	</target>
-
-	<target name="clean">
-		<delete dir="${classes.dir}" />
-		<delete dir="${test.classes.dir}" />
-		<delete dir="${target.dir}" />
 	</target>
 
 	<target name="compress">
@@ -185,6 +175,17 @@
 		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
 			<arg line=" --charset utf-8 --type css -o ${webapp.dir}/styles/all-min.css ${webapp.dir}/styles/all.css" />
 		</java>
+	</target>
+
+	<target name="war" depends="compile,compress">
+		<mkdir dir="${target.dir}" />
+		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}" webxml="${webapp.dir}/WEB-INF/web.xml" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${classes.dir}" />
+		<delete dir="${test.classes.dir}" />
+		<delete dir="${target.dir}" />
 	</target>
 
 </project>

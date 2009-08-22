@@ -146,7 +146,7 @@ public class EntityAction extends BaseAction {
 					it = naturalIds.keySet().iterator();
 					while (it.hasNext()) {
 						addFieldError(getEntityName() + "." + it.next(),
-								getText("naturalId.already.exists"));
+								getText("validation.already.exists"));
 					}
 					return INPUT;
 				}
@@ -172,7 +172,7 @@ public class EntityAction extends BaseAction {
 					it = naturalIds.keySet().iterator();
 					while (it.hasNext()) {
 						addFieldError(getEntityName() + "." + it.next(),
-								getText("naturalId.already.exists"));
+								getText("validation.already.exists"));
 					}
 					return INPUT;
 				}
@@ -206,7 +206,7 @@ public class EntityAction extends BaseAction {
 		}
 
 		baseManager.save(entity);
-		addActionMessage(getText("save.successfully"));
+		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
 
@@ -244,8 +244,7 @@ public class EntityAction extends BaseAction {
 			if (list.size() > 0) {
 				for (Object obj : list)
 					baseManager.delete((Persistable) obj);
-				addActionMessage(getText("delete.success",
-						"delete  successfully", new String[] { "" }));
+				addActionMessage(getText("delete.success"));
 			}
 		}
 		return SUCCESS;

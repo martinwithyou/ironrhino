@@ -12,9 +12,8 @@
 		<property name="name" />
 		<property name="email" />
 		<property name="phone" />
-		<property name="subject" />
+		<property name="title" />
 		<property name="content" />
-		<property name="postDate" />
 		<property name="status">
 			<type name="org.hibernate.type.EnumType">
 				<param name="enumClass">
@@ -25,5 +24,7 @@
 					-->
 			</type>
 		</property>
+		<property name="createDate" />
+		<property name="modifyDate" />
 	</class>
 </hibernate-mapping>

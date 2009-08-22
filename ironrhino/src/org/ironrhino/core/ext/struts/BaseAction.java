@@ -114,6 +114,11 @@ public class BaseAction extends ActionSupport {
 		return list();
 	}
 
+	@Override
+	public String input() {
+		return INPUT;
+	}
+
 	public String list() {
 		return NONE;
 	}

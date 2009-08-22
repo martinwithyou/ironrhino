@@ -67,6 +67,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		random = new Random();
 	}
 
+	@Override
 	public List<Product> getNewArrivalProducts(int... parameters) {
 		DetachedCriteria dc = prepareDetachedCriteria();
 		dc.addOrder(Order.asc("displayOrder"));
@@ -87,6 +88,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return productManager.getListByCriteria(dc, 1, maxResults);
 	}
 
+	@Override
 	public List<Product> getProducts(int max) {
 		DetachedCriteria dc = prepareDetachedCriteria();
 		dc.addOrder(Order.asc("displayOrder"));
@@ -94,6 +96,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return productManager.getListByCriteria(dc, 1, max);
 	}
 
+	@Override
 	public List<Product> getProducts(String[] codeArray) {
 		DetachedCriteria dc = prepareDetachedCriteria();
 		dc.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -114,6 +117,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return list;
 	}
 
+	@Override
 	public List<Product> getRecommendedProducts() {
 		List<Product> list;
 		String[] codeArray = settingControl
@@ -129,6 +133,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	/**
 	 * categoryId 0->all,-1->no category
 	 */
+	@Override
 	public ResultPage getResultPageByCategoryId(ResultPage<Product> resultPage,
 			Integer categoryId) {
 		DetachedCriteria dc = prepareDetachedCriteria();
@@ -148,6 +153,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return resultPage;
 	}
 
+	@Override
 	public ResultPage getResultPageByCategoryCode(
 			ResultPage<Product> resultPage, String categoryCode) {
 		Integer id = null;
@@ -165,6 +171,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return getResultPageByCategoryId(resultPage, id);
 	}
 
+	@Override
 	public ResultPage getResultPageByTag(ResultPage<Product> resultPage,
 			String tag) {
 		DetachedCriteria dc = prepareDetachedCriteria();
@@ -180,6 +187,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return resultPage;
 	}
 
+	@Override
 	@CheckCache(key = "${args[0]}", namespace = "product", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','product','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','product','miss'})}")
 	public Product getProductByCode(String code) {
 		DetachedCriteria dc = prepareDetachedCriteria();
@@ -188,6 +196,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return product;
 	}
 
+	@Override
 	public Product getRandomProduct() {
 		int count = productManager.countByCriteria(prepareDetachedCriteria());
 		if (count == 0)
@@ -202,6 +211,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return product;
 	}
 
+	@Override
 	@CheckCache(key = "score_${args[0]}", namespace = "product")
 	public AggregateResult getScoreResult(final String productCode) {
 		baseManager.setEntityClass(ProductScore.class);
@@ -211,6 +221,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		dc.add(Restrictions.eq("productCode", productCode));
 		Object[] array = (Object[]) baseManager
 				.executeQuery(new HibernateCallback() {
+					@Override
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						return dc.getExecutableCriteria(session).uniqueResult();
@@ -246,10 +257,12 @@ public class ProductFacadeImpl implements ProductFacade {
 		return sr;
 	}
 
+	@Override
 	public List<AggregateResult> getTopScoreProducts(final int maxResults) {
 		List<AggregateResult> list;
 		list = (List<AggregateResult>) baseManager
 				.executeQuery(new HibernateCallback() {
+					@Override
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
@@ -276,10 +289,12 @@ public class ProductFacadeImpl implements ProductFacade {
 		return list;
 	}
 
+	@Override
 	public List<AggregateResult> getTopFavoriteProducts(final int maxResults) {
 		List<AggregateResult> list;
 		list = (List<AggregateResult>) baseManager
 				.executeQuery(new HibernateCallback() {
+					@Override
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
@@ -301,35 +316,12 @@ public class ProductFacadeImpl implements ProductFacade {
 		return list;
 	}
 
-	public List<AggregateResult> getTopSendProducts(final int maxResults) {
-		List<AggregateResult> list;
-		list = (List<AggregateResult>) baseManager
-				.executeQuery(new HibernateCallback() {
-					public Object doInHibernate(Session session)
-							throws HibernateException, SQLException {
-						Query q = session
-								.createQuery("select ps.productCode,count(ps.destination) from ProductSend ps,Product p where ps.productCode=p.code group by ps.productCode order by count(ps.destination) desc");
-						q.setMaxResults(maxResults);
-						List<AggregateResult> list = new ArrayList<AggregateResult>();
-						List<Object[]> result = q.list();
-						for (Object[] array : result) {
-							AggregateResult sr = new AggregateResult();
-							sr.setPrincipal(array[0]);
-							sr.setCount(((Number) array[1]).intValue());
-							list.add(sr);
-						}
-						return list;
-					}
-				});
-		for (AggregateResult sr : list)
-			sr.setPrincipal(getProductByCode((String) sr.getPrincipal()));
-		return list;
-	}
-
+	@Override
 	public List<AggregateResult> getTopSaleProducts(final int maxResults) {
 		List<AggregateResult> list;
 		list = (List<AggregateResult>) baseManager
 				.executeQuery(new HibernateCallback() {
+					@Override
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
 						Query q = session
@@ -351,9 +343,11 @@ public class ProductFacadeImpl implements ProductFacade {
 		return list;
 	}
 
+	@Override
 	public List<AggregateResult> getTags(final String... prefix) {
 		final List<AggregateResult> tags = new ArrayList<AggregateResult>();
 		baseManager.executeQuery(new HibernateCallback() {
+			@Override
 			public Object doInHibernate(Session session)
 					throws HibernateException, SQLException {
 				SQLQuery q;
@@ -389,6 +383,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		return dc;
 	}
 
+	@Override
 	public List<Product> getRelatedProducts(final Product product) {
 		int count = 5;
 		List<Product> list = new ArrayList<Product>(count);

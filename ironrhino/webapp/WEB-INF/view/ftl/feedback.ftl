@@ -4,15 +4,15 @@
 <title>ironrhino</title>
 </head>
 <body>
-<@s.form id="feedback" action="feedback" method="post" cssClass="ajax">
+<@s.form id="feedback" action="feedback" method="post" cssClass="ajax reset">
 	<@s.textfield label="%{getText('name')}" name="feedback.name"
 		cssClass="required" />
 	<@s.textfield label="%{getText('phone')}"
 		name="feedback.phone" />
 	<@s.textfield label="%{getText('email')}" name="feedback.email"
 		cssClass="email" />
-	<@s.textfield label="%{getText('subject')}"
-		name="feedback.subject" size="50" cssClass="required" />
+	<@s.textfield label="%{getText('title')}"
+		name="feedback.title" size="50" cssClass="required" />
 	<@s.textarea label="%{getText('content')}" cols="50" rows="5"
 		name="feedback.content" />
 	<@authorize ifNotGranted="ROLE_BUILTIN_ACCOUNT">

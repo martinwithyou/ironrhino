@@ -2,9 +2,12 @@ package org.ironrhino.online.model;
 
 import java.util.Date;
 
+import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.model.Recordable;
 
-public class Feedback extends BaseEntity {
+@RecordAware
+public class Feedback extends BaseEntity implements Recordable {
 
 	private static final long serialVersionUID = -6411648866122045952L;
 
@@ -16,17 +19,18 @@ public class Feedback extends BaseEntity {
 
 	private String phone;
 
-	private String subject;
+	private String title;
 
 	private String content;
 
-	private Date postDate;
+	private Date createDate;
+
+	private Date modifyDate;
 
 	private FeedbackStatus status;
 
 	public Feedback() {
 		status = FeedbackStatus.UNDECIDED;
-		postDate = new Date();
 	}
 
 	public String getUsername() {
@@ -45,12 +49,12 @@ public class Feedback extends BaseEntity {
 		this.status = status;
 	}
 
-	public String getSubject() {
-		return subject;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getPhone() {
@@ -85,12 +89,20 @@ public class Feedback extends BaseEntity {
 		this.name = name;
 	}
 
-	public Date getPostDate() {
-		return postDate;
+	public Date getCreateDate() {
+		return createDate;
 	}
 
-	public void setPostDate(Date postDate) {
-		this.postDate = postDate;
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
 	}
 
 }

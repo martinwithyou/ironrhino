@@ -55,8 +55,7 @@ public class SettingAction extends BaseAction {
 	public String save() {
 		if (setting != null) {
 			baseManager.save(setting);
-			addActionMessage(getText("save.success", "save {0} successfully",
-					new String[] { setting.getKey() }));
+			addActionMessage(getText("save.success"));
 		}
 		return SUCCESS;
 	}
@@ -69,17 +68,9 @@ public class SettingAction extends BaseAction {
 			dc.add(Restrictions.in("id", id));
 			List<Setting> list = baseManager.getListByCriteria(dc);
 			if (list.size() > 0) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("(");
-				for (Setting setting : list) {
+				for (Setting setting : list)
 					baseManager.delete(setting);
-					sb.append(setting.getKey() + ",");
-				}
-				sb.deleteCharAt(sb.length() - 1);
-				sb.append(")");
-				addActionMessage(getText("delete.success",
-						"delete {0} successfully",
-						new String[] { sb.toString() }));
+				addActionMessage(getText("delete.success"));
 			}
 		}
 		return SUCCESS;

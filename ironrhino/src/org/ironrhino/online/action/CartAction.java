@@ -61,9 +61,6 @@ public class CartAction extends BaseAction {
 							.valueOf(cart.getOrder().getItems().size()) }));
 		} else {
 			cart.put(code, quantity);
-			addActionMessage(getText("add.successfully",
-					"add {0} successfully", new String[] { cart
-							.getProductName(code) }));
 		}
 		return "facade";
 	}
@@ -73,9 +70,6 @@ public class CartAction extends BaseAction {
 		String code = getUid();
 		if (cart.contains(code)) {
 			cart.update(code, cart.getQuantity(code) - 1);
-			addActionMessage(getText("substract.successfully",
-					"substract {0} successfully", new String[] { cart
-							.getProductName(code) }));
 		}
 		return "facade";
 	}
@@ -92,8 +86,7 @@ public class CartAction extends BaseAction {
 			}
 			sb.deleteCharAt(sb.length() - 1);
 			sb.append(")");
-			addActionMessage(getText("remove.successfully",
-					"remove {0} successfully", new String[] { sb.toString() }));
+			addActionMessage(getText("operation.success"));
 
 		}
 		return SUCCESS;
@@ -106,15 +99,14 @@ public class CartAction extends BaseAction {
 			for (OrderItem item : items)
 				cart.update(item.getProductCode(), item.getQuantity());
 		}
-		addActionMessage(getText("update.successfully", "your cart has updated"));
+		addActionMessage(getText("operation.success"));
 		return SUCCESS;
 	}
 
 	@SkipValidation
 	public String clear() {
 		cart.clear();
-		addActionMessage(getText("clear.successfully",
-				"clear cart successfully"));
+		addActionMessage(getText("operation.success"));
 		return SUCCESS;
 	}
 

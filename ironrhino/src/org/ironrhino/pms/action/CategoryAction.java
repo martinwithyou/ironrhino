@@ -115,7 +115,8 @@ public class CategoryAction extends BaseAction {
 	public String save() {
 		if (category.isNew()) {
 			if (categoryManager.getByNaturalId("code", category.getCode()) != null) {
-				addFieldError("category.code", getText("category.code.exists"));
+				addFieldError("category.code",
+						getText("validation.already.exists"));
 				return INPUT;
 			}
 			if (parentId != null) {
@@ -132,8 +133,7 @@ public class CategoryAction extends BaseAction {
 				category.setRolesAsString(rolesAsString);
 		}
 		categoryManager.save(category);
-		addActionMessage(getText("save.success", "save {0} successfully",
-				new String[] { category.getName() }));
+		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
 
@@ -162,17 +162,9 @@ public class CategoryAction extends BaseAction {
 			dc.add(Restrictions.in("id", id));
 			List<Category> list = categoryManager.getListByCriteria(dc);
 			if (list.size() > 0) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("(");
-				for (Category category : list) {
+				for (Category category : list)
 					categoryManager.delete(category);
-					sb.append(category.getCode() + ",");
-				}
-				sb.deleteCharAt(sb.length() - 1);
-				sb.append(")");
-				addActionMessage(getText("delete.success",
-						"delete {0} successfully",
-						new String[] { sb.toString() }));
+				addActionMessage(getText("delete.success"));
 			}
 		}
 		return SUCCESS;
