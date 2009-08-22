@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<bean type="com.opensymphony.xwork2.UnknownHandler" class="org.ironrhino.core.ext.struts.UnknownHandlerImpl" />
+	<bean type="com.opensymphony.xwork2.config.PackageProvider" name="ironrhino-autoconfig"
+		class="org.ironrhino.core.ext.struts.AutoConfigPackageProvider" />
+	<bean type="org.apache.struts2.views.freemarker.FreemarkerManager" class="org.ironrhino.core.ext.struts.RichFreemarkerManager" />
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
+	<constant name="struts.mapper.class"
+		value="org.ironrhino.core.ext.struts.DelegateActionMapper" />
+	<constant name="struts.url.includeParams" value="none" />
+	<constant name="struts.custom.i18n.resources" value="resources.i18n.messages" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<package name="ironrhino-default" extends="struts-default">
+		<result-types>
+			<result-type name="autoconfig"
+				class="org.ironrhino.core.ext.struts.AutoConfigResult" />
+			<result-type name="json"
+				class="org.ironrhino.core.ext.struts.JsonResult" />
+			<result-type name="referer"
+				class="org.ironrhino.core.ext.struts.RefererResult" />
+			<result-type name="feed"
+				class="org.ironrhino.core.ext.struts.FeedResult" />
+		</result-types>
+		<interceptors>
+			<interceptor name="annotationWorkflow"
+				class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
+			<interceptor-stack name="annotationDefaultStack">
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="actionMappingParams" />
+				<interceptor-ref name="params">
+					<param name="excludeParams">_.*_</param>
+				</interceptor-ref>
+				<interceptor-ref name="conversionError" />
+				<interceptor-ref name="annotationWorkflow" />
+				<interceptor-ref name="validation">
+					<param name="validateAnnotatedMethodOnly">true</param>
+				</interceptor-ref>
+				<interceptor-ref name="workflow" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="annotationDefaultStack" />
+		<global-results>
+			<result name="json" type="json" />
+			<result name="referer" type="referer" />
+			<result name="feed" type="feed">
+				<param name="feedType">${uid}</param>
+			</result>
+			<result name="redirect" type="redirect">${targetUrl}</result>
+			<result name="accessDenied">/WEB-INF/view/jsp/error/403.jsp
+			</result>
+		</global-results>
+	</package>
+</struts>
