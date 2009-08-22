@@ -53,6 +53,8 @@ public class AutoConfigResult extends FreemarkerResult {
 
 	@Override
 	public void execute(ActionInvocation invocation) throws Exception {
+		if (invocation.getResultCode().equals(Action.NONE))
+			return;
 		if (invocation.getResultCode().equals(Action.SUCCESS)
 				&& !invocation.getProxy().getMethod().equals("")
 				&& !invocation.getProxy().getMethod().equals("execute")) {
@@ -105,7 +107,7 @@ public class AutoConfigResult extends FreemarkerResult {
 					AutoConfigResult.class);
 		}
 		if (url == null) {
-			location = jspLocation + "/" + result + ".jsp";
+			location = jspLocation + "/meta/result/" + result + ".jsp";
 			try {
 				url = context.getResource(location);
 			} catch (MalformedURLException e) {
@@ -113,7 +115,7 @@ public class AutoConfigResult extends FreemarkerResult {
 			}
 		}
 		if (url == null)
-			location = ftlClasspath + "/" + result + ".ftl";
+			location = ftlClasspath + "/meta/result/" + result + ".ftl";
 		return location;
 	}
 

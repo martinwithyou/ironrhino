@@ -97,7 +97,7 @@ public class EntityAction extends BaseAction {
 	@Override
 	public String input() {
 		if (readonly())
-			return NONE;
+			return ACCESSDENIED;
 		baseManager.setEntityClass(getEntityClass());
 		if (getUid() != null)
 			entity = baseManager.get(getUid());
@@ -115,7 +115,7 @@ public class EntityAction extends BaseAction {
 	@Override
 	public String save() {
 		if (readonly())
-			return NONE;
+			return ACCESSDENIED;
 		baseManager.setEntityClass(getEntityClass());
 		entity = getEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
@@ -222,7 +222,7 @@ public class EntityAction extends BaseAction {
 	@Override
 	public String delete() {
 		if (readonly())
-			return NONE;
+			return ACCESSDENIED;
 		baseManager.setEntityClass(getEntityClass());
 		String[] arr = getId();
 		Serializable[] id = (arr != null) ? new Serializable[arr.length]

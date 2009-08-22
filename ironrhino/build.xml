@@ -104,7 +104,7 @@
 		<delete file="${target.dir}/${jar.name}" />
 		<jar jarfile="${target.dir}/${jar.name}" basedir="${classes.dir}" includes="com/**,org/**" />
 		<delete file="${target.dir}/${core-jar.name}" />
-		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,org/ironrhino/core/**,org/ironrhino/common/**,resources/hibernate/common/**,resources/view/*.ftl,,resources/view/import/*.ftl,resources/view/include/*.ftl" />
+		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,org/ironrhino/core/**,org/ironrhino/common/**,resources/hibernate/common/**,resources/view/meta/**" />
 		<jar jarfile="${target.dir}/${ums-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/ums/**,resources/struts/struts-ums.xml,resources/hibernate/ums/**,resources/view/backend/ums/*.ftl,resources/spring/applicationContext-service-ums.xml" />
 	</target>
 

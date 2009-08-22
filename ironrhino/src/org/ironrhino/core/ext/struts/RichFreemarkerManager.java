@@ -76,7 +76,7 @@ public class RichFreemarkerManager extends
 		String namespace;
 		try {
 			searchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
-					+ ftlClasspath + "/import/*.ftl";
+					+ ftlClasspath + "/meta/import/*.ftl";
 			resources = resourcePatternResolver.getResources(searchPath);
 			for (Resource r : resources) {
 				location = r.getURL().toString();
@@ -89,7 +89,7 @@ public class RichFreemarkerManager extends
 			log.info(e.getMessage());
 		}
 		try {
-			searchPath = ftlLocation + "/import/*.ftl";
+			searchPath = ftlLocation + "/meta/import/*.ftl";
 			resources = servletContextResourcePatternResolver
 					.getResources(searchPath);
 			for (Resource r : resources) {
@@ -104,7 +104,7 @@ public class RichFreemarkerManager extends
 		}
 		try {
 			searchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
-					+ ftlClasspath + "/include/*.ftl";
+					+ ftlClasspath + "/meta/include/*.ftl";
 			resources = resourcePatternResolver.getResources(searchPath);
 			for (Resource r : resources) {
 				location = r.getURL().toString();
@@ -115,7 +115,7 @@ public class RichFreemarkerManager extends
 			log.info(e.getMessage());
 		}
 		try {
-			searchPath = ftlLocation + "/include/*.ftl";
+			searchPath = ftlLocation + "/meta/include/*.ftl";
 			resources = servletContextResourcePatternResolver
 					.getResources(searchPath);
 			for (Resource r : resources) {
