@@ -26,22 +26,22 @@
 <ul class="nav">
 	<li><a>系统配置</a>
 	<ul>
-		<li><a href="${base}/backend/controlPanel">控制面板</a></li>
-		<li><a href="${base}/backend/common/setting">参数设置</a></li>
-		<li><a href="${base}/backend/common/monitor">系统监控</a></li>
-		<li><a href="${base}/backend/common/customizeEntity">属性定制</a></li>
+		<li><a href="${base}/common/controlPanel">控制面板</a></li>
+		<li><a href="${base}/common/setting">参数设置</a></li>
+		<li><a href="${base}/common/monitor">系统监控</a></li>
+		<li><a href="${base}/common/customizeEntity">属性定制</a></li>
 	</ul>
 	</li>
-	<li><a href="${base}/backend/common/region">区域管理</a></li>
+	<li><a href="${base}/common/region">区域管理</a></li>
 	<li><a>用户管理</a>
 	<ul>
-		<li><a href="${base}/backend/ums/user">用户管理</a></li>
+		<li><a href="${base}/ums/user">用户管理</a></li>
 	</ul>
 	</li>
 	<li><a>产品管理</a>
 	<ul>
-		<li><a href="${base}/backend/pms/category">目录管理</a></li>
-		<li><a href="${base}/backend/pms/product">产品管理</a></li>
+		<li><a href="${base}/pms/category">目录管理</a></li>
+		<li><a href="${base}/pms/product">产品管理</a></li>
 	</ul>
 	</li>
 	<li><a href="${base}/account/logout">注销</a></li>

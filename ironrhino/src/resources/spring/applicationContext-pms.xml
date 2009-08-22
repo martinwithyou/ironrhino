@@ -14,4 +14,8 @@
 		p:width="200" />
 	<bean id="categoryTreeControl"
 		class="org.ironrhino.pms.support.CategoryTreeControl" />
+	<bean id="categoryManager"
+		class="org.ironrhino.pms.service.CategoryManagerImpl" />
+	<bean id="productManager"
+		class="org.ironrhino.pms.service.ProductManagerImpl" />
 </beans>

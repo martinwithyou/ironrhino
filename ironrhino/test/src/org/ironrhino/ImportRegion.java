@@ -16,7 +16,9 @@ public class ImportRegion {
 
 	public static void main(String... strings) throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-				new String[] { "applicationContext-base.xml",
+				new String[] { "applicationContext-common.xml",
+						"resources/spring/applicationContext-datasource.xml",
+						"resources/spring/applicationContext-aop.xml",
 						"resources/spring/applicationContext-hibernate.xml" });
 		baseManager = (BaseManager) ctx.getBean("baseManager");
 		baseManager.bulkUpdate("delete from Region");

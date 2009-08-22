@@ -23,8 +23,7 @@ public class InitData {
 
 	public static void main(String... strings) {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-				new String[] { "applicationContext-base.xml",
-						"resources/spring/applicationContext-common.xml",
+				new String[] { "applicationContext-common.xml",
 						"resources/spring/applicationContext-datasource.xml",
 						"resources/spring/applicationContext-aop.xml",
 						"resources/spring/applicationContext-hibernate.xml",

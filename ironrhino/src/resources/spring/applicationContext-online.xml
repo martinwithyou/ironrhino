@@ -14,4 +14,23 @@
 		class="org.ironrhino.online.servlet.UrlRewriteFilter" />
 	<bean id="searchHitsControl"
 		class="org.ironrhino.online.support.SearchHitsControlImpl" />
+		
+	<bean id="paymentManager"
+		class="org.ironrhino.online.payment.PaymentManager">
+		<property name="payments">
+			<list>
+				<ref bean="paypal" />
+				<ref bean="alipay" />
+			</list>
+		</property>
+	</bean>
+	<bean id="paypal" class="org.ironrhino.online.payment.Paypal"
+		p:business="${paypal.business}"/>
+	<bean id="alipay" class="org.ironrhino.online.payment.Alipay"
+		p:partner="${alipay.partner}" p:key="${alipay.key}" />
+		
+	<bean id="productFacade"
+		class="org.ironrhino.online.service.ProductFacadeImpl" />
+	<bean id="orderManager"
+		class="org.ironrhino.online.service.OrderManagerImpl" />
 </beans>

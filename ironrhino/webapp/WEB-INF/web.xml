@@ -84,7 +84,11 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>OpenSessionInViewFilter</filter-name>
-		<url-pattern>/backend/*</url-pattern>
+		<url-pattern>/pms/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>OpenSessionInViewFilter</filter-name>
+		<url-pattern>/ums/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CharacterEncodingFilter</filter-name>

@@ -32,6 +32,3 @@ cp keystore to tomcat's conf directory,and add below xml fragment to server.xml 
 
 6.deploy this webapp and start tomcat
 
-7.admin url: /backend/index,will redirect to cas login page,use admin:password login
-
-

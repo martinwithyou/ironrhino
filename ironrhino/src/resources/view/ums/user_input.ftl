@@ -22,7 +22,6 @@
 		required="true" />
 	<@s.textfield label="%{getText('email')}" name="user.email"
 		required="true" />
-	<@s.textarea label="%{getText('description')}" name="user.description"  cols="50" rows="5"/>
 	<@s.checkbox label="%{getText('enabled')}" name="user.enabled" />
 	<@s.checkbox label="%{getText('locked')}" name="user.locked" />
 	<@s.textfield label="%{getText('accountExpireDate')}"

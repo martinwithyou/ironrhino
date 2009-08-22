@@ -8,13 +8,13 @@
 		var name=$(this).text();
 		if(!confirm('change to '+name+'?'))
 		return;
-		var url='${base}/backend/pms/product/category/${Parameters.id}?categoryId='+id;
+		var url='${base}/pms/product/category/${Parameters.id}?categoryId='+id;
 		ajax({url:url,dataType:'json'});
 	}
 	Initialization.treeview= function(){
 		$("#treeview").treeview({
 			<#if async?if_exists>
-			url: "${base}/backend/pms/category/children",
+			url: "${base}/pms/category/children",
 			click:_click,
 			</#if>
 			collapsed: true,
