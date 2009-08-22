@@ -10,7 +10,6 @@ import org.ironrhino.common.model.Setting;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.online.service.ProductFacade;
-import org.ironrhino.online.servlet.UrlRewriteFilter;
 import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.model.ProductStatus;
