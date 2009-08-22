@@ -14,8 +14,6 @@
 <![endif]-->
 <link rel="alternate" href="${base}/product/feed" title="ironrhino products" type="application/atom+xml" />
 <script src="${base}/scripts/all-min.js" type="text/javascript"></script>
-<script type="text/javascript" src="${base}/dwr/engine.js"></script>
-<script type="text/javascript" src="${base}/dwr/interface/ApplicationContextConsole.js"></script>
 <#noescape>${head}</#noescape>
 </head>
 

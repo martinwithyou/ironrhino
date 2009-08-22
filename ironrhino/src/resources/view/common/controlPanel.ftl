@@ -2,6 +2,8 @@
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Control Panel</title>
+<script type="text/javascript" src="${base}/dwr/engine.js"></script>
+<script type="text/javascript" src="${base}/dwr/interface/ApplicationContextConsole.js"></script>
 <script>
 Initialization.init = function(){
 $('#execute').click(function(){ApplicationContextConsole.execute($('#cmd').val(),function(result){alert(result);});});
