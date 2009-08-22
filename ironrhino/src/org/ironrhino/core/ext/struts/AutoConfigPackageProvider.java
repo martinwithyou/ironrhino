@@ -92,11 +92,12 @@ public class AutoConfigPackageProvider implements PackageProvider {
 	public void loadPackages() throws ConfigurationException {
 		if (packages.size() == 0)
 			return;
+
 		for (String defaultNamespace : packages.keySet()) {
 			Set<Class> entityClasses = ClassScaner.scan(packages.get(
 					defaultNamespace).toArray(new String[0]), AutoConfig.class);
 			if (entityClasses.size() == 0)
-				return;
+				continue;
 			packageLoader = new PackageLoader();
 			for (Class clazz : entityClasses) {
 				processAutoConfigClass(clazz, defaultNamespace);
