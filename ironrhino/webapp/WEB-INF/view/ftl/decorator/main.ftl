@@ -10,7 +10,7 @@
 <!--[if IE]>
 	<link href="${base}/styles/ie.css" media="all" rel="stylesheet" type="text/css" />
 <![endif]-->
-<script src="${base}/scripts/all.js" type="text/javascript"></script>
+<script src="${base}/scripts/all-min.js" type="text/javascript"></script>
 <#if request.servletPath?starts_with('/product/')>
 <script type="text/javascript" src="${base}/scripts/app.product.js"></script>
 </#if>
