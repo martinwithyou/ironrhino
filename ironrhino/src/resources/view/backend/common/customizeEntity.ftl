@@ -16,7 +16,7 @@ Observation.obs = function(){
 	alert('no changes');
 	return;
 	}
-	ApplicationContextConsole.execute('customizableEntityChanger.discardChanges()',null,function(){
+	ApplicationContextConsole.execute('customizableEntityChanger.discardChanges()',function(){
 		ajax({url:document.location.href});
 	})});
 	$('#apply').click(function(){
@@ -24,7 +24,7 @@ Observation.obs = function(){
 	alert('no changes');
 	return;
 	}
-	ApplicationContextConsole.execute('customizableEntityChanger.applyChanges()',null,function(){
+	ApplicationContextConsole.execute('customizableEntityChanger.applyChanges()',function(){
 		ajax({url:document.location.href});
 	})});
 }
