@@ -41,7 +41,7 @@
 			<property name="postcode" />
 			<property name="phone" />
 		</component>
-		<many-to-one name="account" column="accountId" not-null="true" />
+		<many-to-one name="user" column="userId" not-null="true" />
 		<many-to-one name="region" column="regionId" lazy="proxy" />
 		<list name="items" table="online_orderItem" cascade="all">
 			<key column="orderId" />

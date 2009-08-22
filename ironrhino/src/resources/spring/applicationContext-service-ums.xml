@@ -5,8 +5,4 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="userManager"
 		class="org.ironrhino.ums.service.UserManagerImpl" />
-	<bean id="groupManager"
-		class="org.ironrhino.ums.service.GroupManagerImpl" />
-	<bean id="roleManager"
-		class="org.ironrhino.ums.service.RoleManagerImpl" />
 </beans>

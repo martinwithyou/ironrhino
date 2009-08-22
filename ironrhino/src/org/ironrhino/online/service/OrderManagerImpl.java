@@ -13,9 +13,9 @@ import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.rule.RuleProvider;
 import org.ironrhino.core.service.BaseManagerImpl;
-import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.Order;
 import org.ironrhino.online.model.OrderStatus;
+import org.ironrhino.ums.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +57,7 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 
 	public void doCalculateOrder(Order order) {
 		// calculate and set discount,shipcost
-		order.setAccount(AuthzUtils.getUserDetails(Account.class));
+		order.setUser(AuthzUtils.getUserDetails(User.class));
 		order.setCreateDate(new Date());
 		if (order.getClass() == Order.class) {
 			// not proxy

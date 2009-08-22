@@ -5,8 +5,8 @@ import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.service.BaseManager;
-import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.Feedback;
+import org.ironrhino.ums.model.User;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
@@ -37,12 +37,12 @@ public class FeedbackAction extends BaseAction {
 
 	@Override
 	public String input() {
-		Account account = AuthzUtils.getUserDetails(Account.class);
-		if (account != null) {
+		User user = AuthzUtils.getUserDetails(User.class);
+		if (user != null) {
 			feedback = new Feedback();
-			feedback.setName(account.getName());
-			feedback.setEmail(account.getEmail());
-			feedback.setPhone(account.getPhone());
+			feedback.setName(user.getName());
+			feedback.setEmail(user.getEmail());
+			feedback.setPhone(user.getPhone());
 		}
 		return SUCCESS;
 	}
@@ -55,9 +55,9 @@ public class FeedbackAction extends BaseAction {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "feedback.title", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "feedback.email", key = "validation.invalid") })
 	public String execute() {
 		if (feedback != null) {
-			Account account = AuthzUtils.getUserDetails(Account.class);
-			if (account != null)
-				feedback.setUsername(account.getUsername());
+			User user = AuthzUtils.getUserDetails(User.class);
+			if (user != null)
+				feedback.setUsername(user.getUsername());
 			baseManager.save(feedback);
 			addActionMessage(getText("save.success"));
 		}

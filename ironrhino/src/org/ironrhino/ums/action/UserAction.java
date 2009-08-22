@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.common.util.BeanUtils;
 import org.ironrhino.core.ext.struts.BaseAction;
+import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
 
@@ -19,6 +20,7 @@ import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
+@AutoConfig
 public class UserAction extends BaseAction {
 
 	private static final long serialVersionUID = -302766917154104461L;
@@ -29,21 +31,11 @@ public class UserAction extends BaseAction {
 
 	private String rolesAsString;
 
-	private String groupsAsString;
-
 	private String password;
 
 	private String confirmPassword;
 
 	private transient UserManager userManager;
-
-	public String getGroupsAsString() {
-		return groupsAsString;
-	}
-
-	public void setGroupsAsString(String groupsAsString) {
-		this.groupsAsString = groupsAsString;
-	}
 
 	public String getRolesAsString() {
 		return rolesAsString;
@@ -141,8 +133,6 @@ public class UserAction extends BaseAction {
 					user.setLegiblePassword(password);
 				if (rolesAsString != null)
 					user.setRolesAsString(rolesAsString);
-				if (groupsAsString != null)
-					user.setGroupsAsString(groupsAsString);
 				userManager.save(user);
 				addActionMessage(getText("save.success"));
 			}

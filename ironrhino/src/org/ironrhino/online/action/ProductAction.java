@@ -20,7 +20,6 @@ import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.monitor.Monitor;
 import org.ironrhino.core.service.BaseManager;
-import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.ProductComment;
 import org.ironrhino.online.model.ProductFavorite;
 import org.ironrhino.online.model.ProductScore;
@@ -28,6 +27,7 @@ import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.support.CategoryTreeControl;
+import org.ironrhino.ums.model.User;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
@@ -271,19 +271,19 @@ public class ProductAction extends BaseAction {
 	@SkipValidation
 	public String favorite() {
 		String code = getUid();
-		Account account = AuthzUtils.getUserDetails(Account.class);
-		if (account == null) {
+		User user = AuthzUtils.getUserDetails(User.class);
+		if (user == null) {
 			addActionError(getText("not.login"));
 		} else if (StringUtils.isNotBlank(code)) {
 			baseManager.setEntityClass(ProductFavorite.class);
 			ProductFavorite favor = (ProductFavorite) baseManager
-					.getByNaturalId("username", account.getUsername(),
+					.getByNaturalId("username", user.getUsername(),
 							"productCode", code);
 			if (favor == null) {
 				Product product = productFacade.getProductByCode(code);
 				if (product != null) {
 					ProductFavorite pf = new ProductFavorite();
-					pf.setUsername(account.getUsername());
+					pf.setUsername(user.getUsername());
 					pf.setProductCode(product.getCode());
 					pf.setProductName(product.getName());
 					baseManager.save(pf);
@@ -300,8 +300,8 @@ public class ProductAction extends BaseAction {
 	@JsonConfig(propertyName = "scoreResult")
 	public String score() {
 		String code = getUid();
-		Account account = AuthzUtils.getUserDetails(Account.class);
-		if (account == null) {
+		User user = AuthzUtils.getUserDetails(User.class);
+		if (user == null) {
 			addActionError(getText("not.login"));
 		} else if (StringUtils.isNotBlank(code) && (score >= 1 && score <= 5)) {
 			String username = AuthzUtils.getUsername();

@@ -15,6 +15,7 @@ import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
+import org.ironrhino.ums.model.User;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
 
@@ -47,7 +48,7 @@ public class Order extends BaseEntity implements Recordable {
 	@CreateIfNull
 	private List<OrderItem> items = new ArrayList<OrderItem>(0);
 
-	private Account account;
+	private User user;
 
 	private Addressee addressee;
 
@@ -112,12 +113,12 @@ public class Order extends BaseEntity implements Recordable {
 		this.description = description;
 	}
 
-	public Account getAccount() {
-		return account;
+	public User getUser() {
+		return user;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public List<OrderItem> getItems() {

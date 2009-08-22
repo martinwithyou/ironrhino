@@ -15,7 +15,7 @@
 		name="feedback.title" size="50" cssClass="required" />
 	<@s.textarea label="%{getText('content')}" cols="50" rows="5"
 		name="feedback.content" />
-	<@authorize ifNotGranted="ROLE_BUILTIN_ACCOUNT">
+	<@authorize ifNotGranted="ROLE_BUILTIN_USER">
 		<@s.textfield label="%{getText('captcha')}" name="captcha" size="6"
 			cssClass="autocomplete_off required captcha"/>
 	</@authorize>

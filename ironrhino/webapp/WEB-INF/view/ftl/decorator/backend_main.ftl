@@ -27,7 +27,6 @@
 	<li><a>系统配置</a>
 	<ul>
 		<li><a href="${base}/backend/controlPanel">控制面板</a></li>
-		<li><a href="${base}/backend/securityConfig">安全配置</a></li>
 		<li><a href="${base}/backend/common/setting">参数设置</a></li>
 		<li><a href="${base}/backend/common/monitor">系统监控</a></li>
 		<li><a href="${base}/backend/common/customizeEntity">属性定制</a></li>
@@ -37,8 +36,6 @@
 	<li><a>用户管理</a>
 	<ul>
 		<li><a href="${base}/backend/ums/user">用户管理</a></li>
-		<li><a href="${base}/backend/ums/role">角色管理</a></li>
-		<li><a href="${base}/backend/ums/group">用户组管理</a></li>
 	</ul>
 	</li>
 	<li><a>产品管理</a>
@@ -47,15 +44,7 @@
 		<li><a href="${base}/backend/pms/product">产品管理</a></li>
 	</ul>
 	</li>
-	<li><a href="${base}/backend/online/account">帐号管理</a></li>
-	<@authorize ifAllGranted="ROLE_SUPERVISOR">
-		<li><a href="${base}/backend/switchUser">切换用户</a></li>
-	</@authorize>
-	<@authorize ifAllGranted="ROLE_PREVIOUS_ADMINISTRATOR">
-		<li><a href="${base}/backend/exit">退出用户</a></li>
-	</@authorize>
-	<li><a href="${base}/backend/changePassword">修改密码</a></li>
-	<li><a href="${base}/backend/logout">注销</a></li>
+	<li><a href="${base}/account/logout">注销</a></li>
 </ul>
 </div>
 </div>

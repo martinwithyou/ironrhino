@@ -1,13 +1,9 @@
 package org.ironrhino.online.action.account;
 
-import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -25,28 +21,13 @@ import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.mail.MailService;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
-import org.ironrhino.online.model.Account;
-import org.ironrhino.online.service.AccountManager;
-import org.ironrhino.online.servlet.AccountAuthenticationProcessingFilter;
-import org.openid4java.OpenIDException;
-import org.openid4java.association.AssociationException;
-import org.openid4java.consumer.ConsumerManager;
-import org.openid4java.consumer.VerificationResult;
-import org.openid4java.discovery.DiscoveryException;
-import org.openid4java.discovery.DiscoveryInformation;
-import org.openid4java.discovery.Identifier;
-import org.openid4java.message.AuthRequest;
-import org.openid4java.message.AuthSuccess;
-import org.openid4java.message.MessageException;
-import org.openid4java.message.ParameterList;
-import org.openid4java.message.ax.AxMessage;
-import org.openid4java.message.ax.FetchRequest;
-import org.openid4java.message.ax.FetchResponse;
+import org.ironrhino.ums.model.User;
+import org.ironrhino.ums.service.UserManager;
+import org.ironrhino.ums.servlet.UserAuthenticationProcessingFilter;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.ui.AbstractProcessingFilter;
 import org.springframework.security.ui.savedrequest.SavedRequest;
 import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.UsernameNotFoundException;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
@@ -61,15 +42,11 @@ public class AccountAction extends BaseAction {
 
 	private static final long serialVersionUID = 5768065836650582081L;
 
-	public static final String TARGET_URL_IN_SESSION = "targetUrl";
-	public static final String OPENID_DISCOVERY_IN_SESSION = "openid_discovry";
-	public static final String OPENID_IN_SESSION = "openid";
 	public static final String EMAIL_IN_SESSION = "email";
-	public static final String OPENID_IN_COOKIE = "OIC";
 
 	protected static Log log = LogFactory.getLog(AccountAction.class);
 
-	private Account account;
+	private User user;
 
 	private String currentPassword;
 
@@ -81,25 +58,11 @@ public class AccountAction extends BaseAction {
 
 	private String username;
 
-	private String openid;
-
 	private transient RegionTreeControl regionTreeControl;
 
-	private transient AccountManager accountManager;
+	private transient UserManager userManager;
 
 	private transient MailService mailService;
-
-	private transient AuthRequest authRequest;
-
-	private transient ConsumerManager consumerManager;
-
-	public String getOpenid() {
-		return openid;
-	}
-
-	public void setOpenid(String openid) {
-		this.openid = openid;
-	}
 
 	public String getUsername() {
 		return username;
@@ -133,16 +96,12 @@ public class AccountAction extends BaseAction {
 		this.confirmPassword = confirmPassword;
 	}
 
-	public Account getAccount() {
-		return account;
+	public User getUser() {
+		return user;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
-	}
-
-	public AuthRequest getAuthRequest() {
-		return authRequest;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public String getPassword() {
@@ -161,12 +120,8 @@ public class AccountAction extends BaseAction {
 		this.regionTreeControl = regionTreeControl;
 	}
 
-	public void setAccountManager(AccountManager accountManager) {
-		this.accountManager = accountManager;
-	}
-
-	public void setConsumerManager(ConsumerManager consumerManager) {
-		this.consumerManager = consumerManager;
+	public void setUserManager(UserManager userManager) {
+		this.userManager = userManager;
 	}
 
 	@Override
@@ -177,26 +132,25 @@ public class AccountAction extends BaseAction {
 	@Override
 	public String input() {
 		if ("profile".equals(originalActionName)) {
-			account = new Account();
-			BeanUtils.copyProperties(AuthzUtils.getUserDetails(Account.class),
-					account);
-			if (StringUtils.isBlank(account.getAddress())) {
+			user = new User();
+			BeanUtils.copyProperties(AuthzUtils.getUserDetails(User.class),
+					user);
+			if (StringUtils.isBlank(user.getAddress())) {
 				Region region = regionTreeControl
 						.parseByHost(ServletActionContext.getRequest()
 								.getRemoteAddr());
 				if (region != null)
-					account.setAddress(region.getFullname());
+					user.setAddress(region.getFullname());
 			}
 		} else if ("email".equals(originalActionName)) {
-			account = new Account();
-			account.setEmail(AuthzUtils.getUserDetails(Account.class)
-					.getEmail());
+			user = new User();
+			user.setEmail(AuthzUtils.getUserDetails(User.class).getEmail());
 		} else if ("signup".equals(originalActionName)) {
 			String email = (String) ServletActionContext.getRequest()
 					.getSession().getAttribute(EMAIL_IN_SESSION);
 			if (email != null) {
-				account = new Account();
-				account.setEmail(email);
+				user = new User();
+				user.setEmail(email);
 				ServletActionContext.getRequest().getSession().removeAttribute(
 						EMAIL_IN_SESSION);
 			}
@@ -205,14 +159,13 @@ public class AccountAction extends BaseAction {
 	}
 
 	public String manage() {
-		account = new Account();
-		BeanUtils.copyProperties(AuthzUtils.getUserDetails(Account.class),
-				account);
-		if (StringUtils.isBlank(account.getAddress())) {
+		user = new User();
+		BeanUtils.copyProperties(AuthzUtils.getUserDetails(User.class), user);
+		if (StringUtils.isBlank(user.getAddress())) {
 			Region region = regionTreeControl.parseByHost(ServletActionContext
 					.getRequest().getRemoteAddr());
 			if (region != null)
-				account.setAddress(region.getFullname());
+				user.setAddress(region.getFullname());
 		}
 		return "manage";
 	}
@@ -238,85 +191,69 @@ public class AccountAction extends BaseAction {
 		if (StringUtils.isBlank(targetUrl))
 			targetUrl = request.getHeader("Referer");
 		username = RequestUtils.getCookieValue(request,
-				AccountAuthenticationProcessingFilter.USERNAME_IN_COOKIE);
+				UserAuthenticationProcessingFilter.USERNAME_IN_COOKIE);
 		if (StringUtils.isNotBlank(username))
 			username = CodecUtils.decode(username);
-		openid = RequestUtils.getCookieValue(request, OPENID_IN_COOKIE);
-		if (StringUtils.isNotBlank(openid))
-			openid = CodecUtils.decode(openid);
 		return "login";
 	}
 
 	@Redirect
 	@InputConfig(methodName = "input")
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "validation.required") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "account.username", expression = "^\\w{3,20}$", key = "validation.invalid") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "user.username", expression = "^\\w{3,20}$", key = "validation.invalid") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
 	public String signup() {
-		if (account != null) {
-			if (accountManager.getAccountByEmail(account.getEmail()) != null)
-				addFieldError("account.email",
+		if (user != null) {
+			if (userManager.getByEmail(user.getEmail()) != null)
+				addFieldError("user.email",
 						getText("validation.already.exists"));
-			if (StringUtils.isBlank(account.getUsername()))
-				account.setUsername(accountManager.suggestUsername(account
-						.getEmail()));
-			else if (accountManager.getAccountByUsername(account.getUsername()) != null)
-				addFieldError("account.username",
+			else if (userManager.getByUsername(user.getUsername()) != null)
+				addFieldError("user.username",
 						getText("validation.already.exists"));
 			if (hasErrors())
 				return INPUT;
 			if (StringUtils.isBlank(password))
 				password = CodecUtils.randomString(10);
-			account.setLegiblePassword(password);
-			String openid = (String) ServletActionContext.getRequest()
-					.getSession().getAttribute(OPENID_IN_SESSION);
-			if (openid != null) {
-				account.setOpenid(openid);
-				ServletActionContext.getRequest().getSession().removeAttribute(
-						OPENID_IN_SESSION);
-			}
-			accountManager.save(account);
-			account.setPassword(password);// for send mail
+			user.setLegiblePassword(password);
+			userManager.save(user);
+			user.setPassword(password);// for send mail
 			addActionMessage(getText("signup.success"));
-			sendActivationMail(account);
+			sendActivationMail(user);
 		}
-		targetUrl = "/account/profile";
+		targetUrl = "/user/profile";
 		return REDIRECT;
 	}
 
-	private void sendActivationMail(Account account) {
+	private void sendActivationMail(User user) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("account", account);
-		model
-				.put("url", "/account/activate/"
-						+ CodecUtils.encode(account.getId() + ","
-								+ account.getEmail()));
+		model.put("user", user);
+		model.put("url", "/user/activate/"
+				+ CodecUtils.encode(user.getId() + "," + user.getEmail()));
 		SimpleMailMessage smm = new SimpleMailMessage();
-		smm.setTo(account.getFriendlyName() + "<" + account.getEmail() + ">");
+		smm.setTo(user.getFriendlyName() + "<" + user.getEmail() + ">");
 		smm.setSubject(getText("activation.mail.subject"));
-		mailService.send(smm, "template/account_activate.ftl", model);
+		mailService.send(smm, "template/user_activate.ftl", model);
 		addActionMessage(getText("operation.success"));
 	}
 
 	@InputConfig(methodName = "input")
 	@Captcha
 	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.username", trim = true, key = "validation.required"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "validation.invalid") })
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.username", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") })
 	// if have not receive activate email,can retry it
 	public String resend() {
-		String email = account.getEmail();
-		account = accountManager.getByNaturalId("username", account
-				.getUsername());
-		if (account != null) {
-			if (!email.equals(account.getEmail())) {
-				addFieldError("account.email", getText("account.email.error"));
+		String email = user.getEmail();
+		user = userManager.getByNaturalId("username", user.getUsername());
+		if (user != null) {
+			if (!email.equals(user.getEmail())) {
+				addFieldError("user.email", getText("user.email.error"));
 			} else {
-				if (account.isEnabled())
-					addActionError(getText("account.already.activated"));
+				if (user.isEnabled())
+					addActionError(getText("user.already.activated"));
 				else
-					sendActivationMail(account);
+					sendActivationMail(user);
 			}
 		} else {
-			addFieldError("account.username", getText("validation.not.exists"));
+			addFieldError("user.username", getText("validation.not.exists"));
 		}
 		return "resend";
 	}
@@ -326,13 +263,13 @@ public class AccountAction extends BaseAction {
 		String u = getUid();
 		if (u != null) {
 			String[] array = CodecUtils.decode(u).split(",");
-			account = accountManager.get(array[0]);
-			if (account != null && !account.isEnabled()
-					&& account.getEmail().equals(array[1])) {
-				account.setEnabled(true);
-				accountManager.save(account);
+			user = userManager.get(array[0]);
+			if (user != null && !user.isEnabled()
+					&& user.getEmail().equals(array[1])) {
+				user.setEnabled(true);
+				userManager.save(user);
 				// auto login
-				UserDetails ud = accountManager.loadUserByUsername(account
+				UserDetails ud = userManager.loadUserByUsername(user
 						.getUsername());
 				AuthzUtils.autoLogin(ud);
 				return "activate";
@@ -344,257 +281,99 @@ public class AccountAction extends BaseAction {
 	@InputConfig(methodName = "input")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "password", trim = true, key = "validation.required") }, stringLengthFields = { @StringLengthFieldValidator(type = ValidatorType.FIELD, trim = true, minLength = "6", maxLength = "20", fieldName = "password", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
 	public String password() {
-		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
-		if (!currentAccount.isPasswordValid(currentPassword)) {
+		User currentUser = AuthzUtils.getUserDetails(User.class);
+		if (!currentUser.isPasswordValid(currentPassword)) {
 			addFieldError("currentPassword", getText("currentPassword.error"));
 			return INPUT;
 		}
-		currentAccount.setLegiblePassword(password);
-		log.info("'" + currentAccount.getUsername() + "' edited password");
-		accountManager.save(currentAccount);
+		currentUser.setLegiblePassword(password);
+		log.info("'" + currentUser.getUsername() + "' edited password");
+		userManager.save(currentUser);
 		addActionMessage(getText("save.success"));
 		return "password";
 	}
 
 	@InputConfig(methodName = "input")
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "validation.invalid") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") })
 	public String email() {
-		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
-		if (!currentAccount.getEmail().equalsIgnoreCase(account.getEmail())) {
-			if (!currentAccount.isPasswordValid(currentPassword)) {
+		User currentUser = AuthzUtils.getUserDetails(User.class);
+		if (!currentUser.getEmail().equalsIgnoreCase(user.getEmail())) {
+			if (!currentUser.isPasswordValid(currentPassword)) {
 				addFieldError("currentPassword",
 						getText("currentPassword.error"));
 				return INPUT;
 			}
-			Account acc = accountManager.getAccountByEmail(account.getEmail());
+			User acc = userManager.getByEmail(user.getEmail());
 			if (acc != null) {
 				addActionError(getText("validation.already.exists"));
 				return SUCCESS;
 			} else {
-				currentAccount.setEmail(account.getEmail());
-				currentAccount.setEnabled(false);
-				accountManager.save(currentAccount);
+				currentUser.setEmail(user.getEmail());
+				currentUser.setEnabled(false);
+				userManager.save(currentUser);
 				addActionMessage(getText("save.success"));
-				sendActivationMail(currentAccount);
+				sendActivationMail(currentUser);
 			}
 		}
 		return "email";
 	}
 
 	@InputConfig(methodName = "input")
-	public String unbindopenid() {
-		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
-		if (!currentAccount.isPasswordValid(currentPassword)) {
-			addFieldError("currentPassword", getText("currentPassword.error"));
-			return INPUT;
-		}
-		currentAccount.setOpenid(null);
-		accountManager.save(currentAccount);
-		return "unbindopenid";
-	}
-
-	@InputConfig(methodName = "input")
 	public String profile() {
-		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
-		accountManager.lock(currentAccount, LockMode.NONE);
-		currentAccount.setNickname(account.getNickname());
-		currentAccount.setSex(account.getSex());
-		currentAccount.setBirthday(account.getBirthday());
-		currentAccount.setName(account.getName());
-		currentAccount.setAddress(account.getAddress());
-		currentAccount.setPostcode(account.getPostcode());
-		currentAccount.setPhone(account.getPhone());
-		currentAccount.setSubscribed(account.isSubscribed());
-		accountManager.save(currentAccount);
+		User currentUser = AuthzUtils.getUserDetails(User.class);
+		userManager.lock(currentUser, LockMode.NONE);
+		currentUser.setSex(user.getSex());
+		currentUser.setBirthday(user.getBirthday());
+		currentUser.setName(user.getName());
+		currentUser.setAddress(user.getAddress());
+		currentUser.setPostcode(user.getPostcode());
+		currentUser.setPhone(user.getPhone());
+		userManager.save(currentUser);
 		addActionMessage(getText("save.success"));
 		return "profile";
 	}
 
 	@InputConfig(methodName = "input")
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "validation.invalid") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") })
 	public String invite() {
-		Account currentAccount = AuthzUtils.getUserDetails(Account.class);
+		User currentUser = AuthzUtils.getUserDetails(User.class);
 		SimpleMailMessage smm = new SimpleMailMessage();
-		smm.setFrom(currentAccount.getFriendlyName() + "<"
-				+ currentAccount.getEmail() + ">");
-		smm.setTo(account.getEmail());
+		smm.setFrom(currentUser.getFriendlyName() + "<"
+				+ currentUser.getEmail() + ">");
+		smm.setTo(user.getEmail());
 		smm.setSubject(getText("invite.subject",
-				"your friend {1} invite you to join us", new String[] { account
+				"your friend {1} invite you to join us", new String[] { user
 						.getFriendlyName() }));
 		Map<String, Object> model = new HashMap<String, Object>(1);
-		String url = "/account/signup?account.email=" + account.getEmail();
+		String url = "/user/signup?user.email=" + user.getEmail();
 		model.put("url", url);
-		mailService.send(smm, "template/account_invite.ftl", model);
+		mailService.send(smm, "template/user_invite.ftl", model);
 		addActionMessage(getText("operation.success"));
 		return "invite";
 	}
 
 	@InputConfig(methodName = "input")
 	@Captcha
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "account.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "account.email", key = "validation.invalid") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") })
 	public String forgot() {
-		account = accountManager.getAccountByEmail(account.getEmail());
-		if (account == null) {
+		user = userManager.getByEmail(user.getEmail());
+		if (user == null) {
 			addActionError(getText("validation.not.exists"));
 		} else {
 			password = CodecUtils.randomString(10);
-			account.setLegiblePassword(password);
-			accountManager.save(account);
-			account.setPassword(password);
+			user.setLegiblePassword(password);
+			userManager.save(user);
+			user.setPassword(password);
 			Map<String, Object> model = new HashMap<String, Object>();
-			model.put("account", account);
-			model.put("url", "/account/manage?tab=password");
+			model.put("user", user);
+			model.put("url", "/user/manage?tab=password");
 			SimpleMailMessage smm = new SimpleMailMessage();
-			smm.setTo(account.getFriendlyName() + "<" + account.getEmail()
-					+ ">");
+			smm.setTo(user.getFriendlyName() + "<" + user.getEmail() + ">");
 			smm.setSubject("this is your username and password");
-			mailService.send(smm, "template/account_forgot.ftl", model);
+			mailService.send(smm, "template/user_forgot.ftl", model);
 			addActionMessage(getText("operation.success"));
 		}
 		return "forgot";
 	}
 
-	@Redirect
-	public String openid() throws IOException {
-		if (ServletActionContext.getRequest().getParameter("openid.mode") != null)
-			return openidCallback();
-		if (username != null)
-			return openidBind();
-		else
-			return openidCheck();
-	}
-
-	public String openidBind() throws IOException {
-		account = (Account) accountManager.loadUserByUsername(username);
-		if (account == null || !account.isPasswordValid(password)) {
-			addActionError(getText("username.password.not.matched"));
-			return INPUT;
-		}
-		openid = (String) ServletActionContext.getRequest().getSession()
-				.getAttribute(OPENID_IN_SESSION);
-		if (openid != null) {
-			account.setOpenid(openid);
-			ServletActionContext.getRequest().getSession().removeAttribute(
-					OPENID_IN_SESSION);
-		}
-		accountManager.save(account);
-		doLogin();
-		return "signup";
-	}
-
-	public String openidCheck() throws IOException {
-		HttpServletRequest request = ServletActionContext.getRequest();
-		String returnToUrl = RequestUtils.getBaseUrl(request, true)
-				+ "/account/openid";
-		if (StringUtils.isNotBlank(targetUrl))
-			request.getSession().setAttribute(TARGET_URL_IN_SESSION, targetUrl);
-		try {
-			List discoveries = consumerManager.discover(openid);
-			DiscoveryInformation discovered = consumerManager
-					.associate(discoveries);
-			request.getSession().setAttribute(OPENID_DISCOVERY_IN_SESSION,
-					discovered);
-			authRequest = consumerManager.authenticate(discovered, returnToUrl);
-			FetchRequest fetch = FetchRequest.createFetchRequest();
-			fetch.addAttribute("email",
-					"http://schema.openid.net/contact/email", true);
-			fetch.addAttribute("nickname",
-					"http://schema.openid.net/contact/nickname", false);
-			fetch.addAttribute("fullname",
-					"http://schema.openid.net/contact/fullname", false);
-			authRequest.addExtension(fetch);
-			// if (!discovered.isVersion2()) {
-			targetUrl = authRequest.getDestinationUrl(true);
-			return REDIRECT;
-			// } else {
-			// use form redirect
-			// return "openid-form-redirect";
-			// }
-		} catch (OpenIDException e) {
-			addActionError(getText("validation.invalid"));
-			return "openid";
-		}
-
-	}
-
-	public String openidCallback() throws IOException {
-		HttpServletRequest request = ServletActionContext.getRequest();
-		HttpServletResponse response = ServletActionContext.getResponse();
-		try {
-			ParameterList pl = new ParameterList(request.getParameterMap());
-			DiscoveryInformation discovered = (DiscoveryInformation) request
-					.getSession().getAttribute(OPENID_DISCOVERY_IN_SESSION);
-			request.getSession().removeAttribute(OPENID_DISCOVERY_IN_SESSION);
-			StringBuffer receivingURL = request.getRequestURL();
-			String queryString = request.getQueryString();
-			if (queryString != null && queryString.length() > 0)
-				receivingURL.append("?").append(request.getQueryString());
-			VerificationResult verification = consumerManager.verify(
-					receivingURL.toString(), pl, discovered);
-			if (verification != null) {
-				Identifier verified = verification.getVerifiedId();
-				if (verified != null) {
-					openid = verified.getIdentifier();
-					RequestUtils.saveCookie(request, response,
-							OPENID_IN_COOKIE, CodecUtils.encode(discovered
-									.getClaimedIdentifier().getIdentifier()),
-							365 * 24 * 3600);
-					AuthSuccess authSuccess = (AuthSuccess) verification
-							.getAuthResponse();
-					String email = null;
-					if (authSuccess.hasExtension(AxMessage.OPENID_NS_AX)) {
-						FetchResponse fetchResp = (FetchResponse) authSuccess
-								.getExtension(AxMessage.OPENID_NS_AX);
-						List emails = fetchResp.getAttributeValues("email");
-						email = (String) emails.get(0);
-					}
-					try {
-						account = (Account) accountManager
-								.loadUserByUsername(openid);
-					} catch (UsernameNotFoundException e) {
-					}
-					if (account == null) {
-						request.getSession().setAttribute(OPENID_IN_SESSION,
-								openid);
-						request.getSession().setAttribute(EMAIL_IN_SESSION,
-								email);
-						targetUrl = "/account/signup";
-					} else {
-						if (!account.isEnabled() || account.isLocked())
-							return ACCESSDENIED;
-						doLogin();
-					}
-					return REDIRECT;
-				} else {
-					addActionError(getText("operation.failed"));
-					return "openid";
-				}
-			}
-		} catch (DiscoveryException e) {
-			log.error(e.getMessage(), e);
-			addActionError(getText("validation.invalid"));
-		} catch (AssociationException e) {
-			log.error(e.getMessage(), e);
-			addActionError(getText("validation.invalid"));
-		} catch (MessageException e) {
-			log.error(e.getMessage(), e);
-			addActionError(getText("validation.invalid"));
-		}
-		return ERROR;
-	}
-
-	private void doLogin() {
-		HttpServletRequest request = ServletActionContext.getRequest();
-		AuthzUtils.autoLogin(account);
-		accountManager.lock(account, LockMode.NONE);
-		account.setLoginTimes(account.getLoginTimes() + 1);
-		account.setLastLoginDate(new Date());
-		account.setLastLoginAddress(request.getRemoteAddr());
-		accountManager.save(account);
-		targetUrl = (String) request.getSession().getAttribute(
-				TARGET_URL_IN_SESSION);
-		request.getSession().removeAttribute(TARGET_URL_IN_SESSION);
-		if (StringUtils.isBlank(targetUrl))
-			targetUrl = request.getContextPath();
-	}
 }

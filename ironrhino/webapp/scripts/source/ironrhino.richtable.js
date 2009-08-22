@@ -384,7 +384,7 @@ Richtable = {
 		cellObj.setAttribute("edited", "true");
 		cellObj.parentNode.setAttribute("edited", "true");
 		cellObj.setAttribute("editing", "false");
-		ECSideUtil.addClass(cellObj, "editedCell");
+		$(cellObj).addClass("editedCell");
 	}
 };
 Observation.richtable = function() {

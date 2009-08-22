@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<security:http access-denied-page="/WEB-INF/view/jsp/error/403.jsp"
+		entry-point-ref="entryPoint">
+		<security:intercept-url pattern="/cas/**" requires-channel="https" />
+		<security:intercept-url pattern="/dwr/**" access="ROLE_SUPERVISOR" requires-channel="https" />
+		<security:intercept-url pattern="/scripts/**" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="any" />
+		<security:intercept-url pattern="/backend/**" access="ROLE_SUPERVISOR" requires-channel="https" />
+		<security:intercept-url pattern="/account/login" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
+		<security:intercept-url pattern="/account/signup" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
+		<security:intercept-url pattern="/account/resend" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
+		<security:intercept-url pattern="/account/activate" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
+		<security:intercept-url pattern="/account/forgot" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
+		<security:intercept-url pattern="/account/**" access="ROLE_BUILTIN_USER" requires-channel="https" />
+		<security:intercept-url pattern="/index" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="http" />
+		<security:intercept-url pattern="/" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="http" />
+		<security:intercept-url pattern="/**" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="any" />
+		<security:anonymous granted-authority="ROLE_BUILTIN_ANONYMOUS" username="anonymousUser" key="anonymous" />
+		<security:remember-me services-ref="rememberMeServices" />
+		<security:logout logout-url="/account/logout" logout-success-url="/" invalidate-session="true" />
+	</security:http>
+	
+	<bean id="rememberMeServices"
+		class="org.ironrhino.core.ext.spring.security.CustomizableTokenBasedRememberMeServices"
+		p:key="youcannotguessme" p:parameter="rememberme" p:cookieName="REMEMBERME"
+		p:userDetailsService-ref="userManager" />
+	<bean id="passwordEncoder"
+		class="org.ironrhino.core.ext.spring.security.PasswordEncoder" />
+
+	<bean id="SWITCH_USER_FILTER"
+		class="org.springframework.security.ui.switchuser.SwitchUserProcessingFilter"
+		p:userDetailsService-ref="userManager" p:switchUserUrl="/account/switch"
+		p:exitUserUrl="/account/exit" p:targetUrl="/" />
+
+	<!-- not use cas start -->
+	<security:authentication-manager alias="authenticationManager"/>
+	<security:authentication-provider user-service-ref="userManager">
+		<security:password-encoder ref="passwordEncoder" />
+	</security:authentication-provider>
+	<bean id="entryPoint"
+		class="org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint"
+		p:loginFormUrl="/account/login" p:forceHttps="true" />
+	<bean id="authenticationProcessingFilter"
+		class="org.ironrhino.ums.servlet.UserAuthenticationProcessingFilter"
+		p:usernameParameter="username" p:passwordParameter="password"
+		p:authenticationFailureUrl="/account/login?error=user.bad.credentials"
+		p:defaultTargetUrl="/" p:filterProcessesUrl="/account/check"
+		p:serverSideRedirect="true" p:authenticationManager-ref="authenticationManager"
+		p:rememberMeServices-ref="rememberMeServices">
+		<security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER" />
+		<property name="targetUrlResolver">
+			<bean
+				class="org.ironrhino.core.ext.spring.security.GracefulTargetUrlResolver" />
+		</property>
+		<property name="exceptionMappings">
+			<value>
+						org.springframework.security.DisabledException=/account/login?error=user.disabled
+						org.springframework.security.BadCredentialsException=/account/login?error=user.bad.credentials
+						org.springframework.security.LockedException=/account/login?error=user.locked
+						org.springframework.security.AccountExpiredException=/account/login?error=user.expired
+						org.springframework.security.concurrent.ConcurrentLoginException=/account/login?error=user.concurrent.login
+						org.springframework.security.CredentialsExpiredException=/account/login?error=user.credentials.expired
+			</value>
+		</property>
+		<property name="userManager" ref="userManager" />
+	</bean>
+	<!-- not use cas end -->
+
+	<!-- use cas start -->
+	<!--
+
+		<bean id="casProcessingFilter"
+			class="org.springframework.security.ui.cas.CasProcessingFilter">
+			<security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER"/>
+			<property name="authenticationManager"
+				ref="authenticationManager" />
+			<property name="defaultTargetUrl" value="/" />
+			<property name="filterProcessesUrl" value="/check" />
+		</bean>
+
+		<bean id="entryPoint"
+			class="org.springframework.security.ui.cas.CasProcessingFilterEntryPoint">
+			<property name="loginUrl" value="${cas.loginUrl}" />
+			<property name="serviceProperties" ref="serviceProperties" />
+		</bean>
+
+		<bean id="authenticationManager"
+			class="org.springframework.security.providers.ProviderManager">
+			<property name="providers">
+				<list>
+					<ref local="authenticationProvider" />
+					<ref bean="anonymousAuthenticationProvider" />
+				</list>
+			</property>
+		</bean>
+
+		<bean id="authenticationProvider"
+			class="org.springframework.security.providers.cas.CasAuthenticationProvider">
+			<property name="userDetailsService" ref="userManager" />
+			<property name="ticketValidator">
+				<bean
+					class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator">
+					<constructor-arg value="${cas.baseUrl}" />
+				</bean>
+			</property>
+			<property name="statelessTicketCache">
+				<bean
+					class="org.springframework.security.providers.cas.cache.EhCacheBasedTicketCache">
+					<property name="cache">
+						<bean id="ticketCache"
+							class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
+					</property>
+				</bean>
+			</property>
+			<property name="serviceProperties" ref="serviceProperties" />
+			<property name="key" value="password" />
+		</bean>
+
+		<bean id="serviceProperties"
+			class="org.springframework.security.ui.cas.ServiceProperties">
+			<property name="service"
+				value="${cas.serviceProperties.service}" />
+			<property name="sendRenew" value="false" />
+		</bean>
+
+		<bean id="anonymousAuthenticationProvider"
+			class="org.springframework.security.providers.anonymous.AnonymousAuthenticationProvider">
+			<property name="key" value="anonymous" />
+		</bean>
+		-->
+	<!-- use cas end -->
+
+</beans>

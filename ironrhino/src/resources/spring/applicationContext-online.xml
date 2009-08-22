@@ -6,15 +6,12 @@
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<bean id="cart" class="org.ironrhino.online.support.Cart" />
-	<bean id="consumerManager"
-		class="org.openid4java.consumer.ConsumerManager"
-		p:connectTimeout="10000" />
 	<bean id="order" class="org.ironrhino.online.model.Order"
 		scope="session">
 		<aop:scoped-proxy />
 	</bean>
-	<bean id="staticResourceFilter"
-		class="org.ironrhino.online.servlet.StaticResourceFilter" />
+	<bean id="urlRewriteFilter"
+		class="org.ironrhino.online.servlet.UrlRewriteFilter" />
 	<bean id="searchHitsControl"
 		class="org.ironrhino.online.support.SearchHitsControlImpl" />
 </beans>

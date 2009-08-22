@@ -1,23 +1,16 @@
 package org.ironrhino.ums.service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.List;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
+import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.SimpleElement;
+import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
-import org.ironrhino.ums.model.Group;
-import org.ironrhino.ums.model.Role;
 import org.ironrhino.ums.model.User;
-import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.GrantedAuthorityImpl;
 import org.springframework.security.userdetails.UsernameNotFoundException;
@@ -28,65 +21,56 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	@Override
 	@Transactional
-	@FlushCache(key = "user_${args[0].username}")
+	@FlushCache(key = "${[args[0].username,args[0].email]}", namespace = "user")
 	public void save(User user) {
 		super.save(user);
 	}
 
+	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','miss'})}")
 	@Transactional(readOnly = true)
-	@CheckCache(key = "user_${args[0]}")
 	public User loadUserByUsername(String username) {
-		User user = getUserByUsername(username);
+		if (StringUtils.isEmpty(username))
+			return null;
+		User user;
+		if (username.indexOf('@') > 0)
+			user = getByEmail(username);
+		else
+			user = getByUsername(username);
 		if (user == null)
 			throw new UsernameNotFoundException("No such Username");
 		populateAuthorities(user);
 		return user;
 	}
 
-	@Transactional(readOnly = true)
-	public User getUserByUsername(String username) {
-		return getByNaturalId(true, "username", username);
-	}
-
 	private void populateAuthorities(User user) {
-		Collection<Role> roles = new HashSet<Role>();
-		List<String> names = new ArrayList<String>();
-		for (SimpleElement sce : user.getRoles())
-			names.add(sce.getValue());
-		if (names.size() > 0) {
-			final DetachedCriteria dc = DetachedCriteria.forClass(Role.class);
-			dc.add(Restrictions.in("name", names));
-			Collection<Role> userRoles = (Collection<Role>) executeQuery(new HibernateCallback() {
-				public Object doInHibernate(Session session)
-						throws HibernateException, SQLException {
-					return dc.getExecutableCriteria(session).list();
-				}
-			});
-			roles.addAll(userRoles);
-			names.clear();
-		}
-		for (SimpleElement sce : user.getGroups())
-			names.add(sce.getValue());
-		if (names.size() > 0) {
-			final DetachedCriteria dc = DetachedCriteria.forClass(Group.class);
-			dc.add(Restrictions.in("name", names));
-			Collection<Group> userGroups = (Collection<Group>) executeQuery(new HibernateCallback() {
-				public Object doInHibernate(Session session)
-						throws HibernateException, SQLException {
-					return dc.getExecutableCriteria(session).list();
-				}
-			});
-			for (Group group : userGroups)
-				if (group.isEnabled())
-					roles.addAll(group.getRoles());
-		}
 		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
 		auths.add(new GrantedAuthorityImpl(ROLE_BUILTIN_ANONYMOUS));
 		auths.add(new GrantedAuthorityImpl(ROLE_BUILTIN_USER));
-		for (Role role : roles)
-			if (role.isEnabled())
-				auths.add(new GrantedAuthorityImpl(role.getName()));
+		for (SimpleElement sce : user.getRoles())
+			auths.add(new GrantedAuthorityImpl(sce.getValue()));
 		user.setAuthorities(auths.toArray(new GrantedAuthority[auths.size()]));
 	}
 
+	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','miss'})}")
+	@Transactional(readOnly = true)
+	public User getByUsername(String username) {
+		if (StringUtils.isEmpty(username))
+			return null;
+		return getByNaturalId(true, "username", username);
+	}
+
+	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','miss'})}")
+	@Transactional(readOnly = true)
+	public User getByEmail(String email) {
+		if (StringUtils.isEmpty(email))
+			return null;
+		return getByNaturalId(true, "email", email);
+	}
+
+	@Transactional
+	public void deleteDisabled() {
+		String hql = "delete from Account a where a.enabled = ? and a.createDate <= ?";
+		bulkUpdate(hql,
+				new Object[] { false, DateUtils.addDays(new Date(), -7) });
+	}
 }

@@ -82,9 +82,3 @@ img.captcha {
 .ondrop {
 	border: 1px dashed #b00;
 }
-
-input.openid {
-	background: url(../images/openid.png) no-repeat;
-	background-position: 0 50%;
-	padding-left: 16px;
-}

@@ -56,7 +56,8 @@ public class RegionTreeControl implements ApplicationListener {
 				new String[] { "parent", "children" });
 		r.setParent(parent);
 		parent.getChildren().add(r);
-		Collections.sort((List<Region>) parent.getChildren());
+		if (parent.getChildren() instanceof List)
+			Collections.sort((List<Region>) parent.getChildren());
 	}
 
 	private void update(Region region) {
@@ -74,7 +75,8 @@ public class RegionTreeControl implements ApplicationListener {
 		}
 		BeanUtils.copyProperties(region, r,
 				new String[] { "parent", "children" });
-		Collections.sort((List<Region>) r.getParent().getChildren());
+		if (r.getParent().getChildren() instanceof List)
+			Collections.sort((List<Region>) r.getParent().getChildren());
 	}
 
 	private void delete(Region region) {

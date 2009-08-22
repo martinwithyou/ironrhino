@@ -1,4 +1,4 @@
-package org.ironrhino.online.model;
+package org.ironrhino.ums.model;
 
 import java.util.Date;
 

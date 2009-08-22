@@ -56,13 +56,13 @@ public class OrderAction extends BaseAction {
 			if (StringUtils.isNotBlank(order.getCode()))
 				dc.add(Restrictions.ilike("code", order.getCode(),
 						MatchMode.ANYWHERE));
-			if (order.getAccount() != null) {
-				dc.createAlias("account", "a");
-				if (StringUtils.isNotBlank(order.getAccount().getUsername()))
-					dc.add(Restrictions.ilike("a.username", order.getAccount()
+			if (order.getUser() != null) {
+				dc.createAlias("user", "u");
+				if (StringUtils.isNotBlank(order.getUser().getUsername()))
+					dc.add(Restrictions.ilike("u.username", order.getUser()
 							.getUsername(), MatchMode.ANYWHERE));
-				if (StringUtils.isNotBlank(order.getAccount().getName()))
-					dc.add(Restrictions.ilike("a.name", order.getAccount()
+				if (StringUtils.isNotBlank(order.getUser().getName()))
+					dc.add(Restrictions.ilike("a.name", order.getUser()
 							.getName(), MatchMode.ANYWHERE));
 			}
 		}

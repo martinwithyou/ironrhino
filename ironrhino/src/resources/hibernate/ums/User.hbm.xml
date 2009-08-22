@@ -4,37 +4,41 @@
 
 <hibernate-mapping package="org.ironrhino.ums.model"
 	default-lazy="true">
-	<class name="User" table="ums_user">
-		<id name="id" type="java.lang.String" length="32"
-			unsaved-value="null">
+	<class name="User" table="ums_user" dynamic-insert="true"
+		dynamic-update="true">
+		<id name="id" type="java.lang.String" length="32" unsaved-value="null">
 			<generator class="uuid" />
 		</id>
 		<natural-id>
 			<property name="username" not-null="true" />
 		</natural-id>
 		<property name="password" not-null="true" />
+		<property name="email" not-null="true" unique="true" />
 		<property name="name" />
-		<property name="email" />
-		<property name="description" />
-		<property name="accountExpireDate" />
+		<property name="sex">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">
+					org.ironrhino.common.model.Sex
+				</param>
+				<!-- if set type=12 then use name not ordinal
+					<param name="type">12</param>
+					-->
+			</type>
+		</property>
+		<property name="birthday" />
+		<property name="address" />
+		<property name="postcode" />
+		<property name="phone" />
 		<property name="locked" />
-		<property name="passwordExpireDate" />
 		<property name="enabled" />
+		<property name="loginTimes" />
+		<property name="lastLoginDate" />
+		<property name="lastLoginAddress" />
 		<property name="createDate" />
 		<property name="modifyDate" />
-		<set name="roles" table="ums_userRole" cascade="all"
-			fetch="subselect">
+		<set name="roles" table="user_userRole" cascade="all">
 			<key column="userId" />
-			<composite-element
-				class="org.ironrhino.common.model.SimpleElement">
-				<property name="value" not-null="true" />
-			</composite-element>
-		</set>
-		<set name="groups" table="ums_userGroup" fetch="subselect"
-			cascade="all">
-			<key column="userId" />
-			<composite-element
-				class="org.ironrhino.common.model.SimpleElement">
+			<composite-element class="org.ironrhino.common.model.SimpleElement">
 				<property name="value" not-null="true" />
 			</composite-element>
 		</set>

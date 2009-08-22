@@ -22,7 +22,6 @@
 <div class="tabs" tab="#${Parameters.tab?if_exists}">
 <ul>
 	<li><a href="#login"><span>${action.getText('login')}</span></a></li>
-	<li><a href="#openid"><span>${action.getText('login.openid')}</span></a></li>
 	<li><a href="#forgot"><span>${action.getText('login.forgot')}</span></a></li>
 	<li><a href="#resend"><span>${action.getText('login.resend')}</span></a></li>
 </ul>
@@ -32,11 +31,6 @@
 	<@s.textfield label="%{getText('username')}" name="username"/>
 	<@s.password label="%{getText('password')}" name="password"/>
 	<@s.checkbox label="%{getText('rememberme')}" name="rememberme"/>
-	<@s.submit value="%{getText('login')}" />
-</@s.form></div>
-<div id="openid"><@s.form action="/account/openid" method="post" cssClass="ajax">
-	<@s.hidden name="targetUrl" />
-	<@s.textfield label="%{getText('openid')}" name="openid" size="30" cssClass="openid"/>
 	<@s.submit value="%{getText('login')}" />
 </@s.form></div>
 <div id="forgot"><@s.form action="forgot" method="post"

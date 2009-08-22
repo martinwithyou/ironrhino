@@ -9,18 +9,14 @@ import org.ironrhino.common.model.Region;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.service.BaseManager;
-import org.ironrhino.online.model.Account;
-import org.ironrhino.online.service.AccountManager;
 import org.ironrhino.online.service.ProductFacade;
-import org.ironrhino.online.servlet.StaticResourceFilter;
+import org.ironrhino.online.servlet.UrlRewriteFilter;
 import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.model.ProductStatus;
 import org.ironrhino.pms.service.CategoryManager;
 import org.ironrhino.pms.service.ProductManager;
-import org.ironrhino.ums.model.Role;
 import org.ironrhino.ums.model.User;
-import org.ironrhino.ums.service.RoleManager;
 import org.ironrhino.ums.service.UserManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -38,36 +34,19 @@ public class InitData {
 						"resources/spring/applicationContext-service-online.xml" });
 
 		UserManager userManager = (UserManager) ctx.getBean("userManager");
-		RoleManager roleManager = (RoleManager) ctx.getBean("roleManager");
-		Role supervisorRole = new Role("ROLE_SUPERVISOR");
-		Role advancedRole = new Role("ROLE_ADVANCED");
-		roleManager.save(supervisorRole);
-		roleManager.save(advancedRole);
 		User test = new User();
 		test.setUsername("test");
 		test.setLegiblePassword("test");
+		test.setEmail("test@test.com");
+		test.setEnabled(true);
 		userManager.save(test);
 		User admin = new User();
 		admin.setUsername("admin");
 		admin.setLegiblePassword("password");
+		admin.setEmail("admin@test.com");
+		admin.setEnabled(true);
 		admin.getRoles().add(new SimpleElement("ROLE_SUPERVISOR"));
 		userManager.save(admin);
-
-		AccountManager accountManager = (AccountManager) ctx
-				.getBean("accountManager");
-		Account acc = new Account();
-		acc.setUsername("test");
-		acc.setLegiblePassword("password");
-		acc.setEmail("www@google.com");
-		acc.setEnabled(true);
-		acc.getRoles().add(new SimpleElement("ROLE_ADVANCED"));
-		accountManager.save(acc);
-		acc = new Account();
-		acc.setUsername("test2");
-		acc.setLegiblePassword("password");
-		acc.setEmail("www2@google.com");
-		acc.setEnabled(true);
-		accountManager.save(acc);
 
 		CategoryManager categoryManager = (CategoryManager) ctx
 				.getBean("categoryManager");
@@ -109,8 +88,6 @@ public class InitData {
 				ProductFacade.SETTING_KEY_RECOMMENDED_PRODUCT, StringUtils
 						.join(recommendedProducts, ",")));
 		baseManager.save(new Setting("product.defaultNewArrivalDays", "14"));
-		baseManager.save(new Setting(
-				StaticResourceFilter.SETTING_KEY_USESTATICPAGE, "true"));
 
 		Region[] regions = new Region[10];
 		for (int i = 0; i < regions.length; i++) {

@@ -9,7 +9,6 @@ import org.jasig.cas.authentication.handler.support.AbstractUsernamePasswordAuth
 import org.jasig.cas.authentication.principal.UsernamePasswordCredentials;
 import org.springframework.util.Assert;
 
-
 public final class CasAuthenticationHandler extends
 		AbstractUsernamePasswordAuthenticationHandler {
 
@@ -35,8 +34,7 @@ public final class CasAuthenticationHandler extends
 	protected boolean authenticateUsernamePasswordInternal(
 			UsernamePasswordCredentials credentials)
 			throws AuthenticationException {
-		User user = userManager.getByNaturalId("username", credentials
-				.getUsername());
+		User user = userManager.loadUserByUsername(credentials.getUsername());
 		if (user == null)
 			throw new BadUsernameOrPasswordAuthenticationException();
 		if (!user.isEnabled())

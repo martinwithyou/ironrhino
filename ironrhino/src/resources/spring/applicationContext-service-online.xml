@@ -5,8 +5,6 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="productFacade"
 		class="org.ironrhino.online.service.ProductFacadeImpl" />
-	<bean id="accountManager"
-		class="org.ironrhino.online.service.AccountManagerImpl" />
 	<bean id="orderManager"
 		class="org.ironrhino.online.service.OrderManagerImpl" />
 </beans>

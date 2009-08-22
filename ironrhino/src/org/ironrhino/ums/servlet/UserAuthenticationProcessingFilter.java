@@ -1,4 +1,4 @@
-package org.ironrhino.online.servlet;
+package org.ironrhino.ums.servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -13,23 +13,23 @@ import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.aop.AopContext;
 import org.ironrhino.core.aop.CacheAspect;
-import org.ironrhino.online.model.Account;
-import org.ironrhino.online.model.LoginRecord;
-import org.ironrhino.online.service.AccountManager;
+import org.ironrhino.ums.model.LoginRecord;
+import org.ironrhino.ums.model.User;
+import org.ironrhino.ums.service.UserManager;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
 import org.springframework.security.ui.webapp.AuthenticationProcessingFilter;
 
-public class AccountAuthenticationProcessingFilter extends
+public class UserAuthenticationProcessingFilter extends
 		AuthenticationProcessingFilter {
 
 	public final static String USERNAME_IN_COOKIE = "UIC";
 
-	private AccountManager accountManager;
+	private UserManager userManager;
 
-	public void setAccountManager(AccountManager accountManager) {
-		this.accountManager = accountManager;
+	public void setUserManager(UserManager userManager) {
+		this.userManager = userManager;
 	}
 
 	@Override
@@ -40,13 +40,12 @@ public class AccountAuthenticationProcessingFilter extends
 		username = CodecUtils.encode(username);
 		RequestUtils.saveCookie(request, response, USERNAME_IN_COOKIE,
 				username, 365 * 24 * 3600);
-		Account account = (Account) authResult.getPrincipal();
-		account.setLoginTimes(account.getLoginTimes() + 1);
-		account.setLastLoginDate(new Date());
-		account.setLastLoginAddress(request.getRemoteAddr());
+		User user = (User) authResult.getPrincipal();
+		user.setLoginTimes(user.getLoginTimes() + 1);
+		user.setLastLoginDate(new Date());
+		user.setLastLoginAddress(request.getRemoteAddr());
 		AopContext.setBypass(CacheAspect.class);
-		accountManager.save(account);
-
+		userManager.save(user);
 		LoginRecord loginRecord = new LoginRecord();
 		loginRecord.setUsername(username);
 		loginRecord.setLoginAddress(request.getRemoteAddr());
@@ -67,7 +66,7 @@ public class AccountAuthenticationProcessingFilter extends
 	}
 
 	private void save(final LoginRecord loginRecord) {
-		accountManager.execute(new HibernateCallback() {
+		userManager.execute(new HibernateCallback() {
 			public Object doInHibernate(Session session)
 					throws HibernateException, SQLException {
 				session.save(loginRecord);

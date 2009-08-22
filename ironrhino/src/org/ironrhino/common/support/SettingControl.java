@@ -26,7 +26,7 @@ public class SettingControl implements ApplicationListener {
 
 	/**
 	 * Autowired will cause exception when
-	 * org.ironrhino.online.servlet.AccountAuthenticationProcessingFilter.save(final
+	 * org.ironrhino.ums.servlet.UserAuthenticationProcessingFilter.save(final
 	 * LoginRecord loginRecord),bloody weird
 	 */
 	private BaseManager<Setting> baseManager;

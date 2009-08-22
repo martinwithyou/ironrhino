@@ -52,7 +52,7 @@
 		<property name="commands">
 			<list>
 				<value>productManager.updateNewArrival()</value>
-				<value>accountManager.deleteDisabledAccount()</value>
+				<value>userManager.deleteDisabled()</value>
 			</list>
 		</property>
 	</bean>

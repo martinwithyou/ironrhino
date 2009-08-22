@@ -12,5 +12,12 @@ public interface UserManager extends BaseManager<User>, UserDetailsService {
 
 	public void save(User user);
 
-	public User getUserByUsername(String username);
+	public User loadUserByUsername(String username);
+
+	public User getByUsername(String username);
+
+	public User getByEmail(String email);
+
+	public void deleteDisabled();
+
 }

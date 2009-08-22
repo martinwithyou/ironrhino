@@ -14,16 +14,5 @@
 		name="confirmPassword" size="24" />
 	<@s.submit value="%{getText('signup')}" />
 </@s.form>
-<#if Session.openid?exists>  
-	<@s.form action="openid" method="post" cssClass="ajax">
-		<@s.textfield label="username or email" name="username" size="24"
-			cssClass="required" />
-		<@s.password label="%{getText('password')}" name="password" size="24"
-			cssClass="required" />
-		<@s.submit value="%{getText('bind')}" />
-	</@s.form>
-<#else>
-	<div><a href="${base}/account/login?tab=openid">${action.getText('login.openid')}?</a></div>
-</#if>
 </body>
 </html></#escape>

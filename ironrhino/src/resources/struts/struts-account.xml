@@ -17,12 +17,6 @@
 			<result name="manage" type="freemarker">
 				/WEB-INF/view/ftl/account/manage.ftl
 			</result>
-			<result name="openid-form-redirect" type="freemarker">
-				/WEB-INF/view/ftl/account/openid.ftl
-			</result>
-			<result name="openid" type="redirect">
-				/account/login?tab=openid
-			</result>
 			<result name="forgot" type="redirect">
 				/account/login?tab=forgot
 			</result>
@@ -40,9 +34,6 @@
 			</result>
 			<result name="email" type="redirect">
 				/account/manage?tab=email
-			</result>
-			<result name="unbindopenid" type="redirect">
-				/account/manage?tab=unbindopenid
 			</result>
 			<result name="invite" type="redirect">
 				/account/manage?tab=invite

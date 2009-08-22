@@ -1,4 +1,4 @@
-package org.ironrhino.ums.action;
+package org.ironrhino.online.action.account;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,7 +14,7 @@ import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
-@AutoConfig(namespace = "/backend")
+@AutoConfig(namespace = "/account")
 public class ChangePasswordAction extends BaseAction {
 
 	private static final long serialVersionUID = -3252241995437692335L;

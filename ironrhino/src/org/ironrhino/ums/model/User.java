@@ -5,11 +5,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.common.model.Addressee;
+import org.ironrhino.common.model.Sex;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.common.util.CodecUtils;
-import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
@@ -17,32 +19,43 @@ import org.springframework.security.GrantedAuthority;
 import org.springframework.security.userdetails.UserDetails;
 
 @RecordAware
-@AutoConfig
 public class User extends BaseEntity implements UserDetails, Recordable {
 
-	private static final long serialVersionUID = -2173119394276547080L;
+	private static final long serialVersionUID = -6696796299386961371L;
 
 	@NaturalId
 	private String username;
 
 	@NotInCopy
+	@NotInJson
 	private String password;
 
 	private String name;
 
+	private Sex sex;
+
+	private Date birthday;
+
 	private String email;
 
-	private String description;
+	private String address;
 
-	private Date accountExpireDate;
+	private String postcode;
 
-	private Date passwordExpireDate;
-
-	private GrantedAuthority[] authorities;
+	private String phone;
 
 	private boolean locked;
 
 	private boolean enabled;
+
+	@NotInCopy
+	private int loginTimes;
+
+	@NotInCopy
+	private Date lastLoginDate;
+
+	@NotInCopy
+	private String lastLoginAddress;
 
 	@NotInCopy
 	private Date createDate;
@@ -51,14 +64,70 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 	private Date modifyDate;
 
 	@NotInCopy
+	@NotInJson
 	private Set<SimpleElement> roles = new HashSet<SimpleElement>(0);
 
-	@NotInCopy
-	private Set<SimpleElement> groups = new HashSet<SimpleElement>(0);
+	@NotInJson
+	private GrantedAuthority[] authorities = new GrantedAuthority[0];
 
 	public User() {
 		createDate = new Date();
-		enabled = true;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getPostcode() {
+		return postcode;
+	}
+
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getLastLoginAddress() {
+		return lastLoginAddress;
+	}
+
+	public void setLastLoginAddress(String lastLoginAddress) {
+		this.lastLoginAddress = lastLoginAddress;
+	}
+
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+
+	public int getLoginTimes() {
+		return loginTimes;
+	}
+
+	public void setLoginTimes(int loginTimes) {
+		this.loginTimes = loginTimes;
 	}
 
 	public Date getCreateDate() {
@@ -77,6 +146,14 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 		this.modifyDate = modifyDate;
 	}
 
+	public Sex getSex() {
+		return sex;
+	}
+
+	public void setSex(Sex sex) {
+		this.sex = sex;
+	}
+
 	public boolean isLocked() {
 		return locked;
 	}
@@ -89,14 +166,6 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 		this.username = username;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -107,23 +176,6 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public Set<SimpleElement> getGroups() {
-		return groups;
-	}
-
-	public void setGroups(Set<SimpleElement> groups) {
-		this.groups = groups;
-	}
-
-	@NotInCopy
-	public String getGroupsAsString() {
-		return StringUtils.join(groups.iterator(), ',');
-	}
-
-	public void setGroupsAsString(String groupsAsString) {
-		SimpleElement.fillCollectionWithString(groups, groupsAsString);
 	}
 
 	public Set<SimpleElement> getRoles() {
@@ -151,22 +203,6 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 		this.enabled = enabled;
 	}
 
-	public Date getAccountExpireDate() {
-		return accountExpireDate;
-	}
-
-	public void setAccountExpireDate(Date accountExpireDate) {
-		this.accountExpireDate = accountExpireDate;
-	}
-
-	public Date getPasswordExpireDate() {
-		return passwordExpireDate;
-	}
-
-	public void setPasswordExpireDate(Date passwordExpireDate) {
-		this.passwordExpireDate = passwordExpireDate;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -188,8 +224,7 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 	}
 
 	public boolean isAccountNonExpired() {
-		return (accountExpireDate == null)
-				|| (accountExpireDate.after(new Date()));
+		return true;
 	}
 
 	public boolean isAccountNonLocked() {
@@ -197,8 +232,7 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 	}
 
 	public boolean isCredentialsNonExpired() {
-		return (passwordExpireDate == null)
-				|| (passwordExpireDate.after(new Date()));
+		return true;
 	}
 
 	public boolean isEnabled() {
@@ -211,5 +245,21 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 
 	public boolean isPasswordValid(String legiblePassword) {
 		return this.password.equals(CodecUtils.digest(legiblePassword));
+	}
+
+	public String getFriendlyName() {
+		if (StringUtils.isNotBlank(this.name))
+			return this.name;
+		else
+			return this.username;
+	}
+
+	public Addressee getDefaultAddressee() {
+		Addressee defaultAddressee = new Addressee();
+		defaultAddressee.setName(name);
+		defaultAddressee.setAddress(address);
+		defaultAddressee.setPostcode(postcode);
+		defaultAddressee.setPhone(phone);
+		return defaultAddressee;
 	}
 }

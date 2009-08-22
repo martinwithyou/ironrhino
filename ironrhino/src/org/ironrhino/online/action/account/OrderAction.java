@@ -9,13 +9,13 @@ import org.ironrhino.common.model.Addressee;
 import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.core.ext.struts.BaseAction;
-import org.ironrhino.online.model.Account;
 import org.ironrhino.online.model.Order;
 import org.ironrhino.online.model.OrderItem;
 import org.ironrhino.online.model.OrderStatus;
 import org.ironrhino.online.payment.PaymentManager;
 import org.ironrhino.online.service.OrderManager;
 import org.ironrhino.online.support.Cart;
+import org.ironrhino.ums.model.User;
 import org.springframework.beans.BeanUtils;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
@@ -53,8 +53,8 @@ public class OrderAction extends BaseAction {
 				return order;
 			order = orderManager.getByNaturalId("code", code);
 			if (order == null
-					|| !order.getAccount().equals(
-							AuthzUtils.getUserDetails(Account.class)))
+					|| !order.getUser().equals(
+							AuthzUtils.getUserDetails(User.class)))
 				order = cart.getOrder();
 			return order;
 		} else {
@@ -88,8 +88,7 @@ public class OrderAction extends BaseAction {
 			resultPage = new ResultPage<Order>();
 		DetachedCriteria dc = orderManager.detachedCriteria();
 		resultPage.setDetachedCriteria(dc);
-		dc.add(Restrictions.eq("account", AuthzUtils
-				.getUserDetails(Account.class)));
+		dc.add(Restrictions.eq("user", AuthzUtils.getUserDetails(User.class)));
 		resultPage.addOrder(org.hibernate.criterion.Order.desc("createDate"));
 		resultPage = orderManager.getResultPage(resultPage);
 		return SUCCESS;
@@ -109,8 +108,8 @@ public class OrderAction extends BaseAction {
 			if (add == null) {
 				add = new Addressee();
 				cart.getOrder().setAddressee(add);
-				BeanUtils.copyProperties(AuthzUtils.getUserDetails(
-						Account.class).getDefaultAddressee(), add);
+				BeanUtils.copyProperties(AuthzUtils.getUserDetails(User.class)
+						.getDefaultAddressee(), add);
 			}
 			return "addressee";
 		} else if ("payment".equals(originalMethod)) {
@@ -118,8 +117,8 @@ public class OrderAction extends BaseAction {
 			if (add == null) {
 				add = new Addressee();
 				cart.getOrder().setAddressee(add);
-				BeanUtils.copyProperties(AuthzUtils.getUserDetails(
-						Account.class).getDefaultAddressee(), add);
+				BeanUtils.copyProperties(AuthzUtils.getUserDetails(User.class)
+						.getDefaultAddressee(), add);
 			}
 			return "payment";
 		}
@@ -184,8 +183,8 @@ public class OrderAction extends BaseAction {
 				continue;
 			}
 			if (o.getStatus() != OrderStatus.INITIAL
-					|| !o.getAccount().equals(
-							AuthzUtils.getUserDetails(Account.class)))
+					|| !o.getUser().equals(
+							AuthzUtils.getUserDetails(User.class)))
 				continue;
 			for (OrderItem oi : o.getItems()) {
 				boolean contains = false;
