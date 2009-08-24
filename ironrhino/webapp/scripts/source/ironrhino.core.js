@@ -137,7 +137,7 @@ Observation.common = function(container) {
 					});
 		});
 	}
-	if (typeof $.fn.fileUpload != 'undefined')
+	if (typeof $.fn.uploadify != 'undefined')
 		$('.uploadify').each(function() {
 			var options = {
 				'uploader' : CONTEXT_PATH + '/images/uploader.swf',
@@ -163,13 +163,13 @@ Observation.common = function(container) {
 				var t = this;
 				$('div.uploadify_control button', $(this).parent()).eq(0)
 						.click(function() {
-									$(t).fileUploadStart()
+									$(t).uploadifyUpload()
 								}).end().eq(1).click(function() {
-									$(t).fileUploadClearQueue()
+									$(t).uploadifyClearQueue()
 								});
 			}
 			options.fileDataName = $(this).attr('name');
-			$(this).fileUpload(options);
+			$(this).uploadify(options);
 		});
 };
 

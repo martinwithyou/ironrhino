@@ -141,7 +141,7 @@
 				<file name="${webapp.dir}/scripts/source/jquery.treeview-1.4.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.treeview.async-0.1.my.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.treeTable-2.2.2.js" />
-				<file name="${webapp.dir}/scripts/source/jquery.uploadify-1.6.2.js" />
+				<file name="${webapp.dir}/scripts/source/jquery.uploadify-2.0.3.js" />
 				<file name="${webapp.dir}/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/scripts/source/ironrhino.core.js" />
 				<file name="${webapp.dir}/scripts/source/ironrhino.checkbox.js" />
