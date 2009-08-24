@@ -75,6 +75,7 @@ public class UrlRewriteFilter implements Filter {
 							+ file));
 					BufferedImage image = ImageIO.read(f);
 					image = Thumbnail.resizeFix(image, width, height);
+					response.setHeader("Cache-Control", "max-age=86400");
 					ImageIO.write(image, file
 							.substring(file.lastIndexOf('.') + 1), response
 							.getOutputStream());
