@@ -52,17 +52,20 @@ public class Monitor {
 		try {
 			appender = new DailyRollingFileAppender(layout, MonitorSettings
 					.getLogFile(MonitorSettings.STAT_LOG_FILE_NAME),
-					MonitorSettings.ENCODING, MonitorSettings.DATE_STYLE);
+					MonitorSettings.DATE_STYLE);
 			appender.setAppend(true);
-			// appender.setEncoding(ENCODING);//doesn't works
+			appender.setEncoding(MonitorSettings.ENCODING);
+			appender.activateOptions();
 			statLogger.addAppender(appender);
 			statLogger.setLevel(Level.INFO);
 			statLogger.setAdditivity(false);
 
 			appender = new DailyRollingFileAppender(layout, MonitorSettings
 					.getLogFile(MonitorSettings.SYSTEM_LOG_FILE_NAME),
-					MonitorSettings.ENCODING, MonitorSettings.DATE_STYLE);
+					MonitorSettings.DATE_STYLE);
 			appender.setAppend(true);
+			appender.setEncoding(MonitorSettings.ENCODING);
+			appender.activateOptions();
 			systemLogger.addAppender(appender);
 			systemLogger.setLevel(Level.INFO);
 			systemLogger.setAdditivity(false);
