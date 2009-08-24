@@ -70,6 +70,10 @@
 		</init-param>
 	</filter>
 	<filter-mapping>
+		<filter-name>urlRewriteFilter</filter-name>
+		<url-pattern>/pic/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
 		<filter-name>WebProxy</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>

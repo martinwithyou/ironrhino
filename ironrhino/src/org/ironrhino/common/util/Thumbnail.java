@@ -6,26 +6,6 @@ import java.io.IOException;
 
 public class Thumbnail {
 
-	private int height;
-
-	private int width;
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
 	public static BufferedImage resize(Image image, int w, int h)
 			throws IOException {
 		BufferedImage bufImage = new BufferedImage(w, h,
@@ -55,11 +35,4 @@ public class Thumbnail {
 		}
 	}
 
-	public BufferedImage resizeFix(Image image) throws IOException {
-		if (image.getWidth(null) / image.getHeight(null) > width / height) {
-			return resizeByWidth(image, width);
-		} else {
-			return resizeByHeight(image, height);
-		}
-	}
 }
