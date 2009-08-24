@@ -1,12 +1,7 @@
 package org.ironrhino.pms.action;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -18,8 +13,6 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Attribute;
 import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.common.util.BeanUtils;
-import org.ironrhino.common.util.Thumbnail;
-import org.ironrhino.common.util.WaterMark;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;
@@ -30,8 +23,6 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 public class ProductAction extends BaseAction {
 
@@ -51,8 +42,6 @@ public class ProductAction extends BaseAction {
 
 	private String pictureContentType;
 
-	private boolean useWaterMark = true;
-
 	private boolean overrideDefault;
 
 	private String pictureName;
@@ -60,12 +49,6 @@ public class ProductAction extends BaseAction {
 	private String actionType;
 
 	private String tagsAsString;
-
-	private transient WaterMark waterMark;
-
-	private transient Thumbnail smallThumbnail;
-
-	private transient Thumbnail mediumThumbnail;
 
 	private transient CategoryManager categoryManager;
 
@@ -104,14 +87,6 @@ public class ProductAction extends BaseAction {
 		this.overrideDefault = overrideDefault;
 	}
 
-	public boolean isUseWaterMark() {
-		return useWaterMark;
-	}
-
-	public void setUseWaterMark(boolean useWaterMark) {
-		this.useWaterMark = useWaterMark;
-	}
-
 	public String getPictureContentType() {
 		return pictureContentType;
 	}
@@ -144,24 +119,12 @@ public class ProductAction extends BaseAction {
 		this.product = product;
 	}
 
-	public void setMediumThumbnail(Thumbnail mediumThumbnail) {
-		this.mediumThumbnail = mediumThumbnail;
-	}
-
-	public void setSmallThumbnail(Thumbnail smallThumbnail) {
-		this.smallThumbnail = smallThumbnail;
-	}
-
 	public void setCategoryManager(CategoryManager categoryManager) {
 		this.categoryManager = categoryManager;
 	}
 
 	public void setProductManager(ProductManager productManager) {
 		this.productManager = productManager;
-	}
-
-	public void setWaterMark(WaterMark waterMark) {
-		this.waterMark = waterMark;
 	}
 
 	@Override
@@ -330,45 +293,14 @@ public class ProductAction extends BaseAction {
 	private void savePictureFile(String filename) throws Exception {
 		String path = getPicturePath(filename);
 		File target = new File(path);
-		Image pictureImage = ImageIO.read(picture);
-		BufferedImage bufferedImage;
-		FileOutputStream fos;
-		JPEGImageEncoder encoder;
-		if (useWaterMark) {
-			bufferedImage = waterMark.mark(pictureImage);
-			fos = new FileOutputStream(target);
-			encoder = JPEGCodec.createJPEGEncoder(fos);
-			encoder.encode(bufferedImage);
-			fos.flush();
-			fos.close();
-		} else {
-			if (!picture.renameTo(target))
-				log.error("failed rename " + picture.getAbsolutePath() + " to "
-						+ target.getAbsolutePath());
-		}
-		bufferedImage = smallThumbnail.resizeFix(pictureImage);
-		fos = new FileOutputStream(path.replace(".jpg", ".small.jpg"));
-		encoder = JPEGCodec.createJPEGEncoder(fos);
-		encoder.encode(bufferedImage);
-		fos.flush();
-		fos.close();
-		bufferedImage = mediumThumbnail.resizeFix(pictureImage);
-		fos = new FileOutputStream(path.replace(".jpg", ".medium.jpg"));
-		encoder = JPEGCodec.createJPEGEncoder(fos);
-		encoder.encode(bufferedImage);
-		fos.flush();
-		fos.close();
+		if (!picture.renameTo(target))
+			log.error("failed rename " + picture.getAbsolutePath() + " to "
+					+ target.getAbsolutePath());
 	}
 
 	private void deletePictureFile(String filename) {
 		String path = getPicturePath(filename);
 		File f = new File(path);
-		if (!f.delete())
-			log.error("failed to delete " + f.getAbsolutePath());
-		f = new File(path.replace(".jpg", ".small.jpg"));
-		if (!f.delete())
-			log.error("failed to delete " + f.getAbsolutePath());
-		f = new File(path.replace(".jpg", ".medium.jpg"));
 		if (!f.delete())
 			log.error("failed to delete " + f.getAbsolutePath());
 	}
@@ -378,16 +310,6 @@ public class ProductAction extends BaseAction {
 		String path2 = getPicturePath(newfilename);
 		File f1 = new File(path1);
 		File f2 = new File(path2);
-		if (!f1.renameTo(f2))
-			log.error("failed rename " + f1.getAbsolutePath() + " to "
-					+ f2.getAbsolutePath());
-		f1 = new File(path1.replace(".jpg", ".small.jpg"));
-		f2 = new File(path2.replace(".jpg", ".small.jpg"));
-		if (!f1.renameTo(f2))
-			log.error("failed rename " + f1.getAbsolutePath() + " to "
-					+ f2.getAbsolutePath());
-		f1 = new File(path1.replace(".jpg", ".medium.jpg"));
-		f2 = new File(path2.replace(".jpg", ".medium.jpg"));
 		if (!f1.renameTo(f2))
 			log.error("failed rename " + f1.getAbsolutePath() + " to "
 					+ f2.getAbsolutePath());

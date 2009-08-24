@@ -21,7 +21,6 @@
 	<@s.hidden name="actionType" value="save" />
 	<@s.hidden name="id" />
 	<@s.file label="%{getText('picture')}" name="picture" />
-	<@s.checkbox label="%{getText('useWaterMark')}" name="useWaterMark" />
 	<@s.checkbox id="overrideDefault" label="%{getText('overrideDefault')}"
 		name="overrideDefault" />
 	<@s.submit value="%{getText('save')}"/>
