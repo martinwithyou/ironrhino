@@ -10,9 +10,9 @@
 		<security:intercept-url pattern="/cas/**" requires-channel="https" />
 		<security:intercept-url pattern="/dwr/**" access="ROLE_SUPERVISOR" requires-channel="https" />
 		<security:intercept-url pattern="/scripts/**" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="any" />
-		<security:intercept-url pattern="/common/*" access="ROLE_SUPERVISOR" requires-channel="https" />
-		<security:intercept-url pattern="/ums/*" access="ROLE_SUPERVISOR" requires-channel="https" />
-		<security:intercept-url pattern="/pms/*" access="ROLE_SUPERVISOR" requires-channel="https" />
+		<security:intercept-url pattern="/common/**" access="ROLE_SUPERVISOR" requires-channel="https" />
+		<security:intercept-url pattern="/ums/**" access="ROLE_SUPERVISOR" requires-channel="https" />
+		<security:intercept-url pattern="/pms/**" access="ROLE_SUPERVISOR" requires-channel="https" />
 		<security:intercept-url pattern="/account/login" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
 		<security:intercept-url pattern="/account/signup" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
 		<security:intercept-url pattern="/account/resend" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
