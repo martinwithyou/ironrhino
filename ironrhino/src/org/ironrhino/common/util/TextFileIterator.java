@@ -38,8 +38,17 @@ public class TextFileIterator<T> implements Iterator<T> {
 	}
 
 	public TextFileIterator(String encoding, File... files) {
-		this(files);
 		this.encoding = encoding;
+		for (File f : files)
+			if (f != null && f.exists() && f.length() > 0)
+				this.files.add(f);
+		if (this.files.size() == 0)
+			throw new RuntimeException("no file available");
+		try {
+			openFile();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void openFile() {
