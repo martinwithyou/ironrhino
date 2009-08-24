@@ -126,6 +126,8 @@ Observation.common = function(container) {
 			var width = $(this).width();
 			var height = $(this).height();
 			var data = $(this).attr('data');
+			if(data.indexOf('/')==0)
+				data = document.location.protocol+'//'+document.location.host+data;
 			if (!id || !width || !height || !data)
 				alert('id,width,height,data all required');
 			swfobject.embedSWF(CONTEXT_PATH + '/images/open-flash-chart.swf',

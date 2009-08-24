@@ -21,6 +21,12 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Stat;
 import org.ironrhino.common.util.CompositeIterator;
 import org.ironrhino.common.util.DateUtils;
+import org.ironrhino.core.ext.openflashchart.model.Chart;
+import org.ironrhino.core.ext.openflashchart.model.Text;
+import org.ironrhino.core.ext.openflashchart.model.axis.XAxis;
+import org.ironrhino.core.ext.openflashchart.model.axis.YAxis;
+import org.ironrhino.core.ext.openflashchart.model.elements.AreaHollowChart;
+import org.ironrhino.core.ext.openflashchart.model.elements.BarChart;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
@@ -288,4 +294,64 @@ public class DefaultMonitorControl implements MonitorControl {
 		return analyzer.getResult();
 	}
 
+	public Chart getChart(Key key, Date date, String vtype, String ctype) {
+		boolean isdouble = "d".equalsIgnoreCase(vtype);
+		boolean isarea = "area".equalsIgnoreCase(ctype);
+		Chart chart = new Chart();
+		if (date == null)
+			date = new Date();
+		List<Value> list = getPeriodResult(key, date, isarea);
+		if (list != null && list.size() > 0) {
+			String[] labels = new String[list.size()];
+			Long[] longValues = new Long[list.size()];
+			Double[] doubleValues = new Double[list.size()];
+			Long minLongValue = null, maxLongValue = null;
+			Double minDoubleValue = null, maxDoubleValue = null;
+			for (int i = 0; i < list.size(); i++) {
+				labels[i] = String.valueOf(i);
+				Long longValue = list.get(i).getLongValue();
+				Double doubleValue = list.get(i).getDoubleValue();
+				if (minLongValue == null || minLongValue > longValue)
+					minLongValue = longValue;
+				if (maxLongValue == null || maxLongValue < longValue)
+					maxLongValue = longValue;
+				if (minDoubleValue == null || minDoubleValue > doubleValue)
+					minDoubleValue = doubleValue;
+				if (maxDoubleValue == null || maxDoubleValue < doubleValue)
+					maxDoubleValue = doubleValue;
+				longValues[i] = longValue;
+				doubleValues[i] = doubleValue;
+			}
+			chart.setTitle(new Text(key.toString()));
+			XAxis x = new XAxis();
+			YAxis y = new YAxis();
+			chart.setXAxis(x);
+			chart.setYAxis(y);
+			x.setLabels(labels);
+			if (!isarea) {
+				BarChart element = new BarChart();
+				if (!isdouble) {
+					y.setMax(maxLongValue.doubleValue());
+					element.addValues(longValues);
+				} else {
+					y.setMax(maxDoubleValue.doubleValue());
+					element.addValues(doubleValues);
+				}
+				chart.addElements(element);
+			} else {
+				AreaHollowChart element = new AreaHollowChart();
+				if (!isdouble) {
+					y.setMax(maxLongValue.doubleValue());
+					element.addValues(longValues);
+				} else {
+					y.setMax(maxDoubleValue.doubleValue());
+					element.addValues(doubleValues);
+				}
+				chart.addElements(element);
+			}
+			// y.setLabels("ylabel");
+
+		}
+		return chart;
+	}
 }
