@@ -140,13 +140,14 @@ Observation.common = function(container) {
 	if (typeof $.fn.uploadify != 'undefined')
 		$('.uploadify').each(function() {
 			var options = {
-				'uploader' : CONTEXT_PATH + '/images/uploader.swf',
+				'uploader' : CONTEXT_PATH + '/images/uploadify.swf',
 				'script' : CONTEXT_PATH + '/components/editor/upload',
 				'cancelImg' : CONTEXT_PATH + '/images/cancel.png',
 				'folder' : CONTEXT_PATH + '/upload',
 				'buttonText' : MessageBundle.get('browse'),
 				'wmode' : 'transparent',
 				'multi' : true,
+				'auto' : true,
 				'dipsplayData' : 'percentage'
 			};
 			var _options = $(this).attr('options') ? eval('('
