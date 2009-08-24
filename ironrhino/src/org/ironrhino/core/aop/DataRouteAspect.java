@@ -22,15 +22,9 @@ public class DataRouteAspect extends BaseAspect {
 	@Around("execution(public * *(..)) and @annotation(transactional)")
 	public Object determineReadonly(ProceedingJoinPoint jp,
 			Transactional transactional) throws Throwable {
-		if (DataRouteContext.isReadonly())
-			return jp.proceed();
 		if (transactional.readOnly())
 			DataRouteContext.setReadonly(true);
-		try {
-			return jp.proceed();
-		} finally {
-			DataRouteContext.setReadonly(false);
-		}
+		return jp.proceed();
 	}
 
 	@Around("execution(public * *(..)) and target(baseManager)")
@@ -45,16 +39,8 @@ public class DataRouteAspect extends BaseAspect {
 		Object obj = eval(groupName, jp, null);
 		if (obj == null)
 			return jp.proceed();
-		else
-			groupName = obj.toString();
-		if (groupName.equals(DataRouteContext.getName()))
-			return jp.proceed();
-		DataRouteContext.setName(groupName);
-		try {
-			return jp.proceed();
-		} finally {
-			DataRouteContext.setName(null);
-		}
+		DataRouteContext.setName(obj.toString());
+		return jp.proceed();
 	}
 
 }
