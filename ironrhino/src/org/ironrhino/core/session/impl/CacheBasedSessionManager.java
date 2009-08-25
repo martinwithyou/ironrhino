@@ -2,6 +2,8 @@ package org.ironrhino.core.session.impl;
 
 import java.util.Map;
 
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
 import net.sf.ehcache.jcache.JCache;
 import net.sf.jsr107cache.Cache;
 
@@ -23,8 +25,9 @@ public class CacheBasedSessionManager implements HttpSessionManager {
 	public void save(HttpWrappedSession session) {
 		Cache sessionCache = CacheContext.getCache(CACHE_NAME);
 		JCache jcache = (JCache) sessionCache;
-		jcache.put(session.getId(), session.getAttrMap(), session
-				.getMaxInactiveInterval());
+		Ehcache cache = jcache.getBackingCache();
+		cache.put(new Element(session.getId(), session.getAttrMap(), null, session
+				.getMaxInactiveInterval(), null));
 	}
 
 	public void invalidate(HttpWrappedSession session) {

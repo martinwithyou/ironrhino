@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.ehcache.jcache.JCache;
+import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheManager;
 import ognl.OgnlContext;
@@ -25,9 +26,9 @@ public class CacheContext {
 
 	public static final String FORCE_FLUSH_PARAM_NAME = "_ff_";
 
-	public static final String DEFAULT_TIME_TO_LIVE = "900";
+	public static final String DEFAULT_TIME_TO_LIVE = "3600";
 
-	public static final String DEFAULT_TIME_TO_IDLE = "900";
+	public static final String DEFAULT_TIME_TO_IDLE = "3600";
 
 	public static final String DEFAULT_SCOPE = "application";
 
@@ -52,9 +53,12 @@ public class CacheContext {
 			return cache;
 		Map config = new HashMap();
 		config.put("name", name);
+		config.put("memoryStoreEvictionPolicy", String
+				.valueOf(MemoryStoreEvictionPolicy.LRU));
 		config.put("maxElementsInMemory", String.valueOf(1000000));
 		config.put("timeToLiveSeconds", DEFAULT_TIME_TO_LIVE);
 		config.put("timeToIdleSeconds", DEFAULT_TIME_TO_IDLE);
+		config.put("overflowToDisk", String.valueOf(true));
 		try {
 			lock.lock();
 			cache = singletonManager.getCache(name);

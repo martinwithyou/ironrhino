@@ -73,6 +73,8 @@ public class UrlRewriteFilter implements Filter {
 							.indexOf('x') + 1));
 					File f = new File(servletContext.getRealPath(picPrefix
 							+ file));
+					if(!f.exists())
+						f = new File(servletContext.getRealPath("/images/product.jpg")); 
 					BufferedImage image = ImageIO.read(f);
 					image = Thumbnail.resizeFix(image, width, height);
 					response.setHeader("Cache-Control", "max-age=86400");
@@ -80,7 +82,7 @@ public class UrlRewriteFilter implements Filter {
 							.substring(file.lastIndexOf('.') + 1), response
 							.getOutputStream());
 				} catch (Exception e) {
-					log.error(e.getMessage(), e);
+					log.error(path + ":" + e.getMessage(), e);
 					chain.doFilter(req, resp);
 				}
 			}

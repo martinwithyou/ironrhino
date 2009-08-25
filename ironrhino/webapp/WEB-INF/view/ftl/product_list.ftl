@@ -7,7 +7,7 @@
 <div id="${list?if_exists}_list_detail">
 <div class="product_list">
 <#list resultPage.result as var>
-	<p><img src="${base}<#if var.pictured>/pic/${var.code}.small.jpg<#else>/images/product.jpg</#if>"
+	<p><img src="${base}/pic/${var.code}.s.jpg"
 		alt="${var.code}" class="product_list" /> <a
 		href="${base}/product/${var.code}.html">${var.name}</a> 
 		<a href="${base}/cart/add/${var.code}"
