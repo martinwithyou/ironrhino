@@ -1,5 +1,5 @@
 <#macro detail product info="">
-<li><img src="${base}/pic/${var.code}.s.jpg" alt="${product.code}" class="product_list" />
+<li><img src="${base}/pic/${product.code}.s.jpg" alt="${product.code}" class="product_list" />
 <#if info!="">
 <div>${info}</div>
 </#if>
