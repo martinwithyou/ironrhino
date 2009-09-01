@@ -137,6 +137,7 @@
 				<file name="${webapp.dir}/scripts/source/jquery.bgiframe-2.1.1.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.autocomplete-1.0.2.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.truncatable-1.0.js" />
+				<file name="${webapp.dir}/scripts/source/jquery.tmpl-1.0.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.elastic-1.6.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.treeview-1.4.js" />
 				<file name="${webapp.dir}/scripts/source/jquery.treeview.async-0.1.my.js" />
