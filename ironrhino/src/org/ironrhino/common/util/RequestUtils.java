@@ -8,6 +8,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 public class RequestUtils {
 
 	public static String getBaseUrl(HttpServletRequest request) {
@@ -57,25 +59,45 @@ public class RequestUtils {
 
 	public static void saveCookie(HttpServletRequest request,
 			HttpServletResponse response, String cookieName, String cookieValue) {
-		saveCookie(request, response, cookieName, cookieValue, -1);
+		saveCookie(request, response, cookieName, cookieValue, false);
+	}
+
+	public static void saveCookie(HttpServletRequest request,
+			HttpServletResponse response, String cookieName,
+			String cookieValue, boolean global) {
+		saveCookie(request, response, cookieName, cookieValue, -1, global);
 	}
 
 	public static void saveCookie(HttpServletRequest request,
 			HttpServletResponse response, String cookieName,
 			String cookieValue, int maxAge) {
-		saveCookie(request, response, cookieName, cookieValue, maxAge, ""
-				.equals(request.getContextPath()) ? "/" : request
-				.getContextPath());
+		saveCookie(request, response, cookieName, cookieValue, maxAge, false);
 	}
 
 	public static void saveCookie(HttpServletRequest request,
 			HttpServletResponse response, String cookieName,
-			String cookieValue, int maxAge, String path) {
+			String cookieValue, int maxAge, boolean global) {
+		String domain = null;
+		String path = "".equals(request.getContextPath()) ? "/" : request
+				.getContextPath();
+		if (global) {
+			domain = parseDomain(request);
+			path = "/";
+		}
+		saveCookie(request, response, cookieName, cookieValue, maxAge, domain,
+				path);
+	}
+
+	public static void saveCookie(HttpServletRequest request,
+			HttpServletResponse response, String cookieName,
+			String cookieValue, int maxAge, String domain, String path) {
 		try {
 			cookieValue = URLEncoder.encode(cookieValue, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 		}
 		Cookie cookie = new Cookie(cookieName, cookieValue);
+		if (StringUtils.isNotBlank(domain))
+			cookie.setDomain(domain);
 		cookie.setMaxAge(maxAge);
 		cookie.setPath(path);
 		response.addCookie(cookie);
@@ -83,15 +105,46 @@ public class RequestUtils {
 
 	public static void deleteCookie(HttpServletRequest request,
 			HttpServletResponse response, String cookieName) {
+		deleteCookie(request, response, cookieName, false);
+	}
+
+	public static void deleteCookie(HttpServletRequest request,
+			HttpServletResponse response, String cookieName, boolean global) {
 		deleteCookie(request, response, cookieName, "".equals(request
-				.getContextPath()) ? "/" : request.getContextPath());
+				.getContextPath()) ? "/" : request.getContextPath(), global);
 	}
 
 	public static void deleteCookie(HttpServletRequest request,
 			HttpServletResponse response, String cookieName, String path) {
+		deleteCookie(request, response, cookieName, path, false);
+	}
+
+	public static void deleteCookie(HttpServletRequest request,
+			HttpServletResponse response, String cookieName, String path,
+			boolean global) {
+		String domain = null;
+		if (global) {
+			domain = parseDomain(request);
+			path = "/";
+		}
 		Cookie cookie = new Cookie(cookieName, null);
+		if (StringUtils.isNotBlank(domain))
+			cookie.setDomain(domain);
 		cookie.setMaxAge(0);
 		cookie.setPath(path);
 		response.addCookie(cookie);
+	}
+
+	private static String parseDomain(HttpServletRequest request) {
+		String[] array = request.getServerName().split("\\.");
+		if (array.length >= 2) {
+			StringBuilder sb = new StringBuilder();
+			sb.append('.');
+			sb.append(array[array.length - 2]);
+			sb.append('.');
+			sb.append(array[array.length - 1]);
+			return sb.toString();
+		}
+		return null;
 	}
 }

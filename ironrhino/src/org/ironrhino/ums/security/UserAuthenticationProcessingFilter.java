@@ -1,4 +1,4 @@
-package org.ironrhino.ums.servlet;
+package org.ironrhino.ums.security;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,6 +26,8 @@ public class UserAuthenticationProcessingFilter extends
 
 	public final static String USERNAME_IN_COOKIE = "UIC";
 
+	public final static String LOGIN_USER = "U";
+
 	private UserManager userManager;
 
 	public void setUserManager(UserManager userManager) {
@@ -37,9 +39,10 @@ public class UserAuthenticationProcessingFilter extends
 			HttpServletResponse response, Authentication authResult)
 			throws IOException {
 		String username = authResult.getName();
+		RequestUtils.saveCookie(request, response, LOGIN_USER, username, true);
 		username = CodecUtils.encode(username);
 		RequestUtils.saveCookie(request, response, USERNAME_IN_COOKIE,
-				username, 365 * 24 * 3600);
+				username, 365 * 24 * 3600, true);
 		User user = (User) authResult.getPrincipal();
 		user.setLoginTimes(user.getLoginTimes() + 1);
 		user.setLastLoginDate(new Date());

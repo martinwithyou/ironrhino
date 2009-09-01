@@ -24,7 +24,9 @@
 		<security:intercept-url pattern="/**" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="any" />
 		<security:anonymous granted-authority="ROLE_BUILTIN_ANONYMOUS" username="anonymousUser" key="anonymous" />
 		<security:remember-me services-ref="rememberMeServices" />
-		<security:logout logout-url="/account/logout" logout-success-url="/" invalidate-session="true" />
+		<!-- use bean config
+			<security:logout logout-url="/account/logout" logout-success-url="/" invalidate-session="true" />
+			-->
 	</security:http>
 	
 	<bean id="rememberMeServices"
@@ -48,7 +50,7 @@
 		class="org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint"
 		p:loginFormUrl="/account/login" p:forceHttps="true" />
 	<bean id="authenticationProcessingFilter"
-		class="org.ironrhino.ums.servlet.UserAuthenticationProcessingFilter"
+		class="org.ironrhino.ums.security.UserAuthenticationProcessingFilter"
 		p:usernameParameter="username" p:passwordParameter="password"
 		p:authenticationFailureUrl="/account/login?error=user.bad.credentials"
 		p:defaultTargetUrl="/" p:filterProcessesUrl="/account/check"
@@ -71,6 +73,20 @@
 		</property>
 		<property name="userManager" ref="userManager" />
 	</bean>
+	<bean id="logoutFilter"
+		class="org.springframework.security.ui.logout.LogoutFilter"
+		p:filterProcessesUrl="/account/logout">	
+		<security:custom-filter position="LOGOUT_FILTER" />
+		<constructor-arg value="/"/>
+		<constructor-arg>
+			<list>
+				<bean class="org.springframework.security.ui.logout.SecurityContextLogoutHandler"/>
+				<ref local="rememberMeServices"/>
+				<bean class="org.ironrhino.ums.security.UserLogoutHandler"/>
+			</list>
+		</constructor-arg>
+	</bean>
+	
 	<!-- not use cas end -->
 
 	<!-- use cas start -->

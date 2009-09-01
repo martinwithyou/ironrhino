@@ -15,8 +15,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.security.Blowfish;
-import org.ironrhino.core.session.HttpWrappedSession;
 import org.ironrhino.core.session.HttpSessionManager;
+import org.ironrhino.core.session.HttpWrappedSession;
 
 public class CookieBasedSessionManager implements HttpSessionManager {
 
@@ -90,7 +90,7 @@ public class CookieBasedSessionManager implements HttpSessionManager {
 							.getResponse(), SESSION_COOKIE_PREFIX + i, value
 							.substring(i * SINGLE_COOKIE_SIZE,
 									i == pieces - 1 ? value.length() : (i + 1)
-											* SINGLE_COOKIE_SIZE));
+											* SINGLE_COOKIE_SIZE), true);
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

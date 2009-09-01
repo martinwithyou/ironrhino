@@ -1,8 +1,6 @@
 package org.ironrhino.core.session;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -11,12 +9,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.common.util.RequestUtils;
 
 public class HttpWrappedSession implements Serializable, HttpSession {
 
@@ -61,27 +59,11 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 	}
 
 	public void save() {
-		if (darty) 
+		if (darty)
 			sessionStoreManager.save(this);
-		if (isnew) {
-			Cookie cookie = new Cookie(SESSION_ID, getId());
-			try {
-				String host = new URL(httpContext.getRequest().getRequestURL()
-						.toString()).getHost();
-				String[] array = host.split("\\.");
-				if (array.length > 1) {
-					StringBuilder domain = new StringBuilder();
-					domain.append('.');
-					domain.append(array[array.length - 2]);
-					domain.append('.');
-					domain.append(array[array.length - 1]);
-					cookie.setDomain(domain.toString());
-				}
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			}
-			httpContext.getResponse().addCookie(cookie);
-		}
+		if (isnew)
+			RequestUtils.saveCookie(httpContext.getRequest(), httpContext
+					.getResponse(), SESSION_ID, getId(), true);
 	}
 
 	public HttpContext getHttpContext() {
