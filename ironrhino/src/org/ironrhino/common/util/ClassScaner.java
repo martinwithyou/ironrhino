@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.context.ResourceLoaderAware;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -21,7 +21,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.SystemPropertyUtils;
 
-public class ClassScaner implements ResourceLoaderAware {
+public class ClassScaner {
 
 	private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
@@ -36,6 +36,7 @@ public class ClassScaner implements ResourceLoaderAware {
 
 	}
 
+	@Autowired(required = false)
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourcePatternResolver = ResourcePatternUtils
 				.getResourcePatternResolver(resourceLoader);
