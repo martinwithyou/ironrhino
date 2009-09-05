@@ -65,20 +65,22 @@ public class HttpSessionFilter implements Filter {
 		if (attributes != null) {
 			attributes.requestCompleted();
 		}
-
-		byte[] bytes = res.getContents();
-		if (bytes == null)
-			bytes = new byte[0];
-		HttpSession session = httpRequest.getSession();
-		if (session instanceof HttpWrappedSession) {
-			((HttpWrappedSession) session).save();
+		try {
+			byte[] bytes = res.getContents();
+			if (bytes == null)
+				bytes = new byte[0];
+			HttpSession session = httpRequest.getSession();
+			if (session instanceof HttpWrappedSession) {
+				((HttpWrappedSession) session).save();
+			}
+			response.setContentLength(bytes.length);
+			ServletOutputStream sos = response.getOutputStream();
+			if (bytes.length > 0)
+				sos.write(bytes);
+			sos.flush();
+			sos.close();
+		} catch (IllegalStateException e) {
 		}
-		response.setContentLength(bytes.length);
-		ServletOutputStream sos = response.getOutputStream();
-		if (bytes.length > 0)
-			sos.write(bytes);
-		sos.flush();
-		sos.close();
 	}
 
 	public void destroy() {
