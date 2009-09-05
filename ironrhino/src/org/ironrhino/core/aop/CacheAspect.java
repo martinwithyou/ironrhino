@@ -3,6 +3,8 @@ package org.ironrhino.core.aop;
 import java.util.Arrays;
 import java.util.List;
 
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
 import net.sf.ehcache.jcache.JCache;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,14 +35,19 @@ public class CacheAspect extends BaseAspect {
 	public Object get(ProceedingJoinPoint jp, CheckCache checkCache)
 			throws Throwable {
 		String name = eval(checkCache.namespace(), jp, null).toString();
-		String key = checkKey(jp, checkCache);
+		List keys = checkKeys(jp, checkCache);
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(name);
-		if (cache == null || key == null || isBypass())
+		if (cache == null || keys == null || keys.size() == 0 || isBypass())
 			return jp.proceed();
 		if (CacheContext.isForceFlush()) {
-			cache.remove(key);
+			for (Object key : keys)
+				cache.remove(key);
 		} else {
-			Object value = cache.get(key);
+			Object value = null;
+			for (Object key : keys) {
+				if ((value = cache.get(key)) != null)
+					break;
+			}
 			if (value != null) {
 				eval(checkCache.onHit(), jp, value);
 				return value;
@@ -51,10 +58,16 @@ public class CacheAspect extends BaseAspect {
 		Object result = jp.proceed();
 		if (result != null && needCache(checkCache, jp, result)) {
 			JCache jcache = (JCache) cache;
-			// TODO timeToIdle
 			int timeToLive = Integer.valueOf(eval(checkCache.timeToLive(), jp,
 					result).toString());
-			jcache.put(key, result, timeToLive);
+			int timeToIdle = Integer.valueOf(eval(checkCache.timeToIdle(), jp,
+					result).toString());
+			Ehcache ehcache = jcache.getBackingCache();
+			for (Object key : keys)
+				ehcache.put(new Element(key, result, null,
+						timeToIdle > 0 ? Integer.valueOf(timeToIdle) : null,
+						timeToIdle <= 0 && timeToLive > 0 ? Integer
+								.valueOf(timeToLive) : null));
 			eval(checkCache.onPut(), jp, result);
 		}
 		return result;
@@ -65,7 +78,7 @@ public class CacheAspect extends BaseAspect {
 		String name = eval(flushCache.namespace(), jp, null).toString();
 		net.sf.jsr107cache.Cache cache = CacheContext.getCache(name, false);
 		List keys = flushKeys(jp, flushCache);
-		if (isBypass() || cache == null || keys == null)
+		if (isBypass() || cache == null || keys == null || keys.size() == 0)
 			return;
 		for (Object key : keys)
 			if (key != null)
@@ -87,12 +100,14 @@ public class CacheAspect extends BaseAspect {
 		return false;
 	}
 
-	private String checkKey(JoinPoint jp, CheckCache cache) {
+	private List checkKeys(JoinPoint jp, CheckCache cache) {
 		try {
-			Object key = eval(cache.key(), jp, null);
-			if (key == null)
+			Object keys = eval(cache.key(), jp, null);
+			if (keys == null)
 				return null;
-			return key.toString().trim();
+			if (keys instanceof List)
+				return (List) keys;
+			return Arrays.asList(keys.toString().split(","));
 		} catch (RuntimeException e) {
 			log.error(e.getMessage(), e);
 			return null;

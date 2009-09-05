@@ -7,6 +7,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
 import net.sf.ehcache.jcache.JCache;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 import net.sf.jsr107cache.Cache;
@@ -28,7 +30,7 @@ public class CacheContext {
 
 	public static final String DEFAULT_TIME_TO_LIVE = "3600";
 
-	public static final String DEFAULT_TIME_TO_IDLE = "3600";
+	public static final String DEFAULT_TIME_TO_IDLE = "-1";
 
 	public static final String DEFAULT_SCOPE = "application";
 
@@ -115,8 +117,12 @@ public class CacheContext {
 			key = actualKey.toString();
 			scope = eval(scope).toString();
 			int _timeToLive = Integer.valueOf(eval(timeToLive).toString());
-			// TODO timeToIdle
-			jcache.put(completeKey(key, scope), content, _timeToLive);
+			int _timeToIdle = Integer.valueOf(eval(timeToIdle).toString());
+			Ehcache ehcache = jcache.getBackingCache();
+			ehcache.put(new Element(completeKey(key, scope), content, null,
+					_timeToIdle > 0 ? Integer.valueOf(_timeToIdle) : null,
+					_timeToIdle <= 0 && _timeToLive > 0 ? Integer
+							.valueOf(_timeToLive) : null));
 		} catch (Throwable e) {
 		}
 	}

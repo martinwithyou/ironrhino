@@ -29,9 +29,9 @@ public class MonitorSettings {
 
 	private static final Log log = LogFactory.getLog(MonitorSettings.class);
 
-	private static long intervalUnit = 10; // senconds
+	private static long intervalUnit = 60; // senconds
 
-	private static long systemIntervalMultiple = 10; // system.log
+	private static long systemIntervalMultiple = 60; // system.log
 	// SYSTEM_INTERVAL_MULTIPLE*INTERVAL_UNIT
 	// senconds
 
