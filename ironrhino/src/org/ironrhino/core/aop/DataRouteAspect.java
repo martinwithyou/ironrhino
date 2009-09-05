@@ -35,11 +35,10 @@ public class DataRouteAspect extends BaseAspect {
 		if (entityClass == null
 				|| (dr = entityClass.getAnnotation(DataRoute.class)) == null)
 			return jp.proceed();
-		String groupName = dr.value();
-		Object obj = eval(groupName, jp, null);
-		if (obj == null)
+		String groupName = evalString(dr.value(), jp, null);
+		if (groupName == null)
 			return jp.proceed();
-		DataRouteContext.setName(obj.toString());
+		DataRouteContext.setName(groupName);
 		return jp.proceed();
 	}
 
