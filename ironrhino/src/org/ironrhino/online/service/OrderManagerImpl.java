@@ -11,6 +11,7 @@ import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.common.util.NumberUtils;
+import org.ironrhino.core.metadata.ConcurrencyControl;
 import org.ironrhino.core.rule.RuleProvider;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.online.model.Order;
@@ -86,6 +87,7 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 	}
 
 	@Transactional
+	@ConcurrencyControl(permits = "10")
 	public String create(Order order) {
 		Order o = new Order();
 		BeanUtils.copyProperties(order, o);
