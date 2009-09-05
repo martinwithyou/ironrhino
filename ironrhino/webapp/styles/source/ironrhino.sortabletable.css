@@ -56,7 +56,3 @@ table.sortable tr.roweven {
 	padding-right: 20px;
 	overflow: hidden;
 }
-
-tr.selected {
-	background: #e6e8fa;
-}

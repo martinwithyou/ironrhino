@@ -25,7 +25,7 @@
 /* jquery.treeTable.sortable
  * ------------------------------------------------------------------------- */
 .treeTable tr.selected, .treeTable tr.accept {
-  background-color: #3875d7;
+  background-color: #EBC79E;
   color: #fff;
 }
 

@@ -82,3 +82,7 @@ img.captcha {
 .ondrop {
 	border: 1px dashed #b00;
 }
+
+tr.selected {
+	background: #EBC79E;
+}
