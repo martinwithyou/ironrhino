@@ -48,6 +48,12 @@ public class BaseAction extends ActionSupport {
 
 	protected boolean restStyle;
 
+	protected boolean needCaptcha;
+
+	public boolean isNeedCaptcha() {
+		return needCaptcha;
+	}
+
 	public String getDataType() {
 		return dataType;
 	}
@@ -145,40 +151,49 @@ public class BaseAction extends ActionSupport {
 
 	@Before(priority = 20)
 	public String checkAccess() throws Exception {
-		Authorize annotation = getAnnotation(Authorize.class);
-		if (annotation == null)
-			annotation = getClass().getAnnotation(Authorize.class);
-		if (annotation == null)
-			return null;
-		boolean passed = AuthzUtils.authorize(annotation.ifAllGranted(),
-				annotation.ifAnyGranted(), annotation.ifNotGranted(),
-				annotation.expression());
-		if (!passed) {
-			getActionErrors().add(getText("access.denied"));
-			return ACCESSDENIED;
+		Authorize authorize = getAnnotation(Authorize.class);
+		if (authorize == null)
+			authorize = getClass().getAnnotation(Authorize.class);
+		if (authorize != null) {
+			boolean passed = AuthzUtils.authorize(authorize.ifAllGranted(),
+					authorize.ifAnyGranted(), authorize.ifNotGranted(),
+					authorize.expression());
+			if (!passed) {
+				getActionErrors().add(getText("access.denied"));
+				return ACCESSDENIED;
+			}
+		}
+		Captcha captcha = getAnnotation(Captcha.class);
+		if (captcha != null) {
+			if (captcha.always()) {
+				needCaptcha = true;
+			} else {
+				UserDetails ud = AuthzUtils.getUserDetails(UserDetails.class);
+				needCaptcha = ud == null;
+			}
 		}
 		return null;
 	}
 
 	@Before(priority = 10)
 	public String returnInputIfGetForm() throws Exception {
-		InputConfig annotation = getAnnotation(InputConfig.class);
-		if (annotation == null)
+		InputConfig inputConfig = getAnnotation(InputConfig.class);
+		if (inputConfig == null)
 			return null;
 		if (!"POST".equalsIgnoreCase(ServletActionContext.getRequest()
 				.getMethod())) {
 			returnInput = true;
-			if (!annotation.methodName().equals("")) {
+			if (!inputConfig.methodName().equals("")) {
 				ActionInvocation ai = ActionContext.getContext()
 						.getActionInvocation();
 				originalActionName = ai.getProxy().getActionName();
 				originalMethod = ai.getProxy().getMethod();
 				// ai.getProxy().setMethod(annotation.methodName());
 				Method method = this.getClass().getMethod(
-						annotation.methodName());
+						inputConfig.methodName());
 				return (String) method.invoke(this);
 			} else {
-				return annotation.resultName();
+				return inputConfig.resultName();
 			}
 		} else {
 			return null;
@@ -187,15 +202,9 @@ public class BaseAction extends ActionSupport {
 
 	@Override
 	public void validate() {
-		Captcha annotation = getAnnotation(Captcha.class);
-		if (annotation == null)
-			return;
-		if (!annotation.always()
-				&& AuthzUtils.getUserDetails(UserDetails.class) != null)
-			return;
-		if (!CaptchaHelper.validate(ServletActionContext.getRequest()))
+		if (needCaptcha
+				&& !CaptchaHelper.validate(ServletActionContext.getRequest()))
 			addFieldError(CaptchaHelper.KEY_CAPTCHA, getText("captcha.error"));
-		return;
 	}
 
 	@BeforeResult

@@ -36,14 +36,18 @@
 <div id="forgot"><@s.form action="forgot" method="post"
 	cssClass="ajax reset">
 	<@s.textfield label="%{getText('email')}" name="account.email" cssClass="required email"/>
+	<#if needCaptcha?if_exists>
 	<@s.textfield label="%{getText('captcha')}" name="captcha" size="6" cssClass="autocomplete_off required captcha"/>
+	</#if>
 	<@s.submit value="%{getText('confirm')}" />
 </@s.form></div>
 <div id="resend"><@s.form action="resend" method="post"
 	cssClass="ajax reset">
 	<@s.textfield label="%{getText('username')}" name="account.username" cssClass="required"/>
 	<@s.textfield label="%{getText('email')}" name="account.email" cssClass="required email"/>
+	<#if needCaptcha?if_exists>
 	<@s.textfield label="%{getText('captcha')}" name="captcha" size="6" cssClass="autocomplete_off required captcha"/>
+	</#if>
 	<@s.submit value="%{getText('confirm')}" />
 </@s.form></div>
 </div>
