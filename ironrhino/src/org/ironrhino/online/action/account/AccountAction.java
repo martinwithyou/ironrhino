@@ -3,36 +3,25 @@ package org.ironrhino.online.action.account;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.hibernate.LockMode;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.support.RegionTreeControl;
 import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.common.util.BeanUtils;
 import org.ironrhino.common.util.CodecUtils;
-import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.mail.MailService;
-import org.ironrhino.core.metadata.Captcha;
-import org.ironrhino.core.metadata.Redirect;
 import org.ironrhino.ums.model.User;
-import org.ironrhino.ums.security.UserAuthenticationProcessingFilter;
 import org.ironrhino.ums.service.UserManager;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.ui.AbstractProcessingFilter;
-import org.springframework.security.ui.savedrequest.SavedRequest;
-import org.springframework.security.userdetails.UserDetails;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
-import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
@@ -40,9 +29,7 @@ import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 public class AccountAction extends BaseAction {
 
-	private static final long serialVersionUID = 5768065836650582081L;
-
-	public static final String EMAIL_IN_SESSION = "email";
+	private static final long serialVersionUID = 5923401396213171705L;
 
 	protected static Log log = LogFactory.getLog(AccountAction.class);
 
@@ -54,31 +41,11 @@ public class AccountAction extends BaseAction {
 
 	private String confirmPassword;
 
-	private String error;
-
-	private String username;
-
 	private transient RegionTreeControl regionTreeControl;
 
 	private transient UserManager userManager;
 
 	private transient MailService mailService;
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getError() {
-		return error;
-	}
-
-	public void setError(String error) {
-		this.error = error;
-	}
 
 	public String getCurrentPassword() {
 		return currentPassword;
@@ -145,15 +112,6 @@ public class AccountAction extends BaseAction {
 		} else if ("email".equals(originalActionName)) {
 			user = new User();
 			user.setEmail(AuthzUtils.getUserDetails(User.class).getEmail());
-		} else if ("signup".equals(originalActionName)) {
-			String email = (String) ServletActionContext.getRequest()
-					.getSession().getAttribute(EMAIL_IN_SESSION);
-			if (email != null) {
-				user = new User();
-				user.setEmail(email);
-				ServletActionContext.getRequest().getSession().removeAttribute(
-						EMAIL_IN_SESSION);
-			}
 		}
 		return originalMethod;
 	}
@@ -168,118 +126,6 @@ public class AccountAction extends BaseAction {
 				user.setAddress(region.getFullname());
 		}
 		return "manage";
-	}
-
-	@Redirect
-	@InputConfig(resultName = "login")
-	@Captcha(threshold = 3)
-	public String login() {
-		if (StringUtils.isNotBlank(error)) {
-			addFieldError("password", getText(error));
-			addCaptachaThreshold();
-		}
-		HttpServletRequest request = ServletActionContext.getRequest();
-		SavedRequest savedRequest = (SavedRequest) request
-				.getSession()
-				.getAttribute(
-						AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
-		if (savedRequest != null) {
-			targetUrl = savedRequest.getFullRequestUrl();
-			if (isUseJson())
-				ServletActionContext
-						.getRequest()
-						.getSession()
-						.removeAttribute(
-								AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
-		}
-		if (StringUtils.isBlank(targetUrl))
-			targetUrl = request.getHeader("Referer");
-		username = RequestUtils.getCookieValue(request,
-				UserAuthenticationProcessingFilter.USERNAME_IN_COOKIE);
-		if (StringUtils.isNotBlank(username))
-			username = CodecUtils.decode(username);
-		return "login";
-	}
-
-	@Redirect
-	@InputConfig(methodName = "input")
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "user.username", expression = "^\\w{3,20}$", key = "validation.invalid") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
-	public String signup() {
-		if (user != null) {
-			if (userManager.getByEmail(user.getEmail()) != null)
-				addFieldError("user.email",
-						getText("validation.already.exists"));
-			else if (userManager.getByUsername(user.getUsername()) != null)
-				addFieldError("user.username",
-						getText("validation.already.exists"));
-			if (hasErrors())
-				return INPUT;
-			if (StringUtils.isBlank(password))
-				password = CodecUtils.randomString(10);
-			user.setLegiblePassword(password);
-			userManager.save(user);
-			user.setPassword(password);// for send mail
-			addActionMessage(getText("signup.success"));
-			sendActivationMail(user);
-		}
-		targetUrl = "/user/profile";
-		return REDIRECT;
-	}
-
-	private void sendActivationMail(User user) {
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("user", user);
-		model.put("url", "/user/activate/"
-				+ CodecUtils.encode(user.getId() + "," + user.getEmail()));
-		SimpleMailMessage smm = new SimpleMailMessage();
-		smm.setTo(user.getFriendlyName() + "<" + user.getEmail() + ">");
-		smm.setSubject(getText("activation.mail.subject"));
-		mailService.send(smm, "template/user_activate.ftl", model);
-		addActionMessage(getText("operation.success"));
-	}
-
-	@InputConfig(methodName = "input")
-	@Captcha(always = true)
-	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.username", trim = true, key = "validation.required"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") })
-	// if have not receive activate email,can retry it
-	public String resend() {
-		String email = user.getEmail();
-		user = userManager.getByNaturalId("username", user.getUsername());
-		if (user != null) {
-			if (!email.equals(user.getEmail())) {
-				addFieldError("user.email", getText("user.email.error"));
-			} else {
-				if (user.isEnabled())
-					addActionError(getText("user.already.activated"));
-				else
-					sendActivationMail(user);
-			}
-		} else {
-			addFieldError("user.username", getText("validation.not.exists"));
-		}
-		return "resend";
-	}
-
-	@SkipValidation
-	public String activate() {
-		String u = getUid();
-		if (u != null) {
-			String[] array = CodecUtils.decode(u).split(",");
-			user = userManager.get(array[0]);
-			if (user != null && !user.isEnabled()
-					&& user.getEmail().equals(array[1])) {
-				user.setEnabled(true);
-				userManager.save(user);
-				// auto login
-				UserDetails ud = userManager.loadUserByUsername(user
-						.getUsername());
-				AuthzUtils.autoLogin(ud);
-				return "activate";
-			}
-		}
-		return ACCESSDENIED;
 	}
 
 	@InputConfig(methodName = "input")
@@ -345,39 +191,26 @@ public class AccountAction extends BaseAction {
 		smm.setFrom(currentUser.getFriendlyName() + "<"
 				+ currentUser.getEmail() + ">");
 		smm.setTo(user.getEmail());
-		smm.setSubject(getText("invite.subject",
-				"your friend {1} invite you to join us", new String[] { user
-						.getFriendlyName() }));
+		smm.setSubject(getText("invite.subject", new String[] { user
+				.getFriendlyName() }));
 		Map<String, Object> model = new HashMap<String, Object>(1);
-		String url = "/user/signup?user.email=" + user.getEmail();
+		String url = "/signup?email=" + user.getEmail();
 		model.put("url", url);
-		mailService.send(smm, "template/user_invite.ftl", model);
+		mailService.send(smm, "template/account_invite.ftl", model);
 		addActionMessage(getText("operation.success"));
 		return "invite";
 	}
 
-	@InputConfig(methodName = "input")
-	@Captcha(always = true)
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") })
-	public String forgot() {
-		user = userManager.getByEmail(user.getEmail());
-		if (user == null) {
-			addActionError(getText("validation.not.exists"));
-		} else {
-			password = CodecUtils.randomString(10);
-			user.setLegiblePassword(password);
-			userManager.save(user);
-			user.setPassword(password);
-			Map<String, Object> model = new HashMap<String, Object>();
-			model.put("user", user);
-			model.put("url", "/user/manage?tab=password");
-			SimpleMailMessage smm = new SimpleMailMessage();
-			smm.setTo(user.getFriendlyName() + "<" + user.getEmail() + ">");
-			smm.setSubject("this is your username and password");
-			mailService.send(smm, "template/user_forgot.ftl", model);
-			addActionMessage(getText("operation.success"));
-		}
-		return "forgot";
+	private void sendActivationMail(User user) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("user", user);
+		model.put("url", "/signup/activate/"
+				+ CodecUtils.encode(user.getId() + "," + user.getEmail()));
+		SimpleMailMessage smm = new SimpleMailMessage();
+		smm.setTo(user.getFriendlyName() + "<" + user.getEmail() + ">");
+		smm.setSubject(getText("activation.mail.subject"));
+		mailService.send(smm, "template/account_activate.ftl", model);
+		addActionMessage(getText("operation.success"));
 	}
 
 }

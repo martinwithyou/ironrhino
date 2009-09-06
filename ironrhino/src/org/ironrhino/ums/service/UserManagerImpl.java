@@ -67,6 +67,20 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		return getByNaturalId(true, "email", email);
 	}
 
+	public String suggestName(String candidate) {
+		// email
+		if (candidate.indexOf('@') > 0)
+			return candidate.replace('.', '-').replace('@', '-');
+		// todo some other
+		return candidate;
+	}
+
+	public boolean isActivationRequired(String email) {
+		if (email.endsWith("@gmail.com"))
+			return false;
+		return true;
+	}
+
 	@Transactional
 	public void deleteDisabled() {
 		String hql = "delete from Account a where a.enabled = ? and a.createDate <= ?";

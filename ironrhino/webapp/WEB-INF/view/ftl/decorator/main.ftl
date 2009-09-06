@@ -24,15 +24,15 @@
 <div id="menu">
 <ul class="nav">
 	<@authorize ifNotGranted="ROLE_BUILTIN_USER">
-		<li><a id="login_link" href="${base}/account/login">登录</a></li>
-		<li><a href="${base}/account/signup">注册</a></li>
+		<li><a id="login_link" href="${base}/login">登录</a></li>
+		<li><a href="${base}/signup">注册</a></li>
 	</@authorize>
 	<@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 		<li><a>${authentication('principal.friendlyName')}</a></li>
 		<li><a href="${base}/account/manage">账户设置</a></li>
 		<li><a href="${base}/account/order">我的订单</a></li>
 		<li><a href="${base}/account/favorite">我的收藏</a></li>
-		<li><a href="${base}/account/logout">注销</a></li>
+		<li><a href="${base}/logout">注销</a></li>
 	</@authorize>
 	<li><a href="${base}/product">产品列表</a></li>
 	<li><a href="${base}/product/random">随便看看</a></li>

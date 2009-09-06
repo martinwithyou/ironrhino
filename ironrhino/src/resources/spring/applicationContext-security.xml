@@ -13,19 +13,19 @@
 		<security:intercept-url pattern="/common/**" access="ROLE_SUPERVISOR" requires-channel="https" />
 		<security:intercept-url pattern="/ums/**" access="ROLE_SUPERVISOR" requires-channel="https" />
 		<security:intercept-url pattern="/pms/**" access="ROLE_SUPERVISOR" requires-channel="https" />
-		<security:intercept-url pattern="/account/login" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
-		<security:intercept-url pattern="/account/signup" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
-		<security:intercept-url pattern="/account/resend" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
-		<security:intercept-url pattern="/account/activate" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
-		<security:intercept-url pattern="/account/forgot" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
+		<security:intercept-url pattern="/login" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
+		<security:intercept-url pattern="/signup" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
 		<security:intercept-url pattern="/account/**" access="ROLE_BUILTIN_USER" requires-channel="https" />
 		<security:intercept-url pattern="/index" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="http" />
+		<security:intercept-url pattern="/switchUser" access="ROLE_SUPERVISOR"/>
+		<security:intercept-url pattern="/switch" access="ROLE_SUPERVISOR"/>
+		<security:intercept-url pattern="/exit" access="ROLE_PREVIOUS_ADMINISTRATOR"/>
 		<security:intercept-url pattern="/" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="http" />
 		<security:intercept-url pattern="/**" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="any" />
 		<security:anonymous granted-authority="ROLE_BUILTIN_ANONYMOUS" username="anonymousUser" key="anonymous" />
 		<security:remember-me services-ref="rememberMeServices" />
 		<!-- use bean config
-			<security:logout logout-url="/account/logout" logout-success-url="/" invalidate-session="true" />
+			<security:logout logout-url="/logout" logout-success-url="/" invalidate-session="true" />
 			-->
 	</security:http>
 	
@@ -36,10 +36,12 @@
 	<bean id="passwordEncoder"
 		class="org.ironrhino.core.ext.spring.security.PasswordEncoder" />
 
-	<bean id="SWITCH_USER_FILTER"
+	<bean id="switchUserProcessingFilter"
 		class="org.springframework.security.ui.switchuser.SwitchUserProcessingFilter"
-		p:userDetailsService-ref="userManager" p:switchUserUrl="/account/switch"
-		p:exitUserUrl="/account/exit" p:targetUrl="/" />
+		p:userDetailsService-ref="userManager" p:switchUserUrl="/switch"
+		p:exitUserUrl="/exit" p:targetUrl="/" >
+		<security:custom-filter position="SWITCH_USER_FILTER" />
+	</bean>
 
 	<!-- not use cas start -->
 	<security:authentication-manager alias="authenticationManager"/>
@@ -48,12 +50,12 @@
 	</security:authentication-provider>
 	<bean id="entryPoint"
 		class="org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint"
-		p:loginFormUrl="/account/login" p:forceHttps="true" />
+		p:loginFormUrl="/login" p:forceHttps="true" />
 	<bean id="authenticationProcessingFilter"
 		class="org.ironrhino.ums.security.UserAuthenticationProcessingFilter"
 		p:usernameParameter="username" p:passwordParameter="password"
-		p:authenticationFailureUrl="/account/login?error=user.bad.credentials"
-		p:defaultTargetUrl="/" p:filterProcessesUrl="/account/check"
+		p:authenticationFailureUrl="/login?error=user.bad.credentials"
+		p:defaultTargetUrl="/" p:filterProcessesUrl="/check"
 		p:serverSideRedirect="true" p:authenticationManager-ref="authenticationManager"
 		p:rememberMeServices-ref="rememberMeServices">
 		<security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER" />
@@ -63,18 +65,18 @@
 		</property>
 		<property name="exceptionMappings">
 			<value>
-						org.springframework.security.DisabledException=/account/login?error=user.disabled
-						org.springframework.security.BadCredentialsException=/account/login?error=user.bad.credentials
-						org.springframework.security.LockedException=/account/login?error=user.locked
-						org.springframework.security.AccountExpiredException=/account/login?error=user.expired
-						org.springframework.security.concurrent.ConcurrentLoginException=/account/login?error=user.concurrent.login
-						org.springframework.security.CredentialsExpiredException=/account/login?error=user.credentials.expired
+						org.springframework.security.DisabledException=/login?error=user.disabled
+						org.springframework.security.BadCredentialsException=/login?error=user.bad.credentials
+						org.springframework.security.LockedException=/login?error=user.locked
+						org.springframework.security.AccountExpiredException=/login?error=user.expired
+						org.springframework.security.concurrent.ConcurrentLoginException=/login?error=user.concurrent.login
+						org.springframework.security.CredentialsExpiredException=/login?error=user.credentials.expired
 			</value>
 		</property>
 	</bean>
 	<bean id="logoutFilter"
 		class="org.springframework.security.ui.logout.LogoutFilter"
-		p:filterProcessesUrl="/account/logout">	
+		p:filterProcessesUrl="/logout">	
 		<security:custom-filter position="LOGOUT_FILTER" />
 		<constructor-arg value="/"/>
 		<constructor-arg>

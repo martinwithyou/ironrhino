@@ -8,23 +8,8 @@
 			<result name="success" type="freemarker">
 				/WEB-INF/view/ftl/account/index.ftl
 			</result>
-			<result name="signup" type="freemarker">
-				/WEB-INF/view/ftl/account/signup.ftl
-			</result>
-			<result name="login" type="freemarker">
-				/WEB-INF/view/ftl/account/login.ftl
-			</result>
 			<result name="manage" type="freemarker">
 				/WEB-INF/view/ftl/account/manage.ftl
-			</result>
-			<result name="forgot" type="redirect">
-				/account/login?tab=forgot
-			</result>
-			<result name="resend" type="redirect">
-				/account/login?tab=resend
-			</result>
-			<result name="activate" type="redirect">
-				/account/manage?tab=profile
 			</result>
 			<result name="profile" type="redirect">
 				/account/manage?tab=profile
@@ -42,9 +27,6 @@
 	</package>
 	<package name="account-other" namespace="/account"
 		extends="ironrhino-default">
-		<action name="switchUser">
-			<result name="success" type="autoconfig"/>
-		</action>
 		<action name="favorite" class="org.ironrhino.online.action.account.FavoriteAction">
 			<result name="success" type="autoconfig"/>
 		</action>

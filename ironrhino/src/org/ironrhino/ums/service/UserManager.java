@@ -18,6 +18,10 @@ public interface UserManager extends BaseManager<User>, UserDetailsService {
 
 	public User getByEmail(String email);
 
+	public String suggestName(String candidate);
+
+	public boolean isActivationRequired(String email);
+
 	public void deleteDisabled();
 
 }
