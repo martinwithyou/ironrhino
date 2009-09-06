@@ -218,7 +218,8 @@ public class BaseAction extends ActionSupport {
 			}
 			Integer threshold = getCaptachaThreshold();
 			if (threshold >= captcha.threshold()) {
-				firstReachCaptchaThreshold = threshold == captcha.threshold();
+				firstReachCaptchaThreshold = (threshold > 0 && threshold == captcha
+						.threshold());
 				captchaRequired = true;
 			}
 		}
@@ -268,8 +269,8 @@ public class BaseAction extends ActionSupport {
 			ServletActionContext.getResponse().setHeader("X-Redirect-To",
 					targetUrl);
 		}
-
-		if (!(returnInput || !isAjax() || isCaptchaRequired() || !(isUseJson() || hasErrors())))
+		if (!(returnInput || !isAjax()
+				|| (captchaRequired && firstReachCaptchaThreshold) || !(isUseJson() || hasErrors())))
 			ActionContext.getContext().getActionInvocation()
 					.setResultCode(JSON);
 	}
