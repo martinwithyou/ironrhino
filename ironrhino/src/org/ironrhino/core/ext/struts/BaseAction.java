@@ -24,6 +24,10 @@ import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 public class BaseAction extends ActionSupport {
 
 	private static final long serialVersionUID = -3183957331611790404L;
+
+	public static final String SESSION_KEY_CAPTCHA_REQUIRED = "captchaRequired";
+	public static final String SESSION_KEY_CAPTCHA_THRESHOLD = "captchaThreshold";
+
 	public static final String LIST = "list";
 	public static final String VIEW = "view";
 	public static final String REFERER = "referer";
@@ -48,10 +52,12 @@ public class BaseAction extends ActionSupport {
 
 	protected boolean restStyle;
 
-	protected boolean needCaptcha;
+	protected boolean captchaRequired;
 
-	public boolean isNeedCaptcha() {
-		return needCaptcha;
+	private boolean firstReachCaptchaThreshold = false;
+
+	public boolean isCaptchaRequired() {
+		return captchaRequired;
 	}
 
 	public String getDataType() {
@@ -149,8 +155,36 @@ public class BaseAction extends ActionSupport {
 		return NONE;
 	}
 
+	protected int getCaptachaThreshold() {
+		Integer threshold = (Integer) ServletActionContext.getContext()
+				.getSession().get(SESSION_KEY_CAPTCHA_THRESHOLD);
+		return threshold == null ? 0 : threshold;
+	}
+
+	protected void addCaptachaThreshold() {
+		boolean added = ServletActionContext.getRequest().getAttribute(
+				"addCaptachaThreshold") != null;
+		if (added)
+			return;
+		Integer threshold = (Integer) ServletActionContext.getContext()
+				.getSession().get(SESSION_KEY_CAPTCHA_THRESHOLD);
+		if (threshold != null)
+			threshold += 1;
+		else
+			threshold = 1;
+		ServletActionContext.getContext().getSession().put(
+				SESSION_KEY_CAPTCHA_THRESHOLD, threshold);
+		ServletActionContext.getRequest().setAttribute("addCaptachaThreshold",
+				true);
+	}
+
+	protected void resetCaptachaThreshold() {
+		ServletActionContext.getContext().getSession().remove(
+				SESSION_KEY_CAPTCHA_THRESHOLD);
+	}
+
 	@Before(priority = 20)
-	public String checkAccess() throws Exception {
+	public String preAction() throws Exception {
 		Authorize authorize = getAnnotation(Authorize.class);
 		if (authorize == null)
 			authorize = getClass().getAnnotation(Authorize.class);
@@ -166,17 +200,33 @@ public class BaseAction extends ActionSupport {
 		Captcha captcha = getAnnotation(Captcha.class);
 		if (captcha != null) {
 			if (captcha.always()) {
-				needCaptcha = true;
-			} else {
+				captchaRequired = true;
+				return null;
+			}
+			Boolean b = (Boolean) ServletActionContext.getContext()
+					.getSession().get(SESSION_KEY_CAPTCHA_REQUIRED);
+			if (b != null) {
+				captchaRequired = b.booleanValue();
+				return null;
+			}
+			if (captcha.bypassLoggedInUser()) {
 				UserDetails ud = AuthzUtils.getUserDetails(UserDetails.class);
-				needCaptcha = ud == null;
+				if (ud != null) {
+					captchaRequired = false;
+					return null;
+				}
+			}
+			Integer threshold = getCaptachaThreshold();
+			if (threshold >= captcha.threshold()) {
+				firstReachCaptchaThreshold = threshold == captcha.threshold();
+				captchaRequired = true;
 			}
 		}
 		return null;
 	}
 
 	@Before(priority = 10)
-	public String returnInputIfGetForm() throws Exception {
+	public String returnInput() throws Exception {
 		InputConfig inputConfig = getAnnotation(InputConfig.class);
 		if (inputConfig == null)
 			return null;
@@ -202,16 +252,26 @@ public class BaseAction extends ActionSupport {
 
 	@Override
 	public void validate() {
-		if (needCaptcha
-				&& !CaptchaHelper.validate(ServletActionContext.getRequest()))
+		if (!captchaRequired || firstReachCaptchaThreshold)
+			return;
+		if (CaptchaHelper.validate(ServletActionContext.getRequest()))
+			resetCaptachaThreshold();
+		else
 			addFieldError(CaptchaHelper.KEY_CAPTCHA, getText("captcha.error"));
 	}
 
 	@BeforeResult
-	public void returnJson() throws Exception {
-		if (returnInput || !isAjax() || !(isUseJson() || hasErrors()))
-			return;
-		ActionContext.getContext().getActionInvocation().setResultCode(JSON);
+	public void preResult() throws Exception {
+		if (StringUtils.isNotBlank(targetUrl) && !hasErrors()) {
+			targetUrl = ServletActionContext.getResponse().encodeRedirectURL(
+					targetUrl);
+			ServletActionContext.getResponse().setHeader("X-Redirect-To",
+					targetUrl);
+		}
+
+		if (!(returnInput || !isAjax() || isCaptchaRequired() || !(isUseJson() || hasErrors())))
+			ActionContext.getContext().getActionInvocation()
+					.setResultCode(JSON);
 	}
 
 	private <T extends Annotation> T getAnnotation(Class<T> annotationClass) {

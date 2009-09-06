@@ -2,20 +2,6 @@
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>${action.getText('login')}</title>
-<script>
-	Initialization.initForm = function() {
-		$('#login_form')[0].onsuccess = redirect;
-		$('#targetUrl')[0].value = self.location.href;
-	}
-
-	function redirect() {
-		<#if targetUrl?exists>
-			top.location.href = '<#if !targetUrl?string?contains('://')>${base}</#if>${targetUrl}';
-		<#else>
-			top.location.href = '${base}';
-		</#if>
-	}
-</script>
 </head>
 
 <body>
@@ -26,17 +12,20 @@
 	<li><a href="#resend"><span>${action.getText('login.resend')}</span></a></li>
 </ul>
 <div id="login"><@s.form id="login_form" action="check"
-	method="post" cssClass="ajax">
+	method="post" cssClass="ajax view">
 	<@s.hidden id="targetUrl" name="targetUrl" />
-	<@s.textfield label="%{getText('username')}" name="username"/>
-	<@s.password label="%{getText('password')}" name="password"/>
+	<@s.textfield label="%{getText('username')}" name="username" cssClass="required"/>
+	<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
 	<@s.checkbox label="%{getText('rememberme')}" name="rememberme"/>
+	<#if captchaRequired?if_exists>
+	<@s.textfield label="%{getText('captcha')}" name="captcha" size="6" cssClass="autocomplete_off required captcha"/>
+	</#if>
 	<@s.submit value="%{getText('login')}" />
 </@s.form></div>
 <div id="forgot"><@s.form action="forgot" method="post"
 	cssClass="ajax reset">
 	<@s.textfield label="%{getText('email')}" name="account.email" cssClass="required email"/>
-	<#if needCaptcha?if_exists>
+	<#if captchaRequired?if_exists>
 	<@s.textfield label="%{getText('captcha')}" name="captcha" size="6" cssClass="autocomplete_off required captcha"/>
 	</#if>
 	<@s.submit value="%{getText('confirm')}" />
@@ -45,7 +34,7 @@
 	cssClass="ajax reset">
 	<@s.textfield label="%{getText('username')}" name="account.username" cssClass="required"/>
 	<@s.textfield label="%{getText('email')}" name="account.email" cssClass="required email"/>
-	<#if needCaptcha?if_exists>
+	<#if captchaRequired?if_exists>
 	<@s.textfield label="%{getText('captcha')}" name="captcha" size="6" cssClass="autocomplete_off required captcha"/>
 	</#if>
 	<@s.submit value="%{getText('confirm')}" />

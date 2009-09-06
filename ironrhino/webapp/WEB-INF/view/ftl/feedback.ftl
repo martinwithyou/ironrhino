@@ -15,7 +15,7 @@
 		name="feedback.title" size="50" cssClass="required" />
 	<@s.textarea label="%{getText('content')}" cols="50" rows="5"
 		name="feedback.content" />
-	<#if needCaptcha?if_exists>
+	<#if captchaRequired?if_exists>
 		<@s.textfield label="%{getText('captcha')}" name="captcha" size="6"
 			cssClass="autocomplete_off required captcha"/>
 	</#if>

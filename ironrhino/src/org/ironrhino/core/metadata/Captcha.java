@@ -9,10 +9,11 @@ import java.lang.annotation.Target;
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface Captcha {
-	/**
-	 * always validate in despite of logged in user if true
-	 * 
-	 * @return
-	 */
+
+	int threshold() default 0;
+
+	boolean bypassLoggedInUser() default false;
+
 	boolean always() default false;
+
 }

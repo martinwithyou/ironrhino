@@ -256,7 +256,7 @@ public class ProductAction extends BaseAction {
 	}
 
 	@InputConfig(methodName = "input")
-	@Captcha
+	@Captcha(always = true)
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "comment.content", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "comment.email", key = "validation.invalid") })
 	public String comment() {
 		String code = getUid();

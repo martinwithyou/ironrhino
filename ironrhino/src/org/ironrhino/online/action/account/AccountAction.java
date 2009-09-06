@@ -170,10 +170,14 @@ public class AccountAction extends BaseAction {
 		return "manage";
 	}
 
-	@SkipValidation
+	@Redirect
+	@InputConfig(resultName = "login")
+	@Captcha(threshold = 3)
 	public String login() {
-		if (StringUtils.isNotBlank(error))
-			addActionError(getText(error));
+		if (StringUtils.isNotBlank(error)) {
+			addFieldError("password", getText(error));
+			addCaptachaThreshold();
+		}
 		HttpServletRequest request = ServletActionContext.getRequest();
 		SavedRequest savedRequest = (SavedRequest) request
 				.getSession()
@@ -235,7 +239,7 @@ public class AccountAction extends BaseAction {
 	}
 
 	@InputConfig(methodName = "input")
-	@Captcha
+	@Captcha(always = true)
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.username", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") })
@@ -353,7 +357,7 @@ public class AccountAction extends BaseAction {
 	}
 
 	@InputConfig(methodName = "input")
-	@Captcha
+	@Captcha(always = true)
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") })
 	public String forgot() {
 		user = userManager.getByEmail(user.getEmail());

@@ -196,7 +196,7 @@ Initialization.common = function() {
 				Indicator.hide();
 				var url = xhr.getResponseHeader("X-Redirect-To");
 				if (url) {
-					top.location.href = url;
+					top.location.href = UrlUtils.absolutize(url);
 					return;
 				}
 			});
@@ -229,8 +229,8 @@ Indicator = {
 UrlUtils = {
 	isSameOrigin : function(a, b) {
 		b = b || document.location.href;
-		var index = a.indexOf('://');
-		if (index == 4 || index == 5) {
+		if (UrlUtils.isAbsolute(a)) {
+			var index = a.indexOf('://');
 			if (a.indexOf(':80/') > 0)
 				a = a.replace(':80/', '/');
 			var ad = a.substring(0, a.indexOf('/', index + 3));
@@ -251,6 +251,22 @@ UrlUtils = {
 					+ CONTEXT_PATH + '/webproxy/' + url;
 		else
 			return url;
+	},
+	isAbsolute : function(a) {
+		var index = a.indexOf('://');
+		return (index == 4 || index == 5);
+	},
+	absolutize : function(url) {
+		if (UrlUtils.isAbsolute(url))
+			return url;
+		var a = document.location.href;
+		var index = a.indexOf('://');
+		if (url.length == 0 || url.indexOf('/') == 0) {
+			return a.substring(0, a.indexOf('/', index + 3)) + CONTEXT_PATH
+					+ url;
+		} else {
+			return a.substring(0, a.lastIndexOf('/') + 1) + url;
+		}
 	}
 }
 

@@ -48,7 +48,7 @@ public class FeedbackAction extends BaseAction {
 	}
 
 	@Override
-	@Captcha
+	@Captcha(bypassLoggedInUser = true)
 	@InputConfig(methodName = "input")
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "feedback.name", trim = true, key = "validation.required"),

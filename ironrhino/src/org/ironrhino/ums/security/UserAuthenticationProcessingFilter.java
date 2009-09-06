@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,10 +17,12 @@ import org.ironrhino.core.aop.CacheAspect;
 import org.ironrhino.ums.model.LoginRecord;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
 import org.springframework.security.ui.webapp.AuthenticationProcessingFilter;
+import org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint;
 
 public class UserAuthenticationProcessingFilter extends
 		AuthenticationProcessingFilter {
@@ -28,11 +31,11 @@ public class UserAuthenticationProcessingFilter extends
 
 	public final static String LOGIN_USER = "U";
 
+	@Autowired
 	private UserManager userManager;
 
-	public void setUserManager(UserManager userManager) {
-		this.userManager = userManager;
-	}
+	@Autowired
+	private AuthenticationProcessingFilterEntryPoint entryPoint;
 
 	@Override
 	protected void onSuccessfulAuthentication(HttpServletRequest request,
@@ -66,6 +69,19 @@ public class UserAuthenticationProcessingFilter extends
 		loginRecord.setFailed(true);
 		loginRecord.setCause(failed.getMessage());
 		save(loginRecord);
+	}
+
+	protected String determineTargetUrl(HttpServletRequest request) {
+		return entryPoint.getLoginFormUrl();
+	}
+
+	protected void sendRedirect(HttpServletRequest request,
+			HttpServletResponse response, String url) throws IOException {
+		try {
+			request.getRequestDispatcher(url).forward(request, response);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void save(final LoginRecord loginRecord) {

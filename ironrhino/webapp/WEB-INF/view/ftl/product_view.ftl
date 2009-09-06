@@ -63,7 +63,7 @@
 		name="comment.email" />
 	<@s.textarea id="comment.content" label="%{getText('content')}"
 		name="comment.content" cols="50" rows="5" />
-	<#if needCaptcha?if_exists>
+	<#if captchaRequired?if_exists>
 		<@s.textfield label="%{getText('captcha')}" name="captcha" size="6"
 			cssClass="autocomplete_off required captcha" />
 	</#if>
@@ -80,7 +80,7 @@
 		name="send.destination" />
 	<@s.textfield label="%{getText('message')}" name="send.message"
 		size="50" />
-	<#if needCaptcha?if_exists>
+	<#if captchaRequired?if_exists>
 		<@s.textfield label="%{getText('captcha')}" name="captcha" size="6"
 			cssClass="autocomplete_off required captcha" />
 	</#if>

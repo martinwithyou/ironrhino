@@ -9,5 +9,4 @@ import java.lang.annotation.Target;
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface Redirect {
-	String targetUrl() default "targetUrl";
 }

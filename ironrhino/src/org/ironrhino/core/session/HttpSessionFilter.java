@@ -80,6 +80,7 @@ public class HttpSessionFilter implements Filter {
 			sos.flush();
 			sos.close();
 		} catch (IllegalStateException e) {
+			e.printStackTrace();
 		}
 	}
 

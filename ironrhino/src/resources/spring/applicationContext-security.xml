@@ -71,7 +71,6 @@
 						org.springframework.security.CredentialsExpiredException=/account/login?error=user.credentials.expired
 			</value>
 		</property>
-		<property name="userManager" ref="userManager" />
 	</bean>
 	<bean id="logoutFilter"
 		class="org.springframework.security.ui.logout.LogoutFilter"
