@@ -13,7 +13,7 @@
 	<link href="${base}/styles/ie.css" media="all" rel="stylesheet" type="text/css" />
 <![endif]-->
 <link rel="alternate" href="${base}/product/feed" title="ironrhino products" type="application/atom+xml" />
-<script src="${base}/scripts/all.js" type="text/javascript"></script>
+<script src="${base}/scripts/all-min.js" type="text/javascript"></script>
 <#noescape>${head}</#noescape>
 </head>
 
@@ -42,7 +42,7 @@
 		<li><a href="${base}/pms/product">产品管理</a></li>
 	</ul>
 	</li>
-	<li><a href="${base}/account/logout">注销</a></li>
+	<li><a href="${base}/logout">注销</a></li>
 </ul>
 </div>
 </div>

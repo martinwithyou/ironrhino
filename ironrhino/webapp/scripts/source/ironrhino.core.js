@@ -381,9 +381,10 @@ Ajax = {
 					document.title = Ajax.title;
 			}
 			var replacement = {};
-			var entries = (options.replacement || $(target).attr('replacement')
-					|| $(target).attr('tagName') == 'FORM' ? $(target)
-					.attr('id') : null || 'content').split(',');
+			var entries = (options.replacement
+					|| $(target).attr('replacement')
+					|| ($(target).attr('tagName') == 'FORM' ? $(target)
+							.attr('id') : null) || 'content').split(',');
 			for (var i = 0; i < entries.length; i++) {
 				var entry = entries[i];
 				var ss = entry.split(':', 2);
