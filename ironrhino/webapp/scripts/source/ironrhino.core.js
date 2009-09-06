@@ -568,6 +568,10 @@ Observation.ajax = function(container) {
 						$(this).ajaxSubmit(options);
 						return false;
 					});
+			$('input,select', this).keyup(function() {
+						Form.validate(this);
+						return true;
+					});
 			return;
 		} else {
 			$(this).click(function() {
