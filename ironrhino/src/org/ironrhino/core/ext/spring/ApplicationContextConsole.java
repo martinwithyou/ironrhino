@@ -35,8 +35,5 @@ public class ApplicationContextConsole {
 			throw e;
 		}
 	}
-	
-	public static void main(String...strings){
-		System.out.println(MVEL.eval("a='haha\nhaha\n';a",new HashMap()));
-	}
+
 }
