@@ -1,6 +1,5 @@
 <#macro rtstart action="" readonly="false">
-<form action="${action}" method="post" class="richtable ajax view" replacement="richtable_main_content" canResizeColWidth="true" minColWidth="40">
-<div class="richtable" id="richtable_main_content" style="width:100%;">
+<form action="${action}" method="post" class="richtable ajax view" canResizeColWidth="true" minColWidth="40">
 <#list Parameters?keys as name>
 <#if !name?starts_with('resultPage.')&&!(name?starts_with('_')||name?ends_with('_'))>
 <input type="hidden" name="${name}" value="${Parameters[name]}" />
@@ -116,7 +115,6 @@ ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!
 </td>
 </tr>
 </table>
-</div>
 </div>
 </form>
 <#if readonly=="false">
