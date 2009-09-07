@@ -9,9 +9,7 @@
 <body>
 <@s.form method="post" cssClass="ajax reset">
 	<@s.textfield label="%{getText('email')}" name="account.email" cssClass="required email"/>
-	<#if captchaRequired?if_exists>
-	<@s.textfield label="%{getText('captcha')}" name="captcha" size="6" cssClass="autocomplete_off required captcha"/>
-	</#if>
+	<@captcha/>
 	<p>
 	<@s.submit value="%{getText('confirm')}" theme="simple" cssClass="primary"/>
 	<@button type="link" text="${action.getText('login')}" href="${base}/login"/>
