@@ -30,26 +30,14 @@ public class AutoConfigResult extends FreemarkerResult {
 
 	private static ServletDispatcherResult servletDispatcherResult = new ServletDispatcherResult();
 
+	@Inject(value = "ironrhino.view.jsp.location", required = false)
 	private String jspLocation = DEFAULT_JSP_LOCATION;
 
+	@Inject(value = "ironrhino.view.ftl.location", required = false)
 	private String ftlLocation = DEFAULT_FTL_LOCATION;
 
-	private String ftlClasspath = DEFAULT_FTL_CLASSPATH;
-
-	@Inject(value = "ironrhino.view.jsp.location", required = false)
-	public void setJspLocation(String val) {
-		this.jspLocation = val;
-	}
-
-	@Inject(value = "ironrhino.view.ftl.location", required = false)
-	public void setFtlLocation(String val) {
-		this.ftlLocation = val;
-	}
-
 	@Inject(value = "ironrhino.view.ftl.classpath", required = false)
-	public void setFtlClasspath(String val) {
-		this.ftlClasspath = val;
-	}
+	private String ftlClasspath = DEFAULT_FTL_CLASSPATH;
 
 	@Override
 	public void execute(ActionInvocation invocation) throws Exception {

@@ -21,12 +21,8 @@ public class FeedResult implements Result {
 
 	private String feedType;
 
-	private String defaultEncoding;
-
 	@Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-	public void setDefaultEncoding(String val) {
-		defaultEncoding = val;
-	}
+	private String defaultEncoding;
 
 	protected String getEncoding() {
 		String encoding = defaultEncoding;

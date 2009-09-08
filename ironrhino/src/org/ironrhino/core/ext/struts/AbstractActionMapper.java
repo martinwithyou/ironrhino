@@ -23,12 +23,8 @@ public abstract class AbstractActionMapper implements ActionMapper {
 
 	protected Log log = LogFactory.getLog(getClass());
 
-	private String encoding = "UTF-8";
-
 	@Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-	public void setEncoding(String val) {
-		encoding = val;
-	}
+	private String encoding = "UTF-8";
 
 	public ActionMapping getMapping(HttpServletRequest request,
 			ConfigurationManager configManager) {

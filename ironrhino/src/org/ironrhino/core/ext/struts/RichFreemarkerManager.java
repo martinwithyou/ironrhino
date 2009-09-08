@@ -29,21 +29,13 @@ public class RichFreemarkerManager extends
 
 	private Log log = LogFactory.getLog(this.getClass());
 
+	@Inject(value = "ironrhino.view.ftl.location", required = false)
 	private String ftlLocation = AutoConfigResult.DEFAULT_FTL_LOCATION;
 
+	@Inject(value = "ironrhino.view.ftl.classpath", required = false)
 	private String ftlClasspath = AutoConfigResult.DEFAULT_FTL_CLASSPATH;
 
 	private Configuration configuration;
-
-	@Inject(value = "ironrhino.view.ftl.location", required = false)
-	public void setFtlLocation(String val) {
-		this.ftlLocation = val;
-	}
-
-	@Inject(value = "ironrhino.view.ftl.classpath", required = false)
-	public void setFtlClasspath(String val) {
-		this.ftlClasspath = val;
-	}
 
 	@Override
 	protected freemarker.template.Configuration createConfiguration(

@@ -23,12 +23,8 @@ public class JsonResult implements Result {
 
 	private static final long serialVersionUID = 5984356746581381755L;
 
-	private String encoding = "UTF-8";
-
 	@Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-	public void setEncoding(String val) {
-		encoding = val;
-	}
+	private String encoding = "UTF-8";
 
 	public String generateJson(ActionInvocation invocation) {
 		Object action = invocation.getAction();

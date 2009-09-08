@@ -37,6 +37,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 	private static final Log log = LogFactory
 			.getLog(AutoConfigPackageProvider.class);
 
+	@Inject(value = "ironrhino.autoconfig.parent.package", required = false)
 	private String parentPackage = "ironrhino-default";
 
 	private String defaultActionClass = EntityAction.class.getName();
@@ -49,6 +50,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 
 	private PackageLoader packageLoader;
 
+	@Inject
 	private ObjectFactory objectFactory;
 
 	@Inject("ironrhino.autoconfig.packages")
@@ -73,16 +75,6 @@ public class AutoConfigPackageProvider implements PackageProvider {
 				set.addAll(Arrays.asList(packs.split(",")));
 			}
 		}
-	}
-
-	@Inject(value = "ironrhino.autoconfig.parent.package", required = false)
-	public void setParentPackage(String val) {
-		this.parentPackage = val;
-	}
-
-	@Inject
-	public void setObjectFactory(ObjectFactory of) {
-		this.objectFactory = of;
 	}
 
 	public void init(Configuration configuration) throws ConfigurationException {

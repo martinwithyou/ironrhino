@@ -540,17 +540,9 @@ public class EntityAction extends BaseAction {
 	}
 
 	@Inject
-	public void setValueStackFactory(ValueStackFactory valueStackFactory) {
-		this.valueStackFactory = valueStackFactory;
-	}
-
 	private transient ValueStackFactory valueStackFactory;
 
 	@Inject("ironrhino-autoconfig")
-	public void setPackageProvider(PackageProvider packageProvider) {
-		this.packageProvider = packageProvider;
-	}
-
 	private transient PackageProvider packageProvider;
 
 }

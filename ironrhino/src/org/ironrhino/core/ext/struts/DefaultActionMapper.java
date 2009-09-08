@@ -14,8 +14,12 @@ import org.ironrhino.common.model.ResultPage;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 public class DefaultActionMapper extends AbstractActionMapper {
+
+	@Inject(value = "ironrhino.cmsPath", required = false)
+	private String cmsPath = "/page/";
 
 	public String getUriFromActionMapping(ActionMapping mapping) {
 		StringBuilder sb = new StringBuilder();
@@ -94,12 +98,17 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		if (StringUtils.isNumeric(ps))
 			params.put("resultPage.pageSize", ps);
 		if (StringUtils.isNotBlank(methodAndUid)) {
-			String[] array = StringUtils.split(methodAndUid, "/", 2);
-			mapping.setMethod(array[0]);
-			if (array.length > 1) {
+			String uid = null;
+			if (!uri.startsWith(cmsPath)) {
+				String[] array = StringUtils.split(methodAndUid, "/", 2);
+				mapping.setMethod(array[0]);
+				if (array.length > 1) {
+					uid = array[1];
+				}
+			}
+			if (StringUtils.isNotBlank(uid)) {
 				try {
-					params.put(ID, URLDecoder.decode(array[1], "UTF-8"));
-
+					params.put(ID, URLDecoder.decode(uid, "UTF-8"));
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
