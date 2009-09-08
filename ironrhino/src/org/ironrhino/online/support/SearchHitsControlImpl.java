@@ -78,8 +78,7 @@ public class SearchHitsControlImpl extends StringStore implements
 
 	private void merge(SearchHits ph, Date d) {
 		baseManager.setEntityClass(SearchHits.class);
-		SearchHits hits = baseManager
-				.getByNaturalId("keyword", ph.getKeyword());
+		SearchHits hits = baseManager.getByNaturalId(ph.getKeyword());
 		if (hits == null) {
 			hits = ph;
 		} else {

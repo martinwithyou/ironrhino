@@ -105,7 +105,7 @@ public class OrderAction extends BaseAction {
 			if (order.getId() != null)
 				order = orderManager.get(order.getId());
 			else if (order.getCode() != null)
-				order = orderManager.getByNaturalId("code", order.getCode());
+				order = orderManager.getByNaturalId(order.getCode());
 		return VIEW;
 	}
 
@@ -115,7 +115,7 @@ public class OrderAction extends BaseAction {
 			if (order.getId() != null)
 				order = orderManager.get(order.getId());
 			else if (order.getCode() != null)
-				order = orderManager.getByNaturalId("code", order.getCode());
+				order = orderManager.getByNaturalId(order.getCode());
 		if (order != null && order.getStatus() == OrderStatus.CANCELLED)
 			orderManager.delete(order);
 		return SUCCESS;

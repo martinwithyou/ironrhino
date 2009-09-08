@@ -51,7 +51,7 @@ public class OrderAction extends BaseAction {
 		if (StringUtils.isNotBlank(code)) {
 			if (order != null && !order.isNew())
 				return order;
-			order = orderManager.getByNaturalId("code", code);
+			order = orderManager.getByNaturalId(code);
 			if (order == null
 					|| !order.getUser().equals(
 							AuthzUtils.getUserDetails(User.class)))

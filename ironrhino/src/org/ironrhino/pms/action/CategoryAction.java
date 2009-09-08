@@ -114,7 +114,7 @@ public class CategoryAction extends BaseAction {
 	@Override
 	public String save() {
 		if (category.isNew()) {
-			if (categoryManager.getByNaturalId("code", category.getCode()) != null) {
+			if (categoryManager.getByNaturalId(category.getCode()) != null) {
 				addFieldError("category.code",
 						getText("validation.already.exists"));
 				return INPUT;

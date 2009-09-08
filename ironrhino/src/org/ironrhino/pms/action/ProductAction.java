@@ -161,7 +161,7 @@ public class ProductAction extends BaseAction {
 		if (product == null)
 			return INPUT;
 		if (product.isNew()) {
-			if (productManager.getByNaturalId("code", product.getCode()) != null) {
+			if (productManager.getByNaturalId(product.getCode()) != null) {
 				addFieldError("product.code",
 						getText("validation.already.exists"));
 				return INPUT;
@@ -257,7 +257,7 @@ public class ProductAction extends BaseAction {
 					index = 0;
 				}
 				deletePictureFile(pictureName);
-				product = productManager.getByNaturalId("code", code);
+				product = productManager.getByNaturalId(code);
 				product.setPictureQuantity(product.getPictureQuantity() - 1);
 				productManager.save(product);
 				int lastIndex = product.getPictureQuantity();

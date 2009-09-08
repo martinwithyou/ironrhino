@@ -107,7 +107,7 @@ public class UserAction extends BaseAction {
 	public String save2() {
 		if (user.isNew()) {
 			user.setUsername(user.getUsername().toLowerCase());
-			if (userManager.getByNaturalId("username", user.getUsername()) != null) {
+			if (userManager.getByNaturalId(user.getUsername()) != null) {
 				addFieldError("user.username",
 						getText("validation.already.exists"));
 				return INPUT;
