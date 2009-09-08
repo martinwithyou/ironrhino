@@ -3,6 +3,7 @@ package org.ironrhino.core.service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +33,7 @@ import org.ironrhino.core.model.AbstractTreeableEntity;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Persistable;
+import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.Treeable;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -78,6 +80,13 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 	@Transactional
 	public void save(T obj) {
 		Session session = sessionFactory.getCurrentSession();
+		if (obj instanceof Recordable) {
+			Recordable r = (Recordable) obj;
+			Date date = new Date();
+			r.setModifyDate(date);
+			if (obj.isNew())
+				r.setCreateDate(date);
+		}
 		if (obj instanceof AbstractTreeableEntity) {
 			final AbstractTreeableEntity entity = (AbstractTreeableEntity) obj;
 			if (entity.isNew()) {

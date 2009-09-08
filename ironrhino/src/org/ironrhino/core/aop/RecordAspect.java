@@ -12,7 +12,6 @@ import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.Persistable;
-import org.ironrhino.core.model.Recordable;
 import org.springframework.core.Ordered;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.security.userdetails.UserDetails;
@@ -34,13 +33,6 @@ public class RecordAspect extends HibernateDaoSupport implements Ordered {
 		if (AopContext.isBypass(this.getClass()))
 			return call.proceed();
 		boolean isNew = entity.isNew();
-		if (entity instanceof Recordable) {
-			Recordable r = (Recordable) entity;
-			Date date = new Date();
-			r.setModifyDate(date);
-			if (isNew)
-				r.setCreateDate(date);
-		}
 		Object result = call.proceed();
 		record(entity, isNew ? EntityOperationType.CREATE
 				: EntityOperationType.UPDATE);
