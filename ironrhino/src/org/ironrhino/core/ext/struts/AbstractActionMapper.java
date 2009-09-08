@@ -33,9 +33,6 @@ public abstract class AbstractActionMapper implements ActionMapper {
 		if (uri.equals("") || uri.equals("/") || uri.startsWith("/struts/")
 				|| uri.startsWith("/cas/"))
 			return null;
-		// if have a extension it is normal request
-		if (uri.lastIndexOf('.') > uri.lastIndexOf('/'))
-			return null;
 		return getActionMappingFromRequest(request, uri, configManager
 				.getConfiguration());
 	}

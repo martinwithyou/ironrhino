@@ -18,8 +18,14 @@ import com.opensymphony.xwork2.inject.Inject;
 
 public class DefaultActionMapper extends AbstractActionMapper {
 
+	private String cmsPath = "/p/";
+
 	@Inject(value = "ironrhino.cmsPath", required = false)
-	private String cmsPath = "/page/";
+	public void setCmsPath(String val) {
+		cmsPath = val;
+		if (!val.endsWith("/"))
+			cmsPath += "/";
+	}
 
 	public String getUriFromActionMapping(ActionMapping mapping) {
 		StringBuilder sb = new StringBuilder();
@@ -47,7 +53,10 @@ public class DefaultActionMapper extends AbstractActionMapper {
 	@Override
 	public ActionMapping getActionMappingFromRequest(
 			HttpServletRequest request, String uri, Configuration config) {
-
+		// if have a extension it is normal request
+		if (!uri.startsWith(cmsPath)
+				&& uri.lastIndexOf('.') > uri.lastIndexOf('/'))
+			return null;
 		String namespace = null;
 		String name = null;
 		String methodAndUid = null;
@@ -105,6 +114,8 @@ public class DefaultActionMapper extends AbstractActionMapper {
 				if (array.length > 1) {
 					uid = array[1];
 				}
+			}else{
+				uid = methodAndUid;
 			}
 			if (StringUtils.isNotBlank(uid)) {
 				try {

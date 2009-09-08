@@ -25,16 +25,14 @@ public class DelegateActionMapper extends AbstractActionMapper {
 			ConfigurationManager configManager) {
 		String uri = getUri(request);
 		// this is no action mapping
-		if (uri.equals("") || uri.equals("/") || uri.startsWith("/struts/")|| uri.startsWith("/cas/"))
+		if (uri.equals("") || uri.equals("/") || uri.startsWith("/struts/")
+				|| uri.startsWith("/cas/"))
 			return null;
 		if (uri.startsWith(restPrefix)) {
 			uri = uri.substring(restPrefix.length() - 1);
 			return restfulActionMapper.getActionMappingFromRequest(request,
 					uri, configManager.getConfiguration());
 		}
-		// if have a extension it is normal request
-		if (uri.lastIndexOf('.') > uri.lastIndexOf('/'))
-			return null;
 		return getActionMappingFromRequest(request, uri, configManager
 				.getConfiguration());
 	}
