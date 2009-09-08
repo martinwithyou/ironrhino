@@ -5,7 +5,7 @@ import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 
-@AutoConfig(namespace = "/", actionName = "p")
+@AutoConfig(namespace = "/")
 public class DisplayPageAction extends BaseAction {
 
 	private static final long serialVersionUID = -5865373753326653067L;
