@@ -2,10 +2,12 @@ package org.ironrhino.common.util;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +129,54 @@ public class ClassScaner {
 			}
 		}
 		return false;
+	}
+
+	public static Collection<String> getAppPackages() {
+		Set<String> packages = new TreeSet<String>();
+		for (Package p : Package.getPackages()) {
+			String name = p.getName();
+			if (name.startsWith("java.") || name.startsWith("javax.")
+					|| name.startsWith("com.sun.") || name.startsWith("sun.")
+					|| name.startsWith("org.w3c.")
+					|| name.startsWith("org.xml.") || name.equals("antlr")
+					|| name.startsWith("antlr.")
+					|| name.startsWith("com.mysql.")
+					|| name.startsWith("com.opensymphony.")
+					|| name.startsWith("freemarker.")
+					|| name.equals("javassist")
+					|| name.startsWith("javassist.")
+					|| name.startsWith("net.sf.")
+					|| name.startsWith("net.sourceforge.")
+					|| name.equals("ognl") || name.startsWith("ognl.")
+					|| name.startsWith("org.antlr.")
+					|| name.startsWith("org.aopalliance.")
+					|| name.startsWith("org.apache.")
+					|| name.startsWith("org.aspectj.")
+					|| name.startsWith("org.compass.")
+					|| name.startsWith("org.directwebremoting.")
+					|| name.startsWith("org.dom4j.")
+					|| name.startsWith("org.drools.")
+					|| name.startsWith("org.eclipse.")
+					|| name.startsWith("org.hibernate.")
+					|| name.startsWith("org.jasig.")
+					|| name.startsWith("org.jcp.")
+					|| name.startsWith("org.mvel2.")
+					|| name.startsWith("org.quartz.")
+					|| name.startsWith("org.slf4j.")
+					|| name.startsWith("org.springframework."))
+				continue;
+			int index = name.indexOf('.');
+			if (index < 0) {
+				packages.add(name);
+			} else {
+				int index2 = name.indexOf('.', index + 1);
+				if (index2 > 0)
+					packages.add(name.substring(0, index2));
+				else
+					packages.add(name.substring(0, index));
+			}
+		}
+		return packages;
 	}
 
 }

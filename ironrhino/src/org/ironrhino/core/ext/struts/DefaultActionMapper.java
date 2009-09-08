@@ -14,18 +14,8 @@ import org.ironrhino.common.model.ResultPage;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.inject.Inject;
 
 public class DefaultActionMapper extends AbstractActionMapper {
-
-	private String cmsPath = "/p/";
-
-	@Inject(value = "ironrhino.cmsPath", required = false)
-	public void setCmsPath(String val) {
-		cmsPath = val;
-		if (!val.endsWith("/"))
-			cmsPath += "/";
-	}
 
 	public String getUriFromActionMapping(ActionMapping mapping) {
 		StringBuilder sb = new StringBuilder();
@@ -54,9 +44,19 @@ public class DefaultActionMapper extends AbstractActionMapper {
 	public ActionMapping getActionMappingFromRequest(
 			HttpServletRequest request, String uri, Configuration config) {
 		// if have a extension it is normal request
-		if (!uri.startsWith(cmsPath)
+		if (!uri.startsWith(getCmsPath())
 				&& uri.lastIndexOf('.') > uri.lastIndexOf('/'))
 			return null;
+		if (uri.startsWith(getCmsPath())) {
+			String pageId = uri.substring(getCmsPath().length());
+			ActionMapping mapping = new ActionMapping();
+			mapping.setNamespace("/");
+			mapping.setName("p");
+			Map<String, Object> params = new HashMap<String, Object>(3);
+			params.put(ID, pageId);
+			mapping.setParams(params);
+			return mapping;
+		}
 		String namespace = null;
 		String name = null;
 		String methodAndUid = null;
@@ -108,15 +108,12 @@ public class DefaultActionMapper extends AbstractActionMapper {
 			params.put("resultPage.pageSize", ps);
 		if (StringUtils.isNotBlank(methodAndUid)) {
 			String uid = null;
-			if (!uri.startsWith(cmsPath)) {
-				String[] array = StringUtils.split(methodAndUid, "/", 2);
-				mapping.setMethod(array[0]);
-				if (array.length > 1) {
-					uid = array[1];
-				}
-			}else{
-				uid = methodAndUid;
+			String[] array = StringUtils.split(methodAndUid, "/", 2);
+			mapping.setMethod(array[0]);
+			if (array.length > 1) {
+				uid = array[1];
 			}
+
 			if (StringUtils.isNotBlank(uid)) {
 				try {
 					params.put(ID, URLDecoder.decode(uid, "UTF-8"));

@@ -23,6 +23,7 @@ public class DelegateActionMapper extends AbstractActionMapper {
 	@Override
 	public ActionMapping getMapping(HttpServletRequest request,
 			ConfigurationManager configManager) {
+		defaultActionMapper.setCmsPath(getCmsPath());
 		String uri = getUri(request);
 		// this is no action mapping
 		if (uri.equals("") || uri.equals("/") || uri.startsWith("/struts/")

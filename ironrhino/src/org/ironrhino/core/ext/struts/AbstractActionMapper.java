@@ -23,6 +23,19 @@ public abstract class AbstractActionMapper implements ActionMapper {
 
 	protected Log log = LogFactory.getLog(getClass());
 
+	private String cmsPath = "/p/";
+
+	@Inject(value = "ironrhino.cmsPath", required = false)
+	public void setCmsPath(String val) {
+		cmsPath = val;
+		if (!val.endsWith("/"))
+			cmsPath += "/";
+	}
+
+	public String getCmsPath() {
+		return cmsPath;
+	}
+
 	@Inject(StrutsConstants.STRUTS_I18N_ENCODING)
 	private String encoding = "UTF-8";
 

@@ -48,6 +48,8 @@
 		class="org.ironrhino.common.support.DefaultMonitorControl" />
 	<bean id="regionTreeControl"
 		class="org.ironrhino.common.support.RegionTreeControl" />
+	<bean id="pageManager"
+		class="org.ironrhino.common.service.PageManagerImpl" />
 	<!--  
 			<bean id="resultPage" class="org.ironrhino.common.model.ResultPage"
 			scope="prototype" p:pageNo="1" p:pageSize="10" />
