@@ -209,51 +209,29 @@ Richtable = {
 			var target = $('#_window_').get(0);
 			target.onsuccess = function() {
 				Dialog.adapt($('#_window_'));
-				var form = $('#_window_ form.ajax');
-				var action = form.attr('action');
-				if (!action || action == document.location.pathname)
-					action = url;
-				else if (action.indexOf('http')!=0&&action.indexOf('/') != 0)
-					action = document.location.pathname
-							+ (document.location.pathname.indexOf('/') == (document.location.pathname.length - 1)
-									? ''
-									: '/') + action;
-				form.attr('action', action);
-				if (form.hasClass('view'))
-					form.attr('replacement', '_window_:content');
-				if (!$('#_window_ form.ajax').hasClass('keepopen')
-						&& !$('#_window_ form.ajax').hasClass('view')) {
-					$('#_window_ form.ajax button[type="submit"]').click(
-							function() {
-								$('#_window_ form.ajax')[0].onsuccess = function() {
-									setTimeout(function() {
-												$("#_window_").dialog('close');
-											}, 1000);
-
-								};
-							});
-				}
 				if (url.indexOf('?') > 0)
 					url = url.substring(0, url.indexOf('?'));
-				var create = url.lastIndexOf('input') == url.length - 5;
-				if (create) {
-					if ($('#_window_ form.ajax input[type="hidden"][name="id"]')
-							.val())
-						create = false;
-					var entity = Richtable.getBaseUrl();
-					entity = entity.substring(entity.lastIndexOf('/') + 1);
-					if ($('#_window_ form.ajax input[type="hidden"][name="'
-							+ entity + '.id"]').val())
-						create = false;
-				}
-				if (create) {
-					$('#_window_ form.ajax button[type="submit"]')
-							.after('<button type="submit" class="btn save_and_create"><span><span>'
-									+ MessageBundle.get('save.and.create')
-									+ '</span></span></button>');
-					$('#_window_ form.ajax .save_and_create').click(function() {
-								$('form.ajax').addClass('reset');
-							});
+				var form = $('#_window_ form.ajax');
+				if (!form.hasClass('keepopen')) {
+					var create = url.lastIndexOf('input') == url.length - 5;
+					if (create) {
+						if ($('input[type="hidden"][name="id"]', form).val())
+							create = false;
+						var entity = Richtable.getBaseUrl();
+						entity = entity.substring(entity.lastIndexOf('/') + 1);
+						if ($('input[type="hidden"][name="' + entity + '.id"]',
+								form).val())
+							create = false;
+					}
+					if (create) {
+						$('button[type="submit"]', form)
+								.after('<button type="submit" class="btn save_and_create"><span><span>'
+										+ MessageBundle.get('save.and.create')
+										+ '</span></span></button>');
+						$('.save_and_create', form).click(function() {
+									$('form.ajax').addClass('reset');
+								});
+					}
 				}
 			};
 			ajax({
@@ -423,6 +401,29 @@ Observation.richtable = function() {
 				function() {
 					Richtable.reload()
 				});
+
+		var form = $('#_window_ form.ajax');
+		if (form.length > 0) {
+			var action = form.attr('action');
+			if (action.indexOf('http') != 0 && action.indexOf('/') != 0)
+				action = document.location.pathname
+						+ (document.location.pathname.indexOf('/') == (document.location.pathname.length - 1)
+								? ''
+								: '/') + action;
+			form.attr('action', action);
+			if (form.hasClass('view'))
+				form.attr('replacement', '_window_:content');
+			if (!form.hasClass('keepopen') && !form.hasClass('view')) {
+				$('button[type="submit"]', form).click(function() {
+							form[0].onsuccess = function() {
+								setTimeout(function() {
+											$("#_window_").dialog('close');
+										}, 1000);
+
+							};
+						});
+			}
+		}
 	}
 };
 Initialization.richtable = function() {
