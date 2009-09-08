@@ -124,7 +124,7 @@ public class PageAction extends BaseAction {
 	}
 
 	public String draft() {
-		pageManager.saveDraft(page);
+		page = pageManager.saveDraft(page);
 		draft = true;
 		return INPUT;
 	}

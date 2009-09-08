@@ -17,6 +17,7 @@
 	<@button type="link" text="${action.getText('view')}" href="${base+cmsPath+page.path}" target="_blank"/>
 	<@s.submit value="%{getText('draft')}" theme="simple" onclick="$(this).closest('form').attr('action',$(this).closest('form').attr('action').replace('save','draft'))"/>
 	<#if draft>
+	${action.getText('draftDate')}:${page.draftDate?datetime}
 	<@s.submit value="%{getText('drop')}" theme="simple" onclick="$(this).closest('form').attr('action',$(this).closest('form').attr('action').replace('save','drop'))"/>
 	<@button type="link" text="${action.getText('preview')}" href="${base+cmsPath+page.path}?preview=true" target="_blank"/>
 	</#if>

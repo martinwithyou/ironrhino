@@ -38,6 +38,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 				+ DELIMITER)
 				+ page.getContent());
 		super.save(p);
+		pullDraft(p);
 		return p;
 	}
 
@@ -66,6 +67,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			page.setTitle(array[0]);
 		else
 			page.setTitle(null);
+		page.setDraft(null);
 	}
 
 }
