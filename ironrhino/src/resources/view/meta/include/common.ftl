@@ -18,6 +18,19 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#if>
 </#macro>
 
+<#macro includePage path>
+<#local pageManager=statics['org.ironrhino.common.util.ApplicationContextUtils'].getBean('pageManager')>
+<#if Parameters.preview?if_exists=='true'>
+<#local page=pageManager.getDraftByPath(path)?if_exists>
+<#else>
+<#local page=pageManager.getByPath(path)?if_exists>
+</#if>
+<#if page?exists>
+<#local content=page.content?interpret>
+<@content/>
+</#if>
+</#macro>
+
 <#macro captcha theme="">
 <#if captchaRequired?if_exists>
 	<@s.textfield label="%{getText('captcha')}" name="captcha" size="6" cssClass="autocomplete_off required captcha"/>

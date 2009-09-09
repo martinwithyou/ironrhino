@@ -26,7 +26,10 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	@Transactional(readOnly = true)
 	@CheckCache(key = "${args[0]}", namespace = "page")
 	public Page getByPath(String path) {
-		return getByNaturalId(path);
+		Page page = getByNaturalId(path);
+		if (page != null)
+			page.setDraft(null);
+		return page;
 	}
 
 	@Override
@@ -67,7 +70,6 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			page.setTitle(array[0]);
 		else
 			page.setTitle(null);
-		page.setDraft(null);
 	}
 
 }

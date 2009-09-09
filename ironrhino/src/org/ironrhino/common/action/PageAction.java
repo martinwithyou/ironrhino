@@ -43,7 +43,7 @@ public class PageAction extends BaseAction {
 
 	public String getCmsPath() {
 		if (cmsPath.endsWith("/"))
-			return cmsPath.substring(0,cmsPath.length()-1);
+			return cmsPath.substring(0, cmsPath.length() - 1);
 		return cmsPath;
 	}
 
@@ -123,6 +123,9 @@ public class PageAction extends BaseAction {
 		return INPUT;
 	}
 
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.path", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
 	public String draft() {
 		page = pageManager.saveDraft(page);
 		draft = true;
