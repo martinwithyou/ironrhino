@@ -48,7 +48,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 				&& uri.lastIndexOf('.') > uri.lastIndexOf('/'))
 			return null;
 		if (uri.startsWith(getCmsPath())) {
-			String pageId = uri.substring(getCmsPath().length());
+			String pageId = uri.substring(getCmsPath().length() - 1);
 			ActionMapping mapping = new ActionMapping();
 			mapping.setNamespace("/");
 			mapping.setName("displayPage");

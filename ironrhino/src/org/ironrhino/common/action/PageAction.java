@@ -35,8 +35,6 @@ public class PageAction extends BaseAction {
 	@Inject(value = "ironrhino.cmsPath", required = false)
 	public void setCmsPath(String val) {
 		cmsPath = val;
-		if (!val.endsWith("/"))
-			cmsPath += "/";
 	}
 
 	public boolean isDraft() {
@@ -44,6 +42,8 @@ public class PageAction extends BaseAction {
 	}
 
 	public String getCmsPath() {
+		if (cmsPath.endsWith("/"))
+			return cmsPath.substring(0,cmsPath.length()-1);
 		return cmsPath;
 	}
 
@@ -98,8 +98,8 @@ public class PageAction extends BaseAction {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
 	public String save() {
 		String path = page.getPath().trim().toLowerCase();
-		while (path.startsWith("/"))
-			path = path.substring(1);
+		if (!path.startsWith("/"))
+			path = "/" + path;
 		page.setPath(path);
 		if (page.isNew()) {
 			if (pageManager.getByNaturalId(page.getPath()) != null) {
