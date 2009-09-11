@@ -569,7 +569,11 @@ Observation.ajax = function(container) {
 						return false;
 					});
 			$('input,select', this).keyup(function() {
-						Form.validate(this);
+						if (!$(this).attr('need')) {
+							$(this).attr('need', 'true');
+						} else {
+							Form.validate(this);
+						}
 						return true;
 					});
 			return;
