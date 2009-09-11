@@ -1,3 +1,29 @@
+<#macro richtable config entityName action="" actionColumnWidth="150px" actionColumnButtons="" bottomButtons="" readonly=false createable=true celleditable=true deleteable=true>
+<@rtstart action="${action?has_content?string(action,entityName)}" readonly="${readonly?string}"/>
+<#list config?keys as name>
+<@rttheadtd name="${name}" editable=(!readonly)&&(config[name]["cellEdit"]?exists)/>
+</#list>
+<@rtmiddle width="${actionColumnWidth}" readonly="${readonly?string}"/>
+<#local index=0>
+<#if resultPage?exists><#local list=resultPage.result></#if>
+<#list list as entity>
+<#local index=index+1>
+<@rttbodytrstart rowid="${entity.id}" odd=(index%2==1)  readonly="${readonly?string}"/>
+	<#list config?keys as name>
+		<#local cellName=(config[name]["trimPrefix"]?exists?string('',entityName+'.'))+name>
+		<#local value=config[name]['value']?exists?string(config[name]['value']?if_exists,entity[name]?if_exists?string)>
+		<#if (!readonly&&celleditable)&&config[name]["cellEdit"]?exists>
+		<#local edit=config[name]["cellEdit"]?split(",")>
+		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']?if_exists}" renderLink="${config[name]['renderLink']?if_exists?string}" cellEdit="${edit[0]}" cellEditTemplate="${edit[1]?if_exists}" cellEditAction="${edit[2]?if_exists}" class="${config[name]['class']?if_exists}"/>
+		<#else>
+		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']?if_exists}" renderLink="${config[name]['renderLink']?if_exists?string}" class="${config[name]['class']?if_exists}"/>
+		</#if>
+	</#list>
+	<@rttbodytrend rowid="${entity.id}" buttons="${actionColumnButtons}" readonly="${readonly?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
+</#list>
+<@rtend buttons="${bottomButtons}" readonly="${readonly?string}" createable="${createable?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
+</#macro>
+
 <#macro rtstart action="" readonly="false">
 <form action="${action}" method="post" class="richtable ajax view" canResizeColWidth="true" minColWidth="40">
 <#list Parameters?keys as name>
@@ -129,30 +155,4 @@ ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!
 </textarea>
 </div>
 </#if>
-</#macro>
-
-<#macro richtable config entityName action="" actionColumnWidth="150px" actionColumnButtons="" bottomButtons="" readonly=false createable=true celleditable=true deleteable=true>
-<@rtstart action="${action?has_content?string(action,entityName)}" readonly="${readonly?string}"/>
-<#list config?keys as name>
-<@rttheadtd name="${name}" editable=(!readonly)&&(config[name]["cellEdit"]?exists)/>
-</#list>
-<@rtmiddle width="${actionColumnWidth}" readonly="${readonly?string}"/>
-<#local index=0>
-<#if resultPage?exists><#local list=resultPage.result></#if>
-<#list list as entity>
-<#local index=index+1>
-<@rttbodytrstart rowid="${entity.id}" odd=(index%2==1)  readonly="${readonly?string}"/>
-	<#list config?keys as name>
-		<#local cellName=(config[name]["trimPrefix"]?exists?string('',entityName+'.'))+name>
-		<#local value=config[name]['value']?exists?string(config[name]['value']?if_exists,entity[name]?if_exists?string)>
-		<#if (!readonly&&celleditable)&&config[name]["cellEdit"]?exists>
-		<#local edit=config[name]["cellEdit"]?split(",")>
-		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']?if_exists}" renderLink="${config[name]['renderLink']?if_exists?string}" cellEdit="${edit[0]}" cellEditTemplate="${edit[1]?if_exists}" cellEditAction="${edit[2]?if_exists}" class="${config[name]['class']?if_exists}"/>
-		<#else>
-		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']?if_exists}" renderLink="${config[name]['renderLink']?if_exists?string}" class="${config[name]['class']?if_exists}"/>
-		</#if>
-	</#list>
-	<@rttbodytrend rowid="${entity.id}" buttons="${actionColumnButtons}" readonly="${readonly?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
-</#list>
-<@rtend buttons="${bottomButtons}" readonly="${readonly?string}" createable="${createable?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
 </#macro>
