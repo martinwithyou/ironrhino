@@ -11,6 +11,7 @@ import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.JsonConfig;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
@@ -93,6 +94,7 @@ public class PageAction extends BaseAction {
 	}
 
 	@Override
+	@JsonConfig(propertyName = { "page" })
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.path", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
@@ -123,10 +125,15 @@ public class PageAction extends BaseAction {
 		return INPUT;
 	}
 
+	@JsonConfig(propertyName = { "page" })
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.path", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
 	public String draft() {
+		String path = page.getPath().trim().toLowerCase();
+		if (!path.startsWith("/"))
+			path = "/" + path;
+		page.setPath(path);
 		page = pageManager.saveDraft(page);
 		draft = true;
 		return INPUT;

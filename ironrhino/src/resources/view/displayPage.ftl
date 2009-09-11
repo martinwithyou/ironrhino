@@ -2,8 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>
-<#if preview>[${action.getText('preview')}]</#if><#assign title=page.title?if_exists?interpret>
-<@title/></title>
+<#if preview>[${action.getText('preview')}]</#if><#if page.title?exists><#assign title=page.title?interpret><@title/></#if></title>
 </head>
 <body>
 <#assign content=page.content?interpret>

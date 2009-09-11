@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		PageManager {
 
-	public static final String DELIMITER = "/*--DELIMITER--*/";
+	public static final String DELIMITER = "@@@@@@@@@@";
 
 	@Override
 	@Transactional
@@ -43,10 +43,14 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	@Transactional
 	public Page saveDraft(Page page) {
 		Page p = get(page.getId());
+		if(p == null){
+			p = page;
+		}
 		p.setDraftDate(new Date());
-		p.setDraft((StringUtils.isBlank(page.getTitle()) ? "" : page.getTitle()
-				+ DELIMITER)
-				+ page.getContent());
+		p.setDraft(page.getPath()
+				+ DELIMITER
+				+ (StringUtils.isBlank(page.getTitle()) ? "" : page.getTitle()
+						+ DELIMITER) + page.getContent());
 		super.save(p);
 		pullDraft(p);
 		return p;
@@ -71,10 +75,11 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 
 	@Override
 	public void pullDraft(Page page) {
-		String array[] = StringUtils.split(page.getDraft(), DELIMITER, 2);
+		String array[] = StringUtils.split(page.getDraft(), DELIMITER, 3);
+		page.setPath(array[0]);
 		page.setContent(array[array.length - 1]);
-		if (array.length == 2)
-			page.setTitle(array[0]);
+		if (array.length == 3)
+			page.setTitle(array[1]);
 		else
 			page.setTitle(null);
 	}

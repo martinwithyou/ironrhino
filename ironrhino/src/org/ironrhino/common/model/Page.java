@@ -3,6 +3,7 @@ package org.ironrhino.common.model;
 import java.util.Date;
 
 import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
 
@@ -15,8 +16,10 @@ public class Page extends BaseEntity implements Recordable {
 
 	private String title;
 
+	@NotInJson
 	private String content;
 
+	@NotInJson
 	private String draft;
 
 	private Date draftDate;

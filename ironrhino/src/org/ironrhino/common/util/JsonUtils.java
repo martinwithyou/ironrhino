@@ -124,7 +124,7 @@ public class JsonUtils {
 
 	public static Object simpleObjectToJSON(Object o) {
 		if (o instanceof Date)
-			return DateUtils.getDate10((Date) o);
+			return DateUtils.getDatetime((Date) o);
 		return o;
 	}
 
