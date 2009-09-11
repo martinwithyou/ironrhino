@@ -9,10 +9,17 @@ public class ProductManagerImpl extends BaseManagerImpl<Product> implements
 		ProductManager {
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	@FlushCache(key = "${args[0].code}", namespace = "product")
 	public void save(Product product) {
 		super.save(product);
+	}
+
+	@Override
+	@Transactional
+	@FlushCache(key = "${args[0].code}", namespace = "product")
+	public void delete(Product product) {
+		super.delete(product);
 	}
 
 }

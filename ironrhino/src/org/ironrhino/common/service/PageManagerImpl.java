@@ -23,6 +23,13 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		super.save(page);
 	}
 
+	@Override
+	@Transactional
+	@FlushCache(key = "${args[0].path}", namespace = "page")
+	public void delete(Page page) {
+		super.delete(page);
+	}
+
 	@Transactional(readOnly = true)
 	@CheckCache(key = "${args[0]}", namespace = "page")
 	public Page getByPath(String path) {

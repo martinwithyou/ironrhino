@@ -26,6 +26,13 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		super.save(user);
 	}
 
+	@Override
+	@Transactional
+	@FlushCache(key = "${[args[0].username,args[0].email]}", namespace = "user")
+	public void delete(User user) {
+		super.delete(user);
+	}
+
 	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','miss'})}")
 	@Transactional(readOnly = true)
 	public User loadUserByUsername(String username) {

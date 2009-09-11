@@ -7,4 +7,6 @@ public interface ProductManager extends BaseManager<Product> {
 
 	public void save(Product product);
 
+	public void delete(Product product);
+
 }

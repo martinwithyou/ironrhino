@@ -6,6 +6,8 @@ import org.ironrhino.core.service.BaseManager;
 public interface PageManager extends BaseManager<Page> {
 
 	public void save(Page page);
+	
+	public void delete(Page page);
 
 	public Page getByPath(String path);
 
