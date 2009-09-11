@@ -136,10 +136,6 @@
 			org.springframework.web.util.IntrospectorCleanupListener</listener-class>
 	</listener>
 	<servlet>
-		<servlet-name>dwr</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-	</servlet>
-	<servlet>
 		<servlet-name>cas</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
@@ -153,10 +149,6 @@
 		<servlet-class>org.ironrhino.core.ext.captcha.ImageCaptchaServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
-	<servlet-mapping>
-		<servlet-name>dwr</servlet-name>
-		<url-pattern>/dwr/*</url-pattern>
-	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>cas</servlet-name>
 		<url-pattern>/cas/*</url-pattern>

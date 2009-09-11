@@ -7,7 +7,6 @@
 		<pattern>/styles/*</pattern>
 		<pattern>/struts/*</pattern>
 		<pattern>/components/*</pattern>
-		<pattern>/dwr/*</pattern>
 	</excludes>
 	<decorator name="none" />
 	<decorator name="simple" page="simple.ftl" />
