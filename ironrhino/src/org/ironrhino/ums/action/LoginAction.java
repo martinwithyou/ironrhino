@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -52,7 +51,7 @@ public class LoginAction extends BaseAction {
 	}
 
 	@Redirect
-	@InputConfig(resultName = SUCCESS)
+	@InputConfig(methodName = INPUT)
 	@Captcha(threshold = 3)
 	public String execute() {
 		HttpServletRequest request = ServletActionContext.getRequest();
@@ -60,6 +59,11 @@ public class LoginAction extends BaseAction {
 			addFieldError("password", getText(error));
 			captchaManager.addCaptachaThreshold(request);
 		}
+		return SUCCESS;
+	}
+
+	public String input() {
+		HttpServletRequest request = ServletActionContext.getRequest();
 		SavedRequest savedRequest = (SavedRequest) request
 				.getSession()
 				.getAttribute(
@@ -76,9 +80,7 @@ public class LoginAction extends BaseAction {
 		if (StringUtils.isBlank(targetUrl))
 			targetUrl = request.getHeader("Referer");
 		username = RequestUtils.getCookieValue(request,
-				UserAuthenticationProcessingFilter.USERNAME_IN_COOKIE);
-		if (StringUtils.isNotBlank(username))
-			username = CodecUtils.decode(username);
+				UserAuthenticationProcessingFilter.LOGIN_USER);
 		return SUCCESS;
 	}
 

@@ -14,6 +14,7 @@ import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.aop.AopContext;
 import org.ironrhino.core.aop.CacheAspect;
+import org.ironrhino.core.security.Blowfish;
 import org.ironrhino.ums.model.LoginRecord;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
@@ -27,9 +28,9 @@ import org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntr
 public class UserAuthenticationProcessingFilter extends
 		AuthenticationProcessingFilter {
 
-	public final static String USERNAME_IN_COOKIE = "UIC";
-
 	public final static String LOGIN_USER = "U";
+
+	public final static String ENCRYPT_LOGIN_USER = "EU";
 
 	@Autowired
 	private UserManager userManager;
@@ -42,10 +43,11 @@ public class UserAuthenticationProcessingFilter extends
 			HttpServletResponse response, Authentication authResult)
 			throws IOException {
 		String username = authResult.getName();
-		RequestUtils.saveCookie(request, response, LOGIN_USER, username, true);
+		RequestUtils.saveCookie(request, response, LOGIN_USER, username,
+				365 * 24 * 3600, true);
+		RequestUtils.saveCookie(request, response, ENCRYPT_LOGIN_USER, Blowfish
+				.encrypt(username), true);
 		username = CodecUtils.encode(username);
-		RequestUtils.saveCookie(request, response, USERNAME_IN_COOKIE,
-				username, 365 * 24 * 3600, true);
 		User user = (User) authResult.getPrincipal();
 		user.setLoginTimes(user.getLoginTimes() + 1);
 		user.setLastLoginDate(new Date());

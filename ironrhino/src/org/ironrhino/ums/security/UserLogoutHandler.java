@@ -13,7 +13,7 @@ public class UserLogoutHandler implements LogoutHandler {
 	public void logout(HttpServletRequest request,
 			HttpServletResponse response, Authentication authentication) {
 		RequestUtils.deleteCookie(request, response,
-				UserAuthenticationProcessingFilter.LOGIN_USER, true);
+				UserAuthenticationProcessingFilter.ENCRYPT_LOGIN_USER, true);
 	}
 
 }

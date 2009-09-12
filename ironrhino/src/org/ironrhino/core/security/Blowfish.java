@@ -133,12 +133,4 @@ public class Blowfish {
 		}
 	}
 
-	public static void main(String... strings) {
-		String s = "this is a test";
-		s = encrypt(s);
-		System.out.println(s);
-		s = decrypt(s);
-		System.out.println(s);
-	}
-
 }
