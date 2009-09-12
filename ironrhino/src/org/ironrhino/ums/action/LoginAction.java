@@ -55,11 +55,11 @@ public class LoginAction extends BaseAction {
 	@InputConfig(resultName = SUCCESS)
 	@Captcha(threshold = 3)
 	public String execute() {
+		HttpServletRequest request = ServletActionContext.getRequest();
 		if (StringUtils.isNotBlank(error)) {
 			addFieldError("password", getText(error));
-			addCaptachaThreshold();
+			captchaManager.addCaptachaThreshold(request);
 		}
-		HttpServletRequest request = ServletActionContext.getRequest();
 		SavedRequest savedRequest = (SavedRequest) request
 				.getSession()
 				.getAttribute(

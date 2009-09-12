@@ -146,7 +146,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>captcha</servlet-name>
-		<servlet-class>org.ironrhino.core.ext.captcha.ImageCaptchaServlet</servlet-class>
+		<servlet-class>org.ironrhino.core.captcha.ImageCaptchaServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
 	<servlet-mapping>

@@ -1,4 +1,4 @@
-package org.ironrhino.core.ext.captcha;
+package org.ironrhino.core.captcha;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -17,9 +17,7 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class CaptchaHelper {
-
-	public static final String KEY_CAPTCHA = "captcha";
+public abstract class AbstractCaptchaManager implements CaptchaManager {
 
 	public static final int width = 200;// 80
 
@@ -75,7 +73,32 @@ public class CaptchaHelper {
 		return sizes[(int) (Math.random() * sizes.length)];
 	}
 
-	public static BufferedImage getChallengeImage(HttpServletRequest request) {
+	private static String getChallenge(HttpServletRequest request) {
+		String challenge = String.valueOf(random.nextInt(8999) + 1000);// width=60
+		String answer = challenge;
+		// String challenge;
+		// String answer;
+		// int left = random.nextInt(89) + 10;
+		// int right = random.nextInt(89) + 10;
+		// boolean add = (left % 2 == 0);
+		// if (add) {
+		// challenge = left + "+" + right + "=?";
+		// answer = String.valueOf(left + right);
+		// } else {
+		// if (left <= right) {
+		// int temp = right;
+		// right = left;
+		// left = temp;
+		// }
+		// challenge = left + "-" + right + "=?";
+		// answer = String.valueOf(left - right);
+		// }
+		request.getSession().setAttribute(KEY_CAPTCHA, answer);
+		return challenge;
+	}
+
+	@Override
+	public BufferedImage getChallengeImage(HttpServletRequest request) {
 		BufferedImage challengeImage = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = challengeImage.createGraphics();
@@ -113,34 +136,12 @@ public class CaptchaHelper {
 		return challengeImage;
 	}
 
-	public static boolean validate(HttpServletRequest request) {
+	@Override
+	public boolean validate(HttpServletRequest request) {
 		String answer = (String) request.getSession(true).getAttribute(
 				KEY_CAPTCHA);
 		return answer != null
 				&& answer.equals(request.getParameter(KEY_CAPTCHA));
 	}
 
-	private static String getChallenge(HttpServletRequest request) {
-		String challenge = String.valueOf(random.nextInt(8999) + 1000);// width=60
-		String answer = challenge;
-		// String challenge;
-		// String answer;
-		// int left = random.nextInt(89) + 10;
-		// int right = random.nextInt(89) + 10;
-		// boolean add = (left % 2 == 0);
-		// if (add) {
-		// challenge = left + "+" + right + "=?";
-		// answer = String.valueOf(left + right);
-		// } else {
-		// if (left <= right) {
-		// int temp = right;
-		// right = left;
-		// left = temp;
-		// }
-		// challenge = left + "-" + right + "=?";
-		// answer = String.valueOf(left - right);
-		// }
-		request.getSession().setAttribute(KEY_CAPTCHA, answer);
-		return challenge;
-	}
 }
