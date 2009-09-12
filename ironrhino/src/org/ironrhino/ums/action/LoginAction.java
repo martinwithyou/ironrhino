@@ -9,7 +9,7 @@ import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
-import org.ironrhino.ums.security.UserAuthenticationProcessingFilter;
+import org.ironrhino.core.session.Constants;
 import org.springframework.security.ui.AbstractProcessingFilter;
 import org.springframework.security.ui.savedrequest.SavedRequest;
 
@@ -80,7 +80,7 @@ public class LoginAction extends BaseAction {
 		if (StringUtils.isBlank(targetUrl))
 			targetUrl = request.getHeader("Referer");
 		username = RequestUtils.getCookieValue(request,
-				UserAuthenticationProcessingFilter.LOGIN_USER);
+				Constants.COOKIE_NAME_LOGIN_USER);
 		return SUCCESS;
 	}
 

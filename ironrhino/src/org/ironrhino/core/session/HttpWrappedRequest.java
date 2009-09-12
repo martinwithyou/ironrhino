@@ -19,11 +19,11 @@ public class HttpWrappedRequest extends HttpServletRequestWrapper {
 			HttpSessionManager sessionManager) {
 		super(request);
 		String sessionId = RequestUtils.getCookieValue(context.getRequest(),
-				HttpWrappedSession.SESSION_ID);
+				Constants.COOKIE_NAME_SESSION_ID);
 		if (StringUtils.isNotBlank(sessionId)) {
 			requestedSessionIdFromCookie = true;
 		} else {
-			sessionId = request.getParameter(HttpWrappedSession.SESSION_ID);
+			sessionId = request.getParameter(Constants.COOKIE_NAME_SESSION_ID);
 			if (StringUtils.isBlank(sessionId)) {
 				String requestURL = request.getRequestURL().toString();
 				if (requestURL.indexOf(';') > -1) {
@@ -33,7 +33,7 @@ public class HttpWrappedRequest extends HttpServletRequestWrapper {
 					for (String pair : array) {
 						if (pair.indexOf('=') > 0) {
 							String k = pair.substring(0, pair.indexOf('='));
-							if (k.equals(HttpWrappedSession.SESSION_ID)) {
+							if (k.equals(Constants.COOKIE_NAME_SESSION_ID)) {
 								sessionId = pair
 										.substring(pair.indexOf('=') + 1);
 								break;

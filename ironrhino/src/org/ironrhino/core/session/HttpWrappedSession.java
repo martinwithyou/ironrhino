@@ -22,10 +22,6 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	private static final String salt = "awpeqaidasdfaioiaoduifayzuxyaaokadoaifaodiaoi";
 
-	public static final String SESSION_ID = "sid";
-
-	public static final int SESSION_TIMEOUT = 1800;
-
 	private String sessionId;
 
 	private transient HttpSessionManager sessionStoreManager;
@@ -36,7 +32,7 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	private long createTime;
 
-	private int maxInactiveInterval = 1800;
+	private int maxInactiveInterval = Constants.SESSION_TIMEOUT;
 
 	private boolean darty;
 
@@ -63,7 +59,8 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 			sessionStoreManager.save(this);
 		if (isnew)
 			RequestUtils.saveCookie(httpContext.getRequest(), httpContext
-					.getResponse(), SESSION_ID, getId(), true);
+					.getResponse(), Constants.COOKIE_NAME_SESSION_ID, getId(),
+					true);
 	}
 
 	public HttpContext getHttpContext() {
