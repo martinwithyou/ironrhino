@@ -17,9 +17,22 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ironrhino.common.util.AuthzUtils;
+import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.captcha.CaptchaManager;
+import org.ironrhino.core.metadata.Captcha;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.userdetails.UserDetails;
 
-public abstract class AbstractCaptchaManager implements CaptchaManager {
+public class DefaultCaptchaManager implements CaptchaManager {
+
+	private static final String CACHE_PREFIX_ANSWER = "answer_";
+
+	public static final String CACHE_PREFIX_THRESHOLD = "captchaThreshold_";
+
+	public static final int CACHE_ANSWER_TIME_TO_LIVE = 60;
+
+	public static final int CACHE_THRESHOLD_TIME_TO_LIVE = 3600;
 
 	public static final int width = 200;// 80
 
@@ -28,6 +41,9 @@ public abstract class AbstractCaptchaManager implements CaptchaManager {
 	private static Random random = new Random();
 
 	private static List<String> fonts = new ArrayList<String>();
+
+	@Autowired
+	protected CacheManager cacheManager;
 
 	static {
 		GraphicsEnvironment.getLocalGraphicsEnvironment().preferLocaleFonts();
@@ -75,7 +91,7 @@ public abstract class AbstractCaptchaManager implements CaptchaManager {
 		return sizes[(int) (Math.random() * sizes.length)];
 	}
 
-	private static String getChallenge(HttpServletRequest request) {
+	protected String getChallenge(HttpServletRequest request) {
 		String challenge = String.valueOf(random.nextInt(8999) + 1000);// width=60
 		String answer = challenge;
 		// String challenge;
@@ -95,7 +111,8 @@ public abstract class AbstractCaptchaManager implements CaptchaManager {
 		// challenge = left + "-" + right + "=?";
 		// answer = String.valueOf(left - right);
 		// }
-		request.getSession().setAttribute(KEY_CAPTCHA, answer);
+		cacheManager.put(getAnswerKey(request), answer, -1,
+				CACHE_ANSWER_TIME_TO_LIVE, KEY_CAPTCHA);
 		return challenge;
 	}
 
@@ -139,11 +156,61 @@ public abstract class AbstractCaptchaManager implements CaptchaManager {
 	}
 
 	@Override
-	public boolean validate(HttpServletRequest request) {
-		String answer = (String) request.getSession(true).getAttribute(
+	public void addCaptachaThreshold(HttpServletRequest request) {
+		boolean added = request.getAttribute("addCaptachaThreshold") != null;
+		if (added)
+			return;
+		String key = getThresholdKey(request);
+		Integer threshold = (Integer) cacheManager.get(key, KEY_CAPTCHA);
+		if (threshold != null)
+			threshold += 1;
+		else
+			threshold = 1;
+		cacheManager.put(key, threshold, -1, CACHE_THRESHOLD_TIME_TO_LIVE,
 				KEY_CAPTCHA);
-		return answer != null
-				&& answer.equals(request.getParameter(KEY_CAPTCHA));
+		request.setAttribute("addCaptachaThreshold", true);
+
 	}
 
+	@Override
+	public boolean[] isCaptchaRequired(HttpServletRequest request,
+			Captcha captcha) {
+		if (captcha != null) {
+			if (captcha.always()) {
+				return new boolean[] { true, false };
+			}
+			if (captcha.bypassLoggedInUser()) {
+				UserDetails ud = AuthzUtils.getUserDetails(UserDetails.class);
+				if (ud != null) {
+					return new boolean[] { false, false };
+				}
+			}
+			Integer threshold = (Integer) cacheManager.get(
+					getThresholdKey(request), KEY_CAPTCHA);
+			if (threshold != null && threshold >= captcha.threshold()) {
+				return new boolean[] { true,
+						(threshold > 0 && threshold == captcha.threshold()) };
+			}
+		}
+		return new boolean[] { false, false };
+	}
+
+	@Override
+	public boolean validate(HttpServletRequest request) {
+		String answer = (String) cacheManager.get(getAnswerKey(request),
+				KEY_CAPTCHA);
+		boolean b = answer != null
+				&& answer.equals(request.getParameter(KEY_CAPTCHA));
+		if (b)
+			cacheManager.remove(getThresholdKey(request), KEY_CAPTCHA);
+		return b;
+	}
+
+	protected String getAnswerKey(HttpServletRequest request) {
+		return CACHE_PREFIX_ANSWER + request.getSession().getId();
+	}
+
+	protected String getThresholdKey(HttpServletRequest request) {
+		return CACHE_PREFIX_THRESHOLD + request.getRemoteAddr();
+	}
 }

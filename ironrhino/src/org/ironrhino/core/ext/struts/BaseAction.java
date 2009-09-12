@@ -50,7 +50,7 @@ public class BaseAction extends ActionSupport {
 
 	protected boolean captchaRequired;
 
-	private boolean firstReachCaptchaThreshold = false;
+	private boolean firstReachCaptchaThreshold;
 
 	protected transient CaptchaManager captchaManager;
 
@@ -210,10 +210,7 @@ public class BaseAction extends ActionSupport {
 	public void validate() {
 		if (!captchaRequired || firstReachCaptchaThreshold)
 			return;
-		if (captchaManager.validate(ServletActionContext.getRequest()))
-			captchaManager.resetCaptachaThreshold(ServletActionContext
-					.getRequest());
-		else
+		if (!captchaManager.validate(ServletActionContext.getRequest()))
 			addFieldError(CaptchaManager.KEY_CAPTCHA, getText("captcha.error"));
 	}
 
