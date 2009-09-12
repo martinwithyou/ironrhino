@@ -15,9 +15,9 @@ public class CacheTag extends BodyTagSupport {
 
 	private String key = null;
 
-	private String timeToLive = CacheContext.DEFAULT_TIME_TO_LIVE;
+	private String timeToLive = CacheManager.DEFAULT_TIME_TO_LIVE;
 
-	private String timeToIdle = CacheContext.DEFAULT_TIME_TO_IDLE;
+	private String timeToIdle = CacheManager.DEFAULT_TIME_TO_IDLE;
 
 	private String scope = CacheContext.DEFAULT_SCOPE;
 

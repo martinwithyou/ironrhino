@@ -6,7 +6,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.ironrhino.core.cache.CacheContext;
+import org.ironrhino.core.cache.CacheManager;
 
 @Target(METHOD)
 @Retention(RUNTIME)
@@ -16,7 +16,7 @@ public @interface FlushCache {
 	String key();
 
 	// mvel expression
-	String namespace() default CacheContext.DEFAULT_CACHE_NAMESPACE;
+	String namespace() default CacheManager.DEFAULT_NAMESPACE;
 
 	// mvel expression
 	String onFlush() default "";

@@ -1,23 +1,13 @@
 package org.ironrhino.core.cache;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
-import net.sf.ehcache.jcache.JCache;
-import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
-import net.sf.jsr107cache.Cache;
-import net.sf.jsr107cache.CacheManager;
 import ognl.OgnlContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.ironrhino.common.util.ApplicationContextUtils;
 import org.mvel2.templates.TemplateRuntime;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -28,53 +18,17 @@ public class CacheContext {
 
 	public static final String FORCE_FLUSH_PARAM_NAME = "_ff_";
 
-	public static final String DEFAULT_TIME_TO_LIVE = "3600";
-
-	public static final String DEFAULT_TIME_TO_IDLE = "-1";
-
 	public static final String DEFAULT_SCOPE = "application";
 
-	public static final String DEFAULT_CACHE_NAMESPACE = "default";
+	public static final String NAMESPACE_PAGE_FRAGMENT = "pageFragment";
 
-	public static final String PAGE_FRAGMENT_CACHE_NAMESPACE = "page";
+	private static CacheManager cacheManager;
 
-	private static Lock lock = new ReentrantLock();
-
-	public static Cache getCache(String name) {
-		return getCache(name, true);
-	}
-
-	public static Cache getCache(String name, boolean autoCreate) {
-		Cache cache = null;
-		CacheManager singletonManager = net.sf.jsr107cache.CacheManager
-				.getInstance();
-		cache = singletonManager.getCache(name);
-		if (!autoCreate && cache == null)
-			return null;
-		if (cache != null)
-			return cache;
-		Map config = new HashMap();
-		config.put("name", name);
-		config.put("memoryStoreEvictionPolicy", String
-				.valueOf(MemoryStoreEvictionPolicy.LRU));
-		config.put("maxElementsInMemory", String.valueOf(1000000));
-		config.put("timeToLiveSeconds", DEFAULT_TIME_TO_LIVE);
-		config.put("timeToIdleSeconds", DEFAULT_TIME_TO_IDLE);
-		config.put("overflowToDisk", String.valueOf(true));
-		try {
-			lock.lock();
-			cache = singletonManager.getCache(name);
-			if (cache == null) {
-				cache = singletonManager.getCacheFactory().createCache(config);
-				singletonManager.registerCache(name, cache);
-			}
-			return cache;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			return null;
-		} finally {
-			lock.unlock();
-		}
+	private static CacheManager getCacheManager() {
+		if (cacheManager == null)
+			cacheManager = (CacheManager) ApplicationContextUtils
+					.getBean("cacheManager");
+		return cacheManager;
 	}
 
 	public static boolean isForceFlush() {
@@ -90,13 +44,12 @@ public class CacheContext {
 	public static String getPageFragment(String key, String scope) {
 		try {
 			Object actualKey = eval(key);
-			Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAMESPACE);
-			if (actualKey == null || CacheContext.isForceFlush()
-					|| cache == null)
+			if (actualKey == null || CacheContext.isForceFlush())
 				return null;
 			key = actualKey.toString();
 			scope = eval(scope).toString();
-			String content = (String) cache.get(completeKey(key, scope));
+			String content = (String) getCacheManager().get(
+					completeKey(key, scope), NAMESPACE_PAGE_FRAGMENT);
 			if (content != null)
 				return content;
 			return null;
@@ -107,22 +60,17 @@ public class CacheContext {
 	}
 
 	public static void putPageFragment(String key, String content,
-			String scope, String timeToLive, String timeToIdle) {
-		Cache cache = getCache(PAGE_FRAGMENT_CACHE_NAMESPACE);
+			String scope, String timeToIdle, String timeToLive) {
 		Object actualKey = eval(key);
-		if (actualKey == null || cache == null)
+		if (actualKey == null)
 			return;
 		try {
-			JCache jcache = (JCache) cache;
 			key = actualKey.toString();
 			scope = eval(scope).toString();
-			int _timeToLive = Integer.valueOf(eval(timeToLive).toString());
 			int _timeToIdle = Integer.valueOf(eval(timeToIdle).toString());
-			Ehcache ehcache = jcache.getBackingCache();
-			ehcache.put(new Element(completeKey(key, scope), content, null,
-					_timeToIdle > 0 ? Integer.valueOf(_timeToIdle) : null,
-					_timeToIdle <= 0 && _timeToLive > 0 ? Integer
-							.valueOf(_timeToLive) : null));
+			int _timeToLive = Integer.valueOf(eval(timeToLive).toString());
+			getCacheManager().put(completeKey(key, scope), content,
+					_timeToIdle, _timeToLive, NAMESPACE_PAGE_FRAGMENT);
 		} catch (Throwable e) {
 		}
 	}
