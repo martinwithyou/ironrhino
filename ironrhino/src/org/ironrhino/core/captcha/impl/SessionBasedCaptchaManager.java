@@ -1,4 +1,4 @@
-package org.ironrhino.core.captcha;
+package org.ironrhino.core.captcha.impl;
 
 import javax.servlet.http.HttpServletRequest;
 

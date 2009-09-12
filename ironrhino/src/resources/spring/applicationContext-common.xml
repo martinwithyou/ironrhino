@@ -45,5 +45,5 @@
 	<bean id="pageManager"
 		class="org.ironrhino.common.service.PageManagerImpl" />
 	<bean id="captchaManager"
-		class="org.ironrhino.core.captcha.SessionBasedCaptchaManager" />
+		class="org.ironrhino.core.captcha.impl.SessionBasedCaptchaManager" />
 </beans>

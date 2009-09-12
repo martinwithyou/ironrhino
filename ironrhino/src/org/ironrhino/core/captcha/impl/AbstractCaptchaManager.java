@@ -1,4 +1,4 @@
-package org.ironrhino.core.captcha;
+package org.ironrhino.core.captcha.impl;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -16,6 +16,8 @@ import java.util.Locale;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.ironrhino.core.captcha.CaptchaManager;
 
 public abstract class AbstractCaptchaManager implements CaptchaManager {
 
