@@ -129,6 +129,7 @@ Observation.common = function(container) {
 			if (data.indexOf('/') == 0)
 				data = document.location.protocol + '//'
 						+ document.location.host + data;
+			data = encodeURIComponent(data);
 			if (!id || !width || !height || !data)
 				alert('id,width,height,data all required');
 			swfobject.embedSWF(CONTEXT_PATH + '/images/open-flash-chart.swf',
