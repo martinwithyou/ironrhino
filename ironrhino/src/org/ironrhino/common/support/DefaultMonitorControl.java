@@ -25,8 +25,8 @@ import org.ironrhino.core.ext.openflashchart.model.Chart;
 import org.ironrhino.core.ext.openflashchart.model.Text;
 import org.ironrhino.core.ext.openflashchart.model.axis.XAxis;
 import org.ironrhino.core.ext.openflashchart.model.axis.YAxis;
-import org.ironrhino.core.ext.openflashchart.model.elements.AreaHollowChart;
 import org.ironrhino.core.ext.openflashchart.model.elements.BarChart;
+import org.ironrhino.core.ext.openflashchart.model.elements.LineChart;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
@@ -296,11 +296,11 @@ public class DefaultMonitorControl implements MonitorControl {
 
 	public Chart getChart(Key key, Date date, String vtype, String ctype) {
 		boolean isdouble = "d".equalsIgnoreCase(vtype);
-		boolean isarea = "area".equalsIgnoreCase(ctype);
+		boolean isline = "line".equalsIgnoreCase(ctype);
 		Chart chart = new Chart();
 		if (date == null)
 			date = new Date();
-		List<Value> list = getPeriodResult(key, date, isarea);
+		List<Value> list = getPeriodResult(key, date, isline);
 		if (list != null && list.size() > 0) {
 			String[] labels = new String[list.size()];
 			Long[] longValues = new Long[list.size()];
@@ -328,7 +328,7 @@ public class DefaultMonitorControl implements MonitorControl {
 			chart.setXAxis(x);
 			chart.setYAxis(y);
 			x.setLabels(labels);
-			if (!isarea) {
+			if (!isline) {
 				BarChart element = new BarChart();
 				if (!isdouble) {
 					y.setMax(maxLongValue.doubleValue());
@@ -339,7 +339,7 @@ public class DefaultMonitorControl implements MonitorControl {
 				}
 				chart.addElements(element);
 			} else {
-				AreaHollowChart element = new AreaHollowChart();
+				LineChart element = new LineChart();
 				if (!isdouble) {
 					y.setMax(maxLongValue.doubleValue());
 					element.addValues(longValues);

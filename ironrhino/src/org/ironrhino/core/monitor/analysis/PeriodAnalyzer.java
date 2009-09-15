@@ -94,7 +94,7 @@ public class PeriodAnalyzer extends AbstractAnalyzer<List<Value>> {
 		int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		result.get(hour).cumulate(pair.getValue());
 		if (cumulative)
-			for (int i = 0; i < hour - 1; i++)
+			for (int i = hour + 1; i < 24; i++)
 				result.get(i).cumulate(pair.getValue());
 		if (perHostEnabled) {
 			List<Value> list = perHostResult.get(pair.getHost());
@@ -106,7 +106,7 @@ public class PeriodAnalyzer extends AbstractAnalyzer<List<Value>> {
 			}
 			list.get(hour).cumulate(pair.getValue());
 			if (cumulative)
-				for (int i = 0; i < hour - 1; i++)
+				for (int i = hour + 1; i < 24; i++)
 					list.get(i).cumulate(pair.getValue());
 		}
 	}

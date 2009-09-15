@@ -25,9 +25,9 @@ public class MonitorAction extends BaseAction {
 
 	private Date to;
 
-	private String vtype; // value type l for longValue or d for doubleValue
+	private String vtype = "l"; // value type l for longValue or d for doubleValue
 
-	private String ctype;// chart type, bar ...
+	private String ctype = "bar";// chart type, bar,line ...
 
 	private Map<String, List<TreeNode>> result;
 
