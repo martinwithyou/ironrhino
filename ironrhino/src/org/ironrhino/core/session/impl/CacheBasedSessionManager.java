@@ -67,7 +67,7 @@ public class CacheBasedSessionManager implements HttpSessionManager {
 	}
 
 	public void invalidate(HttpWrappedSession session) {
-		cacheManager.remove(session.getId(), Constants.CACHE_NAMESPACE);
+		cacheManager.delete(session.getId(), Constants.CACHE_NAMESPACE);
 	}
 
 }

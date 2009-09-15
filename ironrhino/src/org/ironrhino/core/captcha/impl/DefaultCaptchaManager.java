@@ -202,7 +202,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		boolean b = answer != null
 				&& answer.equals(request.getParameter(KEY_CAPTCHA));
 		if (b)
-			cacheManager.remove(getThresholdKey(request), KEY_CAPTCHA);
+			cacheManager.delete(getThresholdKey(request), KEY_CAPTCHA);
 		return b;
 	}
 

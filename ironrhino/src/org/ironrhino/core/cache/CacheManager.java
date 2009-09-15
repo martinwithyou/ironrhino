@@ -1,6 +1,8 @@
 package org.ironrhino.core.cache;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
 
 public interface CacheManager {
 
@@ -15,6 +17,14 @@ public interface CacheManager {
 
 	public Serializable get(Serializable key, String namespace);
 
-	public void remove(Serializable key, String namespace);
+	public void delete(Serializable key, String namespace);
+
+	public void mput(Map<Serializable, Serializable> map, int timeToIdle,
+			int timeToLive, String namespace);
+
+	public Map<Serializable, Serializable> mget(Collection<Serializable> keys,
+			String namespace);
+
+	public void mdelete(Collection<Serializable> keys, String namespace);
 
 }

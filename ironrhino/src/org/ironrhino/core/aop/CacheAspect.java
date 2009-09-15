@@ -36,7 +36,7 @@ public class CacheAspect extends BaseAspect {
 			return jp.proceed();
 		if (CacheContext.isForceFlush()) {
 			for (Serializable key : keys)
-				cacheManager.remove(key, namespace);
+				cacheManager.delete(key, namespace);
 		} else {
 			Object value = null;
 			for (Serializable key : keys) {
@@ -68,9 +68,7 @@ public class CacheAspect extends BaseAspect {
 		List<Serializable> keys = evalList(flushCache.key(), jp, null);
 		if (isBypass() || keys == null || keys.size() == 0)
 			return;
-		for (Serializable key : keys)
-			if (key != null)
-				cacheManager.remove(key.toString().trim(), namespace);
+		cacheManager.mdelete(keys, namespace);
 		eval(flushCache.onFlush(), jp, null);
 	}
 
