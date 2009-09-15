@@ -4,18 +4,24 @@
 <title>Monitor</title>
 </head>
 <body>
-<form action="monitor" class="ajax view" replacement="data">
+<form action="${base}/common/monitor/chart/<#noescape>${uid}</#noescape>" class="ajax view" replacement="c">
+<@s.hidden name="vtype"/>
+<@s.hidden name="ctype"/>
 <span>${action.getText('date')}</span>
 <@s.textfield label="%{getText('date')}" theme="simple" name="date" cssClass="date" size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
-<form action="monitor" class="ajax view" replacement="data">
+<form action="${base}/common/monitor/chart/<#noescape>${uid}</#noescape>" class="ajax view" replacement="c">
+<@s.hidden name="vtype"/>
+<@s.hidden name="ctype"/>
 <span>${action.getText('date.range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" name="from" cssClass="date"  size="10" maxlength="10"/>
 <@s.textfield label="%{getText('to')}" theme="simple" name="to" cssClass="date"  size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
-<div id="chart" class="chart" data="${base}/common/monitor/data/<#noescape>${uid}</#noescape><#if request.queryString?exists>?${request.queryString}</#if>" style="width:1024px; height:300px;">
+<div id="c">
+<div id="chart" class="chart" data="${base}/common/monitor/data/<#noescape>${uid}<#if request.queryString?exists>?${request.queryString}</#if></#noescape>" style="width:1024px; height:300px;">
+</div>
 </div>
 </body>
 </html></#escape>

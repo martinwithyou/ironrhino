@@ -40,12 +40,11 @@ public class TextFileIterator<T> implements Iterator<T> {
 	public TextFileIterator(String encoding, File... files) {
 		this.encoding = encoding;
 		for (File f : files)
-			if (f != null && f.exists() && f.length() > 0)
+			if (f != null && f.exists())
 				this.files.add(f);
-		if (this.files.size() == 0)
-			throw new RuntimeException("no file available");
 		try {
-			openFile();
+			if (this.files.size() > 0)
+				openFile();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -66,10 +65,12 @@ public class TextFileIterator<T> implements Iterator<T> {
 	}
 
 	public boolean hasNext() {
+		if (this.files.size() == 0) return false;
 		return nextline != null || currentIndex < files.size() - 1;
 	}
 
 	public T next() {
+		if (this.files.size() == 0) return null;
 		try {
 			if (nextline == null && currentIndex < files.size() - 1) {
 				currentIndex++;

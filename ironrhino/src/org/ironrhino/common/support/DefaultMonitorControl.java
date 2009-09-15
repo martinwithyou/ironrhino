@@ -265,7 +265,7 @@ public class DefaultMonitorControl implements MonitorControl {
 			boolean perHost) {
 		PeriodAnalyzer analyzer;
 		try {
-			analyzer = new PeriodAnalyzer(key);
+			analyzer = new PeriodAnalyzer(key,date);
 			analyzer.setCumulative(cumulative);
 		} catch (FileNotFoundException e) {
 			Calendar cal = Calendar.getInstance();
