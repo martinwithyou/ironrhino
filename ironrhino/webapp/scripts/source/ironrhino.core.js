@@ -145,9 +145,9 @@ Observation.common = function(container) {
 		$('.uploadify').each(function() {
 			var options = {
 				'uploader' : CONTEXT_PATH + '/images/uploadify.swf',
-				'script' : CONTEXT_PATH + '/components/editor/upload',
+				'script' : $(this).closest('form')[0].action,
 				'cancelImg' : CONTEXT_PATH + '/images/cancel.png',
-				'folder' : CONTEXT_PATH + '/upload',
+//				'folder' : CONTEXT_PATH + '/upload',
 				'buttonText' : MessageBundle.get('browse'),
 				'wmode' : 'transparent',
 				'multi' : true,

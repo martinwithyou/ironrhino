@@ -46,4 +46,6 @@
 		class="org.ironrhino.common.service.PageManagerImpl" />
 	<bean id="captchaManager"
 		class="org.ironrhino.core.captcha.impl.DefaultCaptchaManager" />
+	<bean id="fileSystem"
+		class="org.ironrhino.core.fs.impl.LocalFileSystem" />
 </beans>
