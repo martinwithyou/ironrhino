@@ -1,5 +1,6 @@
 package org.ironrhino.core.aop;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,6 +12,7 @@ import javax.annotation.PostConstruct;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.ironrhino.core.metadata.Async;
 import org.ironrhino.core.metadata.ConcurrencyControl;
 
@@ -65,14 +67,16 @@ public class ConcurrentAspect extends BaseAspect {
 
 	}
 
-	@Around("execution(public void *(..)) and @annotation(async)")
-	public Object async(final ProceedingJoinPoint jp, Async async)
-			throws Throwable {
+	@Around("execution(public * *(..)) and @annotation(async)")
+	public Object async(ProceedingJoinPoint jp, Async async) throws Throwable {
+		final Object _this = jp.getTarget();
+		final Object[] args = jp.getArgs();
+		final Method method = ((MethodSignature) jp.getSignature()).getMethod();
 		executorService.execute(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					jp.proceed();
+					method.invoke(_this, args);
 				} catch (Throwable e) {
 					log.error(e.getMessage(), e);
 				}
