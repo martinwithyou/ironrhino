@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.util.BeanUtils;
 import org.ironrhino.common.util.RegionUtils;
@@ -41,6 +42,8 @@ public class RegionTreeControl implements ApplicationListener {
 	}
 
 	public Region parseByAddress(String address) {
+		if (StringUtils.isBlank(address))
+			return null;
 		return RegionUtils.parseByAddress(address, regionTree);
 	}
 

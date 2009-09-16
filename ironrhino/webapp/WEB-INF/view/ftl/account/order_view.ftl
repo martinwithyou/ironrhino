@@ -94,7 +94,7 @@
 		<div id="payment"><#list paymentManager.payments as var>
 			<#if !var.disabled>
 				<div><img src="${base}/images/${code}.jpg" alt="${var.code}" />${var.name}
-				${var.getPayForm(order)}</div>
+				<#noescape>${var.getPayForm(order)}</#noescape></div>
 			</#if>
 		</#list></div>
 		<div><a

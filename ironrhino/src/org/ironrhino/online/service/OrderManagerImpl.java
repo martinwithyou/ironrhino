@@ -11,6 +11,7 @@ import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.common.util.NumberUtils;
+import org.ironrhino.core.metadata.ConcurrencyControl;
 import org.ironrhino.core.rule.RuleProvider;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.online.model.Order;
@@ -23,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 		OrderManager {
 
+	public static final String CREATE_CONCURRENT_PERMITS_KEY = "orderManager.create.concurrent.permits";
+
 	@Autowired(required = false)
 	private RegionTreeControl regionTreeControl;
 
@@ -32,7 +35,8 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 	@Override
 	@Transactional
 	public void save(Order order) {
-		if (regionTreeControl != null && order.getRegion() == null)
+		if (regionTreeControl != null && order.getRegion() == null
+				&& order.getAddressee() != null)
 			order.setRegion(regionTreeControl.parseByAddress(order
 					.getAddressee().getAddress()));
 		super.save(order);
@@ -86,6 +90,8 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 	}
 
 	@Transactional
+	@ConcurrencyControl(permits = "${aspect.config('"
+			+ CREATE_CONCURRENT_PERMITS_KEY + "',10)}")
 	public String create(Order order) {
 		Order o = new Order();
 		BeanUtils.copyProperties(order, o);

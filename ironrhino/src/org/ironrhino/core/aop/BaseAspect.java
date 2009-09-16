@@ -9,7 +9,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
+import org.ironrhino.core.ext.spring.ApplicationContextConsole;
 import org.mvel2.templates.TemplateRuntime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 
 public class BaseAspect implements Ordered {
@@ -17,6 +19,9 @@ public class BaseAspect implements Ordered {
 	protected Log log = LogFactory.getLog(getClass());
 
 	private int order;
+
+	@Autowired
+	private ApplicationContextConsole applicationContextConsole;
 
 	protected boolean isBypass() {
 		return AopContext.isBypass(this.getClass());
@@ -36,6 +41,7 @@ public class BaseAspect implements Ordered {
 		template = template.trim();
 		if (template.length() == 0)
 			return "";
+
 		Map<String, Object> context = new HashMap<String, Object>();
 		context.put("_this", jp.getThis());
 		context.put("target", jp.getTarget());
@@ -131,4 +137,32 @@ public class BaseAspect implements Ordered {
 			return null;
 		}
 	}
+
+	public boolean config(String key, boolean _default) {
+		String value = applicationContextConsole.getConfigValue(key);
+		return StringUtils.isNotBlank(value) ? Boolean.valueOf(value)
+				: _default;
+	}
+
+	public String config(String key, String _default) {
+		String value = applicationContextConsole.getConfigValue(key);
+		return StringUtils.isNotBlank(value) ? value : _default;
+	}
+
+	public long config(String key, long _default) {
+		String value = applicationContextConsole.getConfigValue(key);
+		return StringUtils.isNotBlank(value) ? Long.valueOf(value) : _default;
+	}
+
+	public int config(String key, int _default) {
+		String value = applicationContextConsole.getConfigValue(key);
+		return StringUtils.isNotBlank(value) ? Integer.valueOf(value)
+				: _default;
+	}
+
+	public double config(String key, double _default) {
+		String value = applicationContextConsole.getConfigValue(key);
+		return StringUtils.isNotBlank(value) ? Double.valueOf(value) : _default;
+	}
+
 }

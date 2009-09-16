@@ -20,14 +20,14 @@
 		<property name="payments">
 			<list>
 				<ref bean="paypal" />
-				<ref bean="alipay" />
+				<!--ref bean="alipay" /-->
 			</list>
 		</property>
 	</bean>
 	<bean id="paypal" class="org.ironrhino.online.payment.Paypal"
 		p:business="${paypal.business}"/>
-	<bean id="alipay" class="org.ironrhino.online.payment.Alipay"
-		p:partner="${alipay.partner}" p:key="${alipay.key}" />
+	<!--bean id="alipay" class="org.ironrhino.online.payment.Alipay"
+		p:partner="${alipay.partner}" p:key="${alipay.key}" /-->
 		
 	<bean id="productFacade"
 		class="org.ironrhino.online.service.ProductFacadeImpl" />

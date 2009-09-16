@@ -99,6 +99,10 @@
 		<url-pattern>/ums/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
+		<filter-name>OpenSessionInViewFilter</filter-name>
+		<url-pattern>/account/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
 		<filter-name>struts-prepare</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
