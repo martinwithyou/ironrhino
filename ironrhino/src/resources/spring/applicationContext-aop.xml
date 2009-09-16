@@ -7,7 +7,7 @@
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 	<aop:aspectj-autoproxy />
-	<bean class="org.ironrhino.core.aop.ConcurrencyControlAspect" p:order="-1000" />
+	<bean class="org.ironrhino.core.aop.ConcurrentAspect" p:order="-1000" />
 	<bean class="org.ironrhino.core.aop.CacheAspect" p:order="-100" />
 	<bean class="org.ironrhino.core.aop.DataRouteAspect" p:order="-2"/>
 	<bean class="org.ironrhino.core.aop.PublishAspect" p:order="-1" />
