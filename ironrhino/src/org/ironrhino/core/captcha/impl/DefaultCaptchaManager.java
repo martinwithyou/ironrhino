@@ -179,12 +179,10 @@ public class DefaultCaptchaManager implements CaptchaManager {
 			if (captcha.always()) {
 				return new boolean[] { true, false };
 			}
-			if (captcha.bypassLoggedInUser()) {
-				UserDetails ud = AuthzUtils.getUserDetails(UserDetails.class);
-				if (ud != null) {
-					return new boolean[] { false, false };
-				}
-			}
+			if (captcha.bypassLoggedInUser())
+				return new boolean[] {
+						AuthzUtils.getUserDetails(UserDetails.class) == null,
+						false };
 			Integer threshold = (Integer) cacheManager.get(
 					getThresholdKey(request), KEY_CAPTCHA);
 			if (threshold != null && threshold >= captcha.threshold()) {
