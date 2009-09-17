@@ -1,4 +1,4 @@
-/*!
+/*
  * jQuery corner plugin: simple corner rounding
  * Examples and documentation at: http://jquery.malsup.com/corner/
  * version 2.01 (08-SEP-2009)
