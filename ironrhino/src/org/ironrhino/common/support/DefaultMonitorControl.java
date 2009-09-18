@@ -36,7 +36,9 @@ import org.ironrhino.core.monitor.analysis.CumulativeAnalyzer;
 import org.ironrhino.core.monitor.analysis.PeriodAnalyzer;
 import org.ironrhino.core.monitor.analysis.TreeNode;
 import org.ironrhino.core.service.BaseManager;
+import org.springframework.stereotype.Component;
 
+@Component("monitorControl")
 public class DefaultMonitorControl implements MonitorControl {
 
 	protected Log log = LogFactory.getLog(getClass());
@@ -265,7 +267,7 @@ public class DefaultMonitorControl implements MonitorControl {
 			boolean perHost) {
 		PeriodAnalyzer analyzer;
 		try {
-			analyzer = new PeriodAnalyzer(key,date);
+			analyzer = new PeriodAnalyzer(key, date);
 			analyzer.setCumulative(cumulative);
 		} catch (FileNotFoundException e) {
 			Calendar cal = Calendar.getInstance();

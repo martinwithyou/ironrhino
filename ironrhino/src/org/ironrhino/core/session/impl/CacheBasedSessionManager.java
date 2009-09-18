@@ -19,7 +19,9 @@ import org.springframework.security.context.SecurityContextImpl;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
 
+@Component("cacheBasedSessionManager")
 public class CacheBasedSessionManager implements HttpSessionManager {
 
 	@Autowired

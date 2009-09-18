@@ -7,8 +7,10 @@ import org.ironrhino.common.model.Page;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Component("pageManager")
 public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		PageManager {
 
@@ -43,7 +45,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	@Transactional
 	public Page saveDraft(Page page) {
 		Page p = get(page.getId());
-		if(p == null){
+		if (p == null) {
 			p = page;
 		}
 		p.setDraftDate(new Date());

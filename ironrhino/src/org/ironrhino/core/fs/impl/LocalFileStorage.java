@@ -18,7 +18,9 @@ import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.fs.FileStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Component;
 
+@Component("fileStorage")
 public class LocalFileStorage implements FileStorage {
 
 	private Log log = LogFactory.getLog(getClass());

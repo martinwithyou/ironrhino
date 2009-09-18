@@ -10,6 +10,7 @@ import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.Persistable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Use for record model's CRUD operations
@@ -18,7 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @see org.ironrhino.core.metadata.PublishAware
  */
 @Aspect
+@Component
 public class PublishAspect extends BaseAspect {
+
+	public PublishAspect() {
+		order = -1;
+	}
 
 	@Autowired
 	private EventPublisher eventPublisher;

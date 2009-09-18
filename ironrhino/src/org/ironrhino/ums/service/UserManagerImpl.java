@@ -14,8 +14,10 @@ import org.ironrhino.ums.model.User;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.GrantedAuthorityImpl;
 import org.springframework.security.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Component("userManager")
 public class UserManagerImpl extends BaseManagerImpl<User> implements
 		UserManager {
 

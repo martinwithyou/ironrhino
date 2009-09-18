@@ -9,7 +9,9 @@ import org.ironrhino.online.model.OrderItem;
 import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component("cart")
 public class Cart implements Serializable {
 
 	private static final long serialVersionUID = -2368151959299407620L;

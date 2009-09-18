@@ -18,7 +18,7 @@ public class BaseAspect implements Ordered {
 
 	protected Log log = LogFactory.getLog(getClass());
 
-	private int order;
+	protected int order;
 
 	@Autowired
 	private ApplicationContextConsole applicationContextConsole;

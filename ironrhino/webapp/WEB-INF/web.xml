@@ -5,7 +5,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath*:resources/spring/applicationContext-*.xml,classpath*:org/ironrhino/core/session/session.xml
+			classpath*:resources/spring/applicationContext-*.xml
 		</param-value>
 	</context-param>
 	<context-param>

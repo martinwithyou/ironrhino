@@ -17,7 +17,9 @@ import org.ironrhino.core.service.BaseManager;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
+@Component("settingControl")
 public class SettingControl implements ApplicationListener {
 
 	protected Log log = LogFactory.getLog(getClass());

@@ -25,7 +25,9 @@ import org.ironrhino.online.model.SearchHits;
 import org.ironrhino.online.model.SearchHitsHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.stereotype.Component;
 
+@Component("searchHitsControl")
 public class SearchHitsControlImpl extends StringStore implements
 		SearchHitsControl {
 

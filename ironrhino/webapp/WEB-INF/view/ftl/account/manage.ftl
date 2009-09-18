@@ -13,20 +13,20 @@
 </ul>
 <div id="profile"><@s.form id="profile_form" action="profile"
 	method="post" cssClass="ajax">
-	<@s.textfield label="%{getText('name')}" name="account.name" />
-	<@s.select label="%{getText('sex')}" name="account.sex"
+	<@s.textfield label="%{getText('name')}" name="user.name" />
+	<@s.select label="%{getText('sex')}" name="user.sex"
 		list="@org.ironrhino.common.model.Sex@values()" listKey="name"
 		listValue="displayName" />
-	<@s.textfield label="%{getText('birthday')}" name="account.birthday"
+	<@s.textfield label="%{getText('birthday')}" name="user.birthday"
 		cssClass="date" />
 	<@s.textfield id="address" label="%{getText('address')}"
-		name="account.address">
+		name="user.address">
 		<@s.param name="after">
 			<span class="link" onclick="Region.select('address',true)">select</span>
 		</@s.param>
 	</@s.textfield>
-	<@s.textfield label="%{getText('postcode')}" name="account.postcode" />
-	<@s.textfield label="%{getText('phone')}" name="account.phone" />
+	<@s.textfield label="%{getText('postcode')}" name="user.postcode" />
+	<@s.textfield label="%{getText('phone')}" name="user.phone" />
 	<@s.submit value="%{getText('save')}" />
 	</@s.form>
 	</div>
@@ -44,13 +44,13 @@
 	method="post" cssClass="ajax">
 	<@s.password label="%{getText('currentPassword')}"
 		name="currentPassword" cssClass="required" />
-	<@s.textfield label="%{getText('email')}" name="account.email"
+	<@s.textfield label="%{getText('email')}" name="user.email"
 		cssClass="required email" />
 	<@s.submit value="%{getText('save')}" />
 </@s.form></div>
 <div id="invite"><@s.form id="invite_form" action="invite"
 	method="post" cssClass="ajax">
-	<@s.textfield label="%{getText('email')}" name="account.email" value=""
+	<@s.textfield label="%{getText('email')}" name="user.email" value=""
 		cssClass="required email" />
 	<@s.submit value="%{getText('save')}" />
 </@s.form></div>

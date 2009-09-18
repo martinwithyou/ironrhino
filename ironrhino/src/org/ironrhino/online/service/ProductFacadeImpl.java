@@ -43,7 +43,9 @@ import org.ironrhino.pms.service.ProductManager;
 import org.ironrhino.pms.support.CategoryTreeControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.stereotype.Component;
 
+@Component("productFacade")
 public class ProductFacadeImpl implements ProductFacade {
 
 	protected final Log log = LogFactory.getLog(ProductFacadeImpl.class);

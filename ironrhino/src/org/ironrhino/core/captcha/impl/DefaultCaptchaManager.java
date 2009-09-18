@@ -10,7 +10,9 @@ import org.ironrhino.core.captcha.CaptchaManager;
 import org.ironrhino.core.metadata.Captcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
+@Component("captchaManager")
 public class DefaultCaptchaManager implements CaptchaManager {
 
 	private static final String CACHE_PREFIX_ANSWER = "answer_";

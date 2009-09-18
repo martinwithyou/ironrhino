@@ -15,12 +15,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.ironrhino.core.metadata.Async;
 import org.ironrhino.core.metadata.ConcurrencyControl;
+import org.springframework.stereotype.Component;
 
 /**
  * 
  * @author zhouyanming
  */
 @Aspect
+@Component
 public class ConcurrentAspect extends BaseAspect {
 
 	private ConcurrentHashMap<String, Semaphore> map = new ConcurrentHashMap<String, Semaphore>();
@@ -28,6 +30,10 @@ public class ConcurrentAspect extends BaseAspect {
 	private int threadPoolSize = 20;
 
 	private ExecutorService executorService;
+
+	public ConcurrentAspect() {
+		order = -1000;
+	}
 
 	@PostConstruct
 	public void afterPropertiesSet() {

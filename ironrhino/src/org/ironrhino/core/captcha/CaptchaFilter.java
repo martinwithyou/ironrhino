@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component("captchaFilter")
 public class CaptchaFilter implements Filter {
 
 	public static final String DEFAULT_IMAGE_CAPTCHA_URL = "/captcha.jpg";

@@ -17,8 +17,8 @@
 	<#list resultPage.result as var>
 		<tr>
 			<td>${var.code}</td>
-			<td>${var.account.username}</td>
-			<td>${var.account.name}</td>
+			<td>${var.user.username}</td>
+			<td>${var.user.name}</td>
 			<td>${var.status.displayName}</td>
 			<td>${var.createDate}</td>
 			<td><a href="${base}/account/order/view/${var.code}">view</a>

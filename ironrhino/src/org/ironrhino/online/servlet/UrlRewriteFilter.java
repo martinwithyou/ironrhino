@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.common.util.Thumbnail;
+import org.springframework.stereotype.Component;
 
+@Component("urlRewriteFilter")
 public class UrlRewriteFilter implements Filter {
 
 	protected Log log = LogFactory.getLog(UrlRewriteFilter.class);
@@ -73,8 +75,9 @@ public class UrlRewriteFilter implements Filter {
 							.indexOf('x') + 1));
 					File f = new File(servletContext.getRealPath(picPrefix
 							+ file));
-					if(!f.exists())
-						f = new File(servletContext.getRealPath("/images/product.jpg")); 
+					if (!f.exists())
+						f = new File(servletContext
+								.getRealPath("/images/product.jpg"));
 					BufferedImage image = ImageIO.read(f);
 					image = Thumbnail.resizeFix(image, width, height);
 					response.setHeader("Cache-Control", "max-age=86400");

@@ -19,8 +19,10 @@ import org.ironrhino.online.model.OrderStatus;
 import org.ironrhino.ums.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Component("orderManager")
 public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 		OrderManager {
 

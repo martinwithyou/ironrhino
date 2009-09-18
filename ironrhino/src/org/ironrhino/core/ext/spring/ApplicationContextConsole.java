@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.support.PropertiesLoaderSupport;
+import org.springframework.stereotype.Component;
 
+@Component("applicationContextConsole")
 public class ApplicationContextConsole {
 
 	protected Log log = LogFactory.getLog(getClass());

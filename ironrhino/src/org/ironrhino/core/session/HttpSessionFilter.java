@@ -17,9 +17,11 @@ import javax.servlet.http.HttpSession;
 import org.ironrhino.core.performance.BufferableResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+@Component("httpSessionFilter")
 public class HttpSessionFilter implements Filter {
 
 	ServletContext servletContext;

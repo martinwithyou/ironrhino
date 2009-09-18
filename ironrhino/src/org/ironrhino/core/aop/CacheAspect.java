@@ -13,6 +13,7 @@ import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * cache some data
@@ -22,10 +23,15 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @see org.ironrhino.core.metadata.FlushCache
  */
 @Aspect
+@Component
 public class CacheAspect extends BaseAspect {
 
 	@Autowired
 	private CacheManager cacheManager;
+
+	public CacheAspect() {
+		order = -100;
+	}
 
 	@Around("execution(public java.io.Serializable+ *(..)) and @annotation(checkCache)")
 	public Object get(ProceedingJoinPoint jp, CheckCache checkCache)

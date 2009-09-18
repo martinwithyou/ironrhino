@@ -20,6 +20,7 @@ import org.ironrhino.core.session.HttpWrappedSession;
 import org.springframework.security.context.HttpSessionContextIntegrationFilter;
 import org.springframework.security.context.SecurityContext;
 
+//@Component("cookieBasedSessionManager")
 public class CookieBasedSessionManager implements HttpSessionManager {
 
 	private Log log = LogFactory.getLog(CookieBasedSessionManager.class);

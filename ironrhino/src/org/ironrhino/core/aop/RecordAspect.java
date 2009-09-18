@@ -15,6 +15,7 @@ import org.ironrhino.core.model.Persistable;
 import org.springframework.core.Ordered;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.security.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 /**
  * Use for record model's CRUD operations
@@ -23,7 +24,12 @@ import org.springframework.security.userdetails.UserDetails;
  * @see org.ironrhino.core.metadata.RecordAware
  */
 @Aspect
+@Component
 public class RecordAspect extends HibernateDaoSupport implements Ordered {
+
+	public RecordAspect() {
+		order = 1;
+	}
 
 	private int order;
 
