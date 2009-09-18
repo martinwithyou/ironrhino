@@ -31,6 +31,8 @@ public class ConcurrentAspect extends BaseAspect {
 
 	private ExecutorService executorService;
 
+	private static ThreadLocal<Boolean> alreadyAsync = new ThreadLocal<Boolean>();
+
 	public ConcurrentAspect() {
 		order = -1000;
 	}
@@ -75,14 +77,18 @@ public class ConcurrentAspect extends BaseAspect {
 
 	@Around("execution(public * *(..)) and @annotation(async)")
 	public Object async(ProceedingJoinPoint jp, Async async) throws Throwable {
-		final Object _this = jp.getTarget();
+		if (alreadyAsync.get() != null && alreadyAsync.get())
+			return jp.proceed();
+		final Object _this = jp.getThis();
 		final Object[] args = jp.getArgs();
 		final Method method = ((MethodSignature) jp.getSignature()).getMethod();
 		executorService.execute(new Runnable() {
 			@Override
 			public void run() {
 				try {
+					alreadyAsync.set(true);
 					method.invoke(_this, args);
+					alreadyAsync.set(null);
 				} catch (Throwable e) {
 					log.error(e.getMessage(), e);
 				}
