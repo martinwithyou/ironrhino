@@ -1,4 +1,4 @@
-package org.ironrhino.common.support;
+package org.ironrhino.core.ext.struts;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -6,8 +6,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.ext.struts.AutoConfigResult;
-import org.ironrhino.core.ext.struts.RichFreemarkerManager;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;

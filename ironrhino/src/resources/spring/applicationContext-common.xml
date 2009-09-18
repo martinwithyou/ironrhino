@@ -23,9 +23,8 @@
 			<bean class="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager"/>
 		</constructor-arg>
 	</bean>
-
 	<bean id="templateProvider"
-		class="org.ironrhino.common.support.TemplateProvider">
+		class="org.ironrhino.core.ext.struts.TemplateProvider">
 		<property name="allSharedVariables">
 			<map>
 				<entry key="base" value="${base}" />
@@ -34,18 +33,9 @@
 	</bean>
 	<bean id="eventPublisher"
 		class="org.ironrhino.core.event.EventPublisher" />
-	<bean id="applicationContextConsole"
-		class="org.ironrhino.core.ext.spring.ApplicationContextConsole"/>
-	<bean id="settingControl"
-		class="org.ironrhino.common.support.SettingControl" />
-	<bean id="monitorControl"
-		class="org.ironrhino.common.support.DefaultMonitorControl" />
-	<bean id="regionTreeControl"
-		class="org.ironrhino.common.support.RegionTreeControl" />
-	<bean id="pageManager"
-		class="org.ironrhino.common.service.PageManagerImpl" />
-	<bean id="captchaManager"
-		class="org.ironrhino.core.captcha.impl.DefaultCaptchaManager" />
-	<bean id="fileSystem"
-		class="org.ironrhino.core.fs.impl.LocalFileSystem" />
+	<bean id="applicationContextConsole" class="org.ironrhino.core.ext.spring.ApplicationContextConsole"/>
+	<bean id="settingControl" class="org.ironrhino.common.support.SettingControl" />
+	<bean id="monitorControl" class="org.ironrhino.common.support.DefaultMonitorControl" />
+	<bean id="regionTreeControl" class="org.ironrhino.common.support.RegionTreeControl" />
+	<bean id="pageManager" class="org.ironrhino.common.service.PageManagerImpl" />
 </beans>

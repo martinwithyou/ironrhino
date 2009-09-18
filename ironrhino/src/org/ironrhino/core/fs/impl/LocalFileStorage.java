@@ -15,11 +15,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.fs.FileSystem;
+import org.ironrhino.core.fs.FileStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 
-public class LocalFileSystem implements FileSystem {
+public class LocalFileStorage implements FileStorage {
 
 	private Log log = LogFactory.getLog(getClass());
 

@@ -3,7 +3,7 @@ package org.ironrhino.core.fs;
 import java.io.File;
 import java.io.InputStream;
 
-public interface FileSystem {
+public interface FileStorage {
 
 	public String save(File localFile);
 
