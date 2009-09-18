@@ -22,14 +22,11 @@ if (typeof(Initialization) == 'undefined')
 if (typeof(Observation) == 'undefined')
 	Observation = {};
 var CONTEXT_PATH = '';
-
+CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
+if (CONTEXT_PATH == '/')
+	CONTEXT_PATH = '';
 function _init() {
-	CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
-	if (CONTEXT_PATH == '/')
-		CONTEXT_PATH = '';
-
 	var array = [];
-
 	for (var key in Initialization) {
 		if (typeof(Initialization[key]) == 'function')
 			array.push(key);
@@ -147,7 +144,7 @@ Observation.common = function(container) {
 				'uploader' : CONTEXT_PATH + '/images/uploadify.swf',
 				'script' : $(this).closest('form')[0].action,
 				'cancelImg' : CONTEXT_PATH + '/images/cancel.png',
-//				'folder' : CONTEXT_PATH + '/upload',
+				// 'folder' : CONTEXT_PATH + '/upload',
 				'buttonText' : MessageBundle.get('browse'),
 				'wmode' : 'transparent',
 				'multi' : true,
