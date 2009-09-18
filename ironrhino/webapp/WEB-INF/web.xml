@@ -29,6 +29,10 @@
 		<filter-class>org.ironrhino.core.ext.servlet.WebProxyFilter</filter-class>
 	</filter>
 	<filter>
+		<filter-name>captchaFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter>
 		<filter-name>httpSessionFilter</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
@@ -75,6 +79,11 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>WebProxy</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>captchaFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
@@ -148,18 +157,9 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	<servlet>
-		<servlet-name>captcha</servlet-name>
-		<servlet-class>org.ironrhino.core.captcha.ImageCaptchaServlet</servlet-class>
-		<load-on-startup>3</load-on-startup>
-	</servlet>
 	<servlet-mapping>
 		<servlet-name>cas</servlet-name>
 		<url-pattern>/cas/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>captcha</servlet-name>
-		<url-pattern>/captcha.jpg</url-pattern>
 	</servlet-mapping>
 	<mime-mapping>
 		<extension>ico</extension>
