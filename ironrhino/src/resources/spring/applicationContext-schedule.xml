@@ -30,7 +30,6 @@
 		<property name="commands">
 			<list>
 				<value>monitorControl.archive()</value>
-				<value>searchHitsControl.consume()</value>
 			</list>
 		</property>
 	</bean>

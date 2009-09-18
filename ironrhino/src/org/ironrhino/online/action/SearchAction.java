@@ -12,12 +12,13 @@ import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
-import org.ironrhino.online.support.SearchHitsControl;
 
 @AutoConfig(namespace = "/")
 public class SearchAction extends BaseAction {
 
 	private static final long serialVersionUID = -605092283512211959L;
+
+	public static final String QUERY_PARAMETER_NAME = "q";
 
 	private String q;
 
@@ -25,21 +26,14 @@ public class SearchAction extends BaseAction {
 
 	private int ps = 10;
 
-	private transient SearchHitsControl searchHitsControl;
-
 	private transient CompassSearchService compassSearchService;
 
 	public List<AggregateResult> getSuggestions() {
-
 		if (StringUtils.isNotBlank(q)) {
-			String keyword = q.trim();
-			return searchHitsControl.suggest(keyword);
+			// TODO how
+			return null;
 		}
 		return null;
-	}
-
-	public void setSearchHitsControl(SearchHitsControl searchHitsControl) {
-		this.searchHitsControl = searchHitsControl;
 	}
 
 	public CompassSearchResults getSearchResults() {
@@ -50,7 +44,6 @@ public class SearchAction extends BaseAction {
 		CompassCriteria cc = new CompassCriteria();
 		cc.setQuery(query);
 		cc.setAliases(new String[] { "product" });
-		cc.ge("product.open", Boolean.TRUE);
 		if (pn > 0)
 			cc.setPageNo(pn);
 		if (ps > 0)
@@ -58,9 +51,6 @@ public class SearchAction extends BaseAction {
 		if (ps > 100)
 			cc.setPageSize(100);
 		CompassSearchResults searchResults = compassSearchService.search(cc);
-		if (searchHitsControl != null) {
-			searchHitsControl.put(query, searchResults.getTotalHits());
-		}
 		return searchResults;
 
 	}
@@ -97,7 +87,19 @@ public class SearchAction extends BaseAction {
 	@Override
 	@SkipValidation
 	public String execute() {
-
+		String queryString = ServletActionContext.getRequest().getQueryString();
+		if (StringUtils.isNotBlank(queryString)) {
+			String[] array = queryString.split("&");
+			for (String s : array) {
+				String[] arr = s.split("=", 2);
+				if (arr.length == 2 && arr[0].equals(QUERY_PARAMETER_NAME)) {
+					q = arr[1];
+					break;
+				}
+			}
+			if (q != null)
+				q = org.ironrhino.common.util.StringUtils.decodeUrl(q);
+		}
 		return SUCCESS;
 	}
 

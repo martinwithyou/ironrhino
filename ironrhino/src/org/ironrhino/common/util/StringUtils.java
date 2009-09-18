@@ -1,5 +1,8 @@
 package org.ironrhino.common.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -415,6 +418,39 @@ public class StringUtils {
 		if (array == null)// not chinese
 			array = new String[] { String.valueOf(c) };
 		return array;
+	}
+
+	public static String decodeUrl(String url) {
+		try {
+			if (isUtf8Url(url)) {
+				return URLDecoder.decode(url, "UTF-8");
+			} else {
+				return URLDecoder.decode(url, "GBK");
+			}
+		} catch (UnsupportedEncodingException e) {
+			return url;
+		}
+	}
+
+	private static boolean utf8codeCheck(String urlCode) {
+		String sign = "";
+		if (urlCode.startsWith("%e"))
+			for (int p = 0; p != -1;) {
+				p = urlCode.indexOf("%", p);
+				if (p != -1)
+					p++;
+				sign += p;
+			}
+		return sign.equals("147-1");
+	}
+
+	private static boolean isUtf8Url(String urlCode) {
+		urlCode = urlCode.toLowerCase();
+		int p = urlCode.indexOf("%");
+		if (p != -1 && urlCode.length() - p > 9) {
+			urlCode = urlCode.substring(p, p + 9);
+		}
+		return utf8codeCheck(urlCode);
 	}
 
 }
