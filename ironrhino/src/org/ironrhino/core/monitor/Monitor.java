@@ -38,7 +38,7 @@ public class Monitor {
 	private static final Map<Key, Value> data = new ConcurrentHashMap<Key, Value>(
 			50);
 
-	private static Thread writeThread = null;
+	private static Thread writeThread;
 
 	private static int currentSystemInterval;
 

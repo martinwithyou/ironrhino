@@ -1,17 +1,17 @@
 package org.ironrhino.online.action;
 
-import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.compass.core.support.search.CompassSearchResults;
-import org.ironrhino.common.model.AggregateResult;
 import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
+import org.ironrhino.core.search.SearchStat;
 
 @AutoConfig(namespace = "/")
 public class SearchAction extends BaseAction {
@@ -28,12 +28,14 @@ public class SearchAction extends BaseAction {
 
 	private transient CompassSearchService compassSearchService;
 
-	public List<AggregateResult> getSuggestions() {
-		if (StringUtils.isNotBlank(q)) {
-			// TODO how
-			return null;
-		}
-		return null;
+	private transient SearchStat searchStat;
+
+	private Map<String, Integer> suggestions;
+
+	public Map<String, Integer> getSuggestions() {
+		if (suggestions == null)
+			suggestions = searchStat.suggest(q);
+		return suggestions;
 	}
 
 	public CompassSearchResults getSearchResults() {
@@ -53,6 +55,10 @@ public class SearchAction extends BaseAction {
 		CompassSearchResults searchResults = compassSearchService.search(cc);
 		return searchResults;
 
+	}
+
+	public void setSearchStat(SearchStat searchStat) {
+		this.searchStat = searchStat;
 	}
 
 	public void setCompassSearchService(

@@ -14,25 +14,32 @@ import org.compass.core.CompassSession;
 import org.compass.core.CompassTemplate;
 import org.compass.core.engine.SearchEngineQueryParseException;
 import org.compass.core.support.search.CompassSearchResults;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 public class CompassSearchService {
 
 	protected Log log = LogFactory.getLog(CompassSearchService.class);
 
+	@Autowired
 	private Compass compass;
+
+	@Autowired
+	private transient SearchStat searchStat;
 
 	private CompassTemplate compassTemplate;
 
 	public CompassSearchResults search(final CompassCriteria criteria) {
 		if (criteria == null)
 			return null;
-		return (CompassSearchResults) getCompassTemplate().execute(
-				new CompassCallback() {
+		CompassSearchResults searchResults = (CompassSearchResults) getCompassTemplate()
+				.execute(new CompassCallback() {
 					public Object doInCompass(CompassSession session) {
 						return performSearch(criteria, session);
 					}
 				});
+		searchStat.put(criteria.getQuery(), searchResults.getTotalHits());
+		return searchResults;
 	}
 
 	protected CompassSearchResults performSearch(CompassCriteria criteria,
