@@ -4,7 +4,7 @@
 <title>ironrhino</title>
 </head>
 <body>
-<div class="tabs" tab="#${Parameters.tab?if_exists}">
+<div class="tabs" tab="#${Parameters.tab!}">
 <ul>
 	<li><a href="#profile"><span>基本信息</span></a></li>
 	<li><a href="#password"><span>修改密码</span></a></li>

@@ -15,7 +15,7 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 <body>
 <@cache key="index_page">
 <#assign list=productFacade.getRecommendedProducts()>
-<#if  list?exists && list.size() gt 0>
+<#if  list?? && list.size() gt 0>
 	<div style="clear:both;">
 	<div class="rounded" style="background: #fcc;">
 	<h1>每周精选</h1>
@@ -28,7 +28,7 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 	</div>
 </#if>
 <#assign list=productFacade.getTopSaleProducts(4)>
-<#if list?exists && list.size() gt 0>
+<#if list?? && list.size() gt 0>
 	<div style="clear:both;">
 	<div class="rounded" style="background: #fcc;">
 	<h1>畅销排行</h1>
@@ -43,7 +43,7 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 </#if>
 
 <#assign list=productFacade.getTopScoreProducts(4)>
-<#if list?exists && list.size() gt 0>
+<#if list?? && list.size() gt 0>
 	<div style="clear:both;">
 	<div class="rounded" style="background: #fcc;">
 	<h1>得分排行</h1>
@@ -58,7 +58,7 @@ ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view"
 </#if>
 
 <#assign list=productFacade.getTopFavoriteProducts(4)>
-<#if list?exists && list.size() gt 0>
+<#if list?? && list.size() gt 0>
 	<div style="clear:both;">
 	<div class="rounded" style="background: #fcc;">
 	<h1>收藏排行</h1>

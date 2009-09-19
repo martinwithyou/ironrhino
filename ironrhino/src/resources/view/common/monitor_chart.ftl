@@ -20,7 +20,7 @@
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
 <div id="c">
-<div id="chart" class="chart" data="${base}/common/monitor/data/<#noescape>${uid}<#if request.queryString?exists>?${request.queryString}</#if></#noescape>" style="width:1024px; height:300px;">
+<div id="chart" class="chart" data="${base}/common/monitor/data/<#noescape>${uid}<#if request.queryString??>?${request.queryString}</#if></#noescape>" style="width:1024px; height:300px;">
 </div>
 </div>
 </body>

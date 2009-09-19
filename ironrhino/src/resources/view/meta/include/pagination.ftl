@@ -10,12 +10,12 @@
 </#if>
 <#if resultPage.totalPage lt 11>
 <#list 1..resultPage.totalPage as index>
-<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${extra['class']?if_exists?html}"</#if><#list extra?keys as attr><#if attr!=class> ${attr}="${extra[attr]?html}"</#if></#list>>${index}</a>
+<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${(extra['class']?html)!}"</#if><#list extra?keys as attr><#if attr!=class> ${attr}="${extra[attr]?html}"</#if></#list>>${index}</a>
 </#list>
 <#else>
 <#if resultPage.pageNo lt 6>
 <#list 1..(resultPage.pageNo+2) as index>
-<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${extra['class']?if_exists?html}"</#if><#list extra?keys as attr><#if attr!=class> ${attr}="${extra[attr]?html}"</#if></#list>>${index}</a>
+<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${(extra['class']?html)!}"</#if><#list extra?keys as attr><#if attr!=class> ${attr}="${extra[attr]?html}"</#if></#list>>${index}</a>
 </#list>
 ...
 <#list (resultPage.totalPage-1)..resultPage.totalPage as index>
@@ -27,7 +27,7 @@
 </#list>
 ...
 <#list (resultPage.pageNo-2)..resultPage.totalPage as index>
-<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${extra['class']?if_exists?html}"</#if><#list extra?keys as attr><#if attr!=class> ${attr}="${extra[attr]?html}"</#if></#list>>${index}</a>
+<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${(extra['class']?html)!}"</#if><#list extra?keys as attr><#if attr!=class> ${attr}="${extra[attr]?html}"</#if></#list>>${index}</a>
 </#list>        
 <#else>
 <#list 1..2 as index>
@@ -35,7 +35,7 @@
 </#list>
 ...
 <#list (resultPage.pageNo-2)..(resultPage.pageNo+2) as index>
-<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${extra['class']?if_exists?html}"</#if><#list extra?keys as attr><#if attr!=class> ${attr}="${extra[attr]?html}"</#if></#list>>${index}</a>
+<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${(extra['class']?html)!}"</#if><#list extra?keys as attr><#if attr!=class> ${attr}="${extra[attr]?html}"</#if></#list>>${index}</a>
 </#list>
 ...
 <#list (resultPage.totalPage-1)..resultPage.totalPage as index>

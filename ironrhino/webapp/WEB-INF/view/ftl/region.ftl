@@ -4,7 +4,7 @@
 <title>region</title>
 <script type="text/javascript">
 	function _click(){
-		<#if Parameters.input?exists>
+		<#if Parameters.input??>
 		var id=$(this).parents('li')[0].id;
 		var name=$(this).text();
 		window.top.document.getElementById('${Parameters.input}').value=name;
@@ -15,7 +15,7 @@
 	
 	Initialization.treeview= function(){
 		$("#treeview").treeview({
-			<#if async>
+			<#if async??&&async>
 			url: '${base}/region/children',
 			click:_click,
 			</#if>
@@ -23,7 +23,7 @@
 			unique: true
 
 		});
-		<#if !async>
+		<#if !(async??&&async)>
 			$("#treeview span").click(_click);
 			var id=document.location.hash;
 			if(id)

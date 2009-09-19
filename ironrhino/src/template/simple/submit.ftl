@@ -5,7 +5,7 @@
 <#if parameters.name??>
  name="${parameters.name?html}"<#rt/>
 </#if>
-<#if parameters.disabled?default(false)>
+<#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
  class="btn<#if parameters.cssClass??> ${parameters.cssClass?html}</#if>"<#rt/>

@@ -1,3 +1,3 @@
-<#list suggestions?keys?if_exists as key>
+<#list suggestions?keys! as key>
 ${key}|${suggestions[key]+action.getText('results')}
 </#list>

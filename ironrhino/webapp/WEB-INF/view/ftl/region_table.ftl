@@ -1,5 +1,5 @@
 <#macro renderTR region>
-<tr id="node-${region.id}"<#if region.parent?exists&&region.parent.id gt 0> class="child-of-node-${region.parent.id}"</#if>>
+<tr id="node-${region.id}"<#if region.parent??&&region.parent.id gt 0> class="child-of-node-${region.parent.id}"</#if>>
         <td><input type="checkbox" name="id" value="${region.id}"/></td>
         <td>${region.name}</td>
         <td>${region.fullname}</td>

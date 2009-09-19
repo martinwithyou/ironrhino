@@ -5,26 +5,25 @@
 </head>
 <body>
 <@s.form action="save" method="post" cssClass="ajax">
-	<#if entity?exists&&!entity.new>
+	<#if entity??&&!entity.new>
 	<@s.hidden name="${entityName}.id" />
 	</#if>
 	<#list naturalIds?keys as key>
 		<#assign config=uiConfigs[key]>
 		<#assign label=key>
-		<#if config.displayName?exists>
+		<#if config.displayName??>
 			<#assign label=config.displayName>
 		</#if>
 		<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" 
-		readonly="${(naturalIdsImmatuable&&!action.isNew())?string}"
-		 cssClass="${config.cssClass}" 
-		 size="${(config.size>0)?string(config.size,20)}"/>
+		readonly="${(naturalIdsImmatuable&&!action.isNew())?string}" cssClass="${config.cssClass}" 
+		size="${(config.size>0)?string(config.size,20)}"/>
 	</#list>
 
 	<#list uiConfigs?keys as key>
 		<#if !naturalIds?keys?seq_contains(key)>
 			<#assign config=uiConfigs[key]>
 			<#assign label=key>
-			<#if config.displayName?exists>
+			<#if config.displayName??>
 				<#assign label=config.displayName>
 			</#if>
 			<#if config.type=='input'>

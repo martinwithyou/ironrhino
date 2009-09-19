@@ -92,8 +92,8 @@ $(function() {
 	<p>
 	<@s.submit id="draft" value="%{getText('draft')}" theme="simple"/>
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
-	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate?exists>${page.draftDate?datetime}</#if></span>
-	<#if page.path?exists>
+	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>
+	<#if page.path??>
 	<@button id="preview" type="link" text="${action.getText('preview')}" href="${base+cmsPath+page.path}?preview=true" target="_blank"/>
 	<#else>
 	<@button id="preview" type="link" text="${action.getText('preview')}" target="_blank"/>
@@ -103,7 +103,7 @@ $(function() {
 	</p>
 	<p>
 	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
-	<#if page.path?exists>
+	<#if page.path??>
 	<@button id="view" type="link" text="${action.getText('view')}" href="${base+cmsPath+page.path}" target="_blank"/>
 	<#else>
 	<@button id="view" type="link" text="${action.getText('view')}" target="_blank"/>

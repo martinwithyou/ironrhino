@@ -2,7 +2,7 @@
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Region Map</title>
-<#if Parameters.type?if_exists=='satellite'>
+<#if (Parameters.type!)=='satellite'>
 	<script src="http://maps.google.com/maps?file=api&amp;v=2"
 		type="text/javascript"></script>
 <#else>
@@ -10,9 +10,9 @@
 		type="text/javascript"></script>
 </#if>
 <script type="text/javascript">
-var lat = ${Parameters.lat?default(22.5162)};
-var lng = ${Parameters.lng?default(114.050128)};
-var zoom = ${Parameters.zoom?default(8)};
+var lat = ${Parameters.lat!22.5162};
+var lng = ${Parameters.lng!114.050128};
+var zoom = ${Parameters.zoom!8};
 var map;
 var mgr;
 $(window).unload(GUnload);
@@ -36,7 +36,7 @@ return;
 		map.setCenter(new GLatLng(lat, lng), zoom);
 		map.addControl(new GLargeMapControl());
 		map.addControl(new GOverviewMapControl());
-<#if Parameters.type?exists&&'satellite'==Parameters.type>
+<#if Parameters.type??&&'satellite'==Parameters.type>
 		map.addControl(new GMapTypeControl());
 		map.setMapType(G_SATELLITE_MAP);
 </#if>
@@ -113,7 +113,7 @@ window.location.href=url;
 <@s.property value="#attr.region.treeViewHtml" escape="false" />
 </div>
 <div style="float: left; width: 80%;">
-<div><#if Parameters.type?exists&&'satellite'==Parameters.type>
+<div><#if Parameters.type??&&'satellite'==Parameters.type>
 	<a class="link" onclick="switchTo('map')">map </a>
 <#else>
 	<a class="link" onclick="switchTo('satellite')">satellite</a>

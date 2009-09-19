@@ -1,5 +1,5 @@
 <#if request.scheme!='https' && !request.servletPath?string?contains('cart')>
-	<#assign current=uid?default('')>
+	<#assign current=uid!''>
 	<#list categoryTreeControl.categoryTree.children as cat>
 		<div class="category_top rounded">
 		<div class="category_top_title"><a

@@ -1,22 +1,22 @@
 <#macro richtable config entityName action="" actionColumnWidth="150px" actionColumnButtons="" bottomButtons="" readonly=false createable=true celleditable=true deleteable=true>
 <@rtstart action="${action?has_content?string(action,entityName)}" readonly="${readonly?string}"/>
 <#list config?keys as name>
-<@rttheadtd name="${name}" editable=(!readonly)&&(config[name]["cellEdit"]?exists)/>
+<@rttheadtd name="${name}" editable=(!readonly)&&(config[name]["cellEdit"]??)/>
 </#list>
 <@rtmiddle width="${actionColumnWidth}" readonly="${readonly?string}"/>
 <#local index=0>
-<#if resultPage?exists><#local list=resultPage.result></#if>
+<#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
 <#local index=index+1>
 <@rttbodytrstart rowid="${entity.id}" odd=(index%2==1)  readonly="${readonly?string}"/>
 	<#list config?keys as name>
-		<#local cellName=(config[name]["trimPrefix"]?exists?string('',entityName+'.'))+name>
-		<#local value=config[name]['value']?exists?string(config[name]['value']?if_exists,entity[name]?if_exists?string)>
-		<#if (!readonly&&celleditable)&&config[name]["cellEdit"]?exists>
+		<#local cellName=((config[name]["trimPrefix"]??)?string('',entityName+'.'))+name>
+		<#local value=(config[name]['value']??)?string(config[name]['value']!,(entity[name]?string)!)>
+		<#if (!readonly&&celleditable)&&config[name]["cellEdit"]??>
 		<#local edit=config[name]["cellEdit"]?split(",")>
-		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']?if_exists}" renderLink="${config[name]['renderLink']?if_exists?string}" cellEdit="${edit[0]}" cellEditTemplate="${edit[1]?if_exists}" cellEditAction="${edit[2]?if_exists}" class="${config[name]['class']?if_exists}"/>
+		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']!}" renderLink="${(config[name]['renderLink']?string)!}" cellEdit="${edit[0]}" cellEditTemplate="${edit[1]!}" cellEditAction="${edit[2]!}" class="${config[name]['class']!}"/>
 		<#else>
-		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']?if_exists}" renderLink="${config[name]['renderLink']?if_exists?string}" class="${config[name]['class']?if_exists}"/>
+		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']!}" renderLink="${(config[name]['renderLink']?string)!}" class="${config[name]['class']!}"/>
 		</#if>
 	</#list>
 	<@rttbodytrend rowid="${entity.id}" buttons="${actionColumnButtons}" readonly="${readonly?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
@@ -104,7 +104,7 @@ ${buttons?replace("#id",rowid)}
 <table class="toolbarTable" cellpadding="0" cellspacing="0" >
 <tr>
 <td class="pageNavigationTool" width="33%" nowrap="nowrap">
-<#if resultPage?exists>
+<#if resultPage??>
 <input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav firstPageD"<#else>class="pageNav firstPage"</#if> title="${action.getText('firstpage')}" />
 <input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav prevPageD"<#else>class="pageNav prevPage"</#if> title="${action.getText('previouspage')}" />
 <input type="button" <#if resultPage.pageNo==resultPage.totalPage>disabled="disabled" class="pageNav nextPageD"<#else> class="pageNav nextPage"</#if> title="${action.getText('nextpage')}" />
@@ -133,7 +133,7 @@ ${buttons}
 </div>
 </td>
 <td class="statusTool" width="33%">
-<#if resultPage?exists>
+<#if resultPage??>
 ${action.getText('total')}${resultPage.totalRecord}${action.getText('record')}<#if resultPage.totalRecord!=0>,${action.getText('display')}${resultPage.start+1}-${resultPage.start+resultPage.result?size}</#if>
 <#else>
 ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!=0>,${action.getText('display')}1-${list?size}</#if>	

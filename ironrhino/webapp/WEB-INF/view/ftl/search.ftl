@@ -4,16 +4,16 @@
 <title>search</title>
 </head>
 <body>
-<@cache key='search'+Parameters.q?if_exists>
+<@cache key='search'+Parameters.q! timeToLive="1800">
 <div id="search_result">
-<#if searchResults?exists>
+<#if searchResults??>
  Search took ${searchResults.searchTime}ms
- <#if searchResults.hits?exists>
+ <#if searchResults.hits??>
 		<#list searchResults.hits as var>
 			<p><a href="${base}/product/${var.data().code}.html">${var.data().name}</a> (${action.formatScore(var.score())})<br />
-			${var.data().shortDescription?if_exists}</p>
+			${var.data().shortDescription!}</p>
 		</#list>
-		<#if searchResults.pages?exists>
+		<#if searchResults.pages??>
 			<p>
 			<#assign index=0>
 			<#list searchResults.pages as var>

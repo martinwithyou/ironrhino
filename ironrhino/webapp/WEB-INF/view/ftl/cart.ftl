@@ -30,7 +30,7 @@
 	</tfoot>
 	<tbody>
 		<#assign index=0>
-		<#list cart.order.items?if_exists as var>
+		<#list cart.order.items! as var>
 			<tr class="row">
 				<td><input type="checkbox" name="id"
 					value="${var.productCode}" /></td>

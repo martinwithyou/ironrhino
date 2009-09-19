@@ -24,7 +24,7 @@
 
 
 <div id="score">
-<#if scoreResult.details?exists>
+<#if scoreResult.details??>
 <div>当前平均分:<span id="score_average">${scoreResult.average}</span>(<span id="score_count">${scoreResult.count}</span>次打分)</div>
 <ul style="clear:both;">
 	<#list scoreResult.details.entrySet() as var>

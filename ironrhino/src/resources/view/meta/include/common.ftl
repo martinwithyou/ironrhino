@@ -9,9 +9,9 @@
 </#function>
 
 <#macro cache key scope="application" timeToIdle="-1" timeToLive="3600">
-<#assign keyExists=statics['org.ironrhino.core.cache.CacheContext'].eval(key)?exists>
-<#assign content=statics['org.ironrhino.core.cache.CacheContext'].getPageFragment(key,scope)?if_exists>
-<#if keyExists&&content?exists&&content?length gt 0>${content}<#else>
+<#assign keyExists=statics['org.ironrhino.core.cache.CacheContext'].eval(key)??>
+<#assign content=statics['org.ironrhino.core.cache.CacheContext'].getPageFragment(key,scope)!>
+<#if keyExists&&content??&&content?length gt 0>${content}<#else>
 <#assign content><#nested/></#assign>  
 ${content}
 ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,scope,timeToIdle,timeToLive)}
@@ -20,19 +20,19 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 
 <#macro includePage path>
 <#local pageManager=statics['org.ironrhino.common.util.ApplicationContextUtils'].getBean('pageManager')>
-<#if Parameters.preview?if_exists=='true'>
-<#local page=pageManager.getDraftByPath(path)?if_exists>
+<#if (Parameters.preview!)=='true'>
+<#local page=pageManager.getDraftByPath(path)!>
 <#else>
-<#local page=pageManager.getByPath(path)?if_exists>
+<#local page=pageManager.getByPath(path)!>
 </#if>
-<#if page?exists>
+<#if page??>
 <#local content=page.content?interpret>
 <@content/>
 </#if>
 </#macro>
 
 <#macro captcha theme="">
-<#if captchaRequired?if_exists>
+<#if captchaRequired!>
 	<@s.textfield label="%{getText('captcha')}" name="captcha" size="6" cssClass="autocomplete_off required captcha"/>
 </#if>
 </#macro>
@@ -58,14 +58,14 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 	<#local _class=' class="btn"'>
 	</#if>
 <#if type=='link'>
-  <#return '<a'+_id?if_exists+_onclick?if_exists+_class+' href="'+href+'"><span><span>'+text+'</span></span></a>'>
+  <#return '<a'+(_id!)+(_onclick!)+(_class)+' href="'+href+'"><span><span>'+text+'</span></span></a>'>
 </#if>
-  <#return '<button'+_id?if_exists+_type?if_exists+_onclick?if_exists+_class+'><span><span>'+text+'</span></span></button>'>
+  <#return '<button'+(_id!)+(_type!)+(_onclick!)+(_class)+'><span><span>'+text+'</span></span></button>'>
 </#function>
 
 <#macro button text="" type="" class="" extra...>
 <#if text==''>
-	<#local text=extra['id']?default('')?replace('_', ' ')>
+	<#local text=(extra['id']!'')?replace('_', ' ')>
 </#if>
 <#if class!=''>
 	<#local class='btn '+class>
@@ -82,5 +82,5 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <#local _type=' type="'+type+'"'>
 </#if>
 </#if>
-<${tag} <#list extra?keys as attr>${attr}="${extra[attr]?html}" </#list>${_type?if_exists} class="${class}"><span><span>${text}</span></span></${tag}>
+<${tag} <#list extra?keys as attr>${attr}="${extra[attr]?html}" </#list>${_type!} class="${class}"><span><span>${text}</span></span></${tag}>
 </#macro>

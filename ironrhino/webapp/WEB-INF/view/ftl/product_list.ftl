@@ -4,7 +4,7 @@
 <title>ironrhino</title>
 </head>
 <body>
-<div id="${list?if_exists}_list_detail">
+<div id="${list!}_list_detail">
 <div class="product_list">
 <#list resultPage.result as var>
 	<p><img src="${base}/pic/${var.code}.s.jpg"
@@ -14,7 +14,7 @@
 		class="ajax view" options="{replacement:'cart_items'}">放入购物车</a></p>
 </#list>
 </div>
-<@pagination class="ajax view" options="{replacement:'${list?if_exists}_list_detail',cache:true}"/>
+<@pagination class="ajax view" options="{replacement:'${list!}_list_detail',cache:true}"/>
 </div>
 </body>
 </html></#escape>
