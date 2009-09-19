@@ -83,7 +83,11 @@ public class EhCacheManager implements CacheManager {
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		Cache cache = ehCacheManager.getCache(namespace);
+		if (cache == null)
+			return null;
 		for (Serializable key : keys) {
+			if (key == null)
+				continue;
 			Element element = cache.get(key);
 			map.put(key, element != null ? element.getValue() : null);
 		}
@@ -96,8 +100,9 @@ public class EhCacheManager implements CacheManager {
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		Cache cache = ehCacheManager.getCache(namespace);
-		for (Serializable key : keys)
-			cache.remove(key);
+		if (cache != null)
+			for (Serializable key : keys)
+				cache.remove(key);
 	}
 
 }
