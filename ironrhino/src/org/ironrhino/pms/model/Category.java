@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.compass.annotations.Index;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 import org.ironrhino.common.model.SimpleElement;
@@ -25,7 +26,7 @@ public class Category extends BaseTreeableEntity<Category> implements Secured {
 	private static final long serialVersionUID = 6550078798855703442L;
 
 	@NaturalId
-	@SearchableProperty
+	@SearchableProperty(index = Index.NOT_ANALYZED)
 	private String code;
 
 	private String description;

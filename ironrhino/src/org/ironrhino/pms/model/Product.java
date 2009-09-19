@@ -40,7 +40,7 @@ public class Product extends BaseEntity implements Ordered, Recordable,
 	private static final int SHORT_DESC_LENGTH = 200;
 
 	@NaturalId
-	@SearchableProperty(boost = 3)
+	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
 	private String code;
 
 	@SearchableProperty(boost = 3)
