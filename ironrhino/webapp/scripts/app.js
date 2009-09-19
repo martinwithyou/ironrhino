@@ -24,16 +24,15 @@ Observation.cart = function() {
 Initialization.app = function() {
 	if (typeof $.fn.autocomplete != 'undefined' && $('#q').length > 0)
 		$("#q").autocomplete(CONTEXT_PATH + "/search/suggest?decorator=none", {
-			minChars : 3,
-			delay : 1000,
-			formatItem : function(row, i, max) {
-				return '<span>' + row[0] + '</span><span>' + row[1]
-						+ '</span>';
-			},
-			formatResult : function(row, i, max) {
-				return row[0];
-			}
-		});
+					minChars : 3,
+					delay : 1000,
+					formatItem : function(row, i, max) {
+						return row[0] + '<cite>' + row[1] + '</cite>';
+					},
+					formatResult : function(row, i, max) {
+						return row[0];
+					}
+				});
 	$('a.category').each(function() {
 				this.onprepare = function() {
 					$('a.category').each(function() {

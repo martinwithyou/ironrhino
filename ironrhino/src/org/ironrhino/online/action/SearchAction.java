@@ -103,6 +103,26 @@ public class SearchAction extends BaseAction {
 	@Override
 	@SkipValidation
 	public String execute() {
+		parseQuery();
+		return SUCCESS;
+	}
+
+	@SkipValidation
+	public String suggest() {
+		ServletActionContext.getResponse().setHeader("Cache-Control",
+				"max-age=86400");
+		parseQuery();
+		return "suggest";
+	}
+
+	public String formatScore(float score) {
+		if (score > 0.999)
+			return "100%";
+		else
+			return NumberUtils.formatPercent(score, 1) + "%";
+	}
+
+	private void parseQuery() {
 		String queryString = ServletActionContext.getRequest().getQueryString();
 		if (StringUtils.isNotBlank(queryString)) {
 			String[] array = queryString.split("&");
@@ -116,20 +136,5 @@ public class SearchAction extends BaseAction {
 			if (q != null)
 				q = org.ironrhino.common.util.StringUtils.decodeUrl(q);
 		}
-		return SUCCESS;
-	}
-
-	@SkipValidation
-	public String suggest() {
-		ServletActionContext.getResponse().setHeader("Cache-Control",
-				"max-age=86400");
-		return "suggest";
-	}
-
-	public String formatScore(float score) {
-		if (score > 0.999)
-			return "100%";
-		else
-			return NumberUtils.formatPercent(score, 1) + "%";
 	}
 }
