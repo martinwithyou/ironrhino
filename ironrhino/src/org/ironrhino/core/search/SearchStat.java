@@ -40,7 +40,7 @@ public class SearchStat {
 
 	public static final long TIME_INTERVAL = 3600;
 
-	public static final int MAX_RESULT = 5;
+	public static final int MAX_LIMIT = 10;
 
 	private Log log = LogFactory.getLog(getClass());
 
@@ -76,14 +76,16 @@ public class SearchStat {
 		runThread();
 	}
 
-	public Map<String, Integer> suggest(String keyword) {
+	public Map<String, Integer> suggest(String keyword, int limit) {
 		if (directory == null || StringUtils.isBlank(keyword))
 			return Collections.EMPTY_MAP;
+		if (limit > MAX_LIMIT)
+			limit = MAX_LIMIT;
 		try {
 			IndexSearcher searcher = new IndexSearcher(directory);
 			PrefixQuery query = new PrefixQuery(new Term("keyword", keyword));
-			ScoreDoc[] hits = searcher.search(query, null, MAX_RESULT,
-					new Sort(new SortField("hits", SortField.INT, true))).scoreDocs;
+			ScoreDoc[] hits = searcher.search(query, null, limit, new Sort(
+					new SortField("hits", SortField.INT, true))).scoreDocs;
 			if (hits.length == 0)
 				return Collections.EMPTY_MAP;
 			Map<String, Integer> result = new LinkedHashMap<String, Integer>();

@@ -26,6 +26,8 @@ public class SearchAction extends BaseAction {
 
 	private int ps = 10;
 
+	private int limit = 10;
+
 	private transient CompassSearchService compassSearchService;
 
 	private transient SearchStat searchStat;
@@ -34,7 +36,7 @@ public class SearchAction extends BaseAction {
 
 	public Map<String, Integer> getSuggestions() {
 		if (suggestions == null)
-			suggestions = searchStat.suggest(q);
+			suggestions = searchStat.suggest(q, limit);
 		return suggestions;
 	}
 
@@ -64,6 +66,14 @@ public class SearchAction extends BaseAction {
 	public void setCompassSearchService(
 			CompassSearchService compassSearchService) {
 		this.compassSearchService = compassSearchService;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 
 	public int getPn() {
