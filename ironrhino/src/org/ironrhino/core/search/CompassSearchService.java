@@ -15,8 +15,10 @@ import org.compass.core.CompassTemplate;
 import org.compass.core.engine.SearchEngineQueryParseException;
 import org.compass.core.support.search.CompassSearchResults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+@Component("compassSearchService")
 public class CompassSearchService {
 
 	protected Log log = LogFactory.getLog(CompassSearchService.class);

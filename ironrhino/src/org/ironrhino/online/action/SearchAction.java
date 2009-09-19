@@ -34,6 +34,8 @@ public class SearchAction extends BaseAction {
 
 	private Map<String, Integer> suggestions;
 
+	private transient CompassSearchResults searchResults;
+
 	public Map<String, Integer> getSuggestions() {
 		if (suggestions == null)
 			suggestions = searchStat.suggest(q, limit);
@@ -42,21 +44,22 @@ public class SearchAction extends BaseAction {
 
 	public CompassSearchResults getSearchResults() {
 		// put logic here for <@cache> in page
-		if (StringUtils.isBlank(q))
-			return null;
-		String query = q.trim();
-		CompassCriteria cc = new CompassCriteria();
-		cc.setQuery(query);
-		cc.setAliases(new String[] { "product" });
-		if (pn > 0)
-			cc.setPageNo(pn);
-		if (ps > 0)
-			cc.setPageSize(ps);
-		if (ps > 100)
-			cc.setPageSize(100);
-		CompassSearchResults searchResults = compassSearchService.search(cc);
+		if (searchResults == null) {
+			if (StringUtils.isBlank(q))
+				return null;
+			String query = q.trim();
+			CompassCriteria cc = new CompassCriteria();
+			cc.setQuery(query);
+			cc.setAliases(new String[] { "product" });
+			if (pn > 0)
+				cc.setPageNo(pn);
+			if (ps > 0)
+				cc.setPageSize(ps);
+			if (ps > 100)
+				cc.setPageSize(100);
+			searchResults = compassSearchService.search(cc);
+		}
 		return searchResults;
-
 	}
 
 	public void setSearchStat(SearchStat searchStat) {
