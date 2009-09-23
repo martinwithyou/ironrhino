@@ -11,12 +11,14 @@ import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/")
 public class RightAction extends BaseAction {
 
 	private static final long serialVersionUID = -6441264436887308502L;
 
+	@Autowired
 	private transient ProductFacade productFacade;
 
 	public Product getRelatedProduct() {
@@ -45,17 +47,8 @@ public class RightAction extends BaseAction {
 		return relatedProduct;
 	}
 
-	public ProductFacade getProductFacade() {
-		return productFacade;
-	}
-
-	public void setProductFacade(ProductFacade productFacade) {
-		this.productFacade = productFacade;
-	}
-
 	@Override
 	public String execute() {
-
 		return SUCCESS;
 	}
 }

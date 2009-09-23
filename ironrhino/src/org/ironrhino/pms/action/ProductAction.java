@@ -18,6 +18,7 @@ import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.service.CategoryManager;
 import org.ironrhino.pms.service.ProductManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
@@ -50,8 +51,10 @@ public class ProductAction extends BaseAction {
 
 	private String tagsAsString;
 
+	@Autowired
 	private transient CategoryManager categoryManager;
 
+	@Autowired
 	private transient ProductManager productManager;
 
 	public ResultPage<Product> getResultPage() {
@@ -117,14 +120,6 @@ public class ProductAction extends BaseAction {
 
 	public void setProduct(Product product) {
 		this.product = product;
-	}
-
-	public void setCategoryManager(CategoryManager categoryManager) {
-		this.categoryManager = categoryManager;
-	}
-
-	public void setProductManager(ProductManager productManager) {
-		this.productManager = productManager;
 	}
 
 	@Override

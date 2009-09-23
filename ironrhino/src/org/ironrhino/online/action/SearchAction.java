@@ -12,6 +12,7 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.core.search.SearchStat;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/")
 public class SearchAction extends BaseAction {
@@ -28,13 +29,15 @@ public class SearchAction extends BaseAction {
 
 	private int limit = 10;
 
-	private transient CompassSearchService compassSearchService;
-
-	private transient SearchStat searchStat;
-
 	private Map<String, Integer> suggestions;
 
 	private transient CompassSearchResults searchResults;
+
+	@Autowired
+	private transient CompassSearchService compassSearchService;
+
+	@Autowired
+	private transient SearchStat searchStat;
 
 	public Map<String, Integer> getSuggestions() {
 		if (suggestions == null)
@@ -60,15 +63,6 @@ public class SearchAction extends BaseAction {
 			searchResults = compassSearchService.search(cc);
 		}
 		return searchResults;
-	}
-
-	public void setSearchStat(SearchStat searchStat) {
-		this.searchStat = searchStat;
-	}
-
-	public void setCompassSearchService(
-			CompassSearchService compassSearchService) {
-		this.compassSearchService = compassSearchService;
 	}
 
 	public int getLimit() {

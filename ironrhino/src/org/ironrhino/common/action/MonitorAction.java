@@ -13,6 +13,7 @@ import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.metadata.JsonSerializerType;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.analysis.TreeNode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig
 public class MonitorAction extends BaseAction {
@@ -25,7 +26,8 @@ public class MonitorAction extends BaseAction {
 
 	private Date to;
 
-	private String vtype = "l"; // value type l for longValue or d for doubleValue
+	private String vtype = "l"; // value type l for longValue or d for
+								// doubleValue
 
 	private String ctype = "bar";// chart type, bar,line ...
 
@@ -33,6 +35,7 @@ public class MonitorAction extends BaseAction {
 
 	private Chart chart;
 
+	@Autowired
 	private transient MonitorControl monitorControl;
 
 	public String getVtype() {
@@ -81,10 +84,6 @@ public class MonitorAction extends BaseAction {
 
 	public Map<String, List<TreeNode>> getResult() {
 		return result;
-	}
-
-	public void setMonitorControl(MonitorControl monitorControl) {
-		this.monitorControl = monitorControl;
 	}
 
 	@Override

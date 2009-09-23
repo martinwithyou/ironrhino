@@ -21,6 +21,7 @@ import org.ironrhino.online.model.Order;
 import org.ironrhino.online.model.OrderStatus;
 import org.ironrhino.online.payment.Paypal;
 import org.ironrhino.online.service.OrderManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/")
 public class PaymentAction extends BaseAction {
@@ -29,17 +30,11 @@ public class PaymentAction extends BaseAction {
 
 	public static final Log log = LogFactory.getLog(PaymentAction.class);
 
+	@Autowired
 	private transient OrderManager orderManager;
 
+	@Autowired
 	private transient Paypal paypal;
-
-	public void setOrderManager(OrderManager orderManager) {
-		this.orderManager = orderManager;
-	}
-
-	public void setPaypal(Paypal paypal) {
-		this.paypal = paypal;
-	}
 
 	public String paypal() throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();

@@ -13,6 +13,7 @@ import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.service.CategoryManager;
 import org.ironrhino.pms.support.CategoryTreeControl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CategoryAction extends BaseAction {
 
@@ -26,8 +27,10 @@ public class CategoryAction extends BaseAction {
 
 	private Collection<Category> list;
 
+	@Autowired
 	private transient CategoryManager categoryManager;
 
+	@Autowired
 	private transient CategoryTreeControl categoryTreeControl;
 
 	private boolean async;
@@ -54,10 +57,6 @@ public class CategoryAction extends BaseAction {
 		return list;
 	}
 
-	public void setCategoryTreeControl(CategoryTreeControl categoryTreeControl) {
-		this.categoryTreeControl = categoryTreeControl;
-	}
-
 	public String getRolesAsString() {
 		return rolesAsString;
 	}
@@ -80,10 +79,6 @@ public class CategoryAction extends BaseAction {
 
 	public void setCategory(Category category) {
 		this.category = category;
-	}
-
-	public void setCategoryManager(CategoryManager categoryManager) {
-		this.categoryManager = categoryManager;
 	}
 
 	@Override

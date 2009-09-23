@@ -28,6 +28,7 @@ import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.support.CategoryTreeControl;
 import org.ironrhino.ums.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
@@ -51,8 +52,6 @@ public class ProductAction extends BaseAction {
 
 	public static final String PSEUDO_CATEGORY_CODE_NULL = "null";
 
-	private transient ProductFacade productFacade;
-
 	private Product product;
 
 	private ResultPage<Product> resultPage;
@@ -73,6 +72,9 @@ public class ProductAction extends BaseAction {
 
 	private ProductComment comment;
 
+	@Autowired
+	private transient ProductFacade productFacade;
+	@Autowired
 	private transient CategoryTreeControl categoryTreeControl;
 
 	private transient BaseManager baseManager;
@@ -123,14 +125,6 @@ public class ProductAction extends BaseAction {
 
 	public List<AggregateResult> getSuggestions() {
 		return suggestions;
-	}
-
-	public void setProductFacade(ProductFacade productFacade) {
-		this.productFacade = productFacade;
-	}
-
-	public void setCategoryTreeControl(CategoryTreeControl categoryTreeControl) {
-		this.categoryTreeControl = categoryTreeControl;
 	}
 
 	public CategoryTreeControl getCategoryTreeControl() {

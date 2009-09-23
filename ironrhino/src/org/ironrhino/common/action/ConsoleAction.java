@@ -3,6 +3,7 @@ package org.ironrhino.common.action;
 import org.ironrhino.core.ext.spring.ApplicationContextConsole;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
@@ -16,6 +17,7 @@ public class ConsoleAction extends BaseAction {
 
 	private String cmd;
 
+	@Autowired
 	private transient ApplicationContextConsole applicationContextConsole;
 
 	public String getCmd() {
@@ -24,11 +26,6 @@ public class ConsoleAction extends BaseAction {
 
 	public void setCmd(String cmd) {
 		this.cmd = cmd;
-	}
-
-	public void setApplicationContextConsole(
-			ApplicationContextConsole applicationContextConsole) {
-		this.applicationContextConsole = applicationContextConsole;
 	}
 
 	@Override

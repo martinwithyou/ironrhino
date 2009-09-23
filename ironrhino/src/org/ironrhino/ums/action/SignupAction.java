@@ -17,6 +17,7 @@ import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.userdetails.UserDetails;
 
@@ -45,8 +46,10 @@ public class SignupAction extends BaseAction {
 
 	private String confirmPassword;
 
+	@Autowired
 	private transient UserManager userManager;
 
+	@Autowired
 	private transient MailService mailService;
 
 	public String getUsername() {
@@ -79,14 +82,6 @@ public class SignupAction extends BaseAction {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public void setMailService(MailService mailService) {
-		this.mailService = mailService;
-	}
-
-	public void setUserManager(UserManager userManager) {
-		this.userManager = userManager;
 	}
 
 	@Override

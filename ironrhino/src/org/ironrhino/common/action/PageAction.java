@@ -12,6 +12,7 @@ import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
@@ -29,6 +30,7 @@ public class PageAction extends BaseAction {
 
 	private ResultPage<Page> resultPage;
 
+	@Autowired
 	private transient PageManager pageManager;
 
 	private String cmsPath = "/p/";
@@ -62,10 +64,6 @@ public class PageAction extends BaseAction {
 
 	public void setResultPage(ResultPage<Page> resultPage) {
 		this.resultPage = resultPage;
-	}
-
-	public void setPageManager(PageManager pageManager) {
-		this.pageManager = pageManager;
 	}
 
 	@Override

@@ -4,20 +4,18 @@ import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.monitor.Monitor;
 import org.ironrhino.online.service.ProductFacade;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/")
 public class IndexAction extends BaseAction {
 
 	private static final long serialVersionUID = -8007101751932155905L;
-	
+
+	@Autowired
 	private transient ProductFacade productFacade;
 
 	public ProductFacade getProductFacade() {
 		return productFacade;
-	}
-
-	public void setProductFacade(ProductFacade productFacade) {
-		this.productFacade = productFacade;
 	}
 
 	@Override

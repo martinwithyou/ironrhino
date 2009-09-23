@@ -17,6 +17,7 @@ import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.mail.MailService;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
@@ -41,10 +42,11 @@ public class AccountAction extends BaseAction {
 
 	private String confirmPassword;
 
+	@Autowired
 	private transient RegionTreeControl regionTreeControl;
-
+	@Autowired
 	private transient UserManager userManager;
-
+	@Autowired
 	private transient MailService mailService;
 
 	public String getCurrentPassword() {
@@ -77,18 +79,6 @@ public class AccountAction extends BaseAction {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public void setMailService(MailService mailService) {
-		this.mailService = mailService;
-	}
-
-	public void setRegionTreeControl(RegionTreeControl regionTreeControl) {
-		this.regionTreeControl = regionTreeControl;
-	}
-
-	public void setUserManager(UserManager userManager) {
-		this.userManager = userManager;
 	}
 
 	@Override

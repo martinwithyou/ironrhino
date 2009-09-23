@@ -10,6 +10,7 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.online.model.Order;
 import org.ironrhino.online.model.OrderStatus;
 import org.ironrhino.online.service.OrderManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig
 public class OrderAction extends BaseAction {
@@ -20,6 +21,7 @@ public class OrderAction extends BaseAction {
 
 	private ResultPage<Order> resultPage;
 
+	@Autowired
 	private transient OrderManager orderManager;
 
 	public Order getOrder() {
@@ -28,14 +30,6 @@ public class OrderAction extends BaseAction {
 
 	public void setOrder(Order order) {
 		this.order = order;
-	}
-
-	public OrderManager getOrderManager() {
-		return orderManager;
-	}
-
-	public void setOrderManager(OrderManager orderManager) {
-		this.orderManager = orderManager;
 	}
 
 	public ResultPage<Order> getResultPage() {

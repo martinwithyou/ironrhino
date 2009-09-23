@@ -5,6 +5,7 @@ import java.io.File;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/", fileupload = "*/*")
 public class UploadAction extends BaseAction {
@@ -13,9 +14,10 @@ public class UploadAction extends BaseAction {
 
 	private File[] file;
 
-	private transient FileStorage fileStorage;
-
 	private String[] filenames;
+
+	@Autowired
+	private transient FileStorage fileStorage;
 
 	public String[] getFilenames() {
 		return filenames;
@@ -23,10 +25,6 @@ public class UploadAction extends BaseAction {
 
 	public void setFile(File[] file) {
 		this.file = file;
-	}
-
-	public void setFileStorage(FileStorage fileStorage) {
-		this.fileStorage = fileStorage;
 	}
 
 	public String execute() {

@@ -9,6 +9,7 @@ import org.ironrhino.common.util.HtmlUtils;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/", actionName = "region")
 public class RegionTreeAction extends BaseAction {
@@ -17,11 +18,12 @@ public class RegionTreeAction extends BaseAction {
 
 	private Collection<Region> children;
 
-	private transient RegionTreeControl regionTreeControl;
-
 	private boolean async = true;
 
 	private int root;
+
+	@Autowired
+	private transient RegionTreeControl regionTreeControl;
 
 	public int getRoot() {
 		return root;
@@ -41,10 +43,6 @@ public class RegionTreeAction extends BaseAction {
 
 	public Collection<Region> getChildren() {
 		return children;
-	}
-
-	public void setRegionTreeControl(RegionTreeControl regionTreeControl) {
-		this.regionTreeControl = regionTreeControl;
 	}
 
 	@JsonConfig(root = "children")

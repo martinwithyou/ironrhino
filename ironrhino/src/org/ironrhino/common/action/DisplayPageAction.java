@@ -4,6 +4,7 @@ import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/")
 public class DisplayPageAction extends BaseAction {
@@ -14,6 +15,7 @@ public class DisplayPageAction extends BaseAction {
 
 	private boolean preview;
 
+	@Autowired
 	private transient PageManager pageManager;
 
 	public boolean isPreview() {
@@ -26,10 +28,6 @@ public class DisplayPageAction extends BaseAction {
 
 	public Page getPage() {
 		return page;
-	}
-
-	public void setPageManager(PageManager pageManager) {
-		this.pageManager = pageManager;
 	}
 
 	public String execute() {

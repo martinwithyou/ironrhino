@@ -12,6 +12,7 @@ import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
@@ -35,6 +36,7 @@ public class UserAction extends BaseAction {
 
 	private String confirmPassword;
 
+	@Autowired
 	private transient UserManager userManager;
 
 	public String getRolesAsString() {
@@ -75,10 +77,6 @@ public class UserAction extends BaseAction {
 
 	public void setResultPage(ResultPage<User> resultPage) {
 		this.resultPage = resultPage;
-	}
-
-	public void setUserManager(UserManager userManager) {
-		this.userManager = userManager;
 	}
 
 	@Override

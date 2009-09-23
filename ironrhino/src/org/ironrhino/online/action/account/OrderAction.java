@@ -17,6 +17,7 @@ import org.ironrhino.online.service.OrderManager;
 import org.ironrhino.online.support.Cart;
 import org.ironrhino.ums.model.User;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
@@ -30,8 +31,9 @@ public class OrderAction extends BaseAction {
 
 	private ResultPage<Order> resultPage;
 
+	@Autowired
 	private transient OrderManager orderManager;
-
+	@Autowired
 	private transient PaymentManager paymentManager;
 
 	public ResultPage<Order> getResultPage() {
@@ -66,20 +68,8 @@ public class OrderAction extends BaseAction {
 		this.cart = cart;
 	}
 
-	public OrderManager getOrderManager() {
-		return orderManager;
-	}
-
-	public void setOrderManager(OrderManager orderManager) {
-		this.orderManager = orderManager;
-	}
-
 	public PaymentManager getPaymentManager() {
 		return paymentManager;
-	}
-
-	public void setPaymentManager(PaymentManager paymentManager) {
-		this.paymentManager = paymentManager;
 	}
 
 	@Override
