@@ -433,15 +433,15 @@ public class StringUtils {
 	}
 
 	private static boolean utf8codeCheck(String urlCode) {
-		String sign = "";
+		StringBuilder sign = new StringBuilder();
 		if (urlCode.startsWith("%e"))
 			for (int p = 0; p != -1;) {
 				p = urlCode.indexOf("%", p);
 				if (p != -1)
 					p++;
-				sign += p;
+				sign.append(p);
 			}
-		return sign.equals("147-1");
+		return sign.toString().equals("147-1");
 	}
 
 	private static boolean isUtf8Url(String urlCode) {
