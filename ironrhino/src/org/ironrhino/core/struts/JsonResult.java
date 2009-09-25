@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.security.csrf.CsrfManager;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.beans.BeanUtils;
 
@@ -38,6 +39,9 @@ public class JsonResult implements Result {
 
 		boolean hasErrors = false;
 		Map<String, Object> map = new HashMap<String, Object>();
+		Object csrf = invocation.getStack().findValue(CsrfManager.KEY_CSRF);
+		if (csrf != null)
+			map.put(CsrfManager.KEY_CSRF, csrf);
 		if (action instanceof ValidationAware) {
 			ValidationAware validationAwareAction = (ValidationAware) action;
 			if (validationAwareAction.hasErrors()) {

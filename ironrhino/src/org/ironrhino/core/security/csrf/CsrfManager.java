@@ -8,6 +8,6 @@ public interface CsrfManager {
 
 	public String createToken(HttpServletRequest request);
 
-	public String validateToken(HttpServletRequest request);
+	public boolean validateToken(HttpServletRequest request);
 
 }

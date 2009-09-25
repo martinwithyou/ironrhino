@@ -9,9 +9,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.Captcha;
+import org.ironrhino.core.metadata.Csrf;
 import org.ironrhino.core.security.captcha.CaptchaManager;
+import org.ironrhino.core.security.csrf.CsrfManager;
 import org.ironrhino.core.util.AuthzUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -44,34 +47,32 @@ public class BaseAction extends ActionSupport {
 
 	protected String targetUrl;
 
-	protected String dataType;
-
-	protected boolean restStyle;
-
 	protected boolean captchaRequired;
 
 	private boolean firstReachCaptchaThreshold;
 
+	protected String csrf;
+
+	protected boolean csrfRequired;
+
+	@Autowired
 	protected transient CaptchaManager captchaManager;
+
+	@Autowired
+	protected transient CsrfManager csrfManager;
+
+	public String getCsrf() {
+		if (csrfRequired && csrf == null)
+			csrf = csrfManager.createToken(ServletActionContext.getRequest());
+		return csrf;
+	}
+
+	public boolean isCsrfRequired() {
+		return csrfRequired;
+	}
 
 	public boolean isCaptchaRequired() {
 		return captchaRequired;
-	}
-
-	public String getDataType() {
-		return dataType;
-	}
-
-	public void setDataType(String dataType) {
-		this.dataType = dataType;
-	}
-
-	public boolean isRestStyle() {
-		return restStyle;
-	}
-
-	public void setRestStyle(boolean restStyle) {
-		this.restStyle = restStyle;
 	}
 
 	public String getTargetUrl() {
@@ -99,10 +100,6 @@ public class BaseAction extends ActionSupport {
 
 	public String[] getId() {
 		return id;
-	}
-
-	public void setCaptchaManager(CaptchaManager captchaManager) {
-		this.captchaManager = captchaManager;
 	}
 
 	public boolean isUseJson() {
@@ -178,6 +175,7 @@ public class BaseAction extends ActionSupport {
 			captchaRequired = array[0];
 			firstReachCaptchaThreshold = array[1];
 		}
+		csrfRequired = !captchaRequired && getAnnotation(Csrf.class) != null;
 		return null;
 	}
 
@@ -208,10 +206,13 @@ public class BaseAction extends ActionSupport {
 
 	@Override
 	public void validate() {
-		if (!captchaRequired || firstReachCaptchaThreshold)
-			return;
-		if (!captchaManager.validate(ServletActionContext.getRequest()))
+		if (captchaRequired && !firstReachCaptchaThreshold
+				&& !captchaManager.validate(ServletActionContext.getRequest()))
 			addFieldError(CaptchaManager.KEY_CAPTCHA, getText("captcha.error"));
+		if (csrfRequired
+				&& !csrfManager
+						.validateToken(ServletActionContext.getRequest()))
+			addActionError(getText("csrf.error"));
 	}
 
 	@BeforeResult
