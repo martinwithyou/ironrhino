@@ -3,9 +3,7 @@
 <head>
 <title><#noescape>${title}</#noescape></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Cache-Control" content="no-store" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
 <meta name="context_path" content="${request.contextPath}" />
 <link href="${base}/styles/all-min.css" media="screen" rel="stylesheet" type="text/css" />
 <!--[if IE]>
