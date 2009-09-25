@@ -1,7 +1,7 @@
 package org.ironrhino.online.action;
 
-import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.pms.support.CategoryTreeControl;
 import org.springframework.beans.factory.annotation.Autowired;
 

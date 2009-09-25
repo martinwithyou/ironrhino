@@ -7,7 +7,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Addressee;
 import org.ironrhino.common.model.ResultPage;
-import org.ironrhino.core.ext.struts.BaseAction;
+import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.online.model.Order;
 import org.ironrhino.online.model.OrderItem;

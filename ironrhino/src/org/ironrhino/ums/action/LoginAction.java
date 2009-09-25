@@ -4,11 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
 import org.ironrhino.core.session.Constants;
+import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.security.ui.AbstractProcessingFilter;
 import org.springframework.security.ui.savedrequest.SavedRequest;

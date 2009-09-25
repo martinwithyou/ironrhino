@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.ext.spring.ApplicationContextConsole;
 import org.ironrhino.core.mail.MailService;
+import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.util.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;

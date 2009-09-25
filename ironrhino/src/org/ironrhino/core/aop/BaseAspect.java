@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
-import org.ironrhino.core.ext.spring.ApplicationContextConsole;
+import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.mvel2.templates.TemplateRuntime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;

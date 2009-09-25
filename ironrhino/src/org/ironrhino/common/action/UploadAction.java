@@ -2,9 +2,9 @@ package org.ironrhino.common.action;
 
 import java.io.File;
 
-import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.struts.BaseAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/", fileupload = "*/*")

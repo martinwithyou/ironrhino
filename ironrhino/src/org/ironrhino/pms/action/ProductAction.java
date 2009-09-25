@@ -12,7 +12,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Attribute;
 import org.ironrhino.common.model.ResultPage;
-import org.ironrhino.core.ext.struts.BaseAction;
+import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.pms.model.Category;
 import org.ironrhino.pms.model.Product;

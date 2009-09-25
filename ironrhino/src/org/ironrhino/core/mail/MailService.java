@@ -3,8 +3,8 @@ package org.ironrhino.core.mail;
 import java.io.StringWriter;
 import java.util.Map;
 
-import org.ironrhino.core.ext.struts.TemplateProvider;
 import org.ironrhino.core.jms.MessageProducer;
+import org.ironrhino.core.struts.TemplateProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 

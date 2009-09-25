@@ -27,7 +27,7 @@
 		</constructor-arg>
 	</bean>
 	<bean id="templateProvider"
-		class="org.ironrhino.core.ext.struts.TemplateProvider">
+		class="org.ironrhino.core.struts.TemplateProvider">
 		<property name="allSharedVariables">
 			<map>
 				<entry key="base" value="${base}" />

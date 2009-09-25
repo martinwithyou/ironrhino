@@ -3,27 +3,27 @@
 	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
 	"http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
-	<bean type="com.opensymphony.xwork2.UnknownHandler" class="org.ironrhino.core.ext.struts.UnknownHandlerImpl" />
+	<bean type="com.opensymphony.xwork2.UnknownHandler" class="org.ironrhino.core.struts.UnknownHandlerImpl" />
 	<bean type="com.opensymphony.xwork2.config.PackageProvider" name="ironrhino-autoconfig"
-		class="org.ironrhino.core.ext.struts.AutoConfigPackageProvider" />
-	<bean type="org.apache.struts2.views.freemarker.FreemarkerManager" class="org.ironrhino.core.ext.struts.RichFreemarkerManager" />
+		class="org.ironrhino.core.struts.AutoConfigPackageProvider" />
+	<bean type="org.apache.struts2.views.freemarker.FreemarkerManager" class="org.ironrhino.core.struts.RichFreemarkerManager" />
 	<constant name="struts.devMode" value="false" />
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
 	<constant name="struts.mapper.class"
-		value="org.ironrhino.core.ext.struts.DelegateActionMapper" />
+		value="org.ironrhino.core.struts.DelegateActionMapper" />
 	<constant name="struts.url.includeParams" value="none" />
 	<constant name="struts.custom.i18n.resources" value="resources.i18n.messages" />
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	<package name="ironrhino-default" extends="struts-default">
 		<result-types>
 			<result-type name="autoconfig"
-				class="org.ironrhino.core.ext.struts.AutoConfigResult" />
+				class="org.ironrhino.core.struts.AutoConfigResult" />
 			<result-type name="json"
-				class="org.ironrhino.core.ext.struts.JsonResult" />
+				class="org.ironrhino.core.struts.JsonResult" />
 			<result-type name="referer"
-				class="org.ironrhino.core.ext.struts.RefererResult" />
+				class="org.ironrhino.core.struts.RefererResult" />
 			<result-type name="feed"
-				class="org.ironrhino.core.ext.struts.FeedResult" />
+				class="org.ironrhino.core.struts.FeedResult" />
 		</result-types>
 		<interceptors>
 			<interceptor name="annotationWorkflow"

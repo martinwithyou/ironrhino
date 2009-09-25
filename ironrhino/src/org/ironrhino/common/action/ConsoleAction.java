@@ -1,8 +1,8 @@
 package org.ironrhino.common.action;
 
-import org.ironrhino.core.ext.spring.ApplicationContextConsole;
-import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.spring.ApplicationContextConsole;
+import org.ironrhino.core.struts.BaseAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;

@@ -7,7 +7,7 @@ Observation.obs = function(){
 	$('#customized button.add').each(function(){$(this).click(function(){
 	var table=$(this).parents('table')[0];
 	var index=$('tr.add',table).length;
-	html='<tr class="row add"><td></td><td><input type="text" name="changes['+index+'].name"/></td><td><select name="changes['+index+'].type"><@s.iterator value="@org.ironrhino.core.ext.hibernate.PropertyType@values()"><option value ="<@s.property value="name" />"><@s.property value="displayName" /></option></@s.iterator></select></td><tr>';
+	html='<tr class="row add"><td></td><td><input type="text" name="changes['+index+'].name"/></td><td><select name="changes['+index+'].type"><@s.iterator value="@org.ironrhino.core.hibernate.PropertyType@values()"><option value ="<@s.property value="name" />"><@s.property value="displayName" /></option></@s.iterator></select></td><tr>';
 	$(html).appendTo(table.tBodies[0]);
 	})});
 	

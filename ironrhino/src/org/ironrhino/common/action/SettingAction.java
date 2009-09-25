@@ -7,8 +7,8 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Setting;
-import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.struts.BaseAction;
 
 public class SettingAction extends BaseAction {
 

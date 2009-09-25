@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.ironrhino.core.ext.openflashchart.model.Chart;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.Value;
 import org.ironrhino.core.monitor.analysis.TreeNode;
+import org.ironrhino.core.openflashchart.model.Chart;
 
 public interface MonitorControl {
 

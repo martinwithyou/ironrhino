@@ -25,7 +25,7 @@
 	<@s.textfield label="%{getText('displayOrder')}"
 		name="product.displayOrder" />
 	<@s.iterator
-		value="@org.ironrhino.core.ext.hibernate.CustomizableEntityChanger@getCustomizedProperties('org.ironrhino.pms.model.Product')">
+		value="@org.ironrhino.core.hibernate.CustomizableEntityChanger@getCustomizedProperties('org.ironrhino.pms.model.Product')">
 		<@s.textfield label="%{getText(key)}"
 			name="%{'product.customProperties.'+key}"
 			cssClass="%{value.name=='DATE'?'date':''}" />

@@ -1,9 +1,9 @@
 package org.ironrhino.online.action;
 
-import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.online.model.Feedback;
 import org.ironrhino.ums.model.User;

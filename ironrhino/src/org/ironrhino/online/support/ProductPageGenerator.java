@@ -22,7 +22,7 @@ import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
-import org.ironrhino.core.ext.struts.TemplateProvider;
+import org.ironrhino.core.struts.TemplateProvider;
 import org.ironrhino.pms.model.Product;
 import org.ironrhino.pms.service.ProductManager;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -25,7 +25,7 @@
 	</bean>
 
 	<bean id="templateProvider"
-		class="org.ironrhino.core.ext.struts.TemplateProvider">
+		class="org.ironrhino.core.struts.TemplateProvider">
 		<property name="allSharedVariables">
 			<map>
 				<entry key="base" value="${base}" />
@@ -35,7 +35,7 @@
 	<bean id="eventPublisher"
 		class="org.ironrhino.core.event.EventPublisher" />
 	<bean id="applicationContextConsole"
-		class="org.ironrhino.core.ext.spring.ApplicationContextConsole"/>
+		class="org.ironrhino.core.spring.ApplicationContextConsole"/>
 	<bean id="settingControl"
 		class="org.ironrhino.common.support.SettingControl" />
 	<bean id="monitorControl"

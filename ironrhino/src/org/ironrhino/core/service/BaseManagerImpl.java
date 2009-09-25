@@ -24,7 +24,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.ResultPage;
-import org.ironrhino.core.ext.hibernate.CustomizableEntityChanger;
+import org.ironrhino.core.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.AbstractTreeableEntity;
 import org.ironrhino.core.model.BaseTreeableEntity;

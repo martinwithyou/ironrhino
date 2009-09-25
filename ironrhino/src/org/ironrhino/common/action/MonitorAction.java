@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.ironrhino.common.support.MonitorControl;
-import org.ironrhino.core.ext.openflashchart.model.Chart;
-import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.metadata.JsonSerializerType;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.analysis.TreeNode;
+import org.ironrhino.core.openflashchart.model.Chart;
+import org.ironrhino.core.struts.BaseAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig
