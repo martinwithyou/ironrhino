@@ -1,4 +1,4 @@
-package org.ironrhino.core.security;
+package org.ironrhino.core.security.util;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;

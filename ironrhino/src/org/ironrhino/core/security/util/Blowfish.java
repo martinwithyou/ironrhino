@@ -1,4 +1,4 @@
-package org.ironrhino.core.security;
+package org.ironrhino.core.security.util;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
