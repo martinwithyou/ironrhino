@@ -27,7 +27,6 @@ import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.ResultPage;
-import org.ironrhino.common.util.AnnotationUtils;
 import org.ironrhino.core.ext.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.ext.hibernate.PropertyType;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -37,6 +36,7 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.util.AnnotationUtils;
 import org.springframework.beans.BeanWrapperImpl;
 
 import com.opensymphony.xwork2.ActionContext;

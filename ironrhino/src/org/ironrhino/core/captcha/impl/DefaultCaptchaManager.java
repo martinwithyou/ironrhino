@@ -4,10 +4,10 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.captcha.CaptchaManager;
 import org.ironrhino.core.metadata.Captcha;
+import org.ironrhino.core.util.AuthzUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.stereotype.Component;

@@ -7,11 +7,11 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Region;
-import org.ironrhino.common.util.BeanUtils;
-import org.ironrhino.common.util.RegionUtils;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.util.BeanUtils;
+import org.ironrhino.core.util.RegionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;

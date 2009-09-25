@@ -6,9 +6,9 @@ import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.online.service.ProductFacade;
 import org.ironrhino.pms.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;

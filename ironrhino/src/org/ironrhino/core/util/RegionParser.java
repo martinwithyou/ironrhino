@@ -1,4 +1,4 @@
-package org.ironrhino.common.util;
+package org.ironrhino.core.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.ironrhino.common.model.Region;
-import org.ironrhino.common.util.RegionParser;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.util.RegionParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class ImportRegion {

@@ -1,4 +1,4 @@
-package org.ironrhino.common.util;
+package org.ironrhino.core.util;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.context.ApplicationContext;

@@ -1,4 +1,4 @@
-package org.ironrhino.common.util;
+package org.ironrhino.core.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Region;

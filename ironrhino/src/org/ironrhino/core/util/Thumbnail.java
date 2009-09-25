@@ -1,4 +1,4 @@
-package org.ironrhino.common.util;
+package org.ironrhino.core.util;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;

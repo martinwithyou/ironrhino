@@ -10,9 +10,9 @@ import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.common.util.RoundRobin;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.Monitor;
+import org.ironrhino.core.util.RoundRobin;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;

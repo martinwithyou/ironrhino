@@ -3,8 +3,8 @@ package org.ironrhino.online.payment;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
-import org.ironrhino.common.util.NumberUtils;
-import org.ironrhino.common.util.RequestUtils;
+import org.ironrhino.core.util.NumberUtils;
+import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.online.model.Order;
 import org.ironrhino.online.service.OrderManager;
 

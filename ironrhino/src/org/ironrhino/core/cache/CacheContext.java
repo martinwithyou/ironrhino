@@ -7,7 +7,7 @@ import ognl.OgnlContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import org.ironrhino.common.util.ApplicationContextUtils;
+import org.ironrhino.core.util.ApplicationContextUtils;
 import org.mvel2.templates.TemplateRuntime;
 
 import com.opensymphony.xwork2.ActionContext;

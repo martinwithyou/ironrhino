@@ -75,7 +75,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 					if ("".equals(temp) || "/".equals(temp))
 						continue;
 					String[] array = StringUtils.split(temp, "/", 2);
-					name = org.ironrhino.common.util.StringUtils
+					name = org.ironrhino.core.util.StringUtils
 							.toCamelCase(array[0]);
 					if (pc.getActionConfigs().containsKey(name))
 						namespace = ns;
@@ -89,14 +89,14 @@ public class DefaultActionMapper extends AbstractActionMapper {
 
 		String str = uri.substring(namespace.length());
 		String[] arr = StringUtils.split(str, "/", 2);
-		name = org.ironrhino.common.util.StringUtils.toCamelCase(arr[0]);
+		name = org.ironrhino.core.util.StringUtils.toCamelCase(arr[0]);
 		if (arr.length > 1)
 			methodAndUid = arr[1];
 
 		ActionMapping mapping = new ActionMapping();
 		mapping.setNamespace(namespace);
 		mapping
-				.setName(org.ironrhino.common.util.StringUtils
+				.setName(org.ironrhino.core.util.StringUtils
 						.toCamelCase(name));
 		Map<String, Object> params = new HashMap<String, Object>(3);
 		// process resultPage.pageNo and resultPage.pageSize

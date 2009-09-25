@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.security.Blowfish;
 import org.ironrhino.core.session.Constants;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpWrappedSession;
+import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.Authentication;
 import org.springframework.security.context.HttpSessionContextIntegrationFilter;

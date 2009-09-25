@@ -3,8 +3,8 @@ package org.ironrhino.ums.security;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.session.Constants;
+import org.ironrhino.core.util.RequestUtils;
 import org.springframework.security.Authentication;
 import org.springframework.security.ui.logout.LogoutHandler;
 

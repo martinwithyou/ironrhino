@@ -8,10 +8,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ironrhino.common.util.BeanUtils;
-import org.ironrhino.common.util.EditAware;
 import org.ironrhino.core.model.Model;
 import org.ironrhino.core.model.Node;
+import org.ironrhino.core.util.BeanUtils;
+import org.ironrhino.core.util.EditAware;
 import org.junit.Test;
 
 public class BeanUtilsTest {

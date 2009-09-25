@@ -8,13 +8,13 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Addressee;
 import org.ironrhino.common.model.Region;
-import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
+import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.ums.model.User;
 
 import com.opensymphony.xwork2.util.CreateIfNull;

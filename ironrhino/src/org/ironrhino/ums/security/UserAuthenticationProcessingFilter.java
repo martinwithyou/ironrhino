@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.ironrhino.common.util.CodecUtils;
-import org.ironrhino.common.util.RequestUtils;
 import org.ironrhino.core.aop.AopContext;
 import org.ironrhino.core.aop.CacheAspect;
 import org.ironrhino.core.security.Blowfish;
 import org.ironrhino.core.session.Constants;
+import org.ironrhino.core.util.CodecUtils;
+import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.model.LoginRecord;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;

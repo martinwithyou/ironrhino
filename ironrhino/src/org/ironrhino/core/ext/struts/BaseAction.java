@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.ironrhino.common.util.AuthzUtils;
 import org.ironrhino.core.captcha.CaptchaManager;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.Captcha;
+import org.ironrhino.core.util.AuthzUtils;
 import org.springframework.beans.BeanUtils;
 
 import com.opensymphony.xwork2.ActionContext;

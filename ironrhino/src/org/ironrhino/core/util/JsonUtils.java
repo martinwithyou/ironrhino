@@ -1,4 +1,4 @@
-package org.ironrhino.common.util;
+package org.ironrhino.core.util;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import org.ironrhino.common.util.DateUtils;
 import org.ironrhino.core.metadata.JsonSerializerType;
 import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.util.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

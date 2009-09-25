@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.KeyValuePair;
 import org.ironrhino.core.monitor.Value;
+import org.ironrhino.core.util.NumberUtils;
 
 public class CumulativeAnalyzer extends
 		AbstractAnalyzer<Map<String, List<TreeNode>>> {

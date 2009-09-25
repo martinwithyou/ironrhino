@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.common.util.Thumbnail;
+import org.ironrhino.core.util.Thumbnail;
 import org.springframework.stereotype.Component;
 
 @Component("urlRewriteFilter")

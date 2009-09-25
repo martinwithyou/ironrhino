@@ -8,13 +8,13 @@ import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Addressee;
 import org.ironrhino.common.model.Sex;
 import org.ironrhino.common.model.SimpleElement;
-import org.ironrhino.common.util.CodecUtils;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
+import org.ironrhino.core.util.CodecUtils;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.userdetails.UserDetails;
 

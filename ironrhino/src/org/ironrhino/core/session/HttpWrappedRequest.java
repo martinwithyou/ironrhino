@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.common.util.RequestUtils;
+import org.ironrhino.core.util.RequestUtils;
 
 public class HttpWrappedRequest extends HttpServletRequestWrapper {
 

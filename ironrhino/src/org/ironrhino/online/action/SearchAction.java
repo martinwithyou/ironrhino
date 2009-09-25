@@ -6,12 +6,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.compass.core.support.search.CompassSearchResults;
-import org.ironrhino.common.util.NumberUtils;
 import org.ironrhino.core.ext.struts.BaseAction;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.core.search.SearchStat;
+import org.ironrhino.core.util.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/")
@@ -131,7 +131,7 @@ public class SearchAction extends BaseAction {
 				}
 			}
 			if (q != null)
-				q = org.ironrhino.common.util.StringUtils.decodeUrl(q);
+				q = org.ironrhino.core.util.StringUtils.decodeUrl(q);
 		}
 	}
 }

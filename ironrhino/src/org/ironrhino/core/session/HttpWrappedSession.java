@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.common.util.RequestUtils;
+import org.ironrhino.core.util.RequestUtils;
 
 public class HttpWrappedSession implements Serializable, HttpSession {
 

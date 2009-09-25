@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.ironrhino.common.util.JsonUtils;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.util.JsonUtils;
 import org.springframework.beans.BeanUtils;
 
 import com.opensymphony.xwork2.ActionInvocation;

@@ -1,11 +1,11 @@
 <#macro authorize ifAllGranted="" ifAnyGranted="" ifNotGranted="" expression="">
-<#if statics['org.ironrhino.common.util.AuthzUtils'].authorize(ifAllGranted,ifAnyGranted,ifNotGranted,expression)>
+<#if statics['org.ironrhino.core.util.AuthzUtils'].authorize(ifAllGranted,ifAnyGranted,ifNotGranted,expression)>
 <#nested>
 </#if>
 </#macro>
 
 <#function authentication property>
-  <#return statics['org.ironrhino.common.util.AuthzUtils'].authentication(property)>
+  <#return statics['org.ironrhino.core.util.AuthzUtils'].authentication(property)>
 </#function>
 
 <#macro cache key scope="application" timeToIdle="-1" timeToLive="3600">
@@ -19,7 +19,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#macro>
 
 <#macro includePage path>
-<#local pageManager=statics['org.ironrhino.common.util.ApplicationContextUtils'].getBean('pageManager')>
+<#local pageManager=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('pageManager')>
 <#if (Parameters.preview!)=='true'>
 <#local page=pageManager.getDraftByPath(path)!>
 <#else>
