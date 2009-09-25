@@ -12,7 +12,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.ironrhino.core.aop.AopContext;
 import org.ironrhino.core.aop.CacheAspect;
-import org.ironrhino.core.security.Blowfish;
+import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.Constants;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.RequestUtils;

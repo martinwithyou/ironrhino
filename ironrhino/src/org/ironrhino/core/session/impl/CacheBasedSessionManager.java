@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
-import org.ironrhino.core.security.Blowfish;
+import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.Constants;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpWrappedSession;

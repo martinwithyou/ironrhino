@@ -13,7 +13,7 @@ import javax.servlet.http.Cookie;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.security.Blowfish;
+import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpWrappedSession;
 import org.ironrhino.core.util.RequestUtils;
