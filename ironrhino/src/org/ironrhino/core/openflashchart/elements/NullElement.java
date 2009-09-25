@@ -1,4 +1,4 @@
-package org.ironrhino.core.openflashchart.model.elements;
+package org.ironrhino.core.openflashchart.elements;
 
 public class NullElement {
 

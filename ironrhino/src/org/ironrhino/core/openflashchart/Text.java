@@ -13,7 +13,7 @@ GNU General Public License for more details.
 
 See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
  */
-package org.ironrhino.core.openflashchart.model;
+package org.ironrhino.core.openflashchart;
 
 import java.io.Serializable;
 

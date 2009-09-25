@@ -13,18 +13,18 @@ GNU General Public License for more details.
 
 See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
  */
-package org.ironrhino.core.openflashchart.model;
+package org.ironrhino.core.openflashchart;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.ironrhino.core.openflashchart.model.axis.XAxis;
-import org.ironrhino.core.openflashchart.model.axis.YAxis;
-import org.ironrhino.core.openflashchart.model.elements.Element;
-import org.ironrhino.core.openflashchart.model.elements.Legend;
-import org.ironrhino.core.openflashchart.model.elements.Tooltip;
+import org.ironrhino.core.openflashchart.axis.XAxis;
+import org.ironrhino.core.openflashchart.axis.YAxis;
+import org.ironrhino.core.openflashchart.elements.Element;
+import org.ironrhino.core.openflashchart.elements.Legend;
+import org.ironrhino.core.openflashchart.elements.Tooltip;
 
 /**
  * This is the most important class in the Java OFC library. Start here,

@@ -13,15 +13,15 @@ GNU General Public License for more details.
 
 See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
  */
-package org.ironrhino.core.openflashchart.model.elements;
+package org.ironrhino.core.openflashchart.elements;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ironrhino.core.openflashchart.model.elements.BarChart.Bar;
-import org.ironrhino.core.openflashchart.model.elements.LineChart.Dot;
-import org.ironrhino.core.openflashchart.model.elements.PieChart.Slice;
+import org.ironrhino.core.openflashchart.elements.BarChart.Bar;
+import org.ironrhino.core.openflashchart.elements.LineChart.Dot;
+import org.ironrhino.core.openflashchart.elements.PieChart.Slice;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -132,19 +132,19 @@ public abstract class Element implements Serializable {
 					max = Math.max(max,
 							((Slice) obj).getValue() != null ? ((Slice) obj)
 									.getValue().doubleValue() : 0);
-				} else if (obj instanceof org.ironrhino.core.openflashchart.model.elements.HorizontalBarChart.Bar) {
+				} else if (obj instanceof org.ironrhino.core.openflashchart.elements.HorizontalBarChart.Bar) {
 					max = Math
 							.max(
 									max,
-									((org.ironrhino.core.openflashchart.model.elements.HorizontalBarChart.Bar) obj)
-											.getLeft() != null ? ((org.ironrhino.core.openflashchart.model.elements.HorizontalBarChart.Bar) obj)
+									((org.ironrhino.core.openflashchart.elements.HorizontalBarChart.Bar) obj)
+											.getLeft() != null ? ((org.ironrhino.core.openflashchart.elements.HorizontalBarChart.Bar) obj)
 											.getLeft().doubleValue()
 											: 0);
 					max = Math
 							.max(
 									max,
-									((org.ironrhino.core.openflashchart.model.elements.HorizontalBarChart.Bar) obj)
-											.getRight() != null ? ((org.ironrhino.core.openflashchart.model.elements.HorizontalBarChart.Bar) obj)
+									((org.ironrhino.core.openflashchart.elements.HorizontalBarChart.Bar) obj)
+											.getRight() != null ? ((org.ironrhino.core.openflashchart.elements.HorizontalBarChart.Bar) obj)
 											.getRight().doubleValue()
 											: 0);
 				} else if (obj instanceof NullElement) {
@@ -184,17 +184,17 @@ public abstract class Element implements Serializable {
 					min = nullSafeMin(min,
 							((Slice) obj).getValue() != null ? ((Slice) obj)
 									.getValue().doubleValue() : 0);
-				} else if (obj instanceof org.ironrhino.core.openflashchart.model.elements.HorizontalBarChart.Bar) {
+				} else if (obj instanceof org.ironrhino.core.openflashchart.elements.HorizontalBarChart.Bar) {
 					min = nullSafeMin(
 							min,
-							((org.ironrhino.core.openflashchart.model.elements.HorizontalBarChart.Bar) obj)
-									.getLeft() != null ? ((org.ironrhino.core.openflashchart.model.elements.HorizontalBarChart.Bar) obj)
+							((org.ironrhino.core.openflashchart.elements.HorizontalBarChart.Bar) obj)
+									.getLeft() != null ? ((org.ironrhino.core.openflashchart.elements.HorizontalBarChart.Bar) obj)
 									.getLeft().doubleValue()
 									: 0);
 					min = nullSafeMin(
 							min,
-							((org.ironrhino.core.openflashchart.model.elements.HorizontalBarChart.Bar) obj)
-									.getRight() != null ? ((org.ironrhino.core.openflashchart.model.elements.HorizontalBarChart.Bar) obj)
+							((org.ironrhino.core.openflashchart.elements.HorizontalBarChart.Bar) obj)
+									.getRight() != null ? ((org.ironrhino.core.openflashchart.elements.HorizontalBarChart.Bar) obj)
 									.getRight().doubleValue()
 									: 0);
 				} else if (obj instanceof NullElement) {

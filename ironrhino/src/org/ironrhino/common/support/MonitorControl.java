@@ -7,7 +7,7 @@ import java.util.Map;
 import org.ironrhino.core.monitor.Key;
 import org.ironrhino.core.monitor.Value;
 import org.ironrhino.core.monitor.analysis.TreeNode;
-import org.ironrhino.core.openflashchart.model.Chart;
+import org.ironrhino.core.openflashchart.Chart;
 
 public interface MonitorControl {
 

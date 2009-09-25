@@ -14,7 +14,7 @@ GNU General Public License for more details.
 See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
  */
 
-package org.ironrhino.core.openflashchart.model.elements;
+package org.ironrhino.core.openflashchart.elements;
 
 import java.util.ArrayList;
 import java.util.Arrays;

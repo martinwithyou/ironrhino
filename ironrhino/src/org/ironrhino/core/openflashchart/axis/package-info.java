@@ -17,4 +17,4 @@ See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
 /**
  * Models pertaining to configuration of axes, such as labeling and styles.
  */
-package org.ironrhino.core.openflashchart.model.axis;
+package org.ironrhino.core.openflashchart.axis;
