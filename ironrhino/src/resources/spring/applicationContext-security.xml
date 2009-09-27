@@ -23,9 +23,7 @@
 		<security:intercept-url pattern="/**" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="any" />
 		<security:anonymous granted-authority="ROLE_BUILTIN_ANONYMOUS" username="anonymousUser" key="anonymous" />
 		<security:remember-me services-ref="rememberMeServices" />
-		<!-- use bean config
-			<security:logout logout-url="/logout" logout-success-url="/" invalidate-session="true" />
-			-->
+		<security:logout logout-url="/logout" logout-success-url="/" invalidate-session="true" />
 	</security:http>
 	
 	<bean id="rememberMeServices"
@@ -33,7 +31,7 @@
 		p:key="youcannotguessme" p:parameter="rememberme" p:cookieName="REMEMBERME"
 		p:userDetailsService-ref="userManager" />
 	<bean id="passwordEncoder"
-		class="org.ironrhino.core.spring.security.PasswordEncoder" />
+		class="org.ironrhino.core.spring.security.MixedPasswordEncoder" />
 
 	<bean id="switchUserProcessingFilter"
 		class="org.springframework.security.ui.switchuser.SwitchUserProcessingFilter"
@@ -72,19 +70,6 @@
 						org.springframework.security.CredentialsExpiredException=/login?error=user.credentials.expired
 			</value>
 		</property>
-	</bean>
-	<bean id="logoutFilter"
-		class="org.springframework.security.ui.logout.LogoutFilter"
-		p:filterProcessesUrl="/logout">	
-		<security:custom-filter position="LOGOUT_FILTER" />
-		<constructor-arg value="/"/>
-		<constructor-arg>
-			<list>
-				<bean class="org.springframework.security.ui.logout.SecurityContextLogoutHandler"/>
-				<ref local="rememberMeServices"/>
-				<bean class="org.ironrhino.ums.security.UserLogoutHandler"/>
-			</list>
-		</constructor-arg>
 	</bean>
 	
 	<!-- not use cas end -->

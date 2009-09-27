@@ -3,8 +3,7 @@ package org.ironrhino.core.spring.security;
 import org.ironrhino.core.util.CodecUtils;
 import org.springframework.security.providers.encoding.BasePasswordEncoder;
 
-
-public class PasswordEncoder extends BasePasswordEncoder {
+public class MixedPasswordEncoder extends BasePasswordEncoder {
 
 	public String encodePassword(String rawPass, Object salt) {
 		String saltedPass = mergePasswordAndSalt(rawPass, salt, false);

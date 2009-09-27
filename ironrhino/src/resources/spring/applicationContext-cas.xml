@@ -81,9 +81,7 @@
 		<property name="authenticationHandlers">
 			<list>
 				<bean
-					class="org.ironrhino.ums.service.CasAuthenticationHandler">
-					<property name="userManager" ref="userManager" />
-				</bean>
+					class="org.ironrhino.core.spring.security.CasAuthenticationHandler"/>
 				<bean
 					class="org.jasig.cas.authentication.handler.support.HttpBasedServiceCredentialsAuthenticationHandler">
 					<property name="httpClient" ref="casHttpClient" />

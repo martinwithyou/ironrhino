@@ -107,6 +107,8 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 		if (target != null)
 			target.invalidate();
 		sessionStoreManager.invalidate(this);
+		RequestUtils.deleteCookie(httpContext.getRequest(), httpContext
+				.getResponse(), Constants.COOKIE_NAME_ENCRYPT_LOGIN_USER, true);
 	}
 
 	public boolean isNew() {

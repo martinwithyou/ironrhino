@@ -1,51 +1,46 @@
-package org.ironrhino.ums.service;
+package org.ironrhino.core.spring.security;
 
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.ums.model.User;
 import org.jasig.cas.authentication.handler.AuthenticationException;
 import org.jasig.cas.authentication.handler.BadUsernameOrPasswordAuthenticationException;
 import org.jasig.cas.authentication.handler.UnsupportedCredentialsException;
 import org.jasig.cas.authentication.handler.support.AbstractUsernamePasswordAuthenticationHandler;
 import org.jasig.cas.authentication.principal.UsernamePasswordCredentials;
-import org.springframework.util.Assert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.providers.encoding.PasswordEncoder;
+import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.userdetails.UserDetailsService;
 
 public final class CasAuthenticationHandler extends
 		AbstractUsernamePasswordAuthenticationHandler {
 
-	private UserManager userManager;
-
-	public UserManager getUserManager() {
-		return userManager;
-	}
-
-	public void setUserManager(UserManager userManager) {
-		this.userManager = userManager;
-	}
+	@Autowired
+	private UserDetailsService userDetailsService;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public CasAuthenticationHandler() {
 		log = LogFactory.getLog(getClass());
-	}
-
-	protected void afterPropertiesSetInternal() throws Exception {
-		Assert.notNull(userManager, "userManager cannot be null.");
 	}
 
 	@Override
 	protected boolean authenticateUsernamePasswordInternal(
 			UsernamePasswordCredentials credentials)
 			throws AuthenticationException {
-		User user = userManager.loadUserByUsername(credentials.getUsername());
-		if (user == null)
+		UserDetails userDetails = userDetailsService
+				.loadUserByUsername(credentials.getUsername());
+		if (userDetails == null)
 			throw new BadUsernameOrPasswordAuthenticationException();
-		if (!user.isEnabled())
+		if (!userDetails.isEnabled())
 			throw new UnsupportedCredentialsException();
-		if (!user.isAccountNonLocked())
+		if (!userDetails.isAccountNonLocked())
 			throw new UnsupportedCredentialsException();
-		if (!user.isAccountNonExpired())
+		if (!userDetails.isAccountNonExpired())
 			throw new UnsupportedCredentialsException();
-		if (!user.isCredentialsNonExpired())
+		if (!userDetails.isCredentialsNonExpired())
 			throw new UnsupportedCredentialsException();
-		boolean success = user.isPasswordValid(credentials.getPassword());
+		boolean success = passwordEncoder.isPasswordValid(userDetails
+				.getPassword(), credentials.getPassword(), null);
 		if (!success)
 			throw new BadUsernameOrPasswordAuthenticationException();
 		log.info("'" + credentials.getUsername() + "' login "
