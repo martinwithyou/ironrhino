@@ -29,8 +29,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.sitemesh.FreeMarkerPageFilter;
 import org.ironrhino.core.session.HttpWrappedSession;
+import org.ironrhino.core.util.HtmlUtils;
 
 import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.Page;
@@ -42,16 +44,40 @@ public class HookedFreeMarkerPageFilter extends FreeMarkerPageFilter {
 			HttpServletRequest req, HttpServletResponse res,
 			ServletContext servletContext, ActionContext ctx)
 			throws ServletException, IOException {
-		beforeApplyDecorator(page, decorator, req, res, servletContext, ctx);
-		super.applyDecorator(page, decorator, req, res, servletContext, ctx);
+		saveSession(page, decorator, req, res, servletContext, ctx);
+		String replacement = req.getParameter("_replacement_");
+		if (StringUtils.isNotBlank(replacement)) {
+			compressBody(page, decorator, req, res, servletContext, ctx);
+		} else {
+			super
+					.applyDecorator(page, decorator, req, res, servletContext,
+							ctx);
+		}
 	}
 
-	protected void beforeApplyDecorator(Page page, Decorator decorator,
+	protected void saveSession(Page page, Decorator decorator,
 			HttpServletRequest req, HttpServletResponse res,
 			ServletContext servletContext, ActionContext ctx) {
 		HttpSession session = req.getSession();
 		if (session instanceof HttpWrappedSession)
 			((HttpWrappedSession) session).save();
+
+	}
+
+	protected void compressBody(Page page, Decorator decorator,
+			HttpServletRequest req, HttpServletResponse res,
+			ServletContext servletContext, ActionContext ctx) {
+		String body = page.getBody();
+		try {
+			String compressed = HtmlUtils.compress(req.getParameter(
+					"_replacement_").split(","), body);
+			if (compressed.length() > 0)
+				body = compressed;
+			res.getWriter().append(body);
+		} catch (Exception e) {
+			// not important exception,no need to log it
+			e.printStackTrace();
+		}
 	}
 
 }

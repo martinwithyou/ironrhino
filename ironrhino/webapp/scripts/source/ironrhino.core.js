@@ -414,7 +414,7 @@ Ajax = {
 			Ajax.fire(target, 'onsuccess', data);
 		} else {
 			Ajax.jsonResult = data;
-			if(data.csrf)
+			if (data.csrf)
 				$('input[name="csrf"]').val(data.csrf);
 			if (data.fieldErrors || data.actionErrors) {
 				hasError = true;
@@ -473,8 +473,6 @@ Ajax = {
 };
 
 function ajax(options) {
-	if (!options.data)
-		options.data = {};
 	$.extend(options.data, {
 				_transport_type_ : 'XMLHttpRequest',
 				_include_query_string_ : 'true',
@@ -530,13 +528,22 @@ Observation.ajax = function(container) {
 						});
 		} catch (e) {
 		}
-
+		var ids = [];
+		var entries = ($(target).attr('replacement') || ($(target)
+				.attr('tagName') == 'FORM' ? $(target).attr('id') : ''))
+				.split(',');
+		for (var i = 0; i < entries.length; i++) {
+			var entry = entries[i];
+			var ss = entry.split(':', 2);
+			var id = ss.length == 2 ? ss[1] : ss[0];
+			if (id)
+				ids.push(id);
+		}
 		if (this.tagName == 'FORM') {
 			var options = {
 				data : {
 					_transport_type_ : 'XMLHttpRequest',
-					_include_query_string_ : 'true',
-					_result_type_ : $(this).hasClass('view') ? '' : 'json'
+					_include_query_string_ : 'true'
 				},
 				beforeSubmit : function() {
 					if (!Ajax.fire(target, 'onprepare'))
@@ -564,6 +571,14 @@ Observation.ajax = function(container) {
 							});
 				}
 			};
+			if (!$(this).hasClass('view'))
+				$.extend(options.data, {
+							_result_type_ : 'json'
+						});
+			if (ids.length > 0)
+				$.extend(options.data, {
+							_replacement_ : ids.join(',')
+						});
 			$(this).bind('submit', function() {
 						$(this).ajaxSubmit(options);
 						return false;
@@ -594,31 +609,39 @@ Observation.ajax = function(container) {
 					$.historyLoad(hash);
 					return false;
 				}
-				$.ajax({
-							url : this.href,
-							type : $(this).attr('method') || 'GET',
-							data : {
-								_transport_type_ : 'XMLHttpRequest',
-								_include_query_string_ : 'true',
-								_result_type_ : $(this).hasClass('view')
-										? ''
-										: 'json'
-							},
-							cache : $(this).hasClass('cache'),
-							beforeSend : function() {
-								$('.action_message,.action_error').remove();
-								Indicator.text = $(target).attr('indicator');
-								Ajax.fire(target, 'onloading');
-							},
-							error : function() {
-								Ajax.fire(target, 'onerror');
-							},
-							success : function(data) {
-								Ajax.handleResponse(data, {
-											'target' : target
-										})
-							}
-						});
+				var options = {
+					url : this.href,
+					type : $(this).attr('method') || 'GET',
+					data : {
+						_transport_type_ : 'XMLHttpRequest',
+						_include_query_string_ : 'true',
+						_result_type_ : $(this).hasClass('view') ? '' : 'json',
+						_replacement_ : ids.length > 0 ? ids.join(',') : ''
+					},
+					cache : $(this).hasClass('cache'),
+					beforeSend : function() {
+						$('.action_message,.action_error').remove();
+						Indicator.text = $(target).attr('indicator');
+						Ajax.fire(target, 'onloading');
+					},
+					error : function() {
+						Ajax.fire(target, 'onerror');
+					},
+					success : function(data) {
+						Ajax.handleResponse(data, {
+									'target' : target
+								})
+					}
+				};
+				if (!$(this).hasClass('view'))
+					$.extend(options.data, {
+								_result_type_ : 'json'
+							});
+				if (ids.length > 0)
+					$.extend(options.data, {
+								_replacement_ : ids.join(',')
+							});
+				$.ajax(options);
 				return false;
 			});
 		}

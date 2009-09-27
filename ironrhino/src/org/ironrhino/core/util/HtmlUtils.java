@@ -1,6 +1,9 @@
 package org.ironrhino.core.util;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -55,10 +58,10 @@ public class HtmlUtils {
 		return sb.toString();
 	}
 
-	public static void parseInnerHTML(final Map<String, String> map, String html)
-			throws Exception {
+	public static String compress(String[] id, String html) throws Exception {
+		final List<String> ids = Arrays.asList(id);
+		final Map<String, String> map = new LinkedHashMap<String, String>();
 		Parser.createParser(html, "UTF-8").parse(new NodeFilter() {
-
 			private static final long serialVersionUID = 5669597261933421020L;
 
 			public boolean accept(Node node) {
@@ -66,7 +69,7 @@ public class HtmlUtils {
 					Tag tag = (Tag) node;
 					if (!tag.isEndTag()) {
 						String id = tag.getAttribute("id");
-						if (map.containsKey(id)) {
+						if (ids.contains(id)) {
 							String _html = tag.toHtml();
 							map.put(id, _html.substring(_html.indexOf('>') + 1,
 									_html.lastIndexOf('<')).trim());
@@ -77,6 +80,15 @@ public class HtmlUtils {
 				return false;
 			}
 		});
+		StringBuilder sb = new StringBuilder();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			sb.append("<div id=\"");
+			sb.append(entry.getKey());
+			sb.append("\">");
+			sb.append(entry.getValue());
+			sb.append("</div>");
+		}
+		return sb.toString();
 	}
 
 	public static String tidy(String src) {
