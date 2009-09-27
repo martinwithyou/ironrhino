@@ -31,25 +31,25 @@
 <@rttbodytrstart rowid="${entity.id}" odd=(index%2==1) readonly="${readonly}"/>
 	<#list naturalIds?keys as key>
 		<#if (readonly=='false')&&!naturalIdsImmatuable>
-		<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" cellEdit="input"/>
+		<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}" cellEdit="input"/>
 		<#else>
-		<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}"/>
+		<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}"/>
 		</#if>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
 			<#if (readonly=='false')&&!uiConfigs[key].readonly>
 				<#if uiConfigs[key].type=='input'||uiConfigs[key].type=='textarea'>
-					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" cellEdit="input"/>
+					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}" cellEdit="input"/>
 				</#if>
 				<#if uiConfigs[key].type=='checkbox'>
-					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" cellEdit="select" cellEditTemplate="select_template_boolean"/>
+					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}" cellEdit="select" cellEditTemplate="select_template_boolean"/>
 				</#if>
 				<#if uiConfigs[key].type=='select'>
-					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" cellEdit="select" cellEditTemplate="select_template_${key}"/>
+					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}" cellEdit="select" cellEditTemplate="select_template_${key}"/>
 				</#if>
 			<#else>
-				<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}"/>
+				<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}"/>
 			</#if>
 		</#if>
 	</#list>	

@@ -416,6 +416,7 @@ public class EntityAction extends BaseAction {
 		private boolean readonly;
 		private int displayOrder;
 		private String displayName;
+		private String template;
 
 		public UiConfigImpl() {
 		}
@@ -431,6 +432,7 @@ public class EntityAction extends BaseAction {
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.displayName()))
 				this.displayName = config.displayName();
+			this.template = config.template();
 		}
 
 		public String getDisplayName() {
@@ -501,6 +503,15 @@ public class EntityAction extends BaseAction {
 		public void setReadonly(boolean readonly) {
 			this.readonly = readonly;
 		}
+
+		public String getTemplate() {
+			return template;
+		}
+
+		public void setTemplate(String template) {
+			this.template = template;
+		}
+
 	}
 
 	// need call once before view
