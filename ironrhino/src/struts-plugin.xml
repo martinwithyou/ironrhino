@@ -10,7 +10,7 @@
 	<constant name="struts.devMode" value="false" />
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
 	<constant name="struts.mapper.class"
-		value="org.ironrhino.core.struts.DelegateActionMapper" />
+		value="org.ironrhino.core.struts.DefaultActionMapper" />
 	<constant name="struts.url.includeParams" value="none" />
 	<constant name="struts.custom.i18n.resources" value="resources.i18n.messages" />
 	<constant name="struts.i18n.encoding" value="UTF-8" />
