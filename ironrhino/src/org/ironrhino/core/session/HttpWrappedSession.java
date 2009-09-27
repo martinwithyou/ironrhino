@@ -34,7 +34,7 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	private int maxInactiveInterval = Constants.SESSION_TIMEOUT;
 
-	private boolean darty;
+	private boolean dirty;
 
 	private boolean isnew;
 
@@ -55,7 +55,10 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 	}
 
 	public void save() {
-		if (darty)
+		// setMaxInactiveInterval(-1) to force save
+		if (maxInactiveInterval < Constants.SESSION_TIMEOUT)
+			dirty = true;
+		if (dirty)
 			sessionStoreManager.save(this);
 		if (isnew)
 			RequestUtils.saveCookie(httpContext.getRequest(), httpContext
@@ -81,7 +84,7 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	public void setAttribute(String key, Object object) {
 		attrMap.put(key, object);
-		darty = true;
+		dirty = true;
 	}
 
 	public Object getAttribute(String key) {
@@ -90,7 +93,7 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	public void removeAttribute(String key) {
 		attrMap.remove(key);
-		darty = true;
+		dirty = true;
 	}
 
 	public Enumeration getAttributeNames() {
