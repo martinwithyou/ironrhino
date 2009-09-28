@@ -3,7 +3,7 @@
 <#if info!="">
 <div>${info}</div>
 </#if>
-<a href="${base}/product/${product.code}.html" class="ajax view tooltip product_view">
+<a href="${base}/product/view/${product.code}" class="ajax view tooltip product_view">
 ${product.name}</a> <a href="${base}/cart/add/${product.code}" class="ajax view" options="{replacement:'cart_items'}">放入购物车</a></li>
 </#macro>
 

@@ -34,7 +34,7 @@
 			<tr class="row">
 				<td><input type="checkbox" name="id"
 					value="${var.productCode}" /></td>
-				<td><a href="${base}/product/${var.productCode}.html"> ${var.productName}</a></td>
+				<td><a href="${base}/product/view/${var.productCode}"> ${var.productName}</a></td>
 				<td>${var.productPrice}</td>
 				<td><input type="hidden" name="items[${index}].productCode" value="${var.productCode}" /> 
 				<input type="text" size="2" name="items[${index}].quantity" value="${var.quantity}" /></td>

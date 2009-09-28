@@ -9,7 +9,7 @@
 <#list resultPage.result as var>
 	<p><img src="${base}/pic/${var.code}.s.jpg"
 		alt="${var.code}" class="product_list" /> <a
-		href="${base}/product/${var.code}.html">${var.name}</a> 
+		href="${base}/product/view/${var.code}">${var.name}</a> 
 		<a href="${base}/cart/add/${var.code}"
 		class="ajax view" options="{replacement:'cart_items'}">放入购物车</a></p>
 </#list>

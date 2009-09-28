@@ -10,7 +10,7 @@
  Search took ${searchResults.searchTime}ms
  <#if searchResults.hits??>
 		<#list searchResults.hits as var>
-			<p><a href="${base}/product/${var.data().code}.html">${var.data().name}</a> (${action.formatScore(var.score())})<br />
+			<p><a href="${base}/product/view/${var.data().code}">${var.data().name}</a> (${action.formatScore(var.score())})<br />
 			${var.data().shortDescription!}</p>
 		</#list>
 		<#if searchResults.pages??>
