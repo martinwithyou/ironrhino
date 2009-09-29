@@ -38,7 +38,7 @@ public class DefaultTokenBasedRememberMeServices extends
 			HttpServletRequest request, HttpServletResponse response) {
 		String cookieValue = encodeCookie(tokens);
 		RequestUtils.saveCookie(request, response, getCookieName(),
-				cookieValue, true);
+				cookieValue, maxAge, true);
 	}
 
 	protected void cancelCookie(HttpServletRequest request,
