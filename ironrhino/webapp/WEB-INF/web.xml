@@ -152,19 +152,6 @@
 		<listener-class>
 			org.springframework.web.util.IntrospectorCleanupListener</listener-class>
 	</listener>
-	<servlet>
-		<servlet-name>cas</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>publishContext</param-name>
-			<param-value>false</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>cas</servlet-name>
-		<url-pattern>/cas/*</url-pattern>
-	</servlet-mapping>
 	<mime-mapping>
 		<extension>ico</extension>
 		<mime-type>image/x-icon</mime-type>

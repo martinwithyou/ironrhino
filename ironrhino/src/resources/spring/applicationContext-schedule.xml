@@ -6,7 +6,6 @@
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="triggerJobDetailTicketRegistryCleaner" />
 				<ref local="dailyBatchExecutorTrigger" />
 				<ref local="weeklyBatchExecutorTrigger" />
 			</list>

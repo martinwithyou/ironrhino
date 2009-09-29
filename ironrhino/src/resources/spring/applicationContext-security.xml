@@ -7,7 +7,6 @@
 
 	<security:http access-denied-page="/WEB-INF/view/jsp/error/403.jsp"
 		entry-point-ref="entryPoint">
-		<security:intercept-url pattern="/cas/**" requires-channel="https" />
 		<security:intercept-url pattern="/scripts/**" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="any" />
 		<security:intercept-url pattern="/common/**" access="ROLE_SUPERVISOR" requires-channel="https" />
 		<security:intercept-url pattern="/ums/**" access="ROLE_SUPERVISOR" requires-channel="https" />
@@ -40,7 +39,6 @@
 		<security:custom-filter position="SWITCH_USER_FILTER" />
 	</bean>
 
-	<!-- not use cas start -->
 	<security:authentication-manager alias="authenticationManager"/>
 	<security:authentication-provider user-service-ref="userManager">
 		<security:password-encoder ref="passwordEncoder" />
@@ -72,70 +70,4 @@
 		</property>
 	</bean>
 	
-	<!-- not use cas end -->
-
-	<!-- use cas start -->
-	<!--
-
-		<bean id="casProcessingFilter"
-			class="org.springframework.security.ui.cas.CasProcessingFilter">
-			<security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER"/>
-			<property name="authenticationManager"
-				ref="authenticationManager" />
-			<property name="defaultTargetUrl" value="/" />
-			<property name="filterProcessesUrl" value="/check" />
-		</bean>
-
-		<bean id="entryPoint"
-			class="org.springframework.security.ui.cas.CasProcessingFilterEntryPoint">
-			<property name="loginUrl" value="${cas.loginUrl}" />
-			<property name="serviceProperties" ref="serviceProperties" />
-		</bean>
-
-		<bean id="authenticationManager"
-			class="org.springframework.security.providers.ProviderManager">
-			<property name="providers">
-				<list>
-					<ref local="authenticationProvider" />
-					<ref bean="anonymousAuthenticationProvider" />
-				</list>
-			</property>
-		</bean>
-
-		<bean id="authenticationProvider"
-			class="org.springframework.security.providers.cas.CasAuthenticationProvider">
-			<property name="userDetailsService" ref="userManager" />
-			<property name="ticketValidator">
-				<bean
-					class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator">
-					<constructor-arg value="${cas.baseUrl}" />
-				</bean>
-			</property>
-			<property name="statelessTicketCache">
-				<bean
-					class="org.springframework.security.providers.cas.cache.EhCacheBasedTicketCache">
-					<property name="cache">
-						<bean id="ticketCache"
-							class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
-					</property>
-				</bean>
-			</property>
-			<property name="serviceProperties" ref="serviceProperties" />
-			<property name="key" value="password" />
-		</bean>
-
-		<bean id="serviceProperties"
-			class="org.springframework.security.ui.cas.ServiceProperties">
-			<property name="service"
-				value="${cas.serviceProperties.service}" />
-			<property name="sendRenew" value="false" />
-		</bean>
-
-		<bean id="anonymousAuthenticationProvider"
-			class="org.springframework.security.providers.anonymous.AnonymousAuthenticationProvider">
-			<property name="key" value="anonymous" />
-		</bean>
-		-->
-	<!-- use cas end -->
-
 </beans>
