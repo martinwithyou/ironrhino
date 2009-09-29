@@ -6,12 +6,12 @@
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-	<bean id="order" class="org.ironrhino.online.model.Order" scope="session">
+	<bean id="order" class="com.ironrhino.online.model.Order" scope="session">
 		<aop:scoped-proxy />
 	</bean>
 
 	<bean id="paymentManager"
-		class="org.ironrhino.online.payment.PaymentManager">
+		class="com.ironrhino.online.payment.PaymentManager">
 		<property name="payments">
 			<list>
 				<ref bean="paypal" />
@@ -19,9 +19,9 @@
 			</list>
 		</property>
 	</bean>
-	<bean id="paypal" class="org.ironrhino.online.payment.Paypal"
+	<bean id="paypal" class="com.ironrhino.online.payment.Paypal"
 		p:business="${paypal.business}"/>
-	<!--bean id="alipay" class="org.ironrhino.online.payment.Alipay"
+	<!--bean id="alipay" class="com.ironrhino.online.payment.Alipay"
 		p:partner="${alipay.partner}" p:key="${alipay.key}" /-->
 
 </beans>

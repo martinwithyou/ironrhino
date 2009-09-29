@@ -1,4 +1,4 @@
-package org.ironrhino.online.rule
+package com.ironrhino.online.rule
 expander drools.dsl
 
 rule "total is less than 100.00"
@@ -8,4 +8,4 @@ rule "total is less than 100.00"
 		taking the ship costs 0.01
 end
 
-import org.ironrhino.online.model.Order;
+import com.ironrhino.online.model.Order;

@@ -1,13 +1,9 @@
-package org.ironrhino.online.service;
+package com.ironrhino.online.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.ironrhino.common.model.ResultPage;
-import org.ironrhino.pms.model.Category;
-import org.ironrhino.pms.model.Product;
-import org.ironrhino.pms.service.CategoryManager;
-import org.ironrhino.pms.service.ProductManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +17,12 @@ import org.springframework.security.context.SecurityContextImpl;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.ironrhino.online.service.ProductFacade;
+import com.ironrhino.pms.model.Category;
+import com.ironrhino.pms.model.Product;
+import com.ironrhino.pms.service.CategoryManager;
+import com.ironrhino.pms.service.ProductManager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {

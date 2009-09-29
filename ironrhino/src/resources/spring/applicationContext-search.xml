@@ -7,8 +7,8 @@
 			<list>
 				<value>org.ironrhino.common.model.SimpleElement</value>
 				<value>org.ironrhino.common.model.Attribute</value>
-				<value>org.ironrhino.pms.model.Category</value>
-				<value>org.ironrhino.pms.model.Product</value>
+				<value>com.ironrhino.pms.model.Category</value>
+				<value>com.ironrhino.pms.model.Product</value>
 			</list>
 		</property>
 		<property name="compassConfiguration">

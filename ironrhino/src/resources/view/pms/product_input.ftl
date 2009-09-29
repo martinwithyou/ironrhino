@@ -20,12 +20,12 @@
 	<@s.textfield label="%{getText('price')}" name="product.price" />
 	<@s.textarea label="%{getText('description')}" name="product.description" cols="50" rows="5"/>
 	<@s.select label="%{getText('status')}" name="product.status"
-		list="@org.ironrhino.pms.model.ProductStatus@values()" listKey="name"
+		list="@com.ironrhino.pms.model.ProductStatus@values()" listKey="name"
 		listValue="displayName" />
 	<@s.textfield label="%{getText('displayOrder')}"
 		name="product.displayOrder" />
 	<@s.iterator
-		value="@org.ironrhino.core.hibernate.CustomizableEntityChanger@getCustomizedProperties('org.ironrhino.pms.model.Product')">
+		value="@org.ironrhino.core.hibernate.CustomizableEntityChanger@getCustomizedProperties('com.ironrhino.pms.model.Product')">
 		<@s.textfield label="%{getText(key)}"
 			name="%{'product.customProperties.'+key}"
 			cssClass="%{value.name=='DATE'?'date':''}" />

@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="org.ironrhino.pms.model"
+<hibernate-mapping package="com.ironrhino.pms.model"
 	default-lazy="true">
 	<class name="Product" table="pms_product" dynamic-insert="true"
 		dynamic-update="true">
@@ -20,7 +20,7 @@
 		<property name="status">
 			<type name="org.hibernate.type.EnumType">
 				<param name="enumClass">
-					org.ironrhino.pms.model.ProductStatus
+					com.ironrhino.pms.model.ProductStatus
 				</param>
 				<!-- if set type=12 then use name not ordinal
 					<param name="type">12</param>

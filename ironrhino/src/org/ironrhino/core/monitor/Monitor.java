@@ -212,22 +212,26 @@ public class Monitor {
 			.getThreadMXBean();
 
 	public static void printSystemInfo() {
-		MemoryUsage memoryUsage = memoryMXBean.getHeapMemoryUsage();
-		// MEMORY
-		Key key = new Key("JVM", 0, false, "MEMORY", "SITUATION");
-		Value value = new Value(memoryUsage.getMax(), memoryUsage.getUsed());
-		output(systemLogger, key, value);
-		// CPU
-		key = new Key("JVM", 0, false, "CPU", "USAGE");
-		value = new Value(threadMXBean.getCurrentThreadCpuTime(), threadMXBean
-				.getCurrentThreadUserTime());
-		output(systemLogger, key, value);
-		// THREAD
-		key = new Key("JVM", 0, false, "THREAD", "TOTAL");
-		value = new Value(threadMXBean.getPeakThreadCount(), threadMXBean
-				.getDaemonThreadCount());
-		// TODO monitor disk usage
-		output(systemLogger, key, value);
+		try {
+			MemoryUsage memoryUsage = memoryMXBean.getHeapMemoryUsage();
+			// MEMORY
+			Key key = new Key("JVM", 0, false, "MEMORY", "SITUATION");
+			Value value = new Value(memoryUsage.getMax(), memoryUsage.getUsed());
+			output(systemLogger, key, value);
+			// CPU
+			key = new Key("JVM", 0, false, "CPU", "USAGE");
+			value = new Value(threadMXBean.getCurrentThreadCpuTime(),
+					threadMXBean.getCurrentThreadUserTime());
+			output(systemLogger, key, value);
+			// THREAD
+			key = new Key("JVM", 0, false, "THREAD", "TOTAL");
+			value = new Value(threadMXBean.getPeakThreadCount(), threadMXBean
+					.getDaemonThreadCount());
+			// TODO monitor disk usage
+			output(systemLogger, key, value);
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+		}
 	}
 
 }

@@ -9,7 +9,7 @@
 	<context:property-placeholder
 		location="/WEB-INF/conf/applicationContext.properties" />
 	<context:annotation-config />
-	<context:component-scan base-package="org.ironrhino"/>
+	<context:component-scan base-package="org.ironrhino,com.ironrhino"/>
 	<aop:aspectj-autoproxy />
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">

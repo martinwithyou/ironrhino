@@ -4,7 +4,7 @@
 <struts>
 	<package name="account" namespace="/" extends="ironrhino-default">
 		<action name="account"
-			class="org.ironrhino.online.action.account.AccountAction">
+			class="com.ironrhino.online.action.account.AccountAction">
 			<result name="success" type="freemarker">
 				/WEB-INF/view/ftl/account/index.ftl
 			</result>
@@ -27,11 +27,11 @@
 	</package>
 	<package name="account-other" namespace="/account"
 		extends="ironrhino-default">
-		<action name="favorite" class="org.ironrhino.online.action.account.FavoriteAction">
+		<action name="favorite" class="com.ironrhino.online.action.account.FavoriteAction">
 			<result name="success" type="autoconfig"/>
 		</action>
 		<action name="order"
-			class="org.ironrhino.online.action.account.OrderAction">
+			class="com.ironrhino.online.action.account.OrderAction">
 			<result name="success" type="autoconfig"/>
 			<result name="view" type="autoconfig"/>
 			<result name="addressee" type="autoconfig"/>

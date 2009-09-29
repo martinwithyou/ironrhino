@@ -9,15 +9,16 @@ import org.ironrhino.common.model.Region;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.service.BaseManager;
-import org.ironrhino.online.service.ProductFacade;
-import org.ironrhino.pms.model.Category;
-import org.ironrhino.pms.model.Product;
-import org.ironrhino.pms.model.ProductStatus;
-import org.ironrhino.pms.service.CategoryManager;
-import org.ironrhino.pms.service.ProductManager;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.ironrhino.online.service.ProductFacade;
+import com.ironrhino.pms.model.Category;
+import com.ironrhino.pms.model.Product;
+import com.ironrhino.pms.model.ProductStatus;
+import com.ironrhino.pms.service.CategoryManager;
+import com.ironrhino.pms.service.ProductManager;
 
 public class InitData {
 
