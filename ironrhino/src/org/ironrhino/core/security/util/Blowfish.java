@@ -1,5 +1,7 @@
 package org.ironrhino.core.security.util;
 
+import java.io.File;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -8,28 +10,39 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.lf5.util.StreamUtils;
 
 public class Blowfish {
 	private static Log log = LogFactory.getLog(Blowfish.class);
 
-	public static final String KEY_LOCATION = "/resources/key/blowfish";
-	private static String CIPHER_KEY = "youcannotguessme";
+	public static final String DEFAULT_KEY_LOCATION = "/resources/key/blowfish";
+
 	private static String CIPHER_NAME = "Blowfish/CFB8/NoPadding";
 	private static String KEY_SPEC_NAME = "Blowfish";
 	private static SecretKeySpec secretKeySpec = null;
 	private static IvParameterSpec ivParameterSpec = null;
 	// thread safe
 	private static final ThreadLocal<Blowfish> pool = new ThreadLocal<Blowfish>();
+	private static String key = "youcannotguessme";
 	Cipher enCipher;
 	Cipher deCipher;
 
 	static {
 		try {
-			CIPHER_KEY = new String(StreamUtils.getBytes(Blowfish.class
-					.getResourceAsStream(KEY_LOCATION)), "UTF-8");
+			File file = new File(System.getProperty("user.home")
+					+ "/key/blowfish");
+			if (file.exists()) {
+				key = FileUtils.readFileToString(file, "UTF-8");
+			} else {
+				log.warn("[" + file
+						+ "] doesn't exists,use classpath resources "
+						+ DEFAULT_KEY_LOCATION);
+				key = IOUtils.toString(Blowfish.class
+						.getResourceAsStream(DEFAULT_KEY_LOCATION), "UTF-8");
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -37,10 +50,9 @@ public class Blowfish {
 
 	private Blowfish() {
 		try {
-			secretKeySpec = new SecretKeySpec(CIPHER_KEY.getBytes(),
-					KEY_SPEC_NAME);
-			ivParameterSpec = new IvParameterSpec((DigestUtils
-					.md5Hex(CIPHER_KEY).substring(0, 8)).getBytes());
+			secretKeySpec = new SecretKeySpec(key.getBytes(), KEY_SPEC_NAME);
+			ivParameterSpec = new IvParameterSpec((DigestUtils.md5Hex(key)
+					.substring(0, 8)).getBytes());
 			enCipher = Cipher.getInstance(CIPHER_NAME);
 			deCipher = Cipher.getInstance(CIPHER_NAME);
 			enCipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);

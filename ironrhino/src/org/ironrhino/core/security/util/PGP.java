@@ -3,6 +3,7 @@ package org.ironrhino.core.security.util;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,9 +23,11 @@ import java.util.Date;
 import java.util.Iterator;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.lf5.util.StreamUtils;
 import org.bouncycastle.bcpg.ArmoredInputStream;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.BCPGOutputStream;
@@ -65,24 +68,84 @@ public class PGP {
 
 	public static final int kEY_SIZE = 1024, STRENGTH = 0;
 
-	public static final String PASSWORD_LOCATION = "/resources/key/pgp-password";
-	public static final String PUBLIC_KEY_LOCATION = "/resources/key/pgp-public";
-	public static final String PRIVATE_KEY_LOCATION = "/resources/key/pgp-private";
-	private static String PASSWORD = "haha";
+	public final static String DEFAULT_PASSWORD_LOCATION = "/resources/key/pgp-password";
+	public final static String DEFAULT_PRIVATE_KEY_LOCATION = "/resources/key/pgp-private";
+	public final static String DEFAULT_PUBLIC_KEY_LOCATION = "/resources/key/pgp-public";
+
+	private static String password;
+	private static PGPSecretKeyRing secretKeyRing;
+	private static PGPSecretKeyRingCollection secretKeyRingCollection;
+	private static PGPPublicKey publicKey;
+	private static PGPPublicKeyRingCollection publicKeyRingCollection;
 
 	static {
 		Security.addProvider(new BouncyCastleProvider());
 		try {
-			PASSWORD = new String(StreamUtils.getBytes(PGP.class
-					.getResourceAsStream(PASSWORD_LOCATION)), "UTF-8");
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			File file = new File(System.getProperty("user.home")
+					+ "/key/pgp-password");
+			if (file.exists()) {
+				password = FileUtils.readFileToString(file, "UTF-8");
+			} else {
+				log.warn("[" + file
+						+ "] doesn't exists,use classpath resources "
+						+ DEFAULT_PASSWORD_LOCATION);
+				password = IOUtils.toString(PGP.class
+						.getResourceAsStream(DEFAULT_PASSWORD_LOCATION),
+						"UTF-8");
+			}
+
+			file = new File(System.getProperty("user.home")
+					+ "/key/pgp-private");
+			String privateKeyString;
+			if (file.exists()) {
+				privateKeyString = FileUtils.readFileToString(file, "UTF-8");
+			} else {
+				log.warn("[" + file
+						+ "] doesn't exists,use classpath resources "
+						+ DEFAULT_PRIVATE_KEY_LOCATION);
+				privateKeyString = IOUtils.toString(PGP.class
+						.getResourceAsStream(DEFAULT_PRIVATE_KEY_LOCATION),
+						"UTF-8");
+			}
+			if (StringUtils.isNotBlank(privateKeyString)) {
+				secretKeyRingCollection = new PGPSecretKeyRingCollection(
+						Collections.EMPTY_LIST);
+				secretKeyRing = new PGPSecretKeyRing(new ArmoredInputStream(
+						new ByteArrayInputStream(privateKeyString
+								.getBytes("UTF-8"))));
+				secretKeyRingCollection = PGPSecretKeyRingCollection
+						.addSecretKeyRing(secretKeyRingCollection,
+								secretKeyRing);
+			}
+
+			file = new File(System.getProperty("user.home") + "/key/pgp-public");
+			String publicKeyString;
+			if (file.exists()) {
+				publicKeyString = FileUtils.readFileToString(file, "UTF-8");
+			} else {
+				log.warn("[" + file
+						+ "] doesn't exists,use classpath resources "
+						+ DEFAULT_PUBLIC_KEY_LOCATION);
+				publicKeyString = IOUtils.toString(PGP.class
+						.getResourceAsStream(DEFAULT_PUBLIC_KEY_LOCATION),
+						"UTF-8");
+			}
+			if (StringUtils.isNotBlank(publicKeyString)) {
+				publicKey = parsePGPPublicKey(new ByteArrayInputStream(
+						publicKeyString.getBytes("UTF-8")));
+				publicKeyRingCollection = parsePGPPublicKeyRingCollection(new ByteArrayInputStream(
+						publicKeyString.getBytes("UTF-8")));
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage(), e);
+		} catch (PGPException e) {
+			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 
 	public static void encrypt(InputStream in, OutputStream out) {
 		try {
-			encrypt(in, out, PGP.class.getResourceAsStream(PUBLIC_KEY_LOCATION));
+			encrypt(in, out, publicKey);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -90,8 +153,7 @@ public class PGP {
 
 	public static void decrypt(InputStream in, OutputStream out) {
 		try {
-			decrypt(in, out, PGP.class
-					.getResourceAsStream(PRIVATE_KEY_LOCATION), PASSWORD);
+			decrypt(in, out, secretKeyRingCollection, password);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -99,8 +161,7 @@ public class PGP {
 
 	public static void sign(InputStream in, OutputStream out) {
 		try {
-			sign(in, out, PGP.class.getResourceAsStream(PRIVATE_KEY_LOCATION),
-					PASSWORD);
+			sign(in, out, secretKeyRing, password);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -108,8 +169,7 @@ public class PGP {
 
 	public static boolean verify(InputStream in, InputStream sign) {
 		try {
-			return verify(in, sign, PGP.class
-					.getResourceAsStream(PUBLIC_KEY_LOCATION));
+			return verify(in, sign, publicKeyRingCollection);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return false;
@@ -179,7 +239,7 @@ public class PGP {
 
 	public static void main(String... strings) throws Exception {
 
-		String keyId = "zhouyanming", password = PASSWORD;
+		String keyId = "zhouyanming";
 		generatorKeyPair(keyId, password, new FileOutputStream("pub.key"),
 				new FileOutputStream("pri.key"));
 
@@ -225,35 +285,36 @@ public class PGP {
 		KeyPair dsaKp = dsaKpg.generateKeyPair();
 		KeyPairGenerator elgKpg = KeyPairGenerator.getInstance("ELGAMAL", "BC");
 
-//		if (STRENGTH > 0) {
-//			ElGamalParametersGenerator paramGen = new ElGamalParametersGenerator();
-//			paramGen.init(kEY_SIZE, STRENGTH, new SecureRandom());
-//			ElGamalParameters genParams = paramGen.generateParameters();
-//			ElGamalParameterSpec elParams = new ElGamalParameterSpec(genParams
-//					.getP(), genParams.getG());
-//			elgKpg.initialize(elParams);
-//		} else {
-			BigInteger g = new BigInteger(
-					"153d5d6172adb43045b68ae8e1de1070b6137005686d29d3d73a7749199681ee5b212c9b96bfdcfa5b20cd5e3fd2044895d609cf9b410b7a0f12ca1cb9a428cc",
-					16);
-			BigInteger p = new BigInteger(
-					"9494fec095f3b85ee286542b3836fc81a5dd0a0349b4c239dd38744d488cf8e31db8bcb7d33b41abb9e5a33cca9144b1cef332c94bf0573bf047a3aca98cdf3b",
-					16);
-			ElGamalParameterSpec elParams = new ElGamalParameterSpec(p, g);
-			elgKpg.initialize(elParams);
-//		}
+		// if (STRENGTH > 0) {
+		// ElGamalParametersGenerator paramGen = new
+		// ElGamalParametersGenerator();
+		// paramGen.init(kEY_SIZE, STRENGTH, new SecureRandom());
+		// ElGamalParameters genParams = paramGen.generateParameters();
+		// ElGamalParameterSpec elParams = new ElGamalParameterSpec(genParams
+		// .getP(), genParams.getG());
+		// elgKpg.initialize(elParams);
+		// } else {
+		BigInteger g = new BigInteger(
+				"153d5d6172adb43045b68ae8e1de1070b6137005686d29d3d73a7749199681ee5b212c9b96bfdcfa5b20cd5e3fd2044895d609cf9b410b7a0f12ca1cb9a428cc",
+				16);
+		BigInteger p = new BigInteger(
+				"9494fec095f3b85ee286542b3836fc81a5dd0a0349b4c239dd38744d488cf8e31db8bcb7d33b41abb9e5a33cca9144b1cef332c94bf0573bf047a3aca98cdf3b",
+				16);
+		ElGamalParameterSpec elParams = new ElGamalParameterSpec(p, g);
+		elgKpg.initialize(elParams);
+		// }
 
 		KeyPair elgKp = elgKpg.generateKeyPair();
 
-		PGPKeyPair dsaKeyPair = new PGPKeyPair(PublicKeyAlgorithmTags.DSA, dsaKp,
-				new Date());
-		PGPKeyPair elgKeyPair = new PGPKeyPair(PublicKeyAlgorithmTags.ELGAMAL_ENCRYPT,
-				elgKp, new Date());
+		PGPKeyPair dsaKeyPair = new PGPKeyPair(PublicKeyAlgorithmTags.DSA,
+				dsaKp, new Date());
+		PGPKeyPair elgKeyPair = new PGPKeyPair(
+				PublicKeyAlgorithmTags.ELGAMAL_ENCRYPT, elgKp, new Date());
 
 		PGPKeyRingGenerator keyRingGen = new PGPKeyRingGenerator(
 				PGPSignature.POSITIVE_CERTIFICATION, dsaKeyPair, keyId,
-				SymmetricKeyAlgorithmTags.AES_256, password.toCharArray(), true, null,
-				null, new SecureRandom(), "BC");
+				SymmetricKeyAlgorithmTags.AES_256, password.toCharArray(),
+				true, null, null, new SecureRandom(), "BC");
 		keyRingGen.addSubKey(elgKeyPair);
 
 		OutputStream ostream = new ArmoredOutputStream(pub);
@@ -304,6 +365,12 @@ public class PGP {
 		encrypt(in, out, keyIs, false, true);
 	}
 
+	public static void encrypt(InputStream in, OutputStream out,
+			PGPPublicKey key) throws IOException, NoSuchProviderException,
+			PGPException {
+		encrypt(in, out, key, false, true);
+	}
+
 	public static void writeStreamToLiteralData(OutputStream out,
 			char fileType, InputStream in) throws IOException {
 		PGPLiteralDataGenerator lData = new PGPLiteralDataGenerator();
@@ -322,9 +389,15 @@ public class PGP {
 	public static void encrypt(InputStream in, OutputStream out,
 			InputStream keyIs, boolean armor, boolean withIntegrityCheck)
 			throws IOException, NoSuchProviderException, PGPException {
+		PGPPublicKey encKey = parsePGPPublicKey(keyIs);
+		encrypt(in, out, encKey, armor, withIntegrityCheck);
+	}
+
+	public static void encrypt(InputStream in, OutputStream out,
+			PGPPublicKey publicKey, boolean armor, boolean withIntegrityCheck)
+			throws IOException, NoSuchProviderException, PGPException {
 		if (armor)
 			out = new ArmoredOutputStream(out);
-		PGPPublicKey encKey = parsePGPPublicKey(keyIs);
 		ByteArrayOutputStream bOut = new ByteArrayOutputStream();
 		PGPCompressedDataGenerator comData = new PGPCompressedDataGenerator(
 				CompressionAlgorithmTags.ZIP);
@@ -333,9 +406,9 @@ public class PGP {
 		// PGPLiteralData.BINARY, file);
 		comData.close();
 		PGPEncryptedDataGenerator cPk = new PGPEncryptedDataGenerator(
-				SymmetricKeyAlgorithmTags.CAST5, withIntegrityCheck, new SecureRandom(),
-				"BC");
-		cPk.addMethod(encKey);
+				SymmetricKeyAlgorithmTags.CAST5, withIntegrityCheck,
+				new SecureRandom(), "BC");
+		cPk.addMethod(publicKey);
 		byte[] bytes = bOut.toByteArray();
 		OutputStream cOut = cPk.open(out, bytes.length);
 		cOut.write(bytes);
@@ -346,6 +419,12 @@ public class PGP {
 	public static void decrypt(InputStream data, OutputStream out,
 			InputStream keyIs, String password) throws Exception {
 		PGPSecretKeyRingCollection secring = parsePGPSecretKeyRingCollection(keyIs);
+		decrypt(data, out, secring, password);
+	}
+
+	public static void decrypt(InputStream data, OutputStream out,
+			PGPSecretKeyRingCollection secring, String password)
+			throws Exception {
 		PGPPublicKeyEncryptedData pbe = null;
 		InputStream in = PGPUtil.getDecoderStream(data);
 		PGPObjectFactory pgpF = new PGPObjectFactory(in);
@@ -430,11 +509,17 @@ public class PGP {
 			InputStream keyIs, String password) throws IOException,
 			NoSuchAlgorithmException, NoSuchProviderException, PGPException,
 			SignatureException {
-		// PGPSecretKey key = null;
 		BufferedInputStream iStream = new BufferedInputStream(keyIs);
 		PGPSecretKeyRing ring;
 		iStream.mark(1024 * 128);
 		ring = new PGPSecretKeyRing(new ArmoredInputStream(iStream));
+		sign(in, out, ring, password);
+	}
+
+	public static void sign(InputStream in, OutputStream out,
+			PGPSecretKeyRing ring, String password) throws IOException,
+			NoSuchAlgorithmException, NoSuchProviderException, PGPException,
+			SignatureException {
 		PGPSecretKey key = ring.getSecretKey();
 		PGPPrivateKey priK = key
 				.extractPrivateKey(password.toCharArray(), "BC");
@@ -452,7 +537,6 @@ public class PGP {
 		}
 
 		BCPGOutputStream bOut = new BCPGOutputStream(out);
-
 		int rSize = 0;
 		byte[] buf = new byte[1024];
 
@@ -466,6 +550,12 @@ public class PGP {
 
 	public static boolean verify(InputStream dataIn, InputStream in,
 			InputStream keyIs) throws Exception {
+		PGPPublicKeyRingCollection pubring = parsePGPPublicKeyRingCollection(keyIs);
+		return verify(dataIn, in, pubring);
+	}
+
+	public static boolean verify(InputStream dataIn, InputStream in,
+			PGPPublicKeyRingCollection pubring) throws Exception {
 		in = PGPUtil.getDecoderStream(in);
 		// dataIn = PGPUtil.getDecoderStream(dataIn);
 		PGPObjectFactory pgpFact = new PGPObjectFactory(in);
@@ -494,7 +584,6 @@ public class PGP {
 		int ch;
 
 		PGPSignature sig = p3.get(0);
-		PGPPublicKeyRingCollection pubring = parsePGPPublicKeyRingCollection(keyIs);
 		PGPPublicKey key = pubring.getPublicKey(sig.getKeyID());
 		if (key == null)
 			throw new Exception("Cannot find key 0x"

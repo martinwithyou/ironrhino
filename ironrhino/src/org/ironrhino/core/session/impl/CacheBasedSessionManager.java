@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
-import org.ironrhino.core.security.util.PGP;
+import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.Constants;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpWrappedSession;
@@ -38,7 +38,7 @@ public class CacheBasedSessionManager implements HttpSessionManager {
 		if (StringUtils.isNotBlank(username)
 				&& (attrMap == null || !attrMap
 						.containsKey(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY))) {
-			username = PGP.decrypt(username);
+			username = Blowfish.decrypt(username);
 			UserDetails ud = userDetailsService.loadUserByUsername(username);
 			if (ud != null) {
 				SecurityContext sc = new SecurityContextImpl();
