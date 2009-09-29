@@ -10,8 +10,6 @@ import org.ironrhino.core.metadata.Redirect;
 import org.ironrhino.core.session.Constants;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
-import org.springframework.security.ui.AbstractProcessingFilter;
-import org.springframework.security.ui.savedrequest.SavedRequest;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
@@ -64,19 +62,6 @@ public class LoginAction extends BaseAction {
 
 	public String input() {
 		HttpServletRequest request = ServletActionContext.getRequest();
-		SavedRequest savedRequest = (SavedRequest) request
-				.getSession()
-				.getAttribute(
-						AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
-		if (savedRequest != null) {
-			targetUrl = savedRequest.getFullRequestUrl();
-			if (isUseJson())
-				ServletActionContext
-						.getRequest()
-						.getSession()
-						.removeAttribute(
-								AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
-		}
 		if (StringUtils.isBlank(targetUrl))
 			targetUrl = request.getHeader("Referer");
 		username = RequestUtils.getCookieValue(request,

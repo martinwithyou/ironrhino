@@ -44,8 +44,8 @@
 		<security:password-encoder ref="passwordEncoder" />
 	</security:authentication-provider>
 	<bean id="entryPoint"
-		class="org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint"
-		p:loginFormUrl="/login" p:forceHttps="true" />
+		class="org.ironrhino.core.security.spring.DefaultAuthenticationProcessingFilterEntryPoint"
+		p:loginFormUrl="/login" p:base="${base}" p:forceHttps="true" />
 	<bean id="authenticationProcessingFilter"
 		class="org.ironrhino.ums.security.UserAuthenticationProcessingFilter"
 		p:usernameParameter="username" p:passwordParameter="password"
