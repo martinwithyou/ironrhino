@@ -31,9 +31,7 @@ import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.springframework.stereotype.Component;
 
-@Component("searchStat")
 public class SearchStat {
 
 	public static final String SEARCH_STAT_THREAD_NAME = "SEARCH_STAT_THREAD_NAME";

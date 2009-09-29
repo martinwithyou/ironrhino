@@ -34,7 +34,7 @@ public class ConsoleAction extends BaseAction {
 	public String execute() {
 		try {
 			Object o = applicationContextConsole.execute(cmd);
-			addActionMessage(getText("operate.success") + ":"
+			addActionMessage(getText("operation.success") + ":"
 					+ String.valueOf(o));
 		} catch (Exception e) {
 			addActionError(getText("error") + ":" + e.getMessage());

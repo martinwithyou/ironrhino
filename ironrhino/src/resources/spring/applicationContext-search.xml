@@ -47,5 +47,6 @@
 			</list>
 		</property>
 	</bean>
-	
+	<bean id="compassSearchService" class="org.ironrhino.core.search.CompassSearchService"/>
+	<bean id="searchStat" class="org.ironrhino.core.search.SearchStat"/>
 </beans>
