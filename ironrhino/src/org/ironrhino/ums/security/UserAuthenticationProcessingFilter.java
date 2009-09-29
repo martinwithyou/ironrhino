@@ -11,7 +11,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.ironrhino.core.aop.AopContext;
 import org.ironrhino.core.aop.CacheAspect;
-import org.ironrhino.core.spring.security.BaseAuthenticationProcessingFilter;
+import org.ironrhino.core.security.spring.BaseAuthenticationProcessingFilter;
 import org.ironrhino.ums.model.LoginRecord;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
