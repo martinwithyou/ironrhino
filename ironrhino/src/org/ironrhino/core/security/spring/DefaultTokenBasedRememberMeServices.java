@@ -1,12 +1,14 @@
 package org.ironrhino.core.security.spring;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.ironrhino.core.util.RequestUtils;
 import org.springframework.security.Authentication;
 import org.springframework.security.ui.rememberme.TokenBasedRememberMeServices;
 import org.springframework.util.StringUtils;
 
-public class CustomizableTokenBasedRememberMeServices extends
+public class DefaultTokenBasedRememberMeServices extends
 		TokenBasedRememberMeServices {
 	@Override
 	protected int calculateLoginLifetime(HttpServletRequest request,
@@ -30,5 +32,17 @@ public class CustomizableTokenBasedRememberMeServices extends
 		if (StringUtils.hasText(request.getParameter(parameter)))
 			return true;
 		return false;
+	}
+
+	protected void setCookie(String[] tokens, int maxAge,
+			HttpServletRequest request, HttpServletResponse response) {
+		String cookieValue = encodeCookie(tokens);
+		RequestUtils.saveCookie(request, response, getCookieName(),
+				cookieValue, true);
+	}
+
+	protected void cancelCookie(HttpServletRequest request,
+			HttpServletResponse response) {
+		RequestUtils.deleteCookie(request, response, getCookieName(), true);
 	}
 }

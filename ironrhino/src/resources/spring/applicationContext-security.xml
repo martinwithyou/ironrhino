@@ -26,7 +26,7 @@
 	</security:http>
 	
 	<bean id="rememberMeServices"
-		class="org.ironrhino.core.security.spring.CustomizableTokenBasedRememberMeServices"
+		class="org.ironrhino.core.security.spring.DefaultTokenBasedRememberMeServices"
 		p:key="youcannotguessme" p:parameter="rememberme" p:cookieName="REMEMBERME"
 		p:userDetailsService-ref="userManager" />
 	<bean id="passwordEncoder"
