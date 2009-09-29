@@ -21,17 +21,18 @@ public class DefaultAuthenticationProcessingFilterEntryPoint extends
 
 	public static final String TARGET_URL = "targetUrl";
 
-	private String base;
+	private String ssoServerBase;
+
 	private String loginUrl;
 
 	@PostConstruct
 	public void init() {
-		loginUrl = base + getLoginFormUrl();
+		if (ssoServerBase != null)
+			loginUrl = ssoServerBase + getLoginFormUrl();
 	}
 
 	protected String buildRedirectUrlToLoginPage(HttpServletRequest request,
 			HttpServletResponse response, AuthenticationException authException) {
-
 		String targetUrl = null;
 		String redirectUrl = null;
 		SavedRequest savedRequest = (SavedRequest) request
@@ -42,8 +43,23 @@ public class DefaultAuthenticationProcessingFilterEntryPoint extends
 				AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
 		if (savedRequest != null)
 			targetUrl = savedRequest.getFullRequestUrl();
-		if (loginUrl.indexOf("://") < 0)
-			throw new IllegalArgumentException("loginForm must be absolute");
+		if (loginUrl == null) {
+			loginUrl = request.getContextPath() + loginUrl;
+			RedirectUrlBuilder urlBuilder = new RedirectUrlBuilder();
+			String scheme = request.getScheme();
+			int serverPort = getPortResolver().getServerPort(request);
+			urlBuilder.setScheme(scheme);
+			urlBuilder.setServerName(request.getServerName());
+			urlBuilder.setPort(serverPort);
+			urlBuilder.setContextPath(request.getContextPath());
+			urlBuilder.setPathInfo(getLoginFormUrl());
+			if (isForceHttps() && "http".equals(scheme)) {
+				Integer httpsPort = getPortMapper().lookupHttpsPort(serverPort);
+				urlBuilder.setScheme("https");
+				urlBuilder.setPort(httpsPort);
+			}
+			loginUrl = urlBuilder.getUrl();
+		}
 		try {
 			redirectUrl = loginUrl
 					+ (StringUtils.isNotBlank(targetUrl) ? "?" + TARGET_URL
@@ -68,9 +84,8 @@ public class DefaultAuthenticationProcessingFilterEntryPoint extends
 		return redirectUrl;
 	}
 
-	public void setBase(String base) {
-		this.base = base;
-
+	public void setSsoServerBase(String ssoServerBase) {
+		this.ssoServerBase = ssoServerBase;
 	}
 
 }

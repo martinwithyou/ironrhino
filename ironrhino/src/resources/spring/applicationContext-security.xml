@@ -45,7 +45,7 @@
 	</security:authentication-provider>
 	<bean id="entryPoint"
 		class="org.ironrhino.core.security.spring.DefaultAuthenticationProcessingFilterEntryPoint"
-		p:loginFormUrl="/login" p:base="${base}" p:forceHttps="true" />
+		p:loginFormUrl="/login" p:ssoServerBase="${sso.server.base}" p:forceHttps="true" />
 	<bean id="authenticationProcessingFilter"
 		class="org.ironrhino.ums.security.UserAuthenticationProcessingFilter"
 		p:usernameParameter="username" p:passwordParameter="password"
