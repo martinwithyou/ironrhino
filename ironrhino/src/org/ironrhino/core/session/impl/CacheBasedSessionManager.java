@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.Constants;
@@ -19,10 +21,13 @@ import org.springframework.security.context.SecurityContextImpl;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
+import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component("cacheBasedSessionManager")
 public class CacheBasedSessionManager implements HttpSessionManager {
+
+	private Log log = LogFactory.getLog(this.getClass());
 
 	@Autowired
 	private CacheManager cacheManager;
@@ -39,7 +44,18 @@ public class CacheBasedSessionManager implements HttpSessionManager {
 				&& (attrMap == null || !attrMap
 						.containsKey(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY))) {
 			username = Blowfish.decrypt(username);
-			UserDetails ud = userDetailsService.loadUserByUsername(username);
+
+			UserDetails ud = null;
+			try {
+				ud = userDetailsService.loadUserByUsername(username);
+			} catch (UsernameNotFoundException e) {
+				RequestUtils.deleteCookie(
+						session.getHttpContext().getRequest(), session
+								.getHttpContext().getResponse(),
+						Constants.COOKIE_NAME_ENCRYPT_LOGIN_USER, true);
+			} catch (Exception e) {
+				log.warn(e.getMessage(), e);
+			}
 			if (ud != null) {
 				SecurityContext sc = new SecurityContextImpl();
 				Authentication auth = new UsernamePasswordAuthenticationToken(
