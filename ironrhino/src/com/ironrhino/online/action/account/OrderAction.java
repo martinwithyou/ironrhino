@@ -134,9 +134,9 @@ public class OrderAction extends BaseAction {
 	}
 
 	public String confirm() {
-		cart.clear();
 		targetUrl = "/account/order/view/"
 				+ orderManager.create(cart.getOrder());
+		cart.clear();
 		return REDIRECT;
 	}
 

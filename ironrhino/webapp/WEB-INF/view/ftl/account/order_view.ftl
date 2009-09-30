@@ -8,11 +8,11 @@
 <table>
 	<tr>
 		<td>${action.getText('code')}</td>
-		<td>${order.code}</td>
+		<td>${order.code!}</td>
 	</tr>
 	<tr>
 		<td>${action.getText('createDate')}</td>
-		<td>${order.createDate}</td>
+		<td>${order.createDate?datetime}</td>
 	</tr>
 	<tr>
 		<td>${action.getText('status')}</td>
@@ -24,11 +24,11 @@
 	</tr>
 	<tr>
 		<td>${action.getText('discount')}</td>
-		<td>${order.discount}</td>
+		<td>${order.discount!}</td>
 	</tr>
 	<tr>
 		<td>${action.getText('shipcost')}</td>
-		<td>${order.shipcost}</td>
+		<td>${order.shipcost!}</td>
 	</tr>
 	<tr>
 		<td>${action.getText('grandtotal')}</td>
@@ -75,7 +75,7 @@
 	</tr>
 	<tr>
 		<td>${action.getText('description')}</td>
-		<td>${order.description}</td>
+		<td>${order.description!}</td>
 	</tr>
 	<#if order.isNew()>
 		<tr>
@@ -93,7 +93,7 @@
 	<#if order.status.getName()=='INITIAL'>
 		<div id="payment"><#list paymentManager.payments as var>
 			<#if !var.disabled>
-				<div><img src="${base}/images/${code}.jpg" alt="${var.code}" />${var.name}
+				<div><img src="${base}/images/${var.code}.jpg" alt="${var.code}" />${var.name}
 				<#noescape>${var.getPayForm(order)}</#noescape></div>
 			</#if>
 		</#list></div>
