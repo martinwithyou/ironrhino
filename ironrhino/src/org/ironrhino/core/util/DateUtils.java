@@ -10,24 +10,30 @@ public class DateUtils {
 
 	private static final String DATE8 = "yyyyMMdd";
 
+	private static final String YEARMONTH = "yyyyMM";
+
 	private static final String DATETIME = "yyyy-MM-dd HH:mm:ss";
 
 	private static final String TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSSS";
 
-	public static String getDate10(Date date) {
+	public static String formatDate10(Date date) {
 		return new SimpleDateFormat(DATE10).format(date);
 	}
 
-	public static String getDate8(Date date) {
+	public static String formatDate8(Date date) {
 		return new SimpleDateFormat(DATE8).format(date);
 	}
 
-	public static String getTimestamp(Date date) {
+	public static String formatTimestamp(Date date) {
 		return new SimpleDateFormat(TIMESTAMP).format(date);
 	}
 
-	public static String getDatetime(Date date) {
+	public static String formatDatetime(Date date) {
 		return new SimpleDateFormat(DATETIME).format(date);
+	}
+
+	public static String formatYearMonth(Date date) {
+		return new SimpleDateFormat(YEARMONTH).format(date);
 	}
 
 	public static Date addDays(Date date, int days) {
@@ -79,15 +85,15 @@ public class DateUtils {
 	}
 
 	public static boolean isYearEnd(Date date) {
-		return getDate10(date).endsWith("12-31");
+		return formatDate10(date).endsWith("12-31");
 	}
 
 	public static boolean isMonthStart(Date date) {
-		return getDate10(date).endsWith("01");
+		return formatDate10(date).endsWith("01");
 	}
 
 	public static boolean isYearStart(Date date) {
-		return getDate10(date).endsWith("01-01");
+		return formatDate10(date).endsWith("01-01");
 	}
 
 	public static String humanRead(Date date) {
