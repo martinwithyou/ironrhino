@@ -136,9 +136,13 @@ public class SignupAction extends BaseAction {
 				user.setEnabled(true);
 				userManager.save(user);
 				// auto login
-				UserDetails ud = userManager.loadUserByUsername(user
-						.getUsername());
-				AuthzUtils.autoLogin(ud);
+				try {
+					UserDetails ud = userManager.loadUserByUsername(user
+							.getUsername());
+					AuthzUtils.autoLogin(ud);
+				} catch (RuntimeException e) {
+					log.warn(e.getMessage(), e);
+				}
 				return "activate";
 			}
 		}
