@@ -48,7 +48,7 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 		super.save(order);
 	}
 
-	private String generateCode(Order order) {
+	private String nextCode() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(DateUtils.formatDate8(new Date()));
 		sb.append(NumberUtils.format(orderCodeSequence.nextIntValue(), 5));
@@ -93,7 +93,7 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 		Order o = new Order();
 		BeanUtils.copyProperties(order, o);
 		calculateOrder(o);
-		o.setCode(generateCode(order));
+		o.setCode(nextCode());
 		save(o);
 		return o.getCode();
 	}
