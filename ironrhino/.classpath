@@ -42,9 +42,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/rome-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-2.5.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-binding-1.0.5.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-cas-client-2.0.4.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-core-2.0.4.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-2.0.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-webflow-1.0.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/standard-1.1.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xbean-spring-3.4.jar"/>
@@ -78,5 +75,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-commons-annotations-3.3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javassist-3.11.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xwork-core-2.1.5.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-core-2.0.5.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-2.0.5.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>

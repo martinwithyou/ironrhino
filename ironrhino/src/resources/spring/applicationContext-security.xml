@@ -22,7 +22,7 @@
 		<security:intercept-url pattern="/**" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="any" />
 		<security:anonymous granted-authority="ROLE_BUILTIN_ANONYMOUS" username="anonymousUser" key="anonymous" />
 		<security:remember-me services-ref="rememberMeServices" />
-		<security:logout logout-url="/logout" logout-success-url="/" invalidate-session="true" />
+		<security:logout logout-url="/logout" invalidate-session="true" />
 	</security:http>
 	
 	<bean id="rememberMeServices"
