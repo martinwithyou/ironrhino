@@ -24,4 +24,6 @@
 	<!--bean id="alipay" class="com.ironrhino.online.payment.Alipay"
 		p:partner="${alipay.partner}" p:key="${alipay.key}" /-->
 
+	<bean id="orderCodeSequence" class="org.ironrhino.core.spring.CyclicMySQLMaxValueIncrementer" 
+		 p:incrementerName="common_sequence" p:columnName="orderCode"/>
 </beans>

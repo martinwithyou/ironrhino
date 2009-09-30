@@ -1,11 +1,8 @@
 package com.ironrhino.online.service;
 
 import java.util.Date;
-import java.util.List;
 
 import org.drools.StatefulSession;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.support.RegionTreeControl;
 import org.ironrhino.core.metadata.ConcurrencyControl;
 import org.ironrhino.core.rule.RuleProvider;
@@ -17,6 +14,8 @@ import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.ums.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.support.incrementer.DataFieldMaxValueIncrementer;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +34,10 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 	@Autowired(required = false)
 	private RuleProvider ruleProvider;
 
+	@Autowired
+	@Qualifier("orderCodeSequence")
+	private DataFieldMaxValueIncrementer orderCodeSequence;
+
 	@Override
 	@Transactional
 	public void save(Order order) {
@@ -45,21 +48,12 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 		super.save(order);
 	}
 
-	private synchronized String generateCode(Order order) {
-		String prefix = DateUtils.getDate8(new Date());
-		DetachedCriteria dc = detachedCriteria();
-		dc.add(Restrictions.like("code", prefix + "%"));
-		dc.addOrder(org.hibernate.criterion.Order.desc("code"));
-		List<Order> results = getListByCriteria(dc, 1, 1);
-		int sequence = 0;
-		if (results.size() > 0) {
-			String lastId = results.get(0).getCode();
-			String lastSeq = lastId.substring(8);
-			lastSeq = lastSeq.substring(0, lastSeq.length() - 5);
-			sequence = Integer.parseInt(lastSeq);
-		}
-		String suffix = CodecUtils.randomString(5);
-		return prefix + NumberUtils.format(sequence + 1, 5) + suffix;
+	private String generateCode(Order order) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(DateUtils.formatDate8(new Date()));
+		sb.append(NumberUtils.format(orderCodeSequence.nextIntValue(), 5));
+		sb.append(CodecUtils.randomString(5));
+		return sb.toString();
 	}
 
 	public void doCalculateOrder(Order order) {
