@@ -24,6 +24,8 @@ public class GroupedDataSource extends AbstractDataSource implements
 
 	private static Log log = LogFactory.getLog(GroupedDataSource.class);
 
+	private int maxRetryTimes = 3;
+
 	// inject starts
 	private String masterName;
 
@@ -69,6 +71,10 @@ public class GroupedDataSource extends AbstractDataSource implements
 		return groupName;
 	}
 
+	public void setMaxRetryTimes(int maxRetryTimes) {
+		this.maxRetryTimes = maxRetryTimes;
+	}
+
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(masterName);
@@ -100,6 +106,11 @@ public class GroupedDataSource extends AbstractDataSource implements
 
 	public Connection getConnection(String username, String password)
 			throws SQLException {
+		return getConnection(username, password, 0);
+	}
+
+	public Connection getConnection(String username, String password,
+			int retryTimes) throws SQLException {
 		DataSource ds = null;
 		String dbname = null;
 		if (DataRouteContext.isReadonly() && readRoundRobin != null) {
@@ -127,7 +138,10 @@ public class GroupedDataSource extends AbstractDataSource implements
 			// retry
 			Monitor
 					.add(new Key("dataroute", true, groupName, dbname, "failed"));
-			return getConnection(username, password);
+			if (retryTimes == maxRetryTimes)
+				return null;
+			else
+				return getConnection(username, password, retryTimes + 1);
 
 		}
 	}
