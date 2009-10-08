@@ -67,8 +67,8 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.0.13.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-commons-annotations-3.3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javassist-3.11.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xwork-core-2.1.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-core-2.0.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-2.0.5.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xwork-core-2.1.6.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
