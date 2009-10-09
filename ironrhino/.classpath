@@ -47,7 +47,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/bcprov-jdk16-143.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/drools-compiler-5.0.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/drools-core-5.0.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ognl-2.7.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/json-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/compass-2.2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-2.4.1.jar"/>
