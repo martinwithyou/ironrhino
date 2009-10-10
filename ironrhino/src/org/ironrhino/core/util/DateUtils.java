@@ -6,15 +6,15 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
-	private static final String DATE10 = "yyyy-MM-dd";
+	public static final String DATE10 = "yyyy-MM-dd";
 
-	private static final String DATE8 = "yyyyMMdd";
+	public static final String DATE8 = "yyyyMMdd";
 
-	private static final String YEARMONTH = "yyyyMM";
+	public static final String YEARMONTH = "yyyyMM";
 
-	private static final String DATETIME = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATETIME = "yyyy-MM-dd HH:mm:ss";
 
-	private static final String TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSSS";
+	public static final String TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSSS";
 
 	public static String formatDate10(Date date) {
 		return new SimpleDateFormat(DATE10).format(date);

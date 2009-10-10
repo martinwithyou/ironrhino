@@ -2,22 +2,60 @@ package org.ironrhino.core.util;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.ironrhino.core.metadata.JsonSerializerType;
+import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
-import org.ironrhino.core.util.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class JsonUtils {
 
-	private static Gson gson = new Gson();
+	private static Gson gson = new GsonBuilder().setExclusionStrategies(
+			new AnnotationBasedExclusionStrategy(NotInJson.class,
+					NotInCopy.class)).setDateFormat(DateUtils.DATETIME)
+			.create();
+
+	private static class AnnotationBasedExclusionStrategy implements
+			ExclusionStrategy {
+		private final Collection<Class<? extends Annotation>> annotationclasses;
+
+		public AnnotationBasedExclusionStrategy(
+				Class<? extends Annotation>... annotationclasses) {
+			this.annotationclasses = new HashSet<Class<? extends Annotation>>();
+			if (annotationclasses != null) {
+				for (Class<? extends Annotation> clazz : annotationclasses) {
+					this.annotationclasses.add(clazz);
+				}
+			}
+		}
+
+		public boolean shouldSkipClass(Class<?> clazz) {
+			for (Class<? extends Annotation> annotationClass : annotationclasses)
+				if (clazz.getAnnotation(annotationClass) != null)
+					return true;
+			return false;
+		}
+
+		@Override
+		public boolean shouldSkipField(FieldAttributes attributes) {
+			for (Class<? extends Annotation> annotationClass : annotationclasses)
+				if (attributes.getAnnotation(annotationClass) != null)
+					return true;
+			return false;
+		}
+	}
 
 	public static String mapToJson(Map<Object, Object> map) {
 		if (map == null)
