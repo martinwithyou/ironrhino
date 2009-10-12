@@ -1,11 +1,10 @@
 package com.ironrhino.online.service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-import org.drools.StatefulSession;
 import org.ironrhino.common.support.RegionTreeControl;
 import org.ironrhino.core.metadata.ConcurrencyControl;
-import org.ironrhino.core.rule.RuleProvider;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
@@ -30,9 +29,6 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 
 	@Autowired(required = false)
 	private RegionTreeControl regionTreeControl;
-
-	@Autowired(required = false)
-	private RuleProvider ruleProvider;
 
 	@Autowired
 	@Qualifier("orderCodeSequence")
@@ -60,21 +56,8 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 		// calculate and set discount,shipcost
 		order.setUser(AuthzUtils.getUserDetails(User.class));
 		order.setCreateDate(new Date());
-		if (order.getClass() == Order.class) {
-			// not proxy
-			StatefulSession session = ruleProvider.getStatefulSession();
-			ruleProvider.insert(session, order);
-			session.fireAllRules();
-			ruleProvider.retract(session, order);
-		} else {
-			Order temp = new Order();
-			BeanUtils.copyProperties(order, temp);
-			StatefulSession session = ruleProvider.getStatefulSession();
-			ruleProvider.insert(session, temp);
-			session.fireAllRules();
-			ruleProvider.retract(session, temp);
-			BeanUtils.copyProperties(temp, order);
-		}
+		if (order.getTotal().compareTo(new BigDecimal(100)) < 0)
+			order.setShipcost(new BigDecimal(0.01));
 
 	}
 
