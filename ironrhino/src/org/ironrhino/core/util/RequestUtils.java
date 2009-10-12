@@ -81,7 +81,7 @@ public class RequestUtils {
 		String path = "".equals(request.getContextPath()) ? "/" : request
 				.getContextPath();
 		if (global) {
-			domain = parseDomain(request);
+			domain = parseGlobalDomain(request.getServerName());
 			path = "/";
 		}
 		saveCookie(request, response, cookieName, cookieValue, maxAge, domain,
@@ -124,7 +124,7 @@ public class RequestUtils {
 			boolean global) {
 		String domain = null;
 		if (global) {
-			domain = parseDomain(request);
+			domain = parseGlobalDomain(request.getServerName());
 			path = "/";
 		}
 		Cookie cookie = new Cookie(cookieName, null);
@@ -135,10 +135,26 @@ public class RequestUtils {
 		response.addCookie(cookie);
 	}
 
-	private static String parseDomain(HttpServletRequest request) {
-		String[] array = request.getServerName().split("\\.");
-		if (array.length >= 2) {
+	private static String parseGlobalDomain(String host) {
+		boolean topDouble = false;
+		for (String s : topDoubleDomains) {
+			if (host.endsWith(s)) {
+				topDouble = true;
+				break;
+			}
+		}
+		String[] array = host.split("\\.");
+		if (!topDouble && array.length >= 2) {
 			StringBuilder sb = new StringBuilder();
+			sb.append('.');
+			sb.append(array[array.length - 2]);
+			sb.append('.');
+			sb.append(array[array.length - 1]);
+			return sb.toString();
+		} else if (topDouble && array.length >= 3) {
+			StringBuilder sb = new StringBuilder();
+			sb.append('.');
+			sb.append(array[array.length - 3]);
 			sb.append('.');
 			sb.append(array[array.length - 2]);
 			sb.append('.');
@@ -147,4 +163,8 @@ public class RequestUtils {
 		}
 		return null;
 	}
+
+	private static String[] topDoubleDomains = new String[] { ".com.cn",
+			".edu.cn", ".org.cn", ".net.cn", ".co.uk", "co.kr", "co.jp" };
+
 }
