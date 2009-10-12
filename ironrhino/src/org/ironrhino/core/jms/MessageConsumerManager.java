@@ -7,7 +7,7 @@ public class MessageConsumerManager {
 
 	private List<MessageConsumer> consumers = Collections.EMPTY_LIST;
 
-	public void doConsume(Object object) {
+	public void consume(Object object) {
 		if (consumers.size() == 0)
 			return;
 		for (MessageConsumer mc : consumers) {

@@ -1,54 +1,40 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:amq="http://activemq.apache.org/schema/core"
+<beans default-autowire="byName" xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:p="http://www.springframework.org/schema/p"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
-	<amq:broker useJmx="false" persistent="true" brokerName="localhost">
-		<amq:persistenceAdapter>
-			<amq:jdbcPersistenceAdapter id="jdbcAdapter"
-				dataSource="#dataSource" createTablesOnStartup="true"
-				useDatabaseLock="true" />
-		</amq:persistenceAdapter>
-		<amq:transportConnectors>
-			<amq:transportConnector uri="vm://localhost" />
-		</amq:transportConnectors>
-	</amq:broker>
-	<bean id="destination" class="org.apache.activemq.command.ActiveMQQueue"
-		p:physicalName="org.ironrhino.intranet" />
-	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
-		p:brokerURL="vm://localhost" />
+	xmlns:amqra="http://activemq.apache.org/schema/ra"
+	xmlns:jencks="http://jencks.org/2.0"
+	xmlns:amqpool="http://jencks.org/amqpool/2.0" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://activemq.apache.org/schema/ra http://activemq.apache.org/schema/ra/activemq-ra.xsd http://jencks.org/2.0 http://jencks.org/2.0/jencks.xsd http://jencks.org/amqpool/2.0 http://jencks.org/amqpool/2.0/jencks-amqpool.xsd">
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory">
-			<bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory">
-				<property name="connectionFactory" ref="jmsConnectionFactory" />
+			<bean class="org.springframework.jms.connection.SingleConnectionFactory">
+				<property name="targetConnectionFactory" ref="jmsConnectionFactory" />
 			</bean>
 		</property>
+		<property name="defaultDestinationName" value="org.ironrhino.intranet" />
 		<property name="messageConverter" ref="messageConverterManager" />
 	</bean>
-	<bean id="messageConverterManager" class="org.ironrhino.core.jms.MessageConverterManager" />
-	<bean id="messageProducer" class="org.ironrhino.core.jms.MessageProducer">
-		<property name="template" ref="jmsTemplate" />
-		<property name="destination" ref="destination" />
-	</bean>
-	<bean id="messageConsumerManager" class="org.ironrhino.core.jms.MessageConsumerManager">
-		<property name="consumers">
-			<list>
-				<bean class="org.ironrhino.core.mail.SimpleMailMessageConsumer"
-					autowire="byName" />
-			</list>
-		</property>
-	</bean>
-
 	<bean id="messageListener"
 		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
 		<property name="delegate" ref="messageConsumerManager" />
-		<property name="defaultListenerMethod" value="doConsume" />
+		<property name="defaultListenerMethod" value="consume" />
 		<property name="messageConverter" ref="messageConverterManager" />
 	</bean>
-
-	<bean id="listenerContainer"
-		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-		<property name="connectionFactory" ref="jmsConnectionFactory" />
-		<property name="destination" ref="destination" />
-		<property name="messageListener" ref="messageListener" />
+	<bean id="messageConverterManager" class="org.ironrhino.core.jms.MessageConverterManager"/>
+	<bean id="messageConsumerManager" class="org.ironrhino.core.jms.MessageConsumerManager">
+		<property name="consumers">
+			<list>
+				<bean class="org.ironrhino.core.mail.SimpleMailMessageConsumer" autowire="byName"/>
+			</list>
+		</property>
 	</bean>
+	<amqpool:pool id="jmsConnectionFactory" brokerURL="${activemq.brokerUrl}" maxConnections="8"/>
+	<amqra:resourceAdapter id="activeMQResourceAdapter" serverUrl="tcp://localhost:61616" />
+	<jencks:transactionManager id="jmsTransactionManager"/>
+	<jencks:jcaContainer id="jcaContainer" resourceAdapter="#activeMQResourceAdapter" transactionManager="#jmsTransactionManager" threadPoolSize="2"/>
+	<jencks:connector ref="messageListener" jcaContainer="#jcaContainer">
+		<jencks:activationSpec>
+			<amqra:activationSpec destination="org.ironrhino.intranet" destinationType="javax.jms.Queue" />
+		</jencks:activationSpec>
+	</jencks:connector>
 </beans>

@@ -85,8 +85,6 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	}
 
 	public boolean isActivationRequired(String email) {
-		if (email.endsWith("@gmail.com"))
-			return false;
 		return true;
 	}
 

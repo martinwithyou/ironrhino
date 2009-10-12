@@ -25,15 +25,12 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/freemarker-2.3.15.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/htmlparser-1.6.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/j2ee-management-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javamail-1.4.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jms-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mysql-connector-java-5.1.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/quartz-all-1.6.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/rome-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-2.5.6.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xbean-spring-3.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-annotations-3.4.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/slf4j-api-1.5.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/slf4j-log4j12-1.5.6.jar"/>
@@ -62,5 +59,13 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xwork-core-2.1.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jta-1.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-2.0.5.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jencks-2.2-all.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-ra-5.2.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jencks-amqpool-2.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xbean-spring-3.5.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/geronimo-connector-2.0.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/geronimo-j2ee-management-1.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/geronimo-jta-1.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/geronimo-transaction-2.0.2.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
