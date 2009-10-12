@@ -42,7 +42,7 @@
 		</jencks:activationSpec>
 	</jencks:connector>
 	
-	<!-- comment for use activemq standalone	
+	<!-- comment for use activemq standalone-->	
 	<amq:broker useJmx="false" persistent="true" brokerName="localhost">
 		<amq:persistenceAdapter>
 			<amq:jdbcPersistenceAdapter id="jdbcAdapter"
@@ -53,5 +53,4 @@
 			<amq:transportConnector uri="${activemq.brokerUrl}" />
 		</amq:transportConnectors>
 	</amq:broker>
-	-->
 </beans>
