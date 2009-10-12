@@ -50,7 +50,7 @@
 		class="org.ironrhino.ums.security.UserAuthenticationProcessingFilter"
 		p:usernameParameter="username" p:passwordParameter="password"
 		p:authenticationFailureUrl="/login?error=user.bad.credentials"
-		p:defaultTargetUrl="/" p:filterProcessesUrl="/check"
+		p:defaultTargetUrl="/" p:filterProcessesUrl="/check" p:invalidateSessionOnSuccessfulAuthentication="true"
 		p:serverSideRedirect="true" p:authenticationManager-ref="authenticationManager"
 		p:rememberMeServices-ref="rememberMeServices">
 		<security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER" />
