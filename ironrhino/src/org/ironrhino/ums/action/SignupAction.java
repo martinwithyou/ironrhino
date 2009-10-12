@@ -182,7 +182,6 @@ public class SignupAction extends BaseAction {
 		smm.setTo(user.getFriendlyName() + "<" + user.getEmail() + ">");
 		smm.setSubject(getText("activation.mail.subject"));
 		mailService.send(smm, "template/account_activate.ftl", model);
-		addActionMessage(getText("operation.success"));
 	}
 
 }

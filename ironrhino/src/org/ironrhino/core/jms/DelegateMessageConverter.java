@@ -10,7 +10,7 @@ import javax.jms.Session;
 
 import org.springframework.jms.support.converter.MessageConverter;
 
-public class MessageConverterManager implements MessageConverter {
+public class DelegateMessageConverter implements MessageConverter {
 
 	public final static String CLASS_PROPERTY_NAME = "_class";
 

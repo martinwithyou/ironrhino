@@ -3,10 +3,15 @@ package org.ironrhino.core.jms;
 import java.util.Collections;
 import java.util.List;
 
-public class MessageConsumerManager {
+public class DelegateMessageConsumer implements MessageConsumer {
 
 	private List<MessageConsumer> consumers = Collections.EMPTY_LIST;
 
+	public void setConsumers(List<MessageConsumer> consumers) {
+		this.consumers = consumers;
+	}
+
+	@Override
 	public void consume(Object object) {
 		if (consumers.size() == 0)
 			return;
@@ -16,8 +21,9 @@ public class MessageConsumerManager {
 		}
 	}
 
-	public void setConsumers(List<MessageConsumer> consumers) {
-		this.consumers = consumers;
+	@Override
+	public boolean supports(Class clazz) {
+		return false;
 	}
 
 }

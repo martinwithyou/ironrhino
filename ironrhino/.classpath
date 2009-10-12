@@ -8,7 +8,6 @@
 	<classpathentry kind="lib" path="lib/servlet-api-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/spring-test-2.5.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-core-5.2.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-pool-5.2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/antlr-runtime-3.1.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/asm-all-2.2.2.jar"/>
