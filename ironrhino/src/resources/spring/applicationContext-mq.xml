@@ -1,8 +1,8 @@
 <beans default-autowire="byName"
 	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:amqra="http://activemq.apache.org/schema/ra"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:amq="http://activemq.apache.org/schema/core" xmlns:amqra="http://activemq.apache.org/schema/ra"
 	xmlns:jencks="http://jencks.org/2.0" xmlns:amqpool="http://jencks.org/amqpool/2.0"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://activemq.apache.org/schema/ra http://activemq.apache.org/schema/ra/activemq-ra.xsd http://jencks.org/2.0 http://jencks.org/2.0/jencks.xsd http://jencks.org/amqpool/2.0 http://jencks.org/amqpool/2.0/jencks-amqpool.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd http://activemq.apache.org/schema/ra http://activemq.apache.org/schema/ra/activemq-ra.xsd http://jencks.org/2.0 http://jencks.org/2.0/jencks.xsd http://jencks.org/amqpool/2.0 http://jencks.org/amqpool/2.0/jencks-amqpool.xsd">
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory">
 			<bean class="org.springframework.jms.connection.SingleConnectionFactory">
@@ -41,4 +41,17 @@
 				destinationType="javax.jms.Queue" />
 		</jencks:activationSpec>
 	</jencks:connector>
+	
+	<!-- comment for use activemq standalone	
+	<amq:broker useJmx="false" persistent="true" brokerName="localhost">
+		<amq:persistenceAdapter>
+			<amq:jdbcPersistenceAdapter id="jdbcAdapter"
+				dataSource="#dataSource" createTablesOnStartup="true"
+				useDatabaseLock="true" />
+		</amq:persistenceAdapter>
+		<amq:transportConnectors>
+			<amq:transportConnector uri="${activemq.brokerUrl}" />
+		</amq:transportConnectors>
+	</amq:broker>
+	-->
 </beans>
