@@ -3,7 +3,11 @@ package org.ironrhino.core.dataroute;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -22,7 +26,7 @@ import org.springframework.util.Assert;
 public class GroupedDataSource extends AbstractDataSource implements
 		BeanNameAware {
 
-	private static Log log = LogFactory.getLog(GroupedDataSource.class);
+	private Log log = LogFactory.getLog(getClass());
 
 	private int maxRetryTimes = 3;
 
@@ -47,8 +51,18 @@ public class GroupedDataSource extends AbstractDataSource implements
 
 	private RoundRobin<String> writeRoundRobin;
 
+	private Set<DataSource> deadDataSources = new HashSet<DataSource>();
+
+	private Map<DataSource, Integer> failureCount = new ConcurrentHashMap<DataSource, Integer>();
+
+	private int deadFailureThreshold = 3;
+
 	@Autowired
 	private BeanFactory beanFactory;
+
+	public void setDeadFailureThreshold(int deadFailureThreshold) {
+		this.deadFailureThreshold = deadFailureThreshold;
+	}
 
 	@Override
 	public void setBeanName(String beanName) {
@@ -87,7 +101,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 					new RoundRobin.UsableChecker<String>() {
 						public boolean isUsable(String target) {
 							DataSource ds = writeSlaves.get(target);
-							return ds != null;
+							return !deadDataSources.contains(ds);
 						}
 					});
 		}
@@ -98,7 +112,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 					new RoundRobin.UsableChecker<String>() {
 						public boolean isUsable(String target) {
 							DataSource ds = readSlaves.get(target);
-							return ds != null;
+							return !deadDataSources.contains(ds);
 						}
 					});
 		}
@@ -128,26 +142,71 @@ public class GroupedDataSource extends AbstractDataSource implements
 		try {
 			Connection conn = (username == null) ? ds.getConnection() : ds
 					.getConnection(username, password);
-
+			failureCount.remove(ds);
 			Monitor
 					.add(new Key("dataroute", true, groupName, dbname,
 							"success"));
 			return conn;
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
-			// retry
+			Integer failureTimes = failureCount.get(ds);
+			if (failureTimes == null)
+				failureTimes = 1;
+			else
+				failureTimes += 1;
+			if (failureTimes == deadFailureThreshold) {
+				failureCount.remove(ds);
+				deadDataSources.add(ds);
+				log.error("datasource [" + groupName + ":" + dbname
+						+ "] down!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				Monitor.add(new Key("dataroute", false, groupName, dbname,
+						"down"));
+			} else {
+				failureCount.put(ds, failureTimes);
+			}
 			Monitor
 					.add(new Key("dataroute", true, groupName, dbname, "failed"));
 			if (retryTimes == maxRetryTimes)
 				return null;
 			else
 				return getConnection(username, password, retryTimes + 1);
-
 		}
 	}
 
 	public Connection getConnection() throws SQLException {
 		return getConnection(null, null);
+	}
+
+	public void checkDeadDataSources() {
+		Iterator<DataSource> it = deadDataSources.iterator();
+		while (it.hasNext()) {
+			DataSource ds = it.next();
+			try {
+				Connection conn = ds.getConnection();
+				conn.close();
+				it.remove();
+				String dbname = null;
+				for (Map.Entry<String, DataSource> entry : writeSlaves
+						.entrySet()) {
+					if (entry.getValue() == ds) {
+						dbname = entry.getKey();
+						break;
+					}
+				}
+				if (dbname == null)
+					for (Map.Entry<String, DataSource> entry : readSlaves
+							.entrySet()) {
+						if (entry.getValue() == ds) {
+							dbname = entry.getKey();
+							break;
+						}
+					}
+				log.warn("datasource[" + groupName + ":" + dbname
+						+ "] recovered");
+			} catch (Exception e) {
+				log.debug(e.getMessage(), e);
+			}
+		}
 	}
 
 }
