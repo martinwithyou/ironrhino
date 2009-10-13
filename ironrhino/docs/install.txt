@@ -1,7 +1,6 @@
 ﻿1.install mysql5 or higher,and create database use createdb.sql
-note:change username and password in src/resources/spring/applicationContext-base.xml if necessary (default is root and no password)
 
-2.install JDK5 or higher
+2.install JDK6 or higher
 
 3.install tomcat5 or higher
 
@@ -32,3 +31,4 @@ cp keystore to tomcat's conf directory,and add below xml fragment to server.xml 
 
 6.deploy this webapp and start tomcat
 
+set JAVA_OPTS=-server -Xms256m -Xmx256m -Xmn80m -Xss256k -XX:PermSize=64m -XX:MaxPermSize=64m -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:+UseParNewGC -XX:CMSMaxAbortablePrecleanTime=5 
