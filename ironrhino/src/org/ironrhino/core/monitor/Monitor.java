@@ -100,8 +100,8 @@ public class Monitor {
 		writeThread = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
+					timerLock.lock();
 					try {
-						timerLock.lock();
 						if (condition.await(MonitorSettings.getIntervalUnit(),
 								TimeUnit.SECONDS))
 							log.debug("await returns true");

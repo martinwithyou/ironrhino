@@ -139,8 +139,8 @@ public class SearchStat {
 		thread = new Thread(new Runnable() {
 			public void run() {
 				while (true) {
+					timerLock.lock();
 					try {
-						timerLock.lock();
 						if (condition.await(TIME_INTERVAL, TimeUnit.SECONDS))
 							log.debug("await returns true");
 					} catch (Exception e) {
