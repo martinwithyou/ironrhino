@@ -25,7 +25,12 @@ public class Blowfish {
 	private static SecretKeySpec secretKeySpec = null;
 	private static IvParameterSpec ivParameterSpec = null;
 	// thread safe
-	private static final ThreadLocal<Blowfish> pool = new ThreadLocal<Blowfish>();
+	private static final ThreadLocal<Blowfish> pool = new ThreadLocal<Blowfish>() {
+		@Override
+		protected Blowfish initialValue() {
+			return new Blowfish();
+		}
+	};
 	private static String key = "youcannotguessme";
 	Cipher enCipher;
 	Cipher deCipher;
@@ -62,20 +67,11 @@ public class Blowfish {
 		}
 	}
 
-	public static Blowfish get() {
-		Blowfish encrypter = pool.get();
-		if (encrypter == null) {
-			encrypter = new Blowfish();
-			pool.set(encrypter);
-		}
-		return encrypter;
-	}
-
 	public static String encrypt(String str) {
 		if (str == null)
 			return null;
 		try {
-			return new String(Base64.encodeBase64(get().encrypt(
+			return new String(Base64.encodeBase64(pool.get().encrypt(
 					str.getBytes("UTF-8"))), "UTF-8");
 		} catch (Exception ex) {
 			log.error("encrypt exception!", ex);
@@ -87,7 +83,7 @@ public class Blowfish {
 		if (str == null)
 			return null;
 		try {
-			return new String(get().decrypt(
+			return new String(pool.get().decrypt(
 					Base64.decodeBase64(str.getBytes("UTF-8"))), "UTF-8");
 		} catch (Exception ex) {
 			log.error("decrypt exception!", ex);
@@ -117,7 +113,7 @@ public class Blowfish {
 
 	public static String encryptBytesToString(byte[] bytes) {
 		try {
-			return new String(Base64.encodeBase64(get().encrypt(bytes)),
+			return new String(Base64.encodeBase64(pool.get().encrypt(bytes)),
 					"UTF-8");
 		} catch (Exception ex) {
 			log.error("decrypt exception!", ex);
@@ -128,8 +124,8 @@ public class Blowfish {
 	public static String encryptBytesToString(byte[] bytes, int offset,
 			int length) {
 		try {
-			return new String(Base64.encodeBase64(get().encrypt(bytes, offset,
-					length)), "UTF-8");
+			return new String(Base64.encodeBase64(pool.get().encrypt(bytes,
+					offset, length)), "UTF-8");
 		} catch (Exception ex) {
 			log.error("decrypt exception!", ex);
 			return "";
@@ -138,7 +134,8 @@ public class Blowfish {
 
 	public static byte[] decryptStringToBytes(String str) {
 		try {
-			return get().decrypt(Base64.decodeBase64(str.getBytes("UTF-8")));
+			return pool.get().decrypt(
+					Base64.decodeBase64(str.getBytes("UTF-8")));
 		} catch (Exception ex) {
 			log.error("decrypt exception!", ex);
 			return new byte[0];
