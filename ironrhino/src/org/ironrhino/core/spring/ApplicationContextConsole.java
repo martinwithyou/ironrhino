@@ -10,8 +10,8 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.metadata.PostReset;
-import org.ironrhino.core.metadata.PreReset;
+import org.ironrhino.core.metadata.PostPropertiesReset;
+import org.ironrhino.core.metadata.PrePropertiesReset;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.mvel2.MVEL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,14 +68,14 @@ public class ApplicationContextConsole {
 			}
 			if (bean != null) {
 				Method m = AnnotationUtils.getAnnotatedMethod(bean.getClass(),
-						PreReset.class);
+						PrePropertiesReset.class);
 				if (m != null)
 					m.invoke(bean, new Object[0]);
 			}
 			Object ret = MVEL.eval(expression, beans);
 			if (bean != null) {
 				Method m = AnnotationUtils.getAnnotatedMethod(bean.getClass(),
-						PostReset.class);
+						PostPropertiesReset.class);
 				if (m != null)
 					m.invoke(bean, new Object[0]);
 			}
