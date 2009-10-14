@@ -10,6 +10,8 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ironrhino.core.metadata.PostReset;
+import org.ironrhino.core.util.AnnotationUtils;
 import org.mvel2.MVEL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -58,7 +60,18 @@ public class ApplicationContextConsole {
 			}
 		}
 		try {
-			return MVEL.eval(expression, beans);
+			Object ret = MVEL.eval(expression, beans);
+			if (expression.indexOf('=') > 0) {
+				Object bean = beans.get(expression.substring(0, expression
+						.indexOf('.')));
+				if (bean != null) {
+					Method m = AnnotationUtils.getAnnotatedMethod(bean
+							.getClass(), PostReset.class);
+					if (m != null)
+						m.invoke(bean, new Object[0]);
+				}
+			}
+			return ret;
 		} catch (Exception e) {
 			throw e;
 		}
