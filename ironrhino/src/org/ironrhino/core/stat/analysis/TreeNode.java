@@ -1,11 +1,11 @@
-package org.ironrhino.core.monitor.analysis;
+package org.ironrhino.core.stat.analysis;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ironrhino.core.monitor.Key;
-import org.ironrhino.core.monitor.Value;
+import org.ironrhino.core.stat.Key;
+import org.ironrhino.core.stat.Value;
 
 public class TreeNode implements Serializable {
 

@@ -14,8 +14,8 @@ import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.monitor.Key;
-import org.ironrhino.core.monitor.Monitor;
+import org.ironrhino.core.stat.Key;
+import org.ironrhino.core.stat.StatLog;
 import org.ironrhino.core.util.RoundRobin;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanNameAware;
@@ -143,7 +143,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 			Connection conn = (username == null) ? ds.getConnection() : ds
 					.getConnection(username, password);
 			failureCount.remove(ds);
-			Monitor
+			StatLog
 					.add(new Key("dataroute", true, groupName, dbname,
 							"success"));
 			return conn;
@@ -159,12 +159,12 @@ public class GroupedDataSource extends AbstractDataSource implements
 				deadDataSources.add(ds);
 				log.error("datasource [" + groupName + ":" + dbname
 						+ "] down!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				Monitor.add(new Key("dataroute", false, groupName, dbname,
+				StatLog.add(new Key("dataroute", false, groupName, dbname,
 						"down"));
 			} else {
 				failureCount.put(ds, failureTimes);
 			}
-			Monitor
+			StatLog
 					.add(new Key("dataroute", true, groupName, dbname, "failed"));
 			if (retryTimes == maxRetryTimes)
 				return null;

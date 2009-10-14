@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ironrhino.common.support.MonitorControl;
+import org.ironrhino.common.support.StatControl;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.metadata.JsonSerializerType;
-import org.ironrhino.core.monitor.Key;
-import org.ironrhino.core.monitor.analysis.TreeNode;
 import org.ironrhino.core.openflashchart.Chart;
+import org.ironrhino.core.stat.Key;
+import org.ironrhino.core.stat.analysis.TreeNode;
 import org.ironrhino.core.struts.BaseAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,7 +36,7 @@ public class MonitorAction extends BaseAction {
 	private Chart chart;
 
 	@Autowired
-	private transient MonitorControl monitorControl;
+	private transient StatControl statControl;
 
 	public String getVtype() {
 		return vtype;
@@ -90,12 +90,12 @@ public class MonitorAction extends BaseAction {
 	public String execute() {
 		try {
 			if (from != null && to != null) {
-				result = monitorControl.getResult(from, to);
+				result = statControl.getResult(from, to);
 			} else {
 				Date today = new Date();
 				if (date == null || date.after(today))
 					date = today;
-				result = monitorControl.getResult(date);
+				result = statControl.getResult(date);
 			}
 		} catch (Exception e) {
 			result = new HashMap<String, List<TreeNode>>();
@@ -109,7 +109,7 @@ public class MonitorAction extends BaseAction {
 
 	@JsonConfig(root = "chart", serializer = JsonSerializerType.GSON)
 	public String data() {
-		chart = monitorControl.getChart(Key.fromString(getUid()), date, vtype,
+		chart = statControl.getChart(Key.fromString(getUid()), date, vtype,
 				ctype);
 		return JSON;
 	}

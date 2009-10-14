@@ -1,4 +1,4 @@
-package org.ironrhino.core.monitor.analysis;
+package org.ironrhino.core.stat.analysis;
 
 
 public class TreeWalker {

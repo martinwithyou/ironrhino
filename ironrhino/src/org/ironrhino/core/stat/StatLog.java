@@ -1,4 +1,4 @@
-package org.ironrhino.core.monitor;
+package org.ironrhino.core.stat;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -21,13 +21,13 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
-public class Monitor {
+public class StatLog {
 
 	private static final Logger statLogger = Logger.getLogger("Stat");
 
 	private static final Logger systemLogger = Logger.getLogger("System");
 
-	private static final Log log = LogFactory.getLog(Monitor.class);
+	private static final Log log = LogFactory.getLog(StatLog.class);
 
 	private static final Lock timerLock = new ReentrantLock();
 
@@ -47,24 +47,24 @@ public class Monitor {
 	private static FileAppender systemLogAppender;
 
 	static {
-		PatternLayout layout = new PatternLayout(MonitorSettings.LAYOUT);
+		PatternLayout layout = new PatternLayout(StatLogSettings.LAYOUT);
 		FileAppender appender = null;
 		try {
-			appender = new DailyRollingFileAppender(layout, MonitorSettings
-					.getLogFile(MonitorSettings.STAT_LOG_FILE_NAME),
-					MonitorSettings.DATE_STYLE);
+			appender = new DailyRollingFileAppender(layout, StatLogSettings
+					.getLogFile(StatLogSettings.STAT_LOG_FILE_NAME),
+					StatLogSettings.DATE_STYLE);
 			appender.setAppend(true);
-			appender.setEncoding(MonitorSettings.ENCODING);
+			appender.setEncoding(StatLogSettings.ENCODING);
 			appender.activateOptions();
 			statLogger.addAppender(appender);
 			statLogger.setLevel(Level.INFO);
 			statLogger.setAdditivity(false);
 
-			appender = new DailyRollingFileAppender(layout, MonitorSettings
-					.getLogFile(MonitorSettings.SYSTEM_LOG_FILE_NAME),
-					MonitorSettings.DATE_STYLE);
+			appender = new DailyRollingFileAppender(layout, StatLogSettings
+					.getLogFile(StatLogSettings.SYSTEM_LOG_FILE_NAME),
+					StatLogSettings.DATE_STYLE);
 			appender.setAppend(true);
-			appender.setEncoding(MonitorSettings.ENCODING);
+			appender.setEncoding(StatLogSettings.ENCODING);
 			appender.activateOptions();
 			systemLogger.addAppender(appender);
 			systemLogger.setLevel(Level.INFO);
@@ -102,7 +102,7 @@ public class Monitor {
 				while (true) {
 					timerLock.lock();
 					try {
-						if (condition.await(MonitorSettings.getIntervalUnit(),
+						if (condition.await(StatLogSettings.getIntervalUnit(),
 								TimeUnit.SECONDS))
 							log.debug("await returns true");
 					} catch (Exception e) {
@@ -110,11 +110,11 @@ public class Monitor {
 					} finally {
 						timerLock.unlock();
 					}
-					Monitor.write();
+					StatLog.write();
 				}
 			}
 
-		}, MonitorSettings.WRITETHREAD_NAME);
+		}, StatLogSettings.WRITETHREAD_NAME);
 		writeThread.start();
 	}
 
@@ -129,7 +129,7 @@ public class Monitor {
 			Key key = entry.getKey();
 			Value value = entry.getValue();
 			if (((!checkInterval || (current - key.getLastWriteTime())
-					/ MonitorSettings.getIntervalUnit() > key
+					/ StatLogSettings.getIntervalUnit() > key
 					.getIntervalMultiple()))
 					&& (value.getLongValue() > 0 || value.getDoubleValue() > 0)) {
 				key.setLastWriteTime(current);
@@ -144,20 +144,20 @@ public class Monitor {
 			value.add(-entry.getValue().getLongValue(), -entry.getValue()
 					.getDoubleValue());
 		}
-		if (currentSystemInterval % MonitorSettings.getSystemIntervalMultiple() == 0)
+		if (currentSystemInterval % StatLogSettings.getSystemIntervalMultiple() == 0)
 			printSystemInfo();
 		currentSystemInterval++;
-		if (currentSystemInterval > MonitorSettings.getSystemIntervalMultiple())
-			currentSystemInterval -= MonitorSettings
+		if (currentSystemInterval > StatLogSettings.getSystemIntervalMultiple())
+			currentSystemInterval -= StatLogSettings
 					.getSystemIntervalMultiple();
 	}
 
 	private static void output(Logger logger, Key key, Value value) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(key);
-		sb.append(MonitorSettings.TOKEN);
+		sb.append(StatLogSettings.TOKEN);
 		sb.append(value);
-		sb.append(MonitorSettings.TOKEN);
+		sb.append(StatLogSettings.TOKEN);
 		sb.append(sysdate());
 		logger.info(sb.toString());
 	}

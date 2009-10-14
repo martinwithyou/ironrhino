@@ -35,7 +35,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		super.delete(user);
 	}
 
-	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','miss'})}")
+	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.stat.StatLog.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.stat.StatLog.add({'cache','user','miss'})}")
 	@Transactional(readOnly = true)
 	public User loadUserByUsername(String username) {
 		if (StringUtils.isEmpty(username))
@@ -60,7 +60,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		user.setAuthorities(auths.toArray(new GrantedAuthority[auths.size()]));
 	}
 
-	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','miss'})}")
+	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.stat.StatLog.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.stat.StatLog.add({'cache','user','miss'})}")
 	@Transactional(readOnly = true)
 	public User getByUsername(String username) {
 		if (StringUtils.isEmpty(username))
@@ -68,7 +68,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		return getByNaturalId(true, "username", username);
 	}
 
-	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','user','miss'})}")
+	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.stat.StatLog.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.stat.StatLog.add({'cache','user','miss'})}")
 	@Transactional(readOnly = true)
 	public User getByEmail(String email) {
 		if (StringUtils.isEmpty(email))

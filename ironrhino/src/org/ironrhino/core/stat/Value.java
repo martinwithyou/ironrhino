@@ -1,4 +1,4 @@
-package org.ironrhino.core.monitor;
+package org.ironrhino.core.stat;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;

@@ -1,8 +1,8 @@
-package org.ironrhino.core.monitor.analysis;
+package org.ironrhino.core.stat.analysis;
 
 import java.util.Iterator;
 
-import org.ironrhino.core.monitor.KeyValuePair;
+import org.ironrhino.core.stat.KeyValuePair;
 
 public interface Analyzer<T> {
 

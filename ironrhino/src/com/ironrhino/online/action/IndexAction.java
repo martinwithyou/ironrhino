@@ -1,7 +1,7 @@
 package com.ironrhino.online.action;
 
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.monitor.Monitor;
+import org.ironrhino.core.stat.StatLog;
 import org.ironrhino.core.struts.BaseAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +21,7 @@ public class IndexAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		Monitor.add("view", "index");
+		StatLog.add("view", "index");
 		return SUCCESS;
 	}
 

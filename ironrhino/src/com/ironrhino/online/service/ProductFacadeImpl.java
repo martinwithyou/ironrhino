@@ -191,7 +191,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	}
 
 	@Override
-	@CheckCache(key = "${args[0]}", namespace = "product", onHit = "${org.ironrhino.core.monitor.Monitor.add({'cache','product','hit'})}", onMiss = "${org.ironrhino.core.monitor.Monitor.add({'cache','product','miss'})}")
+	@CheckCache(key = "${args[0]}", namespace = "product", onHit = "${org.ironrhino.core.stat.StatLog.add({'cache','product','hit'})}", onMiss = "${org.ironrhino.core.stat.StatLog.add({'cache','product','miss'})}")
 	public Product getProductByCode(String code) {
 		DetachedCriteria dc = prepareDetachedCriteria();
 		dc.add(Restrictions.naturalId().set("code", code));

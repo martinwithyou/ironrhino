@@ -19,14 +19,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Stat;
-import org.ironrhino.core.monitor.Key;
-import org.ironrhino.core.monitor.KeyValuePair;
-import org.ironrhino.core.monitor.Value;
-import org.ironrhino.core.monitor.analysis.AbstractAnalyzer;
-import org.ironrhino.core.monitor.analysis.Analyzer;
-import org.ironrhino.core.monitor.analysis.CumulativeAnalyzer;
-import org.ironrhino.core.monitor.analysis.PeriodAnalyzer;
-import org.ironrhino.core.monitor.analysis.TreeNode;
 import org.ironrhino.core.openflashchart.Chart;
 import org.ironrhino.core.openflashchart.Text;
 import org.ironrhino.core.openflashchart.axis.XAxis;
@@ -34,12 +26,20 @@ import org.ironrhino.core.openflashchart.axis.YAxis;
 import org.ironrhino.core.openflashchart.elements.BarChart;
 import org.ironrhino.core.openflashchart.elements.LineChart;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.stat.Key;
+import org.ironrhino.core.stat.KeyValuePair;
+import org.ironrhino.core.stat.Value;
+import org.ironrhino.core.stat.analysis.AbstractAnalyzer;
+import org.ironrhino.core.stat.analysis.Analyzer;
+import org.ironrhino.core.stat.analysis.CumulativeAnalyzer;
+import org.ironrhino.core.stat.analysis.PeriodAnalyzer;
+import org.ironrhino.core.stat.analysis.TreeNode;
 import org.ironrhino.core.util.CompositeIterator;
 import org.ironrhino.core.util.DateUtils;
 import org.springframework.stereotype.Component;
 
-@Component("monitorControl")
-public class DefaultMonitorControl implements MonitorControl {
+@Component("statControl")
+public class StatControl {
 
 	protected Log log = LogFactory.getLog(getClass());
 

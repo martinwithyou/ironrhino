@@ -1,4 +1,4 @@
-package org.ironrhino.core.monitor.analysis;
+package org.ironrhino.core.stat.analysis;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.ironrhino.core.monitor.Key;
-import org.ironrhino.core.monitor.KeyValuePair;
-import org.ironrhino.core.monitor.Value;
+import org.ironrhino.core.stat.Key;
+import org.ironrhino.core.stat.KeyValuePair;
+import org.ironrhino.core.stat.Value;
 import org.ironrhino.core.util.NumberUtils;
 
 public class CumulativeAnalyzer extends

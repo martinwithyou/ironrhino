@@ -1,4 +1,4 @@
-package org.ironrhino.core.monitor.analysis;
+package org.ironrhino.core.stat.analysis;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -15,10 +15,10 @@ import java.util.TreeMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.monitor.Key;
-import org.ironrhino.core.monitor.KeyValuePair;
-import org.ironrhino.core.monitor.MonitorSettings;
-import org.ironrhino.core.monitor.Value;
+import org.ironrhino.core.stat.Key;
+import org.ironrhino.core.stat.KeyValuePair;
+import org.ironrhino.core.stat.StatLogSettings;
+import org.ironrhino.core.stat.Value;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.TextFileIterator;
 
@@ -71,7 +71,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		for (File f : files)
 			if (!f.exists())
 				throw new FileNotFoundException(f.getAbsolutePath());
-		return new TextFileIterator<KeyValuePair>(MonitorSettings.ENCODING,
+		return new TextFileIterator<KeyValuePair>(StatLogSettings.ENCODING,
 				files) {
 			@Override
 			protected KeyValuePair transform(String line, File f) {
@@ -128,13 +128,13 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		final Map<String, File> map = new TreeMap<String, File>();
 		boolean today = DateUtils.isToday(date);
 		StringBuilder sb = new StringBuilder();
-		sb.append(MonitorSettings.SEPARATOR);
-		sb.append(MonitorSettings.STAT_LOG_FILE_NAME);
+		sb.append(StatLogSettings.SEPARATOR);
+		sb.append(StatLogSettings.STAT_LOG_FILE_NAME);
 		if (!today)
-			sb.append(new SimpleDateFormat(MonitorSettings.DATE_STYLE)
+			sb.append(new SimpleDateFormat(StatLogSettings.DATE_STYLE)
 					.format(date));
 		final String suffix = sb.toString();
-		File dir = MonitorSettings.getLogFileDirectory();
+		File dir = StatLogSettings.getLogFileDirectory();
 		dir.listFiles(new FileFilter() {
 			public boolean accept(File f) {
 				String name = f.getName();
@@ -154,6 +154,6 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
 	public static String getHost(File file) {
 		String name = file.getName();
-		return name.substring(0, name.lastIndexOf(MonitorSettings.SEPARATOR));
+		return name.substring(0, name.lastIndexOf(StatLogSettings.SEPARATOR));
 	}
 }

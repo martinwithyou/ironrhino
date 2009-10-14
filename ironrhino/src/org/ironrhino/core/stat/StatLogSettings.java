@@ -1,4 +1,4 @@
-package org.ironrhino.core.monitor;
+package org.ironrhino.core.stat;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -7,9 +7,9 @@ import java.net.UnknownHostException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class MonitorSettings {
+public class StatLogSettings {
 
-	public static final String WRITETHREAD_NAME = "MONITOR-WRITE";
+	public static final String WRITETHREAD_NAME = "STATLOG-WRITE";
 
 	public static final String ENCODING = "UTF-8";
 
@@ -21,13 +21,13 @@ public class MonitorSettings {
 
 	public static final String SEPARATOR = "_";
 
-	public static final String FILE_DIRECTORY = "/logs/monitor";
+	public static final String FILE_DIRECTORY = "/logs/stat";
 
 	public static final String STAT_LOG_FILE_NAME = "stat.log";
 
 	public static final String SYSTEM_LOG_FILE_NAME = "system.log";
 
-	private static final Log log = LogFactory.getLog(MonitorSettings.class);
+	private static final Log log = LogFactory.getLog(StatLogSettings.class);
 
 	private static long intervalUnit = 60; // senconds
 
@@ -53,7 +53,7 @@ public class MonitorSettings {
 
 	public static void setIntervalUnit(long intervalUnit) {
 		if (intervalUnit > 0)
-			MonitorSettings.intervalUnit = intervalUnit;
+			StatLogSettings.intervalUnit = intervalUnit;
 	}
 
 	public static long getSystemIntervalMultiple() {
@@ -62,7 +62,7 @@ public class MonitorSettings {
 
 	public static void setSystemIntervalMultiple(long systemIntervalMultiple) {
 		if (systemIntervalMultiple > 0)
-			MonitorSettings.systemIntervalMultiple = systemIntervalMultiple;
+			StatLogSettings.systemIntervalMultiple = systemIntervalMultiple;
 	}
 
 	public static File getLogFileDirectory() {

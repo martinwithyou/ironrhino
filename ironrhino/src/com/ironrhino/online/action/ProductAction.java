@@ -15,8 +15,8 @@ import org.ironrhino.common.model.AggregateResult;
 import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.JsonConfig;
-import org.ironrhino.core.monitor.Monitor;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.stat.StatLog;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.RequestUtils;
@@ -149,9 +149,9 @@ public class ProductAction extends BaseAction {
 			category = categoryTreeControl.getCategoryTree()
 					.getDescendantOrSelfByCode(cateCode);
 		if (StringUtils.isNotBlank(cateCode))
-			Monitor.add("view", "list", cateCode);
+			StatLog.add("view", "list", cateCode);
 		else
-			Monitor.add("view", "list", "all");
+			StatLog.add("view", "list", "all");
 		return LIST;
 	}
 
@@ -206,7 +206,7 @@ public class ProductAction extends BaseAction {
 			resultPage.addOrder(Order.desc("commentDate"));
 			resultPage = baseManager.getResultPage(resultPage);
 		}
-		Monitor.add("view", "detail", product.getCode());
+		StatLog.add("view", "detail", product.getCode());
 		return VIEW;
 	}
 
