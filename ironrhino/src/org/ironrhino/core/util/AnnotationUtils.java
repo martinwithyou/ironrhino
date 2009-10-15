@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,9 +20,10 @@ public class AnnotationUtils {
 
 	public static Method getAnnotatedMethod(Class clazz,
 			Class<? extends Annotation> annotaionClass) {
-		Set<Method> set = getAnnotatedMethods(clazz, annotaionClass);
-		if (set != null)
-			return set.iterator().next();
+		Iterator<Method> it = getAnnotatedMethods(clazz, annotaionClass)
+				.iterator();
+		if (it.hasNext())
+			return it.next();
 		return null;
 	}
 
