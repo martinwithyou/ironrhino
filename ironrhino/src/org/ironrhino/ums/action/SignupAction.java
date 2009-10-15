@@ -168,7 +168,7 @@ public class SignupAction extends BaseAction {
 			smm.setTo(user.getFriendlyName() + "<" + user.getEmail() + ">");
 			smm.setSubject("this is your username and password");
 			mailService.send(smm, "template/account_forgot.ftl", model);
-			addActionMessage(getText("operation.success"));
+			addActionMessage(getText("operate.success"));
 		}
 		return "forgot";
 	}

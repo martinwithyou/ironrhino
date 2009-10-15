@@ -428,8 +428,8 @@ Observation.richtable = function() {
 };
 Initialization.richtable = function() {
 	if ($('form.richtable').length > 0) {
-		var canResizeColWidth = $('form.richtable').attr('canResizeColWidth');
-		if (canResizeColWidth == "true") {
+		var resizable = $('form.richtable').attr('resizable');
+		if (resizable == "true") {
 			document.onmousemove = ECSideUtil.DoResize;
 			document.onmouseup = ECSideUtil.EndResize;
 			document.body.ondrag = function() {

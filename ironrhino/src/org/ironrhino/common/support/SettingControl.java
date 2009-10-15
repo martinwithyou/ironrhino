@@ -1,57 +1,43 @@
 package org.ironrhino.common.support;
 
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.criterion.Order;
-import org.ironrhino.common.model.Setting;
-import org.ironrhino.core.event.EntityOperationEvent;
-import org.ironrhino.core.event.EntityOperationType;
-import org.ironrhino.core.service.BaseManager;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component("settingControl")
-public class SettingControl implements ApplicationListener {
+public class SettingControl {
 
 	protected Log log = LogFactory.getLog(getClass());
 
-	private Map<String, Setting> settings;
-
-	/**
-	 * Autowired will cause exception when
-	 * org.ironrhino.ums.servlet.UserAuthenticationProcessingFilter.save(final
-	 * LoginRecord loginRecord),bloody weird
-	 */
-	private BaseManager<Setting> baseManager;
-
-	public void setBaseManager(BaseManager<Setting> baseManager) {
-		this.baseManager = baseManager;
-	}
+	private Map<String, String> settings = new TreeMap<String, String>();
 
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
-		refresh();
+		load();
 	}
 
-	public void refresh() {
-		baseManager.setEntityClass(Setting.class);
-		List<Setting> list = baseManager.getAll(Order.asc("key"));
-		settings = new ConcurrentHashMap<String, Setting>();
-		for (Setting s : list)
-			settings.put(s.getKey(), s);
+	public void load() {
+		settings.clear();
+		// TODO init
+		settings.put("adfaf", "1");
+		settings.put("haha", "hehe");
+		settings.put("haha1", "hehe");
+		settings.put("haha2", "hehe");
+		settings.put("haha3", "hehe");
 	}
 
-	public Setting get(String key) {
-		return settings.get(key);
+	public Map<String, String> getAll() {
+		return settings;
+	}
+
+	public void set(String key, String value) {
+		settings.put(key, value);
 	}
 
 	public int getIntValue(String key) {
@@ -59,9 +45,31 @@ public class SettingControl implements ApplicationListener {
 	}
 
 	public int getIntValue(String key, int defaultValue) {
-		Setting s = settings.get(key);
-		if (s != null && StringUtils.isNotBlank(s.getValue()))
-			return Integer.parseInt(s.getValue().trim());
+		String s = settings.get(key);
+		if (StringUtils.isNotBlank(s))
+			return Integer.parseInt(s.trim());
+		return defaultValue;
+	}
+
+	public long getLongValue(String key) {
+		return getLongValue(key, 0);
+	}
+
+	public long getLongValue(String key, long defaultValue) {
+		String s = settings.get(key);
+		if (StringUtils.isNotBlank(s))
+			return Long.parseLong(s.trim());
+		return defaultValue;
+	}
+
+	public double geDoubleValue(String key) {
+		return getDoubleValue(key, 0);
+	}
+
+	public double getDoubleValue(String key, double defaultValue) {
+		String s = settings.get(key);
+		if (StringUtils.isNotBlank(s))
+			return Double.parseDouble(s.trim());
 		return defaultValue;
 	}
 
@@ -70,9 +78,9 @@ public class SettingControl implements ApplicationListener {
 	}
 
 	public boolean getBooleanValue(String key, boolean defaultValue) {
-		Setting s = settings.get(key);
-		if (s != null && StringUtils.isNotBlank(s.getValue()))
-			return Boolean.parseBoolean(s.getValue().trim());
+		String s = settings.get(key);
+		if (StringUtils.isNotBlank(s))
+			return Boolean.parseBoolean(s.trim());
 		return defaultValue;
 	}
 
@@ -81,35 +89,18 @@ public class SettingControl implements ApplicationListener {
 	}
 
 	public String getStringValue(String key, String defaultValue) {
-		Setting s = settings.get(key);
-		if (s != null && StringUtils.isNotBlank(s.getValue()))
-			return s.getValue().trim();
+		String s = settings.get(key);
+		if (StringUtils.isNotBlank(s))
+			return s.trim();
 		return defaultValue;
 	}
 
 	public String[] getStringArray(String key) {
-		Setting s = settings.get(key);
-		if (s != null && StringUtils.isNotBlank(s.getValue()))
-			return s.getValue().trim().split(",");
+		String s = settings.get(key);
+		if (StringUtils.isNotBlank(s))
+			return org.springframework.util.StringUtils
+					.commaDelimitedListToStringArray(s);
 		return new String[0];
 	}
 
-	public void onApplicationEvent(ApplicationEvent event) {
-		if (event instanceof EntityOperationEvent) {
-			EntityOperationEvent ev = (EntityOperationEvent) event;
-			if (ev.getEntity() instanceof Setting) {
-				Setting s = (Setting) ev.getEntity();
-				if (ev.getType() == EntityOperationType.CREATE) {
-					settings.put(s.getKey(), s);
-				} else {
-					Setting ss = settings.get(s.getKey());
-					if (ss != null)
-						if (ev.getType() == EntityOperationType.UPDATE)
-							BeanUtils.copyProperties(s, ss);
-						else if (ev.getType() == EntityOperationType.DELETE)
-							settings.remove(ss.getKey());
-				}
-			}
-		}
-	}
 }

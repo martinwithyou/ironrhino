@@ -86,7 +86,7 @@ public class CartAction extends BaseAction {
 			}
 			sb.deleteCharAt(sb.length() - 1);
 			sb.append(")");
-			addActionMessage(getText("operation.success"));
+			addActionMessage(getText("operate.success"));
 
 		}
 		return SUCCESS;
@@ -99,14 +99,14 @@ public class CartAction extends BaseAction {
 			for (OrderItem item : items)
 				cart.update(item.getProductCode(), item.getQuantity());
 		}
-		addActionMessage(getText("operation.success"));
+		addActionMessage(getText("operate.success"));
 		return SUCCESS;
 	}
 
 	@SkipValidation
 	public String clear() {
 		cart.clear();
-		addActionMessage(getText("operation.success"));
+		addActionMessage(getText("operate.success"));
 		return SUCCESS;
 	}
 

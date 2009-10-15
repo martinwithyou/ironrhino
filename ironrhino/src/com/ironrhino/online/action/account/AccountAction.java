@@ -187,7 +187,7 @@ public class AccountAction extends BaseAction {
 		String url = "/signup?email=" + user.getEmail();
 		model.put("url", url);
 		mailService.send(smm, "template/account_invite.ftl", model);
-		addActionMessage(getText("operation.success"));
+		addActionMessage(getText("operate.success"));
 		return "invite";
 	}
 
@@ -200,7 +200,7 @@ public class AccountAction extends BaseAction {
 		smm.setTo(user.getFriendlyName() + "<" + user.getEmail() + ">");
 		smm.setSubject(getText("activation.mail.subject"));
 		mailService.send(smm, "template/account_activate.ftl", model);
-		addActionMessage(getText("operation.success"));
+		addActionMessage(getText("operate.success"));
 	}
 
 }

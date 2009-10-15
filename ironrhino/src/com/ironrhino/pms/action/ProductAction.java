@@ -233,7 +233,7 @@ public class ProductAction extends BaseAction {
 		if (product != null && categoryId != null) {
 			product.setCategory(categoryManager.get(categoryId));
 			productManager.save(product);
-			addActionMessage(getText("operation.success"));
+			addActionMessage(getText("operate.success"));
 		}
 		return "category";
 	}

@@ -4,16 +4,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Region;
-import org.ironrhino.common.model.Setting;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ironrhino.online.service.ProductFacade;
 import com.ironrhino.pms.model.Category;
 import com.ironrhino.pms.model.Product;
 import com.ironrhino.pms.model.ProductStatus;
@@ -26,12 +23,7 @@ public class InitData {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				new String[] { "applicationContext-common.xml",
 						"resources/spring/applicationContext-datasource.xml",
-						"resources/spring/applicationContext-aop.xml",
-						"resources/spring/applicationContext-hibernate.xml",
-						"resources/spring/applicationContext-service-ums.xml",
-						"resources/spring/applicationContext-service-pms.xml",
-						"resources/spring/applicationContext-service-online.xml" });
-
+						"resources/spring/applicationContext-hibernate.xml" });
 		UserManager userManager = (UserManager) ctx.getBean("userManager");
 		User test = new User();
 		test.setUsername("test");
@@ -83,9 +75,6 @@ public class InitData {
 		}
 
 		BaseManager baseManager = (BaseManager) ctx.getBean("baseManager");
-		baseManager.save(new Setting(
-				ProductFacade.SETTING_KEY_RECOMMENDED_PRODUCT, StringUtils
-						.join(recommendedProducts, ",")));
 
 		Region[] regions = new Region[10];
 		for (int i = 0; i < regions.length; i++) {
