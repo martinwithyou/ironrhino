@@ -88,7 +88,8 @@ ${value?xhtml}
 <#if !readonly>
 <td class="include_if_edited">
 <#if buttons!="">
-${buttons?replace("#id",rowid)}
+<#local temp=buttons?interpret>
+<@temp/>
 <#else>
 <#if celleditable>
 <@button onclick="Richtable.save('${rowid}')" text=action.getText('save')/>
@@ -129,7 +130,8 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 <td class="extendTool" align="center">
 <div style="text-align: center; width: 100%; padding: 3px;" class="richtable">
 <#if buttons!="">
-${buttons}
+<#local temp=buttons?interpret>
+<@temp/>
 <#else>
 <#if !readonly>
 <#if createable><@button onclick="Richtable.input()" text=action.getText('create')/></#if>

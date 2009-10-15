@@ -5,7 +5,7 @@
 </head>
 <body>
 <#assign config={"code":{},"name":{},"tagsAsString":{"trimPrefix":true,"cellEdit":"input","class":"include_if_edited"}}>
-<#assign actionColumnButtons=btn(action.getText('save'),"Richtable.save('#id')")+btn(action.getText('edit'),"Richtable.input('#id')")+btn(action.getText('picture'),"Richtable.open(Richtable.getUrl('picture','#id'))")+btn(action.getText('attribute'),"Richtable.open(Richtable.getUrl('attribute','#id'))")+btn(action.getText('category'),"Richtable.open(Richtable.getUrl('category','#id'),true,true)")+btn(action.getText('delete'),"Richtable.del('#id')")>
+<#assign actionColumnButtons=btn(action.getText('save'),r"Richtable.save('${rowid}')")+btn(action.getText('edit'),r"Richtable.input('${rowid}')")+btn(action.getText('picture'),r"Richtable.open(Richtable.getUrl('picture','${rowid}'))")+btn(action.getText('attribute'),r"Richtable.open(Richtable.getUrl('attribute','${rowid}'))")+btn(action.getText('category'),r"Richtable.open(Richtable.getUrl('category','${rowid}'),true,true)")+btn(action.getText('delete'),r"Richtable.del('${rowid}')")>
 <@richtable entityName="product" config=config actionColumnWidth="250px" actionColumnButtons=actionColumnButtons/>
 </body>
 </html></#escape>
