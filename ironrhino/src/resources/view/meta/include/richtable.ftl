@@ -11,7 +11,11 @@
 <@rttbodytrstart rowid=entity.id! odd=(index%2==1)  readonly=readonly/>
 	<#list config?keys as name>
 		<#local cellName=((config[name]["trimPrefix"]??)?string('',entityName+'.'))+name>
-		<#local value=(config[name]['value']??)?string(config[name]['value']!,(entity[name]?string)!)>
+		<#if config[name]['value']??>
+		<#local value=config[name]['value']>
+		<#else>
+		<#local value=entity[name]!>
+		</#if>
 		<#if (!readonly&&celleditable)&&config[name]["cellEdit"]??>
 		<#local edit=config[name]["cellEdit"]?split(",")>
 		<@rttbodytd entity=entity cellName=cellName value=value readonly=readonly template=config[name]['template']! renderLink=(config[name]['renderLink']??) cellEdit=edit[0] cellEditTemplate=edit[1]! cellEditAction=edit[2]! class=config[name]['class']!/>
