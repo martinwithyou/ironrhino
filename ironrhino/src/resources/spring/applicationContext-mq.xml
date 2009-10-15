@@ -1,9 +1,9 @@
 <beans default-autowire="byName"
 	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:amq="http://activemq.apache.org/schema/core" xmlns:amqra="http://activemq.apache.org/schema/ra"
-	xmlns:jencks="http://jencks.org/2.0" xmlns:amqpool="http://jencks.org/amqpool/2.0"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:amqra="http://activemq.apache.org/schema/ra" xmlns:jencks="http://jencks.org/2.0"
+	xmlns:amqpool="http://jencks.org/amqpool/2.0"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd http://activemq.apache.org/schema/ra http://activemq.apache.org/schema/ra/activemq-ra.xsd http://jencks.org/2.0 http://jencks.org/2.0/jencks.xsd http://jencks.org/amqpool/2.0 http://jencks.org/amqpool/2.0/jencks-amqpool.xsd">
-<!-- 
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory">
 			<bean class="org.springframework.jms.connection.SingleConnectionFactory">
@@ -20,6 +20,7 @@
 				<property name="consumers">
 					<list>
 						<bean class="org.ironrhino.core.mail.SimpleMailMessageConsumer" />
+						<bean class="org.ironrhino.core.event.ApplicationEventConsumer" />
 					</list>
 				</property>
 			</bean>
@@ -28,10 +29,11 @@
 		<property name="messageConverter" ref="messageConverter" />
 	</bean>
 	<bean id="messageConverter" class="org.ironrhino.core.jms.DelegateMessageConverter" />
+	<amq:topic id="applicationEventDestination" physicalName="${activemq.defaultDestinationName}" />
 	<amqpool:pool id="jmsConnectionFactory" brokerURL="${activemq.brokerUrl}"
 		maxConnections="8" />
 	<amqra:resourceAdapter id="activeMQResourceAdapter"
-		serverUrl="tcp://localhost:61616" />
+		serverUrl="${activemq.brokerUrl}" />
 	<jencks:transactionManager id="jmsTransactionManager" />
 	<jencks:jcaContainer id="jcaContainer"
 		resourceAdapter="#activeMQResourceAdapter" transactionManager="#jmsTransactionManager"
@@ -42,7 +44,14 @@
 				destinationType="javax.jms.Queue" />
 		</jencks:activationSpec>
 	</jencks:connector>
-	
+	<jencks:connector ref="messageListener" jcaContainer="#jcaContainer">
+		<jencks:activationSpec>
+			<amqra:activationSpec destination="${activemq.defaultDestinationName}"
+				destinationType="javax.jms.Topic" />
+		</jencks:activationSpec>
+	</jencks:connector>
+
+	<!-- !!!!!!!!NOTICE!!!!!!!! comment below and use standalone activemq server in production -->
 	<amq:broker useJmx="false" persistent="true" brokerName="localhost">
 		<amq:persistenceAdapter>
 			<amq:jdbcPersistenceAdapter id="jdbcAdapter"
@@ -54,5 +63,4 @@
 		</amq:transportConnectors>
 	</amq:broker>
 	
-	 -->
 </beans>

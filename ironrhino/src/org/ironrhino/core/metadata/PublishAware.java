@@ -18,4 +18,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Inherited
 public @interface PublishAware {
+	boolean global() default true;
 }

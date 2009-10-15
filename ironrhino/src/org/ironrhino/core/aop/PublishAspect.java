@@ -39,7 +39,8 @@ public class PublishAspect extends BaseAspect {
 		if (eventPublisher != null)
 			eventPublisher.publish(new EntityOperationEvent(entity,
 					isNew ? EntityOperationType.CREATE
-							: EntityOperationType.UPDATE));
+							: EntityOperationType.UPDATE), publishAware
+					.global());
 		return result;
 	}
 
@@ -49,7 +50,7 @@ public class PublishAspect extends BaseAspect {
 			return;
 		if (eventPublisher != null)
 			eventPublisher.publish(new EntityOperationEvent(entity,
-					EntityOperationType.DELETE));
+					EntityOperationType.DELETE), publishAware.global());
 	}
 
 }
