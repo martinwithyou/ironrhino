@@ -14,9 +14,9 @@
 		<#local value=(config[name]['value']??)?string(config[name]['value']!,(entity[name]?string)!)>
 		<#if (!readonly&&celleditable)&&config[name]["cellEdit"]??>
 		<#local edit=config[name]["cellEdit"]?split(",")>
-		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']!}" renderLink="${(config[name]['renderLink']?string)!}" cellEdit="${edit[0]}" cellEditTemplate="${edit[1]!}" cellEditAction="${edit[2]!}" class="${config[name]['class']!}"/>
+		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" readonly="${readonly?string}" template="${config[name]['template']!}" renderLink="${(config[name]['renderLink']?string)!}" cellEdit="${edit[0]}" cellEditTemplate="${edit[1]!}" cellEditAction="${edit[2]!}" class="${config[name]['class']!}"/>
 		<#else>
-		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']!}" renderLink="${(config[name]['renderLink']?string)!}" class="${config[name]['class']!}"/>
+		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" readonly="${readonly?string}" template="${config[name]['template']!}" renderLink="${(config[name]['renderLink']?string)!}" class="${config[name]['class']!}"/>
 		</#if>
 	</#list>
 	<@rttbodytrend rowid="${entity.id!}" buttons="${actionColumnButtons}" readonly="${readonly?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
@@ -53,12 +53,12 @@
 </#macro>
 
 <#macro rttbodytrstart rowid,odd,readonly="false">
-<tr class="${odd?string("odd","even")}" rowid="${rowid}" >
+<tr class="${odd?string("odd","even")}"<#if rowid!=''> rowid="${rowid}"</#if>>
 <#if readonly=="false"><td><input type="checkbox" name="check"/></td></#if>
 </#macro>
 
-<#macro rttbodytd cellName,value,entity="",template="",renderLink="false",cellEdit="",cellEditTemplate="rt_edit_template_input",cellEditAction="ondblclick",class="">
-<td <#if class!="">class="${class}" </#if><#if cellEdit!="">${(cellEditAction!="")?string(cellEditAction,"ondblclick")}="ECSideUtil.editCell(this,'${cellEdit}','${(cellEditTemplate!="")?string(cellEditTemplate,"rt_edit_template_input")}')" </#if>cellName="${cellName}">
+<#macro rttbodytd cellName,value,entity="",template="",renderLink="false",cellEdit="",cellEditTemplate="rt_edit_template_input",cellEditAction="ondblclick",class="",readonly="false">
+<td<#if class!=""> class="${class}"</#if><#if cellEdit!=""> ${(cellEditAction!="")?string(cellEditAction,"ondblclick")}="ECSideUtil.editCell(this,'${cellEdit}','${(cellEditTemplate!="")?string(cellEditTemplate,"rt_edit_template_input")}')"</#if><#if readonly=='false'> cellName="${cellName}"</#if>>
 <#if template=="">
 <#if renderLink=="true">
 <a href="?${cellName}=${value?url('utf-8')}" class="ajax view">
