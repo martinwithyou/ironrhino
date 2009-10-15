@@ -4,15 +4,14 @@
 <title>List ${entityName?cap_first}</title>
 </head>
 <body>
-<#assign readonly="${readonly?string}"/>
-<@rtstart action="${entityName}" readonly="${readonly}"/>
+<@rtstart action=entityName readonly=readonly/>
 	<#list naturalIds?keys as key>
 		<#assign config=uiConfigs[key]>
 		<#assign label=key>
 		<#if config.displayName??>
 			<#assign label=config.displayName>
 		</#if>
-		<@rttheadtd name="${label}" editable=(readonly=='false')&&!naturalIdsImmatuable/>
+		<@rttheadtd name=label editable=!(readonly||naturalIdsImmatuable)/>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
@@ -21,42 +20,42 @@
 			<#if config.displayName??>
 				<#assign label=config.displayName>
 			</#if>
-			<@rttheadtd name="${label}" editable=(readonly=='false')&&!uiConfigs[key].readonly/>
+			<@rttheadtd name=label editable=!(readonly||uiConfigs[key].readonly)/>
 		</#if>
 	</#list>
-<@rtmiddle readonly="${readonly}"/>
+<@rtmiddle readonly=readonly/>
 <#assign index=0>
 <#list resultPage.result as entity>
 <#assign index=index+1>
-<@rttbodytrstart rowid="${entity.id}" odd=(index%2==1) readonly="${readonly}"/>
+<@rttbodytrstart rowid=entity.id! odd=(index%2==1) readonly=readonly/>
 	<#list naturalIds?keys as key>
-		<#if (readonly=='false')&&!naturalIdsImmatuable>
-		<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}" cellEdit="input"/>
+		<#if !(readonly||naturalIdsImmatuable)>
+		<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key] template="${uiConfigs[key].template}" cellEdit="input"/>
 		<#else>
-		<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}"/>
+		<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key] template="${uiConfigs[key].template}"/>
 		</#if>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
-			<#if (readonly=='false')&&!uiConfigs[key].readonly>
+			<#if !(readonly||uiConfigs[key].readonly)>
 				<#if uiConfigs[key].type=='input'||uiConfigs[key].type=='textarea'>
-					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}" cellEdit="input"/>
+					<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key]! template="${uiConfigs[key].template}" cellEdit="input"/>
 				</#if>
 				<#if uiConfigs[key].type=='checkbox'>
-					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}" cellEdit="select" cellEditTemplate="select_template_boolean"/>
+					<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key]! template="${uiConfigs[key].template}" cellEdit="select" cellEditTemplate="select_template_boolean"/>
 				</#if>
 				<#if uiConfigs[key].type=='select'>
-					<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}" cellEdit="select" cellEditTemplate="select_template_${key}"/>
+					<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key]! template="${uiConfigs[key].template}" cellEdit="select" cellEditTemplate="select_template_${key}"/>
 				</#if>
 			<#else>
-				<@rttbodytd cellName="${entityName}.${key}" value="${entity[key]?string!}" template="${uiConfigs[key].template}"/>
+				<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key]! template="${uiConfigs[key].template}"/>
 			</#if>
 		</#if>
 	</#list>	
-<@rttbodytrend  rowid="${entity.id}" readonly="${readonly}"/>
+<@rttbodytrend  rowid=entity.id readonly=readonly/>
 </#list>
-<@rtend readonly="${readonly}"/>
-<#if readonly=='false'>
+<@rtend readonly=readonly/>
+<#if !readonly>
 <div style="display: none">
 <#list uiConfigs?keys as key>
 	<#if uiConfigs[key].type=='select'>

@@ -1,7 +1,7 @@
-<#macro richtable config entityName action="" actionColumnWidth="150px" actionColumnButtons="" bottomButtons="" readonly=false resizable=true createable=true celleditable=true deleteable=true>
-<@rtstart action=action?has_content?string(action,entityName) readonly=readonly resizable=resizable/>
+<#macro richtable config entityName action="" actionColumnWidth="150px" actionColumnButtons="" bottomButtons="" resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true>
+<@rtstart action=action?has_content?string(action,entityName) readonly=readonly resizable=resizable sortable=sortable/>
 <#list config?keys as name>
-<@rttheadtd name=name editable=(!readonly)&&(config[name]["cellEdit"]??)/>
+<@rttheadtd name=name editable=(!readonly)&&(config[name]["cellEdit"]??) resizable=resizable/>
 </#list>
 <@rtmiddle width=actionColumnWidth readonly=readonly/>
 <#local index=0>
@@ -24,14 +24,14 @@
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable/>
 </#macro>
 
-<#macro rtstart action="" readonly=false resizable=true>
+<#macro rtstart action="" readonly=false resizable=true sortable=true>
 <form action="${action}" method="post" class="richtable ajax view"<#if resizable> resizable="true" minColWidth="40"</#if>>
 <#list Parameters?keys as name>
 <#if !name?starts_with('resultPage.')&&!(name?starts_with('_')||name?ends_with('_'))>
 <input type="hidden" name="${name}" value="${Parameters[name]}" />
 </#if>
 </#list>
-<table border="0" cellspacing="0" cellpadding="0" class="sortable" style="table-layout:fixed;" width="100%">
+<table border="0" cellspacing="0" cellpadding="0"<#if sortable> class="sortable"</#if> style="table-layout:fixed;" width="100%">
 <thead>
 <tr>
 <#if !readonly>
@@ -39,9 +39,15 @@
 </#if>
 </#macro>
 
-<#macro rttheadtd name editable=true>
-<td class="tableHeader<#if editable> editableColumn</#if>"><span class="resizeTitle">${action.getText(name)}</span>
-<span class="resizeBar" onmousedown="ECSideUtil.StartResize(event);" onmouseup="ECSideUtil.EndResize(event);"></span></td>
+<#macro rttheadtd name editable=true resizable=true>
+<td class="tableHeader<#if editable> editableColumn</#if>">
+<#if resizable>
+<span class="resizeTitle">${action.getText(name)}</span>
+<span class="resizeBar" onmousedown="ECSideUtil.StartResize(event);" onmouseup="ECSideUtil.EndResize(event);"></span>
+<#else>
+${action.getText(name)}
+</#if>
+</td>
 </#macro>
 <#macro rtmiddle width="150px" readonly=false>
 <#if !readonly>
@@ -63,7 +69,7 @@
 <#if renderLink>
 <a href="?${cellName}=${value?url('utf-8')}" class="ajax view">
 </#if>
-<#if value=='true'||value=='false'>
+<#if value?string=='true'||value?string=='false'>
 ${action.getText(value)}
 <#else>
 ${value?xhtml}
