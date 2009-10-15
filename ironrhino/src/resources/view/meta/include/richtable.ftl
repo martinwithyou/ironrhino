@@ -54,7 +54,7 @@
 
 <#macro rttbodytrstart rowid,odd,readonly="false">
 <tr class="${odd?string("odd","even")}" rowid="${rowid}" >
-<#if readonly=="false"><td><input type="checkbox" name="deleteFlag" value="1" class="checkbox"/></td></#if>
+<#if readonly=="false"><td><input type="checkbox" name="check"/></td></#if>
 </#macro>
 
 <#macro rttbodytd cellName,value,entity="",template="",renderLink="false",cellEdit="",cellEditTemplate="rt_edit_template_input",cellEditAction="ondblclick",class="">

@@ -41,11 +41,6 @@
 	width: auto;
 }
 
-.richtable input.checkbox {
-	font-size: 12px;
-	width: auto;
-}
-
 .richtable select {
 	border: solid 1px #EEEEEE;
 	width: 75px;
