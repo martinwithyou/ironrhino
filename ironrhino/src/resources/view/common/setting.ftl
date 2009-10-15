@@ -4,7 +4,8 @@
 <title>List Setttings</title>
 </head>
 <body>
-<#assign config={'key':{},'value':{'template':r'<input type="text" size="80" name="settings.${entity.key}" value="${value}"/>'}}>
-<@richtable entityName="setting" config=config readonly=true/>
+<#assign config={'key':{},'value':{'template':r'<input type="text" size="80" name="settings.${entity.key}" value="${value?xhtml}"/>'}}>
+<#assign bottomButtons=btn(action.getText('save'),null,'submit')+btn(action.getText('reload'),'Richtable.reload()')>
+<@richtable entityName="setting" config=config readonly=true includeParameters=false bottomButtons=bottomButtons/>
 </body>
 </html></#escape>

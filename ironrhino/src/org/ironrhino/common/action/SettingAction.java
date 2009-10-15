@@ -8,6 +8,9 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.opensymphony.xwork2.util.Element;
+import com.opensymphony.xwork2.util.Key;
+
 @AutoConfig
 public class SettingAction extends BaseAction {
 
@@ -16,6 +19,8 @@ public class SettingAction extends BaseAction {
 	@Autowired
 	private transient SettingControl settingControl;
 
+	@Key(String.class)
+	@Element(String.class)
 	public Map<String, String> getSettings() {
 		return settingControl.getAll();
 	}
@@ -26,12 +31,6 @@ public class SettingAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		return SUCCESS;
-	}
-
-	@Override
-	public String save() {
-		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
 

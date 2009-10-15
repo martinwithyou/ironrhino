@@ -1,5 +1,5 @@
-<#macro richtable config entityName action="" actionColumnWidth="150px" actionColumnButtons="" bottomButtons="" resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true>
-<@rtstart action=action?has_content?string(action,entityName) readonly=readonly resizable=resizable sortable=sortable/>
+<#macro richtable config entityName action="" actionColumnWidth="150px" actionColumnButtons="" bottomButtons="" resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true includeParameters=true>
+<@rtstart action=action?has_content?string(action,entityName) readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters/>
 <#list config?keys as name>
 <@rttheadtd name=name editable=(!readonly)&&(config[name]["cellEdit"]??) resizable=resizable/>
 </#list>
@@ -28,13 +28,15 @@
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable/>
 </#macro>
 
-<#macro rtstart action="" readonly=false resizable=true sortable=true>
+<#macro rtstart action="" readonly=false resizable=true sortable=true includeParameters=true>
 <form action="${action}" method="post" class="richtable ajax view"<#if resizable> resizable="true" minColWidth="40"</#if>>
+<#if includeParameters>
 <#list Parameters?keys as name>
 <#if !name?starts_with('resultPage.')&&!(name?starts_with('_')||name?ends_with('_'))>
 <input type="hidden" name="${name}" value="${Parameters[name]}" />
 </#if>
 </#list>
+</#if>
 <table border="0" cellspacing="0" cellpadding="0"<#if sortable> class="sortable"</#if> style="table-layout:fixed;" width="100%">
 <thead>
 <tr>
