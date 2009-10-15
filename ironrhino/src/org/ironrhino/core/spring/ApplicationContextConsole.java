@@ -4,12 +4,16 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ironrhino.core.event.EventPublisher;
+import org.ironrhino.core.event.SetPropertyEvent;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.ironrhino.core.metadata.PrePropertiesReset;
 import org.ironrhino.core.util.AnnotationUtils;
@@ -17,16 +21,24 @@ import org.mvel2.MVEL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.support.PropertiesLoaderSupport;
 import org.springframework.stereotype.Component;
 
 @Component("applicationContextConsole")
-public class ApplicationContextConsole {
+public class ApplicationContextConsole implements ApplicationListener {
+
+	private static final Pattern SET_PROPERTY_EXPRESSION_PATTERN = Pattern
+			.compile("(^[a-zA-Z][a-zA-Z0-9_\\-]*\\.[a-zA-Z][a-zA-Z0-9_\\-]*\\s*=\\s*.+$)");
 
 	protected Log log = LogFactory.getLog(getClass());
 
 	@Autowired
 	private ApplicationContext ctx;
+
+	@Autowired
+	private EventPublisher eventPublisher;
 
 	private Map<String, Object> beans;
 
@@ -61,27 +73,70 @@ public class ApplicationContextConsole {
 			}
 		}
 		try {
-			Object bean = null;
-			if (expression.indexOf('=') > 0) {
-				bean = beans.get(expression.substring(0, expression
-						.indexOf('.')));
+			if (isSetProperyExpression(expression)) {
+				executeSetProperty(expression, true);
+				return null;
+			} else {
+				return executeMethodInvocation(expression);
 			}
-			if (bean != null) {
-				Method m = AnnotationUtils.getAnnotatedMethod(bean.getClass(),
-						PrePropertiesReset.class);
-				if (m != null)
-					m.invoke(bean, new Object[0]);
-			}
-			Object ret = MVEL.eval(expression, beans);
-			if (bean != null) {
-				Method m = AnnotationUtils.getAnnotatedMethod(bean.getClass(),
-						PostPropertiesReset.class);
-				if (m != null)
-					m.invoke(bean, new Object[0]);
-			}
-			return ret;
 		} catch (Exception e) {
 			throw e;
+		}
+	}
+
+	private Object executeMethodInvocation(String expression) throws Exception {
+		if (beans == null) {
+			beans = new HashMap<String, Object>();
+			String[] beanNames = ctx.getBeanDefinitionNames();
+			for (String beanName : beanNames) {
+				if (StringUtils.isAlphanumeric(beanName)
+						&& ctx.isSingleton(beanName))
+					beans.put(beanName, ctx.getBean(beanName));
+			}
+		}
+		try {
+			return MVEL.eval(expression, beans);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	private void executeSetProperty(String expression, boolean global)
+			throws Exception {
+		if (global) {
+			eventPublisher.publish(new SetPropertyEvent(expression), true);
+		} else {
+			if (beans == null) {
+				beans = new HashMap<String, Object>();
+				String[] beanNames = ctx.getBeanDefinitionNames();
+				for (String beanName : beanNames) {
+					if (StringUtils.isAlphanumeric(beanName)
+							&& ctx.isSingleton(beanName))
+						beans.put(beanName, ctx.getBean(beanName));
+				}
+			}
+			try {
+				Object bean = null;
+				if (expression.indexOf('=') > 0) {
+					bean = beans.get(expression.substring(0, expression
+							.indexOf('.')));
+				}
+				if (bean != null) {
+					Method m = AnnotationUtils.getAnnotatedMethod(bean
+							.getClass(), PrePropertiesReset.class);
+					if (m != null)
+						m.invoke(bean, new Object[0]);
+				}
+				MVEL.eval(expression, beans);
+				if (bean != null) {
+					Method m = AnnotationUtils.getAnnotatedMethod(bean
+							.getClass(), PostPropertiesReset.class);
+					if (m != null)
+						m.invoke(bean, new Object[0]);
+				}
+			} catch (Exception e) {
+				throw e;
+			}
 		}
 	}
 
@@ -92,6 +147,23 @@ public class ApplicationContextConsole {
 		if (value == null)
 			value = System.getProperty(key);
 		return value;
+	}
+
+	private static boolean isSetProperyExpression(String expression) {
+		Matcher matcher = SET_PROPERTY_EXPRESSION_PATTERN.matcher(expression);
+		return matcher.matches();
+	}
+
+	@Override
+	public void onApplicationEvent(ApplicationEvent event) {
+		if (event instanceof SetPropertyEvent) {
+			String expression = ((SetPropertyEvent) event).getExpression();
+			try {
+				executeSetProperty(expression, false);
+			} catch (Exception e) {
+				log.error("execute '" + expression + "' error", e);
+			}
+		}
 	}
 
 }

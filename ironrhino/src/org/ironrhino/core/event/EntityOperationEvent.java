@@ -25,4 +25,12 @@ public class EntityOperationEvent extends ApplicationEvent {
 		return type;
 	}
 
+	public Object getSource() {
+		return getEntity();
+	}
+
+	public String toString() {
+		return getClass().getName() + "[source=" + getSource() + ",timestamp="
+				+ getTimestamp() + "]";
+	}
 }

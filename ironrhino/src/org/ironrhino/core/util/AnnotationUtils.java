@@ -30,7 +30,7 @@ public class AnnotationUtils {
 	public static Set<Method> getAnnotatedMethods(Class clazz,
 			Class<? extends Annotation> annotaionClass) {
 		String key = clazz.getCanonicalName() + "-"
-				+ annotaionClass.getCanonicalName()+"-method";
+				+ annotaionClass.getCanonicalName() + "-method";
 		if (cache.get(key) == null) {
 			Set<Method> set = new HashSet<Method>();
 			try {
@@ -49,7 +49,7 @@ public class AnnotationUtils {
 	public static Set<String> getAnnotatedPropertyNames(Class clazz,
 			Class<? extends Annotation> annotaionClass) {
 		String key = clazz.getCanonicalName() + "-"
-				+ annotaionClass.getCanonicalName()+"-propertyName";
+				+ annotaionClass.getCanonicalName() + "-propertyName";
 		if (cache.get(key) == null) {
 			Set<String> set = new HashSet<String>();
 			try {
@@ -89,7 +89,8 @@ public class AnnotationUtils {
 	public static Map<String, Annotation> getAnnotatedPropertyNameAndAnnotations(
 			Class clazz, Class<? extends Annotation> annotaionClass) {
 		String key = clazz.getCanonicalName() + "-"
-				+ annotaionClass.getCanonicalName()+"-propertyNameAndAnnotation";
+				+ annotaionClass.getCanonicalName()
+				+ "-propertyNameAndAnnotation";
 		Map<String, Annotation> map = new HashMap<String, Annotation>();
 		if (cache.get(key) == null) {
 			try {
