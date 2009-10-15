@@ -30,7 +30,7 @@ public class AnnotationUtils {
 	public static Set<Method> getAnnotatedMethods(Class clazz,
 			Class<? extends Annotation> annotaionClass) {
 		String key = clazz.getCanonicalName() + "-"
-				+ annotaionClass.getCanonicalName();
+				+ annotaionClass.getCanonicalName()+"-method";
 		if (cache.get(key) == null) {
 			Set<Method> set = new HashSet<Method>();
 			try {
