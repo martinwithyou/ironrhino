@@ -18,7 +18,7 @@
 		</bean>
 	-->
 	<bean id="smtpAuthenticator"
-		class="org.ironrhino.core.javamail.SmtpAuthenticator"
+		class="org.ironrhino.core.mail.SmtpAuthenticator"
 		p:username="${mail.smtp.username}" p:password="${mail.smtp.password}" />
 
 	<bean id="mailSession" class="javax.mail.Session"

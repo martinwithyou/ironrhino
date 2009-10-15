@@ -1,4 +1,4 @@
-package org.ironrhino.core.javamail;
+package org.ironrhino.core.mail;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
