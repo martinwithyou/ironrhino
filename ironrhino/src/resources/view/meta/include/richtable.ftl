@@ -18,9 +18,9 @@
 		</#if>
 		<#if (!readonly&&celleditable)&&config[name]["cellEdit"]??>
 		<#local edit=config[name]["cellEdit"]?split(",")>
-		<@rttbodytd entity=entity cellName=cellName value=value readonly=readonly template=config[name]['template']! renderLink=(config[name]['renderLink']??) cellEdit=edit[0] cellEditTemplate=edit[1]! cellEditAction=edit[2]! class=config[name]['class']!/>
+		<@rttbodytd entity=entity cellName=cellName value=value readonly=readonly template=config[name]['template']! renderLink=(config[name]['renderLink']??&&config[name]['renderLink']) cellEdit=edit[0] cellEditTemplate=edit[1]! cellEditAction=edit[2]! class=config[name]['class']!/>
 		<#else>
-		<@rttbodytd entity=entity cellName=cellName value=value readonly=readonly template=config[name]['template']! renderLink=(config[name]['renderLink']??) class=config[name]['class']!/>
+		<@rttbodytd entity=entity cellName=cellName value=value readonly=readonly template=config[name]['template']! renderLink=(config[name]['renderLink']??&&config[name]['renderLink']) class=config[name]['class']!/>
 		</#if>
 	</#list>
 	<@rttbodytrend rowid=entity.id! buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
