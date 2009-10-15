@@ -101,7 +101,7 @@ ${buttons?replace("#id",rowid)}
 </tbody>
 </table>
 <div class="toolbar" style="width:100%;" >
-<table class="toolbarTable" cellpadding="0" cellspacing="0" >
+<table class="toolbarTable" cellpadding="0" cellspacing="0">
 <tr>
 <td class="pageNavigationTool" width="33%" nowrap="nowrap">
 <#if resultPage??>
