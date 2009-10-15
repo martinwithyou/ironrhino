@@ -46,27 +46,7 @@
 	width: 75px;
 }
 
-.richtable .tableRegion {
-	border: 0px #ff00ff solid;
-	padding: 0px;
-	margin: 0px;
-	border-collapse: collapse;
-	/* width:100%; */
-	table-layout: fixed;
-}
-
-.richtable .tableRegion td {
-	color: #000000;
-	border: 1px #cccccc solid;
-	padding: 2px;
-	height: 23px;
-	white-space: nowrap;
-	word-break: keep-all;
-	word-wrap: normal;
-	overflow: hidden;
-}
-
-.richtable .tableHeader,.richtable .tableRegion .tableHeader td {
+.richtable .tableHeader {
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
@@ -94,10 +74,6 @@
 	vertical-align: top;
 	background-color: #cccccc;
 	display: inline;
-}
-
-.richtable .tableRegion .editableColumn {
-	color: #883A3A;
 }
 
 .richtable .odd a,.even a {
