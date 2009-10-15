@@ -49,7 +49,7 @@ public class AnnotationUtils {
 	public static Set<String> getAnnotatedPropertyNames(Class clazz,
 			Class<? extends Annotation> annotaionClass) {
 		String key = clazz.getCanonicalName() + "-"
-				+ annotaionClass.getCanonicalName();
+				+ annotaionClass.getCanonicalName()+"-propertyName";
 		if (cache.get(key) == null) {
 			Set<String> set = new HashSet<String>();
 			try {
@@ -88,8 +88,8 @@ public class AnnotationUtils {
 
 	public static Map<String, Annotation> getAnnotatedPropertyNameAndAnnotations(
 			Class clazz, Class<? extends Annotation> annotaionClass) {
-		String key = clazz.getCanonicalName() + ":"
-				+ annotaionClass.getCanonicalName();
+		String key = clazz.getCanonicalName() + "-"
+				+ annotaionClass.getCanonicalName()+"-propertyNameAndAnnotation";
 		Map<String, Annotation> map = new HashMap<String, Annotation>();
 		if (cache.get(key) == null) {
 			try {
