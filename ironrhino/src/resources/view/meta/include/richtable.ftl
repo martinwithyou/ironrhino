@@ -8,7 +8,7 @@
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
 <#local index=index+1>
-<@rttbodytrstart rowid="${entity.id}" odd=(index%2==1)  readonly="${readonly?string}"/>
+<@rttbodytrstart rowid="${entity.id!}" odd=(index%2==1)  readonly="${readonly?string}"/>
 	<#list config?keys as name>
 		<#local cellName=((config[name]["trimPrefix"]??)?string('',entityName+'.'))+name>
 		<#local value=(config[name]['value']??)?string(config[name]['value']!,(entity[name]?string)!)>
@@ -19,7 +19,7 @@
 		<@rttbodytd entity="${entity}" cellName="${cellName}" value="${value}" template="${config[name]['template']!}" renderLink="${(config[name]['renderLink']?string)!}" class="${config[name]['class']!}"/>
 		</#if>
 	</#list>
-	<@rttbodytrend rowid="${entity.id}" buttons="${actionColumnButtons}" readonly="${readonly?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
+	<@rttbodytrend rowid="${entity.id!}" buttons="${actionColumnButtons}" readonly="${readonly?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
 </#list>
 <@rtend buttons="${bottomButtons}" readonly="${readonly?string}" createable="${createable?string}" celleditable="${celleditable?string}" deleteable="${deleteable?string}"/>
 </#macro>
