@@ -21,8 +21,7 @@ public class LocalFileStorage extends AbstractFileStorage {
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
 		Assert.hasText(uri);
-		URI u = new URI(uri);
-		this.directory = new File(u);
+		this.directory = new File(new URI(uri));
 		if (this.directory.isFile())
 			throw new RuntimeException(directory + " is not directory");
 		if (!this.directory.exists())
