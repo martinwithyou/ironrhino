@@ -5,18 +5,14 @@ import java.io.InputStream;
 
 public interface FileStorage {
 
-	public String save(File localFile);
+	public boolean save(File file, String path);
 
-	public String save(InputStream os);
+	public boolean save(InputStream os, String path);
 
-	public void save(File file, String filename);
+	public InputStream open(String path);
 
-	public void save(InputStream os, String filename);
+	public boolean get(String path, File local);
 
-	public InputStream get(String filename);
-
-	public boolean get(String filename, File localFile);
-
-	public boolean delete(String filename);
+	public boolean delete(String path);
 
 }

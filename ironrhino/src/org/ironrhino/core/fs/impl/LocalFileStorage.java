@@ -6,35 +6,21 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.fs.FileStorage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Component;
 
-@Component("fileStorage")
-public class LocalFileStorage implements FileStorage {
-
-	private Log log = LogFactory.getLog(getClass());
-
-	@Autowired
-	private ResourceLoader resourceLoader;
+//@Component("fileStorage")
+public class LocalFileStorage extends AbstractFileStorage {
 
 	private File directory;
 
-	private String path = "/uploadfiles";
+	private String path = "/fs";
 
 	@PostConstruct
 	public void afterPropertiesSet() throws IOException {
-		this.directory = resourceLoader.getResource(path).getFile();
+		this.directory = new File(path);
 		if (this.directory.isFile())
 			throw new RuntimeException(directory + " is not directory");
 		if (!this.directory.exists())
@@ -52,7 +38,7 @@ public class LocalFileStorage implements FileStorage {
 	}
 
 	@Override
-	public InputStream get(String filename) {
+	public InputStream open(String filename) {
 		File dest = new File(directory, filename);
 		if (!dest.exists())
 			return null;
@@ -80,72 +66,20 @@ public class LocalFileStorage implements FileStorage {
 	}
 
 	@Override
-	public String save(File localFile) {
-		String filename = newName();
+	public boolean save(File file, String filename) {
 		File dest = new File(directory, filename);
-		boolean b = localFile.renameTo(dest);
-		if (b)
-			return filename;
-		else
-			throw new RuntimeException("rename to '" + dest.getAbsolutePath()
-					+ "' error");
+		return file.renameTo(dest);
 	}
 
 	@Override
-	public String save(InputStream is) {
-		String name = newName();
-		File dest = new File(directory, name);
-		FileOutputStream os = null;
+	public boolean save(InputStream is, String filename) {
+		File dest = new File(directory, filename);
 		try {
-			os = new FileOutputStream(dest);
-			IOUtils.copy(is, os);
-			return name;
+			FileOutputStream os = new FileOutputStream(dest);
+			return copy(is, os);
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage(), e);
-		} finally {
-			try {
-				if (os != null)
-					os.close();
-				if (is != null)
-					is.close();
-			} catch (Exception e) {
-			}
+			return false;
 		}
 	}
 
-	@Override
-	public void save(File file, String filename) {
-		if (StringUtils.isBlank(filename))
-			throw new RuntimeException("filename is blank");
-		File dest = new File(directory, filename);
-		if (!file.renameTo(dest))
-			throw new RuntimeException("rename to '" + dest.getAbsolutePath()
-					+ "' error");
-	}
-
-	@Override
-	public void save(InputStream is, String filename) {
-		if (StringUtils.isBlank(filename))
-			throw new RuntimeException("filename is blank");
-		File dest = new File(directory, filename);
-		FileOutputStream os = null;
-		try {
-			os = new FileOutputStream(dest);
-			IOUtils.copy(is, os);
-		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage(), e);
-		} finally {
-			try {
-				if (os != null)
-					os.close();
-				if (is != null)
-					is.close();
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	protected String newName() {
-		return UUID.randomUUID().toString().replace("-", "");
-	}
 }
