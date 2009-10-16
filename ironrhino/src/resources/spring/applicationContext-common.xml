@@ -34,6 +34,8 @@
 			</map>
 		</property>
 	</bean>
-	<bean id="fileStorage"
-		class="org.ironrhino.core.fs.impl.HdfsFileStorage" p:uri="${hdfs.uri}"/>
+	<bean id="fileStorage" class="org.ironrhino.core.fs.impl.LocalFileStorage" p:uri="${fileStorage.uri}"/>
+	<!--
+	<bean id="fileStorage" class="org.ironrhino.core.fs.impl.HdfsFileStorage" p:uri="${fileStorage.uri}"/>
+	-->
 </beans>

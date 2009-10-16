@@ -18,12 +18,6 @@ public class HdfsFileStorage extends AbstractFileStorage {
 
 	private FileSystem hdfs;
 
-	private String uri;
-
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
-
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
 		Assert.hasText(uri);

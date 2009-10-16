@@ -16,8 +16,14 @@ public abstract class AbstractFileStorage implements FileStorage {
 
 	protected int bufferSize = 512 * 1024;
 
+	protected String uri;
+
 	public void setBufferSize(int bufferSize) {
 		this.bufferSize = bufferSize;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
 
 	protected boolean copy(InputStream is, OutputStream os) {

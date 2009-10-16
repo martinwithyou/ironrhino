@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 
 import javax.annotation.PostConstruct;
 
@@ -17,21 +18,16 @@ public class LocalFileStorage extends AbstractFileStorage {
 
 	private File directory;
 
-	private String path;
-
 	@PostConstruct
-	public void afterPropertiesSet() throws IOException {
-		Assert.hasText(path);
-		this.directory = new File(path);
+	public void afterPropertiesSet() throws Exception {
+		Assert.hasText(uri);
+		URI u = new URI(uri);
+		this.directory = new File(u);
 		if (this.directory.isFile())
 			throw new RuntimeException(directory + " is not directory");
 		if (!this.directory.exists())
 			if (!this.directory.mkdirs())
 				log.error("mkdir error:" + directory.getAbsolutePath());
-	}
-
-	public void setPath(String path) {
-		this.path = path;
 	}
 
 	@Override
