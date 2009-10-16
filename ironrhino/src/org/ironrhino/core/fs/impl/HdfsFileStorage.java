@@ -12,14 +12,13 @@ import javax.annotation.PostConstruct;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
-@Component("fileStorage")
 public class HdfsFileStorage extends AbstractFileStorage {
 
 	private FileSystem hdfs;
 
-	private String uri = "hdfs://localhost:9000/";
+	private String uri;
 
 	public void setUri(String uri) {
 		this.uri = uri;
@@ -27,6 +26,7 @@ public class HdfsFileStorage extends AbstractFileStorage {
 
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
+		Assert.hasText(uri);
 		Configuration conf = new Configuration();
 		hdfs = FileSystem.get(new URI(uri), conf);
 	}

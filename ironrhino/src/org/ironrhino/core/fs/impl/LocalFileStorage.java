@@ -10,16 +10,18 @@ import java.io.InputStream;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.util.Assert;
 
 //@Component("fileStorage")
 public class LocalFileStorage extends AbstractFileStorage {
 
 	private File directory;
 
-	private String path = "/fs";
+	private String path;
 
 	@PostConstruct
 	public void afterPropertiesSet() throws IOException {
+		Assert.hasText(path);
 		this.directory = new File(path);
 		if (this.directory.isFile())
 			throw new RuntimeException(directory + " is not directory");
