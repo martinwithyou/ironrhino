@@ -25,7 +25,7 @@ public class SettingControl {
 	public void load() {
 		settings.clear();
 		// TODO init
-		settings.put("adfaf", "1");
+		settings.put("product.recommanded", "productCode100,productCode200,productCode300,productCode400");
 		settings.put("haha", "hehe");
 		settings.put("haha1", "hehe");
 		settings.put("haha2", "hehe");
