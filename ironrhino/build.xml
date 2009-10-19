@@ -174,10 +174,10 @@
 			</filelist>
 		</concat>
 		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
-			<arg line=" --charset utf-8 --type js -o ${webapp.dir}/scripts/all-min.js ${webapp.dir}/scripts/all.js" />
+			<arg line=" --charset utf-8 --type js -o ./webapp/scripts/all-min.js ./webapp/scripts/all.js" />
 		</java>
 		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
-			<arg line=" --charset utf-8 --type css -o ${webapp.dir}/styles/all-min.css ${webapp.dir}/styles/all.css" />
+			<arg line=" --charset utf-8 --type css -o ./webapp/styles/all-min.css ./webapp/styles/all.css" />
 		</java>
 	</target>
 
