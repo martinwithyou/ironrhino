@@ -35,12 +35,10 @@ public class RichFreemarkerManager extends
 	@Inject(value = "ironrhino.view.ftl.classpath", required = false)
 	private String ftlClasspath = AutoConfigResult.DEFAULT_FTL_CLASSPATH;
 
-	private Configuration configuration;
-
 	@Override
 	protected freemarker.template.Configuration createConfiguration(
 			ServletContext servletContext) throws TemplateException {
-		configuration = super.createConfiguration(servletContext);
+		Configuration configuration = super.createConfiguration(servletContext);
 		Map globalVariables = new HashMap();
 		globalVariables.put("statics", BeansWrapper.getDefaultInstance()
 				.getStaticModels());
@@ -118,11 +116,7 @@ public class RichFreemarkerManager extends
 		} catch (IOException e) {
 			log.info(e.getMessage());
 		}
-
 		return configuration;
 	}
 
-	public Configuration getConfiguration() {
-		return configuration;
-	}
 }
