@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
@@ -45,9 +46,11 @@ public class TemplateProvider {
 		if (configuration == null) {
 			try {
 				Container con = ActionContext.getContext().getContainer();
-				RichFreemarkerManager freemarkerManager = (RichFreemarkerManager) con
+				FreemarkerManager freemarkerManager = con
 						.getInstance(org.apache.struts2.views.freemarker.FreemarkerManager.class);
-				configuration = freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
+				configuration = freemarkerManager
+						.getConfiguration(ServletActionContext
+								.getServletContext());
 				TemplateHashModelEx hash = new SimpleMapModel(
 						allSharedVariables, BeansWrapper.getDefaultInstance());
 				configuration.setAllSharedVariables(hash);
