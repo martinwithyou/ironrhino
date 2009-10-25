@@ -16,10 +16,12 @@ public class ImportRegion {
 
 	public static void main(String... strings) throws Exception {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-				new String[] { "applicationContext-common.xml",
+				new String[] {
+						"resources/spring/applicationContext-common.xml",
 						"resources/spring/applicationContext-datasource.xml",
-						"resources/spring/applicationContext-aop.xml",
-						"resources/spring/applicationContext-hibernate.xml" });
+						"resources/spring/applicationContext-hibernate.xml",
+						"resources/spring/applicationContext-online.xml",
+						"resources/spring/applicationContext-cache.xml" });
 		baseManager = (BaseManager) ctx.getBean("baseManager");
 		baseManager.bulkUpdate("delete from Region");
 		List<Region> regions = RegionParser.parse();
@@ -27,6 +29,7 @@ public class ImportRegion {
 			save(region);
 		}
 		System.out.println(count);
+		ctx.close();
 	}
 
 	public static void save(Region region) {

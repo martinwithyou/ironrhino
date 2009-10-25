@@ -21,7 +21,7 @@ public class StatLogSettings {
 
 	public static final String SEPARATOR = "_";
 
-	public static final String FILE_DIRECTORY = "/logs/stat";
+	public static final String FILE_DIRECTORY = "/app/logs/stat";
 
 	public static final String STAT_LOG_FILE_NAME = "stat.log";
 

@@ -71,6 +71,7 @@ public class PGP {
 	public final static String DEFAULT_PASSWORD_LOCATION = "/resources/key/pgp-password";
 	public final static String DEFAULT_PRIVATE_KEY_LOCATION = "/resources/key/pgp-private";
 	public final static String DEFAULT_PUBLIC_KEY_LOCATION = "/resources/key/pgp-public";
+	public static final String KEY_DIRECTORY = "/app/conf/";
 
 	private static String password;
 	private static PGPSecretKeyRing secretKeyRing;
@@ -82,7 +83,7 @@ public class PGP {
 		Security.addProvider(new BouncyCastleProvider());
 		try {
 			File file = new File(System.getProperty("user.home")
-					+ "/key/pgp-password");
+					+ KEY_DIRECTORY + "pgp-password");
 			if (file.exists()) {
 				password = FileUtils.readFileToString(file, "UTF-8");
 			} else {
@@ -94,8 +95,8 @@ public class PGP {
 						"UTF-8");
 			}
 
-			file = new File(System.getProperty("user.home")
-					+ "/key/pgp-private");
+			file = new File(System.getProperty("user.home") + KEY_DIRECTORY
+					+ "pgp-private");
 			String privateKeyString;
 			if (file.exists()) {
 				privateKeyString = FileUtils.readFileToString(file, "UTF-8");
@@ -118,7 +119,8 @@ public class PGP {
 								secretKeyRing);
 			}
 
-			file = new File(System.getProperty("user.home") + "/key/pgp-public");
+			file = new File(System.getProperty("user.home") + KEY_DIRECTORY
+					+ "pgp-public");
 			String publicKeyString;
 			if (file.exists()) {
 				publicKeyString = FileUtils.readFileToString(file, "UTF-8");

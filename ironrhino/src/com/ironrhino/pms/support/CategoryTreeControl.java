@@ -94,7 +94,8 @@ public class CategoryTreeControl implements ApplicationListener {
 				.copyProperties(cate, c, new String[] { "parent", "children" });
 		c.setParent(parent);
 		parent.getChildren().add(c);
-		Collections.sort((List<Category>) parent.getChildren());
+		if (parent.getChildren() instanceof List)
+			Collections.sort((List<Category>) parent.getChildren());
 	}
 
 	private void update(Category cate) {
@@ -112,7 +113,8 @@ public class CategoryTreeControl implements ApplicationListener {
 		}
 		BeanUtils
 				.copyProperties(cate, c, new String[] { "parent", "children" });
-		Collections.sort((List<Category>) c.getParent().getChildren());
+		if (c.getParent().getChildren() instanceof List)
+			Collections.sort((List<Category>) c.getParent().getChildren());
 	}
 
 	private void delete(Category cate) {

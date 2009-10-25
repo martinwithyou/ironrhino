@@ -30,7 +30,7 @@ public class StringStore implements BeanNameAware {
 
 	private String beanName;
 
-	private String directory = "/logs/data/";
+	private String directory = "/app/data/";
 
 	private File file;
 

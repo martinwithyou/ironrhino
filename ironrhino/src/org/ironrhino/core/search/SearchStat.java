@@ -35,6 +35,7 @@ import org.apache.lucene.store.NIOFSDirectory;
 public class SearchStat {
 
 	public static final String SEARCH_STAT_THREAD_NAME = "SEARCH_STAT_THREAD_NAME";
+	public static final String INDEX_DIRECTORY = "/app/searchstat";
 
 	public static final long TIME_INTERVAL = 3600;
 
@@ -57,7 +58,8 @@ public class SearchStat {
 	@PostConstruct
 	public void afterPropertiesSet() {
 		try {
-			File dir = new File(System.getProperty("user.home") + "/searchstat");
+			File dir = new File(System.getProperty("user.home")
+					+ INDEX_DIRECTORY);
 			if (!dir.exists() && dir.mkdirs())
 				log.error("mkdir error:" + dir.getAbsolutePath());
 			this.directory = NIOFSDirectory.getDirectory(dir);

@@ -19,6 +19,7 @@ public class Blowfish {
 	private static Log log = LogFactory.getLog(Blowfish.class);
 
 	public static final String DEFAULT_KEY_LOCATION = "/resources/key/blowfish";
+	public static final String KEY_DIRECTORY = "/app/conf/";
 
 	private static String CIPHER_NAME = "Blowfish/CFB8/NoPadding";
 	private static String KEY_SPEC_NAME = "Blowfish";
@@ -38,7 +39,7 @@ public class Blowfish {
 	static {
 		try {
 			File file = new File(System.getProperty("user.home")
-					+ "/key/blowfish");
+					+ KEY_DIRECTORY + "blowfish");
 			if (file.exists()) {
 				key = FileUtils.readFileToString(file, "UTF-8");
 			} else {

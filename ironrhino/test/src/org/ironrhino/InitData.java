@@ -21,9 +21,12 @@ public class InitData {
 
 	public static void main(String... strings) {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-				new String[] { "applicationContext-common.xml",
+				new String[] {
+						"resources/spring/applicationContext-common.xml",
 						"resources/spring/applicationContext-datasource.xml",
-						"resources/spring/applicationContext-hibernate.xml" });
+						"resources/spring/applicationContext-hibernate.xml",
+						"resources/spring/applicationContext-online.xml",
+						"resources/spring/applicationContext-cache.xml" });
 		UserManager userManager = (UserManager) ctx.getBean("userManager");
 		User test = new User();
 		test.setUsername("test");
@@ -84,6 +87,6 @@ public class InitData {
 				regions[i].setParent(regions[(i - 1) / 2]);
 			baseManager.save(regions[i]);
 		}
-
+		ctx.close();
 	}
 }

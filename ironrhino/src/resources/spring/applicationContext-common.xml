@@ -6,8 +6,14 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-	<context:property-placeholder
-		location="/WEB-INF/conf/applicationContext.properties" />
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" p:ignoreResourceNotFound="true">
+		<property name="locations">
+			<list>
+				<value>classpath:resources/spring/applicationContext.properties</value>
+				<value>file:///${user.home}/app/conf/applicationContext.properties</value>
+			</list>
+		</property>
+	</bean>
 	<context:annotation-config />
 	<context:component-scan base-package="org.ironrhino,com.ironrhino"/>
 	<aop:aspectj-autoproxy />
@@ -36,6 +42,6 @@
 	</bean>
 	<bean id="fileStorage" class="org.ironrhino.core.fs.impl.LocalFileStorage" p:uri="${fileStorage.uri}"/>
 	<!--
-	<bean id="fileStorage" class="org.ironrhino.core.fs.impl.HdfsFileStorage" p:uri="${fileStorage.uri}"/>
-	-->
+		<bean id="fileStorage" class="org.ironrhino.core.fs.impl.HdfsFileStorage" p:uri="${fileStorage.uri}"/>
+		-->
 </beans>
