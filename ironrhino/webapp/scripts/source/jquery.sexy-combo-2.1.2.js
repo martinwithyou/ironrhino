@@ -17,9 +17,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
- 
+
+
 ;(function() {
     $.fn.sexyCombo = function(config) {
+		//return;
         return this.each(function() {
 		if ("SELECT" != this.tagName.toUpperCase()) {
 		    return;	
@@ -79,7 +81,8 @@
 	    changeCallback: null,
 	
 	    //called when text input's value is changed
-	    textChangeCallback: null
+	    textChangeCallback: null,
+		checkWidth: true
     };
     
     //constructor
@@ -122,40 +125,52 @@
 	    appendTo(this.wrapper).
 	    //addClass("invisible").
 	    addClass("list-wrapper"); 
-		if ("function" == typeof this.listWrapper.bgiframe) {
-		    this.listWrapper.bgiframe({height: 1000});
-		}
+
 	    this.updateDrop();
 	
 	    this.list = $("<ul />").appendTo(this.listWrapper); 
 	    var self = this;
-	    this.options.each(function() {
+		var optWidths = [];
+	    this.options.each(function() {					   
 	        var optionText = $.trim($(this).text());
-	        $("<li />").
-	        appendTo(self.list).
-	        html("<span>" + optionText + "</span>").
-	        addClass("visible");
-	    
+			if (self.config.checkWidth) {
+			    optWidths.push($("<li />").
+	            appendTo(self.list).
+	            html("<span>" + optionText + "</span>").
+	            addClass("visible").find("span").outerWidth());	
+			}
+			else {
+	            $("<li />").
+	            appendTo(self.list).
+	            html("<span>" + optionText + "</span>").
+	            addClass("visible");
+			}
 	    });  
 		
 	
 	    this.listItems = this.list.children();
 		
-		//alert(this.listItems.find("span").outerWidth());
 		
-		var optWidths = [];
 		
-		this.listItems.find("span").each(function() {
+		
+		/*this.listItems.find("span").each(function() {
 		    optWidths.push($(this).outerWidth());										  
-		});
-		
-		optWidths = optWidths.sort(function(a, b) {
-		    return a - b;									
-		});
-		var maxOptionWidth = optWidths[optWidths.length - 1];
+		});*/
+		if (optWidths.length) {
+		    optWidths = optWidths.sort(function(a, b) {
+		        return a - b;									
+		    });
+		    var maxOptionWidth = optWidths[optWidths.length - 1];
+			
+			
+		}
 		
 
         this.singleItemHeight = this.listItems.outerHeight();
+		//bgiframe causes some problems, let's remove it
+		/*if ("function" == typeof this.listWrapper.bgiframe) {
+		    this.listWrapper.bgiframe({height: this.singleItemHeight * this.wrapper.find("li").height()});
+		}*/
 		this.listWrapper.addClass("invisible");
 		
        
@@ -178,12 +193,12 @@
 	
 	    this.overflowCSS = "overflowY";
 	
-	    if (this.listWrapper.innerWidth() < maxOptionWidth) {
+	    if ((this.config.checkWidth) && (this.listWrapper.innerWidth() < maxOptionWidth)) {
 		    this.overflowCSS = "overflow";	
+			
 		}
         
 		
-
 	    this.notify("init");
 	    this.initEvents();
     };
@@ -198,6 +213,25 @@
 	    //initializes all event listeners
         initEvents: function() {
 	        var self = this;
+			
+	        this.icon.bind("click", function(e) {
+	            if (!self.wrapper.data("sc:positionY"))	{
+		            self.wrapper.data("sc:positionY", e.pageY);	    	
+		        }
+	        });
+	
+	        this.input.bind("click", function(e) {
+	            if (!self.wrapper.data("sc:positionY"))	{
+		            self.wrapper.data("sc:positionY", e.pageY);	    	
+		        }								 
+	        });
+	
+
+	        this.wrapper.bind("click", function(e) {
+	            if (!self.wrapper.data("sc:positionY"))	{
+		            self.wrapper.data("sc:positionY", e.pageY);	 
+		        }									   
+	        });					
 	    
 	        this.icon.bind("click", function() {
 		        if (self.input.attr("disabled")) {
@@ -209,7 +243,13 @@
 	        }); 
 	    
 	        this.listItems.bind("mouseover", function(e) {
-	            self.highlight(e.target);
+	            //self.highlight(e.target);
+				if ("LI" == e.target.nodeName.toUpperCase()) {
+				    self.highlight(e.target);	
+				}
+				else {
+				    self.highlight($(e.target).parent());	
+				}
 	        });
 	    
 	        this.listItems.bind("click", function(e) {
@@ -218,11 +258,10 @@
 		
 			this.input.bind("keyup", function(e) {
 				self.wrapper.data("sc:lastEvent", "key");							                //alert(self.wrapper.data("sc:lastEvent"));
+				self.keyUp(e);
 			});		
 	    
-	        this.input.bind("keyup", function(e) {
-	            self.keyUp(e);
-	        });
+	      
 			
 
 	    
@@ -385,8 +424,13 @@
 		        this.setDropUp(false);	
 		    }
 		
-	        this.highlightFirst();
-	        this.listWrapper.scrollTop(0);
+		    if ("" == $.trim(this.input.val())) {
+	            this.highlightFirst();
+	            this.listWrapper.scrollTop(0);
+			}
+			else {
+			    this.highlightSelected();	
+			}
 	        this.notify("showList");
 	    },
 	
@@ -404,10 +448,7 @@
 	
 	    //returns sum of all visible items height
 	    getListItemsHeight: function() {
-	        /*var itemHeight = 20;
-	        if ($.browser.msie) {
-		        itemHeight = 18;   
-	        }*/
+	       
 			var itemHeight = this.singleItemHeight;
 	        return itemHeight * this.liLen();
 	    },
@@ -591,7 +632,7 @@
 			
 		var result = parseInt(this.listWrapper.css("maxHeight"), 10);
 		if (isNaN(result)) {
-		    result = 200;	
+		    result = this.singleItemHeight * 10;	
 		}
 		
 		return result;
@@ -603,6 +644,7 @@
 	    var liHeight = this.getListItemsHeight();
 		
 	    var maxHeight = this.getListMaxHeight();
+		
 	
 	    var listHeight = this.listWrapper.height();
 	    if (liHeight < listHeight) {
@@ -611,7 +653,6 @@
 			return liHeight;
 	    }
 	    else if (liHeight > listHeight) {
-			
 	        this.listWrapper.height(Math.min(maxHeight, liHeight));
 			
 			return Math.min(maxHeight, liHeight);
@@ -679,6 +720,23 @@
 	highlightFirst: function() {
 	    this.listItems.removeClass("active").filter(".visible:eq(0)").addClass("active");
 	    this.autoFill();
+	},
+	
+	highlightSelected: function() {
+        this.listItems.removeClass("active");
+		var val = $.trim(this.input.val());
+		
+		try {
+			this.listItems.each(function() {
+			    var $this = $(this);
+				if ($this.text() == val) {
+				    $this.addClass("active");	
+					self.listWrapper.scrollTop(0);
+					self.scrollDown();
+					
+				}
+			});
+		} catch (e) {}
 	},
 	
 	//highlights item of the dropdown list next to the currently active item
@@ -787,15 +845,18 @@
 	        return;
 		
 	    var self = this;	
-		var set = false;
+		try {
 	    this.options.each(function() {
 	        if ($(this).attr("selected")) {
-		    set = true;
-		    self.setComboValue($(this).text(), false, true);    
-		}
+		        self.setComboValue($(this).text(), false, true);
+				throw new Exception();
+		    }
 	    });	
-		//alert(set.toSource());
+		} catch (e) {
+		    return;	
+		}
 		
+        self.setComboValue(this.options.eq(0).text(), false, false);
 	},
 	
 	//autofill stuff
