@@ -31,11 +31,12 @@ import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
+import org.ironrhino.core.util.AppInfo;
 
 public class SearchStat {
 
 	public static final String SEARCH_STAT_THREAD_NAME = "SEARCH_STAT_THREAD_NAME";
-	public static final String INDEX_DIRECTORY = "/app/searchstat";
+	public static final String INDEX_DIRECTORY = "/searchstat";
 
 	public static final long TIME_INTERVAL = 3600;
 
@@ -58,8 +59,7 @@ public class SearchStat {
 	@PostConstruct
 	public void afterPropertiesSet() {
 		try {
-			File dir = new File(System.getProperty("user.home")
-					+ INDEX_DIRECTORY);
+			File dir = new File(AppInfo.getAppHome() + INDEX_DIRECTORY);
 			if (!dir.exists() && dir.mkdirs())
 				log.error("mkdir error:" + dir.getAbsolutePath());
 			this.directory = NIOFSDirectory.getDirectory(dir);

@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ironrhino.core.util.AppInfo;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.util.Assert;
 
@@ -30,7 +31,7 @@ public class StringStore implements BeanNameAware {
 
 	private String beanName;
 
-	private String directory = "/app/data/";
+	private String directory = "/data/";
 
 	private File file;
 
@@ -59,7 +60,7 @@ public class StringStore implements BeanNameAware {
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
 		Assert.hasLength(directory);
-		File dir = new File(System.getProperty("user.home") + directory);
+		File dir = new File(AppInfo.getAppHome() + directory);
 		if (!dir.mkdirs())
 			log.error("mkdir failed:" + dir.getAbsolutePath());
 		file = new File(dir, beanName + ".dat");

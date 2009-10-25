@@ -14,12 +14,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ironrhino.core.util.AppInfo;
 
 public class Blowfish {
 	private static Log log = LogFactory.getLog(Blowfish.class);
 
 	public static final String DEFAULT_KEY_LOCATION = "/resources/key/blowfish";
-	public static final String KEY_DIRECTORY = "/app/conf/";
+	public static final String KEY_DIRECTORY = "/key/";
 
 	private static String CIPHER_NAME = "Blowfish/CFB8/NoPadding";
 	private static String KEY_SPEC_NAME = "Blowfish";
@@ -38,8 +39,8 @@ public class Blowfish {
 
 	static {
 		try {
-			File file = new File(System.getProperty("user.home")
-					+ KEY_DIRECTORY + "blowfish");
+			File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY
+					+ "blowfish");
 			if (file.exists()) {
 				key = FileUtils.readFileToString(file, "UTF-8");
 			} else {
