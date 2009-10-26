@@ -1,7 +1,6 @@
 package org.ironrhino.common.action;
 
 import java.io.File;
-import java.util.UUID;
 
 import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -40,7 +39,6 @@ public class UploadAction extends BaseAction {
 	}
 
 	private String createPath(String filename) {
-		return "/upload/" + UUID.randomUUID().toString().replaceAll("-", "")
-				+ "-" + filename;
+		return "/upload/" + System.nanoTime() + "-" + filename;
 	}
 }

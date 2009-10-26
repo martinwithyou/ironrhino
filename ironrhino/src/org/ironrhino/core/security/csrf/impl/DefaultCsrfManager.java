@@ -1,12 +1,11 @@
 package org.ironrhino.core.security.csrf.impl;
 
-import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.security.csrf.CsrfManager;
+import org.ironrhino.core.util.CodecUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +19,7 @@ public class DefaultCsrfManager implements CsrfManager {
 
 	@Override
 	public String createToken(HttpServletRequest request) {
-		String token = UUID.randomUUID().toString().replace("-", "");
+		String token = CodecUtils.nextId();
 		cacheManager.put(request.getSession().getId(), token, -1,
 				CACHE_TOKEN_TIME_TO_LIVE, KEY_CSRF);
 		return token;
@@ -31,7 +30,7 @@ public class DefaultCsrfManager implements CsrfManager {
 		String value = request.getParameter(KEY_CSRF);
 		if (StringUtils.isBlank(value))
 			return false;
-		String last = (String)cacheManager.get(request.getSession().getId(),
+		String last = (String) cacheManager.get(request.getSession().getId(),
 				KEY_CSRF);
 		boolean b = value.equals(last);
 		cacheManager.delete(request.getSession().getId(), KEY_CSRF);

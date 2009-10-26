@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
@@ -123,6 +124,18 @@ public class CodecUtils {
 		for (int i = 0; i < digits; i++)
 			sb.append(string.charAt(random.nextInt(26)));
 		return sb.toString();
+	}
+
+	public static String nextId() {
+		String id = UUID.randomUUID().toString().replace("-", "");
+		id = NumberUtils.xToY(16, 64, id);
+		return id;
+	}
+
+	public static String nextId(String salt) {
+		String id = md5Hex(salt + UUID.randomUUID().toString());
+		id = NumberUtils.xToY(16, 64, id);
+		return id;
 	}
 
 }

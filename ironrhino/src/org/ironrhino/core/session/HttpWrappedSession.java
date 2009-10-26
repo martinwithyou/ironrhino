@@ -6,14 +6,13 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.RequestUtils;
 
 public class HttpWrappedSession implements Serializable, HttpSession {
@@ -49,7 +48,7 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 		if (StringUtils.isBlank(sessionId)) {
 			isnew = true;
 			createTime = System.currentTimeMillis();
-			sessionId = DigestUtils.md5Hex(salt + UUID.randomUUID().toString());
+			sessionId = CodecUtils.nextId(salt);
 		}
 		sessionStoreManager.initialize(this);
 	}
