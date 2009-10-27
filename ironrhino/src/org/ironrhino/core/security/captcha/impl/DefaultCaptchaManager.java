@@ -8,6 +8,7 @@ import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.security.captcha.CaptchaManager;
 import org.ironrhino.core.util.AuthzUtils;
+import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -108,6 +109,6 @@ public class DefaultCaptchaManager implements CaptchaManager {
 	}
 
 	protected String getThresholdKey(HttpServletRequest request) {
-		return CACHE_PREFIX_THRESHOLD + request.getRemoteAddr();
+		return CACHE_PREFIX_THRESHOLD + RequestUtils.getRemoteAddr(request);
 	}
 }

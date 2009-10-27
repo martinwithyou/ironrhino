@@ -12,6 +12,7 @@ import org.hibernate.Session;
 import org.ironrhino.core.aop.AopContext;
 import org.ironrhino.core.aop.CacheAspect;
 import org.ironrhino.core.security.spring.BaseAuthenticationProcessingFilter;
+import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.model.LoginRecord;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
@@ -34,12 +35,12 @@ public class UserAuthenticationProcessingFilter extends
 		User user = (User) authResult.getPrincipal();
 		user.setLoginTimes(user.getLoginTimes() + 1);
 		user.setLastLoginDate(new Date());
-		user.setLastLoginAddress(request.getRemoteAddr());
+		user.setLastLoginAddress(RequestUtils.getRemoteAddr(request));
 		AopContext.setBypass(CacheAspect.class);
 		userManager.save(user);
 		LoginRecord loginRecord = new LoginRecord();
 		loginRecord.setUsername(user.getUsername());
-		loginRecord.setLoginAddress(request.getRemoteAddr());
+		loginRecord.setLoginAddress(RequestUtils.getRemoteAddr(request));
 		save(loginRecord);
 	}
 
@@ -50,7 +51,7 @@ public class UserAuthenticationProcessingFilter extends
 		LoginRecord loginRecord = new LoginRecord();
 		loginRecord.setUsername((String) request.getSession().getAttribute(
 				SPRING_SECURITY_LAST_USERNAME_KEY));
-		loginRecord.setLoginAddress(request.getRemoteAddr());
+		loginRecord.setLoginAddress(RequestUtils.getRemoteAddr(request));
 		loginRecord.setFailed(true);
 		loginRecord.setCause(failed.getMessage());
 		save(loginRecord);

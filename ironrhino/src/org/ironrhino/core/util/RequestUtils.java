@@ -11,6 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 public class RequestUtils {
+	
+	public static String getRemoteAddr(HttpServletRequest request) {
+		String addr = request.getHeader("X-Forward-For");
+		return StringUtils.isNotBlank(addr)?addr:request.getRemoteAddr();
+	}
+
 
 	public static String getBaseUrl(HttpServletRequest request) {
 		StringBuffer sb = request.getRequestURL();

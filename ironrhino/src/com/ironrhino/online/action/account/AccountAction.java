@@ -15,6 +15,7 @@ import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.core.util.CodecUtils;
+import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,8 +95,7 @@ public class AccountAction extends BaseAction {
 					user);
 			if (StringUtils.isBlank(user.getAddress())) {
 				Region region = regionTreeControl
-						.parseByHost(ServletActionContext.getRequest()
-								.getRemoteAddr());
+						.parseByHost(RequestUtils.getRemoteAddr(ServletActionContext.getRequest()));
 				if (region != null)
 					user.setAddress(region.getFullname());
 			}
@@ -110,8 +110,8 @@ public class AccountAction extends BaseAction {
 		user = new User();
 		BeanUtils.copyProperties(AuthzUtils.getUserDetails(User.class), user);
 		if (StringUtils.isBlank(user.getAddress())) {
-			Region region = regionTreeControl.parseByHost(ServletActionContext
-					.getRequest().getRemoteAddr());
+			Region region = regionTreeControl.parseByHost(RequestUtils.getRemoteAddr(ServletActionContext
+					.getRequest()));
 			if (region != null)
 				user.setAddress(region.getFullname());
 		}
