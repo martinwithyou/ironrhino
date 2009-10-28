@@ -2,6 +2,7 @@ package org.ironrhino.core.fs;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public interface FileStorage {
 
@@ -18,6 +19,10 @@ public interface FileStorage {
 	public boolean get(String path, File local);
 
 	public boolean get(String path, File local, boolean realtime);
+
+	public void write(String path, OutputStream os);
+
+	public void write(String path, OutputStream os, boolean realtime);
 
 	public boolean delete(String path);
 

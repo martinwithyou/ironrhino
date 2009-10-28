@@ -37,11 +37,11 @@ public class LocalFileStorage extends AbstractFileStorage {
 
 	@Override
 	public InputStream open(String path, boolean realtime) {
-		File dest = new File(directory, path);
-		if (!dest.exists())
+		File target = new File(directory, path);
+		if (!target.exists())
 			return null;
 		try {
-			return new FileInputStream(dest);
+			return new FileInputStream(target);
 		} catch (FileNotFoundException e) {
 			log.error(e.getMessage(), e);
 			return null;
@@ -50,11 +50,11 @@ public class LocalFileStorage extends AbstractFileStorage {
 
 	@Override
 	public boolean get(String path, File localFile, boolean realtime) {
-		File dest = new File(directory, path);
-		if (!dest.exists())
+		File target = new File(directory, path);
+		if (!target.exists())
 			return false;
 		try {
-			FileUtils.copyFile(dest, localFile);
+			FileUtils.copyFile(target, localFile);
 			return true;
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
@@ -66,12 +66,16 @@ public class LocalFileStorage extends AbstractFileStorage {
 	@Override
 	public boolean save(File file, String path) {
 		File dest = new File(directory, path);
+		if(!dest.getParentFile().mkdirs())
+			return false;
 		return file.renameTo(dest);
 	}
 
 	@Override
 	public boolean save(InputStream is, String path) {
 		File dest = new File(directory, path);
+		if(!dest.getParentFile().mkdirs())
+			return false;
 		try {
 			FileOutputStream os = new FileOutputStream(dest);
 			return copy(is, os);

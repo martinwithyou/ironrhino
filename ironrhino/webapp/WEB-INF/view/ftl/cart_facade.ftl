@@ -6,7 +6,7 @@
 <ul>
 	<#list cart.order.items as var>
 		<li><img class="cart_item draggable"
-			src="${base}/pic/${var.productCode}.s.jpg"
+			src="${base}/product/${var.productCode}.s.jpg"
 			alt="${var.productCode}" />
 		<span>${var.productName}<#if var.quantity gt 1>(${var.quantity})</#if></span>
 		</li>

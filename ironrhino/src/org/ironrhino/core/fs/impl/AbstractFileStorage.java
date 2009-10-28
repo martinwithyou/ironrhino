@@ -53,6 +53,17 @@ public abstract class AbstractFileStorage implements FileStorage {
 		return get(path, local, false);
 	}
 
+	@Override
+	public void write(String path, OutputStream os) {
+		write(path, os, false);
+	}
+
+	@Override
+	public void write(String path, OutputStream os, boolean realtime) {
+		InputStream is = open(path, realtime);
+		copy(is, os);
+	}
+
 	protected boolean copy(InputStream is, OutputStream os) {
 		try {
 			BufferedInputStream bis = new BufferedInputStream(is, bufferSize);

@@ -1,14 +1,12 @@
 package com.ironrhino.online.servlet;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -17,47 +15,45 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.util.Thumbnail;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("urlRewriteFilter")
-public class UrlRewriteFilter implements Filter {
+@Component("productPictureFilter")
+public class ProductPictureFilter implements Filter {
 
-	protected Log log = LogFactory.getLog(UrlRewriteFilter.class);
-
-	private String picPrefix = "/pic/";
+	protected Log log = LogFactory.getLog(ProductPictureFilter.class);
 
 	private String productPrefix = "/product/";
 
-	private ServletContext servletContext;
-
-	public void setPicPrefix(String picPrefix) {
-		this.picPrefix = picPrefix;
-	}
+	@Autowired
+	private FileStorage fileStorage;
 
 	public void setProductPrefix(String productPrefix) {
 		this.productPrefix = productPrefix;
-	}
-
-	public void destroy() {
 	}
 
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
-		String productCode = "";
 		String path = request.getServletPath();
 		if (path == null) {
 			path = request.getRequestURI();
 			path = path.substring(request.getContextPath().length());
 		}
-
-		if (path.startsWith(picPrefix)) {
+		if (path.startsWith(productPrefix) && path.endsWith(".jpg")) {
 			String file = path.substring(path.lastIndexOf('/') + 1);
 			if (file.indexOf('.') == file.lastIndexOf('.')) {
 				// original pic,no need thumbnail
-				chain.doFilter(req, resp);
+				try {
+					fileStorage.write(path, response.getOutputStream());
+				} catch (Exception e) {
+					log.error(path + ":" + e.getMessage(), e);
+					request.getRequestDispatcher("/images/product.jpg")
+							.forward(request, response);
+				}
 			} else {
 				String size = file.substring(file.indexOf('.') + 1, file
 						.lastIndexOf('.'));
@@ -68,17 +64,13 @@ public class UrlRewriteFilter implements Filter {
 				else if (size.equalsIgnoreCase("m"))
 					size = "200x200";
 				size = size.toLowerCase();
+				int width = Integer.valueOf(size
+						.substring(0, size.indexOf('x')));
+				int height = Integer.valueOf(size
+						.substring(size.indexOf('x') + 1));
+				path = productPrefix + file;
 				try {
-					int width = Integer.valueOf(size.substring(0, size
-							.indexOf('x')));
-					int height = Integer.valueOf(size.substring(size
-							.indexOf('x') + 1));
-					File f = new File(servletContext.getRealPath(picPrefix
-							+ file));
-					if (!f.exists())
-						f = new File(servletContext
-								.getRealPath("/images/product.jpg"));
-					BufferedImage image = ImageIO.read(f);
+					BufferedImage image = ImageIO.read(fileStorage.open(path));
 					image = Thumbnail.resizeFix(image, width, height);
 					response.setHeader("Cache-Control", "max-age=86400");
 					ImageIO.write(image, file
@@ -86,24 +78,20 @@ public class UrlRewriteFilter implements Filter {
 							.getOutputStream());
 				} catch (Exception e) {
 					log.error(path + ":" + e.getMessage(), e);
-					chain.doFilter(req, resp);
+					request.getRequestDispatcher("/images/product.jpg")
+							.forward(request, response);
 				}
 			}
 			return;
 		}
-
-		if (!path.endsWith(".html")) {
-			chain.doFilter(req, resp);
-			return;
-		}
-		productCode = path.substring(productPrefix.length(), path
-				.lastIndexOf('.'));
-		request.getRequestDispatcher(productPrefix + "view/" + productCode)
-				.forward(request, response);
+		chain.doFilter(req, resp);
 	}
 
 	public void init(FilterConfig config) throws ServletException {
-		servletContext = config.getServletContext();
+
+	}
+
+	public void destroy() {
 	}
 
 }
