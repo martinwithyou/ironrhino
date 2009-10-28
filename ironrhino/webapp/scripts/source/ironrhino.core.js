@@ -146,7 +146,7 @@ Observation.common = function(container) {
 						+ this.get_img_binary() + '"/>');
 			});
 			content.push('<\/body><\/html>');
-			var img_win = window.open('', 'img_win');
+			var img_win = window.open('', '_blank');
 			with (img_win.document) {
 				write(content.join(''));
 				img_win.document.close();
