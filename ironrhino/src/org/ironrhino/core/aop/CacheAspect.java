@@ -37,16 +37,16 @@ public class CacheAspect extends BaseAspect {
 	public Object get(ProceedingJoinPoint jp, CheckCache checkCache)
 			throws Throwable {
 		String namespace = eval(checkCache.namespace(), jp, null).toString();
-		List<Serializable> keys = evalList(checkCache.key(), jp, null);
+		List keys = evalList(checkCache.key(), jp, null);
 		if (keys == null || keys.size() == 0 || isBypass())
 			return jp.proceed();
 		if (CacheContext.isForceFlush()) {
-			for (Serializable key : keys)
-				cacheManager.delete(key, namespace);
+			for (Object key : keys)
+				cacheManager.delete(key.toString(), namespace);
 		} else {
 			Object value = null;
-			for (Serializable key : keys) {
-				if ((value = cacheManager.get(key, namespace)) != null)
+			for (Object key : keys) {
+				if ((value = cacheManager.get(key.toString(), namespace)) != null)
 					break;
 			}
 			if (value != null) {
@@ -60,9 +60,9 @@ public class CacheAspect extends BaseAspect {
 		if (result != null && evalBoolean(checkCache.when(), jp, result)) {
 			int timeToLive = evalInt(checkCache.timeToLive(), jp, result);
 			int timeToIdle = evalInt(checkCache.timeToIdle(), jp, result);
-			for (Serializable key : keys)
-				cacheManager
-						.put(key, result, timeToIdle, timeToLive, namespace);
+			for (Object key : keys)
+				cacheManager.put(key.toString(), result, timeToIdle,
+						timeToLive, namespace);
 			eval(checkCache.onPut(), jp, result);
 		}
 		return result;
@@ -71,7 +71,7 @@ public class CacheAspect extends BaseAspect {
 	@AfterReturning("@annotation(flushCache)")
 	public void remove(JoinPoint jp, FlushCache flushCache) {
 		String namespace = eval(flushCache.namespace(), jp, null).toString();
-		List<Serializable> keys = evalList(flushCache.key(), jp, null);
+		List keys = evalList(flushCache.key(), jp, null);
 		if (isBypass() || keys == null || keys.size() == 0)
 			return;
 		cacheManager.mdelete(keys, namespace);
