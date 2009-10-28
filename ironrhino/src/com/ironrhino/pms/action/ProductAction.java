@@ -6,12 +6,12 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Attribute;
 import org.ironrhino.common.model.ResultPage;
+import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +56,9 @@ public class ProductAction extends BaseAction {
 
 	@Autowired
 	private transient ProductManager productManager;
+
+	@Autowired
+	private transient FileStorage fileStorage;
 
 	public ResultPage<Product> getResultPage() {
 		return resultPage;
@@ -285,34 +288,31 @@ public class ProductAction extends BaseAction {
 		return "picture";
 	}
 
-	private void savePictureFile(String filename) throws Exception {
+	private void savePictureFile(String filename) {
 		String path = getPicturePath(filename);
-		File target = new File(path);
-		if (!picture.renameTo(target))
+		if (!fileStorage.save(picture, path))
 			log.error("failed rename " + picture.getAbsolutePath() + " to "
-					+ target.getAbsolutePath());
+					+ path);
 	}
 
 	private void deletePictureFile(String filename) {
 		String path = getPicturePath(filename);
-		File f = new File(path);
-		if (!f.delete())
-			log.error("failed to delete " + f.getAbsolutePath());
+		if (!fileStorage.delete(path))
+			log.error("failed to delete " + path);
 	}
 
 	private void renamePictureFile(String filename, String newfilename) {
 		String path1 = getPicturePath(filename);
 		String path2 = getPicturePath(newfilename);
-		File f1 = new File(path1);
-		File f2 = new File(path2);
-		if (!f1.renameTo(f2))
-			log.error("failed rename " + f1.getAbsolutePath() + " to "
-					+ f2.getAbsolutePath());
+		if (!fileStorage.rename(path1, path2))
+			log.error("failed rename " + path1 + " to " + path2);
 	}
 
 	private String getPicturePath(String filename) {
-		return ServletActionContext.getServletContext().getRealPath(
-				"/pic/" + filename + ".jpg");
-
+		StringBuilder sb = new StringBuilder();
+		sb.append("/product/");
+		sb.append(filename);
+		sb.append(".jpg");
+		return sb.toString();
 	}
 }

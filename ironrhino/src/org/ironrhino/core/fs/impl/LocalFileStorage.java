@@ -94,4 +94,10 @@ public class LocalFileStorage extends AbstractFileStorage {
 		}
 	}
 
+	@Override
+	public boolean rename(String fromPath, String toPath) {
+		return new File(directory, fromPath).renameTo(new File(directory,
+				toPath));
+	}
+
 }

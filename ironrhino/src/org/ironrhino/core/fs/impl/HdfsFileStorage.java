@@ -63,6 +63,20 @@ public class HdfsFileStorage extends AbstractFileStorage {
 	}
 
 	@Override
+	public boolean rename(String fromPath, String toPath) {
+		try {
+			boolean b = hdfs.rename(new Path(fromPath), new Path(toPath));
+			if (b && cache != null) {
+				cache.delete(fromPath);
+			}
+			return b;
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+			return false;
+		}
+	}
+
+	@Override
 	public InputStream open(String path, boolean realtime) {
 		try {
 			if (cache == null)

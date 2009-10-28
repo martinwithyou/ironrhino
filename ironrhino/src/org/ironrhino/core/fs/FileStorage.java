@@ -27,4 +27,6 @@ public interface FileStorage {
 
 	public boolean copy(String path, FileStorage from, FileStorage to);
 
+	public boolean rename(String fromPath, String toPath);
+
 }
