@@ -402,16 +402,17 @@ Observation.richtable = function() {
 					Richtable.reload()
 				});
 
+		var pathname = document.location.pathname;
 		var form = $('#_window_ form.ajax');
 		if (form.length > 0) {
 			var action = form.attr('action');
 			if (action.indexOf('http') != 0 && action.indexOf('/') != 0)
-				action = document.location.pathname
-						+ (document.location.pathname.indexOf('/') == (document.location.pathname.length - 1)
+				action = pathname
+						+ (pathname.indexOf('/') == (pathname.length - 1)
 								? ''
 								: '/') + action;
 			form.attr('action', action);
-			if (form.hasClass('view'))
+			if (form.hasClass('view') && !form.attr('replacement'))
 				form.attr('replacement', '_window_:content');
 			if (!form.hasClass('keepopen') && !form.hasClass('view')) {
 				$('button[type="submit"]', form).click(function() {
@@ -424,6 +425,16 @@ Observation.richtable = function() {
 						});
 			}
 		}
+		$('#_window_ a').each(function() {
+			var href = $(this).attr('href');
+			if (href.indexOf('http') != 0 && href.indexOf('/') != 0) {
+				href = pathname
+						+ (pathname.indexOf('/') == (pathname.length - 1)
+								? ''
+								: '/') + href;
+				this.href = href;
+			}
+		});
 	}
 };
 Initialization.richtable = function() {
