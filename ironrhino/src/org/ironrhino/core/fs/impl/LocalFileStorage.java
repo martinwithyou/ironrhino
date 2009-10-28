@@ -13,7 +13,6 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.io.FileUtils;
 import org.springframework.util.Assert;
 
-//@Component("fileStorage")
 public class LocalFileStorage extends AbstractFileStorage {
 
 	private File directory;
@@ -32,13 +31,13 @@ public class LocalFileStorage extends AbstractFileStorage {
 	}
 
 	@Override
-	public boolean delete(String filename) {
-		return new File(directory, filename).delete();
+	public boolean delete(String path) {
+		return new File(directory, path).delete();
 	}
 
 	@Override
-	public InputStream open(String filename) {
-		File dest = new File(directory, filename);
+	public InputStream open(String path, boolean realtime) {
+		File dest = new File(directory, path);
 		if (!dest.exists())
 			return null;
 		try {
@@ -50,8 +49,8 @@ public class LocalFileStorage extends AbstractFileStorage {
 	}
 
 	@Override
-	public boolean get(String filename, File localFile) {
-		File dest = new File(directory, filename);
+	public boolean get(String path, File localFile, boolean realtime) {
+		File dest = new File(directory, path);
 		if (!dest.exists())
 			return false;
 		try {
@@ -65,19 +64,33 @@ public class LocalFileStorage extends AbstractFileStorage {
 	}
 
 	@Override
-	public boolean save(File file, String filename) {
-		File dest = new File(directory, filename);
+	public boolean save(File file, String path) {
+		File dest = new File(directory, path);
 		return file.renameTo(dest);
 	}
 
 	@Override
-	public boolean save(InputStream is, String filename) {
-		File dest = new File(directory, filename);
+	public boolean save(InputStream is, String path) {
+		File dest = new File(directory, path);
 		try {
 			FileOutputStream os = new FileOutputStream(dest);
 			return copy(is, os);
 		} catch (IOException e) {
 			return false;
+		}
+	}
+
+	@Override
+	public long getLastModified(String path) {
+		return new File(directory, path).lastModified();
+	}
+
+	@Override
+	public void setLastModified(String path, long lastModified) {
+		try {
+			new File(directory, path).setLastModified(lastModified);
+		} catch (Exception e) {
+
 		}
 	}
 

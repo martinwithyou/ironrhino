@@ -2,6 +2,7 @@ package org.ironrhino.core.fs.impl;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,6 +25,32 @@ public abstract class AbstractFileStorage implements FileStorage {
 
 	public void setUri(String uri) {
 		this.uri = uri;
+	}
+
+	@Override
+	public boolean save(File file, String path, boolean deleteFile) {
+		boolean b = save(file, path);
+		if (b && file.delete())
+			return true;
+		return b;
+	}
+
+	@Override
+	public boolean copy(String path, FileStorage from, FileStorage to) {
+		InputStream is = from.open(path);
+		if (is == null)
+			return false;
+		return to.save(is, path);
+	}
+
+	@Override
+	public InputStream open(String path) {
+		return open(path, false);
+	}
+
+	@Override
+	public boolean get(String path, File local) {
+		return get(path, local, false);
 	}
 
 	protected boolean copy(InputStream is, OutputStream os) {
