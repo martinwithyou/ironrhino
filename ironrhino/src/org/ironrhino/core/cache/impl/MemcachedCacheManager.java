@@ -42,10 +42,12 @@ public class MemcachedCacheManager implements CacheManager {
 	}
 
 	@PostPropertiesReset
-	public void postPropertiesReset() throws IOException {
+	public void rebuild() throws IOException {
 		if (rebuild) {
 			rebuild = false;
+			MemcachedClient temp = memcached;
 			memcached = build(serverAddress);
+			temp.shutdown();
 		}
 	}
 
