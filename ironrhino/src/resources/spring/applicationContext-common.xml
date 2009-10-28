@@ -42,6 +42,10 @@
 	</bean>
 	<bean id="fileStorage" class="org.ironrhino.core.fs.impl.LocalFileStorage" p:uri="${fileStorage.uri}"/>
 	<!--
-		<bean id="fileStorage" class="org.ironrhino.core.fs.impl.HdfsFileStorage" p:uri="${fileStorage.uri}"/>
-		-->
+	<bean id="fileStorage" class="org.ironrhino.core.fs.impl.HdfsFileStorage" p:uri="${fileStorage.uri}">
+		<property name="cache">
+			<bean class="org.ironrhino.core.fs.impl.LocalFileStorage" p:uri="file:///temp"/>
+		</property>
+	</bean>
+	-->
 </beans>
