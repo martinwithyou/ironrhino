@@ -15,7 +15,10 @@ import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.ConnectionFactory;
 import net.spy.memcached.DefaultConnectionFactory;
 import net.spy.memcached.HashAlgorithm;
+import net.spy.memcached.KetamaNodeLocator;
 import net.spy.memcached.MemcachedClient;
+import net.spy.memcached.MemcachedNode;
+import net.spy.memcached.NodeLocator;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
@@ -62,7 +65,12 @@ public class MemcachedCacheManager implements CacheManager {
 		ConnectionFactory cf = new BinaryConnectionFactory(
 				DefaultConnectionFactory.DEFAULT_OP_QUEUE_LEN,
 				DefaultConnectionFactory.DEFAULT_READ_BUFFER_SIZE,
-				HashAlgorithm.KETAMA_HASH);
+				HashAlgorithm.KETAMA_HASH) {
+			@Override
+			public NodeLocator createLocator(List<MemcachedNode> nodes) {
+				return new KetamaNodeLocator(nodes, getHashAlg());
+			}
+		};
 		return new MemcachedClient(cf, AddrUtil.getAddresses(serverAddress));
 	}
 
