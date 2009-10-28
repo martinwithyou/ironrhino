@@ -137,6 +137,21 @@ Observation.common = function(container) {
 						wmode : "transparent"
 					});
 		});
+		window.save_image = function() {
+			var content = [];
+			content
+					.push('<html><head><title>Charts: Export as Image<\/title><\/head><body>');
+			$('object[data]').each(function() {
+				content.push('<img src="data:image/png;base64,'
+						+ this.get_img_binary() + '"/>');
+			});
+			content.push('<\/body><\/html>');
+			var img_win = window.open('', 'Charts: Export as Image');
+			with (img_win.document) {
+				write(content.join(''));
+				img_win.document.close();
+			}
+		}
 	}
 	if (typeof $.fn.uploadify != 'undefined')
 		$('.uploadify').each(function() {
