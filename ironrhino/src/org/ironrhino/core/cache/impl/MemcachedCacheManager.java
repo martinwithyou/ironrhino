@@ -12,10 +12,14 @@ import javax.annotation.PreDestroy;
 
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.BinaryConnectionFactory;
+import net.spy.memcached.ConnectionFactory;
+import net.spy.memcached.DefaultConnectionFactory;
+import net.spy.memcached.HashAlgorithm;
 import net.spy.memcached.MemcachedClient;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
+import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.springframework.util.Assert;
 
 public class MemcachedCacheManager implements CacheManager {
@@ -24,21 +28,40 @@ public class MemcachedCacheManager implements CacheManager {
 
 	private MemcachedClient memcached;
 
-	public void setServerAddress(String serverAddress) {
-		this.serverAddress = serverAddress;
+	private boolean rebuild; // reserve last set
+
+	public void setServerAddress(String val) {
+		if (val != null && serverAddress != null && !val.equals(serverAddress))
+			rebuild = true;
+		serverAddress = val;
 	}
 
 	@PostConstruct
 	public void afterPropertiesSet() throws IOException {
-		Assert.hasLength(serverAddress);
-		memcached = new MemcachedClient(new BinaryConnectionFactory(), AddrUtil
-				.getAddresses(serverAddress));
+		memcached = build(serverAddress);
+	}
+
+	@PostPropertiesReset
+	public void postPropertiesReset() throws IOException {
+		if (rebuild) {
+			rebuild = false;
+			memcached = build(serverAddress);
+		}
 	}
 
 	@PreDestroy
 	public void destroy() {
 		if (memcached != null)
 			memcached.shutdown();
+	}
+
+	private MemcachedClient build(String serverAddress) throws IOException {
+		Assert.hasLength(serverAddress);
+		ConnectionFactory cf = new BinaryConnectionFactory(
+				DefaultConnectionFactory.DEFAULT_OP_QUEUE_LEN,
+				DefaultConnectionFactory.DEFAULT_READ_BUFFER_SIZE,
+				HashAlgorithm.KETAMA_HASH);
+		return new MemcachedClient(cf, AddrUtil.getAddresses(serverAddress));
 	}
 
 	public void put(String key, Object value, int timeToIdle, int timeToLive,
@@ -103,4 +126,5 @@ public class MemcachedCacheManager implements CacheManager {
 		sb.append(key);
 		return sb.toString();
 	}
+
 }

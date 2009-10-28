@@ -15,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.event.SetPropertyEvent;
 import org.ironrhino.core.metadata.PostPropertiesReset;
-import org.ironrhino.core.metadata.PrePropertiesReset;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.mvel2.MVEL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,12 +119,6 @@ public class ApplicationContextConsole implements ApplicationListener {
 				if (expression.indexOf('=') > 0) {
 					bean = beans.get(expression.substring(0, expression
 							.indexOf('.')));
-				}
-				if (bean != null) {
-					Method m = AnnotationUtils.getAnnotatedMethod(bean
-							.getClass(), PrePropertiesReset.class);
-					if (m != null)
-						m.invoke(bean, new Object[0]);
 				}
 				MVEL.eval(expression, beans);
 				if (bean != null) {
