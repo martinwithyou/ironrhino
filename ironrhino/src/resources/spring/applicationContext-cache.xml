@@ -9,4 +9,7 @@
 			<bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
 		</constructor-arg>
 	</bean>
+	<!--
+		<bean id="cacheManager" class="org.ironrhino.core.cache.impl.MemcachedCacheManager" p:serverAddress="localhost:11211"/>
+	-->
 </beans>

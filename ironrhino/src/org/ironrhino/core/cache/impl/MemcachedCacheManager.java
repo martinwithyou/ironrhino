@@ -1,7 +1,6 @@
 package org.ironrhino.core.cache.impl;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,11 +20,15 @@ import net.spy.memcached.MemcachedNode;
 import net.spy.memcached.NodeLocator;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.springframework.util.Assert;
 
 public class MemcachedCacheManager implements CacheManager {
+
+	private Log log = LogFactory.getLog(getClass());
 
 	private String serverAddress;
 
@@ -70,6 +73,11 @@ public class MemcachedCacheManager implements CacheManager {
 			public NodeLocator createLocator(List<MemcachedNode> nodes) {
 				return new KetamaNodeLocator(nodes, getHashAlg());
 			}
+
+			@Override
+			public long getOperationTimeout() {
+				return 2000;
+			}
 		};
 		return new MemcachedClient(cf, AddrUtil.getAddresses(serverAddress));
 	}
@@ -81,15 +89,24 @@ public class MemcachedCacheManager implements CacheManager {
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		// TODO timeToIdle doesn't supported
-		memcached.set(generateKey(key, namespace), timeToLive, value);
+		try {
+			memcached.set(generateKey(key, namespace), timeToLive, value);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 
-	public Serializable get(String key, String namespace) {
+	public Object get(String key, String namespace) {
 		if (key == null)
 			return null;
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
-		return (Serializable) memcached.get(generateKey(key, namespace));
+		try {
+			return memcached.get(generateKey(key, namespace));
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return null;
+		}
 	}
 
 	public void delete(String key, String namespace) {
@@ -97,7 +114,11 @@ public class MemcachedCacheManager implements CacheManager {
 			return;
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
-		memcached.delete(generateKey(key, namespace));
+		try {
+			memcached.delete(generateKey(key, namespace));
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
@@ -117,7 +138,12 @@ public class MemcachedCacheManager implements CacheManager {
 		List<String> list = new ArrayList<String>();
 		for (String key : keys)
 			list.add(generateKey(key, namespace));
-		return memcached.getBulk(list);
+		try {
+			return memcached.getBulk(list);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return null;
+		}
 	}
 
 	public void mdelete(Collection<String> keys, String namespace) {
