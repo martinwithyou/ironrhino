@@ -20,6 +20,8 @@ import com.ironrhino.pms.service.ProductManager;
 public class InitData {
 
 	public static void main(String... strings) {
+		System.setProperty("app.name", "ironrhino");
+		System.setProperty("ironrhino.apphome", "ironrhino");
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				new String[] {
 						"resources/spring/applicationContext-common.xml",

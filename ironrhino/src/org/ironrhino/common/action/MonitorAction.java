@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.ironrhino.common.support.StatControl;
+import org.ironrhino.core.chart.openflashchart.Chart;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.metadata.JsonSerializerType;
-import org.ironrhino.core.openflashchart.Chart;
 import org.ironrhino.core.stat.Key;
 import org.ironrhino.core.stat.analysis.TreeNode;
 import org.ironrhino.core.struts.BaseAction;

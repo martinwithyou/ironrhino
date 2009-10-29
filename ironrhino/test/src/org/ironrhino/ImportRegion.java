@@ -15,6 +15,8 @@ public class ImportRegion {
 	static BaseManager baseManager;
 
 	public static void main(String... strings) throws Exception {
+		System.setProperty("app.name", "ironrhino");
+		System.setProperty("ironrhino.apphome", "ironrhino");
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				new String[] {
 						"resources/spring/applicationContext-common.xml",

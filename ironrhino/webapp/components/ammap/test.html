@@ -1,0 +1,22 @@
+<html> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+<title>ammap</title> 
+</head> 
+ 
+<body onload="ammap.focus()" style="background-color:transparent" > 
+	<div id="chart"> 
+		<strong>Please update your Flash Player</strong> 
+	</div> 
+	<script type="text/javascript"> 
+		var so = new SWFObject("ammap.swf", "ammap", "100%", "100%", "8", "#FFFFFF");
+    	so.addVariable("path", "");
+		so.addVariable("data_file",'datafile.xml');
+   		so.addVariable("settings_file", 'ammapsettings.xml');		
+		so.addVariable("preloader_color", "#999999");
+		so.addParam("wmode","transparent");
+		so.write("chart");
+	</script> 
+</body> 
+</html> 
+
