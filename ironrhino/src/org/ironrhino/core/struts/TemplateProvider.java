@@ -12,12 +12,15 @@ import org.apache.struts2.views.freemarker.FreemarkerManager;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.SimpleMapModel;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateHashModelEx;
 
+/**
+ * see org.ironrhino.core.struts.RichFreemarkerManager
+ * 
+ * @author minggao
+ * 
+ */
 public class TemplateProvider {
 
 	private Log log = LogFactory.getLog(this.getClass());
@@ -32,6 +35,10 @@ public class TemplateProvider {
 
 	public void setAllSharedVariables(Map allSharedVariables) {
 		this.allSharedVariables = allSharedVariables;
+	}
+
+	public Map getAllSharedVariables() {
+		return allSharedVariables;
 	}
 
 	public void setFtlLocation(String ftlLocation) {
@@ -51,9 +58,6 @@ public class TemplateProvider {
 				configuration = freemarkerManager
 						.getConfiguration(ServletActionContext
 								.getServletContext());
-				TemplateHashModelEx hash = new SimpleMapModel(
-						allSharedVariables, BeansWrapper.getDefaultInstance());
-				configuration.setAllSharedVariables(hash);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}

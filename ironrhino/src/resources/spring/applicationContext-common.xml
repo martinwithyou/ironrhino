@@ -37,6 +37,7 @@
 		<property name="allSharedVariables">
 			<map>
 				<entry key="base" value="${base}" />
+				<entry key="assetsBase" value="${assetsBase}" />
 			</map>
 		</property>
 	</bean>

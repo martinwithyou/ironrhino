@@ -13,6 +13,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.opensymphony.xwork2.inject.Inject;
 
@@ -35,11 +36,17 @@ public class RichFreemarkerManager extends
 	@Inject(value = "ironrhino.view.ftl.classpath", required = false)
 	private String ftlClasspath = AutoConfigResult.DEFAULT_FTL_CLASSPATH;
 
+	
+
 	@Override
 	protected freemarker.template.Configuration createConfiguration(
 			ServletContext servletContext) throws TemplateException {
+		TemplateProvider templateProvider = (TemplateProvider) WebApplicationContextUtils
+				.getWebApplicationContext(servletContext).getBean(
+						"templateProvider", TemplateProvider.class);
 		Configuration configuration = super.createConfiguration(servletContext);
 		Map globalVariables = new HashMap();
+		globalVariables.putAll(templateProvider.getAllSharedVariables());
 		globalVariables.put("statics", BeansWrapper.getDefaultInstance()
 				.getStaticModels());
 		TemplateHashModelEx hash = new SimpleMapModel(globalVariables,
