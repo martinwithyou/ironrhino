@@ -85,12 +85,17 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <${tag} <#list extra?keys as attr>${attr}="${extra[attr]?html}" </#list>${_type!} class="${class}"><span><span>${text}</span></span></${tag}>
 </#macro>
 
-<#macro link value secure=false>
+<#macro link value secure=''>
 <#if value?starts_with('/assets/')>
-${assetsBase!}${value}
+${assetsBase???string(assetsBase!,base)+value}
 <#elseif value?starts_with('/')>
-<#local v=base+value>
-
+<#local value=base+value>
+<#if !request.isSecure() && secure=='true'>
+<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,true)+value>
+<#elseif request.isSecure() && secure=='false'>
+<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,false)+value>
+</#if>
+${value}
 <#else>
 ${value}
 </#if>
