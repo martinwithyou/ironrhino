@@ -93,7 +93,7 @@
 	<#if order.status.getName()=='INITIAL'>
 		<div id="payment"><#list paymentManager.payments as var>
 			<#if !var.disabled>
-				<div><img src="${base}/images/${var.code}.jpg" alt="${var.code}" />${var.name}
+				<div><img src="${base}/assets/images/${var.code}.jpg" alt="${var.code}" />${var.name}
 				<#noescape>${var.getPayForm(order)}</#noescape></div>
 			</#if>
 		</#list></div>

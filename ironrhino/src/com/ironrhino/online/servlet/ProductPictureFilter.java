@@ -50,7 +50,7 @@ public class ProductPictureFilter implements Filter {
 				try {
 					fileStorage.write(path, response.getOutputStream());
 				} catch (Exception e) {
-					request.getRequestDispatcher("/images/product.jpg")
+					request.getRequestDispatcher("/assets/images/product.jpg")
 							.forward(request, response);
 				}
 			} else {
@@ -76,7 +76,7 @@ public class ProductPictureFilter implements Filter {
 							.substring(file.lastIndexOf('.') + 1), response
 							.getOutputStream());
 				} catch (Exception e) {
-					request.getRequestDispatcher("/images/product.jpg")
+					request.getRequestDispatcher("/assets/images/product.jpg")
 							.forward(request, response);
 				}
 			}

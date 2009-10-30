@@ -84,3 +84,14 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#if>
 <${tag} <#list extra?keys as attr>${attr}="${extra[attr]?html}" </#list>${_type!} class="${class}"><span><span>${text}</span></span></${tag}>
 </#macro>
+
+<#macro link value secure=false>
+<#if value?starts_with('/assets/')>
+${assetsBase!}${value}
+<#elseif value?starts_with('/')>
+<#local v=base+value>
+
+<#else>
+${value}
+</#if>
+</#macro>

@@ -3,15 +3,15 @@
 <head>
 <title>ammap</title>
 <meta name="decorator" content="none"/>
-<script src="${base}/components/ammap/swfobject.js"></script>
+<script src="${base}/assets/components/ammap/swfobject.js"></script>
 </head>
 <body style="background-color:transparent" > 
 	<div id="ammap" style="width:800px; height:600px;"> 
 		<strong>Please update your Flash Player</strong> 
 	</div> 
 	<script type="text/javascript"> 
-		var so = new SWFObject('${base}/components/ammap/ammap.swf', 'ammap', '100%', '100%', '8', '#FFFFFF');
-		so.addVariable('path', encodeURIComponent('${base}/components/ammap/'));
+		var so = new SWFObject('${base}/assets/components/ammap/ammap.swf', 'ammap', '100%', '100%', '8', '#FFFFFF');
+		so.addVariable('path', encodeURIComponent('${base}/assets/components/ammap/'));
 		so.addVariable('data_file',encodeURIComponent('${Parameters.data_file}'));
    		so.addVariable('settings_file', encodeURIComponent('${base}/common/ammap/settings<#noescape><#if request.queryString??>?${request.queryString}</#if></#noescape>'));		
 		so.addVariable('preloader_color', '#999999');

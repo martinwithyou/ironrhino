@@ -1,5 +1,5 @@
 $.extend($.jStore.defaults, {
-			flash : CONTEXT_PATH + '/images/jStore.Flash.html'
+			flash : CONTEXT_PATH + '/assets/images/jStore.Flash.html'
 		});
 
 /*

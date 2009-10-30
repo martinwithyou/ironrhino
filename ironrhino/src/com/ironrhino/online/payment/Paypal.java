@@ -67,7 +67,7 @@ public class Paypal extends AbstractPayment {
 				request, false)
 				+ "/payment/paypal"));
 		sb
-				.append("<input type=\"image\" SRC=\"http://images.paypal.com/images/x-click-but01.gif\" border=\"0\" name=\"submit\" alt='"
+				.append("<input type=\"image\" SRC=\"http://images.paypal.com/assets/images/x-click-but01.gif\" border=\"0\" name=\"submit\" alt='"
 						+ name + "' title='" + name + "'/>");
 		sb.append("</form>");
 		return sb.toString();

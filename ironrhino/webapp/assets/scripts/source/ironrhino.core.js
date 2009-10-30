@@ -129,9 +129,9 @@ Observation.common = function(container) {
 			data = encodeURIComponent(data);
 			if (!id || !width || !height || !data)
 				alert('id,width,height,data all required');
-			swfobject.embedSWF(CONTEXT_PATH + '/images/open-flash-chart.swf',
+			swfobject.embedSWF(CONTEXT_PATH + '/assets/images/open-flash-chart.swf',
 					id, width, height, '9.0.0', CONTEXT_PATH
-							+ '/images/expressInstall.swf', {
+							+ '/assets/images/expressInstall.swf', {
 						'data-file' : data
 					}, {
 						wmode : "transparent"
@@ -156,9 +156,9 @@ Observation.common = function(container) {
 	if (typeof $.fn.uploadify != 'undefined')
 		$('.uploadify').each(function() {
 			var options = {
-				'uploader' : CONTEXT_PATH + '/images/uploadify.swf',
+				'uploader' : CONTEXT_PATH + '/assets/images/uploadify.swf',
 				'script' : $(this).closest('form')[0].action,
-				'cancelImg' : CONTEXT_PATH + '/images/cancel.png',
+				'cancelImg' : CONTEXT_PATH + '/assets/images/cancel.png',
 				// 'folder' : CONTEXT_PATH + '/upload',
 				'buttonText' : MessageBundle.get('browse'),
 				'wmode' : 'transparent',

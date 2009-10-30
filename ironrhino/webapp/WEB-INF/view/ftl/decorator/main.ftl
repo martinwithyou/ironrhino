@@ -6,14 +6,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 <meta name="context_path" content="${request.contextPath}" />
-<link rel="shortcut icon" href="${base}/images/favicon.ico" />
-<link href="${base}/styles/all-min.css" media="screen" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="${base}/assets/images/favicon.ico" />
+<link href="${base}/assets/styles/all-min.css" media="screen" rel="stylesheet" type="text/css" />
 <!--[if IE]>
-	<link href="${base}/styles/ie.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="${base}/assets/styles/ie.css" media="all" rel="stylesheet" type="text/css" />
 <![endif]-->
-<script src="${base}/scripts/all-min.js" type="text/javascript"></script>
+<script src="${base}/assets/scripts/all-min.js" type="text/javascript"></script>
 <#if request.servletPath?starts_with('/product/')>
-<script type="text/javascript" src="${base}/scripts/app.product.js"></script>
+<script type="text/javascript" src="${base}/assets/scripts/app.product.js"></script>
 </#if>
 <#noescape>${head}</#noescape>
 </head>
@@ -21,7 +21,7 @@
 <body>
 <div id="wrapper">
 <div id="header">
-<div id="logo"><a href="${base}"><img src="${base}/images/logo.gif" alt="返回首页" /></a></div>
+<div id="logo"><a href="${base}"><img src="${base}/assets/images/logo.gif" alt="返回首页" /></a></div>
 <div id="menu">
 <ul class="nav">
 	<@authorize ifNotGranted="ROLE_BUILTIN_USER">

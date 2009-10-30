@@ -3,12 +3,12 @@
 <head>
 <title>Create/Edit Page</title>
 <meta name="cms_path" content="${cmsPath}" />
-<script type="text/javascript" src="${base}/components/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script> 
+<script type="text/javascript" src="${base}/assets/components/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script> 
 <script type="text/javascript">
 $(function() {
 		var cmsPath= $('meta[name="cms_path"]').attr('content') || '';
 		var options = {
-			script_url : '${base}/components/tinymce/jscripts/tiny_mce/tiny_mce.js',
+			script_url : '${base}/assets/components/tinymce/jscripts/tiny_mce/tiny_mce.js',
 			theme : "advanced",
 			plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,autosave",
 			theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
@@ -19,7 +19,7 @@ $(function() {
 			theme_advanced_toolbar_align : "left",
 			theme_advanced_statusbar_location : "bottom",
 			theme_advanced_resizing : true,
-			content_css : "${base}/styles/all-min.css",
+			content_css : "${base}/assets/styles/all-min.css",
 			mode : "textareas"
 		};
 		$('#page_content').tinymce(options);

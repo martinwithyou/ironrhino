@@ -5,13 +5,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 <meta name="context_path" content="${request.contextPath}" />
-<link rel="shortcut icon" href="${base}/images/favicon.ico" />
-<link href="${base}/styles/all-min.css" media="screen" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="${base}/assets/images/favicon.ico" />
+<link href="${base}/assets/styles/all-min.css" media="screen" rel="stylesheet" type="text/css" />
 <!--[if IE]>
-	<link href="${base}/styles/ie.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="${base}/assets/styles/ie.css" media="all" rel="stylesheet" type="text/css" />
 <![endif]-->
 <link rel="alternate" href="${base}/product/feed" title="ironrhino products" type="application/atom+xml" />
-<script src="${base}/scripts/all-min.js" type="text/javascript"></script>
+<script src="${base}/assets/scripts/all-min.js" type="text/javascript"></script>
 <#noescape>${head}</#noescape>
 </head>
 
