@@ -2,11 +2,13 @@ package org.ironrhino;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.util.RegionParser;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -19,9 +21,12 @@ import com.ironrhino.pms.service.ProductManager;
 
 public class InitData {
 
-	public static void main(String... strings) {
+	static BaseManager baseManager;
+
+	public static void main(String... strings) throws Exception {
 		System.setProperty("app.name", "ironrhino");
-		System.setProperty("ironrhino.apphome", "ironrhino");
+		System.setProperty("ironrhino.apphome", System.getProperty("user.home")
+				+ "/" + System.getProperty("app.name"));
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				new String[] {
 						"resources/spring/applicationContext-common.xml",
@@ -79,16 +84,22 @@ public class InitData {
 			}
 		}
 
-		BaseManager baseManager = (BaseManager) ctx.getBean("baseManager");
-
-		Region[] regions = new Region[10];
-		for (int i = 0; i < regions.length; i++) {
-			regions[i] = new Region();
-			regions[i].setName("region" + i);
-			if ((i + 1) % 2 == 0)
-				regions[i].setParent(regions[(i - 1) / 2]);
-			baseManager.save(regions[i]);
+		baseManager = (BaseManager) ctx.getBean("baseManager");
+		List<Region> regions = RegionParser.parse();
+		for (Region region : regions) {
+			save(region);
 		}
 		ctx.close();
 	}
+
+	private static void save(Region region) {
+		baseManager.save(region);
+		List<Region> list = new ArrayList<Region>();
+		for (Region child : region.getChildren())
+			list.add(child);
+		Collections.sort(list);
+		for (Region child : list)
+			save(child);
+	}
+
 }

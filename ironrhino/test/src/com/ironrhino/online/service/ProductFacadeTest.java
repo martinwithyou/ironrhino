@@ -26,11 +26,11 @@ import com.ironrhino.pms.service.ProductManager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:resources/spring/applicationContext-base.xml",
-		"classpath:resources/spring/applicationContext-hibernate.xml",
-		"classpath:resources/spring/applicationContext-service-pms.xml",
-		"classpath:resources/spring/applicationContext-service-online.xml",
-		"classpath:resources/spring/applicationContext-aop.xml" })
+		"resources/spring/applicationContext-common.xml",
+		"resources/spring/applicationContext-datasource.xml",
+		"resources/spring/applicationContext-hibernate.xml",
+		"resources/spring/applicationContext-online.xml",
+		"resources/spring/applicationContext-cache.xml" })
 public class ProductFacadeTest {
 
 	Product[] products = new Product[10];
