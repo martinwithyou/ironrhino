@@ -10,15 +10,15 @@ public enum ChinaArea {
 	static ResourceBundle resources = ResourceBundle.getBundle(ChinaArea.class
 			.getCanonicalName(), Locale.CHINA);
 
-	public String getDisplayName() {
-		return resources.getString(getName());
-	}
-
-	public ChinaArea parse(String displayName) {
+	public static ChinaArea parse(String displayName) {
 		for (ChinaArea area : values())
 			if (displayName.equals(area.getDisplayName()))
 				return area;
 		return null;
+	}
+
+	public String getDisplayName() {
+		return resources.getString(getName());
 	}
 
 	public String getName() {
