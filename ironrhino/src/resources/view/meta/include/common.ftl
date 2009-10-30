@@ -85,22 +85,26 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <${tag} <#list extra?keys as attr>${attr}="${extra[attr]?html}" </#list>${_type!} class="${class}"><span><span>${text}</span></span></${tag}>
 </#macro>
 
-
-
 <#function getUri value secure=''>
 <#if value?starts_with('/assets/')>
-<#return assetsBase???string(assetsBase!,base)+value>
+	<#local value=assetsBase???string(assetsBase!,base)+value>
 <#elseif value?starts_with('/')>
-<#local value=base+value>
-<#if !request.isSecure() && secure=='true'>
-<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,true)+value>
-<#elseif request.isSecure() && secure=='false'>
-<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,false)+value>
+	<#local value=base+value>
+	<#if request??>
+		<#if !request.isSecure() && secure=='true'>
+			<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,true)+value>
+		<#elseif request.isSecure() && secure=='false'>
+			<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,false)+value>
+		</#if>
+	<#else>
+		<#if value?starts_with('http://') && secure=='true'>
+			<#local value=value?replace('http://','https://')?replace('8080','8443')>
+		<#elseif value?starts_with('https://') && secure=='false'>
+			<#local value=value?replace('https://','http://')?replace('8443','8080')>
+		</#if>
+	</#if>
 </#if>
 <#return value>
-<#else>
-<#return value>
-</#if>
 </#function>
 
 <#macro uri value secure=''>
