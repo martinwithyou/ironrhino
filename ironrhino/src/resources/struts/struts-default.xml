@@ -4,8 +4,8 @@
 <struts>
 	<package name="default" namespace="/" extends="ironrhino-default">
 		<action name="product" class="com.ironrhino.online.action.ProductAction">
-			<result name="input" type="redirect">/product/${uid}.html</result>
-			<result name="success" type="redirect">/product/${uid}.html</result>
+			<result name="input" type="redirect">/product/view/${uid}</result>
+			<result name="success" type="redirect">/product/view/${uid}</result>
 			<result name="list" type="autoconfig"/>
 			<result name="view" type="autoconfig"/>
 		</action>

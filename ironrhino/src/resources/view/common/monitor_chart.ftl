@@ -4,14 +4,14 @@
 <title>Monitor</title>
 </head>
 <body>
-<form action="${base}/common/monitor/chart/<#noescape>${uid}</#noescape>" class="ajax view" replacement="c">
+<form action="<@uri value="/common/monitor/chart/${uid}"/>" class="ajax view" replacement="c">
 <@s.hidden name="vtype"/>
 <@s.hidden name="ctype"/>
 <span>${action.getText('date')}</span>
 <@s.textfield label="%{getText('date')}" theme="simple" name="date" cssClass="date" size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
-<form action="${base}/common/monitor/chart/<#noescape>${uid}</#noescape>" class="ajax view" replacement="c">
+<form action="<@uri value="/common/monitor/chart/${uid}"/>" class="ajax view" replacement="c">
 <@s.hidden name="vtype"/>
 <@s.hidden name="ctype"/>
 <span>${action.getText('date.range')}</span>
@@ -20,7 +20,7 @@
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
 <div id="c">
-<div id="chart" class="chart" data="${base}/common/monitor/data/<#noescape>${uid}<#if request.queryString??>?${request.queryString}</#if></#noescape>" style="width:1024px; height:300px;">
+<div id="chart" class="chart" data="<@uri value="/common/monitor/data/${uid+request.queryString???string('?'+request.queryString,'')}"/>" style="width:1024px; height:300px;">
 </div>
 </div>
 </body>

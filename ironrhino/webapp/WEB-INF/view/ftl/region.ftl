@@ -16,7 +16,7 @@
 	Initialization.treeview= function(){
 		$("#treeview").treeview({
 			<#if async??&&async>
-			url: '${base}/region/children',
+			url: '<@uri value="/region/children"/>',
 			click:_click,
 			</#if>
 			collapsed: true,

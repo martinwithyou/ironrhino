@@ -10,7 +10,7 @@
 	Initialization.treeview= function(){
 		$("#treeview").treeview({
 			<#if async??&&async>
-			url: "${base}/pms/category/children",
+			url: "<@uri value="/pms/category/children"/>",
 			click:_click,
 			</#if>
 			collapsed: true,

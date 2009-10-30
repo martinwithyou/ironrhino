@@ -6,7 +6,7 @@
 <ul>
 	<#list cart.order.items as var>
 		<li><img class="cart_item draggable"
-			src="${base}/product/${var.productCode}.s.jpg"
+			src="<@uri value="/product/${var.productCode}.s.jpg"/>"
 			alt="${var.productCode}" />
 		<span>${var.productName}<#if var.quantity gt 1>(${var.quantity})</#if></span>
 		</li>
@@ -18,6 +18,6 @@
 </div>
 </div>
 <div style="height: 5px;"></div>
-<div id="cart_footer"><a href="${base}/cart">管理</a>/<a
-	href="${base}/account/order/addressee">结算</a></div>
+<div id="cart_footer"><a href="<@uri value="/cart"/>">管理</a>/<a
+	href="<@uri value="/account/order/addressee"/>">结算</a></div>
 </div>

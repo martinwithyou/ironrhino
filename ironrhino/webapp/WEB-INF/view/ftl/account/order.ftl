@@ -21,12 +21,12 @@
 			<td>${var.user.name}</td>
 			<td>${var.status.displayName}</td>
 			<td>${var.createDate}</td>
-			<td><a href="${base}/account/order/view/${var.code}">view</a>
+			<td><a href="<@uri value="/account/order/view/${var.code}"/>">view</a>
 			<#if var.status.getName()=='INITIAL'>
-				<a href="${base}/account/order/view/${var.code}">pay</a>
-				<a href="${base}/account/order/cancel/${var.code}">cancel</a>
+				<a href="<@uri value="/account/order/view/${var.code}"/>">pay</a>
+				<a href="<@uri value="/account/order/cancel/${var.code}"/>">cancel</a>
 			</#if><#if var.status.getName()=='CANCELLED'>
-				<a href="${base}/account/order/delete/${var.code}">delete</a>
+				<a href="<@uri value="/account/order/delete/${var.code}"/>">delete</a>
 			</#if></td>
 		</tr>
 	</#list>

@@ -1,6 +1,6 @@
 <div>
 username:${user.username}
 password:${user.password}
-activate url:<a href="${base+url}" target="_blank">${base+url}</a>
+activate url:<#assign url=getUri(url)/><a href="${url}" target="_blank">${url}</a>
 </div>
 

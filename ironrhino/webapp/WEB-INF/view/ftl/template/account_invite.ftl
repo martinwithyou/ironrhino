@@ -1,3 +1,3 @@
 <div>
-url:<a href="${base+url}" target="_blank">${base+url}</a>
+url:<#assign url=getUri(url)/><a href="${url}" target="_blank">${url}</a>
 </div>

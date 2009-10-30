@@ -18,7 +18,7 @@
 		<#list resultPage.result as var>
 			<tr>
 				<td><input type="checkbox" name="id" value="${var.id}" /></td>
-				<td><a href="${base}/product/view/${var.productCode}">${var.productName}</a></td>
+				<td><a href="<@uri value="/product/view/${var.productCode}"/>">${var.productName}</a></td>
 				<td>${var.addDate}</td>
 				<td><a href="delete/${var.id}" class="ajax view">delete</a></td>
 			</tr>

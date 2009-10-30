@@ -4,7 +4,7 @@
 <title>ironrhino</title>
 </head>
 <body>
-<form action="${base}/cart/update" method="post"
+<form action="<@uri value="/cart/update"/>" method="post"
 	class="ajax view" options="{replacement:'detail'}">
 <div id="detail">
 <table class="sortable">
@@ -34,12 +34,12 @@
 			<tr class="row">
 				<td><input type="checkbox" name="id"
 					value="${var.productCode}" /></td>
-				<td><a href="${base}/product/view/${var.productCode}"> ${var.productName}</a></td>
+				<td><a href="<@uri value="/product/view/${var.productCode}"/>"> ${var.productName}</a></td>
 				<td>${var.productPrice}</td>
 				<td><input type="hidden" name="items[${index}].productCode" value="${var.productCode}" /> 
 				<input type="text" size="2" name="items[${index}].quantity" value="${var.quantity}" /></td>
 				<td>${var.subtotal}</td>
-				<td><a href="${base}/cart/remove/${var.productCode}" class="ajax view"
+				<td><a href="<@uri value="/cart/remove/${var.productCode}"/>" class="ajax view"
 					options="{replacement:'detail',onprepare:'confirm(\'are you sure to remove ${var.productCode}\')'}">remove</a></td>
 			</tr>
 			<#assign index=index+1>
@@ -50,9 +50,9 @@
 <div id="actions">
 <@button class="goback" text="继续购物"/>
 <@s.submit value="更新购物车" theme="simple" />
-<@button type="link" text="删除选中" href="${base}/cart/remove" class="ajax view delete_selected" options="{replacement:'detail'}"/>
-<@button type="link" text="清空" href="${base}/cart/clear" class="ajax view" options="{replacement:'detail',onprepare:'confirm(\'are you sure to clear cart\')'}"/>
-<@button type="link" text="结算" href="${base}/account/order/addressee"/>
+<@button type="link" text="删除选中" href="${getUri('/cart/remove')}" class="ajax view delete_selected" options="{replacement:'detail'}"/>
+<@button type="link" text="清空" href="${getUri('/cart/clear')}" class="ajax view" options="{replacement:'detail',onprepare:'confirm(\'are you sure to clear cart\')'}"/>
+<@button type="link" text="结算" href="${getUri('/account/order/addressee')}"/>
 </form>
 </body>
 </html></#escape>
