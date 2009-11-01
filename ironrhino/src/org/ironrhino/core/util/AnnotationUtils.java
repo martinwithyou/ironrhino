@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class AnnotationUtils {
 
@@ -29,9 +30,13 @@ public class AnnotationUtils {
 
 	public static Set<Method> getAnnotatedMethods(Class clazz,
 			Class<? extends Annotation> annotaionClass) {
-		String key = clazz.getCanonicalName() + "-"
-				+ annotaionClass.getCanonicalName() + "-method";
-		if (cache.get(key) == null) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("getAnnotatedMethods:");
+		sb.append(clazz.getCanonicalName());
+		sb.append(',');
+		sb.append(annotaionClass.getCanonicalName());
+		String key = sb.toString();
+		if (!cache.containsKey(key)) {
 			Set<Method> set = new HashSet<Method>();
 			try {
 				Method[] methods = clazz.getMethods();
@@ -48,9 +53,13 @@ public class AnnotationUtils {
 
 	public static Set<String> getAnnotatedPropertyNames(Class clazz,
 			Class<? extends Annotation> annotaionClass) {
-		String key = clazz.getCanonicalName() + "-"
-				+ annotaionClass.getCanonicalName() + "-propertyName";
-		if (cache.get(key) == null) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("getAnnotatedPropertyNames:");
+		sb.append(clazz.getCanonicalName());
+		sb.append(',');
+		sb.append(annotaionClass.getCanonicalName());
+		String key = sb.toString();
+		if (!cache.containsKey(key)) {
 			Set<String> set = new HashSet<String>();
 			try {
 				Field[] fs = clazz.getDeclaredFields();
@@ -88,11 +97,14 @@ public class AnnotationUtils {
 
 	public static Map<String, Annotation> getAnnotatedPropertyNameAndAnnotations(
 			Class clazz, Class<? extends Annotation> annotaionClass) {
-		String key = clazz.getCanonicalName() + "-"
-				+ annotaionClass.getCanonicalName()
-				+ "-propertyNameAndAnnotation";
-		Map<String, Annotation> map = new HashMap<String, Annotation>();
-		if (cache.get(key) == null) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("getAnnotatedPropertyNameAndAnnotations:");
+		sb.append(clazz.getCanonicalName());
+		sb.append(',');
+		sb.append(annotaionClass.getCanonicalName());
+		String key = sb.toString();
+		if (!cache.containsKey(key)) {
+			Map<String, Annotation> map = new HashMap<String, Annotation>();
 			try {
 				Field[] fs = clazz.getDeclaredFields();
 				for (Field f : fs)
@@ -111,6 +123,36 @@ public class AnnotationUtils {
 			cache.put(key, map);
 		}
 		return (Map<String, Annotation>) cache.get(key);
+	}
+
+	public static <T extends Annotation> T getAnnotation(Class clazz,
+			Class<T> annotationClass, String methodName, Class... paramTypes) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("getAnnotation:");
+		sb.append(clazz.getCanonicalName());
+		sb.append(',');
+		sb.append(annotationClass.getCanonicalName());
+		sb.append(',');
+		sb.append(methodName);
+		if (paramTypes.length > 0) {
+			sb.append('(');
+			sb.append(StringUtils.join(paramTypes, ","));
+			sb.append(')');
+		}
+		String key = sb.toString();
+		if (!cache.containsKey(key)) {
+			Method method = org.springframework.beans.BeanUtils.findMethod(
+					clazz, methodName, paramTypes);
+			Object annotation = method != null ? method
+					.getAnnotation(annotationClass) : null;
+			if (annotation == null)
+				annotation = "null";
+			cache.put(key, annotation);
+		}
+		Object v = cache.get(key);
+		if (v instanceof Annotation)
+			return (T) v;
+		return null;
 	}
 
 }

@@ -12,8 +12,8 @@ import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Csrf;
 import org.ironrhino.core.security.captcha.CaptchaManager;
 import org.ironrhino.core.security.csrf.CsrfManager;
+import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -230,12 +230,9 @@ public class BaseAction extends ActionSupport {
 	}
 
 	private <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-		Method method = BeanUtils.findMethod(getClass(), ActionContext
-				.getContext().getActionInvocation().getProxy().getMethod(),
-				null);
-		if (method == null)
-			return null;
-		return method.getAnnotation(annotationClass);
+		return AnnotationUtils.getAnnotation(getClass(), annotationClass,
+				ActionContext.getContext().getActionInvocation().getProxy()
+						.getMethod());
 	}
 
 }
