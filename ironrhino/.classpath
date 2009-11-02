@@ -30,7 +30,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/json-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/compass-2.2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-2.4.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-1.6.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-core-2.1.8.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-spring-plugin-2.1.8.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-3.3.2.jar"/>
@@ -66,5 +65,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mysql-connector-java-5.1.10.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/slf4j-api-1.5.8.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/slf4j-log4j12-1.5.8.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-1.7.0.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
