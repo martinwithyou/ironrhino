@@ -15,26 +15,30 @@ public class AppInfo {
 
 	public static final String HOSTNAME;
 
-	public static final String RACK;
+	public static final String DEFAULT_RACK = "/default-rack";
+
+	public static final String NODEPATH;
 
 	static {
-		String name = "localhost";
+		String name = "unknown";
 		try {
 			name = InetAddress.getLocalHost().getHostName();
 		} catch (UnknownHostException e) {
 		}
 		HOSTNAME = name;
 		String[] array = HOSTNAME.split("-");
+		StringBuilder sb = new StringBuilder();
 		if (array.length == 1) {
-			RACK = null;
+			sb.append(DEFAULT_RACK);
+			sb.append('/');
+			sb.append(array[0]);
 		} else {
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < array.length - 1; i++) {
+			for (int i = 0; i < array.length; i++) {
 				sb.append('/');
 				sb.append(array[i]);
 			}
-			RACK = sb.toString();
 		}
+		NODEPATH = sb.toString();
 	}
 
 	public static String getAppHome() {
@@ -53,8 +57,8 @@ public class AppInfo {
 		return HOSTNAME;
 	}
 
-	public static String getRack() {
-		return RACK;
+	public static String getNodePath() {
+		return NODEPATH;
 	}
 
 }
