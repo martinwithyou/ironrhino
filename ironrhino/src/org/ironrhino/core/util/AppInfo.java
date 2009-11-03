@@ -5,13 +5,19 @@ import java.net.UnknownHostException;
 
 public class AppInfo {
 
+	public static final String KEY_STAGE = "STAGE";
+
 	public static final String KEY_APP_NAME = "app.name";
 
 	public static final String KEY_APP_VERSION = "app.version";
 
+	public static final String KEY_RACK = "RACK";
+
 	public static String APP_NAME = "app";
 
 	public static String APP_VERSION = "1.0.0";
+
+	public static final Stage STAGE;
 
 	public static final String HOSTNAME;
 
@@ -20,25 +26,44 @@ public class AppInfo {
 	public static final String NODEPATH;
 
 	static {
+		String stage = System.getProperty(KEY_STAGE);
+		if (stage == null)
+			stage = System.getenv(KEY_STAGE);
+		Stage s = null;
+		if (stage != null)
+			try {
+				s = Stage.valueOf(stage.toUpperCase());
+			} catch (Exception e) {
+			}
+		if (s != null)
+			STAGE = s;
+		else
+			STAGE = Stage.PRODUCTION;
+
 		String name = "unknown";
 		try {
 			name = InetAddress.getLocalHost().getHostName();
 		} catch (UnknownHostException e) {
 		}
 		HOSTNAME = name;
-		String[] array = HOSTNAME.split("-");
+
+		String rack = System.getProperty(KEY_RACK);
+		if (rack == null)
+			rack = System.getenv(KEY_RACK);
+		if (rack == null)
+			rack = DEFAULT_RACK;
 		StringBuilder sb = new StringBuilder();
-		if (array.length == 1) {
-			sb.append(DEFAULT_RACK);
-			sb.append('/');
-			sb.append(array[0]);
-		} else {
-			for (int i = 0; i < array.length; i++) {
-				sb.append('/');
-				sb.append(array[i]);
-			}
-		}
+		if (!rack.startsWith("/"))
+			sb.append("/");
+		sb.append(rack);
+		if (!rack.endsWith("/"))
+			sb.append("/");
+		sb.append(HOSTNAME);
 		NODEPATH = sb.toString();
+	}
+
+	public static Stage getStage() {
+		return STAGE;
 	}
 
 	public static String getAppHome() {
@@ -59,6 +84,10 @@ public class AppInfo {
 
 	public static String getNodePath() {
 		return NODEPATH;
+	}
+
+	public static enum Stage {
+		DEVELOPMENT, TEST, PREPARATION, PRODUCTION
 	}
 
 }
