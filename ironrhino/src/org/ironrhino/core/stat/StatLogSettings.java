@@ -1,8 +1,6 @@
 package org.ironrhino.core.stat;
 
 import java.io.File;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,20 +31,9 @@ public class StatLogSettings {
 	private static long intervalUnit = 60; // senconds
 
 	private static long systemIntervalMultiple = 60; // system.log
+
 	// SYSTEM_INTERVAL_MULTIPLE*INTERVAL_UNIT
 	// senconds
-
-	public static final String HOST;
-
-	static {
-		String host = "localhost";
-		try {
-			host = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			log.error(e.getMessage(), e);
-		}
-		HOST = host;
-	}
 
 	public static long getIntervalUnit() {
 		return intervalUnit;
@@ -74,8 +61,8 @@ public class StatLogSettings {
 	}
 
 	public static String getLogFile(String filename) {
-		return new File(getLogFileDirectory(), HOST + SEPARATOR + filename)
-				.getAbsolutePath();
+		return new File(getLogFileDirectory(), AppInfo.getHostName()
+				+ SEPARATOR + filename).getAbsolutePath();
 	}
 
 }
