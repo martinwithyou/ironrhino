@@ -128,13 +128,13 @@ public class CodecUtils {
 
 	public static String nextId() {
 		String id = UUID.randomUUID().toString().replace("-", "");
-		id = NumberUtils.xToY(16, 64, id);
+		id = NumberUtils.xToY(16, 62, id);
 		return id;
 	}
 
 	public static String nextId(String salt) {
 		String id = md5Hex(salt + UUID.randomUUID().toString());
-		id = NumberUtils.xToY(16, 64, id);
+		id = NumberUtils.xToY(16, 62, id);
 		return id;
 	}
 

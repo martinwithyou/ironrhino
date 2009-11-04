@@ -6,9 +6,9 @@
 	default-lazy="true">
 	<class name="Product" table="pms_product" dynamic-insert="true"
 		dynamic-update="true">
-		<id name="id" type="java.lang.String" length="32"
+		<id name="id" type="java.lang.String" length="22"
 			unsaved-value="null">
-			<generator class="uuid" />
+			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
 		<natural-id>
 			<property name="code" not-null="true" />

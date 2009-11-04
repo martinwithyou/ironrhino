@@ -5,8 +5,8 @@
 <hibernate-mapping package="com.ironrhino.online.model"
 	default-lazy="true">
 	<class name="Feedback" table="online_feedback">
-		<id name="id" type="java.lang.String" length="32" unsaved-value="null">
-			<generator class="uuid" />
+		<id name="id" type="java.lang.String" length="22" unsaved-value="null">
+			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
 		<property name="username" />
 		<property name="name" />
