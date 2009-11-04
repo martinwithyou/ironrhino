@@ -70,24 +70,24 @@ ${action.getText(name)}
 </#macro>
 
 <#macro rttbodytd cellName,value,entity,template="",readonly=false,renderLink=false,cellEdit="",cellEditTemplate="rt_edit_template_input",cellEditAction="ondblclick",class="">
-<td<#if class!=""> class="${class}"</#if><#if cellEdit!=""> ${(cellEditAction!="")?string(cellEditAction,"ondblclick")}="ECSideUtil.editCell(this,'${cellEdit}','${(cellEditTemplate!="")?string(cellEditTemplate,"rt_edit_template_input")}')"</#if><#if !readonly> cellName="${cellName}"</#if>>
-<#if template=="">
-<#if renderLink>
-<a href="?${cellName}=${value?url('utf-8')}" class="ajax view">
-</#if>
-<#if value?string=='true'||value?string=='false'>
-${action.getText(value)}
-<#else>
-${value?xhtml}
-</#if>
-<#if renderLink>
-</a>
-</#if>
-<#else>
-<#local temp=template?interpret>
-<@temp/>
-</#if>
-</td>
+<td<#if class!=""> class="${class}"</#if><#if cellEdit!=""> ${(cellEditAction!="")?string(cellEditAction,"ondblclick")}="ECSideUtil.editCell(this,'${cellEdit}','${(cellEditTemplate!="")?string(cellEditTemplate,"rt_edit_template_input")}')"</#if><#if !readonly> cellName="${cellName}"</#if>><#rt>
+<#if template==""><#t>
+<#if renderLink><#t>
+<a href="?${cellName}=${value?url('utf-8')}" class="ajax view"><#t>
+</#if><#t>
+<#if value?string=='true'||value?string=='false'><#t>
+${action.getText(value)}<#t>
+<#else><#t>
+${value?xhtml}<#t>
+</#if><#t>
+<#if renderLink><#t>
+</a><#t>
+</#if><#t>
+<#else><#t>
+<#local temp=template?interpret><#t>
+<@temp/><#t>
+</#if><#t>
+</td><#lt>
 </#macro>
 
 <#macro rttbodytrend rowid buttons="" readonly=false celleditable=true deleteable=true>
