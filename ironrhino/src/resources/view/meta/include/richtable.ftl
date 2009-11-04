@@ -1,7 +1,8 @@
 <#macro richtable config entityName action='' actionColumnWidth='150px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true includeParameters=true>
 <@rtstart action=action?has_content?string(action,entityName) readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters/>
 <#list config?keys as name>
-<@rttheadtd name=name editable=(!readonly)&&(config[name]['cellEdit']??) resizable=resizable/>
+<#local cellName=((config[name]['trimPrefix']??)?string('',entityName+'.'))+name>
+<@rttheadtd name=name class=config[name]['class']! cellName=cellName cellEdit=config[name]['cellEdit'] readonly=readonly resizable=resizable/>
 </#list>
 <@rtmiddle width=actionColumnWidth readonly=readonly/>
 <#local index=0>
@@ -10,20 +11,19 @@
 <#local index=index+1>
 <@rttbodytrstart rowid=entity.id! odd=(index%2==1)  readonly=readonly/>
 	<#list config?keys as name>
-		<#local cellName=((config[name]['trimPrefix']??)?string('',entityName+'.'))+name>
 		<#if config[name]['value']??>
 		<#local value=config[name]['value']>
 		<#else>
 		<#local value=entity[name]!>
 		</#if>
-		<@rttbodytd entity=entity cellName=cellName value=value readonly=readonly template=config[name]['template']! renderLink=(config[name]['renderLink']??&&config[name]['renderLink']) cellEdit=config[name]['cellEdit'] class=config[name]['class']!/>
+		<@rttbodytd entity=entity value=value template=config[name]['template']! renderLink=(config[name]['renderLink']??&&config[name]['renderLink'])/>
 	</#list>
 	<@rttbodytrend rowid=entity.id! buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
 </#list>
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable/>
 </#macro>
 
-<#macro rtstart action='' readonly=false resizable=true sortable=true includeParameters=true>
+<#macro rtstart action='',readonly=false,resizable=true,sortable=true,includeParameters=true>
 <form action="${action}" method="post" class="richtable ajax view"<#if resizable> resizable="true" minColWidth="40"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
@@ -40,8 +40,8 @@
 </#if>
 </#macro>
 
-<#macro rttheadtd name editable=true resizable=true>
-<td class="tableHeader<#if editable> editableColumn</#if>">
+<#macro rttheadtd name,cellName='',cellEdit='',class='',readonly=false,resizable=true>
+<td class="tableHeader<#if class!=''> ${class}</#if>"<#if !readonly> cellName="${cellName}"</#if><#if cellEdit!=''> cellEdit="${cellEdit}"</#if>>
 <#if resizable>
 <span class="resizeTitle">${action.getText(name)}</span>
 <span class="resizeBar"/>
@@ -64,8 +64,8 @@ ${action.getText(name)}
 <#if !readonly><td><input type="checkbox" name="check"/></td></#if>
 </#macro>
 
-<#macro rttbodytd cellName,value,entity,template='',readonly=false,renderLink=false,cellEdit='',class=''>
-<td<#if !readonly> cellName="${cellName}"</#if><#if class!=''> class="${class}"</#if><#if cellEdit!=''> cellEdit="${cellEdit}"</#if>><#rt>
+<#macro rttbodytd value,entity,template='',renderLink=false>
+<td><#rt>
 <#if template==''><#t>
 <#if renderLink><#t>
 <a href="?${cellName}=${value?url('utf-8')}" class="ajax view"><#t>
@@ -87,7 +87,7 @@ ${value?xhtml}<#t>
 
 <#macro rttbodytrend rowid buttons='' readonly=false celleditable=true deleteable=true>
 <#if !readonly>
-<td class="include_if_edited">
+<td>
 <#if buttons!=''>
 <#local temp=buttons?interpret>
 <@temp/>

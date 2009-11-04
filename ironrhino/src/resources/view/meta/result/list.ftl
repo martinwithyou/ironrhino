@@ -11,7 +11,7 @@
 		<#if config.displayName??>
 			<#assign label=config.displayName>
 		</#if>
-		<@rttheadtd name=label editable=!(readonly||naturalIdsImmatuable)/>
+		<@rttheadtd name=label cellName=entityName+'.'+key cellEdit=(readonly||naturalIdsImmatuable)?string('','input') readonly=readonly/>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
@@ -20,7 +20,20 @@
 			<#if config.displayName??>
 				<#assign label=config.displayName>
 			</#if>
-			<@rttheadtd name=label editable=!(readonly||uiConfigs[key].readonly)/>
+			<#if !(readonly||uiConfigs[key].readonly)>
+				<#if uiConfigs[key].type=='input'||uiConfigs[key].type=='textarea'>
+					<#assign cellEdit='input'/>
+				</#if>
+				<#if uiConfigs[key].type=='checkbox'>
+					<#assign cellEdit='select,select_template_boolean'/>
+				</#if>
+				<#if uiConfigs[key].type=='select'>
+				<#assign cellEdit='select,select_template_'+key/>
+				</#if>
+			<#else>
+				<#assign cellEdit=''/>
+			</#if>
+			<@rttheadtd name=label cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly/>
 		</#if>
 	</#list>
 <@rtmiddle readonly=readonly/>
@@ -29,30 +42,14 @@
 <#assign index=index+1>
 <@rttbodytrstart rowid=entity.id! odd=(index%2==1) readonly=readonly/>
 	<#list naturalIds?keys as key>
-		<#if !(readonly||naturalIdsImmatuable)>
-		<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key] template='${uiConfigs[key].template}' cellEdit='input'/>
-		<#else>
-		<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key] template='${uiConfigs[key].template}'/>
-		</#if>
+		<@rttbodytd entity=entity value=entity[key] template=uiConfigs[key].template/>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
-			<#if !(readonly||uiConfigs[key].readonly)>
-				<#if uiConfigs[key].type=='input'||uiConfigs[key].type=='textarea'>
-					<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key]! template='${uiConfigs[key].template}' cellEdit='input'/>
-				</#if>
-				<#if uiConfigs[key].type=='checkbox'>
-					<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key]! template='${uiConfigs[key].template}' cellEdit='select,select_template_boolean'/>
-				</#if>
-				<#if uiConfigs[key].type=='select'>
-					<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key]! template='${uiConfigs[key].template}' cellEdit='select,select_template_${key}'/>
-				</#if>
-			<#else>
-				<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key]! template='${uiConfigs[key].template}'/>
-			</#if>
+			<@rttbodytd entity=entity value=entity[key]! template=uiConfigs[key].template/>
 		</#if>
 	</#list>	
-<@rttbodytrend  rowid=entity.id readonly=readonly/>
+<@rttbodytrend rowid=entity.id readonly=readonly/>
 </#list>
 <@rtend readonly=readonly/>
 <#if !readonly>

@@ -135,7 +135,6 @@ public class UserAction extends BaseAction {
 				addActionMessage(getText("save.success"));
 			}
 		}
-		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
 
