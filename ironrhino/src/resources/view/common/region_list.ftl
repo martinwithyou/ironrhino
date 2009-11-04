@@ -5,7 +5,7 @@
 </head>
 <body>
 <#assign config={"name":{"cellEdit":"input"},"displayOrder":{"cellEdit":"input"}}>
-<#assign actionColumnButtons=btn(action.getText('enter'),r"Richtable.enter('${rowid}')")+btn(action.getText('save'),r"Richtable.save('${rowid}')")+btn(action.getText('delete'),r"Richtable.del('${rowid}')")>
+<#assign actionColumnButtons=btn(action.getText('enter'),r"Richtable.enter('${rowid}')")+btn(action.getText('save'),null,'save')+btn(action.getText('delete'),null,'del')>
 <@richtable entityName="region" config=config actionColumnButtons=actionColumnButtons/>
 </body>
 </html></#escape>

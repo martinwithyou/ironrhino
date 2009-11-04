@@ -49,7 +49,7 @@
 <td class="tableHeader<#if editable> editableColumn</#if>">
 <#if resizable>
 <span class="resizeTitle">${action.getText(name)}</span>
-<span class="resizeBar" onmousedown="ECSideUtil.StartResize(event);" onmouseup="ECSideUtil.EndResize(event);"></span>
+<span class="resizeBar"/>
 <#else>
 ${action.getText(name)}
 </#if>
@@ -98,11 +98,11 @@ ${value?xhtml}<#t>
 <@temp/>
 <#else>
 <#if celleditable>
-<@button onclick="Richtable.save('${rowid}')" text=action.getText('save')/>
+<@button class="save" text=action.getText('save')/>
 </#if>
-<@button onclick="Richtable.input('${rowid}')" text=action.getText('edit')/>
+<@button class="input" text=action.getText('edit')/>
 <#if deleteable>
-<@button onclick="Richtable.del('${rowid}')" text=action.getText('delete')/>
+<@button class="del" text=action.getText('delete')/>
 </#if>
 </#if>
 </td>
@@ -134,16 +134,16 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 </#if>
 </td>
 <td class="extendTool" align="center">
-<div style="text-align: center; width: 100%; padding: 3px;" class="richtable">
+<div style="text-align: center; width: 100%; padding: 3px;">
 <#if buttons!="">
 <#local temp=buttons?interpret>
 <@temp/>
 <#else>
 <#if !readonly>
-<#if createable><@button onclick="Richtable.input()" text=action.getText('create')/></#if>
-<#if celleditable><@button onclick="Richtable.save()" text=action.getText('save')/></#if>
-<#if deleteable><@button onclick="Richtable.del()" text=action.getText('delete')/></#if>
-</#if><@button onclick="Richtable.reload()" text=action.getText('reload')/></#if>
+<#if createable><@button class="input" text=action.getText('create')/></#if>
+<#if celleditable><@button class="save" text=action.getText('save')/></#if>
+<#if deleteable><@button class="del" text=action.getText('delete')/></#if>
+</#if><@button class="reload" text=action.getText('reload')/></#if>
 </div>
 </td>
 <td class="statusTool" width="33%">

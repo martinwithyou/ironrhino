@@ -173,9 +173,7 @@ Richtable = {
 		return url;
 	},
 	getUrl : function(type, id, includeParams) {
-		var url = eval('Richtable.' + type + 'Url');
-		if (!url)
-			url = Richtable.getBaseUrl() + '/' + type;
+		var url = Richtable.getBaseUrl() + '/' + type;
 		if (includeParams)
 			url += document.location.search;
 		if (id) {
@@ -190,10 +188,14 @@ Richtable = {
 	reload : function() {
 		$('form.richtable').submit();
 	},
-	input : function(id) {
+	input : function(event) {
+		var ev = event || window.event;
+		var id = $(event.srcElement || event.target).closest('tr').attr('rowid');
 		Richtable.open(Richtable.getUrl('input', id), true);
 	},
-	view : function(id) {
+	view : function(event) {
+		var ev = event || window.event;
+		var id = $(event.srcElement || event.target).closest('tr').attr('rowid');
 		if (!id)
 			return;
 		Richtable.open(Richtable.getUrl('view', id));
@@ -281,7 +283,9 @@ Richtable = {
 		}
 		document.location.href = url;
 	},
-	save : function(id) {
+	save : function(event) {
+		var ev = event || window.event;
+		var id = $(event.srcElement || event.target).closest('tr').attr('rowid');
 		var arr = [];
 		if (id)
 			arr[0] = id;
@@ -322,7 +326,9 @@ Richtable = {
 			}
 		});
 	},
-	del : function(id) {
+	del : function(event) {
+		var ev = event || window.event;
+		var id = $(event.srcElement || event.target).closest('tr').attr('rowid');
 		url = Richtable.getBaseUrl() + '/delete';
 		if (id) {
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
@@ -366,38 +372,44 @@ Richtable = {
 	}
 };
 Observation.richtable = function() {
-	if ($('form.richtable').length > 0) {
-		$('form.richtable .pageNav.firstPage').click(function() {
-					$('form.richtable input.jumpPageInput').val(1);
+	if ($('.richtable').length > 0) {
+		$('.richtable .input').click(Richtable.input);
+		$('.richtable .save').click(Richtable.save);
+		$('.richtable .del').click(Richtable.del);
+		$('.richtable .reload').click(Richtable.reload);
+		$('.richtable .resizeBar').mousedown(ECSideUtil.StartResize);
+		$('.richtable .resizeBar').mouseup(ECSideUtil.EndResize);
+		$('.richtable .firstPage').click(function() {
+					$('.richtable .jumpPageInput').val(1);
 					Richtable.reload()
 				});
-		$('form.richtable .pageNav.prevPage').click(function() {
-			$('form.richtable input.jumpPageInput')
-					.val(parseInt($('form.richtable input.jumpPageInput').val())
+		$('.richtable .prevPage').click(function() {
+			$('.richtable .jumpPageInput')
+					.val(parseInt($('.richtable input.jumpPageInput').val())
 							- 1);
 			Richtable.reload()
 		});
-		$('form.richtable .pageNav.nextPage').click(function() {
-			$('form.richtable input.jumpPageInput')
-					.val(parseInt($('form.richtable input.jumpPageInput').val())
+		$('.richtable .nextPage').click(function() {
+			$('.richtable .jumpPageInput')
+					.val(parseInt($('.richtable input.jumpPageInput').val())
 							+ 1);
 			Richtable.reload()
 		});
-		$('form.richtable .pageNav.lastPage').click(function() {
-			$('form.richtable input.jumpPageInput')
-					.val($("form.richtable .totalPage").text());
+		$('.richtable .lastPage').click(function() {
+			$('.richtable .jumpPageInput')
+					.val($(".richtable .totalPage").text());
 			Richtable.reload()
 		});
-		$('form.richtable .pageNav.jumpPage').click(function() {
+		$('.richtable .jumpPage').click(function() {
 					Richtable.reload()
 				});
-		$('form.richtable input[name="resultPage.pageNo"]').keydown(
+		$('.richtable input[name="resultPage.pageNo"]').keydown(
 				function(event) {
 					if (event.keyCode && event.keyCode == 13) {
 						Richtable.reload()
 					}
 				});
-		$('form.richtable select[name="resultPage.pageSize"]').change(
+		$('.richtable select[name="resultPage.pageSize"]').change(
 				function() {
 					Richtable.reload()
 				});
@@ -438,8 +450,8 @@ Observation.richtable = function() {
 	}
 };
 Initialization.richtable = function() {
-	if ($('form.richtable').length > 0) {
-		var resizable = $('form.richtable').attr('resizable');
+	if ($('.richtable').length > 0) {
+		var resizable = $('.richtable').attr('resizable');
 		if (resizable == "true") {
 			document.onmousemove = ECSideUtil.DoResize;
 			document.onmouseup = ECSideUtil.EndResize;

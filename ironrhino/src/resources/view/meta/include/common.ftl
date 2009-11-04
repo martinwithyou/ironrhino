@@ -37,7 +37,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#if>
 </#macro>
 
-<#function btn text="" onclick="" type="" id="" class="" href="">
+<#function btn text="" onclick="" class="" type="" id="" href="">
 	<#if id!=''>
 	<#local _id=' id="'+id+'"'>
 	<#if text==''>
@@ -82,7 +82,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <#local _type=' type="'+type+'"'>
 </#if>
 </#if>
-<${tag} <#list extra?keys as attr>${attr}="${extra[attr]?html}" </#list>${_type!} class="${class}"><span><span>${text}</span></span></${tag}>
+<${tag} <#list extra?keys as attr>${attr}="${extra[attr]?html}" </#list>${_type!} class="${class}"><span><span>${text}</span></span></${tag}><#t>
 </#macro>
 
 <#function getUri value secure=''>
@@ -108,5 +108,5 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#function>
 
 <#macro uri value secure=''>
-${getUri(value,secure)}
+${getUri(value,secure)}<#t>
 </#macro>
