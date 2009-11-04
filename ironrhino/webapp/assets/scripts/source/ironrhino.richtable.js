@@ -190,15 +190,14 @@ Richtable = {
 	},
 	input : function(event) {
 		var ev = event || window.event;
-		var id = $(event.srcElement || event.target).closest('tr').attr('rowid');
-		Richtable.open(Richtable.getUrl('input', id), true);
+		Richtable.open(Richtable.getUrl('input', $(event.srcElement
+								|| event.target).closest('tr').attr('rowid')),
+				true);
 	},
 	view : function(event) {
 		var ev = event || window.event;
-		var id = $(event.srcElement || event.target).closest('tr').attr('rowid');
-		if (!id)
-			return;
-		Richtable.open(Richtable.getUrl('view', id));
+		Richtable.open(Richtable.getUrl('view', $(event.srcElement
+						|| event.target).closest('tr').attr('rowid')));
 	},
 	open : function(url, reloadonclose, useiframe) {
 		reloadonclose = reloadonclose || false;
@@ -285,7 +284,8 @@ Richtable = {
 	},
 	save : function(event) {
 		var ev = event || window.event;
-		var id = $(event.srcElement || event.target).closest('tr').attr('rowid');
+		var id = $(event.srcElement || event.target).closest('tr')
+				.attr('rowid');
 		var arr = [];
 		if (id)
 			arr[0] = id;
@@ -328,7 +328,8 @@ Richtable = {
 	},
 	del : function(event) {
 		var ev = event || window.event;
-		var id = $(event.srcElement || event.target).closest('tr').attr('rowid');
+		var id = $(event.srcElement || event.target).closest('tr')
+				.attr('rowid');
 		url = Richtable.getBaseUrl() + '/delete';
 		if (id) {
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
@@ -376,6 +377,12 @@ Observation.richtable = function() {
 		$('.richtable .input').click(Richtable.input);
 		$('.richtable .save').click(Richtable.save);
 		$('.richtable .del').click(Richtable.del);
+		$('.richtable button[action]').click(function(event) {
+			var ev = event || window.event;
+			Richtable.open(Richtable.getUrl($('this').attr('action'),
+					$(event.srcElement || event.target).closest('tr')
+							.attr('rowid')));
+		});
 		$('.richtable .reload').click(Richtable.reload);
 		$('.richtable .resizeBar').mousedown(ECSideUtil.StartResize);
 		$('.richtable .resizeBar').mouseup(ECSideUtil.EndResize);
@@ -396,8 +403,8 @@ Observation.richtable = function() {
 			Richtable.reload()
 		});
 		$('.richtable .lastPage').click(function() {
-			$('.richtable .jumpPageInput')
-					.val($(".richtable .totalPage").text());
+			$('.richtable .jumpPageInput').val($(".richtable .totalPage")
+					.text());
 			Richtable.reload()
 		});
 		$('.richtable .jumpPage').click(function() {
@@ -409,8 +416,7 @@ Observation.richtable = function() {
 						Richtable.reload()
 					}
 				});
-		$('.richtable select[name="resultPage.pageSize"]').change(
-				function() {
+		$('.richtable select[name="resultPage.pageSize"]').change(function() {
 					Richtable.reload()
 				});
 
