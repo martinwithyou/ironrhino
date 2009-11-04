@@ -1,7 +1,7 @@
-<#macro richtable config entityName action="" actionColumnWidth="150px" actionColumnButtons="" bottomButtons="" resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true includeParameters=true>
+<#macro richtable config entityName action='' actionColumnWidth='150px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true includeParameters=true>
 <@rtstart action=action?has_content?string(action,entityName) readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters/>
 <#list config?keys as name>
-<@rttheadtd name=name editable=(!readonly)&&(config[name]["cellEdit"]??) resizable=resizable/>
+<@rttheadtd name=name editable=(!readonly)&&(config[name]['cellEdit']??) resizable=resizable/>
 </#list>
 <@rtmiddle width=actionColumnWidth readonly=readonly/>
 <#local index=0>
@@ -10,25 +10,20 @@
 <#local index=index+1>
 <@rttbodytrstart rowid=entity.id! odd=(index%2==1)  readonly=readonly/>
 	<#list config?keys as name>
-		<#local cellName=((config[name]["trimPrefix"]??)?string('',entityName+'.'))+name>
+		<#local cellName=((config[name]['trimPrefix']??)?string('',entityName+'.'))+name>
 		<#if config[name]['value']??>
 		<#local value=config[name]['value']>
 		<#else>
 		<#local value=entity[name]!>
 		</#if>
-		<#if (!readonly&&celleditable)&&config[name]["cellEdit"]??>
-		<#local edit=config[name]["cellEdit"]?split(",")>
-		<@rttbodytd entity=entity cellName=cellName value=value readonly=readonly template=config[name]['template']! renderLink=(config[name]['renderLink']??&&config[name]['renderLink']) cellEdit=edit[0] cellEditTemplate=edit[1]! cellEditAction=edit[2]! class=config[name]['class']!/>
-		<#else>
-		<@rttbodytd entity=entity cellName=cellName value=value readonly=readonly template=config[name]['template']! renderLink=(config[name]['renderLink']??&&config[name]['renderLink']) class=config[name]['class']!/>
-		</#if>
+		<@rttbodytd entity=entity cellName=cellName value=value readonly=readonly template=config[name]['template']! renderLink=(config[name]['renderLink']??&&config[name]['renderLink']) cellEdit=config[name]['cellEdit'] class=config[name]['class']!/>
 	</#list>
 	<@rttbodytrend rowid=entity.id! buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
 </#list>
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable/>
 </#macro>
 
-<#macro rtstart action="" readonly=false resizable=true sortable=true includeParameters=true>
+<#macro rtstart action='' readonly=false resizable=true sortable=true includeParameters=true>
 <form action="${action}" method="post" class="richtable ajax view"<#if resizable> resizable="true" minColWidth="40"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
@@ -55,7 +50,7 @@ ${action.getText(name)}
 </#if>
 </td>
 </#macro>
-<#macro rtmiddle width="150px" readonly=false>
+<#macro rtmiddle width='150px' readonly=false>
 <#if !readonly>
 <td class="nosort" width="${width}"></td>
 </#if>
@@ -65,13 +60,13 @@ ${action.getText(name)}
 </#macro>
 
 <#macro rttbodytrstart rowid,odd,readonly=false>
-<tr class="${odd?string("odd","even")}"<#if rowid?string!=''> rowid="${rowid}"</#if>>
+<tr class="${odd?string('odd','even')}"<#if rowid?string!=''> rowid="${rowid}"</#if>>
 <#if !readonly><td><input type="checkbox" name="check"/></td></#if>
 </#macro>
 
-<#macro rttbodytd cellName,value,entity,template="",readonly=false,renderLink=false,cellEdit="",cellEditTemplate="rt_edit_template_input",cellEditAction="ondblclick",class="">
-<td<#if class!=""> class="${class}"</#if><#if cellEdit!=""> ${(cellEditAction!="")?string(cellEditAction,"ondblclick")}="ECSideUtil.editCell(this,'${cellEdit}','${(cellEditTemplate!="")?string(cellEditTemplate,"rt_edit_template_input")}')"</#if><#if !readonly> cellName="${cellName}"</#if>><#rt>
-<#if template==""><#t>
+<#macro rttbodytd cellName,value,entity,template='',readonly=false,renderLink=false,cellEdit='',class=''>
+<td<#if !readonly> cellName="${cellName}"</#if><#if class!=''> class="${class}"</#if><#if cellEdit!=''> cellEdit="${cellEdit}"</#if>><#rt>
+<#if template==''><#t>
 <#if renderLink><#t>
 <a href="?${cellName}=${value?url('utf-8')}" class="ajax view"><#t>
 </#if><#t>
@@ -90,19 +85,19 @@ ${value?xhtml}<#t>
 </td><#lt>
 </#macro>
 
-<#macro rttbodytrend rowid buttons="" readonly=false celleditable=true deleteable=true>
+<#macro rttbodytrend rowid buttons='' readonly=false celleditable=true deleteable=true>
 <#if !readonly>
 <td class="include_if_edited">
-<#if buttons!="">
+<#if buttons!=''>
 <#local temp=buttons?interpret>
 <@temp/>
 <#else>
 <#if celleditable>
-<@button class="save" text=action.getText('save')/>
+<@button class='save' text=action.getText('save')/>
 </#if>
-<@button class="input" text=action.getText('edit')/>
+<@button class='input' text=action.getText('edit')/>
 <#if deleteable>
-<@button class="del" text=action.getText('delete')/>
+<@button class='del' text=action.getText('delete')/>
 </#if>
 </#if>
 </td>
@@ -110,7 +105,7 @@ ${value?xhtml}<#t>
 </tr>
 </#macro>
 
-<#macro rtend buttons="" readonly=false createable=true celleditable=true deleteable=true>
+<#macro rtend buttons='' readonly=false createable=true celleditable=true deleteable=true>
 </tbody>
 </table>
 <div class="toolbar" style="width:100%;" >
@@ -135,15 +130,15 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 </td>
 <td class="extendTool" align="center">
 <div style="text-align: center; width: 100%; padding: 3px;">
-<#if buttons!="">
+<#if buttons!=''>
 <#local temp=buttons?interpret>
 <@temp/>
 <#else>
 <#if !readonly>
-<#if createable><@button class="input" text=action.getText('create')/></#if>
-<#if celleditable><@button class="save" text=action.getText('save')/></#if>
-<#if deleteable><@button class="del" text=action.getText('delete')/></#if>
-</#if><@button class="reload" text=action.getText('reload')/></#if>
+<#if createable><@button class='input' text=action.getText('create')/></#if>
+<#if celleditable><@button class='save' text=action.getText('save')/></#if>
+<#if deleteable><@button class='del' text=action.getText('delete')/></#if>
+</#if><@button class='reload' text=action.getText('reload')/></#if>
 </div>
 </td>
 <td class="statusTool" width="33%">

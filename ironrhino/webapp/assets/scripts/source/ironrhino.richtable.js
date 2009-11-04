@@ -377,12 +377,15 @@ Observation.richtable = function() {
 		$('.richtable .input').click(Richtable.input);
 		$('.richtable .save').click(Richtable.save);
 		$('.richtable .del').click(Richtable.del);
-		$('.richtable button[action]').click(function(event) {
-			var ev = event || window.event;
-			Richtable.open(Richtable.getUrl($('this').attr('action'),
-					$(event.srcElement || event.target).closest('tr')
-							.attr('rowid')));
-		});
+		$('.richtable td[cellEdit]').dblclick(function() {
+					var cellEdit = $(this).attr('cellEdit');
+					if (!cellEdit)
+						return;
+					var array = cellEdit.split(',');
+					var template = array[1] || 'rt_edit_template_input';
+					ECSideUtil.editCell(this, array[0], template);
+					var action = array[1] || '';
+				});
 		$('.richtable .reload').click(Richtable.reload);
 		$('.richtable .resizeBar').mousedown(ECSideUtil.StartResize);
 		$('.richtable .resizeBar').mouseup(ECSideUtil.EndResize);

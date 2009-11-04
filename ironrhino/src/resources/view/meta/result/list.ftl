@@ -30,25 +30,25 @@
 <@rttbodytrstart rowid=entity.id! odd=(index%2==1) readonly=readonly/>
 	<#list naturalIds?keys as key>
 		<#if !(readonly||naturalIdsImmatuable)>
-		<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key] template="${uiConfigs[key].template}" cellEdit="input"/>
+		<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key] template='${uiConfigs[key].template}' cellEdit='input'/>
 		<#else>
-		<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key] template="${uiConfigs[key].template}"/>
+		<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key] template='${uiConfigs[key].template}'/>
 		</#if>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
 			<#if !(readonly||uiConfigs[key].readonly)>
 				<#if uiConfigs[key].type=='input'||uiConfigs[key].type=='textarea'>
-					<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key]! template="${uiConfigs[key].template}" cellEdit="input"/>
+					<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key]! template='${uiConfigs[key].template}' cellEdit='input'/>
 				</#if>
 				<#if uiConfigs[key].type=='checkbox'>
-					<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key]! template="${uiConfigs[key].template}" cellEdit="select" cellEditTemplate="select_template_boolean"/>
+					<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key]! template='${uiConfigs[key].template}' cellEdit='select,select_template_boolean'/>
 				</#if>
 				<#if uiConfigs[key].type=='select'>
-					<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key]! template="${uiConfigs[key].template}" cellEdit="select" cellEditTemplate="select_template_${key}"/>
+					<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key]! template='${uiConfigs[key].template}' cellEdit='select,select_template_${key}'/>
 				</#if>
 			<#else>
-				<@rttbodytd entity=entity cellName="${entityName}.${key}" value=entity[key]! template="${uiConfigs[key].template}"/>
+				<@rttbodytd entity=entity cellName='${entityName}.${key}' value=entity[key]! template='${uiConfigs[key].template}'/>
 			</#if>
 		</#if>
 	</#list>	
