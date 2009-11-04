@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.ironrhino.common.model.Region;
+import org.ironrhino.common.model.Setting;
 import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.RegionParser;
@@ -90,6 +91,8 @@ public class InitData {
 			save(region);
 		}
 		ctx.close();
+		
+		baseManager.save(new Setting("product.recommanded", "productCode100,productCode200,productCode300,productCode400"));
 	}
 
 	private static void save(Region region) {
