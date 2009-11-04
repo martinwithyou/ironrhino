@@ -544,8 +544,11 @@ Observation.ajax = function(container) {
 		} catch (e) {
 		}
 		var ids = [];
+		var targetId = $(target).attr('id');
+		if(typeof targetId != 'string')
+			targetId='';
 		var entries = ($(target).attr('replacement') || ($(target)
-				.attr('tagName') == 'FORM' ? $(target).attr('id') : ''))
+				.attr('tagName') == 'FORM' ? targetId : ''))
 				.split(',');
 		for (var i = 0; i < entries.length; i++) {
 			var entry = entries[i];
