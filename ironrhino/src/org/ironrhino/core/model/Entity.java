@@ -7,7 +7,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.util.AnnotationUtils;
 
-public abstract class Entity<T extends Serializable> implements Persistable<T> {
+public abstract class Entity<PK extends Serializable> implements
+		Persistable<PK> {
 
 	private static final long serialVersionUID = 5366738895214161098L;
 
@@ -43,10 +44,7 @@ public abstract class Entity<T extends Serializable> implements Persistable<T> {
 
 	@Override
 	public String toString() {
-		Map<String, Object> map = AnnotationUtils
-				.getAnnotatedPropertyNameAndValues(this, NaturalId.class);
-		return getClass().getName() + "{id=" + getId() + ",naturalId="
-				+ map.toString() + "}";
+		return toIdentifiedString();
 	}
 
 }
