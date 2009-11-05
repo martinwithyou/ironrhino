@@ -5,12 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.Constants;
-import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpWrappedSession;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +21,8 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-@Component("cacheBasedSessionManager")
-public class CacheBasedSessionManager implements HttpSessionManager {
-
-	private Log log = LogFactory.getLog(this.getClass());
+@Component("sessionManager")
+public class CacheBasedSessionManager extends AbstractSessionManager {
 
 	@Autowired
 	private CacheManager cacheManager;
@@ -35,7 +30,7 @@ public class CacheBasedSessionManager implements HttpSessionManager {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-	public void initialize(HttpWrappedSession session) {
+	public void doInitialize(HttpWrappedSession session) {
 		Map attrMap = (Map) cacheManager.get(session.getId(),
 				Constants.CACHE_NAMESPACE);
 		String username = RequestUtils.getCookieValue(session.getHttpContext()
@@ -73,7 +68,7 @@ public class CacheBasedSessionManager implements HttpSessionManager {
 			session.setAttrMap(attrMap);
 	}
 
-	public void save(HttpWrappedSession session) {
+	public void doSave(HttpWrappedSession session) {
 		Map attrMap = session.getAttrMap();
 		if (attrMap != null)
 			attrMap
@@ -84,7 +79,7 @@ public class CacheBasedSessionManager implements HttpSessionManager {
 					Constants.CACHE_NAMESPACE);
 	}
 
-	public void invalidate(HttpWrappedSession session) {
+	public void doInvalidate(HttpWrappedSession session) {
 		cacheManager.delete(session.getId(), Constants.CACHE_NAMESPACE);
 	}
 

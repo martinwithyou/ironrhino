@@ -11,19 +11,14 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.security.util.Blowfish;
-import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpWrappedSession;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.security.context.HttpSessionContextIntegrationFilter;
 import org.springframework.security.context.SecurityContext;
 
-//@Component("cookieBasedSessionManager")
-public class CookieBasedSessionManager implements HttpSessionManager {
-
-	private Log log = LogFactory.getLog(CookieBasedSessionManager.class);
+//@Component("sessionManager")
+public class CookieBasedSessionManager extends AbstractSessionManager {
 
 	public static final String SESSION_COOKIE_PREFIX = "s_";
 
@@ -31,7 +26,7 @@ public class CookieBasedSessionManager implements HttpSessionManager {
 
 	// cookies
 
-	public void initialize(HttpWrappedSession session) {
+	public void doInitialize(HttpWrappedSession session) {
 		Map attrMap = null;
 		String value = getCookie(session);
 		if (StringUtils.isNotBlank(value)) {
@@ -50,7 +45,7 @@ public class CookieBasedSessionManager implements HttpSessionManager {
 		session.setAttrMap(attrMap);
 	}
 
-	public void save(HttpWrappedSession session) {
+	public void doSave(HttpWrappedSession session) {
 		String referer = session.getHttpContext().getRequest().getHeader(
 				"Referer");
 		if (referer == null)
@@ -80,8 +75,7 @@ public class CookieBasedSessionManager implements HttpSessionManager {
 		}
 	}
 
-	public void invalidate(HttpWrappedSession session) {
-		session.getAttrMap().clear();
+	public void doInvalidate(HttpWrappedSession session) {
 		clearCookie(session);
 
 	}

@@ -35,8 +35,13 @@ public class HttpSessionFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		// non struts action
+		
 		HttpServletRequest req = (HttpServletRequest) request;
+		// assets
+		if(req.getServletPath().startsWith("/assets/")){
+			chain.doFilter(request, response);
+			return;
+		}
 		HttpContext httpContext = new HttpContext((HttpServletRequest) request,
 				(HttpServletResponse) response, servletContext);
 		HttpWrappedRequest httpRequest = new HttpWrappedRequest(req,

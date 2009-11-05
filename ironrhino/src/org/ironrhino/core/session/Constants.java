@@ -10,6 +10,8 @@ public interface Constants {
 
 	public static final String COOKIE_NAME_SESSION_ID = "sid";
 
-	public static final int SESSION_TIMEOUT = 1800;
+	public static final int SESSION_TIMEOUT = 1800; // in seconds
+
+	public static final int SESSION_TOLERATE_INTERVAL = 60;// in seconds
 
 }

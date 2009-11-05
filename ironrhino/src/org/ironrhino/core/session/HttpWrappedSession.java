@@ -23,13 +23,17 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	private String sessionId;
 
-	private transient HttpSessionManager sessionStoreManager;
+	private transient HttpSessionManager sessionManager;
 
 	private transient HttpContext httpContext;
 
 	private Map<String, Object> attrMap = new HashMap<String, Object>();
 
-	private long createTime;
+	private long creationTime;
+
+	private long lastAccessedTime;
+
+	private long now;
 
 	private int maxInactiveInterval = Constants.SESSION_TIMEOUT;
 
@@ -37,28 +41,31 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	private boolean isnew;
 
-	private HttpSession target;
-
 	public HttpWrappedSession(HttpContext context,
-			HttpSessionManager sessionStoreManager, String sid) {
-		this.target = context.getRequest().getSession(false);
+			HttpSessionManager sessionManager, String sid) {
+		now = System.currentTimeMillis();
 		this.httpContext = context;
-		this.sessionStoreManager = sessionStoreManager;
+		this.sessionManager = sessionManager;
 		this.sessionId = sid;
 		if (StringUtils.isBlank(sessionId)) {
 			isnew = true;
-			createTime = System.currentTimeMillis();
+			creationTime = now;
 			sessionId = CodecUtils.nextId(salt);
 		}
-		sessionStoreManager.initialize(this);
+		sessionManager.initialize(this);
 	}
 
 	public void save() {
 		// setMaxInactiveInterval(-1) to force save
 		if (maxInactiveInterval < Constants.SESSION_TIMEOUT)
 			dirty = true;
+		if (now == lastAccessedTime
+				|| (now - lastAccessedTime) > Constants.SESSION_TOLERATE_INTERVAL * 1000) {
+			lastAccessedTime = now;
+			dirty = true;
+		}
 		if (dirty)
-			sessionStoreManager.save(this);
+			sessionManager.save(this);
 		if (isnew)
 			RequestUtils.saveCookie(httpContext.getRequest(), httpContext
 					.getResponse(), Constants.COOKIE_NAME_SESSION_ID, getId(),
@@ -100,31 +107,19 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 	}
 
 	public long getCreationTime() {
-		if (target != null)
-			return target.getCreationTime();
-		return this.createTime;
+		return this.creationTime;
 	}
 
 	public void invalidate() {
-		if (target != null)
-			target.invalidate();
-		sessionStoreManager.invalidate(this);
-		RequestUtils.deleteCookie(httpContext.getRequest(), httpContext
-				.getResponse(), Constants.COOKIE_NAME_SESSION_ID, true);
-		RequestUtils.deleteCookie(httpContext.getRequest(), httpContext
-				.getResponse(), Constants.COOKIE_NAME_ENCRYPT_LOGIN_USER, true);
+		sessionManager.invalidate(this);
 	}
 
 	public boolean isNew() {
-		if (target != null)
-			return target.isNew();
 		return isnew;
 	}
 
 	public long getLastAccessedTime() {
-		if (target != null)
-			return target.getLastAccessedTime();
-		return createTime;
+		return lastAccessedTime;
 	}
 
 	public ServletContext getServletContext() {
@@ -132,15 +127,23 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 	}
 
 	public void setMaxInactiveInterval(int arg0) {
-		if (target != null)
-			target.setMaxInactiveInterval(arg0);
 		maxInactiveInterval = arg0;
 	}
 
 	public int getMaxInactiveInterval() {
-		if (target != null)
-			return target.getMaxInactiveInterval();
 		return maxInactiveInterval;
+	}
+
+	public long getNow() {
+		return now;
+	}
+
+	public void setCreationTime(long creationTime) {
+		this.creationTime = creationTime;
+	}
+
+	public void setLastAccessedTime(long lastAccessedTime) {
+		this.lastAccessedTime = lastAccessedTime;
 	}
 
 	@Deprecated
