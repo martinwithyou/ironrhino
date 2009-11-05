@@ -36,13 +36,13 @@ public class CategoryAction extends BaseAction {
 
 	private boolean async;
 
-	private int root;
+	private long root;
 
-	public int getRoot() {
+	public long getRoot() {
 		return root;
 	}
 
-	public void setRoot(int root) {
+	public void setRoot(long root) {
 		this.root = root;
 	}
 

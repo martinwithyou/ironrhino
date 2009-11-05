@@ -2,7 +2,6 @@ package org.ironrhino.core.aop;
 
 import java.util.Date;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
@@ -61,8 +60,7 @@ public class RecordAspect extends HibernateDaoSupport implements Ordered {
 			record.setOperatorClass(ud.getClass().getName());
 		}
 		try {
-			record.setEntityId(String.valueOf(BeanUtils.getProperty(entity,
-					"id")));
+			record.setEntityId(String.valueOf(entity.getId()));
 		} catch (Exception e) {
 		}
 		record.setEntityClass(entity.getClass().getName());

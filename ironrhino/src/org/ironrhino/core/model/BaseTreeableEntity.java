@@ -66,7 +66,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		this.parent = parent;
 	}
 
-	public T getDescendantOrSelfById(Integer id) {
+	public T getDescendantOrSelfById(Long id) {
 		if (id == null)
 			throw new IllegalArgumentException("id must not be null");
 		if (id.equals(this.getId()))

@@ -20,7 +20,7 @@ public interface ProductFacade {
 	public List<Product> getRecommendedProducts();
 
 	public ResultPage getResultPageByCategoryId(ResultPage<Product> resultPage,
-			Integer categoryId);
+			Long categoryId);
 
 	public ResultPage getResultPageByCategoryCode(
 			ResultPage<Product> resultPage, String categoryCode);

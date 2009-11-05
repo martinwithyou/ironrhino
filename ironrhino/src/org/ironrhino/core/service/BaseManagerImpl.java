@@ -357,7 +357,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 					"entityClass mustn't be null,and must extends class 'BaseTreeableEntity'");
 		try {
 			TE root = (TE) getEntityClass().newInstance();
-			root.setId(0);
+			root.setId(0L);
 			root.setName("");
 			if (args.length > 0) {
 				loadTree1(root);

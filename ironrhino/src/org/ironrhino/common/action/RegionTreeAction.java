@@ -20,16 +20,16 @@ public class RegionTreeAction extends BaseAction {
 
 	private boolean async = true;
 
-	private int root;
+	private long root;
 
 	@Autowired
 	private transient RegionTreeControl regionTreeControl;
 
-	public int getRoot() {
+	public long getRoot() {
 		return root;
 	}
 
-	public void setRoot(int root) {
+	public void setRoot(long root) {
 		this.root = root;
 	}
 

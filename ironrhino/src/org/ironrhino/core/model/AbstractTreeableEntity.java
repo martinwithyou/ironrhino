@@ -6,11 +6,11 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 
 public abstract class AbstractTreeableEntity<T extends AbstractTreeableEntity>
-		extends Entity implements Treeable<T> {
+		extends Entity<Long> implements Treeable<T> {
 
 	private static final long serialVersionUID = -1883496335563461601L;
 
-	private Integer id;
+	private Long id;
 
 	private String fullId;
 
@@ -26,12 +26,12 @@ public abstract class AbstractTreeableEntity<T extends AbstractTreeableEntity>
 		this.fullId = fullId;
 	}
 
-	@SearchableId(converter = "int")
-	public Integer getId() {
+	@SearchableId(converter = "long")
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -138,7 +138,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	 */
 	@Override
 	public ResultPage getResultPageByCategoryId(ResultPage<Product> resultPage,
-			Integer categoryId) {
+			Long categoryId) {
 		DetachedCriteria dc = prepareDetachedCriteria();
 		resultPage.setDetachedCriteria(dc);
 		if (categoryId != null)
@@ -159,11 +159,11 @@ public class ProductFacadeImpl implements ProductFacade {
 	@Override
 	public ResultPage getResultPageByCategoryCode(
 			ResultPage<Product> resultPage, String categoryCode) {
-		Integer id = null;
+		Long id = null;
 		if (StringUtils.isNotBlank(categoryCode)) {
 			if (categoryCode
 					.equalsIgnoreCase(ProductAction.PSEUDO_CATEGORY_CODE_NULL))
-				id = -1;
+				id = -1L;
 			else {
 				Category cate = categoryTreeControl.getCategoryTree()
 						.getDescendantOrSelfByCode(categoryCode);

@@ -1,13 +1,13 @@
 package org.ironrhino.core.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.util.AnnotationUtils;
 
-public abstract class Entity implements Persistable {
+public abstract class Entity<T extends Serializable> implements Persistable<T> {
 
 	private static final long serialVersionUID = 5366738895214161098L;
 
@@ -47,14 +47,6 @@ public abstract class Entity implements Persistable {
 				.getAnnotatedPropertyNameAndValues(this, NaturalId.class);
 		return getClass().getName() + "{id=" + getId() + ",naturalId="
 				+ map.toString() + "}";
-	}
-
-	private Object getId() {
-		try {
-			return BeanUtils.getProperty(this, "id");
-		} catch (Exception e) {
-			return null;
-		}
 	}
 
 }
