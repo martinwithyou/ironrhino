@@ -21,10 +21,7 @@ if (typeof(Initialization) == 'undefined')
 	Initialization = {};
 if (typeof(Observation) == 'undefined')
 	Observation = {};
-var CONTEXT_PATH = '';
-CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
-if (CONTEXT_PATH == '/')
-	CONTEXT_PATH = '';
+var CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
 function _init() {
 	var array = [];
 	for (var key in Initialization) {
@@ -129,8 +126,9 @@ Observation.common = function(container) {
 			data = encodeURIComponent(data);
 			if (!id || !width || !height || !data)
 				alert('id,width,height,data all required');
-			swfobject.embedSWF(CONTEXT_PATH + '/assets/images/open-flash-chart.swf',
-					id, width, height, '9.0.0', CONTEXT_PATH
+			swfobject.embedSWF(CONTEXT_PATH
+							+ '/assets/images/open-flash-chart.swf', id, width,
+					height, '9.0.0', CONTEXT_PATH
 							+ '/assets/images/expressInstall.swf', {
 						'data-file' : data
 					}, {
@@ -545,11 +543,10 @@ Observation.ajax = function(container) {
 		}
 		var ids = [];
 		var targetId = $(target).attr('id');
-		if(typeof targetId != 'string')
-			targetId='';
+		if (typeof targetId != 'string')
+			targetId = '';
 		var entries = ($(target).attr('replacement') || ($(target)
-				.attr('tagName') == 'FORM' ? targetId : ''))
-				.split(',');
+				.attr('tagName') == 'FORM' ? targetId : '')).split(',');
 		for (var i = 0; i < entries.length; i++) {
 			var entry = entries[i];
 			var ss = entry.split(':', 2);

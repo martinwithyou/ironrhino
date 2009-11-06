@@ -170,8 +170,8 @@
 				<file name="${webapp.dir}/assets/styles/app.css" />
 			</filelist>
 		</concat>
-		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
-			<arg line=" --charset utf-8 --type js -o ./webapp/assets/scripts/all-min.js ./webapp/assets/scripts/all.js" />
+		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
+			<arg line=" --js=./webapp/assets/scripts/all.js --js_output_file=./webapp/assets/scripts/all-min.js" />
 		</java>
 		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
 			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/all-min.css ./webapp/assets/styles/all.css" />
