@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.util.CodecUtils;
-import org.ironrhino.core.util.RequestUtils;
 
 public class HttpWrappedSession implements Serializable, HttpSession {
 
@@ -50,26 +49,14 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 		if (StringUtils.isBlank(sessionId)) {
 			isnew = true;
 			creationTime = now;
+			lastAccessedTime = now;
 			sessionId = CodecUtils.nextId(salt);
 		}
 		sessionManager.initialize(this);
 	}
 
 	public void save() {
-		// setMaxInactiveInterval(-1) to force save
-		if (maxInactiveInterval < Constants.SESSION_TIMEOUT)
-			dirty = true;
-		if (now == lastAccessedTime
-				|| (now - lastAccessedTime) > Constants.SESSION_TOLERATE_INTERVAL * 1000) {
-			lastAccessedTime = now;
-			dirty = true;
-		}
-		if (dirty)
-			sessionManager.save(this);
-		if (isnew)
-			RequestUtils.saveCookie(httpContext.getRequest(), httpContext
-					.getResponse(), Constants.COOKIE_NAME_SESSION_ID, getId(),
-					true);
+		sessionManager.save(this);
 	}
 
 	public HttpContext getHttpContext() {
@@ -144,6 +131,14 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	public void setLastAccessedTime(long lastAccessedTime) {
 		this.lastAccessedTime = lastAccessedTime;
+	}
+
+	public boolean isDirty() {
+		return dirty;
+	}
+
+	public void setDirty(boolean dirty) {
+		this.dirty = dirty;
 	}
 
 	@Deprecated

@@ -16,25 +16,43 @@ public abstract class AbstractSessionManager implements HttpSessionManager {
 
 	public void initialize(HttpWrappedSession session) {
 		doInitialize(session);
+		long now = session.getNow();
 		Long creationTime = (Long) session.getAttrMap().get(KEY_CREATIONTIME);
 		Long lastAccessedTime = (Long) session.getAttrMap().get(
 				KEY_LASTACCESSEDTIME);
 		session.getAttrMap().remove(KEY_CREATIONTIME);
 		session.getAttrMap().remove(KEY_LASTACCESSEDTIME);
-		session.setCreationTime(creationTime != null ? creationTime : session
-				.getNow());
+		session.setCreationTime(creationTime != null ? creationTime : now);
 		session.setLastAccessedTime(lastAccessedTime != null ? lastAccessedTime
-				: session.getNow());
+				: now);
+		boolean timeout = lastAccessedTime != null
+				&& now - lastAccessedTime > session.getMaxInactiveInterval() * 1000;
+		if (timeout) 
+			invalidate(session);
 	}
 
 	public void save(HttpWrappedSession session) {
-		session.getAttrMap().put(KEY_LASTACCESSEDTIME,
-				session.getLastAccessedTime());
-		session.getAttrMap().put(KEY_CREATIONTIME, session.getCreationTime());
-		doSave(session);
+		if (session.getNow() == session.getLastAccessedTime()
+				|| (session.getNow() - session.getLastAccessedTime()) > Constants.SESSION_TOLERATE_INTERVAL * 1000) {
+			session.setLastAccessedTime(session.getNow());
+			session.setDirty(true);
+		}
+		if (session.isNew()) {
+			RequestUtils.saveCookie(session.getHttpContext().getRequest(),
+					session.getHttpContext().getResponse(),
+					Constants.COOKIE_NAME_SESSION_ID, session.getId(), true);
+		}
+		if (session.isDirty()) {
+			session.getAttrMap().put(KEY_LASTACCESSEDTIME,
+					session.getLastAccessedTime());
+			session.getAttrMap().put(KEY_CREATIONTIME,
+					session.getCreationTime());
+			doSave(session);
+		}
 	}
 
 	public void invalidate(HttpWrappedSession session) {
+		session.getAttrMap().clear();
 		RequestUtils.deleteCookie(session.getHttpContext().getRequest(),
 				session.getHttpContext().getResponse(),
 				Constants.COOKIE_NAME_SESSION_ID, true);

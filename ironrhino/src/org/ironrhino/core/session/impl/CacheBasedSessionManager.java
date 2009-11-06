@@ -75,7 +75,7 @@ public class CacheBasedSessionManager extends AbstractSessionManager {
 					.remove(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY);
 		if (attrMap != null && attrMap.size() > 0)
 			cacheManager.put(session.getId(), (Serializable) session
-					.getAttrMap(), session.getMaxInactiveInterval(), -1,
+					.getAttrMap(), session.getMaxInactiveInterval() * 2, -1,
 					Constants.CACHE_NAMESPACE);
 	}
 
