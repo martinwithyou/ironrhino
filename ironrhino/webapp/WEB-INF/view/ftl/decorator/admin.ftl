@@ -10,7 +10,6 @@
 <!--[if IE]>
 	<link href="<@uri value="/assets/styles/ie.css"/>" media="all" rel="stylesheet" type="text/css" />
 <![endif]-->
-<link rel="alternate" href="<@uri value="/product/feed"/>" title="ironrhino products" type="application/atom+xml" />
 <script src="<@uri value="/assets/scripts/all-min.js"/>" type="text/javascript"></script>
 <#noescape>${head}</#noescape>
 </head>
