@@ -11,10 +11,10 @@ import org.hibernate.LockMode;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.support.RegionTreeControl;
 import org.ironrhino.core.mail.MailService;
+import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
-import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
@@ -195,7 +195,7 @@ public class AccountAction extends BaseAction {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("user", user);
 		model.put("url", "/signup/activate/"
-				+ CodecUtils.encode(user.getId() + "," + user.getEmail()));
+				+ Blowfish.encrypt(user.getId() + "," + user.getEmail()));
 		SimpleMailMessage smm = new SimpleMailMessage();
 		smm.setTo(user.getFriendlyName() + "<" + user.getEmail() + ">");
 		smm.setSubject(getText("activation.mail.subject"));

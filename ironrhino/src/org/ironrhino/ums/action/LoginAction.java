@@ -7,9 +7,9 @@ import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
-import org.ironrhino.core.session.Constants;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
+import org.ironrhino.ums.security.UserAuthenticationProcessingFilter;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
@@ -65,7 +65,7 @@ public class LoginAction extends BaseAction {
 		if (StringUtils.isBlank(targetUrl))
 			targetUrl = request.getHeader("Referer");
 		username = RequestUtils.getCookieValue(request,
-				Constants.COOKIE_NAME_LOGIN_USER);
+				UserAuthenticationProcessingFilter.COOKIE_NAME_LOGIN_USER);
 		return SUCCESS;
 	}
 

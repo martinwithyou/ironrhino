@@ -12,6 +12,7 @@ import org.ironrhino.core.mail.MailService;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
+import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
@@ -129,7 +130,7 @@ public class SignupAction extends BaseAction {
 	public String activate() {
 		String u = getUid();
 		if (u != null) {
-			String[] array = CodecUtils.decode(u).split(",");
+			String[] array = Blowfish.decrypt(u).split(",");
 			User user = userManager.get(array[0]);
 			if (user != null && !user.isEnabled()
 					&& user.getEmail().equals(array[1])) {
@@ -177,7 +178,7 @@ public class SignupAction extends BaseAction {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("user", user);
 		model.put("url", "/signup/activate/"
-				+ CodecUtils.encode(user.getId() + "," + user.getEmail()));
+				+ Blowfish.encrypt(user.getId() + "," + user.getEmail()));
 		SimpleMailMessage smm = new SimpleMailMessage();
 		smm.setTo(user.getFriendlyName() + "<" + user.getEmail() + ">");
 		smm.setSubject(getText("activation.mail.subject"));

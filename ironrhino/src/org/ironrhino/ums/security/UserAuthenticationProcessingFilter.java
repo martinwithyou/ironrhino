@@ -24,6 +24,8 @@ import org.springframework.security.AuthenticationException;
 public class UserAuthenticationProcessingFilter extends
 		BaseAuthenticationProcessingFilter {
 
+	public final static String COOKIE_NAME_LOGIN_USER = "U";
+
 	@Autowired
 	private UserManager userManager;
 
@@ -32,6 +34,9 @@ public class UserAuthenticationProcessingFilter extends
 			HttpServletResponse response, Authentication authResult)
 			throws IOException {
 		super.onSuccessfulAuthentication(request, response, authResult);
+		String username = authResult.getName();
+		RequestUtils.saveCookie(request, response, COOKIE_NAME_LOGIN_USER,
+				username, 365 * 24 * 3600, true);
 		User user = (User) authResult.getPrincipal();
 		user.setLoginTimes(user.getLoginTimes() + 1);
 		user.setLastLoginDate(new Date());

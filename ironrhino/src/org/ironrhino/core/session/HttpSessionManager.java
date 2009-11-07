@@ -8,4 +8,6 @@ public interface HttpSessionManager {
 
 	public void invalidate(HttpWrappedSession sesion);
 
+	public int getMaxInactiveInterval();
+
 }

@@ -72,22 +72,22 @@ public class CodecUtils {
 	}
 
 	public static String encode(String input) {
-		byte[] bytes = new byte[0];
 		try {
-			bytes = Base64.encodeBase64(input.getBytes("UTF-8"));
+			byte[] bytes = Base64.encodeBase64(input.getBytes("UTF-8"));
 			swap(bytes);
+			return new String(bytes);
 		} catch (UnsupportedEncodingException e) {
+			return input;
 		}
-		return new String(bytes);
 	}
 
 	public static String decode(String input) {
-		byte[] bytes = input.getBytes();
-		swap(bytes);
 		try {
+			byte[] bytes = input.getBytes();
+			swap(bytes);
 			return new String(Base64.decodeBase64(bytes), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			return "";
+			return input;
 		}
 	}
 
@@ -138,4 +138,7 @@ public class CodecUtils {
 		return id;
 	}
 
+	public static void main(String... strings) {
+		System.out.println((char) ('Z' + 1));
+	}
 }
