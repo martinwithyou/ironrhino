@@ -79,7 +79,7 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>WebProxy</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/webproxy/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
