@@ -80,29 +80,29 @@
 	<#if order.isNew()>
 		<tr>
 			<td colspan="2"><a
-				href="<@uri value="/account/order/addressee"/>">edit</a></td>
+				href="<@url value="/account/order/addressee"/>">edit</a></td>
 		</tr>
 	</#if>
 </table>
 </div>
 
 <div id="operation"><#if order.isNew()>
-	<div><a href="<@uri value="/account/order/confirm"/>">confirm</a>&nbsp;<a
-		href="<@uri value="/account/order/cancel"/>">cancel</a></div>
+	<div><a href="<@url value="/account/order/confirm"/>">confirm</a>&nbsp;<a
+		href="<@url value="/account/order/cancel"/>">cancel</a></div>
 <#else>
 	<#if order.status.getName()=='INITIAL'>
 		<div id="payment"><#list paymentManager.payments as var>
 			<#if !var.disabled>
-				<div><img src="<@uri value="/assets/images/${var.code}.jpg"/>" alt="${var.code}" />${var.name}
+				<div><img src="<@url value="/assets/images/${var.code}.jpg"/>" alt="${var.code}" />${var.name}
 				<#noescape>${var.getPayForm(order)}</#noescape></div>
 			</#if>
 		</#list></div>
 		<div><a
-			href="<@uri value="/account/order/cancel/${order.code}"/>">cancel</a></div>
+			href="<@url value="/account/order/cancel/${order.code}"/>">cancel</a></div>
 	</#if>
 	<#if order.status.getName()=='CANCELLED'>
 		<div><a
-			href="<@uri value="/account/order/delete/${order.code}"/>">delete</a></div>
+			href="<@url value="/account/order/delete/${order.code}"/>">delete</a></div>
 	</#if>
 </#if></div>
 </body>

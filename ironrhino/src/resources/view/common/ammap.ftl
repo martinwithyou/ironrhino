@@ -3,17 +3,17 @@
 <head>
 <title>ammap</title>
 <meta name="decorator" content="none"/>
-<script src="<@uri value="/assets/components/ammap/swfobject.js"/>"></script>
+<script src="<@url value="/assets/components/ammap/swfobject.js"/>"></script>
 </head>
 <body style="background-color:transparent" > 
 	<div id="ammap" style="width:800px; height:600px;"> 
 		<strong>Please update your Flash Player</strong> 
 	</div> 
 	<script type="text/javascript"> 
-		var so = new SWFObject('<@uri value="/assets/components/ammap/ammap.swf"/>', 'ammap', '100%', '100%', '8', '#FFFFFF');
-		so.addVariable('path', encodeURIComponent('<@uri value="/assets/components/ammap/"/>'));
+		var so = new SWFObject('<@url value="/assets/components/ammap/ammap.swf"/>', 'ammap', '100%', '100%', '8', '#FFFFFF');
+		so.addVariable('path', encodeURIComponent('<@url value="/assets/components/ammap/"/>'));
 		so.addVariable('data_file',encodeURIComponent('${Parameters.data_file}'));
-   		so.addVariable('settings_file', encodeURIComponent('<@uri value="/common/ammap/settings${request.queryString???string('?'+request.queryString,'')}"/>'));		
+   		so.addVariable('settings_file', encodeURIComponent('<@url value="/common/ammap/settings${request.queryString???string('?'+request.queryString,'')}"/>'));		
 		so.addVariable('preloader_color', '#999999');
 		so.addParam('wmode','transparent');
 		so.write('ammap');

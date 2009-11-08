@@ -17,9 +17,9 @@
 </table>
 
 
-<a href="<@uri value="/cart/add/${product.code}"/>"
+<a href="<@url value="/cart/add/${product.code}"/>"
 	class="ajax view" options="{replacement:'cart_items'}">放入购物车</a> <a
-	href="<@uri value="/product/favorite/${product.code}"/>"
+	href="<@url value="/product/favorite/${product.code}"/>"
 	class="ajax" options="{onerror:'login()'}">加入收藏夹</a></div>
 
 
@@ -38,7 +38,7 @@
 	<li class="current-rating" style="width: 150px;"></li>
 	<#list 1..5 as index>
 		<li><a
-			href="<@uri value="/product/score/${product.code}?score=${index}"/>"
+			href="<@url value="/product/score/${product.code}?score=${index}"/>"
 			title="${index}"
 			class="ajax r${index}-unit"
 			options="{onsuccess:'updateScore()',onerror:'login()'}">${index}</a></li>

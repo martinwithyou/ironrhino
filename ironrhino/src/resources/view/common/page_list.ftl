@@ -4,7 +4,7 @@
 <title>List Pages</title>
 </head>
 <body>
-<#assign config={"path":{"template":"<a href=\"${getUri(cmsPath)}$"+"{value}\" target=\"_blank\">$"+"{value}</a>"},"title":{},"createDate":{},"modifyDate":{}}>
+<#assign config={"path":{"template":"<a href=\"${getUrl(cmsPath)}$"+"{value}\" target=\"_blank\">$"+"{value}</a>"},"title":{},"createDate":{},"modifyDate":{}}>
 <#assign actionColumnButtons=btn(action.getText('edit'),r"window.open(Richtable.getUrl('input','${rowid}'))")+btn(action.getText('delete'),null,'del')>
 <@richtable entityName="page" config=config actionColumnWidth="100px" actionColumnButtons=actionColumnButtons celleditable=false/>
 </body>

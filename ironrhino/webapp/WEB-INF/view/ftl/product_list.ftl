@@ -7,10 +7,10 @@
 <div id="${list!}_list_detail">
 <div class="product_list">
 <#list resultPage.result as var>
-	<p><img src="<@uri value="/product/${var.code}.s.jpg"/>"
+	<p><img src="<@url value="/product/${var.code}.s.jpg"/>"
 		alt="${var.code}" class="product_list" /> <a
-		href="<@uri value="/product/view/${var.code}"/>">${var.name}</a> 
-		<a href="<@uri value="/cart/add/${var.code}"/>"
+		href="<@url value="/product/view/${var.code}"/>">${var.name}</a> 
+		<a href="<@url value="/cart/add/${var.code}"/>"
 		class="ajax view" options="{replacement:'cart_items'}">放入购物车</a></p>
 </#list>
 </div>

@@ -3,12 +3,12 @@
 <head>
 <title>Create/Edit Page</title>
 <meta name="cms_path" content="${cmsPath}" />
-<script type="text/javascript" src="<@uri value="/assets/components/tinymce/jscripts/tiny_mce/jquery.tinymce.js"/>"></script> 
+<script type="text/javascript" src="<@url value="/assets/components/tinymce/jscripts/tiny_mce/jquery.tinymce.js"/>"></script> 
 <script type="text/javascript">
 $(function() {
 		var cmsPath= $('meta[name="cms_path"]').attr('content') || '';
 		var options = {
-			script_url : '<@uri value="/assets/components/tinymce/jscripts/tiny_mce/tiny_mce.js"/>',
+			script_url : '<@url value="/assets/components/tinymce/jscripts/tiny_mce/tiny_mce.js"/>',
 			theme : "advanced",
 			plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,autosave",
 			theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
@@ -19,7 +19,7 @@ $(function() {
 			theme_advanced_toolbar_align : "left",
 			theme_advanced_statusbar_location : "bottom",
 			theme_advanced_resizing : true,
-			content_css : "<@uri value="/assets/styles/all-min.css"/>",
+			content_css : "<@url value="/assets/styles/all-min.css"/>",
 			mode : "textareas"
 		};
 		$('#page_content').tinymce(options);
@@ -94,7 +94,7 @@ $(function() {
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
 	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>
 	<#if page.path??>
-	<@button id="preview" type="link" text="${action.getText('preview')}" href="${getUri(cmsPath+page.path)}?preview=true" target="_blank"/>
+	<@button id="preview" type="link" text="${action.getText('preview')}" href="${getUrl(cmsPath+page.path)}?preview=true" target="_blank"/>
 	<#else>
 	<@button id="preview" type="link" text="${action.getText('preview')}" target="_blank"/>
 	</#if>
@@ -104,7 +104,7 @@ $(function() {
 	<p>
 	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
 	<#if page.path??>
-	<@button id="view" type="link" text="${action.getText('view')}" href="${getUri(cmsPath+page.path)}" target="_blank"/>
+	<@button id="view" type="link" text="${action.getText('view')}" href="${getUrl(cmsPath+page.path)}" target="_blank"/>
 	<#else>
 	<@button id="view" type="link" text="${action.getText('view')}" target="_blank"/>
 	</#if>

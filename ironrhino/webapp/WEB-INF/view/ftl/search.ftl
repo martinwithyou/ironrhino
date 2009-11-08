@@ -10,7 +10,7 @@
  Search took ${searchResults.searchTime}ms
  <#if searchResults.hits??>
 		<#list searchResults.hits as var>
-			<p><a href="<@uri value="/product/view/${var.data().code}"/>">${var.data().name}</a> (${action.formatScore(var.score())})<br />
+			<p><a href="<@url value="/product/view/${var.data().code}"/>">${var.data().name}</a> (${action.formatScore(var.score())})<br />
 			${var.data().shortDescription!}</p>
 		</#list>
 		<#if searchResults.pages??>
@@ -21,7 +21,7 @@
 				<#if var.selected>
 					<span>${var.from}-${var.to}</span>
 					<#else>
-					<a href="<@uri value="/search?q=${q}&amp;pn=${index}&amp;ps=${ps}"/>">${var.from}-${var.to}</a>
+					<a href="<@url value="/search?q=${q}&amp;pn=${index}&amp;ps=${ps}"/>">${var.from}-${var.to}</a>
 				</#if>
 			</#list></p>
 		</#if>

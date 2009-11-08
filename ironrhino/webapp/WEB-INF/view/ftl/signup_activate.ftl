@@ -3,7 +3,7 @@
 <head>
 <title>${action.getText('signup')}</title>
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
-<meta http-equiv="refresh" content="0; url=<@uri value="/"/>" />
+<meta http-equiv="refresh" content="0; url=<@url value="/"/>" />
 </@authorize>
 </head>
 <body>

@@ -5,12 +5,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 <meta name="context_path" content="${request.contextPath}" />
-<link rel="shortcut icon" href="<@uri value="/assets/images/favicon.ico"/>" />
-<link href="<@uri value="/assets/styles/all-min.css"/>" media="screen" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="<@url value="/assets/images/favicon.ico"/>" />
+<link href="<@url value="/assets/styles/all-min.css"/>" media="screen" rel="stylesheet" type="text/css" />
 <!--[if IE]>
-	<link href="<@uri value="/assets/styles/ie.css"/>" media="all" rel="stylesheet" type="text/css" />
+	<link href="<@url value="/assets/styles/ie.css"/>" media="all" rel="stylesheet" type="text/css" />
 <![endif]-->
-<script src="<@uri value="/assets/scripts/all-min.js"/>" type="text/javascript"></script>
+<script src="<@url value="/assets/scripts/all-min.js"/>" type="text/javascript"></script>
 <#noescape>${head}</#noescape>
 </head>
 
@@ -21,25 +21,25 @@
 <ul class="nav">
 	<li><a>系统配置</a>
 	<ul>
-		<li><a href="<@uri value="/common/console"/>">控制台</a></li>
-		<li><a href="<@uri value="/common/setting"/>">参数设置</a></li>
-		<li><a href="<@uri value="/common/monitor"/>">系统监控</a></li>
-		<li><a href="<@uri value="/common/customizeEntity"/>">属性定制</a></li>
+		<li><a href="<@url value="/common/console"/>">控制台</a></li>
+		<li><a href="<@url value="/common/setting"/>">参数设置</a></li>
+		<li><a href="<@url value="/common/monitor"/>">系统监控</a></li>
+		<li><a href="<@url value="/common/customizeEntity"/>">属性定制</a></li>
 	</ul>
 	</li>
-	<li><a href="<@uri value="/common/region"/>">区域管理</a></li>
+	<li><a href="<@url value="/common/region"/>">区域管理</a></li>
 	<li><a>用户管理</a>
 	<ul>
-		<li><a href="<@uri value="/ums/user"/>">用户管理</a></li>
+		<li><a href="<@url value="/ums/user"/>">用户管理</a></li>
 	</ul>
 	</li>
 	<li><a>产品管理</a>
 	<ul>
-		<li><a href="<@uri value="/pms/category"/>">目录管理</a></li>
-		<li><a href="<@uri value="/pms/product"/>">产品管理</a></li>
+		<li><a href="<@url value="/pms/category"/>">目录管理</a></li>
+		<li><a href="<@url value="/pms/product"/>">产品管理</a></li>
 	</ul>
 	</li>
-	<li><a href="<@uri value="/logout"/>">注销</a></li>
+	<li><a href="<@url value="/logout"/>">注销</a></li>
 </ul>
 </div>
 </div>

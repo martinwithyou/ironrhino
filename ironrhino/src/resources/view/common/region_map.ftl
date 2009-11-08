@@ -22,7 +22,7 @@ $(window).unload(GUnload);
 	}
 	Initialization.treeview= function(){
 		$("#treeview").treeview({
-			url: "<@uri value="/region/children"/>",
+			url: "<@url value="/region/children"/>",
 			click:_click,
 			collapsed: true,
 			unique: true
@@ -63,7 +63,7 @@ function mark(){
 		var bounds = map.getBounds();
 		var southWest = bounds.getSouthWest();
 		var northEast = bounds.getNorthEast();
-		GDownloadUrl('<@uri value="/common/region/mark?southWest="/>'+southWest.lat()+','+southWest.lng()+'&northEast='+northEast.lat()+','+northEast.lng()+'&zoom='+map.getZoom(), function(data, responseCode) {
+		GDownloadUrl('<@url value="/common/region/mark?southWest="/>'+southWest.lat()+','+southWest.lng()+'&northEast='+northEast.lat()+','+northEast.lng()+'&zoom='+map.getZoom(), function(data, responseCode) {
         var markers = eval('('+data+')');
   		for (var i = 0; i < markers.length; i++) 
   			addMarker(markers[i]);
@@ -96,12 +96,12 @@ if(!confirm('map center to '+region.name+'?'))
 return;
 region.latitude=map.getCenter().lat();
 region.longitude=map.getCenter().lng();
-var url='<@uri value="/common/region/save?region.id="/>'+region.id+'&region.latitude='+region.latitude+'&region.longitude='+region.longitude;
+var url='<@url value="/common/region/save?region.id="/>'+region.id+'&region.latitude='+region.latitude+'&region.longitude='+region.longitude;
 new $.ajax({url:url,dataType:true,success:function(){addMarker(region)}});
 }
 
 function switchTo(type){
-url='<@uri value="/common/region/map?"/>'+(type?'type='+type:'')+'&lat='+map.getCenter().lat()+'&lng='+map.getCenter().lng()+'&zoom='+map.getZoom();
+url='<@url value="/common/region/map?"/>'+(type?'type='+type:'')+'&lat='+map.getCenter().lat()+'&lng='+map.getCenter().lng()+'&zoom='+map.getZoom();
 window.location.href=url;
 }
 </script>

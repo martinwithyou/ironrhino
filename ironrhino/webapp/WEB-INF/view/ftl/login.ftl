@@ -3,7 +3,7 @@
 <head>
 <title>${action.getText('login')}</title>
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
-<meta http-equiv="refresh" content="0; url=<@uri value="/"/>" />
+<meta http-equiv="refresh" content="0; url=<@url value="/"/>" />
 </@authorize>
 </head>
 <body>
@@ -15,8 +15,8 @@
 	<@captcha/>
 	<p>
 	<@s.submit value="%{getText('login')}" theme="simple" cssClass="primary"/>
-	<@button type="link" text="${action.getText('signup')}" href="${getUri('/signup')}"/>
-	<@button type="link" text="${action.getText('forgot')}" href="${getUri('/signup/forgot')}"/>
+	<@button type="link" text="${action.getText('signup')}" href="${getUrl('/signup')}"/>
+	<@button type="link" text="${action.getText('forgot')}" href="${getUrl('/signup/forgot')}"/>
 	</p>
 </@s.form>
 </body>

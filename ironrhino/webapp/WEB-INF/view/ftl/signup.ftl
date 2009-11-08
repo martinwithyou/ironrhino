@@ -3,7 +3,7 @@
 <head>
 <title>${action.getText('signup')}</title>
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
-<meta http-equiv="refresh" content="0; url=<@uri value="/"/>" />
+<meta http-equiv="refresh" content="0; url=<@url value="/"/>" />
 </@authorize>
 </head>
 <body>
@@ -14,8 +14,8 @@
 	<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" size="24" cssClass="required"/>
 	<p>
 	<@s.submit value="%{getText('signup')}" theme="simple" cssClass="primary"/>
-	<@button type="link" text="${action.getText('login')}" href="${getUri('/login')}"/>
-	<@button type="link" text="${action.getText('forgot')}" href="${getUri('/signup/forgot')}"/>
+	<@button type="link" text="${action.getText('login')}" href="${getUrl('/login')}"/>
+	<@button type="link" text="${action.getText('forgot')}" href="${getUrl('/signup/forgot')}"/>
 	</p>
 </@s.form>
 </body>
