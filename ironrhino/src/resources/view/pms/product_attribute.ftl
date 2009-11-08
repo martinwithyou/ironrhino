@@ -4,7 +4,7 @@
 <title>Product Attribute</title>
 </head>
 <body>
-<form action="attribute" method="post" class="ajax view"><@s.hidden
+<form action="<@url value="attribute"/>" method="post" class="ajax view"><@s.hidden
 	name="id" />
 <table class="datagrid">
 	<thead>

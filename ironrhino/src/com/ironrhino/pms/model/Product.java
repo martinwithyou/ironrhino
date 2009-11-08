@@ -19,7 +19,6 @@ import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
-import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Customizable;
@@ -29,7 +28,6 @@ import org.ironrhino.core.model.Recordable;
 import com.opensymphony.xwork2.util.CreateIfNull;
 
 @RecordAware
-@PublishAware
 @Searchable(alias = "product")
 @AutoConfig(fileupload = "image/pjpeg,image/jpeg")
 public class Product extends BaseEntity implements Ordered, Recordable,

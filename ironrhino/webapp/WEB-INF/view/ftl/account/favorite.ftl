@@ -4,7 +4,7 @@
 <title>ironrhino</title>
 </head>
 <body>
-<form action="delete" class="ajax view">
+<form action="<@url value="delete"/>" class="ajax view">
 <table class="sortable">
 	<thead>
 		<tr>

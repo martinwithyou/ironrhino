@@ -14,7 +14,7 @@
 			class="ajax view" method="post" replacement="product_pic_list">delete</a></li>
 	</@s.iterator>
 </ul>
-<form action="picture" method="post" enctype="multipart/form-data" class="ajax view" replacement="product_pic_list">
+<form action="<@url value="picture"/>" method="post" enctype="multipart/form-data" class="ajax view" replacement="product_pic_list">
 	<@s.hidden name="actionType" value="save" />
 	<@s.hidden name="id" />
 	<@s.file label="%{getText('picture')}" name="picture" />

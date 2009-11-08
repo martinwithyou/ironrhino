@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>${action.getText('switchUser')}</h1>
-<form action="switch" method="POST">
+<form action="<@url value="switch"/>" method="POST">
 <p>
 <input type='text' name='j_username'>
 <@button type="submit" text="${action.getText('switchUser')}"/>
