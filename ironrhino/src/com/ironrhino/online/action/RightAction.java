@@ -22,29 +22,32 @@ public class RightAction extends BaseAction {
 	@Autowired
 	private transient ProductFacade productFacade;
 
+	private Product relatedProduct;
+
 	public Product getRelatedProduct() {
-		String history = RequestUtils.getCookieValue(ServletActionContext
-				.getRequest(), "HISTORY");
-		Product relatedProduct = null;
-		if (StringUtils.isNotBlank(history)) {
-			String[] array = history.split(",");
-			Random random = new Random();
-			int index = random.nextInt(array.length);
-			String code = array[index];
-			relatedProduct = productFacade.getProductByCode(code);
-			if (relatedProduct != null) {
-				List<Product> relatedProducts = productFacade
-						.getRelatedProducts(relatedProduct);
-				if (relatedProducts.size() > 0) {
-					index = random.nextInt(relatedProducts.size());
-					Iterator<Product> it = relatedProducts.iterator();
-					for (int i = 0; i <= index; i++)
-						relatedProduct = it.next();
+		if (relatedProduct == null) {
+			String history = RequestUtils.getCookieValue(ServletActionContext
+					.getRequest(), "HISTORY");
+			if (StringUtils.isNotBlank(history)) {
+				String[] array = history.split(",");
+				Random random = new Random();
+				int index = random.nextInt(array.length);
+				String code = array[index];
+				relatedProduct = productFacade.getProductByCode(code);
+				if (relatedProduct != null) {
+					List<Product> relatedProducts = productFacade
+							.getRelatedProducts(relatedProduct);
+					if (relatedProducts.size() > 0) {
+						index = random.nextInt(relatedProducts.size());
+						Iterator<Product> it = relatedProducts.iterator();
+						for (int i = 0; i <= index; i++)
+							relatedProduct = it.next();
+					}
 				}
 			}
+			if (relatedProduct == null)
+				relatedProduct = productFacade.getRandomProduct();
 		}
-		if (relatedProduct == null)
-			relatedProduct = productFacade.getRandomProduct();
 		return relatedProduct;
 	}
 
