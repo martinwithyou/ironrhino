@@ -6,6 +6,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -15,13 +17,18 @@ import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.security.context.HttpSessionContextIntegrationFilter;
 
-public class HttpWrappedSession implements Serializable, HttpSession {
+public class WrappedHttpSession implements Serializable, HttpSession {
 
 	private static final long serialVersionUID = -4227316119138095858L;
 
+	public static final String SESSION_TRACKER_NAME = "T";
+
+	public static Pattern SESSION_TRACKER_PATTERN = Pattern.compile(';'
+			+ SESSION_TRACKER_NAME + "=.+");
+
 	private String id;
 
-	private transient HttpSessionManager sessionManager;
+	private transient HttpSessionManager httpSessionManager;
 
 	private transient HttpContext httpContext;
 
@@ -50,16 +57,16 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	private boolean invalid;
 
-	public HttpWrappedSession(HttpContext context,
-			HttpSessionManager sessionManager) {
+	public WrappedHttpSession(HttpContext context,
+			HttpSessionManager httpSessionManager) {
 		now = System.currentTimeMillis();
 		this.httpContext = context;
-		this.sessionManager = sessionManager;
+		this.httpSessionManager = httpSessionManager;
 		sessionTracker = RequestUtils.getCookieValue(context.getRequest(),
-				Constants.SESSION_TRACKER_NAME);
+				SESSION_TRACKER_NAME);
 		if (StringUtils.isBlank(sessionTracker)) {
 			sessionTracker = context.getRequest().getParameter(
-					Constants.SESSION_TRACKER_NAME);
+					SESSION_TRACKER_NAME);
 			if (StringUtils.isBlank(sessionTracker)) {
 				String requestURL = context.getRequest().getRequestURL()
 						.toString();
@@ -70,7 +77,7 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 					for (String pair : array) {
 						if (pair.indexOf('=') > 0) {
 							String k = pair.substring(0, pair.indexOf('='));
-							if (k.equals(Constants.SESSION_TRACKER_NAME)) {
+							if (k.equals(SESSION_TRACKER_NAME)) {
 								sessionTracker = pair.substring(pair
 										.indexOf('=') + 1);
 								break;
@@ -83,11 +90,11 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 				fromCookie = false;
 		}
 
-		sessionManager.initialize(this);
+		httpSessionManager.initialize(this);
 	}
 
 	public void save() {
-		sessionManager.save(this);
+		httpSessionManager.save(this);
 	}
 
 	public HttpContext getHttpContext() {
@@ -110,9 +117,11 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 	@Override
 	public void setAttribute(String key, Object object) {
 		attrMap.put(key, object);
-		if (!HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY
-				.equals(key))
+		if (isRequestedSessionIdFromURL()
+				|| !HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY
+						.equals(key)) {
 			dirty = true;
+		}
 	}
 
 	@Override
@@ -138,7 +147,7 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	@Override
 	public void invalidate() {
-		sessionManager.invalidate(this);
+		httpSessionManager.invalidate(this);
 	}
 
 	@Override
@@ -198,6 +207,10 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 		this.sessionTracker = sessionTracker;
 	}
 
+	public void resetSessionTracker() {
+		this.sessionTracker = httpSessionManager.getSessionTracker(this);
+	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -224,6 +237,40 @@ public class HttpWrappedSession implements Serializable, HttpSession {
 
 	public boolean isRequestedSessionIdFromURL() {
 		return !fromCookie;
+	}
+
+	public String encodeURL(String url) {
+		if (!isRequestedSessionIdFromURL() || StringUtils.isBlank(url))
+			return url;
+		Matcher m = SESSION_TRACKER_PATTERN.matcher(url);
+		if (m.find())
+			return url;
+		return doEncodeURL(url);
+	}
+
+	public String encodeRedirectURL(String url) {
+		if (!isRequestedSessionIdFromURL() || StringUtils.isBlank(url))
+			return url;
+		Matcher m = SESSION_TRACKER_PATTERN.matcher(url);
+		url = m.replaceAll("");
+		return doEncodeURL(url);
+	}
+
+	private String doEncodeURL(String url) {
+		String[] array = url.split("\\?", 2);
+		StringBuilder sb = new StringBuilder();
+		sb.append(array[0]);
+		if (sessionTracker != null) {
+			sb.append(';');
+			sb.append(SESSION_TRACKER_NAME);
+			sb.append('=');
+			sb.append(sessionTracker);
+		}
+		if (array.length == 2) {
+			sb.append('?');
+			sb.append(array[1]);
+		}
+		return sb.toString();
 	}
 
 	@Deprecated

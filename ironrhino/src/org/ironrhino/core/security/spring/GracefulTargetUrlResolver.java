@@ -17,8 +17,11 @@ public class GracefulTargetUrlResolver implements TargetUrlResolver {
 				&& StringUtils.hasLength(request.getHeader("Referer")))
 			targetUrl = request.getHeader("Referer");
 
-		if (StringUtils.hasLength(request.getParameter("targetUrl")))
-			targetUrl = request.getParameter("targetUrl");
+		if (StringUtils
+				.hasLength(request
+						.getParameter(DefaultAuthenticationProcessingFilterEntryPoint.TARGET_URL)))
+			targetUrl = request
+					.getParameter(DefaultAuthenticationProcessingFilterEntryPoint.TARGET_URL);
 
 		if (!StringUtils.hasLength(targetUrl))
 			targetUrl = request.getContextPath();

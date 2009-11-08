@@ -23,7 +23,7 @@ public class HttpContext {
 		return request;
 	}
 
-	public void setRequest(HttpWrappedRequest request) {
+	public void setRequest(WrappedHttpServletRequest request) {
 		this.request = request;
 	}
 

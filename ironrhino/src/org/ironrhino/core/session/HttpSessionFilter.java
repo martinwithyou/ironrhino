@@ -12,7 +12,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.performance.BufferableResponseWrapper;
@@ -45,20 +44,24 @@ public class HttpSessionFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-
 		HttpServletRequest req = (HttpServletRequest) request;
-		for (String pattern : excludePatterns)
+		for (String pattern : excludePatterns) {
 			if (org.ironrhino.core.util.StringUtils.matchesWildcard(req
 					.getServletPath(), pattern)) {
 				chain.doFilter(request, response);
 				return;
 			}
+		}
 		HttpContext httpContext = new HttpContext((HttpServletRequest) request,
 				(HttpServletResponse) response, servletContext);
-		HttpWrappedRequest httpRequest = new HttpWrappedRequest(req,
-				httpContext, httpSessionManager);
+		WrappedHttpSession session = new WrappedHttpSession(httpContext,
+				httpSessionManager);
+		WrappedHttpServletRequest httpRequest = new WrappedHttpServletRequest(
+				req, session);
+		WrappedHttpServletResponse httpResponse = new WrappedHttpServletResponse(
+				(HttpServletResponse) response, session);
 		BufferableResponseWrapper res = new BufferableResponseWrapper(
-				(HttpServletResponse) response);
+				httpResponse);
 		// copy from
 		// org.springframework.web.context.request.ServletRequestListener
 		ServletRequestAttributes attributes = new ServletRequestAttributes(
@@ -87,10 +90,7 @@ public class HttpSessionFilter implements Filter {
 			byte[] bytes = res.getContents();
 			if (bytes == null)
 				bytes = new byte[0];
-			HttpSession session = httpRequest.getSession();
-			if (session instanceof HttpWrappedSession) {
-				((HttpWrappedSession) session).save();
-			}
+			session.save();
 			response.setContentLength(bytes.length);
 			ServletOutputStream sos = response.getOutputStream();
 			if (bytes.length > 0)

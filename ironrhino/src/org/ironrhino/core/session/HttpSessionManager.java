@@ -1,13 +1,11 @@
 package org.ironrhino.core.session;
 
-public interface HttpSessionManager {
+public interface HttpSessionManager extends HttpSessionStore {
 
-	public void save(HttpWrappedSession sesion);
+	public String getSessionTracker(WrappedHttpSession session);
 
-	public void initialize(HttpWrappedSession session);
+	public int getMaxInactiveInterval(); // in seconds
 
-	public void invalidate(HttpWrappedSession sesion);
-
-	public int getMaxInactiveInterval();
+	public int getMinActiveInterval(); // in seconds
 
 }

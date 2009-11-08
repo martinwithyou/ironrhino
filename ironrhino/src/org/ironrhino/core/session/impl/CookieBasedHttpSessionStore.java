@@ -11,14 +11,20 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.security.util.Blowfish;
-import org.ironrhino.core.session.HttpWrappedSession;
+import org.ironrhino.core.session.HttpSessionStore;
+import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.security.context.HttpSessionContextIntegrationFilter;
 import org.springframework.security.context.SecurityContext;
+import org.springframework.stereotype.Component;
 
-//@Component("sessionManager")
-public class CookieBasedSessionManager extends AbstractSessionManager {
+@Component("cookieBased")
+public class CookieBasedHttpSessionStore implements HttpSessionStore {
+
+	protected Log log = LogFactory.getLog(this.getClass());
 
 	public static final String SESSION_COOKIE_PREFIX = "s_";
 
@@ -26,7 +32,7 @@ public class CookieBasedSessionManager extends AbstractSessionManager {
 
 	// cookies
 
-	public void doInitialize(HttpWrappedSession session) {
+	public void initialize(WrappedHttpSession session) {
 		Map attrMap = null;
 		String value = getCookie(session);
 		if (StringUtils.isNotBlank(value)) {
@@ -45,7 +51,7 @@ public class CookieBasedSessionManager extends AbstractSessionManager {
 		session.setAttrMap(attrMap);
 	}
 
-	public void doSave(HttpWrappedSession session) {
+	public void save(WrappedHttpSession session) {
 		String referer = session.getHttpContext().getRequest().getHeader(
 				"Referer");
 		if (referer == null)
@@ -75,12 +81,12 @@ public class CookieBasedSessionManager extends AbstractSessionManager {
 		}
 	}
 
-	public void doInvalidate(HttpWrappedSession session) {
+	public void invalidate(WrappedHttpSession session) {
 		clearCookie(session);
 
 	}
 
-	private String getCookie(HttpWrappedSession session) {
+	private String getCookie(WrappedHttpSession session) {
 		Map<String, String> cookieMap = new HashMap<String, String>(3);
 		Cookie[] cookies = session.getHttpContext().getRequest().getCookies();
 		if (cookies != null) {
@@ -106,7 +112,7 @@ public class CookieBasedSessionManager extends AbstractSessionManager {
 		return sb.toString();
 	}
 
-	private void saveCookie(HttpWrappedSession session, String value) {
+	private void saveCookie(WrappedHttpSession session, String value) {
 		clearCookie(session);
 		if (StringUtils.isNotBlank(value)) {
 			int pieces = value.length() / SINGLE_COOKIE_SIZE;
@@ -125,7 +131,7 @@ public class CookieBasedSessionManager extends AbstractSessionManager {
 		}
 	}
 
-	private void clearCookie(HttpWrappedSession session) {
+	private void clearCookie(WrappedHttpSession session) {
 		Cookie[] cookies = session.getHttpContext().getRequest().getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies)

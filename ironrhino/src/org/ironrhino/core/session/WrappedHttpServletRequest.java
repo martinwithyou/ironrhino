@@ -4,14 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
-public class HttpWrappedRequest extends HttpServletRequestWrapper {
+public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 
-	private HttpWrappedSession session;
+	private WrappedHttpSession session;
 
-	public HttpWrappedRequest(HttpServletRequest request, HttpContext context,
-			HttpSessionManager sessionManager) {
+	public WrappedHttpServletRequest(HttpServletRequest request, WrappedHttpSession session) {
 		super(request);
-		session = new HttpWrappedSession(context, sessionManager);
+		this.session =session; 
 	}
 
 	@Override
@@ -43,6 +42,11 @@ public class HttpWrappedRequest extends HttpServletRequestWrapper {
 	@Override
 	public boolean isRequestedSessionIdValid() {
 		return true;
+	}
+	
+	@Override
+	public String getRequestedSessionId() {
+		return session.getId();
 	}
 
 }
