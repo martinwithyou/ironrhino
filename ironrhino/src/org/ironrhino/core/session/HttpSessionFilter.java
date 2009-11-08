@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.performance.BufferableResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -24,24 +25,34 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component("httpSessionFilter")
 public class HttpSessionFilter implements Filter {
 
-	ServletContext servletContext;
+	public static final String KEY_EXCLUDE_PATTERNS = "excludePatterns";
+	public static final String DEFAULT_EXCLUDE_PATTERNS = "/assets/*";
+
+	private ServletContext servletContext;
 
 	@Autowired
-	HttpSessionManager httpSessionManager;
+	private HttpSessionManager httpSessionManager;
+
+	private String[] excludePatterns;
 
 	public void init(FilterConfig filterConfig) {
 		servletContext = filterConfig.getServletContext();
+		String str = filterConfig.getInitParameter(KEY_EXCLUDE_PATTERNS);
+		if (StringUtils.isBlank(str))
+			str = DEFAULT_EXCLUDE_PATTERNS;
+		excludePatterns = str.split(",");
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		
+
 		HttpServletRequest req = (HttpServletRequest) request;
-		// assets
-		if(req.getServletPath().startsWith("/assets/")){
-			chain.doFilter(request, response);
-			return;
-		}
+		for (String pattern : excludePatterns)
+			if (org.ironrhino.core.util.StringUtils.matchesWildcard(req
+					.getServletPath(), pattern)) {
+				chain.doFilter(request, response);
+				return;
+			}
 		HttpContext httpContext = new HttpContext((HttpServletRequest) request,
 				(HttpServletResponse) response, servletContext);
 		HttpWrappedRequest httpRequest = new HttpWrappedRequest(req,
