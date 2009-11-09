@@ -2,8 +2,7 @@
 	<#assign current=uid!''>
 	<#list categoryTreeControl.categoryTree.children as cat>
 		<div class="category_top rounded">
-		<div class="category_top_title"><a
-			href="<@url value="/product/list/${cat.code}"/>" class="ajax view category<#if cat.code==current> selected</#if>">${cat.name}</a></div>
+		<div class="category_top_title"><a href="<@url value="/product/list/${cat.code}"/>" class="ajax view category<#if cat.code==current> selected</#if>">${cat.name}</a></div>
 		<#if cat.children.size() gt 0>
 			<div class="category_second rounded">
 			<#list cat.children as child>
@@ -23,12 +22,10 @@
 		<div class="blankline"></div>
 	</#list>
 	<div class="category_top rounded">
-	<div class="category_top_title"><a
-		href="<@url value="/product/list/null"/>" class="ajax view category<#if 'null'==current> selected</#if>">未分类产品</a></div>
+	<div class="category_top_title"><a href="<@url value="/product/list/null"/>" class="ajax view category<#if 'null'==current> selected</#if>">未分类产品</a></div>
 	</div>
 	<div class="blankline"></div>
 	<div class="category_top rounded">
-	<div class="category_top_title"><a
-		href="<@url value="/product/list/history"/>" class="ajax view category<#if 'history'==current> selected</#if>">最近浏览过的产品</a></div>
+	<div class="category_top_title"><a href="<@url value="/product/list/history"/>" class="ajax view category<#if 'history'==current> selected</#if>">最近浏览过的产品</a></div>
 	</div>
 </#if>
