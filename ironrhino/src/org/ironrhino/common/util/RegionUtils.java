@@ -1,7 +1,9 @@
-package org.ironrhino.core.util;
+package org.ironrhino.common.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Region;
+import org.ironrhino.core.util.Location;
+import org.ironrhino.core.util.LocationParser;
 
 public class RegionUtils {
 	public static Region parseByHost(String host, Region regionTree) {
