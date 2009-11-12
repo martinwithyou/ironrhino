@@ -2,8 +2,8 @@ package com.ironrhino.online.service;
 
 import java.util.List;
 
-import org.ironrhino.common.model.AggregateResult;
-import org.ironrhino.common.model.ResultPage;
+import org.ironrhino.core.model.AggregateResult;
+import org.ironrhino.core.model.ResultPage;
 
 import com.ironrhino.pms.model.Product;
 

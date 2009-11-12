@@ -38,7 +38,7 @@
 		<property name="modifyDate" />
 		<set name="roles" table="user_userRole" cascade="all">
 			<key column="userId" />
-			<composite-element class="org.ironrhino.common.model.SimpleElement">
+			<composite-element class="org.ironrhino.core.model.SimpleElement">
 				<property name="value" not-null="true" />
 			</composite-element>
 		</set>

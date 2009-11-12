@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
+import org.ironrhino.core.model.SimpleElement;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.ums.model.User;

@@ -40,7 +40,7 @@
 			<key column="productId" />
 			<list-index column="lineNumber" />
 			<composite-element
-				class="org.ironrhino.common.model.SimpleElement">
+				class="org.ironrhino.core.model.SimpleElement">
 				<property name="value" not-null="true" />
 			</composite-element>
 		</list>
@@ -49,7 +49,7 @@
 			<key column="productId" />
 			<list-index column="lineNumber" />
 			<composite-element
-				class="org.ironrhino.common.model.Attribute">
+				class="org.ironrhino.core.model.Attribute">
 				<property name="name" />
 				<property name="value" />
 			</composite-element>

@@ -1,4 +1,4 @@
-package org.ironrhino.common.model;
+package org.ironrhino.core.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

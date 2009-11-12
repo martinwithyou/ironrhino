@@ -3,7 +3,7 @@ package com.ironrhino.online.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.ironrhino.common.model.ResultPage;
+import org.ironrhino.core.model.ResultPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

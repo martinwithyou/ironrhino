@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.ironrhino.common.model.ResultPage;
+import org.ironrhino.core.model.ResultPage;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.PackageConfig;

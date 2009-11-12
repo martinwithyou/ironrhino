@@ -14,16 +14,16 @@ import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableComponent;
 import org.compass.annotations.SearchableProperty;
 import org.compass.annotations.Store;
-import org.ironrhino.common.model.Attribute;
-import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.RecordAware;
+import org.ironrhino.core.model.Attribute;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Recordable;
+import org.ironrhino.core.model.SimpleElement;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
 

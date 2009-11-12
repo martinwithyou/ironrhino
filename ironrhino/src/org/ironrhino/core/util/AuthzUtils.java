@@ -9,8 +9,8 @@ import ognl.OgnlContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.ironrhino.common.model.SimpleElement;
 import org.ironrhino.core.model.Secured;
+import org.ironrhino.core.model.SimpleElement;
 import org.mvel2.templates.TemplateRuntime;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;

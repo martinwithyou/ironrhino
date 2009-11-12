@@ -7,9 +7,9 @@ import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
-import org.ironrhino.common.model.ResultPage;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Persistable;
+import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.model.Treeable;
 import org.springframework.orm.hibernate3.HibernateCallback;
 

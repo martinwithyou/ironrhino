@@ -25,7 +25,7 @@
 			fetch="subselect">
 			<key column="categoryId" />
 			<composite-element
-				class="org.ironrhino.common.model.SimpleElement">
+				class="org.ironrhino.core.model.SimpleElement">
 				<property name="value" not-null="true" />
 			</composite-element>
 		</set>

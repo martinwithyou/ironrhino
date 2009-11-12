@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.model.Setting;
-import org.ironrhino.common.model.SimpleElement;
+import org.ironrhino.core.model.SimpleElement;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.RegionParser;
 import org.ironrhino.ums.model.User;
