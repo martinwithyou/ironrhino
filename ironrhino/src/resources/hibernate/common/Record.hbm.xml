@@ -5,7 +5,7 @@
 <hibernate-mapping package="org.ironrhino.common.model"
 	default-lazy="true">
 	<class name="Record" table="common_record">
-		<id name="id" type="java.lang.String" length="22"
+		<id name="id" type="java.lang.String" 
 			unsaved-value="null">
 			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>

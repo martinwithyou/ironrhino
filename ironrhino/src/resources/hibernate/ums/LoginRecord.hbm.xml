@@ -4,7 +4,7 @@
 
 <hibernate-mapping package="org.ironrhino.ums.model">
 	<class name="LoginRecord" table="ums_loginRecord">
-		<id name="id" type="java.lang.String" length="22"
+		<id name="id" type="java.lang.String" 
 			unsaved-value="null">
 			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
