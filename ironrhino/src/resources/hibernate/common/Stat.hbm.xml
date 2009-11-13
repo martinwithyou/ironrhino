@@ -6,7 +6,7 @@
 	default-lazy="true">
 	<class name="Stat" table="common_stat">
 		<id name="id" type="java.lang.String" 
-			unsaved-value="null">
+			length="32" unsaved-value="null">
 			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
 		<property name="keyAsString" not-null="true" />

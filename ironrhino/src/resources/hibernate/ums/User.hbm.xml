@@ -6,7 +6,7 @@
 	default-lazy="true">
 	<class name="User" table="ums_user" dynamic-insert="true"
 		dynamic-update="true">
-		<id name="id" type="java.lang.String"  unsaved-value="null">
+		<id name="id" type="java.lang.String"  length="32" unsaved-value="null">
 			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
 		<natural-id>
