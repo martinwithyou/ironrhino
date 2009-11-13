@@ -36,7 +36,7 @@
 		<property name="lastLoginAddress" />
 		<property name="createDate" />
 		<property name="modifyDate" />
-		<set name="roles" table="user_userRole" cascade="all">
+		<set name="roles" table="ums_userRole" cascade="all">
 			<key column="userId" />
 			<composite-element class="org.ironrhino.core.model.SimpleElement">
 				<property name="value" not-null="true" />
