@@ -16192,6 +16192,14 @@ MessageBundle = {
 	var $ajax = $.ajax;
 	$.ajax = function(options) {
 		options.url = UrlUtils.makeSameOrigin(options.url);
+		var temp = options.beforeSend;
+		options.beforeSend = function(xhr) {
+			if (options.header)
+				for (var key in options.header)
+					xhr.setRequestHeader(key, options.header[key]);
+			if (temp)
+				temp(xhr);
+		}
 		return $ajax(options);
 	}
 })();
@@ -16772,9 +16780,9 @@ Observation.ajax = function(container) {
 							_result_type_ : 'json'
 						});
 			if (ids.length > 0)
-				$.extend(options.data, {
-							_replacement_ : ids.join(',')
-						});
+				options.header = {
+					'X-Fragment' : ids.join(',')
+				};
 			$(this).bind('submit', function() {
 						$(this).ajaxSubmit(options);
 						return false;
@@ -16811,8 +16819,7 @@ Observation.ajax = function(container) {
 					data : {
 						_transport_type_ : 'XMLHttpRequest',
 						_include_query_string_ : 'true',
-						_result_type_ : $(this).hasClass('view') ? '' : 'json',
-						_replacement_ : ids.length > 0 ? ids.join(',') : ''
+						_result_type_ : $(this).hasClass('view') ? '' : 'json'
 					},
 					cache : $(this).hasClass('cache'),
 					beforeSend : function() {
@@ -16834,9 +16841,9 @@ Observation.ajax = function(container) {
 								_result_type_ : 'json'
 							});
 				if (ids.length > 0)
-					$.extend(options.data, {
-								_replacement_ : ids.join(',')
-							});
+					options.header = {
+						'X-Fragment' : ids.join(',')
+					};
 				$.ajax(options);
 				return false;
 			});

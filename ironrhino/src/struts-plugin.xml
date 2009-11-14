@@ -6,7 +6,7 @@
 	<bean type="com.opensymphony.xwork2.UnknownHandler" class="org.ironrhino.core.struts.UnknownHandlerImpl" />
 	<bean type="com.opensymphony.xwork2.config.PackageProvider" name="ironrhino-autoconfig"
 		class="org.ironrhino.core.struts.AutoConfigPackageProvider" />
-	<bean type="org.apache.struts2.views.freemarker.FreemarkerManager" class="org.ironrhino.core.struts.RichFreemarkerManager" />
+	<bean type="org.apache.struts2.views.freemarker.FreemarkerManager" class="org.ironrhino.core.struts.MyFreemarkerManager" />
 	<constant name="struts.devMode" value="false" />
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
 	<constant name="struts.mapper.class"

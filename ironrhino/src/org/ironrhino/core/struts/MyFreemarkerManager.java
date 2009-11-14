@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.views.freemarker.ScopesHashModel;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -16,16 +19,19 @@ import org.springframework.web.context.support.ServletContextResourcePatternReso
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
 import freemarker.template.Configuration;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateHashModelEx;
+import freemarker.template.TemplateModelException;
 
-public class RichFreemarkerManager extends
+public class MyFreemarkerManager extends
 		org.apache.struts2.views.freemarker.FreemarkerManager {
 
 	private Log log = LogFactory.getLog(this.getClass());
@@ -35,8 +41,6 @@ public class RichFreemarkerManager extends
 
 	@Inject(value = "ironrhino.view.ftl.classpath", required = false)
 	private String ftlClasspath = AutoConfigResult.DEFAULT_FTL_CLASSPATH;
-
-	
 
 	@Override
 	protected freemarker.template.Configuration createConfiguration(
@@ -124,6 +128,20 @@ public class RichFreemarkerManager extends
 			log.info(e.getMessage());
 		}
 		return configuration;
+	}
+
+	protected ScopesHashModel buildScopesHashModel(
+			ServletContext servletContext, HttpServletRequest request,
+			HttpServletResponse response, ObjectWrapper wrapper,
+			ValueStack stack) {
+		ScopesHashModel model = super.buildScopesHashModel(servletContext,
+				request, response, wrapper, stack);
+		try {
+			model.put("Parameters", model.get(".freemarker.RequestParameters"));
+		} catch (TemplateModelException e) {
+			e.printStackTrace();
+		}
+		return model;
 	}
 
 }
