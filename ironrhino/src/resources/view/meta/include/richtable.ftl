@@ -24,7 +24,7 @@
 </#macro>
 
 <#macro rtstart action='',readonly=false,resizable=true,sortable=true,includeParameters=true>
-<form action="${getUrl(action)}" method="post" class="richtable ajax view"<#if resizable> resizable="true" minColWidth="40"</#if>>
+<form id="${action}_form" action="${getUrl(action)}" method="post" class="richtable ajax view"<#if resizable> resizable="true" minColWidth="40"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
 <#if !name?starts_with('resultPage.')&&!(name?starts_with('_')||name?ends_with('_'))>
