@@ -106,6 +106,8 @@ public class DefaultCaptchaManager implements CaptchaManager {
 								true,
 								(threshold > 0 && threshold == captcha
 										.threshold()) };
+					}else{
+						required = new boolean[] { false, false };
 					}
 				}
 			} else {
