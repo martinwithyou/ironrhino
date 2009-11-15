@@ -3,8 +3,6 @@ package org.ironrhino.core.struts;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.Authorize;
@@ -103,21 +101,13 @@ public class BaseAction extends ActionSupport {
 	}
 
 	public boolean isUseJson() {
-		HttpServletRequest request = ServletActionContext.getRequest();
-		return (request.getHeader("Accept") != null && request.getHeader(
-				"Accept").indexOf("json") > -1)
-				|| JSON.equalsIgnoreCase(request.getParameter("_result_type_"));
+		return JSON.equalsIgnoreCase(ServletActionContext.getRequest()
+				.getHeader("X-Data-Type"));
 	}
 
 	public boolean isAjax() {
 		return "XMLHttpRequest".equalsIgnoreCase(ServletActionContext
-				.getRequest().getHeader("X-Requested-With"))
-				|| StringUtils.isNotEmpty(getAjaxTransport());
-	}
-
-	public String getAjaxTransport() {
-		return ServletActionContext.getRequest().getParameter(
-				"_transport_type_");
+				.getRequest().getHeader("X-Requested-With"));
 	}
 
 	@Override

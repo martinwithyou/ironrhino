@@ -2,6 +2,7 @@ package com.ironrhino.online.action;
 
 import java.util.List;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ironrhino.online.model.OrderItem;
 import com.ironrhino.online.service.ProductFacade;
 import com.ironrhino.online.support.Cart;
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.CreateIfNull;
 
 @AutoConfig(namespace = "/")
@@ -28,6 +28,8 @@ public class CartAction extends BaseAction {
 
 	private List<OrderItem> items;
 
+	private Cart cart;
+
 	public void setItems(List<OrderItem> items) {
 		this.items = items;
 	}
@@ -42,11 +44,12 @@ public class CartAction extends BaseAction {
 	}
 
 	public Cart getCart() {
-		Cart cart = (Cart) ActionContext.getContext().getSession().get(
-				SESSION_KEY_CART);
+		cart = (Cart) ServletActionContext.getRequest().getSession()
+				.getAttribute(SESSION_KEY_CART);
 		if (cart == null) {
 			cart = new Cart();
-			ActionContext.getContext().getSession().put(SESSION_KEY_CART, cart);
+			ServletActionContext.getRequest().getSession().setAttribute(
+					SESSION_KEY_CART, cart);
 		}
 		return cart;
 	}
@@ -57,6 +60,7 @@ public class CartAction extends BaseAction {
 	}
 
 	public String facade() {
+		getCart();
 		return "facade";
 	}
 

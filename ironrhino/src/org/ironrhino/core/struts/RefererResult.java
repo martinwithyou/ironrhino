@@ -14,7 +14,7 @@ public class RefererResult implements Result {
 
 	private static final long serialVersionUID = 6487995341022610712L;
 
-	public static final String INCLUDE_QUERY_STRING = "_include_query_string_";
+	public static final String INCLUDE_QUERY_STRING = "X-Include-Query-String";
 
 	private boolean includeQueryString = false;
 
@@ -31,7 +31,7 @@ public class RefererResult implements Result {
 		if (StringUtils.isBlank(url))
 			url = RequestUtils.getBaseUrl(request);
 		if (includeQueryString
-				|| request.getParameter(INCLUDE_QUERY_STRING) != null)
+				|| request.getHeader(INCLUDE_QUERY_STRING) != null)
 			url += (url.indexOf('?') > 0 ? "&" : "?")
 					+ request.getQueryString();
 		response.sendRedirect(response.encodeRedirectURL(url));

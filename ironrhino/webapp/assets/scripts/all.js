@@ -16745,10 +16745,6 @@ Observation.ajax = function(container) {
 		}
 		if (this.tagName == 'FORM') {
 			var options = {
-				data : {
-					_transport_type_ : 'XMLHttpRequest',
-					_include_query_string_ : 'true'
-				},
 				beforeSubmit : function() {
 					if (!Ajax.fire(target, 'onprepare'))
 						return false;
@@ -16773,16 +16769,17 @@ Observation.ajax = function(container) {
 					Ajax.handleResponse(data, {
 								'target' : target
 							});
-				}
+				},
+				header : {}
 			};
 			if (!$(this).hasClass('view'))
-				$.extend(options.data, {
-							_result_type_ : 'json'
+				$.extend(options.header, {
+							'X-Data-Type' : 'json'
 						});
 			if (ids.length > 0)
-				options.header = {
-					'X-Fragment' : ids.join(',')
-				};
+				$.extend(options.header, {
+							'X-Fragment' : ids.join(',')
+						});
 			$(this).bind('submit', function() {
 						$(this).ajaxSubmit(options);
 						return false;
@@ -16834,16 +16831,17 @@ Observation.ajax = function(container) {
 						Ajax.handleResponse(data, {
 									'target' : target
 								})
-					}
+					},
+					header : {}
 				};
 				if (!$(this).hasClass('view'))
-					$.extend(options.data, {
-								_result_type_ : 'json'
+					$.extend(options.header, {
+								'X-Data-Type' : 'json'
 							});
 				if (ids.length > 0)
-					options.header = {
-						'X-Fragment' : ids.join(',')
-					};
+					$.extend(options.header, {
+								'X-Fragment' : ids.join(',')
+							});
 				$.ajax(options);
 				return false;
 			});
