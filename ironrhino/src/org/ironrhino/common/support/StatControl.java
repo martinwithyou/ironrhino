@@ -209,7 +209,7 @@ public class StatControl {
 			Date end = cal.getTime();
 			baseManager.setEntityClass(Stat.class);
 			DetachedCriteria dc = baseManager.detachedCriteria();
-			dc.add(Restrictions.between("statDate", start, end));
+			dc.add(Restrictions.between("date", start, end));
 			List<Stat> list = baseManager.getListByCriteria(dc);
 			try {
 				if (list.size() > 0) {
