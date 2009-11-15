@@ -94,19 +94,23 @@ public class DefaultCaptchaManager implements CaptchaManager {
 			if (captcha != null) {
 				if (captcha.always()) {
 					required = new boolean[] { true, false };
-				}
-				if (captcha.bypassLoggedInUser())
+				} else if (captcha.bypassLoggedInUser()) {
 					required = new boolean[] {
 							AuthzUtils.getUserDetails(UserDetails.class) == null,
 							false };
-				Integer threshold = (Integer) cacheManager.get(
-						getThresholdKey(request), KEY_CAPTCHA);
-				if (threshold != null && threshold >= captcha.threshold()) {
-					required = new boolean[] { true,
-							(threshold > 0 && threshold == captcha.threshold()) };
+				} else {
+					Integer threshold = (Integer) cacheManager.get(
+							getThresholdKey(request), KEY_CAPTCHA);
+					if (threshold != null && threshold >= captcha.threshold()) {
+						required = new boolean[] {
+								true,
+								(threshold > 0 && threshold == captcha
+										.threshold()) };
+					}
 				}
+			} else {
+				required = new boolean[] { false, false };
 			}
-			required = new boolean[] { false, false };
 			request.setAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_REQUIRED,
 					required);
 		}
