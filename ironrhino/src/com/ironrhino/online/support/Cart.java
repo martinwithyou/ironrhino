@@ -4,30 +4,19 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.ironrhino.online.model.Order;
 import com.ironrhino.online.model.OrderItem;
-import com.ironrhino.online.service.ProductFacade;
 import com.ironrhino.pms.model.Product;
 
-@Component("cart")
 public class Cart implements Serializable {
 
 	private static final long serialVersionUID = -2368151959299407620L;
 
-	private Order order;
-
-	@Autowired
-	private transient ProductFacade productFacade;
+	private Order order = new Order();
 
 	public Order getOrder() {
 		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
 	}
 
 	public boolean contains(String productCode) {
@@ -39,15 +28,14 @@ public class Cart implements Serializable {
 		return false;
 	}
 
-	public void put(String productCode, int quantity) {
-		if (StringUtils.isBlank(productCode) || quantity <= 0)
+	public void put(Product product, int quantity) {
+		if (product == null || quantity <= 0)
 			return;
-		if (!contains(productCode)) {
-			Product product = productFacade.getProductByCode(productCode);
+		if (!contains(product.getCode())) {
 			if (product != null && order != null)
 				doPut(product, quantity);
 		} else {
-			update(productCode, quantity + getQuantity(productCode));
+			update(product.getCode(), quantity + getQuantity(product.getCode()));
 		}
 	}
 
