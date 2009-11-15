@@ -27,7 +27,7 @@ public class MonitorAction extends BaseAction {
 	private Date to;
 
 	private String vtype = "l"; // value type l for longValue or d for
-								// doubleValue
+	// doubleValue
 
 	private String ctype = "bar";// chart type, bar,line ...
 
@@ -104,6 +104,9 @@ public class MonitorAction extends BaseAction {
 	}
 
 	public String chart() {
+		Date today = new Date();
+		if (date == null || date.after(today))
+			date = today;
 		return "chart";
 	}
 
