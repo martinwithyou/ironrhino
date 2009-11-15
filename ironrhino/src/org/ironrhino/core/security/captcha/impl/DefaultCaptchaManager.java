@@ -35,7 +35,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 	protected CacheManager cacheManager;
 
 	@Override
-	public String getChallenge(HttpServletRequest request) {
+	public String getChallenge(HttpServletRequest request, String token) {
 		String challenge = (String) request
 				.getAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_CHALLENGE);
 		if (challenge == null) {
@@ -58,7 +58,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 			// challenge = left + "-" + right + "=?";
 			// answer = String.valueOf(left - right);
 			// }
-			cacheManager.put(getAnswerKey(request), answer, -1,
+			cacheManager.put(CACHE_PREFIX_ANSWER + token, answer, -1,
 					CACHE_ANSWER_TIME_TO_LIVE, KEY_CAPTCHA);
 			request.setAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_CHALLENGE,
 					challenge);
@@ -106,7 +106,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 								true,
 								(threshold > 0 && threshold == captcha
 										.threshold()) };
-					}else{
+					} else {
 						required = new boolean[] { false, false };
 					}
 				}
@@ -120,12 +120,12 @@ public class DefaultCaptchaManager implements CaptchaManager {
 	}
 
 	@Override
-	public boolean validate(HttpServletRequest request) {
+	public boolean validate(HttpServletRequest request, String token) {
 		Boolean validated = (Boolean) request
 				.getAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_VALIDATED);
 		if (validated == null) {
-			String answer = (String) cacheManager.get(getAnswerKey(request),
-					KEY_CAPTCHA);
+			String answer = (String) cacheManager.get(CACHE_PREFIX_ANSWER
+					+ token, KEY_CAPTCHA);
 			boolean b = answer != null
 					&& answer.equals(request.getParameter(KEY_CAPTCHA));
 			if (b)
@@ -134,10 +134,6 @@ public class DefaultCaptchaManager implements CaptchaManager {
 			request.setAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_VALIDATED, b);
 		}
 		return validated;
-	}
-
-	protected String getAnswerKey(HttpServletRequest request) {
-		return CACHE_PREFIX_ANSWER + request.getSession().getId();
 	}
 
 	protected String getThresholdKey(HttpServletRequest request) {

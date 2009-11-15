@@ -95,13 +95,12 @@ Observation.common = function(container) {
 					zIndex : 2000
 				});
 	$('input.captcha', container).focus(function() {
-		if ($(this).attr('_captcha_'))
-			return;
-		$(this).after('<img class="captcha" src="' + CONTEXT_PATH
-				+ '/captcha.jpg"/>');
-		$('img.captcha', container).click(Captcha.refresh);
-		$(this).attr('_captcha_', true);
-	});
+				if ($(this).attr('_captcha_'))
+					return;
+				$(this).after('<img class="captcha" src="' + this.id + '"/>');
+				$('img.captcha', container).click(Captcha.refresh);
+				$(this).attr('_captcha_', true);
+			});
 	if (typeof $.fn.treeTable != 'undefined')
 		$('.treeTable', container).each(function() {
 			$(this).treeTable({
@@ -738,9 +737,10 @@ Captcha = {
 	refresh : function() {
 		$('img.captcha').each(function() {
 					var src = this.src;
-					if (src.lastIndexOf('?') > 0)
-						src = src.substring(0, src.lastIndexOf('?'));
-					this.src = src + '?' + Math.random();
+					var i = src.lastIndexOf('&');
+					if (i > 0)
+						src = src.substring(0, i);
+					this.src = src + '&' + Math.random();
 				});
 		$('input.captcha').val('');
 	}

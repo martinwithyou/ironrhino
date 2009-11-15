@@ -36,15 +36,15 @@ public class CaptchaFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
+		String token = request.getParameter("token");
 		String path = request.getServletPath();
 		if (path.equals(imageCaptchaUrl)) {
 			response.setContentType("image/jpeg");
 			response.setHeader("Pragma", "No-cache");
 			response.setHeader("Cache-Control", "no-cache");
 			response.setDateHeader("Expires", 0);
-			ImageIO.write(
-					new ImageCaptcha(captchaManager.getChallenge(request))
-							.getImage(), "JPEG", response.getOutputStream());
+			ImageIO.write(new ImageCaptcha(captchaManager.getChallenge(request,
+					token)).getImage(), "JPEG", response.getOutputStream());
 			response.getOutputStream().close();
 			return;
 		}

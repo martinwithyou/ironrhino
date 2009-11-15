@@ -196,8 +196,10 @@ public class BaseAction extends ActionSupport {
 
 	@Override
 	public void validate() {
-		if (captchaRequired && !firstReachCaptchaThreshold
-				&& !captchaManager.validate(ServletActionContext.getRequest()))
+		if (captchaRequired
+				&& !firstReachCaptchaThreshold
+				&& !captchaManager.validate(ServletActionContext.getRequest(),
+						ServletActionContext.getRequest().getSession().getId()))
 			addFieldError(CaptchaManager.KEY_CAPTCHA, getText("captcha.error"));
 		if (csrfRequired
 				&& !csrfManager

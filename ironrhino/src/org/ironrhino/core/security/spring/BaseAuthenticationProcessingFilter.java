@@ -30,7 +30,8 @@ public class BaseAuthenticationProcessingFilter extends
 
 		if (captchaManager != null)
 			if (request.getParameter(CaptchaManager.KEY_CAPTCHA) != null) {
-				boolean validated = captchaManager.validate(request);
+				boolean validated = captchaManager.validate(request, request
+						.getSession().getId());
 				if (!validated) {
 					throw new AuthenticationException("captcha error") {
 						private static final long serialVersionUID = 7690064696615444060L;
