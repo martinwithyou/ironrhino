@@ -494,10 +494,10 @@ Ajax = {
 };
 
 function ajax(options) {
-	$.extend(options.data, {
-				_transport_type_ : 'XMLHttpRequest',
-				_include_query_string_ : 'true',
-				_result_type_ : options.dataType != 'json' ? '' : 'json'
+	if (!options.header)
+		options.header = {};
+	$.extend(options.header, {
+				'X-Data-Type' : options.dataType
 			});
 	$.extend(options, {
 				beforeSend : function() {
@@ -632,11 +632,6 @@ Observation.ajax = function(container) {
 				var options = {
 					url : this.href,
 					type : $(this).attr('method') || 'GET',
-					data : {
-						_transport_type_ : 'XMLHttpRequest',
-						_include_query_string_ : 'true',
-						_result_type_ : $(this).hasClass('view') ? '' : 'json'
-					},
 					cache : $(this).hasClass('cache'),
 					beforeSend : function() {
 						$('.action_message,.action_error').remove();
