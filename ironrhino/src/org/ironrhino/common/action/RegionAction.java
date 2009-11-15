@@ -17,7 +17,7 @@ public class RegionAction extends BaseAction {
 
 	private Region region;
 
-	private Integer parentId;
+	private Long parentId;
 
 	private String rolesAsString;
 
@@ -59,11 +59,11 @@ public class RegionAction extends BaseAction {
 		this.rolesAsString = rolesAsString;
 	}
 
-	public Integer getParentId() {
+	public Long getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(Integer parentId) {
+	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
 
