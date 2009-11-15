@@ -75,6 +75,7 @@ public class CartAction extends BaseAction {
 		} else {
 			getCart().put(productFacade.getProductByCode(code), quantity);
 		}
+		markSessionDirty();
 		return "facade";
 	}
 
@@ -84,6 +85,7 @@ public class CartAction extends BaseAction {
 		if (getCart().contains(code)) {
 			getCart().update(code, getCart().getQuantity(code) - 1);
 		}
+		markSessionDirty();
 		return "facade";
 	}
 
@@ -99,8 +101,8 @@ public class CartAction extends BaseAction {
 			}
 			sb.deleteCharAt(sb.length() - 1);
 			sb.append(")");
+			markSessionDirty();
 			addActionMessage(getText("operate.success"));
-
 		}
 		return SUCCESS;
 	}
@@ -112,6 +114,7 @@ public class CartAction extends BaseAction {
 			for (OrderItem item : items)
 				getCart().update(item.getProductCode(), item.getQuantity());
 		}
+		markSessionDirty();
 		addActionMessage(getText("operate.success"));
 		return SUCCESS;
 	}
@@ -119,8 +122,15 @@ public class CartAction extends BaseAction {
 	@SkipValidation
 	public String clear() {
 		getCart().clear();
+		markSessionDirty();
 		addActionMessage(getText("operate.success"));
 		return SUCCESS;
+	}
+
+	private void markSessionDirty() {
+		if (cart != null)
+			ServletActionContext.getRequest().getSession().setAttribute(
+					SESSION_KEY_CART, cart);
 	}
 
 }
