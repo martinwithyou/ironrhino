@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ironrhino.core.security.captcha.CaptchaManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
@@ -22,22 +21,8 @@ public class BaseAuthenticationProcessingFilter extends
 	@Autowired
 	private AuthenticationProcessingFilterEntryPoint entryPoint;
 
-	@Autowired(required = false)
-	private CaptchaManager captchaManager;
-
 	public Authentication attemptAuthentication(HttpServletRequest request)
 			throws AuthenticationException {
-
-		if (captchaManager != null)
-			if (request.getParameter(CaptchaManager.KEY_CAPTCHA) != null) {
-				boolean validated = captchaManager.validate(request, request
-						.getSession().getId());
-				if (!validated) {
-					throw new AuthenticationException("captcha error") {
-						private static final long serialVersionUID = 7690064696615444060L;
-					};
-				}
-			}
 
 		String username = obtainUsername(request);
 		String password = obtainPassword(request);
