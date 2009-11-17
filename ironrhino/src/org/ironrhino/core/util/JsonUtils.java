@@ -3,6 +3,7 @@ package org.ironrhino.core.util;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -99,6 +100,14 @@ public class JsonUtils {
 		if (type == JsonSerializerType.GSON)
 			return gson.toJson(object);
 		return toJson(object);
+	}
+
+	public static <T> T fromJson(String json, Type typeOfT) {
+		return gson.fromJson(json, typeOfT);
+	}
+
+	public static <T> T fromJson(String json, Class<T> classOfT) {
+		return gson.fromJson(json, classOfT);
 	}
 
 	public static JSONObject complexObjectToJson(Object o) {

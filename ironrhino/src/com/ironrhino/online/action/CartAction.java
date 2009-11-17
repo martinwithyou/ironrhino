@@ -1,13 +1,18 @@
 package com.ironrhino.online.action;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.gson.reflect.TypeToken;
 import com.ironrhino.online.model.OrderItem;
 import com.ironrhino.online.service.ProductFacade;
 import com.ironrhino.online.support.Cart;
@@ -44,13 +49,9 @@ public class CartAction extends BaseAction {
 	}
 
 	public Cart getCart() {
-		cart = (Cart) ServletActionContext.getRequest().getSession()
-				.getAttribute(SESSION_KEY_CART);
-		if (cart == null) {
-			cart = new Cart();
-			ServletActionContext.getRequest().getSession().setAttribute(
-					SESSION_KEY_CART, cart);
-		}
+		if (cart == null)
+			cart = uncompress((String) ServletActionContext.getRequest()
+					.getSession().getAttribute(SESSION_KEY_CART));
 		return cart;
 	}
 
@@ -130,7 +131,32 @@ public class CartAction extends BaseAction {
 	private void markSessionDirty() {
 		if (cart != null)
 			ServletActionContext.getRequest().getSession().setAttribute(
-					SESSION_KEY_CART, cart);
+					SESSION_KEY_CART, compress(cart));
+	}
+
+	private String compress(Cart cart) {
+		if (cart == null)
+			return null;
+		List<OrderItem> items = cart.getOrder().getItems();
+		if (items == null || items.isEmpty())
+			return null;
+		Map<String, Integer> map = new HashMap<String, Integer>(items.size());
+		for (OrderItem oi : items)
+			map.put(oi.getProductCode(), oi.getQuantity());
+		return JsonUtils.toJson(map);
+	}
+
+	private Cart uncompress(String str) {
+		Cart cart = new Cart();
+		if (StringUtils.isNotBlank(str)) {
+			Map<String, Integer> map = JsonUtils.fromJson(str,
+					new TypeToken<Map<String, Integer>>() {
+					}.getType());
+			for (Map.Entry<String, Integer> entry : map.entrySet())
+				cart.put(productFacade.getProductByCode(entry.getKey()), entry
+						.getValue());
+		}
+		return cart;
 	}
 
 }
