@@ -1,15 +1,28 @@
 package org.ironrhino.ums.action;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
+import org.ironrhino.core.security.spring.BaseAuthenticationProcessingFilter;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.security.UserAuthenticationProcessingFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.AccountExpiredException;
+import org.springframework.security.Authentication;
+import org.springframework.security.AuthenticationException;
+import org.springframework.security.BadCredentialsException;
+import org.springframework.security.CredentialsExpiredException;
+import org.springframework.security.DisabledException;
+import org.springframework.security.LockedException;
+import org.springframework.security.concurrent.ConcurrentLoginException;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
@@ -18,11 +31,16 @@ public class LoginAction extends BaseAction {
 
 	private static final long serialVersionUID = 2783386542815083811L;
 
+	private static Log log = LogFactory.getLog(LoginAction.class);
+
 	private String password;
 
 	private String error;
 
 	private String username;
+
+	@Autowired
+	private transient BaseAuthenticationProcessingFilter authenticationProcessingFilter;
 
 	public String getUsername() {
 		return username;
@@ -34,10 +52,6 @@ public class LoginAction extends BaseAction {
 
 	public String getError() {
 		return error;
-	}
-
-	public void setError(String error) {
-		this.error = error;
 	}
 
 	public String getPassword() {
@@ -53,10 +67,43 @@ public class LoginAction extends BaseAction {
 	@Captcha(threshold = 3)
 	public String execute() {
 		HttpServletRequest request = ServletActionContext.getRequest();
-		if (StringUtils.isNotBlank(error)) {
+		HttpServletResponse response = ServletActionContext.getResponse();
+		Authentication authResult = null;
+		try {
+			authResult = authenticationProcessingFilter
+					.attemptAuthentication(request);
+		} catch (AuthenticationException failed) {
+			if (failed instanceof BadCredentialsException)
+				error = "user.bad.credentials";
+			else if (failed instanceof DisabledException)
+				error = "user.disabled";
+			else if (failed instanceof LockedException)
+				error = "user.locked";
+			else if (failed instanceof AccountExpiredException)
+				error = "user.expired";
+			else if (failed instanceof ConcurrentLoginException)
+				error = "user.concurrent.login";
+			else if (failed instanceof CredentialsExpiredException)
+				error = "user.bad.credentials";
+			else
+				error = "";
+			// Authentication failed
 			addFieldError("password", getText(error));
 			captchaManager.addCaptachaThreshold(request);
+			try {
+				 authenticationProcessingFilter.unsuccessfulAuthentication(request, response, failed);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+			return SUCCESS;
 		}
+		if (authResult != null)
+			try {
+				authenticationProcessingFilter.successfulAuthentication(
+						request, response, authResult);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
 		return SUCCESS;
 	}
 

@@ -10,9 +10,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
+import org.springframework.security.context.SecurityContextHolder;
+import org.springframework.security.event.authentication.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.ui.webapp.AuthenticationProcessingFilter;
 import org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint;
+import org.springframework.security.util.SessionUtils;
 import org.springframework.security.util.TextUtils;
 
 public class BaseAuthenticationProcessingFilter extends
@@ -66,6 +69,33 @@ public class BaseAuthenticationProcessingFilter extends
 		} catch (ServletException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void successfulAuthentication(HttpServletRequest request,
+			HttpServletResponse response, Authentication authResult)
+			throws IOException, ServletException {
+		SecurityContextHolder.getContext().setAuthentication(authResult);
+		if (isInvalidateSessionOnSuccessfulAuthentication()) {
+			SessionUtils.startNewSessionIfRequired(request,
+					isMigrateInvalidatedSessionAttributes(),
+					getSessionRegistry());
+		}
+		onSuccessfulAuthentication(request, response, authResult);
+		getRememberMeServices().loginSuccess(request, response, authResult);
+		// Fire event
+		if (this.eventPublisher != null) {
+			eventPublisher
+					.publishEvent(new InteractiveAuthenticationSuccessEvent(
+							authResult, this.getClass()));
+		}
+	}
+
+	public void unsuccessfulAuthentication(HttpServletRequest request,
+			HttpServletResponse response, AuthenticationException failed)
+			throws IOException, ServletException {
+		SecurityContextHolder.getContext().setAuthentication(null);
+		onUnsuccessfulAuthentication(request, response, failed);
+		getRememberMeServices().loginFail(request, response);
 	}
 
 }

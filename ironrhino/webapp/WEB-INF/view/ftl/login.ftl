@@ -7,7 +7,7 @@
 </@authorize>
 </head>
 <body>
-<@s.form id="login" action="check" method="post" cssClass="ajax">
+<@s.form id="login" action="login" method="post" cssClass="ajax">
 	<@s.hidden id="targetUrl" name="targetUrl" />
 	<@s.textfield label="%{getText('username')}" name="username" cssClass="required"/>
 	<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
