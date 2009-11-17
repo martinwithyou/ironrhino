@@ -25,11 +25,11 @@
 	</security:http>
 	
 	<bean id="rememberMeServices"
-		class="org.ironrhino.core.security.spring.DefaultTokenBasedRememberMeServices"
+		class="org.ironrhino.core.spring.security.DefaultTokenBasedRememberMeServices"
 		p:key="youcannotguessme" p:parameter="rememberme" p:cookieName="REMEMBERME"
 		p:userDetailsService-ref="userManager" />
 	<bean id="passwordEncoder"
-		class="org.ironrhino.core.security.spring.MixedPasswordEncoder" />
+		class="org.ironrhino.core.spring.security.MixedPasswordEncoder" />
 
 	<bean id="switchUserProcessingFilter"
 		class="org.springframework.security.ui.switchuser.SwitchUserProcessingFilter"
@@ -43,7 +43,7 @@
 		<security:password-encoder ref="passwordEncoder" />
 	</security:authentication-provider>
 	<bean id="entryPoint"
-		class="org.ironrhino.core.security.spring.DefaultAuthenticationProcessingFilterEntryPoint"
+		class="org.ironrhino.core.spring.security.DefaultAuthenticationProcessingFilterEntryPoint"
 		p:loginFormUrl="/login" p:ssoServerBase="${sso.server.base}" p:forceHttps="true" />
 	<bean id="authenticationProcessingFilter"
 		class="org.ironrhino.ums.security.UserAuthenticationProcessingFilter"
@@ -55,7 +55,7 @@
 		<security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER" />
 		<property name="targetUrlResolver">
 			<bean
-				class="org.ironrhino.core.security.spring.GracefulTargetUrlResolver" />
+				class="org.ironrhino.core.spring.security.GracefulTargetUrlResolver" />
 		</property>
 		<property name="exceptionMappings">
 			<value>

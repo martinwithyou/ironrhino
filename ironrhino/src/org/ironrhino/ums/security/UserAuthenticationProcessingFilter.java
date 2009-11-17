@@ -11,7 +11,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.ironrhino.core.aop.AopContext;
 import org.ironrhino.core.aop.CacheAspect;
-import org.ironrhino.core.security.spring.BaseAuthenticationProcessingFilter;
+import org.ironrhino.core.spring.security.DefaultuthenticationProcessingFilter;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.model.LoginRecord;
 import org.ironrhino.ums.model.User;
@@ -22,7 +22,7 @@ import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
 
 public class UserAuthenticationProcessingFilter extends
-		BaseAuthenticationProcessingFilter {
+		DefaultuthenticationProcessingFilter {
 
 	public final static String COOKIE_NAME_LOGIN_USER = "U";
 

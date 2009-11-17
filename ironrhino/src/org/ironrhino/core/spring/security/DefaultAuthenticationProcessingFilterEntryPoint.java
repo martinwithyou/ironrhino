@@ -1,4 +1,4 @@
-package org.ironrhino.core.security.spring;
+package org.ironrhino.core.spring.security;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;

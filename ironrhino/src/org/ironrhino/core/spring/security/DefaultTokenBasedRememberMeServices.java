@@ -1,4 +1,4 @@
-package org.ironrhino.core.security.spring;
+package org.ironrhino.core.spring.security;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

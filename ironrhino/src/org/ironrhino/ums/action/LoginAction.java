@@ -10,7 +10,7 @@ import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
-import org.ironrhino.core.security.spring.BaseAuthenticationProcessingFilter;
+import org.ironrhino.core.spring.security.DefaultuthenticationProcessingFilter;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.security.UserAuthenticationProcessingFilter;
@@ -38,7 +38,7 @@ public class LoginAction extends BaseAction {
 	private String username;
 
 	@Autowired
-	private transient BaseAuthenticationProcessingFilter authenticationProcessingFilter;
+	private transient DefaultuthenticationProcessingFilter authenticationProcessingFilter;
 
 	public String getUsername() {
 		return username;
@@ -84,7 +84,7 @@ public class LoginAction extends BaseAction {
 			addFieldError("password", getText(error));
 			captchaManager.addCaptachaThreshold(request);
 			try {
-				authenticationProcessingFilter.unsuccessfulAuthentication(
+				authenticationProcessingFilter.unsuccessfulAuthenticationWithoutRedirect(
 						request, response, failed);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -93,7 +93,7 @@ public class LoginAction extends BaseAction {
 		}
 		if (authResult != null)
 			try {
-				authenticationProcessingFilter.successfulAuthentication(
+				authenticationProcessingFilter.successfulAuthenticationWithoutRedirect(
 						request, response, authResult);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);

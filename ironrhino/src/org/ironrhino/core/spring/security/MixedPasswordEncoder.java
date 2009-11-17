@@ -1,4 +1,4 @@
-package org.ironrhino.core.security.spring;
+package org.ironrhino.core.spring.security;
 
 import org.ironrhino.core.util.CodecUtils;
 import org.springframework.security.providers.encoding.BasePasswordEncoder;
