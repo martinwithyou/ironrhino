@@ -1,5 +1,6 @@
 package org.ironrhino.core.session.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.SessionCompressorManager;
 import org.ironrhino.core.session.WrappedHttpSession;
@@ -17,7 +18,8 @@ public abstract class AbstractHttpSessionStore implements HttpSessionStore {
 
 	public void save(WrappedHttpSession session) {
 		String str = sessionCompressorManager.compress(session);
-		saveSessionString(session, str);
+		if (StringUtils.isNotBlank(str))
+			saveSessionString(session, str);
 	}
 
 	public abstract String getSessionString(WrappedHttpSession session);

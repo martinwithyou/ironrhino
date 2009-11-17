@@ -49,11 +49,9 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 	private boolean fromCookie = true;
 
 	/**
-	 * sessionTracker -> id-creationTime-lastAccessedTime-username
+	 * sessionTracker -> id-creationTime-lastAccessedTime
 	 */
 	private String sessionTracker;
-
-	private String username;
 
 	private boolean invalid;
 
@@ -221,14 +219,6 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 
 	public void setInvalid(boolean invalid) {
 		this.invalid = invalid;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public boolean isRequestedSessionIdFromCookie() {

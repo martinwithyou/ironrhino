@@ -60,7 +60,9 @@ public class SessionCompressorManager {
 				log.error("No compressor for " + key + ",it won't be saved");
 			}
 		}
-		return JsonUtils.toJson(compressedMap);
+		if (!map.isEmpty())
+			return JsonUtils.toJson(compressedMap);
+		return null;
 	}
 
 	public void uncompress(WrappedHttpSession session, String str) {

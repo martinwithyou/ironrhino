@@ -55,9 +55,11 @@ public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
 		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < cookieMap.size(); i++) {
-			String s = cookieMap.get(SESSION_COOKIE_PREFIX + i);
+			String s = i == 0 ? cookieMap.get(SESSION_COOKIE_PREFIX)
+					: cookieMap.get(SESSION_COOKIE_PREFIX + (i - 1));
 			if (s == null) {
 				log.error(SESSION_COOKIE_PREFIX + i + " is null");
+				clearCookie(session);
 				return null;
 			}
 			sb.append(s);
@@ -76,7 +78,8 @@ public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
 						.saveCookie(
 								session.getHttpContext().getRequest(),
 								session.getHttpContext().getResponse(),
-								SESSION_COOKIE_PREFIX + i,
+								i == 0 ? SESSION_COOKIE_PREFIX
+										: SESSION_COOKIE_PREFIX + (i - 1),
 								value.substring(i * SINGLE_COOKIE_SIZE,
 										i == pieces - 1 ? value.length()
 												: (i + 1) * SINGLE_COOKIE_SIZE),

@@ -1,13 +1,10 @@
 package org.ironrhino.core.session.impl;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.WrappedHttpSession;
@@ -16,14 +13,6 @@ import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.Authentication;
-import org.springframework.security.context.HttpSessionContextIntegrationFilter;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.UserDetailsService;
-import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component("httpSessionManager")
@@ -42,9 +31,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	public static final int DEFAULT_MAXINACTIVEINTERVAL = 1800; // in seconds
 
 	public static final int DEFAULT_MINACTIVEINTERVAL = 60;// in seconds
-
-	@Autowired
-	private UserDetailsService userDetailsService;
 
 	@Autowired
 	@Qualifier("cookieBased")
@@ -84,7 +70,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		String sessionId = null;
 		long creationTime = now;
 		long lastAccessedTime = now;
-		String username = null;
 
 		if (StringUtils.isNotBlank(sessionTracker)) {
 			if (session.isRequestedSessionIdFromURL()) {
@@ -102,8 +87,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 						lastAccessedTime = NumberUtils.xToDecimal(
 								SESSION_LASTACCESSEDTIME_SCALE, array[2])
 								.longValue();
-					if (array.length > 3)
-						username = Blowfish.decrypt(array[3]);
 					boolean timeout = now - lastAccessedTime > session
 							.getMaxInactiveInterval() * 1000;
 					if (timeout) {
@@ -125,33 +108,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.setLastAccessedTime(lastAccessedTime);
 		doInitialize(session);
 
-		if (username != null) {
-			UserDetails ud = null;
-			try {
-				ud = userDetailsService.loadUserByUsername(username);
-			} catch (UsernameNotFoundException e) {
-				invalidate(session);
-				return;
-			} catch (Exception e) {
-				log.warn(e.getMessage(), e);
-			}
-			if (ud != null) {
-				session.setUsername(username);
-				SecurityContext sc = new SecurityContextImpl();
-				Authentication auth = new UsernamePasswordAuthenticationToken(
-						ud, ud.getPassword(), ud.getAuthorities());
-				sc.setAuthentication(auth);
-				Map attrMap = session.getAttrMap();
-				if (attrMap == null) {
-					attrMap = new HashMap<String, Object>();
-					session.setAttrMap(attrMap);
-				}
-				attrMap
-						.put(
-								HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY,
-								sc);
-			}
-		}
 	}
 
 	@Override
@@ -166,28 +122,12 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			session.setLastAccessedTime(session.getNow());
 			sessionTrackerChanged = true;
 		}
-		if (!session.isRequestedSessionIdFromURL()) {
-			Map attrMap = session.getAttrMap();
-			SecurityContext sc = (SecurityContext) attrMap
-					.get(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY);
-			if (sc != null) {
-				if (session.getUsername() == null) {
-					Authentication auth = sc.getAuthentication();
-					if (auth != null && auth.isAuthenticated()) {
-						session.setUsername(auth.getName());
-						sessionTrackerChanged = true;
-					}
-				}
-				attrMap
-						.remove(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY);
-			}
-			if (sessionTrackerChanged) {
-				session.resetSessionTracker();
-				RequestUtils.saveCookie(session.getHttpContext().getRequest(),
-						session.getHttpContext().getResponse(),
-						WrappedHttpSession.SESSION_TRACKER_NAME, session
-								.getSessionTracker(), true);
-			}
+		if (!session.isRequestedSessionIdFromURL() && sessionTrackerChanged) {
+			session.resetSessionTracker();
+			RequestUtils.saveCookie(session.getHttpContext().getRequest(),
+					session.getHttpContext().getResponse(),
+					WrappedHttpSession.SESSION_TRACKER_NAME, session
+							.getSessionTracker(), true);
 		}
 
 		if (session.isDirty()) {
@@ -198,7 +138,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	@Override
 	public void invalidate(WrappedHttpSession session) {
 		session.setInvalid(true);
-		session.setUsername(null);
 		session.getAttrMap().clear();
 		if (!session.isRequestedSessionIdFromURL()) {
 			RequestUtils.deleteCookie(session.getHttpContext().getRequest(),
@@ -224,10 +163,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		sb.append(SESSION_TRACKER_SEPERATOR);
 		sb.append(NumberUtils.decimalToX(SESSION_LASTACCESSEDTIME_SCALE,
 				BigInteger.valueOf(session.getLastAccessedTime())));
-		if (session.getUsername() != null) {
-			sb.append(SESSION_TRACKER_SEPERATOR);
-			sb.append(Blowfish.encrypt(session.getUsername()));
-		}
 		return sb.toString();
 	}
 
