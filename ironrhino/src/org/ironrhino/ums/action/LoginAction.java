@@ -35,8 +35,6 @@ public class LoginAction extends BaseAction {
 
 	private String password;
 
-	private String error;
-
 	private String username;
 
 	@Autowired
@@ -48,10 +46,6 @@ public class LoginAction extends BaseAction {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getError() {
-		return error;
 	}
 
 	public String getPassword() {
@@ -73,6 +67,7 @@ public class LoginAction extends BaseAction {
 			authResult = authenticationProcessingFilter
 					.attemptAuthentication(request);
 		} catch (AuthenticationException failed) {
+			String error = "user.bad.credentials";
 			if (failed instanceof BadCredentialsException)
 				error = "user.bad.credentials";
 			else if (failed instanceof DisabledException)
@@ -85,13 +80,12 @@ public class LoginAction extends BaseAction {
 				error = "user.concurrent.login";
 			else if (failed instanceof CredentialsExpiredException)
 				error = "user.bad.credentials";
-			else
-				error = "";
 			// Authentication failed
 			addFieldError("password", getText(error));
 			captchaManager.addCaptachaThreshold(request);
 			try {
-				 authenticationProcessingFilter.unsuccessfulAuthentication(request, response, failed);
+				authenticationProcessingFilter.unsuccessfulAuthentication(
+						request, response, failed);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
