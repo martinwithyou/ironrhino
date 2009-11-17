@@ -13,6 +13,8 @@ public class Cart implements Serializable {
 
 	private static final long serialVersionUID = -2368151959299407620L;
 
+	public static final String SESSION_KEY_CART = "CART";
+
 	private Order order = new Order();
 
 	public Order getOrder() {

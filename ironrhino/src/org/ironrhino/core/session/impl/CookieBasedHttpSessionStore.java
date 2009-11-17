@@ -1,9 +1,5 @@
 package org.ironrhino.core.session.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,15 +10,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.security.util.Blowfish;
-import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.RequestUtils;
-import org.springframework.security.context.HttpSessionContextIntegrationFilter;
-import org.springframework.security.context.SecurityContext;
 import org.springframework.stereotype.Component;
 
 @Component("cookieBased")
-public class CookieBasedHttpSessionStore implements HttpSessionStore {
+public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
 
 	protected Log log = LogFactory.getLog(this.getClass());
 
@@ -32,53 +25,13 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 
 	// cookies
 
-	public void initialize(WrappedHttpSession session) {
-		Map attrMap = null;
-		String value = getCookie(session);
-		if (StringUtils.isNotBlank(value)) {
-			byte[] bytes = Blowfish.decryptStringToBytes(value);
-			try {
-				ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-				ObjectInputStream ois = new ObjectInputStream(bis);
-				attrMap = (Map) ois.readObject();
-			} catch (Exception e) {
-				clearCookie(session);
-				log.error(e.getMessage(), e);
-			}
-		}
-		if (attrMap == null)
-			attrMap = new HashMap();
-		session.setAttrMap(attrMap);
+	public String getSessionString(WrappedHttpSession session) {
+		return Blowfish.decrypt(getCookie(session));
 	}
 
-	public void save(WrappedHttpSession session) {
-		String referer = session.getHttpContext().getRequest().getHeader(
-				"Referer");
-		if (referer == null)
-			return;
-		Map<String, Object> attrMap = session.getAttrMap();
-		if (attrMap == null)
-			return;
-		SecurityContext sc = (SecurityContext) attrMap
-				.get(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY);
-		if (sc != null && sc.getAuthentication() != null
-				&& !sc.getAuthentication().isAuthenticated())
-			attrMap
-					.remove(HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY);
-		if (attrMap.size() == 0)
-			return;
-		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(bos);
-			oos.writeObject(attrMap);
-			oos.close();
-			byte[] bytes = bos.toByteArray();
-			bos.close();
-			String value = Blowfish.encryptBytesToString(bytes);
-			saveCookie(session, value);
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
+	public void saveSessionString(WrappedHttpSession session,
+			String sessionString) {
+		saveCookie(session, Blowfish.encrypt(sessionString));
 	}
 
 	public void invalidate(WrappedHttpSession session) {
