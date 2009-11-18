@@ -41,7 +41,7 @@ public class PaymentAction extends BaseAction {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String orderCode = request.getParameter("item_name");
 
-		Order order = orderManager.getByNaturalId(orderCode);
+		Order order = orderManager.findByNaturalId(orderCode);
 		if (order == null) {
 			log.error("no order code:" + orderCode);
 			return NONE;

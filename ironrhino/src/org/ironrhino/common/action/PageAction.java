@@ -73,7 +73,7 @@ public class PageAction extends BaseAction {
 			resultPage = new ResultPage<Page>();
 		resultPage.setDetachedCriteria(dc);
 		resultPage.addOrder(Order.asc("path"));
-		resultPage = pageManager.getResultPage(resultPage);
+		resultPage = pageManager.findByResultPage(resultPage);
 		return LIST;
 	}
 
@@ -102,7 +102,7 @@ public class PageAction extends BaseAction {
 			path = "/" + path;
 		page.setPath(path);
 		if (page.isNew()) {
-			if (pageManager.getByNaturalId(page.getPath()) != null) {
+			if (pageManager.findByNaturalId(page.getPath()) != null) {
 				addFieldError("page.path", getText("validation.already.exists"));
 				return INPUT;
 			}
@@ -110,7 +110,7 @@ public class PageAction extends BaseAction {
 			Page temp = page;
 			page = pageManager.get(page.getId());
 			if (!page.getPath().equals(temp.getPath())
-					&& pageManager.getByNaturalId(temp.getPath()) != null) {
+					&& pageManager.findByNaturalId(temp.getPath()) != null) {
 				addFieldError("page.path", getText("validation.already.exists"));
 				return INPUT;
 			}
@@ -148,7 +148,7 @@ public class PageAction extends BaseAction {
 		if (id != null) {
 			DetachedCriteria dc = pageManager.detachedCriteria();
 			dc.add(Restrictions.in("id", id));
-			List<Page> list = pageManager.getListByCriteria(dc);
+			List<Page> list = pageManager.findListByCriteria(dc);
 			if (list.size() > 0) {
 				for (Page page : list)
 					pageManager.delete(page);

@@ -76,7 +76,7 @@ public class StatControl {
 			dc.add(Restrictions.eq("host", host));
 			dc.add(Restrictions.between("date", start, end));
 			dc.addOrder(Order.desc("date"));
-			Stat stat = baseManager.getByCriteria(dc);
+			Stat stat = baseManager.findByCriteria(dc);
 			final Date lastStatDate;
 			if (stat != null)
 				lastStatDate = stat.getDate();
@@ -210,7 +210,7 @@ public class StatControl {
 			baseManager.setEntityClass(Stat.class);
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.between("date", start, end));
-			List<Stat> list = baseManager.getListByCriteria(dc);
+			List<Stat> list = baseManager.findListByCriteria(dc);
 			try {
 				if (list.size() > 0) {
 					Iterator<? extends KeyValuePair> it1 = list.iterator();
@@ -284,7 +284,7 @@ public class StatControl {
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.eq("keyAsString", key.toString()));
 			dc.add(Restrictions.between("date", start, end));
-			List<Stat> list = baseManager.getListByCriteria(dc);
+			List<Stat> list = baseManager.findListByCriteria(dc);
 			analyzer = new PeriodAnalyzer(key, list.iterator());
 			analyzer.setCumulative(cumulative);
 		}

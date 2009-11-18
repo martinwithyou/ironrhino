@@ -139,7 +139,7 @@ public class ProductAction extends BaseAction {
 		resultPage.setDetachedCriteria(dc);
 		resultPage.addOrder(Order.asc("displayOrder"));
 		resultPage.addOrder(Order.desc("createDate"));
-		resultPage = productManager.getResultPage(resultPage);
+		resultPage = productManager.findByResultPage(resultPage);
 		return LIST;
 	}
 
@@ -159,7 +159,7 @@ public class ProductAction extends BaseAction {
 		if (product == null)
 			return INPUT;
 		if (product.isNew()) {
-			if (productManager.getByNaturalId(product.getCode()) != null) {
+			if (productManager.findByNaturalId(product.getCode()) != null) {
 				addFieldError("product.code",
 						getText("validation.already.exists"));
 				return INPUT;
@@ -205,7 +205,7 @@ public class ProductAction extends BaseAction {
 		if (id != null) {
 			DetachedCriteria dc = productManager.detachedCriteria();
 			dc.add(Restrictions.in("id", id));
-			List<Product> list = productManager.getListByCriteria(dc);
+			List<Product> list = productManager.findListByCriteria(dc);
 			if (list.size() > 0) {
 				for (Product product : list)
 					productManager.delete(product);
@@ -255,7 +255,7 @@ public class ProductAction extends BaseAction {
 					index = 0;
 				}
 				deletePictureFile(pictureName);
-				product = productManager.getByNaturalId(code);
+				product = productManager.findByNaturalId(code);
 				product.setPictureQuantity(product.getPictureQuantity() - 1);
 				productManager.save(product);
 				int lastIndex = product.getPictureQuantity();

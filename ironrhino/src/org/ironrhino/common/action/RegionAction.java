@@ -90,7 +90,7 @@ public class RegionAction extends BaseAction {
 			dc.add(Restrictions.isNull("parent"));
 			dc.addOrder(Order.asc("displayOrder"));
 			dc.addOrder(Order.asc("name"));
-			region.setChildren(baseManager.getListByCriteria(dc));
+			region.setChildren(baseManager.findListByCriteria(dc));
 		}
 		list = region.getChildren();
 		return LIST;
@@ -137,7 +137,7 @@ public class RegionAction extends BaseAction {
 		if (id != null) {
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.in("id", id));
-			List<Region> list = baseManager.getListByCriteria(dc);
+			List<Region> list = baseManager.findListByCriteria(dc);
 			if (list.size() > 0) {
 				for (Region region : list)
 					baseManager.delete(region);
@@ -165,7 +165,7 @@ public class RegionAction extends BaseAction {
 			dc.add(Restrictions.in("level", levels));
 		dc.add(Restrictions.and(Restrictions.between("latitude", bottom, top),
 				Restrictions.between("longitude", left, right)));
-		list = baseManager.getListByCriteria(dc);
+		list = baseManager.findListByCriteria(dc);
 		return JSON;
 	}
 

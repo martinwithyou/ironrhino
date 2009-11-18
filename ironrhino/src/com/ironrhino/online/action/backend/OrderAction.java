@@ -62,7 +62,7 @@ public class OrderAction extends BaseAction {
 			}
 		}
 		resultPage.addOrder(org.hibernate.criterion.Order.desc("createDate"));
-		resultPage = orderManager.getResultPage(resultPage);
+		resultPage = orderManager.findByResultPage(resultPage);
 		return LIST;
 	}
 
@@ -100,7 +100,7 @@ public class OrderAction extends BaseAction {
 			if (order.getId() != null)
 				order = orderManager.get(order.getId());
 			else if (order.getCode() != null)
-				order = orderManager.getByNaturalId(order.getCode());
+				order = orderManager.findByNaturalId(order.getCode());
 		return VIEW;
 	}
 
@@ -110,7 +110,7 @@ public class OrderAction extends BaseAction {
 			if (order.getId() != null)
 				order = orderManager.get(order.getId());
 			else if (order.getCode() != null)
-				order = orderManager.getByNaturalId(order.getCode());
+				order = orderManager.findByNaturalId(order.getCode());
 		if (order != null && order.getStatus() == OrderStatus.CANCELLED)
 			orderManager.delete(order);
 		return SUCCESS;

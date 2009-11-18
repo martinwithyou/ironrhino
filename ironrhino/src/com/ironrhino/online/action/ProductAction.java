@@ -204,7 +204,7 @@ public class ProductAction extends BaseAction {
 			dc.add(Restrictions.eq("productCode", code));
 			resultPage.setDetachedCriteria(dc);
 			resultPage.addOrder(Order.desc("commentDate"));
-			resultPage = baseManager.getResultPage(resultPage);
+			resultPage = baseManager.findByResultPage(resultPage);
 		}
 		StatLog.add("view", "detail", product.getCode());
 		return VIEW;
@@ -271,7 +271,7 @@ public class ProductAction extends BaseAction {
 		} else if (StringUtils.isNotBlank(code)) {
 			baseManager.setEntityClass(ProductFavorite.class);
 			ProductFavorite favor = (ProductFavorite) baseManager
-					.getByNaturalId("username", user.getUsername(),
+					.findByNaturalId("username", user.getUsername(),
 							"productCode", code);
 			if (favor == null) {
 				Product product = productFacade.getProductByCode(code);
@@ -300,7 +300,7 @@ public class ProductAction extends BaseAction {
 		} else if (StringUtils.isNotBlank(code) && (score >= 1 && score <= 5)) {
 			String username = AuthzUtils.getUsername();
 			baseManager.setEntityClass(ProductScore.class);
-			ProductScore ps = (ProductScore) baseManager.getByNaturalId(
+			ProductScore ps = (ProductScore) baseManager.findByNaturalId(
 					"username", username, "productCode", code);
 			if (ps == null) {
 				ps = new ProductScore();

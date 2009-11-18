@@ -39,7 +39,7 @@ public class SettingAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		list = baseManager.getAll(Order.asc("key"));
+		list = baseManager.findAll(Order.asc("key"));
 		return LIST;
 	}
 
@@ -66,7 +66,7 @@ public class SettingAction extends BaseAction {
 		if (id != null) {
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.in("id", id));
-			List<Setting> list = baseManager.getListByCriteria(dc);
+			List<Setting> list = baseManager.findListByCriteria(dc);
 			if (list.size() > 0) {
 				for (Setting setting : list)
 					baseManager.delete(setting);

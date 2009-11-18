@@ -88,7 +88,7 @@ public class ProductFacadeImpl implements ProductFacade {
 			dc.add(Restrictions.between("modifyDate", DateUtils.addDays(date,
 					-beforeDays), date));
 		}
-		return productManager.getListByCriteria(dc, 1, maxResults);
+		return productManager.findListByCriteria(dc, 1, maxResults);
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		DetachedCriteria dc = prepareDetachedCriteria();
 		dc.addOrder(Order.asc("displayOrder"));
 		dc.addOrder(Order.desc("modifyDate"));
-		return productManager.getListByCriteria(dc, 1, max);
+		return productManager.findListByCriteria(dc, 1, max);
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		dc.setFetchMode("roles", FetchMode.JOIN);
 		dc.setFetchMode("relatedProducts", FetchMode.JOIN);
 		dc.add(Restrictions.in("code", codeArray));
-		List<Product> result = productManager.getListByCriteria(dc);
+		List<Product> result = productManager.findListByCriteria(dc);
 		List<Product> list = new ArrayList<Product>(result.size());
 		// sort by array
 		for (String code : codeArray)
@@ -152,7 +152,7 @@ public class ProductFacadeImpl implements ProductFacade {
 				dc.add(Restrictions.isNull("category"));
 		resultPage.addOrder(Order.asc("displayOrder"));
 		resultPage.addOrder(Order.desc("modifyDate"));
-		resultPage = productManager.getResultPage(resultPage);
+		resultPage = productManager.findByResultPage(resultPage);
 		return resultPage;
 	}
 
@@ -186,7 +186,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		dc.add(Restrictions.sqlRestriction(sql, tag, Hibernate.STRING));
 		resultPage.addOrder(Order.asc("displayOrder"));
 		resultPage.addOrder(Order.desc("modifyDate"));
-		resultPage = productManager.getResultPage(resultPage);
+		resultPage = productManager.findByResultPage(resultPage);
 		return resultPage;
 	}
 
@@ -195,7 +195,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	public Product getProductByCode(String code) {
 		DetachedCriteria dc = prepareDetachedCriteria();
 		dc.add(Restrictions.naturalId().set("code", code));
-		Product product = productManager.getByCriteria(dc);
+		Product product = productManager.findByCriteria(dc);
 		return product;
 	}
 
@@ -208,7 +208,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		DetachedCriteria dc = prepareDetachedCriteria();
 		dc.setFetchMode("attributes", FetchMode.JOIN);
 		dc.setFetchMode("category", FetchMode.JOIN);
-		List<Product> list = productManager.getBetweenListByCriteria(dc, rand,
+		List<Product> list = productManager.findBetweenListByCriteria(dc, rand,
 				rand + 1);
 		Product product = list.get(0);
 		return product;
@@ -223,7 +223,7 @@ public class ProductFacadeImpl implements ProductFacade {
 				Projections.count("score")).add(Projections.avg("score")));
 		dc.add(Restrictions.eq("productCode", productCode));
 		Object[] array = (Object[]) baseManager
-				.executeQuery(new HibernateCallback() {
+				.executeFind(new HibernateCallback() {
 					@Override
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
@@ -242,7 +242,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		}
 		if (sr.getCount().intValue() > 0) {
 			sr.setDetails((Map<Number, Number>) baseManager
-					.executeQuery(new HibernateCallback() {
+					.executeFind(new HibernateCallback() {
 						public Object doInHibernate(Session session)
 								throws HibernateException, SQLException {
 							Query q = session
@@ -264,7 +264,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	public List<AggregateResult> getTopScoreProducts(final int maxResults) {
 		List<AggregateResult> list;
 		list = (List<AggregateResult>) baseManager
-				.executeQuery(new HibernateCallback() {
+				.executeFind(new HibernateCallback() {
 					@Override
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
@@ -296,7 +296,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	public List<AggregateResult> getTopFavoriteProducts(final int maxResults) {
 		List<AggregateResult> list;
 		list = (List<AggregateResult>) baseManager
-				.executeQuery(new HibernateCallback() {
+				.executeFind(new HibernateCallback() {
 					@Override
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
@@ -323,7 +323,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	public List<AggregateResult> getTopSaleProducts(final int maxResults) {
 		List<AggregateResult> list;
 		list = (List<AggregateResult>) baseManager
-				.executeQuery(new HibernateCallback() {
+				.executeFind(new HibernateCallback() {
 					@Override
 					public Object doInHibernate(Session session)
 							throws HibernateException, SQLException {
@@ -349,7 +349,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	@Override
 	public List<AggregateResult> getTags(final String... prefix) {
 		final List<AggregateResult> tags = new ArrayList<AggregateResult>();
-		baseManager.executeQuery(new HibernateCallback() {
+		baseManager.executeFind(new HibernateCallback() {
 			@Override
 			public Object doInHibernate(Session session)
 					throws HibernateException, SQLException {
@@ -393,7 +393,7 @@ public class ProductFacadeImpl implements ProductFacade {
 		final int maxResults = count - list.size();
 		if (product.getTags().size() > 0) {
 			list.addAll((List<Product>) productManager
-					.executeQuery(new HibernateCallback() {
+					.executeFind(new HibernateCallback() {
 						public Object doInHibernate(Session session)
 								throws HibernateException, SQLException {
 							List<SimpleElement> tags = product.getTags();

@@ -12,8 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
-import org.hibernate.Hibernate;
-import org.hibernate.LockMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,7 +29,6 @@ import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.model.Treeable;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.core.util.ReflectionUtils;
@@ -75,6 +72,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return entityClassHolder.get();
 	}
 
+	@Override
 	@Transactional
 	public void save(T obj) {
 		Session session = sessionFactory.getCurrentSession();
@@ -112,11 +110,13 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		session.saveOrUpdate(obj);
 	}
 
+	@Override
 	@Transactional
 	public void delete(T obj) {
 		sessionFactory.getCurrentSession().delete(obj);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public T get(Serializable id) {
 		if (id == null)
@@ -124,16 +124,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return (T) sessionFactory.getCurrentSession().get(getEntityClass(), id);
 	}
 
-	@Transactional(readOnly = true)
-	public void lock(T obj, LockMode mode) {
-		sessionFactory.getCurrentSession().lock(obj, mode);
-	}
-
-	@Transactional(readOnly = true)
-	public void evict(T obj) {
-		sessionFactory.getCurrentSession().evict(obj);
-	}
-
+	@Override
 	@Transactional(readOnly = true)
 	public void clear() {
 		sessionFactory.getCurrentSession().clear();
@@ -143,6 +134,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return DetachedCriteria.forClass(getEntityClass());
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public int countByCriteria(DetachedCriteria dc) {
 		Criteria c = dc.getExecutableCriteria(sessionFactory
@@ -153,8 +145,9 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public T getByCriteria(DetachedCriteria dc) {
+	public T findByCriteria(DetachedCriteria dc) {
 		Criteria c = dc.getExecutableCriteria(sessionFactory
 				.getCurrentSession());
 		c.setMaxResults(1);
@@ -162,8 +155,9 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return (T) c.uniqueResult();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public List<T> getListByCriteria(DetachedCriteria dc) {
+	public List<T> findListByCriteria(DetachedCriteria dc) {
 		try {
 			Criteria c = dc.getExecutableCriteria(sessionFactory
 					.getCurrentSession());
@@ -175,8 +169,9 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		}
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public List<T> getBetweenListByCriteria(DetachedCriteria dc, int start,
+	public List<T> findBetweenListByCriteria(DetachedCriteria dc, int start,
 			int end) {
 		try {
 			Criteria c = dc.getExecutableCriteria(sessionFactory
@@ -195,15 +190,17 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		}
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public List<T> getListByCriteria(DetachedCriteria dc, int pageNo,
+	public List<T> findListByCriteria(DetachedCriteria dc, int pageNo,
 			int pageSize) {
-		return getBetweenListByCriteria(dc, (pageNo - 1) * pageSize, pageNo
+		return findBetweenListByCriteria(dc, (pageNo - 1) * pageSize, pageNo
 				* pageSize);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public ResultPage<T> getResultPage(ResultPage<T> resultPage) {
+	public ResultPage<T> findByResultPage(ResultPage<T> resultPage) {
 		resultPage.setTotalRecord(countByCriteria(resultPage
 				.getDetachedCriteria()));
 		int totalRecord = resultPage.getTotalRecord();
@@ -235,7 +232,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 					* resultPage.getPageSize();
 		}
 		if (totalRecord > 0)
-			resultPage.setResult(getBetweenListByCriteria(resultPage
+			resultPage.setResult(findBetweenListByCriteria(resultPage
 					.getDetachedCriteria(), start, end));
 		else
 			resultPage.setResult(Collections.EMPTY_LIST);
@@ -243,25 +240,15 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return resultPage;
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public int countAll() {
 		return countByCriteria(detachedCriteria());
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public List<T> getAll(int pageNo, int pageSize, Order... orders) {
-
-		Criteria c = sessionFactory.getCurrentSession().createCriteria(
-				getEntityClass());
-		if (pageNo != 1 || (pageSize > 0 && pageSize < Integer.MAX_VALUE))
-			c.setFirstResult((pageNo - 1) * pageSize).setMaxResults(pageSize);
-		for (Order order : orders)
-			c.addOrder(order);
-		return c.list();
-	}
-
-	@Transactional(readOnly = true)
-	public List<T> getAll(Order... orders) {
+	public List<T> findAll(Order... orders) {
 		Criteria c = sessionFactory.getCurrentSession().createCriteria(
 				getEntityClass());
 		c.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -270,8 +257,9 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return c.list();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public T getByNaturalId(Object... objects) {
+	public T findByNaturalId(Object... objects) {
 		if (objects.length == 1) {
 			Criteria c = sessionFactory.getCurrentSession().createCriteria(
 					getEntityClass());
@@ -299,10 +287,11 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return (T) c.uniqueResult();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public T getByNaturalId(boolean caseInsensitive, Object... objects) {
+	public T findByNaturalId(boolean caseInsensitive, Object... objects) {
 		if (!caseInsensitive)
-			return getByNaturalId(objects);
+			return findByNaturalId(objects);
 
 		String hql = "select entity from " + getEntityClass().getName()
 				+ " entity where ";
@@ -323,25 +312,19 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return (T) query.uniqueResult();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public List<T> query(final String hql, final Object... args) {
-		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+	public List<T> find(final String queryString, final Object... args) {
+		Query query = sessionFactory.getCurrentSession().createQuery(
+				queryString);
 		for (int i = 0; i < args.length; i++)
 			query.setParameter(i, args[i]);
 		return query.list();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public void initialize(final Treeable<? extends Treeable> entity) {
-		sessionFactory.getCurrentSession().lock(entity, LockMode.NONE);
-		if (!Hibernate.isInitialized(entity.getChildren()))
-			Hibernate.initialize(entity.getChildren());
-		for (Treeable child : entity.getChildren())
-			initialize(child);
-	}
-
-	@Transactional(readOnly = true)
-	public <TE extends BaseTreeableEntity<TE>> TE loadTree(Object... args) {
+	public <TE extends BaseTreeableEntity<TE>> TE loadTree() {
 		if (getEntityClass() == null
 				|| !(BaseTreeableEntity.class
 						.isAssignableFrom(getEntityClass())))
@@ -351,11 +334,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			TE root = (TE) getEntityClass().newInstance();
 			root.setId(0L);
 			root.setName("");
-			if (args.length > 0) {
-				loadTree1(root);
-			} else {
-				loadTree2(root);
-			}
+			loadTree(root);
 			return root;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -363,25 +342,9 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		}
 	}
 
-	private <TE extends BaseTreeableEntity<TE>> void loadTree1(TE root) {
-		DetachedCriteria dc = detachedCriteria();
-		dc.add(Restrictions.isNull("parent"));
-		dc.addOrder(Order.asc("displayOrder"));
-		dc.addOrder(Order.asc("name"));
-		List<TE> list = (List<TE>) getListByCriteria(dc);
-		List<TE> children = new ArrayList<TE>();
-		for (TE var : list) {
-			initialize(var);
-			var = BeanUtils.deepClone(var);
-			var.setParent(root);
-			children.add(var);
-		}
-		root.setChildren(list);
-	}
-
-	private <TE extends BaseTreeableEntity<TE>> void loadTree2(TE root) {
+	private <TE extends BaseTreeableEntity<TE>> void loadTree(TE root) {
 		try {
-			assemble(root, (List<TE>) getAll());
+			assemble(root, (List<TE>) findAll());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -415,6 +378,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			assemble(r, list);
 	}
 
+	@Override
 	@Transactional
 	public int bulkUpdate(String queryString, Object... values) {
 		Query queryObject = sessionFactory.getCurrentSession().createQuery(
@@ -429,6 +393,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return queryObject.executeUpdate();
 	}
 
+	@Override
 	@Transactional
 	public Object execute(HibernateCallback callback) {
 		try {
@@ -439,8 +404,9 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		}
 	}
 
+	@Override
 	@Transactional(readOnly = true)
-	public Object executeQuery(HibernateCallback callback) {
+	public Object executeFind(HibernateCallback callback) {
 		return execute(callback);
 	}
 

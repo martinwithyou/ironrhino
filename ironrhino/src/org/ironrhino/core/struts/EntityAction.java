@@ -89,7 +89,7 @@ public class EntityAction extends BaseAction {
 		if (resultPage == null)
 			resultPage = new ResultPage();
 		resultPage.setDetachedCriteria(dc);
-		resultPage = baseManager.getResultPage(resultPage);
+		resultPage = baseManager.findByResultPage(resultPage);
 		readonly = readonly();
 		return LIST;
 	}
@@ -141,7 +141,7 @@ public class EntityAction extends BaseAction {
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
-				persisted = baseManager.getByNaturalId(caseInsensitive, args);
+				persisted = baseManager.findByNaturalId(caseInsensitive, args);
 				if (persisted != null) {
 					it = naturalIds.keySet().iterator();
 					while (it.hasNext()) {
@@ -167,7 +167,7 @@ public class EntityAction extends BaseAction {
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
-				persisted = baseManager.getByNaturalId(caseInsensitive, args);
+				persisted = baseManager.findByNaturalId(caseInsensitive, args);
 				if (persisted != null && !persisted.equals(entity)) {
 					it = naturalIds.keySet().iterator();
 					while (it.hasNext()) {
@@ -177,7 +177,7 @@ public class EntityAction extends BaseAction {
 					return INPUT;
 				}
 				if (persisted != null && !persisted.equals(entity)) {
-					baseManager.evict(persisted);
+					baseManager.clear();
 					persisted = null;
 				}
 			}
@@ -240,7 +240,7 @@ public class EntityAction extends BaseAction {
 		if (id.length > 0) {
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.in("id", id));
-			List list = baseManager.getListByCriteria(dc);
+			List list = baseManager.findListByCriteria(dc);
 			if (list.size() > 0) {
 				for (Object obj : list)
 					baseManager.delete((Persistable) obj);

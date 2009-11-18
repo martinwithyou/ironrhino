@@ -86,7 +86,7 @@ public class UserAction extends BaseAction {
 			resultPage = new ResultPage<User>();
 		resultPage.setDetachedCriteria(dc);
 		resultPage.addOrder(Order.asc("username"));
-		resultPage = userManager.getResultPage(resultPage);
+		resultPage = userManager.findByResultPage(resultPage);
 		return LIST;
 	}
 
@@ -105,7 +105,7 @@ public class UserAction extends BaseAction {
 	public String save2() {
 		if (user.isNew()) {
 			user.setUsername(user.getUsername().toLowerCase());
-			if (userManager.getByNaturalId(user.getUsername()) != null) {
+			if (userManager.findByNaturalId(user.getUsername()) != null) {
 				addFieldError("user.username",
 						getText("validation.already.exists"));
 				return INPUT;
@@ -151,7 +151,7 @@ public class UserAction extends BaseAction {
 		if (id != null) {
 			DetachedCriteria dc = userManager.detachedCriteria();
 			dc.add(Restrictions.in("id", id));
-			List<User> list = userManager.getListByCriteria(dc);
+			List<User> list = userManager.findListByCriteria(dc);
 			if (list.size() > 0) {
 				for (User user : list)
 					userManager.delete(user);

@@ -3,19 +3,14 @@ package org.ironrhino.core.service;
 import java.io.Serializable;
 import java.util.List;
 
-import org.hibernate.LockMode;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.model.Treeable;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 public interface BaseManager<T extends Persistable> {
-
-	public void setSessionFactory(SessionFactory sessionFactory);
 
 	public Class<T> getEntityClass();
 
@@ -27,48 +22,40 @@ public interface BaseManager<T extends Persistable> {
 
 	public void delete(T obj);
 
-	public void lock(T obj, LockMode mode);
-
-	public void evict(T obj);
-
 	public void clear();
 
 	public DetachedCriteria detachedCriteria();
 
 	public int countByCriteria(DetachedCriteria dc);
 
-	public T getByCriteria(DetachedCriteria dc);
+	public T findByCriteria(DetachedCriteria dc);
 
-	public List<T> getListByCriteria(DetachedCriteria dc);
+	public List<T> findListByCriteria(DetachedCriteria dc);
 
-	public List<T> getBetweenListByCriteria(final DetachedCriteria dc,
+	public List<T> findBetweenListByCriteria(final DetachedCriteria dc,
 			int from, int end);
 
-	public List<T> getListByCriteria(DetachedCriteria dc, int pageNo,
+	public List<T> findListByCriteria(DetachedCriteria dc, int pageNo,
 			int pageSize);
 
-	public ResultPage<T> getResultPage(ResultPage<T> resultPage);
+	public ResultPage<T> findByResultPage(ResultPage<T> resultPage);
 
 	public int countAll();
 
-	public List<T> getAll(int pageNo, int pageSize, Order... orders);
+	public T findByNaturalId(Object... objects);
 
-	public T getByNaturalId(Object... objects);
+	public T findByNaturalId(boolean caseInsensitive, Object... objects);
 
-	public T getByNaturalId(boolean caseInsensitive, Object... objects);
+	public List<T> findAll(Order... orders);
 
-	public List<T> getAll(Order... orders);
+	public List<T> find(String queryString, Object... args);
 
-	public List<T> query(String hql, Object... args);
+	public <TE extends BaseTreeableEntity<TE>> TE loadTree();
 
-	public void initialize(Treeable<? extends Treeable> entity);
-
-	public <TE extends BaseTreeableEntity<TE>> TE loadTree(Object... args);
-
-	public int bulkUpdate(String hql, Object... args);
+	public int bulkUpdate(String queryString, Object... args);
 
 	public Object execute(HibernateCallback callback);
 
-	public Object executeQuery(HibernateCallback callback);
+	public Object executeFind(HibernateCallback callback);
 
 }

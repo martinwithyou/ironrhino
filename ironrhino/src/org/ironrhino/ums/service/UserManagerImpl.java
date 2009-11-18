@@ -65,7 +65,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	public User getByUsername(String username) {
 		if (StringUtils.isEmpty(username))
 			return null;
-		return getByNaturalId(true, "username", username);
+		return findByNaturalId(true, "username", username);
 	}
 
 	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.stat.StatLog.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.stat.StatLog.add({'cache','user','miss'})}")
@@ -73,7 +73,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	public User getByEmail(String email) {
 		if (StringUtils.isEmpty(email))
 			return null;
-		return getByNaturalId(true, "email", email);
+		return findByNaturalId(true, "email", email);
 	}
 
 	public String suggestName(String candidate) {

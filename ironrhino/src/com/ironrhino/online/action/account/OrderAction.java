@@ -53,7 +53,7 @@ public class OrderAction extends BaseAction {
 		if (StringUtils.isNotBlank(code)) {
 			if (order != null && !order.isNew())
 				return order;
-			order = orderManager.getByNaturalId(code);
+			order = orderManager.findByNaturalId(code);
 			if (order == null
 					|| !order.getUser().equals(
 							AuthzUtils.getUserDetails(User.class)))
@@ -80,7 +80,7 @@ public class OrderAction extends BaseAction {
 		resultPage.setDetachedCriteria(dc);
 		dc.add(Restrictions.eq("user", AuthzUtils.getUserDetails(User.class)));
 		resultPage.addOrder(org.hibernate.criterion.Order.desc("createDate"));
-		resultPage = orderManager.getResultPage(resultPage);
+		resultPage = orderManager.findByResultPage(resultPage);
 		return SUCCESS;
 	}
 

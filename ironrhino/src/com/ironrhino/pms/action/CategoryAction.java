@@ -92,7 +92,7 @@ public class CategoryAction extends BaseAction {
 			dc.add(Restrictions.isNull("parent"));
 			dc.addOrder(Order.asc("displayOrder"));
 			dc.addOrder(Order.asc("name"));
-			category.setChildren(categoryManager.getListByCriteria(dc));
+			category.setChildren(categoryManager.findListByCriteria(dc));
 		}
 		list = category.getChildren();
 		return LIST;
@@ -110,7 +110,7 @@ public class CategoryAction extends BaseAction {
 	@Override
 	public String save() {
 		if (category.isNew()) {
-			if (categoryManager.getByNaturalId(category.getCode()) != null) {
+			if (categoryManager.findByNaturalId(category.getCode()) != null) {
 				addFieldError("category.code",
 						getText("validation.already.exists"));
 				return INPUT;
@@ -156,7 +156,7 @@ public class CategoryAction extends BaseAction {
 		if (id != null) {
 			DetachedCriteria dc = categoryManager.detachedCriteria();
 			dc.add(Restrictions.in("id", id));
-			List<Category> list = categoryManager.getListByCriteria(dc);
+			List<Category> list = categoryManager.findListByCriteria(dc);
 			if (list.size() > 0) {
 				for (Category category : list)
 					categoryManager.delete(category);

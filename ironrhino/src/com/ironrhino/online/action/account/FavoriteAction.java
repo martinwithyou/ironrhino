@@ -45,7 +45,7 @@ public class FavoriteAction extends BaseAction {
 		dc.add(Restrictions.eq("username", AuthzUtils.getUsername()));
 		resultPage.setDetachedCriteria(dc);
 		resultPage.addOrder(Order.desc("addDate"));
-		resultPage = baseManager.getResultPage(resultPage);
+		resultPage = baseManager.findByResultPage(resultPage);
 		return SUCCESS;
 	}
 
@@ -57,7 +57,7 @@ public class FavoriteAction extends BaseAction {
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.eq("username", AuthzUtils.getUsername()));
 			dc.add(Restrictions.in("id", id));
-			List<ProductFavorite> list = baseManager.getListByCriteria(dc);
+			List<ProductFavorite> list = baseManager.findListByCriteria(dc);
 			if (list.size() > 0) {
 				for (ProductFavorite pf : list)
 					baseManager.delete(pf);

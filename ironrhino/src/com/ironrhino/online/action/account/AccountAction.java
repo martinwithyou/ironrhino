@@ -7,7 +7,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import org.hibernate.LockMode;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.support.RegionTreeControl;
 import org.ironrhino.core.mail.MailService;
@@ -94,8 +93,8 @@ public class AccountAction extends BaseAction {
 			BeanUtils.copyProperties(AuthzUtils.getUserDetails(User.class),
 					user);
 			if (StringUtils.isBlank(user.getAddress())) {
-				Region region = regionTreeControl
-						.parseByHost(RequestUtils.getRemoteAddr(ServletActionContext.getRequest()));
+				Region region = regionTreeControl.parseByHost(RequestUtils
+						.getRemoteAddr(ServletActionContext.getRequest()));
 				if (region != null)
 					user.setAddress(region.getFullname());
 			}
@@ -110,8 +109,8 @@ public class AccountAction extends BaseAction {
 		user = new User();
 		BeanUtils.copyProperties(AuthzUtils.getUserDetails(User.class), user);
 		if (StringUtils.isBlank(user.getAddress())) {
-			Region region = regionTreeControl.parseByHost(RequestUtils.getRemoteAddr(ServletActionContext
-					.getRequest()));
+			Region region = regionTreeControl.parseByHost(RequestUtils
+					.getRemoteAddr(ServletActionContext.getRequest()));
 			if (region != null)
 				user.setAddress(region.getFullname());
 		}
@@ -161,7 +160,6 @@ public class AccountAction extends BaseAction {
 	@InputConfig(methodName = "input")
 	public String profile() {
 		User currentUser = AuthzUtils.getUserDetails(User.class);
-		userManager.lock(currentUser, LockMode.NONE);
 		currentUser.setSex(user.getSex());
 		currentUser.setBirthday(user.getBirthday());
 		currentUser.setName(user.getName());
