@@ -203,17 +203,9 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 	}
 
 	@Transactional(readOnly = true)
-	public int countResultPage(ResultPage<T> resultPage) {
-		if (resultPage.getTotalRecord() < 0) {
-			int totalRecord = countByCriteria(resultPage.getDetachedCriteria());
-			resultPage.setTotalRecord(totalRecord);
-		}
-		return resultPage.getTotalRecord();
-	}
-
-	@Transactional(readOnly = true)
 	public ResultPage<T> getResultPage(ResultPage<T> resultPage) {
-		countResultPage(resultPage);
+		resultPage.setTotalRecord(countByCriteria(resultPage
+				.getDetachedCriteria()));
 		int totalRecord = resultPage.getTotalRecord();
 		if (resultPage.getPageSize() < 1)
 			resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);

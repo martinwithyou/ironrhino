@@ -47,8 +47,6 @@ public interface BaseManager<T extends Persistable> {
 	public List<T> getListByCriteria(DetachedCriteria dc, int pageNo,
 			int pageSize);
 
-	public int countResultPage(ResultPage<T> resultPage);
-
 	public ResultPage<T> getResultPage(ResultPage<T> resultPage);
 
 	public int countAll();
