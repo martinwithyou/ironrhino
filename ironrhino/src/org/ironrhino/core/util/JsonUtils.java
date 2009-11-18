@@ -103,7 +103,7 @@ public class JsonUtils {
 	}
 
 	public static <T> T fromJson(String json, Type typeOfT) {
-		return gson.fromJson(json, typeOfT);
+		return (T)gson.fromJson(json, typeOfT);
 	}
 
 	public static <T> T fromJson(String json, Class<T> classOfT) {
