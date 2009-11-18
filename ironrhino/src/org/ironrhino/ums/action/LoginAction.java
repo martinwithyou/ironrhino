@@ -67,25 +67,23 @@ public class LoginAction extends BaseAction {
 			authResult = authenticationProcessingFilter
 					.attemptAuthentication(request);
 		} catch (AuthenticationException failed) {
-			String error = "user.bad.credentials";
-			if (failed instanceof BadCredentialsException)
-				error = "user.bad.credentials";
-			else if (failed instanceof DisabledException)
-				error = "user.disabled";
+			if (failed instanceof DisabledException)
+				addFieldError("username", getText("user.disabled"));
 			else if (failed instanceof LockedException)
-				error = "user.locked";
+				addFieldError("username", getText("user.locked"));
 			else if (failed instanceof AccountExpiredException)
-				error = "user.expired";
+				addFieldError("username", getText("user.expired"));
 			else if (failed instanceof ConcurrentLoginException)
-				error = "user.concurrent.login";
+				addFieldError("username", getText("user.concurrent.login"));
+			else if (failed instanceof BadCredentialsException)
+				addFieldError("password", getText("user.bad.credentials"));
 			else if (failed instanceof CredentialsExpiredException)
-				error = "user.bad.credentials";
-			// Authentication failed
-			addFieldError("password", getText(error));
+				addFieldError("password", getText("user.bad.expired"));
 			captchaManager.addCaptachaThreshold(request);
 			try {
-				authenticationProcessingFilter.unsuccessfulAuthenticationWithoutRedirect(
-						request, response, failed);
+				authenticationProcessingFilter
+						.unsuccessfulAuthenticationWithoutRedirect(request,
+								response, failed);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
@@ -93,8 +91,14 @@ public class LoginAction extends BaseAction {
 		}
 		if (authResult != null)
 			try {
-				authenticationProcessingFilter.successfulAuthenticationWithoutRedirect(
-						request, response, authResult);
+				authenticationProcessingFilter
+						.successfulAuthenticationWithoutRedirect(request,
+								response, authResult);
+				ServletActionContext
+						.getRequest()
+						.getSession()
+						.removeAttribute(
+								DefaultuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}

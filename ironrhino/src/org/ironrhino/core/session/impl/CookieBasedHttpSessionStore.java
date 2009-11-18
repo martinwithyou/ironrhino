@@ -31,7 +31,10 @@ public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
 
 	public void saveSessionString(WrappedHttpSession session,
 			String sessionString) {
-		saveCookie(session, Blowfish.encrypt(sessionString));
+		if (StringUtils.isNotBlank(sessionString))
+			saveCookie(session, Blowfish.encrypt(sessionString));
+		else
+			clearCookie(session);
 	}
 
 	public void invalidate(WrappedHttpSession session) {

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 @Component("captchaManager")
 public class DefaultCaptchaManager implements CaptchaManager {
 
-	private static final String REQUEST_ATTRIBUTE_KEY_CAPTACHA_CHALLENGE = "CAPTCHA_CHALLENGE";
 	private static final String REQUEST_ATTRIBUTE_KEY_CAPTACHA_THRESHOLD_ADDED = "CAPTACHA_THRESHOLD_ADDED";
 	private static final String REQUEST_ATTRIBUTE_KEY_CAPTACHA_REQUIRED = "CAPTACHA_REQUIRED";
 	private static final String REQUEST_ATTRIBUTE_KEY_CAPTACHA_VALIDATED = "CAPTACHA_VALIDATED";
@@ -36,33 +35,27 @@ public class DefaultCaptchaManager implements CaptchaManager {
 
 	@Override
 	public String getChallenge(HttpServletRequest request, String token) {
-		String challenge = (String) request
-				.getAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_CHALLENGE);
-		if (challenge == null) {
-			challenge = String.valueOf(random.nextInt(8999) + 1000);// width=60
-			String answer = challenge;
-			// String challenge;
-			// String answer;
-			// int left = random.nextInt(89) + 10;
-			// int right = random.nextInt(89) + 10;
-			// boolean add = (left % 2 == 0);
-			// if (add) {
-			// challenge = left + "+" + right + "=?";
-			// answer = String.valueOf(left + right);
-			// } else {
-			// if (left <= right) {
-			// int temp = right;
-			// right = left;
-			// left = temp;
-			// }
-			// challenge = left + "-" + right + "=?";
-			// answer = String.valueOf(left - right);
-			// }
-			cacheManager.put(CACHE_PREFIX_ANSWER + token, answer, -1,
-					CACHE_ANSWER_TIME_TO_LIVE, KEY_CAPTCHA);
-			request.setAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_CHALLENGE,
-					challenge);
-		}
+		String challenge = String.valueOf(random.nextInt(8999) + 1000);// width=60
+		String answer = challenge;
+		// String challenge;
+		// String answer;
+		// int left = random.nextInt(89) + 10;
+		// int right = random.nextInt(89) + 10;
+		// boolean add = (left % 2 == 0);
+		// if (add) {
+		// challenge = left + "+" + right + "=?";
+		// answer = String.valueOf(left + right);
+		// } else {
+		// if (left <= right) {
+		// int temp = right;
+		// right = left;
+		// left = temp;
+		// }
+		// challenge = left + "-" + right + "=?";
+		// answer = String.valueOf(left - right);
+		// }
+		cacheManager.put(CACHE_PREFIX_ANSWER + token, answer, -1,
+				CACHE_ANSWER_TIME_TO_LIVE, KEY_CAPTCHA);
 		return challenge;
 	}
 
@@ -126,13 +119,13 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		if (validated == null) {
 			String answer = (String) cacheManager.get(CACHE_PREFIX_ANSWER
 					+ token, KEY_CAPTCHA);
-			boolean b = answer != null
+			validated = answer != null
 					&& answer.equals(request.getParameter(KEY_CAPTCHA));
-			if (b)
-				cacheManager.delete(getThresholdKey(request), KEY_CAPTCHA);
-			validated = b;
-			request.setAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_VALIDATED, b);
+			request.setAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_VALIDATED,
+					validated);
 		}
+		if (validated)
+			cacheManager.delete(getThresholdKey(request), KEY_CAPTCHA);
 		return validated;
 	}
 

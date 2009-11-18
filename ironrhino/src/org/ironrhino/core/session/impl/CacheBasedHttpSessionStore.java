@@ -1,5 +1,6 @@
 package org.ironrhino.core.session.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.session.WrappedHttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,11 @@ public class CacheBasedHttpSessionStore extends AbstractHttpSessionStore {
 
 	public void saveSessionString(WrappedHttpSession session,
 			String sessionString) {
-		cacheManager.put(session.getId(), sessionString, session
-				.getMaxInactiveInterval(), -1, CACHE_NAMESPACE);
+		if (StringUtils.isNotBlank(sessionString))
+			cacheManager.put(session.getId(), sessionString, session
+					.getMaxInactiveInterval(), -1, CACHE_NAMESPACE);
+		else
+			cacheManager.delete(session.getId(), CACHE_NAMESPACE);
 	}
 
 	public void invalidate(WrappedHttpSession session) {
