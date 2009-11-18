@@ -91,7 +91,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	@Transactional
 	public void deleteDisabled() {
 		String hql = "delete from Account a where a.enabled = ? and a.createDate <= ?";
-		bulkUpdate(hql,
+		executeUpdate(hql,
 				new Object[] { false, DateUtils.addDays(new Date(), -7) });
 	}
 }

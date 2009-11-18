@@ -52,7 +52,7 @@ public interface BaseManager<T extends Persistable> {
 
 	public <TE extends BaseTreeableEntity<TE>> TE loadTree();
 
-	public int bulkUpdate(String queryString, Object... args);
+	public int executeUpdate(String queryString, Object... args);
 
 	public Object execute(HibernateCallback callback);
 

@@ -334,19 +334,11 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			TE root = (TE) getEntityClass().newInstance();
 			root.setId(0L);
 			root.setName("");
-			loadTree(root);
+			assemble(root, (List<TE>) findAll());
 			return root;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return null;
-		}
-	}
-
-	private <TE extends BaseTreeableEntity<TE>> void loadTree(TE root) {
-		try {
-			assemble(root, (List<TE>) findAll());
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -380,7 +372,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	@Override
 	@Transactional
-	public int bulkUpdate(String queryString, Object... values) {
+	public int executeUpdate(String queryString, Object... values) {
 		Query queryObject = sessionFactory.getCurrentSession().createQuery(
 				queryString);
 		SessionFactoryUtils
