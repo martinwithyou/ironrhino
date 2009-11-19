@@ -11,12 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 public class RequestUtils {
-	
+
 	public static String getRemoteAddr(HttpServletRequest request) {
 		String addr = request.getHeader("X-Forward-For");
-		return StringUtils.isNotBlank(addr)?addr:request.getRemoteAddr();
+		int index = 0;
+		if (StringUtils.isNotBlank(addr) && (index = addr.indexOf(',')) > 0)
+			addr = addr.substring(0, index);
+		return StringUtils.isNotBlank(addr) ? addr : request.getRemoteAddr();
 	}
-
 
 	public static String getBaseUrl(HttpServletRequest request) {
 		StringBuffer sb = request.getRequestURL();
