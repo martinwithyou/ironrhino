@@ -1,7 +1,6 @@
 package org.ironrhino.core.servlet;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
@@ -14,24 +13,40 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.DeleteMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.PutMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.lf5.util.StreamUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 
 public class WebProxyFilter implements Filter {
 
-	private HttpClient httpClient = new HttpClient();
+	private ClientConnectionManager clientConnectionManager;
+
+	private HttpClient httpClient;
 
 	private boolean checkSameOrigin = false;
 
 	public void destroy() {
+		if (clientConnectionManager != null)
+			clientConnectionManager.shutdown();
 	}
 
 	public void doFilter(ServletRequest req, ServletResponse resp,
@@ -51,77 +66,77 @@ public class WebProxyFilter implements Filter {
 		}
 		String uri = requestURL.toString();
 		String target = null;
-		int index = uri.indexOf("http://",uri.indexOf("://")+1);
+		int index = uri.indexOf("http://", uri.indexOf("://") + 1);
 		if (index > 0)
 			target = uri.substring(index);
 		if (target == null) {
-			index = uri.indexOf("https://",uri.indexOf("://")+1);
+			index = uri.indexOf("https://", uri.indexOf("://") + 1);
 			if (index > 0)
 				target = uri.substring(index);
 		}
 		if (target == null)
 			return;
-		uri = target;
-		HttpMethod method;
-		if ("GET".equalsIgnoreCase(request.getMethod())) {
-			method = new GetMethod(uri);
-		} else if ("GET".equalsIgnoreCase(request.getMethod())) {
-			method = new GetMethod(uri);
-		} else if ("POST".equalsIgnoreCase(request.getMethod())) {
-			method = new PostMethod(uri);
-		} else if ("PUT".equalsIgnoreCase(request.getMethod())) {
-			method = new PutMethod(uri);
-		} else if ("DELETE".equalsIgnoreCase(request.getMethod())) {
-			method = new DeleteMethod(uri);
-		} else {
-			method = new GetMethod(uri);
-		}
-		method.setFollowRedirects(true);
 		String queryString = request.getQueryString();
-		if (queryString != null) {
-			if (queryString.startsWith("_"))
-				queryString = "&" + queryString;
-			queryString = queryString.replaceAll("\\&_\\w+_=[^&]*", "");
-			if (queryString.startsWith("&"))
-				queryString = queryString.substring(1);
-			method.setQueryString(queryString);
+		StringBuilder sb = new StringBuilder();
+		sb.append(target);
+		if (StringUtils.isNotBlank(queryString)) {
+			sb.append('?');
+			sb.append(queryString);
 		}
-		HttpMethodParams params = new HttpMethodParams();
-		params.setSoTimeout(5000);
+		uri = sb.toString();
+		HttpRequestBase httpRequest;
+		if ("GET".equalsIgnoreCase(request.getMethod())) {
+			httpRequest = new HttpGet(uri);
+		} else if ("POST".equalsIgnoreCase(request.getMethod())) {
+			httpRequest = new HttpPost(uri);
+		} else if ("PUT".equalsIgnoreCase(request.getMethod())) {
+			httpRequest = new HttpPut(uri);
+		} else if ("DELETE".equalsIgnoreCase(request.getMethod())) {
+			httpRequest = new HttpDelete(uri);
+		} else {
+			httpRequest = new HttpGet(uri);
+		}
+		HttpParams params = new BasicHttpParams();
 		Enumeration<String> en = request.getParameterNames();
 		while (en.hasMoreElements()) {
 			String name = en.nextElement();
-			if (name.startsWith("_") && name.endsWith("_")
-					|| queryString != null && queryString.contains(name + "="))
-				continue;
 			for (String value : request.getParameterValues(name))
-				params.setParameter(name, value);
+				if (queryString == null || !queryString.contains(name + "="))
+					params.setParameter(name, value);
 		}
-		method.setParams(params);
+		httpRequest.setParams(params);
+		HttpEntity entity = null;
 		try {
-			int code = httpClient.executeMethod(method);
-			if (code >= 400) {
-				response.sendError(code);
-				return;
+			HttpResponse rsp = httpClient.execute(httpRequest);
+			entity = rsp.getEntity();
+			if (entity != null) {
+				for (Header h : httpRequest.getAllHeaders())
+					response.setHeader(h.getName(), h.getValue());
+				entity.writeTo(response.getOutputStream());
 			}
-			response.setStatus(code);
-			for (Header h : method.getResponseHeaders())
-				response.setHeader(h.getName(), h.getValue());
-			InputStream input = method.getResponseBodyAsStream();
-			StreamUtils.copy(input, response.getOutputStream());
-			input.close();
 		} catch (Exception e) {
+			httpRequest.abort();
 			e.printStackTrace();
-		} finally {
-			method.releaseConnection();
 		}
 	}
 
 	public void init(FilterConfig config) throws ServletException {
 		String s = config.getInitParameter("checkSameOrigin");
-		if (StringUtils.isBlank(s))
-			return;
-		checkSameOrigin = Boolean.parseBoolean(s.trim());
+		if (StringUtils.isNotBlank(s))
+			checkSameOrigin = Boolean.parseBoolean(s.trim());
+		HttpParams params = new BasicHttpParams();
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		HttpProtocolParams.setContentCharset(params, "UTF-8");
+		HttpProtocolParams.setUseExpectContinue(params, true);
+		HttpConnectionParams.setConnectionTimeout(params, 5000);
+		SchemeRegistry schemeRegistry = new SchemeRegistry();
+		schemeRegistry.register(new Scheme("http", PlainSocketFactory
+				.getSocketFactory(), 80));
+		schemeRegistry.register(new Scheme("https", SSLSocketFactory
+				.getSocketFactory(), 443));
+		clientConnectionManager = new ThreadSafeClientConnManager(params,
+				schemeRegistry);
+		httpClient = new DefaultHttpClient(clientConnectionManager, params);
 	}
 
 }

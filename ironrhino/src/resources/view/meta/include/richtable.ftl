@@ -27,9 +27,7 @@
 <form id="${action}_form" action="${getUrl(action)}" method="post" class="richtable ajax view"<#if resizable> resizable="true" minColWidth="40"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
-<#if !name?starts_with('resultPage.')&&!(name?starts_with('_')||name?ends_with('_'))>
 <input type="hidden" name="${name}" value="${Parameters[name]}" />
-</#if>
 </#list>
 </#if>
 <table border="0" cellspacing="0" cellpadding="0"<#if sortable> class="sortable"</#if> style="table-layout:fixed;" width="100%">

@@ -60,7 +60,7 @@ public class SessionCompressorManager {
 				log.error("No compressor for " + key + ",it won't be saved");
 			}
 		}
-		if (!map.isEmpty())
+		if (!compressedMap.isEmpty())
 			return JsonUtils.toJson(compressedMap);
 		return null;
 	}
