@@ -16,15 +16,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.performance.BufferableResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Component("httpSessionFilter")
 public class HttpSessionFilter implements Filter {
 
 	public static final String KEY_EXCLUDE_PATTERNS = "excludePatterns";
+
 	public static final String DEFAULT_EXCLUDE_PATTERNS = "/assets/*";
 
 	private ServletContext servletContext;
@@ -56,38 +54,15 @@ public class HttpSessionFilter implements Filter {
 				(HttpServletResponse) response, servletContext);
 		WrappedHttpSession session = new WrappedHttpSession(httpContext,
 				httpSessionManager);
-		WrappedHttpServletRequest httpRequest = new WrappedHttpServletRequest(
+		HttpServletRequest wrappedHttpRequest = new WrappedHttpServletRequest(
 				req, session);
-		WrappedHttpServletResponse httpResponse = new WrappedHttpServletResponse(
+		HttpServletResponse wrappedHttpResponse = new WrappedHttpServletResponse(
 				(HttpServletResponse) response, session);
-		BufferableResponseWrapper res = new BufferableResponseWrapper(
-				httpResponse);
-		// copy from
-		// org.springframework.web.context.request.ServletRequestListener
-		ServletRequestAttributes attributes = new ServletRequestAttributes(
-				httpRequest);
-		LocaleContextHolder.setLocale(request.getLocale());
-		RequestContextHolder.setRequestAttributes(attributes);
-
-		chain.doFilter(httpRequest, res);
-
-		// copy from
-		// org.springframework.web.context.request.ServletRequestListener
-		ServletRequestAttributes threadAttributes = (ServletRequestAttributes) RequestContextHolder
-				.getRequestAttributes();
-		if (threadAttributes != null) {
-			// We're assumably within the original request thread...
-			if (attributes == null) {
-				attributes = threadAttributes;
-			}
-			RequestContextHolder.resetRequestAttributes();
-			LocaleContextHolder.resetLocaleContext();
-		}
-		if (attributes != null) {
-			attributes.requestCompleted();
-		}
+		BufferableResponseWrapper buffResponse = new BufferableResponseWrapper(
+				wrappedHttpResponse);
+		chain.doFilter(wrappedHttpRequest, buffResponse);
 		try {
-			byte[] bytes = res.getContents();
+			byte[] bytes = buffResponse.getContents();
 			if (bytes == null)
 				bytes = new byte[0];
 			session.save();
@@ -97,7 +72,7 @@ public class HttpSessionFilter implements Filter {
 				sos.write(bytes);
 			sos.flush();
 			sos.close();
-		} catch (IllegalStateException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
