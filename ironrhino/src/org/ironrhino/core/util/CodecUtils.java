@@ -100,6 +100,17 @@ public class CodecUtils {
 		}
 	}
 
+	public static String swap(String str) {
+		char[] chars = str.toCharArray();
+		int half = chars.length / 2;
+		for (int i = 0; i < half; i++) {
+			char temp = chars[i];
+			chars[i] = chars[half + i];
+			chars[half + i] = temp;
+		}
+		return new String(chars);
+	}
+
 	public static String digest(String input) {
 		return md5Hex(shaHex(input, 3));
 	}
@@ -138,7 +149,4 @@ public class CodecUtils {
 		return id;
 	}
 
-	public static void main(String... strings) {
-		System.out.println((char) ('Z' + 1));
-	}
 }

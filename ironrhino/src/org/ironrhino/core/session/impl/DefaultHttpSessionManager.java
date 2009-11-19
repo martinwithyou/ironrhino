@@ -22,10 +22,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	private static final String SALT = "awpeqaidasdfaioiaoduifayzuxyaaokadoaifaodiaoi";
 
-	private static final int SESSION_CREATIONTIME_SCALE = 62;
-
-	private static final int SESSION_LASTACCESSEDTIME_SCALE = 61;
-
 	private static final String SESSION_TRACKER_SEPERATOR = "-";
 
 	public static final int DEFAULT_MAXINACTIVEINTERVAL = 1800; // in seconds
@@ -72,6 +68,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		long lastAccessedTime = now;
 
 		if (StringUtils.isNotBlank(sessionTracker)) {
+			sessionTracker = CodecUtils.swap(sessionTracker);
 			if (session.isRequestedSessionIdFromURL()) {
 				sessionId = sessionTracker;
 			} else {
@@ -80,12 +77,10 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 							.split(SESSION_TRACKER_SEPERATOR);
 					sessionId = array[0];
 					if (array.length > 1)
-						creationTime = NumberUtils.xToDecimal(
-								SESSION_CREATIONTIME_SCALE, array[1])
+						creationTime = NumberUtils.xToDecimal(62, array[1])
 								.longValue();
 					if (array.length > 2)
-						lastAccessedTime = NumberUtils.xToDecimal(
-								SESSION_LASTACCESSEDTIME_SCALE, array[2])
+						lastAccessedTime = NumberUtils.xToDecimal(62, array[2])
 								.longValue();
 					boolean timeout = now - lastAccessedTime > session
 							.getMaxInactiveInterval() * 1000;
@@ -158,12 +153,12 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		StringBuilder sb = new StringBuilder();
 		sb.append(session.getId());
 		sb.append(SESSION_TRACKER_SEPERATOR);
-		sb.append(NumberUtils.decimalToX(SESSION_CREATIONTIME_SCALE, BigInteger
-				.valueOf(session.getCreationTime())));
+		sb.append(NumberUtils.decimalToX(62, BigInteger.valueOf(session
+				.getCreationTime())));
 		sb.append(SESSION_TRACKER_SEPERATOR);
-		sb.append(NumberUtils.decimalToX(SESSION_LASTACCESSEDTIME_SCALE,
-				BigInteger.valueOf(session.getLastAccessedTime())));
-		return sb.toString();
+		sb.append(NumberUtils.decimalToX(62, BigInteger.valueOf(session
+				.getLastAccessedTime())));
+		return CodecUtils.swap(sb.toString());
 	}
 
 	private void doInitialize(WrappedHttpSession session) {
