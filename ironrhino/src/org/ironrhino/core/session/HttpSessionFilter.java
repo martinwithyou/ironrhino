@@ -23,7 +23,7 @@ public class HttpSessionFilter implements Filter {
 
 	public static final String KEY_EXCLUDE_PATTERNS = "excludePatterns";
 
-	public static final String DEFAULT_EXCLUDE_PATTERNS = "/assets/*";
+	public static final String DEFAULT_EXCLUDE_PATTERNS = "/assets/*,/remoting/*";
 
 	private ServletContext servletContext;
 
