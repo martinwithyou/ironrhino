@@ -25,6 +25,7 @@ import org.ironrhino.core.chart.openflashchart.axis.YAxis;
 import org.ironrhino.core.chart.openflashchart.elements.Element;
 import org.ironrhino.core.chart.openflashchart.elements.Legend;
 import org.ironrhino.core.chart.openflashchart.elements.Tooltip;
+import org.ironrhino.core.util.JsonUtils;
 
 /**
  * This is the most important class in the Java OFC library. Start here,
@@ -165,9 +166,7 @@ public class Chart implements Serializable {
 
 	@Override
 	public String toString() {
-		// TODO rendre to json
-		return "{}";
-		// return OFC.getInstance().render(this);
+		return JsonUtils.toJson(this, this.getClass());
 	}
 
 	/**
