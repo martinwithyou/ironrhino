@@ -102,12 +102,20 @@ public class JsonUtils {
 		return toJson(object);
 	}
 
-	public static <T> T fromJson(String json, Type typeOfT) {
-		return (T)gson.fromJson(json, typeOfT);
+	public static String toJson(Object object, Class clazz) {
+		return gson.toJson(object, clazz);
 	}
 
-	public static <T> T fromJson(String json, Class<T> classOfT) {
-		return gson.fromJson(json, classOfT);
+	public static String toJson(Object object, Type type) {
+		return gson.toJson(object, type);
+	}
+
+	public static <T> T fromJson(String json, Type type) {
+		return (T) gson.fromJson(json, type);
+	}
+
+	public static <T> T fromJson(String json, Class<T> clazz) {
+		return gson.fromJson(json, clazz);
 	}
 
 	public static JSONObject complexObjectToJson(Object o) {
@@ -239,9 +247,5 @@ public class JsonUtils {
 			return true;
 		return false;
 	}
-
-	// private static boolean isComplex(Object o) {
-	// return !(isSimple(o) || isArray(o) || isMap(o));
-	// }
 
 }
