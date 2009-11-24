@@ -155,4 +155,17 @@ public class AnnotationUtils {
 		return null;
 	}
 
+	public static <T extends Annotation> T getAnnotation(Class clazz,
+			Class<T> annotationClass) {
+		T annotation = null;
+		Class c = clazz;
+		while (annotation == null && c != null) {
+			annotation = (T) clazz.getAnnotation(annotationClass);
+			c = clazz.getSuperclass();
+			if (c instanceof Object)
+				break;
+		}
+		return annotation;
+	}
+
 }

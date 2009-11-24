@@ -1,9 +1,11 @@
 package org.ironrhino.ums.service;
 
+import org.ironrhino.core.metadata.Remoting;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.ums.model.User;
 import org.springframework.security.userdetails.UserDetailsService;
 
+@Remoting
 public interface UserManager extends BaseManager<User>, UserDetailsService {
 
 	public static final String ROLE_BUILTIN_ANONYMOUS = "ROLE_BUILTIN_ANONYMOUS";
