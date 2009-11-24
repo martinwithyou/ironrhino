@@ -3,8 +3,8 @@ package org.ironrhino.core.spring.remoting;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +30,9 @@ public class ConventionalHessianServiceExporter extends HessianServiceExporter
 
 	private ThreadLocal<Class> serviceInterface = new ThreadLocal<Class>();
 
-	private Map<Class, HessianSkeleton> skeletons = new ConcurrentHashMap<Class, HessianSkeleton>();
+	private ThreadLocal<Object> service = new ThreadLocal<Object>();
+
+	private Map<Class, HessianSkeleton> skeletons = new HashMap<Class, HessianSkeleton>();
 
 	// @Autowired //doesn't works
 	private ApplicationContext ctx;
@@ -46,17 +48,9 @@ public class ConventionalHessianServiceExporter extends HessianServiceExporter
 			serviceInterface.set(clazz);
 			HessianSkeleton skeleton = skeletons.get(clazz);
 			if (skeleton == null) {
-				Remoting remoting = AnnotationUtils.getAnnotation(clazz,
-						Remoting.class);
-				if (remoting == null) {
-					String message = "please add @Remoting on " + clazz;
-					log.error(message);
-					response.sendError(HttpServletResponse.SC_NOT_FOUND,
-							message);
-				}
-				skeleton = new HessianSkeleton(getProxyForService(),
-						getServiceInterface());
-				skeletons.put(clazz, skeleton);
+				String message = "please add @Remoting on " + clazz;
+				log.error(message);
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
 			}
 			super.handleRequest(request, response);
 		} catch (Exception ex) {
@@ -68,20 +62,39 @@ public class ConventionalHessianServiceExporter extends HessianServiceExporter
 
 	@Override
 	public void prepare() {
-		// override and do nothing
+		String[] beanNames = ctx.getParent().getBeanDefinitionNames();
+		for (String beanName : beanNames) {
+			if (StringUtils.isAlphanumeric(beanName)
+					&& ctx.isSingleton(beanName)) {
+				Object bean = ctx.getBean(beanName);
+				Class[] interfaces = bean.getClass().getInterfaces();
+				if (interfaces != null) {
+					for (Class inte : interfaces) {
+						Remoting remoting = AnnotationUtils.getAnnotation(inte,
+								Remoting.class);
+						if (remoting != null) {
+							if (StringUtils.isBlank(remoting.name())
+									|| remoting.name().equals(beanName)) {
+								serviceInterface.set(inte);
+								service.set(bean);
+								skeletons.put(inte, new HessianSkeleton(
+										getProxyForService(),
+										getServiceInterface()));
+								log.info("export service :" + inte.getName());
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		serviceInterface.set(null);
+		service.set(null);
 	}
 
 	@Override
 	public Object getService() {
-		Class clazz = getServiceInterface();
-		Remoting remoting = AnnotationUtils
-				.getAnnotation(clazz, Remoting.class);
-		if (remoting == null)
-			return null;
-		if (StringUtils.isNotBlank(remoting.name()))
-			return ctx.getBean(remoting.name(), clazz);
-		else
-			return ctx.getBean(clazz);
+		return service.get();
 	}
 
 	@Override
