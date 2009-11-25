@@ -23,8 +23,8 @@ import org.springframework.remoting.caucho.HessianServiceExporter;
 
 import com.caucho.hessian.server.HessianSkeleton;
 
-public class ConventionalHessianServiceExporter extends HessianServiceExporter
-		implements ApplicationContextAware {
+public class HessianServer extends HessianServiceExporter implements
+		ApplicationContextAware {
 
 	private Log log = LogFactory.getLog(getClass());
 
@@ -81,6 +81,7 @@ public class ConventionalHessianServiceExporter extends HessianServiceExporter
 										getProxyForService(),
 										getServiceInterface()));
 								log.info("export service :" + inte.getName());
+								//TODO register service to service center,zookeeper?
 								break;
 							}
 						}
