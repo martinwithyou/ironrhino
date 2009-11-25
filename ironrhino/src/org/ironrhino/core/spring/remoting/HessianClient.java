@@ -8,24 +8,19 @@ public class HessianClient extends HessianProxyFactoryBean {
 
 	private static Log log = LogFactory.getLog(HessianClient.class);
 
-	private String serviceUrl;
-
 	@Override
 	public void afterPropertiesSet() {
 		String interfaceName = getServiceInterface().getName();
-		serviceUrl = discoverServiceUrl(interfaceName);
+		String serviceUrl = discoverServiceUrl(interfaceName);
 		log.info("discovered service url:" + serviceUrl);
+		setServiceUrl(serviceUrl);
+		setHessian2(true);
 		super.afterPropertiesSet();
-	}
-
-	@Override
-	public String getServiceUrl() {
-		return this.serviceUrl;
 	}
 
 	protected String discoverServiceUrl(String interfaceName) {
 		// TODO auto discover service url from service center,zookeeper?
-		serviceUrl = "http://localhost:8080/ironrhino/remoting/"
+		String serviceUrl = "http://localhost:8080/ironrhino/remoting/"
 				+ interfaceName;
 		return serviceUrl;
 	}
