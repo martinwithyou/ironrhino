@@ -162,7 +162,7 @@ public class AnnotationUtils {
 		while (annotation == null && c != null) {
 			annotation = (T) clazz.getAnnotation(annotationClass);
 			c = clazz.getSuperclass();
-			if (c.getClass().equals(Object.class))
+			if (c == null || c.getClass().equals(Object.class))
 				break;
 		}
 		return annotation;
