@@ -21,8 +21,8 @@
 			<key column="parentId" />
 			<one-to-many class="Category" />
 		</set>
-		<set name="roles" table="pms_categoryRole" cascade="all"
-			fetch="subselect">
+		<set name="roles" table="pms_categoryRole" cascade="all" lazy="false"
+			fetch="join">
 			<key column="categoryId" />
 			<composite-element
 				class="org.ironrhino.core.model.SimpleElement">
