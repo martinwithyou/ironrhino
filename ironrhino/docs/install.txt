@@ -4,28 +4,12 @@
 
 3.install tomcat5 or higher
 
-4.generate keystore and open https port for tomcat
-
-#generate a keystore
-keytool -genkey -alias ironrhino -keyalg RSA -keystore keystore
-enter password:ironrhino
-#note CN=your domain,eg:localhost,ironrhino.org
-
-#export crt
-keytool -export -file server.crt -alias ironrhino -keystore keystore
-enter password:ironrhino
-
-#import crt in cas client machine,normally localhost
-keytool -import -keystore "%JAVA_HOME%"\jre\lib\security\cacerts -file server.crt -alias ironrhino
-enter password:changeit
-
-cp keystore to tomcat's conf directory,and add below xml fragment to server.xml in this directory
+4.server.xml in tomcat's conf directory
 
     <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
                maxThreads="150" scheme="https" secure="true"
 	       clientAuth="false" sslProtocol="TLS"
-	       keystoreFile="conf/keystore" keystorePass="ironrhino"
-	       truststoreFile="conf/keystore" truststorePass="ironrhino" URIEncoding="UTF-8"/>
+	       keystoreFile="conf/keystore" URIEncoding="UTF-8"/>
 
 5.import this project into eclipse,and run test/org/ironrhino/InitData.java add some test data
 
