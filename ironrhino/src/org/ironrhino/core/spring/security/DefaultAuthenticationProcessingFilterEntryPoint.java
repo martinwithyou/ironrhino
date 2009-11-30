@@ -31,6 +31,7 @@ public class DefaultAuthenticationProcessingFilterEntryPoint extends
 			loginUrl = ssoServerBase + getLoginFormUrl();
 	}
 
+	@Override
 	protected String buildRedirectUrlToLoginPage(HttpServletRequest request,
 			HttpServletResponse response, AuthenticationException authException) {
 		String targetUrl = null;

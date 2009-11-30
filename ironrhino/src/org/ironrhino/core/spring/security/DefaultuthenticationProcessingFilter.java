@@ -2,11 +2,11 @@ package org.ironrhino.core.spring.security;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
 import org.springframework.security.context.SecurityContextHolder;
@@ -18,13 +18,15 @@ import org.springframework.security.util.SessionUtils;
 public class DefaultuthenticationProcessingFilter extends
 		AuthenticationProcessingFilter {
 
-	@Autowired
+	@Inject
 	private AuthenticationProcessingFilterEntryPoint entryPoint;
 
+	@Override
 	protected String determineTargetUrl(HttpServletRequest request) {
 		return entryPoint.getLoginFormUrl();
 	}
 
+	@Override
 	protected void sendRedirect(HttpServletRequest request,
 			HttpServletResponse response, String url) throws IOException {
 		try {

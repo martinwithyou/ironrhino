@@ -2,6 +2,8 @@ package org.ironrhino.common.action;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -12,9 +14,7 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.BaseAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
@@ -30,12 +30,12 @@ public class PageAction extends BaseAction {
 
 	private ResultPage<Page> resultPage;
 
-	@Autowired
+	@Inject
 	private transient PageManager pageManager;
 
 	private String cmsPath = "/p/";
 
-	@Inject(value = "ironrhino.cmsPath", required = false)
+	@com.opensymphony.xwork2.inject.Inject(value = "ironrhino.cmsPath", required = false)
 	public void setCmsPath(String val) {
 		cmsPath = val;
 	}

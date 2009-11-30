@@ -1,18 +1,19 @@
 package org.ironrhino.core.security.csrf.impl;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.security.csrf.CsrfManager;
 import org.ironrhino.core.util.CodecUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component("csrfManager")
+@Singleton@Named("csrfManager")
 public class DefaultCsrfManager implements CsrfManager {
 
-	@Autowired
+	@Inject
 	protected CacheManager cacheManager;
 
 	public static final int CACHE_TOKEN_TIME_TO_LIVE = 3600;

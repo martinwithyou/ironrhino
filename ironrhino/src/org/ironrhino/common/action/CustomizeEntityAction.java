@@ -2,12 +2,13 @@ package org.ironrhino.common.action;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.hibernate.PropertyChange;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.util.CreateIfNull;
 
@@ -16,7 +17,7 @@ public class CustomizeEntityAction extends BaseAction {
 
 	private static final long serialVersionUID = 1273888244881893724L;
 
-	@Autowired
+	@Inject
 	private transient CustomizableEntityChanger customizableEntityChanger;
 
 	private String entityClassName;

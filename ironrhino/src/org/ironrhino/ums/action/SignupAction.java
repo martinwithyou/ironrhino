@@ -3,6 +3,8 @@ package org.ironrhino.ums.action;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +20,6 @@ import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.userdetails.UserDetails;
 
@@ -47,10 +48,10 @@ public class SignupAction extends BaseAction {
 
 	private String confirmPassword;
 
-	@Autowired
+	@Inject
 	private transient UserManager userManager;
 
-	@Autowired
+	@Inject
 	private transient MailService mailService;
 
 	public String getUsername() {
@@ -94,6 +95,7 @@ public class SignupAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Override
 	@Redirect
 	@InputConfig(methodName = "input")
 	@Validations(requiredStrings = {

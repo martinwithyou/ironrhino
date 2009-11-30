@@ -1,13 +1,14 @@
 package org.ironrhino.core.session.impl;
 
+import javax.inject.Inject;
+
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.SessionCompressorManager;
 import org.ironrhino.core.session.WrappedHttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractHttpSessionStore implements HttpSessionStore {
 
-	@Autowired
+	@Inject
 	private SessionCompressorManager sessionCompressorManager;
 
 	public void initialize(WrappedHttpSession session) {

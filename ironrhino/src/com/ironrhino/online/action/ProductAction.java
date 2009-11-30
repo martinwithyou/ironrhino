@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.validation.SkipValidation;
@@ -21,7 +23,6 @@ import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ironrhino.online.model.ProductComment;
 import com.ironrhino.online.model.ProductFavorite;
@@ -72,9 +73,9 @@ public class ProductAction extends BaseAction {
 
 	private ProductComment comment;
 
-	@Autowired
+	@Inject
 	private transient ProductFacade productFacade;
-	@Autowired
+	@Inject
 	private transient CategoryTreeControl categoryTreeControl;
 
 	private transient BaseManager baseManager;

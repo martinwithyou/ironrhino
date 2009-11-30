@@ -1,9 +1,10 @@
 package org.ironrhino.common.action;
 
+import javax.inject.Inject;
+
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.struts.BaseAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
@@ -17,7 +18,7 @@ public class ConsoleAction extends BaseAction {
 
 	private String cmd;
 
-	@Autowired
+	@Inject
 	private transient ApplicationContextConsole applicationContextConsole;
 
 	public String getCmd() {

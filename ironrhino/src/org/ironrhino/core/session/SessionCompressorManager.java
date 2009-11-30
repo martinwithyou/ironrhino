@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.util.JsonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,7 @@ public class SessionCompressorManager {
 	private Type type = new TypeToken<Map<String, String>>() {
 	}.getType();
 
-	@Autowired
+	@Inject
 	private ApplicationContext ctx;
 
 	private Collection<SessionCompressor> compressors;

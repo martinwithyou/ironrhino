@@ -3,6 +3,8 @@ package com.ironrhino.pms.action;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,7 +16,6 @@ import org.ironrhino.core.model.Attribute;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ironrhino.pms.model.Category;
 import com.ironrhino.pms.model.Product;
@@ -51,13 +52,13 @@ public class ProductAction extends BaseAction {
 
 	private String tagsAsString;
 
-	@Autowired
+	@Inject
 	private transient CategoryManager categoryManager;
 
-	@Autowired
+	@Inject
 	private transient ProductManager productManager;
 
-	@Autowired
+	@Inject
 	private transient FileStorage fileStorage;
 
 	public ResultPage<Product> getResultPage() {

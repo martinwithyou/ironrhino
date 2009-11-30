@@ -1,6 +1,7 @@
 package org.ironrhino.core.search;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,18 +15,17 @@ import org.compass.core.CompassSession;
 import org.compass.core.CompassTemplate;
 import org.compass.core.engine.SearchEngineQueryParseException;
 import org.compass.core.support.search.CompassSearchResults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 public class CompassSearchService {
 
 	protected Log log = LogFactory.getLog(CompassSearchService.class);
 
-	@Autowired
+	@Inject
 	private Compass compass;
 
-	@Autowired
-	private transient SearchStat searchStat;
+	@Inject
+	private SearchStat searchStat;
 
 	private CompassTemplate compassTemplate;
 

@@ -33,6 +33,7 @@ public class CyclicMySQLMaxValueIncrementer extends
 		this.cycleType = cycleType;
 	}
 
+	@Override
 	protected synchronized long getNextKey() throws DataAccessException {
 		if (this.maxId == this.nextId) {
 

@@ -1,9 +1,10 @@
 package com.ironrhino.online.action;
 
+import javax.inject.Inject;
+
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.stat.StatLog;
 import org.ironrhino.core.struts.BaseAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ironrhino.online.service.ProductFacade;
 
@@ -12,7 +13,7 @@ public class IndexAction extends BaseAction {
 
 	private static final long serialVersionUID = -8007101751932155905L;
 
-	@Autowired
+	@Inject
 	private transient ProductFacade productFacade;
 
 	public ProductFacade getProductFacade() {

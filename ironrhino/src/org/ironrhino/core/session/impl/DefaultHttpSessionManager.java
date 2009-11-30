@@ -2,6 +2,10 @@ package org.ironrhino.core.session.impl;
 
 import java.math.BigInteger;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,11 +15,9 @@ import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.core.util.RequestUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
-@Component("httpSessionManager")
+@Singleton
+@Named("httpSessionManager")
 public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	protected Log log = LogFactory.getLog(this.getClass());
@@ -28,12 +30,12 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	public static final int DEFAULT_MINACTIVEINTERVAL = 60;// in seconds
 
-	@Autowired
-	@Qualifier("cookieBased")
+	@Inject
+	@Named("cookieBased")
 	private HttpSessionStore cookieBased;
 
-	@Autowired
-	@Qualifier("cacheBased")
+	@Inject
+	@Named("cacheBased")
 	private HttpSessionStore cacheBased;
 
 	private int maxInactiveInterval = DEFAULT_MAXINACTIVEINTERVAL;

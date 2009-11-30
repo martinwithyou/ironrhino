@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.session.SessionCompressor;
 import org.ironrhino.core.util.JsonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.reflect.TypeToken;
@@ -17,7 +18,7 @@ import com.ironrhino.online.service.ProductFacade;
 @Component
 public class CartSessionCompressor implements SessionCompressor<Cart> {
 
-	@Autowired
+	@Inject
 	private ProductFacade productFacade;
 
 	@Override

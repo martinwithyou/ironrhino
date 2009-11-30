@@ -1,5 +1,6 @@
 package org.ironrhino.ums.action;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +15,6 @@ import org.ironrhino.core.spring.security.DefaultuthenticationProcessingFilter;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.security.UserAuthenticationProcessingFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.AccountExpiredException;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
@@ -23,6 +23,7 @@ import org.springframework.security.CredentialsExpiredException;
 import org.springframework.security.DisabledException;
 import org.springframework.security.LockedException;
 import org.springframework.security.concurrent.ConcurrentLoginException;
+import org.springframework.security.ui.webapp.AuthenticationProcessingFilter;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
@@ -37,7 +38,7 @@ public class LoginAction extends BaseAction {
 
 	private String username;
 
-	@Autowired
+	@Inject
 	private transient DefaultuthenticationProcessingFilter authenticationProcessingFilter;
 
 	public String getUsername() {
@@ -56,6 +57,7 @@ public class LoginAction extends BaseAction {
 		this.password = password;
 	}
 
+	@Override
 	@Redirect
 	@InputConfig(methodName = INPUT)
 	@Captcha(threshold = 3)
@@ -98,13 +100,14 @@ public class LoginAction extends BaseAction {
 						.getRequest()
 						.getSession()
 						.removeAttribute(
-								DefaultuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY);
+								AuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
 		return SUCCESS;
 	}
 
+	@Override
 	public String input() {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		if (StringUtils.isBlank(targetUrl))

@@ -4,6 +4,8 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,9 +14,8 @@ import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.RequestUtils;
-import org.springframework.stereotype.Component;
 
-@Component("cookieBased")
+@Singleton@Named("cookieBased")
 public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
 
 	protected Log log = LogFactory.getLog(this.getClass());
@@ -25,10 +26,12 @@ public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
 
 	// cookies
 
+	@Override
 	public String getSessionString(WrappedHttpSession session) {
 		return Blowfish.decrypt(getCookie(session));
 	}
 
+	@Override
 	public void saveSessionString(WrappedHttpSession session,
 			String sessionString) {
 		if (StringUtils.isNotBlank(sessionString))

@@ -2,6 +2,8 @@ package org.ironrhino.ums.action;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -12,7 +14,6 @@ import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
@@ -36,7 +37,7 @@ public class UserAction extends BaseAction {
 
 	private String confirmPassword;
 
-	@Autowired
+	@Inject
 	private transient UserManager userManager;
 
 	public String getRolesAsString() {

@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.mvel2.templates.TemplateRuntime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 
 public class BaseAspect implements Ordered {
@@ -20,7 +21,7 @@ public class BaseAspect implements Ordered {
 
 	protected int order;
 
-	@Autowired
+	@Inject
 	private ApplicationContextConsole applicationContextConsole;
 
 	protected boolean isBypass() {

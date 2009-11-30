@@ -3,6 +3,10 @@ package com.ironrhino.online.service;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.ironrhino.common.support.RegionTreeControl;
 import org.ironrhino.core.metadata.ConcurrencyControl;
 import org.ironrhino.core.service.BaseManagerImpl;
@@ -13,15 +17,14 @@ import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.ums.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.support.incrementer.DataFieldMaxValueIncrementer;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ironrhino.online.model.Order;
 import com.ironrhino.online.model.OrderStatus;
 
-@Component("orderManager")
+@Singleton
+@Named("orderManager")
 public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 		OrderManager {
 
@@ -30,8 +33,8 @@ public class OrderManagerImpl extends BaseManagerImpl<Order> implements
 	@Autowired(required = false)
 	private RegionTreeControl regionTreeControl;
 
-	@Autowired
-	@Qualifier("orderCodeSequence")
+	@Inject
+	@Named("orderCodeSequence")
 	private DataFieldMaxValueIncrementer orderCodeSequence;
 
 	@Override

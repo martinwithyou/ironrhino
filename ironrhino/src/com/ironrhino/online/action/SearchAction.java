@@ -2,6 +2,8 @@ package com.ironrhino.online.action;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.validation.SkipValidation;
@@ -12,7 +14,6 @@ import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.core.search.SearchStat;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/")
 public class SearchAction extends BaseAction {
@@ -33,10 +34,10 @@ public class SearchAction extends BaseAction {
 
 	private transient CompassSearchResults searchResults;
 
-	@Autowired
+	@Inject
 	private transient CompassSearchService compassSearchService;
 
-	@Autowired
+	@Inject
 	private transient SearchStat searchStat;
 
 	public Map<String, Integer> getSuggestions() {

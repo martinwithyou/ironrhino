@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Region;
@@ -12,17 +15,15 @@ import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
 
-@Component("regionTreeControl")
+@Singleton@Named("regionTreeControl")
 public class RegionTreeControl implements ApplicationListener {
 
 	private Region regionTree;
 
-	@Autowired
+	@Inject
 	private BaseManager<Region> baseManager;
 
 	public void buildRegionTree() {

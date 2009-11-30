@@ -25,10 +25,12 @@ public class EntityOperationEvent extends ApplicationEvent {
 		return type;
 	}
 
+	@Override
 	public Object getSource() {
 		return getEntity();
 	}
 
+	@Override
 	public String toString() {
 		return getClass().getName() + "[source=" + getSource() + ",timestamp="
 				+ getTimestamp() + "]";

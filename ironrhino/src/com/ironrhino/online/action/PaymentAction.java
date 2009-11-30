@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Enumeration;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
@@ -17,7 +18,6 @@ import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ironrhino.online.model.Order;
 import com.ironrhino.online.model.OrderStatus;
@@ -31,10 +31,10 @@ public class PaymentAction extends BaseAction {
 
 	public static final Log log = LogFactory.getLog(PaymentAction.class);
 
-	@Autowired
+	@Inject
 	private transient OrderManager orderManager;
 
-	@Autowired
+	@Inject
 	private transient Paypal paypal;
 
 	public String paypal() throws Exception {

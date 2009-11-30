@@ -3,6 +3,8 @@ package com.ironrhino.online.action.account;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,7 +19,6 @@ import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
@@ -42,11 +43,11 @@ public class AccountAction extends BaseAction {
 
 	private String confirmPassword;
 
-	@Autowired
+	@Inject
 	private transient RegionTreeControl regionTreeControl;
-	@Autowired
+	@Inject
 	private transient UserManager userManager;
-	@Autowired
+	@Inject
 	private transient MailService mailService;
 
 	public String getCurrentPassword() {

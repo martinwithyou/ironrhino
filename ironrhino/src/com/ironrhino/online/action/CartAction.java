@@ -2,11 +2,12 @@ package com.ironrhino.online.action;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ironrhino.online.model.OrderItem;
 import com.ironrhino.online.service.ProductFacade;
@@ -18,7 +19,7 @@ public class CartAction extends BaseAction {
 
 	private static final long serialVersionUID = 2090481459995236536L;
 
-	@Autowired
+	@Inject
 	private transient ProductFacade productFacade;
 
 	// quantity

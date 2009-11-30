@@ -2,6 +2,9 @@ package org.ironrhino.core.session;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -15,10 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.performance.BufferableResponseWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component("httpSessionFilter")
+@Singleton@Named("httpSessionFilter")
 public class HttpSessionFilter implements Filter {
 
 	public static final String KEY_EXCLUDE_PATTERNS = "excludePatterns";
@@ -27,7 +28,7 @@ public class HttpSessionFilter implements Filter {
 
 	private ServletContext servletContext;
 
-	@Autowired
+	@Inject
 	private HttpSessionManager httpSessionManager;
 
 	private String[] excludePatterns;

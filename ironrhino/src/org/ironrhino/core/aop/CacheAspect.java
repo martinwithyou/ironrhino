@@ -3,6 +3,8 @@ package org.ironrhino.core.aop;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -12,7 +14,6 @@ import org.ironrhino.core.cache.CacheContext;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CacheAspect extends BaseAspect {
 
-	@Autowired
+	@Inject
 	private CacheManager cacheManager;
 
 	public CacheAspect() {

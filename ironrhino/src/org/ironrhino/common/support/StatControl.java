@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.DetachedCriteria;
@@ -36,9 +39,8 @@ import org.ironrhino.core.stat.analysis.PeriodAnalyzer;
 import org.ironrhino.core.stat.analysis.TreeNode;
 import org.ironrhino.core.util.CompositeIterator;
 import org.ironrhino.core.util.DateUtils;
-import org.springframework.stereotype.Component;
 
-@Component("statControl")
+@Singleton@Named("statControl")
 public class StatControl {
 
 	protected Log log = LogFactory.getLog(getClass());

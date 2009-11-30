@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,7 +17,6 @@ import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.model.LoginRecord;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
@@ -26,7 +26,7 @@ public class UserAuthenticationProcessingFilter extends
 
 	public final static String COOKIE_NAME_LOGIN_USER = "U";
 
-	@Autowired
+	@Inject
 	private UserManager userManager;
 
 	@Override

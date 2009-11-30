@@ -2,6 +2,9 @@ package org.ironrhino.core.security.captcha.impl;
 
 import java.util.Random;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ironrhino.core.cache.CacheManager;
@@ -9,11 +12,9 @@ import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.security.captcha.CaptchaManager;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.RequestUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
-@Component("captchaManager")
+@Singleton@Named("captchaManager")
 public class DefaultCaptchaManager implements CaptchaManager {
 
 	private static final String REQUEST_ATTRIBUTE_KEY_CAPTACHA_THRESHOLD_ADDED = "CAPTACHA_THRESHOLD_ADDED";
@@ -30,7 +31,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 
 	private static Random random = new Random();
 
-	@Autowired
+	@Inject
 	protected CacheManager cacheManager;
 
 	@Override

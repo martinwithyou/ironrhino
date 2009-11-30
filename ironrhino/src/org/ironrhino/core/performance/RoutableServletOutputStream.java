@@ -3,8 +3,9 @@
  * distribution in the LICENSE.txt file. */
 package org.ironrhino.core.performance;
 
-import javax.servlet.ServletOutputStream;
 import java.io.IOException;
+
+import javax.servlet.ServletOutputStream;
 
 /**
  * Provides a ServletOutputStream that routes through to another

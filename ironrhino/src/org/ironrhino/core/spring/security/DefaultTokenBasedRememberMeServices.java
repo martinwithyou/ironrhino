@@ -34,6 +34,7 @@ public class DefaultTokenBasedRememberMeServices extends
 		return false;
 	}
 
+	@Override
 	protected void setCookie(String[] tokens, int maxAge,
 			HttpServletRequest request, HttpServletResponse response) {
 		String cookieValue = encodeCookie(tokens);
@@ -41,6 +42,7 @@ public class DefaultTokenBasedRememberMeServices extends
 				cookieValue, maxAge, true);
 	}
 
+	@Override
 	protected void cancelCookie(HttpServletRequest request,
 			HttpServletResponse response) {
 		RequestUtils.deleteCookie(request, response, getCookieName(), true);

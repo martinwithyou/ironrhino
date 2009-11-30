@@ -3,6 +3,8 @@ package org.ironrhino.core.mail;
 import java.io.StringWriter;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.struts.TemplateProvider;
@@ -23,7 +25,7 @@ public class MailService {
 	@Autowired(required = false)
 	private JmsTemplate jmsTemplate;
 
-	@Autowired
+	@Inject
 	private MailSender mailSender;
 
 	private boolean forceSync;

@@ -4,6 +4,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -17,17 +20,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.util.Thumbnail;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component("productPictureFilter")
+@Singleton@Named("productPictureFilter")
 public class ProductPictureFilter implements Filter {
 
 	protected Log log = LogFactory.getLog(ProductPictureFilter.class);
 
 	private String productPrefix = "/product/";
 
-	@Autowired
+	@Inject
 	private FileStorage fileStorage;
 
 	public void setProductPrefix(String productPrefix) {

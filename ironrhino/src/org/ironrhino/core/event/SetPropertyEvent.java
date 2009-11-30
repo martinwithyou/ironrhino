@@ -17,10 +17,12 @@ public class SetPropertyEvent extends ApplicationEvent {
 		return this.expression;
 	}
 
+	@Override
 	public Object getSource() {
 		return getExpression();
 	}
 
+	@Override
 	public String toString() {
 		return getClass().getName() + "[source=" + getSource() + ",timestamp="
 				+ getTimestamp() + "]";

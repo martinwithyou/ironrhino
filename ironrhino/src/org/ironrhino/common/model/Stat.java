@@ -50,11 +50,13 @@ public class Stat extends KeyValuePair implements Persistable {
 		this.id = id;
 	}
 
+	@Override
 	@UiConfig(hide = true)
 	public Key getKey() {
 		return key;
 	}
 
+	@Override
 	@UiConfig(hide = true)
 	public Value getValue() {
 		return value;
@@ -90,11 +92,13 @@ public class Stat extends KeyValuePair implements Persistable {
 			value = Value.fromString(valueAsString);
 	}
 
+	@Override
 	@UiConfig(displayOrder = 2)
 	public Date getDate() {
 		return date;
 	}
 
+	@Override
 	@UiConfig(displayOrder = 3)
 	public String getHost() {
 		return host;

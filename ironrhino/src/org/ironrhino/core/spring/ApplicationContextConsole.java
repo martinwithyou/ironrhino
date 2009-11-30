@@ -8,6 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -23,9 +26,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.support.PropertiesLoaderSupport;
-import org.springframework.stereotype.Component;
 
-@Component("applicationContextConsole")
+@Singleton
+@Named("applicationContextConsole")
 public class ApplicationContextConsole implements ApplicationListener {
 
 	private static final Pattern SET_PROPERTY_EXPRESSION_PATTERN = Pattern
@@ -33,10 +36,10 @@ public class ApplicationContextConsole implements ApplicationListener {
 
 	protected Log log = LogFactory.getLog(getClass());
 
-	@Autowired
+	@Inject
 	private ApplicationContext ctx;
 
-	@Autowired
+	@Inject
 	private EventPublisher eventPublisher;
 
 	private Map<String, Object> beans;

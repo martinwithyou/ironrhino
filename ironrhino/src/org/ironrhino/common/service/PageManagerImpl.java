@@ -2,15 +2,17 @@ package org.ironrhino.common.service;
 
 import java.util.Date;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component("pageManager")
+@Singleton@Named("pageManager")
 public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		PageManager {
 

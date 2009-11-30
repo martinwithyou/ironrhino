@@ -1,5 +1,7 @@
 package com.ironrhino.online.action.backend;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -7,7 +9,6 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.BaseAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ironrhino.online.model.Order;
 import com.ironrhino.online.model.OrderStatus;
@@ -22,7 +23,7 @@ public class OrderAction extends BaseAction {
 
 	private ResultPage<Order> resultPage;
 
-	@Autowired
+	@Inject
 	private transient OrderManager orderManager;
 
 	public Order getOrder() {

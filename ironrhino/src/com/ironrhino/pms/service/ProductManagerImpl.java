@@ -1,13 +1,15 @@
 package com.ironrhino.pms.service;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.ironrhino.core.metadata.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ironrhino.pms.model.Product;
 
-@Component("productManager")
+@Singleton@Named("productManager")
 public class ProductManagerImpl extends BaseManagerImpl<Product> implements
 		ProductManager {
 

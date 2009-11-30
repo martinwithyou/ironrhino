@@ -1,25 +1,27 @@
 package org.ironrhino.core.event;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.jms.Destination;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.stereotype.Component;
 
-@Component("eventPublisher")
+@Singleton
+@Named("eventPublisher")
 public class EventPublisher {
 
-	@Autowired
+	@Inject
 	private ApplicationEventPublisher publisher;
 
 	@Autowired(required = false)
 	private JmsTemplate jmsTemplate;
 
 	@Autowired(required = false)
-	@Qualifier("applicationEventDestination")
+	@Named("applicationEventDestination")
 	private Destination applicationEventDestination;
 
 	public void publish(ApplicationEvent event, boolean global) {

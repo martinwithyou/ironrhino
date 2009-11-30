@@ -2,6 +2,7 @@ package org.ironrhino.core.mail;
 
 import java.io.UnsupportedEncodingException;
 
+import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
@@ -9,7 +10,6 @@ import javax.mail.internet.MimeUtility;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -29,7 +29,7 @@ public class MailSender {
 
 	private String defaultTo = "zhouyanming@gmail.com";
 
-	@Autowired
+	@Inject
 	private JavaMailSenderImpl javaMailSender;
 
 	public String getDefaultFrom() {

@@ -1,11 +1,12 @@
 package org.ironrhino.core.mail;
 
+import javax.inject.Inject;
+
 import org.ironrhino.core.jms.MessageConsumer;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class SimpleMailMessageConsumer implements MessageConsumer {
 
-	@Autowired
+	@Inject
 	private MailSender mailSender;
 
 	public void consume(Object object) {

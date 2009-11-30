@@ -4,12 +4,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ironrhino.online.service.ProductFacade;
 import com.ironrhino.pms.model.Product;
@@ -19,7 +20,7 @@ public class RightAction extends BaseAction {
 
 	private static final long serialVersionUID = -6441264436887308502L;
 
-	@Autowired
+	@Inject
 	private transient ProductFacade productFacade;
 
 	private Product relatedProduct;

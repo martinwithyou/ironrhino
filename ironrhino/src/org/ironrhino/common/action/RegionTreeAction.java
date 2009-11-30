@@ -2,6 +2,8 @@ package org.ironrhino.common.action;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.support.RegionTreeControl;
@@ -9,7 +11,6 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.HtmlUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/", actionName = "region")
 public class RegionTreeAction extends BaseAction {
@@ -22,7 +23,7 @@ public class RegionTreeAction extends BaseAction {
 
 	private long root;
 
-	@Autowired
+	@Inject
 	private transient RegionTreeControl regionTreeControl;
 
 	public long getRoot() {

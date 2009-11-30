@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -26,7 +27,6 @@ import org.hibernate.type.Type;
 import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.XmlUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.w3c.dom.Document;
@@ -38,7 +38,7 @@ public class CustomizableEntityChanger {
 
 	protected Log log = LogFactory.getLog(getClass());
 
-	@Autowired
+	@Inject
 	private ApplicationContext ctx;
 
 	private LocalSessionFactoryBean lsfb;
@@ -112,7 +112,7 @@ public class CustomizableEntityChanger {
 
 	private void initCustomizableEntities() {
 		lsfb = (LocalSessionFactoryBean) ctx.getBean("&sessionFactory");
-		sf = (SessionFactory) lsfb.getObject();
+		sf = lsfb.getObject();
 		customizableEntities = new HashMap<String, Map<String, PropertyType>>();
 		Iterator it = lsfb.getConfiguration().getClassMappings();
 		while (it.hasNext()) {

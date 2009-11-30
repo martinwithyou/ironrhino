@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -17,9 +19,8 @@ import org.ironrhino.core.service.BaseManager;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
 
-@Component("settingControl")
+@Singleton@Named("settingControl")
 public class SettingControl implements ApplicationListener {
 
 	protected Log log = LogFactory.getLog(getClass());

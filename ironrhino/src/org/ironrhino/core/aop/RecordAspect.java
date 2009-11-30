@@ -67,7 +67,7 @@ public class RecordAspect extends HibernateDaoSupport implements Ordered {
 		record.setEntityToString(entity.toString());
 		record.setAction(action.name());
 		record.setRecordDate(new Date());
-		// important! no transaction,inserted before actual save entity and
+		// import javax.inject.Inject; import ant! no transaction,inserted before actual save entity and
 		// ignore transaction rollback
 		getHibernateTemplate().save(record);
 	}

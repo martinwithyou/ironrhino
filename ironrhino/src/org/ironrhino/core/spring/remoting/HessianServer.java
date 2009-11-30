@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +17,6 @@ import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.metadata.Remoting;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.remoting.caucho.HessianServiceExporter;
@@ -38,7 +38,7 @@ public class HessianServer extends HessianServiceExporter implements
 	private ApplicationContext ctx;
 
 	@Override
-	@Autowired
+	@Inject
 	public void handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String uri = request.getRequestURI();
@@ -81,7 +81,8 @@ public class HessianServer extends HessianServiceExporter implements
 										getProxyForService(),
 										getServiceInterface()));
 								log.info("export service :" + inte.getName());
-								//TODO register service to service center,zookeeper?
+								// TODO register service to service
+								// center,zookeeper?
 								break;
 							}
 						}

@@ -3,8 +3,8 @@
  * distribution in the LICENSE.txt file. */
 package org.ironrhino.core.performance;
 
-import java.io.PrintWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 
 /**

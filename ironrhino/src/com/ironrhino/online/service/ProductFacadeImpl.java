@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -37,7 +40,6 @@ import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.stereotype.Component;
 
 import com.ironrhino.online.action.ProductAction;
 import com.ironrhino.online.model.ProductScore;
@@ -46,18 +48,19 @@ import com.ironrhino.pms.model.Product;
 import com.ironrhino.pms.service.ProductManager;
 import com.ironrhino.pms.support.CategoryTreeControl;
 
-@Component("productFacade")
+@Singleton
+@Named("productFacade")
 public class ProductFacadeImpl implements ProductFacade {
 
 	protected final Log log = LogFactory.getLog(ProductFacadeImpl.class);
 
-	@Autowired
+	@Inject
 	private ProductManager productManager;
 
-	@Autowired
+	@Inject
 	private BaseManager baseManager;
 
-	@Autowired
+	@Inject
 	private SettingControl settingControl;
 
 	@Autowired(required = false)

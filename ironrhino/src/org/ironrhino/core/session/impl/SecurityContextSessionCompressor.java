@@ -1,7 +1,8 @@
 package org.ironrhino.core.session.impl;
 
+import javax.inject.Inject;
+
 import org.ironrhino.core.session.SessionCompressor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.Authentication;
 import org.springframework.security.context.HttpSessionContextIntegrationFilter;
 import org.springframework.security.context.SecurityContext;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class SecurityContextSessionCompressor implements
 		SessionCompressor<SecurityContext> {
 
-	@Autowired
+	@Inject
 	private UserDetailsService userDetailsService;
 
 	@Override

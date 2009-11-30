@@ -1,5 +1,7 @@
 package org.ironrhino.core.aop;
 
+import javax.inject.Inject;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
@@ -9,7 +11,6 @@ import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.Persistable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +27,7 @@ public class PublishAspect extends BaseAspect {
 		order = -1;
 	}
 
-	@Autowired
+	@Inject
 	private EventPublisher eventPublisher;
 
 	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(publishAware)")

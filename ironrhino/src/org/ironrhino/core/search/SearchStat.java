@@ -30,7 +30,7 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.lucene.store.FSDirectory;
 import org.ironrhino.core.util.AppInfo;
 
 public class SearchStat {
@@ -62,7 +62,7 @@ public class SearchStat {
 			File dir = new File(AppInfo.getAppHome() + INDEX_DIRECTORY);
 			if (!dir.exists() && dir.mkdirs())
 				log.error("mkdir error:" + dir.getAbsolutePath());
-			this.directory = NIOFSDirectory.getDirectory(dir);
+			this.directory = FSDirectory.getDirectory(dir);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

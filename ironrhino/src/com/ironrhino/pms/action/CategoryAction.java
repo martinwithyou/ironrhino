@@ -3,6 +3,8 @@ package com.ironrhino.pms.action;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -10,7 +12,6 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.HtmlUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ironrhino.pms.model.Category;
 import com.ironrhino.pms.service.CategoryManager;
@@ -28,10 +29,10 @@ public class CategoryAction extends BaseAction {
 
 	private Collection<Category> list;
 
-	@Autowired
+	@Inject
 	private transient CategoryManager categoryManager;
 
-	@Autowired
+	@Inject
 	private transient CategoryTreeControl categoryTreeControl;
 
 	private boolean async;

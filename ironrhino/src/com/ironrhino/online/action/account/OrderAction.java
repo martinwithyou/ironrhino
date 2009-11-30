@@ -2,6 +2,8 @@ package com.ironrhino.online.action.account;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -11,7 +13,6 @@ import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.ums.model.User;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ironrhino.online.model.Order;
 import com.ironrhino.online.model.OrderItem;
@@ -31,9 +32,9 @@ public class OrderAction extends BaseAction {
 
 	private ResultPage<Order> resultPage;
 
-	@Autowired
+	@Inject
 	private transient OrderManager orderManager;
-	@Autowired
+	@Inject
 	private transient PaymentManager paymentManager;
 
 	public ResultPage<Order> getResultPage() {

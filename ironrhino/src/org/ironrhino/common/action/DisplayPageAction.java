@@ -1,10 +1,11 @@
 package org.ironrhino.common.action;
 
+import javax.inject.Inject;
+
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/")
 public class DisplayPageAction extends BaseAction {
@@ -15,7 +16,7 @@ public class DisplayPageAction extends BaseAction {
 
 	private boolean preview;
 
-	@Autowired
+	@Inject
 	private transient PageManager pageManager;
 
 	public boolean isPreview() {
@@ -30,6 +31,7 @@ public class DisplayPageAction extends BaseAction {
 		return page;
 	}
 
+	@Override
 	public String execute() {
 		if (page == null) {
 			String path = getUid();

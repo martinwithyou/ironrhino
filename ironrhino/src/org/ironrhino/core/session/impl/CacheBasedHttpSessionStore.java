@@ -1,17 +1,19 @@
 package org.ironrhino.core.session.impl;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.session.WrappedHttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component("cacheBased")
+@Singleton@Named("cacheBased")
 public class CacheBasedHttpSessionStore extends AbstractHttpSessionStore {
 
 	public static final String CACHE_NAMESPACE = "session";
 
-	@Autowired
+	@Inject
 	private CacheManager cacheManager;
 
 	@Override
@@ -19,6 +21,7 @@ public class CacheBasedHttpSessionStore extends AbstractHttpSessionStore {
 		return (String) cacheManager.get(session.getId(), CACHE_NAMESPACE);
 	}
 
+	@Override
 	public void saveSessionString(WrappedHttpSession session,
 			String sessionString) {
 		if (StringUtils.isNotBlank(sessionString))

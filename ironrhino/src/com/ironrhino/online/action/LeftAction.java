@@ -1,8 +1,9 @@
 package com.ironrhino.online.action;
 
+import javax.inject.Inject;
+
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ironrhino.pms.support.CategoryTreeControl;
 
@@ -11,7 +12,7 @@ public class LeftAction extends BaseAction {
 
 	private static final long serialVersionUID = 6640138055634199058L;
 
-	@Autowired
+	@Inject
 	private transient CategoryTreeControl categoryTreeControl;
 
 	public CategoryTreeControl getCategoryTreeControl() {
