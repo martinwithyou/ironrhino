@@ -1,8 +1,6 @@
 package org.ironrhino.core.spring.remoting;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,11 +16,11 @@ import org.ironrhino.core.util.AnnotationUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.remoting.caucho.HessianServiceExporter;
+import org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter;
+import org.springframework.remoting.support.RemoteInvocation;
+import org.springframework.remoting.support.RemoteInvocationResult;
 
-import com.caucho.hessian.server.HessianSkeleton;
-
-public class HessianServer extends HessianServiceExporter implements
+public class HttpInvokerServer extends HttpInvokerServiceExporter implements
 		ApplicationContextAware {
 
 	private Log log = LogFactory.getLog(getClass());
@@ -31,7 +29,7 @@ public class HessianServer extends HessianServiceExporter implements
 
 	private ThreadLocal<Object> service = new ThreadLocal<Object>();
 
-	private Map<Class, HessianSkeleton> skeletons = new HashMap<Class, HessianSkeleton>();
+	private Map<Class, Object> proxies = new HashMap<Class, Object>();
 
 	private ApplicationContext ctx;
 
@@ -43,19 +41,15 @@ public class HessianServer extends HessianServiceExporter implements
 			Class clazz = Class
 					.forName(uri.substring(uri.lastIndexOf('/') + 1));
 			serviceInterface.set(clazz);
-			super.handleRequest(request, response);
+			RemoteInvocation invocation = readRemoteInvocation(request);
+			RemoteInvocationResult result = invokeAndCreateResult(invocation,
+					getProxyForService()); // getProxy is final cannot override
+			writeRemoteInvocationResult(request, response, result);
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex
 					.getMessage());
 		}
-	}
-
-	@Override
-	public void invoke(InputStream inputStream, OutputStream outputStream)
-			throws Throwable {
-		doInvoke(skeletons.get(getServiceInterface()), inputStream,
-				outputStream);
 	}
 
 	@Override
@@ -75,9 +69,7 @@ public class HessianServer extends HessianServiceExporter implements
 									|| remoting.name().equals(beanName)) {
 								serviceInterface.set(inte);
 								service.set(bean);
-								skeletons.put(inte, new HessianSkeleton(
-										getProxyForService(),
-										getServiceInterface()));
+								proxies.put(inte, super.getProxyForService());
 								log.info("export service :" + inte.getName());
 								// TODO register service to service
 								// center,zookeeper?
@@ -100,6 +92,11 @@ public class HessianServer extends HessianServiceExporter implements
 	@Override
 	public Class getServiceInterface() {
 		return serviceInterface.get();
+	}
+
+	@Override
+	protected Object getProxyForService() {
+		return proxies.get(getServiceInterface());
 	}
 
 	@Override
