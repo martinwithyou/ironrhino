@@ -19,12 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.performance.BufferableResponseWrapper;
 
-@Singleton@Named("httpSessionFilter")
+@Singleton
+@Named("httpSessionFilter")
 public class HttpSessionFilter implements Filter {
 
 	public static final String KEY_EXCLUDE_PATTERNS = "excludePatterns";
 
-	public static final String DEFAULT_EXCLUDE_PATTERNS = "/assets/*,/remoting/*";
+	public static final String DEFAULT_EXCLUDE_PATTERNS = "/remoting/*";
 
 	private ServletContext servletContext;
 
@@ -45,8 +46,10 @@ public class HttpSessionFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		for (String pattern : excludePatterns) {
-			if (org.ironrhino.core.util.StringUtils.matchesWildcard(req
-					.getServletPath(), pattern)) {
+			String path = req.getRequestURI();
+			path = path.substring(req.getContextPath().length());
+			if (org.ironrhino.core.util.StringUtils.matchesWildcard(path,
+					pattern)) {
 				chain.doFilter(request, response);
 				return;
 			}
