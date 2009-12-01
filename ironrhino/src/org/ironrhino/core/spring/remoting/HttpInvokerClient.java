@@ -16,9 +16,15 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	@Inject
 	private ServiceRegistry serviceRegistry;
 
+	private String host;
+
 	private int port = 8080;
 
 	private String contextPath;
+
+	public void setHost(String host) {
+		this.host = host;
+	}
 
 	public void setPort(int port) {
 		this.port = port;
@@ -43,7 +49,11 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	protected String discoverServiceUrl(String interfaceName) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("http://");
-		sb.append(serviceRegistry.locate(interfaceName));
+		if (StringUtils.isBlank(host)) {
+			sb.append(serviceRegistry.locate(interfaceName));
+		} else {
+			sb.append(host);
+		}
 		if (port != 80) {
 			sb.append(':');
 			sb.append(port);
