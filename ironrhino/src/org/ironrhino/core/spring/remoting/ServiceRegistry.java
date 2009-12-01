@@ -37,7 +37,7 @@ public class ServiceRegistry {
 	public String locate(String serviceName) {
 		Set<String> set = getRegistry().get(serviceName);
 		if (set == null || set.isEmpty())
-			return "localhost";
+			return "localhost"; // for test
 		return set.iterator().next();
 	}
 
@@ -49,6 +49,7 @@ public class ServiceRegistry {
 			getRegistry().put(serviceName, set);
 		}
 		set.add(address);
+		log.info("register service [" + serviceName + "]");
 	}
 
 	public void unregister(String serviceName) {
@@ -87,7 +88,6 @@ public class ServiceRegistry {
 									|| remoting.name().equals(beanName)) {
 								services.put(inte, bean);
 								register(inte.getName());
-								log.info("register service :" + inte.getName());
 								break;
 							}
 						}
