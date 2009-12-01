@@ -21,6 +21,8 @@ public class AppInfo {
 
 	public static final String HOSTNAME;
 
+	public static final String HOSTADDRESS;
+
 	public static final String DEFAULT_RACK = "/default-rack";
 
 	public static final String NODEPATH;
@@ -41,11 +43,14 @@ public class AppInfo {
 			STAGE = Stage.PRODUCTION;
 
 		String name = "unknown";
+		String address = "";
 		try {
 			name = InetAddress.getLocalHost().getHostName();
+			address = InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
 		}
 		HOSTNAME = name;
+		HOSTADDRESS = address;
 
 		String rack = System.getProperty(KEY_RACK);
 		if (rack == null)
@@ -80,6 +85,10 @@ public class AppInfo {
 
 	public static String getHostName() {
 		return HOSTNAME;
+	}
+
+	public static String getHostAddress() {
+		return HOSTADDRESS;
 	}
 
 	public static String getNodePath() {

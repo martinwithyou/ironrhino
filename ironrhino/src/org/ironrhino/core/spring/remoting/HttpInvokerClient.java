@@ -1,5 +1,8 @@
 package org.ironrhino.core.spring.remoting;
 
+import javax.inject.Inject;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
@@ -7,6 +10,21 @@ import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
 	private static Log log = LogFactory.getLog(HttpInvokerClient.class);
+
+	@Inject
+	private ServiceRegistry serviceRegistry;
+
+	private int port = 80;
+
+	private String contextPath;
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	public void setContextPath(String contextPath) {
+		this.contextPath = contextPath;
+	}
 
 	@Override
 	public void afterPropertiesSet() {
@@ -21,9 +39,15 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	}
 
 	protected String discoverServiceUrl(String interfaceName) {
-		// TODO auto discover service url from service center,zookeeper?
 		StringBuilder sb = new StringBuilder();
-		sb.append("http://localhost:8080/ironrhino");
+		sb.append("http://");
+		sb.append(serviceRegistry.locate(interfaceName));
+		if (port != 80) {
+			sb.append(':');
+			sb.append(port);
+		}
+		if (StringUtils.isNotBlank(contextPath))
+			sb.append(contextPath);
 		sb.append("/remoting/httpinvoker/");
 		sb.append(interfaceName);
 		return sb.toString();

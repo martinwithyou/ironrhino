@@ -8,20 +8,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.ironrhino.core.metadata.Remoting;
-import org.ironrhino.core.util.AnnotationUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter;
 import org.springframework.remoting.support.RemoteInvocation;
 import org.springframework.remoting.support.RemoteInvocationResult;
 
-public class HttpInvokerServer extends HttpInvokerServiceExporter implements
-		ApplicationContextAware {
+public class HttpInvokerServer extends HttpInvokerServiceExporter {
 
 	private Log log = LogFactory.getLog(getClass());
 
@@ -31,7 +24,11 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter implements
 
 	private Map<Class, Object> proxies = new HashMap<Class, Object>();
 
-	private ApplicationContext ctx;
+	private ServiceRegistry serviceRegistry;
+
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
+	}
 
 	@Override
 	public void handleRequest(HttpServletRequest request,
@@ -54,31 +51,11 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter implements
 
 	@Override
 	public void prepare() {
-		String[] beanNames = ctx.getParent().getBeanDefinitionNames();
-		for (String beanName : beanNames) {
-			if (StringUtils.isAlphanumeric(beanName)
-					&& ctx.isSingleton(beanName)) {
-				Object bean = ctx.getBean(beanName);
-				Class[] interfaces = bean.getClass().getInterfaces();
-				if (interfaces != null) {
-					for (Class inte : interfaces) {
-						Remoting remoting = AnnotationUtils.getAnnotation(inte,
-								Remoting.class);
-						if (remoting != null) {
-							if (StringUtils.isBlank(remoting.name())
-									|| remoting.name().equals(beanName)) {
-								serviceInterface.set(inte);
-								service.set(bean);
-								proxies.put(inte, super.getProxyForService());
-								log.info("export service :" + inte.getName());
-								// TODO register service to service
-								// center,zookeeper?
-								break;
-							}
-						}
-					}
-				}
-			}
+		for (Map.Entry<Class, Object> entry : serviceRegistry.getServices()
+				.entrySet()) {
+			serviceInterface.set(entry.getKey());
+			service.set(entry.getValue());
+			proxies.put(entry.getKey(), super.getProxyForService());
 		}
 		serviceInterface.set(null);
 		service.set(null);
@@ -99,9 +76,4 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter implements
 		return proxies.get(getServiceInterface());
 	}
 
-	@Override
-	public void setApplicationContext(ApplicationContext ctx)
-			throws BeansException {
-		this.ctx = ctx;
-	}
 }
