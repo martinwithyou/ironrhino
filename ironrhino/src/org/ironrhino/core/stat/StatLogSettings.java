@@ -24,16 +24,9 @@ public class StatLogSettings {
 
 	public static final String STAT_LOG_FILE_NAME = "stat.log";
 
-	public static final String SYSTEM_LOG_FILE_NAME = "system.log";
-
 	private static final Log log = LogFactory.getLog(StatLogSettings.class);
 
 	private static int intervalUnit = 60; // senconds
-
-	private static int systemIntervalMultiple = 60; // senconds system.log
-
-	// SYSTEM_INTERVAL_MULTIPLE*INTERVAL_UNIT
-	// senconds
 
 	public static int getIntervalUnit() {
 		return intervalUnit;
@@ -42,15 +35,6 @@ public class StatLogSettings {
 	public static void setIntervalUnit(int intervalUnit) {
 		if (intervalUnit > 0)
 			StatLogSettings.intervalUnit = intervalUnit;
-	}
-
-	public static int getSystemIntervalMultiple() {
-		return systemIntervalMultiple;
-	}
-
-	public static void setSystemIntervalMultiple(int systemIntervalMultiple) {
-		if (systemIntervalMultiple > 0)
-			StatLogSettings.systemIntervalMultiple = systemIntervalMultiple;
 	}
 
 	public static File getLogFileDirectory() {

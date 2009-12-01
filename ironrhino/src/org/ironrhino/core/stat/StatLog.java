@@ -1,11 +1,6 @@
 package org.ironrhino.core.stat;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
-import java.lang.management.OperatingSystemMXBean;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,8 +21,6 @@ public class StatLog {
 
 	private static final Logger statLogger = Logger.getLogger("Stat");
 
-	private static final Logger systemLogger = Logger.getLogger("System");
-
 	private static final Log log = LogFactory.getLog(StatLog.class);
 
 	private static final Lock timerLock = new ReentrantLock();
@@ -41,35 +34,22 @@ public class StatLog {
 
 	private static Thread writeThread;
 
-	private static int currentSystemInterval;
-
 	private static FileAppender statLogAppender;
-
-	private static FileAppender systemLogAppender;
 
 	static {
 		PatternLayout layout = new PatternLayout(StatLogSettings.LAYOUT);
-		FileAppender appender = null;
 		try {
-			appender = new DailyRollingFileAppender(layout, StatLogSettings
-					.getLogFile(StatLogSettings.STAT_LOG_FILE_NAME),
+			DailyRollingFileAppender statAppender = new DailyRollingFileAppender(
+					layout, StatLogSettings
+							.getLogFile(StatLogSettings.STAT_LOG_FILE_NAME),
 					StatLogSettings.DATE_STYLE);
-			appender.setAppend(true);
-			appender.setEncoding(StatLogSettings.ENCODING);
-			appender.activateOptions();
-			statLogger.addAppender(appender);
+			statAppender.setAppend(true);
+			statAppender.setEncoding(StatLogSettings.ENCODING);
+			statAppender.activateOptions();
+			statLogger.addAppender(statAppender);
 			statLogger.setLevel(Level.INFO);
 			statLogger.setAdditivity(false);
 
-			appender = new DailyRollingFileAppender(layout, StatLogSettings
-					.getLogFile(StatLogSettings.SYSTEM_LOG_FILE_NAME),
-					StatLogSettings.DATE_STYLE);
-			appender.setAppend(true);
-			appender.setEncoding(StatLogSettings.ENCODING);
-			appender.activateOptions();
-			systemLogger.addAppender(appender);
-			systemLogger.setLevel(Level.INFO);
-			systemLogger.setAdditivity(false);
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
@@ -78,9 +58,7 @@ public class StatLog {
 			@Override
 			public void run() {
 				write(false);
-				if (systemLogAppender != null)
-					systemLogAppender.close();
-				if (systemLogAppender != null)
+				if (statLogAppender != null)
 					statLogAppender.close();
 			}
 		});
@@ -145,12 +123,6 @@ public class StatLog {
 			value.add(-entry.getValue().getLongValue(), -entry.getValue()
 					.getDoubleValue());
 		}
-		if (currentSystemInterval % StatLogSettings.getSystemIntervalMultiple() == 0)
-			printSystemInfo();
-		currentSystemInterval++;
-		if (currentSystemInterval > StatLogSettings.getSystemIntervalMultiple())
-			currentSystemInterval -= StatLogSettings
-					.getSystemIntervalMultiple();
 	}
 
 	private static void output(Logger logger, Key key, Value value) {
@@ -207,33 +179,4 @@ public class StatLog {
 		return add(key, 1);
 	}
 
-	private static final MemoryMXBean memoryMXBean = ManagementFactory
-			.getMemoryMXBean();
-	private static final OperatingSystemMXBean operatingSystemMXBean = ManagementFactory
-			.getOperatingSystemMXBean();
-	private static final File[] roots = File.listRoots();
-
-	public static void printSystemInfo() {
-		try {
-			MemoryUsage memoryUsage = memoryMXBean.getHeapMemoryUsage();
-			// MEMORY
-			Key key = new Key("JVM", 0, false, "MEMORY", "SITUATION");
-			Value value = new Value(memoryUsage.getMax(), memoryUsage.getUsed());
-			output(systemLogger, key, value);
-			// CPU
-			key = new Key("SYSTEM", 0, false, "LOAD");
-			value = new Value(0, operatingSystemMXBean.getSystemLoadAverage());
-			output(systemLogger, key, value);
-			// DISK
-			for (File root : roots) {
-				key = new Key("SYSTEM", 0, false, "DISK", root.getPath());
-				long total = root.getTotalSpace();
-				long usable = root.getUsableSpace();
-				value = new Value(usable, total - usable);
-				output(systemLogger, key, value);
-			}
-		} catch (Exception e) {
-			log.warn(e.getMessage());
-		}
-	}
 }

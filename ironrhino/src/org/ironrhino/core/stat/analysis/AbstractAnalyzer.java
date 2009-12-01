@@ -66,7 +66,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		this.iterator = iterator;
 	}
 
-	private Iterator<KeyValuePair> newIterator(File[] files)
+	protected Iterator<KeyValuePair> newIterator(File[] files)
 			throws FileNotFoundException {
 		for (File f : files)
 			if (!f.exists())
