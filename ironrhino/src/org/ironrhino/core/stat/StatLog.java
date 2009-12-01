@@ -227,7 +227,9 @@ public class StatLog {
 			// DISK
 			for (File root : roots) {
 				key = new Key("SYSTEM", 0, false, "DISK", root.getPath());
-				value = new Value(root.getTotalSpace(), root.getUsableSpace());
+				long total = root.getTotalSpace();
+				long usable = root.getUsableSpace();
+				value = new Value(usable, total - usable);
 				output(systemLogger, key, value);
 			}
 		} catch (Exception e) {
