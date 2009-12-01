@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,11 +33,9 @@ public class HessianServer extends HessianServiceExporter implements
 
 	private Map<Class, HessianSkeleton> skeletons = new HashMap<Class, HessianSkeleton>();
 
-	// @Autowired //doesn't works
 	private ApplicationContext ctx;
 
 	@Override
-	@Inject
 	public void handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String uri = request.getRequestURI();
@@ -46,17 +43,27 @@ public class HessianServer extends HessianServiceExporter implements
 			Class clazz = Class
 					.forName(uri.substring(uri.lastIndexOf('/') + 1));
 			serviceInterface.set(clazz);
-			HessianSkeleton skeleton = skeletons.get(clazz);
-			if (skeleton == null) {
-				String message = "please add @Remoting on " + clazz;
-				log.error(message);
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
-			}
 			super.handleRequest(request, response);
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, ex
 					.getMessage());
+		}
+	}
+
+	@Override
+	public void invoke(InputStream inputStream, OutputStream outputStream)
+			throws Throwable {
+		Class clazz = getServiceInterface();
+		HessianSkeleton skeleton = skeletons.get(clazz);
+		if (skeleton != null) {
+			doInvoke(skeletons.get(getServiceInterface()), inputStream,
+					outputStream);
+		} else {
+			String message = "please add @Remoting on " + clazz;
+			log.error(message);
+			outputStream.write(message.getBytes());
+
 		}
 	}
 
@@ -102,12 +109,6 @@ public class HessianServer extends HessianServiceExporter implements
 	@Override
 	public Class getServiceInterface() {
 		return serviceInterface.get();
-	}
-
-	public void invoke(InputStream inputStream, OutputStream outputStream)
-			throws Throwable {
-		doInvoke(skeletons.get(getServiceInterface()), inputStream,
-				outputStream);
 	}
 
 	@Override
