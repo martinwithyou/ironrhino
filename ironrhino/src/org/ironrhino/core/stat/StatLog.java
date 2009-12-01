@@ -1,10 +1,11 @@
 package org.ironrhino.core.stat;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
-import java.lang.management.ThreadMXBean;
+import java.lang.management.OperatingSystemMXBean;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -208,8 +209,9 @@ public class StatLog {
 
 	private static final MemoryMXBean memoryMXBean = ManagementFactory
 			.getMemoryMXBean();
-	private static final ThreadMXBean threadMXBean = ManagementFactory
-			.getThreadMXBean();
+	private static final OperatingSystemMXBean operatingSystemMXBean = ManagementFactory
+			.getOperatingSystemMXBean();
+	private static final File[] roots = File.listRoots();
 
 	public static void printSystemInfo() {
 		try {
@@ -219,19 +221,17 @@ public class StatLog {
 			Value value = new Value(memoryUsage.getMax(), memoryUsage.getUsed());
 			output(systemLogger, key, value);
 			// CPU
-			key = new Key("JVM", 0, false, "CPU", "USAGE");
-			value = new Value(threadMXBean.getCurrentThreadCpuTime(),
-					threadMXBean.getCurrentThreadUserTime());
+			key = new Key("SYSTEM", 0, false, "LOAD");
+			value = new Value(0, operatingSystemMXBean.getSystemLoadAverage());
 			output(systemLogger, key, value);
-			// THREAD
-			key = new Key("JVM", 0, false, "THREAD", "TOTAL");
-			value = new Value(threadMXBean.getPeakThreadCount(), threadMXBean
-					.getDaemonThreadCount());
-			// TODO monitor disk usage
-			output(systemLogger, key, value);
+			// DISK
+			for (File root : roots) {
+				key = new Key("SYSTEM", 0, false, "DISK", root.getPath());
+				value = new Value(root.getTotalSpace(), root.getUsableSpace());
+				output(systemLogger, key, value);
+			}
 		} catch (Exception e) {
 			log.warn(e.getMessage());
 		}
 	}
-
 }
