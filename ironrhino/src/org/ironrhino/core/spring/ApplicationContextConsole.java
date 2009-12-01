@@ -42,7 +42,7 @@ public class ApplicationContextConsole implements ApplicationListener {
 	@Inject
 	private EventPublisher eventPublisher;
 
-	private Map<String, Object> beans;
+	private Map<String, Object> beans = new HashMap<String, Object>();
 
 	@Autowired(required = false)
 	private PropertyPlaceholderConfigurer propertyPlaceholderConfigurer;
@@ -51,29 +51,26 @@ public class ApplicationContextConsole implements ApplicationListener {
 
 	@PostConstruct
 	public void init() {
-		if (propertyPlaceholderConfigurer == null)
-			return;
+		String[] beanNames = ctx.getBeanDefinitionNames();
+		for (String beanName : beanNames) {
+			if (StringUtils.isAlphanumeric(beanName)
+					&& ctx.isSingleton(beanName))
+				beans.put(beanName, ctx.getBean(beanName));
+		}
 		try {
-			Method method = PropertiesLoaderSupport.class.getDeclaredMethod(
-					"mergeProperties", new Class[0]);
-			method.setAccessible(true);
-			properties = (Properties) method.invoke(
-					propertyPlaceholderConfigurer, new Object[0]);
+			if (propertyPlaceholderConfigurer != null) {
+				Method method = PropertiesLoaderSupport.class
+						.getDeclaredMethod("mergeProperties", new Class[0]);
+				method.setAccessible(true);
+				properties = (Properties) method.invoke(
+						propertyPlaceholderConfigurer, new Object[0]);
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
 	}
 
 	public Object execute(String expression) throws Exception {
-		if (beans == null) {
-			beans = new HashMap<String, Object>();
-			String[] beanNames = ctx.getBeanDefinitionNames();
-			for (String beanName : beanNames) {
-				if (StringUtils.isAlphanumeric(beanName)
-						&& ctx.isSingleton(beanName))
-					beans.put(beanName, ctx.getBean(beanName));
-			}
-		}
 		try {
 			if (isSetProperyExpression(expression)) {
 				executeSetProperty(expression, true);
@@ -87,15 +84,6 @@ public class ApplicationContextConsole implements ApplicationListener {
 	}
 
 	private Object executeMethodInvocation(String expression) throws Exception {
-		if (beans == null) {
-			beans = new HashMap<String, Object>();
-			String[] beanNames = ctx.getBeanDefinitionNames();
-			for (String beanName : beanNames) {
-				if (StringUtils.isAlphanumeric(beanName)
-						&& ctx.isSingleton(beanName))
-					beans.put(beanName, ctx.getBean(beanName));
-			}
-		}
 		try {
 			return MVEL.eval(expression, beans);
 		} catch (Exception e) {
@@ -108,15 +96,6 @@ public class ApplicationContextConsole implements ApplicationListener {
 		if (global) {
 			eventPublisher.publish(new SetPropertyEvent(expression), true);
 		} else {
-			if (beans == null) {
-				beans = new HashMap<String, Object>();
-				String[] beanNames = ctx.getBeanDefinitionNames();
-				for (String beanName : beanNames) {
-					if (StringUtils.isAlphanumeric(beanName)
-							&& ctx.isSingleton(beanName))
-						beans.put(beanName, ctx.getBean(beanName));
-				}
-			}
 			try {
 				Object bean = null;
 				if (expression.indexOf('=') > 0) {

@@ -1,5 +1,6 @@
 package org.ironrhino.core.spring.remoting;
 
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -72,7 +73,11 @@ public class ServiceRegistry {
 			if (StringUtils.isAlphanumeric(beanName)
 					&& ctx.isSingleton(beanName)) {
 				Object bean = ctx.getBean(beanName);
-				Class[] interfaces = bean.getClass().getInterfaces();
+				Class clazz = bean.getClass();
+				if (Proxy.isProxyClass(clazz)
+						&& bean.toString().indexOf("remoting") > -1)// client
+					continue;
+				Class[] interfaces = clazz.getInterfaces();
 				if (interfaces != null) {
 					for (Class inte : interfaces) {
 						Remoting remoting = AnnotationUtils.getAnnotation(inte,
@@ -81,8 +86,8 @@ public class ServiceRegistry {
 							if (StringUtils.isBlank(remoting.name())
 									|| remoting.name().equals(beanName)) {
 								services.put(inte, bean);
-								log.info("export service :" + inte.getName());
 								register(inte.getName());
+								log.info("register service :" + inte.getName());
 								break;
 							}
 						}

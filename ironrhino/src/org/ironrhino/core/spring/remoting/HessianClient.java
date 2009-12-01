@@ -5,6 +5,8 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ironrhino.core.security.util.Blowfish;
+import org.ironrhino.core.util.AppInfo;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
 public class HessianClient extends HessianProxyFactoryBean {
@@ -14,7 +16,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 	@Inject
 	private ServiceRegistry serviceRegistry;
 
-	private int port = 80;
+	private int port = 8080;
 
 	private String contextPath;
 
@@ -32,7 +34,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 		String serviceUrl = getServiceUrl();
 		if (serviceUrl == null) {
 			serviceUrl = discoverServiceUrl(interfaceName);
-			log.info("discovered service url:" + serviceUrl);
+			log.info("locate service url:" + serviceUrl);
 			setServiceUrl(serviceUrl);
 		}
 		setHessian2(true);
@@ -51,6 +53,8 @@ public class HessianClient extends HessianProxyFactoryBean {
 			sb.append(contextPath);
 		sb.append("/remoting/hessian/");
 		sb.append(interfaceName);
+		if (AppInfo.getStage() == AppInfo.Stage.PRODUCTION && port == 80)
+			sb.append("?" + Blowfish.encrypt(interfaceName));
 		return sb.toString();
 	}
 }

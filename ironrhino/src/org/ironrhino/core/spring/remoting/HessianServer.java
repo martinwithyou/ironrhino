@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ironrhino.core.security.util.Blowfish;
+import org.ironrhino.core.util.AppInfo;
 import org.springframework.remoting.caucho.HessianServiceExporter;
 
 import com.caucho.hessian.server.HessianSkeleton;
@@ -37,8 +39,17 @@ public class HessianServer extends HessianServiceExporter {
 			HttpServletResponse response) throws ServletException, IOException {
 		String uri = request.getRequestURI();
 		try {
-			Class clazz = Class
-					.forName(uri.substring(uri.lastIndexOf('/') + 1));
+			String interfaceName = uri.substring(uri.lastIndexOf('/') + 1);
+			if (AppInfo.getStage() == AppInfo.Stage.PRODUCTION
+					&& request.getServerPort() == 80) {
+				String s = Blowfish.decrypt(request.getQueryString());
+				if (!interfaceName.equals(s)) {
+					response
+							.sendError(HttpServletResponse.SC_NON_AUTHORITATIVE_INFORMATION);
+					return;
+				}
+			}
+			Class clazz = Class.forName(interfaceName);
 			serviceInterface.set(clazz);
 			super.handleRequest(request, response);
 		} catch (Exception ex) {
