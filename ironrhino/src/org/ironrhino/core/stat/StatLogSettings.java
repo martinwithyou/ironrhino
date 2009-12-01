@@ -28,27 +28,27 @@ public class StatLogSettings {
 
 	private static final Log log = LogFactory.getLog(StatLogSettings.class);
 
-	private static long intervalUnit = 60; // senconds
+	private static int intervalUnit = 60; // senconds
 
-	private static long systemIntervalMultiple = 60; // system.log
+	private static int systemIntervalMultiple = 60; // senconds system.log
 
 	// SYSTEM_INTERVAL_MULTIPLE*INTERVAL_UNIT
 	// senconds
 
-	public static long getIntervalUnit() {
+	public static int getIntervalUnit() {
 		return intervalUnit;
 	}
 
-	public static void setIntervalUnit(long intervalUnit) {
+	public static void setIntervalUnit(int intervalUnit) {
 		if (intervalUnit > 0)
 			StatLogSettings.intervalUnit = intervalUnit;
 	}
 
-	public static long getSystemIntervalMultiple() {
+	public static int getSystemIntervalMultiple() {
 		return systemIntervalMultiple;
 	}
 
-	public static void setSystemIntervalMultiple(long systemIntervalMultiple) {
+	public static void setSystemIntervalMultiple(int systemIntervalMultiple) {
 		if (systemIntervalMultiple > 0)
 			StatLogSettings.systemIntervalMultiple = systemIntervalMultiple;
 	}
