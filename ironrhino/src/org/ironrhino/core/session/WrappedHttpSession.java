@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.iterators.IteratorEnumeration;
@@ -30,7 +32,11 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 
 	private transient HttpSessionManager httpSessionManager;
 
-	private transient volatile HttpContext httpContext;
+	private transient volatile HttpServletRequest request;
+
+	private transient volatile HttpServletResponse response;
+
+	private transient volatile ServletContext context;
 
 	private volatile Map<String, Object> attrMap = new HashMap<String, Object>();
 
@@ -55,19 +61,20 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 
 	private volatile boolean invalid;
 
-	public WrappedHttpSession(HttpContext context,
+	public WrappedHttpSession(HttpServletRequest request,
+			HttpServletResponse response, ServletContext context,
 			HttpSessionManager httpSessionManager) {
 		now = System.currentTimeMillis();
-		this.httpContext = context;
+		this.request = request;
+		this.response = response;
+		this.context = context;
 		this.httpSessionManager = httpSessionManager;
-		sessionTracker = RequestUtils.getCookieValue(context.getRequest(),
+		sessionTracker = RequestUtils.getCookieValue(request,
 				SESSION_TRACKER_NAME);
 		if (StringUtils.isBlank(sessionTracker)) {
-			sessionTracker = context.getRequest().getParameter(
-					SESSION_TRACKER_NAME);
+			sessionTracker = request.getParameter(SESSION_TRACKER_NAME);
 			if (StringUtils.isBlank(sessionTracker)) {
-				String requestURL = context.getRequest().getRequestURL()
-						.toString();
+				String requestURL = request.getRequestURL().toString();
 				if (requestURL.indexOf(';') > -1) {
 					requestURL = requestURL
 							.substring(requestURL.indexOf(';') + 1);
@@ -95,8 +102,16 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		httpSessionManager.save(this);
 	}
 
-	public HttpContext getHttpContext() {
-		return httpContext;
+	public HttpServletRequest getRequest() {
+		return request;
+	}
+
+	public HttpServletResponse getResponse() {
+		return response;
+	}
+
+	public ServletContext getContext() {
+		return context;
 	}
 
 	public Map<String, Object> getAttrMap() {
@@ -164,7 +179,7 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 
 	@Override
 	public ServletContext getServletContext() {
-		return httpContext.getContext();
+		return context;
 	}
 
 	@Override

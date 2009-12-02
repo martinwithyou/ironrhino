@@ -54,10 +54,9 @@ public class HttpSessionFilter implements Filter {
 				return;
 			}
 		}
-		HttpContext httpContext = new HttpContext((HttpServletRequest) request,
-				(HttpServletResponse) response, servletContext);
-		WrappedHttpSession session = new WrappedHttpSession(httpContext,
-				httpSessionManager);
+		WrappedHttpSession session = new WrappedHttpSession(
+				(HttpServletRequest) request, (HttpServletResponse) response,
+				servletContext, httpSessionManager);
 		HttpServletRequest wrappedHttpRequest = new WrappedHttpServletRequest(
 				req, session);
 		HttpServletResponse wrappedHttpResponse = new WrappedHttpServletResponse(

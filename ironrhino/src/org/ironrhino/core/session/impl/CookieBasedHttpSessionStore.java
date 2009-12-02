@@ -15,7 +15,8 @@ import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.RequestUtils;
 
-@Singleton@Named("cookieBased")
+@Singleton
+@Named("cookieBased")
 public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
 
 	protected Log log = LogFactory.getLog(this.getClass());
@@ -47,7 +48,7 @@ public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
 
 	private String getCookie(WrappedHttpSession session) {
 		Map<String, String> cookieMap = new HashMap<String, String>(3);
-		Cookie[] cookies = session.getHttpContext().getRequest().getCookies();
+		Cookie[] cookies = session.getRequest().getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies)
 				if (cookie.getName().startsWith(SESSION_COOKIE_PREFIX)) {
@@ -80,26 +81,20 @@ public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
 			if (value.length() % SINGLE_COOKIE_SIZE != 0)
 				pieces++;
 			for (int i = 0; i < pieces; i++)
-				RequestUtils
-						.saveCookie(
-								session.getHttpContext().getRequest(),
-								session.getHttpContext().getResponse(),
-								i == 0 ? SESSION_COOKIE_PREFIX
-										: SESSION_COOKIE_PREFIX + (i - 1),
-								value.substring(i * SINGLE_COOKIE_SIZE,
-										i == pieces - 1 ? value.length()
-												: (i + 1) * SINGLE_COOKIE_SIZE),
-								true);
+				RequestUtils.saveCookie(session.getRequest(), session
+						.getResponse(), i == 0 ? SESSION_COOKIE_PREFIX
+						: SESSION_COOKIE_PREFIX + (i - 1), value.substring(i
+						* SINGLE_COOKIE_SIZE, i == pieces - 1 ? value.length()
+						: (i + 1) * SINGLE_COOKIE_SIZE), true);
 		}
 	}
 
 	private void clearCookie(WrappedHttpSession session) {
-		Cookie[] cookies = session.getHttpContext().getRequest().getCookies();
+		Cookie[] cookies = session.getRequest().getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies)
 				if (cookie.getName().startsWith(SESSION_COOKIE_PREFIX)) {
-					RequestUtils.deleteCookie(session.getHttpContext()
-							.getRequest(), session.getHttpContext()
+					RequestUtils.deleteCookie(session.getRequest(), session
 							.getResponse(), cookie.getName(), true);
 				}
 		}

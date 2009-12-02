@@ -121,8 +121,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		}
 		if (!session.isRequestedSessionIdFromURL() && sessionTrackerChanged) {
 			session.resetSessionTracker();
-			RequestUtils.saveCookie(session.getHttpContext().getRequest(),
-					session.getHttpContext().getResponse(),
+			RequestUtils.saveCookie(session.getRequest(),
+					session.getResponse(),
 					WrappedHttpSession.SESSION_TRACKER_NAME, session
 							.getSessionTracker(), true);
 		}
@@ -137,9 +137,9 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.setInvalid(true);
 		session.getAttrMap().clear();
 		if (!session.isRequestedSessionIdFromURL()) {
-			RequestUtils.deleteCookie(session.getHttpContext().getRequest(),
-					session.getHttpContext().getResponse(),
-					WrappedHttpSession.SESSION_TRACKER_NAME, true);
+			RequestUtils.deleteCookie(session.getRequest(), session
+					.getResponse(), WrappedHttpSession.SESSION_TRACKER_NAME,
+					true);
 		}
 		doInvalidate(session);
 		session.setId(CodecUtils.nextId(SALT));
