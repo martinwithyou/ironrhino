@@ -101,6 +101,17 @@ public class BufferableResponseWrapper extends HttpServletResponseWrapper {
 			super.flushBuffer();
 	}
 
+	public void commitBuffer() throws IOException {
+		byte[] bytes = getContents();
+		if (bytes == null || bytes.length == 0)
+			return;
+		setContentLength(bytes.length);
+		ServletOutputStream sos = super.getOutputStream();
+		sos.write(bytes);
+		sos.flush();
+		sos.close();
+	}
+
 	@Override
 	public void setHeader(String name, String value) {
 		if (name.toLowerCase().equals("content-type")) {

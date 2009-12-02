@@ -10,7 +10,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -62,18 +61,11 @@ public class HttpSessionFilter implements Filter {
 				(HttpServletResponse) response, session);
 		chain.doFilter(wrappedHttpRequest, wrappedHttpResponse);
 		try {
-			byte[] bytes = wrappedHttpResponse.getContents();
-			if (bytes == null)
-				bytes = new byte[0];
 			session.save();
-			response.setContentLength(bytes.length);
-			ServletOutputStream sos = response.getOutputStream();
-			if (bytes.length > 0)
-				sos.write(bytes);
-			sos.flush();
-			sos.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			wrappedHttpResponse.commitBuffer();
 		}
 	}
 
