@@ -19,6 +19,10 @@ public class EhCacheManager implements CacheManager {
 		this.ehCacheManager = ehCacheManager;
 	}
 
+	public void put(String key, Object value, int timeToLive, String namespace) {
+		put(key, value, -1, timeToLive, namespace);
+	}
+
 	public void put(String key, Object value, int timeToIdle, int timeToLive,
 			String namespace) {
 		if (key == null || value == null)
@@ -102,6 +106,10 @@ public class EhCacheManager implements CacheManager {
 		if (cache != null)
 			for (Serializable key : keys)
 				cache.remove(key);
+	}
+
+	public boolean supportsTimeToIdle() {
+		return true;
 	}
 
 }

@@ -42,18 +42,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	private int minActiveInterval = DEFAULT_MINACTIVEINTERVAL;
 
-	@Override
-	public int getMaxInactiveInterval() {
-		return maxInactiveInterval;
-	}
-
 	public void setMaxInactiveInterval(int maxInactiveInterval) {
 		this.maxInactiveInterval = maxInactiveInterval;
-	}
-
-	@Override
-	public int getMinActiveInterval() {
-		return minActiveInterval;
 	}
 
 	public void setMinActiveInterval(int minActiveInterval) {
@@ -62,7 +52,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	@Override
 	public void initialize(WrappedHttpSession session) {
-		session.setMaxInactiveInterval(getMaxInactiveInterval());
+		session.setMaxInactiveInterval(maxInactiveInterval);
 		String sessionTracker = session.getSessionTracker();
 		long now = session.getNow();
 		String sessionId = null;
@@ -103,6 +93,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.setId(sessionId);
 		session.setCreationTime(creationTime);
 		session.setLastAccessedTime(lastAccessedTime);
+		session.setMinActiveInterval(minActiveInterval);
 		doInitialize(session);
 
 	}
@@ -115,7 +106,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		}
 		if (session.isNew())
 			sessionTrackerChanged = true;
-		if (session.getNow() - session.getLastAccessedTime() > getMinActiveInterval() * 1000) {
+		if (session.getNow() - session.getLastAccessedTime() > session
+				.getMinActiveInterval() * 1000) {
 			session.setLastAccessedTime(session.getNow());
 			sessionTrackerChanged = true;
 		}
@@ -126,10 +118,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 					WrappedHttpSession.SESSION_TRACKER_NAME, session
 							.getSessionTracker(), true);
 		}
-
-		if (session.isDirty()) {
-			doSave(session);
-		}
+		doSave(session);
 	}
 
 	@Override

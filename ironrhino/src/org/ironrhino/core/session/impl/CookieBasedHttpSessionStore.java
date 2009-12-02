@@ -4,6 +4,7 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.Cookie;
@@ -12,12 +13,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.security.util.Blowfish;
+import org.ironrhino.core.session.HttpSessionStore;
+import org.ironrhino.core.session.SessionCompressorManager;
 import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.RequestUtils;
 
 @Singleton
 @Named("cookieBased")
-public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
+public class CookieBasedHttpSessionStore implements HttpSessionStore {
 
 	protected Log log = LogFactory.getLog(this.getClass());
 
@@ -25,25 +28,29 @@ public class CookieBasedHttpSessionStore extends AbstractHttpSessionStore {
 
 	public static final int SINGLE_COOKIE_SIZE = 2 * 1024;
 
-	// cookies
+	@Inject
+	private SessionCompressorManager sessionCompressorManager;
 
 	@Override
-	public String getSessionString(WrappedHttpSession session) {
-		return Blowfish.decrypt(getCookie(session));
+	public void initialize(WrappedHttpSession session) {
+		sessionCompressorManager.uncompress(session, Blowfish
+				.decrypt(getCookie(session)));
 	}
 
 	@Override
-	public void saveSessionString(WrappedHttpSession session,
-			String sessionString) {
+	public void save(WrappedHttpSession session) {
+		if (!session.isDirty())
+			return;
+		String sessionString = sessionCompressorManager.compress(session);
 		if (StringUtils.isNotBlank(sessionString))
 			saveCookie(session, Blowfish.encrypt(sessionString));
 		else
 			clearCookie(session);
 	}
 
+	@Override
 	public void invalidate(WrappedHttpSession session) {
 		clearCookie(session);
-
 	}
 
 	private String getCookie(WrappedHttpSession session) {

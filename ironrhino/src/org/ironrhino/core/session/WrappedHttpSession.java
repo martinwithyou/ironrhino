@@ -48,6 +48,8 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 
 	private volatile int maxInactiveInterval;
 
+	private volatile int minActiveInterval;
+
 	private volatile boolean dirty;
 
 	private volatile boolean isnew;
@@ -190,6 +192,14 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 	@Override
 	public int getMaxInactiveInterval() {
 		return maxInactiveInterval;
+	}
+
+	public int getMinActiveInterval() {
+		return minActiveInterval;
+	}
+
+	public void setMinActiveInterval(int minActiveInterval) {
+		this.minActiveInterval = minActiveInterval;
 	}
 
 	public long getNow() {

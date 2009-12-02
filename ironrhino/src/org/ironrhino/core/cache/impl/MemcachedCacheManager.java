@@ -82,13 +82,16 @@ public class MemcachedCacheManager implements CacheManager {
 		return new MemcachedClient(cf, AddrUtil.getAddresses(serverAddress));
 	}
 
+	public void put(String key, Object value, int timeToLive, String namespace) {
+		put(key, value, -1, timeToLive, namespace);
+	}
+
 	public void put(String key, Object value, int timeToIdle, int timeToLive,
 			String namespace) {
 		if (key == null || value == null)
 			return;
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
-		// TODO timeToIdle doesn't supported
 		try {
 			memcached.set(generateKey(key, namespace), timeToLive, value);
 		} catch (Exception e) {
@@ -161,6 +164,10 @@ public class MemcachedCacheManager implements CacheManager {
 		sb.append(':');
 		sb.append(key);
 		return sb.toString();
+	}
+
+	public boolean supportsTimeToIdle() {
+		return false;
 	}
 
 }
