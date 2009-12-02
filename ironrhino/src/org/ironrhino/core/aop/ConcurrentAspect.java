@@ -8,6 +8,8 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,14 +17,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.ironrhino.core.metadata.Async;
 import org.ironrhino.core.metadata.ConcurrencyControl;
-import org.springframework.stereotype.Component;
 
 /**
  * 
  * @author zhouyanming
  */
 @Aspect
-@Component
+@Singleton
+@Named
 public class ConcurrentAspect extends BaseAspect {
 
 	private ConcurrentHashMap<String, Semaphore> map = new ConcurrentHashMap<String, Semaphore>();

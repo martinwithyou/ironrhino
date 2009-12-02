@@ -1,6 +1,8 @@
 package org.ironrhino.core.session.impl;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.ironrhino.core.session.SessionCompressor;
 import org.springframework.security.Authentication;
@@ -11,9 +13,9 @@ import org.springframework.security.providers.UsernamePasswordAuthenticationToke
 import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 
-@Component
+@Singleton
+@Named
 public class SecurityContextSessionCompressor implements
 		SessionCompressor<SecurityContext> {
 

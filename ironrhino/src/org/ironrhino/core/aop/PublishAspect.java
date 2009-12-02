@@ -1,6 +1,8 @@
 package org.ironrhino.core.aop;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -11,7 +13,6 @@ import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.Persistable;
-import org.springframework.stereotype.Component;
 
 /**
  * Use for record model's CRUD operations
@@ -20,7 +21,8 @@ import org.springframework.stereotype.Component;
  * @see org.ironrhino.core.metadata.PublishAware
  */
 @Aspect
-@Component
+@Singleton
+@Named
 public class PublishAspect extends BaseAspect {
 
 	public PublishAspect() {

@@ -2,6 +2,9 @@ package org.ironrhino.core.aop;
 
 import java.util.Date;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
@@ -14,7 +17,6 @@ import org.ironrhino.core.util.AuthzUtils;
 import org.springframework.core.Ordered;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.security.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
 /**
  * Use for record model's CRUD operations
@@ -23,7 +25,8 @@ import org.springframework.stereotype.Component;
  * @see org.ironrhino.core.metadata.RecordAware
  */
 @Aspect
-@Component
+@Singleton
+@Named
 public class RecordAspect extends HibernateDaoSupport implements Ordered {
 
 	public RecordAspect() {
@@ -67,7 +70,8 @@ public class RecordAspect extends HibernateDaoSupport implements Ordered {
 		record.setEntityToString(entity.toString());
 		record.setAction(action.name());
 		record.setRecordDate(new Date());
-		// import javax.inject.Inject; import ant! no transaction,inserted before actual save entity and
+		// import javax.inject.Inject; import ant! no transaction,inserted
+		// before actual save entity and
 		// ignore transaction rollback
 		getHibernateTemplate().save(record);
 	}

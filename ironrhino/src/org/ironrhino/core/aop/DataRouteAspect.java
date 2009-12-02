@@ -1,5 +1,8 @@
 package org.ironrhino.core.aop;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -7,7 +10,6 @@ import org.ironrhino.core.dataroute.DataRouteContext;
 import org.ironrhino.core.metadata.DataRoute;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -18,7 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @see org.ironrhino.core.dataroute.GroupedDataSource
  */
 @Aspect
-@Component
+@Singleton
+@Named
 public class DataRouteAspect extends BaseAspect {
 
 	public DataRouteAspect() {

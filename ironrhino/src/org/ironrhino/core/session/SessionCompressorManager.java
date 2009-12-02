@@ -7,17 +7,19 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import com.google.gson.reflect.TypeToken;
 
-@Component
+@Singleton
+@Named
 public class SessionCompressorManager {
 
 	private Log log = LogFactory.getLog(getClass());

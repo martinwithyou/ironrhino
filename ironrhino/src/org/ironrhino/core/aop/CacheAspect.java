@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -14,7 +16,6 @@ import org.ironrhino.core.cache.CacheContext;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
-import org.springframework.stereotype.Component;
 
 /**
  * cache some data
@@ -24,7 +25,8 @@ import org.springframework.stereotype.Component;
  * @see org.ironrhino.core.metadata.FlushCache
  */
 @Aspect
-@Component
+@Singleton
+@Named
 public class CacheAspect extends BaseAspect {
 
 	@Inject

@@ -5,17 +5,19 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.session.SessionCompressor;
 import org.ironrhino.core.util.JsonUtils;
-import org.springframework.stereotype.Component;
 
 import com.google.gson.reflect.TypeToken;
 import com.ironrhino.online.model.OrderItem;
 import com.ironrhino.online.service.ProductFacade;
 
-@Component
+@Singleton
+@Named
 public class CartSessionCompressor implements SessionCompressor<Cart> {
 
 	@Inject
