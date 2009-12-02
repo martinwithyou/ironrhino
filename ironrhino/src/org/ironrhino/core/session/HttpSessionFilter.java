@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.core.performance.BufferableResponseWrapper;
 
 @Singleton
 @Named("httpSessionFilter")
@@ -57,15 +56,13 @@ public class HttpSessionFilter implements Filter {
 		WrappedHttpSession session = new WrappedHttpSession(
 				(HttpServletRequest) request, (HttpServletResponse) response,
 				servletContext, httpSessionManager);
-		HttpServletRequest wrappedHttpRequest = new WrappedHttpServletRequest(
+		WrappedHttpServletRequest wrappedHttpRequest = new WrappedHttpServletRequest(
 				req, session);
-		HttpServletResponse wrappedHttpResponse = new WrappedHttpServletResponse(
+		WrappedHttpServletResponse wrappedHttpResponse = new WrappedHttpServletResponse(
 				(HttpServletResponse) response, session);
-		BufferableResponseWrapper buffResponse = new BufferableResponseWrapper(
-				wrappedHttpResponse);
-		chain.doFilter(wrappedHttpRequest, buffResponse);
+		chain.doFilter(wrappedHttpRequest, wrappedHttpResponse);
 		try {
-			byte[] bytes = buffResponse.getContents();
+			byte[] bytes = wrappedHttpResponse.getContents();
 			if (bytes == null)
 				bytes = new byte[0];
 			session.save();

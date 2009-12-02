@@ -1,4 +1,4 @@
-package org.ironrhino.core.performance;
+package org.ironrhino.core.servlet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

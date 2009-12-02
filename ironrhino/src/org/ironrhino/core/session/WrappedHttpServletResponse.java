@@ -1,9 +1,10 @@
 package org.ironrhino.core.session;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
-public class WrappedHttpServletResponse extends HttpServletResponseWrapper {
+import org.ironrhino.core.servlet.BufferableResponseWrapper;
+
+public class WrappedHttpServletResponse extends BufferableResponseWrapper {
 
 	private WrappedHttpSession session;
 
