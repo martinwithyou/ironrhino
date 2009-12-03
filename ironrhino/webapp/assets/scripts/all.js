@@ -18150,59 +18150,116 @@ highlight : function(node, word) {
 /**
  * @author 全冠清
  */
-$.fn.extend({
-	cursorPosition : function(value) {
-		var elem = this[0];
-		if (elem
-				&& (elem.tagName == "TEXTAREA" || elem.type.toLowerCase() == "text")) {
-			if ($.browser.msie) {
-				var rng;
-				if (elem.tagName == "TEXTAREA") {
-					rng = event.srcElement.createTextRange();
-					rng.moveToPoint(event.x, event.y);
+(function($) {
+	$.fn.extend({
+		cursorPosition : function(value) {
+			var elem = this[0];
+			if (elem
+					&& (elem.tagName == "TEXTAREA" || elem.type.toLowerCase() == "text")) {
+				if ($.browser.msie) {
+					var rng;
+					if (elem.tagName == "TEXTAREA") {
+						rng = event.srcElement.createTextRange();
+						rng.moveToPoint(event.x, event.y);
+					} else {
+						rng = document.selection.createRange();
+					}
+					if (value === undefined) {
+						rng.moveStart("character",
+								-event.srcElement.value.length);
+						return rng.text.length;
+					} else if (typeof value === "number") {
+						var index = this.position();
+						index > value ? (rng
+								.moveEnd("character", value - index)) : (rng
+								.moveStart("character", value - index))
+						rng.select();
+					}
 				} else {
-					rng = document.selection.createRange();
-				}
-				if (value === undefined) {
-					rng.moveStart("character", -event.srcElement.value.length);
-					return rng.text.length;
-				} else if (typeof value === "number") {
-					var index = this.position();
-					index > value
-							? (rng.moveEnd("character", value - index))
-							: (rng.moveStart("character", value - index))
-					rng.select();
+					if (value === undefined) {
+						return elem.selectionStart;
+					} else if (typeof value === "number") {
+						elem.selectionEnd = value;
+						elem.selectionStart = value;
+					}
 				}
 			} else {
-				if (value === undefined) {
-					return elem.selectionStart;
-				} else if (typeof value === "number") {
-					elem.selectionEnd = value;
-					elem.selectionStart = value;
-				}
+				if (value === undefined)
+					return undefined;
 			}
-		} else {
-			if (value === undefined)
-				return undefined;
+		},
+		selectRange : function(start, end) {
+			return this.each(function() {
+						if (this.setSelectionRange) {
+							this.focus();
+							this.setSelectionRange(start, end);
+						} else if (this.createTextRange) {
+							var range = this.createTextRange();
+							range.collapse(true);
+							range.moveEnd('character', end);
+							range.moveStart('character', start);
+							range.select();
+						}
+					})
 		}
-	},
-	selectRange : function(start, end) {
-		return this.each(function() {
-					if (this.setSelectionRange) {
-						this.focus();
-						this.setSelectionRange(start, end);
-					} else if (this.createTextRange) {
-						var range = this.createTextRange();
-						range.collapse(true);
-						range.moveEnd('character', end);
-						range.moveStart('character', start);
-						range.select();
-					}
-				})
+
+	})
+})(jQuery);
+
+(function($) {
+	$.fn.editme = function() {
+		var t = $(this);
+		t.bind('click', click).bind('blur', blur);
+		if ('hover' == t.attr('trigger'))
+			t.hover(click, blur);
+		else
+			t.hover(function() {
+						$(this).addClass('editme_hover')
+					}, function() {
+						$(this).removeClass('editme_hover')
+					});
+	};
+	function click() {
+		var t = $(this);
+		t.unbind('click', click);
+		var value = t.text();
+		t.attr('_value', value);
+		t.html('<input value="' + value + '"/>');
+		$('input', this).width(t.width()).blur(function() {
+					$(this).parent().trigger('blur')
+				}).focus();
+	};
+	function blur() {
+		var oldvalue = $(this).attr('_value');
+		var value = $('input', this).val();
+		var t = $(this);
+		var url = $(this).attr('url');
+		var name = $(this).attr('name');
+		if (!url || !name) {
+			t.text(value);
+		} else {
+			$.ajax({
+						url : url,
+						type : 'POST',
+						data : {
+							name : value
+						},
+						global : false,
+						success : function() {
+							t.text(value);
+						},
+						error : function() {
+							t.text(oldvalue);
+						}
+					});
+		}
+		t.bind('click', click);
 	}
+})(jQuery);
 
-})
-
+Observation.editme = function(container) {
+	$('.editme', container).editme();
+};
 Observation.cart = function() {
 	$('img.product_list').addClass('draggable').each(function() {
 				var code = this.alt;
