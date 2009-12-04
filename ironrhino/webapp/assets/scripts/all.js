@@ -17368,8 +17368,6 @@ Observation.checkbox = function(container) {
 				} else {
 					return SortableTable.compare(a ? 1 : 0, b ? 1 : 0);
 				}
-				return SortableTable.compare(a ? new Date(a).valueOf() : 0,
-						b ? new Date(b).valueOf() : 0);
 			},
 			time : function(a, b) {
 				var d = new Date();
