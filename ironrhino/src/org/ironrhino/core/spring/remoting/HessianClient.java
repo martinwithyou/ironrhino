@@ -1,14 +1,17 @@
 package org.ironrhino.core.spring.remoting;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
-import org.springframework.remoting.RemoteConnectFailureException;
+import org.springframework.remoting.RemoteAccessException;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
 public class HessianClient extends HessianProxyFactoryBean {
@@ -26,7 +29,9 @@ public class HessianClient extends HessianProxyFactoryBean {
 
 	private int maxRetryTimes = 3;
 
-	private boolean urlFromDiscover;
+	private boolean urlFromDiscovery;
+
+	private boolean reset;
 
 	public void setHost(String host) {
 		this.host = host;
@@ -45,6 +50,12 @@ public class HessianClient extends HessianProxyFactoryBean {
 	}
 
 	@Override
+	public void setServiceUrl(String serviceUrl) {
+		super.setServiceUrl(serviceUrl);
+		reset = true;
+	}
+
+	@Override
 	public void afterPropertiesSet() {
 		String interfaceName = getServiceInterface().getName();
 		String serviceUrl = getServiceUrl();
@@ -52,10 +63,19 @@ public class HessianClient extends HessianProxyFactoryBean {
 			serviceUrl = discoverServiceUrl(interfaceName);
 			log.info("locate service url:" + serviceUrl);
 			setServiceUrl(serviceUrl);
-			urlFromDiscover = true;
+			reset = false;
+			urlFromDiscovery = true;
 		}
 		setHessian2(true);
 		super.afterPropertiesSet();
+	}
+
+	@PostPropertiesReset
+	public void reset() throws IOException {
+		if (reset) {
+			reset = false;
+			super.afterPropertiesSet();
+		}
 	}
 
 	@Override
@@ -67,16 +87,19 @@ public class HessianClient extends HessianProxyFactoryBean {
 			throws Throwable {
 		try {
 			return super.invoke(invocation);
-		} catch (RemoteConnectFailureException e) {
+		} catch (RemoteAccessException e) {
 			// retry
-			if (retryTimes < maxRetryTimes)
+			if (retryTimes < maxRetryTimes - 1)
 				return invoke(invocation, retryTimes + 1);
-			if (urlFromDiscover) {
+			if (urlFromDiscovery) {
 				String serviceUrl = discoverServiceUrl(getServiceInterface()
 						.getName());
-				log.info("relocate service url:" + serviceUrl);
-				setServiceUrl(serviceUrl);
-				return super.invoke(invocation);
+				if (!serviceUrl.equals(getServiceUrl())) {
+					setServiceUrl(serviceUrl);
+					log.info("relocate service url:" + serviceUrl);
+					reset();
+					return super.invoke(invocation);
+				}
 			}
 			throw e;
 		}

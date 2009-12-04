@@ -8,7 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
-import org.springframework.remoting.RemoteConnectFailureException;
+import org.springframework.remoting.RemoteAccessException;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 
 public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
@@ -26,7 +26,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
 	private int maxRetryTimes = 3;
 
-	private boolean urlFromDiscover;
+	private boolean urlFromDiscovery;
 
 	public void setHost(String host) {
 		this.host = host;
@@ -52,7 +52,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 			serviceUrl = discoverServiceUrl(interfaceName);
 			log.info("locate service url:" + serviceUrl);
 			setServiceUrl(serviceUrl);
-			urlFromDiscover = true;
+			urlFromDiscovery = true;
 		}
 		super.afterPropertiesSet();
 	}
@@ -66,16 +66,18 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 			throws Throwable {
 		try {
 			return super.invoke(invocation);
-		} catch (RemoteConnectFailureException e) {
+		} catch (RemoteAccessException e) {
 			// retry
-			if (retryTimes < maxRetryTimes)
+			if (retryTimes < maxRetryTimes - 1)
 				return invoke(invocation, retryTimes + 1);
-			if (urlFromDiscover) {
+			if (urlFromDiscovery) {
 				String serviceUrl = discoverServiceUrl(getServiceInterface()
 						.getName());
-				log.info("relocate service url:" + serviceUrl);
-				setServiceUrl(serviceUrl);
-				return super.invoke(invocation);
+				if (!serviceUrl.equals(getServiceUrl())) {
+					setServiceUrl(serviceUrl);
+					log.info("relocate service url:" + serviceUrl);
+					return super.invoke(invocation);
+				}
 			}
 			throw e;
 		}
