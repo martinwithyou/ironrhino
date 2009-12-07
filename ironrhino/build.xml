@@ -154,6 +154,7 @@
 		</concat>
 		<concat destfile="${dest.style}" encoding="utf-8" fixlastline="yes">
 			<filelist>
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.button.css" />
