@@ -1,10 +1,10 @@
 package org.ironrhino.core.spring.remoting;
 
 import java.lang.reflect.Proxy;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -19,6 +19,7 @@ import org.ironrhino.core.metadata.Remoting;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AppInfo;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
 
 @Singleton
 @Named("serviceRegistry")
@@ -30,36 +31,46 @@ public class ServiceRegistry {
 	private ApplicationContext ctx;
 
 	// TODO from zookeeper?
-	private Map<String, Set<String>> registry = new HashMap<String, Set<String>>();
+	private Map<String, Collection<String>> registry = new HashMap<String, Collection<String>>();
 
 	private Map<Class, Object> services = new HashMap<Class, Object>();
 
 	public String locate(String serviceName) {
-		Set<String> set = getRegistry().get(serviceName);
+		Collection<String> set = getServerHosts(serviceName);
 		if (set == null || set.isEmpty())
 			return "localhost"; // for test
 		return set.iterator().next();
 	}
 
 	public void register(String serviceName) {
-		String address = AppInfo.getHostAddress();
-		Set<String> set = getRegistry().get(serviceName);
+		register(serviceName, AppInfo.getHostAddress());
+	}
+
+	public void register(String serviceName, String address) {
+		Collection<String> set = getRegistry().get(serviceName);
 		if (set == null) {
 			set = new HashSet<String>();
 			getRegistry().put(serviceName, set);
 		}
 		set.add(address);
-		log.info("register service [" + serviceName + "]");
+		log.info("register service [" + serviceName + "@" + address + "]");
 	}
 
 	public void unregister(String serviceName) {
-		String address = AppInfo.getHostAddress();
-		Set<String> set = getRegistry().get(serviceName);
+		unregister(serviceName, AppInfo.getHostAddress());
+	}
+
+	public void unregister(String serviceName, String address) {
+		Collection<String> set = getRegistry().get(serviceName);
 		if (set != null)
 			set.remove(address);
 	}
 
-	public Map<String, Set<String>> getRegistry() {
+	public Collection<String> getServerHosts(String serviceName) {
+		return getRegistry().get(serviceName);
+	}
+
+	public Map<String, Collection<String>> getRegistry() {
 		return registry;
 	}
 
@@ -69,6 +80,8 @@ public class ServiceRegistry {
 
 	@PostConstruct
 	public void init() {
+		if (!(ctx instanceof WebApplicationContext))
+			return;
 		String[] beanNames = ctx.getBeanDefinitionNames();
 		for (String beanName : beanNames) {
 			if (StringUtils.isAlphanumeric(beanName)
@@ -76,7 +89,7 @@ public class ServiceRegistry {
 				Object bean = ctx.getBean(beanName);
 				Class clazz = bean.getClass();
 				if (Proxy.isProxyClass(clazz)
-						&& bean.toString().indexOf("remoting") > -1)// client
+						&& bean.toString().indexOf("remoting") > -1)// remoting_client
 					continue;
 				Class[] interfaces = clazz.getInterfaces();
 				if (interfaces != null) {
