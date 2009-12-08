@@ -1,6 +1,9 @@
 package org.ironrhino.core.spring.remoting;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
@@ -11,6 +14,8 @@ import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.remoting.RemoteAccessException;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
@@ -21,6 +26,10 @@ public class HessianClient extends HessianProxyFactoryBean {
 	@Inject
 	private ServiceRegistry serviceRegistry;
 
+	@Autowired(required = false)
+	@Qualifier("cachedThreadPool")
+	private ExecutorService cachedThreadPool;
+
 	private String host;
 
 	private int port = 8080;
@@ -28,6 +37,8 @@ public class HessianClient extends HessianProxyFactoryBean {
 	private String contextPath;
 
 	private int maxRetryTimes = 3;
+
+	private List<String> asyncMethods;
 
 	private boolean urlFromDiscovery;
 
@@ -47,6 +58,14 @@ public class HessianClient extends HessianProxyFactoryBean {
 
 	public void setMaxRetryTimes(int maxRetryTimes) {
 		this.maxRetryTimes = maxRetryTimes;
+	}
+
+	public void setAsyncMethods(String asyncMethods) {
+		if (StringUtils.isNotBlank(asyncMethods)) {
+			asyncMethods = asyncMethods.trim();
+			String[] array = asyncMethods.split(",");
+			this.asyncMethods = Arrays.asList(array);
+		}
 	}
 
 	@Override
@@ -79,7 +98,23 @@ public class HessianClient extends HessianProxyFactoryBean {
 	}
 
 	@Override
-	public Object invoke(MethodInvocation invocation) throws Throwable {
+	public Object invoke(final MethodInvocation invocation) throws Throwable {
+		if (cachedThreadPool != null && asyncMethods != null) {
+			String name = invocation.getMethod().getName();
+			if (asyncMethods.contains(name)) {
+				cachedThreadPool.execute(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							invoke(invocation, 0);
+						} catch (Throwable e) {
+							log.error(e.getMessage(), e);
+						}
+					}
+				});
+				return null;
+			}
+		}
 		return invoke(invocation, 0);
 	}
 
