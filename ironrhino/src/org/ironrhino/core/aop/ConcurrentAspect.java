@@ -29,8 +29,6 @@ public class ConcurrentAspect extends BaseAspect {
 
 	private ConcurrentHashMap<String, Semaphore> map = new ConcurrentHashMap<String, Semaphore>();
 
-	private int threadPoolSize = 20;
-
 	private ExecutorService executorService;
 
 	private static ThreadLocal<Boolean> alreadyAsync = new ThreadLocal<Boolean>();
@@ -41,7 +39,7 @@ public class ConcurrentAspect extends BaseAspect {
 
 	@PostConstruct
 	public void afterPropertiesSet() {
-		executorService = Executors.newFixedThreadPool(threadPoolSize);
+		executorService = Executors.newCachedThreadPool();
 	}
 
 	@Around("execution(public * *(..)) and @annotation(concurrencyControl)")
@@ -98,10 +96,6 @@ public class ConcurrentAspect extends BaseAspect {
 			}
 		});
 		return null;
-	}
-
-	public void setThreadPoolSize(int threadPoolSize) {
-		this.threadPoolSize = threadPoolSize;
 	}
 
 }
