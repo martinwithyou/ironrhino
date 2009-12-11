@@ -62,8 +62,9 @@ public class JavaSourceExecutor {
 				.call();
 		for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics
 				.getDiagnostics())
-			System.out.format("Error on line %d in %s", diagnostic
-					.getLineNumber(), diagnostic.getSource().toUri());
+			System.out.format("Error [%s] on line %d in %s", diagnostic
+					.getMessage(null), diagnostic.getLineNumber(), diagnostic
+					.getSource().toUri());
 		fileManager.close();
 
 		Class clazz = ByteArrayClassLoader.getInstance().loadClass(
