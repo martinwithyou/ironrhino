@@ -60,13 +60,22 @@ public class JavaSourceExecutor {
 		DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 		compiler.getTask(null, fileManager, diagnostics, null, null, list)
 				.call();
-		for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics
-				.getDiagnostics())
-			System.out.format("Error [%s] on line %d in %s", diagnostic
-					.getMessage(null), diagnostic.getLineNumber(), diagnostic
-					.getSource().toUri());
 		fileManager.close();
-
+		List<Diagnostic<? extends JavaFileObject>> diagnos = diagnostics
+				.getDiagnostics();
+		if (diagnos.size() > 0) {
+			StringBuilder sb = new StringBuilder();
+			for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics
+					.getDiagnostics()) {
+				sb.append("Error [");
+				sb.append(diagnostic.getMessage(null));
+				sb.append("] on line ");
+				sb.append(diagnostic.getLineNumber());
+				sb.append(" in  ");
+				sb.append(diagnostic.getSource().toUri());
+			}
+			throw new RuntimeException(sb.toString());
+		}
 		Class clazz = ByteArrayClassLoader.getInstance().loadClass(
 				source.getClassName());
 		Object instance = clazz.newInstance();
