@@ -459,8 +459,11 @@ Ajax = {
 							.get(data.actionErrors[i], 'action_error');
 			if (data.actionMessages)
 				for (var i = 0; i < data.actionMessages.length; i++)
-					message += Message.get(data.actionMessages[i],
-							'action_message');
+					if (typeof $.jGrowl != 'undefined')
+						$.jGrowl(data.actionMessages[i]);
+					else
+						message += Message.get(data.actionMessages[i],
+								'action_message');
 			if (message)
 				if (target && target.tagName == 'FORM') {
 					if ($('#' + target.id + '_message').length == 0)
