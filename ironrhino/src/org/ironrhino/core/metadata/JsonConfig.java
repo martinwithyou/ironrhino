@@ -14,6 +14,4 @@ public @interface JsonConfig {
 
 	String[] propertyName() default {};
 
-	JsonSerializerType serializer() default JsonSerializerType.DEFAULT;
-
 }

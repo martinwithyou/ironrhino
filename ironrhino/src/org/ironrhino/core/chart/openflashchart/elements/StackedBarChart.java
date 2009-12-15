@@ -1,42 +1,15 @@
-/*
-This file is part of JOFC2.
-
-JOFC2 is free software: you can redistribute it and/or modify
-it under the terms of the Lesser GNU General Public License as
-published by the Free Software Foundation, either version 3 of
-the License, or (at your option) any later version.
-
-JOFC2 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
- */
-
 package org.ironrhino.core.chart.openflashchart.elements;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
+import org.codehaus.jackson.annotate.JsonProperty;
 
-/**
- * The stacked bar chart allows you to draw a bar chart divided into value
- * regions.
- */
-/*
- * Implementation note: the Stack class wraps standard List objects. The List
- * objects are preserved in the element value field rather than the Stack object
- * itself so that XStream renders the data correctly. I didn't have much luck
- * trying to use a custom converter or an implicit collection.
- */
 public class StackedBarChart extends Element {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -4495162733156231531L;
 	private List<Key> keys = new ArrayList<Key>();
 
@@ -48,68 +21,29 @@ public class StackedBarChart extends Element {
 		return keys;
 	}
 
-	/**
-	 * Add keys to the chart (var-args version).
-	 * 
-	 * @param keys
-	 *            the keys that have not yet been placed into the chart
-	 * @return the chart element object being operated on
-	 */
-	public StackedBarChart addKeys(Key... keys) {
-		return addKeys(Arrays.asList(keys));
+	public void addKeys(Key... keys) {
+		addKeys(Arrays.asList(keys));
 	}
 
-	/**
-	 * Add keys to the chart (Collections version).
-	 * 
-	 * @param keys
-	 *            the keys that have not yet been placed into the chart
-	 * @return the chart element object being operated on
-	 */
-	public StackedBarChart addKeys(List<Key> keys) {
+	public void addKeys(List<Key> keys) {
 		getKeys().addAll(keys);
-		return this;
+
 	}
 
-	/**
-	 * Add stacks to the chart (var-args version).
-	 * 
-	 * @param stacks
-	 *            the stacks that have not yet been placed into the chart
-	 * @return the chart element object being operated on
-	 */
-	public StackedBarChart addStack(Stack... stacks) {
-		return copy(Arrays.asList(stacks));
+	public void addStack(Stack... stacks) {
+		copy(Arrays.asList(stacks));
 	}
 
-	/**
-	 * Add stacks to the chart (Collections version).
-	 * 
-	 * @param stacks
-	 *            the stacks that have not yet been placed into the chart
-	 * @return the chart element object being operated on
-	 */
-	public StackedBarChart addStack(List<Stack> stacks) {
-		return copy(stacks);
+	public void addStack(List<Stack> stacks) {
+		copy(stacks);
 	}
 
-	/**
-	 * Create a stack and add it into the chart. You do not need to pass this
-	 * Stack object to addStack.
-	 * 
-	 * @return the stack that has been created in the chart
-	 */
 	public Stack newStack() {
 		Stack s = new Stack();
 		copy(Arrays.asList(s));
 		return s;
 	}
 
-	/**
-	 * Find the most recently created stack, or create one if there are none.
-	 * 
-	 * @return the last stack in the chart
-	 */
 	public Stack lastStack() {
 		if (getValues().isEmpty()) {
 			return newStack();
@@ -118,40 +52,27 @@ public class StackedBarChart extends Element {
 		}
 	}
 
-	/**
-	 * Find an arbitrary stack by index number. (Starts at 0.)
-	 * 
-	 * @param index
-	 *            the index of the stack, 0 to getStackCount() - 1.
-	 * @return the stack at the specified index
-	 */
 	@SuppressWarnings("unchecked")
 	public Stack stack(int index) {
 		return new Stack((List<Object>) getValues().get(index));
 	}
 
-	/**
-	 * The number of stacks in the chart.
-	 * 
-	 * @return the number of stacks in the chart
-	 */
 	public int getStackCount() {
 		return getValues().size();
 	}
 
-	private StackedBarChart copy(List<Stack> stacks) {
+	private void copy(List<Stack> stacks) {
 		for (Stack s : stacks) {
 			getValues().add(s.getBackingList());
 		}
-		return this;
+
 	}
 
-	/**
-	 * Representation of a stack in the chart. This class allows you to add
-	 * numbers or complex values with custom data.
-	 */
-	public static class Stack {
-		private transient List<Object> values;
+	public static class Stack implements Serializable {
+
+		private static final long serialVersionUID = 5436766430239448801L;
+
+		private List<Object> values;
 
 		public Stack() {
 			values = new ArrayList<Object>();
@@ -161,31 +82,31 @@ public class StackedBarChart extends Element {
 			this.values = values;
 		}
 
-		public Stack addStackValues(StackValue... values) {
-			return doAdd(Arrays.asList(values));
+		public void addStackValues(StackValue... values) {
+			doAdd(Arrays.asList(values));
 		}
 
-		public Stack addStackValues(List<StackValue> values) {
-			return doAdd(values);
+		public void addStackValues(List<StackValue> values) {
+			doAdd(values);
 		}
 
-		public Stack addValues(Number... numbers) {
-			return addValues(Arrays.asList(numbers));
+		public void addValues(Number... numbers) {
+			addValues(Arrays.asList(numbers));
 		}
 
-		public Stack addValues(List<Number> numbers) {
+		public void addValues(List<Number> numbers) {
 			for (Number number : numbers) {
 				if (number != null) {
 					this.doAdd(Collections
 							.singletonList(new StackValue(number)));
 				}
 			}
-			return this;
+
 		}
 
-		private Stack doAdd(List<? extends Object> values) {
+		private void doAdd(List<? extends Object> values) {
 			this.values.addAll(values);
-			return this;
+
 		}
 
 		List<Object> getBackingList() {
@@ -193,10 +114,9 @@ public class StackedBarChart extends Element {
 		}
 	}
 
-	/**
-	 * Representation of data in the stacked bar chart.
-	 */
-	public static class StackValue {
+	public static class StackValue implements Serializable {
+
+		private static final long serialVersionUID = -2712623023061331779L;
 		private Number val;
 		private String colour;
 
@@ -213,28 +133,26 @@ public class StackedBarChart extends Element {
 			return val;
 		}
 
-		public StackValue setValue(Number val) {
+		public void setValue(Number val) {
 			this.val = val;
-			return this;
+
 		}
 
 		public String getColour() {
 			return colour;
 		}
 
-		public StackValue setColour(String colour) {
+		public void setColour(String colour) {
 			this.colour = colour;
-			return this;
+
 		}
 	}
 
-	/**
-	 * Representation of a key in the stacked bar chart.
-	 */
-	public static class Key {
+	public static class Key implements Serializable {
+		private static final long serialVersionUID = 2221314445193990267L;
 		private String colour;
 		private String text;
-		@SerializedName(value = "font-size")
+		@JsonProperty(value = "font-size")
 		private Integer fontSize;
 
 		public Key(String colour, String text, Integer fontSize) {

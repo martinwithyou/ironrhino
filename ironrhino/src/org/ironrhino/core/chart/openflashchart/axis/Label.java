@@ -1,43 +1,23 @@
-/*
-This file is part of JOFC2.
-
-JOFC2 is free software: you can redistribute it and/or modify
-it under the terms of the Lesser GNU General Public License as
-published by the Free Software Foundation, either version 3 of
-the License, or (at your option) any later version.
-
-JOFC2 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
- */
 package org.ironrhino.core.chart.openflashchart.axis;
 
 import java.io.Serializable;
 
 public class Label implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6976582830606939527L;
-	/**
-	 * 
-	 */
+
 	private String text;
 	private String colour;
 	private Integer size;
-	private Rotation rotate;
+	private Rotate rotate;
 	private Boolean visible;
 
-	public static enum Rotation {
+	public static enum Rotate {
 		VERTICAL(-90), HALF_DIAGONAL(-24), DIAGONAL(-45), HORIZONTAL(0);
 
 		private final int degrees;
 
-		Rotation(int degrees) {
+		Rotate(int degrees) {
 			this.degrees = degrees;
 		}
 
@@ -48,7 +28,6 @@ public class Label implements Serializable {
 	}
 
 	public Label() {
-		this(null);
 	}
 
 	public Label(String text) {
@@ -59,44 +38,40 @@ public class Label implements Serializable {
 		return text;
 	}
 
-	public Label setText(String text) {
+	public void setText(String text) {
 		this.text = text;
-		return this;
 	}
 
 	public String getColour() {
 		return colour;
 	}
 
-	public Label setColour(String colour) {
+	public void setColour(String colour) {
 		this.colour = colour;
-		return this;
 	}
 
 	public Integer getSize() {
 		return size;
 	}
 
-	public Label setSize(Integer size) {
+	public void setSize(Integer size) {
 		this.size = size;
-		return this;
 	}
 
-	public Rotation getRotation() {
+	public Rotate getRotate() {
 		return rotate;
 	}
 
-	public Label setRotation(Rotation rotate) {
+	public void setRotate(Rotate rotate) {
 		this.rotate = rotate;
-		return this;
 	}
 
 	public Boolean getVisible() {
 		return visible;
 	}
 
-	public Label setVisible(Boolean visible) {
+	public void setVisible(Boolean visible) {
 		this.visible = visible;
-		return this;
 	}
+
 }

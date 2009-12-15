@@ -1,77 +1,58 @@
-/*
-This file is part of JOFC2.
-
-JOFC2 is free software: you can redistribute it and/or modify
-it under the terms of the Lesser GNU General Public License as
-published by the Free Software Foundation, either version 3 of
-the License, or (at your option) any later version.
-
-JOFC2 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
- */
-
 package org.ironrhino.core.chart.openflashchart.elements;
 
-import com.google.gson.annotations.SerializedName;
-
 public class SketchBarChart extends FilledBarChart {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 7562070898232847510L;
+
 	private static final transient String TYPE = "bar_sketch";
-	@SerializedName("offset")
-	private Integer funFactor;
+
+	private Integer offset;
 
 	public SketchBarChart() {
 		super(TYPE);
 	}
 
-	public SketchBarChart(String colour, String outlineColour, Integer funFactor) {
+	public SketchBarChart(String colour, String outlineColour, Integer offset) {
 		super(TYPE);
 		setColour(colour);
 		setOutlineColour(outlineColour);
-		setFunFactor(funFactor);
+		setOffset(offset);
 	}
 
-	public Integer getFunFactor() {
-		return funFactor;
+	public Integer getOffset() {
+		return offset;
 	}
 
-	public BarChart setFunFactor(Integer funFactor) {
-		this.funFactor = funFactor;
-		return this;
+	public void setOffset(Integer offset) {
+		this.offset = offset;
 	}
 
 	public static class Bar extends FilledBarChart.Bar {
-		@SerializedName("offset")
-		private Integer funFactor;
+
+		private static final long serialVersionUID = -6406122712221203219L;
+		private Integer offset;
 
 		public Bar(Number top) {
 			super(top);
 		}
 
-		public Bar(Number top, Integer funFactor) {
+		public Bar(Number top, Integer offset) {
 			super(top);
-			setFunFactor(funFactor);
+			setOffset(offset);
 		}
 
-		public Bar(Number top, Number bottom, Integer funFactor) {
+		public Bar(Number top, Number bottom, Integer offset) {
 			super(top, bottom);
-			setFunFactor(funFactor);
+			setOffset(offset);
 		}
 
-		public Bar setFunFactor(Integer funFactor) {
-			this.funFactor = funFactor;
-			return this;
+		public Integer getOffset() {
+			return offset;
 		}
 
-		public Integer getFunFactor() {
-			return funFactor;
+		public void setOffset(Integer offset) {
+			this.offset = offset;
 		}
+
 	}
 }

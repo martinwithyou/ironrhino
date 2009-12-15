@@ -1,116 +1,96 @@
-/*
-This file is part of JOFC2.
-
-JOFC2 is free software: you can redistribute it and/or modify
-it under the terms of the Lesser GNU General Public License as
-published by the Free Software Foundation, either version 3 of
-the License, or (at your option) any later version.
-
-JOFC2 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
- */
 package org.ironrhino.core.chart.openflashchart.elements;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Tooltip implements Serializable {
 
 	private static final long serialVersionUID = 3867120511555479609L;
-	@SerializedName(value = "mouse")
-	private Type type = null;
+	private Mouse mouse = null;
 	private Boolean shadow;
 	private Integer stroke;
 	private String colour;
-	@SerializedName(value = "background")
-	private String backgroundColour;
-	@SerializedName(value = "title")
-	private String titleStyle;
-	@SerializedName(value = "body")
-	private String bodyStyle;
+	private String background;
+	private String title;
+	private String body;
 
 	public Tooltip() {
 	}
 
-	public Type getType() {
-		return type;
+	public Mouse getMouse() {
+		return mouse;
 	}
 
-	public Tooltip setHover() {
-		this.type = Type.HOVER;
-		return this;
+	public void setMouse(Mouse mouse) {
+		this.mouse = mouse;
 	}
 
-	public Tooltip setProximity() {
-		this.type = Type.PROXIMITY;
-		return this;
+	public void setHover() {
+		this.mouse = Mouse.HOVER;
+
+	}
+
+	public void setProximity() {
+		this.mouse = Mouse.PROXIMITY;
+
 	}
 
 	public Boolean getShadow() {
 		return shadow;
 	}
 
-	public Tooltip setShadow(Boolean shadow) {
+	public void setShadow(Boolean shadow) {
 		this.shadow = shadow;
-		return this;
+
 	}
 
 	public Integer getStroke() {
 		return stroke;
 	}
 
-	public Tooltip setStroke(Integer stroke) {
+	public void setStroke(Integer stroke) {
 		this.stroke = stroke;
-		return this;
+
 	}
 
 	public String getColour() {
 		return colour;
 	}
 
-	public Tooltip setColour(String colour) {
+	public void setColour(String colour) {
 		this.colour = colour;
-		return this;
+
 	}
 
-	public String getBackgroundColour() {
-		return backgroundColour;
+	public String getBackground() {
+		return background;
 	}
 
-	public Tooltip setBackgroundColour(String backgroundColour) {
-		this.backgroundColour = backgroundColour;
-		return this;
+	public void setBackground(String background) {
+		this.background = background;
 	}
 
-	public String getTitleStyle() {
-		return titleStyle;
+	public String getTitle() {
+		return title;
 	}
 
-	public Tooltip setTitleStyle(String titleStyle) {
-		this.titleStyle = titleStyle;
-		return this;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public String getBodyStyle() {
-		return bodyStyle;
+	public String getBody() {
+		return body;
 	}
 
-	public Tooltip setBodyStyle(String bodyStyle) {
-		this.bodyStyle = bodyStyle;
-		return this;
+	public void setBody(String body) {
+		this.body = body;
 	}
 
-	public enum Type {
+	public enum Mouse {
 		PROXIMITY(1), HOVER(2);
 
 		private final int value;
 
-		private Type(Integer value) {
+		private Mouse(Integer value) {
 			this.value = value;
 		}
 

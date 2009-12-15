@@ -329,8 +329,8 @@ public class StatControl {
 			chart.setTitle(new Text(key.toString()));
 			XAxis x = new XAxis();
 			YAxis y = new YAxis();
-			chart.setXAxis(x);
-			chart.setYAxis(y);
+			chart.setX_axis(x);
+			chart.setY_axis(y);
 			x.setLabels(labels);
 			if (!isline) {
 				BarChart element = new BarChart();

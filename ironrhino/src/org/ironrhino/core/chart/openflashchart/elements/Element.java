@@ -1,35 +1,14 @@
-/*
-This file is part of JOFC2.
-
-JOFC2 is free software: you can redistribute it and/or modify
-it under the terms of the Lesser GNU General Public License as
-published by the Free Software Foundation, either version 3 of
-the License, or (at your option) any later version.
-
-JOFC2 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
- */
 package org.ironrhino.core.chart.openflashchart.elements;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.ironrhino.core.chart.openflashchart.elements.BarChart.Bar;
-import org.ironrhino.core.chart.openflashchart.elements.LineChart.Dot;
 import org.ironrhino.core.chart.openflashchart.elements.PieChart.Slice;
 
-import com.google.gson.annotations.SerializedName;
-
 public abstract class Element implements Serializable {
-
-	/**
-	 * 
-	 */
 
 	public static final String ON_CLICK_TOGGLE_VISIBILITY = "toggle-visibility";
 
@@ -37,18 +16,22 @@ public abstract class Element implements Serializable {
 	private final String type;
 	private Float alpha;
 	private String text;
-	@SerializedName("font-size")
+	@JsonProperty("font-size")
 	private Integer fontSize;
-	@SerializedName("tip")
+	@JsonProperty("tip")
 	private String tooltip;
-	@SerializedName("gradient-fill")
+	@JsonProperty("gradient-fill")
 	private Boolean gradientFill;
-	@SerializedName("key-on-click")
+	@JsonProperty("key-on-click")
 	private String key_on_click;
 	private List<Object> values = new ArrayList<Object>();
 
 	protected Element(String type) {
 		this.type = type;
+	}
+
+	public void setValues(List<Object> values) {
+		this.values = values;
 	}
 
 	public String getType() {
@@ -59,9 +42,9 @@ public abstract class Element implements Serializable {
 		return alpha;
 	}
 
-	public Element setAlpha(Float alpha) {
+	public void setAlpha(Float alpha) {
 		this.alpha = alpha;
-		return this;
+
 	}
 
 	public String getText() {
@@ -72,27 +55,27 @@ public abstract class Element implements Serializable {
 	 * The Text is used to represent the Element in the legend. If text is null
 	 * the element will not appear in the legend
 	 */
-	public Element setText(String text) {
+	public void setText(String text) {
 		this.text = text;
-		return this;
+
 	}
 
 	public Integer getFontSize() {
 		return fontSize;
 	}
 
-	public Element setFontSize(Integer fontSize) {
+	public void setFontSize(Integer fontSize) {
 		this.fontSize = fontSize;
-		return this;
+
 	}
 
 	public List<Object> getValues() {
 		return values;
 	}
 
-	public Element setTooltip(String tooltip) {
+	public void setTooltip(String tooltip) {
 		this.tooltip = tooltip;
-		return this;
+
 	}
 
 	public String getTooltip() {

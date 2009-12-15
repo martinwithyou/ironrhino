@@ -27,12 +27,6 @@ import org.ironrhino.core.chart.openflashchart.elements.Legend;
 import org.ironrhino.core.chart.openflashchart.elements.Tooltip;
 import org.ironrhino.core.util.JsonUtils;
 
-/**
- * This is the most import javax.inject.Inject; import ant class in the Java OFC
- * library. Start here, configuring the title, axes, legends, labels, and
- * draw-able elements in your chart. Coerce the object to a String with the
- * toString() method to get the chart data back out.
- */
 public class Chart implements Serializable {
 
 	private static final long serialVersionUID = -1868082240169089976L;
@@ -49,12 +43,7 @@ public class Chart implements Serializable {
 	private Legend legend;
 	private Tooltip tooltip;
 
-	public XAxis getXAxis() {
-		return x_axis;
-	}
-
 	public Chart() {
-		// nothing...
 	}
 
 	public Chart(String titleText) {
@@ -65,6 +54,78 @@ public class Chart implements Serializable {
 		this.setTitle(new Text(titleText, style));
 	}
 
+	public Text getTitle() {
+		return title;
+	}
+
+	public void setTitle(Text title) {
+		this.title = title;
+	}
+
+	public XAxis getX_axis() {
+		return x_axis;
+	}
+
+	public void setX_axis(XAxis xAxis) {
+		x_axis = xAxis;
+	}
+
+	public YAxis getY_axis() {
+		return y_axis;
+	}
+
+	public void setY_axis(YAxis yAxis) {
+		y_axis = yAxis;
+	}
+
+	public YAxis getY_axis_right() {
+		return y_axis_right;
+	}
+
+	public void setY_axis_right(YAxis yAxisRight) {
+		y_axis_right = yAxisRight;
+	}
+
+	public Text getY_legend() {
+		return y_legend;
+	}
+
+	public void setY_legend(Text yLegend) {
+		y_legend = yLegend;
+	}
+
+	public Text getX_legend() {
+		return x_legend;
+	}
+
+	public void setX_legend(Text xLegend) {
+		x_legend = xLegend;
+	}
+
+	public String getBg_colour() {
+		return bg_colour;
+	}
+
+	public void setBg_colour(String bgColour) {
+		bg_colour = bgColour;
+	}
+
+	public int getNum_decimals() {
+		return num_decimals;
+	}
+
+	public void setNum_decimals(int numDecimals) {
+		num_decimals = numDecimals;
+	}
+
+	public Legend getLegend() {
+		return legend;
+	}
+
+	public void setLegend(Legend legend) {
+		this.legend = legend;
+	}
+
 	public Tooltip getTooltip() {
 		return tooltip;
 	}
@@ -73,83 +134,24 @@ public class Chart implements Serializable {
 		this.tooltip = tooltip;
 	}
 
-	public Chart setXAxis(XAxis x_axis) {
-		this.x_axis = x_axis;
-		return this;
-	}
-
-	public YAxis getYAxis() {
-		return y_axis;
-	}
-
-	public Chart setYAxis(YAxis y_axis) {
-		this.y_axis = y_axis;
-		return this;
-	}
-
-	public Chart setYAxisRight(YAxis y_axis_right) {
-		this.y_axis_right = y_axis_right;
-		return this;
-	}
-
-	public YAxis getYAxisRight() {
-		return y_axis_right;
-	}
-
-	public Text getTitle() {
-		return title;
-	}
-
-	public Chart setTitle(Text title) {
-		this.title = title;
-		return this;
-	}
-
-	public Text getXLegend() {
-		return x_legend;
-	}
-
-	public Chart setXLegend(Text x_legend) {
-		this.x_legend = x_legend;
-		return this;
-	}
-
-	public Text getYLegend() {
-		return y_legend;
-	}
-
-	public Chart setYLegend(Text y_legend) {
-		this.y_legend = y_legend;
-		return this;
-	}
-
-	public String getBackgroundColour() {
-		return bg_colour;
-	}
-
-	public Chart setBackgroundColour(String bg_colour) {
-		this.bg_colour = bg_colour;
-		return this;
-	}
-
 	public Collection<Element> getElements() {
 		return elements;
 	}
 
-	public Chart setElements(Collection<Element> elements) {
+	public void setElements(Collection<Element> elements) {
 		this.elements.clear();
 		this.elements.addAll(elements);
-		return this;
+
 	}
 
-	public Chart addElements(Element... e) {
+	public void addElements(Element... e) {
 		elements.addAll(Arrays.asList(e));
-		return this;
+
 	}
 
-	public Chart addElements(Collection<Element> coll) {
+	public void addElements(Collection<Element> coll) {
 		elements.addAll(coll);
-		return this;
+
 	}
 
 	public boolean removeElement(Element e) {
@@ -169,30 +171,14 @@ public class Chart implements Serializable {
 		return JsonUtils.toJson(this);
 	}
 
-	/**
-	 * @return the max number of decimals printed out in OFC. <br />
-	 */
-	public int getNumDecimals() {
-		return num_decimals;
-	}
-
-	/**
-	 * @param num_decimals
-	 *            the max number of decimals printed out in OFC.<br />
-	 *            Allowed values 0 - 16. <br/>
-	 */
-	public void setNumDecimals(int num_decimals) {
-		this.num_decimals = num_decimals;
-	}
-
 	public void computeYAxisRange(int steps) {
 		Double min = null;
 		double max = 0;
 		double stepWidth = 1;
 		if (getElements() != null) {
-			if (getYAxis() == null) {
+			if (getY_axis() == null) {
 				YAxis ya = new YAxis();
-				this.setYAxis(ya);
+				this.setY_axis(ya);
 			}
 			for (Element e : getElements()) {
 				max = Math.max(max, e.getMaxValue());
@@ -204,7 +190,7 @@ public class Chart implements Serializable {
 			stepWidth = getStepWidth(Math.abs(max - min), steps);
 			min = Math.floor(min / stepWidth) * stepWidth;
 			max = Math.ceil(max / stepWidth) * stepWidth;
-			getYAxis().setRange(min, max, stepWidth);
+			getY_axis().setRange(min, max, stepWidth);
 
 		}
 	}
@@ -231,11 +217,4 @@ public class Chart implements Serializable {
 		return result * Math.pow(10, exponent);
 	}
 
-	public Legend getLegend() {
-		return legend;
-	}
-
-	public void setLegend(Legend legend) {
-		this.legend = legend;
-	}
 }

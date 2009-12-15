@@ -11,7 +11,6 @@ import org.ironrhino.common.support.StatControl;
 import org.ironrhino.core.chart.openflashchart.Chart;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
-import org.ironrhino.core.metadata.JsonSerializerType;
 import org.ironrhino.core.stat.Key;
 import org.ironrhino.core.stat.analysis.TreeNode;
 import org.ironrhino.core.struts.BaseAction;
@@ -111,7 +110,7 @@ public class MonitorAction extends BaseAction {
 		return "chart";
 	}
 
-	@JsonConfig(root = "chart", serializer = JsonSerializerType.GSON)
+	@JsonConfig(root = "chart")
 	public String data() {
 		chart = statControl.getChart(Key.fromString(getUid()), date, vtype,
 				ctype);

@@ -1,39 +1,29 @@
-/*
-This file is part of JOFC2.
-
-JOFC2 is free software: you can redistribute it and/or modify
-it under the terms of the Lesser GNU General Public License as
-published by the Free Software Foundation, either version 3 of
-the License, or (at your option) any later version.
-
-JOFC2 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
- */
 package org.ironrhino.core.chart.openflashchart.elements;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class LineChart extends Element {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8807130855547088579L;
 	private static transient final Integer DEFAULT_FONTSIZE = 10;
 	private Integer width;
-	@SerializedName("dot-size")
+	@JsonProperty("dot-size")
 	private Integer dotSize;
-	@SerializedName("halo-size")
+	@JsonProperty("halo-size")
 	private Integer haloSize;
 	private String colour;
 	private String axis;
+
+	public String getAxis() {
+		return axis;
+	}
+
+	public void setAxis(String axis) {
+		this.axis = axis;
+	}
 
 	public String getYaxis() {
 		return axis;
@@ -43,9 +33,6 @@ public class LineChart extends Element {
 		this.axis = yAxis;
 	}
 
-	/**
-	 * Tells the LineChart to Use the right YAxis
-	 */
 	public void setRightYAxis() {
 		setYAxis("right");
 	}
@@ -67,38 +54,35 @@ public class LineChart extends Element {
 		return width;
 	}
 
-	public LineChart setWidth(Integer width) {
+	public void setWidth(Integer width) {
 		this.width = width;
-		return this;
+
 	}
 
 	public Integer getDotSize() {
 		return dotSize;
 	}
 
-	public LineChart setDotSize(Integer dotSize) {
+	public void setDotSize(Integer dotSize) {
 		this.dotSize = dotSize;
-		return this;
+
 	}
 
 	public String getColour() {
 		return colour;
 	}
 
-	public LineChart setColour(String colour) {
+	public void setColour(String colour) {
 		this.colour = colour;
-		return this;
+
 	}
 
-	public LineChart addValues(Number... values) {
-		return addValues(Arrays.asList(values));
+	public void addValues(Number... values) {
+		addValues(Arrays.asList(values));
 	}
 
-	public LineChart addValues(List<Number> values) {
-		// We convert all Numbers to Dots except Null Values they are Converted
-		// to a Null Element
-		// as Dots with the value null are interpreted as Zero from OFC and null
-		// Values themself are interpolated
+	public void addValues(List<Number> values) {
+
 		for (Number number : values) {
 			if (number == null) {
 				getValues().add(new NullElement());
@@ -106,87 +90,25 @@ public class LineChart extends Element {
 				getValues().add(number);
 			}
 		}
-		return this;
+
 	}
 
-	public LineChart addDots(Dot... dots) {
-		return addDots(Arrays.asList(dots));
+	public void addDots(Dot... dots) {
+		addDots(Arrays.asList(dots));
 	}
 
-	public LineChart addDots(List<Dot> dots) {
+	public void addDots(List<Dot> dots) {
 		getValues().addAll(dots);
-		return this;
+
 	}
 
 	public Integer getHaloSize() {
 		return haloSize;
 	}
 
-	public LineChart setHaloSize(Integer haloSize) {
+	public void setHaloSize(Integer haloSize) {
 		this.haloSize = haloSize;
-		return this;
-	}
 
-	public static class Dot {
-
-		@SerializedName("halo-size")
-		private Integer haloSize;
-		@SerializedName("dot-size")
-		private Integer dotSize;
-		private Number value;
-		private String colour;
-
-		public Dot(Number value) {
-			this(value, null, null, null);
-		}
-
-		public Dot(Number value, String colour) {
-			this(value, colour, null, null);
-		}
-
-		public Dot(Number value, String colour, Integer dotSize,
-				Integer haloSize) {
-			setValue(value);
-			setColour(colour);
-			setDotSize(dotSize);
-			setHaloSize(haloSize);
-		}
-
-		public Integer getHaloSize() {
-			return haloSize;
-		}
-
-		public Dot setHaloSize(Integer haloSize) {
-			this.haloSize = haloSize;
-			return this;
-		}
-
-		public Integer getDotSize() {
-			return dotSize;
-		}
-
-		public Dot setDotSize(Integer dotSize) {
-			this.dotSize = dotSize;
-			return this;
-		}
-
-		public Number getValue() {
-			return value;
-		}
-
-		public Dot setValue(Number value) {
-			this.value = value;
-			return this;
-		}
-
-		public String getColour() {
-			return colour;
-		}
-
-		public Dot setColour(String colour) {
-			this.colour = colour;
-			return this;
-		}
 	}
 
 	public static enum Style {

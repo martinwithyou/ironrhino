@@ -25,7 +25,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/compass-2.2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-2.4.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-3.3.2.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/gson-1.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-commons-annotations-3.3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javassist-3.11.jar"/>

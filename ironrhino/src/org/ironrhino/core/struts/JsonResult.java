@@ -34,7 +34,7 @@ public class JsonResult implements Result {
 		JsonConfig jsonConfig = method.getAnnotation(JsonConfig.class);
 		if (jsonConfig != null && StringUtils.isNotBlank(jsonConfig.root())) {
 			Object value = invocation.getStack().findValue(jsonConfig.root());
-			return JsonUtils.toJson(value, jsonConfig.serializer());
+			return JsonUtils.toJson(value);
 		}
 
 		boolean hasErrors = false;

@@ -1,30 +1,12 @@
-/*
-This file is part of JOFC2.
-
-JOFC2 is free software: you can redistribute it and/or modify
-it under the terms of the Lesser GNU General Public License as
-published by the Free Software Foundation, either version 3 of
-the License, or (at your option) any later version.
-
-JOFC2 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
- */
-
 package org.ironrhino.core.chart.openflashchart.elements;
 
-import com.google.gson.annotations.SerializedName;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class FilledBarChart extends BarChart {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 3471991868191065273L;
 	private static final transient String TYPE = "bar_filled";
-	@SerializedName("outline-colour")
+	@JsonProperty("outline-colour")
 	private String outlineColour;
 
 	public FilledBarChart() {
@@ -45,13 +27,15 @@ public class FilledBarChart extends BarChart {
 		return outlineColour;
 	}
 
-	public BarChart setOutlineColour(String outlineColour) {
+	public void setOutlineColour(String outlineColour) {
 		this.outlineColour = outlineColour;
-		return this;
+
 	}
 
 	public static class Bar extends BarChart.Bar {
-		@SerializedName("outline-colour")
+
+		private static final long serialVersionUID = 8679477620059697844L;
+		@JsonProperty("outline-colour")
 		private String outlineColour;
 
 		public Bar(Number top, Number bottom) {
@@ -69,9 +53,9 @@ public class FilledBarChart extends BarChart {
 			super(top);
 		}
 
-		public Bar setOutlineColour(String outlineColour) {
+		public void setOutlineColour(String outlineColour) {
 			this.outlineColour = outlineColour;
-			return this;
+
 		}
 
 		public String getOutlineColour() {

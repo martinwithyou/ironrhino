@@ -1,38 +1,19 @@
-/*
-This file is part of JOFC2.
-
-JOFC2 is free software: you can redistribute it and/or modify
-it under the terms of the Lesser GNU General Public License as
-published by the Free Software Foundation, either version 3 of
-the License, or (at your option) any later version.
-
-JOFC2 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
- */
-
 package org.ironrhino.core.chart.openflashchart.axis;
 
 import java.io.Serializable;
 
-import com.google.gson.annotations.SerializedName;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public abstract class Axis implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 4823643361437691998L;
 	private Integer stroke;
 	private String colour;
-	@SerializedName("grid-colour")
-	private String grid_colour;
+	@JsonProperty("grid-colour")
+	private String gridColour;
 	private Double steps;
 	private Integer offset;
-	@SerializedName("3d")
-	private Integer threed;
+	private Integer _3d;
 	private Double min;
 	private Double max;
 
@@ -40,101 +21,104 @@ public abstract class Axis implements Serializable {
 		return stroke;
 	}
 
-	public Axis setStroke(Integer stroke) {
+	public void setOffset(Integer offset) {
+		this.offset = offset;
+	}
+
+	public void setStroke(Integer stroke) {
 		this.stroke = stroke;
-		return this;
 	}
 
 	public String getColour() {
 		return colour;
 	}
 
-	public Axis setColour(String colour) {
+	public void setColour(String colour) {
 		this.colour = colour;
-		return this;
+
 	}
 
 	public String getGridColour() {
-		return grid_colour;
+		return gridColour;
 	}
 
-	public Axis setGridColour(String grid_colour) {
-		this.grid_colour = grid_colour;
-		return this;
+	public void setGridColour(String gridColour) {
+		this.gridColour = gridColour;
+
 	}
 
 	public Double getSteps() {
 		return steps;
 	}
 
-	public Axis setSteps(Double steps) {
+	public void setSteps(Double steps) {
 		this.steps = steps;
-		return this;
+
 	}
 
-	public Axis setSteps(Integer steps) {
+	public void setSteps(Integer steps) {
 		this.steps = steps.doubleValue();
-		return this;
+
 	}
 
 	public Integer getOffset() {
 		return offset;
 	}
 
-	public Axis setOffset(Boolean offset) {
+	public void setOffset(Boolean offset) {
 		if (offset == null)
 			this.offset = 0;
 		else
 			this.offset = offset ? 1 : 0;
-		return this;
+
 	}
 
 	public Integer get3D() {
-		return threed;
+		return _3d;
 	}
 
-	public Axis set3D(Integer threed) {
-		this.threed = threed;
-		return this;
+	public void set3D(Integer _3d) {
+		this._3d = _3d;
+
 	}
 
 	public Double getMin() {
 		return min;
 	}
 
-	public Axis setMin(Double min) {
+	public void setMin(Double min) {
 		this.min = min;
-		return this;
+
 	}
 
-	public Axis setMin(Integer min) {
+	public void setMin(Integer min) {
 		this.min = min.doubleValue();
-		return this;
+
 	}
 
 	public Double getMax() {
 		return max;
 	}
 
-	public Axis setMax(Double max) {
+	public void setMax(Double max) {
 		this.max = max;
-		return this;
+
 	}
 
-	public Axis setMax(Integer max) {
+	public void setMax(Integer max) {
 		this.max = max.doubleValue();
-		return this;
+
 	}
 
-	public Axis setRange(Number min, Number max, Number step) {
+	public void setRange(Number min, Number max, Number step) {
 		setMin(min.doubleValue());
 		setMax(max.doubleValue());
 		setSteps(step.doubleValue());
-		return this;
+
 	}
 
-	public Axis setRange(Number min, Number max) {
-		return setRange(min, max, getSteps());
+	public void setRange(Number min, Number max) {
+		setRange(min, max, getSteps());
 	}
 
 }

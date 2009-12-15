@@ -1,18 +1,3 @@
-/*
-This file is part of JOFC2.
-
-JOFC2 is free software: you can redistribute it and/or modify
-it under the terms of the Lesser GNU General Public License as
-published by the Free Software Foundation, either version 3 of
-the License, or (at your option) any later version.
-
-JOFC2 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-See <http://www.gnu.org/licenses/lgpl-3.0.txt>.
- */
 package org.ironrhino.core.chart.openflashchart.axis;
 
 import java.util.List;
@@ -23,39 +8,42 @@ public class YAxis extends Axis {
 	private Integer tick_length;
 	private YAxisLabels labels;
 
-	public YAxis setTickLength(Integer tick_length) {
-		this.tick_length = tick_length;
-		return this;
-	}
-
-	public Integer getTickLength() {
+	public Integer getTick_length() {
 		return tick_length;
 	}
 
-	public YAxis setLabels(String... labels) {
-		this.labels = new YAxisLabels(labels);
-		return this;
+	public void setTick_length(Integer tickLength) {
+		tick_length = tickLength;
 	}
 
-	public YAxis setLabels(List<String> labels) {
-		this.labels = new YAxisLabels(labels);
-		return this;
+	public void setLabels(YAxisLabels labels) {
+		this.labels = labels;
 	}
 
-	public YAxis addLabels(String... labels) {
+	public void setLabels(String... labels) {
+		this.labels = new YAxisLabels(labels);
+
+	}
+
+	public void setLabels(List<String> labels) {
+		this.labels = new YAxisLabels(labels);
+
+	}
+
+	public void addLabels(String... labels) {
 		if (this.labels == null) {
 			this.labels = new YAxisLabels();
 		}
 		this.labels.addLabels(labels);
-		return this;
+
 	}
 
-	public YAxis addLabels(List<Label> labels) {
+	public void addLabels(List<Label> labels) {
 		if (this.labels == null) {
 			this.labels = new YAxisLabels();
 		}
 		this.labels.addLabels(labels);
-		return this;
+
 	}
 
 	public YAxisLabels getLabels() {
