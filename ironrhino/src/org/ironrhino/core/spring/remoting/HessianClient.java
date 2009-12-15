@@ -38,6 +38,8 @@ public class HessianClient extends HessianProxyFactoryBean {
 
 	private String contextPath;
 
+	private String version;
+
 	private int maxRetryTimes = 3;
 
 	private List<String> asyncMethods;
@@ -52,6 +54,10 @@ public class HessianClient extends HessianProxyFactoryBean {
 
 	public void setPort(int port) {
 		this.port = port;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public void setContextPath(String contextPath) {
@@ -158,11 +164,30 @@ public class HessianClient extends HessianProxyFactoryBean {
 			sb.append(contextPath);
 		sb.append("/remoting/hessian/");
 		sb.append(interfaceName);
+		boolean first = true;
+		if (StringUtils.isNotBlank(version)) {
+			if (first) {
+				sb.append('?');
+				first = false;
+			} else {
+				sb.append('&');
+			}
+			sb.append(Context.VERSION);
+			sb.append('=');
+			sb.append(version);
+		}
 		if (AppInfo.getStage() == AppInfo.Stage.PRODUCTION && port == 80)
 			try {
-				sb.append("?key="
-						+ URLEncoder.encode(Blowfish.encrypt(interfaceName),
-								"UTF-8"));
+				if (first) {
+					sb.append('?');
+					first = false;
+				} else {
+					sb.append('&');
+				}
+				sb.append(Context.KEY);
+				sb.append('=');
+				sb.append(URLEncoder.encode(Blowfish.encrypt(interfaceName),
+						"UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}

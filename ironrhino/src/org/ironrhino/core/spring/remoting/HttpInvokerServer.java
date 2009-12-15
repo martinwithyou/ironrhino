@@ -20,9 +20,7 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 
 	private Log log = LogFactory.getLog(getClass());
 
-	private ThreadLocal<Class> serviceInterface = new ThreadLocal<Class>();
-
-	private ThreadLocal<Object> service = new ThreadLocal<Object>();
+	private static ThreadLocal<Object> service = new ThreadLocal<Object>();
 
 	private Map<Class, Object> proxies = new HashMap<Class, Object>();
 
@@ -35,12 +33,15 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 	@Override
 	public void handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		Map<String, String[]> map = request.getParameterMap();
+		if (map != null && map.size() > 0)
+			Context.PARAMETERS_MAP.set(map);
 		String uri = request.getRequestURI();
 		try {
 			String interfaceName = uri.substring(uri.lastIndexOf('/') + 1);
 			if (AppInfo.getStage() == AppInfo.Stage.PRODUCTION
 					&& request.getServerPort() == 80) {
-				String s = Blowfish.decrypt(request.getParameter("key"));
+				String s = Blowfish.decrypt(Context.get(Context.KEY));
 				if (!interfaceName.equals(s)) {
 					response
 							.sendError(HttpServletResponse.SC_NON_AUTHORITATIVE_INFORMATION);
@@ -48,7 +49,7 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 				}
 			}
 			Class clazz = Class.forName(interfaceName);
-			serviceInterface.set(clazz);
+			Context.SERVICE.set(clazz);
 			RemoteInvocation invocation = readRemoteInvocation(request);
 			RemoteInvocationResult result = invokeAndCreateResult(invocation,
 					getProxyForService()); // getProxy is final cannot override
@@ -57,6 +58,8 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 			log.error(ex.getMessage(), ex);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex
 					.getMessage());
+		} finally {
+			Context.reset();
 		}
 	}
 
@@ -64,11 +67,11 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 	public void prepare() {
 		for (Map.Entry<Class, Object> entry : serviceRegistry.getServices()
 				.entrySet()) {
-			serviceInterface.set(entry.getKey());
+			Context.SERVICE.set(entry.getKey());
 			service.set(entry.getValue());
 			proxies.put(entry.getKey(), super.getProxyForService());
 		}
-		serviceInterface.set(null);
+		Context.SERVICE.set(null);
 		service.set(null);
 	}
 
@@ -79,7 +82,7 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 
 	@Override
 	public Class getServiceInterface() {
-		return serviceInterface.get();
+		return Context.SERVICE.get();
 	}
 
 	@Override
