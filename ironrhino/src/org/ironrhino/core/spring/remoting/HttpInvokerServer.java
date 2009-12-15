@@ -40,7 +40,7 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 			String interfaceName = uri.substring(uri.lastIndexOf('/') + 1);
 			if (AppInfo.getStage() == AppInfo.Stage.PRODUCTION
 					&& request.getServerPort() == 80) {
-				String s = Blowfish.decrypt(request.getQueryString());
+				String s = Blowfish.decrypt(request.getParameter("key"));
 				if (!interfaceName.equals(s)) {
 					response
 							.sendError(HttpServletResponse.SC_NON_AUTHORITATIVE_INFORMATION);

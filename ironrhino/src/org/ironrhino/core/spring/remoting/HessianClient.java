@@ -1,6 +1,8 @@
 package org.ironrhino.core.spring.remoting;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -157,7 +159,13 @@ public class HessianClient extends HessianProxyFactoryBean {
 		sb.append("/remoting/hessian/");
 		sb.append(interfaceName);
 		if (AppInfo.getStage() == AppInfo.Stage.PRODUCTION && port == 80)
-			sb.append("?" + Blowfish.encrypt(interfaceName));
+			try {
+				sb.append("?key="
+						+ URLEncoder.encode(Blowfish.encrypt(interfaceName),
+								"UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		return sb.toString();
 	}
 }
