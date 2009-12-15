@@ -9,16 +9,20 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.session.SessionCompressor;
 import org.ironrhino.core.util.JsonUtils;
 
-import com.google.gson.reflect.TypeToken;
 import com.ironrhino.online.model.OrderItem;
 import com.ironrhino.online.service.ProductFacade;
 
 @Singleton
 @Named
 public class CartSessionCompressor implements SessionCompressor<Cart> {
+
+	private Log log = LogFactory.getLog(getClass());
 
 	@Inject
 	private ProductFacade productFacade;
@@ -45,14 +49,17 @@ public class CartSessionCompressor implements SessionCompressor<Cart> {
 	public Cart uncompress(String str) {
 		Cart cart = new Cart();
 		if (StringUtils.isNotBlank(str)) {
-			Map<String, Integer> map = JsonUtils.fromJson(str,
-					new TypeToken<Map<String, Integer>>() {
-					}.getType());
-			for (Map.Entry<String, Integer> entry : map.entrySet())
-				cart.put(productFacade.getProductByCode(entry.getKey()), entry
-						.getValue());
+			try {
+				Map<String, Integer> map = JsonUtils.fromJson(str,
+						new TypeReference<Map<String, Integer>>() {
+						});
+				for (Map.Entry<String, Integer> entry : map.entrySet())
+					cart.put(productFacade.getProductByCode(entry.getKey()),
+							entry.getValue());
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
 		}
 		return cart;
 	}
-
 }

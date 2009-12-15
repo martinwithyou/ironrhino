@@ -86,8 +86,8 @@ public class JsonResult implements Result {
 	public void execute(ActionInvocation invocation) throws Exception {
 		String json = generateJson(invocation);
 		HttpServletResponse response = ServletActionContext.getResponse();
-		// response.setContentType("application/json;charset=" + getEncoding());
-		response.setContentType("text/javascript;charset=" + encoding);
+		response.setContentType("application/json;charset=" + encoding);
+		// response.setContentType("text/javascript;charset=" + encoding);
 		if (!response.containsHeader("Cache-Control")) {
 			response.setHeader("Cache-Control", "no-cache");
 			response.setHeader("Pragma", "no-cache");

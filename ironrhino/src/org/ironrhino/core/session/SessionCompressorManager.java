@@ -1,6 +1,5 @@
 package org.ironrhino.core.session;
 
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,10 +12,9 @@ import javax.inject.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.context.ApplicationContext;
-
-import com.google.gson.reflect.TypeToken;
 
 @Singleton
 @Named
@@ -24,8 +22,8 @@ public class SessionCompressorManager {
 
 	private Log log = LogFactory.getLog(getClass());
 
-	private Type type = new TypeToken<Map<String, String>>() {
-	}.getType();
+	private TypeReference<Map<String, String>> type = new TypeReference<Map<String, String>>() {
+	};
 
 	@Inject
 	private ApplicationContext ctx;
@@ -70,22 +68,27 @@ public class SessionCompressorManager {
 	public void uncompress(WrappedHttpSession session, String str) {
 		Map<String, Object> map = session.getAttrMap();
 		if (StringUtils.isNotBlank(str)) {
-			Map<String, String> compressedMap = JsonUtils.fromJson(str, type);
-			for (Map.Entry<String, String> entry : compressedMap.entrySet()) {
-				String key = entry.getKey();
-				String value = entry.getValue();
-				SessionCompressor compressor = null;
-				for (SessionCompressor var : compressors) {
-					if (var.supportsKey(key)) {
-						compressor = var;
-						break;
+			try {
+				Map<String, String> compressedMap = JsonUtils.fromJson(str,
+						type);
+				for (Map.Entry<String, String> entry : compressedMap.entrySet()) {
+					String key = entry.getKey();
+					String value = entry.getValue();
+					SessionCompressor compressor = null;
+					for (SessionCompressor var : compressors) {
+						if (var.supportsKey(key)) {
+							compressor = var;
+							break;
+						}
+					}
+					if (compressor != null) {
+						map.put(key, compressor.uncompress(value));
+					} else {
+						map.put(key, value);
 					}
 				}
-				if (compressor != null) {
-					map.put(key, compressor.uncompress(value));
-				} else {
-					map.put(key, value);
-				}
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
 			}
 		}
 	}

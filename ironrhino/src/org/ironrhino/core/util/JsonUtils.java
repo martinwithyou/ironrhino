@@ -1,98 +1,56 @@
 package org.ironrhino.core.util;
 
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.introspect.Annotated;
+import org.codehaus.jackson.map.introspect.AnnotatedField;
+import org.codehaus.jackson.map.introspect.AnnotatedMethod;
+import org.codehaus.jackson.map.introspect.BasicClassIntrospector;
+import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
+import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.metadata.JsonSerializerType;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class JsonUtils {
 
-	private static Gson gson = new GsonBuilder().setExclusionStrategies(
-			new AnnotationBasedExclusionStrategy(NotInJson.class,
-					NotInCopy.class)).setDateFormat(DateUtils.DATETIME)
-			.create();
+	private static ObjectMapper objectMapper = new ObjectMapper()
+			.setSerializationConfig(new SerializationConfig(
+					new BasicClassIntrospector(),
+					new JacksonAnnotationIntrospector() {
+						public boolean isHandled(Annotation ann) {
+							return true;
+						}
 
-	private static class AnnotationBasedExclusionStrategy implements
-			ExclusionStrategy {
-		private final Collection<Class<? extends Annotation>> annotationclasses;
+						@Override
+						public boolean isIgnorableField(AnnotatedField f) {
+							return super.isIgnorableField(f) || isIgnorable(f);
+						}
 
-		public AnnotationBasedExclusionStrategy(
-				Class<? extends Annotation>... annotationclasses) {
-			this.annotationclasses = new HashSet<Class<? extends Annotation>>();
-			if (annotationclasses != null) {
-				for (Class<? extends Annotation> clazz : annotationclasses) {
-					this.annotationclasses.add(clazz);
-				}
-			}
-		}
+						@Override
+						public boolean isIgnorableMethod(AnnotatedMethod m) {
+							return super.isIgnorableMethod(m) || isIgnorable(m);
+						}
 
-		public boolean shouldSkipClass(Class<?> clazz) {
-			for (Class<? extends Annotation> annotationClass : annotationclasses)
-				if (clazz.getAnnotation(annotationClass) != null)
-					return true;
-			return false;
-		}
+						private boolean isIgnorable(Annotated a) {
+							return (a.getAnnotation(NotInJson.class) != null || a
+									.getAnnotation(NotInCopy.class) != null);
+						}
+					}));
 
-		@Override
-		public boolean shouldSkipField(FieldAttributes attributes) {
-			for (Class<? extends Annotation> annotationClass : annotationclasses)
-				if (attributes.getAnnotation(annotationClass) != null)
-					return true;
-			return false;
-		}
-	}
-
-	public static String mapToJson(Map<Object, Object> map) {
-		if (map == null)
-			return null;
-		JSONObject jo = new JSONObject();
-		try {
-			for (Map.Entry<Object, Object> entry : map.entrySet()) {
-				String key = entry.getKey().toString();
-				Object value = map.get(key);
-				if (isSimple(value))
-					jo.put(key, simpleObjectToJSON(value));
-				else if (isArray(value)) {
-					jo.put(key, arrayObjectToJSON(value));
-				} else if (isMap(value)) {
-					jo.put(key, mapObjectToJSON(value));
-				} else {
-					jo.put(key, complexObjectToJson(value));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return jo.toString();
-	}
+	private static Gson gson = new GsonBuilder().setDateFormat(
+			DateUtils.DATETIME).create();
 
 	public static String toJson(Object object) {
-		if (object == null)
-			return "";
-		if (isSimple(object))
-			return simpleObjectToJSON(object).toString();
-		else if (isArray(object)) {
-			return arrayObjectToJSON(object).toString();
-		} else if (isMap(object)) {
-			return mapObjectToJSON(object).toString();
-		} else {
-			return complexObjectToJson(object).toString();
+		try {
+			return objectMapper.writeValueAsString(object);
+		} catch (Exception e) {
+			return null;
 		}
 	}
 
@@ -102,150 +60,9 @@ public class JsonUtils {
 		return toJson(object);
 	}
 
-	public static String toJson(Object object, Class clazz) {
-		return gson.toJson(object, clazz);
-	}
-
-	public static String toJson(Object object, Type type) {
-		return gson.toJson(object, type);
-	}
-
-	public static <T> T fromJson(String json, Type type) {
-		return (T) gson.fromJson(json, type);
-	}
-
-	public static <T> T fromJson(String json, Class<T> clazz) {
-		return gson.fromJson(json, clazz);
-	}
-
-	public static JSONObject complexObjectToJson(Object o) {
-		if (o == null)
-			return null;
-		Set<String> ignoreProperties = AnnotationUtils
-				.getAnnotatedPropertyNames(o.getClass(), NotInJson.class);
-		JSONObject jo = new JSONObject();
-		try {
-
-			PropertyDescriptor[] pds = Introspector.getBeanInfo(o.getClass())
-					.getPropertyDescriptors();
-			for (PropertyDescriptor pd : pds)
-				if (pd.getReadMethod() != null && !pd.getName().equals("class")
-						&& !ignoreProperties.contains(pd.getName())) {
-					Object value = pd.getReadMethod()
-							.invoke(o, new Object[] {});
-					if (isSimple(value))
-						jo.put(pd.getName(), simpleObjectToJSON(value));
-					else if (isArray(value)) {
-						jo.put(pd.getName(), arrayObjectToJSON(value));
-					} else if (isMap(value)) {
-						jo.put(pd.getName(), mapObjectToJSON(value));
-					} else {
-						jo.put(pd.getName(), complexObjectToJson(value));
-					}
-				}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return jo;
-	}
-
-	public static JSONArray arrayObjectToJSON(Object o) {
-		if (o == null || !isArray(o))
-			return null;
-		JSONArray ja = new JSONArray();
-		Object[] array;
-		try {
-			if (o instanceof Collection) {
-				array = ((Collection) o).toArray();
-			} else {
-				array = (Object[]) o;
-			}
-			for (int i = 0; i < array.length; i++) {
-				if (isSimple(array[i])) {
-					ja.put(simpleObjectToJSON(array[i]));
-				} else if (isArray(array[i])) {
-					ja.put(arrayObjectToJSON(array[i]));
-				} else if (isMap(array[i])) {
-					ja.put(mapObjectToJSON(array[i]));
-				} else {
-					ja.put(complexObjectToJson(array[i]));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ja;
-	}
-
-	public static Object simpleObjectToJSON(Object o) {
-		if (o instanceof Date)
-			return DateUtils.formatDatetime((Date) o);
-		return o;
-	}
-
-	public static JSONObject mapObjectToJSON(Object o) {
-		if (o == null)
-			return null;
-		JSONObject jo = new JSONObject();
-		Map<Object, Object> map = (Map) o;
-		try {
-			for (Map.Entry entry : map.entrySet()) {
-				String key = entry.getKey().toString();
-				Object value = entry.getValue();
-				if (isSimple(value))
-					jo.put(key, simpleObjectToJSON(value));
-				else if (isArray(value)) {
-					jo.put(key, arrayObjectToJSON(value));
-				} else if (isMap(value)) {
-					jo.put(key, mapObjectToJSON(value));
-				} else {
-					jo.put(key, complexObjectToJson(value));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return jo;
-	}
-
-	private static boolean isSimple(Object o) {
-		if (o == null)
-			return true;
-		if (o instanceof Number)
-			return true;
-		if (o instanceof String)
-			return true;
-		if (o instanceof Boolean)
-			return true;
-		if (o instanceof Character)
-			return true;
-		if (o.getClass().isEnum())
-			return true;
-		if (o instanceof Date)
-			return true;
-		if (o instanceof JSONArray)
-			return true;
-		if (o instanceof JSONObject)
-			return true;
-		return false;
-	}
-
-	private static boolean isArray(Object o) {
-		if (o == null)
-			return false;
-		if (o instanceof Collection)
-			return true;
-		if (o.getClass().isArray())
-			return true;
-		return false;
-	}
-
-	private static boolean isMap(Object o) {
-		if (o == null)
-			return false;
-		if (o instanceof Map)
-			return true;
-		return false;
+	public static <T> T fromJson(String json, TypeReference type)
+			throws Exception {
+		return objectMapper.readValue(json, type);
 	}
 
 }
