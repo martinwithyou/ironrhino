@@ -28,10 +28,10 @@ import org.ironrhino.core.chart.openflashchart.elements.Tooltip;
 import org.ironrhino.core.util.JsonUtils;
 
 /**
- * This is the most import javax.inject.Inject; import ant class in the Java OFC library. Start here,
- * configuring the title, axes, legends, labels, and draw-able elements in your
- * chart. Coerce the object to a String with the toString() method to get the
- * chart data back out.
+ * This is the most import javax.inject.Inject; import ant class in the Java OFC
+ * library. Start here, configuring the title, axes, legends, labels, and
+ * draw-able elements in your chart. Coerce the object to a String with the
+ * toString() method to get the chart data back out.
  */
 public class Chart implements Serializable {
 
@@ -166,7 +166,7 @@ public class Chart implements Serializable {
 
 	@Override
 	public String toString() {
-		return JsonUtils.toJson(this, this.getClass());
+		return JsonUtils.toJson(this);
 	}
 
 	/**
