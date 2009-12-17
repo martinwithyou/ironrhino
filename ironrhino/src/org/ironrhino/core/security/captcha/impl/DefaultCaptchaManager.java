@@ -7,6 +7,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.security.captcha.CaptchaManager;
@@ -18,7 +19,7 @@ import org.springframework.security.userdetails.UserDetails;
 @Named("captchaManager")
 public class DefaultCaptchaManager implements CaptchaManager {
 
-	private static final String CHINESE_NUMBERS = "零壹贰叁肆伍陆柒捌玖";
+	private static final char[] CHINESE_NUMBERS = "零壹贰叁肆伍陆柒捌玖".toCharArray();
 
 	private static final String REQUEST_ATTRIBUTE_KEY_CAPTACHA_THRESHOLD_ADDED = "CAPTACHA_THRESHOLD_ADDED";
 	private static final String REQUEST_ATTRIBUTE_KEY_CAPTACHA_REQUIRED = "CAPTACHA_REQUIRED";
@@ -50,13 +51,34 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		char[] chars = challenge.toCharArray();
 		StringBuilder sb = new StringBuilder();
 		for (char c : chars)
-			sb.append(CHINESE_NUMBERS.charAt(Integer
-					.parseInt(String.valueOf(c))));
+			sb.append(CHINESE_NUMBERS[Integer.parseInt(String.valueOf(c))]);
+		return sb.toString();
+	}
+
+	protected String clarify(String input) {
+		if (StringUtils.isNumeric(input))
+			return input;
+		char[] chars = input.toCharArray();
+		StringBuilder sb = new StringBuilder();
+		for (char c : chars) {
+			for (int i = 0; i < CHINESE_NUMBERS.length; i++) {
+				if (c == CHINESE_NUMBERS[i]) {
+					sb.append(String.valueOf(i));
+					break;
+				}
+			}
+		}
 		return sb.toString();
 	}
 
 	protected String answer(String challenge) {
 		return challenge;
+	}
+
+	protected boolean validate(String input, String answer) {
+		if (input == null || answer == null)
+			return false;
+		return clarify(input).equals(answer);
 	}
 
 	@Override
@@ -119,8 +141,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		if (validated == null) {
 			String answer = (String) cacheManager.get(CACHE_PREFIX_ANSWER
 					+ token, KEY_CAPTCHA);
-			validated = answer != null
-					&& answer.equals(request.getParameter(KEY_CAPTCHA));
+			validated = validate(request.getParameter(KEY_CAPTCHA), answer);
 			request.setAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_VALIDATED,
 					validated);
 		}
