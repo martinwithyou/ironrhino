@@ -14,8 +14,11 @@ import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.security.userdetails.UserDetails;
 
-@Singleton@Named("captchaManager")
+@Singleton
+@Named("captchaManager")
 public class DefaultCaptchaManager implements CaptchaManager {
+
+	private static final String CHINESE_NUMBERS = "零壹贰叁肆伍陆柒捌玖";
 
 	private static final String REQUEST_ATTRIBUTE_KEY_CAPTACHA_THRESHOLD_ADDED = "CAPTACHA_THRESHOLD_ADDED";
 	private static final String REQUEST_ATTRIBUTE_KEY_CAPTACHA_REQUIRED = "CAPTACHA_REQUIRED";
@@ -37,26 +40,22 @@ public class DefaultCaptchaManager implements CaptchaManager {
 	@Override
 	public String getChallenge(HttpServletRequest request, String token) {
 		String challenge = String.valueOf(random.nextInt(8999) + 1000);// width=60
-		String answer = challenge;
-		// String challenge;
-		// String answer;
-		// int left = random.nextInt(89) + 10;
-		// int right = random.nextInt(89) + 10;
-		// boolean add = (left % 2 == 0);
-		// if (add) {
-		// challenge = left + "+" + right + "=?";
-		// answer = String.valueOf(left + right);
-		// } else {
-		// if (left <= right) {
-		// int temp = right;
-		// right = left;
-		// left = temp;
-		// }
-		// challenge = left + "-" + right + "=?";
-		// answer = String.valueOf(left - right);
-		// }
+		String answer = answer(challenge);
 		cacheManager.put(CACHE_PREFIX_ANSWER + token, answer, -1,
 				CACHE_ANSWER_TIME_TO_LIVE, KEY_CAPTCHA);
+		return fuzzify(challenge);
+	}
+
+	protected String fuzzify(String challenge) {
+		char[] chars = challenge.toCharArray();
+		StringBuilder sb = new StringBuilder();
+		for (char c : chars)
+			sb.append(CHINESE_NUMBERS.charAt(Integer
+					.parseInt(String.valueOf(c))));
+		return sb.toString();
+	}
+
+	protected String answer(String challenge) {
 		return challenge;
 	}
 
