@@ -71,8 +71,8 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 			service.set(entry.getValue());
 			proxies.put(entry.getKey(), super.getProxyForService());
 		}
-		Context.SERVICE.set(null);
-		service.set(null);
+		Context.SERVICE.remove();
+		service.remove();
 	}
 
 	@Override

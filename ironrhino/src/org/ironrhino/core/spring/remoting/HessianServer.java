@@ -78,8 +78,8 @@ public class HessianServer extends HessianServiceExporter {
 			skeletons.put(entry.getKey(), new HessianSkeleton(
 					getProxyForService(), getServiceInterface()));
 		}
-		Context.SERVICE.set(null);
-		service.set(null);
+		Context.SERVICE.remove();
+		service.remove();
 	}
 
 	@Override

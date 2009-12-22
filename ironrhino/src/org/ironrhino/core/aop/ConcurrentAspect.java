@@ -86,7 +86,7 @@ public class ConcurrentAspect extends BaseAspect {
 				try {
 					alreadyAsync.set(true);
 					method.invoke(_this, args);
-					alreadyAsync.set(null);
+					alreadyAsync.remove();
 				} catch (Throwable e) {
 					log.error(e.getMessage(), e);
 				}

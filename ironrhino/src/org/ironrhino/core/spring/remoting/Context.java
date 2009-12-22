@@ -20,7 +20,7 @@ public class Context {
 	}
 
 	public static void reset() {
-		PARAMETERS_MAP.set(null);
-		SERVICE.set(null);
+		PARAMETERS_MAP.remove();
+		SERVICE.remove();
 	}
 }
