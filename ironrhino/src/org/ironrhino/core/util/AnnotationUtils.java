@@ -32,9 +32,9 @@ public class AnnotationUtils {
 			Class<? extends Annotation> annotaionClass) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("getAnnotatedMethods:");
-		sb.append(clazz.getCanonicalName());
+		sb.append(clazz.getName());
 		sb.append(',');
-		sb.append(annotaionClass.getCanonicalName());
+		sb.append(annotaionClass.getName());
 		String key = sb.toString();
 		if (!cache.containsKey(key)) {
 			Set<Method> set = new HashSet<Method>();
@@ -55,9 +55,9 @@ public class AnnotationUtils {
 			Class<? extends Annotation> annotaionClass) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("getAnnotatedPropertyNames:");
-		sb.append(clazz.getCanonicalName());
+		sb.append(clazz.getName());
 		sb.append(',');
-		sb.append(annotaionClass.getCanonicalName());
+		sb.append(annotaionClass.getName());
 		String key = sb.toString();
 		if (!cache.containsKey(key)) {
 			Set<String> set = new HashSet<String>();
@@ -99,9 +99,9 @@ public class AnnotationUtils {
 			Class clazz, Class<? extends Annotation> annotaionClass) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("getAnnotatedPropertyNameAndAnnotations:");
-		sb.append(clazz.getCanonicalName());
+		sb.append(clazz.getName());
 		sb.append(',');
-		sb.append(annotaionClass.getCanonicalName());
+		sb.append(annotaionClass.getName());
 		String key = sb.toString();
 		if (!cache.containsKey(key)) {
 			Map<String, Annotation> map = new HashMap<String, Annotation>();
@@ -129,9 +129,9 @@ public class AnnotationUtils {
 			Class<T> annotationClass, String methodName, Class... paramTypes) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("getAnnotation:");
-		sb.append(clazz.getCanonicalName());
+		sb.append(clazz.getName());
 		sb.append(',');
-		sb.append(annotationClass.getCanonicalName());
+		sb.append(annotationClass.getName());
 		sb.append(',');
 		sb.append(methodName);
 		if (paramTypes.length > 0) {
