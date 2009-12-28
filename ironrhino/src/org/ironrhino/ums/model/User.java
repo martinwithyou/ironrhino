@@ -69,7 +69,7 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 	private Set<SimpleElement> roles = new HashSet<SimpleElement>(0);
 
 	@NotInJson
-	private Collection<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+	private Collection<GrantedAuthority> authorities;
 
 	public User() {
 		createDate = new Date();
