@@ -21,7 +21,7 @@ import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.ums.model.User;
 import org.ironrhino.ums.service.UserManager;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;

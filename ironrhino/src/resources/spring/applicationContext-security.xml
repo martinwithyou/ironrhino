@@ -19,9 +19,12 @@
 		<security:intercept-url pattern="/exit" access="ROLE_PREVIOUS_ADMINISTRATOR"/>
 		<security:intercept-url pattern="/" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="http" />
 		<security:intercept-url pattern="/**" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="any" />
-		<security:anonymous granted-authority="ROLE_BUILTIN_ANONYMOUS" username="anonymousUser" key="anonymous" />
+		<security:session-management session-fixation-protection="migrateSession" />
 		<security:remember-me services-ref="rememberMeServices" />
+		<security:anonymous granted-authority="ROLE_BUILTIN_ANONYMOUS" username="anonymousUser" key="anonymous" />
 		<security:logout logout-url="/logout" invalidate-session="true" />
+		<security:custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
+		<security:custom-filter ref="switchUserProcessingFilter" position="SWITCH_USER_FILTER"/>
 	</security:http>
 	
 	<bean id="rememberMeServices"
@@ -32,41 +35,22 @@
 		class="org.ironrhino.core.spring.security.MixedPasswordEncoder" />
 
 	<bean id="switchUserProcessingFilter"
-		class="org.springframework.security.ui.switchuser.SwitchUserProcessingFilter"
+		class="org.springframework.security.web.authentication.switchuser.SwitchUserFilter"
 		p:userDetailsService-ref="userManager" p:switchUserUrl="/switch"
 		p:exitUserUrl="/exit" p:targetUrl="/" >
-		<security:custom-filter position="SWITCH_USER_FILTER" />
 	</bean>
 
-	<security:authentication-manager alias="authenticationManager"/>
-	<security:authentication-provider user-service-ref="userManager">
-		<security:password-encoder ref="passwordEncoder" />
-	</security:authentication-provider>
-	<bean id="entryPoint"
-		class="org.ironrhino.core.spring.security.DefaultAuthenticationProcessingFilterEntryPoint"
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider user-service-ref="userManager">
+			<security:password-encoder ref="passwordEncoder" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+	<bean id="entryPoint" class="org.ironrhino.core.spring.security.DefaultLoginUrlAuthenticationEntryPoint"
 		p:loginFormUrl="/login" p:ssoServerBase="${sso.server.base}" p:forceHttps="true" />
-	<bean id="authenticationProcessingFilter"
-		class="org.ironrhino.ums.security.UserAuthenticationProcessingFilter"
-		p:usernameParameter="username" p:passwordParameter="password"
-		p:authenticationFailureUrl="/login?error=user.bad.credentials"
-		p:defaultTargetUrl="/" p:filterProcessesUrl="/check" p:invalidateSessionOnSuccessfulAuthentication="true"
-		p:serverSideRedirect="true" p:authenticationManager-ref="authenticationManager"
-		p:rememberMeServices-ref="rememberMeServices">
-		<security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER" />
-		<property name="targetUrlResolver">
-			<bean
-				class="org.ironrhino.core.spring.security.GracefulTargetUrlResolver" />
-		</property>
-		<property name="exceptionMappings">
-			<value>
-						org.springframework.security.DisabledException=/login?error=user.disabled
-						org.springframework.security.BadCredentialsException=/login?error=user.bad.credentials
-						org.springframework.security.LockedException=/login?error=user.locked
-						org.springframework.security.AccountExpiredException=/login?error=user.expired
-						org.springframework.security.concurrent.ConcurrentLoginException=/login?error=user.concurrent.login
-						org.springframework.security.CredentialsExpiredException=/login?error=user.credentials.expired
-			</value>
-		</property>
+	<bean id="authenticationFilter" class="org.ironrhino.ums.security.AuthenticationFilter"
+		p:usernameParameter="username" p:passwordParameter="password" p:filterProcessesUrl="/check"
+		p:authenticationManager-ref="authenticationManager" p:rememberMeServices-ref="rememberMeServices">
 	</bean>
 	
 </beans>

@@ -21,6 +21,9 @@ import org.apache.commons.lang.StringUtils;
 @Named("httpSessionFilter")
 public class HttpSessionFilter implements Filter {
 
+	private static final String APPLIED_KEY = "APPLIED."
+			+ HttpSessionFilter.class.getName();
+
 	public static final String KEY_EXCLUDE_PATTERNS = "excludePatterns";
 
 	public static final String DEFAULT_EXCLUDE_PATTERNS = "/remoting/*";
@@ -43,6 +46,12 @@ public class HttpSessionFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
+		if (req.getAttribute(APPLIED_KEY) != null) {
+			chain.doFilter(request, response);
+			return;
+		}
+		request.setAttribute(APPLIED_KEY, true);
+
 		for (String pattern : excludePatterns) {
 			String path = req.getRequestURI();
 			path = path.substring(req.getContextPath().length());

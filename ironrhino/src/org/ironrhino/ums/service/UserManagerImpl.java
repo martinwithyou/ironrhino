@@ -14,12 +14,13 @@ import org.ironrhino.core.model.SimpleElement;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.ums.model.User;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.GrantedAuthorityImpl;
-import org.springframework.security.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
-@Singleton@Named("userManager")
+@Singleton
+@Named("userManager")
 public class UserManagerImpl extends BaseManagerImpl<User> implements
 		UserManager {
 
@@ -59,7 +60,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		auths.add(new GrantedAuthorityImpl(ROLE_BUILTIN_USER));
 		for (SimpleElement sce : user.getRoles())
 			auths.add(new GrantedAuthorityImpl(sce.getValue()));
-		user.setAuthorities(auths.toArray(new GrantedAuthority[auths.size()]));
+		user.setAuthorities(auths);
 	}
 
 	@CheckCache(key = "${args[0]}", namespace = "user", onHit = "${org.ironrhino.core.stat.StatLog.add({'cache','user','hit'})}", onMiss = "${org.ironrhino.core.stat.StatLog.add({'cache','user','miss'})}")
@@ -93,7 +94,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	@Transactional
 	public void deleteDisabled() {
 		String hql = "delete from Account a where a.enabled = ? and a.createDate <= ?";
-		executeUpdate(hql,
-				new Object[] { false, DateUtils.addDays(new Date(), -7) });
+		executeUpdate(hql, new Object[] { false,
+				DateUtils.addDays(new Date(), -7) });
 	}
 }

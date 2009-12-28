@@ -10,16 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.security.AuthenticationException;
-import org.springframework.security.ui.AbstractProcessingFilter;
-import org.springframework.security.ui.savedrequest.SavedRequest;
-import org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint;
-import org.springframework.security.util.RedirectUrlBuilder;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.savedrequest.DefaultSavedRequest;
+import org.springframework.security.web.savedrequest.SavedRequest;
+import org.springframework.security.web.util.RedirectUrlBuilder;
 
-public class DefaultAuthenticationProcessingFilterEntryPoint extends
-		AuthenticationProcessingFilterEntryPoint {
-
-	public static final String TARGET_URL = "targetUrl";
+public class DefaultLoginUrlAuthenticationEntryPoint extends
+		LoginUrlAuthenticationEntryPoint {
 
 	private String ssoServerBase;
 
@@ -36,14 +34,13 @@ public class DefaultAuthenticationProcessingFilterEntryPoint extends
 			HttpServletResponse response, AuthenticationException authException) {
 		String targetUrl = null;
 		String redirectUrl = null;
-		SavedRequest savedRequest = (SavedRequest) request
-				.getSession()
+		SavedRequest savedRequest = (SavedRequest) request.getSession()
 				.getAttribute(
-						AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
+						DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY);
 		request.getSession().removeAttribute(
-				AbstractProcessingFilter.SPRING_SECURITY_SAVED_REQUEST_KEY);
+				DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY);
 		if (savedRequest != null)
-			targetUrl = savedRequest.getFullRequestUrl();
+			targetUrl = savedRequest.getRedirectUrl();
 		if (loginUrl == null) {
 			loginUrl = request.getContextPath() + loginUrl;
 			RedirectUrlBuilder urlBuilder = new RedirectUrlBuilder();
@@ -63,8 +60,10 @@ public class DefaultAuthenticationProcessingFilterEntryPoint extends
 		}
 		try {
 			redirectUrl = loginUrl
-					+ (StringUtils.isNotBlank(targetUrl) ? "?" + TARGET_URL
-							+ "=" + URLEncoder.encode(targetUrl, "UTF-8") : "");
+					+ (StringUtils.isNotBlank(targetUrl) ? "?"
+							+ DefaultUsernamePasswordAuthenticationFilter.TARGET_URL
+							+ "=" + URLEncoder.encode(targetUrl, "UTF-8")
+							: "");
 			if (isForceHttps() && redirectUrl.startsWith("http://")) {
 				URL url = new URL(redirectUrl);
 				RedirectUrlBuilder urlBuilder = new RedirectUrlBuilder();

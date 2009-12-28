@@ -28,9 +28,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-commons-annotations-3.3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javassist-3.11.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-core-2.0.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jta-1.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-2.0.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jencks-2.2-all.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jencks-amqpool-2.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xbean-spring-3.5.jar"/>
@@ -82,5 +80,9 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.transaction-3.0.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.web-3.0.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.web.servlet-3.0.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-core-3.0.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-3.0.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-web-3.0.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-config-3.0.0.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>

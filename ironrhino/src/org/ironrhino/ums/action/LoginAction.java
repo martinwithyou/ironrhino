@@ -11,19 +11,17 @@ import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
-import org.ironrhino.core.spring.security.DefaultuthenticationProcessingFilter;
+import org.ironrhino.core.spring.security.DefaultUsernamePasswordAuthenticationFilter;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
-import org.ironrhino.ums.security.UserAuthenticationProcessingFilter;
-import org.springframework.security.AccountExpiredException;
-import org.springframework.security.Authentication;
-import org.springframework.security.AuthenticationException;
-import org.springframework.security.BadCredentialsException;
-import org.springframework.security.CredentialsExpiredException;
-import org.springframework.security.DisabledException;
-import org.springframework.security.LockedException;
-import org.springframework.security.concurrent.ConcurrentLoginException;
-import org.springframework.security.ui.webapp.AuthenticationProcessingFilter;
+import org.ironrhino.ums.security.AuthenticationFilter;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
@@ -39,7 +37,7 @@ public class LoginAction extends BaseAction {
 	private String username;
 
 	@Inject
-	private transient DefaultuthenticationProcessingFilter authenticationProcessingFilter;
+	private transient DefaultUsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
 
 	public String getUsername() {
 		return username;
@@ -66,8 +64,8 @@ public class LoginAction extends BaseAction {
 		HttpServletResponse response = ServletActionContext.getResponse();
 		Authentication authResult = null;
 		try {
-			authResult = authenticationProcessingFilter
-					.attemptAuthentication(request);
+			authResult = usernamePasswordAuthenticationFilter
+					.attemptAuthentication(request, response);
 		} catch (AuthenticationException failed) {
 			if (failed instanceof DisabledException)
 				addFieldError("username", getText("user.disabled"));
@@ -75,17 +73,14 @@ public class LoginAction extends BaseAction {
 				addFieldError("username", getText("user.locked"));
 			else if (failed instanceof AccountExpiredException)
 				addFieldError("username", getText("user.expired"));
-			else if (failed instanceof ConcurrentLoginException)
-				addFieldError("username", getText("user.concurrent.login"));
 			else if (failed instanceof BadCredentialsException)
 				addFieldError("password", getText("user.bad.credentials"));
 			else if (failed instanceof CredentialsExpiredException)
 				addFieldError("password", getText("user.bad.expired"));
 			captchaManager.addCaptachaThreshold(request);
 			try {
-				authenticationProcessingFilter
-						.unsuccessfulAuthenticationWithoutRedirect(request,
-								response, failed);
+				usernamePasswordAuthenticationFilter.unsuccess(request,
+						response, failed);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
@@ -93,14 +88,8 @@ public class LoginAction extends BaseAction {
 		}
 		if (authResult != null)
 			try {
-				authenticationProcessingFilter
-						.successfulAuthenticationWithoutRedirect(request,
-								response, authResult);
-				ServletActionContext
-						.getRequest()
-						.getSession()
-						.removeAttribute(
-								AuthenticationProcessingFilter.SPRING_SECURITY_LAST_USERNAME_KEY);
+				usernamePasswordAuthenticationFilter.success(request, response,
+						authResult);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
@@ -110,10 +99,13 @@ public class LoginAction extends BaseAction {
 	@Override
 	public String input() {
 		HttpServletRequest request = ServletActionContext.getRequest();
-		if (StringUtils.isBlank(targetUrl))
+		if (StringUtils.isBlank(targetUrl)) {
 			targetUrl = request.getHeader("Referer");
+			if (StringUtils.isBlank(targetUrl))
+				targetUrl = "/";
+		}
 		username = RequestUtils.getCookieValue(request,
-				UserAuthenticationProcessingFilter.COOKIE_NAME_LOGIN_USER);
+				AuthenticationFilter.COOKIE_NAME_LOGIN_USER);
 		return SUCCESS;
 	}
 

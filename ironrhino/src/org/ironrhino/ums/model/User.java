@@ -1,5 +1,6 @@
 package org.ironrhino.ums.model;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,8 +16,8 @@ import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.SimpleElement;
 import org.ironrhino.core.util.CodecUtils;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @RecordAware
 public class User extends BaseEntity implements UserDetails, Recordable {
@@ -68,7 +69,7 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 	private Set<SimpleElement> roles = new HashSet<SimpleElement>(0);
 
 	@NotInJson
-	private GrantedAuthority[] authorities = new GrantedAuthority[0];
+	private Collection<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 
 	public User() {
 		createDate = new Date();
@@ -195,7 +196,7 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 		SimpleElement.fillCollectionWithString(roles, rolesAsString);
 	}
 
-	public void setAuthorities(GrantedAuthority[] authorities) {
+	public void setAuthorities(Collection<GrantedAuthority> authorities) {
 		this.authorities = authorities;
 	}
 
@@ -219,7 +220,7 @@ public class User extends BaseEntity implements UserDetails, Recordable {
 		return password;
 	}
 
-	public GrantedAuthority[] getAuthorities() {
+	public Collection<GrantedAuthority> getAuthorities() {
 		return this.authorities;
 	}
 

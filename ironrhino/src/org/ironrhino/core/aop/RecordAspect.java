@@ -16,7 +16,7 @@ import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.util.AuthzUtils;
 import org.springframework.core.Ordered;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Use for record model's CRUD operations

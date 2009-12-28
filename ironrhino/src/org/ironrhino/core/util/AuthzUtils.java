@@ -1,6 +1,7 @@
 package org.ironrhino.core.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.jsp.tagext.Tag;
@@ -14,15 +15,15 @@ import org.ironrhino.core.model.SimpleElement;
 import org.mvel2.templates.TemplateRuntime;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
-import org.springframework.security.Authentication;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.context.HttpSessionContextIntegrationFilter;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.taglibs.authz.AuthorizeTag;
-import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -63,8 +64,8 @@ public class AuthzUtils {
 	public static List<String> getRoleNames() {
 		List<String> roleNames = new ArrayList<String>();
 		if (SecurityContextHolder.getContext().getAuthentication() != null) {
-			GrantedAuthority[] authz = SecurityContextHolder.getContext()
-					.getAuthentication().getAuthorities();
+			Collection<GrantedAuthority> authz = SecurityContextHolder
+					.getContext().getAuthentication().getAuthorities();
 			if (authz != null)
 				for (GrantedAuthority var : authz)
 					roleNames.add(var.getAuthority());
@@ -119,7 +120,7 @@ public class AuthzUtils {
 				.getRequest()
 				.getSession()
 				.setAttribute(
-						HttpSessionContextIntegrationFilter.SPRING_SECURITY_CONTEXT_KEY,
+						HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
 						sc);
 	}
 }

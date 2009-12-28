@@ -1,7 +1,7 @@
 package org.ironrhino.core.spring.security;
 
 import org.ironrhino.core.util.CodecUtils;
-import org.springframework.security.providers.encoding.BasePasswordEncoder;
+import org.springframework.security.authentication.encoding.BasePasswordEncoder;
 
 public class MixedPasswordEncoder extends BasePasswordEncoder {
 

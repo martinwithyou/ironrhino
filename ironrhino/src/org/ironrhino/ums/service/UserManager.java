@@ -3,7 +3,7 @@ package org.ironrhino.ums.service;
 import org.ironrhino.core.metadata.Remoting;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.ums.model.User;
-import org.springframework.security.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Remoting
 public interface UserManager extends BaseManager<User>, UserDetailsService {

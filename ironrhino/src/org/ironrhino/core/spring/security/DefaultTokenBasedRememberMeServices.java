@@ -4,8 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ironrhino.core.util.RequestUtils;
-import org.springframework.security.Authentication;
-import org.springframework.security.ui.rememberme.TokenBasedRememberMeServices;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.util.StringUtils;
 
 public class DefaultTokenBasedRememberMeServices extends
