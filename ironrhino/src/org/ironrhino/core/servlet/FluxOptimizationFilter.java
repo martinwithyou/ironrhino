@@ -32,7 +32,7 @@ public class FluxOptimizationFilter implements Filter {
 			chain.doFilter(rq, rs);
 		HttpServletRequest request = (HttpServletRequest) rq;
 		HttpServletResponse response = (HttpServletResponse) rs;
-		BufferableResponseWrapper brw = new BufferableResponseWrapper(response);
+		LazyCommitResponseWrapper brw = new LazyCommitResponseWrapper(response);
 		chain.doFilter(request, brw);
 		byte[] bytes = brw.getContents();
 		if (bytes != null) {

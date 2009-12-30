@@ -74,7 +74,7 @@ public class HttpSessionFilter implements Filter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			wrappedHttpResponse.commitBuffer();
+			wrappedHttpResponse.commit();
 		}
 	}
 

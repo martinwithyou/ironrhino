@@ -2,9 +2,9 @@ package org.ironrhino.core.session;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.ironrhino.core.servlet.BufferableResponseWrapper;
+import org.ironrhino.core.servlet.LazyCommitResponseWrapper;
 
-public class WrappedHttpServletResponse extends BufferableResponseWrapper {
+public class WrappedHttpServletResponse extends LazyCommitResponseWrapper {
 
 	private WrappedHttpSession session;
 

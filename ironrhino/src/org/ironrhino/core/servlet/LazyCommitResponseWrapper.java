@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.commons.lang.StringUtils;
 
-public class BufferableResponseWrapper extends HttpServletResponseWrapper {
+public class LazyCommitResponseWrapper extends HttpServletResponseWrapper {
 
 	private final RoutablePrintWriter routablePrintWriter;
 
@@ -24,7 +24,9 @@ public class BufferableResponseWrapper extends HttpServletResponseWrapper {
 
 	private boolean parseablePage = false;
 
-	public BufferableResponseWrapper(final HttpServletResponse response) {
+	private String location;
+
+	public LazyCommitResponseWrapper(final HttpServletResponse response) {
 		super(response);
 		routablePrintWriter = new RoutablePrintWriter(
 				new RoutablePrintWriter.DestinationFactory() {
@@ -101,17 +103,6 @@ public class BufferableResponseWrapper extends HttpServletResponseWrapper {
 			super.flushBuffer();
 	}
 
-	public void commitBuffer() throws IOException {
-		byte[] bytes = getContents();
-		if (bytes == null || bytes.length == 0)
-			return;
-		setContentLength(bytes.length);
-		ServletOutputStream sos = super.getOutputStream();
-		sos.write(bytes);
-		sos.flush();
-		sos.close();
-	}
-
 	@Override
 	public void setHeader(String name, String value) {
 		if (name.toLowerCase().equals("content-type")) {
@@ -166,7 +157,7 @@ public class BufferableResponseWrapper extends HttpServletResponseWrapper {
 	@Override
 	public void sendRedirect(String location) throws IOException {
 		aborted = true;
-		super.sendRedirect(location);
+		this.location = location;
 	}
 
 	public boolean isUsingStream() {
@@ -179,6 +170,21 @@ public class BufferableResponseWrapper extends HttpServletResponseWrapper {
 		} else {
 			return buffer.getBytes();
 		}
+	}
+
+	public void commit() throws IOException {
+		if (location != null) {
+			super.sendRedirect(location);
+			return;
+		}
+		byte[] bytes = getContents();
+		if (bytes == null || bytes.length == 0)
+			return;
+		setContentLength(bytes.length);
+		ServletOutputStream sos = super.getOutputStream();
+		sos.write(bytes);
+		sos.flush();
+		sos.close();
 	}
 
 	private static class HttpContentType {
