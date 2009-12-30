@@ -24,36 +24,16 @@ public class LazyCommitResponseWrapper extends HttpServletResponseWrapper {
 	public LazyCommitResponseWrapper(final HttpServletResponse response) {
 		super(response);
 		buffer = new Buffer(getCharacterEncoding());
-
 	}
 
 	@Override
-	public void setContentType(String type) {
-		super.setContentType(type);
+	public ServletOutputStream getOutputStream() {
+		return buffer.getOutputStream();
 	}
 
 	@Override
-	public void setContentLength(int contentLength) {
-
-	}
-
-	@Override
-	public void flushBuffer() throws IOException {
-
-	}
-
-	@Override
-	public void setHeader(String name, String value) {
-		if (!name.toLowerCase().equals("content-length")) {
-			super.setHeader(name, value);
-		}
-	}
-
-	@Override
-	public void addHeader(String name, String value) {
-		if (!name.toLowerCase().equals("content-length")) {
-			super.addHeader(name, value);
-		}
+	public PrintWriter getWriter() {
+		return buffer.getWriter();
 	}
 
 	@Override
@@ -74,22 +54,8 @@ public class LazyCommitResponseWrapper extends HttpServletResponseWrapper {
 	}
 
 	@Override
-	public ServletOutputStream getOutputStream() {
-		return buffer.getOutputStream();
-	}
-
-	@Override
-	public PrintWriter getWriter() {
-		return buffer.getWriter();
-	}
-
-	@Override
 	public void sendRedirect(String location) throws IOException {
 		this.location = location;
-	}
-
-	public boolean isUsingStream() {
-		return buffer != null && buffer.isUsingStream();
 	}
 
 	public byte[] getContents() throws IOException {
@@ -98,6 +64,11 @@ public class LazyCommitResponseWrapper extends HttpServletResponseWrapper {
 		} else {
 			return buffer.getBytes();
 		}
+	}
+
+	@Override
+	public void flushBuffer() throws IOException {
+
 	}
 
 	public void commit() throws IOException {
@@ -111,7 +82,7 @@ public class LazyCommitResponseWrapper extends HttpServletResponseWrapper {
 			byte[] bytes = getContents();
 			if (bytes == null || bytes.length == 0)
 				return;
-			super.setContentLength(bytes.length);
+			setContentLength(bytes.length);
 			ServletOutputStream sos = super.getOutputStream();
 			sos.write(bytes);
 			sos.flush();
@@ -177,9 +148,6 @@ public class LazyCommitResponseWrapper extends HttpServletResponseWrapper {
 			return exposedStream;
 		}
 
-		public boolean isUsingStream() {
-			return bufferedStream != null;
-		}
 	}
 
 }
