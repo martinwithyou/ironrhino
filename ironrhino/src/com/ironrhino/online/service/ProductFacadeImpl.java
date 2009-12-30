@@ -384,7 +384,7 @@ public class ProductFacadeImpl implements ProductFacade {
 	private DetachedCriteria prepareDetachedCriteria() {
 		DetachedCriteria dc = productManager.detachedCriteria();
 		dc.setFetchMode("category", FetchMode.JOIN);
-		dc.setFetchMode("attributes", FetchMode.JOIN);
+		dc.setFetchMode("attributes", FetchMode.SELECT);
 		dc.setFetchMode("tags", FetchMode.JOIN);
 		return dc;
 	}
