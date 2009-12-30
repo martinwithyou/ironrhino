@@ -19,29 +19,7 @@ ECSideUtil.getPosLeft = function(elm) {
 ECSideUtil.getPosRight = function(elm) {
 	return ECSideUtil.getPosLeft(elm) + elm.offsetWidth;
 };
-ECSideUtil.replaceAll = function(exstr, ov, value) {
-	var gc = ECSideUtil.escapeRegExp(ov);
-	if (gc == null || gc == '') {
-		return exstr;
-	}
-	var reReplaceGene = "/" + gc + "/gm";
-	var r = null;
-	var cmd = "r=exstr.replace(" + reReplaceGene + ","
-			+ ECSideUtil.escapeString(value) + ")";
-	eval(cmd);
-	return r;
-};
-ECSideUtil.escapeRegExp = function(str) {
-	return !str ? '' + str : ('' + str).replace(/\\/gm, "\\\\").replace(
-			/([\f\b\n\t\r[\^$|?*+(){}])/gm, "\\$1");
-};
-ECSideUtil.escapeString = function(str) {
-	return !str
-			? '' + str
-			: ('"' + ('' + str).replace(/(["\\])/g, '\\$1') + '"').replace(
-					/[\f]/g, "\\f").replace(/[\b]/g, "\\b").replace(/[\n]/g,
-					"\\n").replace(/[\t]/g, "\\t").replace(/[\r]/g, "\\r");
-};
+
 ECSideUtil.Dragobj = null;
 ECSideUtil.DragobjSibling = null;
 ECSideUtil.DragobjBodyCell = null;
@@ -117,33 +95,16 @@ ECSideUtil.EndResize = function(event) {
 };
 
 ECSideUtil.editCell = function(cellObj, editType, templateId) {
-	if (cellObj.getAttribute("editing") == "true")
+	if ($(cellObj).attr("editing") == "true")
 		return;
-	cellObj.setAttribute("editing", "true");
+	$(cellObj).attr("editing", "true");
 	var template = document.getElementById(templateId);
 	var templateText = $.browser.msie ? template.value : template.textContent;
-
 	var text = $.browser.msie ? cellObj.innerText : cellObj.textContent;
-	var value = cellObj.getAttribute("cellValue");
+	var value = $(cellObj).attr("cellValue");
 	value = value == null ? text : value;
-	var name = cellObj.getAttribute("cellName");
-	if (templateText.indexOf("name=\"\"") > 0) {
-		templateText = ECSideUtil.replaceAll(templateText, "name=\"\"",
-				"name=\"" + name + "\"");
-	}
-	if (editType == "input") {
-		cellObj.innerHTML = ECSideUtil.replaceAll(templateText, "value=\"\"",
-				"value=\"" + value + "\"");
-	} else if (editType == "select") {
-		cellObj.innerHTML = ECSideUtil.replaceAll(templateText, "value=\""
-						+ value + "\"", "value=\"" + value
-						+ "\" selected=\"selected\"");
-	} else if (editType == "checkbox" || editType == "radio") {
-		cellObj.innerHTML = ECSideUtil.replaceAll(templateText, "value=\""
-						+ value + "\"", "value=\"" + value
-						+ "\" checked=\"checked\"");
-	}
-	$('input,select,checkbox', cellObj).focus();
+	$(cellObj).html(templateText);
+	$('input,select,checkbox', $(cellObj)).val(value).focus();
 };
 ECSideUtil.updateCell = function(cellEditObj, editType) {
 	var cellObj = cellEditObj.parentNode;
