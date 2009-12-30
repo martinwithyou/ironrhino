@@ -4,8 +4,7 @@
 <title>ironrhino</title>
 </head>
 <body>
-<@s.form id="addressee" namespace="/account" action="order!addressee"
-	method="post">
+<@s.form id="addressee" action="addressee" method="post">
 	<@s.textfield label="%{getText('name')}" name="order.addressee.name"
 		cssClass="required" />
 	<@s.textfield label="%{getText('address')}" id="address" name="order.addressee.address" cssClass="required">

@@ -61,7 +61,11 @@ public class JsonUtils {
 
 	public static <T> T fromJson(String json, TypeReference type)
 			throws Exception {
-		return (T)objectMapper.readValue(json, type);
+		return (T) objectMapper.readValue(json, type);
+	}
+
+	public static <T> T fromJson(String json, Class<T> cls) throws Exception {
+		return (T) objectMapper.readValue(json, cls);
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Addressee;
@@ -58,15 +59,21 @@ public class OrderAction extends BaseAction {
 			if (order == null
 					|| !order.getUser().equals(
 							AuthzUtils.getUserDetails(User.class)))
-				order = cart.getOrder();
-			return order;
+				order = getCart().getOrder();
 		} else {
-			return cart.getOrder();
+			order = getCart().getOrder();
 		}
+		return order;
 	}
 
-	public void setCart(Cart cart) {
-		this.cart = cart;
+	public Cart getCart() {
+		if (cart == null) {
+			cart = (Cart) ServletActionContext.getRequest().getSession()
+					.getAttribute(Cart.SESSION_KEY_CART);
+			if (cart == null)
+				cart = new Cart();
+		}
+		return cart;
 	}
 
 	public PaymentManager getPaymentManager() {
@@ -87,27 +94,26 @@ public class OrderAction extends BaseAction {
 
 	@Override
 	public String view() {
-		order = getOrder();
-		orderManager.calculateOrder(order);
+		orderManager.calculateOrder(getOrder());
 		return VIEW;
 	}
 
 	@Override
 	public String input() {
 		if ("addressee".equals(originalMethod)) {
-			Addressee add = cart.getOrder().getAddressee();
+			Addressee add = getCart().getOrder().getAddressee();
 			if (add == null) {
 				add = new Addressee();
-				cart.getOrder().setAddressee(add);
+				getCart().getOrder().setAddressee(add);
 				BeanUtils.copyProperties(AuthzUtils.getUserDetails(User.class)
 						.getDefaultAddressee(), add);
 			}
 			return "addressee";
 		} else if ("payment".equals(originalMethod)) {
-			Addressee add = cart.getOrder().getAddressee();
+			Addressee add = getCart().getOrder().getAddressee();
 			if (add == null) {
 				add = new Addressee();
-				cart.getOrder().setAddressee(add);
+				getCart().getOrder().setAddressee(add);
 				BeanUtils.copyProperties(AuthzUtils.getUserDetails(User.class)
 						.getDefaultAddressee(), add);
 			}
@@ -119,12 +125,13 @@ public class OrderAction extends BaseAction {
 
 	@InputConfig(methodName = "input")
 	public String addressee() {
-		if (!order.isNew()) {
-			orderManager.save(order);
-			targetUrl = "/account/order/view/" + order.getCode();
+		if (!getOrder().isNew()) {
+			orderManager.save(getOrder());
+			targetUrl = "/account/order/view/" + getOrder().getCode();
 		} else {
 			targetUrl = "/account/order/view";
 		}
+		markSessionDirty();
 		return REDIRECT;
 	}
 
@@ -136,15 +143,17 @@ public class OrderAction extends BaseAction {
 
 	public String confirm() {
 		targetUrl = "/account/order/view/"
-				+ orderManager.create(cart.getOrder());
-		cart.clear();
+				+ orderManager.create(getCart().getOrder());
+		getCart().clear();
+		markSessionDirty();
 		return REDIRECT;
 	}
 
 	public String cancel() {
 		Order order = getOrder();
-		if (!order.isNew() && order.getStatus() == OrderStatus.INITIAL) {
-			order.setStatus(OrderStatus.CANCELLED);
+		if (!getOrder().isNew()
+				&& getOrder().getStatus() == OrderStatus.INITIAL) {
+			getOrder().setStatus(OrderStatus.CANCELLED);
 			orderManager.save(order);
 		}
 		return REFERER;
@@ -153,8 +162,8 @@ public class OrderAction extends BaseAction {
 	@Override
 	public String delete() {
 		Order order = getOrder();
-		if (!order.isNew()
-				&& (order.getStatus() == OrderStatus.INITIAL || order
+		if (!getOrder().isNew()
+				&& (getOrder().getStatus() == OrderStatus.INITIAL || order
 						.getStatus() == OrderStatus.CANCELLED))
 			orderManager.delete(order);
 		targetUrl = "/account/order";
@@ -170,7 +179,7 @@ public class OrderAction extends BaseAction {
 			Order o = orderManager.get(ids[i]);
 			if (i == 0) {
 				order = o;
-				items = order.getItems();
+				items = getOrder().getItems();
 				continue;
 			}
 			if (o.getStatus() != OrderStatus.INITIAL
@@ -192,8 +201,8 @@ public class OrderAction extends BaseAction {
 			orderManager.delete(o);
 		}
 		orderManager.save(order);
-		targetUrl = "/account/order/view" + order.getCode() == null ? "" : "/"
-				+ order.getCode();
+		targetUrl = "/account/order/view" + getOrder().getCode() == null ? ""
+				: "/" + getOrder().getCode();
 		return REDIRECT;
 	}
 
@@ -201,6 +210,12 @@ public class OrderAction extends BaseAction {
 	public String update() {
 		// adjust quantity,remove item status must be INITIAL
 		return NONE;
+	}
+
+	private void markSessionDirty() {
+		if (cart != null)
+			ServletActionContext.getRequest().getSession().setAttribute(
+					Cart.SESSION_KEY_CART, cart);
 	}
 
 }

@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.type.TypeReference;
+import org.ironrhino.common.model.Addressee;
 import org.ironrhino.core.session.SessionCompressor;
 import org.ironrhino.core.util.JsonUtils;
 
@@ -21,6 +22,8 @@ import com.ironrhino.online.service.ProductFacade;
 @Singleton
 @Named
 public class CartSessionCompressor implements SessionCompressor<Cart> {
+
+	private static final String SEPARATOR = "|**|";
 
 	private Log log = LogFactory.getLog(getClass());
 
@@ -42,13 +45,26 @@ public class CartSessionCompressor implements SessionCompressor<Cart> {
 		Map<String, Integer> map = new HashMap<String, Integer>(items.size());
 		for (OrderItem oi : items)
 			map.put(oi.getProductCode(), oi.getQuantity());
-		return JsonUtils.toJson(map);
+		Addressee add = cart.getOrder().getAddressee();
+		if (add == null) {
+			return JsonUtils.toJson(map);
+		} else {
+			return new StringBuilder().append(JsonUtils.toJson(map)).append(
+					SEPARATOR).append(JsonUtils.toJson(add)).toString();
+		}
+
 	}
 
 	@Override
 	public Cart uncompress(String str) {
 		Cart cart = new Cart();
 		if (StringUtils.isNotBlank(str)) {
+			String add = null;
+			int index = str.indexOf(SEPARATOR);
+			if (index > 0) {
+				add = str.substring(index + SEPARATOR.length());
+				str = str.substring(0, index);
+			}
 			try {
 				Map<String, Integer> map = JsonUtils.fromJson(str,
 						new TypeReference<Map<String, Integer>>() {
@@ -56,6 +72,9 @@ public class CartSessionCompressor implements SessionCompressor<Cart> {
 				for (Map.Entry<String, Integer> entry : map.entrySet())
 					cart.put(productFacade.getProductByCode(entry.getKey()),
 							entry.getValue());
+				if (add != null)
+					cart.getOrder().setAddressee(
+							JsonUtils.fromJson(add, Addressee.class));
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
