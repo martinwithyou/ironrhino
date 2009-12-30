@@ -17851,16 +17851,6 @@ Observation.datagridTable = function(container) {
 	$('table.datagrid', container).datagridTable();
 };
 ﻿var ECSideUtil = {};
-ECSideUtil.getNextElement = function(node) {
-	var tnode = node.nextSibling;
-	while (tnode != null) {
-		if (tnode.nodeType == 1) {
-			return tnode;
-		}
-		tnode = tnode.nextSibling;
-	}
-	return null;
-};
 ECSideUtil.getPosLeft = function(elm) {
 	var left = elm.offsetLeft;
 	while ((elm = elm.offsetParent) != null) {
@@ -17881,7 +17871,7 @@ ECSideUtil.StartResize = function(event) {
 	var obj = event.srcElement || event.target;
 	obj.focus();
 	document.body.style.cursor = "e-resize";
-	var sibling = ECSideUtil.getNextElement(obj.parentNode);
+	var sibling = $(obj.parentNode).next()[0];
 	var dx = event.screenX;
 	obj.parentTdW = obj.parentNode.clientWidth;
 	obj.siblingW = sibling.clientWidth;
@@ -17896,8 +17886,8 @@ ECSideUtil.StartResize = function(event) {
 	var cellIndex = ECSideUtil.Dragobj.parentNode.cellIndex;
 	try {
 		ECSideUtil.DragobjBodyCell = $('#' + Richtable.id + ' tbody')[0].rows[0].cells[cellIndex];
-		ECSideUtil.DragobjBodyCellSibling = ECSideUtil
-				.getNextElement(ECSideUtil.DragobjBodyCell);
+		ECSideUtil.DragobjBodyCellSibling = $(ECSideUtil.DragobjBodyCell)
+				.next()[0];
 	} catch (e) {
 		ECSideUtil.DragobjBodyCell = null;
 	}
@@ -17955,11 +17945,8 @@ ECSideUtil.editCell = function(cellObj, editType, templateId) {
 	var text = $.browser.msie ? cellObj.innerText : cellObj.textContent;
 	var value = $(cellObj).attr("cellValue");
 	value = value == null ? text : value;
-	var name = $(cellObj).attr("cellName");
 	$(cellObj).html(templateText);
-	var v = $('input,select,checkbox', $(cellObj));
-	v[0].name = 'haha';
-	v.val(value).focus();
+	$('input,select,checkbox', $(cellObj)).val(value).focus();
 };
 ECSideUtil.updateCell = function(cellEditObj, editType) {
 	var cellObj = cellEditObj.parentNode;
