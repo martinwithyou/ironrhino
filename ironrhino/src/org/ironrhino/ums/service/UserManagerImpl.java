@@ -14,6 +14,7 @@ import org.ironrhino.core.model.SimpleElement;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.ums.model.User;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -92,6 +93,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	}
 
 	@Transactional
+	@Scheduled(cron = "0 50 23 ? * MON")
 	public void deleteDisabled() {
 		String hql = "delete from Account a where a.enabled = ? and a.createDate <= ?";
 		executeUpdate(hql, new Object[] { false,

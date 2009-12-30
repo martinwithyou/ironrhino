@@ -39,8 +39,10 @@ import org.ironrhino.core.stat.analysis.PeriodAnalyzer;
 import org.ironrhino.core.stat.analysis.TreeNode;
 import org.ironrhino.core.util.CompositeIterator;
 import org.ironrhino.core.util.DateUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 
-@Singleton@Named("statControl")
+@Singleton
+@Named("statControl")
 public class StatControl {
 
 	protected Log log = LogFactory.getLog(getClass());
@@ -51,6 +53,7 @@ public class StatControl {
 		this.baseManager = baseManager;
 	}
 
+	@Scheduled(cron = "0 5 0 * * ?")
 	public void archive() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, -1);
