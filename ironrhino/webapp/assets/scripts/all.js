@@ -18429,6 +18429,8 @@ highlight : function(node, word) {
 		t.html('<input value="' + value + '"/>');
 		$('input', this).width(t.width()).blur(function() {
 					$(this).parent().trigger('blur')
+				}).focus(function() {
+					$(this).select()
 				}).focus();
 	};
 	function blur() {
