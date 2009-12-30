@@ -20,7 +20,20 @@
 		$('input', this).width(t.width()).blur(function() {
 					$(this).parent().trigger('blur')
 				}).focus(function() {
-					$(this).select()
+					if ($.browser.mozilla) {
+						return;
+					} else if ($.browser.msie || $.browser.opera) {
+						var rng = this.createTextRange();
+						rng.text = this.value;
+						rng.collapse(false);
+					} else {
+						// webkit
+						try {
+							this.select();
+							window.getSelection().collapseToEnd();
+						} catch (e) {
+						}
+					}
 				}).focus();
 	};
 	function blur() {
