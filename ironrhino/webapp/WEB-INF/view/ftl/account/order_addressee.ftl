@@ -9,7 +9,7 @@
 		cssClass="required" />
 	<@s.textfield label="%{getText('address')}" id="address" name="order.addressee.address" cssClass="required">
 		<@s.param name="after">
-			<span class="link" onclick="Region.select('address')">select</span>
+			<span class="link" onclick="Region.select('address',true)">select</span>
 		</@s.param>
 	</@s.textfield>
 	<@s.textfield label="%{getText('postcode')}"

@@ -17,6 +17,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	protected Collection<T> children = new HashSet<T>(0);
 
+	@NotInJson
 	public int getDisplayOrder() {
 		return displayOrder;
 	}

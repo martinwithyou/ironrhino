@@ -4,6 +4,7 @@ import org.compass.annotations.SearchableId;
 import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.NotInJson;
 
 public abstract class AbstractTreeableEntity<T extends AbstractTreeableEntity>
 		extends Entity<Long> implements Treeable<T> {
@@ -18,6 +19,7 @@ public abstract class AbstractTreeableEntity<T extends AbstractTreeableEntity>
 
 	protected int level;
 
+	@NotInJson
 	public String getFullId() {
 		return fullId;
 	}
@@ -36,6 +38,7 @@ public abstract class AbstractTreeableEntity<T extends AbstractTreeableEntity>
 	}
 
 	@Override
+	@NotInJson
 	public boolean isNew() {
 		return id == null || id == 0;
 	}
@@ -59,6 +62,7 @@ public abstract class AbstractTreeableEntity<T extends AbstractTreeableEntity>
 		this.name = name;
 	}
 
+	@NotInJson
 	public String getFullname() {
 		String fullname = name;
 		AbstractTreeableEntity e = this;
