@@ -17850,90 +17850,92 @@ var DataGridTable = {
 Observation.datagridTable = function(container) {
 	$('table.datagrid', container).datagridTable();
 };
-﻿var ECSideUtil = {};
-ECSideUtil.getPosLeft = function(elm) {
-	var left = elm.offsetLeft;
-	while ((elm = elm.offsetParent) != null) {
-		left += elm.offsetLeft;
-	}
-	return left;
-};
-ECSideUtil.getPosRight = function(elm) {
-	return ECSideUtil.getPosLeft(elm) + elm.offsetWidth;
-};
-
-ECSideUtil.Dragobj = null;
-ECSideUtil.DragobjSibling = null;
-ECSideUtil.DragobjBodyCell = null;
-ECSideUtil.DragobjBodyCellSibling = null;
-ECSideUtil.StartResize = function(event) {
-	event = event || window.event;
-	var obj = event.srcElement || event.target;
-	obj.focus();
-	document.body.style.cursor = "e-resize";
-	var sibling = $(obj.parentNode).next()[0];
-	var dx = event.screenX;
-	obj.parentTdW = obj.parentNode.clientWidth;
-	obj.siblingW = sibling.clientWidth;
-	obj.mouseDownX = dx;
-	obj.totalWidth = obj.siblingW + obj.parentTdW;
-	obj.oldSiblingRight = ECSideUtil.getPosRight(sibling);
-	ECSideUtil.Dragobj = obj;
-	ECSideUtil.DragobjSibling = sibling;
-	ECSideUtil.MinColWidth = $('#' + Richtable.id).attr('minColWidth') || '30';
-	ECSideUtil.Dragobj.style.backgroundColor = "#3366ff";
-	ECSideUtil.Dragobj.parentTdW -= ECSideUtil.Dragobj.mouseDownX;
-	var cellIndex = ECSideUtil.Dragobj.parentNode.cellIndex;
-	try {
-		ECSideUtil.DragobjBodyCell = $('#' + Richtable.id + ' tbody')[0].rows[0].cells[cellIndex];
-		ECSideUtil.DragobjBodyCellSibling = $(ECSideUtil.DragobjBodyCell)
-				.next()[0];
-	} catch (e) {
-		ECSideUtil.DragobjBodyCell = null;
-	}
-};
-ECSideUtil.DoResize = function(event) {
-	var e = event || window.event;
-	if (ECSideUtil.Dragobj == null) {
-		return true;
-	}
-	if (!ECSideUtil.Dragobj.mouseDownX) {
-		return false;
-	}
-	document.body.style.cursor = "e-resize";
-	var dx = e.screenX;
-	var newWidth = ECSideUtil.Dragobj.parentTdW + dx;
-	var newSiblingWidth = 0;
-	/* fix different from ie to ff . but I don't know why */
-	if ($.browser.msie) {
-		newSiblingWidth = ECSideUtil.Dragobj.totalWidth - newWidth - 1;
-	} else {
-		newSiblingWidth = ECSideUtil.Dragobj.totalWidth - newWidth - 21;
-	}
-	if (newWidth > ECSideUtil.MinColWidth
-			&& newSiblingWidth > ECSideUtil.MinColWidth) {
-		ECSideUtil.Dragobj.parentNode.style.width = newWidth + "px";
-		ECSideUtil.DragobjSibling.style.width = newSiblingWidth + "px";
-		try {
-			ECSideUtil.DragobjBodyCell.style.width = newWidth + "px";
-			ECSideUtil.DragobjBodyCellSibling.style.width = newSiblingWidth
-					+ "px";
-			ECSideUtil.DragobjBodyCell.width = newWidth + "px";
-			ECSideUtil.DragobjBodyCellSibling.width = newSiblingWidth + "px";
-		} catch (e) {
+﻿ECSideUtil = {
+	Dragobj : null,
+	DragobjSibling : null,
+	DragobjBodyCell : null,
+	DragobjBodyCellSibling : null,
+	getPosLeft : function(elm) {
+		var left = elm.offsetLeft;
+		while ((elm = elm.offsetParent) != null) {
+			left += elm.offsetLeft;
 		}
-	}
-};
-ECSideUtil.EndResize = function(event) {
-	if (ECSideUtil.Dragobj == null) {
-		return false;
-	}
-	ECSideUtil.Dragobj.mouseDownX = 0;
-	document.body.style.cursor = "";
-	ECSideUtil.Dragobj.style.backgroundColor = "";
-	ECSideUtil.Dragobj = null;
-	ECSideUtil.DragobjSibling = null;
+		return left;
+	},
+	getPosRight : function(elm) {
+		return ECSideUtil.getPosLeft(elm) + elm.offsetWidth;
+	},
+	StartResize : function(event) {
+		event = event || window.event;
+		var obj = event.srcElement || event.target;
+		obj.focus();
+		document.body.style.cursor = "e-resize";
+		var sibling = $(obj.parentNode).next()[0];
+		var dx = event.screenX;
+		obj.parentTdW = obj.parentNode.clientWidth;
+		obj.siblingW = sibling.clientWidth;
+		obj.mouseDownX = dx;
+		obj.totalWidth = obj.siblingW + obj.parentTdW;
+		obj.oldSiblingRight = ECSideUtil.getPosRight(sibling);
+		ECSideUtil.Dragobj = obj;
+		ECSideUtil.DragobjSibling = sibling;
+		ECSideUtil.MinColWidth = $('#' + Richtable.id).attr('minColWidth')
+				|| '30';
+		ECSideUtil.Dragobj.style.backgroundColor = "#3366ff";
+		ECSideUtil.Dragobj.parentTdW -= ECSideUtil.Dragobj.mouseDownX;
+		var cellIndex = ECSideUtil.Dragobj.parentNode.cellIndex;
+		try {
+			ECSideUtil.DragobjBodyCell = $('#' + Richtable.id + ' tbody')[0].rows[0].cells[cellIndex];
+			ECSideUtil.DragobjBodyCellSibling = $(ECSideUtil.DragobjBodyCell)
+					.next()[0];
+		} catch (e) {
+			ECSideUtil.DragobjBodyCell = null;
+		}
+	},
+	DoResize : function(event) {
+		var e = event || window.event;
+		if (ECSideUtil.Dragobj == null) {
+			return true;
+		}
+		if (!ECSideUtil.Dragobj.mouseDownX) {
+			return false;
+		}
+		document.body.style.cursor = "e-resize";
+		var dx = e.screenX;
+		var newWidth = ECSideUtil.Dragobj.parentTdW + dx;
+		var newSiblingWidth = 0;
+		/* fix different from ie to ff . but I don't know why */
+		if ($.browser.msie) {
+			newSiblingWidth = ECSideUtil.Dragobj.totalWidth - newWidth - 1;
+		} else {
+			newSiblingWidth = ECSideUtil.Dragobj.totalWidth - newWidth - 21;
+		}
+		if (newWidth > ECSideUtil.MinColWidth
+				&& newSiblingWidth > ECSideUtil.MinColWidth) {
+			ECSideUtil.Dragobj.parentNode.style.width = newWidth + "px";
+			ECSideUtil.DragobjSibling.style.width = newSiblingWidth + "px";
+			try {
+				ECSideUtil.DragobjBodyCell.style.width = newWidth + "px";
+				ECSideUtil.DragobjBodyCellSibling.style.width = newSiblingWidth
+						+ "px";
+				ECSideUtil.DragobjBodyCell.width = newWidth + "px";
+				ECSideUtil.DragobjBodyCellSibling.width = newSiblingWidth
+						+ "px";
+			} catch (e) {
+			}
+		}
+	},
+	EndResize : function(event) {
+		if (ECSideUtil.Dragobj == null) {
+			return false;
+		}
+		ECSideUtil.Dragobj.mouseDownX = 0;
+		document.body.style.cursor = "";
+		ECSideUtil.Dragobj.style.backgroundColor = "";
+		ECSideUtil.Dragobj = null;
+		ECSideUtil.DragobjSibling = null;
 
+	}
 };
 
 Richtable = {
