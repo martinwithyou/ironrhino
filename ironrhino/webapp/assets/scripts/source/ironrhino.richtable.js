@@ -84,38 +84,6 @@ ECSideUtil.EndResize = function(event) {
 
 };
 
-ECSideUtil.editCell = function(cellObj, editType, templateId) {
-	if ($(cellObj).attr("editing") == "true")
-		return;
-	$(cellObj).attr("editing", "true");
-	var template = document.getElementById(templateId);
-	var templateText = $.browser.msie ? template.value : template.textContent;
-	var text = $.browser.msie ? cellObj.innerText : cellObj.textContent;
-	var value = $(cellObj).attr("cellValue");
-	value = value == null ? text : value;
-	$(cellObj).html(templateText);
-	$('input,select,checkbox', $(cellObj)).val(value).focus();
-};
-ECSideUtil.updateCell = function(cellEditObj, editType) {
-	var cellObj = cellEditObj.parentNode;
-	var value = '';
-	if (editType == "input") {
-		value = cellEditObj.value;
-		cellObj.innerHTML = cellEditObj.value;
-	} else if (editType == "select") {
-		value = cellEditObj.options[cellEditObj.selectedIndex].value;
-		cellObj.innerHTML = cellEditObj.options[cellEditObj.selectedIndex].text;
-	} else if (editType == "checkbox" || editType == "radio") {
-		value = cellEditObj.value;
-		cellObj.innerHTML = cellEditObj.nextSibling.nodeValue;
-	}
-	cellObj.setAttribute("cellValue", value);
-	cellObj.setAttribute("edited", "true");
-	cellObj.parentNode.setAttribute("edited", "true");
-	cellObj.setAttribute("editing", "false");
-	$(cellObj).addClass("editedCell");
-};
-
 Richtable = {
 	getBaseUrl : function() {
 		var url = document.location.href;
@@ -314,14 +282,47 @@ Richtable = {
 					complete : Richtable.reload
 				});
 	},
-	updatePasswordCell : function(cellEditObj) {
-		var cellObj = cellEditObj.parentNode;
-		cellObj.innerHTML = '********';
-		cellObj.setAttribute("cellValue", cellEditObj.value);
-		cellObj.setAttribute("edited", "true");
-		cellObj.parentNode.setAttribute("edited", "true");
-		cellObj.setAttribute("editing", "false");
-		$(cellObj).addClass("editedCell");
+	editCell : function(cell, templateId) {
+		var ce = $(cell);
+		if (ce.attr("editing") == "true")
+			return;
+		ce.attr("editing", "true");
+		var template = document.getElementById(templateId);
+		var templateText = $.browser.msie
+				? template.value
+				: template.textContent;
+		var text = ce.text();
+		var value = ce.attr("cellValue");
+		value = value || text;
+		ce.html(templateText);
+		$('input,select,checkbox,radio', ce).val(value).focus();
+	},
+	updateCell : function(cellEdit) {
+		var ce = $(cellEdit);
+		var cell = ce.parent();
+		var editType = ce.attr('tagName');
+		if (editType == "INPUT") {
+			cell.html(ce.val());
+		} else if (editType == "SELECT") {
+			cell.html($('option[selected]', ce).text());
+		} else if (editType == "CHECKBOX" || editType == "RADIO") {
+			cell.html(ce.next().text());
+		}
+		cell.attr("cellValue", ce.val());
+		cell.attr("edited", "true");
+		cell.parent().attr("edited", "true");
+		cell.removeAttr("editing");
+		cell.addClass("editedCell");
+	},
+	updatePasswordCell : function(cellEdit) {
+		var ce = $(cellEdit);
+		var cell = ce.parent();
+		cell.text('********');
+		cell.attr("cellValue", ce.val());
+		cell.attr("edited", "true");
+		cell.parent().attr("edited", "true");
+		cell.attr("editing", "false");
+		cell.addClass("editedCell");
 	}
 };
 Observation.richtable = function() {
@@ -331,18 +332,19 @@ Observation.richtable = function() {
 		$('.richtable .del').click(Richtable.del);
 		var theadCells = $('.richtable thead:eq(0) td');
 		var rows = $('.richtable tbody:eq(0) tr').each(function() {
-			var cells = this.cells;
-			theadCells.each(function(i) {
-				var cellEdit = $(this).attr('cellEdit');
-				if (!cellEdit)
-					return;
-				$(cells[i]).dblclick(function() {
-							var array = cellEdit.split(',');
-							var template = array[1] || 'rt_edit_template_input';
-							ECSideUtil.editCell(this, array[0], template);
-						});
-			});
-		});
+					var cells = this.cells;
+					theadCells.each(function(i) {
+								var cellEdit = $(this).attr('cellEdit');
+								if (!cellEdit)
+									return;
+								var ar = cellEdit.split(',');
+								var template = ar[1]
+										|| 'rt_edit_template_input';
+								$(cells[i]).bind(ar[0], function() {
+											Richtable.editCell(this, template);
+										});
+							});
+				});
 		$('.richtable .reload').click(Richtable.reload);
 		$('.richtable .resizeBar').mousedown(ECSideUtil.StartResize);
 		$('.richtable .resizeBar').mouseup(ECSideUtil.EndResize);

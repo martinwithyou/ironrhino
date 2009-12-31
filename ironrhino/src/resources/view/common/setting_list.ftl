@@ -4,7 +4,7 @@
 <title>List Setttings</title>
 </head>
 <body>
-<#assign config={"key":{},"value":{"cellEdit":"input"}}>
+<#assign config={"key":{},"value":{"cellEdit":"click"}}>
 <@richtable entityName="setting" config=config/>
 </body>
 </html></#escape>
