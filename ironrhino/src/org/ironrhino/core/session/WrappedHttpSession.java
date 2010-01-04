@@ -32,36 +32,36 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 
 	private transient HttpSessionManager httpSessionManager;
 
-	private transient volatile HttpServletRequest request;
+	private transient HttpServletRequest request;
 
-	private transient volatile HttpServletResponse response;
+	private transient HttpServletResponse response;
 
-	private transient volatile ServletContext context;
+	private transient ServletContext context;
 
-	private volatile Map<String, Object> attrMap = new HashMap<String, Object>();
+	private Map<String, Object> attrMap = new HashMap<String, Object>();
 
-	private volatile long creationTime;
+	private long creationTime;
 
-	private volatile long lastAccessedTime;
+	private long lastAccessedTime;
 
-	private volatile long now;
+	private long now;
 
-	private volatile int maxInactiveInterval;
+	private int maxInactiveInterval;
 
-	private volatile int minActiveInterval;
+	private int minActiveInterval;
 
-	private volatile boolean dirty;
+	private boolean dirty;
 
-	private volatile boolean isnew;
+	private boolean isnew;
 
-	private volatile boolean fromCookie = true;
+	private boolean fromCookie = true;
 
 	/**
 	 * sessionTracker -> id-creationTime-lastAccessedTime
 	 */
-	private volatile String sessionTracker;
+	private String sessionTracker;
 
-	private volatile boolean invalid;
+	private boolean invalid;
 
 	public WrappedHttpSession(HttpServletRequest request,
 			HttpServletResponse response, ServletContext context,
