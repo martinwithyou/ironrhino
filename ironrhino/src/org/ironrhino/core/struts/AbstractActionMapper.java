@@ -17,10 +17,6 @@ public abstract class AbstractActionMapper implements ActionMapper {
 
 	public static final String ID = "id";
 
-	public static final String REST_STYLE = "restStyle";
-
-	public static final String DATA_TYPE = "dataType";
-
 	protected Log log = LogFactory.getLog(getClass());
 
 	private String cmsPath = "/p/";
