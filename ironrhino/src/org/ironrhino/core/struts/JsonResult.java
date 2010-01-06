@@ -27,7 +27,7 @@ public class JsonResult implements Result {
 	@Inject(StrutsConstants.STRUTS_I18N_ENCODING)
 	private String encoding = "UTF-8";
 
-	public String generateJson(ActionInvocation invocation) {
+	private String generateJson(ActionInvocation invocation) {
 		Object action = invocation.getAction();
 		Method method = BeanUtils.findDeclaredMethod(action.getClass(),
 				invocation.getProxy().getMethod(), null);
