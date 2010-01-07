@@ -123,7 +123,7 @@ Richtable = {
 	open : function(url, reloadonclose, useiframe) {
 		reloadonclose = reloadonclose || false;
 		useiframe = useiframe || false;
-		if ($('#_window_').length == 0)
+		if (!$('#_window_').length)
 			$('<div id="_window_"></div>').appendTo(document.body);
 		if (!useiframe) {
 			// ajax replace
@@ -328,7 +328,7 @@ Richtable = {
 	}
 };
 Observation.richtable = function() {
-	if ($('.richtable').length > 0) {
+	if ($('.richtable').length) {
 		$('.richtable .input').click(Richtable.input);
 		$('.richtable .save').click(Richtable.save);
 		$('.richtable .del').click(Richtable.del);
@@ -386,7 +386,7 @@ Observation.richtable = function() {
 
 		var pathname = document.location.pathname;
 		var form = $('#_window_ form.ajax');
-		if (form.length > 0) {
+		if (form.length) {
 			var action = form.attr('action');
 			if (action.indexOf('http') != 0 && action.indexOf('/') != 0)
 				action = pathname
@@ -420,7 +420,7 @@ Observation.richtable = function() {
 	}
 };
 Initialization.richtable = function() {
-	if ($('.richtable').length > 0) {
+	if ($('.richtable').length) {
 		var resizable = $('.richtable').attr('resizable');
 		if (resizable == "true") {
 			document.onmousemove = ECSideUtil.DoResize;

@@ -63,7 +63,7 @@ Observation.common = function(container) {
 			});
 	if ($.browser.msie) {
 		$('ul.nav>li', container).each(function() {
-					if ($('ul>li', this).length > 0)
+					if ($('ul>li', this).length)
 						$(this).hover(function() {
 									$(this).addClass("sfHover");
 								}, function() {
@@ -223,7 +223,7 @@ Initialization.common = function() {
 Indicator = {
 	text : '',
 	show : function(iserror) {
-		if ($('#indicator').length == 0)
+		if (!$('#indicator').length)
 			$('<div id="indicator"></div>').appendTo(document.body);
 		var ind = $('#indicator');
 		if (iserror && ind.hasClass('loading'))
@@ -471,7 +471,7 @@ Ajax = {
 								+ '_message"></div>');
 					$('#' + target.id + '_message').html(message);
 				} else {
-					if ($('#message').length == 0)
+					if (!$('#message').length)
 						$('<div id="message"></div>').prependTo(document.body);
 					$('#message').html(message);
 				}
@@ -715,7 +715,7 @@ var Region = {
 				$('#' + Region.hiddenid).val($(this).closest('li').attr('id'));
 			$("#region_window").dialog('close');
 		};
-		if ($('#region_window').length == 0) {
+		if (!$('#region_window').length) {
 			$('<div id="region_window" title="' + MessageBundle.get('select')
 					+ '"><div id="region_tree"></div></div>')
 					.appendTo(document.body);
