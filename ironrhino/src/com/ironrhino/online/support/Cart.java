@@ -62,11 +62,11 @@ public class Cart implements Serializable {
 	}
 
 	public void clear() {
-		order.setDescription(null);
 		order.setDiscount(null);
 		order.setShipcost(null);
 		order.setCreateDate(null);
 		order.setModifyDate(null);
+		order.setAddressee(null);
 		order.getItems().clear();
 	}
 

@@ -34,12 +34,12 @@
 			</type>
 		</property>
 		<property name="comment" />
-		<property name="description" />
 		<component name="addressee">
 			<property name="name" />
 			<property name="address" />
 			<property name="postcode" />
 			<property name="phone" />
+			<property name="description" />
 		</component>
 		<many-to-one name="user" column="userId" not-null="true" />
 		<many-to-one name="region" column="regionId" lazy="proxy" />

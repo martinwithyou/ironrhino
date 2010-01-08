@@ -18,6 +18,8 @@ public class Addressee implements Serializable {
 
 	private String phone;
 
+	private String description;
+
 	public String getAddress() {
 		return address;
 	}
@@ -48,6 +50,14 @@ public class Addressee implements Serializable {
 
 	public void setPostcode(String postcode) {
 		this.postcode = postcode;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Override

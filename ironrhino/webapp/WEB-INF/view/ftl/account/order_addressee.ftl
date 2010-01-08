@@ -16,7 +16,7 @@
 		name="order.addressee.postcode" cssClass="required" />
 	<@s.textfield label="%{getText('phone')}" name="order.addressee.phone"
 		cssClass="required" />
-	<@s.textarea label="%{getText('description')}" name="order.description"  cols="50" rows="5"/>
+	<@s.textarea label="%{getText('description')}" name="order.addressee.description"  cols="50" rows="5"/>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>

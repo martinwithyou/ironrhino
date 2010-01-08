@@ -75,7 +75,7 @@
 	</tr>
 	<tr>
 		<td>${action.getText('description')}</td>
-		<td>${order.description!}</td>
+		<td>${order.addressee.description!}</td>
 	</tr>
 	<#if order.isNew()>
 		<tr>

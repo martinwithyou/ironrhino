@@ -43,8 +43,6 @@ public class Order extends BaseEntity implements Recordable {
 
 	private String comment;
 
-	private String description;
-
 	@CreateIfNull
 	private List<OrderItem> items = new ArrayList<OrderItem>(0);
 
@@ -103,14 +101,6 @@ public class Order extends BaseEntity implements Recordable {
 
 	public void setCode(String orderId) {
 		this.code = orderId;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public User getUser() {
