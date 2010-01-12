@@ -1,6 +1,5 @@
 package org.ironrhino.core.spring.remoting;
 
-import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.metadata.Remoting;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AppInfo;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -88,7 +88,7 @@ public class ServiceRegistry {
 					&& ctx.isSingleton(beanName)) {
 				Object bean = ctx.getBean(beanName);
 				Class clazz = bean.getClass();
-				if (Proxy.isProxyClass(clazz)
+				if (AopUtils.isAopProxy(bean)
 						&& bean.toString().indexOf("remoting") > -1)// remoting_client
 					continue;
 				Class[] interfaces = clazz.getInterfaces();
