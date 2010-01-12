@@ -1,5 +1,6 @@
 package org.ironrhino.core.spring.remoting;
 
+import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -88,7 +89,7 @@ public class ServiceRegistry {
 					&& ctx.isSingleton(beanName)) {
 				Object bean = ctx.getBean(beanName);
 				Class clazz = bean.getClass();
-				if (AopUtils.isAopProxy(bean)
+				if ((AopUtils.isAopProxy(bean) || Proxy.isProxyClass(clazz))
 						&& bean.toString().indexOf("remoting") > -1)// remoting_client
 					continue;
 				Class[] interfaces = clazz.getInterfaces();
