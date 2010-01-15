@@ -2,6 +2,7 @@ package com.ironrhino.online.servlet;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -70,7 +71,9 @@ public class ProductPictureFilter implements Filter {
 						.substring(size.indexOf('x') + 1));
 				path = productPrefix + file;
 				try {
-					BufferedImage image = ImageIO.read(fileStorage.open(path));
+					InputStream is = fileStorage.open(path);
+					BufferedImage image = ImageIO.read(is);
+					is.close();
 					image = Thumbnail.resizeFix(image, width, height);
 					response.setHeader("Cache-Control", "max-age=86400");
 					ImageIO.write(image, file
