@@ -18273,13 +18273,13 @@ Initialization.common = function() {
 		dwr.engine.setPreHook(Indicator.show);
 		dwr.engine.setPostHook(Indicator.hide);
 	}
-	$().ajaxStart(function() {
+	$(document).ajaxStart(function() {
 				Indicator.show()
 			});
-	$().ajaxError(function() {
+	$(document).ajaxError(function() {
 				Indicator.showError()
 			});
-	$().ajaxSuccess(function(ev, xhr) {
+	$(document).ajaxSuccess(function(ev, xhr) {
 				Indicator.hide();
 				var url = xhr.getResponseHeader("X-Redirect-To");
 				if (url) {
