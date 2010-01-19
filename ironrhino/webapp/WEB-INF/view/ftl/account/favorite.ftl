@@ -24,7 +24,7 @@
 			</tr>
 		</#list>
 		<tr>
-			<td colspan="4"><@pagination class="ajax view" options="{'replacement':'list'}"/></td>
+			<td colspan="4"><@pagination class="ajax view" replacement="list"/></td>
 		</tr>
 	</tbody>
 	<tfoot>

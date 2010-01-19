@@ -32,7 +32,7 @@
 	</#list>
 </table>
 </div>
-<@pagination class="ajax view" options="{'replacement':'list'}"/>
+<@pagination class="ajax view" replacement="list"/>
 </body>
 </html></#escape>
 

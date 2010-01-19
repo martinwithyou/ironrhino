@@ -4,7 +4,7 @@
 <div>${info}</div>
 </#if>
 <a href="<@url value="/product/view/${product.code}"/>" class="ajax view tooltip product_view">
-${product.name}</a> <a href="<@url value="/cart/add/${product.code}"/>" class="ajax view" options="{replacement:'cart_items'}">放入购物车</a></li>
+${product.name}</a> <a href="<@url value="/cart/add/${product.code}"/>" class="ajax view" replacement="cart_items">放入购物车</a></li>
 </#macro>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

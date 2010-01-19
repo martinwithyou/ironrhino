@@ -553,18 +553,6 @@ Initialization.history = function() {
 Observation.ajax = function(container) {
 	$('a.ajax,form.ajax', container).each(function() {
 		var target = this;
-		try {
-			var _options;
-			if (window.JSON && window.JSON.parse)
-				_options = window.JSON.parse($(this).attr('options'));
-			else
-				_options = (new Function("return " + $(this).attr('options')))();
-			if (_options)
-				$.each(_options, function(key, value) {
-							$(target).attr(key, value);
-						});
-		} catch (e) {
-		}
 		var ids = [];
 		var targetId = $(target).attr('id');
 		if (typeof targetId != 'string')

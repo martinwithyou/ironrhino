@@ -4,8 +4,7 @@
 <title>ironrhino</title>
 </head>
 <body>
-<form action="<@url value="/cart/update"/>" method="post"
-	class="ajax view" options="{replacement:'detail'}">
+<form action="<@url value="/cart/update"/>" method="post" class="ajax view" replacement="detail">
 <div id="detail">
 <table class="sortable">
 	<thead>
@@ -39,8 +38,7 @@
 				<td><input type="hidden" name="items[${index}].productCode" value="${var.productCode}" /> 
 				<input type="text" size="2" name="items[${index}].quantity" value="${var.quantity}" /></td>
 				<td>${var.subtotal}</td>
-				<td><a href="<@url value="/cart/remove/${var.productCode}"/>" class="ajax view"
-					options="{replacement:'detail',onprepare:'confirm(\'are you sure to remove ${var.productCode}\')'}">remove</a></td>
+				<td><a href="<@url value="/cart/remove/${var.productCode}"/>" class="ajax view" replacement="detail" onprepare="confirm('are you sure to remove ${var.productCode}')">remove</a></td>
 			</tr>
 			<#assign index=index+1>
 		</#list>
@@ -50,8 +48,8 @@
 <div id="actions">
 <@button class="goback" text="继续购物"/>
 <@s.submit value="更新购物车" theme="simple" />
-<@button type="link" text="删除选中" href="${getUrl('/cart/remove')}" class="ajax view delete_selected" options="{replacement:'detail'}"/>
-<@button type="link" text="清空" href="${getUrl('/cart/clear')}" class="ajax view" options="{replacement:'detail',onprepare:'confirm(\'are you sure to clear cart\')'}"/>
+<@button type="link" text="删除选中" href="${getUrl('/cart/remove')}" class="ajax view delete_selected" replacement="detail"/>
+<@button type="link" text="清空" href="${getUrl('/cart/clear')}" class="ajax view" replacement="detail" onprepare="confirm('are you sure to clear cart')"/>
 <@button type="link" text="结算" href="${getUrl('/account/order/addressee')}"/>
 </form>
 </body>

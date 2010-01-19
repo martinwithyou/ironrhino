@@ -17,10 +17,10 @@
 </table>
 
 
-<a href="<@url value="/cart/add/${product.code}"/>"
-	class="ajax view" options="{replacement:'cart_items'}">放入购物车</a> <a
-	href="<@url value="/product/favorite/${product.code}"/>"
-	class="ajax" options="{onerror:'login()'}">加入收藏夹</a></div>
+<a href="<@url value="/cart/add/${product.code}"/>" class="ajax view" replacement="cart_items">放入购物车</a>
+<a href="<@url value="/product/favorite/${product.code}"/>" class="ajax" onerror="login()">加入收藏夹</a>
+
+</div>
 
 
 <div id="score">
@@ -37,11 +37,7 @@
 <ul class="unit-rating">
 	<li class="current-rating" style="width: 150px;"></li>
 	<#list 1..5 as index>
-		<li><a
-			href="<@url value="/product/score/${product.code}?score=${index}"/>"
-			title="${index}"
-			class="ajax r${index}-unit"
-			options="{onsuccess:'updateScore()',onerror:'login()'}">${index}</a></li>
+		<li><a href="<@url value="/product/score/${product.code}?score=${index}"/>" title="${index}" class="ajax r${index}-unit" onsuccess="updateScore()" onerror="login()">${index}</a></li>
 	</#list>
 </ul>
 </div>
@@ -52,7 +48,7 @@
 		<li>${var.displayName} says:${var.content}</li>
 	</#list>
 </ul>
-<@pagination class="ajax view" options="{replacement:'comments'}"/>
+<@pagination class="ajax view" replacement="comments"/>
 </div>
 <@s.form id="comment_form" action="comment" namespace="/"
 	method="post" cssClass="ajax view reset">

@@ -7,14 +7,14 @@
 <div id="${list!}_list_detail">
 <div class="product_list">
 <#list resultPage.result as var>
-	<p><img src="<@url value="/product/${var.code}.s.jpg"/>"
-		alt="${var.code}" class="product_list" /> <a
-		href="<@url value="/product/view/${var.code}"/>">${var.name}</a> 
-		<a href="<@url value="/cart/add/${var.code}"/>"
-		class="ajax view" options="{replacement:'cart_items'}">放入购物车</a></p>
+	<p>
+	<img src="<@url value="/product/${var.code}.s.jpg"/>" alt="${var.code}" class="product_list" />
+	<a href="<@url value="/product/view/${var.code}"/>">${var.name}</a> 
+	<a href="<@url value="/cart/add/${var.code}"/>" class="ajax view" replacement="cart_items">放入购物车</a>
+	</p>
 </#list>
 </div>
-<@pagination class="ajax view" options="{replacement:'${list!}_list_detail',cache:true}"/>
+<@pagination class="ajax view" replacement="${list!}_list_detail" cache="true"/>
 </div>
 </body>
 </html></#escape>
