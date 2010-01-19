@@ -18240,8 +18240,15 @@ Observation.common = function(container) {
 				'auto' : true,
 				'dipsplayData' : 'percentage'
 			};
-			var _options = $(this).attr('options') ? eval('('
-					+ $(this).attr('options') + ')') : null;
+			var _options;
+			try {
+				if (window.JSON && window.JSON.parse)
+					_options = window.JSON.parse($(this).attr('options'));
+				else
+					_options = (new Function("return "
+							+ $(this).attr('options')))();
+			} catch (e) {
+			}
 			if (_options)
 				$.extend(options, _options);
 			if (!options.auto) {
@@ -18459,7 +18466,11 @@ Ajax = {
 		var target = options.target;
 		if ((typeof data == 'string')
 				&& (data.indexOf('{') == 0 || data.indexOf('[') == 0))
-			data = eval('(' + data + ')');
+			if (window.JSON && window.JSON.parse) {
+				data = window.JSON.parse(data);
+			} else {
+				data = (new Function("return " + data))();
+			}
 		if (typeof data == 'string') {
 			if (data.indexOf('<title>') > 0 && data.indexOf('</title>') > 0) {
 				Ajax.title = data.substring(data.indexOf('<title>') + 7, data
@@ -18612,8 +18623,11 @@ Observation.ajax = function(container) {
 	$('a.ajax,form.ajax', container).each(function() {
 		var target = this;
 		try {
-			var _options = $(target).attr('options') ? eval('('
-					+ $(target).attr('options') + ')') : null;
+			var _options;
+			if (window.JSON && window.JSON.parse)
+				_options = window.JSON.parse($(this).attr('options'));
+			else
+				_options = (new Function("return " + $(this).attr('options')))();
 			if (_options)
 				$.each(_options, function(key, value) {
 							$(target).attr(key, value);
