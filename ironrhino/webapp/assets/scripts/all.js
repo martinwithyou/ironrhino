@@ -12873,6 +12873,7 @@ jQuery.extend({
 	historyCurrentHash: undefined,
 	historyCallback: undefined,
 	historyIframeSrc: undefined,
+	historyNeedIframe: jQuery.browser.msie && (jQuery.browser.version < 8 || document.documentMode < 8),
 	
 	historyInit: function(callback, src){
 		jQuery.historyCallback = callback;
@@ -12880,17 +12881,15 @@ jQuery.extend({
 		var current_hash = location.hash.replace(/\?.*$/, '');
 		
 		jQuery.historyCurrentHash = current_hash;
-		// if ((jQuery.browser.msie) && (jQuery.browser.version < 8)) {
-		if (jQuery.browser.msie) {
+		if (jQuery.historyNeedIframe) {
 			// To stop the callback firing twice during initilization if no hash present
 			if (jQuery.historyCurrentHash == '') {
-			jQuery.historyCurrentHash = '#';
-		}
+				jQuery.historyCurrentHash = '#';
+			}
 		
 			// add hidden iframe for IE
 			jQuery("body").prepend('<iframe id="jQuery_history" style="display: none;"'+
-				(jQuery.historyIframeSrc ? ' src="'+jQuery.historyIframeSrc+'"' : '')
-				+'></iframe>'
+				' src="javascript:false;"></iframe>'
 			);
 			var ihistory = jQuery("#jQuery_history")[0];
 			var iframe = ihistory.contentWindow.document;
@@ -12921,8 +12920,7 @@ jQuery.extend({
 	},
 	
 	historyCheck: function(){
-		// if ((jQuery.browser.msie) && (jQuery.browser.version < 8)) {
-		if (jQuery.browser.msie) {
+		if (jQuery.historyNeedIframe) {
 			// On IE, check for location.hash of iframe
 			var ihistory = jQuery("#jQuery_history")[0];
 			var iframe = ihistory.contentDocument || ihistory.contentWindow.document;
@@ -12991,8 +12989,7 @@ jQuery.extend({
 		}
 		jQuery.historyCurrentHash = newhash;
 		
-		// if ((jQuery.browser.msie) && (jQuery.browser.version < 8)) {
-		if (jQuery.browser.msie) {
+		if (jQuery.historyNeedIframe) {
 			var ihistory = jQuery("#jQuery_history")[0];
 			var iframe = ihistory.contentWindow.document;
 			iframe.open();
@@ -13021,8 +13018,6 @@ jQuery.extend({
 		}
 	}
 });
-
-
 /*
  * jQuery Form Plugin
  * version: 2.31 (09-SEP-2009)
