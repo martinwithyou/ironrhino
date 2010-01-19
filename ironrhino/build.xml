@@ -125,14 +125,14 @@
 				<file name="${webapp.dir}/assets/scripts/source/ui.datepicker-1.7.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ui.datepicker-zh-CN-1.7.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.history-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.31.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.corner-2.0.3.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.sexy-combo-2.1.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.bgiframe-2.1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.autocomplete-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.truncatable-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.tmpl-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.elastic-1.6.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.elastic-1.6.3.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.jgrowl-1.2.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview-1.4.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview.async-0.1.my.js" />

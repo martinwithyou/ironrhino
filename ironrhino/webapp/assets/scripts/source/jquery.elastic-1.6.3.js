@@ -1,15 +1,20 @@
 /**
 *	@name							Elastic
 *	@descripton						Elastic is Jquery plugin that grow and shrink your textareas automaticliy
-*	@version						1.6
+*	@version						1.6.3
 *	@requires						Jquery 1.2.6+
-*	@author							Jan Jarfalk jan.jarfalk@unwrongest.com
+*
+*	@author							Jan Jarfalk
+*	@author-email					jan.jarfalk@unwrongest.com
+*	@author-website					http://www.unwrongest.com
+*
+*	@licens							MIT License - http://www.opensource.org/licenses/mit-license.php
 */
 
-(function($){ 
-	$.fn.extend({  
+(function(jQuery){ 
+	jQuery.fn.extend({  
 		elastic: function() {
-			
+		
 			//	We will create a div clone of the textarea
 			//	by copying these attributes from the textarea to the div.
 			var mimics = [
@@ -30,15 +35,17 @@
 					return false;
 				}
 				
-				var $textarea	=	$(this),
-					$twin		=	$('<div />').css({'position': 'absolute','display':'none'}),
-					lineHeight	=	parseInt($textarea.css('lineHeight'),10) || parseInt($textarea.css('fontSize'),'10'),
+				var $textarea	=	jQuery(this),
+					$twin		=	jQuery('<div />').css({'position': 'absolute','display':'none','word-wrap':'break-word'}),
+					lineHeight	=	parseInt($textarea.css('line-height'),10) || parseInt($textarea.css('font-size'),'10'),
 					minheight	=	parseInt($textarea.css('height'),10) || lineHeight*3,
 					maxheight	=	parseInt($textarea.css('max-height'),10) || Number.MAX_VALUE,
 					goalheight	=	0,
 					i 			=	0;
 				
-				
+				// Opera returns max-height of -1 if not set
+				if (maxheight < 0) { maxheight = Number.MAX_VALUE; }
+					
 				// Append the twin to the DOM
 				// We are going to meassure the height of this, not the textarea.
 				$twin.appendTo($textarea.parent());
@@ -48,6 +55,7 @@
 				while(i--){
 					$twin.css(mimics[i].toString(),$textarea.css(mimics[i].toString()));
 				}
+				
 				
 				// Sets a given height and overflow state on the textarea
 				function setHeightAndOverflow(height, overflow){
@@ -63,7 +71,8 @@
 				function update() {
 					
 					// Get curated content from the textarea.
-					var textareaContent = $textarea.val().replace(/<|>/g, ' ').replace(/\n/g, '<br />').replace(/&/g,"&amp;");
+					var textareaContent = $textarea.val().replace(/&/g,'&amp;').replace(/  /g, '&nbsp;').replace(/<|>/g, '&gt;').replace(/\n/g, '<br />');
+
 					var twinContent = $twin.html();
 					
 					if(textareaContent+'&nbsp;' != twinContent){
@@ -89,14 +98,14 @@
 					
 				}
 				
-				// Only run update when the textarea has focus
-				$textarea.css({'overflow':'hidden'}).bind('focus',function() {
-					self.periodicalUpdater = window.setInterval(function() {
-						update();
-					}, 50);
-				}).bind('blur', function() {
-					clearInterval(self.periodicalUpdater);
-				});
+				// Hide scrollbars
+				$textarea.css({'overflow':'hidden'});
+				
+				// Update textarea size on keyup
+				$textarea.keyup(function(){ update(); });
+				
+				// And this line is to catch the browser paste event
+				$textarea.live('input paste',function(e){ setTimeout( update, 250); });				
 				
 				// Run update once when elastic is initialized
 				update();
