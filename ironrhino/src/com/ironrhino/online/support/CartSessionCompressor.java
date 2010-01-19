@@ -1,6 +1,6 @@
 package com.ironrhino.online.support;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class CartSessionCompressor implements SessionCompressor<Cart> {
 		List<OrderItem> items = cart.getOrder().getItems();
 		if (items == null || items.isEmpty())
 			return null;
-		Map<String, Integer> map = new HashMap<String, Integer>(items.size());
+		Map<String, Integer> map = new LinkedHashMap<String, Integer>(items.size());
 		for (OrderItem oi : items)
 			map.put(oi.getProductCode(), oi.getQuantity());
 		Addressee add = cart.getOrder().getAddressee();
