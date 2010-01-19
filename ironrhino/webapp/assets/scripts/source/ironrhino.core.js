@@ -203,10 +203,6 @@ Observation.common = function(container) {
 };
 
 Initialization.common = function() {
-	if ($.browser.msie)
-		window.attachEvent('onunload', function() {
-					CollectGarbage()
-				});
 	if (typeof dwr != 'undefined') {
 		dwr.engine.setPreHook(Indicator.show);
 		dwr.engine.setPostHook(Indicator.hide);
