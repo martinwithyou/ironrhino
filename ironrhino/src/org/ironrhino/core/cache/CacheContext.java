@@ -1,7 +1,16 @@
 package org.ironrhino.core.cache;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
+import net.htmlparser.jericho.Attribute;
+import net.htmlparser.jericho.Attributes;
+import net.htmlparser.jericho.OutputDocument;
+import net.htmlparser.jericho.Source;
+import net.htmlparser.jericho.StartTag;
+import net.htmlparser.jericho.StartTagType;
+import net.htmlparser.jericho.Tag;
 import ognl.OgnlContext;
 
 import org.apache.commons.logging.Log;
@@ -51,12 +60,34 @@ public class CacheContext {
 			String content = (String) getCacheManager().get(
 					completeKey(key, scope), NAMESPACE_PAGE_FRAGMENT);
 			if (content != null)
-				return content;
+				return process(content);
 			return null;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			return null;
 		}
+	}
+
+	private static String process(String content) {
+		if (ServletActionContext.getRequest().isRequestedSessionIdFromCookie())
+			return content;
+		Source source = new Source(content);
+		source.fullSequentialParse();
+		OutputDocument outputDocument = new OutputDocument(source);
+		List<Tag> tags = source.getAllTags(StartTagType.NORMAL);
+		for (Tag t : tags) {
+			StartTag st = (StartTag) t;
+			Attributes attrs = st.parseAttributes();
+			Attribute attr = attrs.get("href");
+			if (attr == null)
+				continue;
+			String href = attr.getValue();
+			StringBuilder sb = new StringBuilder().append("href=\"");
+			sb.append(ServletActionContext.getResponse().encodeURL(href));
+			sb.append("\"");
+			outputDocument.replace(attr, sb);
+		}
+		return outputDocument.toString();
 	}
 
 	public static void putPageFragment(String key, String content,

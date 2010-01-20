@@ -63,6 +63,8 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 
 	private boolean invalid;
 
+	private String requestURL;
+
 	public WrappedHttpSession(HttpServletRequest request,
 			HttpServletResponse response, ServletContext context,
 			HttpSessionManager httpSessionManager) {
@@ -71,6 +73,7 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		this.response = response;
 		this.context = context;
 		this.httpSessionManager = httpSessionManager;
+		requestURL = request.getRequestURL().toString();
 		sessionTracker = RequestUtils.getCookieValue(request,
 				SESSION_TRACKER_NAME);
 		if (StringUtils.isBlank(sessionTracker)) {
@@ -97,8 +100,8 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 				fromCookie = false;
 			} else {
 				String referer = request.getHeader("Referer");
-				String url = request.getRequestURL().toString();
-				if (referer != null && RequestUtils.isSameOrigin(url, referer)) {
+				if (referer != null
+						&& RequestUtils.isSameOrigin(requestURL, referer)) {
 					fromCookie = false;
 				}
 			}
@@ -262,7 +265,8 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 	}
 
 	public String encodeURL(String url) {
-		if (!isRequestedSessionIdFromURL() || StringUtils.isBlank(url))
+		if (!isRequestedSessionIdFromURL() || StringUtils.isBlank(url)
+				|| !RequestUtils.isSameOrigin(requestURL, url))
 			return url;
 		Matcher m = SESSION_TRACKER_PATTERN.matcher(url);
 		if (m.find())
