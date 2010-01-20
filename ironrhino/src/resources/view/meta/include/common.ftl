@@ -95,6 +95,8 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 			<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,true)+value>
 		<#elseif request.isSecure() && secure=='false'>
 			<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,false)+value>
+		<#else>
+			<#local value=base+value>
 		</#if>
 	<#else>
 		<#if value?starts_with('http://') && secure=='true'>
