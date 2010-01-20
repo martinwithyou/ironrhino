@@ -146,13 +146,14 @@ public class RequestUtils {
 	}
 
 	public static boolean isSameOrigin(String a, String b) {
-		if(StringUtils.isBlank(a)||StringUtils.isBlank(b))
+		if (StringUtils.isBlank(a) || StringUtils.isBlank(b))
 			return false;
 		try {
 			String host1 = new URL(a).getHost();
 			String host2 = new URL(b).getHost();
-			return parseGlobalDomain(host1).equalsIgnoreCase(
-					parseGlobalDomain(host2));
+			return host1.equalsIgnoreCase(host2)
+					|| parseGlobalDomain(host1).equalsIgnoreCase(
+							parseGlobalDomain(host2));
 		} catch (MalformedURLException e) {
 			return false;
 		}
@@ -183,9 +184,9 @@ public class RequestUtils {
 			sb.append(array[array.length - 2]);
 			sb.append('.');
 			sb.append(array[array.length - 1]);
-			host = sb.toString();
+			return sb.toString();
 		}
-		return host;
+		return null;
 	}
 
 	private static String[] topDoubleDomains = new String[] { ".com.cn",
