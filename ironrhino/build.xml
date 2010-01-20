@@ -138,7 +138,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview.async-0.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeTable-2.2.3.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.uploadify-2.1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.jstore-all-1.2.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.checkbox.js" />
@@ -150,7 +149,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.cursor.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
 				<file name="${webapp.dir}/assets/scripts/app.js" />
-				<file name="${webapp.dir}/assets/scripts/app.store.js" />
 			</filelist>
 		</concat>
 		<concat destfile="${dest.style}" encoding="utf-8" fixlastline="yes">
