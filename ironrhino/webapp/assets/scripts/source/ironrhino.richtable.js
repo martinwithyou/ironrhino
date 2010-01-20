@@ -89,12 +89,28 @@
 Richtable = {
 	getBaseUrl : function() {
 		var url = document.location.href;
-		if (url.indexOf('?') > 0)
-			url = url.substring(0, url.indexOf('?'));
+		var p = url.indexOf('?');
+		if (p > 0)
+			url = url.substring(0, p);
+		p = url.indexOf(';');
+		if (p > 0)
+			url = url.substring(0, p);
 		return url;
 	},
+	getPathParams : function() {
+		var url = document.location.href;
+		var p = url.indexOf('?');
+		if (p > 0)
+			url = url.substring(0, p);
+		p = url.indexOf(';');
+		if (p > 0)
+			return url.substring(p);
+		else
+			return '';
+	},
 	getUrl : function(type, id, includeParams) {
-		var url = Richtable.getBaseUrl() + '/' + type;
+		var url = Richtable.getBaseUrl() + '/' + type
+				+ Richtable.getPathParams();
 		if (includeParams)
 			url += document.location.search;
 		if (id) {
@@ -193,7 +209,7 @@ Richtable = {
 	},
 	enter : function(parentId, url) {
 		if (!url)
-			url = Richtable.getBaseUrl();
+			url = Richtable.getBaseUrl() + Ritchtable.getPathParams();
 		if (parentId) {
 			if (url.indexOf('{parentId}') > 0)
 				url = url.replace('{parentId}', parentId);
@@ -238,7 +254,8 @@ Richtable = {
 						value = window.isIE ? this.innerText : this.textContent;
 					params[name] = value;
 				});
-				url = Richtable.getBaseUrl() + '/save';
+				url = Richtable.getBaseUrl() + '/save'
+						+ Richtable.getPathParams();
 				ajax({
 							url : url,
 							type : 'POST',
@@ -252,7 +269,7 @@ Richtable = {
 		var ev = event || window.event;
 		var id = $(event.srcElement || event.target).closest('tr')
 				.attr('rowid');
-		url = Richtable.getBaseUrl() + '/delete';
+		url = Richtable.getBaseUrl() + '/delete' + Richtable.getPathParams();;
 		if (id) {
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
 		} else {
@@ -275,7 +292,8 @@ Richtable = {
 				});
 	},
 	execute : function(operation, id) {
-		var url = Richtable.getBaseUrl() + '/' + operation;
+		var url = Richtable.getBaseUrl() + '/' + operation
+				+ Richtable.getPathParams();;
 		url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
 		ajax({
 					url : url,
