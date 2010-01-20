@@ -93,8 +93,15 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 					}
 				}
 			}
-			if (StringUtils.isNotBlank(sessionTracker))
+			if (StringUtils.isNotBlank(sessionTracker)) {
 				fromCookie = false;
+			} else {
+				String referer = request.getHeader("Referer");
+				String url = request.getRequestURL().toString();
+				if (referer != null && RequestUtils.isSameOrigin(url, referer)) {
+					fromCookie = false;
+				}
+			}
 		}
 
 		httpSessionManager.initialize(this);

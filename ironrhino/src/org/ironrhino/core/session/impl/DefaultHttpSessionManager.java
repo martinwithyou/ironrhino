@@ -94,6 +94,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.setCreationTime(creationTime);
 		session.setLastAccessedTime(lastAccessedTime);
 		session.setMinActiveInterval(minActiveInterval);
+		if(session.getSessionTracker()==null)
+			session.setSessionTracker(getSessionTracker(session));
 		doInitialize(session);
 
 	}
@@ -111,7 +113,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			session.setLastAccessedTime(session.getNow());
 			sessionTrackerChanged = true;
 		}
-		if (!session.isRequestedSessionIdFromURL() && sessionTrackerChanged) {
+//		if (!session.isRequestedSessionIdFromURL() && sessionTrackerChanged) {
+		if (sessionTrackerChanged) {
 			session.resetSessionTracker();
 			RequestUtils.saveCookie(session.getRequest(),
 					session.getResponse(),
