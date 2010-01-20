@@ -1,6 +1,8 @@
 package org.ironrhino.core.util;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
@@ -143,6 +145,20 @@ public class RequestUtils {
 		response.addCookie(cookie);
 	}
 
+	public static boolean isSameOrigin(String a, String b) {
+		if(StringUtils.isBlank(a)||StringUtils.isBlank(b))
+			return false;
+		try {
+			String host1 = new URL(a).getHost();
+			String host2 = new URL(b).getHost();
+			return parseGlobalDomain(host1).equalsIgnoreCase(
+					parseGlobalDomain(host2));
+		} catch (MalformedURLException e) {
+			return false;
+		}
+
+	}
+
 	private static String parseGlobalDomain(String host) {
 		boolean topDouble = false;
 		for (String s : topDoubleDomains) {
@@ -167,9 +183,9 @@ public class RequestUtils {
 			sb.append(array[array.length - 2]);
 			sb.append('.');
 			sb.append(array[array.length - 1]);
-			return sb.toString();
+			host = sb.toString();
 		}
-		return null;
+		return host;
 	}
 
 	private static String[] topDoubleDomains = new String[] { ".com.cn",
