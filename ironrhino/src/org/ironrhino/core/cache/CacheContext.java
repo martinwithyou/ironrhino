@@ -82,7 +82,8 @@ public class CacheContext {
 			if (attr == null)
 				continue;
 			String href = attr.getValue();
-			StringBuilder sb = new StringBuilder().append("href=\"");
+			StringBuilder sb = new StringBuilder().append(attr.getKey())
+					.append("=\"");
 			sb.append(ServletActionContext.getResponse().encodeURL(href));
 			sb.append("\"");
 			outputDocument.replace(attr, sb);
