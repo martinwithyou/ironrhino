@@ -4,7 +4,7 @@
 <title>Create/Edit Product</title>
 </head>
 <body>
-<@s.form id="save2" action="${getUrl('/pms/product/save2')}" method="post" cssClass="ajax">
+<@s.form id="save2" action="/pms/product/save2" method="post" cssClass="ajax">
 	<@s.if test="%{!product.isNew()}">
 		<@s.hidden name="product.id" />
 		<@s.textfield label="%{getText('code')}" name="product.code"
