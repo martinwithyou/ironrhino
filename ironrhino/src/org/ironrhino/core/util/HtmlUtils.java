@@ -5,8 +5,14 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import net.htmlparser.jericho.Attribute;
+import net.htmlparser.jericho.Attributes;
 import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.OutputDocument;
 import net.htmlparser.jericho.Source;
+import net.htmlparser.jericho.StartTag;
+import net.htmlparser.jericho.StartTagType;
+import net.htmlparser.jericho.Tag;
 
 import org.ironrhino.core.model.BaseTreeableEntity;
 
@@ -37,7 +43,7 @@ public class HtmlUtils {
 		return sb.toString();
 	}
 
-	public static String compress(String[] id, String html) throws Exception {
+	public static String compress(String html, String[] id) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		final List<String> ids = Arrays.asList(id);
 		Source source = new Source(html);
@@ -49,6 +55,29 @@ public class HtmlUtils {
 				sb.append(element.toString());
 		}
 		return sb.toString();
+	}
+
+	public static String process(String html, Replacer replacer) {
+		Source source = new Source(html);
+		source.fullSequentialParse();
+		OutputDocument outputDocument = new OutputDocument(source);
+		List<Tag> tags = source.getAllTags(StartTagType.NORMAL);
+		for (Tag t : tags) {
+			StartTag st = (StartTag) t;
+			Attributes attrs = st.parseAttributes();
+			Iterator<Attribute> it = attrs.iterator();
+			while (it.hasNext()) {
+				Attribute attr = it.next();
+				String temp = replacer.replace(st, attr);
+				if (temp != null)
+					outputDocument.replace(attr, temp);
+			}
+		}
+		return outputDocument.toString();
+	}
+
+	public static interface Replacer {
+		public String replace(StartTag st, Attribute attr);
 	}
 
 }

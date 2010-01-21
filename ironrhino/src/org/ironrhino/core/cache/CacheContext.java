@@ -1,22 +1,17 @@
 package org.ironrhino.core.cache;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import net.htmlparser.jericho.Attribute;
-import net.htmlparser.jericho.Attributes;
-import net.htmlparser.jericho.OutputDocument;
-import net.htmlparser.jericho.Source;
 import net.htmlparser.jericho.StartTag;
-import net.htmlparser.jericho.StartTagType;
-import net.htmlparser.jericho.Tag;
 import ognl.OgnlContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.util.ApplicationContextUtils;
+import org.ironrhino.core.util.HtmlUtils;
+import org.ironrhino.core.util.HtmlUtils.Replacer;
 import org.mvel2.templates.TemplateRuntime;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -59,8 +54,13 @@ public class CacheContext {
 			scope = eval(scope).toString();
 			String content = (String) getCacheManager().get(
 					completeKey(key, scope), NAMESPACE_PAGE_FRAGMENT);
-			if (content != null)
-				return process(content);
+			if (content != null) {
+				if (ServletActionContext.getRequest()
+						.isRequestedSessionIdFromCookie())
+					return content;
+				else
+					return HtmlUtils.process(content, replacer);
+			}
 			return null;
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -68,28 +68,19 @@ public class CacheContext {
 		}
 	}
 
-	private static String process(String content) {
-		if (ServletActionContext.getRequest().isRequestedSessionIdFromCookie())
-			return content;
-		Source source = new Source(content);
-		source.fullSequentialParse();
-		OutputDocument outputDocument = new OutputDocument(source);
-		List<Tag> tags = source.getAllTags(StartTagType.NORMAL);
-		for (Tag t : tags) {
-			StartTag st = (StartTag) t;
-			Attributes attrs = st.parseAttributes();
-			Attribute attr = attrs.get("href");
-			if (attr == null)
-				continue;
+	static Replacer replacer = new Replacer() {
+		@Override
+		public String replace(StartTag st, Attribute attr) {
+			if (!st.getName().equals("a") || !attr.getKey().equals("href"))
+				return null;
 			String href = attr.getValue();
 			StringBuilder sb = new StringBuilder().append(attr.getName())
 					.append("=\"");
 			sb.append(ServletActionContext.getResponse().encodeURL(href));
 			sb.append("\"");
-			outputDocument.replace(attr, sb);
+			return sb.toString();
 		}
-		return outputDocument.toString();
-	}
+	};
 
 	public static void putPageFragment(String key, String content,
 			String scope, String timeToIdle, String timeToLive) {

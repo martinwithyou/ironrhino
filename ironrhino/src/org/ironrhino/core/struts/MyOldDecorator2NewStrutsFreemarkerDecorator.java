@@ -34,8 +34,8 @@ public class MyOldDecorator2NewStrutsFreemarkerDecorator extends
 				StringWriter writer = new StringWriter();
 				content.writeBody(writer);
 				response.getWriter().write(
-						HtmlUtils.compress(replacement.split(","), writer
-								.toString()));
+						HtmlUtils.compress(writer.toString(), replacement
+								.split(",")));
 				return;
 			} catch (Exception e) {
 
