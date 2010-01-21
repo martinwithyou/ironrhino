@@ -148,7 +148,7 @@ public class RequestUtils {
 	public static boolean isSameOrigin(String a, String b) {
 		if (StringUtils.isBlank(a) || StringUtils.isBlank(b))
 			return false;
-		if (a.startsWith("/") || b.startsWith("/"))
+		if (b.indexOf("://") < 0 || a.indexOf("://") < 0)
 			return true;
 		try {
 			String host1 = new URL(a).getHost();
