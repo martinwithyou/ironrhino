@@ -1,16 +1,13 @@
-package org.ironrhino.core.spring.remoting;
+package org.ironrhino.core.remoting;
 
 import org.ironrhino.ums.service.UserManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Main {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-				new String[] { "org/ironrhino/core/spring/remoting/client.xml" });
+				new String[] { "org/ironrhino/core/remoting/client.xml" });
 		UserManager hessianUserManager = ctx.getBean("hessianUserManager",
 				UserManager.class);
 		System.out.println(hessianUserManager.suggestName("test@google.com"));

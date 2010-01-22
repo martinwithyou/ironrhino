@@ -1,12 +1,11 @@
-package org.ironrhino.core.spring.remoting;
+package org.ironrhino.core.remoting;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
-
-import javax.inject.Inject;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +22,9 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
 	private static Log log = LogFactory.getLog(HttpInvokerClient.class);
 
-	@Inject
+	private static Random random = new Random();
+
+	@Autowired(required = false)
 	private ServiceRegistry serviceRegistry;
 
 	@Autowired(required = false)
@@ -74,10 +75,10 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
 	@Override
 	public void afterPropertiesSet() {
-		String interfaceName = getServiceInterface().getName();
+		String serviceName = getServiceInterface().getName();
 		String serviceUrl = getServiceUrl();
 		if (serviceUrl == null) {
-			serviceUrl = discoverServiceUrl(interfaceName);
+			serviceUrl = discoverServiceUrl(serviceName);
 			log.info("locate service url:" + serviceUrl);
 			setServiceUrl(serviceUrl);
 			urlFromDiscovery = true;
@@ -94,7 +95,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 					@Override
 					public void run() {
 						try {
-							invoke(invocation, 0);
+							invoke(invocation, maxRetryTimes);
 						} catch (Throwable e) {
 							log.error(e.getMessage(), e);
 						}
@@ -103,35 +104,46 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 				return null;
 			}
 		}
-		return invoke(invocation, 0);
+		return invoke(invocation, maxRetryTimes);
 	}
 
 	public Object invoke(MethodInvocation invocation, int retryTimes)
 			throws Throwable {
+		retryTimes--;
+		if (retryTimes < 0) {
+			return super.invoke(invocation);
+		}
 		try {
 			return super.invoke(invocation);
 		} catch (RemoteAccessException e) {
-			// retry
-			if (retryTimes < maxRetryTimes - 1)
-				return invoke(invocation, retryTimes + 1);
 			if (urlFromDiscovery) {
 				String serviceUrl = discoverServiceUrl(getServiceInterface()
 						.getName());
 				if (!serviceUrl.equals(getServiceUrl())) {
 					setServiceUrl(serviceUrl);
 					log.info("relocate service url:" + serviceUrl);
-					return super.invoke(invocation);
 				}
 			}
-			throw e;
+			return invoke(invocation, retryTimes);
 		}
 	}
 
-	protected String discoverServiceUrl(String interfaceName) {
+	protected String discoverServiceUrl(String serviceName) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("http://");
 		if (StringUtils.isBlank(host)) {
-			sb.append(serviceRegistry.locate(interfaceName));
+			if (serviceRegistry != null) {
+				List<String> hosts = serviceRegistry.getImportServices().get(
+						serviceName);
+				if (hosts != null && hosts.size() > 0) {
+					sb.append(hosts.get(random.nextInt(hosts.size())));
+				} else {
+					sb.append("notexitshost");
+					log.error("couldn't discover service:" + serviceName);
+				}
+			} else {
+				sb.append("localhost");
+			}
 		} else {
 			sb.append(host);
 		}
@@ -142,7 +154,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 		if (StringUtils.isNotBlank(contextPath))
 			sb.append(contextPath);
 		sb.append("/remoting/httpinvoker/");
-		sb.append(interfaceName);
+		sb.append(serviceName);
 		boolean first = true;
 		if (StringUtils.isNotBlank(version)) {
 			if (first) {
@@ -165,12 +177,11 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 				}
 				sb.append(Context.KEY);
 				sb.append('=');
-				sb.append(URLEncoder.encode(Blowfish.encrypt(interfaceName),
+				sb.append(URLEncoder.encode(Blowfish.encrypt(serviceName),
 						"UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
 		return sb.toString();
 	}
-
 }

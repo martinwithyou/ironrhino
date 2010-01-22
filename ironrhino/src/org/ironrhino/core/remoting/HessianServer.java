@@ -1,4 +1,4 @@
-package org.ironrhino.core.spring.remoting;
+package org.ironrhino.core.remoting;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +52,14 @@ public class HessianServer extends HessianServiceExporter {
 			}
 			Class clazz = Class.forName(interfaceName);
 			Context.SERVICE.set(clazz);
-			super.handleRequest(request, response);
+			HessianSkeleton skeleton = skeletons.get(getServiceInterface());
+			if (skeleton != null) {
+				super.handleRequest(request, response);
+			} else {
+				String msg = "No Service:" + getServiceInterface().getName();
+				log.error("No Service:" + getServiceInterface());
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, msg);
+			}
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex
@@ -71,15 +78,22 @@ public class HessianServer extends HessianServiceExporter {
 
 	@Override
 	public void prepare() {
-		for (Map.Entry<Class, Object> entry : serviceRegistry.getServices()
-				.entrySet()) {
-			Context.SERVICE.set(entry.getKey());
-			service.set(entry.getValue());
-			skeletons.put(entry.getKey(), new HessianSkeleton(
-					getProxyForService(), getServiceInterface()));
+		if (serviceRegistry != null) {
+			for (Map.Entry<String, Object> entry : serviceRegistry
+					.getExportServices().entrySet()) {
+				try {
+					Class intf = Class.forName(entry.getKey());
+					Context.SERVICE.set(intf);
+					service.set(entry.getValue());
+					skeletons.put(intf, new HessianSkeleton(
+							getProxyForService(), getServiceInterface()));
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+			Context.SERVICE.remove();
+			service.remove();
 		}
-		Context.SERVICE.remove();
-		service.remove();
 	}
 
 	@Override

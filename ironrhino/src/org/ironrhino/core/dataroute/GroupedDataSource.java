@@ -120,13 +120,14 @@ public class GroupedDataSource extends AbstractDataSource implements
 
 	public Connection getConnection(String username, String password)
 			throws SQLException {
-		return getConnection(username, password, 0);
+		return getConnection(username, password, maxRetryTimes);
 	}
 
 	public Connection getConnection(String username, String password,
 			int retryTimes) throws SQLException {
 		DataSource ds = null;
 		String dbname = null;
+
 		if (DataRouteContext.isReadonly() && readRoundRobin != null) {
 			dbname = readRoundRobin.pick();
 			ds = readSlaves.get(dbname);
@@ -139,8 +140,18 @@ public class GroupedDataSource extends AbstractDataSource implements
 			dbname = masterName;
 			ds = master;
 		}
+		retryTimes--;
+		if (retryTimes < 0) {
+			Connection conn = username == null ? ds.getConnection() : ds
+					.getConnection(username, password);
+			failureCount.remove(ds);
+			StatLog
+					.add(new Key("dataroute", true, groupName, dbname,
+							"success"));
+			return conn;
+		}
 		try {
-			Connection conn = (username == null) ? ds.getConnection() : ds
+			Connection conn = username == null ? ds.getConnection() : ds
 					.getConnection(username, password);
 			failureCount.remove(ds);
 			StatLog
@@ -166,10 +177,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 			}
 			StatLog
 					.add(new Key("dataroute", true, groupName, dbname, "failed"));
-			if (retryTimes == maxRetryTimes)
-				return null;
-			else
-				return getConnection(username, password, retryTimes + 1);
+			return getConnection(username, password, retryTimes);
 		}
 	}
 

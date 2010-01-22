@@ -1,4 +1,4 @@
-package org.ironrhino.core.spring.remoting;
+package org.ironrhino.core.remoting;
 
 import java.util.Map;
 

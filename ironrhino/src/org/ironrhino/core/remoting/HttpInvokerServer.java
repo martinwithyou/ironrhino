@@ -1,4 +1,4 @@
-package org.ironrhino.core.spring.remoting;
+package org.ironrhino.core.remoting;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -51,9 +51,17 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 			Class clazz = Class.forName(interfaceName);
 			Context.SERVICE.set(clazz);
 			RemoteInvocation invocation = readRemoteInvocation(request);
-			RemoteInvocationResult result = invokeAndCreateResult(invocation,
-					getProxyForService()); // getProxy is final cannot override
-			writeRemoteInvocationResult(request, response, result);
+			Object proxy = getProxyForService();
+			if (proxy != null) {
+				RemoteInvocationResult result = invokeAndCreateResult(
+						invocation, proxy); // getProxy is final cannot override
+				writeRemoteInvocationResult(request, response, result);
+			} else {
+				String msg = "No Service:" + getServiceInterface().getName();
+				log.error("No Service:" + getServiceInterface());
+				response.sendError(
+						HttpServletResponse.SC_NOT_FOUND, msg);
+			}
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex
@@ -65,14 +73,21 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 
 	@Override
 	public void prepare() {
-		for (Map.Entry<Class, Object> entry : serviceRegistry.getServices()
-				.entrySet()) {
-			Context.SERVICE.set(entry.getKey());
-			service.set(entry.getValue());
-			proxies.put(entry.getKey(), super.getProxyForService());
+		if (serviceRegistry != null) {
+			for (Map.Entry<String, Object> entry : serviceRegistry
+					.getExportServices().entrySet()) {
+				try {
+					Class intf = Class.forName(entry.getKey());
+					Context.SERVICE.set(intf);
+					service.set(entry.getValue());
+					proxies.put(intf, super.getProxyForService());
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+			Context.SERVICE.remove();
+			service.remove();
 		}
-		Context.SERVICE.remove();
-		service.remove();
 	}
 
 	@Override
