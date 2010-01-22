@@ -7,7 +7,6 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -49,25 +48,27 @@ public class ApplicationContextConsole implements ApplicationListener {
 
 	private Properties properties;
 
-	@PostConstruct
-	public void init() {
-		String[] beanNames = ctx.getBeanDefinitionNames();
-		for (String beanName : beanNames) {
-			if (StringUtils.isAlphanumeric(beanName)
-					&& ctx.isSingleton(beanName))
-				beans.put(beanName, ctx.getBean(beanName));
-		}
-		try {
-			if (propertyPlaceholderConfigurer != null) {
-				Method method = PropertiesLoaderSupport.class
-						.getDeclaredMethod("mergeProperties", new Class[0]);
-				method.setAccessible(true);
-				properties = (Properties) method.invoke(
-						propertyPlaceholderConfigurer, new Object[0]);
+	public Map<String, Object> getBeans() {
+		if (beans.isEmpty()) {
+			String[] beanNames = ctx.getBeanDefinitionNames();
+			for (String beanName : beanNames) {
+				if (StringUtils.isAlphanumeric(beanName)
+						&& ctx.isSingleton(beanName))
+					beans.put(beanName, ctx.getBean(beanName));
 			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			try {
+				if (propertyPlaceholderConfigurer != null) {
+					Method method = PropertiesLoaderSupport.class
+							.getDeclaredMethod("mergeProperties", new Class[0]);
+					method.setAccessible(true);
+					properties = (Properties) method.invoke(
+							propertyPlaceholderConfigurer, new Object[0]);
+				}
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
 		}
+		return beans;
 	}
 
 	public Object execute(String expression) throws Exception {
@@ -85,7 +86,7 @@ public class ApplicationContextConsole implements ApplicationListener {
 
 	private Object executeMethodInvocation(String expression) throws Exception {
 		try {
-			return MVEL.eval(expression, beans);
+			return MVEL.eval(expression, getBeans());
 		} catch (Exception e) {
 			throw e;
 		}
@@ -99,10 +100,10 @@ public class ApplicationContextConsole implements ApplicationListener {
 			try {
 				Object bean = null;
 				if (expression.indexOf('=') > 0) {
-					bean = beans.get(expression.substring(0, expression
+					bean = getBeans().get(expression.substring(0, expression
 							.indexOf('.')));
 				}
-				MVEL.eval(expression, beans);
+				MVEL.eval(expression, getBeans());
 				if (bean != null) {
 					Method m = AnnotationUtils.getAnnotatedMethod(bean
 							.getClass(), PostPropertiesReset.class);
