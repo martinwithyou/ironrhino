@@ -3,6 +3,7 @@
 <decorators defaultdir="/WEB-INF/view/ftl/decorator">
 	<excludes>
 		<pattern>/assets/*</pattern>
+		<pattern>/remoting/*</pattern>
 	</excludes>
 	<decorator name="none" />
 	<decorator name="simple" page="simple.ftl" />
