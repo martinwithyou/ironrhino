@@ -3,6 +3,8 @@ package org.ironrhino.core.remoting.impl;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.zookeeper.CreateMode;
@@ -50,6 +52,15 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			log.error(e.getMessage(), e);
 		}
 
+	}
+
+	@PostConstruct
+	public void destroy() {
+		if (zooKeeper != null)
+			try {
+				zooKeeper.close();
+			} catch (InterruptedException e) {
+			}
 	}
 
 	@Override
