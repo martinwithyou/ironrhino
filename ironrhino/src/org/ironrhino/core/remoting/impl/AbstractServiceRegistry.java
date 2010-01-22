@@ -1,35 +1,32 @@
 package org.ironrhino.core.remoting.impl;
 
-import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.metadata.Remoting;
+import org.ironrhino.core.remoting.HessianClient;
+import org.ironrhino.core.remoting.HttpInvokerClient;
 import org.ironrhino.core.remoting.ServiceRegistry;
 import org.ironrhino.core.util.AnnotationUtils;
-import org.springframework.aop.framework.Advised;
-import org.springframework.aop.support.AopUtils;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
-@Singleton
-@Named("serviceRegistry")
-public abstract class AbstractServiceRegistry implements ServiceRegistry {
+public abstract class AbstractServiceRegistry implements ServiceRegistry,
+		BeanFactoryPostProcessor {
 
-	@Inject
-	protected ApplicationContext ctx;
+	ConfigurableListableBeanFactory beanFactory;
 
 	protected Map<String, List<String>> importServices = new ConcurrentHashMap<String, List<String>>();
 
 	protected Map<String, Object> exportServices = new HashMap<String, Object>();
+
+	private boolean converted;
 
 	public Map<String, List<String>> getImportServices() {
 		return importServices;
@@ -37,33 +34,36 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry {
 
 	@Override
 	public Map<String, Object> getExportServices() {
+		if (!converted) {
+			converted = true;
+			Map<String, Object> map = new HashMap<String, Object>();
+			for (Map.Entry<String, Object> entry : exportServices.entrySet())
+				map.put(entry.getKey(), beanFactory.getBean((String) entry
+						.getValue()));
+			exportServices = map;
+		}
 		return exportServices;
 	}
 
-	@PostConstruct
 	public void init() {
 		prepare();
-		String[] beanNames = ctx.getBeanDefinitionNames();
+		String[] beanNames = beanFactory.getBeanDefinitionNames();
 		for (String beanName : beanNames) {
-			if (StringUtils.isAlphanumeric(beanName)
-					&& ctx.isSingleton(beanName)) {
-				Object bean = ctx.getBean(beanName);
-				Class clazz = bean.getClass();
-				if ((Proxy.isProxyClass(clazz) || AopUtils.isAopProxy(bean))
-						&& bean.toString().indexOf("remoting") > -1) {// remoting_client
-					String serviceName = null;
-					if (bean instanceof Advised) {
-						serviceName = ((Advised) bean).getProxiedInterfaces()[0]
-								.getName();
-
-					} else if (Proxy.isProxyClass(bean.getClass())) {
-						serviceName = bean.getClass().getInterfaces()[0]
-								.getName();
-					}
-					if (serviceName != null)
-						importServices.put(serviceName, Collections.EMPTY_LIST);
-					continue;
-				}
+			BeanDefinition bd = beanFactory.getBeanDefinition(beanName);
+			if (!bd.isSingleton())
+				continue;
+			Class clazz = null;
+			try {
+				clazz = Class.forName(bd.getBeanClassName());
+			} catch (Exception e) {
+				clazz = Object.class;
+			}
+			if (clazz.equals(HessianClient.class)
+					|| clazz.equals(HttpInvokerClient.class)) {// remoting_client
+				String serviceName = (String) bd.getPropertyValues()
+						.getPropertyValue("serviceInterface").getValue();
+				importServices.put(serviceName, Collections.EMPTY_LIST);
+			} else {
 				Class[] interfaces = clazz.getInterfaces();
 				if (interfaces != null) {
 					for (Class inte : interfaces) {
@@ -73,7 +73,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry {
 							if (StringUtils.isBlank(remoting.name())
 									|| remoting.name().equals(beanName)) {
 								String serviceName = inte.getName();
-								exportServices.put(serviceName, bean);
+								exportServices.put(serviceName, beanName);
 								break;
 							}
 						}
@@ -86,6 +86,13 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry {
 			register(serviceName);
 		for (String serviceName : importServices.keySet())
 			discover(serviceName);
+	}
+
+	@Override
+	public void postProcessBeanFactory(ConfigurableListableBeanFactory arg)
+			throws BeansException {
+		beanFactory = arg;
+		init();
 	}
 
 	protected abstract void prepare();

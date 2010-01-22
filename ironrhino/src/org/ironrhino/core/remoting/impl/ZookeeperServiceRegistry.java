@@ -84,7 +84,8 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			try {
 				zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
 						CreateMode.EPHEMERAL);
-				log.info("register service [" + serviceName + "@" + address + "]");
+				log.info("register service [" + serviceName + "@" + address
+						+ "]");
 			} catch (Exception e) {
 				log.error("cannot register service:" + serviceName, e);
 			}
@@ -160,6 +161,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			return;
 		}
 		String serviceName = path.substring(1);
+		System.out.println("children:" + children);
 		importServices.put(serviceName, children);
 	}
 
