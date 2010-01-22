@@ -3,7 +3,7 @@ package org.ironrhino.core.remoting.impl;
 import java.io.IOException;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,7 +54,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	}
 
-	@PostConstruct
+	@PreDestroy
 	public void destroy() {
 		if (zooKeeper != null)
 			try {
@@ -84,6 +84,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			try {
 				zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
 						CreateMode.EPHEMERAL);
+				log.info("register service [" + serviceName + "@" + address + "]");
 			} catch (Exception e) {
 				log.error("cannot register service:" + serviceName, e);
 			}
