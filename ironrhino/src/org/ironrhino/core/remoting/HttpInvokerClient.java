@@ -110,12 +110,11 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	public Object invoke(MethodInvocation invocation, int retryTimes)
 			throws Throwable {
 		retryTimes--;
-		if (retryTimes < 0) {
-			return super.invoke(invocation);
-		}
 		try {
 			return super.invoke(invocation);
 		} catch (RemoteAccessException e) {
+			if (retryTimes < 0)
+				throw e;
 			if (urlFromDiscovery) {
 				String serviceUrl = discoverServiceUrl(getServiceInterface()
 						.getName());

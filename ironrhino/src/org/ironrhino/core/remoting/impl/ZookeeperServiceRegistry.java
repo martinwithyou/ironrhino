@@ -76,26 +76,20 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	}
 
 	private void register(String serviceName, String address, int retryTimes) {
+		retryTimes--;
 		String node = new StringBuilder().append('/').append(serviceName)
 				.append('/').append(address).toString();
 		byte[] data = "".getBytes();
-		retryTimes--;
-		if (retryTimes < 0) {
-			try {
-				zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
-						CreateMode.EPHEMERAL);
-				log.info("register service [" + serviceName + "@" + address
-						+ "]");
-			} catch (Exception e) {
-				log.error("cannot register service:" + serviceName, e);
-			}
-		}
 		try {
 
 			zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
 					CreateMode.EPHEMERAL);
 			log.info("register service [" + serviceName + "@" + address + "]");
 		} catch (NoNodeException e) {
+			if (retryTimes < 0) {
+				log.error("error creating node:" + node, e);
+				return;
+			}
 			node = new StringBuilder().append('/').append(serviceName)
 					.toString();
 			try {
@@ -115,6 +109,10 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			}
 			log.info("register service [" + serviceName + "@" + address + "]");
 		} catch (Exception e1) {
+			if (retryTimes < 0) {
+				log.error("error creating node:" + node, e1);
+				return;
+			}
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException ie) {
