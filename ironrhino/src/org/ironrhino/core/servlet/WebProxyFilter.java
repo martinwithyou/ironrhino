@@ -18,6 +18,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -108,6 +109,13 @@ public class WebProxyFilter implements Filter {
 		HttpEntity entity = null;
 		try {
 			HttpResponse rsp = httpClient.execute(httpRequest);
+
+			StatusLine sl = rsp.getStatusLine();
+			if (sl.getStatusCode() >= 300) {
+				response.sendError(sl.getStatusCode(), sl.getReasonPhrase());
+				return;
+			}
+
 			entity = rsp.getEntity();
 			if (entity != null) {
 				for (Header h : httpRequest.getAllHeaders())
