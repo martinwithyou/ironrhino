@@ -6,18 +6,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.datasource.AbstractDataSource;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.util.Assert;
 
 public class RoutedDataSource extends AbstractDataSource {
 
 	private DataSource mainGroup;
 
 	private Map<String, DataSource> routingMap;
+
+	public DataSource getMainGroup() {
+		if (mainGroup == null) {
+			mainGroup = routingMap.values().iterator().next();
+		}
+		return mainGroup;
+	}
 
 	// inject DataSource with groupName
 	public void setRoutingMap(Map<String, DataSource> map) {
@@ -36,13 +41,6 @@ public class RoutedDataSource extends AbstractDataSource {
 		mainGroup = list.get(0);
 	}
 
-	@PostConstruct
-	public void afterPropertiesSet() throws Exception {
-		Assert.notEmpty(routingMap);
-		mainGroup = routingMap.values().iterator().next();
-		Assert.notNull(mainGroup);
-	}
-
 	public Connection getConnection(String username, String password)
 			throws SQLException {
 		DataSource ds = null;
@@ -50,7 +48,7 @@ public class RoutedDataSource extends AbstractDataSource {
 		if (groupName != null) {
 			ds = routingMap.get(groupName);
 		} else {
-			ds = mainGroup;
+			ds = getMainGroup();
 		}
 		if (ds == null)
 			throw new IllegalArgumentException("group name '" + groupName

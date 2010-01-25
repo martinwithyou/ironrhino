@@ -34,6 +34,12 @@
 				<entry  key="mainGroupRead3" value="3"/>
 			</map>
 		</property>
+		<property name="writeSlaveNames">
+			<map>
+				<entry  key="mainGroupWrite1" value="1"/>
+				<entry  key="mainGroupWrite2" value="1"/>
+			</map>
+		</property>
 	</bean>
 	
 	<bean id="miscGroup"
