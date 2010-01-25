@@ -158,7 +158,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 				if (hosts != null && hosts.size() > 0) {
 					sb.append(hosts.get(random.nextInt(hosts.size())));
 				} else {
-					sb.append("notexitshost");
+					sb.append("localhost");
 					log.error("couldn't discover service:" + serviceName);
 				}
 			} else {

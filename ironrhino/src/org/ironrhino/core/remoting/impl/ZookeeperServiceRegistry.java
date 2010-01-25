@@ -28,7 +28,8 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	private ZooKeeper zooKeeper;
 
-	private String connectString = "localhost:2181/remoting";
+	// private String connectString = "localhost:2181/remoting";
+	private String connectString;
 
 	private int sessionTimeout = 3000;
 
