@@ -10,6 +10,27 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
+		testPerformance();
+	}
+
+	public static void testPerformance() throws IOException {
+		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
+				new String[] { "org/ironrhino/core/remoting/client.xml" });
+
+		UserManager httpInvokerUserManager = ctx.getBean(
+				"httpInvokerUserManager", UserManager.class);
+		for (int i = 0; i < 10; i++)
+			System.out.println(httpInvokerUserManager.suggestName("test" + i));
+		System.out.println("-------------------------------------------------");
+		long time = System.currentTimeMillis();
+		for (int i = 0; i < 10000; i++)
+			httpInvokerUserManager.suggestName("test");
+		System.out.println(System.currentTimeMillis() - time);
+		ctx.close();
+
+	}
+
+	public static void testFunction() throws IOException {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				new String[] { "org/ironrhino/core/remoting/client.xml" });
 		UserManager hessianUserManager = ctx.getBean("hessianUserManager",

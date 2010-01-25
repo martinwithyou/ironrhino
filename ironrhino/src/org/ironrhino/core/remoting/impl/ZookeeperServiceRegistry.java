@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.PreDestroy;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,7 +19,8 @@ import org.apache.zookeeper.KeeperException.Code;
 import org.apache.zookeeper.KeeperException.NoNodeException;
 import org.ironrhino.core.util.AppInfo;
 
-//@Component("serviceRegistry")
+@Singleton
+@Named("serviceRegistry")
 public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		Watcher, ChildrenCallback {
 
@@ -159,7 +162,6 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			return;
 		}
 		String serviceName = path.substring(1);
-		System.out.println("children:" + children);
 		importServices.put(serviceName, children);
 	}
 

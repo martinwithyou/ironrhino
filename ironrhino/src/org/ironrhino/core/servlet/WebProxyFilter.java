@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -25,29 +24,18 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
+import org.ironrhino.core.util.HttpClientFactory;
 
 public class WebProxyFilter implements Filter {
-
-	private ClientConnectionManager clientConnectionManager;
 
 	private HttpClient httpClient;
 
 	private boolean checkSameOrigin = false;
 
 	public void destroy() {
-		if (clientConnectionManager != null)
-			clientConnectionManager.shutdown();
+		httpClient.getConnectionManager().shutdown();
 	}
 
 	public void doFilter(ServletRequest req, ServletResponse resp,
@@ -132,19 +120,7 @@ public class WebProxyFilter implements Filter {
 		String s = config.getInitParameter("checkSameOrigin");
 		if (StringUtils.isNotBlank(s))
 			checkSameOrigin = Boolean.parseBoolean(s.trim());
-		HttpParams params = new BasicHttpParams();
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		HttpProtocolParams.setContentCharset(params, "UTF-8");
-		HttpProtocolParams.setUseExpectContinue(params, true);
-		HttpConnectionParams.setConnectionTimeout(params, 5000);
-		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(new Scheme("http", PlainSocketFactory
-				.getSocketFactory(), 80));
-		schemeRegistry.register(new Scheme("https", SSLSocketFactory
-				.getSocketFactory(), 443));
-		clientConnectionManager = new ThreadSafeClientConnManager(params,
-				schemeRegistry);
-		httpClient = new DefaultHttpClient(clientConnectionManager, params);
+		httpClient = HttpClientFactory.create();
 	}
 
 }
