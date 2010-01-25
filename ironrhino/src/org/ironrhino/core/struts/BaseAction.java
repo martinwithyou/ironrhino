@@ -12,6 +12,7 @@ import org.ironrhino.core.security.captcha.CaptchaManager;
 import org.ironrhino.core.security.csrf.CsrfManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
+import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -209,7 +210,10 @@ public class BaseAction extends ActionSupport {
 
 	@BeforeResult
 	public void preResult() throws Exception {
-		if (StringUtils.isNotBlank(targetUrl) && !hasErrors()) {
+		if (StringUtils.isNotBlank(targetUrl)
+				&& !hasErrors()
+				&& RequestUtils.isSameOrigin(ServletActionContext.getRequest()
+						.getRequestURL().toString(), targetUrl)) {
 			targetUrl = ServletActionContext.getResponse().encodeRedirectURL(
 					targetUrl);
 			ServletActionContext.getResponse().setHeader("X-Redirect-To",
