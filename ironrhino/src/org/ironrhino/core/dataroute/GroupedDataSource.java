@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
@@ -89,8 +88,21 @@ public class GroupedDataSource extends AbstractDataSource implements
 		this.maxRetryTimes = maxRetryTimes;
 	}
 
-	@PostConstruct
-	public void afterPropertiesSet() throws Exception {
+	public RoundRobin<String> getReadRoundRobin() {
+		if (readRoundRobin == null) {
+			init();
+		}
+		return readRoundRobin;
+	}
+
+	public RoundRobin<String> getWriteRoundRobin() {
+		if (writeRoundRobin == null) {
+			init();
+		}
+		return writeRoundRobin;
+	}
+
+	public void init() {
 		Assert.notNull(masterName);
 		master = (DataSource) beanFactory.getBean(masterName);
 		if (writeSlaveNames != null && writeSlaveNames.size() > 0) {
@@ -128,12 +140,12 @@ public class GroupedDataSource extends AbstractDataSource implements
 		retryTimes--;
 		DataSource ds = null;
 		String dbname = null;
-		if (DataRouteContext.isReadonly() && readRoundRobin != null) {
-			dbname = readRoundRobin.pick();
+		if (DataRouteContext.isReadonly() && getReadRoundRobin() != null) {
+			dbname = getReadRoundRobin().pick();
 			ds = readSlaves.get(dbname);
 		}
-		if (ds == null && writeRoundRobin != null) {
-			dbname = writeRoundRobin.pick();
+		if (ds == null && getWriteRoundRobin() != null) {
+			dbname = getWriteRoundRobin().pick();
 			ds = writeSlaves.get(dbname);
 		}
 		if (ds == null) {
