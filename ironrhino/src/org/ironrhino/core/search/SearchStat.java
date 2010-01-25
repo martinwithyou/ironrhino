@@ -5,10 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 
@@ -32,10 +28,10 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.ironrhino.core.util.AppInfo;
+import org.springframework.scheduling.annotation.Scheduled;
 
 public class SearchStat {
 
-	public static final String SEARCH_STAT_THREAD_NAME = "SEARCH_STAT_THREAD_NAME";
 	public static final String INDEX_DIRECTORY = "/searchstat";
 
 	public static final long TIME_INTERVAL = 3600;
@@ -43,12 +39,6 @@ public class SearchStat {
 	public static final int MAX_LIMIT = 10;
 
 	private Log log = LogFactory.getLog(getClass());
-
-	private final Lock timerLock = new ReentrantLock();
-
-	private final Condition condition = timerLock.newCondition();
-
-	private Thread thread;
 
 	private Directory directory;
 
@@ -73,7 +63,6 @@ public class SearchStat {
 			return;
 		keyword = keyword.toLowerCase();
 		map.put(keyword, hits);
-		runThread();
 	}
 
 	public Map<String, Integer> suggest(String keyword, int limit) {
@@ -102,6 +91,7 @@ public class SearchStat {
 		return Collections.EMPTY_MAP;
 	}
 
+	@Scheduled(fixedDelay = 3600000)
 	public void index() {
 		try {
 			boolean create = true;
@@ -124,38 +114,6 @@ public class SearchStat {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-	}
-
-	private void runThread() {
-		if (directory == null)
-			return;
-		if (thread != null) {
-			if (thread.isAlive())
-				return;
-			try {
-				thread.interrupt();
-			} catch (Exception e) {
-				log.error("interrupt write thread error", e);
-			}
-		}
-		thread = new Thread(new Runnable() {
-			public void run() {
-				while (true) {
-					timerLock.lock();
-					try {
-						if (condition.await(TIME_INTERVAL, TimeUnit.SECONDS))
-							log.debug("await returns true");
-					} catch (Exception e) {
-						log.error("wait error", e);
-					} finally {
-						timerLock.unlock();
-					}
-					index();
-				}
-			}
-
-		}, SEARCH_STAT_THREAD_NAME);
-		thread.start();
 	}
 
 }

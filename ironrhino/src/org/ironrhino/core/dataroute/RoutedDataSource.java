@@ -5,22 +5,15 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.datasource.AbstractDataSource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.Assert;
 
 public class RoutedDataSource extends AbstractDataSource {
-
-	private Log log = LogFactory.getLog(getClass());
 
 	private DataSource mainGroup;
 
@@ -48,7 +41,6 @@ public class RoutedDataSource extends AbstractDataSource {
 		Assert.notEmpty(routingMap);
 		mainGroup = routingMap.values().iterator().next();
 		Assert.notNull(mainGroup);
-		startCheckThread();
 	}
 
 	public Connection getConnection(String username, String password)
@@ -70,31 +62,13 @@ public class RoutedDataSource extends AbstractDataSource {
 		return getConnection(null, null);
 	}
 
-	private Thread checkThread;
-	private Lock timerLock = new ReentrantLock();
-	private Condition condition = timerLock.newCondition();
-
-	private void startCheckThread() {
-		checkThread = new Thread(new Runnable() {
-			public void run() {
-				while (true) {
-					timerLock.lock();
-					try {
-						if (condition.await(60, TimeUnit.SECONDS))
-							log.debug("await returns true");
-					} catch (Exception e) {
-						e.printStackTrace();
-					} finally {
-						timerLock.unlock();
-					}
-					if (mainGroup instanceof GroupedDataSource)
-						((GroupedDataSource) mainGroup).checkDeadDataSources();
-					for (DataSource ds : routingMap.values())
-						if (ds instanceof GroupedDataSource)
-							((GroupedDataSource) ds).checkDeadDataSources();
-				}
-			}
-		}, "CHECK_DEAD_DATASOURCE");
-		checkThread.start();
+	@Scheduled(fixedDelay = 30000)
+	public void check() {
+		if (mainGroup instanceof GroupedDataSource)
+			((GroupedDataSource) mainGroup).checkDeadDataSources();
+		for (DataSource ds : routingMap.values())
+			if (ds instanceof GroupedDataSource)
+				((GroupedDataSource) ds).checkDeadDataSources();
 	}
+
 }
