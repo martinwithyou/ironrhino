@@ -14,19 +14,9 @@
 			<th>price</th>
 			<th class="nosort">quantity</th>
 			<th>subtotal</th>
-			<th class="nosort">remove</th>
+			<th class="nosort"></th>
 		</tr>
 	</thead>
-	<tfoot>
-		<tr>
-			<td></td>
-			<td>name</td>
-			<td>price</td>
-			<td>quantity</td>
-			<td>subtotal</td>
-			<td>remove</td>
-		</tr>
-	</tfoot>
 	<tbody>
 		<#assign index=0>
 		<#list cart.order.items! as var>
@@ -38,19 +28,20 @@
 				<td><input type="hidden" name="items[${index}].productCode" value="${var.productCode}" /> 
 				<input type="text" size="2" name="items[${index}].quantity" value="${var.quantity}" /></td>
 				<td>${var.subtotal}</td>
-				<td><a href="<@url value="/cart/remove/${var.productCode}"/>" class="ajax view" replacement="detail" onprepare="confirm('are you sure to remove ${var.productCode}')">remove</a></td>
+				<td><@button type="link" text="${action.getText('remove')}" href="${getUrl('/cart/remove/'+var.productCode)}" class="ajax view" replacement="detail" onprepare="confirm('are you sure to remove ${var.productCode}')"/></td>
 			</tr>
 			<#assign index=index+1>
 		</#list>
 	</tbody>
 </table>
 </div>
-<div id="actions">
-<@button class="goback" text="继续购物"/>
+<div>
+<@button text="继续购物" onclick="history.go(-1)" />
 <@s.submit value="更新购物车" theme="simple" />
 <@button type="link" text="删除选中" href="${getUrl('/cart/remove')}" class="ajax view delete_selected" replacement="detail"/>
 <@button type="link" text="清空" href="${getUrl('/cart/clear')}" class="ajax view" replacement="detail" onprepare="confirm('are you sure to clear cart')"/>
 <@button type="link" text="结算" href="${getUrl('/account/order/addressee')}"/>
+</div>
 </form>
 </body>
 </html></#escape>
