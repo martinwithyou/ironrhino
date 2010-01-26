@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.fs.FileStorage;
+import org.springframework.beans.factory.annotation.Value;
 
 public abstract class AbstractFileStorage implements FileStorage {
 
@@ -17,6 +18,7 @@ public abstract class AbstractFileStorage implements FileStorage {
 
 	protected int bufferSize = 512 * 1024;
 
+	@Value("${fileStorage.uri}")
 	protected String uri;
 
 	public void setBufferSize(int bufferSize) {
