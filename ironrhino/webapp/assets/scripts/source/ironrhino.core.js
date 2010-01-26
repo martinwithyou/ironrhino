@@ -42,7 +42,7 @@ function _init() {
 	_observe();
 }
 function _observe(container) {
-	if (!container || container.length == 0)
+	if (!container)
 		container = document;
 	var array = [];
 	for (var key in Observation) {
