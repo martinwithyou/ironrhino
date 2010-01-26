@@ -17173,6 +17173,8 @@ function _init() {
 	_observe();
 }
 function _observe(container) {
+	if (!container || container.length == 0)
+		container = document;
 	var array = [];
 	for (var key in Observation) {
 		if (typeof(Observation[key]) == 'function')
