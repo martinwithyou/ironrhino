@@ -5,12 +5,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.core.util.RequestUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.ironrhino.online.model.Order;
 import com.ironrhino.online.service.OrderManager;
 
 public class Paypal extends AbstractPayment {
 
+	@Value("${paypal.business}")
 	private String business;
 
 	private String currency = "CNY";

@@ -15,8 +15,7 @@
 			</list>
 		</property>
 	</bean>
-	<bean id="paypal" class="com.ironrhino.online.payment.Paypal"
-		p:business="${paypal.business}"/>
+	<bean id="paypal" class="com.ironrhino.online.payment.Paypal"/>
 	<!--bean id="alipay" class="com.ironrhino.online.payment.Alipay"
 		p:partner="${alipay.partner}" p:key="${alipay.key}" /-->
 
