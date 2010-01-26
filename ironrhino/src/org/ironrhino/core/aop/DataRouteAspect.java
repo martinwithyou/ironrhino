@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  * split read and write database
  * 
  * @author zhouyanming
- * @see org.ironrhino.core.dataroute.RoutedDataSource
+ * @see org.ironrhino.core.dataroute.RoutingDataSource
  * @see org.ironrhino.core.dataroute.GroupedDataSource
  */
 @Aspect

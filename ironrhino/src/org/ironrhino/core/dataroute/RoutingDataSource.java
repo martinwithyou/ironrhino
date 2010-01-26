@@ -9,9 +9,8 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.datasource.AbstractDataSource;
-import org.springframework.scheduling.annotation.Scheduled;
 
-public class RoutedDataSource extends AbstractDataSource {
+public class RoutingDataSource extends AbstractDataSource {
 
 	private DataSource mainGroup;
 
@@ -60,7 +59,6 @@ public class RoutedDataSource extends AbstractDataSource {
 		return getConnection(null, null);
 	}
 
-	@Scheduled(fixedDelay = 30000)
 	public void check() {
 		if (mainGroup instanceof GroupedDataSource)
 			((GroupedDataSource) mainGroup).checkDeadDataSources();
