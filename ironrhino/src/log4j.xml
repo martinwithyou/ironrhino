@@ -25,8 +25,8 @@
 			<param name="ConversionPattern" value="%d %c %p %m%n"/>
 		</layout>
 	</appender>
-	<appender name="FRAMEWORK" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="${ironrhino.home}/logs/framework.log"/>
+	<appender name="REMOTING" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="${ironrhino.home}/logs/remoting.log"/>
 		<param name="append" value="true"/>
 		<param name="encoding" value="utf-8"/>
 		<param name="threshold" value="INFO"/>
@@ -53,47 +53,11 @@
 	<logger name="org.apache.struts2.components.ServletUrlRenderer" additivity="true">
 		<level value="ERROR"/>
 	</logger>
-	<logger name="org.springframework" additivity="false">
+	<logger name="org.ironrhino.remoting" additivity="false">
 		<level value="INFO"/>
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="FRAMEWORK"/>
+		<appender-ref ref="REMOTING"/>
 	</logger>
-	<logger name="org.apache" additivity="false">
-		<level value="INFO"/>
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="FRAMEWORK"/>
-	</logger>
-	<logger name="com.opensymphony" additivity="false">
-		<level value="INFO"/>
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="FRAMEWORK"/>
-	</logger>
-	<logger name="org.hibernate" additivity="false">
-		<level value="INFO"/>
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="FRAMEWORK"/>
-	</logger>
-	<logger name="net.sf" additivity="false">
-		<level value="INFO"/>
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="FRAMEWORK"/>
-	</logger>
-	<logger name="org.compass" additivity="false">
-		<level value="INFO"/>
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="FRAMEWORK"/>
-	</logger>
-	<logger name="org.jencks" additivity="false">
-		<level value="INFO"/>
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="FRAMEWORK"/>
-	</logger>
-	<logger name="org.ironrhino.core" additivity="false">
-		<level value="INFO"/>
-		<appender-ref ref="CONSOLE"/>
-		<appender-ref ref="FRAMEWORK"/>
-	</logger>
-	<logger name="accesslog" additivity="false">
+	<logger name="access" additivity="false">
 		<level value="INFO"/>
 		<appender-ref ref="ACCESS"/>
 	</logger>

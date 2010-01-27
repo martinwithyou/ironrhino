@@ -19,7 +19,7 @@ import org.ironrhino.ums.security.AuthenticationFilter;
 
 public class AccessLogFilter implements Filter {
 
-	private Log log = LogFactory.getLog("accesslog");
+	private Log log = LogFactory.getLog("access");
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
