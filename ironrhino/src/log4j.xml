@@ -16,7 +16,7 @@
 			<param name="ConversionPattern" value="%d %c %p %X{url} %m%n"/>
 		</layout>
 	</appender>
-	<appender name="APPLICATION-ERROR" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="ERROR" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="${ironrhino.home}/logs/application-error.log"/>
 		<param name="append" value="false"/>
 		<param name="encoding" value="utf-8"/>
@@ -65,7 +65,7 @@
 		<level value="INFO"/>
 		<appender-ref ref="CONSOLE"/>
 		<appender-ref ref="APPLICATION"/>
-		<appender-ref ref="APPLICATION-ERROR"/>
+		<appender-ref ref="ERROR"/>
 	</root>
 	
 </log4j:configuration>
