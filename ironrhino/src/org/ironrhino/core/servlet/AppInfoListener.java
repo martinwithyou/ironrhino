@@ -17,12 +17,14 @@ public class AppInfoListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent event) {
 		ServletContext ctx = event.getServletContext();
 		String name = ctx.getInitParameter(AppInfo.KEY_APP_NAME);
+		if (name == null)
+			name = ctx.getServletContextName();
 		if (StringUtils.isNotBlank(name))
 			AppInfo.setAppName(name);
 		String version = ctx.getInitParameter(AppInfo.KEY_APP_VERSION);
 		if (StringUtils.isNotBlank(version))
 			AppInfo.setAppVersion(version);
-		System.setProperty(AppInfo.APP_NAME + ".apphome", AppInfo.getAppHome());
+		System.setProperty(AppInfo.APP_NAME + ".home", AppInfo.getAppHome());
 	}
 
 }

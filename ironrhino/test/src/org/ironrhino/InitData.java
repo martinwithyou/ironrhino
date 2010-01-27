@@ -26,7 +26,7 @@ public class InitData {
 
 	public static void main(String... strings) throws Exception {
 		System.setProperty("app.name", "ironrhino");
-		System.setProperty("ironrhino.apphome", System.getProperty("user.home")
+		System.setProperty("ironrhino.home", System.getProperty("user.home")
 				+ "/" + System.getProperty("app.name"));
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				new String[] {

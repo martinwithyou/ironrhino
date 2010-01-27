@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	
+	<appender name="APPLICATION" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="${ironrhino.home}/logs/application.log"/>
+		<param name="append" value="true"/>
+		<param name="encoding" value="utf-8"/>
+		<param name="threshold" value="INFO"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %c %p %X{url} %m%n"/>
+		</layout>
+	</appender>
+	<appender name="APPLICATION-ERROR" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="${ironrhino.home}/logs/application-error.log"/>
+		<param name="append" value="false"/>
+		<param name="encoding" value="utf-8"/>
+		<param name="threshold" value="ERROR"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %c %p %X{url} %m%n"/>
+		</layout>
+	</appender>
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %c %p %m%n"/>
+		</layout>
+	</appender>
+	<appender name="FRAMEWORK" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="${ironrhino.home}/logs/framework.log"/>
+		<param name="append" value="true"/>
+		<param name="encoding" value="utf-8"/>
+		<param name="threshold" value="INFO"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %c %p %m%n"/>
+		</layout>
+	</appender>
+	<appender name="ACCESS" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="${ironrhino.home}/logs/access.log"/>
+		<param name="append" value="true"/>
+		<param name="encoding" value="utf-8"/>
+		<param name="threshold" value="INFO"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %X{username}@%X{remoteAddr} %X{method} %X{url} UserAgent:%X{userAgent} Referer:%X{referer}%n"/>
+		</layout>
+	</appender>
+   
+	<logger name="org.springframework.aop.framework.Cglib2AopProxy" additivity="true">
+		<level value="ERROR"/>
+	</logger>
+	<logger name="com.opensymphony.xwork2.ognl.OgnlValueStack" additivity="true">
+		<level value="ERROR"/>
+	</logger>
+	<logger name="org.apache.struts2.components.ServletUrlRenderer" additivity="true">
+		<level value="ERROR"/>
+	</logger>
+	<logger name="org.springframework" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FRAMEWORK"/>
+	</logger>
+	<logger name="org.apache" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FRAMEWORK"/>
+	</logger>
+	<logger name="com.opensymphony" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FRAMEWORK"/>
+	</logger>
+	<logger name="org.hibernate" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FRAMEWORK"/>
+	</logger>
+	<logger name="net.sf" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FRAMEWORK"/>
+	</logger>
+	<logger name="org.compass" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FRAMEWORK"/>
+	</logger>
+	<logger name="org.jencks" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FRAMEWORK"/>
+	</logger>
+	<logger name="org.ironrhino.core" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FRAMEWORK"/>
+	</logger>
+	<logger name="accesslog" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="ACCESS"/>
+	</logger>
+	<root>
+		<level value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="APPLICATION"/>
+		<appender-ref ref="APPLICATION-ERROR"/>
+	</root>
+	
+</log4j:configuration>
