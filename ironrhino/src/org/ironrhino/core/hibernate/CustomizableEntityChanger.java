@@ -85,15 +85,15 @@ public class CustomizableEntityChanger {
 					else if (PropertyType.BIGDECIMAL == map.get(name))
 						customProperties.put(name, new BigDecimal(value));
 					else if (PropertyType.DOUBLE == map.get(name))
-						customProperties.put(name, new Double(value));
+						customProperties.put(name, Double.valueOf(value));
 					else if (PropertyType.FLOAT == map.get(name))
-						customProperties.put(name, new Float(value));
+						customProperties.put(name, Float.valueOf(value));
 					else if (PropertyType.LONG == map.get(name))
-						customProperties.put(name, new Long(value));
+						customProperties.put(name,  Long.valueOf(value));
 					else if (PropertyType.INTEGER == map.get(name))
-						customProperties.put(name, new Integer(value));
+						customProperties.put(name, Integer.valueOf(value));
 					else if (PropertyType.SHORT == map.get(name))
-						customProperties.put(name, new Short(value));
+						customProperties.put(name, Short.valueOf(value));
 					else if (PropertyType.BOOLEAN == map.get(name))
 						customProperties.put(name, Boolean.valueOf(value));
 					else

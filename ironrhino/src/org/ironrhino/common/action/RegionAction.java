@@ -99,7 +99,7 @@ public class RegionAction extends BaseAction {
 	@Override
 	public String input() {
 		if (getUid() != null)
-			region = baseManager.get(new Integer(getUid()));
+			region = baseManager.get(Long.valueOf(getUid()));
 		if (region == null)
 			region = new Region();
 		return INPUT;
@@ -131,9 +131,9 @@ public class RegionAction extends BaseAction {
 	@Override
 	public String delete() {
 		String[] arr = getId();
-		Integer[] id = new Integer[arr.length];
+		Long[] id = new Long[arr.length];
 		for (int i = 0; i < id.length; i++)
-			id[i] = new Integer(arr[i]);
+			id[i] = Long.valueOf(arr[i]);
 		if (id != null) {
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			dc.add(Restrictions.in("id", id));

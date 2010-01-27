@@ -102,7 +102,7 @@ public class CategoryAction extends BaseAction {
 	@Override
 	public String input() {
 		if (getUid() != null)
-			category = categoryManager.get(new Integer(getUid()));
+			category = categoryManager.get(Long.valueOf(getUid()));
 		if (category == null)
 			category = new Category();
 		return INPUT;
@@ -137,7 +137,7 @@ public class CategoryAction extends BaseAction {
 	public String move() {
 		String id = getUid();
 		if (StringUtils.isNotBlank(id)) {
-			category = categoryManager.get(new Integer(getUid()));
+			category = categoryManager.get(Long.valueOf(getUid()));
 			if (parentId != null && parentId > 0
 					&& !id.equals(parentId.toString()))
 				category.setParent(categoryManager.get(parentId));
@@ -151,9 +151,9 @@ public class CategoryAction extends BaseAction {
 	@Override
 	public String delete() {
 		String[] arr = getId();
-		Integer[] id = new Integer[arr.length];
+		Long[] id = new Long[arr.length];
 		for (int i = 0; i < id.length; i++)
-			id[i] = new Integer(arr[i]);
+			id[i] = Long.valueOf(arr[i]);
 		if (id != null) {
 			DetachedCriteria dc = categoryManager.detachedCriteria();
 			dc.add(Restrictions.in("id", id));
