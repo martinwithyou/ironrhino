@@ -53,7 +53,7 @@
 	<logger name="org.apache.struts2.components.ServletUrlRenderer" additivity="true">
 		<level value="ERROR"/>
 	</logger>
-	<logger name="org.ironrhino.remoting" additivity="false">
+	<logger name="org.ironrhino.core.remoting" additivity="false">
 		<level value="INFO"/>
 		<appender-ref ref="REMOTING"/>
 	</logger>
