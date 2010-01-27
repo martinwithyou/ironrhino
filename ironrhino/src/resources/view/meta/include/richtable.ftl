@@ -44,7 +44,7 @@
 <td class="tableHeader<#if class!=''> ${class}</#if>"<#if !readonly> cellName="${cellName}"</#if><#if cellEdit!=''> cellEdit="${cellEdit}"</#if>>
 <#if resizable>
 <span class="resizeTitle">${action.getText(name)}</span>
-<span class="resizeBar"/>
+<span class="resizeBar"></span>
 <#else>
 ${action.getText(name)}
 </#if>
