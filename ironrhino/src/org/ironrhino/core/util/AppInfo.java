@@ -72,7 +72,8 @@ public class AppInfo {
 	}
 
 	public static String getAppHome() {
-		return System.getProperty("user.home") + "/" + APP_NAME;
+		return System.getProperty("user.home").replace('\\', '/') + "/"
+				+ APP_NAME;
 	}
 
 	public static void setAppName(String name) {
