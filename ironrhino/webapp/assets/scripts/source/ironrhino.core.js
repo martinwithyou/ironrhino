@@ -173,15 +173,7 @@ Observation.common = function(container) {
 				'auto' : true,
 				'dipsplayData' : 'percentage'
 			};
-			var _options;
-			try {
-				if (window.JSON && window.JSON.parse)
-					_options = window.JSON.parse($(this).attr('options'));
-				else
-					_options = (new Function("return "
-							+ $(this).attr('options')))();
-			} catch (e) {
-			}
+			var _options = $.parseJSON($(this).attr('options'));
 			if (_options)
 				$.extend(options, _options);
 			if (!options.auto) {
@@ -395,11 +387,7 @@ Ajax = {
 		var target = options.target;
 		if ((typeof data == 'string')
 				&& (data.indexOf('{') == 0 || data.indexOf('[') == 0))
-			if (window.JSON && window.JSON.parse) {
-				data = window.JSON.parse(data);
-			} else {
-				data = (new Function("return " + data))();
-			}
+			data = $.parseJSON(data);
 		if (typeof data == 'string') {
 			if (data.indexOf('<title>') > 0 && data.indexOf('</title>') > 0) {
 				Ajax.title = data.substring(data.indexOf('<title>') + 7, data
