@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 
 import org.aopalliance.intercept.MethodInvocation;
@@ -21,8 +20,6 @@ import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
 	private static Log log = LogFactory.getLog(HttpInvokerClient.class);
-
-	private static Random random = new Random();
 
 	@Autowired(required = false)
 	private ServiceRegistry serviceRegistry;
@@ -132,10 +129,9 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 		sb.append("http://");
 		if (StringUtils.isBlank(host)) {
 			if (serviceRegistry != null) {
-				List<String> hosts = serviceRegistry.getImportServices().get(
-						serviceName);
-				if (hosts != null && hosts.size() > 0) {
-					sb.append(hosts.get(random.nextInt(hosts.size())));
+				String ho = serviceRegistry.discover(serviceName);
+				if (ho != null) {
+					sb.append(ho);
 				} else {
 					sb.append("localhost");
 					log.error("couldn't discover service:" + serviceName);

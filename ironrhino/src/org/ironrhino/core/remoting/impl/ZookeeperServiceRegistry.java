@@ -7,8 +7,6 @@ import javax.annotation.PreDestroy;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
@@ -24,12 +22,10 @@ import org.ironrhino.core.util.AppInfo;
 public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		Watcher, ChildrenCallback {
 
-	private Log log = LogFactory.getLog(getClass());
-
 	private ZooKeeper zooKeeper;
 
-	// private String connectString = "localhost:2181/remoting";
-	private String connectString;
+	private String connectString = "localhost:2181/remoting";
+	// private String connectString;
 
 	private int sessionTimeout = 3000;
 
@@ -58,6 +54,11 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	}
 
+	@Override
+	public void onReady() {
+
+	}
+
 	@PreDestroy
 	public void destroy() {
 		if (zooKeeper != null)
@@ -68,13 +69,12 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	}
 
 	@Override
-	protected void register(String serviceName) {
+	public void register(String serviceName) {
 		if (zooKeeper != null)
 			register(serviceName, AppInfo.getHostAddress(), maxRetryTimes);
 	}
 
-	@Override
-	protected void discover(String serviceName) {
+	protected void lookup(String serviceName) {
 		if (zooKeeper != null)
 			zooKeeper.getChildren("/" + serviceName, true, this, null);
 	}

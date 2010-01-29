@@ -4,9 +4,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.metadata.Remoting;
 import org.ironrhino.core.remoting.HessianClient;
 import org.ironrhino.core.remoting.HttpInvokerClient;
@@ -20,11 +23,15 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		BeanFactoryPostProcessor {
 
+	protected Log log = LogFactory.getLog(getClass());
+
 	ConfigurableListableBeanFactory beanFactory;
 
 	protected Map<String, List<String>> importServices = new ConcurrentHashMap<String, List<String>>();
 
 	protected Map<String, Object> exportServices = new HashMap<String, Object>();
+
+	private Random random = new Random();
 
 	private boolean converted;
 
@@ -85,7 +92,8 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		for (String serviceName : exportServices.keySet())
 			register(serviceName);
 		for (String serviceName : importServices.keySet())
-			discover(serviceName);
+			lookup(serviceName);
+		onReady();
 	}
 
 	@Override
@@ -95,10 +103,23 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		init();
 	}
 
+	@Override
+	public String discover(String serviceName) {
+		List<String> hosts = getImportServices().get(serviceName);
+		if (hosts != null && hosts.size() > 0) {
+			String host = hosts.get(random.nextInt(hosts.size()));
+			log.info("discovered " + serviceName + "@" + host);
+			return host;
+		} else {
+			return null;
+		}
+
+	}
+
 	protected abstract void prepare();
 
-	protected abstract void register(String serviceName);
+	protected abstract void onReady();
 
-	protected abstract void discover(String serviceName);
+	protected abstract void lookup(String serviceName);
 
 }
