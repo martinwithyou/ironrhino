@@ -108,12 +108,20 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		List<String> hosts = getImportServices().get(serviceName);
 		if (hosts != null && hosts.size() > 0) {
 			String host = hosts.get(random.nextInt(hosts.size()));
-			log.info("discovered " + serviceName + "@" + host);
+			onDiscover(serviceName, host);
 			return host;
 		} else {
 			return null;
 		}
 
+	}
+
+	protected void onDiscover(String serviceName, String host) {
+		log.info("discovered " + serviceName + "@" + host);
+	}
+
+	protected void onRegister(String serviceName, String host) {
+		log.info("registered " + serviceName + "@" + host);
 	}
 
 	protected abstract void prepare();
