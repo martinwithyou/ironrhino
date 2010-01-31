@@ -21,11 +21,30 @@ public class AccessLogFilter implements Filter {
 
 	private Log log = LogFactory.getLog("access");
 
+	public static final String KEY_EXCLUDE_PATTERNS = "excludePatterns";
+
+	public static final String DEFAULT_EXCLUDE_PATTERNS = "/remoting/*";
+
+	public static final String KEY_PRINT = "print";
+
+	private String[] excludePatterns;
+
+	private boolean print = true;
+
+	@Override
+	public void init(FilterConfig filterConfig) {
+		if ("false".equals(filterConfig.getInitParameter(KEY_PRINT)))
+			print = false;
+		String str = filterConfig.getInitParameter(KEY_EXCLUDE_PATTERNS);
+		if (StringUtils.isBlank(str))
+			str = DEFAULT_EXCLUDE_PATTERNS;
+		excludePatterns = str.split(",");
+	}
+
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
-
 		MDC.put("remoteAddr", RequestUtils.getRemoteAddr(request));
 		MDC.put("method", request.getMethod());
 		StringBuilder url = new StringBuilder().append(request.getRequestURI());
@@ -42,17 +61,25 @@ public class AccessLogFilter implements Filter {
 				AuthenticationFilter.COOKIE_NAME_LOGIN_USER);
 		if (s != null)
 			MDC.put("username", s);
-		log.info("");
+		boolean excluded = false;
+		if (print) {
+			for (String pattern : excludePatterns) {
+				String path = request.getRequestURI();
+				path = path.substring(request.getContextPath().length());
+				if (org.ironrhino.core.util.StringUtils.matchesWildcard(path,
+						pattern)) {
+					excluded = true;
+					break;
+				}
+			}
+			if (!excluded)
+				log.info("");
+		}
 		chain.doFilter(req, resp);
 	}
 
 	@Override
 	public void destroy() {
-
-	}
-
-	@Override
-	public void init(FilterConfig arg0) throws ServletException {
 
 	}
 

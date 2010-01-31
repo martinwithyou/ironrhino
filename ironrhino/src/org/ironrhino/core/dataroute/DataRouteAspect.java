@@ -1,4 +1,4 @@
-package org.ironrhino.core.aop;
+package org.ironrhino.core.dataroute;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.ironrhino.core.dataroute.DataRouteContext;
+import org.ironrhino.core.aop.BaseAspect;
 import org.ironrhino.core.metadata.DataRoute;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;

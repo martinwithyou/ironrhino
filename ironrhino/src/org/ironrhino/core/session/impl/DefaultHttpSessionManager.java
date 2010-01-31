@@ -22,6 +22,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	protected Log log = LogFactory.getLog(this.getClass());
 
+	public static final String DEFAULT_SESSION_TRACKER_NAME = "T";
+
 	private static final String SALT = "awpeqaidasdfaioiaoduifayzuxyaaokadoaifaodiaoi";
 
 	private static final String SESSION_TRACKER_SEPERATOR = "-";
@@ -29,6 +31,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	public static final int DEFAULT_MAXINACTIVEINTERVAL = 1800; // in seconds
 
 	public static final int DEFAULT_MINACTIVEINTERVAL = 60;// in seconds
+
+	private String sessionTrackerName = DEFAULT_SESSION_TRACKER_NAME;
 
 	@Inject
 	@Named("cookieBased")
@@ -48,6 +52,15 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	public void setMinActiveInterval(int minActiveInterval) {
 		this.minActiveInterval = minActiveInterval;
+	}
+
+	public void setSessionTrackerName(String sessionTrackerName) {
+		this.sessionTrackerName = sessionTrackerName;
+	}
+
+	@Override
+	public String getSessionTrackerName() {
+		return sessionTrackerName;
 	}
 
 	@Override
@@ -94,7 +107,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.setCreationTime(creationTime);
 		session.setLastAccessedTime(lastAccessedTime);
 		session.setMinActiveInterval(minActiveInterval);
-		if(session.getSessionTracker()==null)
+		if (session.getSessionTracker() == null)
 			session.setSessionTracker(getSessionTracker(session));
 		doInitialize(session);
 
@@ -113,12 +126,12 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			session.setLastAccessedTime(session.getNow());
 			sessionTrackerChanged = true;
 		}
-//		if (!session.isRequestedSessionIdFromURL() && sessionTrackerChanged) {
+		// if (!session.isRequestedSessionIdFromURL() && sessionTrackerChanged)
+		// {
 		if (sessionTrackerChanged) {
 			session.resetSessionTracker();
 			RequestUtils.saveCookie(session.getRequest(),
-					session.getResponse(),
-					WrappedHttpSession.SESSION_TRACKER_NAME, session
+					session.getResponse(), getSessionTrackerName(), session
 							.getSessionTracker(), true);
 		}
 		doSave(session);
@@ -130,8 +143,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.getAttrMap().clear();
 		if (!session.isRequestedSessionIdFromURL()) {
 			RequestUtils.deleteCookie(session.getRequest(), session
-					.getResponse(), WrappedHttpSession.SESSION_TRACKER_NAME,
-					true);
+					.getResponse(), getSessionTrackerName(), true);
 		}
 		doInvalidate(session);
 		session.setId(CodecUtils.nextId(SALT));

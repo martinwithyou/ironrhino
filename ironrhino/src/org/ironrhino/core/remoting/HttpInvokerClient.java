@@ -41,6 +41,12 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	private List<String> asyncMethods;
 
 	private boolean urlFromDiscovery;
+	
+	private boolean poll;
+	
+	public void setPoll(boolean poll) {
+		this.poll = poll;
+	}
 
 	public void setHost(String host) {
 		this.host = host;
@@ -85,6 +91,8 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
+		if(poll)
+			setServiceUrl(discoverServiceUrl(getServiceInterface().getName()));
 		if (cachedThreadPool != null && asyncMethods != null) {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {

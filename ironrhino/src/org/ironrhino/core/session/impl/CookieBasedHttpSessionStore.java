@@ -24,12 +24,18 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 
 	protected Log log = LogFactory.getLog(this.getClass());
 
-	public static final String SESSION_COOKIE_PREFIX = "s_";
+	public static final String DEFAULT_SESSION_COOKIE_NAME = "s";
 
 	public static final int SINGLE_COOKIE_SIZE = 2 * 1024;
 
+	private String sessionCookieName = DEFAULT_SESSION_COOKIE_NAME;
+
 	@Inject
 	private SessionCompressorManager sessionCompressorManager;
+
+	public void setSessionCookieName(String sessionCookieName) {
+		this.sessionCookieName = sessionCookieName;
+	}
 
 	@Override
 	public void initialize(WrappedHttpSession session) {
@@ -58,7 +64,7 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 		Cookie[] cookies = session.getRequest().getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies)
-				if (cookie.getName().startsWith(SESSION_COOKIE_PREFIX)) {
+				if (cookie.getName().startsWith(sessionCookieName)) {
 					try {
 						cookieMap.put(cookie.getName(), URLDecoder.decode(
 								cookie.getValue(), "UTF-8"));
@@ -69,10 +75,10 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < cookieMap.size(); i++) {
-			String s = i == 0 ? cookieMap.get(SESSION_COOKIE_PREFIX)
-					: cookieMap.get(SESSION_COOKIE_PREFIX + (i - 1));
+			String s = i == 0 ? cookieMap.get(sessionCookieName) : cookieMap
+					.get(sessionCookieName + (i - 1));
 			if (s == null) {
-				log.error(SESSION_COOKIE_PREFIX + i + " is null");
+				log.error(sessionCookieName + i + " is null");
 				clearCookie(session);
 				return null;
 			}
@@ -89,8 +95,8 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 				pieces++;
 			for (int i = 0; i < pieces; i++)
 				RequestUtils.saveCookie(session.getRequest(), session
-						.getResponse(), i == 0 ? SESSION_COOKIE_PREFIX
-						: SESSION_COOKIE_PREFIX + (i - 1), value.substring(i
+						.getResponse(), i == 0 ? sessionCookieName
+						: sessionCookieName + (i - 1), value.substring(i
 						* SINGLE_COOKIE_SIZE, i == pieces - 1 ? value.length()
 						: (i + 1) * SINGLE_COOKIE_SIZE), true);
 		}
@@ -100,7 +106,7 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 		Cookie[] cookies = session.getRequest().getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies)
-				if (cookie.getName().startsWith(SESSION_COOKIE_PREFIX)) {
+				if (cookie.getName().startsWith(sessionCookieName)) {
 					RequestUtils.deleteCookie(session.getRequest(), session
 							.getResponse(), cookie.getName(), true);
 				}

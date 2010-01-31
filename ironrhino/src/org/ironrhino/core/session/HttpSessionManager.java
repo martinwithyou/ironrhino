@@ -4,4 +4,6 @@ public interface HttpSessionManager extends HttpSessionStore {
 
 	public String getSessionTracker(WrappedHttpSession session);
 
+	public String getSessionTrackerName();
+
 }

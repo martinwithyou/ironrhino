@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.ironrhino.core.aop.AopContext;
-import org.ironrhino.core.aop.CacheAspect;
+import org.ironrhino.core.cache.CacheAspect;
 import org.ironrhino.core.spring.security.DefaultAuthenticationFailureHandler;
 import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.spring.security.DefaultUsernamePasswordAuthenticationFilter;

@@ -23,10 +23,7 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 
 	private static final long serialVersionUID = -4227316119138095858L;
 
-	public static final String SESSION_TRACKER_NAME = "T";
-
-	public static Pattern SESSION_TRACKER_PATTERN = Pattern.compile(';'
-			+ SESSION_TRACKER_NAME + "=.+");
+	public static Pattern SESSION_TRACKER_PATTERN;
 
 	private String id;
 
@@ -75,9 +72,10 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		this.httpSessionManager = httpSessionManager;
 		requestURL = request.getRequestURL().toString();
 		sessionTracker = RequestUtils.getCookieValue(request,
-				SESSION_TRACKER_NAME);
+				httpSessionManager.getSessionTrackerName());
 		if (StringUtils.isBlank(sessionTracker)) {
-			sessionTracker = request.getParameter(SESSION_TRACKER_NAME);
+			sessionTracker = request.getParameter(httpSessionManager
+					.getSessionTrackerName());
 			if (StringUtils.isBlank(sessionTracker)) {
 				String requestURL = request.getRequestURL().toString();
 				if (requestURL.indexOf(';') > -1) {
@@ -87,7 +85,8 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 					for (String pair : array) {
 						if (pair.indexOf('=') > 0) {
 							String k = pair.substring(0, pair.indexOf('='));
-							if (k.equals(SESSION_TRACKER_NAME)) {
+							if (k.equals(httpSessionManager
+									.getSessionTrackerName())) {
 								sessionTracker = pair.substring(pair
 										.indexOf('=') + 1);
 								break;
@@ -106,7 +105,9 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 				}
 			}
 		}
-
+		if (SESSION_TRACKER_PATTERN == null)
+			SESSION_TRACKER_PATTERN = Pattern.compile(';'
+					+ httpSessionManager.getSessionTrackerName() + "=.+");
 		httpSessionManager.initialize(this);
 	}
 
@@ -288,7 +289,7 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		sb.append(array[0]);
 		if (sessionTracker != null) {
 			sb.append(';');
-			sb.append(SESSION_TRACKER_NAME);
+			sb.append(httpSessionManager.getSessionTrackerName());
 			sb.append('=');
 			sb.append(sessionTracker);
 		}
