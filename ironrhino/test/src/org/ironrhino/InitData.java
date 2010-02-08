@@ -31,7 +31,7 @@ public class InitData {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				new String[] {
 						"resources/spring/applicationContext-common.xml",
-						"resources/spring/applicationContext-datasource.xml",
+						"resources/spring/applicationContext-ds.xml",
 						"resources/spring/applicationContext-hibernate.xml",
 						"resources/spring/applicationContext-online.xml",
 						"resources/spring/applicationContext-cache.xml" });
@@ -90,9 +90,9 @@ public class InitData {
 		for (Region region : regions) {
 			save(region);
 		}
+		baseManager.save(new Setting("product.recommanded", "productCode100,productCode200,productCode300,productCode400"));
 		ctx.close();
 		
-		baseManager.save(new Setting("product.recommanded", "productCode100,productCode200,productCode300,productCode400"));
 	}
 
 	private static void save(Region region) {
