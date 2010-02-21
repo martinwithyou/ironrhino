@@ -112,7 +112,7 @@
 		<concat destfile="${dest.script}" encoding="utf-8" fixlastline="yes">
 			<filelist>
 				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery-1.4.1.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery-1.4.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/effects.core-1.7.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/effects.highlight-1.7.2.js" />
