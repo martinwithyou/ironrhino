@@ -78,7 +78,7 @@ public class Mappings implements Serializable {
 	protected boolean autoImport;
 	protected boolean defaultLazy;
 	protected final List propertyReferences;
-	protected final transient NamingStrategy namingStrategy;
+	protected final NamingStrategy namingStrategy;
 	protected final Map filterDefinitions;
 	protected final List auxiliaryDatabaseObjects;
 
