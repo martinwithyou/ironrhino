@@ -15,6 +15,7 @@ import org.compass.core.CompassSession;
 import org.compass.core.CompassTemplate;
 import org.compass.core.engine.SearchEngineQueryParseException;
 import org.compass.core.support.search.CompassSearchResults;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 public class CompassSearchService {
@@ -24,7 +25,7 @@ public class CompassSearchService {
 	@Inject
 	private Compass compass;
 
-	@Inject
+	@Autowired(required = false)
 	private SearchStat searchStat;
 
 	private CompassTemplate compassTemplate;
@@ -38,7 +39,8 @@ public class CompassSearchService {
 						return performSearch(criteria, session);
 					}
 				});
-		searchStat.put(criteria.getQuery(), searchResults.getTotalHits());
+		if (searchStat != null)
+			searchStat.put(criteria.getQuery(), searchResults.getTotalHits());
 		return searchResults;
 	}
 
