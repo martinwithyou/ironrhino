@@ -23,7 +23,6 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.metadata.NaturalId;
-import org.ironrhino.core.model.AbstractTreeableEntity;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Persistable;
@@ -83,8 +82,8 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			if (obj.isNew())
 				r.setCreateDate(date);
 		}
-		if (obj instanceof AbstractTreeableEntity) {
-			final AbstractTreeableEntity entity = (AbstractTreeableEntity) obj;
+		if (obj instanceof BaseTreeableEntity) {
+			final BaseTreeableEntity entity = (BaseTreeableEntity) obj;
 			if (entity.isNew()) {
 				FlushMode mode = session.getFlushMode();
 				session.setFlushMode(FlushMode.MANUAL);
@@ -97,8 +96,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			if (entity.getParent() == null)
 				fullId = String.valueOf(entity.getId());
 			else
-				fullId = ((AbstractTreeableEntity) entity.getParent())
-						.getFullId()
+				fullId = ((BaseTreeableEntity) entity.getParent()).getFullId()
 						+ "." + String.valueOf(entity.getId());
 			entity.setFullId(fullId);
 			entity.setLevel(fullId.split("\\.").length);
