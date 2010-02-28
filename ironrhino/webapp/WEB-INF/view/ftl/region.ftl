@@ -27,7 +27,7 @@
 			$("#treeview span").click(_click);
 			var id=document.location.hash;
 			if(id)
-				$(id).parents("li.expandable").find(">div.hitarea").click();
+				$(id).addClass('highlight').parents("li.expandable").find(">div.hitarea").click();
 		</#if>
 	};
 </script>

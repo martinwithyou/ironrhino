@@ -114,6 +114,10 @@
 	background: #FF6;
 }
 
+#treeview li.highlight {
+	font-weight:bold;
+}
+
 .bold {
 	font-weight: bold;
 }

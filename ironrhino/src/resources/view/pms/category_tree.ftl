@@ -20,7 +20,7 @@
 		<#if !(async??&&async)>
 			$("#treeview span").click(_click);
 			<#if Parameters.focus??>
-			$("#${Parameters.focus}").parents("li.expandable").find(">div.hitarea").click();
+			$("#${Parameters.focus}").addClass('highlight').parents("li.expandable").find(">div.hitarea").click();
 			</#if>
 		</#if>
 	};

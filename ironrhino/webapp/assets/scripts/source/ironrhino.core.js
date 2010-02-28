@@ -499,15 +499,19 @@ function ajax(options) {
 	$.extend(options.header, {
 				'X-Data-Type' : options.dataType
 			});
-	$.extend(options, {
-				beforeSend : function() {
-					Indicator.text = options.indicator;
-					Ajax.fire(null, options.onloading);
-				},
-				success : function(data) {
-					Ajax.handleResponse(data, options)
-				}
-			});
+	var beforeSend = options.beforeSend;
+	options.beforeSend = function(xhr) {
+		if(beforeSend)
+			beforeSend(xhr);
+		Indicator.text = options.indicator;
+		Ajax.fire(null, options.onloading);
+	}
+	var success = options.success;
+	options.success = function(data, textStatus, XMLHttpRequest) {
+			Ajax.handleResponse(data, options);
+			if(success)
+				success(data, textStatus, XMLHttpRequest);
+	};
 	$.ajax(options);
 }
 var _history_ = false;
