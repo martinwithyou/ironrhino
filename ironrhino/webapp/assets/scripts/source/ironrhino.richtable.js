@@ -182,7 +182,7 @@ Richtable = {
 		} else {
 			// embed iframe
 			$('#_window_')
-					.html('<iframe style="width:650px;border:0;" onload="Dialog.adapt($(\'#_window_\'),this);"/>');
+					.html('<iframe style="width:650px;height:90%;border:0;" onload="Dialog.adapt($(\'#_window_\'),this);"/>');
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'decorator=simple&'
 					+ Math.random();
 			$('#_window_ > iframe')[0].src = url;

@@ -10,6 +10,7 @@ import org.ironrhino.common.model.Region;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.util.HtmlUtils;
 
 public class RegionAction extends BaseAction {
 
@@ -30,6 +31,16 @@ public class RegionAction extends BaseAction {
 	private String northEast;
 
 	private int zoom;
+
+	private boolean async;
+
+	public boolean isAsync() {
+		return async;
+	}
+
+	public void setAsync(boolean async) {
+		this.async = async;
+	}
 
 	public int getZoom() {
 		return zoom;
@@ -145,6 +156,10 @@ public class RegionAction extends BaseAction {
 			}
 		}
 		return SUCCESS;
+	}
+
+	public String getTreeViewHtml() {
+		return HtmlUtils.getTreeViewHtml(list, async);
 	}
 
 	public String map() {
