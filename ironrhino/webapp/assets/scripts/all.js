@@ -17379,6 +17379,7 @@ MessageBundle = {
 			document.domain = d[d.length - 3] + '.' + d[d.length - 2] + '.'
 					+ d[d.length - 1];
 	}
+	$.ajaxSettings.traditional = true;
 	var $ajax = $.ajax;
 	$.ajax = function(options) {
 		options.url = UrlUtils.makeSameOrigin(options.url);

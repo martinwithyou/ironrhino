@@ -4,7 +4,7 @@
 <title>List Users</title>
 </head>
 <body>
-<#assign config={"username":{},"name":{},"email":{},"password":{"value":"********","trimPrefix":true,"cellEdit":"input,ec_edit_template_password","class":"include_if_edited"},"rolesAsString":{"trimPrefix":true,"cellEdit":"click","class":"include_if_edited"}}>
+<#assign config={"username":{},"name":{},"email":{},"password":{"value":"********","trimPrefix":true,"cellEdit":"click,ec_edit_template_password","class":"include_if_edited"},"rolesAsString":{"trimPrefix":true,"cellEdit":"click","class":"include_if_edited"}}>
 <@richtable entityName="user" config=config/>
 <div style="display: none;">
 <textarea id="ec_edit_template_password">
