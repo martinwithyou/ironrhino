@@ -36,7 +36,7 @@ public class ProductAction extends BaseAction {
 
 	private ResultPage<Product> resultPage;
 
-	private Integer categoryId;
+	private Long categoryId;
 
 	private List<Attribute> attributes;
 
@@ -110,11 +110,11 @@ public class ProductAction extends BaseAction {
 		this.picture = picture;
 	}
 
-	public Integer getCategoryId() {
+	public Long getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(Integer categoryId) {
+	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
 
