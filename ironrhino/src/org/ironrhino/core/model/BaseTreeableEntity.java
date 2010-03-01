@@ -150,6 +150,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		return null;
 	}
 
+	@NotInJson
 	public List<T> getDescendants() {
 		List<T> ids = new ArrayList<T>();
 		if (!this.isLeaf())
@@ -159,6 +160,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		return ids;
 	}
 
+	@NotInJson
 	public List<T> getDescendantsAndSelf() {
 		List<T> ids = new ArrayList<T>();
 		collect((T) this, ids);

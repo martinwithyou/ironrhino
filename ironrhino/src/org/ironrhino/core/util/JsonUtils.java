@@ -2,6 +2,8 @@ package org.ironrhino.core.util;
 
 import java.lang.annotation.Annotation;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -15,6 +17,8 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 
 public class JsonUtils {
+
+	private static Log log = LogFactory.getLog(JsonUtils.class);
 
 	private static ObjectMapper objectMapper;
 	static {
@@ -55,6 +59,7 @@ public class JsonUtils {
 		try {
 			return objectMapper.writeValueAsString(object);
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			return null;
 		}
 	}

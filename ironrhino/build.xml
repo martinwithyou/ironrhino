@@ -98,7 +98,7 @@
 		</junit>
 	</target>
 
-	<target name="jar" depends="compile">
+	<target name="jar">
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${core-jar.name}" />
 		<delete file="${target.dir}/${ums-jar.name}" />
