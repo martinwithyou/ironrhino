@@ -20,13 +20,13 @@ public class AppInfoListener implements ServletContextListener {
 		if (name == null)
 			name = ctx.getServletContextName();
 		if (StringUtils.isNotBlank(name))
-			AppInfo.name = name;
+			AppInfo.setName(name);
 		String version = ctx.getInitParameter(AppInfo.KEY_APP_VERSION);
 		if (StringUtils.isNotBlank(version))
-			AppInfo.version = version;
+			AppInfo.setVersion(version);
 		String home = ctx.getInitParameter(AppInfo.KEY_APP_HOME);
 		if (StringUtils.isNotBlank(home)) {
-			AppInfo.home = home;
+			AppInfo.setHome(home);
 		}
 		System.setProperty(AppInfo.name + ".home", AppInfo.getAppHome());
 	}

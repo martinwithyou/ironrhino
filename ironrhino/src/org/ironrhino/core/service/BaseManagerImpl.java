@@ -206,10 +206,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
 		else if (resultPage.getPageSize() > ResultPage.MAX_RECORDS_PER_PAGE)
 			resultPage.setPageSize(ResultPage.MAX_RECORDS_PER_PAGE);
-		int totalPage = totalRecord % resultPage.getPageSize() == 0 ? totalRecord
-				/ resultPage.getPageSize()
-				: totalRecord / resultPage.getPageSize() + 1;
-		resultPage.setTotalPage(totalPage);
 		if (resultPage.getPageNo() < 1)
 			resultPage.setPageNo(1);
 		else if (resultPage.getPageNo() > resultPage.getTotalPage())

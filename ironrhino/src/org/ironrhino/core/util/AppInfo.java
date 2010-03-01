@@ -71,6 +71,18 @@ public class AppInfo {
 		NODEPATH = sb.toString();
 	}
 
+	public static void setName(String name) {
+		AppInfo.name = name;
+	}
+
+	public static void setHome(String home) {
+		AppInfo.home = home;
+	}
+
+	public static void setVersion(String version) {
+		AppInfo.version = version;
+	}
+
 	public static Stage getStage() {
 		return STAGE;
 	}

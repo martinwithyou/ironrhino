@@ -169,7 +169,6 @@ public class ProductAction extends BaseAction {
 		}
 		resultPage = new ResultPage<Product>();
 		resultPage.setResult(list);
-		resultPage.setTotalPage(1);
 		resultPage.setTotalRecord(list.size());
 		setUid(PSEUDO_CATEGORY_CODE_HISTORY);
 		return LIST;

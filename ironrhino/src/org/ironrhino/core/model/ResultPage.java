@@ -26,8 +26,6 @@ public class ResultPage<T> implements Serializable {
 
 	private int pageSize = DEFAULT_PAGE_SIZE;
 
-	private int totalPage = -1;
-
 	private int totalRecord = -1;
 
 	private Collection<T> result = new ArrayList<T>();
@@ -41,11 +39,11 @@ public class ResultPage<T> implements Serializable {
 	private int start = -1;
 
 	public int getStart() {
-		return this.start;
+		return (this.pageNo - 1) * this.pageSize;
 	}
 
 	public void setStart(int start) {
-		this.start = start;
+		this.pageNo = start / pageSize + 1;
 	}
 
 	public boolean isReverse() {
@@ -83,11 +81,8 @@ public class ResultPage<T> implements Serializable {
 	}
 
 	public int getTotalPage() {
-		return totalPage;
-	}
-
-	public void setTotalPage(int totalPage) {
-		this.totalPage = totalPage;
+		return totalRecord % pageSize == 0 ? totalRecord / pageSize
+				: totalRecord / pageSize + 1;
 	}
 
 	public int getTotalRecord() {
@@ -127,7 +122,7 @@ public class ResultPage<T> implements Serializable {
 	}
 
 	public boolean isLast() {
-		return this.pageNo >= this.totalPage;
+		return this.pageNo >= getTotalPage();
 	}
 
 	public int getPreviousPage() {
@@ -135,7 +130,7 @@ public class ResultPage<T> implements Serializable {
 	}
 
 	public int getNextPage() {
-		return this.pageNo < this.totalPage ? this.pageNo + 1 : this.totalPage;
+		return this.pageNo < getTotalPage() ? this.pageNo + 1 : getTotalPage();
 	}
 
 	public boolean isDefaultPageSize() {
