@@ -102,7 +102,7 @@
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${core-jar.name}" />
 		<delete file="${target.dir}/${ums-jar.name}" />
-		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/hibernate/common/**,resources/view/meta/**" />
+		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/hibernate/common/**,resources/view/common/**,resources/view/meta/**" />
 		<jar jarfile="${target.dir}/${ums-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/ums/**,resources/hibernate/ums/**,resources/view/ums/*.ftl,resources/spring/applicationContext-ums.xml" />
 	</target>
 
