@@ -99,8 +99,17 @@ public class EntityAction extends BaseAction {
 		if (readonly())
 			return ACCESSDENIED;
 		baseManager.setEntityClass(getEntityClass());
-		if (getUid() != null)
-			entity = baseManager.get(getUid());
+		if (getUid() != null) {
+			try {
+				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
+						.newInstance());
+				bw.setPropertyValue("id", getUid());
+				entity = baseManager.get((Serializable) bw
+						.getPropertyValue("id"));
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
 		if (entity == null)
 			try {
 				// for fetch default value by construct
@@ -213,8 +222,17 @@ public class EntityAction extends BaseAction {
 	@Override
 	public String view() {
 		baseManager.setEntityClass(getEntityClass());
-		if (getUid() != null)
-			entity = baseManager.get(getUid());
+		if (getUid() != null) {
+			try {
+				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
+						.newInstance());
+				bw.setPropertyValue("id", getUid());
+				entity = baseManager.get((Serializable) bw
+						.getPropertyValue("id"));
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
 		setEntity(entity);
 		return VIEW;
 	}
