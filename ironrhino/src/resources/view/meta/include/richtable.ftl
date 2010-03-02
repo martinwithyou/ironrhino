@@ -71,7 +71,7 @@ ${action.getText(name)}
 <a href="?${cellName}=${value?url('utf-8')}" class="ajax view"><#t>
 </#if><#t>
 <#if value?string=='true'||value?string=='false'><#t>
-${action.getText(value)}<#t>
+${action.getText(value?string)}<#t>
 <#else><#t>
 ${value?xhtml}<#t>
 </#if><#t>
