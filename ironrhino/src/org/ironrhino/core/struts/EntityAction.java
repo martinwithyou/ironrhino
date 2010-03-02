@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.hibernate.PropertyType;
@@ -33,6 +34,7 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Customizable;
+import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.service.BaseManager;
@@ -64,6 +66,10 @@ public class EntityAction extends BaseAction {
 		return readonly;
 	}
 
+	public Persistable getEntity() {
+		return entity;
+	}
+
 	public ResultPage getResultPage() {
 		return resultPage;
 	}
@@ -89,6 +95,8 @@ public class EntityAction extends BaseAction {
 		if (resultPage == null)
 			resultPage = new ResultPage();
 		resultPage.setDetachedCriteria(dc);
+		if (Ordered.class.isAssignableFrom(getEntityClass()))
+			dc.addOrder(Order.asc("displayOrder"));
 		resultPage = baseManager.findByResultPage(resultPage);
 		readonly = readonly();
 		return LIST;
@@ -126,7 +134,7 @@ public class EntityAction extends BaseAction {
 		if (readonly())
 			return ACCESSDENIED;
 		baseManager.setEntityClass(getEntityClass());
-		entity = getEntity();
+		entity = constructEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
 		Persistable persisted = null;
 		Map<String, Annotation> naturalIds = getNaturalIds();
@@ -552,7 +560,7 @@ public class EntityAction extends BaseAction {
 		vs.set(getEntityName(), entity);
 	}
 
-	private Persistable getEntity() {
+	private Persistable constructEntity() {
 		Persistable entity = null;
 		try {
 			entity = (Persistable) getEntityClass().newInstance();
