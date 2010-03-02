@@ -2,6 +2,10 @@ input,select,checkbox {
 	border: 1px solid #0070FF;
 }
 
+select {
+	width: 150px;
+}
+
 input.required {
 	background:#FFF url(../images/required.png) no-repeat right;
 }
