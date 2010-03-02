@@ -11,7 +11,7 @@
 		<#if config.displayName??>
 			<#assign label=config.displayName>
 		</#if>
-		<@rttheadtd name=label cellName=entityName+'.'+key cellEdit=(readonly||naturalIdsImmatuable)?string('','input') readonly=readonly/>
+		<@rttheadtd name=label cellName=entityName+'.'+key cellEdit=(readonly||naturalIdsImmatuable)?string('','click') readonly=readonly/>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
@@ -22,13 +22,13 @@
 			</#if>
 			<#if !(readonly||uiConfigs[key].readonly)>
 				<#if uiConfigs[key].type=='input'||uiConfigs[key].type=='textarea'>
-					<#assign cellEdit='input'/>
+					<#assign cellEdit='click'/>
 				</#if>
 				<#if uiConfigs[key].type=='checkbox'>
-					<#assign cellEdit='select,select_template_boolean'/>
+					<#assign cellEdit='click,select_template_boolean'/>
 				</#if>
 				<#if uiConfigs[key].type=='select'>
-				<#assign cellEdit='select,select_template_'+key/>
+				<#assign cellEdit='click,select_template_'+key/>
 				</#if>
 			<#else>
 				<#assign cellEdit=''/>
