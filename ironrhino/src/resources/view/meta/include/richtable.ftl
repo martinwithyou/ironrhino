@@ -41,7 +41,7 @@
 </#macro>
 
 <#macro rttheadtd name,cellName='',cellEdit='',class='',width='',readonly=false,resizable=true>
-<td class="tableHeader<#if class!=''> ${class}</#if>"<#if width!=''> width="${width}"</#if><#if !readonly> cellName="${cellName}"</#if><#if cellEdit!=''> cellEdit="${cellEdit}"</#if>>
+<td class="tableHeader<#if class!=''> ${class}</#if>"<#if width!=''> width="${width}"</#if><#if !(readonly||cellEdit=='')> cellName="${cellName}"</#if><#if cellEdit!=''> cellEdit="${cellEdit}"</#if>>
 <#if resizable>
 <span class="resizeTitle">${action.getText(name)}</span>
 <span class="resizeBar"></span>
