@@ -1,5 +1,9 @@
-form input.required {
-	background: url(../images/required.png) no-repeat right;
+input,select,checkbox {
+	border: 1px solid #0070FF;
+}
+
+input.required {
+	background:#FFF url(../images/required.png) no-repeat right;
 }
 
 form p {

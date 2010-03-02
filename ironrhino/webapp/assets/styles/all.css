@@ -329,8 +329,12 @@ button.pill-r span {
 	font-weight: bold;
 	color: #000;
 }
-form input.required {
-	background: url(../images/required.png) no-repeat right;
+input,select,checkbox {
+	border: 1px solid #0070FF;
+}
+
+input.required {
+	background:#FFF url(../images/required.png) no-repeat right;
 }
 
 form p {
@@ -350,7 +354,6 @@ p.top label {
 .field_error {
 	color: red;
 }
-
 .nav,.nav ul {
 	list-style: none;
 	margin: 0;
