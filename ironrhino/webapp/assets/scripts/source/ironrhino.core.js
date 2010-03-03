@@ -338,6 +338,7 @@ Form = {
 					Message.showError(target, 'integer');
 					return false;
 				}
+				return true;
 			} else if ($(target).hasClass('double') && $(target).val()) {
 				if ($(target).hasClass('positive')
 						&& !$(target).val().match(/^[+]?\d+(\.\d+)?$/)) {
@@ -349,6 +350,7 @@ Form = {
 					Message.showError(target, 'double');
 					return false;
 				}
+				return true;
 			} else {
 				return true;
 			}
