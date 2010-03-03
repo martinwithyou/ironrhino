@@ -18994,7 +18994,7 @@ Richtable = {
 	},
 	enter : function(parentId, url) {
 		if (!url)
-			url = Richtable.getBaseUrl() + Ritchtable.getPathParams();
+			url = Richtable.getBaseUrl() + Richtable.getPathParams();
 		if (parentId) {
 			if (url.indexOf('{parentId}') > 0)
 				url = url.replace('{parentId}', parentId);
