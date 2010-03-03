@@ -110,8 +110,6 @@ Richtable = {
 	getUrl : function(type, id, includeParams) {
 		var url = Richtable.getBaseUrl() + '/' + type
 				+ Richtable.getPathParams();
-		if (includeParams)
-			url += document.location.search;
 		if (id) {
 			url += (url.indexOf('?') > 0 ? '&' : '?');
 			if (url.indexOf('{id}') > 0)
@@ -119,6 +117,8 @@ Richtable = {
 			else
 				url += 'id=' + id;
 		}
+		if (includeParams&&document.location.search)
+			url += (url.indexOf('?') > 0 ? '&' : '?')+ document.location.search.substring(1);
 		return url;
 	},
 	reload : function() {
@@ -126,8 +126,8 @@ Richtable = {
 	},
 	input : function(event) {
 		var ev = event || window.event;
-		Richtable.open(Richtable.getUrl('input', $(
-				event.srcElement || event.target).closest('tr').attr('rowid')),
+		var id = $(event.srcElement || event.target).closest('tr').attr('rowid');
+		Richtable.open(Richtable.getUrl('input', id,!id),
 				true);
 	},
 	view : function(event) {
@@ -349,6 +349,7 @@ Richtable = {
 };
 Observation.richtable = function() {
 	if ($('.richtable').length) {
+		$('.richtable .view').click(Richtable.view);
 		$('.richtable .input').click(Richtable.input);
 		$('.richtable .save').click(Richtable.save);
 		$('.richtable .del').click(Richtable.del);
