@@ -1,4 +1,4 @@
-<#macro richtable config entityName action='' actionColumnWidth='150px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true includeParameters=true>
+<#macro richtable config entityName action='' actionColumnWidth='150px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true>
 <@rtstart action=action?has_content?string(action,entityName) readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters/>
 <#list config?keys as name>
 <#local cellName=((config[name]['trimPrefix']??)?string('',entityName+'.'))+name>
@@ -20,14 +20,14 @@
 	</#list>
 	<@rttbodytrend rowid=entity.id! buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
 </#list>
-<@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable/>
+<@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable searchable=searchable searchButtons=searchButtons/>
 </#macro>
 
 <#macro rtstart action='',readonly=false,resizable=true,sortable=true,includeParameters=true>
 <form id="${action}_form" action="${getUrl(action)}" method="post" class="richtable ajax view"<#if resizable> resizable="true" minColWidth="40"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
-<#if !name?starts_with('resultPage.')>
+<#if !name?starts_with('resultPage.')&&name!='keyword'>
 <input type="hidden" name="${name}" value="${Parameters[name]}" />
 </#if>
 </#list>
@@ -105,13 +105,13 @@ ${value?xhtml}<#t>
 </tr>
 </#macro>
 
-<#macro rtend buttons='' readonly=false createable=true celleditable=true deleteable=true>
+<#macro rtend buttons='' readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons=''>
 </tbody>
 </table>
 <div class="toolbar" style="width:100%;" >
 <table class="toolbarTable" cellpadding="0" cellspacing="0">
 <tr>
-<td class="pageNavigationTool" width="33%" nowrap="nowrap">
+<td class="pageNavigationTool" width="40%" nowrap="nowrap">
 <#if resultPage??>
 <input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav firstPageD"<#else>class="pageNav firstPage"</#if> title="${action.getText('firstpage')}" />
 <input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav prevPageD"<#else>class="pageNav prevPage"</#if> title="${action.getText('previouspage')}" />
@@ -141,7 +141,16 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 </#if><@button class='reload' text=action.getText('reload')/></#if>
 </div>
 </td>
-<td class="statusTool" width="33%">
+<td class="searchTool" width="25%">
+<#if searchable>
+<@s.textfield theme="simple" name="keyword" size="20"/><@s.submit theme="simple" value="%{getText('search')}" />
+</#if>
+<#if searchButtons!=''>
+<#local temp=searchButtons?interpret>
+<@temp/>
+</#if>
+</td>
+<td class="statusTool" width="15%">
 <#if resultPage??>
 ${action.getText('total')}${resultPage.totalRecord}${action.getText('record')}<#if resultPage.totalRecord!=0>,${action.getText('display')}${resultPage.start+1}-${resultPage.start+resultPage.result?size}</#if>
 <#else>
