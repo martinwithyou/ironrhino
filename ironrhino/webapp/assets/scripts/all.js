@@ -17331,8 +17331,10 @@ MessageBundle = {
 		'required' : 'please input value',
 		'selection.required' : 'please select',
 		'email' : 'this field must be a valid email',
-		'integer' : 'this field must be integer',
-		'double' : 'this field must be double',
+		'integer' : 'this field must be a integer',
+		'integer.positive' : 'this field must be a positive integer',
+		'double' : 'this field must be a decimal',
+		'double.positive' : 'this field must be a positive decimal',
 		'confirm.delete' : 'are you sure to delete?',
 		'save.and.create' : 'save and add',
 		'add' : 'add',
@@ -17347,7 +17349,9 @@ MessageBundle = {
 		'selection.required' : '必填项,请选择',
 		'email' : 'email不合法',
 		'integer' : '请填写整数',
+		'integer.positive' : '请填写正整数',
 		'double' : '请填写数字',
+		'double.positive' : '请填写大于零的数字',
 		'confirm.delete' : '确定要删除?',
 		'save.and.create' : '保存并新建',
 		'add' : '添加',
@@ -17698,14 +17702,28 @@ Form = {
 							.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
 				Message.showError(target, 'email');
 				return false;
-			} else if ($(target).hasClass('integer') && $(target).val()
-					&& !$(target).val().match(/^[-+]?\d*$/)) {
-				Message.showError(target, 'integer');
-				return false;
-			} else if ($(target).hasClass('double') && $(target).val()
-					&& !$(target).val().match(/^[-\+]?\d+(\.\d+)?$/)) {
-				Message.showError(target, 'double');
-				return false;
+			} else if ($(target).hasClass('integer') && $(target).val()) {
+				if ($(target).hasClass('positive')
+						&& !$(target).val().match(/^[+]?\d*$/)) {
+					Message.showError(target, 'integer.positive');
+					return false;
+				}
+				if (!$(target).hasClass('positive')
+						&& !$(target).val().match(/^[-+]?\d*$/)) {
+					Message.showError(target, 'integer');
+					return false;
+				}
+			} else if ($(target).hasClass('double') && $(target).val()) {
+				if ($(target).hasClass('positive')
+						&& !$(target).val().match(/^[+]?\d+(\.\d+)?$/)) {
+					Message.showError(target, 'double');
+					return false;
+				}
+				if (!$(target).hasClass('positive')
+						&& !$(target).val().match(/^[-+]?\d+(\.\d+)?$/)) {
+					Message.showError(target, 'double');
+					return false;
+				}
 			} else {
 				return true;
 			}
@@ -17872,16 +17890,16 @@ function ajax(options) {
 			});
 	var beforeSend = options.beforeSend;
 	options.beforeSend = function(xhr) {
-		if(beforeSend)
+		if (beforeSend)
 			beforeSend(xhr);
 		Indicator.text = options.indicator;
 		Ajax.fire(null, options.onloading);
 	}
 	var success = options.success;
 	options.success = function(data, textStatus, XMLHttpRequest) {
-			Ajax.handleResponse(data, options);
-			if(success)
-				success(data, textStatus, XMLHttpRequest);
+		Ajax.handleResponse(data, options);
+		if (success)
+			success(data, textStatus, XMLHttpRequest);
 	};
 	$.ajax(options);
 }
@@ -17969,12 +17987,16 @@ Observation.ajax = function(container) {
 						$(this).ajaxSubmit(options);
 						return false;
 					});
-			$('input,select', this).keyup(function() {
+			$('input', this).keyup(function() {
 						if (!$(this).attr('need')) {
 							$(this).attr('need', 'true');
 						} else {
 							Form.validate(this);
 						}
+						return true;
+					});
+			$('select', this).change(function() {
+						Form.validate(this);
 						return true;
 					});
 			return;
