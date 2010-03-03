@@ -27,8 +27,7 @@
 		obj.oldSiblingRight = ECSideUtil.getPosRight(sibling);
 		ECSideUtil.Dragobj = obj;
 		ECSideUtil.DragobjSibling = sibling;
-		ECSideUtil.MinColWidth = $('#' + Richtable.id).attr('minColWidth')
-				|| '30';
+		ECSideUtil.MinColWidth = $('#' + Richtable.id).attr('minColWidth') || '30';
 		ECSideUtil.Dragobj.style.backgroundColor = "#3366ff";
 		ECSideUtil.Dragobj.parentTdW -= ECSideUtil.Dragobj.mouseDownX;
 		var cellIndex = ECSideUtil.Dragobj.parentNode.cellIndex;
@@ -127,14 +126,14 @@ Richtable = {
 	},
 	input : function(event) {
 		var ev = event || window.event;
-		Richtable.open(Richtable.getUrl('input', $(event.srcElement
-								|| event.target).closest('tr').attr('rowid')),
+		Richtable.open(Richtable.getUrl('input', $(
+				event.srcElement || event.target).closest('tr').attr('rowid')),
 				true);
 	},
 	view : function(event) {
 		var ev = event || window.event;
-		Richtable.open(Richtable.getUrl('view', $(event.srcElement
-						|| event.target).closest('tr').attr('rowid')));
+		Richtable.open(Richtable.getUrl('view', $(
+				event.srcElement || event.target).closest('tr').attr('rowid')));
 	},
 	open : function(url, reloadonclose, useiframe) {
 		reloadonclose = reloadonclose || false;
@@ -163,26 +162,27 @@ Richtable = {
 					}
 					if (create) {
 						$('button[type="submit"]', form)
-								.after('<button type="submit" class="btn save_and_create"><span><span>'
-										+ MessageBundle.get('save.and.create')
-										+ '</span></span></button>');
+								.after(
+										'<button type="submit" class="btn save_and_create"><span><span>' + MessageBundle
+												.get('save.and.create') + '</span></span></button>');
 						$('.save_and_create', form).click(function() {
-									$('form.ajax').addClass('reset');
-								});
+							$('form.ajax').addClass('reset');
+						});
 					}
 				}
 			};
-			ajax({
-						url : url,
-						cache : false,
-						target : target,
-						replacement : '_window_:content',
-						quiet : true
-					});
+			ajax( {
+				url : url,
+				cache : false,
+				target : target,
+				replacement : '_window_:content',
+				quiet : true
+			});
 		} else {
 			// embed iframe
 			$('#_window_')
-					.html('<iframe style="width:650px;height:90%;border:0;" onload="Dialog.adapt($(\'#_window_\'),this);"/>');
+					.html(
+							'<iframe style="width:650px;height:90%;border:0;" onload="Dialog.adapt($(\'#_window_\'),this);"/>');
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'decorator=simple&'
 					+ Math.random();
 			$('#_window_ > iframe')[0].src = url;
@@ -196,16 +196,16 @@ Richtable = {
 			return;
 		}
 		$('#_window_').attr('_dialoged_', true);
-		$("#_window_").dialog({
-					minHeight : 500,
-					width : 700,
-					modal : true,
-					bgiframe : true,
-					closeOnEscape : false,
-					close : (reloadonclose ? function() {
-						Richtable.reload();
-					} : null)
-				});
+		$("#_window_").dialog( {
+			minHeight : 500,
+			width : 700,
+			modal : true,
+			bgiframe : true,
+			closeOnEscape : false,
+			close : (reloadonclose ? function() {
+				Richtable.reload();
+			} : null)
+		});
 	},
 	enter : function(parentId, url) {
 		if (!url)
@@ -228,14 +228,14 @@ Richtable = {
 			arr[0] = id;
 		else
 			$.each($('.richtable tbody')[0].rows, function() {
-						if ($(this).attr("edited") == "true")
-							arr.push($(this).attr('rowid'))
-					});
+				if ($(this).attr("edited") == "true")
+					arr.push($(this).attr('rowid'))
+			});
 		var theadCells = $('.richtable thead:eq(0) td');
 		$.each(arr, function() {
 			var rows = $('.richtable tbody')[0].rows;
 			var row;
-			for (var i = 0; i < rows.length; i++)
+			for ( var i = 0; i < rows.length; i++)
 				if ($(rows[i]).attr('rowid') == this)
 					row = rows[i];
 			if (row && $(row).attr('edited') == 'true') {
@@ -243,25 +243,27 @@ Richtable = {
 				var entity = Richtable.getBaseUrl();
 				entity = entity.substring(entity.lastIndexOf('/') + 1);
 				params[entity + '.id'] = this;
-				$.each(row.cells, function(i) {
-					var theadCell = $(theadCells[i]);
-					var name = theadCell.attr("cellName");
-					if (!name || $(this).attr('edited') != 'true'
-							&& theadCell.hasClass('include_if_edited'))
-						return;
-					var value = $(this).attr('cellValue');
-					if (!value)
-						value = window.isIE ? this.innerText : this.textContent;
-					params[name] = value;
-				});
+				$.each(row.cells,
+						function(i) {
+							var theadCell = $(theadCells[i]);
+							var name = theadCell.attr("cellName");
+							if (!name || $(this).attr('edited') != 'true'
+									&& theadCell.hasClass('include_if_edited'))
+								return;
+							var value = $(this).attr('cellValue');
+							if (!value)
+								value = window.isIE ? this.innerText
+										: this.textContent;
+							params[name] = value;
+						});
 				url = Richtable.getBaseUrl() + '/save'
 						+ Richtable.getPathParams();
-				ajax({
-							url : url,
-							type : 'POST',
-							data : params,
-							dataType : 'json'
-						});
+				ajax( {
+					url : url,
+					type : 'POST',
+					data : params,
+					dataType : 'json'
+				});
 			}
 		});
 	},
@@ -269,38 +271,39 @@ Richtable = {
 		var ev = event || window.event;
 		var id = $(event.srcElement || event.target).closest('tr')
 				.attr('rowid');
-		url = Richtable.getBaseUrl() + '/delete' + Richtable.getPathParams();;
+		url = Richtable.getBaseUrl() + '/delete' + Richtable.getPathParams();
+		;
 		if (id) {
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
 		} else {
 			var arr = [];
 			$('form.richtable tbody input[type="checkbox"]').each(function() {
-						if (this.checked)
-							arr.push('id='
-									+ $(this).closest('tr').attr('rowid'));
-					});
+				if (this.checked)
+					arr.push('id=' + $(this).closest('tr').attr('rowid'));
+			});
 			if (arr.length == 0)
 				return;
 			url += (url.indexOf('?') > 0 ? '&' : '?') + arr.join('&');
 		}
 
-		ajax({
-					url : url,
-					type : 'POST',
-					dataType : 'json',
-					complete : Richtable.reload
-				});
+		ajax( {
+			url : url,
+			type : 'POST',
+			dataType : 'json',
+			complete : Richtable.reload
+		});
 	},
 	execute : function(operation, id) {
 		var url = Richtable.getBaseUrl() + '/' + operation
-				+ Richtable.getPathParams();;
+				+ Richtable.getPathParams();
+		;
 		url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
-		ajax({
-					url : url,
-					type : 'POST',
-					dataType : 'json',
-					complete : Richtable.reload
-				});
+		ajax( {
+			url : url,
+			type : 'POST',
+			dataType : 'json',
+			complete : Richtable.reload
+		});
 	},
 	editCell : function(cell, templateId) {
 		var ce = $(cell);
@@ -308,8 +311,7 @@ Richtable = {
 			return;
 		ce.attr("editing", "true");
 		var template = document.getElementById(templateId);
-		var templateText = $.browser.msie
-				? template.value
+		var templateText = $.browser.msie ? template.value
 				: template.textContent;
 		var text = ce.text();
 		var value = ce.attr("cellValue");
@@ -352,46 +354,50 @@ Observation.richtable = function() {
 		$('.richtable .del').click(Richtable.del);
 		var theadCells = $('.richtable thead:eq(0) td');
 		var rows = $('.richtable tbody:eq(0) tr').each(function() {
-					var cells = this.cells;
-					theadCells.each(function(i) {
-								var cellEdit = $(this).attr('cellEdit');
-								if (!cellEdit)
-									return;
-								var ar = cellEdit.split(',');
-								var template = ar[1]
-										|| 'rt_edit_template_input';
-								$(cells[i]).bind(ar[0], function() {
-											Richtable.editCell(this, template);
-										});
-							});
+			var cells = this.cells;
+			theadCells.each(function(i) {
+				var cellEdit = $(this).attr('cellEdit');
+				if (!cellEdit)
+					return;
+				var ar = cellEdit.split(',');
+				var template = ar[1] || 'rt_edit_template_input';
+				$(cells[i]).bind(ar[0], function() {
+					Richtable.editCell(this, template);
 				});
+			});
+		});
 		$('.richtable .reload').click(Richtable.reload);
 		$('.richtable .resizeBar').mousedown(ECSideUtil.StartResize);
 		$('.richtable .resizeBar').mouseup(ECSideUtil.EndResize);
 		$('.richtable .firstPage').click(function() {
-					$('.richtable .jumpPageInput').val(1);
+			$('.richtable .jumpPageInput').val(1);
+			Richtable.reload()
+		});
+		$('.richtable .prevPage')
+				.click(
+						function() {
+							$('.richtable .jumpPageInput').val(
+									parseInt($('.richtable .jumpPageInput')
+											.val()) - 1);
+							Richtable.reload()
+						});
+		$('.richtable .nextPage')
+				.click(
+						function() {
+							$('.richtable .jumpPageInput').val(
+									parseInt($('.richtable .jumpPageInput')
+											.val()) + 1);
+							Richtable.reload()
+						});
+		$('.richtable .lastPage').click(
+				function() {
+					$('.richtable .jumpPageInput').val(
+							$(".richtable .totalPage").text());
 					Richtable.reload()
 				});
-		$('.richtable .prevPage').click(function() {
-			$('.richtable .jumpPageInput')
-					.val(parseInt($('.richtable input.jumpPageInput').val())
-							- 1);
-			Richtable.reload()
-		});
-		$('.richtable .nextPage').click(function() {
-			$('.richtable .jumpPageInput')
-					.val(parseInt($('.richtable input.jumpPageInput').val())
-							+ 1);
-			Richtable.reload()
-		});
-		$('.richtable .lastPage').click(function() {
-			$('.richtable .jumpPageInput').val($(".richtable .totalPage")
-					.text());
-			Richtable.reload()
-		});
 		$('.richtable .jumpPage').click(function() {
-					Richtable.reload()
-				});
+			Richtable.reload()
+		});
 		$('.richtable input[name="resultPage.pageNo"]').keydown(
 				function(event) {
 					if (event.keyCode && event.keyCode == 13) {
@@ -399,8 +405,15 @@ Observation.richtable = function() {
 					}
 				});
 		$('.richtable select[name="resultPage.pageSize"]').change(function() {
-					Richtable.reload()
-				});
+			Richtable.reload()
+		});
+		$('.richtable input[name="keyword"]').focus().keydown(function(event) {
+			if (event.keyCode && event.keyCode == 13) {
+				$('.richtable .jumpPageInput').val(1);
+			}
+		}).next().click(function() {
+			$('.richtable .jumpPageInput').val(1)
+		});
 
 		var pathname = document.location.pathname;
 		var form = $('#_window_ form.ajax');
@@ -408,33 +421,34 @@ Observation.richtable = function() {
 			var action = form.attr('action');
 			if (action.indexOf('http') != 0 && action.indexOf('/') != 0)
 				action = pathname
-						+ (pathname.indexOf('/') == (pathname.length - 1)
-								? ''
+						+ (pathname.indexOf('/') == (pathname.length - 1) ? ''
 								: '/') + action;
 			form.attr('action', action);
 			if (form.hasClass('view') && !form.attr('replacement'))
 				form.attr('replacement', '_window_:content');
 			if (!form.hasClass('keepopen') && !form.hasClass('view')) {
 				$('button[type="submit"]', form).click(function() {
-							form[0].onsuccess = function() {
-								setTimeout(function() {
-											$("#_window_").dialog('close');
-										}, 1000);
+					form[0].onsuccess = function() {
+						setTimeout(function() {
+							$("#_window_").dialog('close');
+						}, 1000);
 
-							};
-						});
+					};
+				});
 			}
 		}
-		$('#_window_ a').each(function() {
-			var href = $(this).attr('href');
-			if (href.indexOf('http') != 0 && href.indexOf('/') != 0) {
-				href = pathname
-						+ (pathname.indexOf('/') == (pathname.length - 1)
-								? ''
-								: '/') + href;
-				this.href = href;
-			}
-		});
+		$('#_window_ a')
+				.each(
+						function() {
+							var href = $(this).attr('href');
+							if (href.indexOf('http') != 0
+									&& href.indexOf('/') != 0) {
+								href = pathname
+										+ (pathname.indexOf('/') == (pathname.length - 1) ? ''
+												: '/') + href;
+								this.href = href;
+							}
+						});
 	}
 };
 Initialization.richtable = function() {
