@@ -8,10 +8,6 @@ table.sortable td,th {
 	border: 1px solid #CCC;
 }
 
-table.sortable thead,tfoot {
-	background-color: #E5ECF9;
-}
-
 table.sortable tr.rowodd {
 	
 }

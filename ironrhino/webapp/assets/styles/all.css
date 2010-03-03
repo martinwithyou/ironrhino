@@ -145,6 +145,14 @@ img.captcha {
 	border: 1px dashed #b00;
 }
 
+table {
+	border: none;	
+}
+
+thead,tfoot {
+	background-color: #E5ECF9;
+}
+
 tr.selected {
 	background: #EBC79E;
 }
@@ -539,10 +547,6 @@ table.sortable {
 table.sortable td,th {
 	padding: 0.5em;
 	border: 1px solid #CCC;
-}
-
-table.sortable thead,tfoot {
-	background-color: #E5ECF9;
 }
 
 table.sortable tr.rowodd {
