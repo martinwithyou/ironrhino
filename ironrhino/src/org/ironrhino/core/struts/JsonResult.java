@@ -2,6 +2,7 @@ package org.ironrhino.core.struts;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +35,8 @@ public class JsonResult implements Result {
 		JsonConfig jsonConfig = method.getAnnotation(JsonConfig.class);
 		if (jsonConfig != null && StringUtils.isNotBlank(jsonConfig.root())) {
 			Object value = invocation.getStack().findValue(jsonConfig.root());
+			if (value == null)
+				value = Collections.EMPTY_MAP;
 			return JsonUtils.toJson(value);
 		}
 
