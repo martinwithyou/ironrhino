@@ -18,6 +18,10 @@ form p {
 	margin: 10px;
 }
 
+form p.submit {
+	text-align: center;
+}
+
 label {
 	display: block;
 	float: left;
