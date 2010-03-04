@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.compass.annotations.SearchableId;
-import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
@@ -73,7 +72,6 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	}
 
 	@NotInJson
-	@SearchableProperty(name = "name", boost = 2)
 	public String getFullname() {
 		String fullname = name;
 		BaseTreeableEntity e = this;

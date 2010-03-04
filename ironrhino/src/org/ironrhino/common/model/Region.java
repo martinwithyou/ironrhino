@@ -1,6 +1,7 @@
 package org.ironrhino.common.model;
 
 import org.compass.annotations.Searchable;
+import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.BaseTreeableEntity;
@@ -43,6 +44,11 @@ public class Region extends BaseTreeableEntity<Region> {
 	public Region(String name, int displayOrder) {
 		this.name = name;
 		this.displayOrder = displayOrder;
+	}
+	
+	@SearchableProperty(boost = 2)
+	public String getFullname() {
+		return super.getFullname();
 	}
 
 	@Override
