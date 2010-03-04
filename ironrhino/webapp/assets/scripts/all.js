@@ -17900,7 +17900,7 @@ function ajax(options) {
 	var success = options.success;
 	options.success = function(data, textStatus, XMLHttpRequest) {
 		Ajax.handleResponse(data, options);
-		if (success)
+		if (success && !(data.fieldErrors || data.actionErrors))
 			success(data, textStatus, XMLHttpRequest);
 	};
 	$.ajax(options);
@@ -19099,7 +19099,7 @@ Richtable = {
 			url : url,
 			type : 'POST',
 			dataType : 'json',
-			complete : Richtable.reload
+			success : Richtable.reload
 		});
 	},
 	execute : function(operation, id) {
@@ -19111,7 +19111,7 @@ Richtable = {
 			url : url,
 			type : 'POST',
 			dataType : 'json',
-			complete : Richtable.reload
+			success : Richtable.reload
 		});
 	},
 	editCell : function(cell, templateId) {

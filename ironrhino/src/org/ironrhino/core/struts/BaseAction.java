@@ -153,7 +153,7 @@ public class BaseAction extends ActionSupport {
 					authorize.ifAnyGranted(), authorize.ifNotGranted(),
 					authorize.expression());
 			if (!passed) {
-				getActionErrors().add(getText("access.denied"));
+				addActionError(getText("access.denied"));
 				return ACCESSDENIED;
 			}
 		}

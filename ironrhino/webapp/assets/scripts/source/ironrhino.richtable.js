@@ -290,7 +290,7 @@ Richtable = {
 			url : url,
 			type : 'POST',
 			dataType : 'json',
-			complete : Richtable.reload
+			success : Richtable.reload
 		});
 	},
 	execute : function(operation, id) {
@@ -302,7 +302,7 @@ Richtable = {
 			url : url,
 			type : 'POST',
 			dataType : 'json',
-			complete : Richtable.reload
+			success : Richtable.reload
 		});
 	},
 	editCell : function(cell, templateId) {
