@@ -29,6 +29,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.hibernate.PropertyType;
+import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -274,6 +275,12 @@ public class EntityAction extends BaseAction {
 			}
 		}
 		return SUCCESS;
+	}
+
+	@Override
+	protected Authorize findAuthorize() {
+		Class<?> c = getEntityClass();
+		return c.getAnnotation(Authorize.class);
 	}
 
 	public boolean isNew() {

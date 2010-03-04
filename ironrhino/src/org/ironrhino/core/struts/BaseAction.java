@@ -147,9 +147,7 @@ public class BaseAction extends ActionSupport {
 
 	@Before(priority = 20)
 	public String preAction() throws Exception {
-		Authorize authorize = getAnnotation(Authorize.class);
-		if (authorize == null)
-			authorize = getClass().getAnnotation(Authorize.class);
+		Authorize authorize = findAuthorize();
 		if (authorize != null) {
 			boolean passed = AuthzUtils.authorize(authorize.ifAllGranted(),
 					authorize.ifAnyGranted(), authorize.ifNotGranted(),
@@ -229,6 +227,13 @@ public class BaseAction extends ActionSupport {
 		return AnnotationUtils.getAnnotation(getClass(), annotationClass,
 				ActionContext.getContext().getActionInvocation().getProxy()
 						.getMethod());
+	}
+
+	protected Authorize findAuthorize() {
+		Authorize authorize = getAnnotation(Authorize.class);
+		if (authorize == null)
+			authorize = getClass().getAnnotation(Authorize.class);
+		return authorize;
 	}
 
 }
