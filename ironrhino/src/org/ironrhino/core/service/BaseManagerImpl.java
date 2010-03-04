@@ -286,9 +286,21 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 	public T findByNaturalId(boolean caseInsensitive, Object... objects) {
 		if (!caseInsensitive)
 			return findByNaturalId(objects);
-
 		String hql = "select entity from " + getEntityClass().getName()
 				+ " entity where ";
+		if (objects.length == 1) {
+			Set<String> naturalIds = AnnotationUtils.getAnnotatedPropertyNames(
+					getEntityClass(), NaturalId.class);
+			if (naturalIds.size() != 1)
+				throw new IllegalArgumentException(
+						"@NaturalId must and only be one");
+			hql += "lower(entity." + naturalIds.iterator().next()
+					+ ")=lower(?)";
+			Query query = sessionFactory.getCurrentSession().createQuery(hql);
+			query.setParameter(0, objects[0]);
+			query.setMaxResults(1);
+			return (T) query.uniqueResult();
+		}
 		int doubles = objects.length / 2;
 		if (doubles == 1) {
 			hql += "lower(entity." + String.valueOf(objects[0]) + ")=lower(?)";
