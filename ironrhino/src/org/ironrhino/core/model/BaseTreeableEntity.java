@@ -64,7 +64,6 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	}
 
 	@NaturalId
-	@SearchableProperty(boost = 2)
 	public String getName() {
 		return name;
 	}
@@ -74,6 +73,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	}
 
 	@NotInJson
+	@SearchableProperty(name = "name", boost = 2)
 	public String getFullname() {
 		String fullname = name;
 		BaseTreeableEntity e = this;

@@ -1,11 +1,13 @@
 package org.ironrhino.common.model;
 
+import org.compass.annotations.Searchable;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.BaseTreeableEntity;
 
 @PublishAware
 @AutoConfig
+@Searchable(alias = "region")
 public class Region extends BaseTreeableEntity<Region> {
 
 	private static final long serialVersionUID = 8878381261391688086L;
