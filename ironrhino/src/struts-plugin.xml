@@ -23,6 +23,8 @@
 				class="org.ironrhino.core.struts.RefererResult" />
 			<result-type name="feed"
 				class="org.ironrhino.core.struts.FeedResult" />
+			<result-type name="jasper" 
+				class="org.apache.struts2.views.jasperreports.JasperReportsResult"/>
 		</result-types>
 		<interceptors>
 			<interceptor name="annotationWorkflow"
