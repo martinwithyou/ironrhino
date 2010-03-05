@@ -36,6 +36,10 @@ public class DateUtils {
 		return new SimpleDateFormat(YEARMONTH).format(date);
 	}
 
+	public static String format(Date date, String pattern) {
+		return new SimpleDateFormat(pattern).format(date);
+	}
+
 	public static Date addDays(Date date, int days) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -52,6 +56,14 @@ public class DateUtils {
 	}
 
 	public static Date parseDatetime(String string) {
+		try {
+			return new SimpleDateFormat(DATETIME).parse(string);
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+
+	public static Date parse(String string, String pattern) {
 		try {
 			return new SimpleDateFormat(DATETIME).parse(string);
 		} catch (ParseException e) {
