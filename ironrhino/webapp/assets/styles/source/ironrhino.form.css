@@ -7,7 +7,7 @@ select {
 }
 
 input.date,input.integer,input.double {
-	width: 75px;
+	width: 80px;
 }
 
 input.required {
