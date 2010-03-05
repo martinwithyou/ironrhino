@@ -342,7 +342,7 @@ Form = {
 			} else if ($(target).hasClass('double') && $(target).val()) {
 				if ($(target).hasClass('positive')
 						&& !$(target).val().match(/^[+]?\d+(\.\d+)?$/)) {
-					Message.showError(target, 'double');
+					Message.showError(target, 'double.positive');
 					return false;
 				}
 				if (!$(target).hasClass('positive')
