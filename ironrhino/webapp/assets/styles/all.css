@@ -355,15 +355,15 @@ select {
 }
 
 input.date,input.integer,input.double {
-	width: 80px;
+	width: 90px;
 }
 
 input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }
 
-form p {
-	margin: 10px;
+form div {
+	margin: 5px 0px 5px 0px;
 }
 
 label {
@@ -372,7 +372,7 @@ label {
 	width: 80px;
 }
 
-p.top label {
+div.top label {
 	float: none;
 }
 

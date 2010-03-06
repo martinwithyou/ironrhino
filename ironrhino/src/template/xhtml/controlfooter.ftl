@@ -4,4 +4,4 @@ ${parameters.after!}
 <div class="field_error">${error?html}</div><#t/>
 </#list>
 </#if>
-</p>
+</div>
