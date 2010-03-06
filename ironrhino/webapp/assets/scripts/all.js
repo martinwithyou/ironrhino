@@ -17434,7 +17434,21 @@ $(_init);
 Observation.common = function(container) {
 	$('.action_error,.action_message,.field_error')
 			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
-	$('input.autocomplete_off').attr('autocomplete', 'off');
+	$('input').each(function() {
+				if (!$(this).attr('autocomplete'))
+					$(this).attr('autocomplete', 'off');
+				var maxlength = $(this).attr('maxlength');
+				if (!maxlength || maxlength > 3000) {
+					if ($(this).hasClass('date'))
+						$(this).attr('maxlength', '10');
+					else if ($(this).hasClass('integer'))
+						$(this).attr('maxlength', '11');
+					else if ($(this).hasClass('double'))
+						$(this).attr('maxlength', '22');
+					else
+						$(this).attr('maxlength', '255');
+				}
+			});
 	$('ul.nav>li', container).hover(function() {
 				$("ul", this).fadeIn("fast");
 			}, function() {

@@ -43,7 +43,7 @@
 </div>
 <div id="search">
 <form id="search_form" action="<@url value="/search"/>" method="get">
-<span><input id="q" type="text" name="q" size="30" maxlength="256" class="autocomplete_off" value="${Parameters.q!}" /></span>
+<span><input id="q" type="text" name="q" size="30" maxlength="256" value="${Parameters.q!}" /></span>
 <div id="q_update"
 	style="display: none; border: 1px solid black; background-color: white;"></div>
 <span><@s.submit value="搜索" theme="simple" /></span></form>
