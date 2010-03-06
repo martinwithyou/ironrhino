@@ -8,7 +8,7 @@
 		if (!select.data('innerHTML'))
 			select.data('innerHTML', select.html());
 		var key = input.val();
-		if (event.keyCode == 8) {
+		if ($.browser.webkit || event.keyCode == 8) {
 			select.html(select.data('innerHTML'));
 			if (!key)
 				return;
