@@ -51,7 +51,7 @@
 	</#list>	
 <@rttbodytrend rowid=entity.id readonly=readonly/>
 </#list>
-<@rtend readonly=readonly/>
+<@rtend readonly=readonly searchable=searchable/>
 <#if !readonly>
 <div style="display: none">
 <#list uiConfigs?keys as key>

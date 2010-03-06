@@ -24,6 +24,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.compass.core.CompassHit;
+import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -38,9 +40,12 @@ import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.search.CompassCriteria;
+import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
@@ -62,6 +67,15 @@ public class EntityAction extends BaseAction {
 	private Persistable entity;
 
 	private boolean readonly;
+
+	private boolean searchable;
+
+	@Autowired(required = false)
+	private transient CompassSearchService compassSearchService;
+
+	public boolean isSearchable() {
+		return searchable;
+	}
 
 	public boolean isReadonly() {
 		return readonly;
@@ -89,17 +103,48 @@ public class EntityAction extends BaseAction {
 		return (ac != null) && ac.readonly();
 	}
 
+	private boolean searchable() {
+		AutoConfig ac = (AutoConfig) getEntityClass().getAnnotation(
+				AutoConfig.class);
+		return (ac != null) && ac.searchable();
+	}
+
 	@Override
 	public String list() {
-		baseManager.setEntityClass(getEntityClass());
-		DetachedCriteria dc = baseManager.detachedCriteria();
-		if (resultPage == null)
-			resultPage = new ResultPage();
-		resultPage.setDetachedCriteria(dc);
-		if (Ordered.class.isAssignableFrom(getEntityClass()))
-			dc.addOrder(Order.asc("displayOrder"));
-		resultPage = baseManager.findByResultPage(resultPage);
+		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
+			baseManager.setEntityClass(getEntityClass());
+			DetachedCriteria dc = baseManager.detachedCriteria();
+			if (resultPage == null)
+				resultPage = new ResultPage();
+			resultPage.setDetachedCriteria(dc);
+			if (Ordered.class.isAssignableFrom(getEntityClass()))
+				dc.addOrder(Order.asc("displayOrder"));
+			resultPage = baseManager.findByResultPage(resultPage);
+		} else {
+			String query = keyword.trim();
+			CompassCriteria cc = new CompassCriteria();
+			cc.setQuery(query);
+			cc.setAliases(new String[] { getEntityName() });
+			if (resultPage == null)
+				resultPage = new ResultPage();
+			cc.setPageNo(resultPage.getPageNo());
+			cc.setPageSize(resultPage.getPageSize());
+			CompassSearchResults searchResults = compassSearchService
+					.search(cc);
+			resultPage.setTotalRecord(searchResults.getTotalHits());
+			CompassHit[] hits = searchResults.getHits();
+			if (hits != null) {
+				List list = new ArrayList(hits.length);
+				for (CompassHit ch : searchResults.getHits()) {
+					list.add(ch.getData());
+				}
+				resultPage.setResult(list);
+			} else {
+				resultPage.setResult(Collections.EMPTY_LIST);
+			}
+		}
 		readonly = readonly();
+		searchable = searchable();
 		return LIST;
 	}
 

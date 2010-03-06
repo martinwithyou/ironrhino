@@ -40,6 +40,8 @@ public class BaseAction extends ActionSupport {
 	// logic id or natrual id
 	private String[] id;
 
+	protected String keyword;
+
 	protected String originalActionName;
 
 	protected String originalMethod;
@@ -80,6 +82,14 @@ public class BaseAction extends ActionSupport {
 
 	public void setTargetUrl(String targetUrl) {
 		this.targetUrl = targetUrl;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 
 	public String getUid() {
