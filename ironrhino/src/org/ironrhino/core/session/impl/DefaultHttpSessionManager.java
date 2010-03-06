@@ -15,6 +15,7 @@ import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.core.util.RequestUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 @Singleton
 @Named("httpSessionManager")
@@ -42,9 +43,13 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	@Named("cacheBased")
 	private HttpSessionStore cacheBased;
 
-	private int maxInactiveInterval = DEFAULT_MAXINACTIVEINTERVAL;
+	@Value("${httpSessionManager.maxInactiveInterval:"
+			+ DEFAULT_MAXINACTIVEINTERVAL + "}")
+	private int maxInactiveInterval;
 
-	private int minActiveInterval = DEFAULT_MINACTIVEINTERVAL;
+	@Value("${httpSessionManager.minActiveInterval:"
+			+ DEFAULT_MINACTIVEINTERVAL + "}")
+	private int minActiveInterval;
 
 	public void setMaxInactiveInterval(int maxInactiveInterval) {
 		this.maxInactiveInterval = maxInactiveInterval;
