@@ -13,11 +13,11 @@
 	<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
 	<@s.checkbox label="%{getText('rememberme')}" name="rememberme"/>
 	<@captcha/>
-	<p>
+	<div>
 	<@s.submit value="%{getText('login')}" theme="simple" cssClass="primary"/>
 	<@button type="link" text="${action.getText('signup')}" href="${getUrl('/signup')}"/>
 	<@button type="link" text="${action.getText('forgot')}" href="${getUrl('/signup/forgot')}"/>
-	</p>
+	</div>
 </@s.form>
 </body>
 </html></#escape>

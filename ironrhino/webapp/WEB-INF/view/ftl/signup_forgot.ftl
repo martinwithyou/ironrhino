@@ -10,11 +10,11 @@
 <@s.form method="post" cssClass="ajax reset">
 	<@s.textfield label="%{getText('email')}" name="account.email" cssClass="required email"/>
 	<@captcha/>
-	<p>
+	<div>
 	<@s.submit value="%{getText('confirm')}" theme="simple" cssClass="primary"/>
 	<@button type="link" text="${action.getText('login')}" href="${getUrl('/login')}"/>
 	<@button type="link" text="${action.getText('signup')}" href="${getUrl('/signup')}"/>
-	</p>
+	</div>
 </@s.form>
 </body>
 </html></#escape>

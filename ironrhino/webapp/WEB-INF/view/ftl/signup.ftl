@@ -12,11 +12,11 @@
 	<@s.textfield label="%{getText('username')}" name="username" size="24" />
 	<@s.password label="%{getText('password')}" name="password" size="24" cssClass="required"/>
 	<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" size="24" cssClass="required"/>
-	<p>
+	<div>
 	<@s.submit value="%{getText('signup')}" theme="simple" cssClass="primary"/>
 	<@button type="link" text="${action.getText('login')}" href="${getUrl('/login')}"/>
 	<@button type="link" text="${action.getText('forgot')}" href="${getUrl('/signup/forgot')}"/>
-	</p>
+	</div>
 </@s.form>
 </body>
 </html></#escape>

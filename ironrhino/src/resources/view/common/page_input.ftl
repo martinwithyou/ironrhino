@@ -89,7 +89,7 @@ $(function() {
 	<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50"/>
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50"/>
 	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="100" rows="30"/>
-	<p>
+	<div>
 	<@s.submit id="draft" value="%{getText('draft')}" theme="simple"/>
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
 	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>
@@ -100,15 +100,15 @@ $(function() {
 	</#if>
 	<@s.submit id="drop" value="%{getText('drop')}" theme="simple"/>
 	</span>
-	</p>
-	<p>
+	</div>
+	<div>
 	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
 	<#if page.path??>
 	<@button id="view" type="link" text="${action.getText('view')}" href="${getUrl(cmsPath+page.path)}" target="_blank"/>
 	<#else>
 	<@button id="view" type="link" text="${action.getText('view')}" target="_blank"/>
 	</#if>
-	</p>
+	</div>
 </@s.form>
 </body>
 </html></#escape>
