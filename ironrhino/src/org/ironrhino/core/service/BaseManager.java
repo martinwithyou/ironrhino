@@ -22,7 +22,7 @@ public interface BaseManager<T extends Persistable> {
 
 	public void delete(T obj);
 
-	public void clear();
+	public boolean canDelete(T obj);
 
 	public DetachedCriteria detachedCriteria();
 

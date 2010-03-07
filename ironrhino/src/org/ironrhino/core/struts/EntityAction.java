@@ -231,7 +231,8 @@ public class EntityAction extends BaseAction {
 					log.error(e.getMessage(), e);
 				}
 				persisted = baseManager.findByNaturalId(caseInsensitive, args);
-				if (persisted != null && !persisted.equals(entity)) {
+				if (persisted != null
+						&& !persisted.getId().equals(entity.getId())) {
 					it = naturalIds.keySet().iterator();
 					while (it.hasNext()) {
 						addFieldError(getEntityName() + "." + it.next(),
@@ -239,8 +240,8 @@ public class EntityAction extends BaseAction {
 					}
 					return INPUT;
 				}
-				if (persisted != null && !persisted.equals(entity)) {
-					baseManager.clear();
+				if (persisted != null
+						&& !persisted.getId().equals(entity.getId())) {
 					persisted = null;
 				}
 			}

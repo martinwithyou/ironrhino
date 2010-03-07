@@ -73,7 +73,11 @@ ${action.getText(name)}
 <#if value?string=='true'||value?string=='false'><#t>
 ${action.getText(value?string)}<#t>
 <#else><#t>
+<#if value.displayName??>
+${value.displayName}
+<#else>
 ${value?xhtml}<#t>
+</#if>
 </#if><#t>
 <#if renderLink><#t>
 </a><#t>
@@ -87,7 +91,7 @@ ${value?xhtml}<#t>
 
 <#macro rttbodytrend rowid buttons='' readonly=false celleditable=true deleteable=true>
 <#if !readonly>
-<td>
+<td class="action">
 <#if buttons!=''>
 <#local temp=buttons?interpret>
 <@temp/>

@@ -116,16 +116,16 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	@Override
 	@Transactional(readOnly = true)
-	public T get(Serializable id) {
-		if (id == null)
-			return null;
-		return (T) sessionFactory.getCurrentSession().get(getEntityClass(), id);
+	public boolean canDelete(T obj) {
+		return true;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public void clear() {
-		sessionFactory.getCurrentSession().clear();
+	public T get(Serializable id) {
+		if (id == null)
+			return null;
+		return (T) sessionFactory.getCurrentSession().get(getEntityClass(), id);
 	}
 
 	public DetachedCriteria detachedCriteria() {

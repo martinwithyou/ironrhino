@@ -117,23 +117,13 @@ Richtable = {
 			else
 				url += 'id=' + id;
 		}
-		if (includeParams&&document.location.search)
-			url += (url.indexOf('?') > 0 ? '&' : '?')+ document.location.search.substring(1);
+		if (includeParams && document.location.search)
+			url += (url.indexOf('?') > 0 ? '&' : '?')
+					+ document.location.search.substring(1);
 		return url;
 	},
 	reload : function() {
 		$('.richtable').submit();
-	},
-	input : function(event) {
-		var ev = event || window.event;
-		var id = $(event.srcElement || event.target).closest('tr').attr('rowid');
-		Richtable.open(Richtable.getUrl('input', id,!id),
-				true);
-	},
-	view : function(event) {
-		var ev = event || window.event;
-		Richtable.open(Richtable.getUrl('view', $(
-				event.srcElement || event.target).closest('tr').attr('rowid')));
 	},
 	open : function(url, reloadonclose, useiframe) {
 		reloadonclose = reloadonclose || false;
@@ -219,10 +209,56 @@ Richtable = {
 		}
 		document.location.href = url;
 	},
+	action : function(event) {
+		var btn = event.target;
+		if ($(btn).attr('tagName') != 'BUTTON')
+			btn = $(btn).closest('button');
+		var action = $(btn).attr('class').split(' ')[1];
+		if (action == 'input')
+			Richtable.input(event);
+		else if (action == 'view')
+			Richtable.view(event);
+		else if (action == 'save')
+			Richtable.save(event);
+		else if (action == 'del')
+			Richtable.del(event);
+		else if (action) {
+			var url = Richtable.getBaseUrl() + '/' + action
+					+ Richtable.getPathParams();
+			var id = $(btn).closest('tr').attr('rowid');
+			if (id) {
+				url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
+			} else {
+				var arr = [];
+				$('form.richtable tbody input[type="checkbox"]').each(
+						function() {
+							if (this.checked)
+								arr.push('id=' + $(this).closest('tr').attr(
+										'rowid'));
+						});
+				if (arr.length == 0)
+					return;
+				url += (url.indexOf('?') > 0 ? '&' : '?') + arr.join('&');
+			}
+
+			ajax( {
+				url : url,
+				type : 'POST',
+				dataType : 'json',
+				success : Richtable.reload
+			});
+		}
+	},
+	input : function(event) {
+		var id = $(event.target).closest('tr').attr('rowid');
+		Richtable.open(Richtable.getUrl('input', id, !id), true);
+	},
+	view : function(event) {
+		Richtable.open(Richtable.getUrl('view', $(event.target).closest('tr')
+				.attr('rowid')));
+	},
 	save : function(event) {
-		var ev = event || window.event;
-		var id = $(event.srcElement || event.target).closest('tr')
-				.attr('rowid');
+		var id = $(event.target).closest('tr').attr('rowid');
 		var arr = [];
 		if (id)
 			arr[0] = id;
@@ -256,7 +292,7 @@ Richtable = {
 										: this.textContent;
 							params[name] = value;
 						});
-				url = Richtable.getBaseUrl() + '/save'
+				var url = Richtable.getBaseUrl() + '/save'
 						+ Richtable.getPathParams();
 				ajax( {
 					url : url,
@@ -268,11 +304,9 @@ Richtable = {
 		});
 	},
 	del : function(event) {
-		var ev = event || window.event;
-		var id = $(event.srcElement || event.target).closest('tr')
-				.attr('rowid');
-		url = Richtable.getBaseUrl() + '/delete' + Richtable.getPathParams();
-		;
+		var url = Richtable.getBaseUrl() + '/delete'
+				+ Richtable.getPathParams();
+		var id = $(event.target).closest('tr').attr('rowid');
 		if (id) {
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
 		} else {
@@ -286,18 +320,6 @@ Richtable = {
 			url += (url.indexOf('?') > 0 ? '&' : '?') + arr.join('&');
 		}
 
-		ajax( {
-			url : url,
-			type : 'POST',
-			dataType : 'json',
-			success : Richtable.reload
-		});
-	},
-	execute : function(operation, id) {
-		var url = Richtable.getBaseUrl() + '/' + operation
-				+ Richtable.getPathParams();
-		;
-		url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
 		ajax( {
 			url : url,
 			type : 'POST',
@@ -349,10 +371,7 @@ Richtable = {
 };
 Observation.richtable = function() {
 	if ($('.richtable').length) {
-		$('.richtable .view').click(Richtable.view);
-		$('.richtable .input').click(Richtable.input);
-		$('.richtable .save').click(Richtable.save);
-		$('.richtable .del').click(Richtable.del);
+		$('.extendTool button.btn,.action button.btn').click(Richtable.action);
 		var theadCells = $('.richtable thead:eq(0) td');
 		var rows = $('.richtable tbody:eq(0) tr').each(function() {
 			var cells = this.cells;
