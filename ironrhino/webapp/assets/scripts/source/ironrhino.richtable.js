@@ -14,8 +14,7 @@
 		return ECSideUtil.getPosLeft(elm) + elm.offsetWidth;
 	},
 	StartResize : function(event) {
-		event = event || window.event;
-		var obj = event.srcElement || event.target;
+		var obj = event.target;
 		obj.focus();
 		document.body.style.cursor = "e-resize";
 		var sibling = $(obj.parentNode).next()[0];

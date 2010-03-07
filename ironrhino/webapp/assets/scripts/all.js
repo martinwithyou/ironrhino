@@ -18759,8 +18759,7 @@ $.fn.datagridTable = function() {
 };
 var DataGridTable = {
 	addRow : function(event) {
-		event = event || window.event;
-		row = $(event.srcElement || event.target).closest('tr').get(0);
+		row = $(event.target).closest('tr').get(0);
 		table = $(row).closest('table').get(0);
 		cells = table.tHead.rows[0].cells;
 		html = '<tr>';
@@ -18792,8 +18791,7 @@ var DataGridTable = {
 		DataGridTable.setRows(table);
 	},
 	deleteRow : function(event) {
-		event = event || window.event;
-		row = $(event.srcElement || event.target).closest('tr').get(0);
+		row = $(event.target).closest('tr').get(0);
 		table = $(row).closest('table').get(0);
 		$(row).remove();
 		DataGridTable.setRows(table);
@@ -18862,8 +18860,7 @@ Observation.combox = function(container) {
 		return ECSideUtil.getPosLeft(elm) + elm.offsetWidth;
 	},
 	StartResize : function(event) {
-		event = event || window.event;
-		var obj = event.srcElement || event.target;
+		var obj = event.target;
 		obj.focus();
 		document.body.style.cursor = "e-resize";
 		var sibling = $(obj.parentNode).next()[0];
