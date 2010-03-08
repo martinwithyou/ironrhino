@@ -22,8 +22,7 @@
 	<@s.select label="%{getText('status')}" name="product.status"
 		list="@com.ironrhino.pms.model.ProductStatus@values()" listKey="name"
 		listValue="displayName" />
-	<@s.textfield label="%{getText('displayOrder')}"
-		name="product.displayOrder" />
+	<@s.textfield label="%{getText('displayOrder')}" name="product.displayOrder" cssClass="integer" />
 	<@s.iterator
 		value="@org.ironrhino.core.hibernate.CustomizableEntityChanger@getCustomizedProperties('com.ironrhino.pms.model.Product')">
 		<@s.textfield label="%{getText(key)}"

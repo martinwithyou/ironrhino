@@ -30,9 +30,11 @@ public class SecurityContextSessionCompressor implements
 
 	@Override
 	public String compress(SecurityContext sc) {
-		Authentication auth = sc.getAuthentication();
-		if (auth != null && auth.isAuthenticated())
-			return auth.getName();
+		if (sc != null) {
+			Authentication auth = sc.getAuthentication();
+			if (auth != null && auth.isAuthenticated())
+				return auth.getName();
+		}
 		return null;
 	}
 

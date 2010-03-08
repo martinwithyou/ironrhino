@@ -10,10 +10,8 @@
 	<@s.hidden name="category.id" />
 	<@s.textfield label="%{getText('code')}" name="category.code" />
 	<@s.textfield label="%{getText('name')}" name="category.name" />
-	<@s.textfield label="%{getText('description')}"
-		name="category.description" />
-	<@s.textfield label="%{getText('displayOrder')}"
-		name="category.displayOrder" />
+	<@s.textfield label="%{getText('description')}"	name="category.description" />
+	<@s.textfield label="%{getText('displayOrder')}" name="category.displayOrder" cssClass="integer" />
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>
