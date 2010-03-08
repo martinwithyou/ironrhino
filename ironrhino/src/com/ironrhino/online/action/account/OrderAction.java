@@ -1,5 +1,6 @@
 package com.ironrhino.online.action.account;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -161,13 +162,34 @@ public class OrderAction extends BaseAction {
 
 	@Override
 	public String delete() {
-		Order order = getOrder();
-		if (!getOrder().isNew()
-				&& (getOrder().getStatus() == OrderStatus.INITIAL || order
-						.getStatus() == OrderStatus.CANCELLED))
-			orderManager.delete(order);
-		targetUrl = "/account/order";
-		return REDIRECT;
+		String[] id = getId();
+		if (id != null) {
+			List<Order> list;
+			if (id.length == 1) {
+				list = new ArrayList<Order>(1);
+				list.add(orderManager.get(id[0]));
+			} else {
+				DetachedCriteria dc = orderManager.detachedCriteria();
+				dc.add(Restrictions.in("id", id));
+				list = orderManager.findListByCriteria(dc);
+			}
+			if (list.size() > 0) {
+				boolean deletable = true;
+				for (Order temp : list) {
+					if (!orderManager.canDelete(temp)) {
+						addActionError(temp.getCode() + getText("delete.forbidden"));
+						deletable = false;
+						break;
+					}
+				}
+				if (deletable) {
+					for (Order temp : list)
+						orderManager.delete(temp);
+					addActionMessage(getText("delete.success"));
+				}
+			}
+		}
+		return SUCCESS;
 	}
 
 	public String merge() {

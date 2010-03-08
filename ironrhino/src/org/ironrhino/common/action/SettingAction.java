@@ -1,5 +1,6 @@
 package org.ironrhino.common.action;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -64,13 +65,29 @@ public class SettingAction extends BaseAction {
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {
-			DetachedCriteria dc = baseManager.detachedCriteria();
-			dc.add(Restrictions.in("id", id));
-			List<Setting> list = baseManager.findListByCriteria(dc);
+			List<Setting> list;
+			if (id.length == 1) {
+				list = new ArrayList<Setting>(1);
+				list.add(baseManager.get(id[0]));
+			} else {
+				DetachedCriteria dc = baseManager.detachedCriteria();
+				dc.add(Restrictions.in("id", id));
+				list = baseManager.findListByCriteria(dc);
+			}
 			if (list.size() > 0) {
-				for (Setting setting : list)
-					baseManager.delete(setting);
-				addActionMessage(getText("delete.success"));
+				boolean deletable = true;
+				for (Setting temp : list) {
+					if (!baseManager.canDelete(temp)) {
+						addActionError(temp.getKey() + getText("delete.forbidden"));
+						deletable = false;
+						break;
+					}
+				}
+				if (deletable) {
+					for (Setting temp : list)
+						baseManager.delete(temp);
+					addActionMessage(getText("delete.success"));
+				}
 			}
 		}
 		return SUCCESS;

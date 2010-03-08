@@ -1,5 +1,8 @@
 package com.ironrhino.online.action.backend;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
@@ -107,13 +110,33 @@ public class OrderAction extends BaseAction {
 
 	@Override
 	public String delete() {
-		if (order != null)
-			if (order.getId() != null)
-				order = orderManager.get(order.getId());
-			else if (order.getCode() != null)
-				order = orderManager.findByNaturalId(order.getCode());
-		if (order != null && order.getStatus() == OrderStatus.CANCELLED)
-			orderManager.delete(order);
+		String[] id = getId();
+		if (id != null) {
+			List<Order> list;
+			if (id.length == 1) {
+				list = new ArrayList<Order>(1);
+				list.add(orderManager.get(id[0]));
+			} else {
+				DetachedCriteria dc = orderManager.detachedCriteria();
+				dc.add(Restrictions.in("id", id));
+				list = orderManager.findListByCriteria(dc);
+			}
+			if (list.size() > 0) {
+				boolean deletable = true;
+				for (Order temp : list) {
+					if (!orderManager.canDelete(temp)) {
+						addActionError(temp.getCode() + getText("delete.forbidden"));
+						deletable = false;
+						break;
+					}
+				}
+				if (deletable) {
+					for (Order temp : list)
+						orderManager.delete(temp);
+					addActionMessage(getText("delete.success"));
+				}
+			}
+		}
 		return SUCCESS;
 	}
 

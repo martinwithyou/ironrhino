@@ -311,9 +311,15 @@ public class EntityAction extends BaseAction {
 			log.error(e.getMessage(), e);
 		}
 		if (id.length > 0) {
-			DetachedCriteria dc = baseManager.detachedCriteria();
-			dc.add(Restrictions.in("id", id));
-			List list = baseManager.findListByCriteria(dc);
+			List list;
+			if (id.length == 1) {
+				list = new ArrayList(1);
+				list.add(baseManager.get(id[0]));
+			} else {
+				DetachedCriteria dc = baseManager.detachedCriteria();
+				dc.add(Restrictions.in("id", id));
+				list = baseManager.findListByCriteria(dc);
+			}
 			if (list.size() > 0) {
 				for (Object obj : list)
 					baseManager.delete((Persistable) obj);

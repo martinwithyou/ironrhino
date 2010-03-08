@@ -1,5 +1,6 @@
 package com.ironrhino.pms.action;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -150,18 +151,31 @@ public class CategoryAction extends BaseAction {
 
 	@Override
 	public String delete() {
-		String[] arr = getId();
-		Long[] id = new Long[arr.length];
-		for (int i = 0; i < id.length; i++)
-			id[i] = Long.valueOf(arr[i]);
+		String[] id = getId();
 		if (id != null) {
-			DetachedCriteria dc = categoryManager.detachedCriteria();
-			dc.add(Restrictions.in("id", id));
-			List<Category> list = categoryManager.findListByCriteria(dc);
+			List<Category> list;
+			if (id.length == 1) {
+				list = new ArrayList<Category>(1);
+				list.add(categoryManager.get(id[0]));
+			} else {
+				DetachedCriteria dc = categoryManager.detachedCriteria();
+				dc.add(Restrictions.in("id", id));
+				list = categoryManager.findListByCriteria(dc);
+			}
 			if (list.size() > 0) {
-				for (Category category : list)
-					categoryManager.delete(category);
-				addActionMessage(getText("delete.success"));
+				boolean deletable = true;
+				for (Category temp : list) {
+					if (!categoryManager.canDelete(temp)) {
+						addActionError( temp.getName() + getText("delete.forbidden"));
+						deletable = false;
+						break;
+					}
+				}
+				if (deletable) {
+					for (Category temp : list)
+						categoryManager.delete(temp);
+					addActionMessage(getText("delete.success"));
+				}
 			}
 		}
 		return SUCCESS;

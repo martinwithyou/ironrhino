@@ -1,5 +1,6 @@
 package org.ironrhino.common.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -146,13 +147,29 @@ public class PageAction extends BaseAction {
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {
-			DetachedCriteria dc = pageManager.detachedCriteria();
-			dc.add(Restrictions.in("id", id));
-			List<Page> list = pageManager.findListByCriteria(dc);
+			List<Page> list;
+			if (id.length == 1) {
+				list = new ArrayList<Page>(1);
+				list.add(pageManager.get(id[0]));
+			} else {
+				DetachedCriteria dc = pageManager.detachedCriteria();
+				dc.add(Restrictions.in("id", id));
+				list = pageManager.findListByCriteria(dc);
+			}
 			if (list.size() > 0) {
-				for (Page page : list)
-					pageManager.delete(page);
-				addActionMessage(getText("delete.success"));
+				boolean deletable = true;
+				for (Page temp : list) {
+					if (!pageManager.canDelete(temp)) {
+						addActionError(temp.getPath() + getText("delete.forbidden"));
+						deletable = false;
+						break;
+					}
+				}
+				if (deletable) {
+					for (Page temp : list)
+						pageManager.delete(temp);
+					addActionMessage(getText("delete.success"));
+				}
 			}
 		}
 		return SUCCESS;

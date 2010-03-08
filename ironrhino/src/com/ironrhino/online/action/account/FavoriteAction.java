@@ -1,5 +1,6 @@
 package com.ironrhino.online.action.account;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.struts2.interceptor.validation.SkipValidation;
@@ -54,10 +55,16 @@ public class FavoriteAction extends BaseAction {
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {
-			DetachedCriteria dc = baseManager.detachedCriteria();
-			dc.add(Restrictions.eq("username", AuthzUtils.getUsername()));
-			dc.add(Restrictions.in("id", id));
-			List<ProductFavorite> list = baseManager.findListByCriteria(dc);
+			List<ProductFavorite> list;
+			if (id.length == 1) {
+				list = new ArrayList<ProductFavorite>(1);
+				list.add(baseManager.get(id[0]));
+			} else {
+				DetachedCriteria dc = baseManager.detachedCriteria();
+				dc.add(Restrictions.eq("username", AuthzUtils.getUsername()));
+				dc.add(Restrictions.in("id", id));
+				list = baseManager.findListByCriteria(dc);
+			}
 			if (list.size() > 0) {
 				for (ProductFavorite pf : list)
 					baseManager.delete(pf);
@@ -66,5 +73,4 @@ public class FavoriteAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-
 }

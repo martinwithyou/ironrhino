@@ -1,6 +1,7 @@
 package com.ironrhino.pms.action;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -204,13 +205,29 @@ public class ProductAction extends BaseAction {
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {
-			DetachedCriteria dc = productManager.detachedCriteria();
-			dc.add(Restrictions.in("id", id));
-			List<Product> list = productManager.findListByCriteria(dc);
+			List<Product> list;
+			if (id.length == 1) {
+				list = new ArrayList<Product>(1);
+				list.add(productManager.get(id[0]));
+			} else {
+				DetachedCriteria dc = productManager.detachedCriteria();
+				dc.add(Restrictions.in("id", id));
+				list = productManager.findListByCriteria(dc);
+			}
 			if (list.size() > 0) {
-				for (Product product : list)
-					productManager.delete(product);
-				addActionMessage(getText("delete.success"));
+				boolean deletable = true;
+				for (Product temp : list) {
+					if (!productManager.canDelete(temp)) {
+						addActionError(temp.getName() + getText("delete.forbidden"));
+						deletable = false;
+						break;
+					}
+				}
+				if (deletable) {
+					for (Product temp : list)
+						productManager.delete(temp);
+					addActionMessage(getText("delete.success"));
+				}
 			}
 		}
 		return SUCCESS;

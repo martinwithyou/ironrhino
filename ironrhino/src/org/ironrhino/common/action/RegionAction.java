@@ -1,5 +1,6 @@
 package org.ironrhino.common.action;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -141,18 +142,31 @@ public class RegionAction extends BaseAction {
 
 	@Override
 	public String delete() {
-		String[] arr = getId();
-		Long[] id = new Long[arr.length];
-		for (int i = 0; i < id.length; i++)
-			id[i] = Long.valueOf(arr[i]);
+		String[] id = getId();
 		if (id != null) {
-			DetachedCriteria dc = baseManager.detachedCriteria();
-			dc.add(Restrictions.in("id", id));
-			List<Region> list = baseManager.findListByCriteria(dc);
+			List<Region> list;
+			if (id.length == 1) {
+				list = new ArrayList<Region>(1);
+				list.add(baseManager.get(id[0]));
+			} else {
+				DetachedCriteria dc = baseManager.detachedCriteria();
+				dc.add(Restrictions.in("id", id));
+				list = baseManager.findListByCriteria(dc);
+			}
 			if (list.size() > 0) {
-				for (Region region : list)
-					baseManager.delete(region);
-				addActionMessage(getText("delete.success"));
+				boolean deletable = true;
+				for (Region temp : list) {
+					if (!baseManager.canDelete(temp)) {
+						addActionError(temp.getName() + getText("delete.forbidden"));
+						deletable = false;
+						break;
+					}
+				}
+				if (deletable) {
+					for (Region temp : list)
+						baseManager.delete(temp);
+					addActionMessage(getText("delete.success"));
+				}
 			}
 		}
 		return SUCCESS;
