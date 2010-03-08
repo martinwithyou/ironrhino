@@ -1,7 +1,10 @@
 package org.ironrhino.core.util;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -13,7 +16,6 @@ import org.codehaus.jackson.map.introspect.AnnotatedMethod;
 import org.codehaus.jackson.map.introspect.BasicClassIntrospector;
 import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
 import org.codehaus.jackson.type.TypeReference;
-import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 
 public class JsonUtils {
@@ -47,8 +49,30 @@ public class JsonUtils {
 					}
 
 					private boolean isIgnorable(Annotated a) {
-						return (a.getAnnotation(NotInJson.class) != null || a
-								.getAnnotation(NotInCopy.class) != null);
+						boolean b = (a.getAnnotation(NotInJson.class) != null);
+						if (b)
+							return b;
+						if (a.getAnnotated() instanceof Method) {
+							Method m = (Method) a.getAnnotated();
+							Class clazz = m.getDeclaringClass();
+							if (m.getParameterTypes().length > 0
+									|| clazz.getName().startsWith("java."))
+								return true;
+							String name = a.getName();
+							if (name.startsWith("get"))
+								name = name.substring(3);
+							else if (name.startsWith("is"))
+								name = name.substring(2);
+							else
+								return true;
+							name = StringUtils.uncapitalize(name);
+							try {
+								Field field = clazz.getDeclaredField(name);
+								return (field.getAnnotation(NotInJson.class) != null);
+							} catch (NoSuchFieldException e) {
+							}
+						}
+						return false;
 					}
 				});
 		config.setSerializationInclusion(Inclusion.NON_NULL);
