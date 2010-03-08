@@ -9,7 +9,7 @@
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
 <#local index=index+1>
-<@rttbodytrstart rowid=entity.id! odd=(index%2==1)  readonly=readonly/>
+<@rttbodytrstart entity=entity odd=(index%2==1)  readonly=readonly/>
 	<#list config?keys as name>
 		<#if config[name]['value']??>
 		<#local value=config[name]['value']>
@@ -18,7 +18,7 @@
 		</#if>
 		<@rttbodytd entity=entity value=value template=config[name]['template']! renderLink=(config[name]['renderLink']??&&config[name]['renderLink'])/>
 	</#list>
-	<@rttbodytrend rowid=entity.id! buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
+	<@rttbodytrend entity=entity buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
 </#list>
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable searchable=searchable searchButtons=searchButtons/>
 </#macro>
@@ -59,8 +59,8 @@ ${action.getText(name)}
 <tbody>
 </#macro>
 
-<#macro rttbodytrstart rowid,odd,readonly=false>
-<tr class="${odd?string('odd','even')}"<#if rowid?string!=''> rowid="${rowid}"</#if>>
+<#macro rttbodytrstart entity odd readonly=false>
+<tr class="${odd?string('odd','even')}"<#if entity.id??> rowid="${entity.id?string}"</#if>>
 <#if !readonly><td><input type="checkbox" name="check"/></td></#if>
 </#macro>
 
@@ -89,7 +89,7 @@ ${value?xhtml}<#t>
 </td><#lt>
 </#macro>
 
-<#macro rttbodytrend rowid buttons='' readonly=false celleditable=true deleteable=true>
+<#macro rttbodytrend entity buttons='' readonly=false celleditable=true deleteable=true>
 <#if !readonly>
 <td class="action">
 <#if buttons!=''>

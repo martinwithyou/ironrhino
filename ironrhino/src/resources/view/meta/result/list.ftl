@@ -40,7 +40,7 @@
 <#assign index=0>
 <#list resultPage.result as entity>
 <#assign index=index+1>
-<@rttbodytrstart rowid=entity.id! odd=(index%2==1) readonly=readonly/>
+<@rttbodytrstart entity=entity odd=(index%2==1) readonly=readonly/>
 	<#list naturalIds?keys as key>
 		<@rttbodytd entity=entity value=entity[key] template=uiConfigs[key].template/>
 	</#list>
@@ -49,7 +49,7 @@
 			<@rttbodytd entity=entity value=entity[key]! template=uiConfigs[key].template/>
 		</#if>
 	</#list>	
-<@rttbodytrend rowid=entity.id readonly=readonly/>
+<@rttbodytrend entity=entity readonly=readonly/>
 </#list>
 <@rtend readonly=readonly searchable=searchable/>
 <#if !readonly>
