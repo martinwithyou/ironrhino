@@ -5,7 +5,7 @@
 </head>
 <body>
 <#assign config={"code":{},"name":{},"tagsAsString":{"trimPrefix":true,"cellEdit":"click","class":"include_if_edited"}}>
-<#assign actionColumnButtons=btn(action.getText('save'),null,'save')+btn(action.getText('edit'),null,'input')+btn(action.getText('picture'),r"Richtable.open(Richtable.getUrl('picture','${rowid}'))")+btn(action.getText('attribute'),r"Richtable.open(Richtable.getUrl('attribute','${rowid}'))")+btn(action.getText('category'),r"Richtable.open(Richtable.getUrl('category','${rowid}'),true,true)")+btn(action.getText('delete'),null,'del')>
+<#assign actionColumnButtons=btn(action.getText('save'),null,'save')+btn(action.getText('edit'),null,'input')+btn(action.getText('picture'),r"Richtable.open(Richtable.getUrl('picture','${entity.id}'))")+btn(action.getText('attribute'),r"Richtable.open(Richtable.getUrl('attribute','${entity.id}'))")+btn(action.getText('category'),r"Richtable.open(Richtable.getUrl('category','${entity.id}'),true,true)")+btn(action.getText('delete'),null,'del')>
 <@richtable entityName="product" config=config actionColumnWidth="250px" actionColumnButtons=actionColumnButtons/>
 </body>
 </html></#escape>
