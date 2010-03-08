@@ -354,8 +354,11 @@ select {
 	width: 150px;
 }
 
-input.date,input.integer,input.double {
+input.integer,input.double {
 	width: 90px;
+}
+input.date{
+	width: 80px;
 }
 
 input.required {

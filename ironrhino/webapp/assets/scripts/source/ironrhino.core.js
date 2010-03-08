@@ -59,7 +59,7 @@ $(_init);
 Observation.common = function(container) {
 	$('.action_error,.action_message,.field_error')
 			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
-	$('input').each(function() {
+	$('input[type="text"]').each(function() {
 				if (!$(this).attr('autocomplete'))
 					$(this).attr('autocomplete', 'off');
 				var maxlength = $(this).attr('maxlength');
