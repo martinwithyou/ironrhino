@@ -366,7 +366,7 @@ form div {
 	margin: 5px 0px 5px 0px;
 }
 
-label {
+form label.field {
 	display: block;
 	float: left;
 	width: 80px;

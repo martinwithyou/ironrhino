@@ -18821,13 +18821,13 @@ Observation.datagridTable = function(container) {
 };
 (function($) {
 	$.fn.filterselect = function() {
+		var select = $(this).nextAll('select:eq(0)');
+		select.data('innerHTML', select.html());
 		$(this).keyup(filterselect);
 	};
 	function filterselect(event) {
 		var input = $(event.target);
 		var select = input.nextAll('select:eq(0)');
-		if (!select.data('innerHTML'))
-			select.data('innerHTML', select.html());
 		var key = input.val();
 		if ($.browser.webkit || event.keyCode == 8) {
 			select.html(select.data('innerHTML'));
