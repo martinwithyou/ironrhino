@@ -9,7 +9,7 @@
 <body>
 <@s.form id="login" action="login" method="post" cssClass="ajax">
 	<@s.hidden id="targetUrl" name="targetUrl" />
-	<@s.textfield label="%{getText('username')}" name="username" cssClass="required"/>
+	<@s.textfield label="%{getText('username')}" name="username" cssClass="required focus"/>
 	<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
 	<@s.checkbox label="%{getText('rememberme')}" name="rememberme"/>
 	<@captcha/>

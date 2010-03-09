@@ -37,8 +37,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mmseg4j-all-1.8.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/memcached-2.4.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/antlr-runtime-3.2.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjrt-1.6.6.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjweaver-1.6.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.0.15.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mysql-connector-java-5.1.10.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/slf4j-api-1.5.8.jar"/>
@@ -70,13 +68,8 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.transaction-3.0.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.web-3.0.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.web.servlet-3.0.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-core-3.0.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-3.0.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-web-3.0.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-config-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jsp-api-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-2.5.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-1.7.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jericho-html-3.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zookeeper-3.2.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hessian-4.0.3.jar"/>
@@ -90,5 +83,12 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-1.4.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.4.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/poi-3.6.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjrt-1.6.8.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjweaver-1.6.8.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-config-3.0.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-core-3.0.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-3.0.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-web-3.0.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.0.0.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>

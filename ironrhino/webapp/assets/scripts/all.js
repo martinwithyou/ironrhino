@@ -17434,6 +17434,7 @@ $(_init);
 Observation.common = function(container) {
 	$('div.action_error,div.action_message,div.field_error,ul.action_error li,ul.action_message li')
 			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
+	$('.focus:eq(0)').focus();
 	$('input[type="text"]').each(function() {
 				if (!$(this).attr('autocomplete'))
 					$(this).attr('autocomplete', 'off');
@@ -19272,7 +19273,7 @@ Observation.richtable = function() {
 		$('.richtable select[name="resultPage.pageSize"]').change(function() {
 			Richtable.reload()
 		});
-		$('.richtable input[name="keyword"]').focus().keydown(function(event) {
+		$('.richtable input[name="keyword"]').keydown(function(event) {
 			if (event.keyCode && event.keyCode == 13) {
 				$('.richtable .jumpPageInput').val(1);
 			}

@@ -147,7 +147,7 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 </td>
 <td class="searchTool" width="25%">
 <#if searchable>
-<@s.textfield theme="simple" name="keyword" size="15"/><@s.submit theme="simple" value="%{getText('search')}" />
+<@s.textfield theme="simple" name="keyword" cssClass="focus" size="15"/><@s.submit theme="simple" value="%{getText('search')}" />
 </#if>
 <#if searchButtons!=''>
 <#local temp=searchButtons?interpret>

@@ -426,7 +426,7 @@ Observation.richtable = function() {
 		$('.richtable select[name="resultPage.pageSize"]').change(function() {
 			Richtable.reload()
 		});
-		$('.richtable input[name="keyword"]').focus().keydown(function(event) {
+		$('.richtable input[name="keyword"]').keydown(function(event) {
 			if (event.keyCode && event.keyCode == 13) {
 				$('.richtable .jumpPageInput').val(1);
 			}
