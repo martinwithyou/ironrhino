@@ -75,12 +75,25 @@ public class DateUtils {
 		return isSameDay(date, new Date());
 	}
 
-	public static Date justDate(Date date) {
+	public static Date beginOfDay(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
+	public static Date endOfDay(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DAY_OF_YEAR, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.add(Calendar.MILLISECOND, -1);
 		return cal.getTime();
 	}
 
