@@ -17432,7 +17432,7 @@ function _observe(container) {
 $(_init);
 
 Observation.common = function(container) {
-	$('.action_error,.action_message,.field_error')
+	$('div.action_error,div.action_message,div.field_error,ul.action_error li,ul.action_message li')
 			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
 	$('input[type="text"]').each(function() {
 				if (!$(this).attr('autocomplete'))
