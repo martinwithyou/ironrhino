@@ -56,162 +56,6 @@ function _observe(container) {
 }
 $(_init);
 
-Observation.common = function(container) {
-	$('div.action_error,div.action_message,div.field_error,ul.action_error li,ul.action_message li')
-			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
-	$('.focus:eq(0)').focus();
-	$('input[type="text"]').each(function() {
-				if (!$(this).attr('autocomplete'))
-					$(this).attr('autocomplete', 'off');
-				var maxlength = $(this).attr('maxlength');
-				if (!maxlength || maxlength > 3000) {
-					if ($(this).hasClass('date'))
-						$(this).attr('maxlength', '10');
-					else if ($(this).hasClass('integer'))
-						$(this).attr('maxlength', '11');
-					else if ($(this).hasClass('double'))
-						$(this).attr('maxlength', '22');
-					else
-						$(this).attr('maxlength', '255');
-				}
-			});
-	$('ul.nav>li', container).hover(function() {
-				$("ul", this).fadeIn("fast");
-			}, function() {
-			});
-	if ($.browser.msie) {
-		$('ul.nav>li', container).each(function() {
-					if ($('ul>li', this).length)
-						$(this).hover(function() {
-									$(this).addClass("sfHover");
-								}, function() {
-									$(this).removeClass("sfHover");
-								})
-				});
-	}
-	$('.highlightrow tbody tr').hover(function() {
-				$(this).addClass('highlight');
-			}, function() {
-				$(this).removeClass('highlight');
-			});
-	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
-		$('textarea').elastic();
-	if (typeof $.fn.tabs != 'undefined')
-		$('div.tabs', container).each(function() {
-					$(this).tabs().tabs('select', $(this).attr('tab'))
-				});
-	if (typeof $.fn.corner != 'undefined')
-		$('.rounded', container).css({
-					padding : '5px',
-					margin : '5px'
-				}).each(function() {
-					$(this).corner();
-				});
-	if (typeof $.fn.datepicker != 'undefined')
-		$('input.date', container).datepicker({
-					dateFormat : 'yy-mm-dd',
-					zIndex : 2000
-				});
-	$('input.captcha', container).focus(function() {
-				if ($(this).attr('_captcha_'))
-					return;
-				$(this).after('<img class="captcha" src="' + this.id + '"/>');
-				$('img.captcha', container).click(Captcha.refresh);
-				$(this).attr('_captcha_', true);
-			});
-	if (typeof $.fn.treeTable != 'undefined')
-		$('.treeTable', container).each(function() {
-			$(this).treeTable({
-				initialState : $(this).hasClass('expanded')
-						? 'expanded'
-						: 'collapsed'
-			});
-		});
-	if (typeof $.fn.sexyCombo != 'undefined')
-		$('select.combox', container).sexyCombo({
-					emptyText : MessageBundle.get('select'),
-					triggerSelected : true
-				});
-	if (typeof $.fn.truncatable != 'undefined')
-		$('.truncatable', container).each(function() {
-					$(this).truncatable({
-								limit : $(this).attr('limit') || 100
-							});
-				});
-
-	if (typeof swfobject.embedSWF != 'undefined') {
-		$('.chart', container).each(function() {
-			var id = this.id;
-			var width = $(this).width();
-			var height = $(this).height();
-			var data = $(this).attr('data');
-			if (data.indexOf('/') == 0)
-				data = document.location.protocol + '//'
-						+ document.location.host + data;
-			data = encodeURIComponent(data);
-			if (!id || !width || !height || !data)
-				alert('id,width,height,data all required');
-			swfobject.embedSWF(CONTEXT_PATH
-							+ '/assets/images/open-flash-chart.swf', id, width,
-					height, '9.0.0', CONTEXT_PATH
-							+ '/assets/images/expressInstall.swf', {
-						'data-file' : data
-					}, {
-						wmode : "transparent"
-					});
-		});
-		window.save_image = function() {
-			var content = [];
-			content
-					.push('<html><head><title>Charts: Export as Image<\/title><\/head><body>');
-			$('object[data]').each(function() {
-				content.push('<img src="data:image/png;base64,'
-						+ this.get_img_binary() + '"/>');
-			});
-			content.push('<\/body><\/html>');
-			var img_win = window.open('', '_blank');
-			with (img_win.document) {
-				write(content.join(''));
-				img_win.document.close();
-			}
-		}
-	}
-	if (typeof $.fn.uploadify != 'undefined')
-		$('.uploadify').each(function() {
-			var options = {
-				'uploader' : CONTEXT_PATH + '/assets/images/uploadify.swf',
-				'script' : $(this).closest('form')[0].action,
-				'cancelImg' : CONTEXT_PATH + '/assets/images/cancel.png',
-				// 'folder' : CONTEXT_PATH + '/upload',
-				'buttonText' : MessageBundle.get('browse'),
-				'wmode' : 'transparent',
-				'multi' : true,
-				'auto' : true,
-				'dipsplayData' : 'percentage'
-			};
-			var _options = $.parseJSON($(this).attr('options'));
-			if (_options)
-				$.extend(options, _options);
-			if (!options.auto) {
-				$(this)
-						.after('<div class="uploadify_control"><button class="btn"><span><span>'
-								+ MessageBundle.get('upload')
-								+ '</span></span></button><button class="btn"><span><span>'
-								+ MessageBundle.get('clear')
-								+ '</span></span></button></div>');
-				var t = this;
-				$('div.uploadify_control button', $(this).parent()).eq(0)
-						.click(function() {
-									$(t).uploadifyUpload()
-								}).end().eq(1).click(function() {
-									$(t).uploadifyClearQueue()
-								});
-			}
-			options.fileDataName = $(this).attr('name');
-			$(this).uploadify(options);
-		});
-};
-
 Initialization.common = function() {
 	if (typeof dwr != 'undefined') {
 		dwr.engine.setPreHook(Indicator.show);
@@ -572,7 +416,169 @@ Initialization.history = function() {
 			}, '');
 }
 
-Observation.ajax = function(container) {
+Observation.common = function(container) {
+	$('div.action_error,div.action_message,div.field_error,ul.action_error li,ul.action_message li')
+			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
+	$('.focus:eq(0)', container).focus();
+	$('form', container).each(function() {
+				if (!$(this).hasClass('ajax'))
+					$(this).submit(function() {
+								$('.action_message,.action_error').remove();
+								$('.field_error', this).remove();
+								return Form.validate(this)
+							});
+			});
+	$('input[type="text"]', container).each(function() {
+				if (!$(this).attr('autocomplete'))
+					$(this).attr('autocomplete', 'off');
+				var maxlength = $(this).attr('maxlength');
+				if (!maxlength || maxlength > 3000) {
+					if ($(this).hasClass('date'))
+						$(this).attr('maxlength', '10');
+					else if ($(this).hasClass('integer'))
+						$(this).attr('maxlength', '11');
+					else if ($(this).hasClass('double'))
+						$(this).attr('maxlength', '22');
+					else
+						$(this).attr('maxlength', '255');
+				}
+			});
+	$('ul.nav>li', container).hover(function() {
+				$("ul", this).fadeIn("fast");
+			}, function() {
+			});
+	if ($.browser.msie) {
+		$('ul.nav>li', container).each(function() {
+					if ($('ul>li', this).length)
+						$(this).hover(function() {
+									$(this).addClass("sfHover");
+								}, function() {
+									$(this).removeClass("sfHover");
+								})
+				});
+	}
+	$('.highlightrow tbody tr').hover(function() {
+				$(this).addClass('highlight');
+			}, function() {
+				$(this).removeClass('highlight');
+			});
+	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
+		$('textarea').elastic();
+	if (typeof $.fn.tabs != 'undefined')
+		$('div.tabs', container).each(function() {
+					$(this).tabs().tabs('select', $(this).attr('tab'))
+				});
+	if (typeof $.fn.corner != 'undefined')
+		$('.rounded', container).css({
+					padding : '5px',
+					margin : '5px'
+				}).each(function() {
+					$(this).corner();
+				});
+	if (typeof $.fn.datepicker != 'undefined')
+		$('input.date', container).datepicker({
+					dateFormat : 'yy-mm-dd',
+					zIndex : 2000
+				});
+	$('input.captcha', container).focus(function() {
+				if ($(this).attr('_captcha_'))
+					return;
+				$(this).after('<img class="captcha" src="' + this.id + '"/>');
+				$('img.captcha', container).click(Captcha.refresh);
+				$(this).attr('_captcha_', true);
+			});
+	if (typeof $.fn.treeTable != 'undefined')
+		$('.treeTable', container).each(function() {
+			$(this).treeTable({
+				initialState : $(this).hasClass('expanded')
+						? 'expanded'
+						: 'collapsed'
+			});
+		});
+	if (typeof $.fn.sexyCombo != 'undefined')
+		$('select.combox', container).sexyCombo({
+					emptyText : MessageBundle.get('select'),
+					triggerSelected : true
+				});
+	if (typeof $.fn.truncatable != 'undefined')
+		$('.truncatable', container).each(function() {
+					$(this).truncatable({
+								limit : $(this).attr('limit') || 100
+							});
+				});
+
+	if (typeof swfobject.embedSWF != 'undefined') {
+		$('.chart', container).each(function() {
+			var id = this.id;
+			var width = $(this).width();
+			var height = $(this).height();
+			var data = $(this).attr('data');
+			if (data.indexOf('/') == 0)
+				data = document.location.protocol + '//'
+						+ document.location.host + data;
+			data = encodeURIComponent(data);
+			if (!id || !width || !height || !data)
+				alert('id,width,height,data all required');
+			swfobject.embedSWF(CONTEXT_PATH
+							+ '/assets/images/open-flash-chart.swf', id, width,
+					height, '9.0.0', CONTEXT_PATH
+							+ '/assets/images/expressInstall.swf', {
+						'data-file' : data
+					}, {
+						wmode : "transparent"
+					});
+		});
+		window.save_image = function() {
+			var content = [];
+			content
+					.push('<html><head><title>Charts: Export as Image<\/title><\/head><body>');
+			$('object[data]').each(function() {
+				content.push('<img src="data:image/png;base64,'
+						+ this.get_img_binary() + '"/>');
+			});
+			content.push('<\/body><\/html>');
+			var img_win = window.open('', '_blank');
+			with (img_win.document) {
+				write(content.join(''));
+				img_win.document.close();
+			}
+		}
+	}
+	if (typeof $.fn.uploadify != 'undefined')
+		$('.uploadify').each(function() {
+			var options = {
+				'uploader' : CONTEXT_PATH + '/assets/images/uploadify.swf',
+				'script' : $(this).closest('form')[0].action,
+				'cancelImg' : CONTEXT_PATH + '/assets/images/cancel.png',
+				// 'folder' : CONTEXT_PATH + '/upload',
+				'buttonText' : MessageBundle.get('browse'),
+				'wmode' : 'transparent',
+				'multi' : true,
+				'auto' : true,
+				'dipsplayData' : 'percentage'
+			};
+			var _options = $.parseJSON($(this).attr('options'));
+			if (_options)
+				$.extend(options, _options);
+			if (!options.auto) {
+				$(this)
+						.after('<div class="uploadify_control"><button class="btn"><span><span>'
+								+ MessageBundle.get('upload')
+								+ '</span></span></button><button class="btn"><span><span>'
+								+ MessageBundle.get('clear')
+								+ '</span></span></button></div>');
+				var t = this;
+				$('div.uploadify_control button', $(this).parent()).eq(0)
+						.click(function() {
+									$(t).uploadifyUpload()
+								}).end().eq(1).click(function() {
+									$(t).uploadifyClearQueue()
+								});
+			}
+			options.fileDataName = $(this).attr('name');
+			$(this).uploadify(options);
+		});
+
 	$('a.ajax,form.ajax', container).each(function() {
 		var target = this;
 		var ids = [];
