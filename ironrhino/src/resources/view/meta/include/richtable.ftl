@@ -16,7 +16,7 @@
 		<#else>
 		<#local value=entity[name]!>
 		</#if>
-		<@rttbodytd entity=entity value=value template=config[name]['template']! renderLink=(config[name]['renderLink']??&&config[name]['renderLink'])/>
+		<@rttbodytd entity=entity value=value template=config[name]['template']!/>
 	</#list>
 	<@rttbodytrend entity=entity buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
 </#list>
@@ -64,12 +64,9 @@ ${action.getText(name)}
 <#if !readonly><td><input type="checkbox" name="check"/></td></#if>
 </#macro>
 
-<#macro rttbodytd value,entity,template='',renderLink=false>
+<#macro rttbodytd value,entity,template=''>
 <td><#rt>
 <#if template==''><#t>
-<#if renderLink><#t>
-<a href="?${cellName}=${value?url('utf-8')}" class="ajax view"><#t>
-</#if><#t>
 <#if value?string=='true'||value?string=='false'><#t>
 ${action.getText(value?string)}<#t>
 <#else><#t>
@@ -78,9 +75,6 @@ ${value.displayName}
 <#else>
 ${value?xhtml}<#t>
 </#if>
-</#if><#t>
-<#if renderLink><#t>
-</a><#t>
 </#if><#t>
 <#else><#t>
 <#local temp=template?interpret><#t>
@@ -96,12 +90,12 @@ ${value?xhtml}<#t>
 <#local temp=buttons?interpret>
 <@temp/>
 <#else>
+<@button text=action.getText('edit') view='input'/>
 <#if celleditable>
-<@button class='save' text=action.getText('save')/>
+<@button text=action.getText('save') action='save'/>
 </#if>
-<@button class='input' text=action.getText('edit')/>
 <#if deleteable>
-<@button class='del' text=action.getText('delete')/>
+<@button text=action.getText('delete') action='delete'/>
 </#if>
 </#if>
 </td>
@@ -139,10 +133,10 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 <@temp/>
 <#else>
 <#if !readonly>
-<#if createable><@button class='input' text=action.getText('create')/></#if>
-<#if celleditable><@button class='save' text=action.getText('save')/></#if>
-<#if deleteable><@button class='del' text=action.getText('delete')/></#if>
-</#if><@button class='reload' text=action.getText('reload')/></#if>
+<#if createable><@button text=action.getText('create') view='input'/></#if>
+<#if celleditable><@button text=action.getText('save') action='save'/></#if>
+<#if deleteable><@button text=action.getText('delete') action='delete'/></#if>
+</#if><@button text=action.getText('reload') class='reload'/></#if>
 </div>
 </td>
 <td class="searchTool" width="25%">

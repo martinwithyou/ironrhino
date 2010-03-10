@@ -5,7 +5,6 @@
 </head>
 <body>
 <#assign config={"path":{"template":"<a href=\"${getUrl(cmsPath)}$"+"{value}\" target=\"_blank\">$"+"{value}</a>"},"title":{},"createDate":{},"modifyDate":{}}>
-<#assign actionColumnButtons=btn(action.getText('edit'),r"window.open(Richtable.getUrl('input','${entity.id}'))")+btn(action.getText('delete'),null,'del')>
-<@richtable entityName="page" config=config actionColumnWidth="100px" actionColumnButtons=actionColumnButtons celleditable=false/>
+<@richtable entityName="page" config=config actionColumnWidth="100px" celleditable=false/>
 </body>
 </html></#escape>

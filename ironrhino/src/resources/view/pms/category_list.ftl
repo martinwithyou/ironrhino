@@ -5,7 +5,13 @@
 </head>
 <body>
 <#assign config={"code":{},"name":{"cellEdit":"click"},"description":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"},"rolesAsString":{"trimPrefix":true,"cellEdit":"click","class":"include_if_edited"}}>
-<#assign actionColumnButtons=btn(action.getText('enter'),r"Richtable.enter('${entity.id}')")+btn(action.getText('save'),null,'save')+btn(action.getText('delete'),null,'del')+btn(action.getText('move'),r"Richtable.open(Richtable.getUrl('tree','${entity.id}'),true,true)")+btn(action.getText('product'),r"Richtable.enter('${entity.id}','product?categoryId={parentId}')")>
+<#assign actionColumnButtons=r"
+<@button text='${action.getText(\'enter\')}' onclick='Richtable.enter(\'${entity.id}\')'/>
+<@button text='${action.getText(\'save\')}' action='save'/>
+<@button text='${action.getText(\'delete\')}' action='delete'/>
+<@button text='${action.getText(\'move\')}' onclick='Richtable.open(Richtable.getUrl(\'tree\',\'${entity.id}\'),true,true)'/>
+<@button text='${action.getText(\'product\')}' type='link' href='product?categoryId=${entity.id}'/>
+">
 <@richtable entityName="category" config=config actionColumnWidth="220px" actionColumnButtons=actionColumnButtons/>
 </body>
 </html></#escape>
