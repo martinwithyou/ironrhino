@@ -230,8 +230,14 @@ Richtable = {
 								arr.push('id='
 										+ $(this).closest('tr').attr('rowid'));
 						});
-				if (arr.length == 0)
+				if (arr.length == 0) {
+					var msg = MessageBundle.get('no.selection');
+					if (typeof $.jGrowl != 'undefined')
+						$.jGrowl(msg);
+					else
+						$('#message').html(Message.get(msg, 'action_message'));
 					return;
+				}
 				url += (url.indexOf('?') > 0 ? '&' : '?') + arr.join('&');
 			}
 
@@ -255,39 +261,55 @@ Richtable = {
 						if ($(this).attr("edited") == "true")
 							arr.push($(this).attr('rowid'))
 					});
-		var theadCells = $('.richtable thead:eq(0) td');
-		$.each(arr, function() {
-			var rows = $('.richtable tbody')[0].rows;
-			var row;
-			for (var i = 0; i < rows.length; i++)
-				if ($(rows[i]).attr('rowid') == this)
-					row = rows[i];
-			if (row && $(row).attr('edited') == 'true') {
-				var params = {};
-				var entity = Richtable.getBaseUrl();
-				entity = entity.substring(entity.lastIndexOf('/') + 1);
-				params[entity + '.id'] = this;
-				$.each(row.cells, function(i) {
-					var theadCell = $(theadCells[i]);
-					var name = theadCell.attr("cellName");
-					if (!name || $(this).attr('edited') != 'true'
-							&& theadCell.hasClass('include_if_edited'))
-						return;
-					var value = $(this).attr('cellValue');
-					if (!value)
-						value = window.isIE ? this.innerText : this.textContent;
-					params[name] = value;
-				});
-				var url = Richtable.getBaseUrl() + '/save'
-						+ Richtable.getPathParams();
-				ajax({
-							url : url,
-							type : 'POST',
-							data : params,
-							dataType : 'json'
-						});
-			}
-		});
+		var modified = false;
+		if (arr.length > 0) {
+			var theadCells = $('.richtable thead:eq(0) td');
+			$.each(arr, function() {
+						var rows = $('.richtable tbody')[0].rows;
+						var row;
+						for (var i = 0; i < rows.length; i++)
+							if ($(rows[i]).attr('rowid') == this)
+								row = rows[i];
+						if (row && $(row).attr('edited') == 'true') {
+							modified = true;
+							var params = {};
+							var entity = Richtable.getBaseUrl();
+							entity = entity.substring(entity.lastIndexOf('/')
+									+ 1);
+							params[entity + '.id'] = this;
+							$.each(row.cells, function(i) {
+										var theadCell = $(theadCells[i]);
+										var name = theadCell.attr("cellName");
+										if (!name
+												|| $(this).attr('edited') != 'true'
+												&& theadCell
+														.hasClass('include_if_edited'))
+											return;
+										var value = $(this).attr('cellValue');
+										if (!value)
+											value = window.isIE
+													? this.innerText
+													: this.textContent;
+										params[name] = value;
+									});
+							var url = Richtable.getBaseUrl() + '/save'
+									+ Richtable.getPathParams();
+							ajax({
+										url : url,
+										type : 'POST',
+										data : params,
+										dataType : 'json'
+									});
+						}
+					});
+		}
+		if (!modified) {
+			var msg = MessageBundle.get('no.modification');
+			if (typeof $.jGrowl != 'undefined')
+				$.jGrowl(msg);
+			else
+				$('#message').html(Message.get(msg, 'action_message'));
+		}
 	},
 	editCell : function(cell, templateId) {
 		var ce = $(cell);
