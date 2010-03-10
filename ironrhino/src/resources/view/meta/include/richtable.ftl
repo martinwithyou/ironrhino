@@ -73,7 +73,7 @@ ${action.getText(name)}
 <#if value?string=='true'||value?string=='false'><#t>
 ${action.getText(value?string)}<#t>
 <#else><#t>
-<#if value.displayName??>
+<#if value?is_hash&&value.displayName??>
 ${value.displayName}
 <#else>
 ${value?xhtml}<#t>
