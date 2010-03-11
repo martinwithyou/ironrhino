@@ -162,7 +162,7 @@ Form = {
 	focus : function(form) {
 		var arr = $('input,select', form).get();
 		for (var i = 0; i < arr.length; i++) {
-			if ($('.field_error', $(arr[i]).parent()).size() > 0) {
+			if ($('.field_error', $(arr[i]).parent()).length) {
 				setTimeout(function() {
 							$(arr[i]).focus();
 						}, 50);
