@@ -210,8 +210,8 @@ Richtable = {
 	},
 	click : function(event) {
 		var btn = event.target;
-		if ($(btn).attr('tagName') != 'BUTTON')
-			btn = $(btn).closest('button');
+		if ($(btn).attr('tagName') != 'BUTTON' || $(btn).attr('tagName') != 'A')
+			btn = $(btn).closest('.btn');
 		var id = $(btn).closest('tr').attr('rowid');
 		var action = $(btn).attr('action');
 		var view = $(btn).attr('view');
@@ -247,8 +247,16 @@ Richtable = {
 						dataType : 'json',
 						success : Richtable.reload
 					});
-		} else if (view) {
-			Richtable.open(Richtable.getUrl(view, id, !id), true);
+		} else {
+			if (view)
+				Richtable.open(Richtable.getUrl(view, id, !id), true);
+			else {
+				var url = $(btn).attr('href');
+				if (url) {
+					Richtable.open(url);
+					return false;
+				}
+			}
 		}
 	},
 	save : function(event) {
@@ -356,7 +364,8 @@ Richtable = {
 };
 Observation.richtable = function() {
 	if ($('.richtable').length) {
-		$('.extendTool button.btn,.action button.btn').click(Richtable.click);
+		$('.extendTool button.btn,.action button.btn,a[rel="richtable"]')
+				.click(Richtable.click);
 		var theadCells = $('.richtable thead:eq(0) td');
 		var rows = $('.richtable tbody:eq(0) tr').each(function() {
 					var cells = this.cells;
