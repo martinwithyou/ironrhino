@@ -256,7 +256,7 @@ Richtable = {
 			else {
 				var url = $(btn).attr('href');
 				if (url) {
-					Richtable.open(url);
+					Richtable.open(url,true);
 					return false;
 				}
 			}
