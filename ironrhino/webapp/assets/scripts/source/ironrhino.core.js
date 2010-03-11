@@ -282,14 +282,14 @@ Ajax = {
 				replacement[ss[0]] = (ss.length == 2 ? ss[1] : ss[0]);
 			}
 			var html = data.replace(/<script(.|\s)*?\/script>/g, "");
-			var div = $("<div/>").append(html);
+			var div = $("<div/>").html(html);
 			// others
 			for (var key in replacement) {
 				if (!options.quiet)
 					$('html,body').animate({
 								scrollTop : $('#' + key).offset().top - 50
 							}, 100);
-				if (div.find('#' + replacement[key]).size() > 0)
+				if (div.find('#' + replacement[key]).length)
 					$('#' + key).html(div.find('#' + replacement[key]).html());
 				else {
 					var start = html.indexOf('>', html.indexOf('<body')) + 1;

@@ -17661,14 +17661,14 @@ Ajax = {
 				replacement[ss[0]] = (ss.length == 2 ? ss[1] : ss[0]);
 			}
 			var html = data.replace(/<script(.|\s)*?\/script>/g, "");
-			var div = $("<div/>").append(html);
+			var div = $("<div/>").html(html);
 			// others
 			for (var key in replacement) {
 				if (!options.quiet)
 					$('html,body').animate({
 								scrollTop : $('#' + key).offset().top - 50
 							}, 100);
-				if (div.find('#' + replacement[key]).size() > 0)
+				if (div.find('#' + replacement[key]).length)
 					$('#' + key).html(div.find('#' + replacement[key]).html());
 				else {
 					var start = html.indexOf('>', html.indexOf('<body')) + 1;
@@ -19042,7 +19042,7 @@ Richtable = {
 			return;
 		}
 		$('#_window_').attr('_dialoged_', true);
-		$("#_window_").dialog({
+		var opt = {
 					minHeight : 500,
 					width : 700,
 					modal : true,
@@ -19051,7 +19051,10 @@ Richtable = {
 					close : (reloadonclose ? function() {
 						Richtable.reload();
 					} : null)
-				});
+				};
+		if($.browser.msie)
+			opt.height = 500;
+		$("#_window_").dialog(opt);
 	},
 	enter : function(parentId, url) {
 		if (!url)
@@ -19130,43 +19133,36 @@ Richtable = {
 		if (arr.length > 0) {
 			var theadCells = $('.richtable thead:eq(0) td');
 			$.each(arr, function() {
-						var rows = $('.richtable tbody')[0].rows;
-						var row;
-						for (var i = 0; i < rows.length; i++)
-							if ($(rows[i]).attr('rowid') == this)
-								row = rows[i];
-						if (row && $(row).attr('edited') == 'true') {
-							modified = true;
-							var params = {};
-							var entity = Richtable.getBaseUrl();
-							entity = entity.substring(entity.lastIndexOf('/')
-									+ 1);
-							params[entity + '.id'] = this;
-							$.each(row.cells, function(i) {
-										var theadCell = $(theadCells[i]);
-										var name = theadCell.attr("cellName");
-										if (!name
-												|| $(this).attr('edited') != 'true'
-												&& theadCell
-														.hasClass('include_if_edited'))
-											return;
-										var value = $(this).attr('cellValue');
-										if (!value)
-											value = window.isIE
-													? this.innerText
-													: this.textContent;
-										params[name] = value;
-									});
-							var url = Richtable.getBaseUrl() + '/save'
-									+ Richtable.getPathParams();
-							ajax({
-										url : url,
-										type : 'POST',
-										data : params,
-										dataType : 'json'
-									});
-						}
+				var rows = $('.richtable tbody')[0].rows;
+				var row;
+				for (var i = 0; i < rows.length; i++)
+					if ($(rows[i]).attr('rowid') == this)
+						row = rows[i];
+				if (row && $(row).attr('edited') == 'true') {
+					modified = true;
+					var params = {};
+					var entity = Richtable.getBaseUrl();
+					entity = entity.substring(entity.lastIndexOf('/') + 1);
+					params[entity + '.id'] = this;
+					$.each(row.cells, function(i) {
+						var theadCell = $(theadCells[i]);
+						var name = theadCell.attr("cellName");
+						if (!name || $(this).attr('edited') != 'true'
+								&& theadCell.hasClass('include_if_edited'))
+							return;
+						var value = $(this).attr('cellValue') || $(this).text();
+						params[name] = value;
 					});
+					var url = Richtable.getBaseUrl() + '/save'
+							+ Richtable.getPathParams();
+					ajax({
+								url : url,
+								type : 'POST',
+								data : params,
+								dataType : 'json'
+							});
+				}
+			});
 		}
 		if (!modified) {
 			var msg = MessageBundle.get('no.modification');
