@@ -55,6 +55,7 @@ public class AutoConfigResult extends FreemarkerResult {
 			String url = namespace + (namespace.endsWith("/") ? "" : "/")
 					+ invocation.getProxy().getActionName();
 			response.sendRedirect(request.getContextPath() + url);
+			return;
 		}
 		String finalLocation = conditionalParse(location, invocation);
 		if (finalLocation.endsWith(".jsp"))
