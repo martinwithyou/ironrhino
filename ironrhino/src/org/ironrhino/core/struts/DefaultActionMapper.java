@@ -50,7 +50,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		if (uri.startsWith(getCmsPath())) {
 			String pageId = uri.substring(getCmsPath().length() - 1);
 			ActionMapping mapping = new ActionMapping();
-			mapping.setNamespace("/");
+			mapping.setNamespace("/common");
 			mapping.setName("displayPage");
 			Map<String, Object> params = new HashMap<String, Object>(3);
 			params.put(ID, pageId);

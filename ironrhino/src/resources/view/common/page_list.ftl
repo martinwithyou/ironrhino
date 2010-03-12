@@ -5,6 +5,15 @@
 </head>
 <body>
 <#assign config={"path":{"template":"<a href=\"${getUrl(cmsPath)}$"+"{value}\" target=\"_blank\">$"+"{value}</a>"},"title":{},"createDate":{},"modifyDate":{}}>
-<@richtable entityName="page" config=config actionColumnWidth="100px" celleditable=false/>
+<#assign actionColumnButtons=r"
+<@button text='${action.getText(\'edit\')}' view='input' windowoptions='{\'iframe\':true,\'width\':\'900px\'}'/>
+<@button text='${action.getText(\'delete\')}' action='delete'/>
+">
+<#assign bottomButtons=r"
+<@button text='${action.getText(\'create\')}' view='input' windowoptions='{\'iframe\':true,\'width\':\'900px\'}'/>
+<@button text='${action.getText(\'delete\')}' action='delete'/>
+<@button text='${action.getText(\'reload\')}' class='reload'/>
+">
+<@richtable entityName="page" config=config actionColumnWidth="100px" actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false/>
 </body>
 </html></#escape>

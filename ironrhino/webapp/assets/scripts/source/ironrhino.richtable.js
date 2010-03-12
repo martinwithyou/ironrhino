@@ -171,7 +171,7 @@ Richtable = {
 		} else {
 			// embed iframe
 			$('#_window_')
-					.html('<iframe style="width:650px;height:90%;border:0;" onload="Dialog.adapt($(\'#_window_\'),this);"/>');
+					.html('<iframe style="width:100%;height:550px;border:0;"/>');
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'decorator=simple&'
 					+ Math.random();
 			$('#_window_ > iframe')[0].src = url;
@@ -186,7 +186,7 @@ Richtable = {
 		}
 		$('#_window_').attr('_dialoged_', true);
 		var opt = {
-					minHeight : 500,
+					minHeight : 600,
 					width : 700,
 					modal : true,
 					bgiframe : true,
@@ -196,7 +196,7 @@ Richtable = {
 					} : null)
 				};
 		if($.browser.msie)
-			opt.height = 500;
+			opt.height = 600;
 		$("#_window_").dialog(opt);
 	},
 	enter : function(parentId, url) {
@@ -251,15 +251,15 @@ Richtable = {
 						success : Richtable.reload
 					});
 		} else {
+			var options = eval('('+($(btn).attr('windowoptions')||'{}')+')');
+			var url = $(btn).attr('href');
 			if (view)
-				Richtable.open(Richtable.getUrl(view, id, !id), true);
-			else {
-				var url = $(btn).attr('href');
-				if (url) {
-					Richtable.open(url,true);
-					return false;
-				}
-			}
+				url = Richtable.getUrl(view, id, !id);
+			Richtable.open(url, true, options.iframe);
+			options.iframe = null;
+			for(var key in options)
+				$("#_window_").dialog('option',key,options[key]);
+			Dialog.adapt($('#_window_'));
 		}
 	},
 	save : function(event) {

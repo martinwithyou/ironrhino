@@ -713,12 +713,11 @@ var Dialog = {
 			}
 			$(d).dialog('option', 'title', doc.title);
 		}
-		var position = d.dialog('option', 'position');
+		d.dialog('option', 'position', 'center');
 		var height = d.height();
-		if (height > 600 && position != 'top')
+		if (height > 600)
 			d.dialog('option', 'position', 'top');
-		if (height <= 600 && position != 'center')
-			d.dialog('option', 'position', 'center');
+		
 	}
 }
 
