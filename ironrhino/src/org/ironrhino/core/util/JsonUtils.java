@@ -3,6 +3,7 @@ package org.ironrhino.core.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -76,6 +77,7 @@ public class JsonUtils {
 					}
 				});
 		config.setSerializationInclusion(Inclusion.NON_NULL);
+		config.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 		objectMapper = new ObjectMapper().setSerializationConfig(config);
 	}
 
