@@ -19116,6 +19116,7 @@ Richtable = {
 			for(var key in options)
 				$("#_window_").dialog('option',key,options[key]);
 			Dialog.adapt($('#_window_'));
+			return false;
 		}
 	},
 	save : function(event) {
