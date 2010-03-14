@@ -53,7 +53,6 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		return id == null || id == 0;
 	}
 
-	@NotInCopy
 	public int getLevel() {
 		return level;
 	}
