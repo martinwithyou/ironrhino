@@ -173,4 +173,30 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 			collect((T) obj, coll);
 		}
 	}
+
+	public boolean isAncestorOrSelfOf(T t) {
+		T parent = t;
+		while (parent != null) {
+			if (parent.getId().equals(this.getId()))
+				return true;
+			parent = (T) parent.getParent();
+		}
+		return false;
+	}
+
+	public boolean isDescendantOrSelfOf(T t) {
+		return t != null && t.isAncestorOrSelfOf(this);
+	}
+
+	public String getAncestorName(int level) {
+		if (level < 1 || level > this.getLevel())
+			return null;
+		T parent = (T) this;
+		while (parent != null) {
+			if (parent.getLevel() == level)
+				return parent.getName();
+			parent = (T) parent.getParent();
+		}
+		return null;
+	}
 }

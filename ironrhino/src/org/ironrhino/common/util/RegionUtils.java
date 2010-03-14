@@ -46,10 +46,12 @@ public class RegionUtils {
 		for (Region r : regionTree.getChildren())
 			if (address.startsWith(r.getName())) {
 				address = address.substring(r.getName().length());
+				if (address.length() == 0)
+					return r;
 				region = r;
 				break;
 			}
-		if (region == null||region.getId() < 1)
+		if (region == null || region.getId() < 1)
 			return null;
 		if (region.getChildren().size() > 0)
 			return parseByAddress(address, region);
