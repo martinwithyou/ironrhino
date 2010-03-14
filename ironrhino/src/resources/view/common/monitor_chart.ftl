@@ -20,7 +20,14 @@
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
 <div id="c">
-<div id="chart" class="chart" data="<@url value="/common/monitor/data/${uid+request.queryString???string('?'+request.queryString,'')}"/>" style="width:1024px; height:300px;">
+<#assign dataurl='/common/monitor/data'/>
+<#if uid??>
+<#assign dataurl=dataurl+'/'+uid>
+</#if>
+<#if request.queryString??>
+<#assign dataurl=dataurl+'?'+request.queryString>
+</#if>
+<div id="chart" class="chart" data="<@url value="${dataurl}"/>" style="width:1024px; height:300px;">
 </div>
 </div>
 </body>

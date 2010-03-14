@@ -87,7 +87,11 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 
 <#function getUrl value secure=''>
 <#if value?starts_with('/assets/')>
-	<#local value=assetsBase???string(assetsBase!,base)+value>
+	<#if assetsBase??>
+		<#local value=assetsBase+value>
+	<#else>
+		<#local value=base+value>
+	</#if>
 	<#return value>
 <#elseif value?starts_with('/')>
 	<#if request??>

@@ -13,7 +13,11 @@
 		var so = new SWFObject('<@url value="/assets/components/ammap/ammap.swf"/>', 'ammap', '100%', '100%', '8', '#FFFFFF');
 		so.addVariable('path', encodeURIComponent('<@url value="/assets/components/ammap/"/>'));
 		so.addVariable('data_file',encodeURIComponent('${Parameters.data_file}'));
-   		so.addVariable('settings_file', encodeURIComponent('<@url value="/common/ammap/settings${request.queryString???string('?'+request.queryString,'')}"/>'));		
+		<#assign settingsurl='/common/ammap/settings'/>
+		<#if request.queryString??>
+			<#assign settingsurl=settingsurl+'?'+request.queryString>
+		</#if>
+   		so.addVariable('settings_file', encodeURIComponent('<@url value="${settingsurl}"/>'));		
 		so.addVariable('preloader_color', '#999999');
 		so.addParam('wmode','transparent');
 		so.write('ammap');
