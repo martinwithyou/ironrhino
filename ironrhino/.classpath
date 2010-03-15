@@ -79,8 +79,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/iTextAsian-2.1.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jasperreports-3.7.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-jasperreports-plugin-2.2.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-1.4.3.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.4.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/poi-3.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjrt-1.6.8.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjweaver-1.6.8.jar"/>
@@ -90,5 +88,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-web-3.0.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.0.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.0.16.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-1.5.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.5.0.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
