@@ -19121,16 +19121,19 @@ Richtable = {
 				url = Richtable.getUrl(view, id, !id);
 			} else {
 				if (!$(btn).hasClass('noid')) {
-					if (!idparams) {
-						var msg = MessageBundle.get('no.selection');
-						if (typeof $.jGrowl != 'undefined')
-							$.jGrowl(msg);
-						else
-							$('#message').html(Message.get(msg,
-									'action_message'));
-						return false;
+					if (!id) {
+						//from bottom
+						if (!idparams) {
+							var msg = MessageBundle.get('no.selection');
+							if (typeof $.jGrowl != 'undefined')
+								$.jGrowl(msg);
+							else
+								$('#message').html(Message.get(msg,
+										'action_message'));
+							return false;
+						}
+						url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
 					}
-					url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
 				}
 			}
 			Richtable.open(url, true, options.iframe);
