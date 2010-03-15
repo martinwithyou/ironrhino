@@ -18,8 +18,7 @@ public abstract class Element implements Serializable {
 	private String text;
 	@JsonProperty("font-size")
 	private Integer fontSize;
-	@JsonProperty("tip")
-	private String tooltip;
+	private String tip;
 	@JsonProperty("gradient-fill")
 	private Boolean gradientFill;
 	@JsonProperty("key-on-click")
@@ -73,13 +72,12 @@ public abstract class Element implements Serializable {
 		return values;
 	}
 
-	public void setTooltip(String tooltip) {
-		this.tooltip = tooltip;
-
+	public String getTip() {
+		return tip;
 	}
 
-	public String getTooltip() {
-		return tooltip;
+	public void setTip(String tip) {
+		this.tip = tip;
 	}
 
 	public Boolean getGradientFill() {
