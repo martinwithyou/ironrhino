@@ -12,7 +12,7 @@
 <#assign bottomButtons=r"
 <@button text='${action.getText(\'create\')}' view='input' windowoptions='{\'iframe\':true,\'width\':\'900px\'}'/>
 <@button text='${action.getText(\'delete\')}' action='delete'/>
-<@button text='${action.getText(\'reload\')}' class='reload'/>
+<@button text='${action.getText(\'reload\')}' action='reload'/>
 ">
 <@richtable entityName="page" config=config actionColumnWidth="100px" actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false/>
 </body>

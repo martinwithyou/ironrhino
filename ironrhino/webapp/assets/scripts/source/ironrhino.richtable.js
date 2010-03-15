@@ -112,10 +112,14 @@ Richtable = {
 				+ Richtable.getPathParams();
 		if (id) {
 			url += (url.indexOf('?') > 0 ? '&' : '?');
-			if (url.indexOf('{id}') > 0)
-				url = url.replace('{id}', id);
-			else
+			if (typeof id == 'string') {
 				url += 'id=' + id;
+			} else {
+				var ids = [];
+				for (var i = 0; i < id.length; i++)
+					ids.push('id=' + id[i]);
+				url += ids.join('&');
+			}
 		}
 		if (includeParams && document.location.search)
 			url += (url.indexOf('?') > 0 ? '&' : '?')
@@ -186,16 +190,16 @@ Richtable = {
 		}
 		$('#_window_').attr('_dialoged_', true);
 		var opt = {
-					minHeight : 600,
-					width : 700,
-					modal : true,
-					bgiframe : true,
-					closeOnEscape : false,
-					close : (reloadonclose ? function() {
-						Richtable.reload();
-					} : null)
-				};
-		if($.browser.msie)
+			minHeight : 600,
+			width : 700,
+			modal : true,
+			bgiframe : true,
+			closeOnEscape : false,
+			close : (reloadonclose ? function() {
+				Richtable.reload();
+			} : null)
+		};
+		if ($.browser.msie)
 			opt.height = 600;
 		$("#_window_").dialog(opt);
 	},
@@ -215,35 +219,38 @@ Richtable = {
 		var btn = event.target;
 		if ($(btn).attr('tagName') != 'BUTTON' || $(btn).attr('tagName') != 'A')
 			btn = $(btn).closest('.btn');
+		var idparams;
 		var id = $(btn).closest('tr').attr('rowid');
+		if (id) {
+			idparams = 'id=' + id;
+		} else {
+			var arr = [];
+			$('form.richtable tbody input[type="checkbox"]').each(function() {
+						if (this.checked) {
+							var _id = $(this).closest('tr').attr('rowid');
+							arr.push('id=' + _id);
+						}
+					});
+			idparams = arr.join('&');
+		}
 		var action = $(btn).attr('action');
 		var view = $(btn).attr('view');
-		if (action == 'save')
+		if (action == 'reload')
+			Richtable.reload();
+		else if (action == 'save')
 			Richtable.save(event);
 		else if (action) {
+			if (!idparams) {
+				var msg = MessageBundle.get('no.selection');
+				if (typeof $.jGrowl != 'undefined')
+					$.jGrowl(msg);
+				else
+					$('#message').html(Message.get(msg, 'action_message'));
+				return;
+			}
 			var url = Richtable.getBaseUrl() + '/' + action
 					+ Richtable.getPathParams();
-			if (id) {
-				url += (url.indexOf('?') > 0 ? '&' : '?') + 'id=' + id;
-			} else {
-				var arr = [];
-				$('form.richtable tbody input[type="checkbox"]').each(
-						function() {
-							if (this.checked)
-								arr.push('id='
-										+ $(this).closest('tr').attr('rowid'));
-						});
-				if (arr.length == 0) {
-					var msg = MessageBundle.get('no.selection');
-					if (typeof $.jGrowl != 'undefined')
-						$.jGrowl(msg);
-					else
-						$('#message').html(Message.get(msg, 'action_message'));
-					return;
-				}
-				url += (url.indexOf('?') > 0 ? '&' : '?') + arr.join('&');
-			}
-
+			url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
 			ajax({
 						url : url,
 						type : 'POST',
@@ -251,14 +258,29 @@ Richtable = {
 						success : Richtable.reload
 					});
 		} else {
-			var options = eval('('+($(btn).attr('windowoptions')||'{}')+')');
+			var options = eval('(' + ($(btn).attr('windowoptions') || '{}')
+					+ ')');
 			var url = $(btn).attr('href');
-			if (view)
+			if (view) {
 				url = Richtable.getUrl(view, id, !id);
+			} else {
+				if (!$(btn).hasClass('noid')) {
+					if (!idparams) {
+						var msg = MessageBundle.get('no.selection');
+						if (typeof $.jGrowl != 'undefined')
+							$.jGrowl(msg);
+						else
+							$('#message').html(Message.get(msg,
+									'action_message'));
+						return false;
+					}
+					url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
+				}
+			}
 			Richtable.open(url, true, options.iframe);
 			options.iframe = null;
-			for(var key in options)
-				$("#_window_").dialog('option',key,options[key]);
+			for (var key in options)
+				$("#_window_").dialog('option', key, options[key]);
 			Dialog.adapt($('#_window_'));
 			return false;
 		}
@@ -378,7 +400,6 @@ Observation.richtable = function() {
 										});
 							});
 				});
-		$('.richtable .reload').click(Richtable.reload);
 		$('.richtable .resizeBar').mousedown(ECSideUtil.StartResize);
 		$('.richtable .resizeBar').mouseup(ECSideUtil.EndResize);
 		$('.richtable .firstPage').click(function() {

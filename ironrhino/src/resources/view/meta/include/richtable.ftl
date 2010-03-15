@@ -136,7 +136,7 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 <#if createable><@button text=action.getText('create') view='input'/></#if>
 <#if celleditable><@button text=action.getText('save') action='save'/></#if>
 <#if deleteable><@button text=action.getText('delete') action='delete'/></#if>
-</#if><@button text=action.getText('reload') class='reload'/></#if>
+</#if><@button text=action.getText('reload') action='reload'/></#if>
 </div>
 </td>
 <td class="searchTool" width="25%">
