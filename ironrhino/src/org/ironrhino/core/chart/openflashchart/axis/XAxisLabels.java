@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class XAxisLabels extends Label {
 
 	private static final long serialVersionUID = -6134375829177947590L;
 	private Integer steps;
+	@JsonProperty("visible-steps")
+	private Integer visible_steps;
 	private List<Object> labels;
 
 	public XAxisLabels() {
@@ -54,6 +58,14 @@ public class XAxisLabels extends Label {
 
 	public Integer getSteps() {
 		return steps;
+	}
+
+	public Integer getVisible_steps() {
+		return visible_steps;
+	}
+
+	public void setVisible_steps(Integer visibleSteps) {
+		visible_steps = visibleSteps;
 	}
 
 	private synchronized void checkLabels() {

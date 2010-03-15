@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.ironrhino.core.chart.openflashchart.elements.BarChart.Bar;
-import org.ironrhino.core.chart.openflashchart.elements.PieChart.Slice;
 
 public abstract class Element implements Serializable {
 
@@ -23,13 +21,13 @@ public abstract class Element implements Serializable {
 	private Boolean gradientFill;
 	@JsonProperty("key-on-click")
 	private String key_on_click;
-	private List<Object> values = new ArrayList<Object>();
+	private List values = new ArrayList();
 
 	protected Element(String type) {
 		this.type = type;
 	}
 
-	public void setValues(List<Object> values) {
+	public void setValues(List values) {
 		this.values = values;
 	}
 
@@ -68,7 +66,7 @@ public abstract class Element implements Serializable {
 
 	}
 
-	public List<Object> getValues() {
+	public List getValues() {
 		return values;
 	}
 
@@ -86,119 +84,6 @@ public abstract class Element implements Serializable {
 
 	public void setGradientFill(Boolean gradientFill) {
 		this.gradientFill = gradientFill;
-	}
-
-	/**
-	 * Returns the maximum value (double) of the given Element Supports only the
-	 * Elements Dot, Bar, Slice and Horizontal Bar
-	 */
-	public double getMaxValue() {
-		double max = 0.0;
-		for (Object obj : getValues()) {
-			if (obj != null) {
-				if (obj instanceof Number) {
-					max = Math.max(max, ((Number) obj).doubleValue());
-				} else if (obj instanceof Dot) {
-					max = Math.max(max,
-							((Dot) obj).getValue() != null ? ((Dot) obj)
-									.getValue().doubleValue() : 0);
-				} else if (obj instanceof Bar) {
-					max = Math.max(max,
-							((Bar) obj).getTop() != null ? ((Bar) obj).getTop()
-									.doubleValue() : 0);
-					max = Math.max(max,
-							((Bar) obj).getBottom() != null ? ((Bar) obj)
-									.getBottom().doubleValue() : 0);
-				} else if (obj instanceof Slice) {
-					max = Math.max(max,
-							((Slice) obj).getValue() != null ? ((Slice) obj)
-									.getValue().doubleValue() : 0);
-				} else if (obj instanceof org.ironrhino.core.chart.openflashchart.elements.HorizontalBarChart.Bar) {
-					max = Math
-							.max(
-									max,
-									((org.ironrhino.core.chart.openflashchart.elements.HorizontalBarChart.Bar) obj)
-											.getLeft() != null ? ((org.ironrhino.core.chart.openflashchart.elements.HorizontalBarChart.Bar) obj)
-											.getLeft().doubleValue()
-											: 0);
-					max = Math
-							.max(
-									max,
-									((org.ironrhino.core.chart.openflashchart.elements.HorizontalBarChart.Bar) obj)
-											.getRight() != null ? ((org.ironrhino.core.chart.openflashchart.elements.HorizontalBarChart.Bar) obj)
-											.getRight().doubleValue()
-											: 0);
-				} else if (obj instanceof NullElement) {
-					/* No action */
-				} else {
-					throw new IllegalArgumentException(
-							"Cannot process Objects of Class: "
-									+ String.valueOf(obj.getClass()));
-				}
-			}
-		}
-		return max;
-	}
-
-	/**
-	 * Returns the minimum value (double) of the given Element Supports only the
-	 * Elements Dot, Bar, Slice and Horizontal Bar
-	 */
-	public double getMinValue() {
-		Double min = null;
-		for (Object obj : getValues()) {
-			if (obj != null) {
-				if (obj instanceof Number) {
-					min = nullSafeMin(min, ((Number) obj).doubleValue());
-				} else if (obj instanceof Dot) {
-					min = nullSafeMin(min,
-							((Dot) obj).getValue() != null ? ((Dot) obj)
-									.getValue().doubleValue() : 0);
-				} else if (obj instanceof Bar) {
-					min = nullSafeMin(min,
-							((Bar) obj).getTop() != null ? ((Bar) obj).getTop()
-									.doubleValue() : 0);
-					min = nullSafeMin(min,
-							((Bar) obj).getBottom() != null ? ((Bar) obj)
-									.getBottom().doubleValue() : 0);
-				} else if (obj instanceof Slice) {
-					min = nullSafeMin(min,
-							((Slice) obj).getValue() != null ? ((Slice) obj)
-									.getValue().doubleValue() : 0);
-				} else if (obj instanceof org.ironrhino.core.chart.openflashchart.elements.HorizontalBarChart.Bar) {
-					min = nullSafeMin(
-							min,
-							((org.ironrhino.core.chart.openflashchart.elements.HorizontalBarChart.Bar) obj)
-									.getLeft() != null ? ((org.ironrhino.core.chart.openflashchart.elements.HorizontalBarChart.Bar) obj)
-									.getLeft().doubleValue()
-									: 0);
-					min = nullSafeMin(
-							min,
-							((org.ironrhino.core.chart.openflashchart.elements.HorizontalBarChart.Bar) obj)
-									.getRight() != null ? ((org.ironrhino.core.chart.openflashchart.elements.HorizontalBarChart.Bar) obj)
-									.getRight().doubleValue()
-									: 0);
-				} else if (obj instanceof NullElement) {
-					/* No action */
-				} else {
-					throw new IllegalArgumentException(
-							"Cannot process Objects of Class: "
-									+ String.valueOf(obj.getClass()));
-				}
-			}
-		}
-		if (null == min) {
-			min = 0.0;
-		}
-		return min;
-	}
-
-	private Double nullSafeMin(Double min, double doubleValue) {
-		if (null == min) {
-			min = doubleValue;
-		}
-		min = Math.min(min, doubleValue);
-		return min;
 	}
 
 	public String getKey_on_click() {
