@@ -23,18 +23,18 @@ public class ChartUtils {
 			"#d1d900", "#00d96d" };
 
 	public static String caculateColor(int seed) {
-		if (seed <= colors.length)
-			return colors[seed - 1];
+		if (seed < colors.length)
+			return colors[seed];
 		boolean odd = seed % 2 != 0;
-		seed = odd ? seed * 2 : 10 - seed;
+		seed = odd ? seed * 2 : 9 - seed;
 		StringBuilder sb = new StringBuilder();
 		sb.append('#');
 		sb.append(seed);
-		sb.append(10 - seed);
+		sb.append(9 - seed);
 		sb.append(seed);
-		sb.append(10 - seed);
+		sb.append(9 - seed);
 		sb.append(seed);
-		sb.append(10 - seed);
+		sb.append(9 - seed);
 		return sb.toString();
 	}
 
