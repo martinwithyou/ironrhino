@@ -359,7 +359,7 @@ input.integer,input.double {
 }
 
 input.date {
-	width: 80px;
+	width: 85px;
 }
 
 input.required {
