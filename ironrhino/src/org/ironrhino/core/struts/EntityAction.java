@@ -44,7 +44,9 @@ import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.AnnotationUtils;
+import org.ironrhino.core.util.ApplicationContextUtils;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -109,10 +111,23 @@ public class EntityAction extends BaseAction {
 		return (ac != null) && ac.searchable();
 	}
 
+	private void checkEntityManager() {
+		String entityManagerName = getEntityName() + "Manager";
+		try {
+			Object bean = ApplicationContextUtils.getBean(entityManagerName);
+			if (bean != null)
+				baseManager = (BaseManager) bean;
+			else
+				baseManager.setEntityClass(getEntityClass());
+		} catch (NoSuchBeanDefinitionException e) {
+
+		}
+	}
+
 	@Override
 	public String list() {
 		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
-			baseManager.setEntityClass(getEntityClass());
+			checkEntityManager();
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			if (resultPage == null)
 				resultPage = new ResultPage();
@@ -152,7 +167,7 @@ public class EntityAction extends BaseAction {
 	public String input() {
 		if (readonly())
 			return ACCESSDENIED;
-		baseManager.setEntityClass(getEntityClass());
+		checkEntityManager();
 		if (getUid() != null) {
 			try {
 				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
@@ -179,7 +194,7 @@ public class EntityAction extends BaseAction {
 	public String save() {
 		if (readonly())
 			return ACCESSDENIED;
-		baseManager.setEntityClass(getEntityClass());
+		checkEntityManager();
 		entity = constructEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
 		Persistable persisted = null;
@@ -276,7 +291,7 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String view() {
-		baseManager.setEntityClass(getEntityClass());
+		checkEntityManager();
 		if (getUid() != null) {
 			try {
 				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
@@ -296,7 +311,7 @@ public class EntityAction extends BaseAction {
 	public String delete() {
 		if (readonly())
 			return ACCESSDENIED;
-		baseManager.setEntityClass(getEntityClass());
+		checkEntityManager();
 		String[] arr = getId();
 		Serializable[] id = (arr != null) ? new Serializable[arr.length]
 				: new Serializable[0];
@@ -320,11 +335,22 @@ public class EntityAction extends BaseAction {
 				dc.add(Restrictions.in("id", id));
 				list = baseManager.findListByCriteria(dc);
 			}
+
 			if (list.size() > 0) {
+				boolean deletable = true;
 				for (Object obj : list)
-					baseManager.delete((Persistable) obj);
-				addActionMessage(getText("delete.success"));
+					if (!baseManager.canDelete((Persistable) obj)) {
+						deletable = false;
+						addActionError(getText("delete.forbidden"));
+						break;
+					}
+				if (deletable) {
+					for (Object obj : list)
+						baseManager.delete((Persistable) obj);
+					addActionMessage(getText("delete.success"));
+				}
 			}
+
 		}
 		return SUCCESS;
 	}

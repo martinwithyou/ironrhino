@@ -24,7 +24,7 @@
 
 .nav li a,.nav li a:link,.nav li a:active,.nav li a:visited {
 	font: bold 1.3em/ 25px arial, sans-serif;
-	color: #959595;
+	color: #000;
 	display: block;
 	padding: 0 9px;
 	text-decoration: none;
@@ -41,7 +41,7 @@
 }
 
 .nav li:hover ul a,.nav li.sfHover ul a {
-	color: #959595;
+	color: #000;
 }
 
 .nav li:hover ul a:hover,.nav li.sfHover ul a:hover {
