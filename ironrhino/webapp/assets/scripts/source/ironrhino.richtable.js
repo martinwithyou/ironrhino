@@ -192,7 +192,7 @@ Richtable = {
 		var opt = {
 			minHeight : 600,
 			width : 700,
-			modal : true,
+//			modal : true,
 			bgiframe : true,
 			closeOnEscape : false,
 			close : (reloadonclose ? function() {
@@ -447,6 +447,7 @@ Observation.richtable = function() {
 		var pathname = document.location.pathname;
 		var form = $('#_window_ form.ajax');
 		if (form.length) {
+			$('input,select,checkbox,radio',form).eq(0).focus();
 			var action = form.attr('action');
 			if (action.indexOf('http') != 0 && action.indexOf('/') != 0)
 				action = pathname
