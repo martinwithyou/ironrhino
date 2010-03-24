@@ -1,75 +1,42 @@
-$.fn.datagridTable = function() {
-	$('button.add_row', this).each( function() {
-		this.onclick = DataGridTable.addRow
-	});
-	$('button.delete_row', this).each( function() {
-		this.onclick = DataGridTable.deleteRow
-	});
-	$('button.reset', this).each( function() {
-		this.onclick = function() {
-			DataGridTable.clear(table);
-			return true
+(function($) {
+	$.fn.datagridTable = function() {
+		$('button.add', this).click(addRow);
+		$('button.remove', this).click(removeRow);
+	};
+
+	var addRow = function(event) {
+		var event = event || window.event;
+		var row = $(event.srcElement || event.target).closest('tr');
+		var r = row.clone(true);
+		$('*', r).removeAttr('id');
+		$('span.info', r).html('');
+		row.after(r);
+		$('input', r).val('');
+		$('input,select,textarea', r).eq(0).focus();
+		rename();
+	};
+	var removeRow = function(event) {
+		var event = event || window.event;
+		var row = $(event.srcElement || event.target).closest('tr');
+		if ($('tr', row.parent()).length > 1) {
+			row.remove();
+			rename(row.closest('tbody'));
 		}
-	});
-};
-var DataGridTable = {
-	addRow : function(event) {
-		row = $(event.target).closest('tr').get(0);
-		table = $(row).closest('table').get(0);
-		cells = table.tHead.rows[0].cells;
-		html = '<tr>';
-		for ( var i = 0; i < cells.length; i++) {
-			if (i != cells.length - 1) {
-				if ($(cells[i]).attr('name'))
-					html += '<td><input type="text"/></td>';
-				else
-					html += '<td></td>';
-			} else {
-				html += '<td><button type="button" class="delete_row btn"><span><span>'
-						+ MessageBundle.get('remove')
-						+ '</span></span></button><button type="button" class="add_row btn"><span><span>'
-						+ MessageBundle.get('add')
-						+ '</span></span></button></td>';
-			}
-		}
-		html += '</tr>';
-		if (row.parentNode.tagName == 'TFOOT')
-			$(html).appendTo($(table.tBodies[0]));
-		else
-			$(row).after($(html));
-		$('button.add_row', table).each( function() {
-			this.onclick = DataGridTable.addRow
-		});
-		$('button.delete_row', table).each( function() {
-			this.onclick = DataGridTable.deleteRow
-		});
-		DataGridTable.setRows(table);
-	},
-	deleteRow : function(event) {
-		row = $(event.target).closest('tr').get(0);
-		table = $(row).closest('table').get(0);
-		$(row).remove();
-		DataGridTable.setRows(table);
-	},
-	setRows : function(table) {
-		cells = table.tHead.rows[0].cells;
-		array = [];
-		for ( var i = 0; i < cells.length; i++)
-			if ($(cells[i]).attr('name'))
-				array.push($(cells[i]).attr('name'));
-		rows = table.tBodies[0].rows;
-		for ( var i = 0; i < rows.length; i++) {
-			var inputs = $('input[type=text]', rows[i]);
-			for ( var j = 0; j < array.length; j++)
-				inputs.get(j).name = array[j].replace('#index', i);
-		}
-	},
-	clear : function(table) {
-		$('input[type=text]', table).each( function() {
-			this.name = ''
+	};
+	var rename = function(tbody) {
+		$('tr', tbody).each(function(i) {
+			$('input', this).each(function() {
+				var name = $(this).attr('name');
+				var j = name.indexOf('[');
+				if (j < 0)
+					return;
+				name = name.substring(0, j + 1) + i
+						+ name.substring(name.indexOf(']'));
+				$(this).attr('name', name);
+			});
 		});
 	}
-};
+})(jQuery);
 
 Observation.datagridTable = function(container) {
 	$('table.datagrid', container).datagridTable();

@@ -4,34 +4,44 @@
 <title>Product Attribute</title>
 </head>
 <body>
-<form action="<@url value="attribute"/>" method="post" class="ajax view"><@s.hidden
-	name="id" />
-<table class="datagrid">
+<form action="<@url value="attribute"/>" method="post" class="ajax view">
+<@s.hidden name="id" />
+<table class="datagrid" style="margin-left:50px;">
 	<thead>
 		<tr>
-			<th name="attributes[#index].name">name</th>
-			<th name="attributes[#index].value">value</th>
-			<th>delete</th>
+			<th>name</th>
+			<th>value</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
-		<@s.iterator value="attributes" status="stat">
+		<#if attributes?? && attributes.size() gt 0>
+		<#assign index=0>
+		<#list attributes as attr>
 			<tr>
-				<td><@s.textfield name="%{'attributes['+#stat.index+'].name'}"
-					value="%{name}" theme="simple" /></td>
-				<td><@s.textfield name="%{'attributes['+#stat.index+'].value'}"
-					value="%{value}" theme="simple" /></td>
+				<td><@s.textfield name="attributes[${index}].name" theme="simple" /></td>
+				<td><@s.textfield name="attributes[${index}].value" theme="simple" /></td>
 				<td>
-				<@button class="delete_row" text="${action.getText('delete')}"/>
-				<@button class="add_row" text="${action.getText('add')}"/>
+				<@button class="add" text="${action.getText('add')}"/>
+				<@button class="remove" text="${action.getText('remove')}"/>
 				</td>
 			</tr>
-		</@s.iterator>
+			<#assign index=index+1>
+		</#list>
+		<#else>
+			<tr>
+				<td><@s.textfield name="attributes[0].name" theme="simple" /></td>
+				<td><@s.textfield name="attributes[0].value" theme="simple" /></td>
+				<td>
+				<@button class="add" text="${action.getText('add')}"/>
+				<@button class="remove" text="${action.getText('remove')}"/>
+				</td>
+			</tr>
+		</#if>
 	</tbody>
 	<tfoot>
 		<tr>
 			<td colspan="3">
-			<@button class="add_row" text="${action.getText('add')}"/>
 			<@button type="submit" text="${action.getText('save')}"/>
 			</td>
 		</tr>

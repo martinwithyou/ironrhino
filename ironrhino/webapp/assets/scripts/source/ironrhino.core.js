@@ -495,11 +495,6 @@ Observation.common = function(container) {
 						: 'collapsed'
 			});
 		});
-	if (typeof $.fn.sexyCombo != 'undefined')
-		$('select.combox', container).sexyCombo({
-					emptyText : MessageBundle.get('select'),
-					triggerSelected : true
-				});
 	if (typeof $.fn.truncatable != 'undefined')
 		$('.truncatable', container).each(function() {
 					$(this).truncatable({

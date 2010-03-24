@@ -6,6 +6,10 @@ select {
 	width: 150px;
 }
 
+select.combox{
+	cursor: text;
+}
+
 input.integer,input.double {
 	width: 90px;
 }

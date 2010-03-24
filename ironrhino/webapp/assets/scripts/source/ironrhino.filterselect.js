@@ -5,6 +5,8 @@
 		$(this).keyup(filterselect);
 	};
 	function filterselect(event) {
+		if (event.keyCode == 32)
+			return;
 		var input = $(event.target);
 		var select = input.nextAll('select:eq(0)');
 		var key = input.val();
@@ -13,10 +15,12 @@
 			if (!key)
 				return;
 		}
-		$('option', select).each(function() {
-					if (!$(this).text().match(key))
-						$(this).remove();
-				});
+		var keys = key.split(/\s+/);
+		for (var i = 0; i < keys.length; i++)
+			$('option', select).each(function() {
+						if (!$(this).text().match(keys[i]))
+							$(this).remove();
+					});
 	}
 })(jQuery);
 

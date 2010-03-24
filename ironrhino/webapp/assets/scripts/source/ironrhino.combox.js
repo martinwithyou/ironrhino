@@ -7,10 +7,11 @@
 	function combox(ele) {
 		var name = $(ele).attr('name');
 		var value = $(ele).val();
-		if ($(ele).attr('tagName').toLowerCase() == 'select') {
+		if ($(ele).attr('tagName') == 'SELECT') {
 			var input = $(ele.nextSibling);
 			if (name == input.attr('name')) {
 				input.attr('disabled', false);
+				input.val(value);
 				input.show();
 			} else {
 				var width = $(ele).width();

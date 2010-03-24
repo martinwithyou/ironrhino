@@ -127,7 +127,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.history-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.corner-2.0.3.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.sexy-combo-2.1.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.bgiframe-2.1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.autocomplete-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.truncatable-1.0.js" />
@@ -144,7 +143,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.sortabletable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.datagridtable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.filterselect.js" />
-				<!--file name="${webapp.dir}/assets/scripts/source/ironrhino.combox.js" /-->
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.combox.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.richtable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.cursor.js" />
