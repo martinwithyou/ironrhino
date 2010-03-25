@@ -1,8 +1,8 @@
-( function($) {
+(function($) {
 	$.fn.combox = function() {
-		$(this).keydown( function() {
-			combox(this)
-		});
+		$(this).keydown(function(event) {
+					combox(this)
+				});
 	};
 	function combox(ele) {
 		var name = $(ele).attr('name');
@@ -17,9 +17,9 @@
 				var width = $(ele).width();
 				var input = $('<input name="' + name + '"/>');
 				input.width(width);
-				input.blur( function() {
-					combox(this)
-				});
+				input.blur(function() {
+							combox(this)
+						});
 				$(ele).after(input);
 			}
 			input.focus();
@@ -27,7 +27,7 @@
 			var select = $(ele.previousSibling);
 			var options = $('option', select);
 			var has = false;
-			for ( var i = 0; i < options.length; i++) {
+			for (var i = 0; i < options.length; i++) {
 				$(options[i]).attr('selected', false);
 				if ($(options[i]).val() == value) {
 					has = true;

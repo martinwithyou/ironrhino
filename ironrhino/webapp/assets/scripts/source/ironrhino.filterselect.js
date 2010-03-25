@@ -5,8 +5,6 @@
 		$(this).keyup(filterselect);
 	};
 	function filterselect(event) {
-		if (event.keyCode == 32)
-			return;
 		var input = $(event.target);
 		var select = input.nextAll('select:eq(0)');
 		var key = input.val();
@@ -24,6 +22,6 @@
 	}
 })(jQuery);
 
-Observation.combox = function(container) {
+Observation.filterselect = function(container) {
 	$('input.filterselect', container).filterselect();
 };

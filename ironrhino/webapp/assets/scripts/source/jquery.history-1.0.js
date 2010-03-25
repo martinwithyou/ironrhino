@@ -66,6 +66,7 @@ jQuery.extend({
 		if (jQuery.historyNeedIframe) {
 			// On IE, check for location.hash of iframe
 			var ihistory = jQuery("#jQuery_history")[0];
+			if(!ihistory) return;
 			var iframe = ihistory.contentDocument || ihistory.contentWindow.document;
 			var current_hash = iframe.location.hash.replace(/\?.*$/, '');
 			if(current_hash != jQuery.historyCurrentHash) {
