@@ -22947,6 +22947,8 @@ Richtable = {
 		else if (action == 'save')
 			Richtable.save(event);
 		else if (action) {
+			if (action == 'delete'&&!confirm(MessageBundle.get('confirm.delete')))
+				return;
 			if (!idparams) {
 				var msg = MessageBundle.get('no.selection');
 				if (typeof $.jGrowl != 'undefined')
