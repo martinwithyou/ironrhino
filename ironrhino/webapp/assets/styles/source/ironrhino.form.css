@@ -12,10 +12,12 @@ select.combox{
 
 input.integer,input.double {
 	width: 90px;
+	font-family: Arial;
 }
 
 input.date {
-	width: 85px;
+	width: 80px;
+	font-family: Arial;
 }
 
 input.required {

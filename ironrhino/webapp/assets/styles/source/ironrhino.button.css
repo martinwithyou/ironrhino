@@ -49,8 +49,10 @@ http://stopdesign.com/eg/buttons/3.0/code.html
        Gecko browsers add an extra 3px of left/right 
        padding to button elements which can't be overriden.
        Thus, we use -3px of left/right margin to overcome this. */
-html:not                   ([lang *=""]                   ) button.btn {
+@-moz-document url-prefix() {
+    button.btn {
 	margin: 0 -3px;
+	}
 }
 
 .btn span {

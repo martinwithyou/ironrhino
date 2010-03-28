@@ -144,6 +144,13 @@
 		</concat>
 		<concat destfile="${dest.style}" encoding="utf-8" fixlastline="yes">
 			<filelist>
+				<file name="${webapp.dir}/assets/styles/source/jquery.autocomplete.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.sexy-combo.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.uploadify.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.jgrowl.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.ui.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
@@ -153,13 +160,6 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.rating.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.sortabletable.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.richtable.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.autocomplete.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.sexy-combo.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.uploadify.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.jgrowl.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.css" />
 				<file name="${webapp.dir}/assets/styles/app.css" />
 			</filelist>
 		</concat>
