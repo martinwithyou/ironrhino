@@ -15,4 +15,17 @@ public enum OrderStatus {
 		return LocalizedTextUtil.findText(getClass(), name(), ActionContext
 				.getContext().getLocale(), name(), null);
 	}
+	
+	public static OrderStatus parse(String name) {
+		if (name != null)
+			for (OrderStatus en : values())
+				if (name.equals(en.name()) || name.equals(en.getDisplayName()))
+					return en;
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		return getDisplayName();
+	}
 }

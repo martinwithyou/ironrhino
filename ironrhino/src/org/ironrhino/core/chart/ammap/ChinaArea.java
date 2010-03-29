@@ -10,19 +10,21 @@ public enum ChinaArea {
 	static ResourceBundle resources = ResourceBundle.getBundle(ChinaArea.class
 			.getName(), Locale.CHINA);
 
-	public static ChinaArea parse(String displayName) {
-		for (ChinaArea area : values())
-			if (displayName.equals(area.getDisplayName()))
-				return area;
-		return null;
+	public String getName() {
+		return name();
 	}
 
 	public String getDisplayName() {
 		return resources.getString(getName());
 	}
 
-	public String getName() {
-		return name();
+	public static ChinaArea parse(String name) {
+		if (name != null)
+			for (ChinaArea area : values())
+				if (name.equals(area.name())
+						|| name.equals(area.getDisplayName()))
+					return area;
+		return null;
 	}
 
 	@Override

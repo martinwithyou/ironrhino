@@ -192,7 +192,7 @@ Richtable = {
 		var opt = {
 			minHeight : 600,
 			width : 700,
-//			modal : true,
+			// modal : true,
 			bgiframe : true,
 			closeOnEscape : false,
 			close : (reloadonclose ? function() {
@@ -219,6 +219,8 @@ Richtable = {
 		var btn = event.target;
 		if ($(btn).attr('tagName') != 'BUTTON' || $(btn).attr('tagName') != 'A')
 			btn = $(btn).closest('.btn');
+		if (btn.attr('onclick'))
+			return;
 		var idparams;
 		var id = $(btn).closest('tr').attr('rowid');
 		if (id) {
@@ -240,7 +242,8 @@ Richtable = {
 		else if (action == 'save')
 			Richtable.save(event);
 		else if (action) {
-			if (action == 'delete'&&!confirm(MessageBundle.get('confirm.delete')))
+			if (action == 'delete'
+					&& !confirm(MessageBundle.get('confirm.delete')))
 				return;
 			if (!idparams) {
 				var msg = MessageBundle.get('no.selection');
@@ -268,7 +271,7 @@ Richtable = {
 			} else {
 				if (!$(btn).hasClass('noid')) {
 					if (!id) {
-						//from bottom
+						// from bottom
 						if (!idparams) {
 							var msg = MessageBundle.get('no.selection');
 							if (typeof $.jGrowl != 'undefined')
@@ -449,7 +452,7 @@ Observation.richtable = function() {
 		var pathname = document.location.pathname;
 		var form = $('#_window_ form.ajax');
 		if (form.length) {
-			$('input,select,textarea',form).eq(0).focus();
+			$('input,select,textarea', form).eq(0).focus();
 			var action = form.attr('action');
 			if (action.indexOf('http') != 0 && action.indexOf('/') != 0)
 				action = pathname

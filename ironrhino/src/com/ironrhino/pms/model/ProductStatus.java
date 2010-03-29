@@ -13,4 +13,17 @@ public enum ProductStatus {
 		return LocalizedTextUtil.findText(getClass(), name(), ActionContext
 				.getContext().getLocale(), name(), null);
 	}
+
+	public static ProductStatus parse(String name) {
+		if (name != null)
+			for (ProductStatus en : values())
+				if (name.equals(en.name()) || name.equals(en.getDisplayName()))
+					return en;
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		return getDisplayName();
+	}
 }

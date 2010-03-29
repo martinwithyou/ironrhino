@@ -1,4 +1,5 @@
-package org.ironrhino.core.chart.openflashchart;
+package org.ironrhino.core.chart;
+
 
 public class ChartUtils {
 	public static int caculateSteps(double max) {
@@ -36,6 +37,19 @@ public class ChartUtils {
 		sb.append(seed);
 		sb.append(9 - seed);
 		return sb.toString();
+	}
+
+	private static final String[] stepColors = new String[] { "#ffeeee",
+			"#ffaaaa", "#ff8888", "#ff55555", "#ff0000" };
+
+	public static String caculateStepColor(double max, double value) {
+		int steps = stepColors.length;
+		double single = max / steps;
+		for (int i = 0; i < steps; i++) {
+			if (value >= single * i && value < single * (i + 1))
+				return stepColors[i];
+		}
+		return stepColors[stepColors.length - 1];
 	}
 
 }
