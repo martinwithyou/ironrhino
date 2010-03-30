@@ -25,7 +25,7 @@ public class RegionUtils {
 		}
 	};
 
-	public static final String[] suffix = "县,旗,省,市,州,地区,区".split(",");
+	public static final String[] suffix = "县,市,州,省,矿区,新区,地区,区".split(",");
 
 	public static String shortenAddress(String address) {
 		for (Map.Entry<String, String> entry : mapping.entrySet())
