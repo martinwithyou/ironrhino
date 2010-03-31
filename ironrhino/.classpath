@@ -32,7 +32,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/geronimo-transaction-2.0.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-core-5.3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-ra-5.3.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hadoop-hdfs-0.20.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hadoop-hdfs-0.20.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mmseg4j-all-1.8.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/memcached-2.4.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/antlr-runtime-3.2.jar"/>
@@ -49,7 +49,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/httpcore-4.0.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/inject-api-1.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-beanutils-1.8.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-beanutils-1.8.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-pool-1.5.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/freemarker-2.3.16.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.aop-3.0.1.jar"/>
@@ -69,7 +69,7 @@
 	<classpathentry kind="lib" path="lib/jsp-api-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-2.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jericho-html-3.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zookeeper-3.2.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zookeeper-3.3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hessian-4.0.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-dbcp-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.test-3.0.1.jar"/>
@@ -86,7 +86,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-3.0.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-web-3.0.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.0.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.0.16.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.0.17.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-1.5.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.5.0.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
