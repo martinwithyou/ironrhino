@@ -29,14 +29,11 @@ import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.ironrhino.core.hibernate.CustomizableEntityChanger;
-import org.ironrhino.core.hibernate.PropertyType;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
-import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
@@ -268,16 +265,8 @@ public class EntityAction extends BaseAction {
 				Set<String> names = getUiConfigs().keySet();
 				if (naturalIdImmutable)
 					names.removeAll(naturalIds.keySet());
-				for (String name : names) {
-					if (!name.startsWith(Customizable.CUSTOM_COMPONENT_NAME))
+				for (String name : names) 
 						bwp.setPropertyValue(name, bw.getPropertyValue(name));
-				}
-				if (persisted instanceof Customizable)
-					bwp
-							.setPropertyValue(
-									Customizable.CUSTOM_COMPONENT_NAME,
-									bw
-											.getPropertyValue(Customizable.CUSTOM_COMPONENT_NAME));
 				entity = persisted;
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -394,7 +383,6 @@ public class EntityAction extends BaseAction {
 	public Map<String, UiConfigImpl> getUiConfigs() {
 		Class clazz = getEntityClass();
 		String key = clazz.getName();
-		boolean customizable = Customizable.class.isAssignableFrom(clazz);
 		if (cache.get(key) == null) {
 			Set<String> hides = new HashSet<String>();
 			hides.addAll(AnnotationUtils.getAnnotatedPropertyNames(clazz,
@@ -476,40 +464,6 @@ public class EntityAction extends BaseAction {
 			map = new LinkedHashMap<String, UiConfigImpl>();
 			for (Map.Entry<String, UiConfigImpl> entry : list)
 				map.put(entry.getKey(), entry.getValue());
-
-			if (customizable) {
-				map.remove(Customizable.CUSTOM_COMPONENT_NAME);
-				Map<String, PropertyType> customProperties = CustomizableEntityChanger.customizableEntities
-						.get(clazz.getName());
-				;
-				if (customProperties != null && customProperties.size() > 0) {
-					for (Map.Entry<String, PropertyType> entry : customProperties
-							.entrySet()) {
-						String name = entry.getKey();
-						PropertyType pt = entry.getValue();
-						UiConfigImpl fec = new UiConfigImpl();
-						if (pt == PropertyType.SHORT
-								|| pt == PropertyType.INTEGER
-								|| pt == PropertyType.LONG) {
-							fec.addCssClass("integer");
-						} else if (pt == PropertyType.FLOAT
-								|| pt == PropertyType.DOUBLE
-								|| pt == PropertyType.BIGDECIMAL) {
-							fec.addCssClass("double");
-						} else if (pt == PropertyType.DATE) {
-							fec.addCssClass("date");
-						} else if (pt == PropertyType.STRING
-								&& name.toLowerCase().contains("email")) {
-							fec.addCssClass("email");
-						} else if (pt == PropertyType.BOOLEAN)
-							fec.setType("checkbox");
-						map
-								.put(Customizable.CUSTOM_COMPONENT_NAME + "."
-										+ name, fec);
-					}
-				}
-				return map;
-			}
 			cache.put(key, map);
 		}
 		return cache.get(key);

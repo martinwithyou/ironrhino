@@ -26,7 +26,7 @@ public class ResultPage<T> implements Serializable {
 
 	private int pageSize = DEFAULT_PAGE_SIZE;
 
-	private int totalRecord = -1;
+	private long totalRecord = -1;
 
 	private Collection<T> result = new ArrayList<T>();
 
@@ -81,15 +81,15 @@ public class ResultPage<T> implements Serializable {
 	}
 
 	public int getTotalPage() {
-		return totalRecord % pageSize == 0 ? totalRecord / pageSize
-				: totalRecord / pageSize + 1;
+		return (int) (totalRecord % pageSize == 0 ? totalRecord / pageSize
+				: totalRecord / pageSize + 1);
 	}
 
-	public int getTotalRecord() {
+	public long getTotalRecord() {
 		return totalRecord;
 	}
 
-	public void setTotalRecord(int totalRecord) {
+	public void setTotalRecord(long totalRecord) {
 		this.totalRecord = totalRecord;
 	}
 

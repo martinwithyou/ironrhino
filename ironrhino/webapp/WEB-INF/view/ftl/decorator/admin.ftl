@@ -24,7 +24,6 @@
 		<li><a href="<@url value="/common/console"/>">控制台</a></li>
 		<li><a href="<@url value="/common/setting"/>">参数设置</a></li>
 		<li><a href="<@url value="/common/monitor"/>">系统监控</a></li>
-		<li><a href="<@url value="/common/customizeEntity"/>">属性定制</a></li>
 	</ul>
 	</li>
 	<li><a href="<@url value="/common/region"/>">区域管理</a></li>

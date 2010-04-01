@@ -31,9 +31,6 @@
 		<property name="pictureQuantity" />
 		<property name="createDate" />
 		<property name="modifyDate" />
-		<dynamic-component name="customProperties" insert="true"
-			update="true" optimistic-lock="true">
-		</dynamic-component>
 		<many-to-one name="category" column="categoryId" />
 		<list name="tags" table="pms_productTag" fetch="subselect"
 			cascade="all" lazy="false">

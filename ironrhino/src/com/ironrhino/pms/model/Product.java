@@ -1,12 +1,9 @@
 package com.ironrhino.pms.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.compass.annotations.Index;
@@ -20,7 +17,6 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.Attribute;
 import org.ironrhino.core.model.BaseEntity;
-import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.SimpleElement;
@@ -30,8 +26,7 @@ import com.opensymphony.xwork2.util.CreateIfNull;
 @RecordAware
 @Searchable(alias = "product")
 @AutoConfig(fileupload = "image/pjpeg,image/jpeg")
-public class Product extends BaseEntity implements Ordered, Recordable,
-		Customizable {
+public class Product extends BaseEntity implements Ordered, Recordable {
 
 	private static final long serialVersionUID = 6787762149959503752L;
 
@@ -216,18 +211,6 @@ public class Product extends BaseEntity implements Ordered, Recordable,
 	@Override
 	public String toString() {
 		return this.code;
-	}
-
-	private Map<String, Serializable> customProperties;
-
-	public Map<String, Serializable> getCustomProperties() {
-		if (customProperties == null)
-			customProperties = new HashMap<String, Serializable>();
-		return customProperties;
-	}
-
-	public void setCustomProperties(Map<String, Serializable> customProperties) {
-		this.customProperties = customProperties;
 	}
 
 }

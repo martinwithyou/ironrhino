@@ -204,7 +204,8 @@ public class ProductFacadeImpl implements ProductFacade {
 
 	@Override
 	public Product getRandomProduct() {
-		int count = productManager.countByCriteria(prepareDetachedCriteria());
+		int count = (int) productManager
+				.countByCriteria(prepareDetachedCriteria());
 		if (count == 0)
 			return new Product();
 		int rand = random.nextInt(count);

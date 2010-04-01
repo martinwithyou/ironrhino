@@ -21,10 +21,8 @@ import org.hibernate.criterion.NaturalIdentifier;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.ironrhino.core.hibernate.CustomizableEntityChanger;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.BaseTreeableEntity;
-import org.ironrhino.core.model.Customizable;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.ResultPage;
@@ -101,10 +99,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			entity.setFullId(fullId);
 			entity.setLevel(fullId.split("\\.").length);
 		}
-		if (obj instanceof Customizable) {
-			CustomizableEntityChanger
-					.convertCustomPropertiesType((Customizable) obj);
-		}
 		session.saveOrUpdate(obj);
 	}
 
@@ -134,12 +128,12 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	@Override
 	@Transactional(readOnly = true)
-	public int countByCriteria(DetachedCriteria dc) {
+	public long countByCriteria(DetachedCriteria dc) {
 		Criteria c = dc.getExecutableCriteria(sessionFactory
 				.getCurrentSession());
 		c.setProjection(Projections.projectionList()
 				.add(Projections.rowCount()));
-		return (Integer) c.uniqueResult();
+		return (Long) c.uniqueResult();
 
 	}
 
@@ -199,9 +193,8 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 	@Override
 	@Transactional(readOnly = true)
 	public ResultPage<T> findByResultPage(ResultPage<T> resultPage) {
-		resultPage.setTotalRecord(countByCriteria(resultPage
-				.getDetachedCriteria()));
-		int totalRecord = resultPage.getTotalRecord();
+		long totalRecord = countByCriteria(resultPage.getDetachedCriteria());
+		resultPage.setTotalRecord(totalRecord);
 		if (resultPage.getPageSize() < 1)
 			resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
 		else if (resultPage.getPageSize() > ResultPage.MAX_RECORDS_PER_PAGE)
@@ -220,10 +213,10 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			start = (resultPage.getPageNo() - 1) * resultPage.getPageSize();
 			end = resultPage.getPageNo() * resultPage.getPageSize();
 		} else {
-			start = resultPage.getTotalRecord() - resultPage.getPageNo()
-					* resultPage.getPageSize();
-			end = resultPage.getTotalRecord() - (resultPage.getPageNo() - 1)
-					* resultPage.getPageSize();
+			start = (int) (resultPage.getTotalRecord() - resultPage.getPageNo()
+					* resultPage.getPageSize());
+			end = (int) (resultPage.getTotalRecord() - (resultPage.getPageNo() - 1)
+					* resultPage.getPageSize());
 		}
 		if (totalRecord > 0)
 			resultPage.setResult(findBetweenListByCriteria(resultPage
@@ -236,7 +229,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	@Override
 	@Transactional(readOnly = true)
-	public int countAll() {
+	public long countAll() {
 		return countByCriteria(detachedCriteria());
 	}
 

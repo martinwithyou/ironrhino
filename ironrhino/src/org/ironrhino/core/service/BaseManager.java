@@ -26,7 +26,7 @@ public interface BaseManager<T extends Persistable> {
 
 	public DetachedCriteria detachedCriteria();
 
-	public int countByCriteria(DetachedCriteria dc);
+	public long countByCriteria(DetachedCriteria dc);
 
 	public T findByCriteria(DetachedCriteria dc);
 
@@ -40,7 +40,7 @@ public interface BaseManager<T extends Persistable> {
 
 	public ResultPage<T> findByResultPage(ResultPage<T> resultPage);
 
-	public int countAll();
+	public long countAll();
 
 	public T findByNaturalId(Object... objects);
 

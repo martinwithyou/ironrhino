@@ -48,7 +48,5 @@
 		class="org.ironrhino.core.service.BaseManagerImpl" primary="true" />
 	<bean
 		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
-	<bean id="customizableEntityChanger"
-		class="org.ironrhino.core.hibernate.CustomizableEntityChanger" />
 	<tx:annotation-driven order="0"/>
 </beans>

@@ -15,13 +15,11 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javamail-1.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/rome-1.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-annotations-3.4.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/pinyin4j-2.5.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/compass-2.2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-2.4.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-3.3.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-3.5.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-codec-1.4.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-commons-annotations-3.3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javassist-3.11.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jta-1.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jencks-2.2-all.jar"/>
@@ -73,7 +71,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hessian-4.0.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-dbcp-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/org.springframework.test-3.0.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-digester-1.8.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/iText-2.1.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/iTextAsian-2.1.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jasperreports-3.7.1.jar"/>
