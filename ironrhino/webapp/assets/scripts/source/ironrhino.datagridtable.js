@@ -11,8 +11,8 @@
 		$('*', r).removeAttr('id');
 		$('span.info', r).html('');
 		row.after(r);
-		$('input', r).val('');
-		$('input,select,textarea', r).eq(0).focus();
+		$(':input', r).val('');
+		$(':input', r).eq(0).focus();
 		rename();
 	};
 	var removeRow = function(event) {

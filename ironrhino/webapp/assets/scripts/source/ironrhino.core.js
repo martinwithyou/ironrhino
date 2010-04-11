@@ -160,7 +160,7 @@ Message = {
 
 Form = {
 	focus : function(form) {
-		var arr = $('input,select', form).get();
+		var arr = $(':input', form).get();
 		for (var i = 0; i < arr.length; i++) {
 			if ($('.field_error', $(arr[i]).parent()).length) {
 				setTimeout(function() {
@@ -215,7 +215,7 @@ Form = {
 			}
 		} else {
 			var valid = true;
-			$('input,select', target).each(function() {
+			$(':input', target).each(function() {
 						if (!Form.validate(this))
 							valid = false;
 					});
@@ -419,7 +419,18 @@ Initialization.history = function() {
 Observation.common = function(container) {
 	$('div.action_error,div.action_message,div.field_error,ul.action_error li,ul.action_message li')
 			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
-	$('.focus:eq(0)', container).focus();
+	var ele = $('.focus:eq(0)', container);
+	if (ele.attr('tagName') != 'FORM') {
+		ele.focus();
+	} else {
+		var arr = $(':input', ele).toArray();
+		for (var i = 0; i < arr.length; i++) {
+			if (!$(arr[i]).val()) {
+				$(arr[i]).focus();
+				break;
+			}
+		}
+	}
 	$('form', container).each(function() {
 				if (!$(this).hasClass('ajax'))
 					$(this).submit(function() {
@@ -712,7 +723,7 @@ var Dialog = {
 		var height = d.height();
 		if (height > 600)
 			d.dialog('option', 'position', 'top');
-		
+
 	}
 }
 

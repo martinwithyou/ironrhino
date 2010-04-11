@@ -359,7 +359,7 @@ Richtable = {
 		var value = ce.attr("cellValue");
 		value = value || text;
 		ce.html(templateText);
-		$('input,select,textarea', ce).val(value).focus();
+		$(':input', ce).val(value).focus();
 	},
 	updateCell : function(cellEdit) {
 		var ce = $(cellEdit);
@@ -452,7 +452,7 @@ Observation.richtable = function() {
 		var pathname = document.location.pathname;
 		var form = $('#_window_ form.ajax');
 		if (form.length) {
-			$('input,select,textarea', form).eq(0).focus();
+			$(':input', form).eq(0).focus();
 			var action = form.attr('action');
 			if (action.indexOf('http') != 0 && action.indexOf('/') != 0)
 				action = pathname
