@@ -1,7 +1,13 @@
 package org.ironrhino.core.servlet;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -16,29 +22,41 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.MDC;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.ums.security.AuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 
-public class AccessLogFilter implements Filter {
+@Singleton
+@Named
+public class AccessFilter implements Filter {
 
 	private Log log = LogFactory.getLog("access");
 
-	public static final String KEY_EXCLUDE_PATTERNS = "excludePatterns";
+	public static final boolean DEFAULT_PRINT = true;
 
-	public static final String DEFAULT_EXCLUDE_PATTERNS = "/remoting/*";
+	public static final String DEFAULT_EXCLUDEPATTERNS = "/remoting/*,/assets/*";
 
-	public static final String KEY_PRINT = "print";
-
-	private String[] excludePatterns;
-
+	@Value("${accessFilter.print:" + DEFAULT_PRINT + "}")
 	private boolean print = true;
+
+	@Value("${accessFilter.excludePatterns:" + DEFAULT_EXCLUDEPATTERNS + "}")
+	private String excludePatterns;
+
+	private List<String> excludePatternsList = Collections.EMPTY_LIST;
+
+	public void setExcludePatterns(String excludePatterns) {
+		this.excludePatterns = excludePatterns;
+	}
+
+	public void setPrint(boolean print) {
+		this.print = print;
+	}
 
 	@Override
 	public void init(FilterConfig filterConfig) {
-		if ("false".equals(filterConfig.getInitParameter(KEY_PRINT)))
-			print = false;
-		String str = filterConfig.getInitParameter(KEY_EXCLUDE_PATTERNS);
-		if (StringUtils.isBlank(str))
-			str = DEFAULT_EXCLUDE_PATTERNS;
-		excludePatterns = str.split(",");
+	}
+
+	@PostConstruct
+	public void _init() {
+		excludePatternsList = Arrays.asList(excludePatterns.split(","));
 	}
 
 	@Override
@@ -63,7 +81,7 @@ public class AccessLogFilter implements Filter {
 			MDC.put("username", s);
 		boolean excluded = false;
 		if (print) {
-			for (String pattern : excludePatterns) {
+			for (String pattern : excludePatternsList) {
 				String path = request.getRequestURI();
 				path = path.substring(request.getContextPath().length());
 				if (org.ironrhino.core.util.StringUtils.matchesWildcard(path,
