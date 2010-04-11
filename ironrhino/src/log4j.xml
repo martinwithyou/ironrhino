@@ -43,6 +43,15 @@
 			<param name="ConversionPattern" value="%d %X{username}@%X{remoteAddr} %X{method} %X{url} UserAgent:%X{userAgent} Referer:%X{referer}%n"/>
 		</layout>
 	</appender>
+		<appender name="ACCESS-WARN" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="${ironrhino.home}/logs/access-warn.log"/>
+		<param name="append" value="true"/>
+		<param name="encoding" value="utf-8"/>
+		<param name="threshold" value="WARN"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %X{username}@%X{remoteAddr} %X{method} %X{url} UserAgent:%X{userAgent} Referer:%X{referer} %m%n"/>
+		</layout>
+	</appender>
    
 	<logger name="org.springframework.aop.framework.Cglib2AopProxy" additivity="true">
 		<level value="ERROR"/>
@@ -60,6 +69,10 @@
 	<logger name="access" additivity="false">
 		<level value="INFO"/>
 		<appender-ref ref="ACCESS"/>
+	</logger>
+	<logger name="access-warn" additivity="false">
+		<level value="WARN"/>
+		<appender-ref ref="ACCESS-WARN"/>
 	</logger>
 	<root>
 		<level value="INFO"/>
