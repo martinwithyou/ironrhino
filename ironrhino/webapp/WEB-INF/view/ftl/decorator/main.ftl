@@ -7,11 +7,13 @@
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
 <meta name="context_path" content="${request.contextPath}" />
 <link rel="shortcut icon" href="<@url value="/assets/images/favicon.ico"/>" />
-<link href="<@url value="/assets/styles/all-min.css"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="<@url value="/assets/styles/ironrhino-min.css"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="<@url value="/assets/styles/app-min.css"/>" media="screen" rel="stylesheet" type="text/css" />
 <!--[if IE]>
 	<link href="<@url value="/assets/styles/ie.css"/>" media="all" rel="stylesheet" type="text/css" />
 <![endif]-->
-<script src="<@url value="/assets/scripts/all-min.js"/>" type="text/javascript"></script>
+<script src="<@url value="/assets/scripts/ironrhino-min.js"/>" type="text/javascript"></script>
+<script src="<@url value="/assets/scripts/app-min.js"/>" type="text/javascript"></script>
 <#if request.servletPath?starts_with('/product/')>
 <script type="text/javascript" src="<@url value="/assets/scripts/app.product.js"/>"></script>
 </#if>

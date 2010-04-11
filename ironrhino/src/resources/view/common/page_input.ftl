@@ -19,7 +19,7 @@ $(function() {
 			theme_advanced_toolbar_align : "left",
 			theme_advanced_statusbar_location : "bottom",
 			theme_advanced_resizing : true,
-			content_css : "<@url value="/assets/styles/all-min.css"/>",
+			content_css : "<@url value="/assets/styles/ironrhino-min.css"/>,<@url value="/assets/styles/app-min.css"/>",
 			mode : "textareas"
 		};
 		$('#page_content').tinymce(options);

@@ -107,8 +107,8 @@
 	</target>
 
 	<target name="compress">
-		<property name="dest.script" value="${webapp.dir}/assets/scripts/all.js" />
-		<property name="dest.style" value="${webapp.dir}/assets/styles/all.css" />
+		<property name="dest.script" value="${webapp.dir}/assets/scripts/ironrhino.js" />
+		<property name="dest.style" value="${webapp.dir}/assets/styles/ironrhino.css" />
 		<concat destfile="${dest.script}" encoding="utf-8" fixlastline="yes">
 			<filelist>
 				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
@@ -139,7 +139,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.cursor.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
-				<file name="${webapp.dir}/assets/scripts/app.js" />
 			</filelist>
 		</concat>
 		<concat destfile="${dest.style}" encoding="utf-8" fixlastline="yes">
@@ -160,14 +159,19 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.rating.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.sortabletable.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.richtable.css" />
-				<file name="${webapp.dir}/assets/styles/app.css" />
 			</filelist>
 		</concat>
 		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
-			<arg line=" --js=./webapp/assets/scripts/all.js --js_output_file=./webapp/assets/scripts/all-min.js" />
+			<arg line=" --js=./webapp/assets/scripts/ironrhino.js --js_output_file=./webapp/assets/scripts/ironrhino-min.js" />
+		</java>
+		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
+			<arg line=" --js=./webapp/assets/scripts/app.js --js_output_file=./webapp/assets/scripts/app-min.js" />
 		</java>
 		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
-			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/all-min.css ./webapp/assets/styles/all.css" />
+			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-min.css ./webapp/assets/styles/ironrhino.css" />
+		</java>
+		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
+			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/app-min.css ./webapp/assets/styles/app.css" />
 		</java>
 	</target>
 
