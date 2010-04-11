@@ -27,8 +27,6 @@ import org.springframework.security.core.AuthenticationException;
 public class AuthenticationFilter extends
 		DefaultUsernamePasswordAuthenticationFilter {
 
-	public final static String COOKIE_NAME_LOGIN_USER = "U";
-
 	@Inject
 	private UserManager userManager;
 
@@ -42,11 +40,6 @@ public class AuthenticationFilter extends
 				super
 						.onAuthenticationSuccess(request, response,
 								authentication);
-				String username = authentication.getName();
-				if (request.isRequestedSessionIdFromCookie())
-					RequestUtils.saveCookie(request, response,
-							COOKIE_NAME_LOGIN_USER, username, 365 * 24 * 3600,
-							true);
 				User user = (User) authentication.getPrincipal();
 				user.setLoginTimes(user.getLoginTimes() + 1);
 				user.setLastLoginDate(new Date());

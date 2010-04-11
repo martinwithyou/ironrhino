@@ -11,10 +11,10 @@ import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
+import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.spring.security.DefaultUsernamePasswordAuthenticationFilter;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
-import org.ironrhino.ums.security.AuthenticationFilter;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -105,7 +105,7 @@ public class LoginAction extends BaseAction {
 				targetUrl = "/";
 		}
 		username = RequestUtils.getCookieValue(request,
-				AuthenticationFilter.COOKIE_NAME_LOGIN_USER);
+				DefaultAuthenticationSuccessHandler.COOKIE_NAME_LOGIN_USER);
 		return SUCCESS;
 	}
 

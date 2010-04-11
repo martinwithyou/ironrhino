@@ -20,25 +20,33 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.MDC;
+import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.util.RequestUtils;
-import org.ironrhino.ums.security.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Value;
 
 @Singleton
 @Named
 public class AccessFilter implements Filter {
 
-	private Log log = LogFactory.getLog("access");
+	private Log accesLog = LogFactory.getLog("access");
+
+	private Log accesWarnLog = LogFactory.getLog("access-warn");
+
+	public static final long DEFAULT_RESPONSETIMETHRESHOLD = 5000;
 
 	public static final boolean DEFAULT_PRINT = true;
 
 	public static final String DEFAULT_EXCLUDEPATTERNS = "/remoting/*,/assets/*";
 
+	@Value("${accessFilter.responseTimeThreshold:"
+			+ DEFAULT_RESPONSETIMETHRESHOLD + "}")
+	public static long responseTimeThreshold = DEFAULT_RESPONSETIMETHRESHOLD;
+
 	@Value("${accessFilter.print:" + DEFAULT_PRINT + "}")
-	private boolean print = true;
+	private boolean print = DEFAULT_PRINT;
 
 	@Value("${accessFilter.excludePatterns:" + DEFAULT_EXCLUDEPATTERNS + "}")
-	private String excludePatterns;
+	private String excludePatterns = DEFAULT_EXCLUDEPATTERNS;
 
 	private List<String> excludePatternsList = Collections.EMPTY_LIST;
 
@@ -50,13 +58,22 @@ public class AccessFilter implements Filter {
 		this.print = print;
 	}
 
-	@Override
-	public void init(FilterConfig filterConfig) {
+	public static long getResponseTimeThreshold() {
+		return responseTimeThreshold;
+	}
+
+	public static void setResponseTimeThreshold(long responseTimeThreshold) {
+		AccessFilter.responseTimeThreshold = responseTimeThreshold;
 	}
 
 	@PostConstruct
 	public void _init() {
 		excludePatternsList = Arrays.asList(excludePatterns.split(","));
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) {
+		_init();
 	}
 
 	@Override
@@ -76,11 +93,11 @@ public class AccessFilter implements Filter {
 		if (s != null)
 			MDC.put("referer", s);
 		s = RequestUtils.getCookieValue(request,
-				AuthenticationFilter.COOKIE_NAME_LOGIN_USER);
+				DefaultAuthenticationSuccessHandler.COOKIE_NAME_LOGIN_USER);
 		if (s != null)
 			MDC.put("username", s);
-		boolean excluded = false;
 		if (print) {
+			boolean excluded = false;
 			for (String pattern : excludePatternsList) {
 				String path = request.getRequestURI();
 				path = path.substring(request.getContextPath().length());
@@ -91,9 +108,13 @@ public class AccessFilter implements Filter {
 				}
 			}
 			if (!excluded)
-				log.info("");
+				accesLog.info("");
 		}
+		long start = System.currentTimeMillis();
 		chain.doFilter(req, resp);
+		long responseTime = System.currentTimeMillis() - start;
+		if (responseTime > responseTimeThreshold)
+			accesWarnLog.warn(" response time:" + responseTime + "ms");
 	}
 
 	@Override
