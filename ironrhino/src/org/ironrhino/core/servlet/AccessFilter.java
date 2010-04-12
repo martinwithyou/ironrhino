@@ -113,8 +113,12 @@ public class AccessFilter implements Filter {
 		long start = System.currentTimeMillis();
 		chain.doFilter(req, resp);
 		long responseTime = System.currentTimeMillis() - start;
-		if (responseTime > responseTimeThreshold)
-			accesWarnLog.warn(" response time:" + responseTime + "ms");
+		if (responseTime > responseTimeThreshold) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(RequestUtils.serializeData(request)).append(
+					" response time:").append(responseTime).append("ms");
+			accesWarnLog.warn(sb.toString());
+		}
 	}
 
 	@Override

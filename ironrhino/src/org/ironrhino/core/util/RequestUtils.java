@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,24 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 public class RequestUtils {
+
+	public static String serializeData(HttpServletRequest request) {
+		if (request.getMethod().equalsIgnoreCase("POST")
+				|| request.getMethod().equalsIgnoreCase("PUT")) {
+			StringBuilder sb = new StringBuilder();
+			Map<String, String[]> map = request.getParameterMap();
+			for (Map.Entry<String, String[]> entry : map.entrySet()) {
+				for (String value : entry.getValue())
+					sb.append(entry.getKey()).append('=').append(value).append(
+							'&');
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			if (sb.length() > 1024)
+				sb.delete(1023, sb.length());
+			return sb.toString();
+		}
+		return request.getQueryString();
+	}
 
 	public static String getRemoteAddr(HttpServletRequest request) {
 		String addr = request.getHeader("X-Forward-For");
