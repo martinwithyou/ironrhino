@@ -4,10 +4,10 @@
 <title>Console</title>
 </head>
 <body>
-<@s.form action="console" method="post" cssClass="ajax focus">
+<@s.form id="form" action="console" method="post" cssClass="ajax focus">
 	<@s.textfield theme="simple" id="cmd" name="cmd" size="50"/>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
-	<@button text="rebuild index" onclick="$('#cmd').val('compassGps.index()');$('#submit').click()"/>
+	<@button text="rebuild index" onclick="$('#cmd').val('compassGps.index()');$('#form').submit()"/>
 </@s.form>
 </body>
 </html></#escape>
