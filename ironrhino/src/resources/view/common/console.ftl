@@ -4,7 +4,7 @@
 <title>Console</title>
 </head>
 <body>
-<@s.form action="console" method="post" cssClass="ajax">
+<@s.form action="console" method="post" cssClass="ajax focus">
 	<@s.textfield theme="simple" id="cmd" name="cmd" size="50"/>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 	<@button text="rebuild index" onclick="$('#cmd').val('compassGps.index()');$('#submit').click()"/>

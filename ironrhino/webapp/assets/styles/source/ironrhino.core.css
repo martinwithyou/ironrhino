@@ -6,11 +6,12 @@
 	height: 20px;
 	float: right;
 	color: #FFF;
+	padding: 0px 2px;
 	background: #F00;
 }
 
 #indicator.loading {
-	padding: 0px 0px 0px 25px;
+	padding: 0px 2px 0px 25px;
 	background: #F00 url(../images/indicator.gif) 0px 0px no-repeat;
 }
 

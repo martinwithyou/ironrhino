@@ -2,6 +2,8 @@ package org.ironrhino.common.action;
 
 import javax.inject.Inject;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.struts.BaseAction;
@@ -15,6 +17,8 @@ import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 public class ConsoleAction extends BaseAction {
 
 	private static final long serialVersionUID = 8180265410790553918L;
+	
+	private static Log log = LogFactory.getLog(ConsoleAction.class);
 
 	private String cmd;
 
@@ -38,6 +42,7 @@ public class ConsoleAction extends BaseAction {
 			addActionMessage(getText("operate.success") + ":"
 					+ String.valueOf(o));
 		} catch (Exception e) {
+			log.error(e.getMessage(),e);
 			addActionError(getText("error") + ":" + e.getMessage());
 		}
 		return SUCCESS;
