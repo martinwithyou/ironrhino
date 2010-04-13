@@ -21,13 +21,12 @@ public class RequestUtils {
 			StringBuilder sb = new StringBuilder();
 			Map<String, String[]> map = request.getParameterMap();
 			for (Map.Entry<String, String[]> entry : map.entrySet()) {
-				for (String value : entry.getValue())
-					sb.append(entry.getKey()).append('=').append(value).append(
-							'&');
+				for (String value : entry.getValue()) {
+					sb.append(entry.getKey()).append('=').append(
+							value.length() > 256 ? value.substring(0, 256)
+									: value).append('&');
+				}
 			}
-			sb.deleteCharAt(sb.length() - 1);
-			if (sb.length() > 1024)
-				sb.delete(1023, sb.length());
 			return sb.toString();
 		}
 		return request.getQueryString();
