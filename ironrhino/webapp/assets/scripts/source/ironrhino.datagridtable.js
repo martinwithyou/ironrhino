@@ -25,7 +25,7 @@
 	};
 	var rename = function(tbody) {
 		$('tr', tbody).each(function(i) {
-			$('input', this).each(function() {
+			$(':input', this).each(function() {
 				var name = $(this).attr('name');
 				var j = name.indexOf('[');
 				if (j < 0)
