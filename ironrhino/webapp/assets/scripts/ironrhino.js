@@ -23090,9 +23090,20 @@ Richtable = {
 				: template.textContent;
 		var text = ce.text();
 		var value = ce.attr("cellValue");
-		value = value || text;
+		value = $.trim(value || text);
 		ce.html(templateText);
-		$(':input', ce).val(value).focus();
+		var select = $('select', ce);
+		if (value && select.length) {
+			var arr = $('option', select).toArray();
+			for (var i = 0; i < arr.length; i++) {
+				if (arr[i].value == value || $(arr[i]).text() == value) {
+					$(arr[i]).attr('selected', true);
+					break;
+				}
+			};
+		} else {
+			$(':input', ce).val(value).focus();
+		}
 	},
 	updateCell : function(cellEdit) {
 		var ce = $(cellEdit);
