@@ -368,6 +368,7 @@ Richtable = {
 					break;
 				}
 			};
+			select.focus();
 		} else {
 			$(':input', ce).val(value).focus();
 		}
