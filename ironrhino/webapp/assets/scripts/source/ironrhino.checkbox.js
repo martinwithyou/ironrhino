@@ -1,9 +1,6 @@
 (function($) {
 	$.fn.checkbox = function() {
-		checkbox(this);
-	};
-	function checkbox(container) {
-		$('input[type=checkbox]', container).each(function() {
+		$('input[type=checkbox]', this).each(function() {
 			this.onclick = function(event) {
 				if (!this.name) {
 					var b = this.checked;

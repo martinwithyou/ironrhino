@@ -1,8 +1,11 @@
 (function($) {
 	$.fn.filterselect = function() {
-		var select = $(this).nextAll('select:eq(0)');
-		select.data('innerHTML', select.html());
-		$(this).keyup(filterselect);
+		this.each(function() {
+					var select = $(this).nextAll('select:eq(0)');
+					select.data('innerHTML', select.html());
+					$(this).keyup(filterselect);
+				});
+		return this;
 	};
 	function filterselect(event) {
 		var input = $(event.target);

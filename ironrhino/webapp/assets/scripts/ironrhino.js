@@ -19990,30 +19990,136 @@ $.fn.selection = function(start, end) {
 	// end the plugin call
 })(jQuery);
 
-// http://ejohn.org/blog/javascript-micro-templating/
-(function($) {
-	var cache = {};
-	$.fn.tmpl = function(data) {
-		var fn = cache[this];
-		if (!fn) {
-			fn = new Function("obj",
-					"var p=[],print=function(){p.push.apply(p,arguments);};" +
+/*
+ * jQuery Templating Plugin
+ *   NOTE: Created for demonstration purposes.
+ * Copyright 2010, John Resig
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ */
+(function(jQuery){
+	// Override the DOM manipulation function
+	var oldManip = jQuery.fn.domManip;
 
-							// Introduce the data as local variables using
-							// with(){}
-							"with(obj){p.push('" +
+	jQuery.fn.extend({
+		render: function( data ) {
+			return this.map(function(i, tmpl){
+				return jQuery.render( tmpl, data );
+			});
+		},
 
-							// Convert the template into pure JavaScript
-							this.html().replace(/[\r\t\n]/g, " ").split("<%")
-									.join("\t").replace(/((^|%>)[^\t]*)'/g,
-											"$1\r").replace(/\t=(.*?)%>/g,
-											"',$1,'").split("\t").join("');")
-									.split("%>").join("p.push('").split("\r")
-									.join("\\'") + "');}return p.join('');");
-			cache[this] = fn;
+		// This will allow us to do: .append( "template", dataObject )
+		domManip: function( args ) {
+			// This appears to be a bug in the appendTo, etc. implementation
+			// it should be doing .call() instead of .apply(). See #6227
+			if ( args.length > 1 && args[0].nodeType ) {
+				arguments[0] = [ jQuery.makeArray(args) ];
+			}
+
+			if ( args.length === 2 && typeof args[0] === "string" && typeof args[1] !== "string" ) {
+				arguments[0] = [ jQuery.render( args[0], args[1] ) ];
+			}
+
+			return oldManip.apply( this, arguments );
 		}
-		return data ? fn(data) : fn;
-	}
+	});
+
+	jQuery.extend({
+		render: function( tmpl, data ) {
+			var fn;
+
+			// Use a pre-defined template, if available
+			if ( jQuery.templates[ tmpl ] ) {
+				fn = jQuery.templates[ tmpl ];
+
+			// We're pulling from a script node
+			} else if ( tmpl.nodeType ) {
+				var node = tmpl, elemData = jQuery.data( node );
+				fn = elemData.tmpl || jQuery.tmpl( node.innerHTML );
+			}
+
+			fn = fn || jQuery.tmpl( tmpl );
+
+			// We assume that if the template string is being passed directly
+			// in the user doesn't want it cached. They can stick it in
+			// jQuery.templates to cache it.
+
+			if ( jQuery.isArray( data ) ) {
+				return jQuery.map( data, function( data, i ) {
+					return fn.call( data, jQuery, data, i );
+				});
+
+			} else {
+				return fn.call( data, jQuery, data, 0 );
+			}
+		},
+
+		// You can stick pre-built template functions here
+		templates: {},
+
+		/*
+		 * For example, someone could do:
+		 *   jQuery.templates.foo = jQuery.tmpl("some long templating string");
+		 *   $("#test").append("foo", data);
+		 */
+
+		tmplcmd: {
+			each: {
+				_default: [ null, "$i" ],
+				prefix: "jQuery.each($1,function($2){with(this){",
+				suffix: "}});"
+			},
+			'if': {
+				prefix: "if($1){",
+				suffix: "}"
+			},
+			'else': {
+				prefix: "}else{"
+			},
+			html: {
+				prefix: "_.push(typeof $1==='function'?$1.call(this):$1);"
+			},
+			"=": {
+				_default: [ "this" ],
+				prefix: "_.push($.encode(typeof $1==='function'?$1.call(this):$1));"
+			}
+		},
+
+		encode: function( text ) {
+			return text != null ? document.createTextNode( text.toString() ).nodeValue : "";
+		},
+
+		tmpl: function(str, data, i) {
+			// Generate a reusable function that will serve as a template
+			// generator (and which will be cached).
+			var fn = new Function("jQuery","$data","$i",
+				"var $=jQuery,_=[];_.data=$data;_.index=$i;" +
+
+				// Introduce the data as local variables using with(){}
+				"with($data){_.push('" +
+
+				// Convert the template into pure JavaScript
+				str
+					.replace(/[\r\t\n]/g, " ")
+					.replace(/\${([^}]*)}/g, "{{= $1}}")
+					.replace(/{{(\/?)(\w+|.)(?:\((.*?)\))?(?: (.*?))?}}/g, function(all, slash, type, fnargs, args) {
+						var tmpl = jQuery.tmplcmd[ type ];
+
+						if ( !tmpl ) {
+							throw "Template not found: " + type;
+						}
+
+						var def = tmpl._default;
+
+						return "');" + tmpl[slash ? "suffix" : "prefix"]
+							.split("$1").join(args || def[0])
+							.split("$2").join(fnargs || def[1]) + "_.push('";
+					})
+				+ "');}return $(_.join('')).get();");
+
+			// Provide some basic currying to the user
+			return data ? fn.call( this, jQuery, data, i ) : fn;
+		}
+	});
 })(jQuery);
 /**
 *	@name							Elastic
@@ -21358,6 +21464,7 @@ UrlUtils = {
 			return url;
 	},
 	isAbsolute : function(a) {
+		if(!a)return false;
 		var index = a.indexOf('://');
 		return (index == 4 || index == 5);
 	},
@@ -22019,11 +22126,45 @@ Captcha = {
 };
 
 (function($) {
-	$.fn.checkbox = function() {
-		checkbox(this);
+	$.fn.ajaxpanel = function() {
+		$(this).each(function() {
+					var t = $(this);
+					if(!t.html())
+						t.html(MessageBundle.get('ajax.loading'));
+					if (t.attr('lazy'))
+						t.bind('load', function() {
+									ajaxpanel(t)
+								});
+					else
+						ajaxpanel(t);
+				});
+		return this;
 	};
-	function checkbox(container) {
-		$('input[type=checkbox]', container).each(function() {
+	function ajaxpanel(ele) {
+		var options = {
+			url : ele.attr('url'),
+			global : false,
+			quiet : true,
+			success : function(data) {
+				if (typeof data != 'string') {
+					ele.empty();
+					$('#' + ele.attr('tmpl')).render(data).appendTo(ele);
+					_observe(ele);
+				}
+			}
+		};
+		var r = ele.attr('id') + ':' + (ele.attr('replacement') || 'content');
+		options.replacement = r;
+		ajax(options);
+	}
+})(jQuery);
+
+Observation.ajaxpanel = function(container) {
+	$('.ajaxpanel', container).ajaxpanel();
+};
+(function($) {
+	$.fn.checkbox = function() {
+		$('input[type=checkbox]', this).each(function() {
 			this.onclick = function(event) {
 				if (!this.name) {
 					var b = this.checked;
@@ -22125,13 +22266,16 @@ Captcha = {
 Observation.checkbox = function(container) {
 	$(container).checkbox();
 };
-( function($) {
+(function($) {
 
 	$.fn.sortableTable = function() {
-		if ('TABLE' == this.attr('tagName'))
-			SortableTable.init(this[0], {
-				tableScroll :SortableTable.options.tableScroll
-			});
+		this.each(function() {
+					if ('TABLE' == $(this).attr('tagName'))
+						SortableTable.init(this, {
+									tableScroll : SortableTable.options.tableScroll
+								});
+				});
+		return this;
 	};
 
 	var SortableTable = {
@@ -22139,44 +22283,37 @@ Observation.checkbox = function(container) {
 			if (!table.id)
 				table.id = "sortable-table-" + SortableTable._count++;
 			$.extend(SortableTable.options, o || {});
-			var doscroll = (SortableTable.options.tableScroll == 'on' || (SortableTable.options.tableScroll == 'class' && $(
-					table).hasClass(SortableTable.options.tableScrollClass)));
+			var doscroll = (SortableTable.options.tableScroll == 'on' || (SortableTable.options.tableScroll == 'class' && $(table)
+					.hasClass(SortableTable.options.tableScrollClass)));
 			var sortFirst;
 			var cells = SortableTable.getHeaderCells(table);
-			$(cells)
-					.each(
-							function() {
-								if (!doscroll
-										&& !$(this)
-												.hasClass(
-														SortableTable.options.nosortClass)) {
-									$(this).click( function() {
-										SortableTable._sort.apply(this)
-									});
-									$(this).addClass(
-											SortableTable.options.columnClass);
-								}
-								if ($(this)
-										.hasClass(
-												SortableTable.options.sortFirstAscendingClass)
-										|| $(this)
-												.hasClass(
-														SortableTable.options.sortFirstDecendingClass))
-									sortFirst = c;
+			$(cells).each(function() {
+				if (!doscroll
+						&& !$(this).hasClass(SortableTable.options.nosortClass)) {
+					$(this).click(function() {
+								SortableTable._sort.apply(this)
 							});
+					$(this).addClass(SortableTable.options.columnClass);
+				}
+				if ($(this)
+						.hasClass(SortableTable.options.sortFirstAscendingClass)
+						|| $(this)
+								.hasClass(SortableTable.options.sortFirstDecendingClass))
+					sortFirst = c;
+			});
 
 			if (sortFirst) {
-				if ($(sortFirst).hasClass(
-						SortableTable.options.sortFirstAscendingClass)) {
+				if ($(sortFirst)
+						.hasClass(SortableTable.options.sortFirstAscendingClass)) {
 					SortableTable.sort(table, sortFirst, 1);
 				} else {
 					SortableTable.sort(table, sortFirst, -1);
 				}
 			} else { // just add row stripe classes
 				var rows = SortableTable.getBodyRows(table);
-				$(rows).each( function(i) {
-					SortableTable.addRowClass(this, i);
-				});
+				$(rows).each(function(i) {
+							SortableTable.addRowClass(this, i);
+						});
 			}
 			if (doscroll)
 				SortableTable.initScroll(table);
@@ -22186,42 +22323,43 @@ Observation.checkbox = function(container) {
 
 			var w = $(table).width();
 
-			table.setStyle( {
-				'border-spacing' :'0',
-				'table-layout' :'fixed',
-				width :w + 'px'
-			});
+			table.setStyle({
+						'border-spacing' : '0',
+						'table-layout' : 'fixed',
+						width : w + 'px'
+					});
 
 			var cells = SortableTable.getHeaderCells(table);
-			$(cells).each( function(i) {
-				var cw = $(this).width();
-				$(this).css( {
-					width :cw + 'px'
-				});
-				$(table.tBodies[0].rows).each( function() {
-					$(this.cells[i]).css( {
-						width :cw + 'px'
-					});
-				})
-			})
+			$(cells).each(function(i) {
+						var cw = $(this).width();
+						$(this).css({
+									width : cw + 'px'
+								});
+						$(table.tBodies[0].rows).each(function() {
+									$(this.cells[i]).css({
+												width : cw + 'px'
+											});
+								})
+					})
 
 			// Fixed Head
-			var head = (table.tHead && table.tHead.rows.length > 0) ? table.tHead
+			var head = (table.tHead && table.tHead.rows.length > 0)
+					? table.tHead
 					: table.rows[0];
 			var hclone = head.cloneNode(true);
 
 			var hdiv = document.createElement('div');
 			hdiv.id = table.id + '-head';
 			table.parentNode.insertBefore(hdiv, table);
-			$(hdiv).css( {
-				overflow :'hidden'
-			});
+			$(hdiv).css({
+						overflow : 'hidden'
+					});
 			var htbl = document.createElement('table');
-			$(htbl).css( {
-				'border-spacing' :'0',
-				'table-layout' :'fixed',
-				width :w + 'px'
-			});
+			$(htbl).css({
+						'border-spacing' : '0',
+						'table-layout' : 'fixed',
+						width : w + 'px'
+					});
 			hdiv.appendChild(htbl);
 			$(hdiv).addClass('scroll-table-head');
 
@@ -22229,33 +22367,33 @@ Observation.checkbox = function(container) {
 			htbl.appendChild(hclone);
 
 			cells = SortableTable.getHeaderCells(htbl);
-			$(cells).each( function() {
-				$(this).click( function() {
-					SortableTable._sortScroll.apply(this);
-				});
-				$(this).addClass(SortableTable.options.columnClass);
-			});
+			$(cells).each(function() {
+						$(this).click(function() {
+									SortableTable._sortScroll.apply(this);
+								});
+						$(this).addClass(SortableTable.options.columnClass);
+					});
 
 			// Table Body
 			var cdiv = document.createElement('div');
 			cdiv.id = table.id + '-body';
 			table.parentNode.insertBefore(cdiv, table);
-			$(cdiv).css( {
-				overflow :'auto'
-			});
+			$(cdiv).css({
+						overflow : 'auto'
+					});
 			cdiv.appendChild(table);
 			cdiv.addClassName('scroll-table-body');
 
 			hdiv.scrollLeft = 0;
 			cdiv.scrollLeft = 0;
 
-			$(cdiv).scroll( function() {
-				SortableTable._scroll.apply(table)
-			});
+			$(cdiv).scroll(function() {
+						SortableTable._scroll.apply(table)
+					});
 			if (table.offsetHeight - cdiv.offsetHeight > 0) {
-				$(cdiv).css( {
-					width :($(cdiv).width() + 16) + 'px'
-				})
+				$(cdiv).css({
+							width : ($(cdiv).width() + 16) + 'px'
+						})
 			}
 		},
 		_scroll : function() {
@@ -22277,7 +22415,8 @@ Observation.checkbox = function(container) {
 				index = Math.min(table.rows[0].cells.length, index);
 				index = Math.max(1, index);
 				index -= 1;
-				cell = (table.tHead && table.tHead.rows.length > 0) ? $(table.tHead.rows[table.tHead.rows.length - 1].cells[index])
+				cell = (table.tHead && table.tHead.rows.length > 0)
+						? $(table.tHead.rows[table.tHead.rows.length - 1].cells[index])
 						: $(table.rows[0].cells[index]);
 			} else {
 				cell = index;
@@ -22288,38 +22427,40 @@ Observation.checkbox = function(container) {
 			var op = SortableTable.options;
 
 			// if(cell.hasClassName(op.nosortClass)) return;
-			order = order ? order : ($(cell).hasClass(op.descendingClass) ? 1
+			order = order ? order : ($(cell).hasClass(op.descendingClass)
+					? 1
 					: -1);
 
 			var hcells = SortableTable.getHeaderCells(null, cell);
-			$(hcells).each( function(i) {
-				if (i == index) {
-					if (order == 1) {
-						$(this).removeClass(op.descendingClass);
-						$(this).addClass(op.ascendingClass);
-					} else {
-						$(this).removeClass(op.ascendingClass);
-						$(this).addClass(op.descendingClass);
-					}
-				} else {
-					$(this).removeClass(op.ascendingClass);
-					$(this).removeClass(op.descendingClass);
-				}
-			});
+			$(hcells).each(function(i) {
+						if (i == index) {
+							if (order == 1) {
+								$(this).removeClass(op.descendingClass);
+								$(this).addClass(op.ascendingClass);
+							} else {
+								$(this).removeClass(op.ascendingClass);
+								$(this).addClass(op.descendingClass);
+							}
+						} else {
+							$(this).removeClass(op.ascendingClass);
+							$(this).removeClass(op.descendingClass);
+						}
+					});
 
 			var rows = $.makeArray(SortableTable.getBodyRows(table));
 			var datatype = SortableTable.getDataType(cell, index, table);
-			rows.sort( function(a, b) {
-				return order
-						* SortableTable.types[datatype](SortableTable
-								.getCellText(a.cells[index]), SortableTable
-								.getCellText(b.cells[index]));
-			});
+			rows.sort(function(a, b) {
+						return order
+								* SortableTable.types[datatype](SortableTable
+												.getCellText(a.cells[index]),
+										SortableTable
+												.getCellText(b.cells[index]));
+					});
 
-			$(rows).each( function(i) {
-				table.tBodies[0].appendChild(this);
-				SortableTable.addRowClass(this, i);
-			});
+			$(rows).each(function(i) {
+						table.tBodies[0].appendChild(this);
+						SortableTable.addRowClass(this, i);
+					});
 		},
 		types : {
 			number : function(a, b) {
@@ -22337,7 +22478,7 @@ Observation.checkbox = function(container) {
 			},
 			text : function(a, b) {
 				return SortableTable.compare(a ? a.toLowerCase() : '', b ? b
-						.toLowerCase() : '');
+								.toLowerCase() : '');
 			},
 			casesensitivetext : function(a, b) {
 				return SortableTable.compare(a, b);
@@ -22349,18 +22490,18 @@ Observation.checkbox = function(container) {
 					var b = r[1] ? Number(r[1]).valueOf() : 0;
 					var m = r[3] ? r[3].substr(0, 1).toLowerCase() : '';
 					switch (m) {
-					case 'k':
-						return b * 1024;
-						break;
-					case 'm':
-						return b * 1024 * 1024;
-						break;
-					case 'g':
-						return b * 1024 * 1024 * 1024;
-						break;
-					case 't':
-						return b * 1024 * 1024 * 1024 * 1024;
-						break;
+						case 'k' :
+							return b * 1024;
+							break;
+						case 'm' :
+							return b * 1024 * 1024;
+							break;
+						case 'g' :
+							return b * 1024 * 1024 * 1024;
+							break;
+						case 't' :
+							return b * 1024 * 1024 * 1024 * 1024;
+							break;
 					}
 					return b;
 				}
@@ -22476,49 +22617,47 @@ Observation.checkbox = function(container) {
 		compare : function(a, b) {
 			return a < b ? -1 : a == b ? 0 : 1;
 		},
-		detectors : [
-				{
-					re :/[\d]{4}-[\d]{2}-[\d]{2}(?:T[\d]{2}\:[\d]{2}(?:\:[\d]{2}(?:\.[\d]+)?)?(Z|([-+][\d]{2}:[\d]{2})?)?)?/,
-					type :"date-iso"
-				}, // 2005-03-26T19:51:34Z
-				{
-					re :/^sun|mon|tue|wed|thu|fri|sat\,\s\d{1,2}\sjan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec\s\d{4}(?:\s\d{2}\:\d{2}(?:\:\d{2})?(?:\sGMT(?:[+-]\d{4})?)?)?/i,
-					type :"date"
-				}, // Mon, 18 Dec 1995 17:28:35 GMT
-				{
-					re :/^\d{2}-\d{2}-\d{4}/i,
-					type :"date-eu"
-				},
-				{
-					re :/^\d{2}\/\d{2}\/\d{4}\s?(?:\d{1,2}\:\d{2}(?:\:\d{2})?\s?[a|p]?m?)?/i,
-					type :"date-au"
-				}, {
-					re :/^\d{1,2}\:\d{2}(?:\:\d{2})?(?:\s[a|p]m)?$/i,
-					type :"time"
-				},
+		detectors : [{
+			re : /[\d]{4}-[\d]{2}-[\d]{2}(?:T[\d]{2}\:[\d]{2}(?:\:[\d]{2}(?:\.[\d]+)?)?(Z|([-+][\d]{2}:[\d]{2})?)?)?/,
+			type : "date-iso"
+		},		// 2005-03-26T19:51:34Z
+		{
+			re : /^sun|mon|tue|wed|thu|fri|sat\,\s\d{1,2}\sjan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec\s\d{4}(?:\s\d{2}\:\d{2}(?:\:\d{2})?(?:\sGMT(?:[+-]\d{4})?)?)?/i,
+			type : "date"
+		},		// Mon, 18 Dec 1995 17:28:35 GMT
+		{
+			re : /^\d{2}-\d{2}-\d{4}/i,
+			type : "date-eu"
+		}, {
+			re : /^\d{2}\/\d{2}\/\d{4}\s?(?:\d{1,2}\:\d{2}(?:\:\d{2})?\s?[a|p]?m?)?/i,
+			type : "date-au"
+		}, {
+			re : /^\d{1,2}\:\d{2}(?:\:\d{2})?(?:\s[a|p]m)?$/i,
+			type : "time"
+		},
 				// {re: /^[$ï¼â¬î/, type : "currency"}, //
 				// dollar,pound,yen,euro,generic currency symbol
 				{
-					re :/^[-+]?[\d]*\.?[\d]+(?:[eE][-+]?[\d]+)?\s?[k|m|g|t]b$/i,
-					type :"datasize"
+					re : /^[-+]?[\d]*\.?[\d]+(?:[eE][-+]?[\d]+)?\s?[k|m|g|t]b$/i,
+					type : "datasize"
 				}, {
-					re :/^[-+]?[\d]*\.?[\d]+(?:[eE][-+]?[\d]+)?/,
-					type :"number"
+					re : /^[-+]?[\d]*\.?[\d]+(?:[eE][-+]?[\d]+)?/,
+					type : "number"
 				}, {
-					re :/^[A-Z]+$/,
-					type :"casesensitivetext"
+					re : /^[A-Z]+$/,
+					type : "casesensitivetext"
 				}, {
-					re :/.*/,
-					type :"text"
-				} ],
+					re : /.*/,
+					type : "text"
+				}],
 		addSortType : function(name, sortfunc) {
 			SortableTable.types[name] = sortfunc;
 		},
 		addDetector : function(rexp, name) {
-			SortableTable.detectors.unshift( {
-				re :rexp,
-				type :name
-			});
+			SortableTable.detectors.unshift({
+						re : rexp,
+						type : name
+					});
 		},
 		getBodyRows : function(table) {
 			if ($(table).hasClass(SortableTable.options.tableScrollClass)
@@ -22532,18 +22671,19 @@ Observation.checkbox = function(container) {
 		addRowClass : function(r, i) {
 			$(r).removeClass(SortableTable.options.rowEvenClass);
 			$(r).removeClass(SortableTable.options.rowOddClass);
-			$(r).addClass(
-					((i + 1) % 2 == 0 ? SortableTable.options.rowEvenClass
-							: SortableTable.options.rowOddClass));
+			$(r).addClass(((i + 1) % 2 == 0
+					? SortableTable.options.rowEvenClass
+					: SortableTable.options.rowOddClass));
 		},
 		getHeaderCells : function(table, cell) {
 			if (!table)
 				table = $(cell).closest('table').get(0);
-			return (table.tHead && table.tHead.rows.length > 0) ? table.tHead.rows[table.tHead.rows.length - 1].cells
+			return (table.tHead && table.tHead.rows.length > 0)
+					? table.tHead.rows[table.tHead.rows.length - 1].cells
 					: table.rows[0].cells;
 		},
 		getCellIndex : function(cell) {
-			for ( var i = 0; i < cell.parentNode.cells.length; i++)
+			for (var i = 0; i < cell.parentNode.cells.length; i++)
 				if (cell.parentNode.cells[i] == cell)
 					return i;
 			return -1;
@@ -22556,8 +22696,8 @@ Observation.checkbox = function(container) {
 		getDataType : function(cell, index, table) {
 			var t;
 			var classes = $(cell).attr('class').split(' ');
-			for ( var i = 0; i < classes.length; i++)
-				for ( var j = 0; j < SortableTable.types.length; j++)
+			for (var i = 0; i < classes.length; i++)
+				for (var j = 0; j < SortableTable.types.length; j++)
 					if (classes[i] == SortableTable.types[j])
 						return SortableTable.types[j];
 
@@ -22566,43 +22706,44 @@ Observation.checkbox = function(container) {
 			if (tbl.tBodies[0].rows.length == 0)
 				return 'text';
 			cell = tbl.tBodies[0].rows[0].cells[i]; // grab same index cell from
-		// second row to try and match
-		// data type
-		for ( var j; j < SortableTable.detectors.length; j++)
-			if (SortableTable.detectors[j].re.test(SortableTable
-					.getCellText(cell)))
-				return SortableTable.detectors[j].type;
-		return 'text';
-	},
-	setup : function(o) {
-		$.extend(SortableTable.options, o || {})
-		// in case the user added more types/detectors in the setup options, we
-		// read them out and then erase them
-		// this is so setup can be called multiple times to inject new
-		// types/detectors
-		$.extend(SortableTable.types, SortableTable.options.types || {})
-		SortableTable.options.types = {};
-		if (SortableTable.options.detectors) {
-			SortableTable.detectors = SortableTable.options.detectors
-					.concat(SortableTable.detectors);
-			SortableTable.options.detectors = [];
-		}
-	},
-	options : {
-		autoLoad :true,
-		tableSelector : [ 'table.sortable' ],
-		columnClass :'sortcol',
-		descendingClass :'sortdesc',
-		ascendingClass :'sortasc',
-		nosortClass :'nosort',
-		sortFirstAscendingClass :'sortfirstasc',
-		sortFirstDecendingClass :'sortfirstdesc',
-		rowEvenClass :'roweven',
-		rowOddClass :'rowodd',
-		tableScroll :'class', // off | on | class;
-		tableScrollClass :'scroll'
-	},
-	_count :0
+			// second row to try and match
+			// data type
+			for (var j; j < SortableTable.detectors.length; j++)
+				if (SortableTable.detectors[j].re.test(SortableTable
+						.getCellText(cell)))
+					return SortableTable.detectors[j].type;
+			return 'text';
+		},
+		setup : function(o) {
+			$.extend(SortableTable.options, o || {})
+			// in case the user added more types/detectors in the setup options,
+			// we
+			// read them out and then erase them
+			// this is so setup can be called multiple times to inject new
+			// types/detectors
+			$.extend(SortableTable.types, SortableTable.options.types || {})
+			SortableTable.options.types = {};
+			if (SortableTable.options.detectors) {
+				SortableTable.detectors = SortableTable.options.detectors
+						.concat(SortableTable.detectors);
+				SortableTable.options.detectors = [];
+			}
+		},
+		options : {
+			autoLoad : true,
+			tableSelector : ['table.sortable'],
+			columnClass : 'sortcol',
+			descendingClass : 'sortdesc',
+			ascendingClass : 'sortasc',
+			nosortClass : 'nosort',
+			sortFirstAscendingClass : 'sortfirstasc',
+			sortFirstDecendingClass : 'sortfirstdesc',
+			rowEvenClass : 'roweven',
+			rowOddClass : 'rowodd',
+			tableScroll : 'class', // off | on | class;
+			tableScrollClass : 'scroll'
+		},
+		_count : 0
 	};
 
 })(jQuery);
@@ -22655,9 +22796,12 @@ Observation.datagridTable = function(container) {
 };
 (function($) {
 	$.fn.filterselect = function() {
-		var select = $(this).nextAll('select:eq(0)');
-		select.data('innerHTML', select.html());
-		$(this).keyup(filterselect);
+		this.each(function() {
+					var select = $(this).nextAll('select:eq(0)');
+					select.data('innerHTML', select.html());
+					$(this).keyup(filterselect);
+				});
+		return this;
 	};
 	function filterselect(event) {
 		var input = $(event.target);
@@ -22682,9 +22826,12 @@ Observation.filterselect = function(container) {
 };
 (function($) {
 	$.fn.combox = function() {
-		$(this).keydown(function(event) {
-					combox(this)
+		this.each(function() {
+					$(this).keydown(function(event) {
+								combox(this)
+							});
 				});
+		return this;
 	};
 	function combox(ele) {
 		var name = $(ele).attr('name');

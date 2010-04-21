@@ -128,6 +128,7 @@ UrlUtils = {
 			return url;
 	},
 	isAbsolute : function(a) {
+		if(!a)return false;
 		var index = a.indexOf('://');
 		return (index == 4 || index == 5);
 	},

@@ -1,8 +1,11 @@
 (function($) {
 	$.fn.combox = function() {
-		$(this).keydown(function(event) {
-					combox(this)
+		this.each(function() {
+					$(this).keydown(function(event) {
+								combox(this)
+							});
 				});
+		return this;
 	};
 	function combox(ele) {
 		var name = $(ele).attr('name');
