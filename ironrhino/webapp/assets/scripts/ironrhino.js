@@ -22134,7 +22134,15 @@ Captcha = {
 					t.bind('load', function() {
 								ajaxpanel(t)
 							});
-					if (!t.attr('manual'))
+					if (t.attr('timeout')) {
+						setTimeout(function() {
+									ajaxpanel(t);
+								}, parseInt(t.attr('timeout')));
+					} else if (t.attr('interval')) {
+						setInterval(function() {
+									ajaxpanel(t);
+								}, parseInt(t.attr('interval')));
+					} else if (!t.attr('manual'))
 						ajaxpanel(t);
 				});
 		return this;
