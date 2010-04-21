@@ -22129,13 +22129,12 @@ Captcha = {
 	$.fn.ajaxpanel = function() {
 		$(this).each(function() {
 					var t = $(this);
-					if(!t.html())
+					if (!t.html())
 						t.html(MessageBundle.get('ajax.loading'));
-					if (t.attr('lazy'))
-						t.bind('load', function() {
-									ajaxpanel(t)
-								});
-					else
+					t.bind('load', function() {
+								ajaxpanel(t)
+							});
+					if (!t.attr('manual'))
 						ajaxpanel(t);
 				});
 		return this;
