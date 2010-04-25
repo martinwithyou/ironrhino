@@ -45,6 +45,11 @@ function _init() {
 function _observe(container) {
 	if (!container)
 		container = document;
+	$('.chart,form.ajax,.ajaxpanel', container).each(function(i) {
+		if (!this.id)
+			this.id = ('a' + (i + Math.random())).replace('.', '').substring(0,
+					5);
+	});
 	var array = [];
 	for (var key in Observation) {
 		if (typeof(Observation[key]) == 'function')
@@ -128,7 +133,8 @@ UrlUtils = {
 			return url;
 	},
 	isAbsolute : function(a) {
-		if(!a)return false;
+		if (!a)
+			return false;
 		var index = a.indexOf('://');
 		return (index == 4 || index == 5);
 	},
