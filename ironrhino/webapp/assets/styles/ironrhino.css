@@ -1325,22 +1325,25 @@ http://stopdesign.com/eg/buttons/3.0/code.html
 	padding-bottom: 1px;
 }
 
-/* 
-@-moz-document url-prefix() {
-    button.btn {
-	margin: 0 -3px;
-	}
-}
- */
+
  
 /* Immediately below is a temporary hack to serve the 
        following margin values only to Gecko browsers
        Gecko browsers add an extra 3px of left/right 
        padding to button elements which can't be overriden.
        Thus, we use -3px of left/right margin to overcome this. */
+
+@-moz-document url-prefix() {
+    button.btn {
+	margin: 0 -3px;
+	}
+}
+
+/* 
 html:not          ([lang *=""]          ) button.btn {
         margin: 0 -3px;
 }
+ */
 
 .btn span {
 	background: #ddd url(../images/bg-button.gif) repeat-x 0 0;
