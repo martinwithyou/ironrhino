@@ -12,7 +12,8 @@ import org.ironrhino.core.metadata.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.springframework.transaction.annotation.Transactional;
 
-@Singleton@Named("pageManager")
+@Singleton
+@Named("pageManager")
 public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		PageManager {
 
@@ -56,7 +57,6 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 				+ (StringUtils.isBlank(page.getTitle()) ? "" : page.getTitle()
 						+ DELIMITER) + page.getContent());
 		super.save(p);
-		pullDraft(p);
 		return p;
 	}
 
@@ -73,7 +73,9 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	@Transactional
 	public Page dropDraft(String id) {
 		Page page = get(id);
-		save(page);
+		page.setDraft(null);
+		page.setDraftDate(null);
+		super.save(page);
 		return page;
 	}
 

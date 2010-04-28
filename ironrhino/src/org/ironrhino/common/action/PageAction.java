@@ -134,6 +134,7 @@ public class PageAction extends BaseAction {
 			path = "/" + path;
 		page.setPath(path);
 		page = pageManager.saveDraft(page);
+		pageManager.pullDraft(page);
 		draft = true;
 		return INPUT;
 	}

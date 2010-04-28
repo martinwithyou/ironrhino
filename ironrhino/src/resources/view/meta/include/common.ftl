@@ -25,7 +25,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <#else>
 <#local page=pageManager.getByPath(path)!>
 </#if>
-<#if page??>
+<#if page??&&page.content??>
 <#local content=page.content?interpret>
 <@content/>
 </#if>
