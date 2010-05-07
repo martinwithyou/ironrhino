@@ -23297,6 +23297,7 @@ Observation.richtable = function() {
 					}
 				});
 		$('.richtable select[name="resultPage.pageSize"]').change(function() {
+					$('.richtable .jumpPageInput').val(1);
 					Richtable.reload()
 				});
 		$('.richtable input[name="keyword"]').keydown(function(event) {
