@@ -6,7 +6,7 @@
 <body>
 <#assign config={"code":{},"name":{"cellEdit":"click"},"description":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"},"rolesAsString":{"trimPrefix":true,"cellEdit":"click","class":"include_if_edited"}}>
 <#assign actionColumnButtons=r"
-<@button text='${action.getText(\'enter\')}' onclick='Richtable.enter(\'${entity.id}\')'/>
+<@button text='${action.getText(\'enter\')}' action='enter'/>
 <@button text='${action.getText(\'save\')}' action='save'/>
 <@button text='${action.getText(\'delete\')}' action='delete'/>
 <@button text='${action.getText(\'move\')}' onclick='Richtable.open(Richtable.getUrl(\'tree\',\'${entity.id}\'),true,true)'/>

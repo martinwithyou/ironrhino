@@ -203,16 +203,15 @@ Richtable = {
 			opt.height = 600;
 		$("#_window_").dialog(opt);
 	},
-	enter : function(parentId, url) {
-		if (!url)
-			url = Richtable.getBaseUrl() + Richtable.getPathParams();
-		if (parentId) {
-			if (url.indexOf('{parentId}') > 0)
-				url = url.replace('{parentId}', parentId);
-			else
-				url += (url.indexOf('?') > 0 ? '&' : '?') + 'parentId='
-						+ parentId;
-		}
+	enter : function(event) {
+		var btn = event.target;
+		if ($(btn).attr('tagName') != 'BUTTON' || $(btn).attr('tagName') != 'A')
+			btn = $(btn).closest('.btn');
+		if (btn.attr('onclick'))
+			return;
+		var url = Richtable.getBaseUrl() + Richtable.getPathParams();
+		url += (url.indexOf('?') > 0 ? '&' : '?') + 'parentId='
+				+ $(btn).closest('tr').attr('rowid');
 		document.location.href = url;
 	},
 	click : function(event) {
@@ -239,6 +238,8 @@ Richtable = {
 		var view = $(btn).attr('view');
 		if (action == 'reload')
 			Richtable.reload();
+		else if (action == 'enter')
+			Richtable.enter(event);
 		else if (action == 'save')
 			Richtable.save(event);
 		else if (action) {
