@@ -734,54 +734,6 @@ var Dialog = {
 	}
 }
 
-var Region = {
-	textid : '',
-	isfull : '',
-	hiddenid : '',
-	select : function(tid, f, hid) {
-		Region.textid = tid;
-		Region.isfull = f;
-		Region.hiddenid = hid;
-		var _click = function() {
-			if (Region.textid && $('#' + Region.textid)) {
-				var name = $(this).text();
-				if (Region.isfull) {
-					var p = this.parentNode.parentNode.parentNode.parentNode;
-					while (p && p.tagName == 'LI') {
-						name = $('a span', p).get(0).innerHTML + name;
-						p = p.parentNode.parentNode;
-					}
-				}
-				if ($('#' + Region.textid).attr('tagName') == 'INPUT')
-					$('#' + Region.textid).val(name);
-				else
-					$('#' + Region.textid).text(name);
-			}
-			if (Region.hiddenid && $('#' + Region.hiddenid))
-				$('#' + Region.hiddenid).val($(this).closest('li').attr('id'));
-			$("#region_window").dialog('close');
-		};
-		if (!$('#region_window').length) {
-			$('<div id="region_window" title="' + MessageBundle.get('select')
-					+ '"><div id="region_tree"></div></div>')
-					.appendTo(document.body);
-			$("#region_window").dialog({
-						width : 500,
-						minHeight : 500
-					});
-			$("#region_tree").treeview({
-						url : CONTEXT_PATH + '/region/children',
-						click : _click,
-						collapsed : true,
-						placeholder : MessageBundle.get('ajax.loading'),
-						unique : true
-					});
-		} else {
-			$("#region_window").dialog('open');
-		}
-	}
-};
-
 Captcha = {
 	refresh : function() {
 		$('img.captcha').each(function() {

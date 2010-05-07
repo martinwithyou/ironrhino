@@ -138,6 +138,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.filterselect.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.combox.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.richtable.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.region.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.cursor.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
