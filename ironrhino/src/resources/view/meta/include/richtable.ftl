@@ -65,7 +65,7 @@ ${action.getText(name)}
 </#macro>
 
 <#macro rttbodytd value,entity,template=''>
-<td><#rt>
+<td<#if value?string=='true'||value?string=='false'> cellValue="${value?string}"</#if><#if value?is_hash&&value.displayName??> cellValue="${value.name()}"</#if>><#rt>
 <#if template==''><#t>
 <#if value?string=='true'||value?string=='false'><#t>
 ${action.getText(value?string)}<#t>
