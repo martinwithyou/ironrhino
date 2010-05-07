@@ -22861,7 +22861,7 @@ Observation.combox = function(container) {
 	StartResize : function(event) {
 		var obj = event.target;
 		obj.focus();
-		document.body.style.cursor = "e-resize";
+		document.body.style.cursor = 'e-resize';
 		var sibling = $(obj.parentNode).next()[0];
 		var dx = event.screenX;
 		obj.parentTdW = obj.parentNode.clientWidth;
@@ -22873,7 +22873,7 @@ Observation.combox = function(container) {
 		ECSideUtil.DragobjSibling = sibling;
 		ECSideUtil.MinColWidth = $('#' + Richtable.id).attr('minColWidth')
 				|| '30';
-		ECSideUtil.Dragobj.style.backgroundColor = "#3366ff";
+		ECSideUtil.Dragobj.style.backgroundColor = '#3366ff';
 		ECSideUtil.Dragobj.parentTdW -= ECSideUtil.Dragobj.mouseDownX;
 		var cellIndex = ECSideUtil.Dragobj.parentNode.cellIndex;
 		try {
@@ -22892,7 +22892,7 @@ Observation.combox = function(container) {
 		if (!ECSideUtil.Dragobj.mouseDownX) {
 			return false;
 		}
-		document.body.style.cursor = "e-resize";
+		document.body.style.cursor = 'e-resize';
 		var dx = e.screenX;
 		var newWidth = ECSideUtil.Dragobj.parentTdW + dx;
 		var newSiblingWidth = 0;
@@ -22904,15 +22904,15 @@ Observation.combox = function(container) {
 		}
 		if (newWidth > ECSideUtil.MinColWidth
 				&& newSiblingWidth > ECSideUtil.MinColWidth) {
-			ECSideUtil.Dragobj.parentNode.style.width = newWidth + "px";
-			ECSideUtil.DragobjSibling.style.width = newSiblingWidth + "px";
+			ECSideUtil.Dragobj.parentNode.style.width = newWidth + 'px';
+			ECSideUtil.DragobjSibling.style.width = newSiblingWidth + 'px';
 			try {
-				ECSideUtil.DragobjBodyCell.style.width = newWidth + "px";
+				ECSideUtil.DragobjBodyCell.style.width = newWidth + 'px';
 				ECSideUtil.DragobjBodyCellSibling.style.width = newSiblingWidth
-						+ "px";
-				ECSideUtil.DragobjBodyCell.width = newWidth + "px";
+						+ 'px';
+				ECSideUtil.DragobjBodyCell.width = newWidth + 'px';
 				ECSideUtil.DragobjBodyCellSibling.width = newSiblingWidth
-						+ "px";
+						+ 'px';
 			} catch (e) {
 			}
 		}
@@ -22922,8 +22922,8 @@ Observation.combox = function(container) {
 			return false;
 		}
 		ECSideUtil.Dragobj.mouseDownX = 0;
-		document.body.style.cursor = "";
-		ECSideUtil.Dragobj.style.backgroundColor = "";
+		document.body.style.cursor = '';
+		ECSideUtil.Dragobj.style.backgroundColor = '';
 		ECSideUtil.Dragobj = null;
 		ECSideUtil.DragobjSibling = null;
 
@@ -23026,11 +23026,11 @@ Richtable = {
 			$('#_window_ > iframe')[0].src = url;
 		}
 		if ($('#_window_').attr('_dialoged_')) {
-			$("#_window_").dialog('option', 'close',
+			$('#_window_').dialog('option', 'close',
 					(reloadonclose ? function() {
 						Richtable.reload();
 					} : null));
-			$("#_window_").dialog('open');
+			$('#_window_').dialog('open');
 			return;
 		}
 		$('#_window_').attr('_dialoged_', true);
@@ -23046,7 +23046,7 @@ Richtable = {
 		};
 		if ($.browser.msie)
 			opt.height = 600;
-		$("#_window_").dialog(opt);
+		$('#_window_').dialog(opt);
 	},
 	enter : function(event) {
 		var btn = event.target;
@@ -23134,7 +23134,7 @@ Richtable = {
 			Richtable.open(url, true, options.iframe);
 			options.iframe = null;
 			for (var key in options)
-				$("#_window_").dialog('option', key, options[key]);
+				$('#_window_').dialog('option', key, options[key]);
 			Dialog.adapt($('#_window_'));
 			return false;
 		}
@@ -23146,7 +23146,7 @@ Richtable = {
 			arr[0] = id;
 		else
 			$.each($('.richtable tbody')[0].rows, function() {
-						if ($(this).attr("edited") == "true")
+						if ($(this).attr('edited') == 'true')
 							arr.push($(this).attr('rowid'))
 					});
 		var modified = false;
@@ -23158,7 +23158,7 @@ Richtable = {
 				for (var i = 0; i < rows.length; i++)
 					if ($(rows[i]).attr('rowid') == this)
 						row = rows[i];
-				if (row && $(row).attr('edited') == 'true') {
+				if (row && $(row).attr('edited')) {
 					modified = true;
 					var params = {};
 					var entity = Richtable.getBaseUrl();
@@ -23166,7 +23166,7 @@ Richtable = {
 					params[entity + '.id'] = this;
 					$.each(row.cells, function(i) {
 						var theadCell = $(theadCells[i]);
-						var name = theadCell.attr("cellName");
+						var name = theadCell.attr('cellName');
 						if (!name || $(this).attr('edited') != 'true'
 								&& theadCell.hasClass('include_if_edited'))
 							return;
@@ -23194,16 +23194,17 @@ Richtable = {
 	},
 	editCell : function(cell, templateId) {
 		var ce = $(cell);
-		if (ce.attr("editing") == "true")
+		if (ce.attr('editing'))
 			return;
-		ce.attr("editing", "true");
+		ce.attr('editing', 'true');
 		var template = document.getElementById(templateId);
 		var templateText = $.browser.msie
 				? template.value
 				: template.textContent;
 		var text = ce.text();
-		var value = ce.attr("cellValue");
+		var value = ce.attr('cellValue');
 		value = $.trim(value || text);
+		ce.attr('oldValue', value);
 		ce.html(templateText);
 		var select = $('select', ce);
 		if (value && select.length) {
@@ -23222,29 +23223,32 @@ Richtable = {
 	updateCell : function(cellEdit) {
 		var ce = $(cellEdit);
 		var cell = ce.parent();
+		cell.removeAttr('editing');
+		cell.attr('cellValue', ce.val());
 		var editType = ce.attr('tagName');
-		if (editType == "INPUT") {
+		if (editType == 'INPUT') {
 			cell.html(ce.val());
-		} else if (editType == "SELECT") {
+		} else if (editType == 'SELECT') {
 			cell.html($('option[selected]', ce).text());
-		} else if (editType == "CHECKBOX" || editType == "RADIO") {
+		} else if (editType == 'CHECKBOX' || editType == 'RADIO') {
 			cell.html(ce.next().text());
 		}
-		cell.attr("cellValue", ce.val());
-		cell.attr("edited", "true");
-		cell.parent().attr("edited", "true");
-		cell.removeAttr("editing");
-		cell.addClass("editedCell");
+		if (cell.attr('oldValue') != cell.attr('cellValue')) {
+			cell.attr('edited', 'true');
+			cell.parent().attr('edited', 'true');
+			cell.addClass('editedCell');
+		}
+		cell.removeAttr('oldValue');
 	},
 	updatePasswordCell : function(cellEdit) {
 		var ce = $(cellEdit);
 		var cell = ce.parent();
 		cell.text('********');
-		cell.attr("cellValue", ce.val());
-		cell.attr("edited", "true");
-		cell.parent().attr("edited", "true");
-		cell.attr("editing", "false");
-		cell.addClass("editedCell");
+		cell.attr('cellValue', ce.val());
+		cell.attr('edited', 'true');
+		cell.parent().attr('edited', 'true');
+		cell.removeAttr('editing');
+		cell.addClass('editedCell');
 	}
 };
 Observation.richtable = function() {
@@ -23283,7 +23287,7 @@ Observation.richtable = function() {
 			Richtable.reload()
 		});
 		$('.richtable .lastPage').click(function() {
-			$('.richtable .jumpPageInput').val($(".richtable .totalPage")
+			$('.richtable .jumpPageInput').val($('.richtable .totalPage')
 					.text());
 			Richtable.reload()
 		});
@@ -23325,7 +23329,7 @@ Observation.richtable = function() {
 				$('button[type="submit"]', form).click(function() {
 							form[0].onsuccess = function() {
 								setTimeout(function() {
-											$("#_window_").dialog('close');
+											$('#_window_').dialog('close');
 										}, 1000);
 
 							};
@@ -23347,7 +23351,7 @@ Observation.richtable = function() {
 Initialization.richtable = function() {
 	if ($('.richtable').length) {
 		var resizable = $('.richtable').attr('resizable');
-		if (resizable == "true") {
+		if (resizable) {
 			document.onmousemove = ECSideUtil.DoResize;
 			document.onmouseup = ECSideUtil.EndResize;
 			document.body.ondrag = function() {
