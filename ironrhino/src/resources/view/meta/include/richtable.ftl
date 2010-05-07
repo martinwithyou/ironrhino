@@ -164,7 +164,7 @@ ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!
 <input type="text" class="inputtext" value="" onblur="Richtable.updateCell(this)" style="width: 100%;"/>
 </textarea>
 <textarea id="select_template_boolean">
-<select onblur="Richtable.updateCell(this,'select')" style="width: 100%;">
+<select onblur="Richtable.updateCell(this)" style="width: 100%;">
 <option value="true">${action.getText('true')}</option>
 <option value="false">${action.getText('false')}</option>
 </select>

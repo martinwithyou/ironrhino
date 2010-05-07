@@ -57,7 +57,7 @@
 <#list uiConfigs?keys as key>
 	<#if uiConfigs[key].type=='select'>
 		<textarea id="select_template_${key}">
-	<select onblur="Richtable.updateCell(this,'select')"
+	<select onblur="Richtable.updateCell(this)"
 			style="width: 100%;" name="${entityName}.${key}">
 			<#list uiConfigs[key].enumValues as en>
 			<option value="${en.getName()}">${en.displayName}</option>
