@@ -21,7 +21,7 @@
 	<@s.textfield id="address" label="%{getText('address')}"
 		name="user.address">
 		<@s.param name="after">
-			<span class="link region" regionname="address" full="true">select</span>
+			<span class="link selectregion" regionname="address" full="true">select</span>
 		</@s.param>
 	</@s.textfield>
 	<@s.textfield label="%{getText('postcode')}" name="user.postcode" />

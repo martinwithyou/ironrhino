@@ -23359,7 +23359,7 @@ Initialization.richtable = function() {
 };
 (function($) {
 	var current;
-	$.fn.region = function() {
+	$.fn.selectregion = function() {
 		$(this).css('cursor', 'pointer').click(function() {
 			current = $(this);
 			var _click = function() {
@@ -23410,8 +23410,8 @@ Initialization.richtable = function() {
 
 })(jQuery);
 
-Observation.region = function(container) {
-	$('.region', container).region();
+Observation.selectregion = function(container) {
+	$('.selectregion', container).selectregion();
 };
 ( function($) {
 	SearchHighlighter = {
