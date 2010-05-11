@@ -136,6 +136,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.sortabletable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.datagridtable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.filterselect.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.portal.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.combox.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.richtable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.selectregion.js" />
@@ -158,6 +159,7 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.button.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.portal.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.menu.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.rating.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.sortabletable.css" />

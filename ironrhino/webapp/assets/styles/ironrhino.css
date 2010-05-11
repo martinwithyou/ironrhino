@@ -1196,6 +1196,9 @@ div.action_message,ul.action_message li {
 	white-space: nowrap;
 }
 
+.clear {
+	clear: both;
+}
 
 .draggable {
 	cursor: move;
@@ -1472,6 +1475,33 @@ div.top label {
 .field_error {
 	color: red;
 }
+.portal-column { 
+	width: 33.33%;
+	float: left;
+	padding-bottom: 100px;
+	}
+.portlet { 
+	margin: 0 1em 1em 0; 
+	}
+.portlet-header { 
+	margin: 0.3em; 
+	padding-bottom: 4px; 
+	padding-left: 0.2em; 
+	}
+.portlet-header .ui-icon { 
+	float: right; 
+	}
+.portlet-content { 
+	padding: 0.4em; 
+	}
+.ui-sortable-placeholder { 
+	border: 1px dotted black; 
+	visibility: visible !important; 
+	height: 100px !important; 
+	}
+.ui-sortable-placeholder * { 
+	visibility: hidden; 
+	}
 .nav,.nav ul {
 	list-style: none;
 	margin: 0;

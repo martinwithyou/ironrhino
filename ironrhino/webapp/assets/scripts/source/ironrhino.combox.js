@@ -1,9 +1,7 @@
 (function($) {
 	$.fn.combox = function() {
-		this.each(function() {
-					$(this).keydown(function(event) {
-								combox(this)
-							});
+		this.keydown(function(event) {
+					combox(this)
 				});
 		return this;
 	};
