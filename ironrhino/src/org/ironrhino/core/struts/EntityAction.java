@@ -117,7 +117,7 @@ public class EntityAction extends BaseAction {
 			else
 				baseManager.setEntityClass(getEntityClass());
 		} catch (NoSuchBeanDefinitionException e) {
-
+			baseManager.setEntityClass(getEntityClass());
 		}
 	}
 
@@ -265,8 +265,8 @@ public class EntityAction extends BaseAction {
 				Set<String> names = getUiConfigs().keySet();
 				if (naturalIdImmutable)
 					names.removeAll(naturalIds.keySet());
-				for (String name : names) 
-						bwp.setPropertyValue(name, bw.getPropertyValue(name));
+				for (String name : names)
+					bwp.setPropertyValue(name, bw.getPropertyValue(name));
 				entity = persisted;
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
