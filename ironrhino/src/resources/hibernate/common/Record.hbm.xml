@@ -9,12 +9,12 @@
 			length="32" unsaved-value="null">
 			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
-		<property name="operatorId" />
+		<property name="operatorId" index="operatorId" />
 		<property name="operatorClass" />
-		<property name="entityId" />
+		<property name="entityId" index="entityId" />
 		<property name="entityClass" />
 		<property name="entityToString" />
 		<property name="action" />
-		<property name="recordDate" />
+		<property name="recordDate" index="recordDate" />
 	</class>
 </hibernate-mapping>

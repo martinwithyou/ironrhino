@@ -1697,7 +1697,7 @@ table.sortable tr.roweven {
 	margin: 0px;
 }
 
-.richtable .inputtext {
+.richtable input.text {
 	border: 1px solid #cc9966;
 	font-size: 12px;
 	padding: 0px;

@@ -372,6 +372,7 @@ Richtable = {
 			};
 			select.focus();
 		} else {
+			$('input.date', ce).datepicker({dateFormat : 'yy-mm-dd',onSelect:function(){Richtable.updateCell(this)}});
 			$(':input', ce).val(value).focus();
 		}
 	},

@@ -9,16 +9,16 @@
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
 <#local index=index+1>
-<@rttbodytrstart entity=entity odd=(index%2==1)  readonly=readonly/>
-	<#list config?keys as name>
-		<#if config[name]['value']??>
-		<#local value=config[name]['value']>
-		<#else>
-		<#local value=entity[name]!>
-		</#if>
-		<@rttbodytd entity=entity value=value template=config[name]['template']!/>
-	</#list>
-	<@rttbodytrend entity=entity buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
+<@rttbodytrstart entity=entity odd=(index%2==1) readonly=readonly/>
+<#list config?keys as name>
+	<#if config[name]['value']??>
+	<#local value=config[name]['value']>
+	<#else>
+	<#local value=entity[name]!>
+	</#if>
+	<@rttbodytd entity=entity value=value celleditable=config[name]['cellEdit']?? template=config[name]['template']!/>
+</#list>
+<@rttbodytrend entity=entity buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
 </#list>
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable searchable=searchable searchButtons=searchButtons/>
 </#macro>
@@ -64,8 +64,8 @@ ${action.getText(name)}
 <#if !readonly><td><input type="checkbox" name="check"/></td></#if>
 </#macro>
 
-<#macro rttbodytd value,entity,template=''>
-<td<#if value?string=='true'||value?string=='false'> cellValue="${value?string}"</#if><#if value?is_hash&&value.displayName??> cellValue="${value.name()}"</#if>><#rt>
+<#macro rttbodytd value,entity,celleditable=true,template=''>
+<td<#if celleditable><#if value?string=='true'||value?string=='false'> cellValue="${value?string}"</#if><#if value?is_hash&&value.displayName??> cellValue="${value.name()}"</#if></#if>><#rt>
 <#if template==''><#t>
 <#if value?string=='true'||value?string=='false'><#t>
 ${action.getText(value?string)}<#t>
@@ -159,11 +159,15 @@ ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!
 </table>
 </div>
 </form>
-<#if !readonly>
-<div style="display: none;"><textarea id="rt_edit_template_input">
-<input type="text" class="inputtext" value="" onblur="Richtable.updateCell(this)" style="width: 100%;"/>
+<#if !readonly&&celleditable>
+<div style="display: none;">
+<textarea id="rt_edit_template_input">
+<input type="text" class="text" value="" onblur="Richtable.updateCell(this)" style="width: 100%;"/>
 </textarea>
-<textarea id="select_template_boolean">
+<textarea id="rt_edit_template_inputdate">
+<input type="text" class="text date" value="" style="width: 100%;"/>
+</textarea>
+<textarea id="rt_select_template_boolean">
 <select onblur="Richtable.updateCell(this)" style="width: 100%;">
 <option value="true">${action.getText('true')}</option>
 <option value="false">${action.getText('false')}</option>

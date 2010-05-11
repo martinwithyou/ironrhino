@@ -28,5 +28,7 @@ public @interface UiConfig {
 	boolean hide() default false;
 
 	String template() default "";
+	
+	String width() default "";
 
 }

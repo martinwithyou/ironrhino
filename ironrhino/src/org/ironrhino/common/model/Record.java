@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.DataRoute;
+import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 
 @DataRoute("miscGroup")
@@ -12,19 +13,26 @@ public class Record extends BaseEntity {
 
 	private static final long serialVersionUID = -8287907984213799302L;
 
-	private String operatorId;
-
-	private String operatorClass;
-
-	private String entityId;
-
+	@UiConfig(width = "200px", displayOrder = 1)
 	private String entityClass;
 
-	private String entityToString;
+	@UiConfig(width = "200px", displayOrder = 2)
+	private String entityId;
 
+	@UiConfig(width = "100px", displayOrder = 3)
 	private String action;
 
+	@UiConfig(width = "200px", displayOrder = 4)
+	private String operatorId;
+
+	@UiConfig(width = "140px", displayOrder = 5)
 	private Date recordDate;
+
+	@UiConfig(hide = true)
+	private String operatorClass;
+
+	@UiConfig(hide = true)
+	private String entityToString;
 
 	public String getAction() {
 		return action;

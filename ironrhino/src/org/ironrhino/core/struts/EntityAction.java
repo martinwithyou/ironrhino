@@ -482,6 +482,7 @@ public class EntityAction extends BaseAction {
 		private int displayOrder;
 		private String displayName;
 		private String template;
+		private String width;
 
 		public UiConfigImpl() {
 		}
@@ -498,6 +499,7 @@ public class EntityAction extends BaseAction {
 			if (StringUtils.isNotBlank(config.displayName()))
 				this.displayName = config.displayName();
 			this.template = config.template();
+			this.width = config.width();
 		}
 
 		public String getDisplayName() {
@@ -577,6 +579,13 @@ public class EntityAction extends BaseAction {
 			this.template = template;
 		}
 
+		public String getWidth() {
+			return width;
+		}
+
+		public void setWidth(String width) {
+			this.width = width;
+		}
 	}
 
 	// need call once before view

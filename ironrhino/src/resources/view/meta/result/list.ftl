@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
-<title>${action.getText('list')}${action.getText(entityName)}</title>
+<title>${action.getText(entityName)}${action.getText('list')}</title>
 </head>
 <body>
 <@rtstart action=entityName readonly=readonly/>
@@ -11,7 +11,7 @@
 		<#if config.displayName??>
 			<#assign label=config.displayName>
 		</#if>
-		<@rttheadtd name=label cellName=entityName+'.'+key cellEdit=(readonly||naturalIdsImmatuable)?string('','click') readonly=readonly/>
+		<@rttheadtd name=label cellName=entityName+'.'+key width=config['width']! cellEdit=(readonly||naturalIdsImmatuable)?string('','click') readonly=readonly/>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
@@ -25,15 +25,15 @@
 					<#assign cellEdit='click'/>
 				</#if>
 				<#if uiConfigs[key].type=='checkbox'>
-					<#assign cellEdit='click,select_template_boolean'/>
+					<#assign cellEdit='click,rt_select_template_boolean'/>
 				</#if>
 				<#if uiConfigs[key].type=='select'>
-				<#assign cellEdit='click,select_template_'+key/>
+				<#assign cellEdit='click,rt_select_template_'+key/>
 				</#if>
 			<#else>
 				<#assign cellEdit=''/>
 			</#if>
-			<@rttheadtd name=label cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly/>
+			<@rttheadtd name=label width=uiConfigs[key]['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly/>
 		</#if>
 	</#list>
 <@rtmiddle readonly=readonly/>
@@ -56,7 +56,7 @@
 <div style="display: none">
 <#list uiConfigs?keys as key>
 	<#if uiConfigs[key].type=='select'>
-		<textarea id="select_template_${key}">
+	<textarea id="rt_select_template_${key}">
 	<select onblur="Richtable.updateCell(this)"
 			style="width: 100%;" name="${entityName}.${key}">
 			<#list uiConfigs[key].enumValues as en>
