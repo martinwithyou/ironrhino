@@ -20,15 +20,29 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-public class FluxOptimizationFilter implements Filter {
+public class OptimizeTrafficFilter implements Filter {
 
-	private boolean etagEnabled = true;
+	private boolean etag = true;
 
-	private boolean compressEnabled = true;
+	private boolean compress = true;
+
+	private int cacheSeconds = 86400;
+
+	public void setEtag(boolean etag) {
+		this.etag = etag;
+	}
+
+	public void setCompress(boolean compress) {
+		this.compress = compress;
+	}
+
+	public void setCacheSeconds(int cacheSeconds) {
+		this.cacheSeconds = cacheSeconds;
+	}
 
 	public void doFilter(ServletRequest rq, ServletResponse rs,
 			FilterChain chain) throws IOException, ServletException {
-		if (!etagEnabled && !compressEnabled)
+		if (!etag && !compress)
 			chain.doFilter(rq, rs);
 		HttpServletRequest request = (HttpServletRequest) rq;
 		HttpServletResponse response = (HttpServletResponse) rs;
@@ -37,7 +51,7 @@ public class FluxOptimizationFilter implements Filter {
 		byte[] bytes = brw.getContents();
 		if (bytes != null) {
 			boolean notmodified = false;
-			if (etagEnabled) {
+			if (etag) {
 				String token = '"' + DigestUtils.md5Hex(bytes) + '"';
 				response.setHeader("ETag", token);
 				String previousToken = request.getHeader("If-None-Match");
@@ -55,7 +69,7 @@ public class FluxOptimizationFilter implements Filter {
 				}
 			}
 			if (!notmodified) {
-				if (compressEnabled
+				if (compress && brw.getContentType() != null
 						&& brw.getContentType().indexOf("text") >= 0) {
 					String acceptEncoding = request
 							.getHeader("Accept-Encoding");
@@ -92,6 +106,12 @@ public class FluxOptimizationFilter implements Filter {
 				}
 
 				response.setContentLength(bytes.length);
+				response.addHeader("Cache-Control", "public");
+				response.addHeader("Cache-Control", "max-age=" + cacheSeconds);
+				Calendar cal = Calendar.getInstance();
+				cal.set(Calendar.MILLISECOND, 0);
+				cal.add(Calendar.SECOND, cacheSeconds);
+				response.setDateHeader("Expires", cal.getTime().getTime());
 				ServletOutputStream sos = response.getOutputStream();
 				sos.write(bytes);
 				sos.flush();
@@ -101,10 +121,13 @@ public class FluxOptimizationFilter implements Filter {
 	}
 
 	public void init(FilterConfig filterConfig) {
-		if ("false".equals(filterConfig.getInitParameter("etagEnabled")))
-			etagEnabled = false;
-		if ("false".equals(filterConfig.getInitParameter("compressEnabled")))
-			compressEnabled = false;
+		if ("false".equals(filterConfig.getInitParameter("etag")))
+			etag = false;
+		if ("false".equals(filterConfig.getInitParameter("compress")))
+			compress = false;
+		if (filterConfig.getInitParameter("cacheSeconds") != null)
+			cacheSeconds = Integer.valueOf(filterConfig
+					.getInitParameter("cacheSeconds"));
 	}
 
 	public void destroy() {
