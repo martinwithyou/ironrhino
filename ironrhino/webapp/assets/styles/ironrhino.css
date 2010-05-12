@@ -1504,6 +1504,10 @@ div.top label {
 .ui-sortable-placeholder * { 
 	visibility: hidden; 
 	}
+.portal-footer { 
+	clear: both; 
+	text-align: center;
+	}
 .nav,.nav ul {
 	list-style: none;
 	margin: 0;

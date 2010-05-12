@@ -153,15 +153,73 @@ UrlUtils = {
 }
 
 Message = {
-	get : function(message, className) {
+	compose : function(message, className) {
 		return '<div class="'
 				+ className
 				+ '"><span class="close" onclick="$(this.parentNode).remove()"></span>'
 				+ message + '</div>';
 	},
-	showError : function(field, errorType) {
-		$(field).parent().append(Message.get(MessageBundle.get(errorType),
-				'field_error'));
+	showMessage : function() {
+		Message.showActionMessage(MessageBundle.get.apply(this, arguments));
+	},
+	showActionMessage : function(messages, target) {
+		if (!messages)
+			return;
+		if (typeof messages == 'string'){
+			var a = [];
+			a.push(messages);
+			messages = a;
+		}
+		var html = '';
+		for (var i = 0; i < messages.length; i++)
+			if (typeof $.jGrowl != 'undefined')
+				$.jGrowl(messages[i]);
+			else
+				html += Message.compose(messages[i], 'action_message');
+		if (html)
+			if (target && target.tagName == 'FORM') {
+				if ($('#' + target.id + '_message').length == 0)
+					$(target).before('<div id="' + target.id
+							+ '_message"></div>');
+				$('#' + target.id + '_message').html(html);
+			} else {
+				if (!$('#message').length)
+					$('<div id="message"></div>').prependTo(document.body);
+				$('#message').html(html);
+			}
+	},
+	showError : function() {
+		Message.showActionError(MessageBundle.get.apply(this, arguments));
+	},
+	showActionError : function(messages, target) {
+		if (!messages)
+			return;
+		if (typeof messages == 'string'){
+			var a = [];
+			a.push(messages);
+			messages = a;
+		}
+		var html = '';
+		for (var i = 0; i < messages.length; i++)
+			html += Message.compose(messages[i], 'action_error');
+		if (html)
+			if (target && target.tagName == 'FORM') {
+				if ($('#' + target.id + '_message').length == 0)
+					$(target).before('<div id="' + target.id
+							+ '_message"></div>');
+				$('#' + target.id + '_message').html(html);
+			} else {
+				if (!$('#message').length)
+					$('<div id="message"></div>').prependTo(document.body);
+				$('#message').html(html);
+			}
+	},
+	showFieldError : function(field, msg, msgKey) {
+		var msg = msg || MessageBundle.get(msgKey);
+		if (field && $(field).length)
+			$(field).parent().append(Message.compose(msg, 'field_error'));
+		else
+			Message.showActionError(msg);
 	}
 };
 
@@ -182,38 +240,38 @@ Form = {
 			$('.field_error', $(target).parent()).remove();
 			if ($(target).hasClass('required') && !$(target).val()) {
 				if ($(target).attr('tagName') == 'SELECT')
-					Message.showError(target, 'selection.required');
+					Message.showFieldError(target, null, 'selection.required');
 				else
-					Message.showError(target, 'required');
+					Message.showFieldError(target, null, 'required');
 				return false;
 			} else if ($(target).hasClass('email')
 					&& $(target).val()
 					&& !$(target)
 							.val()
 							.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-				Message.showError(target, 'email');
+				Message.showFieldError(target, null, 'email');
 				return false;
 			} else if ($(target).hasClass('integer') && $(target).val()) {
 				if ($(target).hasClass('positive')
 						&& !$(target).val().match(/^[+]?\d*$/)) {
-					Message.showError(target, 'integer.positive');
+					Message.showFieldError(target, null, 'integer.positive');
 					return false;
 				}
 				if (!$(target).hasClass('positive')
 						&& !$(target).val().match(/^[-+]?\d*$/)) {
-					Message.showError(target, 'integer');
+					Message.showFieldError(target, null, 'integer');
 					return false;
 				}
 				return true;
 			} else if ($(target).hasClass('double') && $(target).val()) {
 				if ($(target).hasClass('positive')
 						&& !$(target).val().match(/^[+]?\d+(\.\d+)?$/)) {
-					Message.showError(target, 'double.positive');
+					Message.showFieldError(target, null, 'double.positive');
 					return false;
 				}
 				if (!$(target).hasClass('positive')
 						&& !$(target).val().match(/^[-+]?\d+(\.\d+)?$/)) {
-					Message.showError(target, 'double');
+					Message.showFieldError(target, null, 'double');
 					return false;
 				}
 				return true;
@@ -322,39 +380,13 @@ Ajax = {
 			} else {
 				Ajax.fire(target, 'onsuccess', data);
 			}
-			var message = '';
-			if (data.fieldErrors)
+			if (data.fieldErrors) {
 				for (key in data.fieldErrors)
-					if (target && target[key])
-						$(target[key]).parent().append($(Message.get(
-								data.fieldErrors[key], 'field_error')));
-					else
-						message += Message.get(data.fieldErrors[key],
-								'action_error');
-			if (data.fieldErrors)
+					Message.showFieldError(target[key], data.fieldErrors[key]);
 				Form.focus(target);
-			if (data.actionErrors)
-				for (var i = 0; i < data.actionErrors.length; i++)
-					message += Message
-							.get(data.actionErrors[i], 'action_error');
-			if (data.actionMessages)
-				for (var i = 0; i < data.actionMessages.length; i++)
-					if (typeof $.jGrowl != 'undefined')
-						$.jGrowl(data.actionMessages[i]);
-					else
-						message += Message.get(data.actionMessages[i],
-								'action_message');
-			if (message)
-				if (target && target.tagName == 'FORM') {
-					if ($('#' + target.id + '_message').length == 0)
-						$(target).before('<div id="' + target.id
-								+ '_message"></div>');
-					$('#' + target.id + '_message').html(message);
-				} else {
-					if (!$('#message').length)
-						$('<div id="message"></div>').prependTo(document.body);
-					$('#message').html(message);
-				}
+			}
+			Message.showActionError(data.actionErrors, target);
+			Message.showActionMessage(data.actionMessages, target);
 		}
 		if (target && target.tagName == 'FORM') {
 			setTimeout(function() {

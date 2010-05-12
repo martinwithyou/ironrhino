@@ -247,11 +247,7 @@ Richtable = {
 					&& !confirm(MessageBundle.get('confirm.delete')))
 				return;
 			if (!idparams) {
-				var msg = MessageBundle.get('no.selection');
-				if (typeof $.jGrowl != 'undefined')
-					$.jGrowl(msg);
-				else
-					$('#message').html(Message.get(msg, 'action_message'));
+				Message.showMessage('no.selection');
 				return;
 			}
 			var url = Richtable.getBaseUrl() + '/' + action
@@ -274,12 +270,7 @@ Richtable = {
 					if (!id) {
 						// from bottom
 						if (!idparams) {
-							var msg = MessageBundle.get('no.selection');
-							if (typeof $.jGrowl != 'undefined')
-								$.jGrowl(msg);
-							else
-								$('#message').html(Message.get(msg,
-										'action_message'));
+							Message.showMessage('no.selection');
 							return false;
 						}
 						url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
@@ -340,11 +331,7 @@ Richtable = {
 			});
 		}
 		if (!modified) {
-			var msg = MessageBundle.get('no.modification');
-			if (typeof $.jGrowl != 'undefined')
-				$.jGrowl(msg);
-			else
-				$('#message').html(Message.get(msg, 'action_message'));
+			Message.showMessage('no.modification');
 		}
 	},
 	editCell : function(cell, templateId) {

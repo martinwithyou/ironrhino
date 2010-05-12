@@ -21410,9 +21410,6 @@ MessageBundle = {
 		'save.and.create' : 'save and add',
 		'no.selection' : 'no selection',
 		'no.modification' : 'no modification',
-		'add' : 'add',
-		'remove' : 'remove',
-		'browse' : 'browse',
 		'select' : 'please select'
 	},
 	'zh-cn' : {
@@ -21432,7 +21429,10 @@ MessageBundle = {
 		'add' : '添加',
 		'remove' : '删除',
 		'browse' : '浏览文件',
-		'select' : '请选择'
+		'select' : '请选择',
+		'save' : '保存',
+		'restore' : '还原',
+		'success' : '操作成功'
 	},
 	get : function() {
 		var key = arguments[0];
@@ -21603,15 +21603,73 @@ UrlUtils = {
 }
 
 Message = {
-	get : function(message, className) {
+	compose : function(message, className) {
 		return '<div class="'
 				+ className
 				+ '"><span class="close" onclick="$(this.parentNode).remove()"></span>'
 				+ message + '</div>';
 	},
-	showError : function(field, errorType) {
-		$(field).parent().append(Message.get(MessageBundle.get(errorType),
-				'field_error'));
+	showMessage : function() {
+		Message.showActionMessage(MessageBundle.get.apply(this, arguments));
+	},
+	showActionMessage : function(messages, target) {
+		if (!messages)
+			return;
+		if (typeof messages == 'string'){
+			var a = [];
+			a.push(messages);
+			messages = a;
+		}
+		var html = '';
+		for (var i = 0; i < messages.length; i++)
+			if (typeof $.jGrowl != 'undefined')
+				$.jGrowl(messages[i]);
+			else
+				html += Message.compose(messages[i], 'action_message');
+		if (html)
+			if (target && target.tagName == 'FORM') {
+				if ($('#' + target.id + '_message').length == 0)
+					$(target).before('<div id="' + target.id
+							+ '_message"></div>');
+				$('#' + target.id + '_message').html(html);
+			} else {
+				if (!$('#message').length)
+					$('<div id="message"></div>').prependTo(document.body);
+				$('#message').html(html);
+			}
+	},
+	showError : function() {
+		Message.showActionError(MessageBundle.get.apply(this, arguments));
+	},
+	showActionError : function(messages, target) {
+		if (!messages)
+			return;
+		if (typeof messages == 'string'){
+			var a = [];
+			a.push(messages);
+			messages = a;
+		}
+		var html = '';
+		for (var i = 0; i < messages.length; i++)
+			html += Message.compose(messages[i], 'action_error');
+		if (html)
+			if (target && target.tagName == 'FORM') {
+				if ($('#' + target.id + '_message').length == 0)
+					$(target).before('<div id="' + target.id
+							+ '_message"></div>');
+				$('#' + target.id + '_message').html(html);
+			} else {
+				if (!$('#message').length)
+					$('<div id="message"></div>').prependTo(document.body);
+				$('#message').html(html);
+			}
+	},
+	showFieldError : function(field, msg, msgKey) {
+		var msg = msg || MessageBundle.get(msgKey);
+		if (field && $(field).length)
+			$(field).parent().append(Message.compose(msg, 'field_error'));
+		else
+			Message.showActionError(msg);
 	}
 };
 
@@ -21632,38 +21690,38 @@ Form = {
 			$('.field_error', $(target).parent()).remove();
 			if ($(target).hasClass('required') && !$(target).val()) {
 				if ($(target).attr('tagName') == 'SELECT')
-					Message.showError(target, 'selection.required');
+					Message.showFieldError(target, null, 'selection.required');
 				else
-					Message.showError(target, 'required');
+					Message.showFieldError(target, null, 'required');
 				return false;
 			} else if ($(target).hasClass('email')
 					&& $(target).val()
 					&& !$(target)
 							.val()
 							.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-				Message.showError(target, 'email');
+				Message.showFieldError(target, null, 'email');
 				return false;
 			} else if ($(target).hasClass('integer') && $(target).val()) {
 				if ($(target).hasClass('positive')
 						&& !$(target).val().match(/^[+]?\d*$/)) {
-					Message.showError(target, 'integer.positive');
+					Message.showFieldError(target, null, 'integer.positive');
 					return false;
 				}
 				if (!$(target).hasClass('positive')
 						&& !$(target).val().match(/^[-+]?\d*$/)) {
-					Message.showError(target, 'integer');
+					Message.showFieldError(target, null, 'integer');
 					return false;
 				}
 				return true;
 			} else if ($(target).hasClass('double') && $(target).val()) {
 				if ($(target).hasClass('positive')
 						&& !$(target).val().match(/^[+]?\d+(\.\d+)?$/)) {
-					Message.showError(target, 'double.positive');
+					Message.showFieldError(target, null, 'double.positive');
 					return false;
 				}
 				if (!$(target).hasClass('positive')
 						&& !$(target).val().match(/^[-+]?\d+(\.\d+)?$/)) {
-					Message.showError(target, 'double');
+					Message.showFieldError(target, null, 'double');
 					return false;
 				}
 				return true;
@@ -21772,39 +21830,13 @@ Ajax = {
 			} else {
 				Ajax.fire(target, 'onsuccess', data);
 			}
-			var message = '';
-			if (data.fieldErrors)
+			if (data.fieldErrors) {
 				for (key in data.fieldErrors)
-					if (target && target[key])
-						$(target[key]).parent().append($(Message.get(
-								data.fieldErrors[key], 'field_error')));
-					else
-						message += Message.get(data.fieldErrors[key],
-								'action_error');
-			if (data.fieldErrors)
+					Message.showFieldError(target[key], data.fieldErrors[key]);
 				Form.focus(target);
-			if (data.actionErrors)
-				for (var i = 0; i < data.actionErrors.length; i++)
-					message += Message
-							.get(data.actionErrors[i], 'action_error');
-			if (data.actionMessages)
-				for (var i = 0; i < data.actionMessages.length; i++)
-					if (typeof $.jGrowl != 'undefined')
-						$.jGrowl(data.actionMessages[i]);
-					else
-						message += Message.get(data.actionMessages[i],
-								'action_message');
-			if (message)
-				if (target && target.tagName == 'FORM') {
-					if ($('#' + target.id + '_message').length == 0)
-						$(target).before('<div id="' + target.id
-								+ '_message"></div>');
-					$('#' + target.id + '_message').html(message);
-				} else {
-					if (!$('#message').length)
-						$('<div id="message"></div>').prependTo(document.body);
-					$('#message').html(message);
-				}
+			}
+			Message.showActionError(data.actionErrors, target);
+			Message.showActionMessage(data.actionMessages, target);
 		}
 		if (target && target.tagName == 'FORM') {
 			setTimeout(function() {
@@ -22905,29 +22937,98 @@ Observation.filterselect = function(container) {
 };
 (function($) {
 	$.fn.portal = function() {
-		this.each(function() {
-			$('.portal-column', this).sortable({
-						connectWith : '.portal-column'
-					});
-			$('.portlet', this)
-					.addClass('ui-widget ui-widget-content ui-helper-clearfix ui-corner-all')
-					.find('.portlet-header')
-					.addClass('ui-widget-header ui-corner-all')
-					.prepend('<span class="ui-icon ui-icon-minusthick">minus</span>')
-					.prepend('<span class="ui-icon ui-icon-closethick">close</span>')
-					.end();
-			$('.portlet-header .ui-icon:even', this).click(function() {
-				$(this).parents('.portlet:first').remove();
+		if (arguments.length == 0) {
+			this.each(function() {
+				$('.portal-column', this).sortable({
+							connectWith : '.portal-column'
+						});
+				$('.portlet', this)
+						.addClass('ui-widget ui-widget-content ui-helper-clearfix ui-corner-all')
+						.find('.portlet-header')
+						.addClass('ui-widget-header ui-corner-all')
+						.prepend('<span class="ui-icon ui-icon-minusthick">minus</span>')
+						.prepend('<span class="ui-icon ui-icon-closethick">close</span>')
+						.end();
+				$('.portlet-header .ui-icon:even', this).click(function() {
+							$(this).parents('.portlet:first').hide();
+						});
+				$('.portlet-header .ui-icon:odd', this).click(function() {
+					$(this).toggleClass('ui-icon-minusthick')
+							.toggleClass('ui-icon-plusthick');
+					$(this).parents('.portlet:first').find('.portlet-content')
+							.toggle();
+				});
+				$('.portal-column', this).disableSelection();
+				if (window.localStorage) {
+					var layout = localStorage[document.location.pathname
+							+ '_portal-layout'];
+					if (layout)
+						$(this).portal('layout', layout);
+				}
+				var t = $(this);
+				if (t.hasClass('savable')) {
+					t
+							.append('<div class="portal-footer"><button class="btn save"><span><span>'
+									+ MessageBundle.get('save')
+									+ '</span></span></button><button class="btn restore"><span><span>'
+									+ MessageBundle.get('restore')
+									+ '</span></span></button></div>');
+					$('.portal-footer .save', t).click(function() {
+								t.portal('layout', 'save');
+								Message.showMessage('success');
+							});
+					$('.portal-footer .restore', t).click(function() {
+								t.portal('layout', 'restore')
+							});
+				}
 			});
-			$('.portlet-header .ui-icon:odd', this).click(function() {
-				$(this).toggleClass('ui-icon-minusthick')
-						.toggleClass('ui-icon-plusthick');
-				$(this).parents('.portlet:first').find('.portlet-content')
-						.toggle();
-			});
-			$('.portal-column', this).disableSelection();
-		});
-		return this;
+			return this;
+		}
+		if (arguments[0] == 'layout') {
+			if (!arguments[1]) {
+				var layout = [];
+				$('.portal-column', this.eq(0)).each(function() {
+							var portlets = [];
+							$('.portlet:visible', this).each(function() {
+										if (this.id)
+											portlets.push('"' + this.id + '"');
+									});
+							layout.push('[' + portlets.join(',') + ']');
+						});
+				return '[' + layout.join(',') + ']';
+			} else {
+				if (arguments[1] == 'save') {
+					if (window.localStorage) {
+						localStorage[document.location.pathname
+								+ '_portal-layout'] = this.portal('layout');
+					}
+				} else if (arguments[1] == 'restore') {
+					delete localStorage[document.location.pathname
+							+ '_portal-layout'];
+					document.location.reload();
+				} else {
+					var layout = $.parseJSON(arguments[1]);
+					for (var i = 0; i < layout.length; i++) {
+						$('.portal-column:eq(' + i + ')', this).each(
+								function() {
+									var portlets = layout[i];
+									for (var j = 0; j < portlets.length; j++) {
+										$('#' + portlets[j]).attr('sorted',
+												true).appendTo(this).show();
+									}
+								});
+					}
+					$('.portlet', this).each(function() {
+								var t = $(this);
+								if (t.attr('sorted'))
+									t.removeAttr('sorted');
+								else
+									t.hide();
+							});
+				}
+				return this;
+			}
+		}
 	};
 })(jQuery);
 
@@ -23235,11 +23336,7 @@ Richtable = {
 					&& !confirm(MessageBundle.get('confirm.delete')))
 				return;
 			if (!idparams) {
-				var msg = MessageBundle.get('no.selection');
-				if (typeof $.jGrowl != 'undefined')
-					$.jGrowl(msg);
-				else
-					$('#message').html(Message.get(msg, 'action_message'));
+				Message.showMessage('no.selection');
 				return;
 			}
 			var url = Richtable.getBaseUrl() + '/' + action
@@ -23262,12 +23359,7 @@ Richtable = {
 					if (!id) {
 						// from bottom
 						if (!idparams) {
-							var msg = MessageBundle.get('no.selection');
-							if (typeof $.jGrowl != 'undefined')
-								$.jGrowl(msg);
-							else
-								$('#message').html(Message.get(msg,
-										'action_message'));
+							Message.showMessage('no.selection');
 							return false;
 						}
 						url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
@@ -23328,11 +23420,7 @@ Richtable = {
 			});
 		}
 		if (!modified) {
-			var msg = MessageBundle.get('no.modification');
-			if (typeof $.jGrowl != 'undefined')
-				$.jGrowl(msg);
-			else
-				$('#message').html(Message.get(msg, 'action_message'));
+			Message.showMessage('no.modification');
 		}
 	},
 	editCell : function(cell, templateId) {

@@ -13,9 +13,6 @@ MessageBundle = {
 		'save.and.create' : 'save and add',
 		'no.selection' : 'no selection',
 		'no.modification' : 'no modification',
-		'add' : 'add',
-		'remove' : 'remove',
-		'browse' : 'browse',
 		'select' : 'please select'
 	},
 	'zh-cn' : {
@@ -35,7 +32,10 @@ MessageBundle = {
 		'add' : '添加',
 		'remove' : '删除',
 		'browse' : '浏览文件',
-		'select' : '请选择'
+		'select' : '请选择',
+		'save' : '保存',
+		'restore' : '还原',
+		'success' : '操作成功'
 	},
 	get : function() {
 		var key = arguments[0];
