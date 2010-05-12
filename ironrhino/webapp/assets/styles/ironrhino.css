@@ -1491,6 +1491,7 @@ div.top label {
 	}
 .portlet-header .ui-icon { 
 	float: right; 
+	cursor: pointer;
 	}
 .portlet-content { 
 	padding: 0.4em; 
