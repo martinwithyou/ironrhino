@@ -22310,7 +22310,7 @@ Captcha = {
 	};
 	function ajaxpanel(ele) {
 		var options = {
-			url : ele.attr('url'),
+			url : ele.attr('url') || document.location.href,
 			global : false,
 			quiet : true,
 			success : function(data) {
@@ -22321,8 +22321,11 @@ Captcha = {
 				}
 			}
 		};
-		var r = ele.attr('id') + ':' + (ele.attr('replacement') || 'content');
-		options.replacement = r;
+		if (ele.attr('url'))
+			options.replacement = ele.attr('id') + ':'
+					+ (ele.attr('replacement') || 'content');
+		else
+			options.replacement = ele.attr('id');
 		ajax(options);
 	}
 })(jQuery);
