@@ -23006,18 +23006,28 @@ Observation.filterselect = function(container) {
 						.addClass('ui-widget ui-widget-content ui-helper-clearfix ui-corner-all')
 						.find('.portlet-header')
 						.addClass('ui-widget-header ui-corner-all')
-						.prepend('<span class="ui-icon ui-icon-minusthick">minus</span>')
-						.prepend('<span class="ui-icon ui-icon-closethick">close</span>')
-						.end();
-				$('.portlet-header .ui-icon:even', this).click(function() {
+						.prepend('<span class="fold ui-icon ui-icon-minusthick"></span>')
+						.prepend('<span class="close ui-icon ui-icon-closethick"></span>');
+				$('.portlet-header .close', this).click(function() {
 							$(this).parents('.portlet:first').hide();
 						});
-				$('.portlet-header .ui-icon:odd', this).click(function() {
+				$('.portlet-header .fold', this).click(function() {
 					$(this).toggleClass('ui-icon-minusthick')
 							.toggleClass('ui-icon-plusthick');
 					$(this).parents('.portlet:first').find('.portlet-content')
 							.toggle();
 				});
+				$('.portlet', this).each(function() {
+					if ($('.ajaxpanel', $(this)).length) {
+						$('.portlet-header .fold', this)
+								.after('<span class="refresh ui-icon ui-icon-refresh"></span>')
+								.next().click(function() {
+									$('.ajaxpanel', $(this).closest('.portlet'))
+											.trigger('load');
+								});
+					}
+				});
+
 				$('.portal-column', this).disableSelection();
 				if (window.localStorage) {
 					var layout = localStorage[document.location.pathname
