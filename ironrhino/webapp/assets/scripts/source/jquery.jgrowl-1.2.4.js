@@ -137,7 +137,7 @@
 			header: 		'',
 			group: 			'',
 			sticky: 		false,
-			position: 		'center', // Is this still needed?
+			position: 		'top-right', // Is this still needed?
 			glue: 			'after',
 			theme: 			'default',
 			corners: 		'10px',
