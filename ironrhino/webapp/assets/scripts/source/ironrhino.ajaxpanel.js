@@ -2,8 +2,6 @@
 	$.fn.ajaxpanel = function() {
 		$(this).each(function() {
 					var t = $(this);
-					if (!t.html())
-						t.html(MessageBundle.get('ajax.loading'));
 					t.bind('load', function() {
 								ajaxpanel(t)
 							});
@@ -25,6 +23,12 @@
 			url : ele.attr('url') || document.location.href,
 			global : false,
 			quiet : true,
+			beforeSend : function() {
+				ele.mask(MessageBundle.get('ajax.loading'));
+			},
+			complete : function() {
+				ele.unmask();
+			},
 			success : function(data) {
 				if (typeof data != 'string') {
 					ele.empty();

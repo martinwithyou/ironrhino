@@ -119,6 +119,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.history-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.corner-2.0.3.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.loadmask-0.4.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.bgiframe-2.1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.autocomplete-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.truncatable-1.0.js" />
@@ -149,7 +150,7 @@
 			<filelist>
 				<file name="${webapp.dir}/assets/styles/source/jquery.ui.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.autocomplete.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.sexy-combo.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.loadmask.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.uploadify.css" />
