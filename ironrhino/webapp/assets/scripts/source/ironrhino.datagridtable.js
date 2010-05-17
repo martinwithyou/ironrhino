@@ -1,7 +1,24 @@
 (function($) {
 	$.fn.datagridTable = function() {
+		$('tr input:last', this).keydown(function(event) {
+					if (event.keyCode && event.keyCode == 13) {
+						if (event.preventDefault) {
+							event.preventDefault();
+							addRow(event);
+						}
+					}
+				});
+		$('tr input:first', this).keydown(function(event) {
+			if (event.keyCode && (event.keyCode == 8 && !$(event.target).val())) {
+				if (event.preventDefault) {
+					event.preventDefault();
+					removeRow(event);
+				}
+			}
+		});
 		$('button.add', this).click(addRow);
 		$('button.remove', this).click(removeRow);
+		return this;
 	};
 
 	var addRow = function(event) {
@@ -11,7 +28,7 @@
 		$('*', r).removeAttr('id');
 		$('span.info', r).html('');
 		row.after(r);
-		$(':input', r).val('');
+		$(':input', r).val('').removeAttr('keyupValidate');
 		$(':input', r).eq(0).focus();
 		rename();
 	};

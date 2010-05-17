@@ -1343,6 +1343,10 @@ form div {
 	margin: 5px 0px 5px 0px;
 }
 
+form div.submit{
+text-align:center;
+}
+
 form.line>div {
 	margin-right: 2px;
 	float: left;

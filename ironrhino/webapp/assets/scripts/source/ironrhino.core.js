@@ -681,8 +681,8 @@ Observation.common = function(container) {
 						return false;
 					});
 			$('input', this).keyup(function() {
-						if (!$(this).attr('need')) {
-							$(this).attr('need', 'true');
+						if (!$(this).attr('keyupValidate')) {
+							$(this).attr('keyupValidate', 'true');
 						} else {
 							Form.validate(this);
 						}
