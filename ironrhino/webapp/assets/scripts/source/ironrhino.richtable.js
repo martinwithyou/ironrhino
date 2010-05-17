@@ -40,7 +40,6 @@
 		}
 	},
 	DoResize : function(event) {
-		var e = event || window.event;
 		if (ECSideUtil.Dragobj == null) {
 			return true;
 		}
@@ -48,7 +47,7 @@
 			return false;
 		}
 		document.body.style.cursor = 'e-resize';
-		var dx = e.screenX;
+		var dx = event.screenX;
 		var newWidth = ECSideUtil.Dragobj.parentTdW + dx;
 		var newSiblingWidth = 0;
 		/* fix different from ie to ff . but I don't know why */
@@ -439,7 +438,7 @@ Observation.richtable = function() {
 				});
 		$('.richtable input[name="resultPage.pageNo"]').keydown(
 				function(event) {
-					if (event.keyCode && event.keyCode == 13) {
+					if (event.keyCode == 13) {
 						Richtable.reload()
 					}
 				});
@@ -448,7 +447,7 @@ Observation.richtable = function() {
 					Richtable.reload()
 				});
 		$('.richtable input[name="keyword"]').keydown(function(event) {
-					if (event.keyCode && event.keyCode == 13) {
+					if (event.keyCode == 13) {
 						$('.richtable .jumpPageInput').val(1);
 					}
 				}).next().click(function() {

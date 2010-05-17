@@ -22447,103 +22447,101 @@ Observation.ajaxpanel = function(container) {
 };
 (function($) {
 	$.fn.checkbox = function() {
-		$('input[type=checkbox]', this).each(function() {
-			this.onclick = function(event) {
-				if (!this.name) {
-					var b = this.checked;
-					$('input[type=checkbox][name]', this.form).each(function() {
-								this.checked = b;
-								var tr = $(this).closest('tr');
-								if (tr) {
-									if (b)
-										tr.addClass('selected');
-									else
-										tr.removeClass('selected');
-								}
-							});
-				} else {
-					if (!(event || window.event).shiftKey) {
-						var tr = $(this).closest('tr');
-						if (tr) {
-							if (this.checked)
-								tr.addClass('selected');
-							else
-								tr.removeClass('selected');
-						}
-						var table = $(this).closest('table');
-						if (table.hasClass('treeTable')) {
-							var checked = this.checked;
-							$('tr.child-of-node-' + this.value, table)
-									.find('input[type=checkbox]').attr(
-											'checked', checked).end().each(
-											function() {
-												if (checked)
-													$(this)
-															.addClass('selected');
-												else
-													$(this)
-															.removeClass('selected');
-											});
-						}
-					} else {
-						var boxes = $('input[type=checkbox][name]', this.form);
-						var start = -1, end = -1, checked = false;
-						for (var i = 0; i < boxes.length; i++) {
-							if ($(boxes[i]).attr('lastClicked')) {
-								checked = boxes[i].checked;
-								start = i;
-							}
-							if (boxes[i] == this) {
-								end = i;
-							}
-						}
-						if (start > end) {
-							var tmp = end;
-							end = start;
-							start = tmp;
-						}
-						for (var i = start; i <= end; i++) {
-							boxes[i].checked = checked;
-							tr = $(boxes[i]).closest('tr');
+		$('input[type=checkbox]', this).click(function(event) {
+			if (!this.name) {
+				var b = this.checked;
+				$('input[type=checkbox][name]', this.form).each(function() {
+							this.checked = b;
+							var tr = $(this).closest('tr');
 							if (tr) {
-								if (boxes[i].checked)
+								if (b)
 									tr.addClass('selected');
 								else
 									tr.removeClass('selected');
 							}
+						});
+			} else {
+				if (!event.shiftKey) {
+					var tr = $(this).closest('tr');
+					if (tr) {
+						if (this.checked)
+							tr.addClass('selected');
+						else
+							tr.removeClass('selected');
+					}
+					var table = $(this).closest('table');
+					if (table.hasClass('treeTable')) {
+						var checked = this.checked;
+						$('tr.child-of-node-' + this.value, table)
+								.find('input[type=checkbox]').attr('checked',
+										checked).end().each(function() {
+											if (checked)
+												$(this).addClass('selected');
+											else
+												$(this).removeClass('selected');
+										});
+					}
+				} else {
+					var boxes = $('input[type=checkbox][name]', this.form);
+					var start = -1, end = -1, checked = false;
+					for (var i = 0; i < boxes.length; i++) {
+						if ($(boxes[i]).attr('lastClicked')) {
+							checked = boxes[i].checked;
+							start = i;
+						}
+						if (boxes[i] == this) {
+							end = i;
 						}
 					}
-					$('input[type=checkbox]', this.form).each(function() {
-								this.removeAttribute('lastClicked')
-							});
-					$(this).attr('lastClicked', 'true');
+					if (start > end) {
+						var tmp = end;
+						end = start;
+						start = tmp;
+					}
+					for (var i = start; i <= end; i++) {
+						boxes[i].checked = checked;
+						tr = $(boxes[i]).closest('tr');
+						if (tr) {
+							if (boxes[i].checked)
+								tr.addClass('selected');
+							else
+								tr.removeClass('selected');
+						}
+					}
 				}
-			}
-		});
-
-		$('a.delete_selected').each(function() {
-			this.onprepare = function() {
-				var params = [];
-				$('input[type=checkbox]', $(this).closest('form')).each(
-						function() {
-							if (this.name && this.checked) {
-								params.push(this.name + '=' + this.value)
-							}
+				$('input[type=checkbox]', this.form).each(function() {
+							this.removeAttribute('lastClicked')
 						});
-				var url = $(this).attr('_href');
-				if (!url) {
-					url = this.href;
-					$(this).attr('_href', url);
-				}
-				url += (url.indexOf('?') > 0 ? '&' : '?') + params.join('&');
-				this.href = url;
-				return true;
-			};
-			this.onsuccess = function() {
-				$(this).attr('href', $(this).attr('_href'));
+				$(this).attr('lastClicked', 'true');
 			}
 		});
+		return this;
 	}
+
+	$('a.delete_selected').each(function() {
+				this.onprepare = function() {
+					var params = [];
+					$('input[type=checkbox]', $(this).closest('form')).each(
+							function() {
+								if (this.name && this.checked) {
+									params.push(this.name + '=' + this.value)
+								}
+							});
+					var url = $(this).attr('_href');
+					if (!url) {
+						url = this.href;
+						$(this).attr('_href', url);
+					}
+					url += (url.indexOf('?') > 0 ? '&' : '?')
+							+ params.join('&');
+					this.href = url;
+					return true;
+				};
+				this.onsuccess = function() {
+					$(this).attr('href', $(this).attr('_href'));
+				}
+			});
+
 })(jQuery);
 
 Observation.checkbox = function(container) {
@@ -23035,45 +23033,54 @@ Observation.sortableTable = function(container) {
 	$('table.sortable', container).sortableTable();
 };
 (function($) {
-	$.fn.datagridTable = function() {
+	$.fn.datagridTable = function(options) {
+		var onadd = options ? options.onadd : null;
+		var onremove = options ? options.onremove : null;
 		$('tr input:last', this).keydown(function(event) {
-					if (event.keyCode && event.keyCode == 13) {
-						if (event.preventDefault) {
-							event.preventDefault();
-							addRow(event);
-						}
+					if (event.keyCode == 13) {
+						event.preventDefault();
+						addRow(event, onadd);
 					}
 				});
 		$('tr input:first', this).keydown(function(event) {
-			if (event.keyCode && (event.keyCode == 8 && !$(event.target).val())) {
-				if (event.preventDefault) {
-					event.preventDefault();
-					removeRow(event);
-				}
-			}
-		});
-		$('button.add', this).click(addRow);
-		$('button.remove', this).click(removeRow);
+					if (event.keyCode == 8 && !$(event.target).val()) {
+						event.preventDefault();
+						removeRow(event, onremove);
+					}
+				});
+		$('button.add', this).click(function(event) {
+					addRow(event, onadd)
+				});
+		$('button.remove', this).click(function(event) {
+					removeRow(event, onremove)
+				});
 		return this;
 	};
 
-	var addRow = function(event) {
-		var event = event || window.event;
-		var row = $(event.srcElement || event.target).closest('tr');
+	var addRow = function(event, onadd) {
+		var row = $(event.target).closest('tr');
 		var r = row.clone(true);
 		$('*', r).removeAttr('id');
 		$('span.info', r).html('');
-		row.after(r);
 		$(':input', r).val('').removeAttr('keyupValidate');
+		$('input.filterselect', this).next('select').html(function() {
+					return $(this).data('innerHTML')
+				});
+		row.after(r);
 		$(':input', r).eq(0).focus();
-		rename();
+		rename(row.closest('tbody'));
+		if (onadd)
+			onadd.apply(r.get(0));
 	};
-	var removeRow = function(event) {
-		var event = event || window.event;
-		var row = $(event.srcElement || event.target).closest('tr');
+	var removeRow = function(event, onremove) {
+		var row = $(event.target).closest('tr');
 		if ($('tr', row.parent()).length > 1) {
+			$(':input', row.prev()).eq(0).focus();
+			if (onremove)
+				onremove.apply(row.get(0));
+			var tbody = row.closest('tbody');
 			row.remove();
-			rename(row.closest('tbody'));
+			rename(tbody);
 		}
 	};
 	var rename = function(tbody) {
@@ -23328,7 +23335,6 @@ Observation.combox = function(container) {
 		}
 	},
 	DoResize : function(event) {
-		var e = event || window.event;
 		if (ECSideUtil.Dragobj == null) {
 			return true;
 		}
@@ -23336,7 +23342,7 @@ Observation.combox = function(container) {
 			return false;
 		}
 		document.body.style.cursor = 'e-resize';
-		var dx = e.screenX;
+		var dx = event.screenX;
 		var newWidth = ECSideUtil.Dragobj.parentTdW + dx;
 		var newSiblingWidth = 0;
 		/* fix different from ie to ff . but I don't know why */
@@ -23727,7 +23733,7 @@ Observation.richtable = function() {
 				});
 		$('.richtable input[name="resultPage.pageNo"]').keydown(
 				function(event) {
-					if (event.keyCode && event.keyCode == 13) {
+					if (event.keyCode == 13) {
 						Richtable.reload()
 					}
 				});
@@ -23736,7 +23742,7 @@ Observation.richtable = function() {
 					Richtable.reload()
 				});
 		$('.richtable input[name="keyword"]').keydown(function(event) {
-					if (event.keyCode && event.keyCode == 13) {
+					if (event.keyCode == 13) {
 						$('.richtable .jumpPageInput').val(1);
 					}
 				}).next().click(function() {
