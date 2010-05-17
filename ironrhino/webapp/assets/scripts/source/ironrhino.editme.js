@@ -10,6 +10,7 @@
 					}, function() {
 						$(this).removeClass('editme_hover')
 					});
+		return this;
 	};
 	function click() {
 		var t = $(this);
