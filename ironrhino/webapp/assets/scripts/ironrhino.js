@@ -23036,13 +23036,13 @@ Observation.sortableTable = function(container) {
 	$.fn.datagridTable = function(options) {
 		var onadd = options ? options.onadd : null;
 		var onremove = options ? options.onremove : null;
-		$('tr input:last', this).keydown(function(event) {
+		$('tbody tr input:last', this).keydown(function(event) {
 					if (event.keyCode == 13) {
 						event.preventDefault();
 						addRow(event, onadd);
 					}
 				});
-		$('tr input:first', this).keydown(function(event) {
+		$('tbody tr input:first', this).keydown(function(event) {
 					if (event.keyCode == 8 && !$(event.target).val()) {
 						event.preventDefault();
 						removeRow(event, onremove);
@@ -23994,6 +23994,7 @@ highlight : function(node, word) {
 					}, function() {
 						$(this).removeClass('editme_hover')
 					});
+		return this;
 	};
 	function click() {
 		var t = $(this);

@@ -2,7 +2,6 @@ package org.ironrhino.core.cache.impl;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.ehcache.Cache;
@@ -82,19 +81,12 @@ public class EhCacheManager implements CacheManager {
 	public Map<String, Object> mget(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return null;
-		Map<String, Object> map = new HashMap<String, Object>();
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		Cache cache = ehCacheManager.getCache(namespace);
 		if (cache == null)
 			return null;
-		for (String key : keys) {
-			if (key == null)
-				continue;
-			Element element = cache.get(key);
-			map.put(key, element != null ? element.getValue() : null);
-		}
-		return map;
+		return cache.getAllWithLoader(keys, null);
 	}
 
 	public void mdelete(Collection<String> keys, String namespace) {
