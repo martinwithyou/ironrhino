@@ -165,17 +165,42 @@ Message = {
 	showActionMessage : function(messages, target) {
 		if (!messages)
 			return;
-		if (typeof messages == 'string'){
+		if (typeof messages == 'string') {
 			var a = [];
 			a.push(messages);
 			messages = a;
 		}
+		var nf = false;
+		if (window.webkitNotifications) {
+			var nc = window.webkitNotifications;
+			if (nc.checkPermission() == 1)
+				nc.requestPermission(function() {
+							nf = true
+						});
+			else if (nc.checkPermission() == 0)
+				nf = true;
+		}
 		var html = '';
-		for (var i = 0; i < messages.length; i++)
-			if (typeof $.jGrowl != 'undefined')
-				$.jGrowl(messages[i]);
-			else
-				html += Message.compose(messages[i], 'action_message');
+		for (var i = 0; i < messages.length; i++) {
+			var nfed = false;
+			if (nf) {
+				try {
+					var n = nc.createNotification('','', messages[i]);
+					n.show();
+					setTimeout(function() {
+								n.cancel()
+							}, 3000);
+					nfed = true;
+				} catch (e) {
+				}
+			}
+			if (!nfed) {
+				if (typeof $.jGrowl != 'undefined')
+					$.jGrowl(messages[i]);
+				else
+					html += Message.compose(messages[i], 'action_message');
+			}
+		}
 		if (html)
 			if (target && target.tagName == 'FORM') {
 				if ($('#' + target.id + '_message').length == 0)
@@ -194,7 +219,7 @@ Message = {
 	showActionError : function(messages, target) {
 		if (!messages)
 			return;
-		if (typeof messages == 'string'){
+		if (typeof messages == 'string') {
 			var a = [];
 			a.push(messages);
 			messages = a;

@@ -48,4 +48,7 @@
 
 Observation.ajaxpanel = function(container) {
 	$('.ajaxpanel', container).ajaxpanel();
+	$('.ajaxpanel .load', container).click(function() {
+				$(this).closest('.ajaxpanel').trigger('load');
+			});
 };
