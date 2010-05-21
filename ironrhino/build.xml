@@ -126,6 +126,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.tmpl-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.elastic-1.6.3.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.jgrowl-1.2.4.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview-1.4.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview.async-0.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeTable-2.2.3.js" />
@@ -155,6 +156,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.uploadify.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.jgrowl.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />

@@ -35,6 +35,9 @@ MessageBundle = {
 		'select' : '请选择',
 		'save' : '保存',
 		'restore' : '还原',
+		'confirm' : '确定',
+		'cancel' : '取消',
+		'error' : '错误',
 		'success' : '操作成功'
 	},
 	get : function() {

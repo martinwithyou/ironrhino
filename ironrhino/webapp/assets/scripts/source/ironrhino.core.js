@@ -62,10 +62,6 @@ function _observe(container) {
 $(_init);
 
 Initialization.common = function() {
-	if (typeof dwr != 'undefined') {
-		dwr.engine.setPreHook(Indicator.show);
-		dwr.engine.setPostHook(Indicator.hide);
-	}
 	$(document).ajaxStart(function() {
 				Indicator.show()
 			});
@@ -80,6 +76,8 @@ Initialization.common = function() {
 					return;
 				}
 			});
+	$.alerts.okButton = MessageBundle.get('confirm');
+	$.alerts.cancelButton = MessageBundle.get('cancel');
 };
 
 Indicator = {
@@ -223,6 +221,10 @@ Message = {
 			var a = [];
 			a.push(messages);
 			messages = a;
+		}
+		if($.alerts){
+			$.alerts.alert(messages.join('\n'),MessageBundle.get('error'));
+			return;
 		}
 		var html = '';
 		for (var i = 0; i < messages.length; i++)

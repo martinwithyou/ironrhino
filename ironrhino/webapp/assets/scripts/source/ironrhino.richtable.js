@@ -242,22 +242,37 @@ Richtable = {
 		else if (action == 'save')
 			Richtable.save(event);
 		else if (action) {
-			if (action == 'delete'
-					&& !confirm(MessageBundle.get('confirm.delete')))
-				return;
 			if (!idparams) {
 				Message.showMessage('no.selection');
 				return;
 			}
-			var url = Richtable.getBaseUrl() + '/' + action
-					+ Richtable.getPathParams();
-			url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
-			ajax({
-						url : url,
-						type : 'POST',
-						dataType : 'json',
-						success : Richtable.reload
-					});
+			if (action == 'delete') {
+				$.alerts.confirm(MessageBundle.get('confirm.delete'), MessageBundle.get('select'),
+						function(b) {
+							if (b) {
+								var url = Richtable.getBaseUrl() + '/' + action
+										+ Richtable.getPathParams();
+								url += (url.indexOf('?') > 0 ? '&' : '?')
+										+ idparams;
+								ajax({
+											url : url,
+											type : 'POST',
+											dataType : 'json',
+											success : Richtable.reload
+										});
+							}
+						});
+			} else {
+				var url = Richtable.getBaseUrl() + '/' + action
+						+ Richtable.getPathParams();
+				url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
+				ajax({
+							url : url,
+							type : 'POST',
+							dataType : 'json',
+							success : Richtable.reload
+						});
+			}
 		} else {
 			var options = eval('(' + ($(btn).attr('windowoptions') || '{}')
 					+ ')');
@@ -358,7 +373,12 @@ Richtable = {
 			};
 			select.focus();
 		} else {
-			$('input.date', ce).datepicker({dateFormat : 'yy-mm-dd',onSelect:function(){Richtable.updateCell(this)}});
+			$('input.date', ce).datepicker({
+						dateFormat : 'yy-mm-dd',
+						onSelect : function() {
+							Richtable.updateCell(this)
+						}
+					});
 			$(':input', ce).val(value).focus();
 		}
 	},
