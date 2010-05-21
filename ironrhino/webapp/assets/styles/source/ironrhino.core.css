@@ -21,7 +21,7 @@ div.field_error,div.action_error,ul.field_error li {
 	padding: 2px 2px 1px 20px;
 	border: 1px solid #F60;
 	vertical-align: middle;
-	background: #FFF2E9 url(../images/warning.png) 1px 1px no-repeat;
+	background: #FFF2E9 url(../images/msg.png) 2px -42px no-repeat;
 	color: #000;
 }
 
@@ -31,7 +31,7 @@ div.action_message,ul.action_message li {
 	padding: 2px 2px 1px 20px;
 	border: 1px solid #669eff;
 	vertical-align: middle;
-	background: #e8eef7 url(../images/information.png) 1px 1px no-repeat;
+	background: #e8eef7 url(../images/msg.png) 2px 2px no-repeat;
 	color: #000;
 }
 
@@ -40,7 +40,7 @@ div.action_message,ul.action_message li {
 	height: 15px;
 	float: right;
 	cursor: pointer;
-	background: url(../images/warning_close.png) 4px 4px no-repeat;
+	background: url(../images/msg.png) 0px -66px no-repeat;
 }
 
 .action_message .close {
@@ -48,7 +48,7 @@ div.action_message,ul.action_message li {
 	height: 15px;
 	float: right;
 	cursor: pointer;
-	background: url(../images/information_close.png) 4px 4px no-repeat;
+	background: url(../images/msg.png) 0px -22px no-repeat;
 }
 
 .highlight {
