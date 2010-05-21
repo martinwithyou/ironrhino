@@ -689,7 +689,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 /* jquery.treeTable.sortable
  * ------------------------------------------------------------------------- */
 .treeTable tr.selected, .treeTable tr.accept {
-  background-color: #EBC79E;
+  background-color: #3875d7;
   color: #fff;
 }
 
@@ -706,11 +706,11 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   z-index: 1;
 }
 
-
 /**fixed span position**/
 .treeTable tbody tr td {
   padding: .3em 1.5em;
 }
+
 
 /*
 Uploadify v2.0.3

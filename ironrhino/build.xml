@@ -129,7 +129,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview-1.4.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview.async-0.1.my.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.treeTable-2.2.3.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.treeTable-2.3.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.uploadify-2.1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
@@ -153,7 +153,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.autocomplete.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.loadmask.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.uploadify.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.jgrowl.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.css" />

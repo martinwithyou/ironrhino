@@ -21334,7 +21334,13 @@ $.fn.treeview = function(settings) {
 };
 
 })(jQuery);
-/* jQuery treeTable Plugin 2.2.3 - http://ludo.cubicphuse.nl/jquery-plugins/treeTable/ */
+/*
+ * jQuery treeTable Plugin 2.3.0
+ * http://ludo.cubicphuse.nl/jquery-plugins/treeTable/
+ *
+ * Copyright 2010, Ludo van den Boom
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ */
 (function($) {
   // Helps to make options available to all functions
   // TODO: This gives problems when there are both expandable and non-expandable
@@ -21348,7 +21354,7 @@ $.fn.treeview = function(settings) {
     return this.each(function() {
       $(this).addClass("treeTable").find("tbody tr").each(function() {
         // Initialize root nodes only if possible
-        if(!options.expandable || $(this)[0].className.search("child-of-") == -1) {
+        if(!options.expandable || $(this)[0].className.search(options.childPrefix) == -1) {
           // To optimize performance of indentation, I retrieve the padding-left
           // value of the first root node. This way I only have to call +css+ 
           // once.
@@ -21405,7 +21411,17 @@ $.fn.treeview = function(settings) {
     
     return this;
   };
-  
+
+  // Reveal a node by expanding all ancestors
+  $.fn.reveal = function() {
+    $(ancestorsOf($(this)).reverse()).each(function() {
+      initialize($(this));
+      $(this).expand().show();
+    });
+    
+    return this;
+  };
+
   // Add an entire branch to +destination+
   $.fn.appendBranchTo = function(destination) {
     var node = $(this);
@@ -21531,7 +21547,7 @@ $.fn.treeview = function(settings) {
     var classNames = node[0].className.split(' ');
     
     for(key in classNames) {
-      if(classNames[key].match("child-of-")) {
+      if(classNames[key].match(options.childPrefix)) {
         return $("#" + classNames[key].substring(9));
       }
     }
