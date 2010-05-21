@@ -662,63 +662,6 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 	{
 	background-position: 0;
 }
-
-.treeview-red li {
-	background-image: url(../images/treeview-red-line.gif);
-}
-
-.treeview-red .hitarea,.treeview-red li.lastCollapsable,.treeview-red li.lastExpandable
-	{
-	background-image: url(../images/treeview-red.gif);
-}
-
-.treeview-black li {
-	background-image: url(../images/treeview-black-line.gif);
-}
-
-.treeview-black .hitarea,.treeview-black li.lastCollapsable,.treeview-black li.lastExpandable
-	{
-	background-image: url(../images/treeview-black.gif);
-}
-
-.treeview-gray li {
-	background-image: url(../images/treeview-gray-line.gif);
-}
-
-.treeview-gray .hitarea,.treeview-gray li.lastCollapsable,.treeview-gray li.lastExpandable
-	{
-	background-image: url(../images/treeview-gray.gif);
-}
-
-.treeview-famfamfam li {
-	background-image: url(../images/treeview-famfamfam-line.gif);
-}
-
-.treeview-famfamfam .hitarea,.treeview-famfamfam li.lastCollapsable,.treeview-famfamfam li.lastExpandable
-	{
-	background-image: url(../images/treeview-famfamfam.gif);
-}
-
-.filetree li {
-	padding: 3px 0 2px 16px;
-}
-
-.filetree span.folder,.filetree span.file {
-	padding: 1px 0 1px 16px;
-	display: block;
-}
-
-.filetree span.folder {
-	background: url(../images/folder.gif) 0 0 no-repeat;
-}
-
-.filetree li.expandable span.folder {
-	background: url(../images/folder-closed.gif) 0 0 no-repeat;
-}
-
-.filetree span.file {
-	background: url(../images/file.gif) 0 0 no-repeat;
-}
 /* jQuery TreeTable Core 2.0 stylesheet
  *
  * This file contains styles that are used to display the tree table. Each tree
