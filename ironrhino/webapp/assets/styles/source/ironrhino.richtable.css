@@ -105,47 +105,47 @@
 .richtable .pageNav {
 	background-color: transparent;
 	background-repeat: no-repeat;
-	background-position: center;
+	background-image: url(../images/pageNav.png);
 	border: 0px #dddddd none;
-	height: 20px;
-	width: 20px;
+	height: 22px;
+	width: 22px;
 	cursor: pointer;
 }
 
 .richtable .jumpPage {
-	background-image: url(../images/gotoPage.gif);
+	background-position: 0px -256px;
 }
 
 .richtable .firstPage {
-	background-image: url(../images/firstPage.gif);
+	background-position: 0px 0px;
 }
 
 .richtable .prevPage {
-	background-image: url(../images/prevPage.gif);
+	background-position: 0px -192px;
 }
 
 .richtable .nextPage {
-	background-image: url(../images/nextPage.gif);
+	background-position: 0px -128px;
 }
 
 .richtable .lastPage {
-	background-image: url(../images/lastPage.gif);
+	background-position: 0px -64px;
 }
 
 .richtable .firstPageD {
-	background-image: url(../images/firstPageDisabled.gif);
+	background-position: 0px -32px;
 }
 
 .richtable .prevPageD {
-	background-image: url(../images/prevPageDisabled.gif);
+	background-position: 0px -224px;
 }
 
 .richtable .nextPageD {
-	background-image: url(../images/nextPageDisabled.gif);
+	background-position: 0px -160px;
 }
 
 .richtable .lastPageD {
-	background-image: url(../images/lastPageDisabled.gif);
+	background-position: 0px -96px;
 }
 
 .richtable .toolbar select {
