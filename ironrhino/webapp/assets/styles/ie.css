@@ -1,16 +1,5 @@
-div.field_error,div.action_error,ul.field_error li {
-	background-image: url(../images/warning.gif) 1px 1px;
-}
-
-div.action_message,ul.action_message li {
-	background-image: url(../images/information.gif) 1px 1px;
-}
-.field_error .close,.action_error .close {
-	background-image: url(../images/warning_close.gif) 4px 4px;
-}
-
-.action_message .close {
-	background-image: url(../images/information_close.gif) 4px 4px;
+div.field_error,div.action_error,ul.field_error li,div.action_message,ul.action_message li,.field_error .close,.action_error .close,.action_message .close {
+	background-image: url(../images/msg.gif);
 }
 
 input.required {
