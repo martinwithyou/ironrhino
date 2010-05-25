@@ -1,12 +1,15 @@
 (function() {
-	var d = document.domain.split('.');
-	try {
-		if (d.length > 2)
-			document.domain = d[d.length - 2] + '.' + d[d.length - 1];
-	} catch (e) {
-		if (d.length > 3)
-			document.domain = d[d.length - 3] + '.' + d[d.length - 2] + '.'
-					+ d[d.length - 1];
+	var d = document.domain;
+	if (!d.match(/^(\d+\.){3}\d+$/)) {
+		d = d.split('.');
+		try {
+			if (d.length > 2)
+				document.domain = d[d.length - 2] + '.' + d[d.length - 1];
+		} catch (e) {
+			if (d.length > 3)
+				document.domain = d[d.length - 3] + '.' + d[d.length - 2] + '.'
+						+ d[d.length - 1];
+		}
 	}
 	$.ajaxSettings.traditional = true;
 	var $ajax = $.ajax;
@@ -183,7 +186,7 @@ Message = {
 			var nfed = false;
 			if (nf) {
 				try {
-					var n = nc.createNotification('','', messages[i]);
+					var n = nc.createNotification('', '', messages[i]);
 					n.show();
 					setTimeout(function() {
 								n.cancel()
@@ -222,8 +225,8 @@ Message = {
 			a.push(messages);
 			messages = a;
 		}
-		if($.alerts){
-			$.alerts.alert(messages.join('\n'),MessageBundle.get('error'));
+		if ($.alerts) {
+			$.alerts.alert(messages.join('\n'), MessageBundle.get('error'));
 			return;
 		}
 		var html = '';
