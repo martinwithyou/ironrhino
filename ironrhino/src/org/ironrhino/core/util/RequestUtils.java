@@ -181,6 +181,8 @@ public class RequestUtils {
 	}
 
 	private static String parseGlobalDomain(String host) {
+		if (host.matches("^(\\d+\\.){3}\\d+$"))
+			return host;
 		boolean topDouble = false;
 		for (String s : topDoubleDomains) {
 			if (host.endsWith(s)) {
