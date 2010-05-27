@@ -24,7 +24,7 @@
 </#macro>
 
 <#macro rtstart action='',readonly=false,resizable=true,sortable=true,includeParameters=true>
-<form id="${action}_form" action="${getUrl(action)}" method="post" class="richtable ajax view"<#if resizable>resizable="true" minColWidth="40"</#if>>
+<form id="${action}_form" action="${getUrl(action)}" method="post" class="richtable ajax view"<#if resizable> resizable="true" minColWidth="40"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
 <#if !name?starts_with('resultPage.')&&name!='keyword'>
@@ -32,7 +32,7 @@
 </#if>
 </#list>
 </#if>
-<table border="0" cellspacing="0" cellpadding="0"<#if sortable>class="sortable"</#if>style="table-layout:fixed;" width="100%">
+<table border="0" cellspacing="0" cellpadding="0"<#if sortable> class="sortable"</#if> style="table-layout:fixed;" width="100%">
 <thead>
 <tr>
 <#if !readonly>
@@ -41,7 +41,7 @@
 </#macro>
 
 <#macro rttheadtd name,cellName='',cellEdit='',class='',width='',readonly=false,resizable=true>
-<td class="tableHeader<#if class!=''>${class}</#if>"<#if width!=''>width="${width}"</#if><#if !(readonly||cellEdit=='')>cellName="${cellName}"</#if><#if cellEdit!=''>cellEdit="${cellEdit}"</#if>>
+<td class="tableHeader<#if class!=''> ${class}</#if>"<#if width!=''> width="${width}"</#if><#if !(readonly||cellEdit=='')> cellName="${cellName}"</#if><#if cellEdit!=''> cellEdit="${cellEdit}"</#if>>
 <#if resizable>
 <span class="resizeTitle">${action.getText(name)}</span>
 <span class="resizeBar"></span>
@@ -60,12 +60,12 @@ ${action.getText(name)}
 </#macro>
 
 <#macro rttbodytrstart entity odd readonly=false>
-<tr class="${odd?string('odd','even')}"<#if entity.id??>rowid="${entity.id?string}"</#if>>
+<tr class="${odd?string('odd','even')}"<#if entity.id??> rowid="${entity.id?string}"</#if>>
 <#if !readonly><td><input type="checkbox" name="check"/></td></#if>
 </#macro>
 
 <#macro rttbodytd value,entity,celleditable=true,template=''>
-<td<#if celleditable><#if value?string=='true'||value?string=='false'>cellValue="${value?string}"</#if><#if value?is_hash&&value.displayName??>cellValue="${value.name()}"</#if></#if>><#rt>
+<td<#if celleditable><#if value?string=='true'||value?string=='false'> cellValue="${value?string}"</#if><#if value?is_hash&&value.displayName??> cellValue="${value.name()}"</#if></#if>><#rt>
 <#if template==''><#t>
 <#if value?string=='true'||value?string=='false'><#t>
 ${action.getText(value?string)}<#t>
@@ -111,17 +111,17 @@ ${value?xhtml}<#t>
 <tr>
 <td class="pageNavigationTool" width="40%" nowrap="nowrap">
 <#if resultPage??>
-<input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav firstPageD"<#else>class="pageNav firstPage"</#if>title="${action.getText('firstpage')}" />
-<input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav prevPageD"<#else>class="pageNav prevPage"</#if>title="${action.getText('previouspage')}" />
-<input type="button" <#if resultPage.pageNo==resultPage.totalPage>disabled="disabled" class="pageNav nextPageD"<#else>class="pageNav nextPage"</#if>title="${action.getText('nextpage')}" />
-<input type="button" <#if resultPage.pageNo==resultPage.totalPage>disabled="disabled" class="pageNav lastPageD"<#else>class="pageNav lastPage"</#if>title="${action.getText('lastpage')}"/>
+<input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav firstPageD"<#else>class="pageNav firstPage"</#if> title="${action.getText('firstpage')}" />
+<input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav prevPageD"<#else>class="pageNav prevPage"</#if> title="${action.getText('previouspage')}" />
+<input type="button" <#if resultPage.pageNo==resultPage.totalPage>disabled="disabled" class="pageNav nextPageD"<#else> class="pageNav nextPage"</#if> title="${action.getText('nextpage')}" />
+<input type="button" <#if resultPage.pageNo==resultPage.totalPage>disabled="disabled" class="pageNav lastPageD"<#else>class="pageNav lastPage"</#if> title="${action.getText('lastpage')}"/>
 <input type="button" class="pageNav jumpPage"/>
 <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="jumpPageInput"/>/<span class="totalPage">${resultPage.totalPage}</span>${action.getText('page')}
 ${action.getText('pagesize')}<select name="resultPage.pageSize">
 <#local array=[5,10,20,50,100,500]>
 <#list array as ps>
 <option value="${ps}" <#if resultPage.pageSize==ps>selected</#if>>${ps}</option>
-</#list>
+</#list> 
 <option value="${resultPage.totalRecord}">${action.getText('all')}</option>
 </select>${action.getText('row')}
 </#if>

@@ -8,7 +8,7 @@
 <#if parameters.disabled!false>
  disabled="disabled"<#rt/>
 </#if>
- class="btn<#if parameters.cssClass??>${parameters.cssClass?html}</#if>"<#rt/>
+ class="btn<#if parameters.cssClass??> ${parameters.cssClass?html}</#if>"<#rt/>
 <#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
