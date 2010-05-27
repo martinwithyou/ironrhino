@@ -160,6 +160,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.uploadify.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.jgrowl.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.reset.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />

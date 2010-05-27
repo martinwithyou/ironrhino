@@ -2,6 +2,9 @@
 	width: 33.33%;
 	float: left;
 	}
+.portal-column.empty {
+	padding-bottom: 100px;
+}
 .portlet { 
 	margin: 0 1em 1em 0; 
 	}

@@ -70,10 +70,6 @@ div.action_message,ul.action_message li {
 	white-space: nowrap;
 }
 
-.clear {
-	clear: both;
-}
-
 .draggable {
 	cursor: move;
 }
@@ -89,9 +85,6 @@ img.captcha {
 	border: 1px dashed #b00;
 }
 
-table {
-	border: none;	
-}
 
 thead,tfoot {
 	background-color: #E5ECF9;

@@ -1,0 +1,45 @@
+* {
+	margin:0; padding:0; 
+}
+html, body {
+	height:100%;
+}
+body {
+	font:12px Arial, Helvetica, sans-serif;
+}
+select, input, button, textarea {
+	font:12px Arial, Helvetica, sans-serif;
+}
+table {
+	font-size:inherit; font:100%;
+}
+a {
+	text-decoration:none; color:black;
+}
+ul, ol {
+	list-style:none;
+}
+img {
+	border:none;
+}
+.clear { 
+	clear:both;
+	display:block;
+	overflow:hidden;
+	visibility:hidden;
+	width:0;
+	height:0;
+}
+.clearfix:after {
+	clear:both;
+	content:' ';
+	display:block;
+	font-size:0;
+	line-height:0;
+	visibility:hidden;
+	width:0;
+	height:0;
+}
+* html .clearfix, *:first-child+html .clearfix {
+	zoom:1;
+}

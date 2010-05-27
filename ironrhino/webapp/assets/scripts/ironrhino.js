@@ -23423,7 +23423,19 @@ Observation.filterselect = function(container) {
 		if (arguments.length == 0) {
 			this.each(function() {
 				$('.portal-column', this).sortable({
-							connectWith : '.portal-column'
+							connectWith : '.portal-column',
+							handle : '.portlet-header',
+							opacity : 0.6,
+							receive : function(event, ui) {
+								var col = $(event.target);
+								if (col.hasClass('empty'))
+									col.removeClass('empty');
+							},
+							remove : function(event, ui) {
+								var col = $(event.target);
+								if ($('.portlet', col).length == 0)
+									col.addClass('empty');
+							}
 						});
 				$('.portlet', this)
 						.addClass('ui-widget ui-widget-content ui-helper-clearfix ui-corner-all')

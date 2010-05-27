@@ -959,6 +959,51 @@ div.jGrowl div.jGrowl-closer {
 #popup_prompt {
 	margin: .5em 0em;
 }
+* {
+	margin:0; padding:0; 
+}
+html, body {
+	height:100%;
+}
+body {
+	font:12px Arial, Helvetica, sans-serif;
+}
+select, input, button, textarea {
+	font:12px Arial, Helvetica, sans-serif;
+}
+table {
+	font-size:inherit; font:100%;
+}
+a {
+	text-decoration:none; color:black;
+}
+ul, ol {
+	list-style:none;
+}
+img {
+	border:none;
+}
+.clear { 
+	clear:both;
+	display:block;
+	overflow:hidden;
+	visibility:hidden;
+	width:0;
+	height:0;
+}
+.clearfix:after {
+	clear:both;
+	content:' ';
+	display:block;
+	font-size:0;
+	line-height:0;
+	visibility:hidden;
+	width:0;
+	height:0;
+}
+* html .clearfix, *:first-child+html .clearfix {
+	zoom:1;
+}
 /*http://kissy.googlecode.com/svn/trunk/src/cssgrids*/
 
 #header, #content, #footer {
@@ -1091,10 +1136,6 @@ div.action_message,ul.action_message li {
 	white-space: nowrap;
 }
 
-.clear {
-	clear: both;
-}
-
 .draggable {
 	cursor: move;
 }
@@ -1110,9 +1151,6 @@ img.captcha {
 	border: 1px dashed #b00;
 }
 
-table {
-	border: none;	
-}
 
 thead,tfoot {
 	background-color: #E5ECF9;
@@ -1378,6 +1416,9 @@ div.top label {
 	width: 33.33%;
 	float: left;
 	}
+.portal-column.empty {
+	padding-bottom: 100px;
+}
 .portlet { 
 	margin: 0 1em 1em 0; 
 	}
