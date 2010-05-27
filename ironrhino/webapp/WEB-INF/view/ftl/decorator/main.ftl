@@ -54,27 +54,27 @@
 </div>
 
 <#if request.servletPath?starts_with('/product/')||request.servletPath='/'||request.servletPath='/index'>
-<div id="content" class="layout grid-s5m0e6"> 
-	<div class="col-main"> 
-		<div class="main-wrap"> 
+<div id="content" class="layout grid-s5m0e6">
+	<div class="col-main">
+		<div class="main-wrap">
 			<div id="message"><@s.actionerror cssClass="action_error" /><@s.actionmessage cssClass="action_message" /></div>
 			<#noescape>${body}</#noescape>
-		</div> 
-	</div> 
-	<div class="col-sub"> 
+		</div>
+	</div>
+	<div class="col-sub">
 		<@s.action name="left" executeResult="true" />
-	</div> 
-	<div class="col-extra"> 
+	</div>
+	<div class="col-extra">
 		<@s.action name="right" executeResult="true" />
-	</div> 
+	</div>
 </div>
 <#else>
-<div id="content" class="layout"> 
-	<div class="col-main"> 
+<div id="content" class="layout">
+	<div class="col-main">
     <div id="message"><@s.actionerror cssClass="action_error" /><@s.actionmessage cssClass="action_message" /></div>
 	<#noescape>${body}</#noescape>
-	</div> 
-</div> 
+	</div>
+</div>
 </#if>
 
 <div id="footer">

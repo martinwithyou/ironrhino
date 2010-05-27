@@ -12,7 +12,7 @@
 <#assign keyExists=statics['org.ironrhino.core.cache.CacheContext'].eval(key)??>
 <#assign content=statics['org.ironrhino.core.cache.CacheContext'].getPageFragment(key,scope)!>
 <#if keyExists&&content??&&content?length gt 0>${content}<#else>
-<#assign content><#nested/></#assign>  
+<#assign content><#nested/></#assign> 
 ${content}
 ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,scope,timeToIdle,timeToLive)}
 </#if>

@@ -3,7 +3,7 @@
 <head>
 <title><#if page.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('page')}</title>
 <meta name="cms_path" content="${cmsPath}" />
-<script type="text/javascript" src="<@url value="/assets/components/tinymce/jscripts/tiny_mce/jquery.tinymce.js"/>"></script> 
+<script type="text/javascript" src="<@url value="/assets/components/tinymce/jscripts/tiny_mce/jquery.tinymce.js"/>"></script>
 <script type="text/javascript">
 $(function() {
 		var cmsPath= $('meta[name="cms_path"]').attr('content') || '';

@@ -37,6 +37,20 @@ form.line>div {
 	float: left;
 }
 
+form.line:after {
+	clear:both;
+	content:' ';
+	display:block;
+	font-size:0;
+	line-height:0;
+	visibility:hidden;
+	width:0;
+	height:0;
+}
+* html form.line, *:first-child+html form.line {
+	zoom:1;
+}
+
 form label.field {
 	display: block;
 	float: left;

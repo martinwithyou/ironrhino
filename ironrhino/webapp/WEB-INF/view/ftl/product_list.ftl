@@ -8,7 +8,7 @@
 <#list resultPage.result as var>
 	<p>
 	<img src="<@url value="/product/${var.code}.s.jpg"/>" alt="${var.code}" class="product_list" />
-	<a href="<@url value="/product/view/${var.code}"/>">${var.name}</a> 
+	<a href="<@url value="/product/view/${var.code}"/>">${var.name}</a>
 	<a href="<@url value="/cart/add/${var.code}"/>" class="ajax view" replacement="cart_items">放入购物车</a>
 	</p>
 </#list>

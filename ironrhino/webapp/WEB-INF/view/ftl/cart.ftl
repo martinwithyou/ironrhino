@@ -22,9 +22,9 @@
 			<tr class="row">
 				<td><input type="checkbox" name="id"
 					value="${var.productCode}" /></td>
-				<td><a href="<@url value="/product/view/${var.productCode}"/>"> ${var.productName}</a></td>
+				<td><a href="<@url value="/product/view/${var.productCode}"/>">${var.productName}</a></td>
 				<td>${var.productPrice}</td>
-				<td><input type="hidden" name="items[${index}].productCode" value="${var.productCode}" /> 
+				<td><input type="hidden" name="items[${index}].productCode" value="${var.productCode}" />
 				<input type="text" size="2" name="items[${index}].quantity" value="${var.quantity}" /></td>
 				<td>${var.subtotal}</td>
 				<td><@button type="link" text="${action.getText('remove')}" href="${getUrl('/cart/remove/'+var.productCode)}" class="ajax view" replacement="detail" onprepare="confirm('are you sure to remove ${var.productCode}')"/></td>

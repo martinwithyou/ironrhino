@@ -108,7 +108,7 @@ window.location.href=url;
 </head>
 <body>
 <div style="float: left; width: 20%;">
-<div><a class="link" onclick="moveTo()">move mode</a> <a class="link" onclick="saveLatLng()">mark mode</a></div>
+<div><a class="link" onclick="moveTo()">move mode</a><a class="link" onclick="saveLatLng()">mark mode</a></div>
 <@s.action var="region" namespace="/" name="region" executeResult="false"/>
 <@s.property value="#attr.region.treeViewHtml" escape="false" />
 </div>

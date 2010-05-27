@@ -81,6 +81,10 @@ Initialization.common = function() {
 			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
+	$('.menu li').each(function() {
+				if ($('a', this).attr('href') == document.location.pathname)
+					$(this).addClass('selected');
+			});
 };
 
 Indicator = {

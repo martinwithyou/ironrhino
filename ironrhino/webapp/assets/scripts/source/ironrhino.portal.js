@@ -1,7 +1,7 @@
 (function($) {
 	$.fn.portal = function() {
 		if (arguments.length == 0) {
-			this.each(function() {
+			this.addClass('clearfix').each(function() {
 				$('.portal-column', this).sortable({
 							connectWith : '.portal-column',
 							handle : '.portlet-header',

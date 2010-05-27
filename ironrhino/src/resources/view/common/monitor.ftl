@@ -1,5 +1,5 @@
 <#macro renderTR node>
-<tr id="node-${node.id}"<#if node.parent??&&node.parent.id gt 0> class="child-of-node-${node.parent.id}"</#if>>
+<tr id="node-${node.id}"<#if node.parent??&&node.parent.id gt 0>class="child-of-node-${node.parent.id}"</#if>>
         <td>${node.name}</td>
         <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.longValue gt 0><a href="monitor/chart/${node.key?string}?vtype=l<#if Parameters.date??>&date=${Parameters.date}</#if>" class="number">${node.value.longValue}</a><span class="perccent">${node.longPercent!}</span></#if></td>
         <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.doubleValue gt 0><a href="monitor/chart/${node.key?string}?vtype=d<#if Parameters.date??>&date=${Parameters.date}</#if>" class="number">${node.value.doubleValue}</a><span  class="perccent">${node.doublePercent!}</span></#if></td>
