@@ -20,7 +20,7 @@
 <div id="wrapper">
 <div id="header" style="height: 40px">
 <div id="menu">
-<ul class="nav">
+<ul class="menu">
 	<li><a>系统配置</a>
 	<ul>
 		<li><a href="<@url value="/common/console"/>">控制台</a></li>

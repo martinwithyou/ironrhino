@@ -1,9 +1,11 @@
-.richtable {
-	border: 0px solid red;
-	padding: 0px;
-	margin: 0px;
+.richtable table {
+	table-layout:fixed;
+	width:100%;
 }
-
+.richtable table td{
+	white-space:nowrap;
+	overflow:hidden;
+}
 .richtable input.text {
 	border: 1px solid #cc9966;
 	font-size: 12px;
@@ -76,30 +78,9 @@
 	background-color: #ffeedd;
 }
 
-.richtable .selected a,.selectlight a {
-	color: black;
-}
-
-.richtable .odd div.ellipsis,.richtable .even div.ellipsis,.richtable.highlight div.ellipsis,.richtable .selectlight DIV.ellipsis
-	{
-	text-align: left;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	color: #3a3a3a;
-	width: 100%;
-}
-
-.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .selectlight .editedCell
+.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .editedCell
 	{
 	background-color: #fff3f0;
-}
-
-.richtable .titleRow {
-	color: #444444;
-	font-weight: bold;
-	font-size: 12px;
-	vertical-align: middle;
 }
 
 .richtable .pageNav {
@@ -146,28 +127,6 @@
 
 .richtable .lastPageD {
 	background-position: 0px -96px;
-}
-
-.richtable .toolbar select {
-	width: 50px;
-}
-
-.richtable .toolbar .toolbarTable {
-	border: 0px;
-	width: 100%;
-}
-
-.richtable .toolbar .toolbarTable td {
-	border: 0px;
-}
-
-.richtable .toolbar .toolbarTable .statusTool {
-	border: 0px solid red;
-	padding-top: 2px;
-	text-align: right;
-	white-space: nowrap;
-	word-break: keep-all;
-	word-wrap: normal;
 }
 
 .richtable .jumpPageInput {

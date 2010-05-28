@@ -32,7 +32,7 @@
 </#if>
 </#list>
 </#if>
-<table border="0" cellspacing="0" cellpadding="0"<#if sortable> class="sortable"</#if> style="table-layout:fixed;" width="100%">
+<table <#if sortable> class="sortable"</#if>>
 <thead>
 <tr>
 <#if !readonly>
@@ -106,10 +106,9 @@ ${value?xhtml}<#t>
 <#macro rtend buttons='' readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons=''>
 </tbody>
 </table>
-<div class="toolbar" style="width:100%;" >
-<table class="toolbarTable" cellpadding="0" cellspacing="0">
+<table style="margin-top:10px;">
 <tr>
-<td class="pageNavigationTool" width="40%" nowrap="nowrap">
+<td width="30%">
 <#if resultPage??>
 <input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav firstPageD"<#else>class="pageNav firstPage"</#if> title="${action.getText('firstpage')}" />
 <input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav prevPageD"<#else>class="pageNav prevPage"</#if> title="${action.getText('previouspage')}" />
@@ -126,8 +125,7 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 </select>${action.getText('row')}
 </#if>
 </td>
-<td class="extendTool" align="center">
-<div style="text-align: center; width: 100%; padding: 3px;">
+<td width="35%" align="center">
 <#if buttons!=''>
 <#local temp=buttons?interpret>
 <@temp/>
@@ -137,9 +135,8 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 <#if celleditable><@button text=action.getText('save') action='save'/></#if>
 <#if deleteable><@button text=action.getText('delete') action='delete'/></#if>
 </#if><@button text=action.getText('reload') action='reload'/></#if>
-</div>
 </td>
-<td class="searchTool" width="25%">
+<td width="20%">
 <#if searchable>
 <@s.textfield theme="simple" name="keyword" cssClass="focus" size="15"/><@s.submit theme="simple" value="%{getText('search')}" />
 </#if>
@@ -148,7 +145,7 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 <@temp/>
 </#if>
 </td>
-<td class="statusTool" width="15%">
+<td align="right">
 <#if resultPage??>
 ${action.getText('total')}${resultPage.totalRecord}${action.getText('record')}<#if resultPage.totalRecord!=0>,${action.getText('display')}${resultPage.start+1}-${resultPage.start+resultPage.result?size}</#if>
 <#else>
@@ -157,7 +154,6 @@ ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!
 </td>
 </tr>
 </table>
-</div>
 </form>
 <#if !readonly&&celleditable>
 <div style="display: none;">

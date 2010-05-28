@@ -24,11 +24,11 @@ input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }
 
-form div {
-	margin: 5px 0px 5px 0px;
+form>div {
+	margin: 10px 0px 10px 0px;
 }
 
-form div.submit{
+form>div.submit{
 text-align:center;
 }
 

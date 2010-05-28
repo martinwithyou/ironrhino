@@ -22396,20 +22396,6 @@ Observation.common = function(container) {
 						$(this).attr('maxlength', '255');
 				}
 			});
-	$('ul.nav>li', container).hover(function() {
-				$("ul", this).fadeIn("fast");
-			}, function() {
-			});
-	if ($.browser.msie) {
-		$('ul.nav>li', container).each(function() {
-					if ($('ul>li', this).length)
-						$(this).hover(function() {
-									$(this).addClass("sfHover");
-								}, function() {
-									$(this).removeClass("sfHover");
-								})
-				});
-	}
 	$('.highlightrow tbody tr').hover(function() {
 				$(this).addClass('highlight');
 			}, function() {

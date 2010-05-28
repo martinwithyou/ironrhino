@@ -1382,11 +1382,11 @@ input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }
 
-form div {
-	margin: 5px 0px 5px 0px;
+form>div {
+	margin: 10px 0px 10px 0px;
 }
 
-form div.submit{
+form>div.submit{
 text-align:center;
 }
 
@@ -1443,87 +1443,64 @@ div.top label {
 	clear: both; 
 	text-align: center;
 	}
-.nav,.nav ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
+.menu {
+	height:35px;
+	padding:5px 0px 0px 0px;
+	position:absolute;
+	left:0;
+	bottom:0;
+	float:left;
+	width:100%;
+	background: #B7B7B7;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#CCCCCC), to(#CCCCCC), color-stop(.5,#A7A7A7));
+	background: -moz-linear-gradient(top,  #cccccc,  #b7b7b7);
+	border-radius: 8px 8px 0px 0px;
+	-webkit-border-radius: 8px 8px 0px 0px;
+	-moz-border-radius: 8px 8px 0px 0px;
+}
+.menu li {
+	float:left;
+}
+.menu li a {
+	width:65px;
+	display:block;
+	height:30px;
+	line-height:30px;
+	font-size:1.2em;
+	font-weight:bold;
+	text-align:center;
+	margin:0px 5px 0px 5px;
+}
+.menu li.selected a,.menu li a:hover {
+	color:#fff;
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	background:#7a7a7a;
+	background: -webkit-gradient(linear, left top, left bottom, from(#929292), to(#5a5a5a));
+	background: -moz-linear-gradient(top,  #929292,  #5a5a5a);
 }
 
-.nav {
-	font-size: 11px;
-	z-index: 100;
-	position: relative;
+.menu li ul {
+	z-index: 9999;
+	width:100px;
+	display:none;
+	position:absolute;
+	top:35px;
+	left:0;
+	background: #B7B7B7;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#CCCCCC), to(#CCCCCC), color-stop(.5,#A7A7A7));
+	background: -moz-linear-gradient(top,  #cccccc,  #b7b7b7);
+	border-radius: 0px 0px 8px 8px;
+	-webkit-border-radius: 0px 0px 8px 8px;
+	-moz-border-radius: 0px 0px 8px 8px;
 }
-
-.nav li {
-	border-right: 1px solid #000;
-	float: left;
-	margin: 0;
-	padding: 0;
-	position: relative;
+.menu li ul li {
+	float:none;
+	display:block;
 }
-
-.nav li.last {
-	border-right: 0px;
-}
-
-.nav li a,.nav li a:link,.nav li a:active,.nav li a:visited {
-	font: bold 1.3em/ 25px arial, sans-serif;
-	color: #000;
-	display: block;
-	padding: 0 9px;
-	text-decoration: none;
-}
-
-.nav li a:hover {
-	background: #ccc;
-	color: #000;
-}
-
-.nav li:hover a,.nav li.sfHover a {
-	background: #ccc;
-	color: #000;
-}
-
-.nav li:hover ul a,.nav li.sfHover ul a {
-	color: #000;
-}
-
-.nav li:hover ul a:hover,.nav li.sfHover ul a:hover {
-	background: #ccc;
-	color: #000;
-}
-
-.nav ul {
-	border-bottom: 1px solid #000;
-	list-style: none;
-	margin: 0;
-	width: 120px;
-	position: absolute;
-	top: -999em;
-	left: -1px;
-}
-
-.nav li:hover ul,.nav li.sfHover ul {
-	top: 25px;
-}
-
-.nav ul li {
-	border: 0;
-	float: none;
-}
-
-.nav ul a {
-	border: 1px solid #000;
-	border-bottom: 0;
-	padding-right: 20px;
-	width: 100px;
-	white-space: nowrap;
-}
-
-.nav ul a:hover {
-	background: #ccc;
-	color: #000;
+.menu li:hover ul{
+	display:block;
 }
 .unit-rating { /* the UL */
 	list-style: none;
@@ -1666,12 +1643,14 @@ table.sortable tr.roweven {
 	padding-right: 20px;
 	overflow: hidden;
 }
-.richtable {
-	border: 0px solid red;
-	padding: 0px;
-	margin: 0px;
+.richtable table {
+	table-layout:fixed;
+	width:100%;
 }
-
+.richtable table td{
+	white-space:nowrap;
+	overflow:hidden;
+}
 .richtable input.text {
 	border: 1px solid #cc9966;
 	font-size: 12px;
@@ -1744,30 +1723,9 @@ table.sortable tr.roweven {
 	background-color: #ffeedd;
 }
 
-.richtable .selected a,.selectlight a {
-	color: black;
-}
-
-.richtable .odd div.ellipsis,.richtable .even div.ellipsis,.richtable.highlight div.ellipsis,.richtable .selectlight DIV.ellipsis
-	{
-	text-align: left;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	color: #3a3a3a;
-	width: 100%;
-}
-
-.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .selectlight .editedCell
+.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .editedCell
 	{
 	background-color: #fff3f0;
-}
-
-.richtable .titleRow {
-	color: #444444;
-	font-weight: bold;
-	font-size: 12px;
-	vertical-align: middle;
 }
 
 .richtable .pageNav {
@@ -1814,28 +1772,6 @@ table.sortable tr.roweven {
 
 .richtable .lastPageD {
 	background-position: 0px -96px;
-}
-
-.richtable .toolbar select {
-	width: 50px;
-}
-
-.richtable .toolbar .toolbarTable {
-	border: 0px;
-	width: 100%;
-}
-
-.richtable .toolbar .toolbarTable td {
-	border: 0px;
-}
-
-.richtable .toolbar .toolbarTable .statusTool {
-	border: 0px solid red;
-	padding-top: 2px;
-	text-align: right;
-	white-space: nowrap;
-	word-break: keep-all;
-	word-wrap: normal;
 }
 
 .richtable .jumpPageInput {
