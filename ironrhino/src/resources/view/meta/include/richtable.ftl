@@ -125,7 +125,7 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize">
 </select>${action.getText('row')}
 </#if>
 </td>
-<td width="35%" align="center">
+<td class="action" width="35%" align="center">
 <#if buttons!=''>
 <#local temp=buttons?interpret>
 <@temp/>

@@ -415,7 +415,7 @@ Richtable = {
 };
 Observation.richtable = function() {
 	if ($('.richtable').length) {
-		$('.extendTool button.btn,.action button.btn,a[rel="richtable"]')
+		$('.action button.btn,a[rel="richtable"]')
 				.click(Richtable.click);
 		var theadCells = $('.richtable thead:eq(0) td');
 		var rows = $('.richtable tbody:eq(0) tr').each(function() {
