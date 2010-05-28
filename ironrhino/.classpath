@@ -83,9 +83,9 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.0.17.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-1.5.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.5.2.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.0.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-digester-2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-3.5.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ognl-3.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.1.0.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
