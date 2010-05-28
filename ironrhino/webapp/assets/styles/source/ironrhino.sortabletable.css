@@ -2,20 +2,10 @@ table.sortable {
 	width: 100%;
 	border-collapse: collapse;
 }
-
 table.sortable td,th {
 	padding: 0.5em;
 	border: 1px solid #CCC;
 }
-
-table.sortable tr.rowodd {
-	
-}
-
-table.sortable tr.roweven {
-	background-color: #F2F2F2;
-}
-
 .sortcol {
 	cursor: pointer;
 	padding-right: 20px;
@@ -24,31 +14,9 @@ table.sortable tr.roweven {
 	background-image: url(../images/notsorted.gif);
 	background-color: transparent;
 }
-
 .sortasc {
-	background-color: #DDFFAC;
 	background-image: url(../images/asc.gif);
 }
-
 .sortdesc {
-	background-color: #B9DDFF;
 	background-image: url(../images/desc.gif);
-}
-
-.nosort {
-	cursor: default;
-}
-
-.scroll-table-head {
-	width: 600px;
-}
-
-.scroll-table-body {
-	width: 600px;
-	height: 400px;
-}
-
-.scroll-table-body td {
-	padding-right: 20px;
-	overflow: hidden;
 }

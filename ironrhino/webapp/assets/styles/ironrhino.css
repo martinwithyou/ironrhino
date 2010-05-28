@@ -1454,7 +1454,7 @@ div.top label {
 	bottom:0;
 	float:left;
 	width:100%;
-	background: #B7B7B7;
+	background: #CCCCCC;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#CCCCCC), to(#CCCCCC), color-stop(.5,#A7A7A7));
 	background: -moz-linear-gradient(center top , #CCCCCC, #A7A7A7, #CCCCCC);
 	border-radius: 8px 8px 0px 0px;
@@ -1594,20 +1594,10 @@ table.sortable {
 	width: 100%;
 	border-collapse: collapse;
 }
-
 table.sortable td,th {
 	padding: 0.5em;
 	border: 1px solid #CCC;
 }
-
-table.sortable tr.rowodd {
-	
-}
-
-table.sortable tr.roweven {
-	background-color: #F2F2F2;
-}
-
 .sortcol {
 	cursor: pointer;
 	padding-right: 20px;
@@ -1616,33 +1606,24 @@ table.sortable tr.roweven {
 	background-image: url(../images/notsorted.gif);
 	background-color: transparent;
 }
-
 .sortasc {
-	background-color: #DDFFAC;
 	background-image: url(../images/asc.gif);
 }
-
 .sortdesc {
-	background-color: #B9DDFF;
 	background-image: url(../images/desc.gif);
 }
-
-.nosort {
-	cursor: default;
+table.richtable thead {
+	background: #E5ECF9;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E5ECF9), to(#E5ECF9), color-stop(.5,#C7D8F9));
+	background: -moz-linear-gradient(center top , #E5ECF9, #C7D8F9, #E5ECF9);
 }
-
-.scroll-table-head {
-	width: 600px;
+table.richtable {
+	width: 100%;
+	border-collapse: collapse;
 }
-
-.scroll-table-body {
-	width: 600px;
-	height: 400px;
-}
-
-.scroll-table-body td {
-	padding-right: 20px;
-	overflow: hidden;
+table.richtable td,th {
+	padding: 0.5em;
+	border: 1px solid #CCC;
 }
 .richtable table {
 	table-layout:fixed;
@@ -1659,34 +1640,28 @@ table.sortable tr.roweven {
 	margin: 0px;
 	width: 100%;
 }
-
 .richtable input.radio {
 	font-size: 12px;
 	width: auto;
 }
-
 .richtable select {
 	border: solid 1px #EEEEEE;
 	width: 75px;
 }
-
-.richtable .tableHeader {
+.richtable thead td {
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
-	color: #3A3A3A;
 	font-weight: bolder;
 	height: 24px;
 	text-align: center;
 	overflow: visible;
 }
-
 .richtable .resizeTitle {
 	float: left;
 	width: 90%;
 	text-align: center;
 }
-
 .richtable .resizeBar {
 	padding: 0px;
 	margin: 0px;
@@ -1699,36 +1674,27 @@ table.sortable tr.roweven {
 	background-color: #cccccc;
 	display: inline;
 }
-
 .richtable .odd a,.even a {
 	color: Black;
 }
-
 .richtable .odd td {
 	background-color: #FFFFFF;
 }
-
 .richtable .even td {
 	background-color: #f3f4f3;
 }
-
 .richtable .selected td {
 	background-color: #ddeeff;
 }
-
 .richtable .selected a,.highlight a {
 	color: black;
 }
-
 .richtable .selected td {
 	background-color: #ffeedd;
 }
-
-.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .editedCell
-	{
+.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .editedCell{
 	background-color: #fff3f0;
 }
-
 .richtable .pageNav {
 	background-color: transparent;
 	background-repeat: no-repeat;
@@ -1738,43 +1704,33 @@ table.sortable tr.roweven {
 	width: 22px;
 	cursor: pointer;
 }
-
 .richtable .jumpPage {
 	background-position: 0px -256px;
 }
-
 .richtable .firstPage {
 	background-position: 0px 0px;
 }
-
 .richtable .prevPage {
 	background-position: 0px -192px;
 }
-
 .richtable .nextPage {
 	background-position: 0px -128px;
 }
-
 .richtable .lastPage {
 	background-position: 0px -64px;
 }
-
 .richtable .firstPageD {
 	background-position: 0px -32px;
 }
-
 .richtable .prevPageD {
 	background-position: 0px -224px;
 }
-
 .richtable .nextPageD {
 	background-position: 0px -160px;
 }
-
 .richtable .lastPageD {
 	background-position: 0px -96px;
 }
-
 .richtable .jumpPageInput {
 	width: 25px;
 	margin-top: 0px;

@@ -6,7 +6,7 @@
 	bottom:0;
 	float:left;
 	width:100%;
-	background: #B7B7B7;
+	background: #CCCCCC;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#CCCCCC), to(#CCCCCC), color-stop(.5,#A7A7A7));
 	background: -moz-linear-gradient(center top , #CCCCCC, #A7A7A7, #CCCCCC);
 	border-radius: 8px 8px 0px 0px;

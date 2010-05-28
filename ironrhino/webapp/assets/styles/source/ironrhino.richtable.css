@@ -1,3 +1,16 @@
+table.richtable thead {
+	background: #E5ECF9;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E5ECF9), to(#E5ECF9), color-stop(.5,#C7D8F9));
+	background: -moz-linear-gradient(center top , #E5ECF9, #C7D8F9, #E5ECF9);
+}
+table.richtable {
+	width: 100%;
+	border-collapse: collapse;
+}
+table.richtable td,th {
+	padding: 0.5em;
+	border: 1px solid #CCC;
+}
 .richtable table {
 	table-layout:fixed;
 	width:100%;
@@ -13,34 +26,28 @@
 	margin: 0px;
 	width: 100%;
 }
-
 .richtable input.radio {
 	font-size: 12px;
 	width: auto;
 }
-
 .richtable select {
 	border: solid 1px #EEEEEE;
 	width: 75px;
 }
-
-.richtable .tableHeader {
+.richtable thead td {
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
-	color: #3A3A3A;
 	font-weight: bolder;
 	height: 24px;
 	text-align: center;
 	overflow: visible;
 }
-
 .richtable .resizeTitle {
 	float: left;
 	width: 90%;
 	text-align: center;
 }
-
 .richtable .resizeBar {
 	padding: 0px;
 	margin: 0px;
@@ -53,36 +60,27 @@
 	background-color: #cccccc;
 	display: inline;
 }
-
 .richtable .odd a,.even a {
 	color: Black;
 }
-
 .richtable .odd td {
 	background-color: #FFFFFF;
 }
-
 .richtable .even td {
 	background-color: #f3f4f3;
 }
-
 .richtable .selected td {
 	background-color: #ddeeff;
 }
-
 .richtable .selected a,.highlight a {
 	color: black;
 }
-
 .richtable .selected td {
 	background-color: #ffeedd;
 }
-
-.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .editedCell
-	{
+.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .editedCell{
 	background-color: #fff3f0;
 }
-
 .richtable .pageNav {
 	background-color: transparent;
 	background-repeat: no-repeat;
@@ -92,43 +90,33 @@
 	width: 22px;
 	cursor: pointer;
 }
-
 .richtable .jumpPage {
 	background-position: 0px -256px;
 }
-
 .richtable .firstPage {
 	background-position: 0px 0px;
 }
-
 .richtable .prevPage {
 	background-position: 0px -192px;
 }
-
 .richtable .nextPage {
 	background-position: 0px -128px;
 }
-
 .richtable .lastPage {
 	background-position: 0px -64px;
 }
-
 .richtable .firstPageD {
 	background-position: 0px -32px;
 }
-
 .richtable .prevPageD {
 	background-position: 0px -224px;
 }
-
 .richtable .nextPageD {
 	background-position: 0px -160px;
 }
-
 .richtable .lastPageD {
 	background-position: 0px -96px;
 }
-
 .richtable .jumpPageInput {
 	width: 25px;
 	margin-top: 0px;
