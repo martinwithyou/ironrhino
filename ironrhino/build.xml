@@ -168,7 +168,6 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.portal.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.menu.css" />
-				<file name="${webapp.dir}/assets/styles/source/ironrhino.rating.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.sortabletable.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.richtable.css" />
 			</filelist>

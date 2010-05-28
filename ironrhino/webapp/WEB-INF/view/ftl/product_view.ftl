@@ -33,7 +33,7 @@
 <#else>
 <div>当前还没有评分</div>
 </#if>
-<ul class="unit-rating">
+<ul>
 	<li class="current-rating" style="width: 150px;"></li>
 	<#list 1..5 as index>
 		<li><a href="<@url value="/product/score/${product.code}?score=${index}"/>" title="${index}" class="ajax r${index}-unit" onsuccess="updateScore()" onerror="login()">${index}</a></li>
