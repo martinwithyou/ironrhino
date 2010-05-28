@@ -972,10 +972,13 @@ select, input, button, textarea {
 	font:12px Arial, Helvetica, sans-serif;
 }
 table {
-	font-size:inherit; font:100%;
+	font-size:inherit;
+	font:100%;
+	line-height:200%;
 }
 a {
-	text-decoration:none; color:black;
+	text-decoration:none;
+	color:black;
 }
 ul, ol {
 	list-style:none;
