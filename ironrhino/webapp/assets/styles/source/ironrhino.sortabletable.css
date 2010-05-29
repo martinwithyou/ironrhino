@@ -10,7 +10,7 @@ table.sortable td,th {
 	cursor: pointer;
 	padding-right: 20px;
 	background-repeat: no-repeat;
-	background-position: right center;
+	background-position: left center;
 	background-image: url(../images/notsorted.gif);
 	background-color: transparent;
 }

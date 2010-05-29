@@ -1515,7 +1515,7 @@ table.sortable td,th {
 	cursor: pointer;
 	padding-right: 20px;
 	background-repeat: no-repeat;
-	background-position: right center;
+	background-position: left center;
 	background-image: url(../images/notsorted.gif);
 	background-color: transparent;
 }
@@ -1581,9 +1581,8 @@ table.richtable td,th {
 	float: right;
 	cursor: e-resize;
 	width: 3px;
-	height: 15px;
+	height: 24px;
 	font-size: 1px;
-	vertical-align: top;
 	background-color: #cccccc;
 	display: inline;
 }
