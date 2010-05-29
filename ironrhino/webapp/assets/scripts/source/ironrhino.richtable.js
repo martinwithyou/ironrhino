@@ -247,8 +247,8 @@ Richtable = {
 				return;
 			}
 			if (action == 'delete') {
-				$.alerts.confirm(MessageBundle.get('confirm.delete'), MessageBundle.get('select'),
-						function(b) {
+				$.alerts.confirm(MessageBundle.get('confirm.delete'),
+						MessageBundle.get('select'), function(b) {
 							if (b) {
 								var url = Richtable.getBaseUrl() + '/' + action
 										+ Richtable.getPathParams();
@@ -415,8 +415,7 @@ Richtable = {
 };
 Observation.richtable = function() {
 	if ($('.richtable').length) {
-		$('.action button.btn,a[rel="richtable"]')
-				.click(Richtable.click);
+		$('.action button.btn,a[rel="richtable"]').click(Richtable.click);
 		var theadCells = $('.richtable thead:eq(0) td');
 		var rows = $('.richtable tbody:eq(0) tr').each(function() {
 					var cells = this.cells;
@@ -434,44 +433,47 @@ Observation.richtable = function() {
 				});
 		$('.richtable .resizeBar').mousedown(ECSideUtil.StartResize);
 		$('.richtable .resizeBar').mouseup(ECSideUtil.EndResize);
+		$('.richtable .inputPage').change(Richtable.reload);
 		$('.richtable .firstPage').click(function() {
-					$('.richtable .jumpPageInput').val(1);
+					$('.richtable .inputPage').val(1);
 					Richtable.reload()
 				});
 		$('.richtable .prevPage').click(function() {
-			$('.richtable .jumpPageInput')
-					.val(parseInt($('.richtable .jumpPageInput').val()) - 1);
+			$('.richtable .inputPage').val(parseInt($('.richtable .inputPage')
+					.val())
+					- 1);
 			Richtable.reload()
 		});
 		$('.richtable .nextPage').click(function() {
-			$('.richtable .jumpPageInput')
-					.val(parseInt($('.richtable .jumpPageInput').val()) + 1);
+			$('.richtable .inputPage').val(parseInt($('.richtable .inputPage')
+					.val())
+					+ 1);
 			Richtable.reload()
 		});
 		$('.richtable .lastPage').click(function() {
-			$('.richtable .jumpPageInput').val($('.richtable .totalPage')
-					.text());
-			Richtable.reload()
-		});
+					$('.richtable .inputPage').val($('.richtable .totalPage')
+							.text());
+					Richtable.reload()
+				});
 		$('.richtable .jumpPage').click(function() {
 					Richtable.reload()
 				});
-		$('.richtable input[name="resultPage.pageNo"]').keydown(
+		$('.richtable .inputPage').keydown(
 				function(event) {
 					if (event.keyCode == 13) {
 						Richtable.reload()
 					}
 				});
-		$('.richtable select[name="resultPage.pageSize"]').change(function() {
-					$('.richtable .jumpPageInput').val(1);
+		$('.richtable select.pageSize').change(function() {
+					$('.richtable .inputPage').val(1);
 					Richtable.reload()
 				});
 		$('.richtable input[name="keyword"]').keydown(function(event) {
 					if (event.keyCode == 13) {
-						$('.richtable .jumpPageInput').val(1);
+						$('.richtable .inputPage').val(1);
 					}
 				}).next().click(function() {
-					$('.richtable .jumpPageInput').val(1)
+					$('.richtable .inputPage').val(1)
 				});
 
 		var pathname = document.location.pathname;

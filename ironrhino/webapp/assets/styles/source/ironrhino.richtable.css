@@ -80,43 +80,9 @@ table.richtable td,th {
 .richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .editedCell{
 	background-color: #fff3f0;
 }
-.richtable .pageNav {
-	background-color: transparent;
-	background-repeat: no-repeat;
-	background-image: url(../images/pageNav.png);
-	border: 0px #dddddd none;
-	height: 22px;
-	width: 22px;
-	cursor: pointer;
-}
-.richtable .jumpPage {
-	background-position: 0px -256px;
-}
-.richtable .firstPage {
-	background-position: 0px 0px;
-}
-.richtable .prevPage {
-	background-position: 0px -192px;
-}
-.richtable .nextPage {
-	background-position: 0px -128px;
-}
-.richtable .lastPage {
-	background-position: 0px -64px;
-}
-.richtable .firstPageD {
-	background-position: 0px -32px;
-}
-.richtable .prevPageD {
-	background-position: 0px -224px;
-}
-.richtable .nextPageD {
-	background-position: 0px -160px;
-}
-.richtable .lastPageD {
-	background-position: 0px -96px;
-}
-.richtable .jumpPageInput {
+.richtable .inputPage {
 	width: 25px;
-	margin-top: 0px;
+}
+.richtable .pageSize {
+	width: 50px;
 }

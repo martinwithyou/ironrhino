@@ -110,19 +110,30 @@ ${value?xhtml}<#t>
 <tr>
 <td width="30%">
 <#if resultPage??>
-<input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav firstPageD"<#else>class="pageNav firstPage"</#if> title="${action.getText('firstpage')}" />
-<input type="button" <#if resultPage.pageNo==1>disabled="disabled" class="pageNav prevPageD"<#else>class="pageNav prevPage"</#if> title="${action.getText('previouspage')}" />
-<input type="button" <#if resultPage.pageNo==resultPage.totalPage>disabled="disabled" class="pageNav nextPageD"<#else> class="pageNav nextPage"</#if> title="${action.getText('nextpage')}" />
-<input type="button" <#if resultPage.pageNo==resultPage.totalPage>disabled="disabled" class="pageNav lastPageD"<#else>class="pageNav lastPage"</#if> title="${action.getText('lastpage')}"/>
-<input type="button" class="pageNav jumpPage"/>
-<input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="jumpPageInput"/>/<span class="totalPage">${resultPage.totalPage}</span>${action.getText('page')}
-${action.getText('pagesize')}<select name="resultPage.pageSize">
+<div class="pagination">
+<#if resultPage.first>
+<span class="disabled" title="${action.getText('firstpage')}">&lt;&lt;</span>
+<span class="disabled" title="${action.getText('previouspage')}">&lt;</span>
+<#else>
+<a class="firstPage" title="${action.getText('firstpage')}">&lt;&lt;</a>
+<a class="prevPage" title="${action.getText('previouspage')}">&lt;</a>
+</#if>
+<#if resultPage.last>
+<span class="disabled" title="${action.getText('nextpage')}">&gt;</span>
+<span class="disabled" title="${action.getText('lastpage')}">&gt;&gt;</span>
+<#else>
+<a class="nextPage" title="${action.getText('nextpage')}">&gt;</a>
+<a class="lastPage" title="${action.getText('lastpage')}">&gt;&gt;</a>
+</#if>
+<input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/>/<span class="totalPage">${resultPage.totalPage}</span>${action.getText('page')}
+${action.getText('pagesize')}<select name="resultPage.pageSize" class="pageSize">
 <#local array=[5,10,20,50,100,500]>
 <#list array as ps>
 <option value="${ps}" <#if resultPage.pageSize==ps>selected</#if>>${ps}</option>
 </#list> 
 <option value="${resultPage.totalRecord}">${action.getText('all')}</option>
 </select>${action.getText('row')}
+</div>
 </#if>
 </td>
 <td class="action" width="35%" align="center">

@@ -1,6 +1,6 @@
 <#macro pagination extra...>
 <#if resultPage.totalPage gt 1>
-<div class="pagination" style="clear:both;">
+<div class="pagination">
 <#if resultPage.first>
 <span class="disabled">${action.getText('firstpage')}</span>
 <span class="disabled">${action.getText('previouspage')}</span>
