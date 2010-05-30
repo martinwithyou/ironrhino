@@ -1181,6 +1181,7 @@ tr.selected {
 	text-decoration:none;
 	background-color:#F5F5F5;
 	width:22px;
+	cursor:pointer;
 }
 
 .pagination .disabled {
@@ -1188,6 +1189,7 @@ tr.selected {
 	border:1px solid #EBEBEB;
 	background-color:#F5F5F5;
 	color:#545454;
+	cursor:not-allowed;
 }
 
 .pagination a:hover {
