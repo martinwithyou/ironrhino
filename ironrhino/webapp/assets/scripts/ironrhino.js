@@ -23710,7 +23710,7 @@ Richtable = {
 		return url;
 	},
 	reload : function() {
-		$('.richtable').submit();
+		$('form.richtable').submit();
 	},
 	open : function(url, reloadonclose, useiframe) {
 		reloadonclose = reloadonclose || false;
@@ -24017,36 +24017,30 @@ Observation.richtable = function() {
 				});
 		$('.richtable .resizeBar').mousedown(ECSideUtil.StartResize);
 		$('.richtable .resizeBar').mouseup(ECSideUtil.EndResize);
-		$('.richtable .inputPage').change(Richtable.reload);
 		$('.richtable .firstPage').click(function() {
 					$('.richtable .inputPage').val(1);
 					Richtable.reload()
 				});
 		$('.richtable .prevPage').click(function() {
-			$('.richtable .inputPage').val(parseInt($('.richtable .inputPage')
-					.val())
-					- 1);
-			Richtable.reload()
-		});
+					$('.richtable .inputPage').val(function(i, v) {
+								return parseInt(v) - 1
+							});
+					Richtable.reload()
+				});
 		$('.richtable .nextPage').click(function() {
-			$('.richtable .inputPage').val(parseInt($('.richtable .inputPage')
-					.val())
-					+ 1);
-			Richtable.reload()
-		});
+					$('.richtable .inputPage').val(function(i, v) {
+								return parseInt(v) + 1
+							});
+					Richtable.reload()
+				});
 		$('.richtable .lastPage').click(function() {
 					$('.richtable .inputPage').val($('.richtable .totalPage')
 							.text());
 					Richtable.reload()
 				});
-		$('.richtable .jumpPage').click(function() {
-					Richtable.reload()
-				});
-		$('.richtable .inputPage').keydown(
-				function(event) {
-					if (event.keyCode == 13) {
-						Richtable.reload()
-					}
+		$('.richtable .inputPage').change(function(event) {
+					Richtable.reload();
+					event.preventDefault();
 				});
 		$('.richtable select.pageSize').change(function() {
 					$('.richtable .inputPage').val(1);
