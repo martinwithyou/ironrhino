@@ -106,7 +106,7 @@
 		<delete file="${target.dir}/${security-jar.name}" />
 		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/view/common/**,resources/view/meta/**" />
 		<jar jarfile="${target.dir}/${common-hbm-jar.name}" basedir="${classes.dir}" includes="resources/hibernate/common/**" />
-		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/view/login.ftl,resources/view/user_*.ftl" />
+		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/spring/applicationContext-security.xml,resources/view/login.ftl,resources/view/user_*.ftl" />
 	</target>
 
 	<target name="compress">

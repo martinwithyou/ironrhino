@@ -11,7 +11,6 @@
 	<link href="<@url value="/assets/styles/ie.css"/>" media="all" rel="stylesheet" type="text/css" />
 <![endif]-->
 <script src="<@url value="/assets/scripts/ironrhino-min.js"/>" type="text/javascript"></script>
-<script src="<@url value="/assets/scripts/app-min.js"/>" type="text/javascript"></script>
 <#noescape>${head}</#noescape>
 </head>
 <body>
