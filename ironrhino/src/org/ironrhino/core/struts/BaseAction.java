@@ -34,6 +34,7 @@ public class BaseAction extends ActionSupport {
 	public static final String FEED = "feed";
 	public static final String SUGGEST = "suggest";
 	public static final String ACCESSDENIED = "accessDenied";
+	public static final String ERROR = "error";
 
 	private boolean returnInput;
 

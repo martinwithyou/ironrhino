@@ -27,9 +27,12 @@
 				class="org.apache.struts2.views.jasperreports.JasperReportsResult"/>
 		</result-types>
 		<interceptors>
+			<interceptor name="exception"
+				class="org.ironrhino.core.struts.ExceptionInterceptor" />
 			<interceptor name="annotationWorkflow"
 				class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
 			<interceptor-stack name="annotationDefaultStack">
+				<interceptor-ref name="exception" />
 				<interceptor-ref name="checkbox" />
 				<interceptor-ref name="actionMappingParams" />
 				<interceptor-ref name="params">
@@ -52,6 +55,7 @@
 			</result>
 			<result name="redirect" type="redirect">${targetUrl}</result>
 			<result name="accessDenied" type="autoconfig"/>
+			<result name="error" type="autoconfig"/>
 		</global-results>
 	</package>
 </struts>
