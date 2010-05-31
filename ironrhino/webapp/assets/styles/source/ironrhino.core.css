@@ -23,6 +23,9 @@ div.field_error,div.action_error,ul.field_error li {
 	vertical-align: middle;
 	background: #FFF2E9 url(../images/msg.png) 2px -42px no-repeat;
 	color: #000;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
 }
 
 div.action_message,ul.action_message li {
@@ -33,6 +36,9 @@ div.action_message,ul.action_message li {
 	vertical-align: middle;
 	background: #e8eef7 url(../images/msg.png) 2px 2px no-repeat;
 	color: #000;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
 }
 
 .field_error .close,.action_error .close {
