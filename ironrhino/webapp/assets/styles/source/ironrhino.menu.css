@@ -38,12 +38,12 @@
 
 .menu li ul {
 	z-index: 9999;
-	width:100px;
+	width:75px;
 	display:none;
 	position:absolute;
 	top:35px;
-	left:0;
 	background: #CCCCCC;
+	padding-bottom:5px;
 	border-radius: 0px 0px 8px 8px;
 	-webkit-border-radius: 0px 0px 8px 8px;
 	-moz-border-radius: 0px 0px 8px 8px;

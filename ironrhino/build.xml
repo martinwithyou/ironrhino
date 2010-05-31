@@ -175,9 +175,6 @@
 		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
 			<arg line=" --js=./webapp/assets/scripts/ironrhino.js --js_output_file=./webapp/assets/scripts/ironrhino-min.js" />
 		</java>
-		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
-			<arg line=" --js=./webapp/assets/scripts/app.js --js_output_file=./webapp/assets/scripts/app-min.js" />
-		</java>
 		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
 			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-min.css ./webapp/assets/styles/ironrhino.css" />
 		</java>
