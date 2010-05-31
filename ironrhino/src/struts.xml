@@ -4,6 +4,6 @@
 	"http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
 	<constant name="ironrhino.autoconfig.packages"
-		value="/common:org.ironrhino.common;/ums:org.ironrhino.ums;/pms:com.ironrhino.pms;/online:com.ironrhino.online" />
+		value="/common:org.ironrhino.common;org.ironrhino.security" />
 	<include file="resources/struts/struts-*.xml" />
 </struts>

@@ -11,7 +11,6 @@ import ognl.OgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.model.Secured;
-import org.ironrhino.core.model.SimpleElement;
 import org.mvel2.templates.TemplateRuntime;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
@@ -79,8 +78,8 @@ public class AuthzUtils {
 		if (entity.getRoles() == null || entity.getRoles().size() == 0)
 			return true;
 		List<String> roleNames = getRoleNames();
-		for (SimpleElement n : entity.getRoles()) {
-			if (roleNames.contains(n.getValue()))
+		for (String s : entity.getRoles()) {
+			if (roleNames.contains(s))
 				return true;
 		}
 		return false;

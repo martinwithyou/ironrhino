@@ -30,10 +30,6 @@
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
 	<filter>
-		<filter-name>productPictureFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter>
 		<filter-name>accessFilter</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
@@ -87,10 +83,6 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>productPictureFilter</filter-name>
-		<url-pattern>/product/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
 		<filter-name>accessFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
@@ -104,19 +96,7 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>openSessionInViewFilter</filter-name>
-		<url-pattern>/common/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>openSessionInViewFilter</filter-name>
-		<url-pattern>/ums/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>openSessionInViewFilter</filter-name>
-		<url-pattern>/pms/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>openSessionInViewFilter</filter-name>
-		<url-pattern>/account/*</url-pattern>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>strutsPrepareFilter</filter-name>

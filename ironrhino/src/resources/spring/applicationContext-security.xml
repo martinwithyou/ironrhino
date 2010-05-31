@@ -7,22 +7,15 @@
 
 	<security:http access-denied-page="/WEB-INF/view/jsp/error/403.jsp"
 		entry-point-ref="entryPoint">
-		<security:intercept-url pattern="/common/**" access="ROLE_SUPERVISOR" requires-channel="https" />
-		<security:intercept-url pattern="/ums/**" access="ROLE_SUPERVISOR" requires-channel="https" />
-		<security:intercept-url pattern="/pms/**" access="ROLE_SUPERVISOR" requires-channel="https" />
-		<security:intercept-url pattern="/login" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
-		<security:intercept-url pattern="/signup" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="https" />
-		<security:intercept-url pattern="/account/**" access="ROLE_BUILTIN_USER" requires-channel="https" />
-		<security:intercept-url pattern="/index" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="http" />
-		<security:intercept-url pattern="/switchUser" access="ROLE_SUPERVISOR"/>
-		<security:intercept-url pattern="/switch" access="ROLE_SUPERVISOR"/>
-		<security:intercept-url pattern="/exit" access="ROLE_PREVIOUS_ADMINISTRATOR"/>
-		<security:intercept-url pattern="/" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="http" />
-		<security:intercept-url pattern="/**" access="ROLE_BUILTIN_ANONYMOUS" requires-channel="any" />
+		<security:intercept-url pattern="/assets/**" access="ROLE_BUILTIN_ANONYMOUS"/>
+		<security:intercept-url pattern="/common/**" access="ROLE_ADMINISTRATOR"/>
+		<security:intercept-url pattern="/login" access="ROLE_BUILTIN_ANONYMOUS"/>
+		<security:intercept-url pattern="/setup" access="ROLE_BUILTIN_ANONYMOUS"/>
+		<security:intercept-url pattern="/**" access="ROLE_BUILTIN_USER"/>
 		<security:session-management session-fixation-protection="migrateSession" />
 		<security:remember-me services-ref="rememberMeServices" />
 		<security:anonymous granted-authority="ROLE_BUILTIN_ANONYMOUS" username="anonymousUser" key="anonymous" />
-		<security:logout logout-url="/logout" invalidate-session="true" />
+		<security:logout logout-url="/logout" logout-success-url="/" invalidate-session="true" />
 		<security:custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
 		<security:custom-filter ref="switchUserProcessingFilter" position="SWITCH_USER_FILTER"/>
 	</security:http>
@@ -37,20 +30,20 @@
 	<bean id="switchUserProcessingFilter"
 		class="org.springframework.security.web.authentication.switchuser.SwitchUserFilter"
 		p:userDetailsService-ref="userManager" p:switchUserUrl="/switch"
-		p:exitUserUrl="/exit" p:targetUrl="/" >
-	</bean>
+		p:exitUserUrl="/exit" p:targetUrl="/" />
 
 	<security:authentication-manager alias="authenticationManager">
 		<security:authentication-provider user-service-ref="userManager">
 			<security:password-encoder ref="passwordEncoder" />
 		</security:authentication-provider>
 	</security:authentication-manager>
-
 	<bean id="entryPoint" class="org.ironrhino.core.spring.security.DefaultLoginUrlAuthenticationEntryPoint"
-		p:loginFormUrl="/login" p:ssoServerBase="${sso.server.base}" p:forceHttps="true" />
-	<bean id="authenticationFilter" class="org.ironrhino.ums.security.AuthenticationFilter"
-		p:usernameParameter="username" p:passwordParameter="password" p:filterProcessesUrl="/check"
-		p:authenticationManager-ref="authenticationManager" p:rememberMeServices-ref="rememberMeServices">
+		p:loginFormUrl="/login" p:forceHttps="false" />
+	<bean id="authenticationFilter"
+		class="org.ironrhino.core.spring.security.DefaultUsernamePasswordAuthenticationFilter"
+		p:usernameParameter="username" p:passwordParameter="password"
+		p:filterProcessesUrl="/check" p:authenticationManager-ref="authenticationManager"
+		p:rememberMeServices-ref="rememberMeServices">
 	</bean>
-	
+
 </beans>

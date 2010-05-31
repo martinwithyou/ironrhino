@@ -13,7 +13,7 @@
 	<property name="test.results.dir" location="${basedir}/test/results" />
 	<property name="core-jar.name" value="ironrhino-core-${version}.jar" />
 	<property name="common-hbm-jar.name" value="ironrhino-common-hbm-${version}.jar" />
-	<property name="ums-jar.name" value="ironrhino-ums-${version}.jar" />
+	<property name="security-jar.name" value="ironrhino-security-${version}.jar" />
 	<property name="war.name" value="ironrhino.war" />
 
 	<path id="lib.classpath">
@@ -103,10 +103,10 @@
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${core-jar.name}" />
 		<delete file="${target.dir}/${common-hbm-jar.name}" />
-		<delete file="${target.dir}/${ums-jar.name}" />
+		<delete file="${target.dir}/${security-jar.name}" />
 		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/view/common/**,resources/view/meta/**" />
 		<jar jarfile="${target.dir}/${common-hbm-jar.name}" basedir="${classes.dir}" includes="resources/hibernate/common/**" />
-		<jar jarfile="${target.dir}/${ums-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/ums/**,resources/hibernate/ums/**,resources/view/ums/*.ftl,resources/spring/applicationContext-ums.xml" />
+		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/view/login.ftl,resources/view/user_*.ftl" />
 	</target>
 
 	<target name="compress">

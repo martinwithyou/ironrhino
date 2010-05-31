@@ -86,7 +86,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			return;
 
 		for (String defaultNamespace : packages.keySet()) {
-			Set<Class> entityClasses = ClassScaner.scan(packages.get(
+			Set<Class> entityClasses = ClassScaner.scanAnnotated(packages.get(
 					defaultNamespace).toArray(new String[0]), AutoConfig.class);
 			if (entityClasses.size() == 0)
 				continue;

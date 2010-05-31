@@ -2,7 +2,6 @@ package org.ironrhino.core.util;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +19,7 @@ import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.SystemPropertyUtils;
 
@@ -63,7 +63,7 @@ public class ClassScaner {
 		this.excludeFilters.clear();
 	}
 
-	public static Set<Class> scan(String basePackage,
+	public static Set<Class> scanAnnotated(String basePackage,
 			Class<? extends Annotation>... annotations) {
 		ClassScaner cs = new ClassScaner();
 		for (Class anno : annotations)
@@ -71,7 +71,7 @@ public class ClassScaner {
 		return cs.doScan(basePackage);
 	}
 
-	public static Set<Class> scan(String[] basePackages,
+	public static Set<Class> scanAnnotated(String[] basePackages,
 			Class<? extends Annotation>... annotations) {
 		ClassScaner cs = new ClassScaner();
 		for (Class anno : annotations)
@@ -80,6 +80,27 @@ public class ClassScaner {
 		for (String s : basePackages)
 			classes.addAll(cs.doScan(s));
 		return classes;
+	}
+
+	public static Set<Class> scanAssignable(String basePackage,
+			Class... classes) {
+		ClassScaner cs = new ClassScaner();
+		for (Class clz : classes)
+			cs.addIncludeFilter(new AssignableTypeFilter(clz));
+		Set<Class> set = new HashSet<Class>();
+		set.addAll(cs.doScan(basePackage));
+		return set;
+	}
+
+	public static Set<Class> scanAssignable(String[] basePackages,
+			Class... classes) {
+		ClassScaner cs = new ClassScaner();
+		for (Class clz : classes)
+			cs.addIncludeFilter(new AssignableTypeFilter(clz));
+		Set<Class> set = new HashSet<Class>();
+		for (String s : basePackages)
+			set.addAll(cs.doScan(s));
+		return set;
 	}
 
 	public Set<Class> doScan(String basePackage) {
@@ -131,39 +152,11 @@ public class ClassScaner {
 		return false;
 	}
 
-	public static Collection<String> getAppPackages() {
+	public static String[] getAppPackages() {
 		Set<String> packages = new TreeSet<String>();
 		for (Package p : Package.getPackages()) {
 			String name = p.getName();
-			if (name.startsWith("java.") || name.startsWith("javax.")
-					|| name.startsWith("com.sun.") || name.startsWith("sun.")
-					|| name.startsWith("org.w3c.")
-					|| name.startsWith("org.xml.") || name.equals("antlr")
-					|| name.startsWith("antlr.")
-					|| name.startsWith("com.mysql.")
-					|| name.startsWith("com.opensymphony.")
-					|| name.startsWith("freemarker.")
-					|| name.equals("javassist")
-					|| name.startsWith("javassist.")
-					|| name.startsWith("net.sf.")
-					|| name.startsWith("net.sourceforge.")
-					|| name.equals("ognl") || name.startsWith("ognl.")
-					|| name.startsWith("org.antlr.")
-					|| name.startsWith("org.aopalliance.")
-					|| name.startsWith("org.apache.")
-					|| name.startsWith("org.aspectj.")
-					|| name.startsWith("org.compass.")
-					|| name.startsWith("org.directwebremoting.")
-					|| name.startsWith("org.dom4j.")
-					|| name.startsWith("org.drools.")
-					|| name.startsWith("org.eclipse.")
-					|| name.startsWith("org.hibernate.")
-					|| name.startsWith("org.jasig.")
-					|| name.startsWith("org.jcp.")
-					|| name.startsWith("org.mvel2.")
-					|| name.startsWith("org.quartz.")
-					|| name.startsWith("org.slf4j.")
-					|| name.startsWith("org.springframework."))
+			if (isExcludePackage(name))
 				continue;
 			int index = name.indexOf('.');
 			if (index < 0) {
@@ -176,7 +169,28 @@ public class ClassScaner {
 					packages.add(name.substring(0, index));
 			}
 		}
-		return packages;
+		return packages.toArray(new String[0]);
 	}
+
+	private static boolean isExcludePackage(String name) {
+		if (name.equals("net") || name.equals("com") || name.equals("org")) {
+			return true;
+		}
+		for (String s : excludePackages) {
+			if (name.equals(s) || name.startsWith(s + '.'))
+				return true;
+		}
+		return false;
+	}
+
+	private static String[] excludePackages = new String[] { "java", "javax",
+			"com.sun", "sun", "org.w3c", "org.xml", "antlr", "com.caucho",
+			"com.chenlb", "com.mysql", "com.opensymphony", "freemarker",
+			"javassist", "net.htmlparser", "net.sf", "net.sourceforge", "ognl",
+			"org.antlr", "org.aopalliance", "org.apache", "org.aspectj",
+			"org.codehaus", "org.compass", "org.directwebremoting",
+			"org.dom4j", "org.drools", "org.eclipse", "org.hibernate",
+			"org.jasig", "org.jcp", "org.jencks", "org.mvel2", "org.quartz",
+			"org.slf4j", "org.springframework" };
 
 }

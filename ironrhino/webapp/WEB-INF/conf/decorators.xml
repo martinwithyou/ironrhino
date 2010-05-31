@@ -7,11 +7,6 @@
 	</excludes>
 	<decorator name="none" />
 	<decorator name="simple" page="simple.ftl" />
-	<decorator name="admin" page="admin.ftl">
-		<pattern>/common/*</pattern>
-		<pattern>/ums/*</pattern>
-		<pattern>/pms/*</pattern>
-	</decorator>
 	<decorator name="main" page="main.ftl">
 		<pattern>/*</pattern>
 	</decorator>

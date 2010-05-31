@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.ironrhino.ums.service.UserManager;
+import org.ironrhino.security.service.UserManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Main {
@@ -20,11 +20,12 @@ public class Main {
 		UserManager httpInvokerUserManager = ctx.getBean(
 				"httpInvokerUserManager", UserManager.class);
 		for (int i = 0; i < 10; i++)
-			System.out.println(httpInvokerUserManager.suggestName("test" + i));
+			System.out.println(httpInvokerUserManager.loadUserByUsername("test"
+					+ i));
 		System.out.println("-------------------------------------------------");
 		long time = System.currentTimeMillis();
 		for (int i = 0; i < 10000; i++)
-			httpInvokerUserManager.suggestName("test");
+			httpInvokerUserManager.loadUserByUsername("test");
 		System.out.println(System.currentTimeMillis() - time);
 		ctx.close();
 
@@ -43,8 +44,9 @@ public class Main {
 			if (line.equals("exit"))
 				break;
 			try {
-				System.out.println(hessianUserManager.suggestName(line));
-				System.out.println(httpInvokerUserManager.suggestName(line));
+				System.out.println(hessianUserManager.loadUserByUsername(line));
+				System.out.println(httpInvokerUserManager
+						.loadUserByUsername(line));
 			} catch (Exception e) {
 				System.out.println("error:" + e.getMessage());
 			}

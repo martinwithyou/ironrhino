@@ -5,7 +5,8 @@ import java.util.Collection;
 
 
 public interface Secured {
-	public Collection<SimpleElement> getRoles();
+	
+	public Collection<String> getRoles();
 
 	public String getRolesAsString();
 
