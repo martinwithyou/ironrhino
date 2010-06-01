@@ -36,7 +36,7 @@ public class Chart implements Serializable {
 	private YAxis y_axis_right;
 	private Text y_legend;
 	private Text x_legend;
-	private String bg_colour;
+	private String bg_colour = "#ffffff";
 
 	private int num_decimals = 2;
 	private Collection<Element> elements = new ArrayList<Element>();
