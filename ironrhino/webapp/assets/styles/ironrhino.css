@@ -1352,13 +1352,13 @@ a.btn:link,a.btn:visited,a.btn:hover {
 	margin: 2px;
 	text-decoration: none;
 }
-input[type="text"],select,textarea {
+input[type="text"],input[type="password"],select,textarea {
 	border: 1px solid #0064b4;
 	border-radius: 3px;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 }
-input[type="text"],select{
+input[type="text"],input[type="password"],select{
 	height:20px;
 }
 select {
