@@ -4,8 +4,8 @@
 <title>${action.getText('user')}${action.getText('list')}</title>
 </head>
 <body>
-<#assign config={"username":{},"name":{},"password":{"value":"********","trimPrefix":true,"cellEdit":"click,rt_edit_template_password","class":"include_if_edited"}}>
-<@richtable entityName="user" config=config searchable=true/>
+<#assign columns={"username":{},"name":{},"password":{"value":"********","trimPrefix":true,"cellEdit":"click,rt_edit_template_password","class":"include_if_edited"}}>
+<@richtable entityName="user" columns=columns searchable=true/>
 <div style="display: none;">
 <textarea id="rt_edit_template_password">
 	<input type="password" class="text" value=""

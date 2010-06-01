@@ -4,7 +4,7 @@
 <title>${action.getText('page')}${action.getText('list')}</title>
 </head>
 <body>
-<#assign config={"path":{"template":"<a href=\"${getUrl(cmsPath)}$"+"{value}\" target=\"_blank\">$"+"{value}</a>"},"title":{},"createDate":{},"modifyDate":{}}>
+<#assign columns={"path":{"template":"<a href=\"${getUrl(cmsPath)}$"+"{value}\" target=\"_blank\">$"+"{value}</a>"},"title":{},"createDate":{},"modifyDate":{}}>
 <#assign actionColumnButtons=r"
 <@button text='${action.getText(\'edit\')}' view='input' windowoptions='{\'iframe\':true,\'width\':\'900px\'}'/>
 <@button text='${action.getText(\'delete\')}' action='delete'/>
@@ -14,6 +14,6 @@
 <@button text='${action.getText(\'delete\')}' action='delete'/>
 <@button text='${action.getText(\'reload\')}' action='reload'/>
 ">
-<@richtable entityName="page" config=config actionColumnWidth="100px" actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false/>
+<@richtable entityName="page" columns=columns actionColumnWidth="100px" actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false/>
 </body>
 </html></#escape>

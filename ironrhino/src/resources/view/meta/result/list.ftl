@@ -6,19 +6,19 @@
 <body>
 <@rtstart action=entityName readonly=readonly/>
 	<#list naturalIds?keys as key>
-		<#assign config=uiConfigs[key]>
+		<#assign columns=uiConfigs[key]>
 		<#assign label=key>
-		<#if config.displayName??>
-			<#assign label=config.displayName>
+		<#if columns.displayName??>
+			<#assign label=columns.displayName>
 		</#if>
-		<@rttheadtd name=label cellName=entityName+'.'+key width=config['width']! cellEdit=(readonly||naturalIdsImmatuable)?string('','click') readonly=readonly/>
+		<@rttheadtd name=label cellName=entityName+'.'+key width=columns['width']! cellEdit=(readonly||naturalIdsImmatuable)?string('','click') readonly=readonly/>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
-			<#assign config=uiConfigs[key]>
+			<#assign columns=uiConfigs[key]>
 			<#assign label=key>
-			<#if config.displayName??>
-				<#assign label=config.displayName>
+			<#if columns.displayName??>
+				<#assign label=columns.displayName>
 			</#if>
 			<#if !(readonly||uiConfigs[key].readonly)>
 				<#if uiConfigs[key].type=='input'||uiConfigs[key].type=='textarea'>

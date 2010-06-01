@@ -1,8 +1,8 @@
-<#macro richtable config entityName action='' actionColumnWidth='150px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true>
+<#macro richtable columns entityName action='' actionColumnWidth='150px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true>
 <@rtstart action=action?has_content?string(action,entityName) readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters/>
-<#list config?keys as name>
-<#local cellName=((config[name]['trimPrefix']??)?string('',entityName+'.'))+name>
-<@rttheadtd name=name class=config[name]['class']! width=config[name]['width']! cellName=cellName cellEdit=config[name]['cellEdit'] readonly=readonly resizable=resizable/>
+<#list columns?keys as name>
+<#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
+<@rttheadtd name=name class=columns[name]['class']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=resizable/>
 </#list>
 <@rtmiddle width=actionColumnWidth readonly=readonly/>
 <#local index=0>
@@ -10,13 +10,13 @@
 <#list list as entity>
 <#local index=index+1>
 <@rttbodytrstart entity=entity odd=(index%2==1) readonly=readonly/>
-<#list config?keys as name>
-	<#if config[name]['value']??>
-	<#local value=config[name]['value']>
+<#list columns?keys as name>
+	<#if columns[name]['value']??>
+	<#local value=columns[name]['value']>
 	<#else>
 	<#local value=entity[name]!>
 	</#if>
-	<@rttbodytd entity=entity value=value celleditable=config[name]['cellEdit']?? template=config[name]['template']!/>
+	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']!/>
 </#list>
 <@rttbodytrend entity=entity buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
 </#list>
