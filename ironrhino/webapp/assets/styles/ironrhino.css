@@ -1092,6 +1092,7 @@ img {
 div.field_error,div.action_error,ul.field_error li {
 	height: 1.5em;
 	line-height: 1.5em;
+	margin: 5px;
 	padding: 2px 2px 1px 20px;
 	border: 1px solid #F60;
 	vertical-align: middle;
@@ -1105,6 +1106,7 @@ div.field_error,div.action_error,ul.field_error li {
 div.action_message,ul.action_message li {
 	height: 1.5em;
 	line-height: 1.5em;
+	margin: 5px;
 	padding: 2px 2px 1px 20px;
 	border: 1px solid #669eff;
 	vertical-align: middle;

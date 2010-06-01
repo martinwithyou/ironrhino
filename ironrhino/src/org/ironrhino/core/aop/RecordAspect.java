@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
@@ -28,6 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Singleton
 @Named
 public class RecordAspect extends HibernateDaoSupport implements Ordered {
+	private Log log = LogFactory.getLog(getClass());
 
 	public RecordAspect() {
 		order = 1;
@@ -56,24 +59,24 @@ public class RecordAspect extends HibernateDaoSupport implements Ordered {
 
 	// record to database,may change to use logger system
 	private void record(Persistable entity, EntityOperationType action) {
-		final Record record = new Record();
-		UserDetails ud = AuthzUtils.getUserDetails(UserDetails.class);
-		if (ud != null) {
-			record.setOperatorId(ud.getUsername());
-			record.setOperatorClass(ud.getClass().getName());
-		}
 		try {
+			Record record = new Record();
+			UserDetails ud = AuthzUtils.getUserDetails(UserDetails.class);
+			if (ud != null) {
+				record.setOperatorId(ud.getUsername());
+				record.setOperatorClass(ud.getClass().getName());
+			}
+
 			record.setEntityId(String.valueOf(entity.getId()));
+
+			record.setEntityClass(entity.getClass().getName());
+			record.setEntityToString(entity.toString());
+			record.setAction(action.name());
+			record.setRecordDate(new Date());
+			getHibernateTemplate().save(record);
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
-		record.setEntityClass(entity.getClass().getName());
-		record.setEntityToString(entity.toString());
-		record.setAction(action.name());
-		record.setRecordDate(new Date());
-		// import javax.inject.Inject; import ant! no transaction,inserted
-		// before actual save entity and
-		// ignore transaction rollback
-		getHibernateTemplate().save(record);
 	}
 
 	public int getOrder() {
