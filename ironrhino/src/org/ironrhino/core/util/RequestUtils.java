@@ -21,6 +21,8 @@ public class RequestUtils {
 			StringBuilder sb = new StringBuilder();
 			Map<String, String[]> map = request.getParameterMap();
 			for (Map.Entry<String, String[]> entry : map.entrySet()) {
+				if (entry.getKey().toLowerCase().contains("password"))
+					continue;
 				for (String value : entry.getValue()) {
 					sb.append(entry.getKey()).append('=').append(
 							value.length() > 256 ? value.substring(0, 256)
@@ -29,7 +31,8 @@ public class RequestUtils {
 			}
 			return sb.toString();
 		}
-		return request.getQueryString();
+		String queryString = request.getQueryString();
+		return queryString != null ? queryString : "";
 	}
 
 	public static String getRemoteAddr(HttpServletRequest request) {
