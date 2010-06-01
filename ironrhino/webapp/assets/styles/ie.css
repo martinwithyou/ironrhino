@@ -1,44 +1,16 @@
+input[type="text"]{
+	height:15px;
+}
+select{
+	height:20px;
+}
 div.field_error,div.action_error,ul.field_error li,div.action_message,ul.action_message li,.field_error .close,.action_error .close,.action_message .close {
 	background-image: url(../images/msg.gif);
 }
-
 input.required {
 	background-image: url(../images/required.gif);
 }
-
 #indicator {
 	position: absolute;
 	top: expression(eval(document.compatMode&&document.compatMode =='CSS1Compat')?documentElement.scrollTop:document.body.scrollTop);
 }
-#cart_items {
-	height: 200px;
-}
-
-.tooltip {
-	width: 150px;
-}
-
-.nav li {
-	color: #000;
-	height: 20px;
-}
-
-.nav li.sfHover,.nav li.sfHover ul li {
-	background: #ccc;
-	height: 20px;
-}
-
-.nav ul li {
-	border: 1px solid #000;
-	border-bottom: 0;
-	padding-right: 20px;
-}
-
-.nav ul a {
-	border: 0;
-}
-
-.nav li:hover ul,.nav li.sfHover ul {
-	top: 20px;
-}
-

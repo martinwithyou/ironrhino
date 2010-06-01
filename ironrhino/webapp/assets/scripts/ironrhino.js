@@ -20839,13 +20839,7 @@ $.fn.selection = function(start, end) {
 			$.alerts._hide();
 			$.alerts._overlay('show');
 			
-			$("BODY").append(
-			  '<div id="popup_container">' +
-			    '<h1 id="popup_title"></h1>' +
-			    '<div id="popup_content">' +
-			      '<div id="popup_message"></div>' +
-				'</div>' +
-			  '</div>');
+			$("BODY").append('<div id="popup_container"><h1 id="popup_title"></h1><div id="popup_content"><div id="popup_icon"></div><div id="popup_message"></div></div></div>');
 			
 			if( $.alerts.dialogClass ) $("#popup_container").addClass($.alerts.dialogClass);
 			
