@@ -19,5 +19,7 @@ public @interface AutoConfig {
 	boolean readonly() default false;
 
 	boolean searchable() default false;
+	
+	String order() default "";
 
 }

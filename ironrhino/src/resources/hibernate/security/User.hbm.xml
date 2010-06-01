@@ -6,7 +6,7 @@
 	default-lazy="true">
 	<class name="User" table="user">
 		<id name="id" type="java.lang.String" length="32" unsaved-value="null">
-			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
+			<generator class="uuid" />
 		</id>
 		<natural-id>
 			<property name="username" not-null="true" />

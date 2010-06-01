@@ -40,7 +40,7 @@ public class AccessFilter implements Filter {
 
 	@Value("${accessFilter.responseTimeThreshold:"
 			+ DEFAULT_RESPONSETIMETHRESHOLD + "}")
-	public static long responseTimeThreshold = DEFAULT_RESPONSETIMETHRESHOLD;
+	public long responseTimeThreshold = DEFAULT_RESPONSETIMETHRESHOLD;
 
 	@Value("${accessFilter.print:" + DEFAULT_PRINT + "}")
 	private boolean print = DEFAULT_PRINT;
@@ -58,12 +58,12 @@ public class AccessFilter implements Filter {
 		this.print = print;
 	}
 
-	public static long getResponseTimeThreshold() {
+	public long getResponseTimeThreshold() {
 		return responseTimeThreshold;
 	}
 
-	public static void setResponseTimeThreshold(long responseTimeThreshold) {
-		AccessFilter.responseTimeThreshold = responseTimeThreshold;
+	public void setResponseTimeThreshold(long responseTimeThreshold) {
+		this.responseTimeThreshold = responseTimeThreshold;
 	}
 
 	@PostConstruct

@@ -97,15 +97,12 @@ public class EntityAction extends BaseAction {
 	}
 
 	private boolean readonly() {
-		AutoConfig ac = (AutoConfig) getEntityClass().getAnnotation(
-				AutoConfig.class);
+		AutoConfig ac = getAutoConfig();
 		return (ac != null) && ac.readonly();
 	}
 
-	private boolean searchable() {
-		AutoConfig ac = (AutoConfig) getEntityClass().getAnnotation(
-				AutoConfig.class);
-		return (ac != null) && ac.searchable();
+	private AutoConfig getAutoConfig() {
+		return (AutoConfig) getEntityClass().getAnnotation(AutoConfig.class);
 	}
 
 	private void checkEntityManager() {
@@ -123,13 +120,22 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String list() {
+		AutoConfig ac = getAutoConfig();
 		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
 			checkEntityManager();
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setDetachedCriteria(dc);
-			if (Ordered.class.isAssignableFrom(getEntityClass()))
+			if (ac != null && StringUtils.isNotBlank(ac.order())) {
+				String[] arr = ac.order().split("\\s");
+				if (arr[arr.length - 1].equalsIgnoreCase("asc"))
+					dc.addOrder(Order.asc(arr[arr.length - 2]));
+				else if (arr[arr.length - 1].equalsIgnoreCase("desc"))
+					dc.addOrder(Order.desc(arr[arr.length - 2]));
+				else
+					dc.addOrder(Order.asc(arr[arr.length - 1]));
+			} else if (Ordered.class.isAssignableFrom(getEntityClass()))
 				dc.addOrder(Order.asc("displayOrder"));
 			resultPage = baseManager.findByResultPage(resultPage);
 		} else {
@@ -156,7 +162,7 @@ public class EntityAction extends BaseAction {
 			}
 		}
 		readonly = readonly();
-		searchable = searchable();
+		searchable = (ac != null) && ac.searchable();
 		return LIST;
 	}
 
