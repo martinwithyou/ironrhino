@@ -23193,7 +23193,7 @@ Observation.checkbox = function(container) {
 					re : /^[-+]?[\d]*\.?[\d]+(?:[eE][-+]?[\d]+)?\s?[k|m|g|t]b$/i,
 					type : "datasize"
 				}, {
-					re : /^[-+]?[\d]*\.?[\d]+(?:[eE][-+]?[\d]+)?/,
+					re : /^[-+]?[\d]*\.?[\d]+(?:[eE][-+]?[\d]+)?$/,
 					type : "number"
 				}, {
 					re : /^[A-Z]+$/,
