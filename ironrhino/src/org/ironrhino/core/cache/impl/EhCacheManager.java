@@ -29,13 +29,18 @@ public class EhCacheManager implements CacheManager {
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		Cache cache = ehCacheManager.getCache(namespace);
-		if (cache == null)
-			ehCacheManager.addCache(namespace);
-		cache = ehCacheManager.getCache(namespace);
-		cache.put(new Element(key, value, null, timeToIdle > 0 ? Integer
-				.valueOf(timeToIdle) : null,
-				timeToIdle <= 0 && timeToLive > 0 ? Integer.valueOf(timeToLive)
-						: null));
+		if (cache == null) {
+			try {
+				ehCacheManager.addCache(namespace);
+				cache = ehCacheManager.getCache(namespace);
+			} catch (Exception e) {
+
+			}
+		}
+		if (cache != null)
+			cache.put(new Element(key, value, null, timeToIdle > 0 ? Integer
+					.valueOf(timeToIdle) : null, timeToIdle <= 0
+					&& timeToLive > 0 ? Integer.valueOf(timeToLive) : null));
 	}
 
 	public Serializable get(String key, String namespace) {

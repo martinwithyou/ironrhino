@@ -119,6 +119,7 @@ public class AccessFilter implements Filter {
 					" response time:").append(responseTime).append("ms");
 			accesWarnLog.warn(sb.toString());
 		}
+		MDC.getContext().clear();
 	}
 
 	@Override
