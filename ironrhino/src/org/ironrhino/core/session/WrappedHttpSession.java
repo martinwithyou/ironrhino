@@ -135,12 +135,10 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		this.attrMap = attrMap;
 	}
 
-	@Override
 	public String getId() {
 		return id;
 	}
 
-	@Override
 	public void setAttribute(String key, Object object) {
 		attrMap.put(key, object);
 		if (isRequestedSessionIdFromURL()
@@ -150,33 +148,27 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		}
 	}
 
-	@Override
 	public Object getAttribute(String key) {
 		return attrMap.get(key);
 	}
 
-	@Override
 	public void removeAttribute(String key) {
 		attrMap.remove(key);
 		dirty = true;
 	}
 
-	@Override
 	public Enumeration getAttributeNames() {
 		return new IteratorEnumeration(attrMap.keySet().iterator());
 	}
 
-	@Override
 	public long getCreationTime() {
 		return this.creationTime;
 	}
 
-	@Override
 	public void invalidate() {
 		httpSessionManager.invalidate(this);
 	}
 
-	@Override
 	public boolean isNew() {
 		return isnew;
 	}
@@ -185,22 +177,18 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		this.isnew = isnew;
 	}
 
-	@Override
 	public long getLastAccessedTime() {
 		return lastAccessedTime;
 	}
 
-	@Override
 	public ServletContext getServletContext() {
 		return context;
 	}
 
-	@Override
 	public void setMaxInactiveInterval(int arg0) {
 		maxInactiveInterval = arg0;
 	}
 
-	@Override
 	public int getMaxInactiveInterval() {
 		return maxInactiveInterval;
 	}
@@ -301,7 +289,7 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 	}
 
 	@Deprecated
-	@Override
+
 	public String[] getValueNames() {
 		List names = new ArrayList();
 
@@ -313,25 +301,25 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 	}
 
 	@Deprecated
-	@Override
+
 	public Object getValue(String key) {
 		return getAttribute(key);
 	}
 
 	@Deprecated
-	@Override
+
 	public void removeValue(String key) {
 		removeAttribute(key);
 	}
 
 	@Deprecated
-	@Override
+
 	public void putValue(String key, Object object) {
 		setAttribute(key, object);
 	}
 
 	@Deprecated
-	@Override
+
 	public javax.servlet.http.HttpSessionContext getSessionContext() {
 		throw new UnsupportedOperationException(
 				"No longer supported method: getSessionContext");

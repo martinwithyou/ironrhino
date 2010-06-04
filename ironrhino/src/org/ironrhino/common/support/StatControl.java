@@ -160,7 +160,6 @@ public class StatControl {
 						save();
 					}
 
-					@Override
 					public Object getResult() {
 						return null;
 					}

@@ -41,7 +41,6 @@ public class CumulativeAnalyzer extends
 		super(iterator);
 	}
 
-	@Override
 	public Map<String, List<TreeNode>> getResult() {
 		return result;
 	}

@@ -44,7 +44,6 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return page;
 	}
 
-	@Override
 	@Transactional
 	public Page saveDraft(Page page) {
 		Page p = get(page.getId());
@@ -69,7 +68,6 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return page;
 	}
 
-	@Override
 	@Transactional
 	public Page dropDraft(String id) {
 		Page page = get(id);
@@ -79,7 +77,6 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return page;
 	}
 
-	@Override
 	public void pullDraft(Page page) {
 		String array[] = StringUtils.split(page.getDraft(), DELIMITER, 3);
 		page.setPath(array[0]);

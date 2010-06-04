@@ -29,7 +29,6 @@ public abstract class AbstractFileStorage implements FileStorage {
 		this.uri = uri;
 	}
 
-	@Override
 	public boolean save(File file, String path, boolean deleteFile) {
 		boolean b = save(file, path);
 		if (b && file.delete())
@@ -37,7 +36,6 @@ public abstract class AbstractFileStorage implements FileStorage {
 		return b;
 	}
 
-	@Override
 	public boolean copy(String path, FileStorage from, FileStorage to) {
 		InputStream is = from.open(path);
 		if (is == null)
@@ -45,22 +43,18 @@ public abstract class AbstractFileStorage implements FileStorage {
 		return to.save(is, path);
 	}
 
-	@Override
 	public InputStream open(String path) {
 		return open(path, false);
 	}
 
-	@Override
 	public boolean get(String path, File local) {
 		return get(path, local, false);
 	}
 
-	@Override
 	public void write(String path, OutputStream os) {
 		write(path, os, false);
 	}
 
-	@Override
 	public void write(String path, OutputStream os, boolean realtime) {
 		InputStream is = open(path, realtime);
 		copy(is, os);

@@ -71,12 +71,10 @@ public class AccessFilter implements Filter {
 		excludePatternsList = Arrays.asList(excludePatterns.split(","));
 	}
 
-	@Override
 	public void init(FilterConfig filterConfig) {
 		_init();
 	}
 
-	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
@@ -122,7 +120,6 @@ public class AccessFilter implements Filter {
 		MDC.getContext().clear();
 	}
 
-	@Override
 	public void destroy() {
 
 	}

@@ -36,6 +36,7 @@ public class JavaSourceExecutor {
 				.getStandardFileManager(null, null, null);
 		JavaFileManager fileManager = new ForwardingJavaFileManager(
 				stdFileManager) {
+
 			@Override
 			public JavaFileObject getJavaFileForOutput(Location location,
 					final String className, Kind kind, FileObject sibling)
@@ -43,6 +44,7 @@ public class JavaSourceExecutor {
 				JavaFileObject jfo = super.getJavaFileForOutput(location,
 						className, kind, sibling);
 				return new ForwardingJavaFileObject(jfo) {
+
 					@Override
 					public OutputStream openOutputStream() throws IOException {
 						ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -159,6 +161,7 @@ public class JavaSourceExecutor {
 			return instance;
 		}
 
+		@Override
 		public Class findClass(String name) {
 			byte[] classData = bytes.remove(name).toByteArray();
 			return defineClass(name, classData, 0, classData.length);

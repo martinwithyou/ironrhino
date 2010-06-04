@@ -25,6 +25,7 @@ public class MyOldDecorator2NewStrutsFreemarkerDecorator extends
 		super(oldDecorator);
 	}
 
+	@Override
 	protected void render(Content content, HttpServletRequest request,
 			HttpServletResponse response, ServletContext servletContext,
 			ActionContext ctx) throws ServletException, IOException {

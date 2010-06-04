@@ -55,6 +55,7 @@ public class StatLog {
 		}
 		startNewThread();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+
 			@Override
 			public void run() {
 				write(false);

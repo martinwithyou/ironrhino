@@ -97,7 +97,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
 				cachedThreadPool.execute(new Runnable() {
-					@Override
+
 					public void run() {
 						try {
 							invoke(invocation, maxRetryTimes);

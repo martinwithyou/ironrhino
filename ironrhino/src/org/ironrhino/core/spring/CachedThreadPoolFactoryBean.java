@@ -27,17 +27,14 @@ public class CachedThreadPoolFactoryBean implements
 		cachedThreadPool.shutdown();
 	}
 
-	@Override
 	public ExecutorService getObject() throws Exception {
 		return cachedThreadPool;
 	}
 
-	@Override
 	public Class<? extends ExecutorService> getObjectType() {
 		return ExecutorService.class;
 	}
 
-	@Override
 	public boolean isSingleton() {
 		return true;
 	}

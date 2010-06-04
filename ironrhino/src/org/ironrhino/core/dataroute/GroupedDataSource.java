@@ -63,7 +63,6 @@ public class GroupedDataSource extends AbstractDataSource implements
 		this.deadFailureThreshold = deadFailureThreshold;
 	}
 
-	@Override
 	public void setBeanName(String beanName) {
 		this.groupName = beanName;
 	}

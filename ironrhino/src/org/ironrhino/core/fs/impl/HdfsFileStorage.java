@@ -49,7 +49,6 @@ public class HdfsFileStorage extends AbstractFileStorage {
 			}
 	}
 
-	@Override
 	public boolean delete(String path) {
 		try {
 			boolean b = hdfs.delete(new Path(path), true);
@@ -62,7 +61,6 @@ public class HdfsFileStorage extends AbstractFileStorage {
 		}
 	}
 
-	@Override
 	public boolean rename(String fromPath, String toPath) {
 		try {
 			boolean b = hdfs.rename(new Path(fromPath), new Path(toPath));
@@ -76,7 +74,6 @@ public class HdfsFileStorage extends AbstractFileStorage {
 		}
 	}
 
-	@Override
 	public InputStream open(String path, boolean realtime) {
 		try {
 			if (cache == null)
@@ -119,7 +116,6 @@ public class HdfsFileStorage extends AbstractFileStorage {
 		}
 	}
 
-	@Override
 	public boolean get(String path, File localFile, boolean realtime) {
 		try {
 			InputStream is = open(path);
@@ -131,7 +127,6 @@ public class HdfsFileStorage extends AbstractFileStorage {
 		}
 	}
 
-	@Override
 	public boolean save(File file, String path) {
 		try {
 			hdfs.copyFromLocalFile(new Path(file.getAbsolutePath()), new Path(
@@ -143,7 +138,6 @@ public class HdfsFileStorage extends AbstractFileStorage {
 		}
 	}
 
-	@Override
 	public boolean save(InputStream is, String path) {
 		try {
 			OutputStream os = hdfs.create(new Path(path), true);
@@ -154,7 +148,6 @@ public class HdfsFileStorage extends AbstractFileStorage {
 		}
 	}
 
-	@Override
 	public long getLastModified(String path) {
 		try {
 			FileStatus status = hdfs.getFileStatus(new Path(path));
@@ -167,7 +160,6 @@ public class HdfsFileStorage extends AbstractFileStorage {
 		}
 	}
 
-	@Override
 	public void setLastModified(String path, long lastModified) {
 		try {
 			hdfs.setTimes(new Path(path), lastModified, -1);

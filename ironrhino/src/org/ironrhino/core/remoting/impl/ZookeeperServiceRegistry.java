@@ -92,12 +92,12 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			}
 	}
 
-	@Override
 	public void register(String serviceName) {
 		if (zooKeeper != null)
 			doRegister(serviceName, AppInfo.getHostAddress(), maxRetryTimes);
 	}
 
+	@Override
 	protected void lookup(String serviceName) {
 		if (zooKeeper != null) {
 			doLookup(serviceName, 3);
@@ -110,7 +110,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		final String host = AppInfo.getHostAddress();
 		final String services = JsonUtils.toJson(discoveredServices);
 		Runnable runnable = new Runnable() {
-			@Override
+
 			public void run() {
 				doWriteDiscoveredServices(host, services, 3);
 
@@ -198,7 +198,6 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		}
 	}
 
-	@Override
 	public void process(WatchedEvent event) {
 		if (event.getType() == Event.EventType.None) {
 			switch (event.getState()) {
@@ -218,7 +217,6 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		}
 	}
 
-	@Override
 	public void processResult(int rc, String path, Object ctx,
 			List<String> children) {
 		Code code = Code.get(rc);

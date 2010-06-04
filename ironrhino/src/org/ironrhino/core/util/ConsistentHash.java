@@ -170,7 +170,6 @@ public class ConsistentHash<K, V> {
 			this.node = node;
 		}
 
-		@Override
 		public int compareTo(Point<V> o) {
 			return start - o.start;
 		}

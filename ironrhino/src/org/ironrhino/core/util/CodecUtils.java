@@ -12,6 +12,7 @@ import org.apache.commons.codec.binary.Hex;
 public class CodecUtils {
 
 	private static ThreadLocal<MessageDigest> MD5 = new ThreadLocal<MessageDigest>() {
+
 		@Override
 		protected MessageDigest initialValue() {
 			try {
@@ -23,6 +24,7 @@ public class CodecUtils {
 	};
 
 	private static ThreadLocal<MessageDigest> SHA = new ThreadLocal<MessageDigest>() {
+
 		@Override
 		protected MessageDigest initialValue() {
 			try {

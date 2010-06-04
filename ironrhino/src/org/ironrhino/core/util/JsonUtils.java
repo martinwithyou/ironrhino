@@ -96,7 +96,7 @@ public class JsonUtils {
 	}
 
 	public static <T> T fromJson(String json, Class<T> cls) throws Exception {
-		return (T) objectMapper.readValue(json, cls);
+		return objectMapper.readValue(json, cls);
 	}
 
 }

@@ -22,13 +22,11 @@ public class CacheBasedHttpSessionStore implements HttpSessionStore {
 	@Inject
 	private CacheManager cacheManager;
 
-	@Override
 	public void initialize(WrappedHttpSession session) {
 		sessionCompressorManager.uncompress(session, (String) cacheManager.get(
 				session.getId(), CACHE_NAMESPACE));
 	}
 
-	@Override
 	public void save(WrappedHttpSession session) {
 		String sessionString = sessionCompressorManager.compress(session);
 		if (session.isDirty() && StringUtils.isBlank(sessionString)) {
@@ -48,7 +46,6 @@ public class CacheBasedHttpSessionStore implements HttpSessionStore {
 		}
 	}
 
-	@Override
 	public void invalidate(WrappedHttpSession session) {
 		cacheManager.delete(session.getId(), CACHE_NAMESPACE);
 	}

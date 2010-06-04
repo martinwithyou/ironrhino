@@ -139,6 +139,7 @@ public class LazyCommitResponseWrapper extends HttpServletResponseWrapper {
 				}
 				bufferedStream = new ByteArrayOutputStream(SIZE);
 				exposedStream = new ServletOutputStream() {
+
 					@Override
 					public void write(int b) {
 						bufferedStream.write(b);

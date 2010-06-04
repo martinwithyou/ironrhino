@@ -11,7 +11,6 @@ public class DelegateMessageConsumer implements MessageConsumer {
 		this.consumers = consumers;
 	}
 
-	@Override
 	public void consume(Object object) {
 		if (consumers.size() == 0)
 			return;
@@ -21,7 +20,6 @@ public class DelegateMessageConsumer implements MessageConsumer {
 		}
 	}
 
-	@Override
 	public boolean supports(Class clazz) {
 		return false;
 	}

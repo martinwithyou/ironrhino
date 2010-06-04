@@ -49,6 +49,7 @@ public class Region extends BaseTreeableEntity<Region> {
 
 	String fullname = null;
 
+	@Override
 	@SearchableProperty(boost = 2)
 	public String getFullname() {
 		if (fullname == null)

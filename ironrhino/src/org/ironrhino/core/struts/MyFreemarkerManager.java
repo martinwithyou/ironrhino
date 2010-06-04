@@ -45,7 +45,7 @@ public class MyFreemarkerManager extends
 	@Override
 	protected freemarker.template.Configuration createConfiguration(
 			ServletContext servletContext) throws TemplateException {
-		TemplateProvider templateProvider = (TemplateProvider) WebApplicationContextUtils
+		TemplateProvider templateProvider = WebApplicationContextUtils
 				.getWebApplicationContext(servletContext).getBean(
 						"templateProvider", TemplateProvider.class);
 		Configuration configuration = super.createConfiguration(servletContext);
@@ -130,6 +130,7 @@ public class MyFreemarkerManager extends
 		return configuration;
 	}
 
+	@Override
 	protected ScopesHashModel buildScopesHashModel(
 			ServletContext servletContext, HttpServletRequest request,
 			HttpServletResponse response, ObjectWrapper wrapper,

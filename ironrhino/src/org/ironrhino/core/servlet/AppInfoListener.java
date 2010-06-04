@@ -9,11 +9,9 @@ import org.ironrhino.core.util.AppInfo;
 
 public class AppInfoListener implements ServletContextListener {
 
-	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 	}
 
-	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		ServletContext ctx = event.getServletContext();
 		String name = ctx.getInitParameter(AppInfo.KEY_APP_NAME);

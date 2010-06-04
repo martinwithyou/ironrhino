@@ -69,7 +69,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return entityClassHolder.get();
 	}
 
-	@Override
 	@Transactional
 	public void save(T obj) {
 		Session session = sessionFactory.getCurrentSession();
@@ -94,7 +93,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			if (entity.getParent() == null)
 				fullId = String.valueOf(entity.getId());
 			else
-				fullId = ((BaseTreeableEntity) entity.getParent()).getFullId()
+				fullId = (entity.getParent()).getFullId()
 						+ "." + String.valueOf(entity.getId());
 			entity.setFullId(fullId);
 			entity.setLevel(fullId.split("\\.").length);
@@ -102,19 +101,16 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		session.saveOrUpdate(obj);
 	}
 
-	@Override
 	@Transactional
 	public void delete(T obj) {
 		sessionFactory.getCurrentSession().delete(obj);
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public boolean canDelete(T obj) {
 		return true;
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public T get(Serializable id) {
 		if (id == null)
@@ -126,7 +122,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return DetachedCriteria.forClass(getEntityClass());
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public long countByCriteria(DetachedCriteria dc) {
 		Criteria c = dc.getExecutableCriteria(sessionFactory
@@ -137,7 +132,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public T findByCriteria(DetachedCriteria dc) {
 		Criteria c = dc.getExecutableCriteria(sessionFactory
@@ -147,7 +141,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return (T) c.uniqueResult();
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public List<T> findListByCriteria(DetachedCriteria dc) {
 		try {
@@ -161,7 +154,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		}
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public List<T> findBetweenListByCriteria(DetachedCriteria dc, int start,
 			int end) {
@@ -182,7 +174,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		}
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public List<T> findListByCriteria(DetachedCriteria dc, int pageNo,
 			int pageSize) {
@@ -190,7 +181,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 				* pageSize);
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public ResultPage<T> findByResultPage(ResultPage<T> resultPage) {
 		long totalRecord = countByCriteria(resultPage.getDetachedCriteria());
@@ -227,13 +217,11 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return resultPage;
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public long countAll() {
 		return countByCriteria(detachedCriteria());
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public List<T> findAll(Order... orders) {
 		Criteria c = sessionFactory.getCurrentSession().createCriteria(
@@ -244,7 +232,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return c.list();
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public T findByNaturalId(Object... objects) {
 		if (objects.length == 1) {
@@ -274,7 +261,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return (T) c.uniqueResult();
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public T findByNaturalId(boolean caseInsensitive, Object... objects) {
 		if (!caseInsensitive)
@@ -311,7 +297,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return (T) query.uniqueResult();
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public List<T> find(final String queryString, final Object... args) {
 		Query query = sessionFactory.getCurrentSession().createQuery(
@@ -321,7 +306,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return query.list();
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public <TE extends BaseTreeableEntity<TE>> TE loadTree() {
 		if (getEntityClass() == null
@@ -369,7 +353,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			assemble(r, list);
 	}
 
-	@Override
 	@Transactional
 	public int executeUpdate(String queryString, Object... values) {
 		Query queryObject = sessionFactory.getCurrentSession().createQuery(
@@ -384,7 +367,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return queryObject.executeUpdate();
 	}
 
-	@Override
 	@Transactional
 	public Object execute(HibernateCallback callback) {
 		try {
@@ -395,7 +377,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		}
 	}
 
-	@Override
 	@Transactional(readOnly = true)
 	public Object executeFind(HibernateCallback callback) {
 		return execute(callback);

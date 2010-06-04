@@ -73,6 +73,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 				throw new FileNotFoundException(f.getAbsolutePath());
 		return new TextFileIterator<KeyValuePair>(StatLogSettings.ENCODING,
 				files) {
+
 			@Override
 			protected KeyValuePair transform(String line, File f) {
 				String[] array = line.split("\\|");
@@ -94,7 +95,6 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		};
 	}
 
-	@Override
 	public void analyze() {
 		preAnalyze();
 		try {
@@ -108,7 +108,6 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
 	}
 
-	@Override
 	public Iterator<? extends KeyValuePair> iterate() {
 		return this.iterator;
 	}

@@ -108,7 +108,6 @@ public class Key implements Serializable, Comparable<Key> {
 		this.lastWriteTime = lastWriteTime;
 	}
 
-	@Override
 	public int compareTo(Key o) {
 		if (o == null)
 			return 1;

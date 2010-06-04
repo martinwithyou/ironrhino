@@ -19,7 +19,6 @@ public class BaseEntity extends Entity<String> {
 			this.id = id;
 	}
 
-	@Override
 	public boolean isNew() {
 		return id == null || StringUtils.isBlank(id);
 	}

@@ -130,7 +130,6 @@ public class ApplicationContextConsole implements ApplicationListener {
 		return matcher.matches();
 	}
 
-	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
 		if (event instanceof SetPropertyEvent) {
 			String expression = ((SetPropertyEvent) event).getExpression();

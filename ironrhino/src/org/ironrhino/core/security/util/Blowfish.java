@@ -28,6 +28,7 @@ public class Blowfish {
 	private static IvParameterSpec ivParameterSpec = null;
 	// thread safe
 	private static final ThreadLocal<Blowfish> pool = new ThreadLocal<Blowfish>() {
+
 		@Override
 		protected Blowfish initialValue() {
 			return new Blowfish();

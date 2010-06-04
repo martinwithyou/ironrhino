@@ -18,7 +18,6 @@ public class DefaultCsrfManager implements CsrfManager {
 
 	public static final int CACHE_TOKEN_TIME_TO_LIVE = 3600;
 
-	@Override
 	public String createToken(HttpServletRequest request) {
 		String token = CodecUtils.nextId();
 		cacheManager.put(request.getSession().getId(), token, -1,
@@ -26,7 +25,6 @@ public class DefaultCsrfManager implements CsrfManager {
 		return token;
 	}
 
-	@Override
 	public boolean validateToken(HttpServletRequest request) {
 		String value = request.getParameter(KEY_CSRF);
 		if (StringUtils.isBlank(value))

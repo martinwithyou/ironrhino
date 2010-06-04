@@ -47,7 +47,6 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		this.id = id;
 	}
 
-	@Override
 	@NotInJson
 	public boolean isNew() {
 		return id == null || id == 0;
@@ -74,7 +73,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	public String getFullname() {
 		String fullname = name;
 		BaseTreeableEntity e = this;
-		while ((e = (BaseTreeableEntity) e.getParent()) != null) {
+		while ((e = e.getParent()) != null) {
 			fullname = e.getName() + fullname;
 		}
 		return fullname;

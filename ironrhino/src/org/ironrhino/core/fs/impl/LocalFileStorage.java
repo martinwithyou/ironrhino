@@ -30,12 +30,10 @@ public class LocalFileStorage extends AbstractFileStorage {
 				log.error("mkdir error:" + directory.getAbsolutePath());
 	}
 
-	@Override
 	public boolean delete(String path) {
 		return new File(directory, path).delete();
 	}
 
-	@Override
 	public InputStream open(String path, boolean realtime) {
 		File target = new File(directory, path);
 		if (!target.exists())
@@ -48,7 +46,6 @@ public class LocalFileStorage extends AbstractFileStorage {
 		}
 	}
 
-	@Override
 	public boolean get(String path, File localFile, boolean realtime) {
 		File target = new File(directory, path);
 		if (!target.exists())
@@ -63,7 +60,6 @@ public class LocalFileStorage extends AbstractFileStorage {
 
 	}
 
-	@Override
 	public boolean save(File file, String path) {
 		File dest = new File(directory, path);
 		if(!dest.getParentFile().mkdirs())
@@ -71,7 +67,6 @@ public class LocalFileStorage extends AbstractFileStorage {
 		return file.renameTo(dest);
 	}
 
-	@Override
 	public boolean save(InputStream is, String path) {
 		File dest = new File(directory, path);
 		if(!dest.getParentFile().mkdirs())
@@ -84,12 +79,10 @@ public class LocalFileStorage extends AbstractFileStorage {
 		}
 	}
 
-	@Override
 	public long getLastModified(String path) {
 		return new File(directory, path).lastModified();
 	}
 
-	@Override
 	public void setLastModified(String path, long lastModified) {
 		try {
 			new File(directory, path).setLastModified(lastModified);
@@ -98,7 +91,6 @@ public class LocalFileStorage extends AbstractFileStorage {
 		}
 	}
 
-	@Override
 	public boolean rename(String fromPath, String toPath) {
 		return new File(directory, fromPath).renameTo(new File(directory,
 				toPath));

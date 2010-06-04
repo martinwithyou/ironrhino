@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 
 public class DefaultTokenBasedRememberMeServices extends
 		TokenBasedRememberMeServices {
+
 	@Override
 	protected int calculateLoginLifetime(HttpServletRequest request,
 			Authentication authentication) {

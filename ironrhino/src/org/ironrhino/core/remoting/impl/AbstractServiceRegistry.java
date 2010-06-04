@@ -39,7 +39,6 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		return importServices;
 	}
 
-	@Override
 	public Map<String, Object> getExportServices() {
 		if (!converted) {
 			converted = true;
@@ -96,14 +95,12 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		onReady();
 	}
 
-	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory arg)
 			throws BeansException {
 		beanFactory = arg;
 		init();
 	}
 
-	@Override
 	public String discover(String serviceName) {
 		List<String> hosts = getImportServices().get(serviceName);
 		if (hosts != null && hosts.size() > 0) {

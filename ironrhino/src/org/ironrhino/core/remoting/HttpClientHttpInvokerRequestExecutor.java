@@ -36,6 +36,7 @@ public class HttpClientHttpInvokerRequestExecutor extends
 	}
 
 	// slow than java.net.HttpURLConnection
+
 	@Override
 	protected RemoteInvocationResult doExecuteRequest(
 			HttpInvokerClientConfiguration config, ByteArrayOutputStream baos)

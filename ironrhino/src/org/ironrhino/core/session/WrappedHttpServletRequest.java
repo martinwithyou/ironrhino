@@ -43,7 +43,7 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 	public boolean isRequestedSessionIdValid() {
 		return true;
 	}
-	
+
 	@Override
 	public String getRequestedSessionId() {
 		return session.getId();

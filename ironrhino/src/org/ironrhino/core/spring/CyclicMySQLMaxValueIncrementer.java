@@ -36,6 +36,7 @@ public class CyclicMySQLMaxValueIncrementer extends
 		this.cycleType = cycleType;
 	}
 
+	@Override
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
 		checkTable();

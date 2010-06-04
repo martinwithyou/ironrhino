@@ -37,13 +37,11 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 		this.sessionCookieName = sessionCookieName;
 	}
 
-	@Override
 	public void initialize(WrappedHttpSession session) {
 		sessionCompressorManager.uncompress(session, Blowfish
 				.decrypt(getCookie(session)));
 	}
 
-	@Override
 	public void save(WrappedHttpSession session) {
 		if (!session.isDirty())
 			return;
@@ -54,7 +52,6 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 			clearCookie(session);
 	}
 
-	@Override
 	public void invalidate(WrappedHttpSession session) {
 		clearCookie(session);
 	}

@@ -205,6 +205,7 @@ public class StringUtils {
 	}
 
 	private static final WordTokenizer CAMEL_CASE_TOKENIZER = new WordTokenizer() {
+
 		@Override
 		protected void startSentence(StringBuffer buffer, char ch) {
 			buffer.append(Character.toLowerCase(ch));
@@ -248,6 +249,7 @@ public class StringUtils {
 	};
 
 	private static final WordTokenizer UPPER_CASE_WITH_UNDERSCORES_TOKENIZER = new WordTokenizer() {
+
 		@Override
 		protected void startSentence(StringBuffer buffer, char ch) {
 			buffer.append(Character.toUpperCase(ch));

@@ -63,12 +63,10 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		this.sessionTrackerName = sessionTrackerName;
 	}
 
-	@Override
 	public String getSessionTrackerName() {
 		return sessionTrackerName;
 	}
 
-	@Override
 	public void initialize(WrappedHttpSession session) {
 		session.setMaxInactiveInterval(maxInactiveInterval);
 		String sessionTracker = session.getSessionTracker();
@@ -118,7 +116,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	}
 
-	@Override
 	public void save(WrappedHttpSession session) {
 		boolean sessionTrackerChanged = false;
 		if (session.isInvalid()) {
@@ -142,7 +139,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		doSave(session);
 	}
 
-	@Override
 	public void invalidate(WrappedHttpSession session) {
 		session.setInvalid(true);
 		session.getAttrMap().clear();
@@ -157,7 +153,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.resetSessionTracker();
 	}
 
-	@Override
 	public String getSessionTracker(WrappedHttpSession session) {
 		if (session.isRequestedSessionIdFromURL())
 			return session.getId();

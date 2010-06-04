@@ -16,7 +16,6 @@ public class DefaultAuthenticationSuccessHandler implements
 
 	public final static String COOKIE_NAME_LOGIN_USER = "U";
 
-	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request,
 			HttpServletResponse response, Authentication authentication)
 			throws ServletException, IOException {

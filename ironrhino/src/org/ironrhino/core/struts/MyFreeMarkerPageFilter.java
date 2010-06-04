@@ -21,11 +21,13 @@ public class MyFreeMarkerPageFilter extends SiteMeshFilter {
 
 	protected FilterConfig filterConfig;
 
+	@Override
 	public void init(FilterConfig filterConfig) {
 		this.filterConfig = filterConfig;
 		super.init(filterConfig);
 	}
 
+	@Override
 	protected DecoratorSelector initDecoratorSelector(
 			SiteMeshWebAppContext webAppContext) {
 		Factory factory = Factory.getInstance(new Config(filterConfig));
