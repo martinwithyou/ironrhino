@@ -23852,8 +23852,8 @@ Richtable = {
 						});
 			}
 		} else {
-			var options = eval('(' + ($(btn).attr('windowoptions') || '{}')
-					+ ')');
+			var options = (new Function("return "
+					+ ($(btn).attr('windowoptions') || '{}')))();
 			var url = $(btn).attr('href');
 			if (view) {
 				url = Richtable.getUrl(view, id, !id);
@@ -23869,8 +23869,12 @@ Richtable = {
 					}
 				}
 			}
-			Richtable.open(url, true, options.iframe);
-			options.iframe = null;
+			var reloadonclose = typeof(options.reloadonclose) == 'undefined'
+					? (view != 'view')
+					: options.reloadonclose;
+			Richtable.open(url, reloadonclose, options.iframe);
+			delete options.iframe;
+			delete options.reloadonclose;
 			for (var key in options)
 				$('#_window_').dialog('option', key, options[key]);
 			Dialog.adapt($('#_window_'));
