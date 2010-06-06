@@ -234,7 +234,8 @@ public class UserAction extends BaseAction {
 				for (final User user : list) {
 					if (!userManager.canDelete(user)) {
 						deletable = false;
-						addActionError(getText("delete.forbidden"));
+						addActionError(getText("delete.forbidden",
+								new String[] { user.getUsername() }));
 						break;
 					}
 				}

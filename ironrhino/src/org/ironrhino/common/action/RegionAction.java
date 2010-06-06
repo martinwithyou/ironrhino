@@ -157,7 +157,9 @@ public class RegionAction extends BaseAction {
 				boolean deletable = true;
 				for (Region temp : list) {
 					if (!baseManager.canDelete(temp)) {
-						addActionError(temp.getName() + getText("delete.forbidden"));
+						addActionError(temp.getName()
+								+ getText("delete.forbidden",
+										new String[] { temp.getName() }));
 						deletable = false;
 						break;
 					}

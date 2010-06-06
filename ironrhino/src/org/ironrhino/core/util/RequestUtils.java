@@ -173,10 +173,14 @@ public class RequestUtils {
 			return true;
 		try {
 			String host1 = new URL(a).getHost();
+			if (host1 == null)
+				host1 = "localhost";
 			String host2 = new URL(b).getHost();
+			if (host2 == null)
+				host2 = "localhost";
 			return host1.equalsIgnoreCase(host2)
-					|| parseGlobalDomain(host1).equalsIgnoreCase(
-							parseGlobalDomain(host2));
+					|| parseGlobalDomain(host1, host1).equalsIgnoreCase(
+							parseGlobalDomain(host2, host2));
 		} catch (MalformedURLException e) {
 			return false;
 		}
@@ -212,6 +216,11 @@ public class RequestUtils {
 			return sb.toString();
 		}
 		return null;
+	}
+
+	private static String parseGlobalDomain(String host, String _default) {
+		host = parseGlobalDomain(host);
+		return host != null ? host : _default;
 	}
 
 	private static String[] topDoubleDomains = new String[] { ".com.cn",

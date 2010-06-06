@@ -78,7 +78,9 @@ public class SettingAction extends BaseAction {
 				boolean deletable = true;
 				for (Setting temp : list) {
 					if (!baseManager.canDelete(temp)) {
-						addActionError(temp.getKey() + getText("delete.forbidden"));
+						addActionError(temp.getKey()
+								+ getText("delete.forbidden",
+										new String[] { setting.getKey() }));
 						deletable = false;
 						break;
 					}

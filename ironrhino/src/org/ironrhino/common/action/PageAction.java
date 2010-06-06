@@ -161,7 +161,9 @@ public class PageAction extends BaseAction {
 				boolean deletable = true;
 				for (Page temp : list) {
 					if (!pageManager.canDelete(temp)) {
-						addActionError(temp.getPath() + getText("delete.forbidden"));
+						addActionError(temp.getPath()
+								+ getText("delete.forbidden",
+										new String[] { temp.getPath() }));
 						deletable = false;
 						break;
 					}

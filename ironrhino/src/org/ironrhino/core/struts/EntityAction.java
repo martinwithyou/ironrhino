@@ -333,12 +333,15 @@ public class EntityAction extends BaseAction {
 
 			if (list.size() > 0) {
 				boolean deletable = true;
-				for (Object obj : list)
-					if (!baseManager.canDelete((Persistable) obj)) {
+				for (Object obj : list) {
+					Persistable entity = (Persistable) obj;
+					if (!baseManager.canDelete(entity)) {
 						deletable = false;
-						addActionError(getText("delete.forbidden"));
+						addActionError(getText("delete.forbidden",
+								new String[] { entity.toString() }));
 						break;
 					}
+				}
 				if (deletable) {
 					for (Object obj : list)
 						baseManager.delete((Persistable) obj);
