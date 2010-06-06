@@ -106,13 +106,13 @@ public class ClassScaner {
 	public Set<Class> doScan(String basePackage) {
 		Set<Class> classes = new HashSet<Class>();
 		try {
-			String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
+			String searchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
 					+ org.springframework.util.ClassUtils
 							.convertClassNameToResourcePath(SystemPropertyUtils
 									.resolvePlaceholders(basePackage))
 					+ "/**/*.class";
 			Resource[] resources = this.resourcePatternResolver
-					.getResources(packageSearchPath);
+					.getResources(searchPath);
 
 			for (int i = 0; i < resources.length; i++) {
 				Resource resource = resources[i];

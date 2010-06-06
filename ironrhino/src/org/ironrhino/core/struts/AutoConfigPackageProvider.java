@@ -1,5 +1,6 @@
 package org.ironrhino.core.struts;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +19,9 @@ import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.util.ClassScaner;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.ClassUtils;
 
 import com.opensymphony.xwork2.Action;
@@ -31,8 +35,11 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 public class AutoConfigPackageProvider implements PackageProvider {
+
+	public static final String GLOBAL_MESSAGES_PATTERN = "resources/i18n/**/*.properties";
 
 	private static final Log log = LogFactory
 			.getLog(AutoConfigPackageProvider.class);
@@ -79,6 +86,40 @@ public class AutoConfigPackageProvider implements PackageProvider {
 
 	public void init(Configuration configuration) throws ConfigurationException {
 		this.configuration = configuration;
+		ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+		String searchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
+				+ GLOBAL_MESSAGES_PATTERN;
+		Map<String, String> messageBunldes = new HashMap<String, String>();
+		try {
+			Resource[] resources = resourcePatternResolver
+					.getResources(searchPath);
+			for (Resource res : resources) {
+				String name = res.getURI().toString();
+				String source = name.substring(0, name
+						.indexOf("/resources/i18n/"));
+				name = name.substring(name.indexOf("resources/i18n/"));
+				name = name.substring(0, name.lastIndexOf('.'));
+				if (name.lastIndexOf('_') > name.lastIndexOf('/'))
+					name = name.substring(0, name.indexOf('_', name
+							.lastIndexOf('/')));
+				name = org.springframework.util.ClassUtils
+						.convertResourcePathToClassName(name);
+				if (messageBunldes.containsKey(name)
+						&& !source.equals(messageBunldes.get(name))) {
+					log.warn("Global messages " + name + " ignored from "
+							+ source + ",will load from "
+							+ messageBunldes.get(name));
+				} else {
+					messageBunldes.put(name, source);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		for (String name : messageBunldes.keySet()) {
+			LocalizedTextUtil.addDefaultResourceBundle(name);
+			log.info("Loading global messages from " + name);
+		}
 	}
 
 	public void loadPackages() throws ConfigurationException {
