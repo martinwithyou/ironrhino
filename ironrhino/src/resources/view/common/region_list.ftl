@@ -7,8 +7,6 @@
 <#assign columns={"name":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"}}>
 <#assign actionColumnButtons=r"
 <@button text='${action.getText(\'enter\')}' action='enter'/>
-<@button text='${action.getText(\'save\')}' action='save'/>
-<@button text='${action.getText(\'delete\')}' action='delete'/>
 ">
 <@richtable entityName="region" columns=columns actionColumnButtons=actionColumnButtons/>
 </body>

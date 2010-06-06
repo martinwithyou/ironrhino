@@ -967,9 +967,6 @@ div.jGrowl div.jGrowl-closer {
 * {
 	margin:0; padding:0; 
 }
-html, body {
-	height:100%;
-}
 body {
 	font:12px Arial, Helvetica, sans-serif;
 }

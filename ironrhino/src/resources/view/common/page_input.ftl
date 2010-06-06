@@ -88,7 +88,7 @@ $(function() {
 	<@s.hidden id="page_id" name="page.id" />
 	<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50"/>
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50"/>
-	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="50" rows="10"/>
+	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="50" rows="12"/>
 	<div>
 	<@s.submit id="draft" value="%{getText('draft')}" theme="simple"/>
 	<span class="draft" <#if !draft>style="display: none;"</#if>>

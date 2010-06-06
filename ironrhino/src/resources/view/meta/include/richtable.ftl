@@ -1,4 +1,4 @@
-<#macro richtable columns entityName action='' actionColumnWidth='150px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true>
+<#macro richtable columns entityName action='' actionColumnWidth='60px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true>
 <@rtstart action=action?has_content?string(action,entityName) readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters/>
 <#list columns?keys as name>
 <#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
@@ -18,7 +18,7 @@
 	</#if>
 	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']!/>
 </#list>
-<@rttbodytrend entity=entity buttons=actionColumnButtons readonly=readonly celleditable=celleditable deleteable=deleteable/>
+<@rttbodytrend entity=entity buttons=actionColumnButtons readonly=readonly/>
 </#list>
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable searchable=searchable searchButtons=searchButtons/>
 </#macro>
@@ -50,7 +50,7 @@ ${action.getText(name)}
 </#if>
 </td>
 </#macro>
-<#macro rtmiddle width='150px' readonly=false>
+<#macro rtmiddle width='60px' readonly=false>
 <#if !readonly>
 <td class="nosort" width="${width}"></td>
 </#if>
@@ -83,7 +83,7 @@ ${value?xhtml}<#t>
 </td><#lt>
 </#macro>
 
-<#macro rttbodytrend entity buttons='' readonly=false celleditable=true deleteable=true>
+<#macro rttbodytrend entity buttons='' readonly=false>
 <#if !readonly>
 <td class="action">
 <#if buttons!=''>
@@ -91,12 +91,6 @@ ${value?xhtml}<#t>
 <@temp/>
 <#else>
 <@button text=action.getText('edit') view='input'/>
-<#if celleditable>
-<@button text=action.getText('save') action='save'/>
-</#if>
-<#if deleteable>
-<@button text=action.getText('delete') action='delete'/>
-</#if>
 </#if>
 </td>
 </#if>

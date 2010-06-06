@@ -6,7 +6,6 @@
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
 <meta name="context_path" content="${request.contextPath}" />
 <link href="<@url value="/assets/styles/ironrhino-min.css"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<@url value="/assets/styles/app-min.css"/>" media="screen" rel="stylesheet" type="text/css" />
 <!--[if IE]>
 	<link href="<@url value="/assets/styles/ie.css"/>" media="all" rel="stylesheet" type="text/css" />
 <![endif]-->
