@@ -6,34 +6,34 @@
 <body>
 <@rtstart action=entityName readonly=readonly/>
 	<#list naturalIds?keys as key>
-		<#assign columns=uiConfigs[key]>
+		<#assign config=uiConfigs[key]>
 		<#assign label=key>
-		<#if columns.displayName??>
-			<#assign label=columns.displayName>
+		<#if config.displayName??>
+			<#assign label=config.displayName>
 		</#if>
-		<@rttheadtd name=label cellName=entityName+'.'+key width=columns['width']! cellEdit=(readonly||naturalIdsImmatuable)?string('','click') readonly=readonly/>
+		<@rttheadtd name=label cellName=entityName+'.'+key width=config['width']! cellEdit=(readonly||naturalIdsImmatuable)?string('','click') readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited/>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
-			<#assign columns=uiConfigs[key]>
+			<#assign config=uiConfigs[key]>
 			<#assign label=key>
-			<#if columns.displayName??>
-				<#assign label=columns.displayName>
+			<#if config.displayName??>
+				<#assign label=config.displayName>
 			</#if>
-			<#if !(readonly||uiConfigs[key].readonly)>
-				<#if uiConfigs[key].type=='input'||uiConfigs[key].type=='textarea'>
+			<#if !(readonly||config.readonly)>
+				<#if config.type=='input'||config.type=='textarea'>
 					<#assign cellEdit='click'/>
 				</#if>
-				<#if uiConfigs[key].type=='checkbox'>
+				<#if config.type=='checkbox'>
 					<#assign cellEdit='click,rt_select_template_boolean'/>
 				</#if>
-				<#if uiConfigs[key].type=='select'>
+				<#if config.type=='select'>
 				<#assign cellEdit='click,rt_select_template_'+key/>
 				</#if>
 			<#else>
 				<#assign cellEdit=''/>
 			</#if>
-			<@rttheadtd name=label width=uiConfigs[key]['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly/>
+			<@rttheadtd name=label width=config['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited/>
 		</#if>
 	</#list>
 <@rtmiddle readonly=readonly/>

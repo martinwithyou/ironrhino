@@ -35,6 +35,8 @@ public @interface UiConfig {
 
 	String width() default "";
 
+	boolean excludeIfNotEdited() default false;
+
 	String listKey() default DEFAULT_LIST_KEY;
 
 	String listValue() default DEFAULT_LIST_VALUE;

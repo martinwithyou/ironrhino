@@ -332,7 +332,7 @@ Richtable = {
 						var theadCell = $(theadCells[i]);
 						var name = theadCell.attr('cellName');
 						if (!name || $(this).attr('edited') != 'true'
-								&& theadCell.hasClass('include_if_edited'))
+								&& theadCell.hasClass('excludeIfNotEdited'))
 							return;
 						var value = $(this).attr('cellValue') || $(this).text();
 						params[name] = value;

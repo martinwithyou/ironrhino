@@ -279,8 +279,13 @@ public class EntityAction extends BaseAction {
 				Set<String> names = getUiConfigs().keySet();
 				if (naturalIdImmutable)
 					names.removeAll(naturalIds.keySet());
-				for (String name : names)
+				for (String name : names) {
+					if (Persistable.class.isAssignableFrom(bwp
+							.getPropertyDescriptor(name).getReadMethod()
+							.getReturnType()))
+						continue;
 					bwp.setPropertyValue(name, bw.getPropertyValue(name));
+				}
 				bw = bwp;
 				entity = persisted;
 			} catch (Exception e) {
@@ -295,7 +300,9 @@ public class EntityAction extends BaseAction {
 				if (Persistable.class.isAssignableFrom(returnType)) {
 					String parameterValue = ServletActionContext.getRequest()
 							.getParameter(getEntityName() + "." + pd.getName());
-					if (StringUtils.isBlank(parameterValue)) {
+					if (parameterValue == null) {
+						continue;
+					} else if (StringUtils.isBlank(parameterValue)) {
 						pd.getWriteMethod().invoke(entity,
 								new Object[] { null });
 					} else {
@@ -480,6 +487,7 @@ public class EntityAction extends BaseAction {
 				} else if (Persistable.class.isAssignableFrom(returnType)) {
 					UiConfigImpl uci = new UiConfigImpl(uiConfig);
 					uci.setType("select");
+					uci.setExcludeIfNotEdited(true);
 					if (lists == null)
 						lists = new HashMap<String, List>();
 					baseManager.setEntityClass(returnType);
@@ -546,6 +554,7 @@ public class EntityAction extends BaseAction {
 		private String displayName;
 		private String template;
 		private String width;
+		private boolean excludeIfNotEdited;
 		private String listKey = UiConfig.DEFAULT_LIST_KEY;
 		private String listValue = UiConfig.DEFAULT_LIST_VALUE;
 
@@ -658,6 +667,15 @@ public class EntityAction extends BaseAction {
 		public void setWidth(String width) {
 			this.width = width;
 		}
+
+		public boolean isExcludeIfNotEdited() {
+			return excludeIfNotEdited;
+		}
+
+		public void setExcludeIfNotEdited(boolean excludeIfNotEdited) {
+			this.excludeIfNotEdited = excludeIfNotEdited;
+		}
+
 	}
 
 	// need call once before view
