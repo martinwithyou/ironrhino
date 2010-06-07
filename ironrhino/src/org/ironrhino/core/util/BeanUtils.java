@@ -10,7 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.model.BaseTreeableEntity;
-import org.springframework.aop.framework.ProxyFactory;
 
 public class BeanUtils {
 
@@ -25,29 +24,12 @@ public class BeanUtils {
 
 	public static void copyProperties(Object source, Object target,
 			String... ignoreProperties) {
-		copyProperties(source, target, false, ignoreProperties);
-	}
-
-	public static EditAware copyProperties(Object source, Object target,
-			boolean editAware, String... ignoreProperties) {
-		ProxyFactory pc;
-		if (editAware) {
-			pc = new ProxyFactory();
-			pc.setProxyTargetClass(true);
-			pc.setTargetClass(target.getClass());
-			pc.addAdvice(new EditAwareMixin());
-			pc.setTarget(target);
-			target = pc.getProxy();
-		}
 		Set<String> ignores = new HashSet<String>();
 		ignores.addAll(AnnotationUtils.getAnnotatedPropertyNames(source
 				.getClass(), NotInCopy.class));
 		ignores.addAll(Arrays.asList(ignoreProperties));
 		org.springframework.beans.BeanUtils.copyProperties(source, target,
 				ignores.toArray(ignoreProperties));
-		if (editAware)
-			return (EditAware) target;
-		return null;
 	}
 
 	public static <T extends BaseTreeableEntity<T>> T deepClone(T source,
