@@ -55,12 +55,16 @@
 <#if !readonly>
 <div style="display: none">
 <#list uiConfigs?keys as key>
-	<#if uiConfigs[key].type=='select'>
+	<#assign config=uiConfigs[key]>
+	<#if config.type=='select'>
 	<textarea id="rt_select_template_${key}">
 	<select onblur="Richtable.updateCell(this)"
 			style="width: 100%;" name="${entityName}.${key}">
-			<#list uiConfigs[key].enumValues as en>
-			<option value="${en.getName()}">${en.displayName}</option>
+			<#if !config.required>
+			<option value=""></option>
+			</#if>
+			<#list lists[key] as var>
+			<option value="<#if config.listKey=='name'&&var.name()??>${var.name()}<#else>${var[config.listKey]}</#if>">${var[config.listValue]}</option>
 			</#list>
 	</select>
 	</textarea>

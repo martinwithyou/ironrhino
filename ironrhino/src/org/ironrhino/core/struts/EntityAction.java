@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -65,12 +65,20 @@ public class EntityAction extends BaseAction {
 
 	private Persistable entity;
 
+	private Map<String, UiConfigImpl> uiConfigs;
+
+	private Map<String, List> lists;
+
 	private boolean readonly;
 
 	private boolean searchable;
 
 	@Autowired(required = false)
 	private transient CompassSearchService compassSearchService;
+
+	public Map<String, List> getLists() {
+		return lists;
+	}
 
 	public boolean isSearchable() {
 		return searchable;
@@ -273,10 +281,46 @@ public class EntityAction extends BaseAction {
 					names.removeAll(naturalIds.keySet());
 				for (String name : names)
 					bwp.setPropertyValue(name, bw.getPropertyValue(name));
+				bw = bwp;
 				entity = persisted;
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
+		}
+		try {
+			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
+					.getPropertyDescriptors(entity.getClass());
+			for (PropertyDescriptor pd : pds) {
+				Class returnType = pd.getReadMethod().getReturnType();
+				if (Persistable.class.isAssignableFrom(returnType)) {
+					String parameterValue = ServletActionContext.getRequest()
+							.getParameter(getEntityName() + "." + pd.getName());
+					if (StringUtils.isBlank(parameterValue)) {
+						pd.getWriteMethod().invoke(entity,
+								new Object[] { null });
+					} else {
+						UiConfig uiConfig = pd.getReadMethod().getAnnotation(
+								UiConfig.class);
+						String listKey = uiConfig != null ? uiConfig.listKey()
+								: UiConfig.DEFAULT_LIST_KEY;
+						BeanWrapperImpl temp = new BeanWrapperImpl(returnType
+								.newInstance());
+						temp.setPropertyValue(listKey, parameterValue);
+						baseManager.setEntityClass(returnType);
+						Object obj;
+						if (listKey.equals(UiConfig.DEFAULT_LIST_KEY))
+							obj = baseManager.get((Serializable) temp
+									.getPropertyValue(listKey));
+						else
+							obj = baseManager.findByNaturalId(listKey, temp
+									.getPropertyValue(listKey));
+						pd.getWriteMethod()
+								.invoke(entity, new Object[] { obj });
+					}
+				}
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
 
 		baseManager.save(entity);
@@ -390,9 +434,8 @@ public class EntityAction extends BaseAction {
 	}
 
 	public Map<String, UiConfigImpl> getUiConfigs() {
-		Class clazz = getEntityClass();
-		String key = clazz.getName();
-		if (cache.get(key) == null) {
+		if (uiConfigs == null) {
+			Class clazz = getEntityClass();
 			Set<String> hides = new HashSet<String>();
 			hides.addAll(AnnotationUtils.getAnnotatedPropertyNames(clazz,
 					NotInCopy.class));
@@ -418,42 +461,56 @@ public class EntityAction extends BaseAction {
 					continue;
 				Class returnType = pd.getReadMethod().getReturnType();
 				if (returnType.isEnum()) {
-					UiConfigImpl fes = new UiConfigImpl();
+					UiConfigImpl uci = new UiConfigImpl(uiConfig);
+					uci.setType("select");
+					uci.setListKey("name");
+					uci.setListValue("displayName");
 					try {
+						if (lists == null)
+							lists = new HashMap<String, List>();
 						Method method = pd.getReadMethod().getReturnType()
 								.getMethod("values", new Class[0]);
-						fes.setEnumValues((Enum[]) method.invoke(null));
-						fes.setEnumClass(returnType.getName());
-						fes.setType("select");
+						lists.put(pd.getName(), Arrays.asList((Enum[]) method
+								.invoke(null)));
 					} catch (Exception e) {
 						log.error(e.getMessage(), e);
 					}
-					map.put(pd.getName(), fes);
+					map.put(pd.getName(), uci);
+					continue;
+				} else if (Persistable.class.isAssignableFrom(returnType)) {
+					UiConfigImpl uci = new UiConfigImpl(uiConfig);
+					uci.setType("select");
+					if (lists == null)
+						lists = new HashMap<String, List>();
+					baseManager.setEntityClass(returnType);
+					lists.put(pd.getName(), baseManager.findAll());
+					map.put(pd.getName(), uci);
 					continue;
 				}
-				UiConfigImpl fec = new UiConfigImpl(uiConfig);
+				UiConfigImpl uci = new UiConfigImpl(uiConfig);
 				if (returnType == Integer.TYPE || returnType == Integer.class
 						|| returnType == Short.TYPE
 						|| returnType == Short.class || returnType == Long.TYPE
 						|| returnType == Long.class) {
-					fec.addCssClass("integer");
+					uci.addCssClass("integer");
 				} else if (returnType == Double.TYPE
 						|| returnType == Double.class
 						|| returnType == Float.TYPE
 						|| returnType == Float.class
 						|| returnType == BigDecimal.class) {
-					fec.addCssClass("double");
+					uci.addCssClass("double");
 				} else if (Date.class.isAssignableFrom(returnType)) {
-					fec.addCssClass("date");
+					uci.addCssClass("date");
 				} else if (String.class == returnType
 						&& pd.getName().toLowerCase().contains("email")) {
-					fec.addCssClass("email");
+					uci.addCssClass("email");
 				} else if (returnType == Boolean.TYPE
-						|| returnType == Boolean.class)
-					fec.setType("checkbox");
+						|| returnType == Boolean.class) {
+					uci.setType("checkbox");
+				}
 				if (getNaturalIds().containsKey(pd.getName()))
-					fec.setRequired(true);
-				map.put(pd.getName(), fec);
+					uci.setRequired(true);
+				map.put(pd.getName(), uci);
 			}
 			List<Map.Entry<String, UiConfigImpl>> list = new ArrayList<Map.Entry<String, UiConfigImpl>>();
 			list.addAll(map.entrySet());
@@ -473,25 +530,24 @@ public class EntityAction extends BaseAction {
 			map = new LinkedHashMap<String, UiConfigImpl>();
 			for (Map.Entry<String, UiConfigImpl> entry : list)
 				map.put(entry.getKey(), entry.getValue());
-			cache.put(key, map);
+			uiConfigs = map;
 		}
-		return cache.get(key);
+		return uiConfigs;
 	}
-
-	private static Map<String, Map<String, UiConfigImpl>> cache = new ConcurrentHashMap<String, Map<String, UiConfigImpl>>();
 
 	public static class UiConfigImpl {
 
 		private String type = UiConfig.DEFAULT_TYPE;
+		private boolean required;
 		private int size;
-		private String enumClass;
-		private Enum[] enumValues;
 		private String cssClass = "";
 		private boolean readonly;
 		private int displayOrder;
 		private String displayName;
 		private String template;
 		private String width;
+		private String listKey = UiConfig.DEFAULT_LIST_KEY;
+		private String listValue = UiConfig.DEFAULT_LIST_VALUE;
 
 		public UiConfigImpl() {
 		}
@@ -500,15 +556,24 @@ public class EntityAction extends BaseAction {
 			if (config == null)
 				return;
 			this.type = config.type();
+			this.listKey = config.listKey();
+			this.listValue = config.listValue();
+			this.required = config.required();
 			this.size = config.size();
 			this.readonly = config.readonly();
-			if (config.required())
-				this.setRequired(true);
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.displayName()))
 				this.displayName = config.displayName();
 			this.template = config.template();
 			this.width = config.width();
+		}
+
+		public boolean isRequired() {
+			return required;
+		}
+
+		public void setRequired(boolean required) {
+			this.required = required;
 		}
 
 		public String getDisplayName() {
@@ -539,37 +604,35 @@ public class EntityAction extends BaseAction {
 			return size;
 		}
 
-		public String getEnumClass() {
-			return enumClass;
-		}
-
-		public void setEnumClass(String enumClass) {
-			this.enumClass = enumClass;
-		}
-
 		public void setSize(int size) {
 			this.size = size;
 		}
 
-		public Enum[] getEnumValues() {
-			return enumValues;
+		public String getListKey() {
+			return listKey;
 		}
 
-		public void setEnumValues(Enum[] enumValues) {
-			this.enumValues = enumValues;
+		public void setListKey(String listKey) {
+			this.listKey = listKey;
+		}
+
+		public String getListValue() {
+			return listValue;
+		}
+
+		public void setListValue(String listValue) {
+			this.listValue = listValue;
 		}
 
 		public String getCssClass() {
-			return cssClass;
+			if (required)
+				return this.cssClass += " required";
+			else
+				return this.cssClass;
 		}
 
 		public void addCssClass(String cssClass) {
 			this.cssClass += " " + cssClass;
-		}
-
-		public void setRequired(boolean required) {
-			if (required)
-				this.cssClass += " required";
 		}
 
 		public boolean isReadonly() {

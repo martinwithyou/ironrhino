@@ -13,6 +13,10 @@ public @interface UiConfig {
 
 	public static final String DEFAULT_TYPE = "input";
 
+	public static final String DEFAULT_LIST_KEY = "id";
+
+	public static final String DEFAULT_LIST_VALUE = "name";
+
 	String displayName() default "";
 
 	String type() default DEFAULT_TYPE;
@@ -28,7 +32,11 @@ public @interface UiConfig {
 	boolean hide() default false;
 
 	String template() default "";
-	
+
 	String width() default "";
+
+	String listKey() default DEFAULT_LIST_KEY;
+
+	String listValue() default DEFAULT_LIST_VALUE;
 
 }
