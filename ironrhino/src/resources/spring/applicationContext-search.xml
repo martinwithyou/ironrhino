@@ -2,12 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="compass" class="org.compass.spring.LocalCompassBean">
-		<property name="classMappings">
-			<list>
-				<value>org.ironrhino.security.model.User</value>
-			</list>
-		</property>
+	<bean id="compass" class="org.ironrhino.core.search.LocalCompassBean">
 		<property name="compassConfiguration">
 			<bean
 				class="org.compass.annotations.config.CompassAnnotationsConfiguration" />
