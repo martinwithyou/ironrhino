@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanWrapperImpl;
 
 public class AnnotationUtils {
 
@@ -85,9 +85,10 @@ public class AnnotationUtils {
 		Set<String> propertyNames = getAnnotatedPropertyNames(
 				object.getClass(), annotaionClass);
 		Map<String, Object> map = new HashMap<String, Object>();
+		BeanWrapperImpl bw = new BeanWrapperImpl(object);
 		try {
 			for (String key : propertyNames) {
-				map.put(key, BeanUtils.getProperty(object, key));
+				map.put(key, bw.getPropertyValue(key));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
