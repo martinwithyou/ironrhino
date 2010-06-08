@@ -68,9 +68,13 @@ public class SessionCompressorManager {
 	public void uncompress(WrappedHttpSession session, String str) {
 		Map<String, Object> map = session.getAttrMap();
 		if (StringUtils.isNotBlank(str)) {
+			Map<String, String> compressedMap = null;
 			try {
-				Map<String, String> compressedMap = JsonUtils.fromJson(str,
-						type);
+				compressedMap = JsonUtils.fromJson(str, type);
+			} catch (Exception e) {
+				log.info(e.getMessage(), e);
+			}
+			if (compressedMap != null)
 				for (Map.Entry<String, String> entry : compressedMap.entrySet()) {
 					String key = entry.getKey();
 					String value = entry.getValue();
@@ -87,9 +91,6 @@ public class SessionCompressorManager {
 						map.put(key, value);
 					}
 				}
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
 		}
 	}
 }
