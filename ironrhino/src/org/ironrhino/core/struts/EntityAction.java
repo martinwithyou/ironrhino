@@ -129,7 +129,9 @@ public class EntityAction extends BaseAction {
 	@Override
 	public String list() {
 		AutoConfig ac = getAutoConfig();
-		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
+		searchable = (ac != null) && ac.searchable();
+		if (!searchable || StringUtils.isBlank(keyword)
+				|| compassSearchService == null) {
 			checkEntityManager();
 			DetachedCriteria dc = baseManager.detachedCriteria();
 			if (resultPage == null)
@@ -170,7 +172,7 @@ public class EntityAction extends BaseAction {
 			}
 		}
 		readonly = readonly();
-		searchable = (ac != null) && ac.searchable();
+
 		return LIST;
 	}
 
