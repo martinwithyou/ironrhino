@@ -5,12 +5,14 @@
 	<property name="src.dir" location="${basedir}/src" />
 	<property name="webapp.dir" location="${basedir}/webapp" />
 	<property name="lib.dir" location="${basedir}/lib" />
+	<property name="doc.src.dir" location="${basedir}/docs/src" />
 	<property name="classes.dir" location="${webapp.dir}/WEB-INF/classes" />
 	<property name="target.dir" location="${basedir}/target" />
 	<property name="test.dir" location="${basedir}/test" />
 	<property name="test.src.dir" location="${basedir}/test/src" />
 	<property name="test.classes.dir" location="${basedir}/test/classes" />
 	<property name="test.results.dir" location="${basedir}/test/results" />
+	<property name="skeleton-zip.name" value="ironrhino-skeleton-${version}.zip" />
 	<property name="core-jar.name" value="ironrhino-core-${version}.jar" />
 	<property name="common-hbm-jar.name" value="ironrhino-common-hbm-${version}.jar" />
 	<property name="security-jar.name" value="ironrhino-security-${version}.jar" />
@@ -108,9 +110,11 @@
 		<delete file="${target.dir}/${security-loginrecord-jar.name}" />
 		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**" />
 		<jar jarfile="${target.dir}/${common-hbm-jar.name}" basedir="${classes.dir}" includes="resources/hibernate/common/**" />
-		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/spring/applicationContext-security.xml,resources/view/login.ftl,resources/view/user_*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**"/>
+		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/spring/applicationContext-security.xml,resources/view/login.ftl,resources/view/user_*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
 		<jar jarfile="${target.dir}/${security-loginrecord-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
 	</target>
+
+
 
 	<target name="compress">
 		<property name="dest.script" value="${webapp.dir}/assets/scripts/ironrhino.js" />
@@ -120,8 +124,8 @@
 				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery-1.4.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.1.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.1.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.2.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.history-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.corner-2.0.3.js" />
@@ -186,9 +190,28 @@
 		</java>
 	</target>
 
-	<target name="war" depends="jar,compress">
-		<mkdir dir="${target.dir}" />
-		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}" webxml="${webapp.dir}/WEB-INF/web.xml" />
+	<target name="skeleton" depends="jar,compress">
+		<move todir="${webapp.dir}/WEB-INF/lib">
+			<fileset dir="${target.dir}">
+				<include name="ironrhino-*.jar" />
+			</fileset>
+		</move>
+		<zip destfile="${target.dir}/${skeleton-zip.name}" basedir="." excludes="docs/**,target/**,test/**,webapps/assets/*/source/**,src/META-INF/**,src/struts-plugin.xml,src/template/**,src/resources/**">
+		</zip>
+		<move todir="${target.dir}">
+			<fileset dir="${webapp.dir}/WEB-INF/lib">
+				<include name="ironrhino-*.jar" />
+			</fileset>
+		</move>
+	</target>
+
+	<target name="docbook">
+		<mkdir dir="${target.dir}/docs" />
+		<xslt in="${doc.src.dir}/doc.xml" out="${target.dir}/docs/index.html" style="${doc.src.dir}/xsl/html/chunk.xsl">
+			<xmlcatalog>
+				<dtd publicid="-//OASIS//DTD DocBook XML V5.0//EN" location="${doc.src.dir}/docbook.dtd" />
+			</xmlcatalog>
+		</xslt>
 	</target>
 
 	<target name="clean">

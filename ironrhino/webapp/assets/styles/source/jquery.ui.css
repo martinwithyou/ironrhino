@@ -46,7 +46,8 @@
 .ui-accordion-icons .ui-accordion-header a { padding-left: 2.2em; }
 .ui-accordion .ui-accordion-header .ui-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }
 .ui-accordion .ui-accordion-content { padding: 1em 2.2em; border-top: 0; margin-top: -2px; position: relative; top: 1px; margin-bottom: 2px; overflow: auto; display: none; zoom: 1; }
-.ui-accordion .ui-accordion-content-active { display: block; }/* Autocomplete
+.ui-accordion .ui-accordion-content-active { display: block; }
+/* Autocomplete
 ----------------------------------*/
 .ui-autocomplete { position: absolute; cursor: default; }	
 .ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
@@ -120,6 +121,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 
 
 
+
 /* Datepicker
 ----------------------------------*/
 .ui-datepicker { width: 17em; padding: .2em .2em 0; }
@@ -180,7 +182,8 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
     left: -4px; /*must have*/
     width: 200px; /*must have*/
     height: 200px; /*must have*/
-}/* Dialog
+}
+/* Dialog
 ----------------------------------*/
 .ui-dialog { position: absolute; padding: .2em; width: 300px; overflow: hidden; }
 .ui-dialog .ui-dialog-titlebar { padding: .5em 1em .3em; position: relative;  }
@@ -196,7 +199,8 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 /* Progressbar
 ----------------------------------*/
 .ui-progressbar { height:2em; text-align: left; }
-.ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }/* Resizable
+.ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
+/* Resizable
 ----------------------------------*/
 .ui-resizable { position: relative;}
 .ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block;}
@@ -208,7 +212,11 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
 .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
 .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
-.ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}/* Slider
+.ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
+/* Selectable
+----------------------------------*/
+.ui-selectable-helper { border:1px dotted black }
+/* Slider
 ----------------------------------*/
 .ui-slider { position: relative; text-align: left; }
 .ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 1.2em; height: 1.2em; cursor: default; }
@@ -224,7 +232,8 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-slider-vertical .ui-slider-handle { left: -.3em; margin-left: 0; margin-bottom: -.6em; }
 .ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }
 .ui-slider-vertical .ui-slider-range-min { bottom: 0; }
-.ui-slider-vertical .ui-slider-range-max { top: 0; }/* Tabs
+.ui-slider-vertical .ui-slider-range-max { top: 0; }
+/* Tabs
 ----------------------------------*/
 .ui-tabs { position: relative; padding: .2em; zoom: 1; } /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
 .ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; }
