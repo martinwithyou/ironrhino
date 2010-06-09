@@ -1,10 +1,13 @@
-<para>
+<chapter id="develop">
+	<title>简单开发</title>
+	<para>
 实现一个最简单的CRUD
-<itemizedlist>
-    <listitem>
-      <para>
+		<itemizedlist>
+			<listitem>
+				<para>
 新建一个类 com.mycompany.model.Customer
-<![CDATA[        	
+					<programlisting>
+					<![CDATA[        	
 package com.mycompany.model;
 
 import java.util.Date;
@@ -16,111 +19,133 @@ import org.ironrhino.core.model.BaseEntity;
 @AutoConfig
 public class Customer extends BaseEntity {
 
-	@NaturalId
-	private String name;
+						@NaturalId
+						private String name;
 
-	private String address;
+						private String address;
 
-	private Date date = new Date();
+						private Date date = new Date();
 
-	public String getName() {
-		return name;
-	}
+						public String getName() {
+							return name;
+						}
 
-	public void setName(String name) {
-		this.name = name;
-	}
+						public void setName(String name) {
+							this.name = name;
+						}
 
-	public String getAddress() {
-		return address;
-	}
+						public String getAddress() {
+							return address;
+						}
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+						public void setAddress(String address) {
+							this.address = address;
+						}
 
-	public Date getDate() {
-		return date;
-	}
+						public Date getDate() {
+							return date;
+						}
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+						public void setDate(Date date) {
+							this.date = date;
+						}
 
 }
-]]>      	
-        	
-      </para>
-    </listitem>
-    <listitem>
-      <para>
+					]]>      	
+					</programlisting>        	
+				</para>
+			</listitem>
+			<listitem>
+				<para>
 在src/resources/hibernate/mycompany下面增加hibernate映射文件Customer.hbm.xml
-<![CDATA[
+					<programlisting>
+					<![CDATA[
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
-	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+						"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.mycompany.model" default-lazy="true">
-	<class name="Customer" table="customer">
-		<id name="id" type="java.lang.String" length="32" unsaved-value="null">
-			<generator class="uuid" />
-		</id>
-		<natural-id>
-			<property name="name" not-null="true" />
-		</natural-id>
-		<property name="address" />
-		<property name="date" />
-	</class>
+						<class name="Customer" table="customer">
+							<id name="id" type="java.lang.String" length="32" unsaved-value="null">
+								<generator class="uuid" />
+							</id>
+							<natural-id>
+								<property name="name" not-null="true" />
+							</natural-id>
+							<property name="address" />
+							<property name="date" />
+						</class>
 </hibernate-mapping>
-]]>
-      </para>
-    </listitem>
-    <listitem>
-      <para>
+					]]>
+					</programlisting>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
       	修改src/struts.xml
-      	<![CDATA[
-      	<constant name="ironrhino.autoconfig.packages" value="/common:org.ironrhino.common;org.ironrhino.security" />
-		]]>
+					<programlisting>
+					<![CDATA[
+<constant name="ironrhino.autoconfig.packages" value="/common:org.ironrhino.common;org.ironrhino.security" />
+					]]>
+					</programlisting>
 		改成
-		<![CDATA[
-      	<constant name="ironrhino.autoconfig.packages" value="/common:org.ironrhino.common;org.ironrhino.security,com.mycompany" />
-		]]>
-      </para>
-    </listitem>
-    <listitem>
-      <para>
+					<programlisting>
+					<![CDATA[
+<constant name="ironrhino.autoconfig.packages" value="/common:org.ironrhino.common;org.ironrhino.security,com.mycompany" />
+					]]>
+					</programlisting>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
       	启动应用服务器,访问http://localhost:8080/customer试试
-      </para>
-    </listitem>
-</itemizedlist>
-</para>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
 
-<para>
+	<para>
 如果需要控制Customer
-<itemizedlist>
-    <listitem>
-      <para>
+		<itemizedlist>
+			<listitem>
+				<para>
 新建一个接口  com.mycompany.service.CustomerManager
-<![CDATA[
+					<programlisting>
+					<![CDATA[
 package com.mycompany.service;
 import org.ironrhino.core.service.BaseManager;
 import com.mycompany.model.Customer;
 public interface CustomerManager extends BaseManager<Customer> {
 
 }
-]]>
+					]]>
+					</programlisting>
 新建一个类  com.mycompany.service.CustomerManagerImpl
-<![CDATA[
+					<programlisting>
+					<![CDATA[
 package com.mycompany.service;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import org.springframework.transaction.annotation.Transactional;
 import org.ironrhino.core.service.BaseManagerImpl;
 import com.mycompany.model.Customer;
 @Singleton
-@Named("userManager")
+@Named("customerManager")
 public class CustomerManagerImpl extends BaseManagerImpl<Customer> implements CustomerManager {
+@Override
+						@Transactional(readOnly = true)
+						public boolean canDelete(Customer c) {
+							return c.getName().startsWith("test");
+						}
 }
-]]>
-      </para>
-    </listitem>
-</itemizedlist>
-</para>
+					]]>
+					</programlisting>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+      	启动应用服务器,访问http://localhost:8080/customer,创建几个customer,试试name不以test开头的customer能否删除
+				</para>
+			</listitem>
+		</itemizedlist>
+	</para>
+</chapter>

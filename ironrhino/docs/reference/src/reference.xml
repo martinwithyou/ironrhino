@@ -42,17 +42,8 @@
 
   <part id="kickstart">
     <title>快速上手</title>
-    <partintro>
-    	环境搭建
-    </partintro>
     &install;
-    <partintro>
-    	目录结构说明
-    </partintro>
     &structure;
-    <partintro>
-    	开发指引
-    </partintro>
     &develop;
   </part>
 

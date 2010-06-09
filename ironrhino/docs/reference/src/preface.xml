@@ -1,10 +1,4 @@
-<sidebar>
-  <title>目标</title>
-  <para><emphasis>简化web应用程序开发,提高可维护性</emphasis></para>
-</sidebar>
-   
 <para>Ironrhino是在spring,struts2,hibernate等成熟的开源框架之上提供一些常用的功能,开发者可重用原有的技术积累和开发习惯,不需要重新学习一套新体系</para>
-
 <para>
 Ironrhino提供如下核心功能:
   <itemizedlist>
