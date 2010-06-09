@@ -15,7 +15,7 @@
 		</property>
 	</bean>
 	<context:annotation-config />
-	<context:component-scan base-package="org.ironrhino,com.ironrhino"/>
+	<context:component-scan base-package="org.ironrhino"/>
 	<aop:aspectj-autoproxy />
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">

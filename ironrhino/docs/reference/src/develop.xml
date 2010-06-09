@@ -81,7 +81,7 @@ public class Customer extends BaseEntity {
 			</listitem>
 			<listitem>
 				<para>
-      	修改src/struts.xml
+      	修改src/struts.xml,让ironrhino知道你的@AutoConfig
 					<programlisting>
 					<![CDATA[
 <constant name="ironrhino.autoconfig.packages" value="/common:org.ironrhino.common;org.ironrhino.security" />
@@ -141,6 +141,22 @@ public class CustomerManagerImpl extends BaseManagerImpl<Customer> implements Cu
 					</programlisting>
 				</para>
 			</listitem>
+			<listitem>
+				<para>
+      	修改src/resources/spring/applicationContext-common.xml,让spring知道你的bean
+					<programlisting>
+					<![CDATA[
+<context:component-scan base-package="org.ironrhino"/>
+					]]>
+					</programlisting>
+		改成
+					<programlisting>
+					<![CDATA[
+<context:component-scan base-package="org.ironrhino,com.mycompany"/>
+					]]>
+					</programlisting>
+				</para>
+			</listitem>			
 			<listitem>
 				<para>
       	启动应用服务器,访问http://localhost:8080/customer,创建几个customer,试试name不以test开头的customer能否删除
