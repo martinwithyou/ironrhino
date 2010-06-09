@@ -1,0 +1,35 @@
+<para>
+安装步骤:
+  <itemizedlist>
+    <listitem>
+      <para>
+        	svn检出http://ironrhino.googlecode.com/svn/trunk/ironrhino/导入到eclipse,在eclipse里面执行ant的skeleton任务,会在生成target文件夹生成ironrhino-skeleton.zip文件
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        	将ironrhino-skeleton.zip解压到文件夹,作为project导入到eclipse的workspace,如果eclipse编译报错请自行调整buildpath
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        	可选,数据库默认是用本机的mysql,root用户无密码,如果是其他数据库或者用户请修改src/resources/spring/applicationContext.properties里面的数据库连接属性
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        	可选,将webapp/WEB-INF/web.xml里面的displayName从ironrhino改成你自己的项目名比如test,然后搜索*.xml,*.properties,*.java,将ironrhino.home改成test.home
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        	执行test/src/org/ironrhino/InitData.java,会插入一个默认的管理员账号,用户名是admin,密码是password,其实是在user表里面插入了一条记录,password是单向加密过的
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        	将webapp/部署到应用服务器,访问http://localhost:8080/user,会跳到登录界面,输入admin/password,会进入到用户管理界面,这样环境就搭建成功
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
