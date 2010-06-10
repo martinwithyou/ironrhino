@@ -108,7 +108,7 @@
 		<delete file="${target.dir}/${common-hbm-jar.name}" />
 		<delete file="${target.dir}/${security-jar.name}" />
 		<delete file="${target.dir}/${security-loginrecord-jar.name}" />
-		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**" />
+		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,com/opensymphony/**,org/apache/**,org/codehaus/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**" />
 		<jar jarfile="${target.dir}/${common-hbm-jar.name}" basedir="${classes.dir}" includes="resources/hibernate/common/**" />
 		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/spring/applicationContext-security.xml,resources/view/login.ftl,resources/view/user_*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
 		<jar jarfile="${target.dir}/${security-loginrecord-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
@@ -196,7 +196,7 @@
 				<include name="ironrhino-*.jar" />
 			</fileset>
 		</move>
-		<zip destfile="${target.dir}/${skeleton-zip.name}" basedir="." excludes="build.xml,docs/**,target/**,test/classes/**,test/src/org/ironrhino/core/**,webapp/WEB-INF/classes/**,webapp/assets/*/source/**,src/META-INF/**,src/struts-plugin.xml,src/template/**,src/resources/data/**,src/resources/hibernate/**,src/resources/i18n/**,src/resources/view/**">
+		<zip destfile="${target.dir}/${skeleton-zip.name}" basedir="." excludes="build.xml,docs/**,target/**,test/classes/**,test/src/org/ironrhino/core/**,webapp/WEB-INF/classes/**,webapp/assets/*/source/**,src/org/**,src/com/**,src/META-INF/**,src/struts-plugin.xml,src/template/**,src/resources/data/**,src/resources/hibernate/**,src/resources/i18n/**,src/resources/view/**">
 		</zip>
 		<move todir="${target.dir}">
 			<fileset dir="${webapp.dir}/WEB-INF/lib">
