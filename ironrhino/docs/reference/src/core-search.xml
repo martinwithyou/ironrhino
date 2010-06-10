@@ -1,32 +1,154 @@
 <chapter id="core-search">
-  <title>Introduction</title>
-  <sect1 id="core-search-overview">
-    <title>Overview</title>
-
-    <sidebar>
-      <title>Compass API</title>
-      <para>
-        As you will learn in this chapter, Compass high level API looks strangely familiar. If you used an ORM framework (Hibernate, JDO or JPA), you should feel right at home. This is of-course, intentional. The aim is to let the developer learn as less as possible in terms of interaction with Compass. Also, there are so many design patterns of integrating this type of API with different applications models, that it is a shame that they won't be used with Compass as well.
-      </para>
-
-      <para>
-        For Hibernate users, <classname>Compass</classname> maps to <classname>SessionFactory</classname>, <classname>CompassSession</classname> maps to <classname>Session</classname>, and <classname>CompassTransaction</classname> maps to <classname>Transaction</classname>.
-      </para>
-    </sidebar>
-
+  <title>全文检索</title>
     <para>
-      Compass is built using a layered architecture. Applications interacts with the underlying Search Engine through three main Compass interfaces: <classname>Compass</classname>, <classname>CompassSession</classname> and optionally <classname>CompassTransaction</classname>. These interfaces hide the implementation details of Compass Search Engine abstraction layer.
+<programlisting>
+		<![CDATA[
+package com.mycompany.model;
+
+import java.util.Date;
+
+import org.compass.annotations.Searchable;
+import org.compass.annotations.SearchableProperty;
+import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.model.BaseEntity;
+
+@AutoConfig(searchable = true)
+@Searchable(alias = "customer")
+public class Customer extends BaseEntity {
+
+						@NaturalId
+						@SearchableProperty(boost=5)
+						private String name;
+						
+						@SearchableProperty
+						private String address;
+						
+						@SearchableProperty(converter = "date", format = "yyyy-MM-dd")
+						private Date date = new Date();
+
+						public String getName() {
+							return name;
+						}
+
+						public void setName(String name) {
+							this.name = name;
+						}
+
+						public String getAddress() {
+							return address;
+						}
+
+						public void setAddress(String address) {
+							this.address = address;
+						}
+
+						public Date getDate() {
+							return date;
+						}
+
+						public void setDate(Date date) {
+							this.date = date;
+						}
+
+}		
+		]]>
+</programlisting>
+@Searchable和@SearchableProperty的用法请参考compass的文档,@AutoConfig(searchable = true) 会在customer列表页底部出现一个搜索框,试一试
     </para>
 
     <para>
-      <emphasis>Compass</emphasis> provide access to search engine management functionality and <classname>CompassSession</classname>'s for managing data within the Search Engine. It is created using <classname>CompassConfiguration</classname> (loads configuration and mappings files). When <classname>Compass</classname> is created, it will either join an existing index or create a new one if none is available. After this, an application will use <classname>Compass</classname> to obtain a <classname>CompassSession</classname> in order to start managing the data with the Search Engine. <classname>Compass</classname> is a heavyweight object, usually created at application startup and shared within an application for <classname>CompassSession</classname> creation.
+如果想在你自己的Action里面调用搜索服务,请参考如下代码    
+<programlisting>
+		<![CDATA[
+		
+package com.mycompany.action;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang.StringUtils;
+import org.compass.core.CompassHit;
+import org.compass.core.support.search.CompassSearchResults;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.search.CompassCriteria;
+import org.ironrhino.core.search.CompassSearchService;
+import org.ironrhino.core.struts.BaseAction;
+
+import com.mycompany.model.Customer;
+import com.mycompany.service.CustomerManager;
+
+public class CustomerAction extends BaseAction {
+
+	private static final long serialVersionUID = 4331302727890834065L;
+
+
+	private ResultPage<Customer> resultPage;
+
+
+	@Inject
+	private transient CustomerManager customerManager;
+
+
+	@Inject
+	private transient CompassSearchService compassSearchService;
+
+	public ResultPage<Customer> getResultPage() {
+		return resultPage;
+	}
+
+	public void setResultPage(ResultPage<Customer> resultPage) {
+		this.resultPage = resultPage;
+	}
+
+	@Override
+	public String execute() {
+		if (StringUtils.isBlank(keyword)) {
+			DetachedCriteria dc = customerManager.detachedCriteria();
+			if (resultPage == null)
+				resultPage = new ResultPage<Customer>();
+			resultPage.setDetachedCriteria(dc);
+			resultPage.addOrder(org.hibernate.criterion.Order.asc("name"));
+			resultPage = customerManager.findByResultPage(resultPage);
+		} else {
+			String query = keyword.trim();
+			CompassCriteria cc = new CompassCriteria();
+			cc.setQuery(query);
+			cc.setAliases(new String[] { "customer" });
+			if (resultPage == null)
+				resultPage = new ResultPage<Customer>();
+			cc.setPageNo(resultPage.getPageNo());
+			cc.setPageSize(resultPage.getPageSize());
+			CompassSearchResults searchResults = compassSearchService
+					.search(cc);
+			int totalHits = searchResults.getTotalHits();
+			CompassHit[] hits = searchResults.getHits();
+			if (hits != null) {
+				List<Customer> list = new ArrayList<Customer>(hits.length);
+				for (CompassHit ch : searchResults.getHits()) 
+					list.add((Customer) ch.getData());
+				resultPage.setResult(list);
+			} else {
+				resultPage.setResult(Collections.EMPTY_LIST);
+			}
+			resultPage.setTotalRecord(totalHits);
+		}
+		return LIST;
+	}
+
+
+}
+
+		
+		]]>
+</programlisting>
     </para>
 
-    <para>
-      <emphasis>CompassSession</emphasis> as the name suggests, represents a working lightweight session within Compass (it is non thread safe). With a <classname>CompassSession</classname>, applications can save and retrieve any searchable data (declared in Compass mapping files) from the Search Engine. Applications work with <classname>CompassSession</classname> at either the Object level or Compass Resource level to save and retrieve data.  In order to work with Objects within Compass, they must be specified using either OSEM, XSEM (with XSEM <classname>XmlObject</classname>) or JSEM. In order to work with Resources, they must be specified using RSEM (Resource can still be used with OSEM/XSEM/JSEM to display search results, since Objects/Xml/Json end up being converted to Resources). Compass will then retrieve the declared searchable data from the Object automatically when saving Objects within Compass. When querying the Search Engine, Compass provides a <classname>CompassHits</classname> interface which one can use to work with the search engine results (getting scores, resources and mapped objects).
-    </para>
-
-  </sect1>
 </chapter>
 
 

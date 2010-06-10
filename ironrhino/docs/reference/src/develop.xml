@@ -97,14 +97,14 @@ public class Customer extends BaseEntity {
 			</listitem>
 			<listitem>
 				<para>
-      	启动应用服务器,访问http://localhost:8080/customer试试
+      	启动应用服务器,访问/customer试试
 				</para>
 			</listitem>
 		</itemizedlist>
 	</para>
 
 	<para>
-如果需要控制Customer
+如果需要写自己的CustomerManager
 		<itemizedlist>
 			<listitem>
 				<para>
@@ -131,11 +131,11 @@ import com.mycompany.model.Customer;
 @Singleton
 @Named("customerManager")
 public class CustomerManagerImpl extends BaseManagerImpl<Customer> implements CustomerManager {
-@Override
-						@Transactional(readOnly = true)
-						public boolean canDelete(Customer c) {
-							return c.getName().startsWith("test");
-						}
+		@Override
+		@Transactional(readOnly = true)
+		public boolean canDelete(Customer c) {
+			return c.getName().startsWith("test");
+		}
 }
 					]]>
 					</programlisting>
@@ -159,7 +159,7 @@ public class CustomerManagerImpl extends BaseManagerImpl<Customer> implements Cu
 			</listitem>			
 			<listitem>
 				<para>
-      	启动应用服务器,访问http://localhost:8080/customer,创建几个customer,试试name不以test开头的customer能否删除
+      	启动应用服务器,访问/customer,创建几个customer,试试name不以test开头的customer能否删除
 				</para>
 			</listitem>
 		</itemizedlist>
