@@ -14,8 +14,7 @@ mail.smtp.username=ironrhinotest@gmail.com
 		]]>
       </programlisting>
 	</para>
-注入org.ironrhino.core.mail.MailService,调用它send方法,它会检测jms是否可用,是则异步发送否则同步发送
-同时,send方法也支持使用freemarker模板
+注入org.ironrhino.core.mail.MailService,调用它send方法,它会检测jms是否可用,是则异步发送否则同步发送,同时,send方法也支持使用freemarker模板
 </chapter>
 
 
