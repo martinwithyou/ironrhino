@@ -1,32 +1,101 @@
 <chapter id="core-security">
-  <title>Introduction</title>
-  <sect1 id="core-security-overview">
-    <title>Overview</title>
+	<title>安全框架</title>
+	<para>
+		ironrhino的安全框架是在spring security之上构建的,包含了一个简单的用户管理系统,只需要将ironrhino-security.jar包放入WEB-INF/lib,就可以把自己的应用程序保护起来
+	</para>
+	<para>
+    	内置一个管理员角色,如果用户需要增加自己的角色,请参考如下代码
+		<programlisting>
+		<![CDATA[
+package com.mycompany.model;
 
-    <sidebar>
-      <title>Compass API</title>
-      <para>
-        As you will learn in this chapter, Compass high level API looks strangely familiar. If you used an ORM framework (Hibernate, JDO or JPA), you should feel right at home. This is of-course, intentional. The aim is to let the developer learn as less as possible in terms of interaction with Compass. Also, there are so many design patterns of integrating this type of API with different applications models, that it is a shame that they won't be used with Compass as well.
-      </para>
+public interface UserRole extends org.ironrhino.security.model.UserRole {
 
-      <para>
-        For Hibernate users, <classname>Compass</classname> maps to <classname>SessionFactory</classname>, <classname>CompassSession</classname> maps to <classname>Session</classname>, and <classname>CompassTransaction</classname> maps to <classname>Transaction</classname>.
-      </para>
-    </sidebar>
+			public static final String ROLE_WAREHOUSEMAN = "ROLE_WAREHOUSEMAN";
+			public static final String ROLE_SALESMAN = "ROLE_SALESMAN";
+			public static final String ROLE_HR = "ROLE_HR";
 
-    <para>
-      Compass is built using a layered architecture. Applications interacts with the underlying Search Engine through three main Compass interfaces: <classname>Compass</classname>, <classname>CompassSession</classname> and optionally <classname>CompassTransaction</classname>. These interfaces hide the implementation details of Compass Search Engine abstraction layer.
-    </para>
+}
+		]]>
+		</programlisting>
+    	写一个接口继承org.ironrhino.security.model.UserRole,接口名随便,里面有静态String成员以ROLE_开头(Spring Security默认要求的),这样在编辑用户的时候可以看到多了三个角色可以选择(可以在resource/i18n/mycompany/messages_zh_CN.properties加入角色名的中文名)
+	</para>
+	<para>
+		控制action的权限,使用@Authorize,参数的意义可以参考spring security的Authorize jsg标签,可以打在方法上,如果方法上没有则查找类上有没有,这样可以控制什么角色的用户可以访问
+		<programlisting>
+		<![CDATA[
+package com.mycompany.action;
 
-    <para>
-      <emphasis>Compass</emphasis> provide access to search engine management functionality and <classname>CompassSession</classname>'s for managing data within the Search Engine. It is created using <classname>CompassConfiguration</classname> (loads configuration and mappings files). When <classname>Compass</classname> is created, it will either join an existing index or create a new one if none is available. After this, an application will use <classname>Compass</classname> to obtain a <classname>CompassSession</classname> in order to start managing the data with the Search Engine. <classname>Compass</classname> is a heavyweight object, usually created at application startup and shared within an application for <classname>CompassSession</classname> creation.
-    </para>
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-    <para>
-      <emphasis>CompassSession</emphasis> as the name suggests, represents a working lightweight session within Compass (it is non thread safe). With a <classname>CompassSession</classname>, applications can save and retrieve any searchable data (declared in Compass mapping files) from the Search Engine. Applications work with <classname>CompassSession</classname> at either the Object level or Compass Resource level to save and retrieve data.  In order to work with Objects within Compass, they must be specified using either OSEM, XSEM (with XSEM <classname>XmlObject</classname>) or JSEM. In order to work with Resources, they must be specified using RSEM (Resource can still be used with OSEM/XSEM/JSEM to display search results, since Objects/Xml/Json end up being converted to Resources). Compass will then retrieve the declared searchable data from the Object automatically when saving Objects within Compass. When querying the Search Engine, Compass provides a <classname>CompassHits</classname> interface which one can use to work with the search engine results (getting scores, resources and mapped objects).
-    </para>
+import javax.inject.Inject;
 
-  </sect1>
+import org.apache.commons.lang.StringUtils;
+import org.ironrhino.core.metadata.Authorize;
+import org.compass.core.CompassHit;
+import org.compass.core.support.search.CompassSearchResults;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.search.CompassCriteria;
+import org.ironrhino.core.search.CompassSearchService;
+import org.ironrhino.core.struts.BaseAction;
+
+import com.mycompany.model.UserRole;
+import com.mycompany.model.Customer;
+import com.mycompany.service.CustomerManager;
+
+@Authorize(ifAnyGranted = UserRole.ROLE_SALESMAN)
+public class CustomerAction extends BaseAction {
+
+	private static final long serialVersionUID = 4331302727890834065L;
+
+
+	private ResultPage<Customer> resultPage;
+
+
+	@Inject
+	private transient CustomerManager customerManager;
+
+
+	public ResultPage<Customer> getResultPage() {
+		return resultPage;
+	}
+
+	public void setResultPage(ResultPage<Customer> resultPage) {
+		this.resultPage = resultPage;
+	}
+
+	@Override
+	public String execute() {
+		DetachedCriteria dc = customerManager.detachedCriteria();
+		if (resultPage == null)
+			resultPage = new ResultPage<Customer>();
+		resultPage.setDetachedCriteria(dc);
+		resultPage.addOrder(org.hibernate.criterion.Order.asc("name"));
+		resultPage = customerManager.findByResultPage(resultPage);
+		return LIST;
+	}
+
+	@Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
+	public String delete() {
+		customerManager.delete(customerManager.get(getUid()));
+		return SUCCESS;
+	}
+
+}
+		]]>
+		</programlisting>
+		以上实例表明ROLE_SALESMAN可以查看customer列表,但是需要ROLE_ADMINISTRATOR才可以删除customer
+	</para>
+	<para>
+		如果ironrhino-security-loginrecord.jar包也放入WEB-INF/lib,就可以记录用户的登录行为,访问 /loginRecord试试看
+	</para>
+	<para>
+		高级用户可以参考ironrhino-security.jar定制自己的用户系统和配置自己的applicationContext-security.xml
+	</para>
 </chapter>
 
 
