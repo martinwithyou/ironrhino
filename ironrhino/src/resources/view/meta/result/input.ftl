@@ -15,16 +15,16 @@
 			<#assign label=config.displayName>
 		</#if>
 		<#if config.type=='input'>
-			<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(naturalIdsImmatuable&&!action.isNew())?string}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" />
+			<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(!naturalIdMutable&&!action.isNew())?string}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" />
 		</#if>
 		<#if config.type=='textarea'>
-			<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(naturalIdsImmatuable&&!action.isNew())?string}" cssClass="${config.cssClass}" cols="50" rows="5" />
+			<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(!naturalIdMutable&&!action.isNew())?string}" cssClass="${config.cssClass}" cols="50" rows="5" />
 		</#if>
 		<#if config.type=='checkbox'>
-			<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(naturalIdsImmatuable&&!action.isNew())?string}" cssClass="${config.cssClass}" />
+			<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(!naturalIdMutable&&!action.isNew())?string}" cssClass="${config.cssClass}" />
 		</#if>
 		<#if config.type=='select'>
-			<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(naturalIdsImmatuable&&!action.isNew())?string}" cssClass="${config.cssClass}" list="${config.list}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue=""/>
+			<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(!naturalIdMutable&&!action.isNew())?string}" cssClass="${config.cssClass}" list="${config.list}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue=""/>
 		</#if>
 	</#list>
 

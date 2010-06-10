@@ -212,7 +212,7 @@ public class EntityAction extends BaseAction {
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
 		Persistable persisted = null;
 		Map<String, Annotation> naturalIds = getNaturalIds();
-		boolean naturalIdImmutable = isNaturalIdsImmatuable();
+		boolean naturalIdMutable = isNaturalIdMutable();
 		boolean caseInsensitive = naturalIds.size() > 0
 				&& ((NaturalId) naturalIds.values().iterator().next())
 						.caseInsensitive();
@@ -243,7 +243,7 @@ public class EntityAction extends BaseAction {
 				}
 			}
 		} else {
-			if (!naturalIdImmutable && naturalIds.size() > 0) {
+			if (naturalIdMutable && naturalIds.size() > 0) {
 				Object[] args = new Object[naturalIds.size() * 2];
 				Iterator<String> it = naturalIds.keySet().iterator();
 				int i = 0;
@@ -279,7 +279,7 @@ public class EntityAction extends BaseAction {
 							.getPropertyValue("id"));
 				BeanWrapperImpl bwp = new BeanWrapperImpl(persisted);
 				Set<String> names = getUiConfigs().keySet();
-				if (naturalIdImmutable)
+				if (!naturalIdMutable)
 					names.removeAll(naturalIds.keySet());
 				for (String name : names) {
 					if (Persistable.class.isAssignableFrom(bwp
@@ -436,10 +436,10 @@ public class EntityAction extends BaseAction {
 		return _naturalIds;
 	}
 
-	public boolean isNaturalIdsImmatuable() {
+	public boolean isNaturalIdMutable() {
 		return getNaturalIds().size() > 0
 				&& ((NaturalId) getNaturalIds().values().iterator().next())
-						.immutable();
+						.mutable();
 	}
 
 	public Map<String, UiConfigImpl> getUiConfigs() {

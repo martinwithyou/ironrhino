@@ -11,7 +11,7 @@
 		<#if config.displayName??>
 			<#assign label=config.displayName>
 		</#if>
-		<@rttheadtd name=label cellName=entityName+'.'+key width=config['width']! cellEdit=(readonly||naturalIdsImmatuable)?string('','click') readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited/>
+		<@rttheadtd name=label cellName=entityName+'.'+key width=config['width']! cellEdit=(readonly||!naturalIdMutable)?string('','click') readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited/>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>

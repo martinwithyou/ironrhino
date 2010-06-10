@@ -11,7 +11,7 @@ public class Page extends BaseEntity implements Recordable {
 
 	private static final long serialVersionUID = 4688382703803043164L;
 
-	@NaturalId(caseInsensitive = true)
+	@NaturalId(mutable = true, caseInsensitive = true)
 	private String path;
 
 	private String title;

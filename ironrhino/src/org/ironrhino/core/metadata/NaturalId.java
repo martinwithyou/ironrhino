@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface NaturalId {
 
-	boolean immutable() default false;
+	boolean mutable() default false;
 
 	boolean caseInsensitive() default false;
 
