@@ -34,7 +34,7 @@
 			</listitem>
 			<listitem>
 				<para>
-        	webapp/WEB-INF/view/ftl/decorator,sitemesh的装饰文件
+        	webapp/WEB-INF/view/ftl/decorator,sitemesh的装饰文件,开发者需要改这里增加顶部菜单
 				</para>
 			</listitem>
 			<listitem>

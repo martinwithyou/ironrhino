@@ -24,7 +24,7 @@ public class User extends BaseEntity implements UserDetails {
 
 	private static final long serialVersionUID = -6135434863820342822L;
 
-	@NaturalId
+	@NaturalId(caseInsensitive = true)
 	@SearchableProperty
 	private String username;
 
