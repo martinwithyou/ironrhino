@@ -1,32 +1,214 @@
 <chapter id="advanced-aopcache">
-  <title>Introduction</title>
-  <sect1 id="advanced-aopcache-overview">
-    <title>Overview</title>
-
-    <sidebar>
-      <title>Compass API</title>
-      <para>
-        As you will learn in this chapter, Compass high level API looks strangely familiar. If you used an ORM framework (Hibernate, JDO or JPA), you should feel right at home. This is of-course, intentional. The aim is to let the developer learn as less as possible in terms of interaction with Compass. Also, there are so many design patterns of integrating this type of API with different applications models, that it is a shame that they won't be used with Compass as well.
-      </para>
-
-      <para>
-        For Hibernate users, <classname>Compass</classname> maps to <classname>SessionFactory</classname>, <classname>CompassSession</classname> maps to <classname>Session</classname>, and <classname>CompassTransaction</classname> maps to <classname>Transaction</classname>.
-      </para>
-    </sidebar>
-
+  <title>AOP缓存</title>
     <para>
-      Compass is built using a layered architecture. Applications interacts with the underlying Search Engine through three main Compass interfaces: <classname>Compass</classname>, <classname>CompassSession</classname> and optionally <classname>CompassTransaction</classname>. These interfaces hide the implementation details of Compass Search Engine abstraction layer.
-    </para>
+     <programlisting>
+					<![CDATA[
+					
+package org.ironrhino.security.service;
 
-    <para>
-      <emphasis>Compass</emphasis> provide access to search engine management functionality and <classname>CompassSession</classname>'s for managing data within the Search Engine. It is created using <classname>CompassConfiguration</classname> (loads configuration and mappings files). When <classname>Compass</classname> is created, it will either join an existing index or create a new one if none is available. After this, an application will use <classname>Compass</classname> to obtain a <classname>CompassSession</classname> in order to start managing the data with the Search Engine. <classname>Compass</classname> is a heavyweight object, usually created at application startup and shared within an application for <classname>CompassSession</classname> creation.
-    </para>
 
-    <para>
-      <emphasis>CompassSession</emphasis> as the name suggests, represents a working lightweight session within Compass (it is non thread safe). With a <classname>CompassSession</classname>, applications can save and retrieve any searchable data (declared in Compass mapping files) from the Search Engine. Applications work with <classname>CompassSession</classname> at either the Object level or Compass Resource level to save and retrieve data.  In order to work with Objects within Compass, they must be specified using either OSEM, XSEM (with XSEM <classname>XmlObject</classname>) or JSEM. In order to work with Resources, they must be specified using RSEM (Resource can still be used with OSEM/XSEM/JSEM to display search results, since Objects/Xml/Json end up being converted to Resources). Compass will then retrieve the declared searchable data from the Object automatically when saving Objects within Compass. When querying the Search Engine, Compass provides a <classname>CompassHits</classname> interface which one can use to work with the search engine results (getting scores, resources and mapped objects).
-    </para>
+import javax.inject.Named;
+import javax.inject.Singleton;
 
-  </sect1>
+import org.ironrhino.core.metadata.CheckCache;
+import org.ironrhino.core.metadata.FlushCache;
+import org.ironrhino.core.service.BaseManagerImpl;
+import org.ironrhino.security.model.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+
+@Singleton
+@Named("userManager")
+public class UserManagerImpl extends BaseManagerImpl<User> implements
+		UserManager {
+
+	@Transactional
+	@FlushCache(namespace = "user", key = "${args[0].username}")
+	//保存时候会删除缓存中以user.username的key的数据
+	public void save(User user) {
+		super.save(user);
+	}
+
+	@Transactional(readOnly = true)
+	@CheckCache(namespace = "user", key = "${args[0]}")
+	//会先去检查缓存里面有没有username这个key,有就会直接返回缓存的结果而不会真的去执行方法,没有就会执行方法并返回结果
+	public User loadUserByUsername(String username) {
+		User user = findByNaturalId(true, "username", username);
+		if (user == null)
+			throw new UsernameNotFoundException("No such Username");
+		return user;
+	}
+
+}
+					
+					]]>
+     </programlisting>
+         <table>
+				<title>@CheckCache的属性</title>
+				<tgroup cols="2">
+					<colspec colname="c1" colwidth="3*" />
+					<colspec colname="c2" colwidth="5*" />
+					<thead>
+						<row>
+							<entry>属性</entry>
+							<entry>说明</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>
+								<literal>key</literal>
+							</entry>
+							<entry>
+								缓存的key,在域里面唯一,支持mvel表达式
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>namespace</literal>
+							</entry>
+							<entry>
+								可选,指定缓存的域,没有指定则使用默认的域,支持mvel表达式
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>when</literal>
+							</entry>
+							<entry>
+								值为true的时候才会去使用缓存,为false的时候每次都会去执行方法,使用mvel表达式
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>timeToLive</literal>
+							</entry>
+							<entry>
+								数据缓存的时间,从放入缓存的时刻开始算起如果超过这个时间则从缓存中删除,设置了timeToIdle时这个失效,以秒为单位,支持mvel表达式
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>timeToIdle</literal>
+							</entry>
+							<entry>
+								数据允许空闲的时间,从上次获取的时刻开始算起如果超过这个时间则从缓存中删除,以秒为单位,支持mvel表达式
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>onHit</literal>
+							</entry>
+							<entry>
+								缓存命中的时候的回调,使用mvel表达式
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>onMiss</literal>
+							</entry>
+							<entry>
+								缓存没有命中的时候的回调,使用mvel表达式
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>onPut</literal>
+							</entry>
+							<entry>
+								数据放入缓存的时候的回调,使用mvel表达式
+							</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			<table>
+				<title>@FlushCache的属性</title>
+				<tgroup cols="2">
+					<colspec colname="c1" colwidth="3*" />
+					<colspec colname="c2" colwidth="5*" />
+					<thead>
+						<row>
+							<entry>属性</entry>
+							<entry>说明</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>
+								<literal>key</literal>
+							</entry>
+							<entry>
+								缓存的key,在域里面唯一,支持mvel表达式
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>namespace</literal>
+							</entry>
+							<entry>
+								可选,指定缓存的域,没有指定则使用默认的域,支持mvel表达式
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>onFlush</literal>
+							</entry>
+							<entry>
+								数据从缓存中删除时候的回调,使用mvel表达式
+							</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			<table>
+				<title>mvel表达式内置变量</title>
+				<tgroup cols="2">
+					<colspec colname="c1" colwidth="3*" />
+					<colspec colname="c2" colwidth="5*" />
+					<thead>
+						<row>
+							<entry>变量名</entry>
+							<entry>说明</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>
+								<literal>args</literal>
+							</entry>
+							<entry>
+								方法的参数数组
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>retval</literal>
+							</entry>
+							<entry>
+								方法的返回值,在when,timeToLive,timeToIdle,onPut里面有效
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>target</literal>
+							</entry>
+							<entry>
+								方法所在的对象,上述例子是UserManagerImpl的实例
+							</entry>
+						</row>
+						<row>
+							<entry>
+								<literal>_this</literal>
+							</entry>
+							<entry>
+								方法所在的对象的代理,上述例子是UserManagerImpl实例的代理
+							</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+	</para>
 </chapter>
 
 
