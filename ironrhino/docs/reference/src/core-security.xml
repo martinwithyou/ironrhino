@@ -91,6 +91,17 @@ public class CustomerAction extends BaseAction {
 		以上实例表明ROLE_SALESMAN可以查看customer列表,但是需要ROLE_ADMINISTRATOR才可以删除customer
 	</para>
 	<para>
+		ftl模板可以这样使用
+		<programlisting>
+		<![CDATA[
+			<@authorize ifAnyGranted = "ROLE_ADMINISTRATOR">
+				<a href="/customer">customers</a>
+			</@authorize>
+		]]>
+		</programlisting>
+		jsp使用spring security的authorize tag就可以
+	</para>
+	<para>
 		如果ironrhino-security-loginrecord.jar包也放入WEB-INF/lib,就可以记录用户的登录行为,访问 /loginRecord试试看
 	</para>
 	<para>
