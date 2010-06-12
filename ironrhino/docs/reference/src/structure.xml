@@ -19,7 +19,7 @@
 			</listitem>
 			<listitem>
 				<para>
-        	src/resources/i18n/,国家化消息的资源文件,可包含子目录,会自动扫描*.properties文件
+        	src/resources/i18n/,国际化消息的资源文件,可包含子目录,会自动扫描*.properties文件
 				</para>
 			</listitem>
 			<listitem>
