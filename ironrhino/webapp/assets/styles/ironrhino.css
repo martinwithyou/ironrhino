@@ -1391,15 +1391,15 @@ input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }
 
-form>div {
+form div.field {
 	margin: 10px 0px 10px 0px;
 }
 
-form>div.submit{
+form div.submit{
 text-align:center;
 }
 
-form.line>div {
+form.line div.field {
 	margin-right: 2px;
 	float: left;
 }
