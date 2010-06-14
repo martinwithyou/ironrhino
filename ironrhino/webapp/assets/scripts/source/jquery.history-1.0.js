@@ -35,10 +35,14 @@ jQuery.extend({
 				' src="javascript:false;"></iframe>'
 			);
 			var ihistory = jQuery("#jQuery_history")[0];
-			var iframe = ihistory.contentWindow.document;
-			iframe.open();
-			iframe.close();
-			iframe.location.hash = current_hash;
+			try{
+				var iframe = ihistory.contentWindow.document;
+				iframe.open();
+				iframe.close();
+				iframe.location.hash = current_hash;
+			}catch(e){
+				
+			}
 		}
 		else if (jQuery.browser.safari) {
 			// etablish back/forward stacks
@@ -67,13 +71,17 @@ jQuery.extend({
 			// On IE, check for location.hash of iframe
 			var ihistory = jQuery("#jQuery_history")[0];
 			if(!ihistory) return;
-			var iframe = ihistory.contentDocument || ihistory.contentWindow.document;
-			var current_hash = iframe.location.hash.replace(/\?.*$/, '');
-			if(current_hash != jQuery.historyCurrentHash) {
-			
-				location.hash = current_hash;
-				jQuery.historyCurrentHash = current_hash;
-				jQuery.historyCallback(current_hash.replace(/^#/, ''));
+			try{
+				var iframe = ihistory.contentDocument || ihistory.contentWindow.document;
+				var current_hash = iframe.location.hash.replace(/\?.*$/, '');
+				if(current_hash != jQuery.historyCurrentHash) {
+				
+					location.hash = current_hash;
+					jQuery.historyCurrentHash = current_hash;
+					jQuery.historyCallback(current_hash.replace(/^#/, ''));
+					
+				}
+			}catch(e){
 				
 			}
 		} else if (jQuery.browser.safari) {
@@ -135,12 +143,16 @@ jQuery.extend({
 		
 		if (jQuery.historyNeedIframe) {
 			var ihistory = jQuery("#jQuery_history")[0];
-			var iframe = ihistory.contentWindow.document;
-			iframe.open();
-			iframe.close();
-			iframe.location.hash = newhash;
-			jQuery.lastHistoryLength = history.length;
-			jQuery.historyCallback(hash);
+			try{
+				var iframe = ihistory.contentWindow.document;
+				iframe.open();
+				iframe.close();
+				iframe.location.hash = newhash;
+				jQuery.lastHistoryLength = history.length;
+				jQuery.historyCallback(hash);
+			}catch(e){
+				
+			}
 		}
 		else if (jQuery.browser.safari) {
 			jQuery.dontCheck = true;
