@@ -29,7 +29,7 @@ input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }
 
-form div.field {
+form div.field,form div.submit {
 	margin: 10px 0px 10px 0px;
 }
 
