@@ -356,7 +356,7 @@ public class StringUtils {
 			boolean b1 = true;
 			for (int i = 0; i < chars.length; i++) {
 				boolean b2 = false;
-				for (String s : pinyin(text.charAt(i)))
+				for (String s : _pinyin(text.charAt(i)))
 					if (s.indexOf(chars[i]) == 0) {
 						b2 = true;
 						break;
@@ -375,7 +375,7 @@ public class StringUtils {
 			boolean b1 = true;
 			for (int i = 0; i < array.length; i++) {
 				boolean b2 = false;
-				for (String s : pinyin(text.charAt(i)))
+				for (String s : _pinyin(text.charAt(i)))
 					if (s.indexOf(array[i]) == 0) {
 						b2 = true;
 						break;
@@ -393,7 +393,7 @@ public class StringUtils {
 		int matchedPosition = 0;
 		while (pattern.length() - 1 > matchedPosition) {
 			boolean b = false;
-			for (String s : pinyin(text.charAt(matchedChars)))
+			for (String s : _pinyin(text.charAt(matchedChars)))
 				if (pattern.substring(matchedPosition).indexOf(s) == 0) {
 					b = true;
 					matchedPosition += s.length();
@@ -406,7 +406,7 @@ public class StringUtils {
 		return true;
 	}
 
-	private static String[] pinyin(char c) {
+	private static String[] _pinyin(char c) {
 		HanyuPinyinOutputFormat f = new HanyuPinyinOutputFormat();
 		f.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
 		f.setVCharType(HanyuPinyinVCharType.WITH_V);
@@ -420,6 +420,22 @@ public class StringUtils {
 		if (array == null)// not chinese
 			array = new String[] { String.valueOf(c) };
 		return array;
+	}
+
+	public static String pinyin(String hanyu) {
+		StringBuilder sb = new StringBuilder();
+		char[] chars = hanyu.toCharArray();
+		for (char c : chars)
+			sb.append(_pinyin(c)[0]);
+		return sb.toString();
+	}
+
+	public static String pinyinAbbr(String hanyu) {
+		StringBuilder sb = new StringBuilder();
+		char[] chars = hanyu.toCharArray();
+		for (char c : chars)
+			sb.append(_pinyin(c)[0].charAt(0));
+		return sb.toString();
 	}
 
 	public static String decodeUrl(String url) {
