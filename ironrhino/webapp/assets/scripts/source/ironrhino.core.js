@@ -415,9 +415,15 @@ Ajax = {
 				Ajax.fire(target, 'onsuccess', data);
 			}
 			if (data.fieldErrors) {
-				for (key in data.fieldErrors)
-					Message.showFieldError(target[key], data.fieldErrors[key]);
-				Form.focus(target);
+				if (target) {
+					for (key in data.fieldErrors)
+						Message.showFieldError(target[key],
+								data.fieldErrors[key]);
+					Form.focus(target);
+				} else {
+					for (key in data.fieldErrors)
+						Message.showActionError(data.fieldErrors[key]);
+				}
 			}
 			Message.showActionError(data.actionErrors, target);
 			Message.showActionMessage(data.actionMessages, target);

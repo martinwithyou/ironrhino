@@ -1,9 +1,6 @@
 input[type="text"],input[type="password"]{
 	height:15px;
 }
-select{
-	height:20px;
-}
 div.field_error,div.action_error,ul.field_error li,div.action_message,ul.action_message li,.field_error .close,.action_error .close,.action_message .close {
 	background-image: url(../images/msg.gif);
 }

@@ -5,9 +5,10 @@ input[type="text"],input[type="password"],select,textarea {
 	-moz-border-radius: 3px;
 }
 input[type="text"],input[type="password"],select{
-	height:20px;
+	height:18px;
 }
 select {
+	height: 20px;
 	width: 150px;
 }
 
