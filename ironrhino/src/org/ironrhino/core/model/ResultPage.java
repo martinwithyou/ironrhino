@@ -3,12 +3,9 @@ package org.ironrhino.core.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
 
 public class ResultPage<T> implements Serializable {
 
@@ -31,8 +28,6 @@ public class ResultPage<T> implements Serializable {
 	private Collection<T> result = new ArrayList<T>();
 
 	private DetachedCriteria detachedCriteria;
-
-	private Set<Order> orders = new LinkedHashSet<Order>();
 
 	private boolean reverse;
 
@@ -99,22 +94,6 @@ public class ResultPage<T> implements Serializable {
 
 	public void setDetachedCriteria(DetachedCriteria detachedCriteria) {
 		this.detachedCriteria = detachedCriteria;
-	}
-
-	public Set<Order> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(Set<Order> orders) {
-		this.orders = orders;
-	}
-
-	public void addOrder(Order order) {
-		this.orders.add(order);
-	}
-
-	public void removeOrder(Order order) {
-		this.orders.remove(order);
 	}
 
 	public boolean isFirst() {

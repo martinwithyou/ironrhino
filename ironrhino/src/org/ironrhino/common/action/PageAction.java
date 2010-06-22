@@ -70,10 +70,10 @@ public class PageAction extends BaseAction {
 	@Override
 	public String execute() {
 		DetachedCriteria dc = pageManager.detachedCriteria();
+		dc.addOrder(Order.asc("path"));
 		if (resultPage == null)
 			resultPage = new ResultPage<Page>();
 		resultPage.setDetachedCriteria(dc);
-		resultPage.addOrder(Order.asc("path"));
 		resultPage = pageManager.findByResultPage(resultPage);
 		return LIST;
 	}

@@ -122,10 +122,10 @@ public class UserAction extends BaseAction {
 	public String execute() {
 		if (compassSearchService == null || StringUtils.isBlank(keyword)) {
 			DetachedCriteria dc = userManager.detachedCriteria();
+			dc.addOrder(Order.asc("username"));
 			if (resultPage == null)
 				resultPage = new ResultPage<User>();
 			resultPage.setDetachedCriteria(dc);
-			resultPage.addOrder(Order.asc("username"));
 			resultPage = userManager.findByResultPage(resultPage);
 		} else {
 			String query = keyword.trim();

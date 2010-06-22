@@ -196,8 +196,6 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		resultPage.getDetachedCriteria().setProjection(null);
 		resultPage.getDetachedCriteria().setResultTransformer(
 				CriteriaSpecification.ROOT_ENTITY);
-		for (Order order : resultPage.getOrders())
-			resultPage.getDetachedCriteria().addOrder(order);
 		int start, end;
 		if (!resultPage.isReverse()) {
 			start = (resultPage.getPageNo() - 1) * resultPage.getPageSize();
