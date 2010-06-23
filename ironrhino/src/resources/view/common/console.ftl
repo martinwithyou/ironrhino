@@ -7,7 +7,9 @@
 <@s.form id="form" action="console" method="post" cssClass="ajax focus">
 	<@s.textfield theme="simple" id="cmd" name="cmd" size="50"/>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
-	<@button text="rebuild index" onclick="$('#cmd').val('compassGps.index()');$('#form').submit()"/>
 </@s.form>
+<div id="dashboard" style="margin:10px;">
+	<@button text="compassGps.index()" onclick="$('#cmd').val($(this).text());$('#form').submit()"/>
+</div>
 </body>
 </html></#escape>

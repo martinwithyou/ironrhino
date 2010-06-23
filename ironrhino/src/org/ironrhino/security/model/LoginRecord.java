@@ -2,11 +2,13 @@ package org.ironrhino.security.model;
 
 import java.util.Date;
 
+import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 
 @AutoConfig(readonly = true, order = "date desc")
+@Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 public class LoginRecord extends BaseEntity {
 
 	@UiConfig(displayOrder = 1)
