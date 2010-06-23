@@ -20,12 +20,6 @@ import org.springframework.core.Ordered;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * Use for record model's CRUD operations
- * 
- * @author zhouyanming
- * @see org.ironrhino.core.metadata.RecordAware
- */
 @Aspect
 @Singleton
 @Named

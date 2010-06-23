@@ -14,12 +14,6 @@ import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.Persistable;
 
-/**
- * Use for record model's CRUD operations
- * 
- * @author zhouyanming
- * @see org.ironrhino.core.metadata.PublishAware
- */
 @Aspect
 @Singleton
 @Named

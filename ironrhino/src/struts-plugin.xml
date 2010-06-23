@@ -20,8 +20,6 @@
 				class="org.ironrhino.core.struts.JsonResult" />
 			<result-type name="referer"
 				class="org.ironrhino.core.struts.RefererResult" />
-			<result-type name="feed"
-				class="org.ironrhino.core.struts.FeedResult" />
 			<result-type name="jasper" 
 				class="org.apache.struts2.views.jasperreports.JasperReportsResult"/>
 		</result-types>
@@ -49,9 +47,6 @@
 		<global-results>
 			<result name="json" type="json" />
 			<result name="referer" type="referer" />
-			<result name="feed" type="feed">
-				<param name="feedType">${uid}</param>
-			</result>
 			<result name="redirect" type="redirect">${targetUrl}</result>
 			<result name="accessDenied" type="autoconfig"/>
 			<result name="error" type="autoconfig"/>

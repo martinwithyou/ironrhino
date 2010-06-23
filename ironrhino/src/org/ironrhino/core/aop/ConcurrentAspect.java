@@ -12,10 +12,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.metadata.ConcurrencyControl;
 
-/**
- * 
- * @author zhouyanming
- */
 @Aspect
 @Singleton
 @Named

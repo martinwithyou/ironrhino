@@ -27,8 +27,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/geronimo-connector-2.0.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/geronimo-j2ee-management-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/geronimo-transaction-2.0.2.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-core-5.3.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-ra-5.3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hadoop-hdfs-0.20.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mmseg4j-all-1.8.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/memcached-2.4.2.jar"/>
@@ -65,8 +63,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-3.0.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-web-3.0.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.0.17.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-1.5.2.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.5.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-digester-2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ognl-3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.1.0.jar"/>
@@ -87,5 +83,10 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.web-3.0.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.web.servlet-3.0.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-net-ftp-2.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-core-5.3.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-ra-5.3.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-1.5.3.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.5.3.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jms-1.1.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
