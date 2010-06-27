@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
@@ -19,13 +20,18 @@ import org.springframework.security.web.util.RedirectUrlBuilder;
 public class DefaultLoginUrlAuthenticationEntryPoint extends
 		LoginUrlAuthenticationEntryPoint {
 
+	@Value("${sso.server.base:}")
 	private String ssoServerBase;
 
 	private String loginUrl;
 
+	public void setSsoServerBase(String ssoServerBase) {
+		this.ssoServerBase = ssoServerBase;
+	}
+
 	@PostConstruct
 	public void init() {
-		if (ssoServerBase != null)
+		if (StringUtils.isNotBlank(ssoServerBase))
 			loginUrl = ssoServerBase + getLoginFormUrl();
 	}
 
@@ -42,12 +48,18 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 		if (savedRequest != null)
 			targetUrl = savedRequest.getRedirectUrl();
 		if (loginUrl == null) {
+			URL url = null;
+			try {
+				url = new URL(request.getRequestURL().toString());
+			} catch (MalformedURLException e) {
+
+			}
 			loginUrl = request.getContextPath() + loginUrl;
 			RedirectUrlBuilder urlBuilder = new RedirectUrlBuilder();
 			String scheme = request.getScheme();
 			int serverPort = getPortResolver().getServerPort(request);
 			urlBuilder.setScheme(scheme);
-			urlBuilder.setServerName(request.getServerName());
+			urlBuilder.setServerName(url.getHost());
 			urlBuilder.setPort(serverPort);
 			urlBuilder.setContextPath(request.getContextPath());
 			urlBuilder.setPathInfo(getLoginFormUrl());
@@ -82,10 +94,6 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 			redirectUrl = loginUrl;
 		}
 		return redirectUrl;
-	}
-
-	public void setSsoServerBase(String ssoServerBase) {
-		this.ssoServerBase = ssoServerBase;
 	}
 
 }
