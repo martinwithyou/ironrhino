@@ -16,13 +16,8 @@ select.combox{
 	cursor: text;
 }
 
-input.integer,input.double {
+input.integer,input.double,input.date {
 	width: 90px;
-	font-family: Arial;
-}
-
-input.date {
-	width: 80px;
 	font-family: Arial;
 }
 
