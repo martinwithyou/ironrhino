@@ -1,7 +1,10 @@
 package org.ironrhino.common.action;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
+import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -39,8 +42,14 @@ public class DisplayPageAction extends BaseAction {
 				page = pageManager.getDraftByPath(path);
 			else
 				page = pageManager.getByPath(path);
-			if (page == null)
-				return ACCESSDENIED;
+			if (page == null){
+				try {
+					ServletActionContext.getResponse().sendError(404);
+					return NONE;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return SUCCESS;
 	}
