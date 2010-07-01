@@ -62,8 +62,7 @@ public class LocalFileStorage extends AbstractFileStorage {
 
 	public boolean save(File file, String path) {
 		File dest = new File(directory, path);
-		if(!dest.getParentFile().mkdirs())
-			return false;
+		dest.getParentFile().mkdirs();
 		return file.renameTo(dest);
 	}
 

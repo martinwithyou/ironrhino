@@ -22509,7 +22509,7 @@ Observation.common = function(container) {
 				'script' : $(this).closest('form')[0].action,
 				'cancelImg' : CONTEXT_PATH + '/assets/images/cancel.png',
 				// 'folder' : CONTEXT_PATH + '/upload',
-				'buttonText' : MessageBundle.get('browse'),
+				'buttonText' : 'browse...',
 				'wmode' : 'transparent',
 				'multi' : true,
 				'auto' : true,

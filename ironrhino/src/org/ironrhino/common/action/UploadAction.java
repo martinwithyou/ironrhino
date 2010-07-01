@@ -8,7 +8,9 @@ import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
 
-@AutoConfig(namespace = "/", fileupload = "*/*")
+import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
+
+@AutoConfig(fileupload = "*/*")
 public class UploadAction extends BaseAction {
 
 	private static final long serialVersionUID = 625509291613761721L;
@@ -29,6 +31,12 @@ public class UploadAction extends BaseAction {
 	}
 
 	@Override
+	public String input() {
+		return INPUT;
+	}
+
+	@Override
+	@InputConfig
 	public String execute() {
 		if (file != null) {
 			int i = 0;
@@ -36,11 +44,12 @@ public class UploadAction extends BaseAction {
 				fileStorage.save(f, createPath(fileFileName[i]));
 				i++;
 			}
+			addActionMessage(getText("operate.success"));
 		}
-		return NONE;
+		return INPUT;
 	}
 
 	private String createPath(String filename) {
-		return "/upload/" + System.nanoTime() + "-" + filename;
+		return "/upload/" + filename;
 	}
 }
