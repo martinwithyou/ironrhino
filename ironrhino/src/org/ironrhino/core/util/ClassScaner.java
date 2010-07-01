@@ -161,6 +161,8 @@ public class ClassScaner {
 			int index = name.indexOf('.');
 			if (index < 0) {
 				packages.add(name);
+			} else if (name.startsWith("org.ironrhino.")) {
+				packages.add(name);
 			} else {
 				int index2 = name.indexOf('.', index + 1);
 				if (index2 > 0)
@@ -173,7 +175,8 @@ public class ClassScaner {
 	}
 
 	private static boolean isExcludePackage(String name) {
-		if (name.equals("net") || name.equals("com") || name.equals("org")) {
+		if (name.equals("net") || name.equals("com") || name.equals("org")
+				|| name.equals("org.ironrhino")) {
 			return true;
 		}
 		for (String s : excludePackages) {
@@ -188,9 +191,9 @@ public class ClassScaner {
 			"com.chenlb", "com.mysql", "com.opensymphony", "freemarker",
 			"javassist", "net.htmlparser", "net.sf", "net.sourceforge", "ognl",
 			"org.antlr", "org.aopalliance", "org.apache", "org.aspectj",
-			"org.codehaus", "org.compass", "org.directwebremoting",
-			"org.dom4j", "org.drools", "org.eclipse", "org.hibernate",
-			"org.jasig", "org.jcp", "org.jencks", "org.mvel2", "org.quartz",
-			"org.slf4j", "org.springframework" };
+			"org.codehaus", "org.compass", "org.dom4j", "org.drools",
+			"org.eclipse", "org.hibernate", "org.jasig", "org.jcp",
+			"org.jencks", "org.mvel2", "org.quartz", "org.slf4j",
+			"org.springframework", "org.ironrhino.core" };
 
 }

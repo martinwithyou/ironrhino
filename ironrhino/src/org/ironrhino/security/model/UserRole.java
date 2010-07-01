@@ -19,8 +19,8 @@ public interface UserRole {
 		public static Set<String> getAllRoles() {
 			if (roles == null) {
 				roles = new LinkedHashSet<String>();
-				Set<Class> set = ClassScaner.scanAssignable(ClassScaner
-						.getAppPackages(), UserRole.class);
+				Set<Class> set = ClassScaner.scanAssignable(
+						ClassScaner.getAppPackages(), UserRole.class);
 				for (Class c : set) {
 					Field[] fields = c.getDeclaredFields();
 					for (Field f : fields) {
@@ -32,7 +32,6 @@ public interface UserRole {
 			}
 			return roles;
 		}
-
 	}
 
 }

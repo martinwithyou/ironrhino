@@ -13,8 +13,13 @@
 		</natural-id>
 		<property name="password" not-null="true" />
 		<property name="name" />
+		<property name="email" />
+		<property name="phone" />
 		<property name="enabled" />
 		<property name="createDate" />
+		<property name="modifyDate" />
+		<many-to-one name="createUser" class="User" column="createUser" not-null="false" lazy="proxy" />
+		<many-to-one name="modifyUser" class="User" column="modifyUser" not-null="false" lazy="proxy" />
 		<property name="rolesAsString" type="java.lang.String" column="roles" length="500"/>
 	</class>
 </hibernate-mapping>

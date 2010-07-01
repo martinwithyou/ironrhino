@@ -27,11 +27,13 @@ import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.util.AnnotationUtils;
+import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.core.util.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
@@ -75,9 +77,13 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		if (obj instanceof Recordable) {
 			Recordable r = (Recordable) obj;
 			Date date = new Date();
-			r.setModifyDate(date);
-			if (obj.isNew())
+			if (obj.isNew()){
 				r.setCreateDate(date);
+				r.setCreateUser(AuthzUtils.getUserDetails(UserDetails.class));
+			}else{
+				r.setModifyDate(date);
+				r.setModifyUser(AuthzUtils.getUserDetails(UserDetails.class));
+			}
 		}
 		if (obj instanceof BaseTreeableEntity) {
 			final BaseTreeableEntity entity = (BaseTreeableEntity) obj;

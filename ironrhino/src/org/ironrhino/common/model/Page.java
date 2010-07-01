@@ -1,32 +1,67 @@
 package org.ironrhino.common.model;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+import org.compass.annotations.Searchable;
+import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Recordable;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public class Page extends BaseEntity implements Recordable {
+@Searchable(alias = "page")
+public class Page extends BaseEntity implements Recordable, Ordered {
 
 	private static final long serialVersionUID = 4688382703803043164L;
 
 	@NaturalId(mutable = true, caseInsensitive = true)
 	private String path;
 
+	@SearchableProperty
 	private String title;
 
 	@NotInJson
+	@SearchableProperty
 	private String content;
+
+	private int displayOrder;
 
 	@NotInJson
 	private String draft;
 
 	private Date draftDate;
 
+	@NotInCopy
 	private Date createDate;
 
+	@NotInCopy
 	private Date modifyDate;
+
+	@NotInCopy
+	private String createUserAsString;
+
+	@NotInCopy
+	private String modifyUserAsString;
+
+	@NotInCopy
+	@NotInJson
+	@SearchableProperty
+	private Set<String> tags = new HashSet<String>(0);
+
+	public int getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(int displayOrder) {
+		this.displayOrder = displayOrder;
+	}
 
 	public String getPath() {
 		return path;
@@ -84,4 +119,70 @@ public class Page extends BaseEntity implements Recordable {
 		this.modifyDate = modifyDate;
 	}
 
+	public Set<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<String> tags) {
+		this.tags = tags;
+	}
+
+	@NotInCopy
+	public String getTagsAsString() {
+		if (tags.size() > 0)
+			return StringUtils.join(tags.iterator(), ',');
+		return null;
+	}
+
+	public void setTagsAsString(String tagsAsString) {
+		if (StringUtils.isNotBlank(tagsAsString))
+			tags.addAll(Arrays.asList(tagsAsString.split(",")));
+	}
+
+	@Override
+	@NotInCopy
+	public UserDetails getCreateUser() {
+		return null;
+	}
+
+	@Override
+	public void setCreateUser(UserDetails user) {
+		createUserAsString = user.getUsername();
+	}
+
+	@Override
+	@NotInCopy
+	public UserDetails getModifyUser() {
+		return null;
+	}
+
+	@Override
+	public void setModifyUser(UserDetails user) {
+		modifyUserAsString = user.getUsername();
+	}
+
+	public String getCreateUserAsString() {
+		return createUserAsString;
+	}
+
+	public void setCreateUserAsString(String createUserAsString) {
+		this.createUserAsString = createUserAsString;
+	}
+
+	public String getModifyUserAsString() {
+		return modifyUserAsString;
+	}
+
+	public void setModifyUserAsString(String modifyUserAsString) {
+		this.modifyUserAsString = modifyUserAsString;
+	}
+
+	public int compareTo(Object object) {
+		if (!(object instanceof Page))
+			return 0;
+		Page entity = (Page) object;
+		if (this.getDisplayOrder() != entity.getDisplayOrder())
+			return this.getDisplayOrder() - entity.getDisplayOrder();
+		return this.getTitle().compareTo(entity.getTitle());
+	}
 }

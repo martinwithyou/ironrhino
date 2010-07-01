@@ -70,6 +70,7 @@ public class PageAction extends BaseAction {
 	@Override
 	public String execute() {
 		DetachedCriteria dc = pageManager.detachedCriteria();
+		dc.addOrder(Order.asc("displayOrder"));
 		dc.addOrder(Order.asc("path"));
 		if (resultPage == null)
 			resultPage = new ResultPage<Page>();
@@ -116,6 +117,8 @@ public class PageAction extends BaseAction {
 				return INPUT;
 			}
 			page.setPath(temp.getPath());
+			page.setTagsAsString(temp.getTagsAsString());
+			page.setDisplayOrder(temp.getDisplayOrder());
 			page.setTitle(temp.getTitle());
 			page.setContent(temp.getContent());
 		}

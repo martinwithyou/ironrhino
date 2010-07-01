@@ -14,13 +14,14 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.util.CodecUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @AutoConfig
 @Searchable(alias = "user")
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	private static final long serialVersionUID = -6135434863820342822L;
 
@@ -34,7 +35,11 @@ public class User extends BaseEntity implements UserDetails {
 	@SearchableProperty
 	private String name;
 
-	private Collection<GrantedAuthority> authorities;
+	@SearchableProperty
+	private String email;
+
+	@SearchableProperty
+	private String phone;
 
 	private boolean enabled = true;
 
@@ -42,32 +47,60 @@ public class User extends BaseEntity implements UserDetails {
 	private Date createDate = new Date();
 
 	@NotInCopy
+	private Collection<GrantedAuthority> authorities;
+
+	@NotInCopy
 	@NotInJson
 	@SearchableProperty
 	private Set<String> roles = new HashSet<String>(0);
+
+	@NotInCopy
+	private Date modifyDate;
+
+	@NotInCopy
+	private User createUser;
+
+	@NotInCopy
+	private User modifyUser;
+
+	public Collection<GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
 
 	public Date getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
+	public User getCreateUser() {
+		return createUser;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+
+	public User getModifyUser() {
+		return modifyUser;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getPhone() {
+		return phone;
 	}
 
 	public Set<String> getRoles() {
 		return roles;
-	}
-
-	public void setRoles(Set<String> roles) {
-		this.roles = roles;
 	}
 
 	@NotInCopy
@@ -77,37 +110,8 @@ public class User extends BaseEntity implements UserDetails {
 		return null;
 	}
 
-	public void setRolesAsString(String rolesAsString) {
-		if (StringUtils.isNotBlank(rolesAsString))
-			roles.addAll(Arrays.asList(rolesAsString.split(",")));
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getUsername() {
 		return username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public Collection<GrantedAuthority> getAuthorities() {
-		return authorities;
-	}
-
-	public void setAuthorities(Collection<GrantedAuthority> authorities) {
-		this.authorities = authorities;
 	}
 
 	public boolean isAccountNonExpired() {
@@ -126,12 +130,65 @@ public class User extends BaseEntity implements UserDetails {
 		return enabled;
 	}
 
+	public boolean isPasswordValid(String legiblePassword) {
+		return this.password.equals(CodecUtils.digest(legiblePassword));
+	}
+
+	public void setAuthorities(Collection<GrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public void setCreateUser(User createUser) {
+		this.createUser = createUser;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public void setLegiblePassword(String legiblePassword) {
 		this.password = CodecUtils.digest(legiblePassword);
 	}
 
-	public boolean isPasswordValid(String legiblePassword) {
-		return this.password.equals(CodecUtils.digest(legiblePassword));
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
+	}
+
+	public void setModifyUser(User modifyUser) {
+		this.modifyUser = modifyUser;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public void setRoles(Set<String> roles) {
+		this.roles = roles;
+	}
+
+	public void setRolesAsString(String rolesAsString) {
+		if (StringUtils.isNotBlank(rolesAsString))
+			roles.addAll(Arrays.asList(rolesAsString.split(",")));
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	@Override
