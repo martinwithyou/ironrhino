@@ -578,7 +578,7 @@ Observation.common = function(container) {
 							});
 				});
 
-	if (typeof swfobject.embedSWF != 'undefined') {
+	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {
 			var id = this.id;
 			var width = $(this).width();
@@ -649,7 +649,17 @@ Observation.common = function(container) {
 			options.fileDataName = $(this).attr('name');
 			$(this).uploadify(options);
 		});
-
+	if (typeof $.fn.cycle != 'undefined')
+		$('.cycle').each(function() {
+					var options = {
+						fx : 'fade',
+						pause : 1
+					};
+					var _options = $.parseJSON($(this).attr('options'));
+					if (_options)
+						$.extend(options, _options);
+					$(this).cycle(options);
+				});
 	$('a.ajax,form.ajax', container).each(function() {
 		var target = this;
 		var ids = [];

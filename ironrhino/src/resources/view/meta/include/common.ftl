@@ -18,9 +18,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#if>
 </#macro>
 
-<#macro printSetting key>
-${statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getStringValue(key)!}
-</#macro>
+<#macro printSetting key default="">${statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getStringValue(key,default)!}</#macro>
 
 <#macro includePage path>
 <#local pageManager=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('pageManager')>

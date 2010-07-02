@@ -123,11 +123,8 @@
 
 
 	<target name="compress">
-		<property name="dest.script" value="${webapp.dir}/assets/scripts/ironrhino.js" />
-		<property name="dest.style" value="${webapp.dir}/assets/styles/ironrhino.css" />
-		<concat destfile="${dest.script}" encoding="utf-8" fixlastline="yes">
+		<concat destfile="${webapp.dir}/assets/scripts/ironrhino.js" encoding="utf-8" fixlastline="yes">
 			<filelist>
-				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery-1.4.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.2.js" />
@@ -147,6 +144,8 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview.async-0.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeTable-2.3.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.uploadify-2.1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
+				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
@@ -163,7 +162,34 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
 			</filelist>
 		</concat>
-		<concat destfile="${dest.style}" encoding="utf-8" fixlastline="yes">
+		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-lite.js" encoding="utf-8" fixlastline="yes">
+			<filelist>
+				<file name="${webapp.dir}/assets/scripts/source/jquery-1.4.2.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.jgrowl-1.2.4.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
+			</filelist>
+		</concat>
+		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-lite-njq.js" encoding="utf-8" fixlastline="yes">
+			<filelist>
+				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.jgrowl-1.2.4.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
+			</filelist>
+		</concat>
+		<concat destfile="${webapp.dir}/assets/styles/ironrhino.css" encoding="utf-8" fixlastline="yes">
 			<filelist>
 				<file name="${webapp.dir}/assets/styles/source/jquery.ui.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.autocomplete.css" />
@@ -185,11 +211,33 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.richtable.css" />
 			</filelist>
 		</concat>
+		<concat destfile="${webapp.dir}/assets/styles/ironrhino-lite.css" encoding="utf-8" fixlastline="yes">
+			<filelist>
+				<file name="${webapp.dir}/assets/styles/source/jquery.jgrowl.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.reset.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.button.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.menu.css" />
+			</filelist>
+		</concat>
 		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
 			<arg line=" --js=./webapp/assets/scripts/ironrhino.js --js_output_file=./webapp/assets/scripts/ironrhino-min.js" />
 		</java>
+		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
+			<arg line=" --js=./webapp/assets/scripts/ironrhino-lite.js --js_output_file=./webapp/assets/scripts/ironrhino-lite-min.js" />
+		</java>
+		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
+			<arg line=" --js=./webapp/assets/scripts/ironrhino-lite-njq.js --js_output_file=./webapp/assets/scripts/ironrhino-lite-njq-min.js" />
+		</java>
 		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
 			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-min.css ./webapp/assets/styles/ironrhino.css" />
+		</java>
+		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
+			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-lite-min.css ./webapp/assets/styles/ironrhino-lite.css" />
 		</java>
 		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
 			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/app-min.css ./webapp/assets/styles/app.css" />

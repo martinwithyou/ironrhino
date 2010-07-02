@@ -24,10 +24,14 @@
 			global : false,
 			quiet : true,
 			beforeSend : function() {
-				ele.mask(MessageBundle.get('ajax.loading'));
+				if (typeof $.fn.mask != 'undefined')
+					ele.mask(MessageBundle.get('ajax.loading'));
+				else
+					ele.text(MessageBundle.get('ajax.loading'));
 			},
 			complete : function() {
-				ele.unmask();
+				if (typeof $.fn.unmask != 'undefined')
+					ele.unmask();
 			},
 			success : function(data) {
 				if (typeof data != 'string') {
