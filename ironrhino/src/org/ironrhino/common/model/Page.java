@@ -2,12 +2,15 @@ package org.ironrhino.common.model;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.compass.annotations.Index;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
+import org.compass.annotations.Store;
+import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
@@ -17,11 +20,13 @@ import org.ironrhino.core.model.Recordable;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Searchable(alias = "page")
+@AutoConfig(searchable = true)
 public class Page extends BaseEntity implements Recordable, Ordered {
 
 	private static final long serialVersionUID = 4688382703803043164L;
 
 	@NaturalId(mutable = true, caseInsensitive = true)
+	@SearchableProperty
 	private String path;
 
 	@SearchableProperty
@@ -39,9 +44,11 @@ public class Page extends BaseEntity implements Recordable, Ordered {
 	private Date draftDate;
 
 	@NotInCopy
+	@SearchableProperty(index = Index.NO, store = Store.YES)
 	private Date createDate;
 
 	@NotInCopy
+	@SearchableProperty(index = Index.NO, store = Store.YES)
 	private Date modifyDate;
 
 	@NotInCopy
@@ -52,8 +59,8 @@ public class Page extends BaseEntity implements Recordable, Ordered {
 
 	@NotInCopy
 	@NotInJson
-	@SearchableProperty
-	private Set<String> tags = new HashSet<String>(0);
+	@SearchableProperty(index = Index.NOT_ANALYZED)
+	private Set<String> tags = new LinkedHashSet<String>(0);
 
 	public int getDisplayOrder() {
 		return displayOrder;
@@ -135,6 +142,7 @@ public class Page extends BaseEntity implements Recordable, Ordered {
 	}
 
 	public void setTagsAsString(String tagsAsString) {
+		tags.clear();
 		if (StringUtils.isNotBlank(tagsAsString))
 			tags.addAll(Arrays.asList(tagsAsString.split(",")));
 	}

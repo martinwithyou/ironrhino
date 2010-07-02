@@ -1,5 +1,7 @@
 package org.ironrhino.common.service;
 
+import java.util.List;
+
 import org.ironrhino.common.model.Page;
 import org.ironrhino.core.service.BaseManager;
 
@@ -18,5 +20,7 @@ public interface PageManager extends BaseManager<Page> {
 	public Page dropDraft(String id);
 
 	public void pullDraft(Page page);
+	
+	public List<Page> getListByTag(String tag);
 
 }

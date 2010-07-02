@@ -8622,6 +8622,8 @@ Captcha = {
 			beforeSend : function() {
 				if (typeof $.fn.mask != 'undefined')
 					ele.mask(MessageBundle.get('ajax.loading'));
+				else
+					ele.text(MessageBundle.get('ajax.loading'));
 			},
 			complete : function() {
 				if (typeof $.fn.unmask != 'undefined')

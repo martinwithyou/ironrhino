@@ -4,7 +4,7 @@
 <title>${action.getText('page')}${action.getText('list')}</title>
 </head>
 <body>
-<#assign columns={"path":{"template":"<a href=\"${getUrl(cmsPath)}$"+"{value}\" target=\"_blank\">$"+"{value}</a>"},"title":{},"createDate":{},"modifyDate":{}}>
+<#assign columns={"path":{"width":"150px","template":"<a href=\"${getUrl(cmsPath)}$"+"{value}\" target=\"_blank\">$"+"{value}</a>"},"title":{},"tag":{"template":r"${entity.tagsAsString!}"},"createDate":{"width":"150px","template":r"<#if entity.createDate??>${value?string('yyyy-MM-dd HH:mm:ss')}</#if>"},"modifyDate":{"width":"150px","template":r"<#if entity.modifyDate??>${value?string('yyyy-MM-dd HH:mm:ss')}</#if>"}}>
 <#assign actionColumnButtons=r"
 <@button text='${action.getText(\'edit\')}' view='input' windowoptions='{\'iframe\':true,\'width\':\'900px\'}'/>
 ">
@@ -13,6 +13,6 @@
 <@button text='${action.getText(\'delete\')}' action='delete'/>
 <@button text='${action.getText(\'reload\')}' action='reload'/>
 ">
-<@richtable entityName="page" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false/>
+<@richtable entityName="page" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false searchable=true/>
 </body>
 </html></#escape>

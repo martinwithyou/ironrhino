@@ -1528,9 +1528,9 @@ table.sortable td,th {
 	background-image: url(../images/desc.gif);
 }
 table.richtable thead {
-	background: #E5ECF9;
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#E5ECF9), to(#E5ECF9), color-stop(.5,#C7D8F9));
-	background: -moz-linear-gradient(center top , #E5ECF9, #C7D8F9, #E5ECF9);
+	background: #d5d5d5;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d5d5d5), to(#d5d5d5), color-stop(.5,#b0b0b0));
+	background: -moz-linear-gradient(center top , #d5d5d5, #b0b0b0, #d5d5d5);
 }
 table.richtable {
 	width: 100%;

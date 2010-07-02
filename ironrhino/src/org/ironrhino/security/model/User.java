@@ -183,6 +183,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	}
 
 	public void setRolesAsString(String rolesAsString) {
+		roles.clear();
 		if (StringUtils.isNotBlank(rolesAsString))
 			roles.addAll(Arrays.asList(rolesAsString.split(",")));
 	}

@@ -153,6 +153,8 @@ public class EntityAction extends BaseAction {
 			CompassCriteria cc = new CompassCriteria();
 			cc.setQuery(query);
 			cc.setAliases(new String[] { getEntityName() });
+			if (Ordered.class.isAssignableFrom(getEntityClass()))
+				cc.addSort("displayOrder", "INT", false);
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			cc.setPageNo(resultPage.getPageNo());
@@ -312,8 +314,8 @@ public class EntityAction extends BaseAction {
 								UiConfig.class);
 						String listKey = uiConfig != null ? uiConfig.listKey()
 								: UiConfig.DEFAULT_LIST_KEY;
-						BeanWrapperImpl temp = new BeanWrapperImpl(returnType
-								.newInstance());
+						BeanWrapperImpl temp = new BeanWrapperImpl(
+								returnType.newInstance());
 						temp.setPropertyValue(listKey, parameterValue);
 						baseManager.setEntityClass(returnType);
 						Object obj;
@@ -321,8 +323,8 @@ public class EntityAction extends BaseAction {
 							obj = baseManager.get((Serializable) temp
 									.getPropertyValue(listKey));
 						else
-							obj = baseManager.findByNaturalId(listKey, temp
-									.getPropertyValue(listKey));
+							obj = baseManager.findByNaturalId(listKey,
+									temp.getPropertyValue(listKey));
 						pd.getWriteMethod()
 								.invoke(entity, new Object[] { obj });
 					}
@@ -479,8 +481,8 @@ public class EntityAction extends BaseAction {
 							lists = new HashMap<String, List>();
 						Method method = pd.getReadMethod().getReturnType()
 								.getMethod("values", new Class[0]);
-						lists.put(pd.getName(), Arrays.asList((Enum[]) method
-								.invoke(null)));
+						lists.put(pd.getName(),
+								Arrays.asList((Enum[]) method.invoke(null)));
 					} catch (Exception e) {
 						log.error(e.getMessage(), e);
 					}
