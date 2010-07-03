@@ -38,6 +38,8 @@ public abstract class Entity<PK extends Serializable> implements
 	private String toIdentifiedString() {
 		Map<String, Object> map = AnnotationUtils
 				.getAnnotatedPropertyNameAndValues(this, NaturalId.class);
+		if (map.size() == 1)
+			return String.valueOf(map.values().iterator().next());
 		return getClass().getName() + "{id=" + getId() + ",naturalId="
 				+ map.toString() + "}";
 	}

@@ -186,11 +186,15 @@ public class Page extends BaseEntity implements Recordable, Ordered {
 	}
 
 	public int compareTo(Object object) {
-		if (!(object instanceof Page))
+		if (!(object instanceof Ordered))
 			return 0;
-		Page entity = (Page) object;
-		if (this.getDisplayOrder() != entity.getDisplayOrder())
-			return this.getDisplayOrder() - entity.getDisplayOrder();
-		return this.getTitle().compareTo(entity.getTitle());
+		Ordered ordered = (Ordered) object;
+		if (this.getDisplayOrder() != ordered.getDisplayOrder())
+			return this.getDisplayOrder() - ordered.getDisplayOrder();
+		return this.toString().compareTo(ordered.toString());
+	}
+
+	public String toString() {
+		return this.path;
 	}
 }
