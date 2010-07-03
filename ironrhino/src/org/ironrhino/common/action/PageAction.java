@@ -25,7 +25,6 @@ import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
-
 public class PageAction extends BaseAction {
 
 	private static final long serialVersionUID = 67252386921293136L;
@@ -40,7 +39,7 @@ public class PageAction extends BaseAction {
 	private transient PageManager pageManager;
 
 	private String cmsPath = "/p/";
-	
+
 	@Autowired(required = false)
 	private transient CompassSearchService compassSearchService;
 
@@ -76,17 +75,16 @@ public class PageAction extends BaseAction {
 	}
 
 	@Override
-	public String execute() {
-		if ( StringUtils.isBlank(keyword)
-				|| compassSearchService == null) {
-		DetachedCriteria dc = pageManager.detachedCriteria();
-		dc.addOrder(Order.asc("displayOrder"));
-		dc.addOrder(Order.asc("path"));
-		if (resultPage == null)
-			resultPage = new ResultPage<Page>();
-		resultPage.setDetachedCriteria(dc);
-		resultPage = pageManager.findByResultPage(resultPage);
-		}else{
+	public String list() {
+		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
+			DetachedCriteria dc = pageManager.detachedCriteria();
+			dc.addOrder(Order.asc("displayOrder"));
+			dc.addOrder(Order.asc("path"));
+			if (resultPage == null)
+				resultPage = new ResultPage<Page>();
+			resultPage.setDetachedCriteria(dc);
+			resultPage = pageManager.findByResultPage(resultPage);
+		} else {
 			String query = keyword.trim();
 			CompassCriteria cc = new CompassCriteria();
 			cc.setQuery(query);
@@ -199,9 +197,8 @@ public class PageAction extends BaseAction {
 				boolean deletable = true;
 				for (Page temp : list) {
 					if (!pageManager.canDelete(temp)) {
-						addActionError(temp.getPath()
-								+ getText("delete.forbidden",
-										new String[] { temp.getPath() }));
+						addActionError(getText("delete.forbidden",
+								new String[] { temp.getPath() }));
 						deletable = false;
 						break;
 					}

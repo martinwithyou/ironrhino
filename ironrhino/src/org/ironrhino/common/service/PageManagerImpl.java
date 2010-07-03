@@ -61,7 +61,9 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	@Transactional
 	public Page saveDraft(Page page) {
 		Page p = get(page.getId());
+		boolean isnew = false;
 		if (p == null) {
+			isnew = true;
 			p = page;
 		}
 		p.setDraftDate(new Date());
@@ -69,6 +71,10 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 				+ DELIMITER
 				+ (StringUtils.isBlank(page.getTitle()) ? "" : page.getTitle()
 						+ DELIMITER) + page.getContent());
+		if(isnew){
+			p.setTitle("");
+			p.setContent("");
+		}
 		super.save(p);
 		return p;
 	}
