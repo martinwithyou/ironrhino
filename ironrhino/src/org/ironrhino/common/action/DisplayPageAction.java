@@ -9,6 +9,8 @@ import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.util.AuthzUtils;
+import org.ironrhino.security.model.UserRole;
 
 @AutoConfig
 public class DisplayPageAction extends BaseAction {
@@ -36,19 +38,17 @@ public class DisplayPageAction extends BaseAction {
 
 	@Override
 	public String execute() {
+		if (preview) {
+			if (AuthzUtils.getRoleNames().contains(UserRole.ROLE_ADMINISTRATOR))
+				page = pageManager.getDraftByPath(getUid());
+		} else
+			page = pageManager.getByPath(getUid());
 		if (page == null) {
-			String path = getUid();
-			if (preview)
-				page = pageManager.getDraftByPath(path);
-			else
-				page = pageManager.getByPath(path);
-			if (page == null){
-				try {
-					ServletActionContext.getResponse().sendError(404);
-					return NONE;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			try {
+				ServletActionContext.getResponse().sendError(404);
+				return NONE;
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		return SUCCESS;
