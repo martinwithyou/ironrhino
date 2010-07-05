@@ -1553,6 +1553,9 @@ table.richtable td,th {
 	white-space:nowrap;
 	overflow:hidden;
 }
+.richtable table td a:hover{
+	color: #1E50A2;
+}
 .richtable input.text {
 	border: 1px solid #cc9966;
 	font-size: 12px;
