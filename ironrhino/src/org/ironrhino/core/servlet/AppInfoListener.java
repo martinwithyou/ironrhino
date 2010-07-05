@@ -10,6 +10,8 @@ import org.ironrhino.core.util.AppInfo;
 public class AppInfoListener implements ServletContextListener {
 
 	public void contextDestroyed(ServletContextEvent event) {
+		System.clearProperty(AppInfo.name + ".home");
+		System.clearProperty(AppInfo.name + ".context");
 	}
 
 	public void contextInitialized(ServletContextEvent event) {
