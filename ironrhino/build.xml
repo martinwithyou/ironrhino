@@ -49,32 +49,6 @@
 		</copy>
 	</target>
 
-	<!--
-	<target name="init">
-			<mkdir dir="${target.dir}" />
-			<mkdir dir="${classes.dir}" />
-			<mkdir dir="${test.classes.dir}" />
-			<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties">
-				<classpath>
-					<pathelement path="${lib.dir}/aspectjtools.jar" />
-				</classpath>
-			</taskdef>
-		</target>
-
-	<target name="compile" depends="init">
-		<antcall target="clean" />
-		<iajc sourceroots="${src.dir}" destdir="${classes.dir}" aspectpath="${lib.dir}/spring-aspects.jar" fork="true" forkclasspath="${lib.dir}/aspectjtools.jar" source="1.5">
-			<classpath refid="lib.classpath"/>
-		</iajc>
-		<copy todir="${classes.dir}">
-			<fileset dir="${src.dir}">
-				<exclude name="**/*.java" />
-			</fileset>
-		</copy>
-	</target>
-	
-		-->
-
 	<target name="test" depends="compile">
 		<mkdir dir="${test.classes.dir}" />
 		<javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" encoding="UTF-8">
