@@ -1,13 +1,18 @@
 #indicator {
 	position: fixed;
-	z-index: 10;
-	right: 0px;
+	z-index: 10000;
+	left: 50%;
 	top: 0px;
 	height: 20px;
+	width: 100px;
 	float: right;
 	color: #FFF;
 	padding: 0px 2px;
 	background: #F00;
+	margin-left: -60px;
+	border-radius: 0px 0px 5px 5px;
+	-webkit-border-radius: 0px 0px 5px 5px;
+	-moz-border-radius: 0px 0px 5px 5px;
 }
 
 #indicator.loading {

@@ -1500,7 +1500,7 @@ MessageBundle = {
 	},
 	'zh-cn' : {
 		'ajax.loading' : '正在加载...',
-		'ajax.error' : '网络故障,请稍后再试',
+		'ajax.error' : '错误,请稍后再试',
 		'required' : '请填写',
 		'selection.required' : '请选择',
 		'email' : 'email不合法',
