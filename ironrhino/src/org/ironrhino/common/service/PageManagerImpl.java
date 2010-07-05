@@ -71,7 +71,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 				+ DELIMITER
 				+ (StringUtils.isBlank(page.getTitle()) ? "" : page.getTitle()
 						+ DELIMITER) + page.getContent());
-		if(isnew){
+		if (isnew) {
 			p.setTitle("");
 			p.setContent("");
 		}
@@ -119,6 +119,8 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			CompassSearchResults searchResults = compassSearchService
 					.search(cc);
 			CompassHit[] hits = searchResults.getHits();
+			if (hits == null)
+				return Collections.EMPTY_LIST;
 			list = new ArrayList(hits.length);
 			for (CompassHit ch : searchResults.getHits()) {
 				list.add(ch.getData());
