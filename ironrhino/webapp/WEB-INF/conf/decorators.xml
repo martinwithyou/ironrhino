@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<decorators defaultdir="/WEB-INF/view/ftl/decorator">
+<decorators defaultdir="/resources/view/decorator">
 	<excludes>
 		<pattern>/assets/*</pattern>
 		<pattern>/remoting/*</pattern>
