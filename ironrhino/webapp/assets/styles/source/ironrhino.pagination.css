@@ -1,3 +1,8 @@
+.pagination{
+	margin-top: 10px;
+	text-align: center;
+}
+
 .pagination a{
 	padding:1px 7px;
 	border:1px solid #8397ee;
@@ -21,5 +26,5 @@
 }
 
 .pagination .selected {
-	border:1px solid #e5aeee;
+	border:1px solid #10e;
 }

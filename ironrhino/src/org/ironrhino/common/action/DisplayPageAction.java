@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang.xwork.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
@@ -39,9 +40,17 @@ public class DisplayPageAction extends BaseAction {
 	@Override
 	public String execute() {
 		if (preview) {
-			if (AuthzUtils.getRoleNames().contains(UserRole.ROLE_ADMINISTRATOR))
+			if (AuthzUtils.getRoleNames().contains(UserRole.ROLE_ADMINISTRATOR)) {
 				page = pageManager.getDraftByPath(getUid());
-		} else
+				if (StringUtils.isBlank(page.getContent())) {
+					preview = false;
+					page = null;
+				}
+			} else {
+				preview = false;
+			}
+		}
+		if (page == null)
 			page = pageManager.getByPath(getUid());
 		if (page == null) {
 			try {

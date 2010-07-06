@@ -24,6 +24,9 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <#local pageManager=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('pageManager')>
 <#if (Parameters.preview!)=='true' && statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
 <#local page=pageManager.getDraftByPath(path)!>
+<#if !page.content?has_content>
+<#local page=pageManager.getByPath(path)!>
+</#if>
 <#else>
 <#local page=pageManager.getByPath(path)!>
 </#if>

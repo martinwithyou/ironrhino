@@ -2,11 +2,11 @@
 <#if resultPage.totalPage gt 1>
 <div class="pagination">
 <#if resultPage.first>
-<span class="disabled">${action.getText('firstpage')}</span>
-<span class="disabled">${action.getText('previouspage')}</span>
+<span class="disabled" title="${action.getText('firstpage')}">&lt;&lt;</span>
+<span class="disabled" title="${action.getText('previouspage')}">&lt;</span>
 <#else>
-<a href="${resultPage.renderUrl(1)}"<#list extra?keys as attr> ${attr}="${extra[attr]?html}"</#list>>${action.getText('firstpage')}</a>
-<a href="${resultPage.renderUrl(resultPage.previousPage)}"<#list extra?keys as attr> ${attr}="${extra[attr]?html}"</#list>>${action.getText('previouspage')}</a>
+<a href="${resultPage.renderUrl(1)}" title="${action.getText('firstpage')}"<#list extra?keys as attr> ${attr}="${extra[attr]?html}"</#list>>&lt;&lt;</a>
+<a href="${resultPage.renderUrl(resultPage.previousPage)}" title="${action.getText('previouspage')}"<#list extra?keys as attr> ${attr}="${extra[attr]?html}"</#list>>&lt;</a>
 </#if>
 <#if resultPage.totalPage lt 11>
 <#list 1..resultPage.totalPage as index>
@@ -44,11 +44,11 @@
 </#if>
 </#if>
 <#if resultPage.last>
-<span class="disabled">${action.getText('nextpage')}</span>
-<span class="disabled">${action.getText('lastpage')}</span>
+<span class="disabled" title="${action.getText('nextpage')}">&gt;</span>
+<span class="disabled" title="${action.getText('lastpage')}">&gt;&gt;</span>
 <#else>
-<a href="${resultPage.renderUrl(resultPage.nextPage)}"<#list extra?keys as attr> ${attr}="${extra[attr]?html}"</#list>>${action.getText('nextpage')}</a>
-<a href="${resultPage.renderUrl(resultPage.totalPage)}"<#list extra?keys as attr> ${attr}="${extra[attr]?html}"</#list>>${action.getText('lastpage')}</a>
+<a href="${resultPage.renderUrl(resultPage.nextPage)}" title="${action.getText('nextpage')}"<#list extra?keys as attr> ${attr}="${extra[attr]?html}"</#list>>&gt;</a>
+<a href="${resultPage.renderUrl(resultPage.totalPage)}" title="${action.getText('lastpage')}"<#list extra?keys as attr> ${attr}="${extra[attr]?html}"</#list>>&gt;&gt;</a>
 </#if>
 </div>
 </#if>
