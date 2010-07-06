@@ -8623,7 +8623,7 @@ Captcha = {
 				if (typeof $.fn.mask != 'undefined')
 					ele.mask(MessageBundle.get('ajax.loading'));
 				else
-					ele.text(MessageBundle.get('ajax.loading'));
+					ele.html('<div style="text-align:center;">'+MessageBundle.get('ajax.loading')+'</div>');
 			},
 			complete : function() {
 				if (typeof $.fn.unmask != 'undefined')

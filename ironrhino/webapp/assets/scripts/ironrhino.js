@@ -22929,7 +22929,7 @@ Captcha = {
 				if (typeof $.fn.mask != 'undefined')
 					ele.mask(MessageBundle.get('ajax.loading'));
 				else
-					ele.text(MessageBundle.get('ajax.loading'));
+					ele.html('<div style="text-align:center;">'+MessageBundle.get('ajax.loading')+'</div>');
 			},
 			complete : function() {
 				if (typeof $.fn.unmask != 'undefined')
@@ -23951,14 +23951,16 @@ Richtable = {
 	open : function(url, reloadonclose, useiframe) {
 		reloadonclose = reloadonclose || false;
 		useiframe = useiframe || false;
-		if (!$('#_window_').length)
-			$('<div id="_window_"></div>').appendTo(document.body);
+		var win = $('#_window_');
+		if (!win.length) 
+			win = $('<div id="_window_"></div>').appendTo(document.body);
 		if (!useiframe) {
 			// ajax replace
-			$('#_window_').html('');
-			var target = $('#_window_').get(0);
+			var target = win.get(0);
 			target.onsuccess = function() {
-				Dialog.adapt($('#_window_'));
+				if (typeof $.fn.mask != 'undefined')
+					win.unmask();
+				Dialog.adapt(win);
 				if (url.indexOf('?') > 0)
 					url = url.substring(0, url.indexOf('?'));
 				var form = $('#_window_ form.ajax');
@@ -23993,21 +23995,21 @@ Richtable = {
 					});
 		} else {
 			// embed iframe
-			$('#_window_')
-					.html('<iframe style="width:100%;height:550px;border:0;"/>');
+			win.html('<iframe style="width:100%;height:550px;border:0;"/>');
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'decorator=simple&'
 					+ Math.random();
 			$('#_window_ > iframe')[0].src = url;
 		}
-		if ($('#_window_').attr('_dialoged_')) {
-			$('#_window_').dialog('option', 'close',
-					(reloadonclose ? function() {
-						Richtable.reload();
-					} : null));
-			$('#_window_').dialog('open');
-			return;
-		}
-		$('#_window_').attr('_dialoged_', true);
+		win.dialog('option', 'close', (reloadonclose ? function() {
+					Richtable.reload();
+				} : null));
+		win.dialog('open');
+		if (!useiframe)
+			if (win.html() && typeof $.fn.mask != 'undefined')
+				win.mask(MessageBundle.get('ajax.loading'));
+			else
+				win.html('<div style="text-align:center;">'
+						+ MessageBundle.get('ajax.loading') + '</div>');
 		var opt = {
 			minHeight : 600,
 			width : 700,
@@ -24020,7 +24022,7 @@ Richtable = {
 		};
 		if ($.browser.msie)
 			opt.height = 600;
-		$('#_window_').dialog(opt);
+		win.dialog(opt);
 	},
 	enter : function(event) {
 		var btn = event.target;
