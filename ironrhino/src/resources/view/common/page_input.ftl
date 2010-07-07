@@ -3,12 +3,12 @@
 <head>
 <title><#if page.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('page')}</title>
 <meta name="cms_path" content="${cmsPath}" />
-<script type="text/javascript" src="<@url value="/assets/components/tinymce/jscripts/tiny_mce/jquery.tinymce.js"/>"></script>
+<script type="text/javascript" src="<@url value="/assets/components/tiny_mce/jquery.tinymce.js"/>"></script>
 <script type="text/javascript">
 $(function() {
 		var cmsPath= $('meta[name="cms_path"]').attr('content') || '';
 		var options = {
-			script_url : '<@url value="/assets/components/tinymce/jscripts/tiny_mce/tiny_mce.js"/>',
+			script_url : '<@url value="/assets/components/tiny_mce/tiny_mce.js"/>',
 			theme : "advanced",
 			plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,autosave",
 			theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
