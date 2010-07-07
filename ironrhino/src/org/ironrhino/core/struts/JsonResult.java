@@ -50,12 +50,12 @@ public class JsonResult implements Result {
 			if (validationAwareAction.hasErrors()) {
 				hasErrors = true;
 				if (validationAwareAction.hasActionErrors()) {
-					map.put("actionErrors", validationAwareAction
-							.getActionErrors());
+					map.put("actionErrors",
+							validationAwareAction.getActionErrors());
 				}
 				if (validationAwareAction.hasFieldErrors()) {
-					map.put("fieldErrors", validationAwareAction
-							.getFieldErrors());
+					map.put("fieldErrors",
+							validationAwareAction.getFieldErrors());
 				}
 				return JsonUtils.toJson(map);
 			} else {
@@ -63,8 +63,8 @@ public class JsonResult implements Result {
 			}
 			if (validationAwareAction.hasActionMessages()) {
 				map.put("hasActionMessages", true);
-				map.put("actionMessages", validationAwareAction
-						.getActionMessages());
+				map.put("actionMessages",
+						validationAwareAction.getActionMessages());
 			} else {
 				map.put("hasActionMessages", false);
 			}
@@ -87,9 +87,14 @@ public class JsonResult implements Result {
 	}
 
 	public void execute(ActionInvocation invocation) throws Exception {
+		String jsonp = ServletActionContext.getRequest().getParameter("jsonp");
 		String json = generateJson(invocation);
 		HttpServletResponse response = ServletActionContext.getResponse();
-		response.setContentType("application/json;charset=" + encoding);
+		if (StringUtils.isNotBlank(jsonp))
+			response.setContentType("application/javascript;charset="
+					+ encoding);
+		else
+			response.setContentType("application/json;charset=" + encoding);
 		// response.setContentType("text/javascript;charset=" + encoding);
 		if (!response.containsHeader("Cache-Control")) {
 			response.setHeader("Cache-Control", "no-cache");
@@ -97,7 +102,13 @@ public class JsonResult implements Result {
 			response.setDateHeader("Expires", 0);
 		}
 		PrintWriter out = response.getWriter();
+		if (StringUtils.isNotBlank(jsonp)) {
+			out.print(jsonp);
+			out.print('(');
+		}
 		out.print(json);
+		if (StringUtils.isNotBlank(jsonp)) 
+			out.print(')');
 		out.flush();
 		out.close();
 	}
