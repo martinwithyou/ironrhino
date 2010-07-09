@@ -17424,7 +17424,7 @@ jQuery.extend({
 		}
 		if(current_hash)
 			jQuery.historyCallback(current_hash.replace(/^#/, ''));
-		setInterval(jQuery.historyCheck, 100);
+		setInterval(jQuery.historyCheck, 400);
 	},
 	
 	historyAddHistory: function(hash) {
