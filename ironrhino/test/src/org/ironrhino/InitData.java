@@ -14,6 +14,8 @@ public class InitData {
 		System.setProperty("app.name", "ironrhino");
 		System.setProperty("ironrhino.home", System.getProperty("user.home")
 				+ "/" + System.getProperty("app.name"));
+		System.setProperty("ironrhino.context", System.getProperty("user.home")
+				+ "/" + System.getProperty("app.name"));
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				new String[] {
 						"resources/spring/applicationContext-common.xml",
