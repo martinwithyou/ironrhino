@@ -9,7 +9,7 @@
 			length="32" unsaved-value="null">
 			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
-		<property name="key" column="_key" not-null="true" />
+		<property name="key" column="skey" not-null="true" />
 		<property name="value" />
 	</class>
 </hibernate-mapping>
