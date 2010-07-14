@@ -224,7 +224,7 @@
 				<include name="ironrhino-*.jar" />
 			</fileset>
 		</move>
-		<zip destfile="${target.dir}/${skeleton-zip.name}" basedir="." excludes="build.xml,docs/**,target/**,test/classes/**,test/src/org/ironrhino/core/**,webapp/WEB-INF/classes/**,webapp/assets/*/source/**,src/org/**,src/com/**,src/META-INF/**,src/struts-plugin.xml,src/template/**,src/resources/data/**,src/resources/hibernate/**,src/resources/i18n/**,src/resources/view/**,src/resources/spring/applicationContext-security.xml">
+		<zip destfile="${target.dir}/${skeleton-zip.name}" basedir="." excludes="build.xml,docs/**,target/**,test/classes/**,test/src/org/ironrhino/core/**,webapp/WEB-INF/classes/**,webapp/assets/*/source/**,src/org/**,src/com/**,src/META-INF/**,src/struts-plugin.xml,src/template/**,src/resources/data/**,src/resources/hibernate/**,src/resources/i18n/**,src/resources/view/*.ftl,src/resources/view/common/**,src/resources/view/meta/**,src/resources/spring/applicationContext-security.xml">
 		</zip>
 		<move todir="${target.dir}">
 			<fileset dir="${webapp.dir}/WEB-INF/lib">
