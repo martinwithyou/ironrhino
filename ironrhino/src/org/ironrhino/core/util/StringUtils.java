@@ -345,8 +345,17 @@ public class StringUtils {
 		return states[N];
 	}
 
-	public static boolean matchesAutocomplete(String text, String pattern) {
+	public static String trimTail(String input, String tail) {
+		if (input == null || tail == null || !input.endsWith(tail))
+			return input;
+		return input.substring(0, input.length() - tail.length());
+	}
 
+	public static String trimTailSlash(String input) {
+		return trimTail(input, "/");
+	}
+
+	public static boolean matchesAutocomplete(String text, String pattern) {
 		text = text.toLowerCase();
 		pattern = pattern.toLowerCase();
 		if (text.startsWith(pattern))

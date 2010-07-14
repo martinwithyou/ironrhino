@@ -18,30 +18,4 @@
 	<context:annotation-config />
 	<context:component-scan base-package="org.ironrhino"/>
 	<aop:aspectj-autoproxy />
-	<bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basenames">
-			<list>
-				<value>org.springframework.security.messages</value>
-				<value>resources.i18n.messages</value>
-			</list>
-		</property>
-	</bean>
-	<bean id="templateProvider"
-		class="org.ironrhino.core.struts.TemplateProvider">
-		<property name="allSharedVariables">
-			<map>
-				<entry key="base" value="${base}" />
-				<entry key="assetsBase" value="${assetsBase}" />
-			</map>
-		</property>
-	</bean>
-	<bean id="fileStorage" class="org.ironrhino.core.fs.impl.LocalFileStorage"/>
-	<!--
-		<bean id="fileStorage" class="org.ironrhino.core.fs.impl.HdfsFileStorage">
-			<property name="cache">
-				<bean class="org.ironrhino.core.fs.impl.LocalFileStorage" p:uri="file:///temp"/>
-			</property>
-		</bean>
-		-->
 </beans>

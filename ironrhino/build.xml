@@ -87,7 +87,7 @@
 		<delete file="${target.dir}/${security-lite-jar.name}" />
 		<delete file="${target.dir}/${security-loginrecord-jar.name}" />
 		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,com/opensymphony/**,org/apache/**,org/codehaus/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**" />
-		<jar jarfile="${target.dir}/${core-lite-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,com/opensymphony/**,org/apache/**,org/codehaus/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**" excludes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/jms/**,org/ironrhino/core/mail/**,org/ironrhino/core/remoting/**"/>
+		<jar jarfile="${target.dir}/${core-lite-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,com/opensymphony/**,org/apache/**,org/codehaus/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**" excludes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/jms/**,org/ironrhino/core/mail/**,org/ironrhino/core/remoting/**" />
 		<jar jarfile="${target.dir}/${common-hbm-jar.name}" basedir="${classes.dir}" includes="resources/hibernate/common/**" />
 		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="resources/spring/applicationContext-security.xml,org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
 		<jar jarfile="${target.dir}/${security-lite-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
@@ -222,10 +222,21 @@
 		<move todir="${webapp.dir}/WEB-INF/lib">
 			<fileset dir="${target.dir}">
 				<include name="ironrhino-*.jar" />
+				<exclude name="*lite*" />
 			</fileset>
 		</move>
-		<zip destfile="${target.dir}/${skeleton-zip.name}" basedir="." excludes="build.xml,docs/**,target/**,test/classes/**,test/src/org/ironrhino/core/**,webapp/WEB-INF/classes/**,webapp/assets/*/source/**,src/org/**,src/com/**,src/META-INF/**,src/struts-plugin.xml,src/template/**,src/resources/data/**,src/resources/hibernate/**,src/resources/i18n/**,src/resources/view/*.ftl,src/resources/view/common/**,src/resources/view/meta/**,src/resources/spring/applicationContext-security.xml">
-		</zip>
+		<mkdir dir="${basedir}/template/src/resources/spring" />
+		<copy todir="${basedir}/template/src/resources/spring">
+			<fileset dir="${src.dir}/resources/spring">
+				<exclude name="applicationContext-security.xml" />
+			</fileset>
+		</copy>
+		<mkdir dir="${basedir}/template/src/resources/view/decorator" />
+		<copy todir="${basedir}/template/src/resources/view/decorator">
+			<fileset dir="${src.dir}/resources/view/decorator" />
+		</copy>
+		<zip destfile="${target.dir}/${skeleton-zip.name}" basedir="." excludes="build.xml,docs/**,target/**,test/classes/**,test/src/org/ironrhino/core/**,webapp/WEB-INF/classes/**,webapp/assets/*/source/**,src/org/**,src/com/**,src/META-INF/**,src/struts-plugin.xml,src/template/**,src/resources/data/**,src/resources/hibernate/**,src/resources/i18n/**,src/resources/view/**,src/resources/spring/**" />
+		<delete dir="${basedir}/template" />
 		<move todir="${target.dir}">
 			<fileset dir="${webapp.dir}/WEB-INF/lib">
 				<include name="ironrhino-*.jar" />

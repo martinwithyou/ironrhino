@@ -1,13 +1,19 @@
 package org.ironrhino.core.struts;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
@@ -15,38 +21,44 @@ import com.opensymphony.xwork2.inject.Container;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-/**
- * see org.ironrhino.core.struts.RichFreemarkerManager
- * 
- * @author minggao
- * 
- */
+@Singleton
+@Named
 public class TemplateProvider {
 
 	private Log log = LogFactory.getLog(this.getClass());
 
-	private String ftlLocation = AutoConfigResult.DEFAULT_FTL_LOCATION;
+	@Value("${ftlLocation:" + AutoConfigResult.DEFAULT_FTL_LOCATION + "}")
+	private String ftlLocation;
 
-	private String ftlClasspath = AutoConfigResult.DEFAULT_FTL_CLASSPATH;
+	@Value("${ftlClasspath:" + AutoConfigResult.DEFAULT_FTL_CLASSPATH + "}")
+	private String ftlClasspath;
+
+	@Value("${base:}")
+	private String base;
+
+	@Value("${assetsBase:}")
+	private String assetsBase;
 
 	private Configuration configuration;
 
-	private Map allSharedVariables;
+	public String getFtlLocation() {
+		return org.ironrhino.core.util.StringUtils.trimTailSlash(ftlLocation);
+	}
 
-	public void setAllSharedVariables(Map allSharedVariables) {
-		this.allSharedVariables = allSharedVariables;
+	public String getFtlClasspath() {
+		return org.ironrhino.core.util.StringUtils.trimTailSlash(ftlClasspath);
 	}
 
 	public Map getAllSharedVariables() {
+		Map<String, String> allSharedVariables = new HashMap<String, String>();
+		if (StringUtils.isNotBlank(base))
+			allSharedVariables.put("base",
+					org.ironrhino.core.util.StringUtils.trimTailSlash(base));
+		if (StringUtils.isNotBlank(assetsBase))
+			allSharedVariables.put("assetsBase",
+					org.ironrhino.core.util.StringUtils
+							.trimTailSlash(assetsBase));
 		return allSharedVariables;
-	}
-
-	public void setFtlLocation(String ftlLocation) {
-		this.ftlLocation = ftlLocation;
-	}
-
-	public void setFtlClasspath(String ftlClasspath) {
-		this.ftlClasspath = ftlClasspath;
 	}
 
 	private Configuration getConfiguration() {
@@ -67,8 +79,8 @@ public class TemplateProvider {
 
 	public Template getTemplate(String templateName) throws IOException {
 		Locale loc = getConfiguration().getLocale();
-		return getTemplate(templateName, loc, getConfiguration().getEncoding(
-				loc), true);
+		return getTemplate(templateName, loc,
+				getConfiguration().getEncoding(loc), true);
 	}
 
 	public Template getTemplate(String templateName, Locale locale,

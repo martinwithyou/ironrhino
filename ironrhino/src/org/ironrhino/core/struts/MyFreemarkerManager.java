@@ -18,7 +18,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.core.Environment;
@@ -35,12 +34,6 @@ public class MyFreemarkerManager extends
 		org.apache.struts2.views.freemarker.FreemarkerManager {
 
 	private Log log = LogFactory.getLog(this.getClass());
-
-	@Inject(value = "ironrhino.view.ftl.location", required = false)
-	private String ftlLocation = AutoConfigResult.DEFAULT_FTL_LOCATION;
-
-	@Inject(value = "ironrhino.view.ftl.classpath", required = false)
-	private String ftlClasspath = AutoConfigResult.DEFAULT_FTL_CLASSPATH;
 
 	@Override
 	protected freemarker.template.Configuration createConfiguration(
@@ -75,6 +68,8 @@ public class MyFreemarkerManager extends
 		String searchPath;
 		String location;
 		String namespace;
+		String ftlClasspath = templateProvider.getFtlClasspath();
+		String ftlLocation = templateProvider.getFtlLocation();
 		try {
 			searchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
 					+ ftlClasspath + "/meta/import/*.ftl";
@@ -83,8 +78,8 @@ public class MyFreemarkerManager extends
 				location = r.getURL().toString();
 				namespace = location.substring(location.lastIndexOf('/') + 1);
 				namespace = namespace.substring(0, namespace.indexOf('.'));
-				configuration.addAutoImport(namespace, location
-						.substring(location.indexOf(ftlClasspath)));
+				configuration.addAutoImport(namespace,
+						location.substring(location.indexOf(ftlClasspath)));
 			}
 		} catch (IOException e) {
 			log.info(e.getMessage());
@@ -97,8 +92,8 @@ public class MyFreemarkerManager extends
 				location = r.getURL().toString();
 				namespace = location.substring(location.lastIndexOf('/') + 1);
 				namespace = namespace.substring(0, namespace.indexOf('.'));
-				configuration.addAutoImport(namespace, location
-						.substring(location.indexOf(ftlLocation)));
+				configuration.addAutoImport(namespace,
+						location.substring(location.indexOf(ftlLocation)));
 			}
 		} catch (IOException e) {
 			log.info(e.getMessage());
