@@ -2,6 +2,8 @@ package org.ironrhino.core.struts;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -64,6 +66,8 @@ public class AutoConfigResult extends FreemarkerResult {
 			doExecute(finalLocation, invocation);
 	}
 
+	private static Map<String, String> cache = new ConcurrentHashMap<String, String>();
+
 	@Override
 	protected String conditionalParse(String param, ActionInvocation invocation) {
 		String result = invocation.getResultCode();
@@ -71,46 +75,68 @@ public class AutoConfigResult extends FreemarkerResult {
 		String actionName = invocation.getProxy().getActionName();
 		if (namespace.equals("/"))
 			namespace = "";
-		String location = jspLocation + namespace + "/"
-				+ getTemplateName(actionName, result) + ".jsp";
-		ServletContext context = ServletActionContext.getServletContext();
-		URL url = null;
-		try {
-			url = context.getResource(location);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		if (url == null) {
-			location = ftlLocation + namespace + "/"
-					+ getTemplateName(actionName, result) + ".ftl";
+		String templateName = getTemplateName(namespace, actionName, result);
+		String location = cache.get(templateName);
+		if (location == null) {
+			ServletContext context = ServletActionContext.getServletContext();
+			URL url = null;
+			location = new StringBuilder().append(jspLocation)
+					.append(templateName).append(".jsp").toString();
 			try {
 				url = context.getResource(location);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
-		}
-		if (url == null) {
-			location = ftlClasspath + namespace + "/"
-					+ getTemplateName(actionName, result) + ".ftl";
-			url = ClassLoaderUtil.getResource(location.substring(1),
-					AutoConfigResult.class);
-		}
-		if (url == null) {
-			location = jspLocation + "/meta/result/" + result + ".jsp";
-			try {
-				url = context.getResource(location);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
+			if (url == null) {
+				location = new StringBuilder().append(ftlLocation)
+						.append(templateName).append(".ftl").toString();
+				try {
+					url = context.getResource(location);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
 			}
+			if (url == null) {
+				location = new StringBuilder().append(ftlClasspath)
+						.append(templateName).append(".ftl").toString();
+				url = ClassLoaderUtil.getResource(location.substring(1),
+						AutoConfigResult.class);
+			}
+			if (url == null) {
+				location = new StringBuilder().append(jspLocation)
+						.append("/meta/result/").append(result).append(".jsp")
+						.toString();
+				try {
+					url = context.getResource(location);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (url == null) {
+				location = new StringBuilder().append(ftlLocation)
+						.append("/meta/result/").append(result).append(".ftl")
+						.toString();
+				try {
+					url = context.getResource(location);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (url == null)
+				location = new StringBuilder().append(ftlClasspath)
+						.append("/meta/result/").append(result).append(".ftl")
+						.toString();
+			cache.put(templateName, location);
 		}
-		if (url == null)
-			location = ftlClasspath + "/meta/result/" + result + ".ftl";
 		return location;
 	}
 
-	private String getTemplateName(String actionName, String resultName) {
-		if (resultName.equals(Action.SUCCESS))
-			return actionName;
-		return actionName + "_" + resultName;
+	private String getTemplateName(String namespace, String actionName,
+			String result) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(namespace).append('/').append(actionName);
+		if (!result.equals(Action.SUCCESS))
+			sb.append('_').append(result);
+		return sb.toString();
 	}
 }

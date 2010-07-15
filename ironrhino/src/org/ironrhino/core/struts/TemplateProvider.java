@@ -27,10 +27,10 @@ public class TemplateProvider {
 
 	private Log log = LogFactory.getLog(this.getClass());
 
-	@Value("${ftlLocation:" + AutoConfigResult.DEFAULT_FTL_LOCATION + "}")
+	@Value("${ironrhino.view.ftl.location:" + AutoConfigResult.DEFAULT_FTL_LOCATION + "}")
 	private String ftlLocation;
 
-	@Value("${ftlClasspath:" + AutoConfigResult.DEFAULT_FTL_CLASSPATH + "}")
+	@Value("${ironrhino.view.ftl.classpath:" + AutoConfigResult.DEFAULT_FTL_CLASSPATH + "}")
 	private String ftlClasspath;
 
 	@Value("${base:}")
