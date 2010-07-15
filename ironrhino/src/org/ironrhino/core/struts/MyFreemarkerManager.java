@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.ScopesHashModel;
+import org.ironrhino.core.util.AppInfo;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -30,8 +32,7 @@ import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModelException;
 
-public class MyFreemarkerManager extends
-		org.apache.struts2.views.freemarker.FreemarkerManager {
+public class MyFreemarkerManager extends FreemarkerManager {
 
 	private Log log = LogFactory.getLog(this.getClass());
 
@@ -53,6 +54,9 @@ public class MyFreemarkerManager extends
 		configuration.setDateTimeFormat("yyyy-MM-dd HH:mm:ss");
 		configuration.setNumberFormat("0.##");
 		configuration.setURLEscapingCharset("UTF-8");
+		if (AppInfo.getStage() == AppInfo.Stage.DEVELOPMENT)
+			configuration.setSetting(Configuration.TEMPLATE_UPDATE_DELAY_KEY,
+					"5");
 		configuration
 				.setTemplateExceptionHandler(new TemplateExceptionHandler() {
 					public void handleTemplateException(TemplateException ex,

@@ -10,10 +10,12 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.event.SetPropertyEvent;
 import org.ironrhino.core.metadata.PostPropertiesReset;
@@ -38,6 +40,9 @@ public class ApplicationContextConsole implements ApplicationListener {
 	@Inject
 	private ApplicationContext ctx;
 
+	@Autowired(required = false)
+	private ServletContext servletContext;
+
 	@Inject
 	private EventPublisher eventPublisher;
 
@@ -50,6 +55,11 @@ public class ApplicationContextConsole implements ApplicationListener {
 
 	public Map<String, Object> getBeans() {
 		if (beans.isEmpty()) {
+			if (servletContext != null)
+				beans.put(
+						"freemarkerConfiguration",
+						servletContext
+								.getAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY));
 			String[] beanNames = ctx.getBeanDefinitionNames();
 			for (String beanName : beanNames) {
 				if (StringUtils.isAlphanumeric(beanName)
@@ -100,13 +110,13 @@ public class ApplicationContextConsole implements ApplicationListener {
 			try {
 				Object bean = null;
 				if (expression.indexOf('=') > 0) {
-					bean = getBeans().get(expression.substring(0, expression
-							.indexOf('.')));
+					bean = getBeans().get(
+							expression.substring(0, expression.indexOf('.')));
 				}
 				MVEL.eval(expression, getBeans());
 				if (bean != null) {
-					Method m = AnnotationUtils.getAnnotatedMethod(bean
-							.getClass(), PostPropertiesReset.class);
+					Method m = AnnotationUtils.getAnnotatedMethod(
+							bean.getClass(), PostPropertiesReset.class);
 					if (m != null)
 						m.invoke(bean, new Object[0]);
 				}

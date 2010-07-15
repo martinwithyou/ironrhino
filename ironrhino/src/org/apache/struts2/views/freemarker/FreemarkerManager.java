@@ -166,6 +166,7 @@ public class FreemarkerManager {
     protected boolean altMapWrapper;
     protected boolean cacheBeanWrapper;
     protected int mruMaxStrongSize;
+    protected String templateUpdateDelay;
     protected Map<String,TagLibrary> tagLibraries;
 
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
@@ -186,6 +187,11 @@ public class FreemarkerManager {
     @Inject(StrutsConstants.STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE)
     public void setMruMaxStrongSize(String size) {
         mruMaxStrongSize = Integer.parseInt(size);
+    }
+    
+    @Inject(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE_UPDATE_DELAY)
+    public void setTemplateUpdateDelay(String delay) {
+    	templateUpdateDelay = delay;
     }
     
     @Inject
@@ -226,7 +232,7 @@ public class FreemarkerManager {
         return contentType;
     }
 
-    public synchronized freemarker.template.Configuration getConfiguration(ServletContext servletContext) {
+    public synchronized Configuration getConfiguration(ServletContext servletContext) {
         if (config == null) {
             try {
                 init(servletContext);
@@ -284,15 +290,17 @@ public class FreemarkerManager {
      *
      * @param servletContext
      */
-    protected freemarker.template.Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
-        freemarker.template.Configuration configuration = new freemarker.template.Configuration();
+    protected Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
+        Configuration configuration = new Configuration();
 
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 
         if (mruMaxStrongSize > 0) {
-            configuration.setSetting(freemarker.template.Configuration.CACHE_STORAGE_KEY, "strong:" + mruMaxStrongSize);
+            configuration.setSetting(Configuration.CACHE_STORAGE_KEY, "strong:" + mruMaxStrongSize);
         }
-
+        if (templateUpdateDelay != null) {
+            configuration.setSetting(Configuration.TEMPLATE_UPDATE_DELAY_KEY, templateUpdateDelay);
+        }
         if (encoding != null) {
             configuration.setDefaultEncoding(encoding);
         }
