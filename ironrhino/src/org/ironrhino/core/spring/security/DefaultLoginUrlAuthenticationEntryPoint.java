@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.security.web.util.RedirectUrlBuilder;
 
@@ -41,10 +41,8 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 		String targetUrl = null;
 		String redirectUrl = null;
 		SavedRequest savedRequest = (SavedRequest) request.getSession()
-				.getAttribute(
-						DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY);
-		request.getSession().removeAttribute(
-				DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY);
+				.getAttribute(WebAttributes.SAVED_REQUEST);
+		request.getSession().removeAttribute(WebAttributes.SAVED_REQUEST);
 		if (savedRequest != null)
 			targetUrl = savedRequest.getRedirectUrl();
 		if (loginUrl == null) {
