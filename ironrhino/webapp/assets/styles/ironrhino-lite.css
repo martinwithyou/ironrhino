@@ -359,6 +359,13 @@ div.action_message,ul.action_message li {
 	background: url(../images/msg.png) 0px -22px no-repeat;
 }
 
+img.captcha {
+	height: 25px;
+	width: 100px;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
 .highlight {
 	background: #FF6;
 }
@@ -382,17 +389,10 @@ div.action_message,ul.action_message li {
 	cursor: move;
 }
 
-img.captcha {
-	height: 25px;
-	width: 100px;
-	cursor: pointer;
-	vertical-align: middle;
-}
 
 .ondrop {
 	border: 1px dashed #b00;
 }
-
 
 thead,tfoot {
 	background-color: #E5ECF9;
@@ -401,15 +401,20 @@ thead,tfoot {
 tr.selected {
 	background: #EBC79E;
 }
-
-.rounded {
-	padding : 5px;
-	margin : 5px;
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-
+.editme{
+	margin:0px;
+	padding:0px;
 }
+.editme[edited="true"] {
+	border:solid 1px red;
+}
+.editme:hover {
+	border:dotted 1px #ffc000;
+}
+.editme:focus {
+	border:solid 1px #ffc000;
+}
+
 .pagination{
 	margin-top: 10px;
 	text-align: center;

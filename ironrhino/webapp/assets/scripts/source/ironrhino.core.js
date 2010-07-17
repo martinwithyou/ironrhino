@@ -545,11 +545,8 @@ Observation.common = function(container) {
 					$(this).tabs().tabs('select', $(this).attr('tab'))
 				});
 	if (typeof $.fn.corner != 'undefined')
-		$('.rounded', container).css({
-					padding : '5px',
-					margin : '5px'
-				}).each(function() {
-					$(this).corner();
+		$('.rounded', container).each(function() {
+					$(this).corner($(this).attr('corner'));
 				});
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({

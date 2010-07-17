@@ -1,0 +1,13 @@
+.editme{
+	margin:0px;
+	padding:0px;
+}
+.editme[edited="true"] {
+	border:solid 1px red;
+}
+.editme:hover {
+	border:dotted 1px #ffc000;
+}
+.editme:focus {
+	border:solid 1px #ffc000;
+}

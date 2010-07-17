@@ -105,7 +105,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.history-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.corner-2.0.3.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.corner-2.0.9.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.loadmask-0.4.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.bgiframe-2.1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.autocomplete-1.1.js" />
@@ -132,7 +132,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.richtable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.selectregion.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
-				<file name="${webapp.dir}/assets/scripts/source/ironrhino.cursor.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
 			</filelist>
 		</concat>
@@ -141,6 +140,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery-1.4.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.corner-2.0.9.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.jgrowl-1.2.4.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
@@ -148,6 +148,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
 			</filelist>
 		</concat>
 		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-lite-njq.js" encoding="utf-8" fixlastline="yes">
@@ -161,6 +162,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
 			</filelist>
 		</concat>
 		<concat destfile="${webapp.dir}/assets/styles/ironrhino.css" encoding="utf-8" fixlastline="yes">
@@ -176,6 +178,7 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.reset.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.button.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
@@ -192,6 +195,7 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.reset.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.button.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />

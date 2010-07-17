@@ -2085,11 +2085,8 @@ Observation.common = function(container) {
 					$(this).tabs().tabs('select', $(this).attr('tab'))
 				});
 	if (typeof $.fn.corner != 'undefined')
-		$('.rounded', container).css({
-					padding : '5px',
-					margin : '5px'
-				}).each(function() {
-					$(this).corner();
+		$('.rounded', container).each(function() {
+					$(this).corner($(this).attr('corner'));
 				});
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({
@@ -2480,3 +2477,37 @@ highlight : function(node, word) {
 		SearchHighlighter.init()
 	});
 })(jQuery);
+(function($) {
+	$.fn.editme = function() {
+		return $(this).attr('contenteditable', 'true').keyup(function() {
+					$(this).attr('edited', 'true')
+				}).blur(blur);
+	};
+	function blur() {
+		var t = $(this);
+		var url = t.attr('url') || document.location.href;
+		var name = t.attr('name') || 'content';
+		var data = {};
+		data[name] = t.html();
+		if (t.attr('edited'))
+			$.alerts.confirm(MessageBundle.get('confirm.save'), MessageBundle
+							.get('select'), function(b) {
+						if (b) {
+							ajax({
+										url : url,
+										type : 'POST',
+										data : data,
+										global : false,
+										success : function() {
+											t.removeAttr('edited');
+										}
+									});
+						}
+					});
+
+	}
+})(jQuery);
+
+Observation.editme = function(container) {
+	$('.editme', container).editme();
+};
