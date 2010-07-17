@@ -8639,40 +8639,6 @@ Observation.common = function(container) {
 			}
 		}
 	}
-	if (typeof $.fn.uploadify != 'undefined')
-		$('.uploadify').each(function() {
-			var options = {
-				'uploader' : CONTEXT_PATH + '/assets/images/uploadify.swf',
-				'script' : $(this).closest('form')[0].action,
-				'cancelImg' : CONTEXT_PATH + '/assets/images/cancel.png',
-				// 'folder' : CONTEXT_PATH + '/upload',
-				'buttonText' : 'browse...',
-				'wmode' : 'transparent',
-				'multi' : true,
-				'auto' : true,
-				'dipsplayData' : 'percentage'
-			};
-			var _options = $.parseJSON($(this).attr('options'));
-			if (_options)
-				$.extend(options, _options);
-			if (!options.auto) {
-				$(this)
-						.after('<div class="uploadify_control"><button class="btn"><span><span>'
-								+ MessageBundle.get('upload')
-								+ '</span></span></button><button class="btn"><span><span>'
-								+ MessageBundle.get('clear')
-								+ '</span></span></button></div>');
-				var t = this;
-				$('div.uploadify_control button', $(this).parent()).eq(0)
-						.click(function() {
-									$(t).uploadifyUpload()
-								}).end().eq(1).click(function() {
-									$(t).uploadifyClearQueue()
-								});
-			}
-			options.fileDataName = $(this).attr('name');
-			$(this).uploadify(options);
-		});
 	if (typeof $.fn.cycle != 'undefined')
 		$('.cycle').each(function() {
 					var options = {

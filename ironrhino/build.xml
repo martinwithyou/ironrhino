@@ -117,7 +117,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview-1.4.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview.async-0.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeTable-2.3.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.uploadify-2.1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
 				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
@@ -172,7 +171,6 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.loadmask.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.my.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.uploadify.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.jgrowl.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.reset.css" />
