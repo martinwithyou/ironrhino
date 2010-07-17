@@ -10,7 +10,7 @@ import org.ironrhino.core.struts.BaseAction;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
-@AutoConfig(fileupload = "*/*")
+@AutoConfig(fileupload = "image/*,text/*,application/x-shockwave-flash,application/pdf")
 public class UploadAction extends BaseAction {
 
 	private static final long serialVersionUID = 625509291613761721L;

@@ -3,23 +3,29 @@
 <head>
 <title>${action.getText('upload')}</title>
 <script>
-$(function(){
-	if($.browser.msie){
-			$('#ordinary').remove();
-			$('#uploadify').show();
-		}else{
-			$('#uploadify').remove();
-		}
-});
+	$(function(){
+		$('#more').click(function(){
+			var f = $('input[type="file"]:last').parent();
+			var r;
+			for(var i=0;i<3;i++){
+				r = f.clone(true);
+				f.after(r);
+				f = r;
+			}		
+		});
+		
+	});
 </script>
 </head>
 <body>
-<@s.form id="ordinary" action="upload" method="post" enctype="multipart/form-data">
-	<@s.file name="file"/>
-	<@s.submit value="${action.getText('upload')}"/>
-</@s.form>
-<@s.form id="uploadify" action="upload" method="post" enctype="multipart/form-data" cssStyle="display:none;">
-	<@s.file name="file" cssClass="uploadify"/>
+<@s.form action="upload" method="post" enctype="multipart/form-data" cssClass="line">
+	<#list 1..3 as index>
+		<@s.file name="file" cssStyle="width:195px;"/>
+	</#list>
+	<div style="clear:both;">
+	<@s.submit theme="simple" value="${action.getText('upload')}"/>
+	<@button id="more" text="${action.getText('more')}"/>
+	</div>
 </@s.form>
 </body>
 </html></#escape>
