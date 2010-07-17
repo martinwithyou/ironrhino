@@ -5,7 +5,6 @@
 <#if preview>[${action.getText('preview')}]</#if><#if page.title??><#assign title=page.title?interpret><@title/></#if></title>
 </head>
 <body>
-<#assign content=page.content?interpret>
-<@content/>
+<@includePage path=page.path />
 </body>
 </html>

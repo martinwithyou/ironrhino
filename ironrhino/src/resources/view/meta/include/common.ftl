@@ -32,11 +32,12 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#if>
 <#if page??&&page.content??>
 <#local content=page.content?interpret>
-<#if (Parameters.designMode!)=='true' && statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
+<#local designMode=(Parameters.designMode!)=='true'&&statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
+<#if designMode>
 <div class="editme" style="padding:0px;margin:0px;" url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
 </#if>
 <@content/>
-<#if (Parameters.designMode!)=='true'>
+<#if designMode>
 </div>
 </#if>
 </#if>
