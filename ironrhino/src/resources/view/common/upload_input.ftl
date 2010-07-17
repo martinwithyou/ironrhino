@@ -2,11 +2,24 @@
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>${action.getText('upload')}</title>
+<script>
+$(function(){
+	if($.browser.msie){
+			$('#ordinary').remove();
+			$('#uploadify').show();
+		}else{
+			$('#uploadify').remove();
+		}
+});
+</script>
 </head>
 <body>
-<@s.form action="upload" method="post" enctype="multipart/form-data">
+<@s.form id="ordinary" action="upload" method="post" enctype="multipart/form-data">
 	<@s.file name="file"/>
 	<@s.submit value="${action.getText('upload')}"/>
+</@s.form>
+<@s.form id="uploadify" action="upload" method="post" enctype="multipart/form-data" cssStyle="display:none;">
+	<@s.file name="file" cssClass="uploadify"/>
 </@s.form>
 </body>
 </html></#escape>
