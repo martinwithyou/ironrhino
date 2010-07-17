@@ -7732,11 +7732,11 @@ MessageBundle = {
 		'integer.positive' : 'must be a positive integer',
 		'double' : 'must be a decimal',
 		'double.positive' : 'must be a positive decimal',
-		'confirm.delete' : 'sure to delete?',
 		'save.and.create' : 'save and add',
 		'no.selection' : 'no selection',
 		'no.modification' : 'no modification',
-		'select' : 'please select'
+		'select' : 'please select',
+		'confirm.delete' : 'sure to delete?'
 	},
 	'zh-cn' : {
 		'ajax.loading' : '正在加载...',
@@ -7748,7 +7748,6 @@ MessageBundle = {
 		'integer.positive' : '请填写正整数',
 		'double' : '请填写数字',
 		'double.positive' : '请填写大于零的数字',
-		'confirm.delete' : '确定要删除?',
 		'save.and.create' : '保存并新建',
 		'no.selection' : '没有选中',
 		'no.modification' : '没有更改',
@@ -7758,10 +7757,12 @@ MessageBundle = {
 		'select' : '请选择',
 		'save' : '保存',
 		'restore' : '还原',
-		'confirm' : '确定',
 		'cancel' : '取消',
 		'error' : '错误',
-		'success' : '操作成功'
+		'success' : '操作成功',
+		'confirm' : '确定',
+		'confirm.delete' : '确定要删除?',
+		'confirm.save' : '确定要保存?'
 	},
 	get : function() {
 		var key = arguments[0];

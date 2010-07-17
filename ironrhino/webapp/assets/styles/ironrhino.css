@@ -1195,10 +1195,6 @@ tr.selected {
 	-moz-border-radius: 10px;
 
 }
-
-.editme_hover{
-	border:1px solid #38B0DE;
-}
 .pagination{
 	margin-top: 10px;
 	text-align: center;

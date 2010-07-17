@@ -213,4 +213,13 @@ public class PageAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
+	public String editme() {
+		String content = page.getContent();
+		page = pageManager.get(getUid());
+		page.setContent(content);
+		pageManager.save(page);
+		addActionMessage(getText("save.success"));
+		return JSON;
+	}
 }
