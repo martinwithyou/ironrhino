@@ -17,7 +17,7 @@ import org.springframework.beans.BeanWrapperImpl;
 
 public class AnnotationUtils {
 
-	private static Map<String, Object> cache = new ConcurrentHashMap<String, Object>();
+	private static Map<String, Object> cache = new ConcurrentHashMap<String, Object>(250);
 
 	public static Method getAnnotatedMethod(Class clazz,
 			Class<? extends Annotation> annotaionClass) {
