@@ -3,10 +3,13 @@ package org.ironrhino.security.model;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -16,6 +19,7 @@ import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.util.CodecUtils;
+import org.ironrhino.core.util.JsonUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -53,6 +57,10 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	@NotInJson
 	@SearchableProperty
 	private Set<String> roles = new HashSet<String>(0);
+
+	@NotInCopy
+	@NotInJson
+	private Map<String, String> attributes;
 
 	@NotInCopy
 	private Date modifyDate;
@@ -190,6 +198,38 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getAttribute(String key) {
+		if (attributes == null)
+			return null;
+		return attributes.get(key);
+	}
+
+	public void setAttribute(String key, String value) {
+		if (attributes == null)
+			attributes = new HashMap<String, String>(4);
+		if (value == null)
+			attributes.remove(key);
+		else
+			attributes.put(key, value);
+	}
+
+	public String getAttributes() {
+		if (attributes == null || attributes.isEmpty())
+			return null;
+		return JsonUtils.toJson(attributes);
+	}
+
+	public void setAttributes(String str) {
+		if (StringUtils.isNotBlank(str))
+			try {
+				attributes = JsonUtils.fromJson(str,
+						new TypeReference<Map<String, String>>() {
+						});
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 	}
 
 	@Override

@@ -21,5 +21,6 @@
 		<many-to-one name="createUser" class="User" column="createUser" not-null="false" lazy="proxy" />
 		<many-to-one name="modifyUser" class="User" column="modifyUser" not-null="false" lazy="proxy" />
 		<property name="rolesAsString" type="java.lang.String" column="roles" length="500"/>
+		<property name="attributes" type="java.lang.String" column="attributes" length="500"/>
 	</class>
 </hibernate-mapping>
