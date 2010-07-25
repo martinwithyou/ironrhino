@@ -127,7 +127,7 @@ public class PageAction extends BaseAction {
 	}
 
 	@Override
-	@JsonConfig(propertyName = { "page" })
+	@JsonConfig(root = "page")
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.path", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
@@ -160,7 +160,7 @@ public class PageAction extends BaseAction {
 		return INPUT;
 	}
 
-	@JsonConfig(propertyName = { "page" })
+	@JsonConfig(root = "page")
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.path", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })

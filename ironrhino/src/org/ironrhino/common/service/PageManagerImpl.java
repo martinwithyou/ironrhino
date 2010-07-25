@@ -3,12 +3,15 @@ package org.ironrhino.common.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.DetachedCriteria;
@@ -20,6 +23,7 @@ import org.ironrhino.core.metadata.FlushCache;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.core.service.BaseManagerImpl;
+import org.ironrhino.core.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Named("pageManager")
 public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		PageManager {
-
-	public static final String DELIMITER = "@@@@@@@@@@";
 
 	@Autowired(required = false)
 	private transient CompassSearchService compassSearchService;
@@ -67,10 +69,11 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			p = page;
 		}
 		p.setDraftDate(new Date());
-		p.setDraft(page.getPath()
-				+ DELIMITER
-				+ (StringUtils.isBlank(page.getTitle()) ? "" : page.getTitle()
-						+ DELIMITER) + page.getContent());
+		Map<String, String> draft = new HashMap<String, String>();
+		draft.put("path", page.getPath());
+		draft.put("title", page.getTitle());
+		draft.put("content", page.getContent());
+		p.setDraft(JsonUtils.toJson(draft));
 		if (isnew) {
 			p.setTitle("");
 			p.setContent("");
@@ -98,13 +101,16 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	}
 
 	public void pullDraft(Page page) {
-		String array[] = StringUtils.split(page.getDraft(), DELIMITER, 3);
-		page.setPath(array[0]);
-		page.setContent(array[array.length - 1]);
-		if (array.length == 3)
-			page.setTitle(array[1]);
-		else
-			page.setTitle(null);
+		try {
+			Map<String, String> map = JsonUtils.fromJson(page.getDraft(),
+					new TypeReference<Map<String, String>>() {
+					});
+			page.setPath(map.get("path"));
+			page.setTitle(map.get("title"));
+			page.setContent(map.get("content"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<Page> getListByTag(String tag) {

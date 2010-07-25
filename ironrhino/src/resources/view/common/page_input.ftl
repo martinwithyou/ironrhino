@@ -40,7 +40,7 @@ $(function() {
 		var form = $('#form');
 		form[0].onsuccess = function(){				
 		ed.isNotDirty = 1;
-		var page = Ajax.jsonResult.page;
+		var page = Ajax.jsonResult;
 		if(page){
 		var date = page.draftDate;
 		var path = page.path;
