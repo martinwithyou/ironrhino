@@ -13,6 +13,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
+import org.ironrhino.core.util.AppInfo;
 
 import com.opensymphony.module.sitemesh.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.Action;
@@ -66,7 +67,8 @@ public class AutoConfigResult extends FreemarkerResult {
 			doExecute(finalLocation, invocation);
 	}
 
-	private static Map<String, String> cache = new ConcurrentHashMap<String, String>(250);
+	private static Map<String, String> cache = new ConcurrentHashMap<String, String>(
+			250);
 
 	@Override
 	protected String conditionalParse(String param, ActionInvocation invocation) {
@@ -77,7 +79,7 @@ public class AutoConfigResult extends FreemarkerResult {
 			namespace = "";
 		String templateName = getTemplateName(namespace, actionName, result);
 		String location = cache.get(templateName);
-		if (location == null) {
+		if (location == null || AppInfo.getStage() == AppInfo.Stage.DEVELOPMENT) {
 			ServletContext context = ServletActionContext.getServletContext();
 			URL url = null;
 			location = new StringBuilder().append(jspLocation)

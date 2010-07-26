@@ -66,9 +66,11 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	private Date modifyDate;
 
 	@NotInCopy
+	@NotInJson
 	private User createUser;
 
 	@NotInCopy
+	@NotInJson
 	private User modifyUser;
 
 	public Collection<GrantedAuthority> getAuthorities() {
