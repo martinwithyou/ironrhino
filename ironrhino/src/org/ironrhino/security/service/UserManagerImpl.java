@@ -37,7 +37,8 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	@Transactional(readOnly = true)
 	@CheckCache(namespace = "user", key = "${args[0]}")
 	public User loadUserByUsername(String username) {
-		User user = findByNaturalId(true, "username", username);
+		username = username.toLowerCase();
+		User user = findByNaturalId(username);
 		if (user == null)
 			throw new UsernameNotFoundException("No such Username");
 		populateAuthorities(user);
