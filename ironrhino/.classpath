@@ -88,5 +88,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-web-3.0.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/memcached-2.5.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xmemcached-1.2.5.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
