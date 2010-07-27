@@ -27,6 +27,11 @@ public interface CacheManager {
 
 	public void mdelete(Collection<String> keys, String namespace);
 
+	public boolean containsKey(String key, String namespace);
+
+	public boolean add(String key, Object value, int timeToLive,
+			String namespace);
+
 	public boolean supportsTimeToIdle();
 
 }

@@ -15,6 +15,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.aop.BaseAspect;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * cache some data
@@ -28,8 +29,18 @@ import org.ironrhino.core.metadata.FlushCache;
 @Named
 public class CacheAspect extends BaseAspect {
 
+	private final static String MUTEX = "_MUTEX_";
+
+	private final static int DEFAULT_MUTEX_WAIT = 500;
+
 	@Inject
 	private CacheManager cacheManager;
+
+	@Value("${cacheAspect.mutex:true}")
+	private boolean mutex;
+
+	@Value("${cacheAspect.mutexWait:" + DEFAULT_MUTEX_WAIT + "}")
+	private int mutexWait = DEFAULT_MUTEX_WAIT;
 
 	public CacheAspect() {
 		order = -100;
@@ -39,22 +50,26 @@ public class CacheAspect extends BaseAspect {
 	public Object get(ProceedingJoinPoint jp, CheckCache checkCache)
 			throws Throwable {
 		String namespace = eval(checkCache.namespace(), jp, null).toString();
-		List keys = evalList(checkCache.key(), jp, null);
-		if (keys == null || keys.size() == 0 || isBypass())
+		String key = evalString(checkCache.key(), jp, null);
+		if (key == null || isBypass())
 			return jp.proceed();
+		String keyMutex = key + MUTEX;
 		if (CacheContext.isForceFlush()) {
-			for (Object key : keys)
-				cacheManager.delete(key.toString(), namespace);
+			cacheManager.delete(key, namespace);
 		} else {
-			Object value = null;
-			for (Object key : keys) {
-				if ((value = cacheManager.get(key.toString(), namespace)) != null)
-					break;
-			}
+			Object value = cacheManager.get(key, namespace);
 			if (value != null) {
 				eval(checkCache.onHit(), jp, value);
 				return value;
 			} else {
+				if (mutex && !cacheManager.add(keyMutex, "", 180, namespace)) {
+					Thread.sleep(mutexWait);
+					value = cacheManager.get(key, namespace);
+					if (value != null) {
+						eval(checkCache.onHit(), jp, value);
+						return value;
+					}
+				}
 				eval(checkCache.onMiss(), jp, null);
 			}
 		}
@@ -62,9 +77,9 @@ public class CacheAspect extends BaseAspect {
 		if (result != null && evalBoolean(checkCache.when(), jp, result)) {
 			int timeToLive = evalInt(checkCache.timeToLive(), jp, result);
 			int timeToIdle = evalInt(checkCache.timeToIdle(), jp, result);
-			for (Object key : keys)
-				cacheManager.put(key.toString(), result, timeToIdle,
-						timeToLive, namespace);
+			cacheManager.put(key, result, timeToIdle, timeToLive, namespace);
+			if (mutex)
+				cacheManager.delete(keyMutex, namespace);
 			eval(checkCache.onPut(), jp, result);
 		}
 		return result;

@@ -105,6 +105,26 @@ public class EhCacheManager implements CacheManager {
 				cache.remove(key);
 	}
 
+	public boolean containsKey(String key, String namespace) {
+		if (key == null)
+			return false;
+		if (StringUtils.isBlank(namespace))
+			namespace = DEFAULT_NAMESPACE;
+		Cache cache = ehCacheManager.getCache(namespace);
+		if (cache != null)
+			return cache.isKeyInCache(key);
+		else
+			return false;
+	}
+
+	public boolean add(String key, Object value, int timeToLive,
+			String namespace) {
+		if (containsKey(key, namespace))
+			return false;
+		put(key, value, timeToLive, namespace);
+		return true;
+	}
+
 	public boolean supportsTimeToIdle() {
 		return true;
 	}
