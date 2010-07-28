@@ -30,6 +30,7 @@ import org.ironrhino.security.service.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
+import com.opensymphony.xwork2.validator.annotations.EmailValidator;
 import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.FieldExpressionValidator;
 import com.opensymphony.xwork2.validator.annotations.RegexFieldValidator;
@@ -174,13 +175,21 @@ public class UserAction extends BaseAction {
 	}
 
 	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.username", trim = true, key = "username.required"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "user.name.required") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "user.username", expression = "^\\w{2,20}$", key = "user.username.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.username", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "validation.required") }, emails = { @EmailValidator(fieldName = "user.email", key = "validation.invalid") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "user.username", expression = "^\\w{2,20}$", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
 	public String save2() {
+		if (StringUtils.isBlank(user.getEmail()))
+			user.setEmail(null);
 		if (user.isNew()) {
 			user.setUsername(user.getUsername().toLowerCase());
-			if (userManager.findByNaturalId("username", user.getUsername()) != null) {
+			if (userManager.findByNaturalId(user.getUsername()) != null) {
 				addFieldError("user.username",
+						getText("validation.already.exists"));
+				return INPUT;
+			}
+			if (StringUtils.isNotBlank(user.getEmail())
+					&& userManager.findByNaturalId("email", user.getEmail()) != null) {
+				addFieldError("user.email",
 						getText("validation.already.exists"));
 				return INPUT;
 			}
