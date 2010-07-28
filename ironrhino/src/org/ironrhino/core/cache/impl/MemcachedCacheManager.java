@@ -124,6 +124,13 @@ public class MemcachedCacheManager implements CacheManager {
 		}
 	}
 
+	public void mput(Map<String, Object> map, int timeToLive, String namespace) {
+		if (map == null)
+			return;
+		for (Map.Entry<String, Object> entry : map.entrySet())
+			put(entry.getKey(), entry.getValue(), timeToLive, namespace);
+	}
+
 	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
 			String namespace) {
 		if (map == null)

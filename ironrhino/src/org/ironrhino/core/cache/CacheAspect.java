@@ -75,9 +75,14 @@ public class CacheAspect extends BaseAspect {
 		}
 		Serializable result = (Serializable) jp.proceed();
 		if (result != null && evalBoolean(checkCache.when(), jp, result)) {
-			int timeToLive = evalInt(checkCache.timeToLive(), jp, result);
-			int timeToIdle = evalInt(checkCache.timeToIdle(), jp, result);
-			cacheManager.put(key, result, timeToIdle, timeToLive, namespace);
+			if (checkCache.eternal()) {
+				cacheManager.put(key, result, 0, namespace);
+			} else {
+				int timeToLive = evalInt(checkCache.timeToLive(), jp, result);
+				int timeToIdle = evalInt(checkCache.timeToIdle(), jp, result);
+				cacheManager
+						.put(key, result, timeToIdle, timeToLive, namespace);
+			}
 			if (mutex)
 				cacheManager.delete(keyMutex, namespace);
 			eval(checkCache.onPut(), jp, result);
@@ -91,7 +96,13 @@ public class CacheAspect extends BaseAspect {
 		List keys = evalList(flushCache.key(), jp, null);
 		if (isBypass() || keys == null || keys.size() == 0)
 			return;
-		cacheManager.mdelete(keys, namespace);
+		if (!flushCache.renew().equals("")) {
+			Object value = eval(flushCache.renew(), jp);
+			for (Object key : keys)
+				cacheManager.put(key.toString(), value, 0, namespace);
+		} else {
+			cacheManager.mdelete(keys, namespace);
+		}
 		eval(flushCache.onFlush(), jp, null);
 	}
 

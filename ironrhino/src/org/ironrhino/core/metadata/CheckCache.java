@@ -25,6 +25,8 @@ public @interface CheckCache {
 
 	// mvel expression
 	String timeToIdle() default CacheManager.DEFAULT_TIME_TO_IDLE;
+	
+	boolean eternal() default false;
 
 	// mvel expression
 	String onHit() default "";

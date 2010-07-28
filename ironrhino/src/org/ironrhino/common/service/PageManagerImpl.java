@@ -37,7 +37,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 
 	@Override
 	@Transactional
-	@FlushCache(key = "${args[0].path}", namespace = "page")
+	@FlushCache(key = "${args[0].path}", namespace = "page", renew = "${args[0]}")
 	public void save(Page page) {
 		page.setDraft(null);
 		page.setDraftDate(null);
@@ -52,7 +52,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	}
 
 	@Transactional(readOnly = true)
-	@CheckCache(key = "${args[0]}", namespace = "page")
+	@CheckCache(key = "${args[0]}", namespace = "page", eternal = true)
 	public Page getByPath(String path) {
 		Page page = findByNaturalId(path);
 		if (page != null)

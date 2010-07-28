@@ -20,5 +20,7 @@ public @interface FlushCache {
 
 	// mvel expression
 	String onFlush() default "";
+	
+	String renew() default "";
 
 }

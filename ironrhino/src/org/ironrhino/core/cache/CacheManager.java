@@ -20,6 +20,8 @@ public interface CacheManager {
 
 	public void delete(String key, String namespace);
 
+	public void mput(Map<String, Object> map, int timeToLive, String namespace);
+
 	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
 			String namespace);
 

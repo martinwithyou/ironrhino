@@ -66,6 +66,10 @@ public class EhCacheManager implements CacheManager {
 			cache.remove(key);
 	}
 
+	public void mput(Map<String, Object> map, int timeToLive, String namespace) {
+		mput(map, -1, timeToLive, namespace);
+	}
+
 	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
 			String namespace) {
 		if (map == null)
