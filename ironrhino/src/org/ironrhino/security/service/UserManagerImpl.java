@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
@@ -29,7 +30,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "user", key = "${args[0].username}")
+	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email]}")
 	public void save(User user) {
 		super.save(user);
 	}
@@ -37,8 +38,14 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	@Transactional(readOnly = true)
 	@CheckCache(namespace = "user", key = "${args[0]}")
 	public User loadUserByUsername(String username) {
+		if (StringUtils.isEmpty(username))
+			return null;
 		username = username.toLowerCase();
-		User user = findByNaturalId(username);
+		User user;
+		if (username.indexOf('@') > 0)
+			user = findByNaturalId("email", username);
+		else
+			user = findByNaturalId(username);
 		if (user == null)
 			throw new UsernameNotFoundException("No such Username");
 		populateAuthorities(user);

@@ -13,7 +13,7 @@
 		</natural-id>
 		<property name="password" not-null="true" />
 		<property name="name" />
-		<property name="email" />
+		<property name="email" unique="true" />
 		<property name="phone" />
 		<property name="enabled" />
 		<property name="createDate" />
