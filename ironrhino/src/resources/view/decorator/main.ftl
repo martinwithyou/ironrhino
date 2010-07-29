@@ -30,7 +30,7 @@
 </@authorize>
 <@authorize ifNotGranted="ROLE_BUILTIN_USER">
 <div class="menu rounded" corner="top 8px" style="text-align:center;font-size:1.2em;font-weight:bold;">
-${action.getText('login')}
+${title}
 </div>
 </@authorize>
 </div>

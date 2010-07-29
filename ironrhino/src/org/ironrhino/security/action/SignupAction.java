@@ -20,6 +20,7 @@ import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.service.UserManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -52,7 +53,7 @@ public class SignupAction extends BaseAction {
 	@Inject
 	private transient SettingControl settingControl;
 
-	@Inject
+	@Autowired(required = false)
 	private transient MailService mailService;
 
 	public String getUsername() {
