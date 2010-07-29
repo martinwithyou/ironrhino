@@ -9,4 +9,6 @@ public interface UserManager extends BaseManager<User>, UserDetailsService {
 
 	public void save(User user);
 
+	public String suggestUsername(String candidate);
+
 }

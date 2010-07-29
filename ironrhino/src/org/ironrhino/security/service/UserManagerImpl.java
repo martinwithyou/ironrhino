@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
+import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -59,6 +60,25 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		for (String role : user.getRoles())
 			auths.add(new GrantedAuthorityImpl(role));
 		user.setAuthorities(auths);
+	}
+
+	public String suggestUsername(String candidate) {
+		int i = candidate.indexOf('@');
+		if (i > 0)
+			candidate = candidate.substring(0, i);
+		candidate.replace('.', '_');
+		User user = findByNaturalId(candidate);
+		if (user == null)
+			return candidate;
+		i = 10;
+		int digits = 1;
+		i = CodecUtils.randomInt(digits);
+		while (user != null) {
+			digits++;
+			i = CodecUtils.randomInt(digits);
+			user = findByNaturalId(candidate + i);
+		}
+		return candidate + i;
 	}
 
 }

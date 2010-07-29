@@ -29,6 +29,8 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	private static final long serialVersionUID = -6135434863820342822L;
 
+	public static final String USERNAME_REGEX = "^[\\w]{3,20}$";
+
 	@NaturalId(caseInsensitive = true)
 	@SearchableProperty
 	private String username;
@@ -236,6 +238,6 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	@Override
 	public String toString() {
-		return this.name;
+		return StringUtils.isNotBlank(this.name) ? this.name : this.username;
 	}
 }

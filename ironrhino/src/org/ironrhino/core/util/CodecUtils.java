@@ -131,12 +131,22 @@ public class CodecUtils {
 
 	private static String string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+	private static Random random = new Random();
+
 	public static String randomString(int digits) {
-		Random random = new Random();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < digits; i++)
 			sb.append(string.charAt(random.nextInt(26)));
 		return sb.toString();
+	}
+
+	public static int randomInt(int digits) {
+		if (digits <= 1)
+			return random.nextInt(10);
+		int n = 10;
+		for (int i = 1; i < digits - 1; i++)
+			n *= 10;
+		return n + random.nextInt(n * 9);
 	}
 
 	public static String nextId() {

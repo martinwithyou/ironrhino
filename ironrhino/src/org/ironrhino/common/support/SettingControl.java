@@ -20,18 +20,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
-@Singleton@Named("settingControl")
+@Singleton
+@Named("settingControl")
 public class SettingControl implements ApplicationListener {
 
 	protected Log log = LogFactory.getLog(getClass());
 
 	private Map<String, Setting> settings;
 
-	/**
-	 * Autowired will cause exception when
-	 * org.ironrhino.online.servlet.AccountAuthenticationProcessingFilter
-	 * .save(final LoginRecord loginRecord),bloody weird
-	 */
 	private BaseManager<Setting> baseManager;
 
 	public void setBaseManager(BaseManager<Setting> baseManager) {
@@ -46,7 +42,7 @@ public class SettingControl implements ApplicationListener {
 	public void refresh() {
 		baseManager.setEntityClass(Setting.class);
 		List<Setting> list = baseManager.findAll(Order.asc("key"));
-		settings = new ConcurrentHashMap<String, Setting>(list.size(),1);
+		settings = new ConcurrentHashMap<String, Setting>(list.size(), 1);
 		for (Setting s : list)
 			settings.put(s.getKey(), s);
 	}
@@ -99,16 +95,27 @@ public class SettingControl implements ApplicationListener {
 		if (event instanceof EntityOperationEvent) {
 			EntityOperationEvent ev = (EntityOperationEvent) event;
 			if (ev.getEntity() instanceof Setting) {
-				Setting s = (Setting) ev.getEntity();
+				Setting settingInEvent = (Setting) ev.getEntity();
 				if (ev.getType() == EntityOperationType.CREATE) {
-					settings.put(s.getKey(), s);
+					settings.put(settingInEvent.getKey(), settingInEvent);
 				} else {
-					Setting ss = settings.get(s.getKey());
-					if (ss != null)
-						if (ev.getType() == EntityOperationType.UPDATE)
-							BeanUtils.copyProperties(s, ss);
-						else if (ev.getType() == EntityOperationType.DELETE)
-							settings.remove(ss.getKey());
+					Setting settingInMemory = null;
+					for (Setting setting : settings.values()) {
+						if (setting.getId().equals(settingInEvent.getId())) {
+							settingInMemory = setting;
+							break;
+						}
+					}
+					if (settingInMemory != null)
+						if (ev.getType() == EntityOperationType.UPDATE) {
+							settings.remove(settingInMemory.getKey());
+							BeanUtils.copyProperties(settingInEvent,
+									settingInMemory);
+							settings.put(settingInMemory.getKey(),
+									settingInMemory);
+						} else if (ev.getType() == EntityOperationType.DELETE) {
+							settings.remove(settingInMemory.getKey());
+						}
 				}
 			}
 		}

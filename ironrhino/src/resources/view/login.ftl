@@ -8,7 +8,6 @@
 </head>
 <body>
 <div><@includePage path="/login/intro"/></div>
-<@authorize ifNotGranted="ROLE_BUILTIN_USER">
 	<div style="margin:auto;width:300px;font-size:1.1em;">
 		<@s.form id="login" action="login" method="post" cssClass="ajax focus">
 			<@s.hidden id="targetUrl" name="targetUrl" />
@@ -17,6 +16,5 @@
 			<@s.submit value="%{getText('login')}" />
 		</@s.form>
 	</div>
-</@authorize>
 </body>
 </html></#escape>
