@@ -177,7 +177,7 @@ public class UserAction extends BaseAction {
 	@Validations(requiredStrings = {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.username", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "validation.required") }, emails = { @EmailValidator(fieldName = "user.email", key = "validation.invalid") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "user.username", expression = "^\\w{2,20}$", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
-	public String save2() {
+	public String save() {
 		if (StringUtils.isBlank(user.getEmail()))
 			user.setEmail(null);
 		if (user.isNew()) {
@@ -198,6 +198,8 @@ public class UserAction extends BaseAction {
 			User temp = user;
 			user = userManager.get(temp.getId());
 			BeanUtils.copyProperties(temp, user);
+			if (StringUtils.isNotBlank(password))
+				user.setLegiblePassword(password);
 		}
 		user.getRoles().clear();
 		if (roleId != null) {
@@ -209,21 +211,7 @@ public class UserAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	@Override
-	public String save() {
-		if (user != null && user.getId() != null) {
-			user = userManager.get(user.getId());
-			if (user != null) {
-				if (StringUtils.isNotBlank(password)
-						&& !password.equals("********"))
-					user.setLegiblePassword(password);
 
-				userManager.save(user);
-				addActionMessage(getText("save.success"));
-			}
-		}
-		return SUCCESS;
-	}
 
 	@Override
 	public String delete() {

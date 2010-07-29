@@ -4,12 +4,7 @@
 <title>${action.getText('user')}${action.getText('list')}</title>
 </head>
 <body>
-<#assign columns={"username":{},"name":{},"password":{"value":"********","trimPrefix":true,"cellEdit":"click,rt_edit_template_password","excludeIfNotEdited":true}}>
-<@richtable entityName="user" columns=columns searchable=true/>
-<div style="display: none;">
-<textarea id="rt_edit_template_password">
-	<input type="password" class="text" value=""
-	onblur="Richtable.updatePasswordCell(this)" style="width: 100%;" name="" />
-</textarea></div>
+<#assign columns={"username":{},"name":{}}>
+<@richtable entityName="user" columns=columns searchable=true celleditable=false/>
 </body>
 </html></#escape>

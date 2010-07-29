@@ -4,18 +4,16 @@
 <title><#if user.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('user')}</title>
 </head>
 <body>
-<@s.form action="save2" method="post" cssClass="ajax">
+<@s.form action="save" method="post" cssClass="ajax">
 	<#if !user.new>
 		<@s.hidden name="user.id" />
-		<@s.textfield label="%{getText('username')}" name="user.username"
-			required="true" readonly="true"/>
+		<@s.textfield label="%{getText('username')}" name="user.username" readonly="true"/>
+		<@s.password label="%{getText('password')}" name="password"/>
+		<@s.password label="%{getText('confirmPassword')}" name="confirmPassword"/>
 	<#else>
-		<@s.textfield label="%{getText('username')}" name="user.username"
-			required="true" cssClass="required"/>
-		<@s.password label="%{getText('password')}" name="password"
-			required="true" cssClass="required"/>
-		<@s.password label="%{getText('confirmPassword')}"
-			name="confirmPassword" required="true" cssClass="required"/>
+		<@s.textfield label="%{getText('username')}" name="user.username" cssClass="required"/>
+		<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
+		<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" cssClass="required"/>
 	</#if>
 	<@s.textfield label="%{getText('name')}" name="user.name" cssClass="required"/>
 	<@s.textfield label="%{getText('email')}" name="user.email" cssClass="email"/>
