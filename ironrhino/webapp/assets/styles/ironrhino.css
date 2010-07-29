@@ -944,6 +944,10 @@ ul, ol {
 img {
 	border:none;
 }
+pre {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
 .clear { 
 	clear:both;
 	display:block;
