@@ -30,6 +30,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1203,6 +1205,7 @@ public abstract class UIBean extends Component {
      */
     public void copyParams(Map params) {
         super.copyParams(params);
+        Set<String> standardAttributes = getStandardAttributes();
         for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             String key = (String) entry.getKey();
@@ -1211,11 +1214,25 @@ public abstract class UIBean extends Component {
         }      
     }
     
-    private static java.util.Set<String> standardAttributes = new HashSet<String>();
+    protected static Map<Class,Set<String>> _standardAttributesMap = new ConcurrentHashMap<Class,Set<String>>();
     
-    static{
-    	for(Field f : UIBean.class.getDeclaredFields())
-    		if(Modifier.isProtected(f.getModifiers())&&f.getType().equals(String.class))
-    			standardAttributes.add(f.getName());
+    protected Set<String> getStandardAttributes(){
+		Class clz = getClass();
+		Set<String> _standardAttributes = _standardAttributesMap.get(clz);
+    	if(_standardAttributes == null){
+    		_standardAttributes = new HashSet<String>();
+    		_standardAttributesMap.put(clz, _standardAttributes);
+    		while(clz != null){
+    		for(Field f : clz.getDeclaredFields())
+        		if(Modifier.isProtected(f.getModifiers())&&f.getType().equals(String.class))
+        			_standardAttributes.add(f.getName());
+    		if(clz.equals(UIBean.class))
+    			break;
+    		else
+    			clz = clz.getSuperclass();
+    		}
+    	}
+    	return _standardAttributes;
     }
+   
 }
