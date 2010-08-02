@@ -22,5 +22,7 @@ public interface PageManager extends BaseManager<Page> {
 	public void pullDraft(Page page);
 	
 	public List<Page> getListByTag(String tag);
+	
+	public List<Page> getListByTag(String... tag);
 
 }

@@ -114,11 +114,24 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	}
 
 	public List<Page> getListByTag(String tag) {
-		if (StringUtils.isBlank(tag))
+		return getListByTag(new String[] { tag });
+	}
+
+	public List<Page> getListByTag(String... tag) {
+		if (tag.length == 0 || StringUtils.isBlank(tag[0]))
 			return Collections.EMPTY_LIST;
 		List list;
 		if (compassSearchService != null) {
-			String query = "tags:" + tag;
+			String query = null;
+			if (tag.length == 1) {
+				query = "tags:" + tag[0];
+			} else {
+				StringBuilder sb = new StringBuilder();
+				sb.append("tags:").append(tag[0]);
+				for (int i = 1; i < tag.length; i++)
+					sb.append(" AND ").append("tags:").append(tag[i]);
+				query = sb.toString();
+			}
 			CompassCriteria cc = new CompassCriteria();
 			cc.setQuery(query);
 			cc.setAliases(new String[] { "page" });
@@ -133,13 +146,15 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			}
 		} else {
 			DetachedCriteria dc = detachedCriteria();
-			dc.add(Restrictions.or(Restrictions.eq("tagsAsString", tag),
-					Restrictions.or(Restrictions.like("tagsAsString",
-							tag + ",", MatchMode.START), Restrictions.or(
-							Restrictions.like("tagsAsString", "," + tag,
-									MatchMode.END), Restrictions.like(
-									"tagsAsString", "," + tag + ",",
-									MatchMode.ANYWHERE)))));
+			for (int i = 0; i < tag.length; i++) {
+				dc.add(Restrictions.or(Restrictions.eq("tagsAsString", tag[i]),
+						Restrictions.or(Restrictions.like("tagsAsString",
+								tag[i] + ",", MatchMode.START), Restrictions
+								.or(Restrictions.like("tagsAsString", ","
+										+ tag[i], MatchMode.END), Restrictions
+										.like("tagsAsString", "," + tag[i]
+												+ ",", MatchMode.ANYWHERE)))));
+			}
 			list = findListByCriteria(dc);
 		}
 		Collections.sort(list);

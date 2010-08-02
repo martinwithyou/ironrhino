@@ -7,9 +7,9 @@
 <body>
 <#assign designMode=(Parameters.designMode!)=='true'&&statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
 <#if designMode>
-<div class="editme" style="padding:0px;margin:0px;" url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
+<div class="editme" url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
 </#if>
-${page.content!}
+<#if page.content??><#assign content=page.content?interpret><@content/></#if>
 <#if designMode>
 </div>
 </#if>

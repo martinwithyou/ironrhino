@@ -20,7 +20,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 
 <#macro printSetting key default="">${statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getStringValue(key,default)!}</#macro>
 
-<#macro includePage path>
+<#macro includePage path abbr=0>
 <#local pageManager=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('pageManager')>
 <#if (Parameters.preview!)=='true' && statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
 <#local page=pageManager.getDraftByPath(path)!>
@@ -31,10 +31,15 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <#local page=pageManager.getByPath(path)!>
 </#if>
 <#if page??&&page.content??>
-<#local content=page.content?interpret>
+<#if abbr gt 0>
+<#local _content=statics['org.ironrhino.core.util.HtmlUtils'].abbr(page.content, abbr)>
+<#else>
+<#local _content=page.content>
+</#if>
+<#local content=_content?interpret>
 <#local designMode=(Parameters.designMode!)=='true'&&statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
 <#if designMode>
-<div class="editme" style="padding:0px;margin:0px;" url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
+<div class="editme" url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
 </#if>
 <@content/>
 <#if designMode>

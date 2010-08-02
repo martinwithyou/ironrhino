@@ -43,6 +43,17 @@ public class HtmlUtils {
 		return sb.toString();
 	}
 
+	public static String abbr(String html, int abbr) {
+		Source source = new Source(html);
+		Iterator<Element> it = source.getAllElements().iterator();
+		if (it.hasNext()) {
+			return org.apache.commons.lang.StringUtils.abbreviate(it.next()
+					.getTextExtractor().toString(), abbr);
+		} else
+			return org.apache.commons.lang.StringUtils.abbreviate(
+					source.toString(), abbr);
+	}
+
 	public static String compress(String html, String[] id) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		final List<String> ids = Arrays.asList(id);
