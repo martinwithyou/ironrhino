@@ -16,6 +16,7 @@ import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.core.metadata.CheckCache;
@@ -191,6 +192,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			cc.setPageNo(resultPage.getPageNo());
 			cc.setPageSize(resultPage.getPageSize());
 			cc.setAliases(new String[] { "page" });
+			cc.addSort("displayOrder", null, false);
 			CompassSearchResults searchResults = compassSearchService
 					.search(cc);
 			CompassHit[] hits = searchResults.getHits();
@@ -215,6 +217,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 										.like("tagsAsString", "," + tag[i]
 												+ ",", MatchMode.ANYWHERE)))));
 			}
+			dc.addOrder(Order.asc("displayOrder"));
 			resultPage.setDetachedCriteria(dc);
 			resultPage = findByResultPage(resultPage);
 		}
