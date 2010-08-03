@@ -23,7 +23,6 @@
 	</ul>
 	<#if page??>
 	<div class="chapter">
-		<h3 class="title">${page.title!}</h3>
 		<div class="content">
 			<@includePage path="${page.path}"/>
 		</div>
