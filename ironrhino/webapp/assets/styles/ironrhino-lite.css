@@ -405,6 +405,14 @@ thead,tfoot {
 tr.selected {
 	background: #EBC79E;
 }
+
+.crumbs{
+margin: 10px;
+}
+.crumbs a {
+color: #36C;
+text-decoration: none;
+}
 .editme{
 	margin:0px;
 	padding:0px;

@@ -4,6 +4,16 @@
 <title>${action.getText(actionName)}</title>
 </head>
 <body>
+<div class="crumbs"> 
+	${action.getText('current.location')}:
+	<a href="<@url value="/"/>">${action.getText('index')}</a><span>&gt;</span>
+<#if !page??>
+	${action.getText(actionName)}
+<#else>
+	<a href="<@url value="/${actionName}"/>">${action.getText(actionName)}</a><span>&gt;</span>
+	${page.title!}
+</#if>
+</div>
 <div class="clearfix series ${actionName}">
 	<ul class="catalog">
 		<#list pages as var>
@@ -13,7 +23,7 @@
 	</ul>
 	<#if page??>
 	<div class="chapter">
-		<h3 class="title"><#if page.title??><#assign title=page.title?interpret><@title/></#if></h3>
+		<h3 class="title">${page.title!}</h3>
 		<div class="content">
 			<@includePage path="${page.path}"/>
 		</div>

@@ -15,6 +15,7 @@ import org.compass.core.CompassSession;
 import org.compass.core.CompassTemplate;
 import org.compass.core.engine.SearchEngineQueryParseException;
 import org.compass.core.support.search.CompassSearchResults;
+import org.ironrhino.core.model.ResultPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
@@ -68,6 +69,8 @@ public class CompassSearchService {
 			doProcessBeforeDetach(criteria, session, hits, -1, -1);
 			detachedHits = hits.detach();
 		} else {
+			if (pageSize > ResultPage.MAX_RECORDS_PER_PAGE)
+				pageSize = ResultPage.MAX_RECORDS_PER_PAGE;
 			int totalPages = hitsLength % pageSize == 0 ? hitsLength / pageSize
 					: hitsLength / pageSize + 1;
 			if (pageNo < 1)

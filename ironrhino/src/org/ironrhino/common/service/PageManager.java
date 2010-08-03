@@ -3,6 +3,7 @@ package org.ironrhino.common.service;
 import java.util.List;
 
 import org.ironrhino.common.model.Page;
+import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.service.BaseManager;
 
 public interface PageManager extends BaseManager<Page> {
@@ -21,8 +22,12 @@ public interface PageManager extends BaseManager<Page> {
 
 	public void pullDraft(Page page);
 	
-	public List<Page> getListByTag(String tag);
+	public List<Page> findListByTag(String tag);
 	
-	public List<Page> getListByTag(String... tag);
+	public List<Page> findListByTag(String... tag);
+	
+	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,String tag);
+	
+	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,String... tag);
 
 }

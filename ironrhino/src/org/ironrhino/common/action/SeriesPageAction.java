@@ -58,7 +58,7 @@ public class SeriesPageAction extends BaseAction {
 	}
 
 	public String p() {
-		pages = pageManager.getListByTag(getActionName());
+		pages = pageManager.findListByTag(getActionName());
 		String path = getUid();
 		if (StringUtils.isNotBlank(path)) {
 			path = "/" + path;
