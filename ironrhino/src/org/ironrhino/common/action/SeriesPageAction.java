@@ -24,6 +24,8 @@ public class SeriesPageAction extends BaseAction {
 
 	protected Page nextPage;
 
+	private String actionName;
+
 	public Page getPreviousPage() {
 		return previousPage;
 	}
@@ -41,10 +43,12 @@ public class SeriesPageAction extends BaseAction {
 	}
 
 	public String getActionName() {
-		String actionName = getClass().getSimpleName();
-		if (actionName.endsWith("Action"))
-			actionName = actionName.substring(0, actionName.length() - 6);
-		actionName = StringUtils.uncapitalize(actionName);
+		if (actionName == null) {
+			actionName = getClass().getSimpleName();
+			if (actionName.endsWith("Action"))
+				actionName = actionName.substring(0, actionName.length() - 6);
+			actionName = StringUtils.uncapitalize(actionName);
+		}
 		return actionName;
 	}
 
