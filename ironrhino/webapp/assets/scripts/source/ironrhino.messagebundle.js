@@ -43,15 +43,26 @@ MessageBundle = {
 	},
 	get : function() {
 		var key = arguments[0];
-		var lang = (navigator.language || navigator.browserLanguage || '')
-				.toLowerCase();
-		if (!MessageBundle[lang])
-			lang = 'en';
+		var lang = MessageBundle.lang();
 		var msg = MessageBundle[lang][key];
 		if (typeof(msg) == 'undefined')
 			msg = key;
 		for (var i = 1; i < arguments.length; i++)
 			msg = msg.replace('{' + i + '}', arguments[i]);
 		return msg;
+	},
+	lang : function() {
+		var lang = (navigator.language || navigator.browserLanguage || '')
+				.toLowerCase();
+		if (!MessageBundle[lang])
+			lang = 'en';
+		return lang;
+	},
+	shortLang : function() {
+		var lang = MessageBundle.lang();
+		var i = lang.indexOf('-');
+		if (i > 0)
+			lang = lang.substring(0, i);
+		return lang;
 	}
 };

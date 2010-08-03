@@ -8,6 +8,7 @@
 $(function() {
 		var cmsPath= $('meta[name="cms_path"]').attr('content') || '';
 		var options = {
+			language : MessageBundle.shortLang(),
 			script_url : '<@url value="/assets/components/tiny_mce/tiny_mce.js"/>',
 			theme : "advanced",
 			plugins : "safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,autosave",
