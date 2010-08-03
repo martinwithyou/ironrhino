@@ -1185,6 +1185,23 @@ text-decoration: none;
 .series .chapter .bar a{
 	padding: 20px;
 }
+
+.column .catalog{
+	float:left;
+	padding:20px;
+	width: 15%;
+}
+.column .catalog li{
+	margin: 10px 0px;
+}
+.column .catalog .selected{
+	font-weight:bold;
+}
+.column .list{
+	float:left;
+	width: 80%;
+}
+
 .pagination{
 	margin-top: 10px;
 	text-align: center;
