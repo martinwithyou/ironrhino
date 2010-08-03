@@ -62,17 +62,23 @@ public class SeriesPageAction extends BaseAction {
 				Page p = pages.get(i);
 				if (p.getPath().equals(path)) {
 					page = p;
-					if (i > 0)
-						previousPage = pages.get(i - 1);
-					if (i < pages.size() - 1)
-						nextPage = pages.get(i + 1);
+					if (isShowBar()) {
+						if (i > 0)
+							previousPage = pages.get(i - 1);
+						if (i < pages.size() - 1)
+							nextPage = pages.get(i + 1);
+					}
 					break;
 				}
 			}
 		}
 		if (page == null && pages.size() > 0)
 			page = pages.get(0);
-		return "chapter";
+		return "series";
+	}
+
+	public boolean isShowBar() {
+		return false;
 	}
 
 }

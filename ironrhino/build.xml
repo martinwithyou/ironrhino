@@ -177,6 +177,7 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.series.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.button.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
@@ -194,6 +195,7 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.series.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.button.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />

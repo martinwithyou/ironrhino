@@ -1151,6 +1151,32 @@ tr.selected {
 	border:solid 1px #ffc000;
 }
 
+.series .catalog{
+	float:left;
+	padding:20px;
+	width: 15%;
+}
+.series .catalog li{
+	margin: 10px 0px;
+}
+.series .catalog .selected{
+	font-weight:bold;
+}
+.series .chapter{
+	float:left;
+	width: 80%;
+}
+.series .chapter .title{
+	text-align:center;
+}
+.series .chapter .bar{
+	margin-top: 20px;
+	text-align:center;
+}
+
+.series .chapter .bar a{
+	padding: 20px;
+}
 .pagination{
 	margin-top: 10px;
 	text-align: center;
