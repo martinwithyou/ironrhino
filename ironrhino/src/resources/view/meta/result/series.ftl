@@ -15,14 +15,7 @@
 	<div class="chapter">
 		<h3 class="title"><#if page.title??><#assign title=page.title?interpret><@title/></#if></h3>
 		<div class="content">
-			<#assign designMode=(Parameters.designMode!)=='true'&&statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
-			<#if designMode>
-			<div class="editme" url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
-			</#if>
-			<#if page.content??><#assign content=page.content?interpret><@content/></#if>
-			<#if designMode>
-			</div>
-			</#if>
+			<@includePage path="${page.path}"/>
 		</div>
 		<#if showBar>
 		<div class="bar">
