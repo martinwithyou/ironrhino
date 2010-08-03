@@ -134,6 +134,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			}
 			CompassCriteria cc = new CompassCriteria();
 			cc.setQuery(query);
+			cc.setPageSize(Integer.MAX_VALUE);
 			cc.setAliases(new String[] { "page" });
 			CompassSearchResults searchResults = compassSearchService
 					.search(cc);

@@ -117,6 +117,8 @@ public class PageAction extends BaseAction {
 		page = pageManager.get(getUid());
 		if (page == null) {
 			page = new Page();
+			if (StringUtils.isNotBlank(keyword) && keyword.startsWith("tags:"))
+				page.setTagsAsString(keyword.substring("tags:".length()));
 		} else {
 			if (StringUtils.isNotBlank(page.getDraft())) {
 				draft = true;

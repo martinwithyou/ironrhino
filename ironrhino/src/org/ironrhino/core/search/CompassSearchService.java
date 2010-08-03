@@ -107,8 +107,8 @@ public class CompassSearchService {
 
 	protected CompassQuery buildQuery(CompassCriteria criteria,
 			CompassSession session) {
-		CompassQuery query = session.queryBuilder().queryString(
-				criteria.getQuery().trim()).toQuery();
+		CompassQuery query = session.queryBuilder()
+				.queryString(criteria.getQuery().trim()).toQuery();
 
 		if (criteria.getAliases() != null)
 			query.setAliases(criteria.getAliases());
@@ -125,17 +125,17 @@ public class CompassSearchService {
 							condition.getLow(), condition.getHigh(), true,
 							false));
 				else if (condition.getType() == CompassConditionType.GE)
-					query.setFilter(builder.ge(condition.getName(), condition
-							.getValue()));
+					query.setFilter(builder.ge(condition.getName(),
+							condition.getValue()));
 				else if (condition.getType() == CompassConditionType.GT)
-					query.setFilter(builder.gt(condition.getName(), condition
-							.getValue()));
+					query.setFilter(builder.gt(condition.getName(),
+							condition.getValue()));
 				else if (condition.getType() == CompassConditionType.LE)
-					query.setFilter(builder.le(condition.getName(), condition
-							.getValue()));
+					query.setFilter(builder.le(condition.getName(),
+							condition.getValue()));
 				else if (condition.getType() == CompassConditionType.LT)
-					query.setFilter(builder.lt(condition.getName(), condition
-							.getValue()));
+					query.setFilter(builder.lt(condition.getName(),
+							condition.getValue()));
 			} else {
 				CompassQueryFilterBuilder.CompassBooleanQueryFilterBuilder cc = builder
 						.bool();
@@ -145,17 +145,17 @@ public class CompassSearchService {
 								condition.getLow(), condition.getHigh(), true,
 								false));
 					else if (condition.getType() == CompassConditionType.GE)
-						cc = cc.and(builder.ge(condition.getName(), condition
-								.getValue()));
+						cc = cc.and(builder.ge(condition.getName(),
+								condition.getValue()));
 					else if (condition.getType() == CompassConditionType.GT)
-						cc = cc.and(builder.gt(condition.getName(), condition
-								.getValue()));
+						cc = cc.and(builder.gt(condition.getName(),
+								condition.getValue()));
 					else if (condition.getType() == CompassConditionType.LE)
-						cc = cc.and(builder.le(condition.getName(), condition
-								.getValue()));
+						cc = cc.and(builder.le(condition.getName(),
+								condition.getValue()));
 					else if (condition.getType() == CompassConditionType.LT)
-						cc = cc.and(builder.lt(condition.getName(), condition
-								.getValue()));
+						cc = cc.and(builder.lt(condition.getName(),
+								condition.getValue()));
 				query.setFilter(cc.toFilter());
 			}
 		}

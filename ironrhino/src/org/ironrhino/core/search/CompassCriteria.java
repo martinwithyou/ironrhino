@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.compass.core.CompassQuery.SortPropertyType;
+import org.ironrhino.core.model.ResultPage;
 
 public class CompassCriteria {
 
@@ -18,7 +19,7 @@ public class CompassCriteria {
 
 	private int pageNo = 1;
 
-	private int pageSize = 20;
+	private int pageSize = ResultPage.DEFAULT_PAGE_SIZE;
 
 	private String[] aliases;
 
