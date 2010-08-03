@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -57,9 +56,9 @@ public abstract class AbstractActionMapper implements ActionMapper {
 		// handle http dispatcher includes.
 		String uri = (String) request
 				.getAttribute("javax.servlet.include.servlet_path");
-		if (uri == null)
-			uri = RequestUtils.getServletPath(request);
-		if ("".endsWith(uri))
+//		if (uri == null)
+//			uri = org.apache.struts2.RequestUtils.getServletPath(request);
+		if ("".equals(uri))
 			uri = "/";
 		if (uri != null)
 			return uri;
