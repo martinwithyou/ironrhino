@@ -289,7 +289,6 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 	}
 
 	@Deprecated
-
 	public String[] getValueNames() {
 		List names = new ArrayList();
 
@@ -301,25 +300,21 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 	}
 
 	@Deprecated
-
 	public Object getValue(String key) {
 		return getAttribute(key);
 	}
 
 	@Deprecated
-
 	public void removeValue(String key) {
 		removeAttribute(key);
 	}
 
 	@Deprecated
-
 	public void putValue(String key, Object object) {
 		setAttribute(key, object);
 	}
 
 	@Deprecated
-
 	public javax.servlet.http.HttpSessionContext getSessionContext() {
 		throw new UnsupportedOperationException(
 				"No longer supported method: getSessionContext");
