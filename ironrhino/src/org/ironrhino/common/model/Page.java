@@ -26,7 +26,7 @@ public class Page extends BaseEntity implements Recordable, Ordered {
 	private static final long serialVersionUID = 4688382703803043164L;
 
 	@NaturalId(mutable = true, caseInsensitive = true)
-	@SearchableProperty
+	@SearchableProperty(index = Index.UN_TOKENIZED)
 	private String path;
 
 	@SearchableProperty
