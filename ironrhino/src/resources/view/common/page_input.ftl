@@ -20,6 +20,8 @@ $(function() {
 			theme_advanced_toolbar_align : "left",
 			theme_advanced_statusbar_location : "bottom",
 			theme_advanced_resizing : true,
+			remove_script_host : false,
+        	convert_urls : false,
 			content_css : "<@url value="/assets/styles/ironrhino-min.css"/>,<@url value="/assets/styles/app-min.css"/>",
 			mode : "textareas"
 		};
