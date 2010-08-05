@@ -89,3 +89,30 @@ table.richtable td,th {
 .richtable .pageSize {
 	width: 50px;
 }
+.richtable .toolbar{
+	margin:10px 0px;
+}
+.richtable .toolbar .pagination{
+	float:left;
+	height:1em;
+	width:30%;
+	text-align:left;
+	margin:0px;
+}
+.richtable .toolbar .action{
+	float:left;
+	height:1em;
+	width:35%;
+	text-align:center;
+}
+.richtable .toolbar .query{
+	float:left;
+	height:1em;
+	width:20%;
+}
+.richtable .toolbar .status{
+	float:left;
+	height:1em;
+	width:15%;
+	text-align:right;
+}

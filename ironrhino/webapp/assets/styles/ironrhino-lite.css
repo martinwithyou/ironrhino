@@ -441,6 +441,7 @@ text-decoration: none;
 .series .chapter{
 	float:left;
 	width: 80%;
+	padding: 10px;
 }
 .series .chapter .title{
 	text-align:center;

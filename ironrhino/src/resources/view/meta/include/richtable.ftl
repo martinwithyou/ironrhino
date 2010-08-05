@@ -100,11 +100,9 @@ ${value?xhtml}<#t>
 <#macro rtend buttons='' readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons=''>
 </tbody>
 </table>
-<table style="margin-top:10px;">
-<tr>
-<td width="30%">
-<#if resultPage??>
+<div class="toolbar clearfix">
 <div class="pagination">
+<#if resultPage??>
 <#if resultPage.first>
 <span class="disabled" title="${action.getText('firstpage')}">&lt;&lt;</span>
 <span class="disabled" title="${action.getText('previouspage')}">&lt;</span>
@@ -127,10 +125,9 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize" class="pageSize"
 </#list> 
 <option value="${resultPage.totalRecord}">${action.getText('all')}</option>
 </select>${action.getText('row')}
-</div>
 </#if>
-</td>
-<td class="action" width="35%" align="center">
+</div>
+<div class="action">
 <#if buttons!=''>
 <#local temp=buttons?interpret>
 <@temp/>
@@ -140,8 +137,8 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize" class="pageSize"
 <#if celleditable><@button text=action.getText('save') action='save'/></#if>
 <#if deleteable><@button text=action.getText('delete') action='delete'/></#if>
 </#if><@button text=action.getText('reload') action='reload'/></#if>
-</td>
-<td width="20%">
+</div>
+<div class="query">
 <#if searchable>
 <@s.textfield theme="simple" name="keyword" cssClass="focus" size="15"/><@s.submit theme="simple" value="%{getText('search')}" />
 </#if>
@@ -149,16 +146,15 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize" class="pageSize"
 <#local temp=searchButtons?interpret>
 <@temp/>
 </#if>
-</td>
-<td align="right">
+</div>
+<div class="status">
 <#if resultPage??>
 ${action.getText('total')}${resultPage.totalRecord}${action.getText('record')}<#if resultPage.totalRecord!=0>,${action.getText('display')}${resultPage.start+1}-${resultPage.start+resultPage.result?size}</#if>
 <#else>
 ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!=0>,${action.getText('display')}1-${list?size}</#if>	
 </#if>
-</td>
-</tr>
-</table>
+</div>
+</div>
 </form>
 <#if !readonly&&celleditable>
 <div style="display: none;">
