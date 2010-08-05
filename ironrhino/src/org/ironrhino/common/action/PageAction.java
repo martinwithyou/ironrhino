@@ -117,8 +117,18 @@ public class PageAction extends BaseAction {
 		page = pageManager.get(getUid());
 		if (page == null) {
 			page = new Page();
-			if (StringUtils.isNotBlank(keyword) && keyword.startsWith("tags:"))
-				page.setTagsAsString(keyword.substring("tags:".length()));
+			if (StringUtils.isNotBlank(keyword) && keyword.startsWith("tags:")) {
+				String tag = keyword.substring("tags:".length());
+				int count = pageManager.findListByTag(tag).size();
+				String path = null;
+				while (true) {
+					path = "/" + tag + (++count);
+					if (pageManager.getByPath(path) == null)
+						break;
+				}
+				page.setPath(path);
+				page.setTagsAsString(tag);
+			}
 		} else {
 			if (StringUtils.isNotBlank(page.getDraft())) {
 				draft = true;
