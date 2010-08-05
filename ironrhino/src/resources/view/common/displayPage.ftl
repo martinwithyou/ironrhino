@@ -5,13 +5,15 @@
 <#if preview>[${action.getText('preview')}]</#if><#if page.title??><#assign title=page.title?interpret><@title/></#if></title>
 </head>
 <body>
-<#assign designMode=(Parameters.designMode!)=='true'&&statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
-<#if designMode>
-<div class="editme" url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
-</#if>
-<#if page.content??><#assign content=page.content?interpret><@content/></#if>
-<#if designMode>
+<div class="page content">
+	<#assign designMode=(Parameters.designMode!)=='true'&&statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
+	<#if designMode>
+	<div class="editme" url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
+	</#if>
+	<#if page.content??><#assign content=page.content?interpret><@content/></#if>
+	<#if designMode>
+	</div>
+	</#if>
 </div>
-</#if>
 </body>
 </html>
