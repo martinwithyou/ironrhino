@@ -10,7 +10,7 @@ body {
 	height:65px;
 	position:relative;
 }
-.search input {
+form.search input {
 	width:150px;
 	height:16px;
 	padding:5px 5px 5px 5px;
@@ -23,7 +23,7 @@ body {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 }
-.search button {
+form.search button {
 	width:60px;
 	height:25px;
 	border:none;

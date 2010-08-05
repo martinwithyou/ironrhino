@@ -1648,7 +1648,7 @@ table.richtable td,th {
 	width:35%;
 	text-align:center;
 }
-.richtable .toolbar .query{
+.richtable .toolbar .search{
 	float:left;
 	height:1em;
 	width:20%;

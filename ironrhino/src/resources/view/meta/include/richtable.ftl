@@ -138,7 +138,7 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize" class="pageSize"
 <#if deleteable><@button text=action.getText('delete') action='delete'/></#if>
 </#if><@button text=action.getText('reload') action='reload'/></#if>
 </div>
-<div class="query">
+<div class="search">
 <#if searchable>
 <@s.textfield theme="simple" name="keyword" cssClass="focus" size="15"/><@s.submit theme="simple" value="%{getText('search')}" />
 </#if>
