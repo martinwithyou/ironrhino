@@ -111,6 +111,13 @@ public class PageAction extends BaseAction {
 		}
 		return LIST;
 	}
+	
+	public static void main(String[] args) {
+		String keyword = "tags:test AND tags:haha";
+		String tag = keyword.replace("tags:", "");
+		tag = tag.replace(" AND ", ",");
+		System.out.println(tag);
+	}
 
 	@Override
 	public String input() {
@@ -118,7 +125,9 @@ public class PageAction extends BaseAction {
 		if (page == null) {
 			page = new Page();
 			if (StringUtils.isNotBlank(keyword) && keyword.startsWith("tags:")) {
-				String tag = keyword.substring("tags:".length());
+				String tags = keyword.replace("tags:", "");
+				tags = tags.replace(" AND ", ",");
+				String tag = tags.split(",")[0];
 				int count = pageManager.findListByTag(tag).size();
 				String path = null;
 				while (true) {
@@ -127,7 +136,7 @@ public class PageAction extends BaseAction {
 						break;
 				}
 				page.setPath(path);
-				page.setTagsAsString(tag);
+				page.setTagsAsString(tags);
 			}
 		} else {
 			if (StringUtils.isNotBlank(page.getDraft())) {
