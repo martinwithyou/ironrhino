@@ -11,7 +11,6 @@ import ognl.OgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.model.Secured;
-import org.mvel2.templates.TemplateRuntime;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,7 +45,7 @@ public class AuthzUtils {
 		if (StringUtils.isNotBlank(expression)) {
 			OgnlContext ognl = (OgnlContext) ActionContext.getContext()
 					.getContextMap();
-			Object o = TemplateRuntime.eval(expression, ognl.getValues());
+			Object o = TemplateUtils.eval(expression, ognl.getValues());
 			return o != null && o.toString().equals("true");
 		}
 		try {

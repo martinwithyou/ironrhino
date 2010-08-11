@@ -86,7 +86,7 @@ public class MyFreemarkerManager extends FreemarkerManager {
 						location.substring(location.indexOf(ftlClasspath)));
 			}
 		} catch (IOException e) {
-			log.info(e.getMessage());
+			log.debug(e.getMessage());
 		}
 		try {
 			searchPath = ftlLocation + "/meta/import/*.ftl";
@@ -100,7 +100,7 @@ public class MyFreemarkerManager extends FreemarkerManager {
 						location.substring(location.indexOf(ftlLocation)));
 			}
 		} catch (IOException e) {
-			log.info(e.getMessage());
+			log.debug(e.getMessage());
 		}
 		try {
 			searchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
@@ -112,7 +112,7 @@ public class MyFreemarkerManager extends FreemarkerManager {
 						.indexOf(ftlClasspath)));
 			}
 		} catch (IOException e) {
-			log.info(e.getMessage());
+			log.debug(e.getMessage());
 		}
 		try {
 			searchPath = ftlLocation + "/meta/include/*.ftl";
@@ -124,7 +124,7 @@ public class MyFreemarkerManager extends FreemarkerManager {
 						.indexOf(ftlLocation)));
 			}
 		} catch (IOException e) {
-			log.info(e.getMessage());
+			log.debug(e.getMessage());
 		}
 		return configuration;
 	}

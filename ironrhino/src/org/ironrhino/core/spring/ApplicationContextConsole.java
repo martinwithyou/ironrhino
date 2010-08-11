@@ -20,7 +20,7 @@ import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.event.SetPropertyEvent;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.ironrhino.core.util.AnnotationUtils;
-import org.mvel2.MVEL;
+import org.ironrhino.core.util.TemplateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ApplicationContext;
@@ -96,7 +96,7 @@ public class ApplicationContextConsole implements ApplicationListener {
 
 	private Object executeMethodInvocation(String expression) throws Exception {
 		try {
-			return MVEL.eval(expression, getBeans());
+			return TemplateUtils.evalExpression(expression, getBeans());
 		} catch (Exception e) {
 			throw e;
 		}
@@ -113,7 +113,7 @@ public class ApplicationContextConsole implements ApplicationListener {
 					bean = getBeans().get(
 							expression.substring(0, expression.indexOf('.')));
 				}
-				MVEL.eval(expression, getBeans());
+				TemplateUtils.evalExpression(expression, getBeans());
 				if (bean != null) {
 					Method m = AnnotationUtils.getAnnotatedMethod(
 							bean.getClass(), PostPropertiesReset.class);
