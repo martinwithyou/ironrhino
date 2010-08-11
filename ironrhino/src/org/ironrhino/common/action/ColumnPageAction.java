@@ -27,6 +27,8 @@ public class ColumnPageAction extends BaseAction {
 
 	private String actionName;
 
+	protected Page page;
+
 	public ResultPage<Page> getResultPage() {
 		return resultPage;
 	}
@@ -39,8 +41,16 @@ public class ColumnPageAction extends BaseAction {
 		return column;
 	}
 
+	public void setColumn(String column) {
+		this.column = column;
+	}
+
 	public String[] getColumns() {
 		return columns;
+	}
+
+	public Page getPage() {
+		return page;
 	}
 
 	public String getActionName() {
@@ -74,5 +84,15 @@ public class ColumnPageAction extends BaseAction {
 			resultPage = pageManager.findResultPageByTag(resultPage,
 					new String[] { getActionName(), column });
 		return "column";
+	}
+
+	public String p() {
+		columns = settingControl.getStringArray(getActionName() + ".column");
+		String path = getUid();
+		if (StringUtils.isNotBlank(path)) {
+			path = "/" + path;
+			page = pageManager.getByPath(path);
+		}
+		return "columnpage";
 	}
 }

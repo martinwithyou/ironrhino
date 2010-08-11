@@ -18,19 +18,14 @@ ${action.getText('current.location')}:
 <ul class="catalog">
 <#list columns as var>
 <#assign selected=column?? && column==var/>
-<li<#if selected> class="selected"</#if>><#if selected><span><#else><a href="<@url value="/${actionName}/list/${var}"/>" class="ajax view"></#if>${var}<#if selected></span><#else></a></#if></li>
+<li<#if selected> class="selected"</#if>><a href="<@url value="/${actionName}/list/${var}"/>" class="ajax view">${var}</a></li>
 </#list>
 </ul>
-<#if column??>
-<div class="list">
-<dl>
-<#list resultPage.result as page>
-	<dd>
-		<a href="<@url value="/${actionName}/p${page.path}?column=${column}"/>"><#if page.title??><#assign title=page.title?interpret><@title/></#if></a>
-	</dd>
-</#list>
-</dl>
-<@pagination class="ajax view" replacement="list" cache="true"/>
+<#if page??>
+<div class="chapter">
+	<div class="content">
+		<@includePage path="${page.path}"/>
+	</div>
 </div>
 </#if>
 </div>

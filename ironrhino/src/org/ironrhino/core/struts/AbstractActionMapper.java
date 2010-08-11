@@ -38,9 +38,9 @@ public abstract class AbstractActionMapper implements ActionMapper {
 			ConfigurationManager configManager) {
 		String uri = getUri(request);
 		// this is no action mapping
-		if (uri.equals("") || uri.equals("/") || uri.startsWith("/struts/")
-				|| uri.startsWith("/cas/"))
-			return null;
+//		if (uri.equals("") || uri.equals("/") || uri.startsWith("/assets/")
+//				|| uri.startsWith("/remoting/"))
+//			return null;
 		return getActionMappingFromRequest(request, uri, configManager
 				.getConfiguration());
 	}
