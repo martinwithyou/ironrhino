@@ -111,13 +111,6 @@ public class PageAction extends BaseAction {
 		}
 		return LIST;
 	}
-	
-	public static void main(String[] args) {
-		String keyword = "tags:test AND tags:haha";
-		String tag = keyword.replace("tags:", "");
-		tag = tag.replace(" AND ", ",");
-		System.out.println(tag);
-	}
 
 	@Override
 	public String input() {
@@ -190,6 +183,19 @@ public class PageAction extends BaseAction {
 		if (!path.startsWith("/"))
 			path = "/" + path;
 		page.setPath(path);
+		if (page.isNew()) {
+			if (pageManager.findByNaturalId(page.getPath()) != null) {
+				addFieldError("page.path", getText("validation.already.exists"));
+				return INPUT;
+			}
+		} else {
+			Page p = pageManager.get(page.getId());
+			if (!page.getPath().equals(p.getPath())
+					&& pageManager.findByNaturalId(page.getPath()) != null) {
+				addFieldError("page.path", getText("validation.already.exists"));
+				return INPUT;
+			}
+		}
 		page = pageManager.saveDraft(page);
 		pageManager.pullDraft(page);
 		draft = true;

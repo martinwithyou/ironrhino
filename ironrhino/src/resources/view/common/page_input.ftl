@@ -29,7 +29,7 @@ $(function() {
 		setTimeout(function(){
 		var ed = tinymce.EditorManager.get('page_content');
 		$('#draft').click(function(){
-			if(!ed.isDirty()) return false;
+			if(!$('#form').attr('dirty')&&!ed.isDirty()) return false;
 			$('#form').attr('action','draft');
 			ed.save();
 		});
@@ -41,46 +41,49 @@ $(function() {
           ed.isNotDirty = 0;
       	});
 		var form = $('#form');
-		form[0].onsuccess = function(){				
+		form[0].onsuccess = function(){	
+		$('#form').removeAttr('dirty')
 		ed.isNotDirty = 1;
 		var page = Ajax.jsonResult.page;
 		if(page){
-		var date = page.draftDate;
-		var path = page.path;
-		$('#page_id').val(page.id);
-		$('#page_path').val(path);
-		path = CONTEXT_PATH+cmsPath+path;
-		if(date){
-			//save draft 
-			$('.draft').show();
-			$('.draftDate').text(date);
-			$('#preview').attr('href',path+'?preview=true');
-		}else{
-			//save
-			$('.draft').hide();
-			$('#view').attr('href',path);
-		}
-		}else{
-			document.location.href=document.location.href;
-		}
+			var date = page.draftDate;
+			var path = page.path;
+			$('#page_id').val(page.id);
+			$('#page_path').val(path);
+			path = CONTEXT_PATH+cmsPath+path;
+			if(date){
+				//save draft 
+				$('.draft').show();
+				$('.draftDate').text(date);
+				$('#preview').attr('href',path+'?preview=true');
+			}else{
+				//save
+				$('.draft').hide();
+				$('#view').attr('href',path);
+			}
+			}else{
+				document.location.href=document.location.href;
+			}
 		};
 		setInterval(function(){
-			if(ed.isDirty()){
+			if($('#form').attr('dirty')||ed.isDirty()){
 				$('#form').attr('action','draft');
 				ed.save();
 				form.submit();
 				}
-		},60000)},3000);
-
-		$('#drop').click(
-		function(){
-		var form = $('#form');
-		form.attr('action','drop');
-		$('#page_content').text('');
-		form[0].onsuccess=function(){
-		document.location.href = document.location.href;
-		};
-		}
+		},60000);
+		},1500);
+		$('input[name="page.path"],input[name="page.title"]').keyup(function(){
+			$('#form').attr('dirty',true);
+		});
+		$('#drop').click(function(){
+			var form = $('#form');
+			form.attr('action','drop');
+			$('#page_content').text('');
+			form[0].onsuccess=function(){
+				document.location.href = document.location.href;
+			};
+			}
 		);
 });
 
@@ -95,11 +98,11 @@ $(function() {
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50"/>
 
 	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="50" rows="12"/>
-	<div>
+	<div class="field">
 	<@s.submit id="draft" value="%{getText('draft')}" theme="simple"/>
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
 	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>
-	<#if page.path??>
+	<#if page.id??>
 	<@button id="preview" type="link" text="${action.getText('preview')}" href="${getUrl(cmsPath+page.path)}?preview=true" target="_blank"/>
 	<#else>
 	<@button id="preview" type="link" text="${action.getText('preview')}" target="_blank"/>
@@ -107,9 +110,9 @@ $(function() {
 	<@s.submit id="drop" value="%{getText('drop')}" theme="simple"/>
 	</span>
 	</div>
-	<div>
+	<div class="field">
 	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
-	<#if page.path??>
+	<#if page.id??>
 	<@button id="view" type="link" text="${action.getText('view')}" href="${getUrl(cmsPath+page.path)}" target="_blank"/>
 	<#else>
 	<@button id="view" type="link" text="${action.getText('view')}" target="_blank"/>
