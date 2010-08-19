@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -78,6 +79,8 @@ public class AccessFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
+		HttpServletResponse response = (HttpServletResponse) resp;
+		RequestUtils.addAccessControl(request, response);
 		MDC.put("remoteAddr", RequestUtils.getRemoteAddr(request));
 		MDC.put("method", request.getMethod());
 		StringBuilder url = new StringBuilder().append(request.getRequestURI());
@@ -113,8 +116,9 @@ public class AccessFilter implements Filter {
 		long responseTime = System.currentTimeMillis() - start;
 		if (responseTime > responseTimeThreshold) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(RequestUtils.serializeData(request)).append(
-					" response time:").append(responseTime).append("ms");
+			sb.append(RequestUtils.serializeData(request))
+					.append(" response time:").append(responseTime)
+					.append("ms");
 			accesWarnLog.warn(sb.toString());
 		}
 		MDC.getContext().clear();

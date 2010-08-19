@@ -24,9 +24,10 @@ public class RequestUtils {
 				if (entry.getKey().toLowerCase().contains("password"))
 					continue;
 				for (String value : entry.getValue()) {
-					sb.append(entry.getKey()).append('=').append(
-							value.length() > 256 ? value.substring(0, 256)
-									: value).append('&');
+					sb.append(entry.getKey())
+							.append('=')
+							.append(value.length() > 256 ? value.substring(0,
+									256) : value).append('&');
 				}
 			}
 			return sb.toString();
@@ -164,6 +165,19 @@ public class RequestUtils {
 		cookie.setMaxAge(0);
 		cookie.setPath(path);
 		response.addCookie(cookie);
+	}
+
+	public static void addAccessControl(HttpServletRequest request,
+			HttpServletResponse response) {
+		String origin = request.getHeader("Origin");
+		if (StringUtils.isNotBlank(origin)) {
+			String url = request.getRequestURL().toString();
+			if (RequestUtils.isSameOrigin(url, origin)) {
+				response.addHeader("Access-Control-Allow-Origin", origin);
+				response.addHeader("Access-Control-Allow-Headers", "X-Data-Type,X-Requested-With,Cookie");
+				response.addHeader("Access-Control-Max-Age", "36000");
+			}
+		}
 	}
 
 	public static boolean isSameOrigin(String a, String b) {

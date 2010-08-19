@@ -22253,20 +22253,34 @@ Indicator = {
 };
 
 UrlUtils = {
+	extractDomain : function(a) {
+		if (UrlUtils.isAbsolute(a)) {
+			a = a.replace(/:\d+/, '');
+			a = a.substring(a.indexOf('://') + 3);
+			var i = a.indexOf('/');
+			if (i > 0)
+				a = a.substring(0, i);
+			return a;
+		} else {
+			return document.location.host;
+		}
+	},
+	isSameDomain : function(a, b) {
+		b = b || document.location.href;
+		var ad = UrlUtils.extractDomain(a);
+		var bd = UrlUtils.extractDomain(b);
+		return ad == bd;
+	},
 	isSameOrigin : function(a, b) {
 		b = b || document.location.href;
-		if (UrlUtils.isAbsolute(a)) {
-			var index = a.indexOf('://');
-			if (a.indexOf(':80/') > 0)
-				a = a.replace(':80/', '/');
-			var ad = a.substring(0, a.indexOf('/', index + 3));
-			if (b.indexOf(':80/') > 0)
-				b = b.replace(':80/', '/');
-			var bd = b.substring(0, b.indexOf('/', b.indexOf('://') + 3));
-			if (ad != bd)
-				return false;
-		}
-		return true;
+		var ad = UrlUtils.extractDomain(a);
+		var bd = UrlUtils.extractDomain(b);
+		if ($.browser.msie && ad != bd)
+			return false;
+		var arra = ad.split('.');
+		var arrb = bd.split('.');
+		return (arra[arra.length - 1] == arrb[arrb.length - 1]
+					&& arra[arra.length - 2] == arrb[arrb.length - 2]);
 	},
 	makeSameOrigin : function(url, referrer) {
 		referrer = referrer || document.location.href;
@@ -22620,7 +22634,7 @@ Initialization.history = function() {
 				if (url.indexOf('#') > 0)
 					url = url.substring(0, url.indexOf('#'));
 				if (hash) {
-					if (UrlUtils.isSameOrigin(hash)) {
+					if (UrlUtils.isSameDomain(hash)) {
 						if (CONTEXT_PATH)
 							hash = CONTEXT_PATH + hash;
 					}
@@ -22840,7 +22854,7 @@ Observation.common = function(container) {
 				if (HISTORY_ENABLED && $(this).hasClass('view')
 						&& !$(this).attr('replacement')) {
 					var hash = this.href;
-					if (UrlUtils.isSameOrigin(hash)) {
+					if (UrlUtils.isSameDomain(hash)) {
 						hash = hash.substring(hash.indexOf('//') + 2);
 						hash = hash.substring(hash.indexOf('/'));
 						if (CONTEXT_PATH)
