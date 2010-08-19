@@ -1689,8 +1689,8 @@ UrlUtils = {
 			return false;
 		var arra = ad.split('.');
 		var arrb = bd.split('.');
-		return (arra[arra.length - 1] == arrb[arrb.length - 1]
-					&& arra[arra.length - 2] == arrb[arrb.length - 2]);
+		return (arra[arra.length - 1] == arrb[arrb.length - 1] && arra[arra.length
+				- 2] == arrb[arrb.length - 2]);
 	},
 	makeSameOrigin : function(url, referrer) {
 		referrer = referrer || document.location.href;
@@ -2035,9 +2035,11 @@ function ajax(options) {
 }
 var _history_ = false;
 Initialization.history = function() {
-	if (!HISTORY_ENABLED || (typeof $.historyInit == 'undefined'))
+	if (!HISTORY_ENABLED || (typeof $.history.init == 'undefined')) {
+		HISTORY_ENABLED = false;
 		return;
-	$.historyInit(function(hash) {
+	}
+	$.history.init(function(hash) {
 				if ((!hash && !_history_) || (hash && hash.indexOf('/') < 0))
 					return;
 				var url = document.location.href;
@@ -2057,7 +2059,9 @@ Initialization.history = function() {
 							cache : true,
 							replaceTitle : true
 						});
-			}, '');
+			}, {
+				unescape : true
+			});
 }
 
 Observation.common = function(container) {
@@ -2271,7 +2275,7 @@ Observation.common = function(container) {
 							hash = hash.substring(CONTEXT_PATH.length);
 					}
 					hash = hash.replace(/^.*#/, '');
-					$.historyLoad(hash);
+					$.history.load(hash);
 					return false;
 				}
 				var options = {
