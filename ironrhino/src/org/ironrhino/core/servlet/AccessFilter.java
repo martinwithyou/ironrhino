@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.MDC;
 import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.util.RequestUtils;
+import org.ironrhino.core.util.UserAgent;
 import org.springframework.beans.factory.annotation.Value;
 
 @Singleton
@@ -80,6 +81,8 @@ public class AccessFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
+		request.setAttribute("userAgent", new UserAgent(request
+				.getHeader("User-Agent")));
 		RequestUtils.addAccessControl(request, response);
 		MDC.put("remoteAddr", RequestUtils.getRemoteAddr(request));
 		MDC.put("method", request.getMethod());
@@ -116,9 +119,8 @@ public class AccessFilter implements Filter {
 		long responseTime = System.currentTimeMillis() - start;
 		if (responseTime > responseTimeThreshold) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(RequestUtils.serializeData(request))
-					.append(" response time:").append(responseTime)
-					.append("ms");
+			sb.append(RequestUtils.serializeData(request)).append(
+					" response time:").append(responseTime).append("ms");
 			accesWarnLog.warn(sb.toString());
 		}
 		MDC.getContext().clear();
