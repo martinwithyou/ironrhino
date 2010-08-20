@@ -53,10 +53,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.0.17.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-digester-2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ognl-3.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-3.5.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-net-ftp-2.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-core-5.3.2.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-ra-5.3.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jms-1.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjrt-1.6.9.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjweaver-1.6.9.jar"/>
@@ -89,5 +86,8 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.transaction-3.0.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.web-3.0.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/org.springframework.web.servlet-3.0.4.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-3.5.5.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-core-5.4.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/activemq-ra-5.4.0.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
