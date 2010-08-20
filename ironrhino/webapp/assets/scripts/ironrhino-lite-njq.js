@@ -1578,66 +1578,6 @@ MessageBundle = {
 	}
 })();
 
-var HISTORY_ENABLED = true;
-
-if (typeof(Initialization) == 'undefined')
-	Initialization = {};
-if (typeof(Observation) == 'undefined')
-	Observation = {};
-var CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
-function _init() {
-	var array = [];
-	for (var key in Initialization) {
-		if (typeof(Initialization[key]) == 'function')
-			array.push(key);
-	}
-	array.sort();
-	for (var i = 0; i < array.length; i++)
-		Initialization[array[i]].call(this);
-	_observe();
-}
-function _observe(container) {
-	if (!container)
-		container = document;
-	$('.chart,form.ajax,.ajaxpanel', container).each(function(i) {
-		if (!this.id)
-			this.id = ('a' + (i + Math.random())).replace('.', '').substring(0,
-					5);
-	});
-	var array = [];
-	for (var key in Observation) {
-		if (typeof(Observation[key]) == 'function')
-			array.push(key);
-	}
-	array.sort();
-	for (var i = 0; i < array.length; i++)
-		Observation[array[i]].call(this, container);
-}
-$(_init);
-
-Initialization.common = function() {
-	$(document).ajaxStart(function() {
-				Indicator.show()
-			});
-	$(document).ajaxError(function() {
-				Indicator.showError()
-			});
-	$(document).ajaxSuccess(function(ev, xhr) {
-				Indicator.hide();
-				var url = xhr.getResponseHeader("X-Redirect-To");
-				if (url) {
-					top.location.href = UrlUtils.absolutize(url);
-					return;
-				}
-			});
-	$.alerts.okButton = MessageBundle.get('confirm');
-	$.alerts.cancelButton = MessageBundle.get('cancel');
-	$('.menu li').each(function() {
-				if ($('a', this).attr('href') == document.location.pathname)
-					$(this).addClass('selected');
-			});
-};
-
 Indicator = {
 	text : '',
 	show : function(iserror) {
@@ -2033,35 +1973,96 @@ function ajax(options) {
 	};
 	$.ajax(options);
 }
+
+var CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
+
+if (typeof(Initialization) == 'undefined')
+	Initialization = {};
+if (typeof(Observation) == 'undefined')
+	Observation = {};
+function _init() {
+	var array = [];
+	for (var key in Initialization) {
+		if (typeof(Initialization[key]) == 'function')
+			array.push(key);
+	}
+	array.sort();
+	for (var i = 0; i < array.length; i++)
+		Initialization[array[i]].call(this);
+	_observe();
+}
+function _observe(container) {
+	if (!container)
+		container = document;
+	$('.chart,form.ajax,.ajaxpanel', container).each(function(i) {
+		if (!this.id)
+			this.id = ('a' + (i + Math.random())).replace('.', '').substring(0,
+					5);
+	});
+	var array = [];
+	for (var key in Observation) {
+		if (typeof(Observation[key]) == 'function')
+			array.push(key);
+	}
+	array.sort();
+	for (var i = 0; i < array.length; i++)
+		Observation[array[i]].call(this, container);
+}
+$(_init);
+
+Initialization.common = function() {
+	$(document).ajaxStart(function() {
+				Indicator.show()
+			});
+	$(document).ajaxError(function() {
+				Indicator.showError()
+			});
+	$(document).ajaxSuccess(function(ev, xhr) {
+				Indicator.hide();
+				var url = xhr.getResponseHeader("X-Redirect-To");
+				if (url) {
+					top.location.href = UrlUtils.absolutize(url);
+					return;
+				}
+			});
+	$.alerts.okButton = MessageBundle.get('confirm');
+	$.alerts.cancelButton = MessageBundle.get('cancel');
+	$('.menu li').each(function() {
+				if ($('a', this).attr('href') == document.location.pathname)
+					$(this).addClass('selected');
+			});
+};
+
+var HISTORY_ENABLED = typeof $.history.init != 'undefined'
+		&& ($('meta[name="history_enabled"]').attr('content') != 'false');
 var _history_ = false;
 Initialization.history = function() {
-	if (!HISTORY_ENABLED || (typeof $.history.init == 'undefined')) {
-		HISTORY_ENABLED = false;
-		return;
-	}
-	$.history.init(function(hash) {
-				if ((!hash && !_history_) || (hash && hash.indexOf('/') < 0))
-					return;
-				var url = document.location.href;
-				if (url.indexOf('#') > 0)
-					url = url.substring(0, url.indexOf('#'));
-				if (hash) {
-					if (UrlUtils.isSameDomain(hash)) {
-						if (CONTEXT_PATH)
-							hash = CONTEXT_PATH + hash;
-					}
-					url = hash;
+	if (HISTORY_ENABLED) {
+		$.history.init(function(hash) {
+					if ((!hash && !_history_)
+							|| (hash && hash.indexOf('/') < 0))
+						return;
+					var url = document.location.href;
+					if (url.indexOf('#') > 0)
+						url = url.substring(0, url.indexOf('#'));
+					if (hash) {
+						if (UrlUtils.isSameDomain(hash)) {
+							if (CONTEXT_PATH)
+								hash = CONTEXT_PATH + hash;
+						}
+						url = hash;
 
-				}
-				_history_ = true;
-				ajax({
-							url : url,
-							cache : true,
-							replaceTitle : true
-						});
-			}, {
-				unescape : true
-			});
+					}
+					_history_ = true;
+					ajax({
+								url : url,
+								cache : true,
+								replaceTitle : true
+							});
+				}, {
+					unescape : true
+				});
+	}
 }
 
 Observation.common = function(container) {
