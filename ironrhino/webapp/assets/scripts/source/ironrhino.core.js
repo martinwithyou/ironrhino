@@ -121,7 +121,7 @@ UrlUtils = {
 				a = a.substring(0, i);
 			return a;
 		} else {
-			return document.location.host;
+			return document.location.hostname;
 		}
 	},
 	isSameDomain : function(a, b) {
