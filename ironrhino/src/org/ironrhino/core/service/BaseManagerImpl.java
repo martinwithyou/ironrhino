@@ -77,10 +77,10 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		if (obj instanceof Recordable) {
 			Recordable r = (Recordable) obj;
 			Date date = new Date();
-			if (obj.isNew()){
+			if (obj.isNew()) {
 				r.setCreateDate(date);
 				r.setCreateUser(AuthzUtils.getUserDetails(UserDetails.class));
-			}else{
+			} else {
 				r.setModifyDate(date);
 				r.setModifyUser(AuthzUtils.getUserDetails(UserDetails.class));
 			}
@@ -99,8 +99,8 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			if (entity.getParent() == null)
 				fullId = String.valueOf(entity.getId());
 			else
-				fullId = (entity.getParent()).getFullId()
-						+ "." + String.valueOf(entity.getId());
+				fullId = (entity.getParent()).getFullId() + "."
+						+ String.valueOf(entity.getId());
 			entity.setFullId(fullId);
 			entity.setLevel(fullId.split("\\.").length);
 		}
@@ -166,13 +166,15 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		try {
 			Criteria c = dc.getExecutableCriteria(sessionFactory
 					.getCurrentSession());
-			int firstResult = start;
-			if (firstResult < 0)
-				firstResult = 0;
-			c.setFirstResult(firstResult);
-			int maxResults = end - firstResult;
-			if (maxResults > 0)
-				c.setMaxResults(maxResults);
+			if (!(start == 0 && end == Integer.MAX_VALUE)) {
+				int firstResult = start;
+				if (firstResult < 0)
+					firstResult = 0;
+				c.setFirstResult(firstResult);
+				int maxResults = end - firstResult;
+				if (maxResults > 0)
+					c.setMaxResults(maxResults);
+			}
 			return c.list();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -193,7 +195,8 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		resultPage.setTotalRecord(totalRecord);
 		if (resultPage.getPageSize() < 1)
 			resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
-		else if (resultPage.getPageSize() > ResultPage.MAX_RECORDS_PER_PAGE)
+		else if (resultPage.getPageSize() < Integer.MAX_VALUE
+				&& resultPage.getPageSize() > ResultPage.MAX_RECORDS_PER_PAGE)
 			resultPage.setPageSize(ResultPage.MAX_RECORDS_PER_PAGE);
 		if (resultPage.getPageNo() < 1)
 			resultPage.setPageNo(1);
