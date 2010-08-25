@@ -23,7 +23,7 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 				ValidationAware validationAwareAction = (ValidationAware) action;
 				validationAwareAction.addActionError(e.getMessage());
 			}
-			log.error(e.getMessage(), e.getCause());
+			log.error(e.getMessage(), e);
 			result = BaseAction.ERROR;
 		}
 		return result;
