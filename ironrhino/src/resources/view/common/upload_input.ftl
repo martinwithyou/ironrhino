@@ -23,9 +23,15 @@
 		<@s.file name="file" cssStyle="width:195px;"/>
 	</#list>
 	<div style="clear:both;">
+	<div>
+	<span style="margin-right:10px;">${action.getText('folder')}:</span><@s.textfield theme="simple" name="folder" size="50"/>
+	</div>
+	<div style="text-align:center;">
 	<@s.submit theme="simple" value="${action.getText('upload')}"/>
 	<@button id="more" text="${action.getText('more')}"/>
 	</div>
+	</div>
+
 </@s.form>
 </body>
 </html></#escape>

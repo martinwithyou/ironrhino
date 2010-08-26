@@ -4,6 +4,7 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
@@ -19,8 +20,18 @@ public class UploadAction extends BaseAction {
 
 	private String[] fileFileName;
 
+	private String folder;
+
 	@Inject
 	private transient FileStorage fileStorage;
+
+	public void setFolder(String folder) {
+		this.folder = folder;
+	}
+
+	public String getFolder() {
+		return folder;
+	}
 
 	public void setFile(File[] file) {
 		this.file = file;
@@ -50,6 +61,9 @@ public class UploadAction extends BaseAction {
 	}
 
 	private String createPath(String filename) {
-		return "/upload/" + filename;
+		if (StringUtils.isBlank(folder))
+			return "/upload/" + filename;
+		else
+			return "/upload/" + folder + "/" + filename;
 	}
 }
