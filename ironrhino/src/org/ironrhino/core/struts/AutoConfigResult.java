@@ -74,7 +74,7 @@ public class AutoConfigResult extends FreemarkerResult {
 	protected String conditionalParse(String param, ActionInvocation invocation) {
 		String result = invocation.getResultCode();
 		String namespace = invocation.getProxy().getNamespace();
-		String actionName = invocation.getProxy().getActionName();
+		String actionName = invocation.getInvocationContext().getName();
 		if (namespace.equals("/"))
 			namespace = "";
 		String templateName = getTemplateName(namespace, actionName, result);
