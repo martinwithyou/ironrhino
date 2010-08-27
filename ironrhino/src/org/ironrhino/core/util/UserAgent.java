@@ -75,7 +75,7 @@ public class UserAgent implements Serializable {
 
 	public void setVersion(String version) {
 		this.version = version;
-		if (version != null) {
+		if (version != null&&!version.equals("unknown")) {
 			String[] arr = version.split("\\.");
 			try {
 				majorVersion = Integer.parseInt(arr[0]);
