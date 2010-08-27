@@ -25,7 +25,7 @@ public class ColumnPageAction extends BaseAction {
 
 	protected ResultPage<Page> resultPage;
 
-	private String actionName;
+	private String name;
 
 	protected Page page;
 
@@ -53,14 +53,18 @@ public class ColumnPageAction extends BaseAction {
 		return page;
 	}
 
-	public String getActionName() {
-		if (actionName == null) {
-			actionName = getClass().getSimpleName();
-			if (actionName.endsWith("Action"))
-				actionName = actionName.substring(0, actionName.length() - 6);
-			actionName = StringUtils.uncapitalize(actionName);
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		if (name == null) {
+			name = getClass().getSimpleName();
+			if (name.endsWith("Action"))
+				name = name.substring(0, name.length() - 6);
+			name = StringUtils.uncapitalize(name);
 		}
-		return actionName;
+		return name;
 	}
 
 	@Override
@@ -70,7 +74,7 @@ public class ColumnPageAction extends BaseAction {
 
 	@Override
 	public String list() {
-		columns = settingControl.getStringArray(getActionName() + ".column");
+		columns = settingControl.getStringArray(getName() + ".column");
 		column = getUid();
 		if (StringUtils.isBlank(column) && columns != null
 				&& columns.length > 0)
@@ -79,15 +83,15 @@ public class ColumnPageAction extends BaseAction {
 			resultPage = new ResultPage<Page>();
 		if (column == null)
 			resultPage = pageManager.findResultPageByTag(resultPage,
-					getActionName());
+					getName());
 		else
 			resultPage = pageManager.findResultPageByTag(resultPage,
-					new String[] { getActionName(), column });
+					new String[] { getName(), column });
 		return "column";
 	}
 
 	public String p() {
-		columns = settingControl.getStringArray(getActionName() + ".column");
+		columns = settingControl.getStringArray(getName() + ".column");
 		String path = getUid();
 		if (StringUtils.isNotBlank(path)) {
 			path = "/" + path;

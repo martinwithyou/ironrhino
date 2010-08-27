@@ -24,7 +24,7 @@ public class SeriesPageAction extends BaseAction {
 
 	protected Page nextPage;
 
-	private String actionName;
+	private String name;
 
 	public Page getPreviousPage() {
 		return previousPage;
@@ -42,14 +42,18 @@ public class SeriesPageAction extends BaseAction {
 		return pages;
 	}
 
-	public String getActionName() {
-		if (actionName == null) {
-			actionName = getClass().getSimpleName();
-			if (actionName.endsWith("Action"))
-				actionName = actionName.substring(0, actionName.length() - 6);
-			actionName = StringUtils.uncapitalize(actionName);
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		if (name == null) {
+			name = getClass().getSimpleName();
+			if (name.endsWith("Action"))
+				name = name.substring(0, name.length() - 6);
+			name = StringUtils.uncapitalize(name);
 		}
-		return actionName;
+		return name;
 	}
 
 	@Override
@@ -58,7 +62,7 @@ public class SeriesPageAction extends BaseAction {
 	}
 
 	public String p() {
-		pages = pageManager.findListByTag(getActionName());
+		pages = pageManager.findListByTag(getName());
 		String path = getUid();
 		if (StringUtils.isNotBlank(path)) {
 			path = "/" + path;
