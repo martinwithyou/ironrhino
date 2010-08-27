@@ -61,16 +61,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		ActionMapping mapping = null;
 		String uri = getUri(request);
 		Configuration config = configManager.getConfiguration();
-		if (actionMappingMatchers == null)
-			actionMappingMatchers = WebApplicationContextUtils
-					.getWebApplicationContext(
-							ServletActionContext.getServletContext())
-					.getBeansOfType(ActionMappingMatcher.class).values();
-		for (ActionMappingMatcher amm : actionMappingMatchers) {
-			mapping = amm.tryMatch(request, this);
-			if (mapping != null)
-				return mapping;
-		}
+
 		// if have a extension it is normal request
 		if (uri.lastIndexOf('.') > uri.lastIndexOf('/'))
 			return null;
@@ -101,6 +92,16 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		}
 
 		if (namespace == null) {
+			if (actionMappingMatchers == null)
+				actionMappingMatchers = WebApplicationContextUtils
+						.getWebApplicationContext(
+								ServletActionContext.getServletContext())
+						.getBeansOfType(ActionMappingMatcher.class).values();
+			for (ActionMappingMatcher amm : actionMappingMatchers) {
+				mapping = amm.tryMatch(request, this);
+				if (mapping != null)
+					return mapping;
+			}
 			return null;
 		}
 
