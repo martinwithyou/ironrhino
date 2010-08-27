@@ -3,19 +3,34 @@ package org.ironrhino.core.struts;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.ironrhino.core.model.ResultPage;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 public class DefaultActionMapper extends AbstractActionMapper {
+
+	private Collection<ActionMappingMatcher> actionMappingMatchers;
+
+	@Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+	private String encoding = "UTF-8";
+
+	public String getEncoding() {
+		return encoding;
+	}
 
 	public String getUriFromActionMapping(ActionMapping mapping) {
 		StringBuilder sb = new StringBuilder();
@@ -41,22 +56,24 @@ public class DefaultActionMapper extends AbstractActionMapper {
 	}
 
 	@Override
-	public ActionMapping getActionMappingFromRequest(
-			HttpServletRequest request, String uri, Configuration config) {
-		// if have a extension it is normal request
-		if (!uri.contains(getCmsPath())
-				&& uri.lastIndexOf('.') > uri.lastIndexOf('/'))
-			return null;
-		if (uri.startsWith(getCmsPath())) {
-			String pageId = uri.substring(getCmsPath().length() - 1);
-			ActionMapping mapping = new ActionMapping();
-			mapping.setNamespace("/common");
-			mapping.setName("displayPage");
-			Map<String, Object> params = new HashMap<String, Object>(3);
-			params.put(ID, pageId);
-			mapping.setParams(params);
-			return mapping;
+	public ActionMapping getMapping(HttpServletRequest request,
+			ConfigurationManager configManager) {
+		ActionMapping mapping = null;
+		String uri = getUri(request);
+		Configuration config = configManager.getConfiguration();
+		if (actionMappingMatchers == null)
+			actionMappingMatchers = WebApplicationContextUtils
+					.getWebApplicationContext(
+							ServletActionContext.getServletContext())
+					.getBeansOfType(ActionMappingMatcher.class).values();
+		for (ActionMappingMatcher amm : actionMappingMatchers) {
+			mapping = amm.tryMatch(request, this);
+			if (mapping != null)
+				return mapping;
 		}
+		// if have a extension it is normal request
+		if (uri.lastIndexOf('.') > uri.lastIndexOf('/'))
+			return null;
 		String namespace = null;
 		String name = null;
 		String methodAndUid = null;
@@ -93,7 +110,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		if (arr.length > 1)
 			methodAndUid = arr[1];
 
-		ActionMapping mapping = new ActionMapping();
+		mapping = new ActionMapping();
 		mapping.setNamespace(namespace);
 		mapping.setName(org.ironrhino.core.util.StringUtils.toCamelCase(name));
 		Map<String, Object> params = new HashMap<String, Object>(3);
@@ -114,7 +131,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 
 			if (StringUtils.isNotBlank(uid)) {
 				try {
-					params.put(ID, URLDecoder.decode(uid, "UTF-8"));
+					params.put(ID, URLDecoder.decode(uid, getEncoding()));
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}

@@ -7,10 +7,12 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
+import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
 
 import com.opensymphony.xwork2.ActionContext;
 
+@AutoConfig(namespace = "/")
 public class SeriesPageAction extends BaseAction {
 
 	private static final long serialVersionUID = -6230162538415715316L;
@@ -46,6 +48,7 @@ public class SeriesPageAction extends BaseAction {
 
 	public void setName(String name) {
 		this.name = name;
+		ActionContext.getContext().setName(getName());
 	}
 
 	public String getName() {

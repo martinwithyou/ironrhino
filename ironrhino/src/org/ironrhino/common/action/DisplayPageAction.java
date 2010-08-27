@@ -13,7 +13,7 @@ import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.security.model.UserRole;
 
-@AutoConfig
+@AutoConfig(namespace = "/")
 public class DisplayPageAction extends BaseAction {
 
 	private static final long serialVersionUID = -5865373753326653067L;
@@ -60,7 +60,7 @@ public class DisplayPageAction extends BaseAction {
 				e.printStackTrace();
 			}
 		}
-		return SUCCESS;
+		return "page";
 	}
 
 }
