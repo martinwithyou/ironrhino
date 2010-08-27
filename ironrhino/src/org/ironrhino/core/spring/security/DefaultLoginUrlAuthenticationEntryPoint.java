@@ -1,11 +1,9 @@
 package org.ironrhino.core.spring.security;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.security.web.util.RedirectUrlBuilder;
 
@@ -23,16 +22,8 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 	@Value("${sso.server.base:}")
 	private String ssoServerBase;
 
-	private String loginUrl;
-
 	public void setSsoServerBase(String ssoServerBase) {
 		this.ssoServerBase = ssoServerBase;
-	}
-
-	@PostConstruct
-	public void init() {
-		if (StringUtils.isNotBlank(ssoServerBase))
-			loginUrl = ssoServerBase + getLoginFormUrl();
 	}
 
 	@Override
@@ -43,16 +34,27 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 		SavedRequest savedRequest = (SavedRequest) request.getSession()
 				.getAttribute(WebAttributes.SAVED_REQUEST);
 		request.getSession().removeAttribute(WebAttributes.SAVED_REQUEST);
-		if (savedRequest != null)
-			targetUrl = savedRequest.getRedirectUrl();
-		if (loginUrl == null) {
+		if (savedRequest != null) {
+			if (savedRequest instanceof DefaultSavedRequest) {
+				DefaultSavedRequest dsr = (DefaultSavedRequest) savedRequest;
+				String queryString = dsr.getQueryString();
+				if (StringUtils.isBlank(queryString)) {
+					targetUrl = dsr.getRequestURL();
+				} else {
+					targetUrl = new StringBuilder(dsr.getRequestURL()).append(
+							"?").append(queryString).toString();
+				}
+			} else
+				targetUrl = savedRequest.getRedirectUrl();
+		}
+		StringBuilder loginUrl = new StringBuilder();
+		if (StringUtils.isBlank(ssoServerBase)) {
 			URL url = null;
 			try {
 				url = new URL(request.getRequestURL().toString());
 			} catch (MalformedURLException e) {
 
 			}
-			loginUrl = request.getContextPath() + loginUrl;
 			RedirectUrlBuilder urlBuilder = new RedirectUrlBuilder();
 			String scheme = request.getScheme();
 			int serverPort = getPortResolver().getServerPort(request);
@@ -66,14 +68,18 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 				urlBuilder.setScheme("https");
 				urlBuilder.setPort(httpsPort);
 			}
-			loginUrl = urlBuilder.getUrl();
+			loginUrl = new StringBuilder(urlBuilder.getUrl());
+		} else {
+			loginUrl = new StringBuilder(ssoServerBase)
+					.append(getLoginFormUrl());
 		}
 		try {
-			redirectUrl = loginUrl
-					+ (StringUtils.isNotBlank(targetUrl) ? "?"
-							+ DefaultUsernamePasswordAuthenticationFilter.TARGET_URL
-							+ "=" + URLEncoder.encode(targetUrl, "UTF-8")
-							: "");
+			if (StringUtils.isNotBlank(targetUrl))
+				loginUrl.append('?').append(
+						DefaultUsernamePasswordAuthenticationFilter.TARGET_URL)
+						.append('=').append(
+								URLEncoder.encode(targetUrl, "UTF-8"));
+			redirectUrl = loginUrl.toString();
 			if (isForceHttps() && redirectUrl.startsWith("http://")) {
 				URL url = new URL(redirectUrl);
 				RedirectUrlBuilder urlBuilder = new RedirectUrlBuilder();
@@ -86,12 +92,9 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 				urlBuilder.setQuery(url.getQuery());
 				redirectUrl = urlBuilder.getUrl();
 			}
-		} catch (UnsupportedEncodingException e) {
-			redirectUrl = loginUrl;
-		} catch (MalformedURLException e2) {
-			redirectUrl = loginUrl;
+		} catch (Exception e) {
+			redirectUrl = loginUrl.toString();
 		}
 		return redirectUrl;
 	}
-
 }
