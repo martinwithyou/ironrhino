@@ -9,6 +9,8 @@ import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.BaseAction;
 
+import com.opensymphony.xwork2.ActionContext;
+
 public class ColumnPageAction extends BaseAction {
 
 	private static final long serialVersionUID = -7189565572156313486L;
@@ -58,12 +60,8 @@ public class ColumnPageAction extends BaseAction {
 	}
 
 	public String getName() {
-		if (name == null) {
-			name = getClass().getSimpleName();
-			if (name.endsWith("Action"))
-				name = name.substring(0, name.length() - 6);
-			name = StringUtils.uncapitalize(name);
-		}
+		if (name == null)
+			name = ActionContext.getContext().getName();
 		return name;
 	}
 
@@ -82,8 +80,7 @@ public class ColumnPageAction extends BaseAction {
 		if (resultPage == null)
 			resultPage = new ResultPage<Page>();
 		if (column == null)
-			resultPage = pageManager.findResultPageByTag(resultPage,
-					getName());
+			resultPage = pageManager.findResultPageByTag(resultPage, getName());
 		else
 			resultPage = pageManager.findResultPageByTag(resultPage,
 					new String[] { getName(), column });

@@ -9,6 +9,8 @@ import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.struts.BaseAction;
 
+import com.opensymphony.xwork2.ActionContext;
+
 public class SeriesPageAction extends BaseAction {
 
 	private static final long serialVersionUID = -6230162538415715316L;
@@ -47,12 +49,8 @@ public class SeriesPageAction extends BaseAction {
 	}
 
 	public String getName() {
-		if (name == null) {
-			name = getClass().getSimpleName();
-			if (name.endsWith("Action"))
-				name = name.substring(0, name.length() - 6);
-			name = StringUtils.uncapitalize(name);
-		}
+		if (name == null)
+			name = ActionContext.getContext().getName();
 		return name;
 	}
 
