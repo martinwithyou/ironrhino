@@ -20,10 +20,10 @@
 		<security:logout logout-url="/logout" logout-success-url="/" invalidate-session="true" />
 		<security:custom-filter ref="authenticationFilter" position="FORM_LOGIN_FILTER"/>
 		<!--
-		<security:intercept-url pattern="/switch" access="ROLE_ADMINISTRATOR"/>
-		<security:intercept-url pattern="/exit" access="ROLE_PREVIOUS_ADMINISTRATOR"/>
-		<security:custom-filter ref="switchUserProcessingFilter" position="SWITCH_USER_FILTER"/>
-		-->
+			<security:intercept-url pattern="/switch" access="ROLE_ADMINISTRATOR"/>
+			<security:intercept-url pattern="/exit" access="ROLE_PREVIOUS_ADMINISTRATOR"/>
+			<security:custom-filter ref="switchUserProcessingFilter" position="SWITCH_USER_FILTER"/>
+			-->
 	</security:http>
 	
 	<bean id="rememberMeServices"
@@ -34,16 +34,19 @@
 		class="org.ironrhino.core.spring.security.MixedPasswordEncoder" />
 
 	<!--
-	<bean id="switchUserProcessingFilter"
-		class="org.springframework.security.web.authentication.switchuser.SwitchUserFilter"
-		p:userDetailsService-ref="userManager" p:switchUserUrl="/switch"
-		p:exitUserUrl="/exit" p:targetUrl="/" />
-	-->
+		<bean id="switchUserProcessingFilter"
+			class="org.springframework.security.web.authentication.switchuser.SwitchUserFilter"
+			p:userDetailsService-ref="userManager" p:switchUserUrl="/switch"
+			p:exitUserUrl="/exit" p:targetUrl="/" />
+		-->
 	
 	<security:authentication-manager alias="authenticationManager">
 		<security:authentication-provider user-service-ref="userManager">
 			<security:password-encoder ref="passwordEncoder" />
 		</security:authentication-provider>
+		<security:authentication-provider ref="rememberMeAuthenticationProvider">  
+			<security:password-encoder ref="passwordEncoder" />  
+		</security:authentication-provider>  
 	</security:authentication-manager>
 	<bean id="entryPoint" class="org.ironrhino.core.spring.security.DefaultLoginUrlAuthenticationEntryPoint"
 		p:loginFormUrl="/login" p:forceHttps="false" />
@@ -53,5 +56,7 @@
 		p:filterProcessesUrl="/check" p:authenticationManager-ref="authenticationManager"
 		p:rememberMeServices-ref="rememberMeServices">
 	</bean>
-
+	<bean id="rememberMeAuthenticationProvider"  
+		class="org.springframework.security.authentication.RememberMeAuthenticationProvider" 
+		p:key="youcannotguessme"/>
 </beans>
