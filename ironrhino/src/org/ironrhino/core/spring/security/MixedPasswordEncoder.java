@@ -11,9 +11,12 @@ public class MixedPasswordEncoder extends BasePasswordEncoder {
 	}
 
 	public boolean isPasswordValid(String encPass, String rawPass, Object salt) {
-		String pass1 = "" + encPass;
-		String pass2 = encodePassword(rawPass, salt);
-		return pass1.equals(pass2);
+		if (encPass == null)
+			encPass = "";
+		if (rawPass == null)
+			rawPass = "";
+		rawPass = encodePassword(rawPass, salt);
+		return encPass.equals(rawPass);
 	}
 
 }
