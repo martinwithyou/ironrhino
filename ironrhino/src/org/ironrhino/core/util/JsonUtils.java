@@ -90,7 +90,7 @@ public class JsonUtils {
 		}
 	}
 
-	public static <T> T fromJson(String json, TypeReference type)
+	public static <T> T fromJson(String json, TypeReference<T> type)
 			throws Exception {
 		return (T) objectMapper.readValue(json, type);
 	}
