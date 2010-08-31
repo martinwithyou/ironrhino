@@ -31,7 +31,7 @@ public class RC4 {
 				log.warn("[" + file
 						+ "] doesn't exists,use classpath resources "
 						+ DEFAULT_KEY_LOCATION);
-				defaultKey = IOUtils.toString(Blowfish.class
+				defaultKey = IOUtils.toString(RC4.class
 						.getResourceAsStream(DEFAULT_KEY_LOCATION), "UTF-8");
 			}
 		} catch (Exception e) {
