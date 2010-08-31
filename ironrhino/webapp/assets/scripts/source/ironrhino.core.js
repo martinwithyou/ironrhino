@@ -26,25 +26,25 @@
 		return $ajax(options);
 	}
 
-	// LOGIN_PASSWORD_ENCRYPTED
-	var LPE = typeof $.rc4EncryptStr != 'undefined'
-			&& ($('meta[name="lpe"]').attr('content') != 'false');
-	if (!LPE)
-		return;
-	var temp = $.param;
-	$.param = function(a, traditional) {
-		if (jQuery.isArray(a) || a.jquery) {
-			jQuery.each(a, function() {
-						if (/password$/.test(this.name.toLowerCase()))
-							this.value = $.rc4EncryptStr(
-									encodeURIComponent(this.value
-											+ $.cookie('T')), $.cookie('T'));
-					});
+	if (typeof $.rc4EncryptStr != 'undefined'
+			&& ($('meta[name="pe"]').attr('content') != 'false')) {
+		var temp = $.param;
+		$.param = function(a, traditional) {
+			if (jQuery.isArray(a) || a.jquery) {
+				jQuery.each(a, function() {
+							if (/password$/.test(this.name.toLowerCase()))
+								this.value = $
+										.rc4EncryptStr(
+												encodeURIComponent(this.value
+														+ $.cookie('T')), $
+														.cookie('T'));
+						});
 
+			}
+			return temp(a, traditional);
 		}
-		return temp(a, traditional);
 	}
-
+	
 })();
 
 Indicator = {
