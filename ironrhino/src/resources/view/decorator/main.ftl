@@ -25,7 +25,7 @@
 		<li><a href="<@url value="/user"/>">${action.getText('user')}</a></li>
 	</@authorize>
 	<li><a href="<@url value="/user/password"/>">${action.getText('change')}${action.getText('password')}</a></li>
-	<li><a href="<@url value="/logout"/>">${action.getText('logout')}</a></li>
+	<li><a href="<@url value="${ssoServerBase!}/logout"/>">${action.getText('logout')}</a></li>
 </ul>
 </@authorize>
 <@authorize ifNotGranted="ROLE_BUILTIN_USER">

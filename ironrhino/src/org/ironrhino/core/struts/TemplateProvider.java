@@ -27,10 +27,12 @@ public class TemplateProvider {
 
 	private Log log = LogFactory.getLog(this.getClass());
 
-	@Value("${ironrhino.view.ftl.location:" + AutoConfigResult.DEFAULT_FTL_LOCATION + "}")
+	@Value("${ironrhino.view.ftl.location:"
+			+ AutoConfigResult.DEFAULT_FTL_LOCATION + "}")
 	private String ftlLocation;
 
-	@Value("${ironrhino.view.ftl.classpath:" + AutoConfigResult.DEFAULT_FTL_CLASSPATH + "}")
+	@Value("${ironrhino.view.ftl.classpath:"
+			+ AutoConfigResult.DEFAULT_FTL_CLASSPATH + "}")
 	private String ftlClasspath;
 
 	@Value("${base:}")
@@ -38,6 +40,9 @@ public class TemplateProvider {
 
 	@Value("${assetsBase:}")
 	private String assetsBase;
+
+	@Value("${sso.server.base:}")
+	private String ssoServerBase;
 
 	private Configuration configuration;
 
@@ -52,12 +57,16 @@ public class TemplateProvider {
 	public Map getAllSharedVariables() {
 		Map<String, String> allSharedVariables = new HashMap<String, String>();
 		if (StringUtils.isNotBlank(base))
-			allSharedVariables.put("base",
-					org.ironrhino.core.util.StringUtils.trimTailSlash(base));
+			allSharedVariables.put("base", org.ironrhino.core.util.StringUtils
+					.trimTailSlash(base));
 		if (StringUtils.isNotBlank(assetsBase))
 			allSharedVariables.put("assetsBase",
 					org.ironrhino.core.util.StringUtils
 							.trimTailSlash(assetsBase));
+		if (StringUtils.isNotBlank(ssoServerBase))
+			allSharedVariables.put("ssoServerBase",
+					org.ironrhino.core.util.StringUtils
+							.trimTailSlash(ssoServerBase));
 		return allSharedVariables;
 	}
 
@@ -79,8 +88,8 @@ public class TemplateProvider {
 
 	public Template getTemplate(String templateName) throws IOException {
 		Locale loc = getConfiguration().getLocale();
-		return getTemplate(templateName, loc,
-				getConfiguration().getEncoding(loc), true);
+		return getTemplate(templateName, loc, getConfiguration().getEncoding(
+				loc), true);
 	}
 
 	public Template getTemplate(String templateName, Locale locale,
