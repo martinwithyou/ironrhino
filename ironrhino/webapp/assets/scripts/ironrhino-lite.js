@@ -8028,7 +8028,9 @@ MessageBundle = {
 		'no.selection' : 'no selection',
 		'no.modification' : 'no modification',
 		'select' : 'please select',
-		'confirm.delete' : 'sure to delete?'
+		'confirm.delete' : 'are sure to delete?',
+		'confirm.save' : 'are sure to save?',
+		'confirm.exit' : 'you have unsaved modification,are sure to exit?'
 	},
 	'zh-cn' : {
 		'ajax.loading' : '正在加载...',
@@ -8054,7 +8056,8 @@ MessageBundle = {
 		'success' : '操作成功',
 		'confirm' : '确定',
 		'confirm.delete' : '确定要删除?',
-		'confirm.save' : '确定要保存?'
+		'confirm.save' : '确定要保存?',
+		'confirm.exit' : '有改动未保存,确定要离开?'
 	},
 	get : function() {
 		var key = arguments[0];
@@ -8109,25 +8112,25 @@ MessageBundle = {
 		return $ajax(options);
 	}
 
-	// LOGIN_PASSWORD_ENCRYPTED
-	var LPE = typeof $.rc4EncryptStr != 'undefined'
-			&& ($('meta[name="lpe"]').attr('content') != 'false');
-	if (!LPE)
-		return;
-	var temp = $.param;
-	$.param = function(a, traditional) {
-		if (jQuery.isArray(a) || a.jquery) {
-			jQuery.each(a, function() {
-						if (/password$/.test(this.name.toLowerCase()))
-							this.value = $.rc4EncryptStr(
-									encodeURIComponent(this.value
-											+ $.cookie('T')), $.cookie('T'));
-					});
+	if (typeof $.rc4EncryptStr != 'undefined'
+			&& ($('meta[name="pe"]').attr('content') != 'false')) {
+		var temp = $.param;
+		$.param = function(a, traditional) {
+			if (jQuery.isArray(a) || a.jquery) {
+				jQuery.each(a, function() {
+							if (/password$/.test(this.name.toLowerCase()))
+								this.value = $
+										.rc4EncryptStr(
+												encodeURIComponent(this.value
+														+ $.cookie('T')), $
+														.cookie('T'));
+						});
 
+			}
+			return temp(a, traditional);
 		}
-		return temp(a, traditional);
 	}
-
+	
 })();
 
 Indicator = {
