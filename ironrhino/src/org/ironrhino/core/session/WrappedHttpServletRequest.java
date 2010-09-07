@@ -1,6 +1,7 @@
 package org.ironrhino.core.session;
 
 import java.net.URLDecoder;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.ironrhino.core.security.util.RC4;
+import org.ironrhino.core.util.RequestUtils;
 
 public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 
@@ -56,10 +58,15 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 	}
 
 	@Override
+	public Locale getLocale() {
+		return RequestUtils.getLocale((HttpServletRequest) this.getRequest(),
+				super.getLocale());
+	}
+
+	@Override
 	public String getParameter(String name) {
 		String value = super.getParameter(name);
-		value = decryptIfNecessary(name, value);
-		return value;
+		return decryptIfNecessary(name, value);
 	}
 
 	@Override
