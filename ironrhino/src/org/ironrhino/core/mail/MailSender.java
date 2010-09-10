@@ -49,14 +49,14 @@ public class MailSender {
 	}
 
 	public void send(final SimpleMailMessage smm) {
-		if (smm.getTo() == null || smm.getTo().length == 0)
-			smm.setTo(defaultTo);
 		send(smm, true);
 	}
 
 	public void send(final SimpleMailMessage smm, final boolean useHtmlFormat) {
-		if (smm == null || smm.getTo() == null)
+		if (smm == null)
 			return;
+		if (smm.getTo() == null || smm.getTo().length == 0)
+			smm.setTo(defaultTo);
 		for (final String to : smm.getTo()) {
 			try {
 				javaMailSender.send(new MimeMessagePreparator() {
