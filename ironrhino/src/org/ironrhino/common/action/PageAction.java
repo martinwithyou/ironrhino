@@ -3,10 +3,12 @@ package org.ironrhino.common.action;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.DetachedCriteria;
@@ -15,6 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
@@ -247,6 +250,29 @@ public class PageAction extends BaseAction {
 		page.setContent(content);
 		pageManager.save(page);
 		addActionMessage(getText("save.success"));
+		return JSON;
+	}
+
+	private List<LabelValue> suggestions;
+
+	public List<LabelValue> getSuggestions() {
+		return suggestions;
+	}
+
+	@JsonConfig(root = "suggestions")
+	public String suggest() {
+		keyword = ServletActionContext.getRequest().getParameter("term");
+		if (StringUtils.isBlank(keyword))
+			return NONE;
+		Map<String, Integer> map = pageManager.findMatchedTags(keyword);
+		suggestions = new ArrayList<LabelValue>(map.size());
+		for (Map.Entry<String, Integer> entry : map.entrySet()) {
+			LabelValue lv = new LabelValue();
+			lv.setValue(entry.getKey());
+			lv.setLabel(new StringBuilder(entry.getKey()).append("(").append(
+					entry.getValue()).append(")").toString());
+			suggestions.add(lv);
+		}
 		return JSON;
 	}
 }

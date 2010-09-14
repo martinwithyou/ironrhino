@@ -2,8 +2,10 @@ package org.ironrhino.common.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -224,4 +226,44 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return resultPage;
 	}
 
+	public Map<String, Integer> findMatchedTags(String keyword) {
+		CompassCriteria cc = new CompassCriteria();
+		cc.setQuery(new StringBuilder("tags:").append("*").append(keyword)
+				.append("*").toString());
+		cc.setAliases(new String[] { "page" });
+		cc.setPageSize(Integer.MAX_VALUE);
+		CompassSearchResults searchResults = compassSearchService.search(cc);
+		CompassHit[] hits = searchResults.getHits();
+		if (hits != null) {
+			Map<String, Integer> map = new HashMap<String, Integer>();
+			for (CompassHit ch : searchResults.getHits()) {
+				Page p = (Page) ch.getData();
+				for (String tag : p.getTags()) {
+					if (!tag.contains(keyword))
+						continue;
+					Integer count = map.get(tag);
+					if (count != null)
+						map.put(tag, map.get(tag) + 1);
+					else
+						map.put(tag, 1);
+				}
+			}
+			List<Map.Entry<String, Integer>> temp = new ArrayList(map.size());
+			temp.addAll(map.entrySet());
+			Collections.sort(temp,
+					new Comparator<Map.Entry<String, Integer>>() {
+						@Override
+						public int compare(Map.Entry<String, Integer> o1,
+								Map.Entry<String, Integer> o2) {
+							return o2.getValue().compareTo(o1.getValue());
+						}
+					});
+			Map<String, Integer> result = new LinkedHashMap<String, Integer>();
+			for (Map.Entry<String, Integer> entry : temp)
+				result.put(entry.getKey(), entry.getValue());
+			return result;
+		} else {
+			return Collections.EMPTY_MAP;
+		}
+	}
 }

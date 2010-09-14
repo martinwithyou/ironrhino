@@ -144,7 +144,8 @@ public class Page extends BaseEntity implements Recordable, Ordered {
 	public void setTagsAsString(String tagsAsString) {
 		tags.clear();
 		if (StringUtils.isNotBlank(tagsAsString))
-			tags.addAll(Arrays.asList(tagsAsString.split(",")));
+			tags.addAll(Arrays.asList(org.ironrhino.core.util.StringUtils
+					.trimTail(tagsAsString, ",").split(",")));
 	}
 
 	@Override

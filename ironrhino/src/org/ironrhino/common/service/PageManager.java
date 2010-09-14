@@ -1,6 +1,7 @@
 package org.ironrhino.common.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.ironrhino.common.model.Page;
 import org.ironrhino.core.model.ResultPage;
@@ -29,5 +30,7 @@ public interface PageManager extends BaseManager<Page> {
 	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,String tag);
 	
 	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,String... tag);
+	
+	public Map<String,Integer> findMatchedTags(String keyword);
 
 }
