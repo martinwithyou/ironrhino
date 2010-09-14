@@ -81,6 +81,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#function>
 
 <#macro button text="" type="" class="" extra...>
+<#if !extra?is_hash_ex><#local extra={}></#if>
 <#if text==''>
 	<#local text=(extra['id']!'')?replace('_', ' ')>
 </#if>

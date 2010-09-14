@@ -26,5 +26,6 @@
 }
 
 .pagination .selected {
-	border:1px solid #10e;
+	background-color: #069;
+	color: white;
 }

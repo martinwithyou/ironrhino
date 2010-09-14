@@ -1,4 +1,5 @@
 <#macro pagination extra...>
+<#if !extra?is_hash_ex><#local extra={}></#if>
 <#if resultPage.totalPage gt 1>
 <div class="pagination">
 <#if resultPage.first>

@@ -499,7 +499,8 @@ text-decoration: none;
 }
 
 .pagination .selected {
-	border:1px solid #10e;
+	background-color: #069;
+	color: white;
 }
 button {
 	overflow: visible;
