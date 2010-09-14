@@ -2,8 +2,10 @@ package org.ironrhino.core.mail;
 
 import java.io.StringWriter;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,44 +30,53 @@ public class MailService {
 	@Inject
 	private MailSender mailSender;
 
-	private boolean forceSync;
+	@Inject
+	@Named("cachedThreadPool")
+	private ExecutorService cachedThreadPool;
 
-	private int forceSyncFailureThreshold = 3;
+	private boolean forceLocalAsync;
+
+	private int forceLocalAsyncFailureThreshold = 3;
 
 	private int _failureCount;
 
 	public boolean isForceSync() {
-		return forceSync;
+		return forceLocalAsync;
 	}
 
-	public void setForceSync(boolean forceSync) {
-		this.forceSync = forceSync;
+	public void setForceLocalAsync(boolean forceLocalAsync) {
+		this.forceLocalAsync = forceLocalAsync;
 	}
 
-	public void setForceSyncFailureThreshold(int forceSyncFailureThreshold) {
-		this.forceSyncFailureThreshold = forceSyncFailureThreshold;
+	public void setForceLocalAsyncFailureThreshold(int forceLocalAsyncFailureThreshold) {
+		this.forceLocalAsyncFailureThreshold = forceLocalAsyncFailureThreshold;
 	}
 
 	public void send(SimpleMailMessage smm) {
 		send(smm, true);
 	}
 
-	public void send(SimpleMailMessage smm, boolean useHtmlFormat) {
-		if (jmsTemplate == null || forceSync) {
-			// synchronized
-			mailSender.send(smm, useHtmlFormat);
+	public void send(final SimpleMailMessage smm, final boolean useHtmlFormat) {
+		if (jmsTemplate == null || forceLocalAsync) {
+			// localAsync
+			cachedThreadPool.execute(new Runnable() {
+				@Override
+				public void run() {
+					mailSender.send(smm, useHtmlFormat);
+				}
+			});
 			return;
 		}
 		try {
-			// asynchronized
+			// asynchronized by jms
 			jmsTemplate.convertAndSend(new SimpleMailMessageWrapper(smm,
 					useHtmlFormat));
 		} catch (JmsException e) {
 			log.error(e.getMessage(), e);
 			_failureCount++;
-			if (_failureCount >= forceSyncFailureThreshold) {
+			if (_failureCount >= forceLocalAsyncFailureThreshold) {
 				_failureCount = 0;
-				forceSync = true;
+				forceLocalAsync = true;
 			}
 			send(smm, useHtmlFormat);
 		}
