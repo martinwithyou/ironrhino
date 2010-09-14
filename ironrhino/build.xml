@@ -109,7 +109,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.corner-2.0.9.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.loadmask-0.4.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.bgiframe-2.1.1.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.autocomplete-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.truncatable-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.tmpl-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.elastic-1.6.3.js" />
@@ -173,7 +172,6 @@
 		<concat destfile="${webapp.dir}/assets/styles/ironrhino.css" encoding="utf-8" fixlastline="yes">
 			<filelist>
 				<file name="${webapp.dir}/assets/styles/source/jquery.ui.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.autocomplete.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.loadmask.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.my.css" />
