@@ -195,8 +195,16 @@ public class UserAction extends BaseAction {
 			}
 			user.setLegiblePassword(password);
 		} else {
+
 			User temp = user;
 			user = userManager.get(temp.getId());
+			if (StringUtils.isNotBlank(temp.getEmail())
+					&& !temp.getEmail().equals(user.getEmail())
+					&& userManager.findByNaturalId("email", temp.getEmail()) != null) {
+				addFieldError("user.email",
+						getText("validation.already.exists"));
+				return INPUT;
+			}
 			BeanUtils.copyProperties(temp, user);
 			if (StringUtils.isNotBlank(password))
 				user.setLegiblePassword(password);
@@ -210,8 +218,6 @@ public class UserAction extends BaseAction {
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
-
-
 
 	@Override
 	public String delete() {
