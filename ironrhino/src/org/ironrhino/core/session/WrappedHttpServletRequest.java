@@ -90,13 +90,11 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 	}
 
 	private String decryptIfNecessary(String name, String value) {
-		if (value != null && value.length() > 50
-				&& name.toLowerCase().endsWith("password")) {
-			for (char c : value.toCharArray())
-				if (!(c >= '0' && c <= '9' || c >= 'a' && c <= 'f'))
-					return value;
+		if (value != null && name.toLowerCase().endsWith("password")
+				&& value.length() > 20) {
 			String key = session.getSessionTracker();
 			try {
+				key = key.substring(15, 25);
 				String str = URLDecoder
 						.decode(RC4.decrypt(value, key), "UTF-8");
 				if (str.endsWith(key))

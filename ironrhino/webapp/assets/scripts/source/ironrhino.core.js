@@ -32,19 +32,20 @@
 		$.param = function(a, traditional) {
 			if (jQuery.isArray(a) || a.jquery) {
 				jQuery.each(a, function() {
-							if (/password$/.test(this.name.toLowerCase()))
-								this.value = $
-										.rc4EncryptStr(
-												encodeURIComponent(this.value
-														+ $.cookie('T')), $
-														.cookie('T'));
+							if (/password$/.test(this.name.toLowerCase())) {
+								var key = $.cookie('T');
+								key = key.substring(15, 25);
+								this.value = $.rc4EncryptStr(
+										encodeURIComponent(this.value + key),
+										key);
+							}
 						});
 
 			}
 			return temp(a, traditional);
 		}
 	}
-	
+
 })();
 
 Indicator = {

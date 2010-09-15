@@ -1,11 +1,9 @@
 package org.ironrhino.core.security.util;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
-import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -23,8 +21,7 @@ public class RC4 {
 
 	static {
 		try {
-			File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY
-					+ "rc4");
+			File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY + "rc4");
 			if (file.exists()) {
 				defaultKey = FileUtils.readFileToString(file, "UTF-8");
 			} else {
@@ -100,40 +97,56 @@ public class RC4 {
 		return result;
 	}
 
-	public static String encrypt(String input)
-			throws UnsupportedEncodingException {
+	public static String encrypt(String input) {
 		if (input == null)
 			return null;
 		RC4 rc4 = new RC4(defaultKey);
-		return Hex.encodeHexString(rc4.rc4(URLEncoder.encode(input, "UTF-8")
-				.getBytes("UTF-8")));
+		try {
+			return Hex.encodeHexString(rc4.rc4(URLEncoder
+					.encode(input, "UTF-8").getBytes("UTF-8")));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return input;
+		}
 	}
 
-	public static String decrypt(String input)
-			throws UnsupportedEncodingException, DecoderException {
+	public static String decrypt(String input) {
 		if (input == null)
 			return null;
 		RC4 rc4 = new RC4(defaultKey);
-		return URLDecoder.decode(new String(rc4.rc4(Hex.decodeHex(input
-				.toCharArray())), "UTF-8"), "UTF-8");
+		try {
+			return URLDecoder.decode(new String(rc4.rc4(Hex.decodeHex(input
+					.toCharArray())), "UTF-8"), "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return input;
+		}
 	}
 
-	public static String encrypt(String input, String key)
-			throws UnsupportedEncodingException {
+	public static String encrypt(String input, String key) {
 		if (key == null || input == null)
 			return null;
 		RC4 rc4 = new RC4(key);
-		return Hex.encodeHexString(rc4.rc4(URLEncoder.encode(input, "UTF-8")
-				.getBytes("UTF-8")));
+		try {
+			return Hex.encodeHexString(rc4.rc4(URLEncoder
+					.encode(input, "UTF-8").getBytes("UTF-8")));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return input;
+		}
 	}
 
-	public static String decrypt(String input, String key)
-			throws UnsupportedEncodingException, DecoderException {
+	public static String decrypt(String input, String key) {
 		if (key == null || input == null)
 			return null;
 		RC4 rc4 = new RC4(key);
-		return URLDecoder.decode(new String(rc4.rc4(Hex.decodeHex(input
-				.toCharArray())), "UTF-8"), "UTF-8");
+		try {
+			return URLDecoder.decode(new String(rc4.rc4(Hex.decodeHex(input
+					.toCharArray())), "UTF-8"), "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return input;
+		}
 	}
 
 }
