@@ -86,31 +86,31 @@ public class AccessFilter implements Filter {
 		// handle cross origin request
 		String origin = request.getHeader("Origin");
 		if (StringUtils.isNotBlank(origin)) {
-			if ("Upgrade".equalsIgnoreCase(request.getHeader("Connection"))
-					&& "WebSocket".equalsIgnoreCase(request
-							.getHeader("Upgrade")))
-				return;
-			String url = request.getRequestURL().toString();
-			if (RequestUtils.isSameOrigin(url, origin)
-					&& !url.startsWith(origin)) {
-				response.setHeader("Access-Control-Allow-Origin", origin);
-				response.setHeader("Access-Control-Allow-Credentials", "true");
-				String requestMethod = request
-						.getHeader("Access-Control-Request-Method");
-				String requestHeaders = request
-						.getHeader("Access-Control-Request-Headers");
-				String method = request.getMethod();
-				if (method.equalsIgnoreCase("OPTIONS")
-						&& (requestMethod != null || requestHeaders != null)) {
-					// preflighted request
-					if (StringUtils.isNotBlank(requestMethod))
-						response.setHeader("Access-Control-Allow-Methods",
-								requestMethod);
-					if (StringUtils.isNotBlank(requestHeaders))
-						response.setHeader("Access-Control-Allow-Headers",
-								requestHeaders);
-					response.setHeader("Access-Control-Max-Age", "36000");
-					return;
+			if (!("Upgrade".equalsIgnoreCase(request.getHeader("Connection")) && "WebSocket"
+					.equalsIgnoreCase(request.getHeader("Upgrade")))) {
+				String url = request.getRequestURL().toString();
+				if (RequestUtils.isSameOrigin(url, origin)
+						&& !url.startsWith(origin)) {
+					response.setHeader("Access-Control-Allow-Origin", origin);
+					response.setHeader("Access-Control-Allow-Credentials",
+							"true");
+					String requestMethod = request
+							.getHeader("Access-Control-Request-Method");
+					String requestHeaders = request
+							.getHeader("Access-Control-Request-Headers");
+					String method = request.getMethod();
+					if (method.equalsIgnoreCase("OPTIONS")
+							&& (requestMethod != null || requestHeaders != null)) {
+						// preflighted request
+						if (StringUtils.isNotBlank(requestMethod))
+							response.setHeader("Access-Control-Allow-Methods",
+									requestMethod);
+						if (StringUtils.isNotBlank(requestHeaders))
+							response.setHeader("Access-Control-Allow-Headers",
+									requestHeaders);
+						response.setHeader("Access-Control-Max-Age", "36000");
+						return;
+					}
 				}
 			}
 		}
@@ -119,7 +119,7 @@ public class AccessFilter implements Filter {
 				.getHeader("User-Agent")));
 		MDC.put("remoteAddr", RequestUtils.getRemoteAddr(request));
 		MDC.put("method", request.getMethod());
-		StringBuilder url = new StringBuilder().append(request.getRequestURI());
+		StringBuilder url = new StringBuilder(request.getRequestURI());
 		if (StringUtils.isNotBlank(request.getQueryString()))
 			url.append('?').append(request.getQueryString());
 		MDC.put("url", url.toString());
