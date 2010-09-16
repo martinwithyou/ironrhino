@@ -93,6 +93,8 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 		if (value != null && name.toLowerCase().endsWith("password")
 				&& value.length() > 20) {
 			String key = session.getSessionTracker();
+			if (key.length() < 25)
+				return value;
 			try {
 				key = key.substring(15, 25);
 				String str = URLDecoder

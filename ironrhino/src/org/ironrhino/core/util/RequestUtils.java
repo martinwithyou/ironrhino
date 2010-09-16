@@ -191,20 +191,6 @@ public class RequestUtils {
 		response.addCookie(cookie);
 	}
 
-	public static void addAccessControl(HttpServletRequest request,
-			HttpServletResponse response) {
-		String origin = request.getHeader("Origin");
-		if (StringUtils.isNotBlank(origin)) {
-			String url = request.getRequestURL().toString();
-			if (RequestUtils.isSameOrigin(url, origin)) {
-				response.addHeader("Access-Control-Allow-Origin", origin);
-				response.addHeader("Access-Control-Allow-Headers",
-						"X-Data-Type,X-Requested-With,Cookie");
-				response.addHeader("Access-Control-Max-Age", "36000");
-			}
-		}
-	}
-
 	public static boolean isSameOrigin(String a, String b) {
 		if (StringUtils.isBlank(a) || StringUtils.isBlank(b))
 			return false;

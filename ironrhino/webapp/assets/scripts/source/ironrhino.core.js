@@ -17,6 +17,8 @@
 		options.url = UrlUtils.makeSameOrigin(options.url);
 		var temp = options.beforeSend;
 		options.beforeSend = function(xhr) {
+			xhr.withCredentials = "true";
+			// xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			if (options.header)
 				for (var key in options.header)
 					xhr.setRequestHeader(key, options.header[key]);
@@ -33,11 +35,15 @@
 			if (jQuery.isArray(a) || a.jquery) {
 				jQuery.each(a, function() {
 							if (/password$/.test(this.name.toLowerCase())) {
-								var key = $.cookie('T');
-								key = key.substring(15, 25);
-								this.value = $.rc4EncryptStr(
-										encodeURIComponent(this.value + key),
-										key);
+								try {
+									var key = $.cookie('T');
+									key = key.substring(15, 25);
+									this.value = $
+											.rc4EncryptStr(
+													encodeURIComponent(this.value
+															+ key), key);
+								} catch (e) {
+								}
 							}
 						});
 

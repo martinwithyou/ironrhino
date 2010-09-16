@@ -79,11 +79,44 @@ public class AccessFilter implements Filter {
 
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
+
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
+
+		// handle cross origin request
+		String origin = request.getHeader("Origin");
+		if (StringUtils.isNotBlank(origin)) {
+			if ("Upgrade".equalsIgnoreCase(request.getHeader("Connection"))
+					&& "WebSocket".equalsIgnoreCase(request
+							.getHeader("Upgrade")))
+				return;
+			String url = request.getRequestURL().toString();
+			if (RequestUtils.isSameOrigin(url, origin)
+					&& !url.startsWith(origin)) {
+				response.setHeader("Access-Control-Allow-Origin", origin);
+				response.setHeader("Access-Control-Allow-Credentials", "true");
+				String requestMethod = request
+						.getHeader("Access-Control-Request-Method");
+				String requestHeaders = request
+						.getHeader("Access-Control-Request-Headers");
+				String method = request.getMethod();
+				if (method.equalsIgnoreCase("OPTIONS")
+						&& (requestMethod != null || requestHeaders != null)) {
+					// preflighted request
+					if (StringUtils.isNotBlank(requestMethod))
+						response.setHeader("Access-Control-Allow-Methods",
+								requestMethod);
+					if (StringUtils.isNotBlank(requestHeaders))
+						response.setHeader("Access-Control-Allow-Headers",
+								requestHeaders);
+					response.setHeader("Access-Control-Max-Age", "36000");
+					return;
+				}
+			}
+		}
+
 		request.setAttribute("userAgent", new UserAgent(request
 				.getHeader("User-Agent")));
-		RequestUtils.addAccessControl(request, response);
 		MDC.put("remoteAddr", RequestUtils.getRemoteAddr(request));
 		MDC.put("method", request.getMethod());
 		StringBuilder url = new StringBuilder().append(request.getRequestURI());
