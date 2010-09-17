@@ -58,16 +58,18 @@ public class JsonResult implements Result {
 							validationAwareAction.getFieldErrors());
 				}
 				return JsonUtils.toJson(map);
-			} else {
-				map.put("hasErrors", false);
-			}
+			} 
+//			else {
+//				map.put("hasErrors", false);
+//			}
 			if (validationAwareAction.hasActionMessages()) {
-				map.put("hasActionMessages", true);
+//				map.put("hasActionMessages", true);
 				map.put("actionMessages",
 						validationAwareAction.getActionMessages());
-			} else {
-				map.put("hasActionMessages", false);
-			}
+			} 
+//			else {
+//				map.put("hasActionMessages", false);
+//			}
 		}
 		if (!hasErrors) {
 			if (jsonConfig == null || jsonConfig.propertyName() == null
