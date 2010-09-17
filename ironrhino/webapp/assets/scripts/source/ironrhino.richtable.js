@@ -138,7 +138,7 @@ Richtable = {
 		useiframe = useiframe || false;
 		var win = $('#_window_');
 		if (!win.length)
-			win = $('<div id="_window_"></div>').appendTo(document.body);
+			win = $('<div id="_window_"></div>').appendTo(document.body).dialog();
 		if (!useiframe) {
 			// ajax replace
 			var target = win.get(0);
@@ -236,11 +236,6 @@ Richtable = {
 					+ Math.random();
 			$('#_window_ > iframe')[0].src = url;
 		}
-		win.dialog('option', 'close', (reloadonclose ? function() {
-					if (!$('#_window_ form.ajax').attr('dontreload'))
-						Richtable.reload(form);
-				} : null));
-		win.dialog('open');
 		if (!useiframe)
 			if (win.html() && typeof $.fn.mask != 'undefined')
 				win.mask(MessageBundle.get('ajax.loading'));
@@ -253,10 +248,12 @@ Richtable = {
 			// modal : true,
 			bgiframe : true,
 			closeOnEscape : false,
-			close : (reloadonclose ? function() {
-				if (!$('#_window_ form.ajax').attr('dontreload'))
-					Richtable.reload(form);
-			} : null),
+			close : function() {
+					$('#_window_ ').html('');
+					if (reloadonclose&&!$('#_window_ form.ajax').attr('dontreload'))
+						Richtable.reload(form);
+					win.dialog('destroy');
+				},
 			beforeclose : function(event, ui) {
 				if ($('form', win).attr('dirty')) {
 					return confirm(MessageBundle.get('confirm.exit'));
@@ -266,6 +263,7 @@ Richtable = {
 		if ($.browser.msie)
 			opt.height = 600;
 		win.dialog(opt);
+		win.dialog('open');
 	},
 	enter : function(event) {
 		var btn = event.target;
