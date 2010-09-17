@@ -156,48 +156,40 @@ Message = {
 			a.push(messages);
 			messages = a;
 		}
-		var nf = false;
-		if (window.webkitNotifications) {
-			var nc = window.webkitNotifications;
-			if (nc.checkPermission() == 1)
-				nc.requestPermission(function() {
-							nf = true
+		if (typeof $.fn.jnotifyInizialize != 'undefined') {
+			if (!$('#notification').length)
+				$('<div id="notification"><div>').prependTo(document.body)
+						.jnotifyInizialize({
+									oneAtTime : false,
+									appendType : 'append'
+								}).css({
+									'position' : 'absolute',
+									'marginTop' : '40px',
+									'right' : '40px',
+									'width' : '250px',
+									'min-height' : '100px',
+									'z-index' : '9999'
+								});
+			for (var i = 0; i < messages.length; i++) {
+				$('#notification').jnotifyAddMessage({
+							text : messages[i],
+							permanent : false
 						});
-			else if (nc.checkPermission() == 0)
-				nf = true;
+			}
+			return;
 		}
 		var html = '';
-		for (var i = 0; i < messages.length; i++) {
-			var nfed = false;
-			if (nf) {
-				try {
-					var n = nc.createNotification('', '', messages[i]);
-					n.show();
-					setTimeout(function() {
-								n.cancel()
-							}, 3000);
-					nfed = true;
-				} catch (e) {
-				}
-			}
-			if (!nfed) {
-				if (typeof $.jGrowl != 'undefined')
-					$.jGrowl(messages[i]);
-				else
-					html += Message.compose(messages[i], 'action_message');
-			}
+		for (var i = 0; i < messages.length; i++)
+			html += Message.compose(messages[i], 'action_message');
+		if (target && target.tagName == 'FORM') {
+			if ($('#' + target.id + '_message').length == 0)
+				$(target).before('<div id="' + target.id + '_message"></div>');
+			$('#' + target.id + '_message').html(html);
+		} else {
+			if (!$('#message').length)
+				$('<div id="message"></div>').prependTo(document.body);
+			$('#message').html(html);
 		}
-		if (html)
-			if (target && target.tagName == 'FORM') {
-				if ($('#' + target.id + '_message').length == 0)
-					$(target).before('<div id="' + target.id
-							+ '_message"></div>');
-				$('#' + target.id + '_message').html(html);
-			} else {
-				if (!$('#message').length)
-					$('<div id="message"></div>').prependTo(document.body);
-				$('#message').html(html);
-			}
 	},
 	showError : function() {
 		Message.showActionError(MessageBundle.get.apply(this, arguments));
@@ -209,6 +201,18 @@ Message = {
 			var a = [];
 			a.push(messages);
 			messages = a;
+		}
+		if (typeof $.fn.jnotifyInizialize != 'undefined') {
+			$('#message').jnotifyInizialize({
+						oneAtTime : false
+					});
+			for (var i = 0; i < messages.length; i++)
+				$('#message').jnotifyAddMessage({
+							text : messages[i],
+							permanent : true,
+							type : 'error'
+						});
+			return;
 		}
 		if ($.alerts) {
 			$.alerts.alert(messages.join('\n'), MessageBundle.get('error'));
@@ -226,6 +230,7 @@ Message = {
 			} else {
 				if (!$('#message').length)
 					$('<div id="message"></div>').prependTo(document.body);
+
 				$('#message').html(html);
 			}
 	},
@@ -590,7 +595,8 @@ Observation.common = function(container) {
 		$('div.tabs', container).each(function() {
 					$(this).tabs().tabs('select', $(this).attr('tab'))
 				});
-	if (typeof $.fn.corner != 'undefined')
+	if (typeof $.fn.corner != 'undefined' && $.browser.msie
+			&& $.browser.version <= 8)
 		$('.rounded', container).each(function() {
 					$(this).corner($(this).attr('corner'));
 				});

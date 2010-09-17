@@ -138,7 +138,8 @@ Richtable = {
 		useiframe = useiframe || false;
 		var win = $('#_window_');
 		if (!win.length)
-			win = $('<div id="_window_"></div>').appendTo(document.body).dialog();
+			win = $('<div id="_window_"></div>').appendTo(document.body)
+					.dialog();
 		if (!useiframe) {
 			// ajax replace
 			var target = win.get(0);
@@ -157,7 +158,7 @@ Richtable = {
 						$(':input', inputform).change(function(e) {
 									inputform.attr('dirty', true);
 								});
-						$(inputform).attr('dontreload',true);
+						$(inputform).attr('dontreload', true);
 						var create = url.lastIndexOf('input') == url.length - 5;
 						if (create) {
 							if ($('input[type="hidden"][name="id"]', inputform)
@@ -249,18 +250,19 @@ Richtable = {
 			bgiframe : true,
 			closeOnEscape : false,
 			close : function() {
-					$('#_window_ ').html('');
-					if (reloadonclose&&!$('#_window_ form.ajax').attr('dontreload'))
-						Richtable.reload(form);
-					win.dialog('destroy');
-				},
+				$('#_window_ ').html('');
+				if (reloadonclose
+						&& !$('#_window_ form.ajax').attr('dontreload'))
+					Richtable.reload(form);
+				win.dialog('destroy');
+			},
 			beforeclose : function(event, ui) {
 				if ($('form', win).attr('dirty')) {
 					return confirm(MessageBundle.get('confirm.exit'));
 				}
 			}
 		};
-		if ($.browser.msie)
+		if ($.browser.msie && $.browser.version <= 8)
 			opt.height = 600;
 		win.dialog(opt);
 		win.dialog('open');

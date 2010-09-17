@@ -24,7 +24,8 @@
 </#macro>
 
 <#macro rtstart action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true>
-<form id="${action}_form" action="${getUrl(action)}" method="post" class="richtable ajax view"<#if entityName!=action&&entityName!=''> entity="${entityName}"</#if><#if resizable> resizable="true" minColWidth="40"</#if>>
+<#local formid=action+'_form'>
+<form id="${formid}" action="${getUrl(action)}" method="post" class="richtable ajax view" replacement="${formid}" <#if entityName!=action&&entityName!=''> entity="${entityName}"</#if><#if resizable> resizable="true" minColWidth="40"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
 <#if !name?starts_with('resultPage.')&&name!='keyword'>
