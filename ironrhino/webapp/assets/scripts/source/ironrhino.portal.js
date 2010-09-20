@@ -43,7 +43,7 @@
 					}
 				});
 
-				$('.portal-column', this).disableSelection();
+				//$('.portal-column', this).disableSelection(); //cannot dropdown selection
 				if (window.localStorage) {
 					var layout = localStorage[document.location.pathname
 							+ '_portal-layout'];
