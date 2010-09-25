@@ -29,6 +29,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	private static final String SESSION_TRACKER_SEPERATOR = "-";
 
+	public static final int DEFAULT_LIFETIME = -1; // in seconds
+
 	public static final int DEFAULT_MAXINACTIVEINTERVAL = 1800; // in seconds
 
 	public static final int DEFAULT_MINACTIVEINTERVAL = 60;// in seconds
@@ -42,6 +44,9 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	@Inject
 	@Named("cacheBased")
 	private HttpSessionStore cacheBased;
+
+	@Value("${httpSessionManager.lifetime:" + DEFAULT_LIFETIME + "}")
+	private int lifetime;
 
 	@Value("${httpSessionManager.maxInactiveInterval:"
 			+ DEFAULT_MAXINACTIVEINTERVAL + "}")
@@ -68,7 +73,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	}
 
 	public void initialize(WrappedHttpSession session) {
-		session.setMaxInactiveInterval(maxInactiveInterval);
+	
 		String sessionTracker = session.getSessionTracker();
 		long now = session.getNow();
 		String sessionId = null;
@@ -90,8 +95,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 					if (array.length > 2)
 						lastAccessedTime = NumberUtils.xToDecimal(62, array[2])
 								.longValue();
-					boolean timeout = now - lastAccessedTime > session
-							.getMaxInactiveInterval() * 1000;
+					boolean timeout = (lifetime > 0 && (now - creationTime > lifetime * 1000))
+							|| (now - lastAccessedTime > maxInactiveInterval * 1000);
 					if (timeout) {
 						invalidate(session);
 						return;
@@ -109,6 +114,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.setId(sessionId);
 		session.setCreationTime(creationTime);
 		session.setLastAccessedTime(lastAccessedTime);
+		session.setMaxInactiveInterval(maxInactiveInterval);
 		session.setMinActiveInterval(minActiveInterval);
 		if (session.getSessionTracker() == null)
 			session.setSessionTracker(getSessionTracker(session));
