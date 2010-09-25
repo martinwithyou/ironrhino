@@ -1,5 +1,6 @@
 package org.ironrhino.core.session.impl;
 
+import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.SessionCompressorManager;
 import org.ironrhino.core.session.WrappedHttpSession;
+import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.core.util.RequestUtils;
 
 @Singleton
@@ -38,17 +40,30 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 	}
 
 	public void initialize(WrappedHttpSession session) {
-		sessionCompressorManager.uncompress(session, Blowfish
-				.decrypt(getCookie(session)));
+		String cookie = getCookie(session);
+		if (StringUtils.isNotBlank(cookie)) {
+			cookie = Blowfish.decrypt(cookie);
+			String creationTime = NumberUtils.decimalToX(62, BigInteger
+					.valueOf(session.getCreationTime()));
+			if (cookie.startsWith(creationTime)) {
+				cookie = cookie.substring(creationTime.length());
+				sessionCompressorManager.uncompress(session, cookie);
+			} else {
+				invalidate(session);
+			}
+		}
 	}
 
 	public void save(WrappedHttpSession session) {
 		if (!session.isDirty())
 			return;
 		String sessionString = sessionCompressorManager.compress(session);
-		if (StringUtils.isNotBlank(sessionString))
-			saveCookie(session, Blowfish.encrypt(sessionString));
-		else
+		if (StringUtils.isNotBlank(sessionString)) {
+			String creationTime = NumberUtils.decimalToX(62, BigInteger
+					.valueOf(session.getCreationTime()));
+			String cookie = creationTime + sessionString;
+			saveCookie(session, Blowfish.encrypt(cookie));
+		} else
 			clearCookie(session);
 	}
 
