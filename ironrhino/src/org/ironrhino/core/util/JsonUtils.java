@@ -75,7 +75,7 @@ public class JsonUtils {
 						}
 						return false;
 					}
-				}, null);
+				}, null, null);
 		config.setSerializationInclusion(Inclusion.NON_NULL);
 		config.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 		objectMapper = new ObjectMapper().setSerializationConfig(config);

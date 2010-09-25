@@ -10,8 +10,12 @@ public enum Status {
 	}
 
 	public String getDisplayName() {
-		return LocalizedTextUtil.findText(getClass(), name(), ActionContext
-				.getContext().getLocale(), name(), null);
+		try {
+			return LocalizedTextUtil.findText(getClass(), name(), ActionContext
+					.getContext().getLocale(), name(), null);
+		} catch (Exception e) {
+			return name();
+		}
 	}
 
 	public static Status parse(String name) {

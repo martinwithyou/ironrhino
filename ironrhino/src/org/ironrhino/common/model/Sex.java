@@ -12,10 +12,14 @@ public enum Sex {
 	}
 
 	public String getDisplayName() {
-		return LocalizedTextUtil.findText(getClass(), name(), ActionContext
-				.getContext().getLocale(), name(), null);
+		try {
+			return LocalizedTextUtil.findText(getClass(), name(), ActionContext
+					.getContext().getLocale(), name(), null);
+		} catch (Exception e) {
+			return name();
+		}
 	}
-	
+
 	public static Sex parse(String name) {
 		if (name != null)
 			for (Sex en : values())
