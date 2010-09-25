@@ -771,7 +771,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 
 #notification .jnotify-item
 {
-	min-height: 80px;
+	min-height: 40px;
 }
 
 #popup_container {
