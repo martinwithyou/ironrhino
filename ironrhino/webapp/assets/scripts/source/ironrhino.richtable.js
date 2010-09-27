@@ -513,6 +513,7 @@ Observation.richtable = function() {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
 					Richtable.reload(form);
+					return false;
 				});
 		$('.richtable .prevPage').click(function(event) {
 					var form = $(event.target).closest('form');
@@ -520,6 +521,7 @@ Observation.richtable = function() {
 								return parseInt(v) - 1
 							});
 					Richtable.reload(form);
+					return false;
 				});
 		$('.richtable .nextPage').click(function(event) {
 					var form = $(event.target).closest('form');
@@ -527,11 +529,13 @@ Observation.richtable = function() {
 								return parseInt(v) + 1
 							});
 					Richtable.reload(form);
+					return false;
 				});
 		$('.richtable .lastPage').click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val($('.totalPage', form).text());
 					Richtable.reload(form);
+					return false;
 				});
 		$('.richtable .inputPage').change(function(event) {
 					var form = $(event.target).closest('form');

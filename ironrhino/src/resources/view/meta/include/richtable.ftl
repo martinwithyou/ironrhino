@@ -108,15 +108,15 @@ ${value?xhtml}<#t>
 <span class="disabled" title="${action.getText('firstpage')}">&lt;&lt;</span>
 <span class="disabled" title="${action.getText('previouspage')}">&lt;</span>
 <#else>
-<a class="firstPage" title="${action.getText('firstpage')}">&lt;&lt;</a>
-<a class="prevPage" title="${action.getText('previouspage')}">&lt;</a>
+<a class="firstPage" title="${action.getText('firstpage')}" href="${resultPage.renderUrl(1)}">&lt;&lt;</a>
+<a class="prevPage" title="${action.getText('previouspage')}" href="${resultPage.renderUrl(resultPage.previousPage)}">&lt;</a>
 </#if>
 <#if resultPage.last>
 <span class="disabled" title="${action.getText('nextpage')}">&gt;</span>
 <span class="disabled" title="${action.getText('lastpage')}">&gt;&gt;</span>
 <#else>
-<a class="nextPage" title="${action.getText('nextpage')}">&gt;</a>
-<a class="lastPage" title="${action.getText('lastpage')}">&gt;&gt;</a>
+<a class="nextPage" title="${action.getText('nextpage')}" href="${resultPage.renderUrl(resultPage.nextPage)}">&gt;</a>
+<a class="lastPage" title="${action.getText('lastpage')}" href="${resultPage.renderUrl(resultPage.totalPage)}">&gt;&gt;</a>
 </#if>
 <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/>/<span class="totalPage">${resultPage.totalPage}</span>${action.getText('page')}
 ${action.getText('pagesize')}<select name="resultPage.pageSize" class="pageSize">
