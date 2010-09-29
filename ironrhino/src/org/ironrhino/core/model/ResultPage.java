@@ -3,7 +3,11 @@ package org.ironrhino.core.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 
@@ -117,27 +121,69 @@ public class ResultPage<T> implements Serializable {
 	}
 
 	public String renderUrl(int pn) {
-		String requestURI = (String) ServletActionContext.getRequest()
-				.getAttribute("struts.request_uri");
-		if (requestURI == null) {
-			requestURI = (String) ServletActionContext.getRequest()
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String requestURI = (String) request.getAttribute("struts.request_uri");
+		if (requestURI == null)
+			requestURI = (String) request
 					.getAttribute("javax.servlet.forward.request_uri");
-		}
-		if (requestURI == null) {
-			requestURI = ServletActionContext.getRequest().getRequestURI();
-		}
+		if (requestURI == null)
+			requestURI = request.getRequestURI();
+		StringBuilder sb = new StringBuilder(requestURI);
+		String parameterString = _getParameterString();
+		if (StringUtils.isNotBlank(parameterString))
+			sb.append("?").append(parameterString);
 		if (isDefaultPageSize()) {
 			if (pn <= 1)
-				return requestURI;
+				return sb.toString();
 			else
-				return requestURI + "?" + PAGENO_PARAM_NAME + "=" + pn;
+				return sb.append(
+						StringUtils.isNotBlank(parameterString) ? "&" : "?")
+						.append(PAGENO_PARAM_NAME).append("=").append(pn)
+						.toString();
 		} else {
 			if (pn <= 1)
-				return requestURI + "?" + PAGESIZE_PARAM_NAME + "=" + pageSize;
+				return sb.append(
+						StringUtils.isNotBlank(parameterString) ? "&" : "?")
+						.append(PAGESIZE_PARAM_NAME).append("=").append(
+								pageSize).toString();
 			else
-				return requestURI + "?" + PAGENO_PARAM_NAME + "=" + pn + "&"
-						+ PAGESIZE_PARAM_NAME + "=" + pageSize;
+				return sb.append(
+						StringUtils.isNotBlank(parameterString) ? "&" : "?")
+						.append(PAGENO_PARAM_NAME).append("=").append(pn)
+						.append("&").append(PAGESIZE_PARAM_NAME).append("=")
+						.append(pageSize).toString();
 		}
+	}
+
+	private String _parameterString;
+
+	private String _getParameterString() {
+		if (_parameterString == null) {
+			StringBuilder sb = new StringBuilder();
+			Map<String, String[]> map = ServletActionContext.getRequest()
+					.getParameterMap();
+			for (Map.Entry<String, String[]> entry : map.entrySet()) {
+				String name = entry.getKey();
+				String[] values = entry.getValue();
+				if (values.length == 1
+						&& values[0].equals("")
+						|| name.equals(PAGENO_PARAM_NAME)
+						|| name.equals(PAGESIZE_PARAM_NAME)
+						|| name
+								.startsWith(StringUtils
+										.uncapitalize(ResultPage.class
+												.getSimpleName()) + '.'))
+					continue;
+				for (String value : values)
+					sb.append(name).append('=').append(
+							value.length() > 256 ? value.substring(0, 256)
+									: value).append('&');
+			}
+			if (sb.length() > 0)
+				sb.deleteCharAt(sb.length() - 1);
+			_parameterString = sb.toString();
+		}
+		return _parameterString;
 	}
 
 }
