@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.SerializationConfig.Feature;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.codehaus.jackson.map.introspect.Annotated;
 import org.codehaus.jackson.map.introspect.AnnotatedField;
@@ -28,11 +29,6 @@ public class JsonUtils {
 		SerializationConfig config = new SerializationConfig(
 				new BasicClassIntrospector(),
 				new JacksonAnnotationIntrospector() {
-
-					@Override
-					public String findEnumValue(Enum<?> value) {
-						return value.toString();
-					}
 
 					@Override
 					public boolean isHandled(Annotation ann) {
@@ -76,9 +72,16 @@ public class JsonUtils {
 						return false;
 					}
 				}, null, null);
+
 		config.setSerializationInclusion(Inclusion.NON_NULL);
 		config.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+		config.set(Feature.WRITE_ENUMS_USING_TO_STRING, true);
 		objectMapper = new ObjectMapper().setSerializationConfig(config);
+		objectMapper
+				.getDeserializationConfig()
+				.set(
+						org.codehaus.jackson.map.DeserializationConfig.Feature.READ_ENUMS_USING_TO_STRING,
+						true);
 	}
 
 	public static String toJson(Object object) {
