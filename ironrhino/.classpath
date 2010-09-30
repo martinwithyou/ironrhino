@@ -37,7 +37,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/httpcore-4.0.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/inject-api-1.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-pool-1.5.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/freemarker-2.3.16.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jericho-html-3.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zookeeper-3.3.1.jar"/>
@@ -48,7 +47,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jasperreports-3.7.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/poi-3.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.0.17.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-digester-2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ognl-3.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-net-ftp-2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jms-1.1.jar"/>
@@ -90,5 +88,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/jsp-api-2.2.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-3.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-pool-1.5.5.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
