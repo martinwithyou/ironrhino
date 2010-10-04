@@ -2,10 +2,12 @@ package org.ironrhino.core.servlet;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.Filter;
@@ -25,6 +27,7 @@ import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.core.util.UserAgent;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 
 @Singleton
 @Named
@@ -52,6 +55,11 @@ public class AccessFilter implements Filter {
 
 	private List<String> excludePatternsList = Collections.EMPTY_LIST;
 
+	private Collection<AccessHandler> handlers;
+
+	@Inject
+	private ApplicationContext ctx;
+
 	public void setExcludePatterns(String excludePatterns) {
 		this.excludePatterns = excludePatterns;
 	}
@@ -71,6 +79,7 @@ public class AccessFilter implements Filter {
 	@PostConstruct
 	public void _init() {
 		excludePatternsList = Arrays.asList(excludePatterns.split(","));
+		handlers = ctx.getBeansOfType(AccessHandler.class).values();
 	}
 
 	public void init(FilterConfig filterConfig) {
@@ -83,35 +92,23 @@ public class AccessFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 
-		// handle cross origin request
-		String origin = request.getHeader("Origin");
-		if (StringUtils.isNotBlank(origin)) {
-			if (!("Upgrade".equalsIgnoreCase(request.getHeader("Connection")) && "WebSocket"
-					.equalsIgnoreCase(request.getHeader("Upgrade")))) {
-				String url = request.getRequestURL().toString();
-				if (RequestUtils.isSameOrigin(url, origin)
-						&& !url.startsWith(origin)) {
-					response.setHeader("Access-Control-Allow-Origin", origin);
-					response.setHeader("Access-Control-Allow-Credentials",
-							"true");
-					String requestMethod = request
-							.getHeader("Access-Control-Request-Method");
-					String requestHeaders = request
-							.getHeader("Access-Control-Request-Headers");
-					String method = request.getMethod();
-					if (method.equalsIgnoreCase("OPTIONS")
-							&& (requestMethod != null || requestHeaders != null)) {
-						// preflighted request
-						if (StringUtils.isNotBlank(requestMethod))
-							response.setHeader("Access-Control-Allow-Methods",
-									requestMethod);
-						if (StringUtils.isNotBlank(requestHeaders))
-							response.setHeader("Access-Control-Allow-Headers",
-									requestHeaders);
-						response.setHeader("Access-Control-Max-Age", "36000");
-						return;
-					}
-				}
+		String uri = request.getRequestURI();
+		uri = uri.substring(request.getContextPath().length());
+		for (String pattern : excludePatternsList) {
+			if (org.ironrhino.core.util.StringUtils.matchesWildcard(uri,
+					pattern)) {
+				chain.doFilter(req, resp);
+				return;
+			}
+		}
+
+		for (AccessHandler interceptor : handlers) {
+			String pattern = interceptor.getPattern();
+			if (StringUtils.isBlank(pattern)
+					|| org.ironrhino.core.util.StringUtils.matchesWildcard(uri,
+							pattern)) {
+				if (interceptor.handle(request, response))
+					return;
 			}
 		}
 
@@ -133,20 +130,9 @@ public class AccessFilter implements Filter {
 				DefaultAuthenticationSuccessHandler.COOKIE_NAME_LOGIN_USER);
 		if (s != null)
 			MDC.put("username", s);
-		if (print) {
-			boolean excluded = false;
-			for (String pattern : excludePatternsList) {
-				String path = request.getRequestURI();
-				path = path.substring(request.getContextPath().length());
-				if (org.ironrhino.core.util.StringUtils.matchesWildcard(path,
-						pattern)) {
-					excluded = true;
-					break;
-				}
-			}
-			if (!excluded)
-				accesLog.info("");
-		}
+		if (print)
+			accesLog.info("");
+
 		long start = System.currentTimeMillis();
 		chain.doFilter(req, resp);
 		long responseTime = System.currentTimeMillis() - start;
