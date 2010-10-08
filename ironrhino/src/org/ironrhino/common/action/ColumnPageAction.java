@@ -3,14 +3,17 @@ package org.ironrhino.common.action;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.struts.RequestDecoratorMapper;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.interceptor.annotations.Before;
 
 @AutoConfig(namespace = "/")
 public class ColumnPageAction extends BaseAction {
@@ -98,5 +101,14 @@ public class ColumnPageAction extends BaseAction {
 			page = pageManager.getByPath(path);
 		}
 		return "columnpage";
+	}
+
+	@Before
+	public void setDecorator() {
+		RequestDecoratorMapper rdm = (RequestDecoratorMapper) ServletActionContext
+				.getServletContext().getAttribute(
+						RequestDecoratorMapper.class.getName());
+		if (rdm != null)
+			rdm.setDecorator(ServletActionContext.getRequest(), getName());
 	}
 }

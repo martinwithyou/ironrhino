@@ -13,12 +13,13 @@
 			<property name="path" />
 		</natural-id>
 		<property name="title" />
+		<property name="head" length="500"/>
 		<property name="content" length="5000" not-null="true"/>
 		<property name="draft" length="5000"/>
 		<property name="displayOrder"/>
-		<property name="draftDate" />
-		<property name="createDate" />
-		<property name="modifyDate" />
+		<property name="draftDate"/>
+		<property name="createDate"/>
+		<property name="modifyDate"/>
 		<property name="createUserAsString" column="createUser"/>
 		<property name="modifyUserAsString" column="modifyUser"/>
 		<property name="tagsAsString" type="java.lang.String" column="tags" length="500"/>

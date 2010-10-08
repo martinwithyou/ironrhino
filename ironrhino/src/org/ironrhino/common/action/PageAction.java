@@ -170,6 +170,7 @@ public class PageAction extends BaseAction {
 			page.setTags(temp.getTags());
 			page.setDisplayOrder(temp.getDisplayOrder());
 			page.setTitle(temp.getTitle());
+			page.setHead(temp.getHead());
 			page.setContent(temp.getContent());
 		}
 		pageManager.save(page);

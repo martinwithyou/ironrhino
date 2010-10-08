@@ -2,6 +2,7 @@ package org.ironrhino.core.struts;
 
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import com.opensymphony.module.sitemesh.Config;
@@ -12,11 +13,15 @@ import com.opensymphony.module.sitemesh.mapper.AbstractDecoratorMapper;
 
 public class RequestDecoratorMapper extends AbstractDecoratorMapper {
 
-	private String decoratorParameter = null;
+	private ServletContext sc;
+
+	private String decoratorParameter = "decorator";
 
 	public void init(Config config, Properties properties,
 			DecoratorMapper parent) throws InstantiationException {
 		super.init(config, properties, parent);
+		sc = config.getServletContext();
+		sc.setAttribute(this.getClass().getName(), this);
 		decoratorParameter = properties.getProperty("decorator.parameter",
 				"decorator");
 	}
@@ -29,5 +34,11 @@ public class RequestDecoratorMapper extends AbstractDecoratorMapper {
 			result = getNamedDecorator(request, decorator);
 		}
 		return result == null ? super.getDecorator(request, page) : result;
+	}
+
+	public void setDecorator(HttpServletRequest request, String name) {
+		Decorator result = getNamedDecorator(request, name);
+		if (result != null)
+			request.setAttribute(decoratorParameter, name);
 	}
 }

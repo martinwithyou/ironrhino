@@ -5,12 +5,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.struts.RequestDecoratorMapper;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.interceptor.annotations.Before;
 
 @AutoConfig(namespace = "/")
 public class SeriesPageAction extends BaseAction {
@@ -90,4 +93,12 @@ public class SeriesPageAction extends BaseAction {
 		return false;
 	}
 
+	@Before
+	public void setDecorator() {
+		RequestDecoratorMapper rdm = (RequestDecoratorMapper) ServletActionContext
+				.getServletContext().getAttribute(
+						RequestDecoratorMapper.class.getName());
+		if (rdm != null)
+			rdm.setDecorator(ServletActionContext.getRequest(), getName());
+	}
 }

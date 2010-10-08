@@ -33,6 +33,9 @@ public class Page extends BaseEntity implements Recordable, Ordered {
 	private String title;
 
 	@NotInJson
+	private String head;
+
+	@NotInJson
 	@SearchableProperty
 	private String content;
 
@@ -61,6 +64,14 @@ public class Page extends BaseEntity implements Recordable, Ordered {
 	@NotInJson
 	@SearchableProperty(index = Index.NOT_ANALYZED)
 	private Set<String> tags = new LinkedHashSet<String>(0);
+
+	public String getHead() {
+		return head;
+	}
+
+	public void setHead(String head) {
+		this.head = head;
+	}
 
 	public int getDisplayOrder() {
 		return displayOrder;
