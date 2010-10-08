@@ -27,7 +27,8 @@
 				if (typeof $.fn.mask != 'undefined')
 					ele.mask(MessageBundle.get('ajax.loading'));
 				else
-					ele.html('<div style="text-align:center;">'+MessageBundle.get('ajax.loading')+'</div>');
+					ele.html('<div style="text-align:center;">'
+							+ MessageBundle.get('ajax.loading') + '</div>');
 			},
 			complete : function() {
 				if (typeof $.fn.unmask != 'undefined')
@@ -36,7 +37,7 @@
 			success : function(data) {
 				if (typeof data != 'string') {
 					ele.empty();
-					$('#' + ele.attr('tmpl')).render(data).appendTo(ele);
+					$.tmpl($('#' + ele.attr('tmpl')), data).appendTo(ele);
 					_observe(ele);
 				}
 			}
