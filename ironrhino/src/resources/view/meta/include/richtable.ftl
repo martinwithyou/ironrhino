@@ -1,4 +1,4 @@
-<#macro richtable columns entityName action='' actionColumnWidth='60px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true>
+<#macro richtable columns entityName action='' actionColumnWidth='60px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true>
 <@rtstart action=action?has_content?string(action,entityName) entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters/>
 <#list columns?keys as name>
 <#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
@@ -20,7 +20,7 @@
 </#list>
 <@rttbodytrend entity=entity buttons=actionColumnButtons readonly=readonly/>
 </#list>
-<@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable searchable=searchable searchButtons=searchButtons/>
+<@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable searchable=searchable searchButtons=searchButtons showPageSize=showPageSize/>
 </#macro>
 
 <#macro rtstart action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true>
@@ -98,7 +98,7 @@ ${value?xhtml}<#t>
 </tr>
 </#macro>
 
-<#macro rtend buttons='' readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons=''>
+<#macro rtend buttons='' readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' showPageSize=true>
 </tbody>
 </table>
 <div class="toolbar clearfix">
@@ -119,6 +119,7 @@ ${value?xhtml}<#t>
 <a class="lastPage" title="${action.getText('lastpage')}" href="${resultPage.renderUrl(resultPage.totalPage)}">&gt;&gt;</a>
 </#if>
 <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/>/<span class="totalPage">${resultPage.totalPage}</span>${action.getText('page')}
+<#if showPageSize>
 ${action.getText('pagesize')}<select name="resultPage.pageSize" class="pageSize">
 <#local array=[5,10,20,50,100,500]>
 <#list array as ps>
@@ -126,6 +127,7 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize" class="pageSize"
 </#list> 
 <option value="${resultPage.totalRecord}">${action.getText('all')}</option>
 </select>${action.getText('row')}
+</#if>
 </#if>
 </div>
 <div class="action">
