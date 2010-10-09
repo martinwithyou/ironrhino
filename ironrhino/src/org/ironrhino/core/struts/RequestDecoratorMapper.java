@@ -5,6 +5,8 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts2.ServletActionContext;
+
 import com.opensymphony.module.sitemesh.Config;
 import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
@@ -40,5 +42,13 @@ public class RequestDecoratorMapper extends AbstractDecoratorMapper {
 		Decorator result = getNamedDecorator(request, name);
 		if (result != null)
 			request.setAttribute(decoratorParameter, name);
+	}
+
+	public static void setDecorator(String name) {
+		RequestDecoratorMapper rdm = (RequestDecoratorMapper) ServletActionContext
+				.getServletContext().getAttribute(
+						RequestDecoratorMapper.class.getName());
+		if (rdm != null)
+			rdm.setDecorator(ServletActionContext.getRequest(), name);
 	}
 }
