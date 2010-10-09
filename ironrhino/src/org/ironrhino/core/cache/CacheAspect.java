@@ -36,7 +36,7 @@ public class CacheAspect extends BaseAspect {
 	@Inject
 	private CacheManager cacheManager;
 
-	@Value("${cacheAspect.mutex:true}")
+	@Value("${cacheAspect.mutex:false}")
 	private boolean mutex;
 
 	@Value("${cacheAspect.mutexWait:" + DEFAULT_MUTEX_WAIT + "}")
