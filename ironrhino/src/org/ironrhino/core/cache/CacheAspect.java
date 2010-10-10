@@ -31,7 +31,7 @@ public class CacheAspect extends BaseAspect {
 
 	private final static String MUTEX = "_MUTEX_";
 
-	private final static int DEFAULT_MUTEX_WAIT = 500;
+	private final static int DEFAULT_MUTEX_WAIT = 200;
 
 	@Inject
 	private CacheManager cacheManager;
