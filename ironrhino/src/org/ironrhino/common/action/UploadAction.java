@@ -22,17 +22,17 @@ public class UploadAction extends BaseAction {
 
 	private String folder;
 
-	private boolean rename;
+	private boolean autorename;
 
 	@Inject
 	private transient FileStorage fileStorage;
 
-	public boolean getRename() {
-		return rename;
+	public boolean isAutorename() {
+		return autorename;
 	}
 
-	public void setRename(boolean rename) {
-		this.rename = rename;
+	public void setAutorename(boolean autorename) {
+		this.autorename = autorename;
 	}
 
 	public void setFolder(String folder) {
@@ -77,7 +77,7 @@ public class UploadAction extends BaseAction {
 		else
 			dir = "/upload/" + folder + "/";
 		String path = dir + filename;
-		if (rename) {
+		if (autorename) {
 			boolean exists = fileStorage.exists(path);
 			int i = 2;
 			while (exists) {
