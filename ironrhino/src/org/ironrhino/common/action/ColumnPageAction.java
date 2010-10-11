@@ -83,8 +83,8 @@ public class ColumnPageAction extends BaseAction {
 			page = pageManager.getByPath("/" + getName() + "/preface");
 			if (page != null)
 				return "columnpage";
-			if (columns != null && columns.length > 0)
-				column = columns[0];
+//			if (columns != null && columns.length > 0)
+//				column = columns[0];
 		}
 		if (resultPage == null)
 			resultPage = new ResultPage<Page>();
