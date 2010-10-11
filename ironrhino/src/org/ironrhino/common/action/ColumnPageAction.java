@@ -79,12 +79,16 @@ public class ColumnPageAction extends BaseAction {
 	public String list() {
 		columns = settingControl.getStringArray(getName() + ".column");
 		column = getUid();
-		if (StringUtils.isBlank(column) && columns != null
-				&& columns.length > 0)
-			column = columns[0];
+		if (StringUtils.isBlank(column)) {
+			page = pageManager.getByPath("/" + getName() + "/preface");
+			if (page != null)
+				return "columnpage";
+			if (columns != null && columns.length > 0)
+				column = columns[0];
+		}
 		if (resultPage == null)
 			resultPage = new ResultPage<Page>();
-		if (column == null)
+		if (StringUtils.isBlank(column))
 			resultPage = pageManager.findResultPageByTag(resultPage, getName());
 		else
 			resultPage = pageManager.findResultPageByTag(resultPage,
