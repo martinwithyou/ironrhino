@@ -3,6 +3,8 @@ package org.ironrhino.core.fs;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
 
 public interface FileStorage {
 
@@ -23,6 +25,8 @@ public interface FileStorage {
 	public void write(String path, OutputStream os);
 
 	public void write(String path, OutputStream os, boolean realtime);
+	
+	public boolean mkdir(String path);
 
 	public boolean delete(String path);
 
@@ -35,5 +39,11 @@ public interface FileStorage {
 	public boolean exists(String path);
 
 	public boolean rename(String fromPath, String toPath);
+	
+	public boolean isDirectory(String path);
+	
+	public List<String> listFiles(String path);
+	
+	public Map<String,Boolean> listFilesAndDirectory(String path);
 
 }

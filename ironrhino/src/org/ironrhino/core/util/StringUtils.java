@@ -355,6 +355,19 @@ public class StringUtils {
 		return trimTail(input, "/");
 	}
 
+	public static String compressRepeat(String input, String repeat) {
+		if (input == null || repeat == null)
+			return input;
+		String s = repeat + repeat;
+		while (input.contains(s))
+			input = input.replace(s, repeat);
+		return input;
+	}
+
+	public static String compressRepeatSlash(String input) {
+		return compressRepeat(input, "/");
+	}
+
 	public static boolean matchesAutocomplete(String text, String pattern) {
 		text = text.toLowerCase();
 		pattern = pattern.toLowerCase();

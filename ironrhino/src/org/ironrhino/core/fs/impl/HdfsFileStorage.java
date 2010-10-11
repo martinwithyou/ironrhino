@@ -7,6 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -55,6 +61,15 @@ public class HdfsFileStorage extends AbstractFileStorage {
 			if (b && cache != null)
 				cache.delete(path);
 			return b;
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e.getCause());
+		}
+	}
+
+	public boolean mkdir(String path) {
+		try {
+			return hdfs.mkdirs(new Path(path));
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e.getCause());
@@ -180,4 +195,56 @@ public class HdfsFileStorage extends AbstractFileStorage {
 		}
 	}
 
+	public boolean isDirectory(String path) {
+		try {
+			return hdfs.getFileStatus(new Path(path)).isDir();
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e.getCause());
+		}
+	}
+
+	public List<String> listFiles(String path) {
+		try {
+			final List<String> list = new ArrayList<String>();
+			for (FileStatus fs : hdfs.listStatus(new Path(path))) {
+				if (!fs.isDir()) {
+					list.add(fs.getPath().getName());
+				}
+			}
+			return list;
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e.getCause());
+		}
+	}
+
+	public Map<String, Boolean> listFilesAndDirectory(String path) {
+		try {
+			final Map<String, Boolean> map = new LinkedHashMap<String, Boolean>();
+			FileStatus[] arr = hdfs.listStatus(new Path(path));
+			List<FileStatus> list = new ArrayList<FileStatus>(arr.length);
+			for (FileStatus fs : arr)
+				list.add(fs);
+			Collections.sort(list, new Comparator<FileStatus>() {
+				@Override
+				public int compare(FileStatus o1, FileStatus o2) {
+					int i = Boolean.valueOf(o1.isDir()).compareTo(
+							Boolean.valueOf(o2.isDir()));
+					if (i == 0)
+						return o1.getPath().getName().compareTo(
+								o2.getPath().getName());
+					else
+						return i;
+				}
+			});
+			for (FileStatus fs : list) {
+				map.put(fs.getPath().getName(), !fs.isDir());
+			}
+			return map;
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e.getCause());
+		}
+	}
 }

@@ -2,6 +2,7 @@ package org.ironrhino.common.action;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
+import org.ironrhino.common.support.SettingControl;
+import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.model.ResultPage;
@@ -276,4 +279,34 @@ public class PageAction extends BaseAction {
 		}
 		return JSON;
 	}
+
+	private Map<String, String> files;
+
+	@Inject
+	private transient FileStorage fileStorage;
+
+	@Inject
+	private transient SettingControl settingControl;
+
+	public Map<String, String> getFiles() {
+		return files;
+	}
+
+	@JsonConfig(root = "files")
+	public String files() {
+		String fileStoragePath = settingControl.getStringValue(
+				"fileStorage.path", "/assets");
+		String path = getHomePath(getUid());
+		List<String> list = fileStorage.listFiles(path);
+		files = new LinkedHashMap<String, String>();
+		for (String s : list)
+			files.put(s, new StringBuilder(fileStoragePath).append(path)
+					.append("/").append(s).toString());
+		return JSON;
+	}
+
+	public static String getHomePath(String id) {
+		return UploadAction.UPLOAD_DIR + "/page/" + id;
+	}
+
 }
