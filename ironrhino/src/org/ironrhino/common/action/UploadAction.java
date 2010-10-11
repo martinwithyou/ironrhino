@@ -127,7 +127,10 @@ public class UploadAction extends BaseAction {
 		String path = getUid();
 		if (path != null) {
 			folder = path.substring(0, path.lastIndexOf('/'));
-			fileStorage.delete(UPLOAD_DIR + "/" + path);
+			boolean b = fileStorage.delete(UPLOAD_DIR + "/" + path);
+			if (!b)
+				addActionError(getText("delete.forbidden",
+						new String[] { path }));
 		}
 		return list();
 	}

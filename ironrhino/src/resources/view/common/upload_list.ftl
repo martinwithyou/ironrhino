@@ -38,7 +38,7 @@
 	</div>
 	</div>
 <table id="files" style="margin-top:50px;width:100%;">
-	<caption><@s.hidden id="folder" name="folder"/>${action.getText('folder')}:<span id="current_folder">${folder}/</span><span style="margin-left:50px;"></span><@button onclick="mkdir()" text="${action.getText('create.subfolder')}"/></caption>
+	<caption><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder">${folder}/</span><span style="margin-left:50px;"></span><@button onclick="mkdir()" text="${action.getText('create.subfolder')}"/></caption>
 	<tbody>
 	<tr>
 		<td>${action.getText('name')}</td>
