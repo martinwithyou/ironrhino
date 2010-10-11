@@ -22,8 +22,18 @@ public class UploadAction extends BaseAction {
 
 	private String folder;
 
+	private boolean rename;
+
 	@Inject
 	private transient FileStorage fileStorage;
+
+	public boolean getRename() {
+		return rename;
+	}
+
+	public void setRename(boolean rename) {
+		this.rename = rename;
+	}
 
 	public void setFolder(String folder) {
 		this.folder = folder;
@@ -61,9 +71,20 @@ public class UploadAction extends BaseAction {
 	}
 
 	private String createPath(String filename) {
+		String dir;
 		if (StringUtils.isBlank(folder))
-			return "/upload/" + filename;
+			dir = "/upload/";
 		else
-			return "/upload/" + folder + "/" + filename;
+			dir = "/upload/" + folder + "/";
+		String path = dir + filename;
+		if (rename) {
+			boolean exists = fileStorage.exists(path);
+			int i = 2;
+			while (exists) {
+				path = dir + "(" + (i++) + ")" + filename;
+				exists = fileStorage.exists(path);
+			}
+		}
+		return path;
 	}
 }

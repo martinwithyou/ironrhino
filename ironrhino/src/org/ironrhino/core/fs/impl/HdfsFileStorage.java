@@ -57,8 +57,20 @@ public class HdfsFileStorage extends AbstractFileStorage {
 			return b;
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
-			return false;
+			throw new RuntimeException(e.getMessage(), e.getCause());
 		}
+	}
+
+	public boolean exists(String path) {
+		try {
+			if (cache != null)
+				return cache.exists(path);
+			return hdfs.exists(new Path(path));
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e.getMessage(), e.getCause());
+		}
+
 	}
 
 	public boolean rename(String fromPath, String toPath) {
@@ -70,7 +82,7 @@ public class HdfsFileStorage extends AbstractFileStorage {
 			return b;
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
-			return false;
+			throw new RuntimeException(e.getMessage(), e.getCause());
 		}
 	}
 
@@ -112,7 +124,7 @@ public class HdfsFileStorage extends AbstractFileStorage {
 			return is;
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
-			return null;
+			throw new RuntimeException(e.getMessage(), e.getCause());
 		}
 	}
 
@@ -123,7 +135,7 @@ public class HdfsFileStorage extends AbstractFileStorage {
 			return copy(is, os);
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
-			return false;
+			throw new RuntimeException(e.getMessage(), e.getCause());
 		}
 	}
 
@@ -134,7 +146,7 @@ public class HdfsFileStorage extends AbstractFileStorage {
 			return true;
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
-			return false;
+			throw new RuntimeException(e.getMessage(), e.getCause());
 		}
 	}
 
@@ -144,7 +156,7 @@ public class HdfsFileStorage extends AbstractFileStorage {
 			return copy(is, os);
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
-			return false;
+			throw new RuntimeException(e.getMessage(), e.getCause());
 		}
 	}
 

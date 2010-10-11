@@ -25,6 +25,7 @@
 	<div style="clear:both;">
 	<div>
 	<span style="margin-right:10px;">${action.getText('folder')}:</span><@s.textfield theme="simple" name="folder" size="50"/>
+	<span style="margin-right:10px;">${action.getText('rename')}:</span><@s.checkbox theme="simple" name="rename"/>
 	</div>
 	<div style="text-align:center;">
 	<@s.submit theme="simple" value="${action.getText('upload')}"/>

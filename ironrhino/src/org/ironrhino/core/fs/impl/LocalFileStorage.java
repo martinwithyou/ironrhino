@@ -68,7 +68,7 @@ public class LocalFileStorage extends AbstractFileStorage {
 
 	public boolean save(InputStream is, String path) {
 		File dest = new File(directory, path);
-		if(!dest.getParentFile().mkdirs())
+		if (!dest.getParentFile().mkdirs())
 			return false;
 		try {
 			FileOutputStream os = new FileOutputStream(dest);
@@ -88,6 +88,10 @@ public class LocalFileStorage extends AbstractFileStorage {
 		} catch (Exception e) {
 
 		}
+	}
+
+	public boolean exists(String path) {
+		return new File(directory, path).exists();
 	}
 
 	public boolean rename(String fromPath, String toPath) {

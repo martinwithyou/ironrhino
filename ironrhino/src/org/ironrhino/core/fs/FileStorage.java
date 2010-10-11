@@ -31,6 +31,8 @@ public interface FileStorage {
 	public void setLastModified(String path, long lastModified);
 
 	public boolean copy(String path, FileStorage from, FileStorage to);
+	
+	public boolean exists(String path);
 
 	public boolean rename(String fromPath, String toPath);
 
