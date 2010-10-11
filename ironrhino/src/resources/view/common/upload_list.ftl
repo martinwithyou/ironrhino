@@ -38,10 +38,11 @@
 	</div>
 	</div>
 <table id="files" style="margin-top:50px;width:100%;">
-	<caption><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder">${folder}/</span><span style="margin-left:50px;"></span><@button onclick="mkdir()" text="${action.getText('create.subfolder')}"/></caption>
+	<caption><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder">${folder}<#if !folder?ends_with('/')>/</#if></span><span style="margin-left:50px;"></span><@button onclick="mkdir()" text="${action.getText('create.subfolder')}"/></caption>
 	<tbody>
 	<tr>
 		<td>${action.getText('name')}</td>
+		<td>${action.getText('preview')}</td>
 		<td>${action.getText('path')}</td>
 		<td width="100px"></td>
 	</tr>
@@ -50,6 +51,7 @@
 	<#list files.entrySet() as entry>
 	<tr>
 		<td><#if entry.value><a href="<@url value="${fileStoragePath}/upload${folder}/${entry.key}"/>" target="_blank">${entry.key}</a><#else><a style="color:blue;" class="ajax view" replacement="files" href="<@url value="/common/upload/list${folder}/${entry.key?replace('..','__')}"/>">${entry.key}</a></#if></td>
+		<td><#if entry.value && ['jpg','gif','png','bmp']?seq_contains(entry.key?lower_case?split('.')?last)><a href="<@url value="${fileStoragePath}/upload${folder}/${entry.key}"/>" target="_blank"><img src="<@url value="${fileStoragePath}/upload${folder}/${entry.key}"/>" style="width:50px;height:50px;"/></a></#if></td>
 		<td><#if entry.value><@url value="${fileStoragePath}/upload${folder}/${entry.key}"/></#if></td>
 		<td><#if entry.key!='..'><@button type="link" text="${action.getText('delete')}" class="ajax view" replacement="files" href="${getUrl('/common/upload/delete?id='+folder+'/'+entry.key)}" onprepare="confirm('${action.getText('confirm.prompt')}')"/></#if></td>
 	</tr>
