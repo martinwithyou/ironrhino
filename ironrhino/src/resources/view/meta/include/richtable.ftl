@@ -28,7 +28,7 @@
 <form id="${formid}" action="${getUrl(action)}" method="post" class="richtable ajax view" replacement="${formid}" <#if entityName!=action&&entityName!=''> entity="${entityName}"</#if><#if resizable> resizable="true" minColWidth="40"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
-<#if !name?starts_with('resultPage.')&&name!='keyword'>
+<#if name!='pn'&&name!='ps'&&!name?starts_with('resultPage.')&&name!='keyword'>
 <input type="hidden" name="${name}" value="${Parameters[name]}" />
 </#if>
 </#list>

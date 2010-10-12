@@ -514,7 +514,7 @@ Initialization.common = function() {
 			});
 };
 
-var HISTORY_ENABLED = typeof $.history.init != 'undefined'
+var HISTORY_ENABLED = typeof $.history != 'undefined'
 		&& ($('meta[name="history_enabled"]').attr('content') != 'false');
 var _history_ = false;
 Initialization.history = function() {
