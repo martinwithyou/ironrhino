@@ -3,6 +3,13 @@
 <head>
 <title>${action.getText('upload')}</title>
 <script>
+	function select(el){
+	 	var s = window.getSelection();
+	 	if(s.rangeCount > 0) s.removeAllRanges();
+		var range = document.createRange();
+		range.selectNode(el);
+		s.addRange(range);
+	}
 	function mkdir(){
 			$.alerts.prompt('', 'newfolder', '', function(t){
 				if(t){
@@ -33,26 +40,27 @@
 	<div style="clear:both;">
 	<div style="text-align:center;padding-top:30px;">
 	<@s.submit theme="simple" value="${action.getText('upload')}"/>
-	<span style="margin-left:10px;margin-right:10px;">${action.getText('autorename')}:</span><@s.checkbox theme="simple" name="autorename"/>
+	<@button onclick="mkdir()" text="${action.getText('create.subfolder')}"/>
 	<@button id="more" text="${action.getText('more')}"/>
+	<span style="margin-left:10px;margin-right:10px;">${action.getText('autorename')}:</span><@s.checkbox theme="simple" name="autorename"/>
 	</div>
 	</div>
 <table id="files" style="margin-top:50px;width:100%;">
-	<caption><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder">${folder}<#if !folder?ends_with('/')>/</#if></span><span style="margin-left:50px;"></span><@button onclick="mkdir()" text="${action.getText('create.subfolder')}"/></caption>
-	<tbody>
-	<tr>
+	<caption style="font-size:120%;font-weight:bold;"><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder" style="margin-left:10px;">${folder}<#if !folder?ends_with('/')>/</#if></span><span style="margin-left:50px;"></span></caption>
+	<hdead>
+	<tr style="font-weight:bold;">
 		<td>${action.getText('name')}</td>
 		<td>${action.getText('preview')}</td>
 		<td>${action.getText('path')}</td>
 		<td width="100px"></td>
 	</tr>
-	</tbody>
+	</thead>
 	<tbody>
 	<#list files.entrySet() as entry>
 	<tr>
-		<td><#if entry.value><a href="<@url value="${fileStoragePath}/upload${folder}/${entry.key}"/>" target="_blank">${entry.key}</a><#else><a style="color:blue;" class="ajax view" replacement="files" href="<@url value="/common/upload/list${folder}/${entry.key?replace('..','__')}"/>">${entry.key}</a></#if></td>
+		<td><#if entry.value><a style="color:#1c5a50;" href="<@url value="${fileStoragePath}/upload${folder}/${entry.key}"/>" target="_blank">${entry.key}</a><#else><a style="color:blue;" class="ajax view" replacement="files" href="<@url value="/common/upload/list${folder}/${entry.key?replace('..','__')}"/>">${entry.key}</a></#if></td>
 		<td><#if entry.value && ['jpg','gif','png','bmp']?seq_contains(entry.key?lower_case?split('.')?last)><a href="<@url value="${fileStoragePath}/upload${folder}/${entry.key}"/>" target="_blank"><img src="<@url value="${fileStoragePath}/upload${folder}/${entry.key}"/>" style="width:50px;height:50px;"/></a></#if></td>
-		<td><#if entry.value><@url value="${fileStoragePath}/upload${folder}/${entry.key}"/></#if></td>
+		<td><#if entry.value><span onclick="select(this)" ondblclick="select(this)"><@url value="${fileStoragePath}/upload${folder}/${entry.key}"/></span></#if></td>
 		<td><#if entry.key!='..'><@button type="link" text="${action.getText('delete')}" class="ajax view" replacement="files" href="${getUrl('/common/upload/delete?id='+folder+'/'+entry.key)}" onprepare="confirm('${action.getText('confirm.prompt')}')"/></#if></td>
 	</tr>
 	</#list>
