@@ -4,11 +4,14 @@
 <title>${action.getText('upload')}</title>
 <script>
 	function select(el){
-	 	var s = window.getSelection();
-	 	if(s.rangeCount > 0) s.removeAllRanges();
-		var range = document.createRange();
-		range.selectNode(el);
-		s.addRange(range);
+		try{
+		 	var s = window.getSelection();
+		 	if(s.rangeCount > 0) s.removeAllRanges();
+			var range = document.createRange();
+			range.selectNode(el);
+			s.addRange(range);
+		}catch(e){
+		}
 	}
 	function mkdir(){
 			$.alerts.prompt('', 'newfolder', '', function(t){
@@ -34,7 +37,7 @@
 </head>
 <body>
 <@s.form action="upload" method="post" enctype="multipart/form-data" cssClass="line">
-	<#list 1..3 as index>
+	<#list 1..6 as index>
 		<@s.file name="file" cssStyle="width:195px;"/>
 	</#list>
 	<div style="clear:both;">
