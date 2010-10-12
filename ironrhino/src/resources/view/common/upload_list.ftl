@@ -49,8 +49,8 @@
 	</div>
 	</div>
 <table id="files" style="margin-top:50px;width:100%;">
-	<caption style="font-size:120%;font-weight:bold;"><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder" style="margin-left:10px;">${folder}<#if !folder?ends_with('/')>/</#if></span><span style="margin-left:50px;"></span></caption>
-	<hdead>
+	<caption style="font-size:120%;font-weight:bold;"><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder" style="margin-left:10px;">${folder}<#if !folder?ends_with('/')>/</#if></span></caption>
+	<thead>
 	<tr style="font-weight:bold;">
 		<td>${action.getText('name')}</td>
 		<td>${action.getText('preview')}</td>
