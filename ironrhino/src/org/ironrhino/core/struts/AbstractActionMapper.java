@@ -17,14 +17,14 @@ public abstract class AbstractActionMapper implements ActionMapper {
 		// handle http dispatcher includes.
 		String uri = (String) request
 				.getAttribute("javax.servlet.include.servlet_path");
-		if (uri == null)
-			uri = org.apache.struts2.RequestUtils.getServletPath(request);
-		if ("".equals(uri))
-			uri = "/";
-		if (uri.equals("/index"))
-			return uri;
-		uri = request.getRequestURI();
-		return uri.substring(request.getContextPath().length());
+		if (uri == null) {
+			uri = request.getRequestURI();
+			uri = uri.substring(request.getContextPath().length());
+		}
+		// uri = org.apache.struts2.RequestUtils.getServletPath(request);
+		if (uri.equals("/") || "".equals(uri))
+			return "/index";
+		return uri;
 	}
 
 	public ActionMapping getMappingFromActionName(String actionName) {
