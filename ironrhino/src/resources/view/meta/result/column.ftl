@@ -26,7 +26,7 @@ ${action.getText('current.location')}:
 <dl>
 <#list resultPage.result as page>
 	<dd>
-		<a href="<@url value="/${name}/p${page.path}?column=${column}"/>"><#if page.title??><#assign title=page.title?interpret><@title/></#if></a>
+		<a href="<@url value="/${name}/p${page.path}"/><#if column??>?column=${column}</#if>"><#if page.title??><#assign title=page.title?interpret><@title/></#if></a>
 	</dd>
 </#list>
 </dl>
