@@ -1,8 +1,11 @@
 package org.ironrhino.security.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -13,6 +16,7 @@ import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +26,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Named("userManager")
 public class UserManagerImpl extends BaseManagerImpl<User> implements
 		UserManager {
+
+	@Inject
+	private ApplicationContext ctx;
+
+	private Collection<UserRoleMapper> mappers;
+
+	@PostConstruct
+	public void afterPropertiesSet() {
+		mappers = ctx.getBeansOfType(UserRoleMapper.class).values();
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -59,6 +73,13 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		auths.add(new GrantedAuthorityImpl(UserRole.ROLE_BUILTIN_USER));
 		for (String role : user.getRoles())
 			auths.add(new GrantedAuthorityImpl(role));
+		if (mappers != null)
+			for (UserRoleMapper mapper : mappers) {
+				String[] roles = mapper.map(user);
+				if (roles != null)
+					for (String role : roles)
+						auths.add(new GrantedAuthorityImpl(role));
+			}
 		user.setAuthorities(auths);
 	}
 
