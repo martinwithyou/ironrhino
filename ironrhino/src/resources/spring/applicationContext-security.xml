@@ -6,7 +6,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 	<security:http access-denied-page="/WEB-INF/view/jsp/error/403.jsp"
-		entry-point-ref="entryPoint">
+		entry-point-ref="entryPoint" access-decision-manager-ref="accessDecisionManager">
 		<security:intercept-url pattern="/assets/**" filters="none"/>
 		<security:intercept-url pattern="/common/**" access="ROLE_ADMINISTRATOR"/>
 		<security:intercept-url pattern="/login" access="ROLE_BUILTIN_ANONYMOUS"/>
@@ -25,6 +25,19 @@
 			<security:custom-filter ref="switchUserProcessingFilter" position="SWITCH_USER_FILTER"/>
 			-->
 	</security:http>
+	
+	<bean
+		id="accessDecisionManager"
+		class="org.springframework.security.access.vote.AffirmativeBased">
+		<property name="decisionVoters">
+			<list>
+				<bean
+					class="org.springframework.security.access.vote.RoleVoter">
+					<property name="rolePrefix" value="" />
+				</bean>
+			</list>
+		</property>
+	</bean>
 	
 	<bean id="rememberMeServices"
 		class="org.ironrhino.core.spring.security.DefaultTokenBasedRememberMeServices"
