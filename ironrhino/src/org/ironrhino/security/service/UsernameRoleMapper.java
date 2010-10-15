@@ -10,7 +10,8 @@ import org.ironrhino.security.model.User;
 public class UsernameRoleMapper implements UserRoleMapper {
 
 	public String[] map(User user) {
-		return new String[] { "USERNAME(" + user.getUsername() + ")" };
+		return new String[] { new StringBuilder("USERNAME(").append(
+				user.getUsername()).append(")").toString() };
 	}
 
 }
