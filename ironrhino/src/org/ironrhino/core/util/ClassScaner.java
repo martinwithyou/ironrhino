@@ -175,6 +175,8 @@ public class ClassScaner {
 	}
 
 	private static boolean isExcludePackage(String name) {
+		if (name.equals("org.ironrhino.core.model"))
+			return false;
 		if (name.equals("net") || name.equals("com") || name.equals("org")
 				|| name.equals("org.ironrhino")) {
 			return true;
