@@ -1,8 +1,10 @@
 package org.ironrhino.core.struts;
 
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 
 import org.apache.struts2.sitemesh.OldDecorator2NewStrutsFreemarkerDecorator;
+import org.apache.struts2.sitemesh.StrutsSiteMeshFactory;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import com.opensymphony.module.sitemesh.Config;
@@ -13,6 +15,10 @@ import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.xwork2.inject.Inject;
 
 public class MyFreeMarkerPageFilter extends SiteMeshFilter {
+	/*
+	 * @see com.opensymphony.module.sitemesh.Factory.SITEMESH_FACTORY
+	 */
+	private static final String SITEMESH_FACTORY = "sitemesh.factory"; 
 
 	@Inject(required = false)
 	public static void setFreemarkerManager(FreemarkerManager mgr) {
@@ -25,6 +31,10 @@ public class MyFreeMarkerPageFilter extends SiteMeshFilter {
 	public void init(FilterConfig filterConfig) {
 		this.filterConfig = filterConfig;
 		super.init(filterConfig);
+		ServletContext sc = filterConfig.getServletContext();
+		Factory instance = (Factory)sc.getAttribute(SITEMESH_FACTORY);
+        if (instance == null) 
+                sc.setAttribute(SITEMESH_FACTORY, new StrutsSiteMeshFactory(new Config(filterConfig)));
 	}
 
 	@Override
