@@ -23561,7 +23561,7 @@ Richtable = {
 					url = url.substring(0, url.indexOf('?'));
 				var inputform = $('#_window_ form.ajax');
 				if (inputform.length) {
-					$(':input', inputform).filter(function(i) {
+					$(':input:visible', inputform).filter(function(i) {
 								return !$(this).val();
 							}).eq(0).focus();
 					if (!inputform.hasClass('keepopen')) {
