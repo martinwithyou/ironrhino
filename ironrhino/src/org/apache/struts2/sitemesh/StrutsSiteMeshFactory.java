@@ -1,16 +1,14 @@
 package org.apache.struts2.sitemesh;
 
-import com.opensymphony.module.sitemesh.Config;
-import com.opensymphony.module.sitemesh.factory.DefaultFactory;
-import com.opensymphony.xwork2.util.logging.Logger;
-import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.lang.xwork.ObjectUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 
+import com.opensymphony.module.sitemesh.Config;
+import com.opensymphony.module.sitemesh.factory.DefaultFactory;
+
 
 public class StrutsSiteMeshFactory extends DefaultFactory {
-    private static final Logger LOG = LoggerFactory.getLogger(StrutsSiteMeshFactory.class);
 
     public StrutsSiteMeshFactory(Config config) {
         super(config);
