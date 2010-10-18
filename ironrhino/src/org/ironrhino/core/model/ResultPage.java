@@ -3,6 +3,7 @@ package org.ironrhino.core.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,13 @@ public class ResultPage<T> implements Serializable {
 	private boolean reverse;
 
 	private int start = -1;
+
+	private Map<String, Boolean> sorts = new LinkedHashMap<String, Boolean>(
+			2);
+
+	public Map<String, Boolean> getSorts() {
+		return sorts;
+	}
 
 	public int getStart() {
 		return (this.pageNo - 1) * this.pageSize;

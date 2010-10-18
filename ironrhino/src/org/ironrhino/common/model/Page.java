@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import org.compass.annotations.Index;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
-import org.compass.annotations.Store;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -47,11 +46,11 @@ public class Page extends BaseEntity implements Recordable, Ordered {
 	private Date draftDate;
 
 	@NotInCopy
-	@SearchableProperty(index = Index.NO, store = Store.YES)
+	@SearchableProperty
 	private Date createDate;
 
 	@NotInCopy
-	@SearchableProperty(index = Index.NO, store = Store.YES)
+	@SearchableProperty
 	private Date modifyDate;
 
 	@NotInCopy

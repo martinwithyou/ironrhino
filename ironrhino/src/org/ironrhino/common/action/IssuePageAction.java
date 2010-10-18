@@ -15,7 +15,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.interceptor.annotations.Before;
 
 @AutoConfig(namespace = "/")
-public class ColumnPageAction extends BaseAction {
+public class IssuePageAction extends BaseAction {
 
 	private static final long serialVersionUID = -7189565572156313486L;
 
@@ -24,10 +24,6 @@ public class ColumnPageAction extends BaseAction {
 
 	@Inject
 	protected SettingControl settingControl;
-
-	protected String column;
-
-	protected String[] columns;
 
 	protected ResultPage<Page> resultPage;
 
@@ -41,18 +37,6 @@ public class ColumnPageAction extends BaseAction {
 
 	public void setResultPage(ResultPage<Page> resultPage) {
 		this.resultPage = resultPage;
-	}
-
-	public String getColumn() {
-		return column;
-	}
-
-	public void setColumn(String column) {
-		this.column = column;
-	}
-
-	public String[] getColumns() {
-		return columns;
 	}
 
 	public Page getPage() {
@@ -77,33 +61,20 @@ public class ColumnPageAction extends BaseAction {
 
 	@Override
 	public String list() {
-		columns = settingControl.getStringArray(getName() + ".column");
-		column = getUid();
-		if (StringUtils.isBlank(column)) {
-			page = pageManager.getByPath("/" + getName() + "/preface");
-			if (page != null)
-				return "columnpage";
-//			if (columns != null && columns.length > 0)
-//				column = columns[0];
-		}
 		if (resultPage == null)
 			resultPage = new ResultPage<Page>();
-		if (StringUtils.isBlank(column))
-			resultPage = pageManager.findResultPageByTag(resultPage, getName());
-		else
-			resultPage = pageManager.findResultPageByTag(resultPage,
-					new String[] { getName(), column });
-		return "columnlist";
+		resultPage.getSorts().put("createDate", true);
+		resultPage = pageManager.findResultPageByTag(resultPage, getName());
+		return "issuelist";
 	}
 
 	public String p() {
-		columns = settingControl.getStringArray(getName() + ".column");
 		String path = getUid();
 		if (StringUtils.isNotBlank(path)) {
 			path = "/" + path;
 			page = pageManager.getByPath(path);
 		}
-		return "columnpage";
+		return "issuepage";
 	}
 
 	@Before

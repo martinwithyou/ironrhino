@@ -194,7 +194,13 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			cc.setPageNo(resultPage.getPageNo());
 			cc.setPageSize(resultPage.getPageSize());
 			cc.setAliases(new String[] { "page" });
-			cc.addSort("displayOrder", null, false);
+			Map<String, Boolean> sorts = resultPage.getSorts();
+			if (sorts.size() > 0) {
+				for (Map.Entry<String, Boolean> entry : sorts.entrySet())
+					cc.addSort(entry.getKey(), null, entry.getValue());
+			} else {
+				cc.addSort("displayOrder", null, false);
+			}
 			CompassSearchResults searchResults = compassSearchService
 					.search(cc);
 			CompassHit[] hits = searchResults.getHits();
@@ -219,7 +225,18 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 										.like("tagsAsString", "," + tag[i]
 												+ ",", MatchMode.ANYWHERE)))));
 			}
-			dc.addOrder(Order.asc("displayOrder"));
+			Map<String, Boolean> sorts = resultPage.getSorts();
+			if (sorts.size() > 0) {
+				for (Map.Entry<String, Boolean> entry : sorts.entrySet()) {
+					if (entry.getValue())
+						dc.addOrder(Order.desc(entry.getKey()));
+					else
+						dc.addOrder(Order.asc(entry.getKey()));
+				}
+			} else {
+				dc.addOrder(Order.asc("displayOrder"));
+			}
+
 			resultPage.setDetachedCriteria(dc);
 			resultPage = findByResultPage(resultPage);
 		}

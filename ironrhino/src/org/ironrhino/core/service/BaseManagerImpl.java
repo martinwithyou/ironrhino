@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -205,6 +206,17 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		resultPage.getDetachedCriteria().setProjection(null);
 		resultPage.getDetachedCriteria().setResultTransformer(
 				CriteriaSpecification.ROOT_ENTITY);
+		Map<String, Boolean> sorts = resultPage.getSorts();
+		if (sorts.size() > 0) {
+			for (Map.Entry<String, Boolean> entry : sorts.entrySet()) {
+				if (entry.getValue())
+					resultPage.getDetachedCriteria().addOrder(
+							Order.desc(entry.getKey()));
+				else
+					resultPage.getDetachedCriteria().addOrder(
+							Order.asc(entry.getKey()));
+			}
+		}
 		int start, end;
 		if (!resultPage.isReverse()) {
 			start = (resultPage.getPageNo() - 1) * resultPage.getPageSize();

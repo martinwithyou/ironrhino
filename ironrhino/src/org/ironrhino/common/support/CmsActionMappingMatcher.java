@@ -31,6 +31,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 	public static final String SETTING_KEY_SERIESES = "cms.serieses";
 
 	public static final String SETTING_KEY_COLUMNS = "cms.columns";
+	
+	public static final String SETTING_KEY_ISSUES = "cms.issues";
 
 	public static final String DEFAULT_PAGE_PATH_PREFIX = "/p/";
 
@@ -42,10 +44,15 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 
 	@Value("${" + SETTING_KEY_COLUMNS + ":}")
 	private String columns = "";
+	
+	@Value("${" + SETTING_KEY_ISSUES + ":}")
+	private String issues = "";
 
 	private List<String> seriesesList;
 
 	private List<String> columnsList;
+	
+	private List<String> issuesList;
 
 	@Autowired(required = false)
 	private SettingControl settingControl;
@@ -54,6 +61,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 	public void afterPropertiesSet() {
 		buildSerieses();
 		buildColumns();
+		buildIssues();
 	}
 
 	public ActionMapping tryMatch(HttpServletRequest request,
@@ -120,6 +128,39 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				return mapping;
 			}
 		}
+		for (String name : issuesList) {
+			String listurl = new StringBuilder("/").append(name).append(
+					"/list/").toString();
+			String pageurl = new StringBuilder("/").append(name).append(
+					DEFAULT_PAGE_PATH_PREFIX).toString();
+			if (uri.equals("/" + name) || uri.startsWith(listurl)
+					|| uri.startsWith(pageurl)) {
+				ActionMapping mapping = new ActionMapping();
+				mapping.setNamespace("/");
+				mapping.setName("issuePage");
+				Map<String, Object> params = new HashMap<String, Object>(3);
+				params.put("name", name);
+				if (uri.startsWith(listurl)) {
+					mapping.setMethod("list");
+					try {
+						params.put(DefaultActionMapper.ID, URLDecoder.decode(
+								uri.substring(listurl.length()), encoding));
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				} else if (uri.startsWith(pageurl)) {
+					mapping.setMethod("p");
+					try {
+						params.put(DefaultActionMapper.ID, URLDecoder.decode(
+								uri.substring(pageurl.length()), encoding));
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				}
+				mapping.setParams(params);
+				return mapping;
+			}
+		}
 		return null;
 	}
 
@@ -144,6 +185,17 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				list.add(s);
 		columnsList = list;
 	}
+	
+	private void buildIssues() {
+		List<String> list = new ArrayList<String>();
+		if (StringUtils.isNotBlank(issues))
+			for (String s : issues.split(","))
+				list.add(s);
+		if (settingControl != null)
+			for (String s : settingControl.getStringArray(SETTING_KEY_ISSUES))
+				list.add(s);
+		issuesList = list;
+	}
 
 	public void onApplicationEvent(ApplicationEvent event) {
 		if (event instanceof EntityOperationEvent) {
@@ -154,6 +206,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 					buildSerieses();
 				} else if (settingInEvent.getKey().equals(SETTING_KEY_COLUMNS)) {
 					buildColumns();
+				} else if (settingInEvent.getKey().equals(SETTING_KEY_ISSUES)) {
+					buildIssues();
 				}
 			}
 		}

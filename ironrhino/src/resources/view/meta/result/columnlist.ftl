@@ -21,7 +21,6 @@ ${action.getText('current.location')}:
 <li<#if selected> class="selected"</#if>><#if selected><span><#else><a href="<@url value="/${name}/list/${var}"/>" class="ajax view"></#if>${var}<#if selected></span><#else></a></#if></li>
 </#list>
 </ul>
-<#if column??>
 <div class="list">
 <dl>
 <#list resultPage.result as page>
@@ -32,7 +31,6 @@ ${action.getText('current.location')}:
 </dl>
 <@pagination class="ajax view" replacement="list" cache="true"/>
 </div>
-</#if>
 </div>
 </body>
 </html></#escape>
