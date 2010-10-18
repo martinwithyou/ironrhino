@@ -22519,7 +22519,7 @@ Message = {
 
 Form = {
 	focus : function(form) {
-		var arr = $(':input', form).get();
+		var arr = $(':input:visible', form).get();
 		for (var i = 0; i < arr.length; i++) {
 			if ($('.field_error', $(arr[i]).parent()).length) {
 				setTimeout(function() {
@@ -22823,11 +22823,12 @@ Initialization.history = function() {
 Observation.common = function(container) {
 	$('div.action_error,div.action_message,div.field_error,ul.action_error li,ul.action_message li')
 			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
-	var ele = $('.focus:eq(0)', container);
+	var ele = ($(container).attr('tagName') == 'FORM' && $(container)
+			.hasClass('focus')) ? container : $('.focus:eq(0)', container);
 	if (ele.attr('tagName') != 'FORM') {
 		ele.focus();
 	} else {
-		var arr = $(':input', ele).toArray();
+		var arr = $(':input:visible', ele).toArray();
 		for (var i = 0; i < arr.length; i++) {
 			if (!$(arr[i]).val()) {
 				$(arr[i]).focus();
@@ -22839,7 +22840,6 @@ Observation.common = function(container) {
 				if (!$(this).hasClass('ajax'))
 					$(this).submit(function() {
 								$('.action_message,.action_error').remove();
-								$('.field_error', this).remove();
 								return Form.validate(this)
 							});
 			});
@@ -22970,7 +22970,6 @@ Observation.common = function(container) {
 					if (!Ajax.fire(target, 'onprepare'))
 						return false;
 					$('.action_message,.action_error').remove();
-					$('.field_error', target).remove();
 					if (!Form.validate(target))
 						return false;
 					Indicator.text = $(target).attr('indicator');
@@ -23005,7 +23004,9 @@ Observation.common = function(container) {
 						$(this).ajaxSubmit(options);
 						return false;
 					});
-			$('input', this).keyup(function() {
+			$('input', this).keyup(function(event) {
+						if (event.keyCode == 13)
+							return true;
 						if (!$(this).attr('keyupValidate')) {
 							$(this).attr('keyupValidate', 'true');
 						} else {
