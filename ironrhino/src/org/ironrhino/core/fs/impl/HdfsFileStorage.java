@@ -197,7 +197,7 @@ public class HdfsFileStorage extends AbstractFileStorage {
 
 	public boolean isDirectory(String path) {
 		try {
-			return hdfs.getFileStatus(new Path(path)).isDir();
+			return hdfs.getFileStatus(new Path(path)).isDirectory();
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e.getCause());
@@ -208,7 +208,7 @@ public class HdfsFileStorage extends AbstractFileStorage {
 		try {
 			final List<String> list = new ArrayList<String>();
 			for (FileStatus fs : hdfs.listStatus(new Path(path))) {
-				if (!fs.isDir()) {
+				if (!fs.isDirectory()) {
 					list.add(fs.getPath().getName());
 				}
 			}
@@ -229,8 +229,8 @@ public class HdfsFileStorage extends AbstractFileStorage {
 			Collections.sort(list, new Comparator<FileStatus>() {
 				@Override
 				public int compare(FileStatus o1, FileStatus o2) {
-					int i = Boolean.valueOf(o1.isDir()).compareTo(
-							Boolean.valueOf(o2.isDir()));
+					int i = Boolean.valueOf(o1.isDirectory()).compareTo(
+							Boolean.valueOf(o2.isDirectory()));
 					if (i == 0)
 						return o1.getPath().getName().compareTo(
 								o2.getPath().getName());
@@ -239,7 +239,7 @@ public class HdfsFileStorage extends AbstractFileStorage {
 				}
 			});
 			for (FileStatus fs : list) {
-				map.put(fs.getPath().getName(), !fs.isDir());
+				map.put(fs.getPath().getName(), !fs.isDirectory());
 			}
 			return map;
 		} catch (IOException e) {
