@@ -15,15 +15,15 @@ import javax.annotation.PreDestroy;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.util.AppInfo;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.util.Assert;
 
 public class StringStore implements BeanNameAware {
 
-	private static Log log = LogFactory.getLog(StringStore.class);
+	private static Logger log = LoggerFactory.getLogger(StringStore.class);
 
 	private List<String> buffer = new ArrayList<String>(100);
 

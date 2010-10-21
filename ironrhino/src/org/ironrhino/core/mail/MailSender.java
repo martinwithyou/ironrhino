@@ -8,8 +8,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -23,7 +23,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
  */
 public class MailSender {
 
-	private Log log = LogFactory.getLog(MailSender.class);
+	private Logger log = LoggerFactory.getLogger(MailSender.class);
 
 	private String defaultFrom = "billgates@gmail.com";
 

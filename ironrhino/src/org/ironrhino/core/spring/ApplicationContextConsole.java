@@ -13,8 +13,8 @@ import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.event.SetPropertyEvent;
@@ -35,7 +35,7 @@ public class ApplicationContextConsole implements ApplicationListener {
 	private static final Pattern SET_PROPERTY_EXPRESSION_PATTERN = Pattern
 			.compile("(^[a-zA-Z][a-zA-Z0-9_\\-]*\\.[a-zA-Z][a-zA-Z0-9_\\-]*\\s*=\\s*.+$)");
 
-	protected Log log = LogFactory.getLog(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	@Inject
 	private ApplicationContext ctx;

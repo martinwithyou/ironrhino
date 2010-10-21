@@ -12,8 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.stat.Key;
 import org.ironrhino.core.stat.StatLog;
 import org.ironrhino.core.util.RoundRobin;
@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
 public class GroupedDataSource extends AbstractDataSource implements
 		BeanNameAware {
 
-	private Log log = LogFactory.getLog(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private int maxRetryTimes = 3;
 

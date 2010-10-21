@@ -9,8 +9,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.ScopesHashModel;
 import org.ironrhino.core.util.AppInfo;
@@ -34,7 +34,7 @@ import freemarker.template.TemplateModelException;
 
 public class MyFreemarkerManager extends FreemarkerManager {
 
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	protected freemarker.template.Configuration createConfiguration(

@@ -10,8 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
 import org.springframework.remoting.caucho.HessianServiceExporter;
@@ -20,7 +20,7 @@ import com.caucho.hessian.server.HessianSkeleton;
 
 public class HessianServer extends HessianServiceExporter {
 
-	private Log log = LogFactory.getLog(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private static ThreadLocal<Object> service = new ThreadLocal<Object>();
 

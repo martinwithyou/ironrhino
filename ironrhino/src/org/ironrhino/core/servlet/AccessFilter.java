@@ -20,9 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.MDC;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.core.util.UserAgent;
@@ -33,9 +33,9 @@ import org.springframework.context.ApplicationContext;
 @Named
 public class AccessFilter implements Filter {
 
-	private Log accesLog = LogFactory.getLog("access");
+	private Logger accesLog = LoggerFactory.getLogger("access");
 
-	private Log accesWarnLog = LogFactory.getLog("access-warn");
+	private Logger accesWarnLog = LoggerFactory.getLogger("access-warn");
 
 	public static final long DEFAULT_RESPONSETIMETHRESHOLD = 5000;
 
@@ -142,7 +142,7 @@ public class AccessFilter implements Filter {
 					" response time:").append(responseTime).append("ms");
 			accesWarnLog.warn(sb.toString());
 		}
-		MDC.getContext().clear();
+		MDC.clear();
 	}
 
 	public void destroy() {

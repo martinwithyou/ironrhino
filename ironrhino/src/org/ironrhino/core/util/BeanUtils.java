@@ -6,14 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.model.BaseTreeableEntity;
 
 public class BeanUtils {
 
-	private static final Log log = LogFactory.getLog(BeanUtils.class);
+	private static final Logger log = LoggerFactory.getLogger(BeanUtils.class);
 
 	public static boolean hasProperty(Class clazz, String name) {
 		if (org.springframework.beans.BeanUtils.getPropertyDescriptor(clazz,

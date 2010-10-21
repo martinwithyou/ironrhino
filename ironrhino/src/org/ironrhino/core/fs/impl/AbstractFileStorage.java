@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.fs.FileStorage;
 import org.springframework.beans.factory.annotation.Value;
 
 public abstract class AbstractFileStorage implements FileStorage {
 
-	protected Log log = LogFactory.getLog(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	protected int bufferSize = 512 * 1024;
 

@@ -2,8 +2,8 @@ package org.ironrhino.core.stat;
 
 import java.io.File;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.util.AppInfo;
 
 public class StatLogSettings {
@@ -24,7 +24,7 @@ public class StatLogSettings {
 
 	public static final String STAT_LOG_FILE_NAME = "stat.log";
 
-	private static final Log log = LogFactory.getLog(StatLogSettings.class);
+	private static final Logger log = LoggerFactory.getLogger(StatLogSettings.class);
 
 	private static int intervalUnit = 60; // senconds
 

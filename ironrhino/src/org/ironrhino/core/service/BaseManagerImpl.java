@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Query;
@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
-	protected Log log = LogFactory.getLog(BaseManagerImpl.class);
+	protected Logger log = LoggerFactory.getLogger(BaseManagerImpl.class);
 
 	protected Class<T> entityClass;
 

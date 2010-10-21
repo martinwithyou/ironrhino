@@ -1,7 +1,7 @@
 package org.ironrhino.core.struts;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
@@ -9,8 +9,8 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
 public class ExceptionInterceptor extends AbstractInterceptor {
 
-	protected static final Log log = LogFactory
-			.getLog(ExceptionInterceptor.class);
+	protected static final Logger log = LoggerFactory
+			.getLogger(ExceptionInterceptor.class);
 
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {

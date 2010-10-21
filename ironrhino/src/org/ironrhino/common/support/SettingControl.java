@@ -9,8 +9,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.criterion.Order;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.core.event.EntityOperationEvent;
@@ -24,7 +24,7 @@ import org.springframework.context.ApplicationListener;
 @Named("settingControl")
 public class SettingControl implements ApplicationListener {
 
-	protected Log log = LogFactory.getLog(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	private Map<String, Setting> settings;
 

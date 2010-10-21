@@ -34,7 +34,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	private ZooKeeper zooKeeper;
 
-	//private String connectString = "localhost:2181/remoting";
+	// private String connectString = "localhost:2181/remoting";
 	private String connectString;
 
 	private int sessionTimeout = 3000;
@@ -180,7 +180,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 				zooKeeper.create(parentNode, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
 						CreateMode.PERSISTENT);
 			} catch (Exception e1) {
-				log.info(e1);
+				log.info(e1.getMessage(), e1);
 				try {
 					Thread.sleep(2000);
 					zooKeeper.create(parentNode, data,

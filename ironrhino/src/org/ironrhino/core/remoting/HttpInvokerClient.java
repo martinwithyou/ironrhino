@@ -8,8 +8,8 @@ import java.util.concurrent.ExecutorService;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 
 public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
-	private static Log log = LogFactory.getLog(HttpInvokerClient.class);
+	private static Logger log = LoggerFactory.getLogger(HttpInvokerClient.class);
 
 	@Autowired(required = false)
 	private ServiceRegistry serviceRegistry;

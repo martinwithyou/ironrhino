@@ -8,8 +8,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.metadata.Remoting;
 import org.ironrhino.core.remoting.HessianClient;
 import org.ironrhino.core.remoting.HttpInvokerClient;
@@ -23,7 +23,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		BeanFactoryPostProcessor {
 
-	protected Log log = LogFactory.getLog(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	ConfigurableListableBeanFactory beanFactory;
 

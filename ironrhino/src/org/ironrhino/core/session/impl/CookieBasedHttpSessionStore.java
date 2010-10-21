@@ -11,8 +11,8 @@ import javax.inject.Singleton;
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.SessionCompressorManager;
@@ -24,7 +24,7 @@ import org.ironrhino.core.util.RequestUtils;
 @Named("cookieBased")
 public class CookieBasedHttpSessionStore implements HttpSessionStore {
 
-	protected Log log = LogFactory.getLog(this.getClass());
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public static final String DEFAULT_SESSION_COOKIE_NAME = "s";
 

@@ -7,8 +7,8 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.struts.TemplateProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.JmsException;
@@ -19,7 +19,7 @@ import freemarker.template.Template;
 
 public class MailService {
 
-	private Log log = LogFactory.getLog(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired(required = false)
 	private TemplateProvider templateProvider;

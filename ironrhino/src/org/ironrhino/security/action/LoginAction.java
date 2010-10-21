@@ -5,8 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
@@ -30,7 +30,7 @@ public class LoginAction extends BaseAction {
 
 	private static final long serialVersionUID = 2783386542815083811L;
 
-	private static Log log = LogFactory.getLog(LoginAction.class);
+	private static Logger log = LoggerFactory.getLogger(LoginAction.class);
 
 	private String password;
 

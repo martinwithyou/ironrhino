@@ -7,12 +7,12 @@ import java.net.URLEncoder;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.util.AppInfo;
 
 public class RC4 {
-	private static Log log = LogFactory.getLog(RC4.class);
+	private static Logger log = LoggerFactory.getLogger(RC4.class);
 
 	public static final String DEFAULT_KEY_LOCATION = "/resources/key/rc4";
 	public static final String KEY_DIRECTORY = "/key/";

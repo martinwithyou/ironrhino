@@ -8,8 +8,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.aspectj.lang.JoinPoint;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.util.AuthzUtils;
@@ -19,7 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class BaseAspect implements Ordered {
 
-	protected Log log = LogFactory.getLog(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	protected int order;
 

@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.mail.MailService;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.util.ExceptionUtils;
@@ -15,7 +15,7 @@ import org.springframework.mail.SimpleMailMessage;
 
 public class BatchExecutor {
 
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	private List<String> commands = Collections.EMPTY_LIST;
 

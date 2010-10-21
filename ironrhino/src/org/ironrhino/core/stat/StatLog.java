@@ -9,19 +9,19 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.slf4j.LoggerFactory;
 
 public class StatLog {
 
 	private static final Logger statLogger = Logger.getLogger("Stat");
 
-	private static final Log log = LogFactory.getLog(StatLog.class);
+	private static final org.slf4j.Logger log = LoggerFactory
+			.getLogger(StatLog.class);
 
 	private static final Lock timerLock = new ReentrantLock();
 

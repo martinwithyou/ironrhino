@@ -6,8 +6,8 @@ import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.StartTag;
 import ognl.OgnlContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.HtmlUtils;
@@ -18,7 +18,7 @@ import com.opensymphony.xwork2.ActionContext;
 
 public class CacheContext {
 
-	private static Log log = LogFactory.getLog(CacheContext.class);
+	private static Logger log = LoggerFactory.getLogger(CacheContext.class);
 
 	public static final String FORCE_FLUSH_PARAM_NAME = "_ff_";
 

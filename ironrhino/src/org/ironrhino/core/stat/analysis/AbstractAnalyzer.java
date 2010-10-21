@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.stat.Key;
 import org.ironrhino.core.stat.KeyValuePair;
 import org.ironrhino.core.stat.StatLogSettings;
@@ -24,7 +24,7 @@ import org.ironrhino.core.util.TextFileIterator;
 
 public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
-	protected Log log = LogFactory.getLog(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	protected Iterator<? extends KeyValuePair> iterator;
 

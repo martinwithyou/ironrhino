@@ -10,8 +10,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.context.ApplicationContext;
@@ -20,7 +20,7 @@ import org.springframework.context.ApplicationContext;
 @Named
 public class SessionCompressorManager {
 
-	private Log log = LogFactory.getLog(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private TypeReference<Map<String, String>> type = new TypeReference<Map<String, String>>() {
 	};

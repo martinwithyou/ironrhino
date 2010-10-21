@@ -17,15 +17,15 @@ import net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator;
 import net.rubyeye.xmemcached.utils.AddrUtil;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.springframework.util.Assert;
 
 public class XMemcachedCacheManager implements CacheManager {
 
-	private Log log = LogFactory.getLog(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private String serverAddress;
 

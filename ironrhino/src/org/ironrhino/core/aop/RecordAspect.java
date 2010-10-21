@@ -5,8 +5,8 @@ import java.util.Date;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
@@ -24,7 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Singleton
 @Named
 public class RecordAspect extends HibernateDaoSupport implements Ordered {
-	private Log log = LogFactory.getLog(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	public RecordAspect() {
 		order = 1;

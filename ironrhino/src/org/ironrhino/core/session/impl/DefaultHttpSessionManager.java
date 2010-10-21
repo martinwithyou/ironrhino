@@ -7,8 +7,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.WrappedHttpSession;
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Named("httpSessionManager")
 public class DefaultHttpSessionManager implements HttpSessionManager {
 
-	protected Log log = LogFactory.getLog(this.getClass());
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public static final String DEFAULT_SESSION_TRACKER_NAME = "T";
 

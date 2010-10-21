@@ -21,8 +21,8 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
@@ -57,7 +57,7 @@ public class EntityAction extends BaseAction {
 
 	private static final long serialVersionUID = -8442983706126047413L;
 
-	protected static Log log = LogFactory.getLog(EntityAction.class);
+	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
 
 	private transient BaseManager<Persistable> baseManager;
 

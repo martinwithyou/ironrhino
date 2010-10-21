@@ -6,8 +6,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.mail.MailService;
@@ -37,7 +37,7 @@ public class SignupAction extends BaseAction {
 
 	private static final long serialVersionUID = 8175406892708878896L;
 
-	protected static Log log = LogFactory.getLog(SignupAction.class);
+	protected static Logger log = LoggerFactory.getLogger(SignupAction.class);
 
 	private String email;
 

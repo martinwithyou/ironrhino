@@ -12,12 +12,12 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ironrhino.core.util.AppInfo;
 
 public class Blowfish {
-	private static Log log = LogFactory.getLog(Blowfish.class);
+	private static Logger log = LoggerFactory.getLogger(Blowfish.class);
 
 	public static final String DEFAULT_KEY_LOCATION = "/resources/key/blowfish";
 	public static final String KEY_DIRECTORY = "/key/";

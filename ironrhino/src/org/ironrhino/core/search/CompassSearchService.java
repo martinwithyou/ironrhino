@@ -3,8 +3,8 @@ package org.ironrhino.core.search;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.compass.core.Compass;
 import org.compass.core.CompassCallback;
 import org.compass.core.CompassDetachedHits;
@@ -21,7 +21,7 @@ import org.springframework.util.Assert;
 
 public class CompassSearchService {
 
-	protected Log log = LogFactory.getLog(CompassSearchService.class);
+	protected Logger log = LoggerFactory.getLogger(CompassSearchService.class);
 
 	@Inject
 	private Compass compass;

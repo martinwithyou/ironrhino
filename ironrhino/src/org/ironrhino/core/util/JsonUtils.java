@@ -6,8 +6,8 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.SerializationConfig.Feature;
@@ -22,7 +22,7 @@ import org.ironrhino.core.metadata.NotInJson;
 
 public class JsonUtils {
 
-	private static Log log = LogFactory.getLog(JsonUtils.class);
+	private static Logger log = LoggerFactory.getLogger(JsonUtils.class);
 
 	private static ObjectMapper objectMapper;
 	static {

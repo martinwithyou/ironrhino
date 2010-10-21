@@ -9,8 +9,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +25,7 @@ import freemarker.template.Template;
 @Named
 public class TemplateProvider {
 
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Value("${ironrhino.view.ftl.location:"
 			+ AutoConfigResult.DEFAULT_FTL_LOCATION + "}")

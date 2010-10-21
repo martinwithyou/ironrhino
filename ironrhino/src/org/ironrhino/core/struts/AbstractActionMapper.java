@@ -2,8 +2,8 @@ package org.ironrhino.core.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
@@ -11,7 +11,7 @@ public abstract class AbstractActionMapper implements ActionMapper {
 
 	public static final String ID = "id";
 
-	protected Log log = LogFactory.getLog(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	public String getUri(HttpServletRequest request) {
 		// handle http dispatcher includes.

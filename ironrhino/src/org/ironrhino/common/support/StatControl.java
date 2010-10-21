@@ -16,8 +16,8 @@ import java.util.Map.Entry;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -45,7 +45,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Named("statControl")
 public class StatControl {
 
-	protected Log log = LogFactory.getLog(getClass());
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	private BaseManager<Stat> baseManager;
 
@@ -192,7 +192,7 @@ public class StatControl {
 				analyzer = new CumulativeAnalyzer(from, to);
 			} catch (Exception e) {
 				e.printStackTrace();
-				log.error(e);
+				log.error(e.getMessage(), e);
 			}
 		} else {
 			Calendar cal = Calendar.getInstance();

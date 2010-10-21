@@ -9,8 +9,8 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
@@ -38,7 +38,7 @@ public class SearchStat {
 
 	public static final int MAX_LIMIT = 10;
 
-	private Log log = LogFactory.getLog(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private Directory directory;
 

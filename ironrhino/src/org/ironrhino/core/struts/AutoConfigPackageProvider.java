@@ -14,11 +14,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.util.ClassScaner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -41,8 +41,8 @@ public class AutoConfigPackageProvider implements PackageProvider {
 
 	public static final String GLOBAL_MESSAGES_PATTERN = "resources/i18n/**/*.properties";
 
-	private static final Log log = LogFactory
-			.getLog(AutoConfigPackageProvider.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(AutoConfigPackageProvider.class);
 
 	@Inject(value = "ironrhino.autoconfig.parent.package", required = false)
 	private String parentPackage = "ironrhino-default";
