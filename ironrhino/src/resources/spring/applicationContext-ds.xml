@@ -60,151 +60,286 @@
 		</property>
 	</bean>
 	
-	<bean id="mainGroupMaster"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-	<bean id="mainGroupRead1"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-	<bean id="mainGroupRead2"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-	<bean id="mainGroupRead3"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-	<bean id="mainGroupWrite1"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-	<bean id="mainGroupWrite2"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-		
-		
-	<bean id="miscGroupMaster"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-	<bean id="miscGroupRead1"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-	<bean id="miscGroupRead2"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-	<bean id="miscGroupRead3"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-	<bean id="miscGroupWrite1"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
-	<bean id="miscGroupWrite2"
-		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-		p:url="${jdbc.url}" p:username="${jdbc.username}"
-		p:password="${jdbc.password}"
-		p:driverClassName="${jdbc.driverClassName}"
-		p:poolPreparedStatements="true" 
-		p:removeAbandoned="true"
-		p:initialSize="${dataSource.initialSize}" 
-		p:maxActive="${dataSource.maxActive}"
-		p:maxIdle="${dataSource.maxIdle}" 
-		p:minIdle="${dataSource.minIdle}"
-		p:maxWait="${dataSource.maxWait}" />
+	<bean id="mainGroupMaster" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>
+	<bean id="mainGroupRead1" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>
+	<bean id="mainGroupRead2" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>	
+	<bean id="mainGroupRead3" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>	
+	<bean id="mainGroupWrite1" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>	
+	<bean id="mainGroupWrite2" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>	
+	<bean id="miscGroupMaster" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>	
+	<bean id="miscGroupRead1" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>	
+	<bean id="miscGroupRead2" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>	
+	<bean id="miscGroupRead3" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>
+	<bean id="miscGroupWrite1" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>
+	<bean id="miscGroupWrite2" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
+		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="releaseHelperThreads" value="3" />
+	</bean>	
+	
+	<!--
+		<bean id="mainGroupMaster"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+		<bean id="mainGroupRead1"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+		<bean id="mainGroupRead2"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+		<bean id="mainGroupRead3"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+		<bean id="mainGroupWrite1"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+		<bean id="mainGroupWrite2"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+
+
+		<bean id="miscGroupMaster"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+		<bean id="miscGroupRead1"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+		<bean id="miscGroupRead2"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+		<bean id="miscGroupRead3"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+		<bean id="miscGroupWrite1"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+		<bean id="miscGroupWrite2"
+			class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+			p:url="${jdbc.url}" p:username="${jdbc.username}"
+			p:password="${jdbc.password}"
+			p:driverClassName="${jdbc.driverClassName}"
+			p:poolPreparedStatements="true" 
+			p:removeAbandoned="true"
+			p:initialSize="${dataSource.initialSize}" 
+			p:maxActive="${dataSource.maxActive}"
+			p:maxIdle="${dataSource.maxIdle}" 
+			p:minIdle="${dataSource.minIdle}"
+			p:maxWait="${dataSource.maxWait}" />
+-->
 
 </beans>
