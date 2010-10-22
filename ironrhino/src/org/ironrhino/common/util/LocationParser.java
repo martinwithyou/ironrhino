@@ -1,10 +1,13 @@
-package org.ironrhino.core.util;
+package org.ironrhino.common.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
+
+import org.ironrhino.core.util.AppInfo;
 
 public class LocationParser {
 
@@ -41,9 +44,14 @@ public class LocationParser {
 		b4 = new byte[4];
 		b3 = new byte[3];
 		try {
-			file = new RandomAccessFile(Thread.currentThread()
-					.getContextClassLoader().getResource(
-							"resources/data/wry.dat").getFile(), "r");
+			File f = new File(AppInfo.getAppHome() + "/resources/data/wry.dat");
+			if (f.exists()) {
+				file = new RandomAccessFile(f, "r");
+			} else {
+				file = new RandomAccessFile(Thread.currentThread()
+						.getContextClassLoader().getResource(
+								"resources/data/wry.dat").getFile(), "r");
+			}
 			start = readLong4(0);
 			end = readLong4(4);
 			if (start == -1 || end == -1) {
@@ -104,6 +112,9 @@ public class LocationParser {
 				if (string.indexOf("区") > string.indexOf("市") + 1)
 					location.setSecondArea(string.substring(
 							string.indexOf("市") + 1, string.indexOf("区")));
+				if (string.indexOf("县") > string.indexOf("市") + 1)
+					location.setSecondArea(string.substring(
+							string.indexOf("县") + 1, string.indexOf("区")));
 				return location;
 			}
 		} catch (Exception e) {
@@ -271,8 +282,14 @@ public class LocationParser {
 				.readByte())
 			;
 		if (i != 0)
-			return new String(buf, 0, i);
+			return new String(buf, 0, i, "GBK");
 		return null;
+	}
+
+	protected void finalize() throws Throwable {
+		super.finalize();
+		if (file != null)
+			file.close();
 	}
 
 }

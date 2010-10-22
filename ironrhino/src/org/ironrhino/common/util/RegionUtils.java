@@ -7,8 +7,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Region;
-import org.ironrhino.core.util.Location;
-import org.ironrhino.core.util.LocationParser;
 
 public class RegionUtils {
 

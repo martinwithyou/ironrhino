@@ -1,6 +1,8 @@
-package org.ironrhino.core.util;
+package org.ironrhino.common.util;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable{
 
 	private String location;
 
@@ -48,6 +50,11 @@ public class Location {
 
 	public void setThirdArea(String thirdArea) {
 		this.thirdArea = thirdArea;
+	}
+
+	@Override
+	public String toString() {
+		return location;
 	}
 
 }
