@@ -1,17 +1,22 @@
 package org.ironrhino.common.action;
 
+import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.util.ClassScaner;
 import org.ironrhino.core.util.HtmlUtils;
+import org.springframework.beans.BeanUtils;
 
 public class RegionAction extends BaseAction {
 
@@ -210,5 +215,52 @@ public class RegionAction extends BaseAction {
 		} else {
 			return null;
 		}
+	}
+
+
+	
+
+	public String merge() {
+		String[] id = getId();
+		if (id != null && id.length == 2) {
+			Region source = null;
+			Region target = null;
+			try {
+				source = baseManager.get(Long.valueOf(id[0]));
+				target = baseManager.get(Long.valueOf(id[1]));
+			} catch (Exception e) {
+
+			}
+			if (source == null || target == null || !source.isLeaf()
+					|| !target.isLeaf()) {
+				addActionError(getText("validation.required"));
+				return SUCCESS;
+			}
+			Set<Class> set = ClassScaner.scanAssignable(ClassScaner
+					.getAppPackages(), Persistable.class);
+			for (Class clz : set) {
+				if (clz.equals(Region.class))
+					continue;
+				PropertyDescriptor[] pds = BeanUtils
+						.getPropertyDescriptors(clz);
+				for (PropertyDescriptor pd : pds) {
+					if (pd.getReadMethod() != null
+							&& pd.getReadMethod().getReturnType().equals(
+									Region.class)
+							&& pd.getWriteMethod() != null) {
+						String name = pd.getName();
+						String hql = new StringBuilder("update ").append(
+								clz.getName()).append(" t set t.").append(name)
+								.append(".id=? where t.").append(name).append(
+										".id=?").toString();
+						baseManager.executeUpdate(hql, target.getId(), source
+								.getId());
+					}
+				}
+			}
+			baseManager.delete(source);
+			addActionMessage(getText("operate.success"));
+		}
+		return SUCCESS;
 	}
 }
