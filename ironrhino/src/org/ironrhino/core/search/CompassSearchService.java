@@ -111,6 +111,10 @@ public class CompassSearchService {
 	protected CompassQuery buildQuery(CompassCriteria criteria,
 			CompassSession session) {
 		String queryString = criteria.getQuery().replaceAll("\\\\", "").trim();
+		if (queryString.startsWith(":"))
+			queryString = queryString.substring(1);
+		if (queryString.endsWith(":"))
+			queryString = queryString.substring(0, queryString.length() - 1);
 		CompassQuery query = session.queryBuilder().queryString(queryString)
 				.toQuery();
 		if (criteria.getAliases() != null)
