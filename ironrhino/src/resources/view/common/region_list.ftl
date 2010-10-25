@@ -19,10 +19,10 @@
 <form id="merge" action="region/merge" method="post" class="ajax reset" style="display:none;" onprepare="return confirm('${action.getText('confirm')}?');" onsuccess="Richtable.reload($('#region_form'))">
 	<div style="padding-top:10px;text-align:center;">
 	<input id="regionId1" type="hidden" name="id"/>
-	<span id="region1" class="selectregion" regionname="region1" full="true" regionid="regionId1">${action.getText('select')}</span>
+	<span id="region1" class="selectregion" regionname="region1" full="true" regionid="regionId1" nocache="true">${action.getText('select')}</span>
 	--&gt;
 	<input id="regionId2" type="hidden" name="id"/>
-	<span id="region2" class="selectregion" regionname="region2" full="true" regionid="regionId2">${action.getText('select')}</span>
+	<span id="region2" class="selectregion" regionname="region2" full="true" regionid="regionId2" nocache="true">${action.getText('select')}</span>
 	<@s.submit theme="simple" value="%{getText('confirm')}" />
 </div>
 </form>

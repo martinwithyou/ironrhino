@@ -24010,24 +24010,30 @@ Initialization.richtable = function() {
 					regionid.val($(this).closest('li').attr('id'));
 				$("#region_window").dialog('close');
 			};
+			var nocache = current.attr('nocache');
+			var options = {
+				url : CONTEXT_PATH + '/region/children',
+				click : _click,
+				collapsed : true,
+				placeholder : MessageBundle.get('ajax.loading'),
+				unique : true
+			};
+			if (nocache){
+				options.url = options.url + '?r=' + Math.random();
+				$('#region_window').remove();
+			}
 			if (!$('#region_window').length) {
 				$('<div id="region_window" title="'
 						+ MessageBundle.get('select')
 						+ '"><div id="region_tree"></div></div>')
 						.appendTo(document.body);
-				$("#region_window").dialog({
+				$('#region_window').dialog({
 							width : 500,
 							minHeight : 500
 						});
-				$("#region_tree").treeview({
-							url : CONTEXT_PATH + '/region/children',
-							click : _click,
-							collapsed : true,
-							placeholder : MessageBundle.get('ajax.loading'),
-							unique : true
-						});
+				$('#region_tree').treeview(options);
 			} else {
-				$("#region_window").dialog('open');
+				$('#region_window').dialog('open');
 			}
 
 		});
