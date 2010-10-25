@@ -55,6 +55,10 @@ public class SettingAction extends BaseAction {
 	@Override
 	public String save() {
 		if (setting != null) {
+			Setting temp = setting;
+			setting = baseManager.get(setting.getId());
+			setting.setKey(temp.getKey());
+			setting.setValue(temp.getValue());
 			baseManager.save(setting);
 			addActionMessage(getText("save.success"));
 		}

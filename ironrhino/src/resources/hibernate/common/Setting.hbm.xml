@@ -11,5 +11,9 @@
 		</id>
 		<property name="key" column="skey" not-null="true" />
 		<property name="value" />
+		<property name="createDate" />
+		<property name="modifyDate" />
+		<many-to-one name="createUser" class="org.ironrhino.security.model.User" column="createUser" not-null="false" lazy="proxy" />
+		<many-to-one name="modifyUser" class="org.ironrhino.security.model.User" column="modifyUser" not-null="false" lazy="proxy" />
 	</class>
 </hibernate-mapping>
