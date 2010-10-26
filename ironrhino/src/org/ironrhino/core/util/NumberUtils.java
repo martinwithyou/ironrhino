@@ -23,7 +23,7 @@ public class NumberUtils {
 	}
 
 	public static double round(double value, int decimalDigits) {
-		return round(new BigDecimal(value), decimalDigits).doubleValue();
+		return round(new BigDecimal(String.valueOf(value)), decimalDigits).doubleValue();
 	}
 
 	public static BigDecimal round(BigDecimal bd, int decimalDigits) {
@@ -92,7 +92,7 @@ public class NumberUtils {
 	private static final String[] DUNIT = { "角", "分", "厘" };
 
 	public static String toChineseUpperCase(double input) {
-		return _toChineseUpperCase(new BigDecimal(input).toString());
+		return _toChineseUpperCase(new BigDecimal(String.valueOf(input)).toString());
 	}
 
 	public static String toChineseUpperCase(BigDecimal input) {
