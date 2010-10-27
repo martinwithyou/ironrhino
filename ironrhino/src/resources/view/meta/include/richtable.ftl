@@ -1,5 +1,5 @@
 <#macro richtable columns entityName action='' actionColumnWidth='60px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true>
-<@rtstart action=action?has_content?string(action,entityName) entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters/>
+<@rtstart action=action?has_content?string(action,request.requestURI?substring(request.contextPath?length)) entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters/>
 <#list columns?keys as name>
 <#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
 <@rttheadtd name=name class=columns[name]['class']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
@@ -24,7 +24,7 @@
 </#macro>
 
 <#macro rtstart action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true>
-<#local formid=action+'_form'>
+<#local formid=entityName+'_form'>
 <form id="${formid}" action="${getUrl(action)}" method="post" class="richtable ajax view" replacement="${formid}" <#if entityName!=action&&entityName!=''> entity="${entityName}"</#if><#if resizable> resizable="true" minColWidth="40"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
