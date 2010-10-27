@@ -45,7 +45,7 @@ public class AuthzUtils {
 		if (StringUtils.isNotBlank(expression)) {
 			OgnlContext ognl = (OgnlContext) ActionContext.getContext()
 					.getContextMap();
-			Object o = TemplateUtils.eval(expression, ognl.getValues());
+			Object o = ExpressionUtils.eval(expression, ognl.getValues());
 			return o != null && o.toString().equals("true");
 		}
 		try {

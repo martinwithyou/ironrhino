@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.aspectj.lang.JoinPoint;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.util.AuthzUtils;
-import org.ironrhino.core.util.TemplateUtils;
+import org.ironrhino.core.util.ExpressionUtils;
 import org.springframework.core.Ordered;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -53,7 +53,7 @@ public class BaseAspect implements Ordered {
 			context.put("retval", retval);
 		context.put("args", jp.getArgs());
 		context.put("user", AuthzUtils.getUserDetails(UserDetails.class));
-		return TemplateUtils.eval(template, context);
+		return ExpressionUtils.eval(template, context);
 	}
 
 	protected Object eval(String template, JoinPoint jp) {

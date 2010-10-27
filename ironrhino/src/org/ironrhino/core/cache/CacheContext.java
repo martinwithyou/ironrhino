@@ -12,7 +12,7 @@ import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.HtmlUtils;
 import org.ironrhino.core.util.HtmlUtils.Replacer;
-import org.ironrhino.core.util.TemplateUtils;
+import org.ironrhino.core.util.ExpressionUtils;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -113,7 +113,7 @@ public class CacheContext {
 		template = template.trim();
 		OgnlContext ognl = (OgnlContext) ActionContext.getContext()
 				.getContextMap();
-		Object value = TemplateUtils.eval(template, ognl.getValues());
+		Object value = ExpressionUtils.eval(template, ognl.getValues());
 		return value;
 	}
 

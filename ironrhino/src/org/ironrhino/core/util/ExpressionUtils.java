@@ -11,7 +11,7 @@ import org.mvel2.templates.CompiledTemplate;
 import org.mvel2.templates.TemplateCompiler;
 import org.mvel2.templates.TemplateRuntime;
 
-public class TemplateUtils {
+public class ExpressionUtils {
 
 	private static Map<String, CompiledTemplate> templateCache = new ConcurrentHashMap<String, CompiledTemplate>();
 
