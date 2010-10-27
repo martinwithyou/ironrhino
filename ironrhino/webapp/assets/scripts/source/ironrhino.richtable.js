@@ -512,6 +512,10 @@ Observation.richtable = function() {
 		$('.richtable .firstPage').click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
+					try{
+						var url = $(event.target).attr('href');
+						history.pushState(url,'',url);
+					}catch(e){};
 					Richtable.reload(form);
 					return false;
 				});
@@ -520,6 +524,10 @@ Observation.richtable = function() {
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) - 1
 							});
+					try{
+						var url = $(event.target).attr('href');
+						history.pushState(url,'',url);
+					}catch(e){};
 					Richtable.reload(form);
 					return false;
 				});
@@ -528,12 +536,20 @@ Observation.richtable = function() {
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) + 1
 							});
+					try{
+						var url = $(event.target).attr('href');
+						history.pushState(url,'',url);
+					}catch(e){};
 					Richtable.reload(form);
 					return false;
 				});
 		$('.richtable .lastPage').click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val($('.totalPage', form).text());
+					try{
+						var url = $(event.target).attr('href');
+						history.pushState(url,'',url);
+					}catch(e){};
 					Richtable.reload(form);
 					return false;
 				});

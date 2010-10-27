@@ -175,6 +175,7 @@ public class ResultPage<T> implements Serializable {
 				String[] values = entry.getValue();
 				if (values.length == 1
 						&& values[0].equals("")
+						|| name.equals("_")
 						|| name.equals(PAGENO_PARAM_NAME)
 						|| name.equals(PAGESIZE_PARAM_NAME)
 						|| name

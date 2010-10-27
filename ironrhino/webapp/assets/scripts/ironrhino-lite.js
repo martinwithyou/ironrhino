@@ -8591,11 +8591,27 @@ Initialization.common = function() {
 
 var HISTORY_ENABLED = typeof $.history != 'undefined'
 		&& ($('meta[name="history_enabled"]').attr('content') != 'false');
-var _history_ = false;
+var SESSION_HISTORY_SUPPORT = typeof history.pushState != 'undefined';
+var _historied_ = false;
 Initialization.history = function() {
 	if (HISTORY_ENABLED) {
+		if (SESSION_HISTORY_SUPPORT) {
+			window.onpopstate = function(event) {
+				var url = document.location.href;
+				if (event.state){
+					ajax({
+								url : url,
+								cache : true,
+								replaceTitle : true
+							});
+				}else{
+					history.replaceState(url);
+				}
+			};
+			return;
+		}
 		$.history.init(function(hash) {
-					if ((!hash && !_history_)
+					if ((!hash && !_historied_)
 							|| (hash && hash.indexOf('/') < 0))
 						return;
 					var url = document.location.href;
@@ -8609,7 +8625,7 @@ Initialization.history = function() {
 						url = hash;
 
 					}
-					_history_ = true;
+					_historied_ = true;
 					ajax({
 								url : url,
 								cache : true,
@@ -8830,12 +8846,17 @@ Observation.common = function(container) {
 					if (UrlUtils.isSameDomain(hash)) {
 						hash = hash.substring(hash.indexOf('//') + 2);
 						hash = hash.substring(hash.indexOf('/'));
-						if (CONTEXT_PATH)
-							hash = hash.substring(CONTEXT_PATH.length);
+						if (SESSION_HISTORY_SUPPORT) {
+							history.pushState(hash, '', hash);
+						} else {
+							if (CONTEXT_PATH)
+								hash = hash.substring(CONTEXT_PATH.length);
+							hash = hash.replace(/^.*#/, '');
+							$.history.load(hash);
+							return false;
+						}
 					}
-					hash = hash.replace(/^.*#/, '');
-					$.history.load(hash);
-					return false;
+
 				}
 				var options = {
 					url : this.href,
