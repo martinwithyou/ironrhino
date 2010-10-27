@@ -1022,6 +1022,10 @@ img.captcha {
 	background: #FF6;
 }
 
+tr.highlight td{
+	background: #ddeeff !important;
+}
+
 #treeview li.highlight {
 	font-weight:bold;
 }
@@ -1554,9 +1558,7 @@ table.richtable td,th {
 .richtable .even td {
 	background-color: #f3f4f3;
 }
-.richtable .selected td {
-	background-color: #ddeeff;
-}
+
 .richtable .selected a,.highlight a {
 	color: black;
 }

@@ -266,6 +266,10 @@ img.captcha {
 	background: #FF6;
 }
 
+tr.highlight td{
+	background: #ddeeff !important;
+}
+
 #treeview li.highlight {
 	font-weight:bold;
 }

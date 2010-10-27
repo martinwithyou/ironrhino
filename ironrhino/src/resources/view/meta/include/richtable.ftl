@@ -33,7 +33,7 @@
 </#if>
 </#list>
 </#if>
-<table class="richtable<#if sortable> sortable</#if>">
+<table class="richtable<#if sortable> sortable</#if> highlightrow">
 <thead>
 <tr>
 <#if !readonly>
