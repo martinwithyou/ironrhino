@@ -12,7 +12,7 @@
 		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
 		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
 		<property name="statementsCacheSize" value="100" />
-		<property name="releaseHelperThreads" value="3" />
+		<property name="releaseHelperThreads" value="1" />
 		<property name="idleConnectionTestPeriod" value="1" />
 		<property name="idleMaxAge" value="60" />
 		<property name="connectionTestStatement" value="${jdbc.connectionTestStatement}" />
