@@ -38,7 +38,7 @@
 <body>
 <@s.form action="upload" method="post" enctype="multipart/form-data" cssClass="line">
 	<#list 1..6 as index>
-		<@s.file name="file" cssStyle="width:195px;"/>
+		<@s.file name="file" cssStyle="width:195px;" multiple="true"/>
 	</#list>
 	<div style="clear:both;">
 	<div style="text-align:center;padding-top:30px;">
