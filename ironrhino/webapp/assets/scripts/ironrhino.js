@@ -23562,6 +23562,17 @@ Richtable = {
 	},
 	reload : function(form) {
 		form = form || $('form.richtable');
+		if (typeof history.pushState != 'undefined') {
+			var url = form.attr('action');
+			var param = form.serialize();
+			if (param) {
+				param = param.replace('resultPage.pageNo', 'pn');
+				param = param.replace('resultPage.pageSize', 'ps');
+				param = param.replace(/&keyword=$/,'');
+				url += (url.indexOf('?') > 0 ? '&' : '?') + param;
+			}
+			history.pushState(url, '', url);
+		}
 		$(form).submit();
 	},
 	open : function(url, reloadonclose, useiframe, form) {
@@ -23944,10 +23955,6 @@ Observation.richtable = function() {
 		$('.richtable .firstPage').click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
-					try{
-						var url = $(event.target).attr('href');
-						history.pushState(url,'',url);
-					}catch(e){};
 					Richtable.reload(form);
 					return false;
 				});
@@ -23956,10 +23963,6 @@ Observation.richtable = function() {
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) - 1
 							});
-					try{
-						var url = $(event.target).attr('href');
-						history.pushState(url,'',url);
-					}catch(e){};
 					Richtable.reload(form);
 					return false;
 				});
@@ -23968,20 +23971,12 @@ Observation.richtable = function() {
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) + 1
 							});
-					try{
-						var url = $(event.target).attr('href');
-						history.pushState(url,'',url);
-					}catch(e){};
 					Richtable.reload(form);
 					return false;
 				});
 		$('.richtable .lastPage').click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val($('.totalPage', form).text());
-					try{
-						var url = $(event.target).attr('href');
-						history.pushState(url,'',url);
-					}catch(e){};
 					Richtable.reload(form);
 					return false;
 				});
@@ -23999,9 +23994,14 @@ Observation.richtable = function() {
 					var form = $(event.target).closest('form');
 					if (event.keyCode == 13) {
 						$('.inputPage', form).val(1);
+						Richtable.reload(form);
+						return false;
 					}
-				}).next().click(function() {
+				}).next().click(function(event) {
+					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
+					Richtable.reload(form);
+					return false;
 				});
 	}
 };
