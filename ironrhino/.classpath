@@ -40,10 +40,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jms-1.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjrt-1.6.9.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjweaver-1.6.9.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-config-3.0.3.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-core-3.0.3.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-3.0.3.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-web-3.0.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/memcached-2.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-core-2.2.1.jar"/>
@@ -93,5 +89,9 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/bonecp-0.7.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/guava-r07.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xwork-core-2.2.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-config-3.0.4.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-core-3.0.4.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-taglibs-3.0.4.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-web-3.0.4.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
