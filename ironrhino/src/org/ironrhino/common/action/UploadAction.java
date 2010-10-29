@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -117,9 +118,10 @@ public class UploadAction extends BaseAction {
 			if (folder.length() > 0 && !folder.startsWith("/"))
 				folder = "/" + folder;
 		}
-		files = fileStorage.listFilesAndDirectory(UPLOAD_DIR + folder);
+		files = new LinkedHashMap<String, Boolean>();
 		if (StringUtils.isNotBlank(folder))
 			files.put("..", Boolean.FALSE);
+		files.putAll(fileStorage.listFilesAndDirectory(UPLOAD_DIR + folder));
 		return LIST;
 	}
 
