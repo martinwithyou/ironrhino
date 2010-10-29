@@ -523,14 +523,15 @@ Initialization.history = function() {
 		if (SESSION_HISTORY_SUPPORT) {
 			window.onpopstate = function(event) {
 				var url = document.location.href;
-				if (event.state){
+				if (event.state && _historied_) {
 					ajax({
 								url : url,
 								cache : true,
 								replaceTitle : true
 							});
-				}else{
+				} else {
 					history.replaceState(url);
+					_historied_ = true;
 				}
 			};
 			return;
