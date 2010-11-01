@@ -57,8 +57,12 @@ public class SettingAction extends BaseAction {
 		if (setting != null) {
 			Setting temp = setting;
 			setting = baseManager.get(setting.getId());
-			setting.setKey(temp.getKey());
-			setting.setValue(temp.getValue());
+			if (setting != null) {
+				setting.setKey(temp.getKey());
+				setting.setValue(temp.getValue());
+			} else {
+				setting = temp;
+			}
 			baseManager.save(setting);
 			addActionMessage(getText("save.success"));
 		}
