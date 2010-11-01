@@ -22446,7 +22446,9 @@ Observation.common = function(container) {
 					$.extend(options.header, {
 								'X-Fragment' : ids.join(',')
 							});
-				$.ajax(options);
+				else
+					options.replaceTitle = true;
+				ajax(options);
 				return false;
 			});
 		}
