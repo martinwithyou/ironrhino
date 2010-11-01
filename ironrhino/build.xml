@@ -135,25 +135,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
 			</filelist>
 		</concat>
-		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-lite.js" encoding="utf-8" fixlastline="yes">
-			<filelist>
-				<file name="${webapp.dir}/assets/scripts/source/jquery-1.4.2.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.history-2.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.rc4-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.corner-2.0.9.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.jnotify-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
-				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
-				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
-				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
-				<file name="${webapp.dir}/assets/scripts/source/ironrhino.marquee.js" />
-				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
-				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
-			</filelist>
-		</concat>
 		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-lite-njq.js" encoding="utf-8" fixlastline="yes">
 			<filelist>
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
@@ -211,11 +192,9 @@
 			<arg line=" --js=./webapp/assets/scripts/ironrhino.js --js_output_file=./webapp/assets/scripts/ironrhino-min.js" />
 		</java>
 		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
-			<arg line=" --js=./webapp/assets/scripts/ironrhino-lite.js --js_output_file=./webapp/assets/scripts/ironrhino-lite-min.js" />
-		</java>
-		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
 			<arg line=" --js=./webapp/assets/scripts/ironrhino-lite-njq.js --js_output_file=./webapp/assets/scripts/ironrhino-lite-njq-min.js" />
 		</java>
+		<delete file="${basedir}/webapp/assets/scripts/ironrhino-lite-njq.js" />
 		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
 			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-min.css ./webapp/assets/styles/ironrhino.css" />
 		</java>

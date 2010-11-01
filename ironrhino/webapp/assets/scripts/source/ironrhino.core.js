@@ -512,6 +512,10 @@ Initialization.common = function() {
 				if ($('a', this).attr('href') == document.location.pathname)
 					$(this).addClass('selected');
 			});
+	$('.menu li a').click(function() {
+				$('li', $(this).closest('.menu')).removeClass('selected');
+				$(this).closest('li').addClass('selected');
+			});
 };
 
 var HISTORY_ENABLED = typeof $.history != 'undefined'
