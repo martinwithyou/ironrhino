@@ -6,6 +6,7 @@ ${base}/assets/scripts/ironrhino-min.js
 ${base}/assets/scripts/app-min.js
 ${base}/assets/styles/app-min.css
 ${base}/assets/styles/ironrhino-min.css
+${base}/assets/images/loading.gif
 ${base}/assets/images/indicator.gif
 ${base}/assets/images/required.png
 ${base}/assets/images/notsorted.gif
