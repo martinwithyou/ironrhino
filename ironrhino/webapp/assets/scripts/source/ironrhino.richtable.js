@@ -128,9 +128,9 @@ Richtable = {
 					+ document.location.search.substring(1);
 		return url;
 	},
-	reload : function(form) {
+	reload : function(form, dontpushstate) {
 		form = form || $('form.richtable');
-		if (typeof history.pushState != 'undefined') {
+		if (!dontpushstate && typeof history.pushState != 'undefined') {
 			var url = form.attr('action');
 			var param = form.serialize();
 			if (param) {
@@ -264,7 +264,7 @@ Richtable = {
 				$('#_window_ ').html('');
 				if (reloadonclose
 						&& !$('#_window_ form.ajax').attr('dontreload'))
-					Richtable.reload(form);
+					Richtable.reload(form, true);
 				win.dialog('destroy');
 			},
 			beforeclose : function(event, ui) {
@@ -314,7 +314,7 @@ Richtable = {
 		var action = $(btn).attr('action');
 		var view = $(btn).attr('view');
 		if (action == 'reload')
-			Richtable.reload(form);
+			Richtable.reload(form, true);
 		else if (action == 'enter')
 			Richtable.enter(event);
 		else if (action == 'save')
@@ -337,7 +337,7 @@ Richtable = {
 											type : 'POST',
 											dataType : 'json',
 											success : function() {
-												Richtable.reload(form)
+												Richtable.reload(form, true)
 											}
 										});
 							}
@@ -351,7 +351,7 @@ Richtable = {
 							type : 'POST',
 							dataType : 'json',
 							success : function() {
-								Richtable.reload(form)
+								Richtable.reload(form, true)
 							}
 						});
 			}
