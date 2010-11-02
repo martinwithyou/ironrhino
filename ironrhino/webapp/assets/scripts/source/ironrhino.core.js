@@ -17,8 +17,8 @@
 		options.url = UrlUtils.makeSameOrigin(options.url);
 		var temp = options.beforeSend;
 		options.beforeSend = function(xhr) {
-			xhr.withCredentials = "true";
-			// xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			xhr.withCredentials = 'true';
+			// xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 			if (options.header)
 				for (var key in options.header)
 					xhr.setRequestHeader(key, options.header[key]);
@@ -312,6 +312,7 @@ Form = {
 };
 
 Ajax = {
+	defaultRepacement : 'content',
 	fire : function(target, funcName) {
 		if (!target)
 			return true;
@@ -350,7 +351,7 @@ Ajax = {
 				&& (data.indexOf('{') == 0 || data.indexOf('[') == 0))
 			data = $.parseJSON(data);
 		if (typeof data == 'string') {
-			if (data.indexOf('<title>') > 0 && data.indexOf('</title>') > 0) {
+			if (data.indexOf('<title>') >= 0 && data.indexOf('</title>') > 0) {
 				Ajax.title = data.substring(data.indexOf('<title>') + 7, data
 								.indexOf('</title>'));
 				if (options.replaceTitle)
@@ -360,14 +361,15 @@ Ajax = {
 			var entries = (options.replacement
 					|| $(target).attr('replacement')
 					|| ($(target).attr('tagName') == 'FORM' ? $(target)
-							.attr('id') : null) || 'content').split(',');
+							.attr('id') : null) || Ajax.defaultRepacement)
+					.split(',');
 			for (var i = 0; i < entries.length; i++) {
 				var entry = entries[i];
 				var ss = entry.split(':', 2);
 				replacement[ss[0]] = (ss.length == 2 ? ss[1] : ss[0]);
 			}
-			var html = data.replace(/<script(.|\s)*?\/script>/g, "");
-			var div = $("<div/>").html(html);
+			var html = data.replace(/<script(.|\s)*?\/script>/g, '');
+			var div = $('<div/>').html(html);
 			// others
 			for (var key in replacement) {
 				if (!options.quiet)
@@ -500,7 +502,7 @@ Initialization.common = function() {
 			});
 	$(document).ajaxSuccess(function(ev, xhr) {
 				Indicator.hide();
-				var url = xhr.getResponseHeader("X-Redirect-To");
+				var url = xhr.getResponseHeader('X-Redirect-To');
 				if (url) {
 					top.location.href = UrlUtils.absolutize(url);
 					return;
@@ -531,7 +533,10 @@ Initialization.history = function() {
 					ajax({
 								url : url,
 								cache : true,
-								replaceTitle : true
+								replaceTitle : true,
+								header : {
+									'X-Fragment' : '_'
+								}
 							});
 				} else {
 					history.replaceState(url);
@@ -559,7 +564,10 @@ Initialization.history = function() {
 					ajax({
 								url : url,
 								cache : true,
-								replaceTitle : true
+								replaceTitle : true,
+								header : {
+									'X-Fragment' : '_'
+								}
 							});
 				}, {
 					unescape : true
@@ -666,7 +674,7 @@ Observation.common = function(container) {
 							+ '/assets/images/expressInstall.swf', {
 						'data-file' : data
 					}, {
-						wmode : "transparent"
+						wmode : 'transparent'
 					});
 		});
 		window.save_image = function() {
@@ -800,24 +808,30 @@ Observation.common = function(container) {
 					error : function() {
 						Ajax.fire(target, 'onerror');
 					},
-					success : function(data) {
-						Ajax.handleResponse(data, {
-									'target' : target
-								})
-					},
 					header : {}
+				};
+				var _opt = {
+					'target' : target
 				};
 				if (!$(this).hasClass('view'))
 					$.extend(options.header, {
 								'X-Data-Type' : 'json'
 							});
-				if (ids.length > 0)
+				if (ids.length > 0) {
 					$.extend(options.header, {
 								'X-Fragment' : ids.join(',')
 							});
-				else
-					options.replaceTitle = true;
-				ajax(options);
+				} else {
+					$.extend(options.header, {
+								'X-Fragment' : '_'
+							});
+					_opt.replaceTitle = true;
+				}
+
+				options.success = function(data) {
+					Ajax.handleResponse(data, _opt);
+				};
+				$.ajax(options);
 				return false;
 			});
 		}
