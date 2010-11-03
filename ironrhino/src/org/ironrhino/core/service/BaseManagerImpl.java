@@ -192,17 +192,20 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	@Transactional(readOnly = true)
 	public ResultPage<T> findByResultPage(ResultPage<T> resultPage) {
-		long totalRecord = countByCriteria(resultPage.getDetachedCriteria());
-		resultPage.setTotalRecord(totalRecord);
-		if (resultPage.getPageSize() < 1)
-			resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
-		else if (resultPage.getPageSize() < Integer.MAX_VALUE
-				&& resultPage.getPageSize() > ResultPage.MAX_RECORDS_PER_PAGE)
-			resultPage.setPageSize(ResultPage.MAX_RECORDS_PER_PAGE);
-		if (resultPage.getPageNo() < 1)
-			resultPage.setPageNo(1);
-		else if (resultPage.getPageNo() > resultPage.getTotalPage())
-			resultPage.setPageNo(resultPage.getTotalPage());
+		long totalRecord = -1;
+		if (resultPage.isCounting()) {
+			totalRecord = countByCriteria(resultPage.getDetachedCriteria());
+			resultPage.setTotalRecord(totalRecord);
+			if (resultPage.getPageSize() < 1)
+				resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
+			else if (resultPage.getPageSize() < Integer.MAX_VALUE
+					&& resultPage.getPageSize() > ResultPage.MAX_RECORDS_PER_PAGE)
+				resultPage.setPageSize(ResultPage.MAX_RECORDS_PER_PAGE);
+			if (resultPage.getPageNo() < 1)
+				resultPage.setPageNo(1);
+			else if (resultPage.getPageNo() > resultPage.getTotalPage())
+				resultPage.setPageNo(resultPage.getTotalPage());
+		}
 		resultPage.getDetachedCriteria().setProjection(null);
 		resultPage.getDetachedCriteria().setResultTransformer(
 				CriteriaSpecification.ROOT_ENTITY);
@@ -227,7 +230,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			end = (int) (resultPage.getTotalRecord() - (resultPage.getPageNo() - 1)
 					* resultPage.getPageSize());
 		}
-		if (totalRecord > 0)
+		if (!(resultPage.isCounting() && totalRecord == 0))
 			resultPage.setResult(findBetweenListByCriteria(resultPage
 					.getDetachedCriteria(), start, end));
 		else

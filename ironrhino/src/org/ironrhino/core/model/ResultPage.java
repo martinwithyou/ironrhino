@@ -36,10 +36,11 @@ public class ResultPage<T> implements Serializable {
 
 	private boolean reverse;
 
+	private boolean counting = true;
+
 	private int start = -1;
 
-	private Map<String, Boolean> sorts = new LinkedHashMap<String, Boolean>(
-			2);
+	private Map<String, Boolean> sorts = new LinkedHashMap<String, Boolean>(2);
 
 	public Map<String, Boolean> getSorts() {
 		return sorts;
@@ -59,6 +60,14 @@ public class ResultPage<T> implements Serializable {
 
 	public void setReverse(boolean reverse) {
 		this.reverse = reverse;
+	}
+
+	public boolean isCounting() {
+		return counting;
+	}
+
+	public void setCounting(boolean counting) {
+		this.counting = counting;
 	}
 
 	public int getPageNo() {
