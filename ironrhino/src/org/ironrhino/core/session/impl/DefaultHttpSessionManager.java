@@ -1,20 +1,22 @@
 package org.ironrhino.core.session.impl;
 
 import java.math.BigInteger;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.core.util.RequestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 @Singleton
@@ -24,6 +26,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public static final String DEFAULT_SESSION_TRACKER_NAME = "T";
+
+	public static final String DEFAULT_COOKIE_NAME_LOCALE = "locale";
 
 	private static final String SALT = "awpeqaidasdfaioiaoduifayzuxyaaokadoaifaodiaoi";
 
@@ -35,7 +39,16 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	public static final int DEFAULT_MINACTIVEINTERVAL = 60;// in seconds
 
+	@Value("${httpSessionManager.sessionTrackerName:"
+			+ DEFAULT_SESSION_TRACKER_NAME + "}")
 	private String sessionTrackerName = DEFAULT_SESSION_TRACKER_NAME;
+
+	@Value("${httpSessionManager.localeCookieName:"
+			+ DEFAULT_COOKIE_NAME_LOCALE + "}")
+	private String localeCookieName = DEFAULT_COOKIE_NAME_LOCALE;
+
+	@Value("${httpSessionManager.defaultLocaleName:}")
+	private String defaultLocaleName;
 
 	@Inject
 	@Named("cookieBased")
@@ -56,16 +69,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			+ DEFAULT_MINACTIVEINTERVAL + "}")
 	private int minActiveInterval;
 
-	public void setMaxInactiveInterval(int maxInactiveInterval) {
-		this.maxInactiveInterval = maxInactiveInterval;
-	}
-
-	public void setMinActiveInterval(int minActiveInterval) {
-		this.minActiveInterval = minActiveInterval;
-	}
-
-	public void setSessionTrackerName(String sessionTrackerName) {
-		this.sessionTrackerName = sessionTrackerName;
+	public String getLocaleCookieName() {
+		return localeCookieName;
 	}
 
 	public String getSessionTrackerName() {
@@ -73,7 +78,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	}
 
 	public void initialize(WrappedHttpSession session) {
-	
+
 		String sessionTracker = session.getSessionTracker();
 		long now = session.getNow();
 		String sessionId = null;
@@ -193,6 +198,18 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			cacheBased.invalidate(session);
 		else
 			cookieBased.invalidate(session);
+	}
+
+	public Locale getLocale(HttpServletRequest request) {
+		String localeName = RequestUtils.getCookieValue(request,
+				localeCookieName);
+		if (StringUtils.isBlank(localeName))
+			localeName = defaultLocaleName;
+		if (StringUtils.isNotBlank(localeName))
+			for (Locale locale : Locale.getAvailableLocales())
+				if (localeName.equalsIgnoreCase(locale.toString()))
+					return locale;
+		return request.getLocale();
 	}
 
 }

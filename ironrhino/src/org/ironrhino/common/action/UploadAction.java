@@ -3,6 +3,7 @@ package org.ironrhino.common.action;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,6 +31,8 @@ public class UploadAction extends BaseAction {
 	private String[] fileFileName;
 
 	private String folder;
+
+	private String folderEncoded;
 
 	private boolean autorename;
 
@@ -59,6 +62,31 @@ public class UploadAction extends BaseAction {
 
 	public String getFolder() {
 		return folder;
+	}
+
+	public String getFolderEncoded() {
+		if (folderEncoded == null) {
+			if (folder != null) {
+				if (folder.equals("/")) {
+					folderEncoded = folder;
+				} else {
+					String[] arr = folder.split("/");
+					StringBuilder sb = new StringBuilder();
+					try {
+						for (int i = 1; i < arr.length; i++) {
+							sb.append("/").append(
+									URLEncoder.encode(arr[i], "UTF-8"));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					folderEncoded = sb.toString();
+				}
+			} else {
+				folderEncoded = folder;
+			}
+		}
+		return folderEncoded;
 	}
 
 	public void setFile(File[] file) {

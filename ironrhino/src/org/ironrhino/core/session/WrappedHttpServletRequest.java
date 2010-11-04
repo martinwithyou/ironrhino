@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.ironrhino.core.security.util.RC4;
-import org.ironrhino.core.util.RequestUtils;
 
 public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 
@@ -59,8 +58,9 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 
 	@Override
 	public Locale getLocale() {
-		return RequestUtils.getLocale((HttpServletRequest) this.getRequest(),
-				super.getLocale());
+		Locale locale = session.getHttpSessionManager().getLocale(
+				(HttpServletRequest) this.getRequest());
+		return locale;
 	}
 
 	@Override

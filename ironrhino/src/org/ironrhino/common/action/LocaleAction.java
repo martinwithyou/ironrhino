@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
 
@@ -27,6 +28,9 @@ public class LocaleAction extends BaseAction {
 
 	@Inject
 	private SettingControl settingControl;
+
+	@Inject
+	private HttpSessionManager httpSessionManager;
 
 	public String getLang() {
 		return lang;
@@ -45,18 +49,24 @@ public class LocaleAction extends BaseAction {
 		if (lang != null) {
 			HttpServletRequest request = ServletActionContext.getRequest();
 			HttpServletResponse response = ServletActionContext.getResponse();
-			Locale locale = null;
+			Locale loc = null;
 			if (StringUtils.isBlank(lang)) {
-				locale = null;
+				loc = null;
 			} else {
 				for (Locale var : Locale.getAvailableLocales()) {
 					if (lang.equalsIgnoreCase(var.toString())) {
-						locale = var;
+						loc = var;
 						break;
 					}
 				}
 			}
-			RequestUtils.setLocale(request, response, locale);
+			if (loc != null) {
+				RequestUtils.saveCookie(request, response, httpSessionManager
+						.getLocaleCookieName(), loc.toString(), true);
+			} else {
+				RequestUtils.deleteCookie(request, response, httpSessionManager
+						.getLocaleCookieName(), true);
+			}
 			targetUrl = "/";
 			return REDIRECT;
 		}

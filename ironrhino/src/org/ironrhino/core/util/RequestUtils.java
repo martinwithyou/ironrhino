@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -15,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 public class RequestUtils {
-
-	public static final String COOKIE_NAME_LANGUAGE = "lang";
 
 	public static String serializeData(HttpServletRequest request) {
 		if (request.getMethod().equalsIgnoreCase("POST")
@@ -36,28 +33,6 @@ public class RequestUtils {
 		}
 		String queryString = request.getQueryString();
 		return queryString != null ? queryString : "";
-	}
-
-	public static void setLocale(HttpServletRequest request,
-			HttpServletResponse response, Locale locale) {
-		if (locale != null) {
-			RequestUtils.saveCookie(request, response, COOKIE_NAME_LANGUAGE,
-					locale.toString(), true);
-		} else {
-			RequestUtils.deleteCookie(request, response, COOKIE_NAME_LANGUAGE,
-					true);
-		}
-
-	}
-
-	public static Locale getLocale(HttpServletRequest request,
-			Locale defaultLocale) {
-		String lang = getCookieValue(request, COOKIE_NAME_LANGUAGE);
-		if (lang != null)
-			for (Locale locale : Locale.getAvailableLocales())
-				if (lang.equalsIgnoreCase(locale.toString()))
-					return locale;
-		return defaultLocale;
 	}
 
 	public static String getRemoteAddr(HttpServletRequest request) {

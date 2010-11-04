@@ -111,6 +111,10 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		httpSessionManager.initialize(this);
 	}
 
+	public HttpSessionManager getHttpSessionManager() {
+		return httpSessionManager;
+	}
+
 	public void save() {
 		httpSessionManager.save(this);
 	}
