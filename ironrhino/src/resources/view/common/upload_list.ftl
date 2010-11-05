@@ -36,18 +36,11 @@
 	}
 	function handleFiles(files){
 		if(!files)return;
-		Indicator.show();
 		var uploadurl = $('#upload_form').attr('action');
-		var inputname = $('#upload_form input[type="file"]').attr('name');
-		var length = files.length;
-	  	var size = 0;
-	  	for(var i=0;i<length;i++)
-	  		size+=files[i].size;
 		var xhr = new XMLHttpRequest();
 		var boundary = 'xxxxxxxxx';
 		xhr.open('POST', uploadurl, true);
 		xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='+boundary); 
-		xhr.setRequestHeader('Content-Length', size);
 		xhr.onreadystatechange = function() {
 	    if (xhr.readyState == 4) {
 	      if ((xhr.status >= 200 && xhr.status <= 200) || xhr.status == 304) {
@@ -58,25 +51,59 @@
 	      }
 	    }
 	  	}
-	  var body = '';
-	  for(var i=0;i<length;i++){
-	  	  body += '--' + boundary + '\r\n';
-		  body += 'Content-Disposition: form-data; name='+inputname+'; filename=' + files[i].name + '\r\n';  
-		  body += 'Content-Type: '+files[i].type+'\r\n\r\n';  
-		  body += files[i].getAsBinary() + '\r\n';  
-	  }
-	  body += '--' + boundary + '--';
-	  if(xhr.sendAsBinary)
-	  	xhr.sendAsBinary(body);
-	  else
-	  	xhr.send(body);
+	  body = compose(files,boundary);
+	  alert(body);
+	  if(body){
+	  	Indicator.show();
+		  if(xhr.sendAsBinary)
+		  	xhr.sendAsBinary(body);
+		  else
+		  	xhr.send(body);
+	  	}else{
+	  		xhr.abort();
+	  	}
 	}
+	function compose(files,boundary){
+		var inputname = $('#upload_form input[type="file"]').attr('name');
+		if($.browser.mozilla){
+		  var body = '';
+		  for(var i=0;i<files.length;i++){
+		  	  body += '--' + boundary + '\r\n';
+			  body += 'Content-Disposition: form-data; name='+inputname+'; filename=' + files[i].name + '\r\n';  
+			  body += 'Content-Type: '+files[i].type+'\r\n\r\n';  
+			  body += files[i].getAsBinary() + '\r\n';  
+		  }
+		  body += '--' + boundary + '--';
+		  return body;
+		}else if($.browser.webkit){
+			var bb = new BlobBuilder();
+			var completed = 0;
+			for(var i=0;i<files.length;i++){
+			  var f = files[i];
+			  var reader = new FileReader();
+			  reader.sourceFile = f;
+			  reader.onload = function(evt) {
+			  	var f = evt.target.sourceFile;
+			  	bb.append('--');bb.append(boundary);bb.append('\r\n');
+			  	bb.append('Content-Disposition: form-data; name=');bb.append(inputname);bb.append('; filename=');bb.append(f.name);bb.append('\r\n');
+				bb.append('Content-Type: ');bb.append(f.type);bb.append('\r\n\r\n');
+				bb.append(evt.target.result);bb.append('\r\n');
+				completed++;
+			  };
+			  reader.readAsBinaryString(f);    
+		  	}
+//		  	while(completed<files.length){
+//		  	}
+		  	bb.append('--');bb.append(boundary);bb.append('--');
+			return bb.getBlob();
+		}
+	}
+	////////////////////////////////////////
 	$(function(){
 		$('#more').click(function(){
 			addMore(1);		
 		});
 		if (typeof window.FileReader != 'undefined') {
-			if(!$.browser.mozilla) return;
 			$('#upload_form input[type="file"]').change(function(){
 					handleFiles(this.files);
 					$(this).closest('div').remove();
