@@ -2,6 +2,9 @@
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>${action.getText('upload')}</title>
+<style>
+#content.hover { border: 1px dashed #333; }
+</style>
 <script>
 	function select(el){
 		try{
@@ -32,11 +35,55 @@
 				f = r;
 			}		
 		});
+		if (typeof window.FileReader != 'undefined') {
+			if(!$.browser.mozilla) return;
+			var uploadurl = $('#upload_form').attr('action');
+			var inputname = $('#upload_form input[type="file"]').attr('name');
+			$('#content').bind('dragover',function(e){$(this).addClass('hover');return false;})
+			.bind('dragleave',function(e){$(this).removeClass('hover');return false;})
+			.get(0).ondrop = function(e){
+				e.preventDefault();
+				$(this).removeClass('hover');
+				var files = e.dataTransfer.files;
+				if(files){
+					var length = files.length;
+				  	var size = 0;
+				  	for(var i=0;i<length;i++)
+				  		size+=files[i].size;
+					var xhr = new XMLHttpRequest();
+					var boundary = 'xxxxxxxxx';
+					xhr.open('POST', uploadurl, true);
+  					xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='+boundary); 
+  					xhr.setRequestHeader('Content-Length', size);
+					xhr.onreadystatechange = function() {
+				    if (xhr.readyState == 4) {
+				      if ((xhr.status >= 200 && xhr.status <= 200) || xhr.status == 304) {
+				        if (xhr.responseText != '') {
+				        	Ajax.handleResponse(xhr.responseText,{replacement:'files'});
+				        	Indicator.hide();
+				        }
+				      }
+				    }
+				  	}
+				  var body = '';
+				  for(var i=0;i<length;i++){
+				  	  body += '--' + boundary + '\r\n';
+					  body += 'Content-Disposition: form-data; name='+inputname+'; filename=' + files[i].name + '\r\n';  
+					  body += 'Content-Type: '+files[i].type+'\r\n\r\n';  
+					  body += files[i].getAsBinary() + '\r\n';  
+				  }
+				  body += '--' + boundary + '--';
+				  xhr.sendAsBinary(body);
+				  Indicator.show();
+				  return true;
+				}
+			};
+		}
 	});
 </script>
 </head>
 <body>
-<@s.form action="upload" method="post" enctype="multipart/form-data" cssClass="line">
+<@s.form id="upload_form" action="upload" method="post" enctype="multipart/form-data" cssClass="line">
 	<#list 1..6 as index>
 		<@s.file name="file" cssStyle="width:194px;" multiple="true"/>
 	</#list>
