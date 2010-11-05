@@ -36,7 +36,7 @@
 	}
 	function handleFiles(files){
 		if(!files)return;
-		var uploadurl = $('#upload_form').attr('action');
+		var uploadurl = $('#upload_form').attr('action')+'?'+$('#upload_form').serialize();
 		var inputname = $('#upload_form input[type="file"]').attr('name');
 		Indicator.show();
 		if(typeof FileReaderSync == 'undefined'&&$.browser.webkit){
@@ -45,21 +45,12 @@
 			  var f = files[i];
 			  var reader = new FileReader();
 			  reader.sourceFile = f;
+			  var completed = 0;
+			  var xhr = new XMLHttpRequest();
+			  var boundary = 'xxxxxxxxx';
 			  reader.onload = function(evt) {
-			  	var xhr = new XMLHttpRequest();
-				var boundary = 'xxxxxxxxx';
-				xhr.open('POST', uploadurl, true);
-				xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='+boundary); 
-				xhr.onreadystatechange = function() {
-			    if (xhr.readyState == 4) {
-			      if ((xhr.status >= 200 && xhr.status <= 200) || xhr.status == 304) {
-			        if (xhr.responseText != '') {
-			        	Ajax.handleResponse(xhr.responseText,{replacement:'files'});
-			        	Indicator.hide();
-			        }
-			      }
-			    }
-			  	}
+			  	xhr.open('POST', uploadurl,false);
+			  	xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='+boundary); 
 			  	var f = evt.target.sourceFile;
 			  	var bb = new BlobBuilder();
 			  	bb.append('--');bb.append(boundary);bb.append('\r\n');
@@ -68,6 +59,11 @@
 				bb.append(evt.target.result);bb.append('\r\n');
 				bb.append('--');bb.append(boundary);bb.append('--');
 				xhr.send(bb.getBlob());
+				completed++;
+				if(completed==files.length){
+					Ajax.handleResponse(xhr.responseText,{replacement:'files'});
+					Indicator.hide();
+				}
 			  };
 			  reader.readAsArrayBuffer(f);    
 		  	}
