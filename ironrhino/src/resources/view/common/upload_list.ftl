@@ -17,66 +17,79 @@
 		}
 	}
 	function mkdir(){
-			$.alerts.prompt('', 'newfolder', '', function(t){
-				if(t){
-					var folder = $('#current_folder').text()+t;
-					var url = CONTEXT_PATH+'/common/upload/mkdir'+folder;
-					ajax({url:url,replacement:'files',success:function(){$('#folder').val(folder)}});
-				}
-			});
+		$.alerts.prompt('', 'newfolder', '', function(t){
+			if(t){
+				var folder = $('#current_folder').text()+t;
+				var url = CONTEXT_PATH+'/common/upload/mkdir'+folder;
+				ajax({url:url,replacement:'files',success:function(){$('#folder').val(folder)}});
+			}
+		});
+	}
+	function addMore(n){
+		var f = $('input[type="file"]:last').parent();
+		var r;
+		for(var i=0;i<n;i++){
+			r = f.clone(true);
+			f.after(r);
+			f = r;
 		}
+	}
+	function handleFiles(files){
+		if(!files)return;
+		Indicator.show();
+		var uploadurl = $('#upload_form').attr('action');
+		var inputname = $('#upload_form input[type="file"]').attr('name');
+		var length = files.length;
+	  	var size = 0;
+	  	for(var i=0;i<length;i++)
+	  		size+=files[i].size;
+		var xhr = new XMLHttpRequest();
+		var boundary = 'xxxxxxxxx';
+		xhr.open('POST', uploadurl, true);
+		xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='+boundary); 
+		xhr.setRequestHeader('Content-Length', size);
+		xhr.onreadystatechange = function() {
+	    if (xhr.readyState == 4) {
+	      if ((xhr.status >= 200 && xhr.status <= 200) || xhr.status == 304) {
+	        if (xhr.responseText != '') {
+	        	Ajax.handleResponse(xhr.responseText,{replacement:'files'});
+	        	Indicator.hide();
+	        }
+	      }
+	    }
+	  	}
+	  var body = '';
+	  for(var i=0;i<length;i++){
+	  	  body += '--' + boundary + '\r\n';
+		  body += 'Content-Disposition: form-data; name='+inputname+'; filename=' + files[i].name + '\r\n';  
+		  body += 'Content-Type: '+files[i].type+'\r\n\r\n';  
+		  body += files[i].getAsBinary() + '\r\n';  
+	  }
+	  body += '--' + boundary + '--';
+	  if(xhr.sendAsBinary)
+	  	xhr.sendAsBinary(body);
+	  else
+	  	xhr.send(body);
+	}
 	$(function(){
 		$('#more').click(function(){
-			var f = $('input[type="file"]:last').parent();
-			var r;
-			for(var i=0;i<3;i++){
-				r = f.clone(true);
-				f.after(r);
-				f = r;
-			}		
+			addMore(1);		
 		});
 		if (typeof window.FileReader != 'undefined') {
 			if(!$.browser.mozilla) return;
-			var uploadurl = $('#upload_form').attr('action');
-			var inputname = $('#upload_form input[type="file"]').attr('name');
+			$('#upload_form input[type="file"]').change(function(){
+					handleFiles(this.files);
+					$(this).closest('div').remove();
+					addMore(1);
+					return false;
+				});
 			$('#content').bind('dragover',function(e){$(this).addClass('hover');return false;})
 			.bind('dragleave',function(e){$(this).removeClass('hover');return false;})
 			.get(0).ondrop = function(e){
 				e.preventDefault();
 				$(this).removeClass('hover');
-				var files = e.dataTransfer.files;
-				if(files){
-					var length = files.length;
-				  	var size = 0;
-				  	for(var i=0;i<length;i++)
-				  		size+=files[i].size;
-					var xhr = new XMLHttpRequest();
-					var boundary = 'xxxxxxxxx';
-					xhr.open('POST', uploadurl, true);
-  					xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='+boundary); 
-  					xhr.setRequestHeader('Content-Length', size);
-					xhr.onreadystatechange = function() {
-				    if (xhr.readyState == 4) {
-				      if ((xhr.status >= 200 && xhr.status <= 200) || xhr.status == 304) {
-				        if (xhr.responseText != '') {
-				        	Ajax.handleResponse(xhr.responseText,{replacement:'files'});
-				        	Indicator.hide();
-				        }
-				      }
-				    }
-				  	}
-				  var body = '';
-				  for(var i=0;i<length;i++){
-				  	  body += '--' + boundary + '\r\n';
-					  body += 'Content-Disposition: form-data; name='+inputname+'; filename=' + files[i].name + '\r\n';  
-					  body += 'Content-Type: '+files[i].type+'\r\n\r\n';  
-					  body += files[i].getAsBinary() + '\r\n';  
-				  }
-				  body += '--' + boundary + '--';
-				  xhr.sendAsBinary(body);
-				  Indicator.show();
-				  return true;
-				}
+				handleFiles(e.dataTransfer.files);
+				return true;
 			};
 		}
 	});
