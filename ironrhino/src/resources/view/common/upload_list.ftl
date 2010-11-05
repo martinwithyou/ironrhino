@@ -69,7 +69,7 @@
 				bb.append('--');bb.append(boundary);bb.append('--');
 				xhr.send(bb.getBlob());
 			  };
-			  reader.readAsBinaryString(f);    
+			  reader.readAsArrayBuffer(f);    
 		  	}
 		  	return;
 		}
