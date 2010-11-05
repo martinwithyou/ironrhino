@@ -37,6 +37,44 @@
 	function handleFiles(files){
 		if(!files)return;
 		var uploadurl = $('#upload_form').attr('action');
+		var inputname = $('#upload_form input[type="file"]').attr('name');
+		Indicator.show();
+		if(typeof FileReaderSync == 'undefined'&&$.browser.webkit){
+			// upload one by one
+			for(var i=0;i<files.length;i++){
+			  var f = files[i];
+			  var reader = new FileReader();
+			  reader.sourceFile = f;
+			  reader.onload = function(evt) {
+			  	var xhr = new XMLHttpRequest();
+				var boundary = 'xxxxxxxxx';
+				xhr.open('POST', uploadurl, true);
+				xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='+boundary); 
+				xhr.onreadystatechange = function() {
+			    if (xhr.readyState == 4) {
+			      if ((xhr.status >= 200 && xhr.status <= 200) || xhr.status == 304) {
+			        if (xhr.responseText != '') {
+			        	Ajax.handleResponse(xhr.responseText,{replacement:'files'});
+			        	Indicator.hide();
+			        }
+			      }
+			    }
+			  	}
+			  	var f = evt.target.sourceFile;
+			  	var bb = new BlobBuilder();
+			  	bb.append('--');bb.append(boundary);bb.append('\r\n');
+			  	bb.append('Content-Disposition: form-data; name=');bb.append(inputname);bb.append('; filename=');bb.append(f.name);bb.append('\r\n');
+				bb.append('Content-Type: ');bb.append(f.type);bb.append('\r\n\r\n');
+				bb.append(evt.target.result);bb.append('\r\n');
+				bb.append('--');bb.append(boundary);bb.append('--');
+				xhr.send(bb.getBlob());
+			  };
+			  reader.readAsBinaryString(f);    
+		  	}
+		  	return;
+		}
+		
+		
 		var xhr = new XMLHttpRequest();
 		var boundary = 'xxxxxxxxx';
 		xhr.open('POST', uploadurl, true);
@@ -51,10 +89,8 @@
 	      }
 	    }
 	  	}
-	  body = compose(files,boundary);
-	  alert(body);
+	  body = compose(files,inputname,boundary);
 	  if(body){
-	  	Indicator.show();
 		  if(xhr.sendAsBinary)
 		  	xhr.sendAsBinary(body);
 		  else
@@ -63,8 +99,7 @@
 	  		xhr.abort();
 	  	}
 	}
-	function compose(files,boundary){
-		var inputname = $('#upload_form input[type="file"]').attr('name');
+	function compose(files,inputname,boundary){
 		if($.browser.mozilla){
 		  var body = '';
 		  for(var i=0;i<files.length;i++){
@@ -76,26 +111,8 @@
 		  body += '--' + boundary + '--';
 		  return body;
 		}else if($.browser.webkit){
-			var bb = new BlobBuilder();
-			var completed = 0;
-			for(var i=0;i<files.length;i++){
-			  var f = files[i];
-			  var reader = new FileReader();
-			  reader.sourceFile = f;
-			  reader.onload = function(evt) {
-			  	var f = evt.target.sourceFile;
-			  	bb.append('--');bb.append(boundary);bb.append('\r\n');
-			  	bb.append('Content-Disposition: form-data; name=');bb.append(inputname);bb.append('; filename=');bb.append(f.name);bb.append('\r\n');
-				bb.append('Content-Type: ');bb.append(f.type);bb.append('\r\n\r\n');
-				bb.append(evt.target.result);bb.append('\r\n');
-				completed++;
-			  };
-			  reader.readAsBinaryString(f);    
-		  	}
-//		  	while(completed<files.length){
-//		  	}
-		  	bb.append('--');bb.append(boundary);bb.append('--');
-			return bb.getBlob();
+			//TODO wait FileReaderSync
+			return null;
 		}
 	}
 	////////////////////////////////////////
