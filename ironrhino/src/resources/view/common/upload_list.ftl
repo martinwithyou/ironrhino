@@ -97,7 +97,7 @@
 </head>
 <body>
 <@s.form id="upload_form" action="upload" method="post" enctype="multipart/form-data" cssClass="line">
-	<#list 1..6 as index>
+	<#list 1..Parameters.size?default('6')?number as index>
 		<@s.file name="file" cssStyle="width:194px;" multiple="true"/>
 	</#list>
 	<div style="clear:both;">
