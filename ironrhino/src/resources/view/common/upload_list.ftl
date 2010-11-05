@@ -22,6 +22,7 @@ div.hover { border: 1px dashed #333; }
 		ajax({
 			url:deleteurl,
 			data:$('#upload_form').serialize(),
+			onerror:reload,
 			replacement:'files'
 		});
 	}

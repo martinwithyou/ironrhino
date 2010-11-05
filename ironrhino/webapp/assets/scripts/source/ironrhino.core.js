@@ -398,8 +398,12 @@ Ajax = {
 				$('input[name="csrf"]').val(data.csrf);
 			if (data.fieldErrors || data.actionErrors) {
 				hasError = true;
+				if (options.onerror)
+					options.onerror.apply(window);
 				Ajax.fire(target, 'onerror', data);
 			} else {
+				if (options.onsuccess)
+					options.onsuccess.apply(window);
 				Ajax.fire(target, 'onsuccess', data);
 			}
 			if (data.fieldErrors) {
