@@ -39,7 +39,7 @@
 		var uploadurl = $('#upload_form').attr('action')+'?'+$('#upload_form').serialize();
 		var inputname = $('#upload_form input[type="file"]').attr('name');
 		Indicator.show();
-		if(typeof FileReaderSync == 'undefined'&&$.browser.webkit){
+		if($.browser.webkit){
 			// upload one by one
 			for(var i=0;i<files.length;i++){
 			  var f = files[i];
