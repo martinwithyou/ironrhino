@@ -4,7 +4,7 @@
 <title>${action.getText('upload')}</title>
 <style>
 td.center {text-align:center;}
-#content.hover { border: 1px dashed #333; }
+div.hover { border: 1px dashed #333; }
 </style>
 <script>
 	function select(el){
@@ -139,7 +139,7 @@ td.center {text-align:center;}
 					addMore(1);
 					return false;
 				});
-			$('#content').bind('dragover',function(e){$(this).addClass('hover');return false;})
+			$('#upload_form').closest('div').bind('dragover',function(e){$(this).addClass('hover');return false;})
 			.bind('dragleave',function(e){$(this).removeClass('hover');return false;})
 			.get(0).ondrop = function(e){
 				e.preventDefault();
