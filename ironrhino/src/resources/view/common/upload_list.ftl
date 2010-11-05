@@ -3,6 +3,7 @@
 <head>
 <title>${action.getText('upload')}</title>
 <style>
+td.center {text-align:center;}
 #content.hover { border: 1px dashed #333; }
 </style>
 <script>
@@ -15,6 +16,21 @@
 			s.addRange(range);
 		}catch(e){
 		}
+	}
+	function del(){
+		var deleteurl = $('#upload_form').attr('action')+'/delete';
+		ajax({
+			url:deleteurl,
+			data:$('#upload_form').serialize(),
+			replacement:'files'
+		});
+	}
+	function reload(){
+		ajax({
+			url:$('#upload_form').attr('action'),
+			data:$('#upload_form').serialize(),
+			replacement:'files'
+		});
 	}
 	function mkdir(){
 		$.alerts.prompt('', 'newfolder', '', function(t){
@@ -143,8 +159,6 @@
 	<div style="clear:both;">
 	<div style="text-align:center;padding-top:30px;">
 	<@s.submit theme="simple" value="${action.getText('upload')}"/>
-	<@button onclick="mkdir()" text="${action.getText('create.subfolder')}"/>
-	<@button id="more" text="${action.getText('more')}"/>
 	<span style="margin-left:10px;margin-right:10px;">${action.getText('autorename')}:</span><@s.checkbox theme="simple" name="autorename"/>
 	</div>
 	</div>
@@ -152,19 +166,28 @@
 	<caption style="font-size:120%;font-weight:bold;"><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder" style="margin-left:10px;">${folder}<#if !folder?ends_with('/')>/</#if></span></caption>
 	<thead>
 	<tr style="font-weight:bold;">
+		<td width="30px" class="center"><input type="checkbox" class="checkbox"/></td>
 		<td>${action.getText('name')}</td>
-		<td>${action.getText('preview')}</td>
+		<td width="100px" class="center">${action.getText('preview')}</td>
 		<td>${action.getText('path')}</td>
-		<td width="100px"></td>
 	</tr>
 	</thead>
+	<tfoot>
+	<tr>
+		<td colspan="4" style="text-align:center;padding:5px 0px;">
+		<@button onclick="del()" text="${action.getText('delete')}"/>
+		<@button onclick="mkdir()" text="${action.getText('create.subfolder')}"/>
+		<@button onclick="reload()" text="${action.getText('reload')}"/>
+		</td>
+	</tr>
+	</tfoot>
 	<tbody>
 	<#list files.entrySet() as entry>
 	<tr>
+		<td class="center"><#if entry.key!='..'><input type="checkbox" name="id" value="${entry.key}"/></#if></td>
 		<td><#if entry.value><a style="color:#1c5a50;" href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank">${entry.key}</a><#else><a style="color:blue;" class="ajax view" replacement="files" href="<@url value="/common/upload/list${folderEncoded}/${entry.key?replace('..','__')?url}"/>">${entry.key}</a></#if></td>
-		<td><#if entry.value && ['jpg','gif','png','bmp']?seq_contains(entry.key?lower_case?split('.')?last)><a href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank"><img src="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" style="width:50px;height:50px;"/></a></#if></td>
+		<td class="center"><#if entry.value && ['jpg','gif','png','bmp']?seq_contains(entry.key?lower_case?split('.')?last)><a href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank"><img src="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" style="width:50px;height:50px;"/></a></#if></td>
 		<td><#if entry.value><span onclick="select(this)" ondblclick="select(this)"><@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/></span></#if></td>
-		<td><#if entry.key!='..'><@button type="link" text="${action.getText('delete')}" class="ajax view" replacement="files" href="${getUrl('/common/upload/delete?id='+folder+'/'+entry.key)}" onprepare="confirm('${action.getText('confirm.prompt')}')"/></#if></td>
 	</tr>
 	</#list>
 	</tbody>
