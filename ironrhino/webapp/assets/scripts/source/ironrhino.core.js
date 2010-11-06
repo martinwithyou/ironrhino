@@ -167,7 +167,7 @@ Message = {
 									'marginTop' : '40px',
 									'right' : '40px',
 									'width' : '250px',
-									'min-height' : '100px',
+									'min-height' : '50px',
 									'z-index' : '9999'
 								});
 			for (var i = 0; i < messages.length; i++) {
