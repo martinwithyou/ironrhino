@@ -43,6 +43,9 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			+ DEFAULT_SESSION_TRACKER_NAME + "}")
 	private String sessionTrackerName = DEFAULT_SESSION_TRACKER_NAME;
 
+	@Value("${httpSessionManager.supportSessionTrackerFromURL:false}")
+	private boolean supportSessionTrackerFromURL;
+
 	@Value("${httpSessionManager.localeCookieName:"
 			+ DEFAULT_COOKIE_NAME_LOCALE + "}")
 	private String localeCookieName = DEFAULT_COOKIE_NAME_LOCALE;
@@ -75,6 +78,10 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	public String getSessionTrackerName() {
 		return sessionTrackerName;
+	}
+
+	public boolean supportSessionTrackerFromURL() {
+		return supportSessionTrackerFromURL;
 	}
 
 	public void initialize(WrappedHttpSession session) {

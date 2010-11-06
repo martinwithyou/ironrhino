@@ -55,14 +55,25 @@ public class SettingAction extends BaseAction {
 	@Override
 	public String save() {
 		if (setting != null) {
-			Setting temp = setting;
-			setting = baseManager.get(setting.getId());
-			if (setting != null) {
+			if (setting.isNew()) {
+				if (baseManager.findByNaturalId(setting.getKey()) != null) {
+					addFieldError("setting.key",
+							getText("validation.already.exists"));
+					return INPUT;
+				}
+			} else {
+				Setting temp = setting;
+				setting = baseManager.get(temp.getId());
+				if (!setting.getKey().equals(temp.getKey())
+						&& baseManager.findByNaturalId(temp.getKey()) != null) {
+					addFieldError("setting.key",
+							getText("validation.already.exists"));
+					return INPUT;
+				}
 				setting.setKey(temp.getKey());
 				setting.setValue(temp.getValue());
-			} else {
-				setting = temp;
 			}
+
 			baseManager.save(setting);
 			addActionMessage(getText("save.success"));
 		}

@@ -9,7 +9,9 @@
 			length="32" unsaved-value="null">
 			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
-		<property name="key" column="skey" not-null="true" />
+		<natural-id mutable="true">
+			<property name="key" column="skey" not-null="true" />
+		</natural-id>
 		<property name="value" />
 		<property name="createDate" />
 		<property name="modifyDate" />
