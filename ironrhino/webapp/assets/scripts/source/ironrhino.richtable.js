@@ -26,13 +26,13 @@
 		obj.oldSiblingRight = ECSideUtil.getPosRight(sibling);
 		ECSideUtil.Dragobj = obj;
 		ECSideUtil.DragobjSibling = sibling;
-		ECSideUtil.MinColWidth = $('#' + Richtable.id).attr('minColWidth')
+		ECSideUtil.MinColWidth = $(obj).closest('table').attr('minColWidth')
 				|| '30';
 		ECSideUtil.Dragobj.style.backgroundColor = '#3366ff';
 		ECSideUtil.Dragobj.parentTdW -= ECSideUtil.Dragobj.mouseDownX;
 		var cellIndex = ECSideUtil.Dragobj.parentNode.cellIndex;
 		try {
-			ECSideUtil.DragobjBodyCell = $('#' + Richtable.id + ' tbody')[0].rows[0].cells[cellIndex];
+			ECSideUtil.DragobjBodyCell = $('tbody', $(obj).closest('table'))[0].rows[0].cells[cellIndex];
 			ECSideUtil.DragobjBodyCellSibling = $(ECSideUtil.DragobjBodyCell)
 					.next()[0];
 		} catch (e) {
@@ -571,10 +571,7 @@ Observation.richtable = function() {
 					Richtable.reload(form);
 					return false;
 				});
-	}
-};
-Initialization.richtable = function() {
-	if ($('.richtable').length) {
+
 		var resizable = $('.richtable').attr('resizable');
 		if (resizable) {
 			document.onmousemove = ECSideUtil.DoResize;
