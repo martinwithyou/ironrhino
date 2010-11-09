@@ -158,20 +158,4 @@ ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!
 </div>
 </div>
 </form>
-<#if !readonly&&celleditable>
-<div style="display: none;">
-<textarea id="rt_edit_template_input">
-<input type="text" class="text" value="" onblur="Richtable.updateCell(this)" style="width: 100%;"/>
-</textarea>
-<textarea id="rt_edit_template_inputdate">
-<input type="text" class="text date" value="" style="width: 100%;"/>
-</textarea>
-<textarea id="rt_select_template_boolean">
-<select onblur="Richtable.updateCell(this)" style="width: 100%;">
-<option value="true">${action.getText('true')}</option>
-<option value="false">${action.getText('false')}</option>
-</select>
-</textarea>
-</div>
-</#if>
 </#macro>

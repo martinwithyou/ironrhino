@@ -42,7 +42,9 @@ MessageBundle = {
 		'confirm' : '确定',
 		'confirm.delete' : '确定要删除?',
 		'confirm.save' : '确定要保存?',
-		'confirm.exit' : '有改动未保存,确定要离开?'
+		'confirm.exit' : '有改动未保存,确定要离开?',
+		'true' : '是',
+		'false' : '否'
 	},
 	get : function() {
 		var key = arguments[0];

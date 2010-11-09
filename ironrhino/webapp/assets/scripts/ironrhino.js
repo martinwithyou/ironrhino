@@ -21681,7 +21681,9 @@ MessageBundle = {
 		'confirm' : '确定',
 		'confirm.delete' : '确定要删除?',
 		'confirm.save' : '确定要保存?',
-		'confirm.exit' : '有改动未保存,确定要离开?'
+		'confirm.exit' : '有改动未保存,确定要离开?',
+		'true' : '是',
+		'false' : '否'
 	},
 	get : function() {
 		var key = arguments[0];
@@ -23976,20 +23978,31 @@ Richtable = {
 			Message.showMessage('no.modification');
 		}
 	},
-	editCell : function(cell, templateId) {
+	editCell : function(cell, templateId, type) {
 		var ce = $(cell);
 		if (ce.attr('editing'))
 			return;
 		ce.attr('editing', 'true');
-		var template = document.getElementById(templateId);
-		var templateText = $.browser.msie
-				? template.value
-				: template.textContent;
-		var text = ce.text();
 		var value = ce.attr('cellValue');
-		value = $.trim(value || text);
+		value = $.trim(value || ce.text());
 		ce.attr('oldValue', value);
-		ce.html(templateText);
+		var template = '';
+		if (templateId) {
+			template = $('#'+templateId).text();
+		} else {
+			if (type == 'textarea') {
+				return;
+			} else if (type == 'date')
+				template = '<input type="text" class="text date" value="" style="width: 100%;"/>';
+			else if (type == 'boolean')
+				template = '<select onblur="Richtable.updateCell(this)" style="width: 100%;"><option value="true">'
+						+ MessageBundle.get('true')
+						+ '</option><option value="false">'
+						+ MessageBundle.get('false') + '</option></select>';
+			else
+				template = '<input type="text" class="text" value="" onblur="Richtable.updateCell(this)" style="width: 100%;"/>';
+		}
+		ce.html(template);
 		var select = $('select', ce);
 		if (value && select.length) {
 			var arr = $('option', select).toArray();
@@ -24052,10 +24065,9 @@ Observation.richtable = function() {
 								if (!cellEdit)
 									return;
 								var ar = cellEdit.split(',');
-								var template = ar[1]
-										|| 'rt_edit_template_input';
 								$(cells[i]).bind(ar[0], function() {
-											Richtable.editCell(this, template);
+											Richtable.editCell(this, ar[1],
+													ar[2]);
 										});
 							});
 				});
