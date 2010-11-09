@@ -20,7 +20,7 @@ public class Setting extends BaseEntity implements Recordable<User> {
 
 	private static final long serialVersionUID = -8352037603261222984L;
 
-	@NaturalId
+	@NaturalId(caseInsensitive = true, mutable = true)
 	private String key = "";
 
 	private String value = "";

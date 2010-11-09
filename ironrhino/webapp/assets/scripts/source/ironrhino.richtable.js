@@ -450,10 +450,10 @@ Richtable = {
 		ce.attr('oldValue', value);
 		var template = '';
 		if (templateId) {
-			template = $('#'+templateId).text();
+			template = $('#' + templateId).text();
 		} else {
 			if (type == 'textarea') {
-				return;
+				template = '<textarea onblur="Richtable.updateCell(this)" type="text" class="text" value="" style="width: 100%;"/>';
 			} else if (type == 'date')
 				template = '<input type="text" class="text date" value="" style="width: 100%;"/>';
 			else if (type == 'boolean')
@@ -462,7 +462,7 @@ Richtable = {
 						+ '</option><option value="false">'
 						+ MessageBundle.get('false') + '</option></select>';
 			else
-				template = '<input type="text" class="text" value="" onblur="Richtable.updateCell(this)" style="width: 100%;"/>';
+				template = '<input onblur="Richtable.updateCell(this)" type="text" class="text" value="" style="width: 100%;"/>';
 		}
 		ce.html(template);
 		var select = $('select', ce);
@@ -491,13 +491,12 @@ Richtable = {
 		cell.removeAttr('editing');
 		cell.attr('cellValue', ce.val());
 		var editType = ce.attr('tagName');
-		if (editType == 'INPUT') {
-			cell.html(ce.val());
-		} else if (editType == 'SELECT') {
-			cell.html($('option[selected]', ce).text());
-		} else if (editType == 'CHECKBOX' || editType == 'RADIO') {
-			cell.html(ce.next().text());
-		}
+		if (editType == 'SELECT')
+			cell.text($('option[selected]', ce).text());
+		else if (editType == 'CHECKBOX' || editType == 'RADIO')
+			cell.text(ce.next().text());
+		else
+			cell.text(ce.val());
 		if (cell.attr('oldValue') != cell.attr('cellValue')) {
 			cell.attr('edited', 'true');
 			cell.parent().attr('edited', 'true');

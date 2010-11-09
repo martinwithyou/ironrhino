@@ -4,7 +4,7 @@
 <title>${action.getText('setting')}${action.getText('list')}</title>
 </head>
 <body>
-<#assign columns={"key":{"cellEdit":"click"},"value":{"cellEdit":"click"}}>
+<#assign columns={"key":{"cellEdit":"click"},"value":{"cellEdit":"click,,textarea"}}>
 <@richtable entityName="setting" columns=columns/>
 </body>
 </html></#escape>

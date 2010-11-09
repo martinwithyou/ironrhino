@@ -8,7 +8,7 @@
 <@s.form action="save" method="post" cssClass="ajax">
 	<@s.hidden name="setting.id" />
 	<@s.textfield label="%{getText('key')}" name="setting.key" />
-	<@s.textfield label="%{getText('value')}" name="setting.value" />
+	<@s.textarea label="%{getText('value')}" name="setting.value" style="width:50%;height:100px;"/>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>

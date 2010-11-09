@@ -56,7 +56,7 @@ public class SettingAction extends BaseAction {
 	public String save() {
 		if (setting != null) {
 			if (setting.isNew()) {
-				if (baseManager.findByNaturalId(setting.getKey()) != null) {
+				if (baseManager.findByNaturalId(true,setting.getKey()) != null) {
 					addFieldError("setting.key",
 							getText("validation.already.exists"));
 					return INPUT;
@@ -65,7 +65,7 @@ public class SettingAction extends BaseAction {
 				Setting temp = setting;
 				setting = baseManager.get(temp.getId());
 				if (!setting.getKey().equals(temp.getKey())
-						&& baseManager.findByNaturalId(temp.getKey()) != null) {
+						&& baseManager.findByNaturalId(true,temp.getKey()) != null) {
 					addFieldError("setting.key",
 							getText("validation.already.exists"));
 					return INPUT;
