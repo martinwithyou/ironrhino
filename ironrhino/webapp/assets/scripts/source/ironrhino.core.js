@@ -168,7 +168,7 @@ Message = {
 									'right' : '40px',
 									'width' : '250px',
 									'min-height' : '50px',
-									'z-index' : '9999'
+									'z-index' : '999'
 								});
 			for (var i = 0; i < messages.length; i++) {
 				$('#notification').jnotifyAddMessage({

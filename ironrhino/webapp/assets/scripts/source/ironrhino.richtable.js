@@ -327,7 +327,7 @@ Richtable = {
 		else if (action) {
 			if (!idparams) {
 				Message.showMessage('no.selection');
-				return;
+				return false;
 			}
 			if (action == 'delete') {
 				$.alerts.confirm(MessageBundle.get('confirm.delete'),
@@ -438,6 +438,7 @@ Richtable = {
 		}
 		if (!modified) {
 			Message.showMessage('no.modification');
+			return false;
 		}
 	},
 	editCell : function(cell, type, templateId) {
