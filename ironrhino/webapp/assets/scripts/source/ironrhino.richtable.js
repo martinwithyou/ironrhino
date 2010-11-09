@@ -440,7 +440,7 @@ Richtable = {
 			Message.showMessage('no.modification');
 		}
 	},
-	editCell : function(cell, templateId, type) {
+	editCell : function(cell, type, templateId) {
 		var ce = $(cell);
 		if (ce.attr('editing'))
 			return;
