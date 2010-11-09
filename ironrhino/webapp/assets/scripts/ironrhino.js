@@ -22597,6 +22597,8 @@ Message = {
 			a.push(messages);
 			messages = a;
 		}
+		if (!$('#message').length)
+			$('<div id="message></div>"').prependTo($('#content'));
 		if (typeof $.fn.jnotifyInizialize != 'undefined') {
 			if (!$('#notification').length)
 				$('<div id="notification"><div>').prependTo(document.body)
@@ -22643,6 +22645,8 @@ Message = {
 			a.push(messages);
 			messages = a;
 		}
+		if (!$('#message').length)
+			$('<div id="message></div>"').prependTo($('#content'));
 		if (typeof $.fn.jnotifyInizialize != 'undefined') {
 			$('#message').jnotifyInizialize({
 						oneAtTime : false

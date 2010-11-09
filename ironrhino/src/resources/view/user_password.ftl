@@ -4,7 +4,7 @@
 <title>${action.getText('change')}${action.getText('password')}</title>
 </head>
 <body>
-<@s.form action="password" method="post" cssClass="ajax focus reset">
+<@s.form action="${getUrl('/user/password')}" method="post" cssClass="ajax focus reset">
 	<@s.password label="%{getText('currentPassword')}" name="currentPassword" cssClass="required" />
 	<@s.password label="%{getText('password')}" name="password" cssClass="required" />
 	<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" cssClass="required" />
