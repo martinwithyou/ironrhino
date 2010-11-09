@@ -23550,6 +23550,7 @@ Observation.combox = function(container) {
 		return ECSideUtil.getPosLeft(elm) + elm.offsetWidth;
 	},
 	StartResize : function(event) {
+		event.preventDefault();
 		var obj = event.target;
 		obj.focus();
 		document.body.style.cursor = 'e-resize';
@@ -23574,8 +23575,10 @@ Observation.combox = function(container) {
 		} catch (e) {
 			ECSideUtil.DragobjBodyCell = null;
 		}
+		return false;
 	},
 	DoResize : function(event) {
+		event.preventDefault();
 		if (ECSideUtil.Dragobj == null) {
 			return true;
 		}
@@ -23606,8 +23609,10 @@ Observation.combox = function(container) {
 			} catch (e) {
 			}
 		}
+		return false;
 	},
 	EndResize : function(event) {
+		event.preventDefault();
 		if (ECSideUtil.Dragobj == null) {
 			return false;
 		}
@@ -23616,7 +23621,7 @@ Observation.combox = function(container) {
 		ECSideUtil.Dragobj.style.backgroundColor = '';
 		ECSideUtil.Dragobj = null;
 		ECSideUtil.DragobjSibling = null;
-
+		return false;
 	}
 };
 
