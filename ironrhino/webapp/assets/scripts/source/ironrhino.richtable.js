@@ -28,7 +28,7 @@ ECSideUtil = {
 		ECSideUtil.Dragobj = obj;
 		ECSideUtil.DragobjSibling = sibling;
 		ECSideUtil.MinColWidth = $(obj).closest('table').attr('minColWidth')
-				|| '30';
+				|| '40';
 		ECSideUtil.Dragobj.style.backgroundColor = '#888';
 		ECSideUtil.Dragobj.parentTdW -= ECSideUtil.Dragobj.mouseDownX;
 		var cellIndex = ECSideUtil.Dragobj.parentNode.cellIndex;
@@ -516,11 +516,13 @@ Richtable = {
 		cell.addClass('editedCell');
 	}
 };
-Observation.richtable = function() {
-	if ($('.richtable').length) {
-		$('.action button.btn,a[rel="richtable"]').click(Richtable.click);
-		var theadCells = $('.richtable thead:eq(0) td');
-		var rows = $('.richtable tbody:eq(0) tr').each(function() {
+Observation.richtable = function(container) {
+	if ($('.richtable', container).length) {
+		$('.action button.btn,a[rel="richtable"]', container)
+				.click(Richtable.click);
+		var theadCells = $('table.richtable thead:eq(0) td', container);
+		var rows = $('table.richtable tbody:eq(0) tr', container).each(
+				function() {
 					var cells = this.cells;
 					theadCells.each(function(i) {
 								var cellEdit = $(this).attr('cellEdit');
@@ -533,15 +535,17 @@ Observation.richtable = function() {
 										});
 							});
 				});
-		$('.richtable .resizeBar').mousedown(ECSideUtil.StartResize);
-		$('.richtable .resizeBar').mouseup(ECSideUtil.EndResize);
-		$('.richtable .firstPage').click(function(event) {
+		$('table.richtable .resizeBar', container)
+				.mousedown(ECSideUtil.StartResize);
+		$('table.richtable .resizeBar', container)
+				.mouseup(ECSideUtil.EndResize);
+		$('table.richtable .firstPage', container).click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
 					Richtable.reload(form);
 					return false;
 				});
-		$('.richtable .prevPage').click(function(event) {
+		$('.prevPage', container).click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) - 1
@@ -549,7 +553,7 @@ Observation.richtable = function() {
 					Richtable.reload(form);
 					return false;
 				});
-		$('.richtable .nextPage').click(function(event) {
+		$('.nextPage', container).click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) + 1
@@ -557,23 +561,23 @@ Observation.richtable = function() {
 					Richtable.reload(form);
 					return false;
 				});
-		$('.richtable .lastPage').click(function(event) {
+		$('.lastPage', container).click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val($('.totalPage', form).text());
 					Richtable.reload(form);
 					return false;
 				});
-		$('.richtable .inputPage').change(function(event) {
+		$('.inputPage', container).change(function(event) {
 					var form = $(event.target).closest('form');
 					Richtable.reload(form);
 					event.preventDefault();
 				});
-		$('.richtable select.pageSize').change(function(event) {
+		$('select.pageSize', container).change(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
 					Richtable.reload(form);
 				});
-		$('.richtable input[name="keyword"]').keydown(function(event) {
+		$('input[name="keyword"]', container).keydown(function(event) {
 					var form = $(event.target).closest('form');
 					if (event.keyCode == 13) {
 						$('.inputPage', form).val(1);
@@ -587,7 +591,7 @@ Observation.richtable = function() {
 					return false;
 				});
 
-		var resizable = $('.richtable').attr('resizable');
+		var resizable = $('table.richtable', container).attr('resizable');
 		if (resizable) {
 			$(document).mousemove(ECSideUtil.DoResize);
 			$(document).mouseup(ECSideUtil.EndResize);

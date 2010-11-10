@@ -24,7 +24,7 @@
 </#macro>
 
 <#macro rtstart action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true>
-<form id="${entityName}_form" action="${getUrl(action)}" method="post" class="richtable ajax view" <#if entityName!=action&&entityName!=''> entity="${entityName}"</#if><#if resizable> resizable="true" minColWidth="40"</#if>>
+<form id="${entityName}_form" action="${getUrl(action)}" method="post" class="richtable ajax view" <#if entityName!=action&&entityName!=''> entity="${entityName}"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
 <#if name!='_'&&name!='pn'&&name!='ps'&&!name?starts_with('resultPage.')&&name!='keyword'>
@@ -32,7 +32,7 @@
 </#if>
 </#list>
 </#if>
-<table class="richtable<#if sortable> sortable</#if> highlightrow">
+<table class="richtable<#if sortable> sortable</#if> highlightrow"<#if resizable> resizable="true" minColWidth="40"</#if>>
 <thead>
 <tr>
 <#if !readonly>
