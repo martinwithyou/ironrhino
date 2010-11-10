@@ -25,7 +25,7 @@ $(function() {
 			theme_advanced_resizing : true,
 			remove_script_host : false,
         	convert_urls : false,
-			content_css : "<@url value="/assets/styles/ironrhino-min.css"/>,<@url value="/assets/styles/app-min.css"/>",
+			content_css : "<@url value="/assets/styles/ironrhino-min.css"/>",
 			mode : "textareas"
 		};
 		$('#page_content').tinymce(options);
