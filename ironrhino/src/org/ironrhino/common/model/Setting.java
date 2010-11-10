@@ -3,40 +3,49 @@ package org.ironrhino.common.model;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.compass.annotations.SearchableComponent;
+import org.compass.annotations.Searchable;
+import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.metadata.RecordAware;
+import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.security.model.User;
 
 @RecordAware
 @PublishAware
-@AutoConfig
+@AutoConfig(searchable = true, order = "key asc")
+@Searchable(alias = "setting")
 public class Setting extends BaseEntity implements Recordable<User> {
 
 	private static final long serialVersionUID = -8352037603261222984L;
 
 	@NaturalId(caseInsensitive = true, mutable = true)
+	@UiConfig(displayOrder = 1)
+	@SearchableProperty(boost = 3)
 	private String key = "";
 
+	@UiConfig(displayOrder = 2, type = "textarea")
+	@SearchableProperty
 	private String value = "";
 
 	@NotInCopy
+	@UiConfig(hide = true)
 	private Date createDate = new Date();
 
 	@NotInCopy
+	@UiConfig(hide = true)
 	private Date modifyDate;
 
-	@SearchableComponent
 	@NotInCopy
+	@UiConfig(hide = true)
 	private User createUser;
 
-	@SearchableComponent
 	@NotInCopy
+	@UiConfig(hide = true)
 	private User modifyUser;
 
 	public Setting() {

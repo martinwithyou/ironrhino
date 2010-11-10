@@ -32,16 +32,16 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	public static final String USERNAME_REGEX = "^[\\w]{3,20}$";
 
 	@NaturalId(caseInsensitive = true)
-	@SearchableProperty
+	@SearchableProperty(boost = 3)
 	private String username;
 
 	@NotInCopy
 	private String password;
 
-	@SearchableProperty
+	@SearchableProperty(boost = 2)
 	private String name;
 
-	@SearchableProperty
+	@SearchableProperty(boost = 3)
 	private String email;
 
 	@SearchableProperty
