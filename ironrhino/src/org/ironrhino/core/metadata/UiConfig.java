@@ -40,5 +40,7 @@ public @interface UiConfig {
 	String listKey() default DEFAULT_LIST_KEY;
 
 	String listValue() default DEFAULT_LIST_VALUE;
+	
+	String cellEdit() default "";
 
 }

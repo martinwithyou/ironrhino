@@ -314,8 +314,8 @@ public class EntityAction extends BaseAction {
 								UiConfig.class);
 						String listKey = uiConfig != null ? uiConfig.listKey()
 								: UiConfig.DEFAULT_LIST_KEY;
-						BeanWrapperImpl temp = new BeanWrapperImpl(
-								returnType.newInstance());
+						BeanWrapperImpl temp = new BeanWrapperImpl(returnType
+								.newInstance());
 						temp.setPropertyValue(listKey, parameterValue);
 						baseManager.setEntityClass(returnType);
 						Object obj;
@@ -323,8 +323,8 @@ public class EntityAction extends BaseAction {
 							obj = baseManager.get((Serializable) temp
 									.getPropertyValue(listKey));
 						else
-							obj = baseManager.findByNaturalId(listKey,
-									temp.getPropertyValue(listKey));
+							obj = baseManager.findByNaturalId(listKey, temp
+									.getPropertyValue(listKey));
 						pd.getWriteMethod()
 								.invoke(entity, new Object[] { obj });
 					}
@@ -481,8 +481,8 @@ public class EntityAction extends BaseAction {
 							lists = new HashMap<String, List>();
 						Method method = pd.getReadMethod().getReturnType()
 								.getMethod("values", new Class[0]);
-						lists.put(pd.getName(),
-								Arrays.asList((Enum[]) method.invoke(null)));
+						lists.put(pd.getName(), Arrays.asList((Enum[]) method
+								.invoke(null)));
 					} catch (Exception e) {
 						log.error(e.getMessage(), e);
 					}
@@ -513,6 +513,8 @@ public class EntityAction extends BaseAction {
 					uci.addCssClass("double");
 				} else if (Date.class.isAssignableFrom(returnType)) {
 					uci.addCssClass("date");
+					if(StringUtils.isBlank(uci.getCellEdit()))
+						uci.setCellEdit("click,date");
 				} else if (String.class == returnType
 						&& pd.getName().toLowerCase().contains("email")) {
 					uci.addCssClass("email");
@@ -561,6 +563,7 @@ public class EntityAction extends BaseAction {
 		private boolean excludeIfNotEdited;
 		private String listKey = UiConfig.DEFAULT_LIST_KEY;
 		private String listValue = UiConfig.DEFAULT_LIST_VALUE;
+		private String cellEdit = "";
 
 		public UiConfigImpl() {
 		}
@@ -579,6 +582,7 @@ public class EntityAction extends BaseAction {
 				this.displayName = config.displayName();
 			this.template = config.template();
 			this.width = config.width();
+			this.cellEdit = config.cellEdit();
 		}
 
 		public boolean isRequired() {
@@ -678,6 +682,14 @@ public class EntityAction extends BaseAction {
 
 		public void setExcludeIfNotEdited(boolean excludeIfNotEdited) {
 			this.excludeIfNotEdited = excludeIfNotEdited;
+		}
+
+		public String getCellEdit() {
+			return cellEdit;
+		}
+
+		public void setCellEdit(String cellEdit) {
+			this.cellEdit = cellEdit;
 		}
 
 	}

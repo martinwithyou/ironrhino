@@ -11,7 +11,26 @@
 		<#if config.displayName??>
 			<#assign label=config.displayName>
 		</#if>
-		<@rttheadtd name=label cellName=entityName+'.'+key width=config['width']! cellEdit=(readonly||!naturalIdMutable)?string('','click') readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited/>
+		<#if !(readonly||config.readonly)>
+			<#assign cellEdit=config.cellEdit!/>
+			<#if cellEdit==''>
+				<#if config.type=='input'>
+					<#assign cellEdit='click'/>
+				</#if>
+				<#if config.type=='textarea'>
+					<#assign cellEdit='click,textarea'/>
+				</#if>
+				<#if config.type=='checkbox'>
+					<#assign cellEdit='click,boolean'/>
+				</#if>
+				<#if config.type=='select'>
+					<#assign cellEdit='click,select,rt_select_template_'+key/>
+				</#if>
+			</#if>
+		<#else>
+			<#assign cellEdit=''/>
+		</#if>
+		<@rttheadtd name=label cellName=entityName+'.'+key width=config['width']! cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited/>
 	</#list>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
@@ -21,14 +40,20 @@
 				<#assign label=config.displayName>
 			</#if>
 			<#if !(readonly||config.readonly)>
-				<#if config.type=='input'||config.type=='textarea'>
-					<#assign cellEdit='click'/>
-				</#if>
-				<#if config.type=='checkbox'>
-					<#assign cellEdit='click,rt_select_template_boolean'/>
-				</#if>
-				<#if config.type=='select'>
-				<#assign cellEdit='click,rt_select_template_'+key/>
+				<#assign cellEdit=config.cellEdit!/>
+				<#if cellEdit==''>
+					<#if config.type=='input'>
+						<#assign cellEdit='click'/>
+					</#if>
+					<#if config.type=='textarea'>
+						<#assign cellEdit='click,textarea'/>
+					</#if>
+					<#if config.type=='checkbox'>
+						<#assign cellEdit='click,boolean'/>
+					</#if>
+					<#if config.type=='select'>
+						<#assign cellEdit='click,select,rt_select_template_'+key/>
+					</#if>
 				</#if>
 			<#else>
 				<#assign cellEdit=''/>
