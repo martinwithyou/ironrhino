@@ -1,0 +1,28 @@
+td.filtercolumn li.selecton
+{
+	color: green;
+	font-weight: bold;
+}
+td.filtercolumn li.selectoff
+{
+	color: red;
+	font-weight: bold;
+}
+td.filtercolumn div.cmDiv
+{
+	display: inline;
+	background: none;
+	border: 0;
+}
+td.filtercolumn li.main
+{
+	padding: 0;
+	background: none;
+	width: 100%;
+	text-align: left;
+}
+td.filtercolumn li.main li
+{
+	text-align: left;
+	padding-right: 2px;
+}

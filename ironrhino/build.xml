@@ -118,6 +118,8 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview.async-0.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeTable-2.3.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.clickmenu-0.1.6.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.columnmanager-0.2.5.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
@@ -133,6 +135,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.selectregion.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.filtercolumn.js" />
 			</filelist>
 		</concat>
 		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-lite-njq.js" encoding="utf-8" fixlastline="yes">
@@ -159,6 +162,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.jnotify.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.clickmenu.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.reset.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
@@ -171,6 +175,7 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.menu.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.sortabletable.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.richtable.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.filtercolumn.css" />
 			</filelist>
 		</concat>
 		<concat destfile="${webapp.dir}/assets/styles/ironrhino-lite.css" encoding="utf-8" fixlastline="yes">
