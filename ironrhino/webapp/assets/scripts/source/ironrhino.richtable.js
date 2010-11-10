@@ -1,4 +1,4 @@
-﻿ECSideUtil = {
+ECSideUtil = {
 	Dragobj : null,
 	DragobjSibling : null,
 	DragobjBodyCell : null,

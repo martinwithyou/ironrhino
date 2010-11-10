@@ -24269,7 +24269,7 @@ Observation.portal = function(container) {
 Observation.combox = function(container) {
 	$('select.combox', container).combox();
 };
-﻿ECSideUtil = {
+ECSideUtil = {
 	Dragobj : null,
 	DragobjSibling : null,
 	DragobjBodyCell : null,
