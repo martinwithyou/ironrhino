@@ -1401,6 +1401,9 @@ input[type="text"],input[type="password"],select,textarea {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 }
+input:focus,select:focus,textarea:focus {
+	border-color: #fdc12f;
+}
 input[type="text"],input[type="password"],select{
 	height:18px;
 }
