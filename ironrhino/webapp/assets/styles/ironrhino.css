@@ -1700,6 +1700,7 @@ td.filtercolumn li.main
 	background: none;
 	width: 100%;
 	text-align: left;
+	cursor: pointer;
 }
 td.filtercolumn li.main li
 {
