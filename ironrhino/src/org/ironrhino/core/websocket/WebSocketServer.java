@@ -13,15 +13,22 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.core.struts.AutoConfigPackageProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
+@Singleton
+@Named
 public class WebSocketServer {
 
-	private final Logger logger = LoggerFactory
-			.getLogger(AutoConfigPackageProvider.class);
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private int port = 8080;
 	private int timeout;
@@ -29,6 +36,8 @@ public class WebSocketServer {
 	private ExecutorService executorService;
 	private boolean running;
 	private Map<String, WebSocketHandler> mapping = new HashMap<String, WebSocketHandler>();
+	@Inject
+	private ApplicationContext ctx;
 
 	public int getPort() {
 		return port;
@@ -46,21 +55,12 @@ public class WebSocketServer {
 		this.timeout = timeout;
 	}
 
-	public boolean isClosed() {
-		return serverSocket == null || serverSocket.isClosed();
-	}
-
-	public void close() throws IOException {
-		running = false;
-		for (WebSocketHandler handler : mapping.values())
-			for (WebSocket ws : handler.getWebSockets())
-				ws.close();
-		executorService.shutdownNow();
-		serverSocket.close();
-	}
-
 	public void setExecutorService(ExecutorService executorService) {
 		this.executorService = executorService;
+	}
+
+	public boolean isClosed() {
+		return serverSocket == null || serverSocket.isClosed();
 	}
 
 	public void addHandler(WebSocketHandler handler) {
@@ -77,9 +77,14 @@ public class WebSocketServer {
 		}
 	}
 
+	@PostConstruct
 	public void start() {
 		if (running)
 			throw new RuntimeException("already started");
+		if (ctx != null)
+			for (WebSocketHandler handler : ctx.getBeansOfType(
+					WebSocketHandler.class).values())
+				addHandler(handler);
 		if (mapping.size() > 0) {
 			// sort mapping by uri
 			List<Map.Entry<String, WebSocketHandler>> list = new ArrayList<Map.Entry<String, WebSocketHandler>>();
@@ -108,7 +113,7 @@ public class WebSocketServer {
 				serverSocket.setSoTimeout(timeout);
 			}
 			running = true;
-			new Thread() {
+			new Thread(getClass().getSimpleName()) {
 				public void run() {
 					while (running) {
 						try {
@@ -132,7 +137,7 @@ public class WebSocketServer {
 										try {
 											handler.handle();
 										} catch (IOException e) {
-											 e.printStackTrace();
+											//e.printStackTrace();
 										} finally {
 											try {
 												handler.close();
@@ -149,7 +154,7 @@ public class WebSocketServer {
 								}
 							}
 						} catch (Exception e) {
-							 e.printStackTrace();
+							//e.printStackTrace();
 						}
 					}
 				}
@@ -157,6 +162,16 @@ public class WebSocketServer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@PreDestroy
+	public void close() throws IOException {
+		running = false;
+		for (WebSocketHandler handler : mapping.values())
+			for (WebSocket ws : handler.getWebSockets())
+				ws.close();
+		executorService.shutdownNow();
+		serverSocket.close();
 	}
 
 }

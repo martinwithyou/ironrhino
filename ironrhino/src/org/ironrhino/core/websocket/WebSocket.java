@@ -243,6 +243,8 @@ public class WebSocket {
 			queryString = _requestUri.substring(i + 1);
 			requestUri = _requestUri.substring(0,i);
 			//TODO cannot use parameters
+		}else{
+			requestUri = _requestUri;
 		}
 		boolean upgrade = false, connection = false;
 		Long[] keys = new Long[2];
