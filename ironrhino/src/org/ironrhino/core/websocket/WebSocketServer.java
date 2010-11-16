@@ -22,15 +22,17 @@ import javax.inject.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 
 @Singleton
 @Named
 public class WebSocketServer {
-
+	public static final int DEFAULT_PORT = 9080;
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-
-	private int port = 8080;
+	@Value("${webSocketServer.port:" + DEFAULT_PORT + "}")
+	private int port = DEFAULT_PORT;
+	@Value("${webSocketServer.timeout:0}")
 	private int timeout;
 	private ServerSocket serverSocket;
 	private ExecutorService executorService;
@@ -137,7 +139,7 @@ public class WebSocketServer {
 										try {
 											handler.handle();
 										} catch (IOException e) {
-											//e.printStackTrace();
+											// e.printStackTrace();
 										} finally {
 											try {
 												handler.close();
@@ -154,7 +156,7 @@ public class WebSocketServer {
 								}
 							}
 						} catch (Exception e) {
-							//e.printStackTrace();
+							// e.printStackTrace();
 						}
 					}
 				}
