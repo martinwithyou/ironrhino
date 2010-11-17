@@ -32,7 +32,7 @@
 </#if>
 </#list>
 </#if>
-<table class="richtable<#if sortable> sortable</#if> filtercolumn highlightrow"<#if resizable> resizable="true" minColWidth="40"</#if>>
+<table class="richtable<#if sortable> sortable</#if> filtercolumn highlightrow<#if resizable> resizable</#if>"<#if resizable> minColWidth="40"</#if>>
 <thead>
 <tr>
 <#if !readonly>

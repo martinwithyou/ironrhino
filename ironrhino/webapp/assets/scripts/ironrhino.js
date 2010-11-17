@@ -25278,8 +25278,7 @@ Observation.richtable = function(container) {
 					return false;
 				});
 
-		var resizable = $('table.richtable', container).attr('resizable');
-		if (resizable) {
+		if ($('table.richtable', container).hasClass('resizable')) {
 			$(document).mousemove(ECSideUtil.DoResize);
 			$(document).mouseup(ECSideUtil.EndResize);
 			$(document.body).bind('drag', function() {
