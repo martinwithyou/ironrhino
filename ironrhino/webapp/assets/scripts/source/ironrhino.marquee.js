@@ -3,12 +3,12 @@
 		this.each(function() {
 					var marquee = $(this);
 					marquee.mouseenter(function() {
-								$(this).attr('stop', 'true');
+								$(this).addClass('stop');
 							}).mouseleave(function() {
-								$(this).removeAttr('stop');
+								$(this).removeClass('stop');
 							});
 					setInterval(function() {
-								if (!marquee.attr('stop'))
+								if (!marquee.hasClass('stop'))
 									$(
 											$(':first-child', marquee)
 													.attr('tagName')

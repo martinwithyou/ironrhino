@@ -1645,7 +1645,7 @@ table.richtable td,th {
 .richtable .selected td {
 	background-color: #ffeedd;
 }
-.richtable .odd .editedCell,.richtable .even .editedCell,.richtable .highlight .editedCell,.richtable .editedCell{
+.richtable .odd .edited,.richtable .even .edited,.richtable .highlight .edited,.richtable .edited{
 	background-color: #fff3f0;
 }
 .richtable .inputPage {

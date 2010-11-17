@@ -38,7 +38,7 @@
 					var boxes = $('input[type=checkbox][name]', this.form);
 					var start = -1, end = -1, checked = false;
 					for (var i = 0; i < boxes.length; i++) {
-						if ($(boxes[i]).attr('lastClicked')) {
+						if ($(boxes[i]).hasClass('lastClicked')) {
 							checked = boxes[i].checked;
 							start = i;
 						}
@@ -62,10 +62,8 @@
 						}
 					}
 				}
-				$('input[type=checkbox]', this.form).each(function() {
-							this.removeAttribute('lastClicked')
-						});
-				$(this).attr('lastClicked', 'true');
+				$('input[type=checkbox]', this.form).removeClass('lastClicked');
+				$(this).addClass('lastClicked');
 			}
 		});
 		return this;

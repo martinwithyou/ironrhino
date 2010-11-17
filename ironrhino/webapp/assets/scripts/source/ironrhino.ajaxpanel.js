@@ -13,7 +13,7 @@
 						setInterval(function() {
 									ajaxpanel(t);
 								}, parseInt(t.attr('interval')));
-					} else if (!t.attr('manual'))
+					} else if (!t.hasClass('manual'))
 						ajaxpanel(t);
 				});
 		return this;

@@ -98,15 +98,14 @@
 								function() {
 									var portlets = layout[i];
 									for (var j = 0; j < portlets.length; j++) {
-										$('#' + portlets[j]).attr('sorted',
-												true).appendTo(this).show();
+										$('#' + portlets[j]).addClass('sorted').appendTo(this).show();
 									}
 								});
 					}
 					$('.portlet', this).each(function() {
 								var t = $(this);
-								if (t.attr('sorted'))
-									t.removeAttr('sorted');
+								if (t.hasClass('sorted'))
+									t.removeClass('sorted');
 								else
 									t.hide();
 							});

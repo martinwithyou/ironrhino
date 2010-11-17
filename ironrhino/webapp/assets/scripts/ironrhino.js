@@ -23762,7 +23762,7 @@ Captcha = {
 						setInterval(function() {
 									ajaxpanel(t);
 								}, parseInt(t.attr('interval')));
-					} else if (!t.attr('manual'))
+					} else if (!t.hasClass('manual'))
 						ajaxpanel(t);
 				});
 		return this;
@@ -23846,7 +23846,7 @@ Observation.ajaxpanel = function(container) {
 					var boxes = $('input[type=checkbox][name]', this.form);
 					var start = -1, end = -1, checked = false;
 					for (var i = 0; i < boxes.length; i++) {
-						if ($(boxes[i]).attr('lastClicked')) {
+						if ($(boxes[i]).hasClass('lastClicked')) {
 							checked = boxes[i].checked;
 							start = i;
 						}
@@ -23870,10 +23870,8 @@ Observation.ajaxpanel = function(container) {
 						}
 					}
 				}
-				$('input[type=checkbox]', this.form).each(function() {
-							this.removeAttribute('lastClicked')
-						});
-				$(this).attr('lastClicked', 'true');
+				$('input[type=checkbox]', this.form).removeClass('lastClicked');
+				$(this).addClass('lastClicked');
 			}
 		});
 		return this;
@@ -23913,12 +23911,12 @@ Observation.checkbox = function(container) {
 		this.each(function() {
 					var marquee = $(this);
 					marquee.mouseenter(function() {
-								$(this).attr('stop', 'true');
+								$(this).addClass('stop');
 							}).mouseleave(function() {
-								$(this).removeAttr('stop');
+								$(this).removeClass('stop');
 							});
 					setInterval(function() {
-								if (!marquee.attr('stop'))
+								if (!marquee.hasClass('stop'))
 									$(
 											$(':first-child', marquee)
 													.attr('tagName')
@@ -24620,15 +24618,14 @@ Observation.filterselect = function(container) {
 								function() {
 									var portlets = layout[i];
 									for (var j = 0; j < portlets.length; j++) {
-										$('#' + portlets[j]).attr('sorted',
-												true).appendTo(this).show();
+										$('#' + portlets[j]).addClass('sorted').appendTo(this).show();
 									}
 								});
 					}
 					$('.portlet', this).each(function() {
 								var t = $(this);
-								if (t.attr('sorted'))
-									t.removeAttr('sorted');
+								if (t.hasClass('sorted'))
+									t.removeClass('sorted');
 								else
 									t.hide();
 							});
@@ -24868,9 +24865,10 @@ Richtable = {
 							}).eq(0).focus();
 					if (!inputform.hasClass('keepopen')) {
 						$(':input', inputform).change(function(e) {
-									inputform.attr('dirty', true);
+									if (!inputform.hasClass('nodirty'))
+										inputform.addClass('dirty');
 								});
-						$(inputform).attr('dontreload', true);
+						$(inputform).addClass('dontreload');
 						var create = url.lastIndexOf('input') == url.length - 5;
 						if (create) {
 							if ($('input[type="hidden"][name="id"]', inputform)
@@ -24908,8 +24906,8 @@ Richtable = {
 					if (!inputform.hasClass('view')) {
 						$('button[type=submit]', inputform).click(function(e) {
 							inputform[0].onsuccess = function() {
-								$(this).removeAttr('dirty');
-								$(this).removeAttr('dontreload');
+								$(this).removeClass('dirty');
+								$(this).removeClass('dontreload');
 								if (!$(e.target).closest('button')
 										.hasClass('save_and_create'))
 									setTimeout(function() {
@@ -24962,14 +24960,14 @@ Richtable = {
 			bgiframe : true,
 			closeOnEscape : false,
 			close : function() {
-				$('#_window_ ').html('');
 				if (reloadonclose
-						&& !$('#_window_ form.ajax').attr('dontreload'))
+						&& !$('#_window_ form.ajax').hasClass('dontreload'))
 					Richtable.reload(form, true);
+				$('#_window_ ').html('');
 				win.dialog('destroy');
 			},
 			beforeclose : function(event, ui) {
-				if ($('form', win).attr('dirty')) {
+				if ($('form', win).hasClass('dirty')) {
 					return confirm(MessageBundle.get('confirm.exit'));
 				}
 			}
@@ -24987,8 +24985,10 @@ Richtable = {
 		if (btn.attr('onclick'))
 			return;
 		var url = Richtable.getBaseUrl(form) + Richtable.getPathParams();
-		url += (url.indexOf('?') > 0 ? '&' : '?') + 'parentId='
-				+ $(btn).closest('tr').attr('rowid');
+		var tr = $(btn).closest('tr');
+		var id = tr.attr('rowid')
+				|| $('input[type="checkbox"]:eq(0)', tr).val();
+		url += (url.indexOf('?') > 0 ? '&' : '?') + 'parentId=' + id;
 		document.location.href = url;
 	},
 	click : function(event) {
@@ -24999,17 +24999,19 @@ Richtable = {
 		if (btn.attr('onclick'))
 			return;
 		var idparams;
-		var id = $(btn).closest('tr').attr('rowid');
+		var tr = $(btn).closest('tr');
+		var id = tr.attr('rowid')
+				|| $('input[type="checkbox"]:eq(0)', tr).val();
 		if (id) {
 			idparams = 'id=' + id;
 		} else {
 			var arr = [];
 			$('form.richtable tbody input[type="checkbox"]').each(function() {
-						if (this.checked) {
-							var _id = $(this).closest('tr').attr('rowid');
-							arr.push('id=' + _id);
-						}
-					});
+				if (this.checked) {
+					var _id = $(this).closest('tr').attr('rowid') || this.value;
+					arr.push('id=' + _id);
+				}
+			});
 			idparams = arr.join('&');
 		}
 		var action = $(btn).attr('action');
@@ -25087,51 +25089,42 @@ Richtable = {
 		}
 	},
 	save : function(event) {
-		var id = $(event.target).closest('tr').attr('rowid');
 		var form = $(event.target).closest('form');
-		var arr = [];
-		if (id)
-			arr[0] = id;
-		else
-			$.each($('.richtable tbody')[0].rows, function() {
-						if ($(this).attr('edited') == 'true')
-							arr.push($(this).attr('rowid'))
-					});
 		var modified = false;
-		if (arr.length > 0) {
-			var theadCells = $('.richtable thead:eq(0) td');
-			$.each(arr, function() {
-				var rows = $('.richtable tbody')[0].rows;
-				var row;
-				for (var i = 0; i < rows.length; i++)
-					if ($(rows[i]).attr('rowid') == this)
-						row = rows[i];
-				if (row && $(row).attr('edited')) {
-					modified = true;
-					var params = {};
-					var entity = Richtable.getBaseUrl(form);
-					entity = entity.substring(entity.lastIndexOf('/') + 1);
-					params[entity + '.id'] = this;
-					$.each(row.cells, function(i) {
-						var theadCell = $(theadCells[i]);
-						var name = theadCell.attr('cellName');
-						if (!name || $(this).attr('edited') != 'true'
-								&& theadCell.hasClass('excludeIfNotEdited'))
-							return;
-						var value = $(this).attr('cellValue') || $(this).text();
-						params[name] = value;
-					});
-					var url = Richtable.getBaseUrl(form) + '/save'
-							+ Richtable.getPathParams();
-					ajax({
-								url : url,
-								type : 'POST',
-								data : params,
-								dataType : 'json'
-							});
-				}
-			});
-		}
+		var theadCells = $('.richtable thead:eq(0) td');
+		$.each($('.richtable tbody')[0].rows, function() {
+			var row = this;
+			if ($(row).hasClass('edited')) {
+				modified = true;
+				var params = {};
+				var entity = Richtable.getBaseUrl(form);
+				entity = entity.substring(entity.lastIndexOf('/') + 1);
+				params[entity + '.id'] = $(this).attr('rowid')
+						|| $('input[type="checkbox"]:eq(0)', this).val();;
+				$.each(row.cells, function(i) {
+							var theadCell = $(theadCells[i]);
+							var name = theadCell.attr('cellName');
+							if (!name || !$(this).hasClass('edited')
+									&& theadCell.hasClass('excludeIfNotEdited'))
+								return;
+							var value = $(this).attr('cellValue')
+									|| $(this).text();
+							params[name] = value;
+						});
+				var url = Richtable.getBaseUrl(form) + '/save'
+						+ Richtable.getPathParams();
+				ajax({
+							url : url,
+							type : 'POST',
+							data : params,
+							dataType : 'json',
+							onsuccess : function() {
+								$(row).removeClass('edited');
+								$('td', row).removeClass('edited')
+							}
+						});
+			}
+		});
 		if (!modified) {
 			Message.showMessage('no.modification');
 			return false;
@@ -25139,9 +25132,9 @@ Richtable = {
 	},
 	editCell : function(cell, type, templateId) {
 		var ce = $(cell);
-		if (ce.attr('editing'))
+		if (ce.hasClass('editing'))
 			return;
-		ce.attr('editing', 'true');
+		ce.addClass('editing');
 		var value = ce.attr('cellValue');
 		value = $.trim(value || ce.text());
 		ce.attr('oldValue', value);
@@ -25185,7 +25178,7 @@ Richtable = {
 	updateCell : function(cellEdit) {
 		var ce = $(cellEdit);
 		var cell = ce.parent();
-		cell.removeAttr('editing');
+		cell.removeClass('editing');
 		cell.attr('cellValue', ce.val());
 		var editType = ce.attr('tagName');
 		if (editType == 'SELECT')
@@ -25195,9 +25188,8 @@ Richtable = {
 		else
 			cell.text(ce.val());
 		if (cell.attr('oldValue') != cell.attr('cellValue')) {
-			cell.attr('edited', 'true');
-			cell.parent().attr('edited', 'true');
-			cell.addClass('editedCell');
+			cell.addClass('edited');
+			cell.parent().addClass('edited');
 		}
 		cell.removeAttr('oldValue');
 	},
@@ -25206,10 +25198,9 @@ Richtable = {
 		var cell = ce.parent();
 		cell.text('********');
 		cell.attr('cellValue', ce.val());
-		cell.attr('edited', 'true');
-		cell.parent().attr('edited', 'true');
-		cell.removeAttr('editing');
-		cell.addClass('editedCell');
+		cell.addClass('edited').removeClass('editing');
+		cell.parent().addClass('edited');
+
 	}
 };
 Observation.richtable = function(container) {
