@@ -15,6 +15,7 @@ import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.ironrhino.common.Constants;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.common.support.SettingControl;
@@ -295,7 +296,7 @@ public class PageAction extends BaseAction {
 	@JsonConfig(root = "files")
 	public String files() {
 		String fileStoragePath = settingControl.getStringValue(
-				"fileStorage.path", "/assets");
+				Constants.SETTING_KEY_FILE_STORAGE_PATH, "/assets");
 		String path = getHomePath(getUid());
 		List<String> list = fileStorage.listFiles(path);
 		files = new LinkedHashMap<String, String>();

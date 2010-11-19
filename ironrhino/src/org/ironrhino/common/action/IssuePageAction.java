@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
-import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.BaseAction;
@@ -21,9 +20,6 @@ public class IssuePageAction extends BaseAction {
 
 	@Inject
 	protected PageManager pageManager;
-
-	@Inject
-	protected SettingControl settingControl;
 
 	protected ResultPage<Page> resultPage;
 

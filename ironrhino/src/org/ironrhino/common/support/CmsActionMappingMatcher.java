@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.ironrhino.common.Constants;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.struts.ActionMappingMatcher;
@@ -28,30 +29,24 @@ import org.springframework.context.ApplicationListener;
 public class CmsActionMappingMatcher implements ActionMappingMatcher,
 		ApplicationListener {
 
-	public static final String SETTING_KEY_SERIESES = "cms.serieses";
-
-	public static final String SETTING_KEY_COLUMNS = "cms.columns";
-	
-	public static final String SETTING_KEY_ISSUES = "cms.issues";
-
 	public static final String DEFAULT_PAGE_PATH_PREFIX = "/p/";
 
 	@Value("${cms.pagePathPrefix:" + DEFAULT_PAGE_PATH_PREFIX + "}")
 	private String pagePathPrefix = DEFAULT_PAGE_PATH_PREFIX;
 
-	@Value("${" + SETTING_KEY_SERIESES + ":}")
+	@Value("${" + Constants.SETTING_KEY_CMS_SERIESES + ":}")
 	private String serieses = "";
 
-	@Value("${" + SETTING_KEY_COLUMNS + ":}")
+	@Value("${" + Constants.SETTING_KEY_CMS_COLUMNS + ":}")
 	private String columns = "";
-	
-	@Value("${" + SETTING_KEY_ISSUES + ":}")
+
+	@Value("${" + Constants.SETTING_KEY_CMS_ISSUES + ":}")
 	private String issues = "";
 
 	private List<String> seriesesList;
 
 	private List<String> columnsList;
-	
+
 	private List<String> issuesList;
 
 	@Autowired(required = false)
@@ -170,7 +165,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			for (String s : serieses.split(","))
 				list.add(s);
 		if (settingControl != null)
-			for (String s : settingControl.getStringArray(SETTING_KEY_SERIESES))
+			for (String s : settingControl
+					.getStringArray(Constants.SETTING_KEY_CMS_SERIESES))
 				list.add(s);
 		seriesesList = list;
 	}
@@ -181,18 +177,20 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			for (String s : columns.split(","))
 				list.add(s);
 		if (settingControl != null)
-			for (String s : settingControl.getStringArray(SETTING_KEY_COLUMNS))
+			for (String s : settingControl
+					.getStringArray(Constants.SETTING_KEY_CMS_COLUMNS))
 				list.add(s);
 		columnsList = list;
 	}
-	
+
 	private void buildIssues() {
 		List<String> list = new ArrayList<String>();
 		if (StringUtils.isNotBlank(issues))
 			for (String s : issues.split(","))
 				list.add(s);
 		if (settingControl != null)
-			for (String s : settingControl.getStringArray(SETTING_KEY_ISSUES))
+			for (String s : settingControl
+					.getStringArray(Constants.SETTING_KEY_CMS_ISSUES))
 				list.add(s);
 		issuesList = list;
 	}
@@ -202,11 +200,14 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			EntityOperationEvent ev = (EntityOperationEvent) event;
 			if (ev.getEntity() instanceof Setting) {
 				Setting settingInEvent = (Setting) ev.getEntity();
-				if (settingInEvent.getKey().equals(SETTING_KEY_SERIESES)) {
+				if (settingInEvent.getKey().equals(
+						Constants.SETTING_KEY_CMS_SERIESES)) {
 					buildSerieses();
-				} else if (settingInEvent.getKey().equals(SETTING_KEY_COLUMNS)) {
+				} else if (settingInEvent.getKey().equals(
+						Constants.SETTING_KEY_CMS_COLUMNS)) {
 					buildColumns();
-				} else if (settingInEvent.getKey().equals(SETTING_KEY_ISSUES)) {
+				} else if (settingInEvent.getKey().equals(
+						Constants.SETTING_KEY_CMS_ISSUES)) {
 					buildIssues();
 				}
 			}

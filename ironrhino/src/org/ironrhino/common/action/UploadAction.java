@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.common.Constants;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -98,7 +99,8 @@ public class UploadAction extends BaseAction {
 	}
 
 	public String getFileStoragePath() {
-		return settingControl.getStringValue("fileStorage.path", "/assets");
+		return settingControl.getStringValue(
+				Constants.SETTING_KEY_FILE_STORAGE_PATH, "/assets");
 	}
 
 	@Override

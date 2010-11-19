@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.ironrhino.common.Constants;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
@@ -50,7 +51,8 @@ public class ManifestAction extends BaseAction {
 		caches.add("test");
 		networks = new ArrayList<String>();
 		networks.add("*");
-		version = settingControl.getStringValue("manifest.version");
+		version = settingControl
+				.getStringValue(Constants.SETTING_KEY_MANIFEST_VERSION);
 		if (StringUtils.isBlank(version)) {
 			// TODO calculate version
 		}

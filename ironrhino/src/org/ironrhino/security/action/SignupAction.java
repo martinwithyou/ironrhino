@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.mail.MailService;
@@ -18,8 +16,11 @@ import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
+import org.ironrhino.security.Constants;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.service.UserManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -90,7 +91,8 @@ public class SignupAction extends BaseAction {
 
 	@Override
 	public String input() {
-		if (!settingControl.getBooleanValue("signup.open", false))
+		if (!settingControl.getBooleanValue(Constants.SETTING_KEY_SIGNUP_OPEN,
+				false))
 			return ACCESSDENIED;
 		return SUCCESS;
 	}
@@ -102,7 +104,8 @@ public class SignupAction extends BaseAction {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "email", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "password", trim = true, key = "validation.required") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "username", expression = User.USERNAME_REGEX, key = "validation.invalid") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "email", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
 	public String execute() {
-		if (!settingControl.getBooleanValue("signup.open", false))
+		if (!settingControl.getBooleanValue(Constants.SETTING_KEY_SIGNUP_OPEN,
+				false))
 			return ACCESSDENIED;
 		if (StringUtils.isBlank(username))
 			username = userManager.suggestUsername(email);
@@ -115,7 +118,7 @@ public class SignupAction extends BaseAction {
 		if (StringUtils.isBlank(password))
 			password = CodecUtils.randomString(10);
 		boolean activationRequired = settingControl.getBooleanValue(
-				"signup.activation.required", false);
+				Constants.SETTING_KEY_SIGNUP_ACTIVATION_REQUIRED, false);
 		User user = new User();
 		user.setEmail(email);
 		user.setUsername(username);
@@ -183,10 +186,8 @@ public class SignupAction extends BaseAction {
 	private void sendActivationMail(User user) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("user", user);
-		model.put(
-				"url",
-				"/signup/activate/"
-						+ Blowfish.encrypt(user.getId() + "," + user.getEmail()));
+		model.put("url", "/signup/activate/"
+				+ Blowfish.encrypt(user.getId() + "," + user.getEmail()));
 		SimpleMailMessage smm = new SimpleMailMessage();
 		smm.setTo(user + "<" + user.getEmail() + ">");
 		smm.setSubject(getText("mail.subject.user_activate"));

@@ -3,6 +3,7 @@ package org.ironrhino.common.action;
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.common.Constants;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.common.support.SettingControl;
@@ -77,14 +78,15 @@ public class ColumnPageAction extends BaseAction {
 
 	@Override
 	public String list() {
-		columns = settingControl.getStringArray(getName() + ".column");
+		columns = settingControl.getStringArray(getName()
+				+ Constants.SETTING_KEY_COLUMN_SUFFIX);
 		column = getUid();
 		if (StringUtils.isBlank(column)) {
 			page = pageManager.getByPath("/" + getName() + "/preface");
 			if (page != null)
 				return "columnpage";
-//			if (columns != null && columns.length > 0)
-//				column = columns[0];
+			// if (columns != null && columns.length > 0)
+			// column = columns[0];
 		}
 		if (resultPage == null)
 			resultPage = new ResultPage<Page>();
@@ -97,7 +99,8 @@ public class ColumnPageAction extends BaseAction {
 	}
 
 	public String p() {
-		columns = settingControl.getStringArray(getName() + ".column");
+		columns = settingControl.getStringArray(getName()
+				+ Constants.SETTING_KEY_COLUMN_SUFFIX);
 		String path = getUid();
 		if (StringUtils.isNotBlank(path)) {
 			path = "/" + path;

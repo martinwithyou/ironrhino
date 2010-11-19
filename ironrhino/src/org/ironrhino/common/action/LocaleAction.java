@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.ironrhino.common.Constants;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.session.HttpSessionManager;
@@ -19,8 +20,6 @@ import org.ironrhino.core.util.RequestUtils;
 
 @AutoConfig(namespace = "/")
 public class LocaleAction extends BaseAction {
-
-	public static final String SETTING_KEY_AVAILABLE_LOCALES = "availableLocales";
 
 	private String lang;
 
@@ -72,7 +71,7 @@ public class LocaleAction extends BaseAction {
 		}
 		availableLocales = Locale.getAvailableLocales();
 		String[] locales = settingControl
-				.getStringArray(SETTING_KEY_AVAILABLE_LOCALES);
+				.getStringArray(Constants.SETTING_KEY_AVAILABLE_LOCALES);
 		if (locales != null && locales.length > 0) {
 			List<String> _locales = Arrays.asList(locales);
 			List<Locale> list = new ArrayList<Locale>(locales.length);
