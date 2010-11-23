@@ -1147,13 +1147,13 @@ text-decoration: none;
 	padding:0px;
 }
 .editme[edited="true"] {
-	border:solid 1px red;
+	outline:1px solid red;
 }
 .editme:hover {
-	border:dotted 1px #ffc000;
+	outline:1px dotted #ffc000;
 }
 .editme:focus {
-	border:solid 1px #ffc000;
+	outline:1px solid #ffc000;
 }
 
 .series .catalog{
