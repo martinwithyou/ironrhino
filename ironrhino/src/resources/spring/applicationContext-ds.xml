@@ -11,8 +11,9 @@
 		<property name="password" value="${jdbc.password}" />
 		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive}" />
 		<property name="minConnectionsPerPartition" value="${dataSource.initialSize}" />
-		<property name="statementsCacheSize" value="0" />
-		<property name="releaseHelperThreads" value="0" />
+		<property name="statementsCacheSize" value="50" />
+		<property name="releaseHelperThreads" value="1" />
+		<property name="statementReleaseHelperThreads" value="1" />
 		<property name="idleConnectionTestPeriod" value="1" />
 		<property name="idleMaxAge" value="60" />
 		<property name="connectionTestStatement" value="${jdbc.connectionTestStatement}" />
