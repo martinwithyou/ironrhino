@@ -40,7 +40,7 @@ public class WebSocketServer {
 	private Map<String, WebSocketHandler> mapping = new HashMap<String, WebSocketHandler>();
 	@Inject
 	private ApplicationContext ctx;
-	private Thread serverThread; 
+	private Thread serverThread;
 
 	public int getPort() {
 		return port;
@@ -107,6 +107,8 @@ public class WebSocketServer {
 				logger.info("mapping {} to {}", entry.getValue().getClass()
 						.getName(), entry.getKey());
 			}
+		} else {
+			return;
 		}
 		if (executorService == null)
 			executorService = Executors.newCachedThreadPool();
@@ -170,6 +172,8 @@ public class WebSocketServer {
 
 	@PreDestroy
 	public void close() throws IOException {
+		if (!running)
+			return;
 		running = false;
 		for (WebSocketHandler handler : mapping.values())
 			for (WebSocket ws : handler.getWebSockets())
