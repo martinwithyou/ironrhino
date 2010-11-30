@@ -703,15 +703,14 @@ Observation.common = function(container) {
 	}
 	if (typeof $.fn.cycle != 'undefined')
 		$('.cycle').each(function() {
-					var options = {
-						fx : 'fade',
-						pause : 1
-					};
-					var _options = $.parseJSON($(this).attr('options'));
-					if (_options)
-						$.extend(options, _options);
-					$(this).cycle(options);
-				});
+			var options = {
+				fx : 'fade',
+				pause : 1
+			};
+			$.extend(options, (new Function("return "
+							+ ($(this).attr('options') || '{}')))());
+			$(this).cycle(options);
+		});
 	$('a.ajax,form.ajax', container).each(function() {
 		var target = this;
 		var ids = [];

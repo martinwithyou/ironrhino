@@ -23569,15 +23569,14 @@ Observation.common = function(container) {
 	}
 	if (typeof $.fn.cycle != 'undefined')
 		$('.cycle').each(function() {
-					var options = {
-						fx : 'fade',
-						pause : 1
-					};
-					var _options = $.parseJSON($(this).attr('options'));
-					if (_options)
-						$.extend(options, _options);
-					$(this).cycle(options);
-				});
+			var options = {
+				fx : 'fade',
+				pause : 1
+			};
+			$.extend(options, (new Function("return "
+							+ ($(this).attr('options') || '{}')))());
+			$(this).cycle(options);
+		});
 	$('a.ajax,form.ajax', container).each(function() {
 		var target = this;
 		var ids = [];
@@ -25290,15 +25289,132 @@ Observation.richtable = function(container) {
 	}
 };
 (function($) {
+	$.fn.treearea = function(treeoptions) {
+		treeoptions = treeoptions || {};
+		this.addClass('treearea').each(function() {
+			_treeoptions = $.extend(treeoptions, (new Function("return "
+							+ ($(this).attr('treeoptions') || '{}')))());
+			var treearea = $(this);
+			var fullname = _treeoptions.value;
+			var i = 0;
+			var callback = fullname ? function() {
+				var area = $('.area:eq(' + (i++) + ')', treearea);
+				var match = false;
+				var id = null;
+				var target = null;
+				$('span', area).each(function() {
+							if (!match) {
+								var name = $(this).text();
+								if (fullname.indexOf(name) == 0) {
+									match = true;
+									target = $(this);
+									fullname = fullname.substring(name.length);
+									id = target.data('treenode').id;
+								}
+							}
+						});
+				if (match)
+					if (fullname.length) {
+						expand(_treeoptions, treearea, target, callback);
+					} else {
+						$('span', target.closest('.area'))
+								.removeClass('selected');
+						target.addClass('selected');
+					}
+			} : null;
+			expand(_treeoptions, $(this), null, callback);
+		});
+		return this;
+	};
+
+	function expand(treeoptions, treearea, target, callback) {
+		var level = 0;
+		var areas = $('.area', treearea);
+		var id = 0;
+		if (target) {
+			id = $(target).data('treenode').id;
+			$('span', target.closest('.area')).removeClass('selected');
+			target.addClass('selected');
+		}
+		if (id > 0)
+			areas.each(function(i) {
+						var index = i + 1;
+						var match = false;
+						$('span', this).each(function() {
+									if ($(this).data('treenode').id == id)
+										match = true;
+								});
+						if (match)
+							level = index;
+					});
+		for (var i = areas.size() - 1; i > level; i--)
+			areas.eq(i).fadeOut().remove();
+		areas = $('.area', treearea);
+		var area = level + 1 == areas.size()
+				? areas.eq(level).html('')
+				: $('<div/>').addClass('clearfix').addClass('area')
+						.appendTo(treearea);
+		var url = treeoptions.url;
+		if (id > 0)
+			url += '?root=' + id;
+		if (!treeoptions.cache)
+			url += (url.indexOf('?') > -1 ? '&' : '?') + 'r=' + Math.random();
+		$.getJSON(url, function(data) {
+			$.each(data, function() {
+						if (treeoptions.full) {
+							var fullname = '';
+							$('.area', treearea).each(function() {
+										$('span', this).each(function() {
+													if ($(this)
+															.hasClass('selected'))
+														fullname += $(this)
+																.text();
+												});
+									});
+							this.fullname = fullname + this.name;
+						}
+						var span = $('<span/>').text(this.name).data(
+								'treenode', this).appendTo(area).click(
+								function(ev) {
+									var target = $(ev.target);
+									if ((!target.hasClass('hasChildren') || target
+											.hasClass('selected'))
+											&& treeoptions.click) {
+										$('span', target.closest('.area'))
+												.removeClass('selected');
+										target.addClass('selected');
+										treeoptions.click(target
+												.data('treenode'));
+									} else
+										expand(treeoptions, target
+														.closest('.treearea'),
+												target, callback);
+								});;
+						if (this.hasChildren)
+							span.addClass('hasChildren');
+
+					});
+			area.fadeIn();
+			if (callback)
+				callback();
+		});
+	}
+})(jQuery);
+(function($) {
 	var current;
-	$.fn.selectregion = function() {
+	$.fn.treeselect = function() {
 		$(this).css('cursor', 'pointer').click(function() {
 			current = $(this);
+			var treeoptions = {
+				full : true,
+				cache : true
+			}
+			$.extend(treeoptions, (new Function("return "
+							+ ($(current).attr('treeoptions') || '{}')))());
 			var _click = function() {
-				var full = current.attr('full');
-				var regionname = $('#' + current.attr('regionname'));
-				var regionid = $('#' + current.attr('regionid'));
-				if (regionname.length) {
+				if (treeoptions.name) {
+					var nametarget = $('#' + treeoptions.name);
+					var full = treeoptions.full || false;
 					var name = $(this).text();
 					if (full) {
 						var p = this.parentNode.parentNode.parentNode.parentNode;
@@ -25307,39 +25423,74 @@ Observation.richtable = function(container) {
 							p = p.parentNode.parentNode;
 						}
 					}
-					if (regionname.attr('tagName') == 'INPUT')
-						regionname.val(name);
+					if (nametarget.is(':input'))
+						nametarget.val(name);
 					else
-						regionname.text(name);
+						nametarget.text(name);
 				}
-				if (regionid.length)
-					regionid.val($(this).closest('li').attr('id'));
-				$("#region_window").dialog('close');
+				if (treeoptions.id) {
+					var idtarget = $('#' + treeoptions.id);
+					var id = $(this).closest('li').attr('id');
+					if (idtarget.is(':input'))
+						idtarget.val(id);
+					else
+						idtarget.text(id);
+				}
+				$("#_tree_window").dialog('close');
 			};
-			var nocache = current.attr('nocache');
 			var options = {
-				url : CONTEXT_PATH + '/region/children',
+				url : treeoptions.url,
 				click : _click,
 				collapsed : true,
 				placeholder : MessageBundle.get('ajax.loading'),
 				unique : true
 			};
-			if (nocache){
+			if (!treeoptions.cache) {
 				options.url = options.url + '?r=' + Math.random();
-				$('#region_window').remove();
+				$('#_tree_window').remove();
 			}
-			if (!$('#region_window').length) {
-				$('<div id="region_window" title="'
+			if (!$('#_tree_window').length) {
+				$('<div id="_tree_window" title="'
 						+ MessageBundle.get('select')
-						+ '"><div id="region_tree"></div></div>')
+						+ '"><div id="_tree_"></div></div>')
 						.appendTo(document.body);
-				$('#region_window').dialog({
+				$('#_tree_window').dialog({
 							width : 500,
 							minHeight : 500
 						});
-				$('#region_tree').treeview(options);
+				if (treeoptions.type != 'treeview') {
+					if (treeoptions.name) {
+						var nametarget = $('#' + treeoptions.name);
+						treeoptions.value = nametarget.is(':input')
+								? nametarget.val()
+								: nametarget.text();
+					}
+					treeoptions.click = function(treenode) {
+						if (treeoptions.name) {
+							var nametarget = $('#' + treeoptions.name);
+							var name = treeoptions.full || false
+									? treenode.fullname
+									: treenode.name;
+							if (nametarget.is(':input'))
+								nametarget.val(name);
+							else
+								nametarget.text(name);
+						}
+						if (treeoptions.id) {
+							var idtarget = $('#' + treeoptions.id);
+							var id = treenode.id;
+							if (idtarget.is(':input'))
+								idtarget.val(id);
+							else
+								idtarget.text(id);
+						}
+						$("#_tree_window").dialog('close');
+					};
+					$('#_tree_').treearea(treeoptions);
+				} else
+					$('#_tree_').treeview(options);
 			} else {
-				$('#region_window').dialog('open');
+				$('#_tree_window').dialog('open');
 			}
 
 		});
@@ -25348,8 +25499,8 @@ Observation.richtable = function(container) {
 
 })(jQuery);
 
-Observation.selectregion = function(container) {
-	$('.selectregion', container).selectregion();
+Observation.treeselect = function(container) {
+	$('.treeselect', container).treeselect();
 };
 ( function($) {
 	SearchHighlighter = {
