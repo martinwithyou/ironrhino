@@ -25361,39 +25361,35 @@ Observation.richtable = function(container) {
 			url += (url.indexOf('?') > -1 ? '&' : '?') + 'r=' + Math.random();
 		$.getJSON(url, function(data) {
 			$.each(data, function() {
-						if (treeoptions.full) {
-							var fullname = '';
-							$('.area', treearea).each(function() {
-										$('span', this).each(function() {
-													if ($(this)
-															.hasClass('selected'))
-														fullname += $(this)
-																.text();
-												});
-									});
-							this.fullname = fullname + this.name;
-						}
-						var span = $('<span/>').text(this.name).data(
-								'treenode', this).appendTo(area).click(
-								function(ev) {
-									var target = $(ev.target);
-									if ((!target.hasClass('hasChildren') || target
-											.hasClass('selected'))
-											&& treeoptions.click) {
-										$('span', target.closest('.area'))
-												.removeClass('selected');
-										target.addClass('selected');
-										treeoptions.click(target
-												.data('treenode'));
-									} else
-										expand(treeoptions, target
-														.closest('.treearea'),
-												target, callback);
-								});;
-						if (this.hasChildren)
-							span.addClass('hasChildren');
+				if (treeoptions.full) {
+					var fullname = '';
+					$('.area', treearea).each(function() {
+								$('span', this).each(function() {
+											if ($(this).hasClass('selected'))
+												fullname += $(this).text();
+										});
+							});
+					this.fullname = fullname + this.name;
+				}
+				var span = $('<span/>').text(this.name).data('treenode', this)
+						.appendTo(area).click(function(ev) {
+							var target = $(ev.target);
+							if ((!target.hasClass('hasChildren') || (!treeoptions.leafonly && target
+									.hasClass('selected')))
+									&& treeoptions.click) {
+								$('span', target.closest('.area'))
+										.removeClass('selected');
+								target.addClass('selected');
+								treeoptions.click(target.data('treenode'));
+							} else
+								expand(treeoptions,
+										target.closest('.treearea'), target,
+										callback);
+						});;
+				if (this.hasChildren)
+					span.addClass('hasChildren');
 
-					});
+			});
 			area.fadeIn();
 			if (callback)
 				callback();
