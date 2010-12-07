@@ -14,7 +14,7 @@
 		<property name="statementsCacheSize" value="50" />
 		<property name="releaseHelperThreads" value="0" />
 		<property name="statementReleaseHelperThreads" value="0" />
-		<property name="idleConnectionTestPeriod" value="0" />
+		<property name="idleConnectionTestPeriod" value="1" />
 		<property name="idleMaxAge" value="60" />
 		<property name="connectionTestStatement" value="${jdbc.connectionTestStatement}" />
 	</bean>
