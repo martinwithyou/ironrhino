@@ -23408,12 +23408,20 @@ Initialization.history = function() {
 								url : url,
 								cache : true,
 								replaceTitle : true,
+								success : function() {
+									$('.menu li').each(function() {
+										if ($('a', this)[0].href == url)
+											$(this).addClass('selected')
+													.siblings()
+													.removeClass('selected');
+									});
+								},
 								header : {
 									'X-Fragment' : '_'
 								}
 							});
 				} else {
-					history.replaceState(url);
+					history.replaceState(url,'',url);
 					_historied_ = true;
 				}
 			};
@@ -23421,24 +23429,32 @@ Initialization.history = function() {
 		}
 		$.history.init(function(hash) {
 					if ((!hash && !_historied_)
-							|| (hash && hash.indexOf('/') < 0))
+							|| (hash && hash.indexOf('!') < 0))
 						return;
 					var url = document.location.href;
 					if (url.indexOf('#') > 0)
 						url = url.substring(0, url.indexOf('#'));
-					if (hash) {
+					if (hash.length) {
+						hash = hash.substring(1);
 						if (UrlUtils.isSameDomain(hash)) {
 							if (CONTEXT_PATH)
 								hash = CONTEXT_PATH + hash;
 						}
 						url = hash;
-
 					}
 					_historied_ = true;
 					ajax({
 								url : url,
 								cache : true,
 								replaceTitle : true,
+								success : function() {
+									$('.menu li').each(function() {
+										if ($('a', this).attr('href') == url)
+											$(this).addClass('selected')
+													.siblings()
+													.removeClass('selected');
+									});
+								},
 								header : {
 									'X-Fragment' : '_'
 								}
@@ -23663,7 +23679,7 @@ Observation.common = function(container) {
 							if (CONTEXT_PATH)
 								hash = hash.substring(CONTEXT_PATH.length);
 							hash = hash.replace(/^.*#/, '');
-							$.history.load(hash);
+							$.history.load('!' + hash);
 							return false;
 						}
 					}
