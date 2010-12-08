@@ -23396,7 +23396,8 @@ Initialization.common = function() {
 
 var HISTORY_ENABLED = typeof $.history != 'undefined'
 		&& ($('meta[name="history_enabled"]').attr('content') != 'false');
-var SESSION_HISTORY_SUPPORT = typeof history.pushState != 'undefined';
+var SESSION_HISTORY_SUPPORT = typeof history.pushState != 'undefined'
+		&& document.location.hash.indexOf('#!/') != 0;
 var _historied_ = false;
 Initialization.history = function() {
 	if (HISTORY_ENABLED) {
@@ -23421,7 +23422,7 @@ Initialization.history = function() {
 								}
 							});
 				} else {
-					history.replaceState(url,'',url);
+					history.replaceState(url, '', url);
 					_historied_ = true;
 				}
 			};
