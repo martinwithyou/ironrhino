@@ -24808,6 +24808,12 @@ Richtable = {
 		p = url.indexOf(';');
 		if (p > 0)
 			url = url.substring(0, p);
+		if (url.indexOf('/') != 0) {
+			var hash = document.location.hash;
+			if (hash.indexOf('!') == 1)
+				url = CONTEXT_PATH
+						+ hash.substring(2, hash.lastIndexOf('/') + 1) + url;
+		}
 		return url;
 	},
 	getPathParams : function() {

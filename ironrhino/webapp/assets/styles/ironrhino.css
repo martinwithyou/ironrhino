@@ -1400,12 +1400,14 @@ input[type="text"],input[type="password"],select,textarea {
 	border-radius: 3px;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	padding-left: 2px;
 }
 input:focus,select:focus,textarea:focus {
 	border-color: #fdc12f;
 }
 input[type="text"],input[type="password"],select{
 	height:18px;
+	line-height:18px;
 }
 select {
 	height: 20px;
@@ -1505,14 +1507,17 @@ div.top label {
 	float:left;
 }
 .menu li a {
-	width:65px;
+	width: auto !important;
+	width: 55px;
+	min-width:55px;
 	display:block;
 	height:30px;
 	line-height:30px;
 	font-size:1.2em;
 	font-weight:bold;
 	text-align:center;
-	margin:0px 5px 0px 5px;
+	margin:0 5px;
+	padding: 0 5px;
 }
 .menu li.selected a,.menu li a:hover {
 	color:#fff;
@@ -1526,7 +1531,9 @@ div.top label {
 
 .menu li ul {
 	z-index: 9999;
-	width:75px;
+	width: auto !important;
+	width: 75px;
+	min-width:75px;
 	display:none;
 	position:absolute;
 	top:35px;
