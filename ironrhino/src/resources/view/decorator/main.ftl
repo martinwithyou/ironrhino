@@ -33,6 +33,7 @@
 	<@authorize ifAnyGranted="ROLE_ADMINISTRATOR">
 		<li><a href="<@url value="/user"/>">${action.getText('user')}</a></li>
 	</@authorize>
+	<li><a href="<@url value="/user/profile"/>">${action.getText('profile')}</a></li>
 	<li><a href="<@url value="/user/password"/>">${action.getText('change')}${action.getText('password')}</a></li>
 	<li><a href="<@url value="${ssoServerBase!}/logout"/>">${action.getText('logout')}</a></li>
 </ul>

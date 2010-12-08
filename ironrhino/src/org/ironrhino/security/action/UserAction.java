@@ -259,12 +259,34 @@ public class UserAction extends BaseAction {
 		User user = AuthzUtils.getUserDetails(User.class);
 		if (user == null || !user.isPasswordValid(currentPassword)) {
 			addFieldError("currentPassword", getText("currentPassword.error"));
-			return INPUT;
+			return "password";
 		}
 		user.setLegiblePassword(password);
 		userManager.save(user);
 		addActionMessage(getText("save.success"));
-		return INPUT;
+		return "password";
+	}
+
+	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
+	@InputConfig(methodName = "inputprofile")
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "validation.required") }, emails = { @EmailValidator(fieldName = "user.email", key = "validation.invalid") })
+	public String profile() {
+		User userInSession = AuthzUtils.getUserDetails(User.class);
+		if (userInSession == null || user == null) {
+			return "profile";
+		}
+		userInSession.setName(user.getName());
+		userInSession.setEmail(user.getEmail());
+		userInSession.setPhone(user.getPhone());
+		userManager.save(userInSession);
+		addActionMessage(getText("save.success"));
+		return "profile";
+	}
+
+	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
+	public String inputprofile() {
+		user = AuthzUtils.getUserDetails(User.class);
+		return "profile";
 	}
 
 }
