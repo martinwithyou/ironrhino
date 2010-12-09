@@ -36,10 +36,13 @@ public class RequestUtils {
 	}
 
 	public static String getRemoteAddr(HttpServletRequest request) {
-		String addr = request.getHeader("X-Forwarded-For");
-		int index = 0;
-		if (StringUtils.isNotBlank(addr) && (index = addr.indexOf(',')) > 0)
-			addr = addr.substring(0, index);
+		String addr = request.getHeader("X-Real-IP");
+		if (StringUtils.isBlank(addr)) {
+			addr = request.getHeader("X-Forwarded-For");
+			int index = 0;
+			if (StringUtils.isNotBlank(addr) && (index = addr.indexOf(',')) > 0)
+				addr = addr.substring(0, index);
+		}
 		return StringUtils.isNotBlank(addr) ? addr : request.getRemoteAddr();
 	}
 
