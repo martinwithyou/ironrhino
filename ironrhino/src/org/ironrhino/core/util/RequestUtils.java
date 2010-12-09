@@ -36,7 +36,7 @@ public class RequestUtils {
 	}
 
 	public static String getRemoteAddr(HttpServletRequest request) {
-		String addr = request.getHeader("X-Forward-For");
+		String addr = request.getHeader("X-Forwarded-For");
 		int index = 0;
 		if (StringUtils.isNotBlank(addr) && (index = addr.indexOf(',')) > 0)
 			addr = addr.substring(0, index);
