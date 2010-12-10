@@ -13,9 +13,20 @@
 <@button text='${action.getText(\'save\')}' action='save'/>
 <@button text='${action.getText(\'delete\')}' action='delete'/>
 <@button text='${action.getText(\'reload\')}' action='reload'/>
+<@button text='${action.getText(\'move\')}' onclick='$(\'#move\').toggle()'/>
 <@button text='${action.getText(\'merge\')}' onclick='$(\'#merge\').toggle()'/>
 ">
 <@richtable entityName="region" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons/>
+<form id="move" action="region/move" method="post" class="ajax reset" style="display:none;" onprepare="return confirm('${action.getText('confirm')}?');" onsuccess="Richtable.reload($('#region_form'))">
+	<div style="padding-top:10px;text-align:center;">
+	<input id="regionId1" type="hidden" name="id"/>
+	<span id="region1" class="treeselect" treeoptions="{'url':'<@url value="/region/children"/>','name':'region1','id':'regionId1','cache':false}">${action.getText('select')}</span>
+	--&gt;
+	<input id="regionId2" type="hidden" name="id"/>
+	<span id="region2" class="treeselect"  treeoptions="{'url':'<@url value="/region/children"/>','name':'region2','id':'regionId2','cache':false}">${action.getText('select')}</span>
+	<@s.submit theme="simple" value="%{getText('confirm')}" />
+	</div>
+</form>
 <form id="merge" action="region/merge" method="post" class="ajax reset" style="display:none;" onprepare="return confirm('${action.getText('confirm')}?');" onsuccess="Richtable.reload($('#region_form'))">
 	<div style="padding-top:10px;text-align:center;">
 	<input id="regionId1" type="hidden" name="id"/>
@@ -24,7 +35,7 @@
 	<input id="regionId2" type="hidden" name="id"/>
 	<span id="region2" class="treeselect"  treeoptions="{'url':'<@url value="/region/children"/>','name':'region2','id':'regionId2','cache':false}">${action.getText('select')}</span>
 	<@s.submit theme="simple" value="%{getText('confirm')}" />
-</div>
+	</div>
 </form>
 </body>
 </html></#escape>

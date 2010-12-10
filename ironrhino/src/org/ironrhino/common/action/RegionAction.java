@@ -217,8 +217,28 @@ public class RegionAction extends BaseAction {
 		}
 	}
 
+	public String move() {
+		String[] id = getId();
+		if (id != null && id.length == 2) {
+			Region source = null;
+			Region target = null;
+			try {
+				source = baseManager.get(Long.valueOf(id[0]));
+				if (Long.valueOf(id[1]) > 0)
+					target = baseManager.get(Long.valueOf(id[1]));
+			} catch (Exception e) {
 
-	
+			}
+			if (source == null) {
+				addActionError(getText("validation.required"));
+				return SUCCESS;
+			}
+			source.setParent(target);
+			baseManager.save(source);
+			addActionMessage(getText("operate.success"));
+		}
+		return SUCCESS;
+	}
 
 	public String merge() {
 		String[] id = getId();

@@ -23636,13 +23636,13 @@ Initialization.common = function() {
 			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
-	$('.menu li').each(function() {
-				if ($('a', this).attr('href') == document.location.pathname)
+	$('.menu li a').each(function() {
+				if ($(this).attr('href') == document.location.pathname)
 					$(this).addClass('selected');
 			});
 	$('.menu li a').click(function() {
-				$('li', $(this).closest('.menu')).removeClass('selected');
-				$(this).closest('li').addClass('selected');
+				$('li a', $(this).closest('.menu')).removeClass('selected');
+				$(this).addClass('selected');
 			});
 };
 
@@ -23662,11 +23662,12 @@ Initialization.history = function() {
 								cache : true,
 								replaceTitle : true,
 								success : function() {
-									$('.menu li').each(function() {
-										if ($('a', this)[0].href == url)
-											$(this).addClass('selected')
-													.siblings()
+									$('.menu li a').each(function() {
+										if (this.href == url) {
+											$('li a', $(this).closest('.menu'))
 													.removeClass('selected');
+											$(this).addClass('selected');
+										}
 									});
 								},
 								header : {
@@ -23702,10 +23703,11 @@ Initialization.history = function() {
 								replaceTitle : true,
 								success : function() {
 									$('.menu li').each(function() {
-										if ($('a', this).attr('href') == url)
-											$(this).addClass('selected')
-													.siblings()
+										if ($(this).attr('href') == url) {
+											$('li a', $(this).closest('.menu'))
 													.removeClass('selected');
+											$(this).addClass('selected');
+										}
 									});
 								},
 								header : {
@@ -24214,129 +24216,25 @@ Observation.marquee = function(container) {
 			if (!table.id)
 				table.id = "sortable-table-" + SortableTable._count++;
 			$.extend(SortableTable.options, o || {});
-			var doscroll = (SortableTable.options.tableScroll == 'on' || (SortableTable.options.tableScroll == 'class' && $(table)
-					.hasClass(SortableTable.options.tableScrollClass)));
-			var sortFirst;
 			var cells = SortableTable.getHeaderCells(table);
 			$(cells).each(function() {
-				if (!doscroll
-						&& !$(this).hasClass(SortableTable.options.nosortClass)) {
-					$(this).click(function() {
-								SortableTable._sort.apply(this)
-							});
-					$(this).addClass(SortableTable.options.columnClass);
-				}
-				if ($(this)
-						.hasClass(SortableTable.options.sortFirstAscendingClass)
-						|| $(this)
-								.hasClass(SortableTable.options.sortFirstDecendingClass))
-					sortFirst = c;
-			});
-
-			if (sortFirst) {
-				if ($(sortFirst)
-						.hasClass(SortableTable.options.sortFirstAscendingClass)) {
-					SortableTable.sort(table, sortFirst, 1);
-				} else {
-					SortableTable.sort(table, sortFirst, -1);
-				}
-			} else { // just add row stripe classes
-				var rows = SortableTable.getBodyRows(table);
-				$(rows).each(function(i) {
-							SortableTable.addRowClass(this, i);
-						});
-			}
-			if (doscroll)
-				SortableTable.initScroll(table);
-		},
-		initScroll : function(table) {
-			$(table).addClass(SortableTable.options.tableScrollClass);
-
-			var w = $(table).width();
-
-			table.setStyle({
-						'border-spacing' : '0',
-						'table-layout' : 'fixed',
-						width : w + 'px'
-					});
-
-			var cells = SortableTable.getHeaderCells(table);
-			$(cells).each(function(i) {
-						var cw = $(this).width();
-						$(this).css({
-									width : cw + 'px'
-								});
-						$(table.tBodies[0].rows).each(function() {
-									$(this.cells[i]).css({
-												width : cw + 'px'
-											});
-								})
-					})
-
-			// Fixed Head
-			var head = (table.tHead && table.tHead.rows.length > 0)
-					? table.tHead
-					: table.rows[0];
-			var hclone = head.cloneNode(true);
-
-			var hdiv = document.createElement('div');
-			hdiv.id = table.id + '-head';
-			table.parentNode.insertBefore(hdiv, table);
-			$(hdiv).css({
-						overflow : 'hidden'
-					});
-			var htbl = document.createElement('table');
-			$(htbl).css({
-						'border-spacing' : '0',
-						'table-layout' : 'fixed',
-						width : w + 'px'
-					});
-			hdiv.appendChild(htbl);
-			$(hdiv).addClass('scroll-table-head');
-
-			table.removeChild(head);
-			htbl.appendChild(hclone);
-
-			cells = SortableTable.getHeaderCells(htbl);
-			$(cells).each(function() {
-						$(this).click(function() {
-									SortableTable._sortScroll.apply(this);
+				if (!$(this).hasClass(SortableTable.options.nosortClass)) {
+					if (!$('div.sort', this).length) {
+						$(this)
+								.prepend('<div class="sort"><span class="sort"></span></div>');
+						$('div.sort', this).click(function() {
+									SortableTable._sort.apply(this.parentNode)
 								});
 						$(this).addClass(SortableTable.options.columnClass);
+					}
+				}
+			});
+			$(SortableTable.getBodyRows(table)).each(function(i) {
+						SortableTable.addRowClass(this, i);
 					});
-
-			// Table Body
-			var cdiv = document.createElement('div');
-			cdiv.id = table.id + '-body';
-			table.parentNode.insertBefore(cdiv, table);
-			$(cdiv).css({
-						overflow : 'auto'
-					});
-			cdiv.appendChild(table);
-			cdiv.addClassName('scroll-table-body');
-
-			hdiv.scrollLeft = 0;
-			cdiv.scrollLeft = 0;
-
-			$(cdiv).scroll(function() {
-						SortableTable._scroll.apply(table)
-					});
-			if (table.offsetHeight - cdiv.offsetHeight > 0) {
-				$(cdiv).css({
-							width : ($(cdiv).width() + 16) + 'px'
-						})
-			}
-		},
-		_scroll : function() {
-			$(this.id + '-head').scrollLeft = $(this.id + '-body').scrollLeft;
 		},
 		_sort : function(e) {
 			SortableTable.sort(null, this);
-		},
-		_sortScroll : function(e) {
-			var hdiv = $(this).closest('div.scroll-table-head').get(0);
-			var id = hdiv.id.match(/^(.*)-head$/);
-			SortableTable.sort($('#' + id[1]).get(0), this);
 		},
 		sort : function(table, index, order) {
 			var cell;
@@ -24438,93 +24336,6 @@ Observation.marquee = function(container) {
 				}
 				return SortableTable.compare(calc(a), calc(b));
 			},
-			'date-au' : function(a, b) {
-				var calc = function(v) {
-					var r = v
-							.match(/^(\d{2})\/(\d{2})\/(\d{4})\s?(?:(\d{1,2})\:(\d{2})(?:\:(\d{2}))?\s?([a|p]?m?))?/i);
-					var yr_num = r[3];
-					var mo_num = parseInt(r[2]) - 1;
-					var day_num = r[1];
-					var hr_num = r[4] ? r[4] : 0;
-					if (r[7] && r[7].toLowerCase().indexOf('p') != -1) {
-						hr_num = parseInt(r[4]) + 12;
-					}
-					var min_num = r[5] ? r[5] : 0;
-					var sec_num = r[6] ? r[6] : 0;
-					return new Date(yr_num, mo_num, day_num, hr_num, min_num,
-							sec_num, 0).valueOf();
-				}
-				return SortableTable.compare(a ? calc(a) : 0, b ? calc(b) : 0);
-			},
-			'date-us' : function(a, b) {
-				var calc = function(v) {
-					var r = v
-							.match(/^(\d{2})\/(\d{2})\/(\d{4})\s?(?:(\d{1,2})\:(\d{2})(?:\:(\d{2}))?\s?([a|p]?m?))?/i);
-					var yr_num = r[3];
-					var mo_num = parseInt(r[1]) - 1;
-					var day_num = r[2];
-					var hr_num = r[4] ? r[4] : 0;
-					if (r[7] && r[7].toLowerCase().indexOf('p') != -1) {
-						hr_num = parseInt(r[4]) + 12;
-					}
-					var min_num = r[5] ? r[5] : 0;
-					var sec_num = r[6] ? r[6] : 0;
-					return new Date(yr_num, mo_num, day_num, hr_num, min_num,
-							sec_num, 0).valueOf();
-				}
-				return SortableTable.compare(a ? calc(a) : 0, b ? calc(b) : 0);
-			},
-			'date-eu' : function(a, b) {
-				var calc = function(v) {
-					var r = v.match(/^(\d{2})-(\d{2})-(\d{4})/);
-					var yr_num = r[3];
-					var mo_num = parseInt(r[2]) - 1;
-					var day_num = r[1];
-					return new Date(yr_num, mo_num, day_num).valueOf();
-				}
-				return SortableTable.compare(a ? calc(a) : 0, b ? calc(b) : 0);
-			},
-			'date-iso' : function(a, b) {
-				// http://delete.me.uk/2005/03/iso8601.html ROCK!
-				var calc = function(v) {
-					var d = v
-							.match(/([\d]{4})(-([\d]{2})(-([\d]{2})(T([\d]{2}):([\d]{2})(:([\d]{2})(\.([\d]+))?)?(Z|(([-+])([\d]{2}):([\d]{2})))?)?)?)?/);
-
-					var offset = 0;
-					var date = new Date(d[1], 0, 1);
-
-					if (d[3]) {
-						date.setMonth(d[3] - 1);
-					}
-					if (d[5]) {
-						date.setDate(d[5]);
-					}
-					if (d[7]) {
-						date.setHours(d[7]);
-					}
-					if (d[8]) {
-						date.setMinutes(d[8]);
-					}
-					if (d[10]) {
-						date.setSeconds(d[10]);
-					}
-					if (d[12]) {
-						date.setMilliseconds(Number("0." + d[12]) * 1000);
-					}
-					if (d[14]) {
-						offset = (Number(d[16]) * 60) + Number(d[17]);
-						offset *= ((d[15] == '-') ? 1 : -1);
-					}
-					offset -= date.getTimezoneOffset();
-					if (offset != 0) {
-						var time = (Number(date) + (offset * 60 * 1000));
-						date.setTime(Number(time));
-					}
-					return date.valueOf();
-				}
-				return SortableTable.compare(a ? calc(a) : 0, b ? calc(b) : 0);
-
-			},
 			date : function(a, b) { // must be standard javascript date format
 				if (a && b) {
 					return SortableTable.compare(new Date(a), new Date(b));
@@ -24549,20 +24360,10 @@ Observation.marquee = function(container) {
 			return a < b ? -1 : a == b ? 0 : 1;
 		},
 		detectors : [{
-			re : /[\d]{4}-[\d]{2}-[\d]{2}(?:T[\d]{2}\:[\d]{2}(?:\:[\d]{2}(?:\.[\d]+)?)?(Z|([-+][\d]{2}:[\d]{2})?)?)?/,
-			type : "date-iso"
-		},		// 2005-03-26T19:51:34Z
-		{
 			re : /^sun|mon|tue|wed|thu|fri|sat\,\s\d{1,2}\sjan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec\s\d{4}(?:\s\d{2}\:\d{2}(?:\:\d{2})?(?:\sGMT(?:[+-]\d{4})?)?)?/i,
 			type : "date"
 		},		// Mon, 18 Dec 1995 17:28:35 GMT
 		{
-			re : /^\d{2}-\d{2}-\d{4}/i,
-			type : "date-eu"
-		}, {
-			re : /^\d{2}\/\d{2}\/\d{4}\s?(?:\d{1,2}\:\d{2}(?:\:\d{2})?\s?[a|p]?m?)?/i,
-			type : "date-au"
-		}, {
 			re : /^\d{1,2}\:\d{2}(?:\:\d{2})?(?:\s[a|p]m)?$/i,
 			type : "time"
 		},
@@ -24667,12 +24468,8 @@ Observation.marquee = function(container) {
 			descendingClass : 'sortdesc',
 			ascendingClass : 'sortasc',
 			nosortClass : 'nosort',
-			sortFirstAscendingClass : 'sortfirstasc',
-			sortFirstDecendingClass : 'sortfirstdesc',
-			rowEvenClass : 'roweven',
-			rowOddClass : 'rowodd',
-			tableScroll : 'class', // off | on | class;
-			tableScrollClass : 'scroll'
+			rowEvenClass : 'even',
+			rowOddClass : 'odd'
 		},
 		_count : 0
 	};
@@ -24680,7 +24477,8 @@ Observation.marquee = function(container) {
 })(jQuery);
 
 Observation.sortableTable = function(container) {
-	$('table.sortable', container).sortableTable();
+	if (!$.browser.msie || $.browser.version > 7)
+		$('table.sortable', container).sortableTable();
 };
 (function($) {
 	$.fn.datagridTable = function(options) {

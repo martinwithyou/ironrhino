@@ -518,13 +518,13 @@ Initialization.common = function() {
 			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
-	$('.menu li').each(function() {
-				if ($('a', this).attr('href') == document.location.pathname)
+	$('.menu li a').each(function() {
+				if ($(this).attr('href') == document.location.pathname)
 					$(this).addClass('selected');
 			});
 	$('.menu li a').click(function() {
-				$('li', $(this).closest('.menu')).removeClass('selected');
-				$(this).closest('li').addClass('selected');
+				$('li a', $(this).closest('.menu')).removeClass('selected');
+				$(this).addClass('selected');
 			});
 };
 
@@ -544,11 +544,12 @@ Initialization.history = function() {
 								cache : true,
 								replaceTitle : true,
 								success : function() {
-									$('.menu li').each(function() {
-										if ($('a', this)[0].href == url)
-											$(this).addClass('selected')
-													.siblings()
+									$('.menu li a').each(function() {
+										if (this.href == url) {
+											$('li a', $(this).closest('.menu'))
 													.removeClass('selected');
+											$(this).addClass('selected');
+										}
 									});
 								},
 								header : {
@@ -584,10 +585,11 @@ Initialization.history = function() {
 								replaceTitle : true,
 								success : function() {
 									$('.menu li').each(function() {
-										if ($('a', this).attr('href') == url)
-											$(this).addClass('selected')
-													.siblings()
+										if ($(this).attr('href') == url) {
+											$('li a', $(this).closest('.menu'))
 													.removeClass('selected');
+											$(this).addClass('selected');
+										}
 									});
 								},
 								header : {

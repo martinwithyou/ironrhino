@@ -1508,8 +1508,8 @@ div.top label {
 }
 .menu li a {
 	width: auto !important;
-	width: 55px;
-	min-width:55px;
+	width: 60px;
+	min-width:60px;
 	display:block;
 	height:30px;
 	line-height:30px;
@@ -1519,7 +1519,7 @@ div.top label {
 	margin:0 5px;
 	padding: 0 5px;
 }
-.menu li.selected a,.menu li a:hover {
+.menu li a.selected,.menu li a:hover {
 	color:#fff;
 	border-radius: 8px;
 	-webkit-border-radius: 8px;
@@ -1550,27 +1550,28 @@ div.top label {
 .menu li:hover ul{
 	display:block;
 }
-table.sortable {
-	width: 100%;
-	border-collapse: collapse;
-}
-table.sortable td,th {
-	padding: 0.5em;
-	border: 1px solid #CCC;
-}
-.sortcol {
+.sortcol div.sort{
 	cursor: pointer;
-	padding-right: 20px;
-	background-repeat: no-repeat;
-	background-position: left center;
-	background-image: url(../images/notsorted.gif);
-	background-color: transparent;
+	position: relative;
 }
-.sortasc {
-	background-image: url(../images/asc.gif);
+.sortcol span.sort{
+	position:absolute;
+	display: block;
+	left:0px;
+	top:8px;
+	width:0;
+	height:0;
+	border-width:4px;
+	border-style:solid;
+	border-color:#888 transparent #888 transparent;
+	font-size:0;
+	line-height:0;
 }
-.sortdesc {
-	background-image: url(../images/desc.gif);
+.sortdesc span.sort{
+	border-color:#222 transparent transparent transparent;
+}
+.sortasc span.sort{
+	border-color:transparent transparent #222 transparent;
 }
 table.richtable thead {
 	background: #d5d5d5;

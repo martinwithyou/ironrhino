@@ -18,8 +18,8 @@
 }
 .menu li a {
 	width: auto !important;
-	width: 55px;
-	min-width:55px;
+	width: 60px;
+	min-width:60px;
 	display:block;
 	height:30px;
 	line-height:30px;
@@ -29,7 +29,7 @@
 	margin:0 5px;
 	padding: 0 5px;
 }
-.menu li.selected a,.menu li a:hover {
+.menu li a.selected,.menu li a:hover {
 	color:#fff;
 	border-radius: 8px;
 	-webkit-border-radius: 8px;

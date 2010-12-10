@@ -9,9 +9,6 @@ ${base}/assets/styles/ironrhino-min.css
 ${base}/assets/images/loading.gif
 ${base}/assets/images/indicator.gif
 ${base}/assets/images/required.png
-${base}/assets/images/notsorted.gif
-${base}/assets/images/desc.gif
-${base}/assets/images/asc.gif
 ${base}/assets/images/bg-button.gif
 ${base}/assets/styles/images/ui-bg_flat_75_ffffff_40x100.png
 ${base}/assets/styles/images/ui-bg_highlight-soft_75_cccccc_1x100.png
