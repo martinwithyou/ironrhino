@@ -4,7 +4,7 @@
 <title>${action.getText(entityName)}${action.getText('list')}</title>
 </head>
 <body>
-<@rtstart action=entityName readonly=readonly/>
+<@rtstart entityName=entityName action=entityName readonly=readonly/>
 	<#list naturalIds?keys as key>
 		<#assign config=uiConfigs[key]>
 		<#assign label=key>

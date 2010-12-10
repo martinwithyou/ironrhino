@@ -120,6 +120,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.clickmenu-0.1.6.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.columnmanager-0.2.5.my.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.throttle-debounce-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
@@ -147,6 +148,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.jnotify-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.throttle-debounce-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />

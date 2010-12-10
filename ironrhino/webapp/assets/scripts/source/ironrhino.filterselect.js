@@ -3,7 +3,7 @@
 		this.each(function() {
 					var select = $(this).nextAll('select:eq(0)');
 					select.data('innerHTML', select.html());
-					$(this).keyup(filterselect);
+					$(this).keyup($.debounce(500, filterselect));
 				});
 		return this;
 	};

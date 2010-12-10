@@ -783,16 +783,11 @@ Observation.common = function(container) {
 						$(this).ajaxSubmit(options);
 						return false;
 					});
-			$('input', this).keyup(function(event) {
-						if (event.keyCode == 13)
-							return true;
-						if (!$(this).attr('keyupValidate')) {
-							$(this).attr('keyupValidate', 'true');
-						} else {
+			$('input', this).keyup($.debounce(500, function(ev) {
+						if (ev.keyCode != 13)
 							Form.validate(this);
-						}
 						return true;
-					});
+					}));
 			$('select', this).change(function() {
 						Form.validate(this);
 						return true;

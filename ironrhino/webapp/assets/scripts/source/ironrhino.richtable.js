@@ -535,11 +535,7 @@ Observation.richtable = function(container) {
 										});
 							});
 				});
-		$('table.richtable .resizeBar', container)
-				.mousedown(ECSideUtil.StartResize);
-		$('table.richtable .resizeBar', container)
-				.mouseup(ECSideUtil.EndResize);
-		$('table.richtable .firstPage', container).click(function(event) {
+		$('.firstPage', container).click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
 					Richtable.reload(form);
@@ -592,6 +588,8 @@ Observation.richtable = function(container) {
 				});
 
 		if ($('table.richtable', container).hasClass('resizable')) {
+			$('.resizeBar', container).mousedown(ECSideUtil.StartResize);
+			$('.resizeBar', container).mouseup(ECSideUtil.EndResize);
 			$(document).mousemove(ECSideUtil.DoResize);
 			$(document).mouseup(ECSideUtil.EndResize);
 			$(document.body).bind('drag', function() {
