@@ -88,6 +88,8 @@ public class WebSocketServer {
 			for (WebSocketHandler handler : ctx.getBeansOfType(
 					WebSocketHandler.class).values())
 				addHandler(handler);
+		if (mapping.isEmpty())
+			return;
 		if (mapping.size() > 0) {
 			// sort mapping by uri
 			List<Map.Entry<String, WebSocketHandler>> list = new ArrayList<Map.Entry<String, WebSocketHandler>>();
@@ -107,8 +109,6 @@ public class WebSocketServer {
 				logger.info("mapping {} to {}", entry.getValue().getClass()
 						.getName(), entry.getKey());
 			}
-		} else {
-			return;
 		}
 		if (executorService == null)
 			executorService = Executors.newCachedThreadPool();

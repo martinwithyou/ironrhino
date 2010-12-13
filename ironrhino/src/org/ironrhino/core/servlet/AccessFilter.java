@@ -130,7 +130,7 @@ public class AccessFilter implements Filter {
 				DefaultAuthenticationSuccessHandler.COOKIE_NAME_LOGIN_USER);
 		if (s != null)
 			MDC.put("username", s);
-		if (print)
+		if (print && request.getHeader("Last-Event-Id") == null)
 			accesLog.info("");
 
 		long start = System.currentTimeMillis();
