@@ -1,5 +1,7 @@
 package org.ironrhino.security.service;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,7 +47,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email]}")
+	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email,args[0].openid]}")
 	public void save(User user) {
 		super.save(user);
 	}
@@ -59,6 +61,8 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		User user;
 		if (username.indexOf('@') > 0)
 			user = findByNaturalId("email", username);
+		else if (username.indexOf("://") > 0)
+			user = findByNaturalId("openid", username);
 		else
 			user = findByNaturalId(username);
 		if (user == null)
@@ -84,6 +88,33 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	}
 
 	public String suggestUsername(String candidate) {
+		if (candidate.indexOf("://") > 0) {
+			try {
+				URL url = new URL(candidate);
+				String path = url.getPath();
+				if (path.length() > 1) {
+					candidate = path.substring(1);
+					if (candidate.endsWith("/"))
+						candidate = candidate.substring(0,
+								candidate.length() - 1);
+				} else {
+					candidate = candidate
+							.substring(candidate.indexOf("://") + 3);
+					String temp = candidate
+							.substring(0, candidate.indexOf('.'));
+					if (!temp.equalsIgnoreCase("www")) {
+						candidate = temp;
+					} else {
+						candidate = candidate
+								.substring(candidate.indexOf('.') + 1);
+						candidate = candidate.substring(0, candidate
+								.indexOf('.'));
+					}
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
 		int i = candidate.indexOf('@');
 		if (i > 0)
 			candidate = candidate.substring(0, i);
@@ -94,6 +125,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		i = 10;
 		int digits = 1;
 		i = CodecUtils.randomInt(digits);
+		user = findByNaturalId(candidate + i);
 		while (user != null) {
 			digits++;
 			i = CodecUtils.randomInt(digits);

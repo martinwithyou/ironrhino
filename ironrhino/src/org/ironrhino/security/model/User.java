@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
+import org.compass.annotations.Index;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -32,7 +33,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	public static final String USERNAME_REGEX = "^[\\w]{3,20}$";
 
 	@NaturalId(caseInsensitive = true)
-	@SearchableProperty(boost = 3)
+	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
 	private String username;
 
 	@NotInCopy
@@ -43,6 +44,10 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	@SearchableProperty(boost = 3)
 	private String email;
+
+	@SearchableProperty(boost = 3)
+	@NotInCopy
+	private String openid;
 
 	@SearchableProperty
 	private String phone;
@@ -89,6 +94,14 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	public String getEmail() {
 		return email;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
 
 	public Date getModifyDate() {
