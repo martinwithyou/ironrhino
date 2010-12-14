@@ -44,7 +44,8 @@ public class SecurityContextSessionCompressor implements
 			} catch (UsernameNotFoundException e) {
 				return null;
 			}
-			if (ud != null) {
+			if (ud != null && ud.isEnabled() && ud.isAccountNonExpired()
+					&& ud.isAccountNonLocked() && ud.isCredentialsNonExpired()) {
 				SecurityContext sc = new SecurityContextImpl();
 				Authentication auth = new UsernamePasswordAuthenticationToken(
 						ud, ud.getPassword(), ud.getAuthorities());
