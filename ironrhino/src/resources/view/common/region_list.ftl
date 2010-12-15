@@ -29,11 +29,11 @@
 </form>
 <form id="merge" action="region/merge" method="post" class="ajax reset" style="display:none;" onprepare="return confirm('${action.getText('confirm')}?');" onsuccess="Richtable.reload($('#region_form'))">
 	<div style="padding-top:10px;text-align:center;">
-	<input id="regionId1" type="hidden" name="id"/>
-	<span id="region1" class="treeselect" treeoptions="{'url':'<@url value="/region/children"/>','name':'region1','id':'regionId1','cache':false}">${action.getText('select')}</span>
+	<input id="regionId3" type="hidden" name="id"/>
+	<span id="region3" class="treeselect" treeoptions="{'url':'<@url value="/region/children"/>','name':'region3','id':'regionId3','cache':false}">${action.getText('select')}</span>
 	--&gt;
-	<input id="regionId2" type="hidden" name="id"/>
-	<span id="region2" class="treeselect"  treeoptions="{'url':'<@url value="/region/children"/>','name':'region2','id':'regionId2','cache':false}">${action.getText('select')}</span>
+	<input id="regionId4" type="hidden" name="id"/>
+	<span id="region4" class="treeselect"  treeoptions="{'url':'<@url value="/region/children"/>','name':'region4','id':'regionId4','cache':false}">${action.getText('select')}</span>
 	<@s.submit theme="simple" value="%{getText('confirm')}" />
 	</div>
 </form>
