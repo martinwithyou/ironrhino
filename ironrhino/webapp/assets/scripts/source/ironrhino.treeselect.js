@@ -23,8 +23,20 @@
 					}
 					if (nametarget.is(':input'))
 						nametarget.val(name);
-					else
-						nametarget.text(name);
+					else {
+						nametarget.text(name).after('<a>x</a>').next().css({
+									'cursor' : 'pointer',
+									'color' : '#black',
+									'margin-left' : '5px',
+									'padding' : '0 5px',
+									'border' : 'solid 1px #FFC000'
+								}).click(function() {
+									nametarget
+											.text(MessageBundle.get('select'));
+									$('#' + treeoptions.id).val('');
+									$(this).remove();
+								});
+					}
 				}
 				if (treeoptions.id) {
 					var idtarget = $('#' + treeoptions.id);
@@ -71,8 +83,21 @@
 									: treenode.name;
 							if (nametarget.is(':input'))
 								nametarget.val(name);
-							else
-								nametarget.text(name);
+							else {
+								nametarget.text(name).after('<a>x</a>').next()
+										.css({
+													'cursor' : 'pointer',
+													'color' : '#black',
+													'margin-left' : '5px',
+													'padding' : '0 5px',
+													'border' : 'solid 1px #FFC000'
+												}).click(function() {
+											nametarget.text(MessageBundle
+													.get('select'));
+											$('#' + treeoptions.id).val('');
+											$(this).remove();
+										});
+							}
 						}
 						if (treeoptions.id) {
 							var idtarget = $('#' + treeoptions.id);
