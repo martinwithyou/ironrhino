@@ -12,6 +12,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.common.model.Page;
 import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
@@ -43,6 +44,13 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	@Transactional(readOnly = true)
 	public boolean canDelete(User obj) {
 		return !obj.isEnabled();
+	}
+
+	@Override
+	@Transactional
+	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email,args[0].openid]}")
+	public void delete(User user) {
+		super.delete(user);
 	}
 
 	@Override
