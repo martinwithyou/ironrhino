@@ -1,4 +1,4 @@
-package org.ironrhino.security.component;
+package org.ironrhino.security.socialauth.impl.openid4java;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,7 +13,7 @@ import org.apache.struts2.ServletActionContext;
 import org.openid4java.association.Association;
 import org.openid4java.consumer.ConsumerAssociationStore;
 
-public class SocialauthConsumerAssociationStore implements
+public class SessionConsumerAssociationStore implements
 		ConsumerAssociationStore {
 
 	public void save(String opUrl, Association association) {
