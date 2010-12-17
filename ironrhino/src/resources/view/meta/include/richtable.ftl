@@ -65,18 +65,24 @@ ${action.getText(name)}
 </#macro>
 
 <#macro rttbodytd value,entity,celleditable=true,template=''>
-<td<#if celleditable><#if value?is_hash&&value.displayName??> cellValue="${value.name()}"</#if></#if>><#rt>
-<#if template==''><#t>
+<td<#if celleditable><#if value??><#if value?is_boolean> cellValue="${value?string}"</#if><#if value?is_hash&&value.displayName??> cellValue="${value.name()}"</#if></#if></#if>><#rt>
+<#if template==''>
+<#if value??>
+<#if value?is_boolean>
+${action.getText(value?string)}<#t>
+<#else>
 <#if value?is_hash&&value.displayName??>
-${value.displayName}
+${value.displayName}<#t>
 <#else>
 ${value?xhtml}<#t>
-</#if><#t>
-<#else><#t>
-<#local temp=template?interpret><#t>
+</#if>
+</#if>
+</#if>
+<#else>
+<#local temp=template?interpret>
 <@temp/><#t>
-</#if><#t>
-</td><#lt>
+</#if>
+</td>
 </#macro>
 
 <#macro rttbodytrend entity buttons='' readonly=false>
