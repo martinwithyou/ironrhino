@@ -11,17 +11,17 @@ import org.codehaus.jackson.JsonNode;
 import org.ironrhino.security.socialauth.Profile;
 import org.springframework.beans.factory.annotation.Value;
 
-@Named("qq")
+@Named("sina")
 @Singleton
-public class QQImpl extends AbstractOAuthProvider {
+public class Sina extends AbstractOAuthProvider {
 
-	@Value("${qq.requestTokenUrl:https://open.t.qq.com/cgi-bin/request_token}")
+	@Value("${sina.requestTokenUrl:http://api.t.sina.com.cn/oauth/request_token}")
 	private String requestTokenUrl;
 
-	@Value("${qq.authorizeUrl:https://open.t.qq.com/cgi-bin/authorize}")
+	@Value("${sina.authorizeUrl:http://api.t.sina.com.cn/oauth/authorize}")
 	private String authorizeUrl;
 
-	@Value("${qq.accessTokenUrl:https://open.t.qq.com/cgi-bin/access_token}")
+	@Value("${sina.accessTokenUrl:http://api.t.sina.com.cn/oauth/access_token}")
 	private String accessTokenUrl;
 
 	public String getRequestTokenUrl() {
@@ -40,20 +40,18 @@ public class QQImpl extends AbstractOAuthProvider {
 	protected Profile doGetProfile(OAuthClient client, OAuthAccessor accessor)
 			throws Exception {
 		OAuthMessage message = client.invoke(accessor,
-				"http://open.t.qq.com/api/user/info?format=json", null);
+				"http://api.t.sina.com.cn/account/verify_credentials.json",
+				null);
 		String json = message.readBodyAsString();
-		JsonNode data = mapper.readValue(json, JsonNode.class).get("data");
-		JsonNode node = data.get("uid");
-		String uid = null;
-		if (node != null)
-			uid = node.getTextValue();
-		else
-			uid = data.get("name").getTextValue();
-		String displayName = data.get("nick").getTextValue();
+		JsonNode data = mapper.readValue(json, JsonNode.class);
+		String uid = data.get("id").getTextValue();
+		String name = data.get("name").getTextValue();
+		String displayName = data.get("screen_name").getTextValue();
 		Profile p = new Profile();
 		p.setId(generateId(uid));
+		p.setName(name);
 		p.setDisplayName(displayName);
+		p.setLocation(data.get("location").getTextValue());
 		return p;
 	}
-
 }

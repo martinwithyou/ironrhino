@@ -141,7 +141,7 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 	}
 
 	protected String generateId(String uid) {
-		return getName() + "_" + uid;
+		return "(" + getName() + ")" + uid;
 	}
 
 }

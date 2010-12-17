@@ -16,7 +16,7 @@ import org.w3c.dom.Document;
 
 @Named("douban")
 @Singleton
-public class DoubanImpl extends AbstractOAuthProvider {
+public class Douban extends AbstractOAuthProvider {
 
 	@Value("${douban.requestTokenUrl:http://www.douban.com/service/auth/request_token}")
 	private String requestTokenUrl;

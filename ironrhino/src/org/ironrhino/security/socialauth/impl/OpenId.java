@@ -24,12 +24,12 @@ import org.openid4java.message.ax.FetchResponse;
 
 @Named
 @Singleton
-public class OpenIdImpl extends AbstractAuthProvider {
+public class OpenId extends AbstractAuthProvider {
 
 	private ConsumerManager manager;
 	private DiscoveryInformation discovered;
 
-	public OpenIdImpl() throws ConsumerException {
+	public OpenId() throws ConsumerException {
 		manager = new ConsumerManager();
 		manager.setAssociations(new SessionConsumerAssociationStore());
 		discovered = null;
