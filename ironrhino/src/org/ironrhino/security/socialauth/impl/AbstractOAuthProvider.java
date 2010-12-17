@@ -15,7 +15,7 @@ import net.oauth.OAuthConsumer;
 import net.oauth.OAuthMessage;
 import net.oauth.OAuthServiceProvider;
 import net.oauth.client.OAuthClient;
-import net.oauth.client.httpclient4.HttpClient4;
+import net.oauth.client.URLConnectionClient;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
@@ -67,7 +67,7 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 		OAuthConsumer consumer = new OAuthConsumer(returnToURL, consumerKey,
 				consumerSecret, serviceProvider);
 		OAuthAccessor accessor = new OAuthAccessor(consumer);
-		OAuthClient client = new OAuthClient(new HttpClient4());
+		OAuthClient client = new OAuthClient(new URLConnectionClient());
 		Map<String, String> map = new HashMap<String, String>(4);
 		map.put(OAuth.OAUTH_CALLBACK, returnToURL);
 		client.getRequestToken(accessor, null, map.entrySet());
@@ -86,15 +86,20 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 		OAuthConsumer consumer = new OAuthConsumer(null, consumerKey,
 				consumerSecret, serviceProvider);
 		OAuthAccessor accessor = new OAuthAccessor(consumer);
-		OAuthClient client = new OAuthClient(new HttpClient4());
-		Map<String, String> token = restoreToken(request);
-		accessor.requestToken = token.get(OAuth.OAUTH_TOKEN);
-		accessor.tokenSecret = token.get(OAuth.OAUTH_TOKEN_SECRET);
-		client.getAccessToken(accessor, "GET", null);
-		token.put(OAuth.OAUTH_TOKEN, accessor.accessToken);
-		token.put(OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret);
-		saveToken(request, token);
-		return doGetProfile(token);
+		OAuthClient client = new OAuthClient(new URLConnectionClient());
+		Map<String, String> map = restoreToken(request);
+		accessor.requestToken = map.get(OAuth.OAUTH_TOKEN);
+		accessor.tokenSecret = map.get(OAuth.OAUTH_TOKEN_SECRET);
+		map.clear();
+		String oauth_verifier = request.getParameter(OAuth.OAUTH_VERIFIER);
+		if (oauth_verifier != null)
+			map.put(OAuth.OAUTH_VERIFIER, oauth_verifier);
+		client.getAccessToken(accessor, "GET", map.entrySet());
+		map.clear();
+		map.put(OAuth.OAUTH_TOKEN, accessor.accessToken);
+		map.put(OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret);
+		saveToken(request, map);
+		return doGetProfile(map);
 	}
 
 	protected abstract Profile doGetProfile(Map<String, String> token)
@@ -108,7 +113,7 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 		OAuthAccessor accessor = new OAuthAccessor(consumer);
 		accessor.accessToken = token.get(OAuth.OAUTH_TOKEN);
 		accessor.tokenSecret = token.get(OAuth.OAUTH_TOKEN_SECRET);
-		OAuthClient client = new OAuthClient(new HttpClient4());
+		OAuthClient client = new OAuthClient(new URLConnectionClient());
 		return client.invoke(accessor, "GET", url, map != null ? map.entrySet()
 				: null);
 	}

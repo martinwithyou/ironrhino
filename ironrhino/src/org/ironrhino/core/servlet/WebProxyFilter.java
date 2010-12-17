@@ -109,7 +109,6 @@ public class WebProxyFilter implements Filter {
 				for (Header h : httpRequest.getAllHeaders())
 					response.setHeader(h.getName(), h.getValue());
 				entity.writeTo(response.getOutputStream());
-				entity.consumeContent();
 			}
 		} catch (Exception e) {
 			httpRequest.abort();
