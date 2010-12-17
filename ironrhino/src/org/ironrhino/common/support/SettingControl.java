@@ -42,9 +42,11 @@ public class SettingControl implements ApplicationListener {
 	public void refresh() {
 		baseManager.setEntityClass(Setting.class);
 		List<Setting> list = baseManager.findAll(Order.asc("key"));
-		settings = new ConcurrentHashMap<String, Setting>(list.size(), 1);
+		Map<String, Setting> temp = new ConcurrentHashMap<String, Setting>(list
+				.size(), 1);
 		for (Setting s : list)
-			settings.put(s.getKey(), s);
+			temp.put(s.getKey(), s);
+		settings = temp;
 	}
 
 	public Setting get(String key) {
