@@ -82,13 +82,15 @@ public class SocialauthAction extends BaseAction {
 				user = new User();
 				user.setUsername(userManager.suggestUsername(id));
 				user.setLegiblePassword(CodecUtils.randomString(10));
-				try {
-					if (userManager.loadUserByUsername(p.getEmail()) == null)
+				if (StringUtils.isNotBlank(p.getEmail()))
+					try {
+						if (userManager.loadUserByUsername(p.getEmail()) == null)
+							user.setEmail(p.getEmail());
+					} catch (UsernameNotFoundException e1) {
 						user.setEmail(p.getEmail());
-				} catch (UsernameNotFoundException e1) {
-					user.setEmail(p.getEmail());
-				}
-				user.setName(p.getName());
+					}
+				user.setName(StringUtils.isNotBlank(p.getName()) ? p.getName()
+						: p.getDisplayName());
 				if (id.indexOf("://") > 0)
 					user.setOpenid(id);
 				userManager.save(user);
@@ -100,5 +102,4 @@ public class SocialauthAction extends BaseAction {
 		}
 		return REDIRECT;
 	}
-
 }

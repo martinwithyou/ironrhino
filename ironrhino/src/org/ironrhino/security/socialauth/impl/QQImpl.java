@@ -1,12 +1,9 @@
 package org.ironrhino.security.socialauth.impl;
 
-import java.io.InputStream;
 import java.util.Map;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.oauth.OAuth;
 import net.oauth.OAuthAccessor;
@@ -17,19 +14,18 @@ import net.oauth.client.httpclient4.HttpClient4;
 
 import org.ironrhino.security.socialauth.Profile;
 import org.springframework.beans.factory.annotation.Value;
-import org.w3c.dom.Document;
 
-@Named("douban")
+@Named("qq")
 @Singleton
-public class DoubanImpl extends AbstractOAuthProvider {
+public class QQImpl extends AbstractOAuthProvider {
 
-	@Value("${douban.requestTokenUrl:http://www.douban.com/service/auth/request_token}")
+	@Value("${qq.requestTokenUrl:https://open.t.qq.com/cgi-bin/request_token}")
 	private String requestTokenUrl;
 
-	@Value("${douban.authorizeUrl:http://www.douban.com/service/auth/authorize}")
+	@Value("${qq.authorizeUrl:https://open.t.qq.com/cgi-bin/authorize}")
 	private String authorizeUrl;
 
-	@Value("${douban.accessTokenUrl:http://www.douban.com/service/auth/access_token}")
+	@Value("${qq.accessTokenUrl:https://open.t.qq.com/cgi-bin/access_token}")
 	private String accessTokenUrl;
 
 	public String getRequestTokenUrl() {
@@ -52,21 +48,40 @@ public class DoubanImpl extends AbstractOAuthProvider {
 		accessor.accessToken = token.get(OAuth.OAUTH_TOKEN);
 		accessor.tokenSecret = token.get(OAuth.OAUTH_TOKEN_SECRET);
 		OAuthClient client = new OAuthClient(new HttpClient4());
-		OAuthMessage message = client.invoke(accessor,
-				"http://api.douban.com/people/%40me", null);
-		DocumentBuilder db = DocumentBuilderFactory.newInstance()
-				.newDocumentBuilder();
-		InputStream is = message.getBodyAsStream();
-		Document doc = db.parse(is);
-		is.close();
-		String uid = doc.getElementsByTagName("db:uid").item(0)
-				.getTextContent();
-		String displayName = doc.getElementsByTagName("title").item(0)
-				.getTextContent();
-		Profile p = new Profile();
-		p.setId(generateId(uid));
-		p.setDisplayName(displayName);
-		return p;
+		OAuthMessage message = client.invoke(accessor, 
+				"http://open.t.qq.com/api/user/info?format=json", token.entrySet());
+		String xml = message.readBodyAsString();
+		System.out.println(xml);
+		return null;
 	}
+	
+	/*
+{
+ret:0,
+Msg:"ok",
+Data:{
+Name:"abc",
+Nick:"abcd",
+Uid:"xxxxxxxxx",
+Head:"",
+Location:"广东 深圳",
+Country_code:"1",
+Province_code:"44",
+City_code:"3",
+isVip:0,
+Isent:0,
+Introduction:"",
+verifyInfo:"",
+Birth_year:"1984"
+Birth_month:"3"
+Birth_day:"28"
+Sex:1
+Fansnum:100,
+Idolnum:100,
+Tweetnum:100
+Tag:[{Id:1,name:""},{id:2,name:""},....]
+}
+}
+	 */
 
 }

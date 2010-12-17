@@ -17,6 +17,7 @@ import net.oauth.OAuthServiceProvider;
 import net.oauth.client.OAuthClient;
 import net.oauth.client.httpclient4.HttpClient4;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.util.JsonUtils;
@@ -29,31 +30,36 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 
 	protected String consumerKey;
 	protected String consumerSecret;
-	protected String requestTokenUrl;
-	protected String authorizeUrl;
-	protected String accessTokenUrl;
 
 	protected OAuthServiceProvider serviceProvider;
 
+	public abstract String getRequestTokenUrl();
+
+	public abstract String getAuthorizeUrl();
+
+	public abstract String getAccessTokenUrl();
+
 	@PostConstruct
-	public void afterPropertiesSet() {
+	public void init() {
 		try {
 			for (Field f : AbstractOAuthProvider.class.getDeclaredFields()) {
 				int mod = f.getModifiers();
 				if (f.getType().equals(String.class)
 						&& Modifier.isProtected(mod) && !Modifier.isStatic(mod)) {
-					if (f.get(this) == null) {
+					String settingValue = settingControl
+							.getStringValue("oauth." + getName() + "."
+									+ f.getName());
+					if (StringUtils.isNotBlank(settingValue)) {
 						f.setAccessible(true);
-						f.set(this, settingControl.getStringValue("oauth."
-								+ getName() + "." + f.getName()));
+						f.set(this, settingValue);
 					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		serviceProvider = new OAuthServiceProvider(requestTokenUrl,
-				authorizeUrl, accessTokenUrl);
+		serviceProvider = new OAuthServiceProvider(getRequestTokenUrl(),
+				getAuthorizeUrl(), getAccessTokenUrl());
 	}
 
 	public String getLoginRedirectURL(HttpServletRequest request,
@@ -62,14 +68,17 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 				consumerSecret, serviceProvider);
 		OAuthAccessor accessor = new OAuthAccessor(consumer);
 		OAuthClient client = new OAuthClient(new HttpClient4());
-		client.getRequestToken(accessor);
-		Map<String, String> token = new HashMap<String, String>();
-		token.put(OAuth.OAUTH_TOKEN, accessor.requestToken);
-		token.put(OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret);
-		saveToken(request, token);
-		token.put(OAuth.OAUTH_CALLBACK, returnToURL);
-		OAuthMessage response = client.invoke(accessor, "GET",
-				serviceProvider.userAuthorizationURL, token.entrySet());
+		Map<String, String> map = new HashMap<String, String>(4);
+		map.put(OAuth.OAUTH_CALLBACK, returnToURL);
+		client.getRequestToken(accessor, null, map.entrySet());
+		map.clear();
+		map.put(OAuth.OAUTH_TOKEN, accessor.requestToken);
+		map.put(OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret);
+		saveToken(request, map);
+		map.remove(OAuth.OAUTH_TOKEN_SECRET);
+		map.put(OAuth.OAUTH_CALLBACK, returnToURL);
+		OAuthMessage response = client.invoke(accessor,
+				serviceProvider.userAuthorizationURL, map.entrySet());
 		return response.URL;
 	}
 
@@ -81,7 +90,7 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 		Map<String, String> token = restoreToken(request);
 		accessor.requestToken = token.get(OAuth.OAUTH_TOKEN);
 		accessor.tokenSecret = token.get(OAuth.OAUTH_TOKEN_SECRET);
-		client.getAccessToken(accessor, "GET", token.entrySet());
+		client.getAccessToken(accessor, "GET", null);
 		token.put(OAuth.OAUTH_TOKEN, accessor.accessToken);
 		token.put(OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret);
 		saveToken(request, token);
@@ -94,14 +103,14 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 	protected OAuthMessage sendRequest(HttpServletRequest request, Map map,
 			String url) throws Exception {
 		Map<String, String> token = restoreToken(request);
-		map.putAll(token);
 		OAuthConsumer consumer = new OAuthConsumer(null, consumerKey,
 				consumerSecret, serviceProvider);
 		OAuthAccessor accessor = new OAuthAccessor(consumer);
 		accessor.accessToken = token.get(OAuth.OAUTH_TOKEN);
 		accessor.tokenSecret = token.get(OAuth.OAUTH_TOKEN_SECRET);
 		OAuthClient client = new OAuthClient(new HttpClient4());
-		return client.invoke(accessor, "GET", url, map.entrySet());
+		return client.invoke(accessor, "GET", url, map != null ? map.entrySet()
+				: null);
 	}
 
 	protected void saveToken(HttpServletRequest request,
@@ -117,6 +126,10 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 		return JsonUtils.fromJson(json,
 				new TypeReference<Map<String, String>>() {
 				});
+	}
+
+	protected String generateId(String uid) {
+		return getName() + "_" + uid;
 	}
 
 }
