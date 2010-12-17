@@ -44,7 +44,7 @@ public class Sina extends AbstractOAuthProvider {
 				null);
 		String json = message.readBodyAsString();
 		JsonNode data = mapper.readValue(json, JsonNode.class);
-		String uid = data.get("id").getTextValue();
+		String uid = String.valueOf(data.get("id").getLongValue());
 		String name = data.get("name").getTextValue();
 		String displayName = data.get("screen_name").getTextValue();
 		Profile p = new Profile();
