@@ -1,19 +1,14 @@
 package org.ironrhino.security.socialauth.impl;
 
 import java.io.InputStream;
-import java.util.Map;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
-import net.oauth.OAuth;
 import net.oauth.OAuthAccessor;
-import net.oauth.OAuthConsumer;
 import net.oauth.OAuthMessage;
 import net.oauth.client.OAuthClient;
-import net.oauth.client.httpclient4.HttpClient4;
 
 import org.ironrhino.security.socialauth.Profile;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,17 +40,11 @@ public class DoubanImpl extends AbstractOAuthProvider {
 	}
 
 	@Override
-	protected Profile doGetProfile(Map<String, String> token) throws Exception {
-		OAuthConsumer consumer = new OAuthConsumer(null, consumerKey,
-				consumerSecret, serviceProvider);
-		OAuthAccessor accessor = new OAuthAccessor(consumer);
-		accessor.accessToken = token.get(OAuth.OAUTH_TOKEN);
-		accessor.tokenSecret = token.get(OAuth.OAUTH_TOKEN_SECRET);
-		OAuthClient client = new OAuthClient(new HttpClient4());
+	protected Profile doGetProfile(OAuthClient client,
+			OAuthAccessor accessor) throws Exception {
 		OAuthMessage message = client.invoke(accessor,
 				"http://api.douban.com/people/%40me", null);
-		DocumentBuilder db = DocumentBuilderFactory.newInstance()
-				.newDocumentBuilder();
+		DocumentBuilder db = factory.newDocumentBuilder();
 		InputStream is = message.getBodyAsStream();
 		Document doc = db.parse(is);
 		is.close();

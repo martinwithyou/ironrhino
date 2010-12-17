@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.oauth.OAuth;
 import net.oauth.OAuthAccessor;
@@ -18,6 +19,7 @@ import net.oauth.client.OAuthClient;
 import net.oauth.client.URLConnectionClient;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.util.JsonUtils;
@@ -38,6 +40,11 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 	public abstract String getAuthorizeUrl();
 
 	public abstract String getAccessTokenUrl();
+
+	protected static ObjectMapper mapper = new ObjectMapper();
+
+	protected static DocumentBuilderFactory factory = DocumentBuilderFactory
+			.newInstance();
 
 	@PostConstruct
 	public void init() {
@@ -99,11 +106,11 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 		map.put(OAuth.OAUTH_TOKEN, accessor.accessToken);
 		map.put(OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret);
 		saveToken(request, map);
-		return doGetProfile(map);
+		return doGetProfile(client, accessor);
 	}
 
-	protected abstract Profile doGetProfile(Map<String, String> token)
-			throws Exception;
+	protected abstract Profile doGetProfile(OAuthClient client,
+			OAuthAccessor accessor) throws Exception;
 
 	protected OAuthMessage sendRequest(HttpServletRequest request, Map map,
 			String url) throws Exception {

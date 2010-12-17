@@ -1,17 +1,13 @@
 package org.ironrhino.security.socialauth.impl;
 
-import java.util.Map;
-
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import net.oauth.OAuth;
 import net.oauth.OAuthAccessor;
-import net.oauth.OAuthConsumer;
 import net.oauth.OAuthMessage;
 import net.oauth.client.OAuthClient;
-import net.oauth.client.httpclient4.HttpClient4;
 
+import org.codehaus.jackson.JsonNode;
 import org.ironrhino.security.socialauth.Profile;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -41,47 +37,23 @@ public class QQImpl extends AbstractOAuthProvider {
 	}
 
 	@Override
-	protected Profile doGetProfile(Map<String, String> token) throws Exception {
-		OAuthConsumer consumer = new OAuthConsumer(null, consumerKey,
-				consumerSecret, serviceProvider);
-		OAuthAccessor accessor = new OAuthAccessor(consumer);
-		accessor.accessToken = token.get(OAuth.OAUTH_TOKEN);
-		accessor.tokenSecret = token.get(OAuth.OAUTH_TOKEN_SECRET);
-		OAuthClient client = new OAuthClient(new HttpClient4());
-		OAuthMessage message = client.invoke(accessor, 
-				"http://open.t.qq.com/api/user/info?format=json", token.entrySet());
-		String xml = message.readBodyAsString();
-		System.out.println(xml);
-		return null;
+	protected Profile doGetProfile(OAuthClient client, OAuthAccessor accessor)
+			throws Exception {
+		OAuthMessage message = client.invoke(accessor,
+				"http://open.t.qq.com/api/user/info?format=json", null);
+		String json = message.readBodyAsString();
+		JsonNode data = mapper.readValue(json, JsonNode.class).get("data");
+		JsonNode node = data.get("uid");
+		String uid = null;
+		if (node != null)
+			uid = node.getTextValue();
+		else
+			uid = data.get("name").getTextValue();
+		String displayName = data.get("nick").getTextValue();
+		Profile p = new Profile();
+		p.setId(generateId(uid));
+		p.setDisplayName(displayName);
+		return p;
 	}
-	
-	/*
-{
-ret:0,
-Msg:"ok",
-Data:{
-Name:"abc",
-Nick:"abcd",
-Uid:"xxxxxxxxx",
-Head:"",
-Location:"广东 深圳",
-Country_code:"1",
-Province_code:"44",
-City_code:"3",
-isVip:0,
-Isent:0,
-Introduction:"",
-verifyInfo:"",
-Birth_year:"1984"
-Birth_month:"3"
-Birth_day:"28"
-Sex:1
-Fansnum:100,
-Idolnum:100,
-Tweetnum:100
-Tag:[{Id:1,name:""},{id:2,name:""},....]
-}
-}
-	 */
 
 }
