@@ -47,15 +47,13 @@ public class SocialauthAction extends BaseAction {
 	}
 
 	public String execute() {
-		if (settingControl.getBooleanValue(
-				Constants.SETTING_KEY_SOCIALAUTH_ENABLED, false))
+		if (isEnabled())
 			providers = authProviderManager.getProviders();
 		return SUCCESS;
 	}
 
 	public String preauth() {
-		if (!settingControl.getBooleanValue(
-				Constants.SETTING_KEY_SOCIALAUTH_ENABLED, false))
+		if (!isEnabled())
 			return ACCESSDENIED;
 		try {
 			HttpServletRequest request = ServletActionContext.getRequest();
@@ -75,8 +73,7 @@ public class SocialauthAction extends BaseAction {
 	}
 
 	public String auth() {
-		if (!settingControl.getBooleanValue(
-				Constants.SETTING_KEY_SOCIALAUTH_ENABLED, false))
+		if (!isEnabled())
 			return ACCESSDENIED;
 		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
@@ -115,5 +112,12 @@ public class SocialauthAction extends BaseAction {
 			e.printStackTrace();
 		}
 		return REDIRECT;
+	}
+
+	private boolean isEnabled() {
+		return settingControl.getBooleanValue(
+				Constants.SETTING_KEY_SIGNUP_OPEN, false)
+				&& settingControl.getBooleanValue(
+						Constants.SETTING_KEY_SOCIALAUTH_ENABLED, false);
 	}
 }
