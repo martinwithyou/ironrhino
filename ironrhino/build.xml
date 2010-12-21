@@ -93,7 +93,7 @@
 		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**,org/ironrhino/security/socialauth/**" />
 		<jar jarfile="${target.dir}/${security-config-jar.name}" basedir="${classes.dir}" includes="resources/spring/applicationContext-security.xml" />
 		<jar jarfile="${target.dir}/${security-loginrecord-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
-		<jar jarfile="${target.dir}/${security-socialauth-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/socialauth/**" />
+		<jar jarfile="${target.dir}/${security-socialauth-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/socialauth/**,resources/view/socialauth*" />
 	</target>
 
 
