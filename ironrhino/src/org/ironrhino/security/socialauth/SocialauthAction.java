@@ -1,6 +1,7 @@
 package org.ironrhino.security.socialauth;
 
 import java.net.URLEncoder;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,8 @@ public class SocialauthAction extends BaseAction {
 	protected static Logger log = LoggerFactory
 			.getLogger(SocialauthAction.class);
 
+	private List<AuthProvider> providers;
+
 	@Inject
 	private transient UserManager userManager;
 
@@ -39,7 +42,18 @@ public class SocialauthAction extends BaseAction {
 	@Inject
 	private transient AuthProviderManager authProviderManager;
 
+	public List<AuthProvider> getProviders() {
+		return providers;
+	}
+
 	public String execute() {
+		if (settingControl.getBooleanValue(
+				Constants.SETTING_KEY_SOCIALAUTH_ENABLED, false))
+			providers = authProviderManager.getProviders();
+		return SUCCESS;
+	}
+
+	public String preauth() {
 		if (!settingControl.getBooleanValue(
 				Constants.SETTING_KEY_SOCIALAUTH_ENABLED, false))
 			return ACCESSDENIED;

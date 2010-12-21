@@ -21,6 +21,7 @@ import org.openid4java.message.ParameterList;
 import org.openid4java.message.ax.AxMessage;
 import org.openid4java.message.ax.FetchRequest;
 import org.openid4java.message.ax.FetchResponse;
+import org.springframework.beans.factory.annotation.Value;
 
 @Named
 @Singleton
@@ -29,14 +30,25 @@ public class OpenId extends AbstractAuthProvider {
 	private ConsumerManager manager;
 	private DiscoveryInformation discovered;
 
+	@Value("${openid.logo:http://openid.net/wordpress-content/themes/openid/images/logo_openid.png}")
+	private String logo;
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public boolean isDiscoverable() {
+		return true;
+	}
+
 	public OpenId() throws ConsumerException {
 		manager = new ConsumerManager();
 		manager.setAssociations(new SessionConsumerAssociationStore());
 		discovered = null;
 	}
 
-	public String getLoginRedirectURL(HttpServletRequest request, String returnToURL)
-			throws IOException {
+	public String getLoginRedirectURL(HttpServletRequest request,
+			String returnToURL) throws IOException {
 		try {
 			List discoveries = manager.discover(request.getParameter("id"));
 

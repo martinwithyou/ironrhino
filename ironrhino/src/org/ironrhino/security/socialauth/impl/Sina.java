@@ -23,6 +23,13 @@ public class Sina extends AbstractOAuthProvider {
 
 	@Value("${sina.accessTokenUrl:http://api.t.sina.com.cn/oauth/access_token}")
 	private String accessTokenUrl;
+	
+	@Value("${sina.logo:http://i1.sinaimg.cn/home/deco/2009/0330/logo_home.gif}")
+	private String logo;
+
+	public String getLogo() {
+		return logo;
+	}
 
 	public String getRequestTokenUrl() {
 		return requestTokenUrl;

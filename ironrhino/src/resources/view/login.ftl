@@ -7,7 +7,7 @@
 </@authorize>
 </head>
 <body>
-<div><@includePage path="${ssoServerBase!}/login/intro"/></div>
+<div><@includePage path="/login/intro"/></div>
 	<div style="margin:auto;width:300px;font-size:1.1em;">
 		<@s.form id="login" action="login" method="post" cssClass="ajax focus">
 			<@s.hidden id="targetUrl" name="targetUrl" />

@@ -1,6 +1,9 @@
 package org.ironrhino.security.socialauth;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -24,6 +27,15 @@ public class AuthProviderManager {
 		providers = ctx.getBeansOfType(AuthProvider.class).values();
 	}
 
+	public List<AuthProvider> getProviders() {
+		List<AuthProvider> list = new ArrayList<AuthProvider>(providers.size());
+		for (AuthProvider p : providers)
+			if (p.isEnabled())
+				list.add(p);
+		Collections.sort(list);
+		return list;
+	}
+
 	public AuthProvider lookup(String id) {
 		if (StringUtils.isBlank(id))
 			return null;
@@ -31,7 +43,7 @@ public class AuthProviderManager {
 		if (name.indexOf("://") > 0)
 			name = "openid";
 		for (AuthProvider p : providers)
-			if (name.equals(p.getName()))
+			if (p.isEnabled() && name.equals(p.getName()))
 				return p;
 		return null;
 	}

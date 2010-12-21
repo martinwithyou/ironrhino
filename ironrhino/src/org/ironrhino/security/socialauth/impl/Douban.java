@@ -27,6 +27,13 @@ public class Douban extends AbstractOAuthProvider {
 	@Value("${douban.accessTokenUrl:http://www.douban.com/service/auth/access_token}")
 	private String accessTokenUrl;
 
+	@Value("${douban.logo:http://img3.douban.com/pics/nav/lg_main_a6.png}")
+	private String logo;
+
+	public String getLogo() {
+		return logo;
+	}
+
 	public String getRequestTokenUrl() {
 		return requestTokenUrl;
 	}
@@ -40,8 +47,8 @@ public class Douban extends AbstractOAuthProvider {
 	}
 
 	@Override
-	protected Profile doGetProfile(OAuthClient client,
-			OAuthAccessor accessor) throws Exception {
+	protected Profile doGetProfile(OAuthClient client, OAuthAccessor accessor)
+			throws Exception {
 		OAuthMessage message = client.invoke(accessor,
 				"http://api.douban.com/people/%40me", null);
 		DocumentBuilder db = factory.newDocumentBuilder();

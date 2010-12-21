@@ -23,6 +23,13 @@ public class Sohu extends AbstractOAuthProvider {
 
 	@Value("${sohu.accessTokenUrl:http://api.t.sohu.com/oauth/access_token}")
 	private String accessTokenUrl;
+	
+	@Value("${sohu.logo:http://s1.cr.itc.cn/img/t/logo_sp6.png}")
+	private String logo;
+
+	public String getLogo() {
+		return logo;
+	}
 
 	public String getRequestTokenUrl() {
 		return requestTokenUrl;

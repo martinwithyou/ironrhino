@@ -23,6 +23,13 @@ public class QQ extends AbstractOAuthProvider {
 
 	@Value("${qq.accessTokenUrl:https://open.t.qq.com/cgi-bin/access_token}")
 	private String accessTokenUrl;
+	
+	@Value("${qq.logo:http://www.qq.com/images/logo.gif}")
+	private String logo;
+
+	public String getLogo() {
+		return logo;
+	}
 
 	public String getRequestTokenUrl() {
 		return requestTokenUrl;

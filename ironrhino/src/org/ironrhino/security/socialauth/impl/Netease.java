@@ -24,6 +24,13 @@ public class Netease extends AbstractOAuthProvider {
 	@Value("${netease.accessTokenUrl:http://api.t.163.com/oauth/access_token}")
 	private String accessTokenUrl;
 
+	@Value("${netease.logo:http://img3.cache.netease.com/t/img10/index/logo.png}")
+	private String logo;
+
+	public String getLogo() {
+		return logo;
+	}
+
 	public String getRequestTokenUrl() {
 		return requestTokenUrl;
 	}

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -18,39 +17,35 @@ import net.oauth.client.URLConnectionClient;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.socialauth.Profile;
 
 public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 
-	@Inject
-	protected SettingControl settingControl;
-
 	protected OAuthServiceProvider serviceProvider;
 
 	public String getRequestTokenUrl() {
-		return settingControl.getStringValue("oauth." + getName()
+		return settingControl.getStringValue("socialauth." + getName()
 				+ ".requestTokenUrl");
 	}
 
 	public String getAuthorizeUrl() {
-		return settingControl.getStringValue("oauth." + getName()
+		return settingControl.getStringValue("socialauth." + getName()
 				+ ".authorizeUrl");
 	}
 
 	public String getAccessTokenUrl() {
-		return settingControl.getStringValue("oauth." + getName()
+		return settingControl.getStringValue("socialauth." + getName()
 				+ ".accessTokenUrl");
 	}
 
 	public String getConsumerKey() {
-		return settingControl.getStringValue("oauth." + getName()
+		return settingControl.getStringValue("socialauth." + getName()
 				+ ".consumerKey");
 	}
 
 	public String getConsumerSecret() {
-		return settingControl.getStringValue("oauth." + getName()
+		return settingControl.getStringValue("socialauth." + getName()
 				+ ".consumerSecret");
 	}
 
@@ -58,6 +53,10 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 
 	protected static DocumentBuilderFactory factory = DocumentBuilderFactory
 			.newInstance();
+
+	public boolean isDiscoverable() {
+		return false;
+	}
 
 	@PostConstruct
 	public void init() {
