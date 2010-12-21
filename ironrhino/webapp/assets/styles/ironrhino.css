@@ -1640,6 +1640,9 @@ table.richtable td,th {
 .richtable .odd a,.even a {
 	color: Black;
 }
+.richtable td.checkbox {
+	text-align: center;
+}
 .richtable .odd td {
 	background-color: #FFFFFF;
 }
