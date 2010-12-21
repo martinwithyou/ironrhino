@@ -11,20 +11,20 @@ import org.codehaus.jackson.JsonNode;
 import org.ironrhino.security.socialauth.Profile;
 import org.springframework.beans.factory.annotation.Value;
 
-@Named("sina")
+@Named("google")
 @Singleton
-public class Sina extends AbstractOAuthProvider {
+public class Google extends AbstractOAuthProvider {
 
-	@Value("${sina.requestTokenUrl:http://api.t.sina.com.cn/oauth/request_token}")
+	@Value("${google.requestTokenUrl:https://www.google.com/accounts/OAuthGetRequestToken}")
 	private String requestTokenUrl;
 
-	@Value("${sina.authorizeUrl:http://api.t.sina.com.cn/oauth/authorize}")
+	@Value("${google.authorizeUrl:https://www.google.com/accounts/OAuthAuthorizeToken}")
 	private String authorizeUrl;
 
-	@Value("${sina.accessTokenUrl:http://api.t.sina.com.cn/oauth/access_token}")
+	@Value("${google.accessTokenUrl:https://www.google.com/accounts/OAuthGetAccessToken}")
 	private String accessTokenUrl;
 
-	@Value("${sina.logo:http://i1.sinaimg.cn/home/deco/2009/0330/logo_home.gif}")
+	@Value("${google.logo:http://www.google.com/images/logos/accounts_logo.gif}")
 	private String logo;
 
 	public String getLogo() {
@@ -46,20 +46,24 @@ public class Sina extends AbstractOAuthProvider {
 	@Override
 	protected Profile doGetProfile(OAuthClient client, OAuthAccessor accessor)
 			throws Exception {
-		OAuthMessage message = client.invoke(accessor,
-				"http://api.t.sina.com.cn/account/verify_credentials.json",
-				null);
+		OAuthMessage message = client
+				.invoke(
+						accessor,
+						"http://www-opensocial.googleusercontent.com/api/people/@me/@self",
+						null);
 		String json = message.readBodyAsString();
 		JsonNode data = mapper.readValue(json, JsonNode.class);
-		String uid = String.valueOf(data.get("id").getLongValue());
-		String name = data.get("name").getTextValue();
-		String displayName = data.get("screen_name").getTextValue();
+		JsonNode entry = data.get("entry");
+		String uid = entry.get("id").getTextValue();
+		String name = entry.get("name").get("formatted").getTextValue();
+		String displayName = data.get("displayName").getTextValue();
 		Profile p = new Profile();
 		p.setId(generateId(uid));
 		p.setName(name);
 		p.setDisplayName(displayName);
 		p.setLocation(data.get("location").getTextValue());
-		p.setImage(data.get("profile_image_url").getTextValue());
+		p.setImage(entry.get("thumbnailUrl").getTextValue());
 		return p;
 	}
+
 }

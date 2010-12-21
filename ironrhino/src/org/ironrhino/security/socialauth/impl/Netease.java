@@ -58,6 +58,7 @@ public class Netease extends AbstractOAuthProvider {
 		p.setName(name);
 		p.setDisplayName(displayName);
 		p.setLocation(data.get("location").getTextValue());
+		p.setImage(data.get("profile_image_url").getTextValue());
 		return p;
 	}
 

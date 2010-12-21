@@ -23,7 +23,7 @@ public class Sohu extends AbstractOAuthProvider {
 
 	@Value("${sohu.accessTokenUrl:http://api.t.sohu.com/oauth/access_token}")
 	private String accessTokenUrl;
-	
+
 	@Value("${sohu.logo:http://s1.cr.itc.cn/img/t/logo_sp6.png}")
 	private String logo;
 
@@ -58,6 +58,7 @@ public class Sohu extends AbstractOAuthProvider {
 		p.setName(name);
 		p.setDisplayName(displayName);
 		p.setLocation(data.get("location").getTextValue());
+		p.setImage(data.get("profile_image_url").getTextValue());
 		return p;
 	}
 }

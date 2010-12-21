@@ -24,7 +24,7 @@ public class Profile {
 
 	private String location;
 
-	private String profileImageURL;
+	private String image;
 
 	private Collection<Contact> contacts;
 
@@ -100,12 +100,12 @@ public class Profile {
 		this.location = location;
 	}
 
-	public String getProfileImageURL() {
-		return profileImageURL;
+	public String getImage() {
+		return image;
 	}
 
-	public void setProfileImageURL(String profileImageURL) {
-		this.profileImageURL = profileImageURL;
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public String getId() {
