@@ -14,6 +14,7 @@ import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 import org.ironrhino.core.util.AppInfo;
+import org.ironrhino.core.util.AppInfo.Stage;
 
 import com.opensymphony.module.sitemesh.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.Action;
@@ -82,16 +83,16 @@ public class AutoConfigResult extends FreemarkerResult {
 		if (location == null || AppInfo.getStage() == AppInfo.Stage.DEVELOPMENT) {
 			ServletContext context = ServletActionContext.getServletContext();
 			URL url = null;
-			location = new StringBuilder().append(jspLocation)
-					.append(templateName).append(".jsp").toString();
+			location = new StringBuilder().append(jspLocation).append(
+					templateName).append(".jsp").toString();
 			try {
 				url = context.getResource(location);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
 			if (url == null) {
-				location = new StringBuilder().append(ftlLocation)
-						.append(templateName).append(".ftl").toString();
+				location = new StringBuilder().append(ftlLocation).append(
+						templateName).append(".ftl").toString();
 				try {
 					url = context.getResource(location);
 				} catch (MalformedURLException e) {
@@ -99,14 +100,14 @@ public class AutoConfigResult extends FreemarkerResult {
 				}
 			}
 			if (url == null) {
-				location = new StringBuilder().append(ftlClasspath)
-						.append(templateName).append(".ftl").toString();
+				location = new StringBuilder().append(ftlClasspath).append(
+						templateName).append(".ftl").toString();
 				url = ClassLoaderUtil.getResource(location.substring(1),
 						AutoConfigResult.class);
 			}
 			if (url == null) {
-				location = new StringBuilder().append(jspLocation)
-						.append("/meta/result/").append(result).append(".jsp")
+				location = new StringBuilder().append(jspLocation).append(
+						"/meta/result/").append(result).append(".jsp")
 						.toString();
 				try {
 					url = context.getResource(location);
@@ -115,8 +116,8 @@ public class AutoConfigResult extends FreemarkerResult {
 				}
 			}
 			if (url == null) {
-				location = new StringBuilder().append(ftlLocation)
-						.append("/meta/result/").append(result).append(".ftl")
+				location = new StringBuilder().append(ftlLocation).append(
+						"/meta/result/").append(result).append(".ftl")
 						.toString();
 				try {
 					url = context.getResource(location);
@@ -125,10 +126,11 @@ public class AutoConfigResult extends FreemarkerResult {
 				}
 			}
 			if (url == null)
-				location = new StringBuilder().append(ftlClasspath)
-						.append("/meta/result/").append(result).append(".ftl")
+				location = new StringBuilder().append(ftlClasspath).append(
+						"/meta/result/").append(result).append(".ftl")
 						.toString();
-			cache.put(templateName, location);
+			if (AppInfo.getStage() == Stage.PRODUCTION)
+				cache.put(templateName, location);
 		}
 		return location;
 	}
