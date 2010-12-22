@@ -116,7 +116,7 @@ public class SocialauthAction extends BaseAction {
 
 	private boolean isEnabled() {
 		return settingControl.getBooleanValue(
-				Constants.SETTING_KEY_SIGNUP_OPEN, false)
+				Constants.SETTING_KEY_SIGNUP_ENABLED, false)
 				&& settingControl.getBooleanValue(
 						Constants.SETTING_KEY_SOCIALAUTH_ENABLED, false);
 	}

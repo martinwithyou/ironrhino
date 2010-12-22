@@ -91,7 +91,7 @@ public class SignupAction extends BaseAction {
 
 	@Override
 	public String input() {
-		if (!settingControl.getBooleanValue(Constants.SETTING_KEY_SIGNUP_OPEN,
+		if (!settingControl.getBooleanValue(Constants.SETTING_KEY_SIGNUP_ENABLED,
 				false))
 			return ACCESSDENIED;
 		return SUCCESS;
@@ -104,7 +104,7 @@ public class SignupAction extends BaseAction {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "email", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "password", trim = true, key = "validation.required") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "username", expression = User.USERNAME_REGEX, key = "validation.invalid") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "email", key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
 	public String execute() {
-		if (!settingControl.getBooleanValue(Constants.SETTING_KEY_SIGNUP_OPEN,
+		if (!settingControl.getBooleanValue(Constants.SETTING_KEY_SIGNUP_ENABLED,
 				false))
 			return ACCESSDENIED;
 		if (StringUtils.isBlank(username))
