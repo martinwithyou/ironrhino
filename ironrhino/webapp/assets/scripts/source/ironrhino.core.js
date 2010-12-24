@@ -189,7 +189,7 @@ Message = {
 			$('#' + target.id + '_message').html(html);
 		} else {
 			if (!$('#message').length)
-				$('<div id="message"></div>').prependTo(document.body);
+				$('<div id="message"></div>').prependTo($('#content'));
 			$('#message').html(html);
 		}
 	},
@@ -233,7 +233,7 @@ Message = {
 				$('#' + target.id + '_message').html(html);
 			} else {
 				if (!$('#message').length)
-					$('<div id="message"></div>').prependTo(document.body);
+					$('<div id="message"></div>').prependTo($('#content'));
 
 				$('#message').html(html);
 			}
@@ -528,7 +528,7 @@ Initialization.common = function() {
 			});
 };
 
-var HISTORY_ENABLED = typeof $.history != 'undefined'
+var HISTORY_ENABLED = (typeof history.pushState != 'undefined' || typeof $.history != 'undefined')
 		&& ($('meta[name="history_enabled"]').attr('content') != 'false');
 var SESSION_HISTORY_SUPPORT = typeof history.pushState != 'undefined'
 		&& document.location.hash.indexOf('#!/') != 0;

@@ -1,17 +1,26 @@
+<#assign html5 = false/>
 <#assign ua = request.getAttribute('userAgent')/>
 <#if ua?? && (ua.name!='msie' || ua.majorVersion gt 8)>
+<#assign html5 = true/>
+</#if>
+<#if html5>
 <!DOCTYPE html>
 <html>
 <#else>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<html xmlns="http://www.w3.org/1999/xhtml">
 </#if>
 <#compress><#escape x as x?html>
 <head>
 <title><#noescape>${title}</#noescape></title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<#if html5>
+<meta charset="utf-8">
+<#else>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</#if>
+<#if request.contextPath!=''>
 <meta name="context_path" content="${request.contextPath}" />
+</#if>
 <link rel="shortcut icon" href="<@url value="/assets/images/favicon.ico"/>" />
 <link href="<@url value="/assets/styles/ironrhino-min.css"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="<@url value="/assets/styles/app-min.css"/>" media="screen" rel="stylesheet" type="text/css" />

@@ -147,6 +147,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.rc4-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.history-2.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.jnotify-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
