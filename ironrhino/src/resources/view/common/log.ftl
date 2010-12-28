@@ -12,12 +12,17 @@
 		$('#download').click(function(){
 			document.location.href+='/download?id='+$('#filename').val();
 		});
-		
+		$('#clear').click(function(){
+			$('#result').html('');
+		});
 		$('#view').click(function(){
 			$('#result').html('');
 			var source = $('#result').data('source');
 			if(source) source.close();
-			source = new EventSource('log/event?id='+$('#filename').val());
+			var url = 'log/event?id='+$('#filename').val();
+			if($('#tail').val())
+				url+='&tail='+$('#tail').val();
+			source = new EventSource(url);
 			$('#result').data('source',source);
 			source.addEventListener('remove',function(event){
 				$('#result').html('');
@@ -36,7 +41,7 @@
 	</script>
 </head>
 <body>
-<input id="filename" type="text" size="50"/><@button id="view" text="${action.getText('view')}"/><@button id="download" text="${action.getText('download')}"/>
+<input id="filename" type="text" size="50"/><input id="tail" type="text" size="5" value="4096"/><@button id="view" text="${action.getText('view')}"/><@button id="clear" text="${action.getText('clear')}"/><@button id="download" text="${action.getText('download')}"/>
 <div id="result">
 </div>
 </body>

@@ -10,6 +10,7 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
@@ -56,8 +57,21 @@ public class LogAction extends BaseAction {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		request.setAttribute("decorator", "none");
 		String id = request.getHeader("Last-Event-Id");
-		long position = id != null ? Long.parseLong(request
-				.getHeader("Last-Event-Id")) : 0;
+		long position = 0;
+		long tail = -1;
+		String temp;
+		if ((temp = request.getParameter("tail")) != null)
+			try {
+				tail = Long.parseLong(temp);
+			} catch (Exception e) {
+
+			}
+		if (StringUtils.isNotBlank(id))
+			try {
+				position = Long.parseLong(request.getHeader("Last-Event-Id"));
+			} catch (Exception e) {
+
+			}
 		final HttpServletResponse response = ServletActionContext.getResponse();
 		response.setContentType("text/event-stream");
 		response.setHeader("Cache-Control", "no-cache");
@@ -68,6 +82,11 @@ public class LogAction extends BaseAction {
 			w.write("retry: 5000\n\n");
 
 			RandomAccessFile raf = new RandomAccessFile(file, "r");
+			if (position == 0 && tail > 0) {
+				position = raf.length() - tail;
+				if (position < 0)
+					position = 0;
+			}
 			long length = raf.length();
 			if (position != length) {
 				if (position < length && position > 0) {
