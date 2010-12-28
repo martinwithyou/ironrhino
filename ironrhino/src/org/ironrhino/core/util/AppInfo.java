@@ -15,21 +15,21 @@ public class AppInfo {
 
 	public static final String KEY_RACK = "RACK";
 
-	public static String name = "app";
-
-	public static String home;
-
-	public static String version = "1.0.0";
-
-	public static final Stage STAGE;
-
-	public static final String HOSTNAME;
-
-	public static final String HOSTADDRESS;
-
 	public static final String DEFAULT_RACK = "/default-rack";
 
-	public static final String NODEPATH;
+	private static String name = "app";
+
+	private static String home;
+
+	private static String version = "1.0.0";
+
+	private static final Stage STAGE;
+
+	private static final String HOSTNAME;
+
+	private static final String HOSTADDRESS;
+
+	private static final String NODEPATH;
 
 	static {
 		String stage = System.getProperty(KEY_STAGE);
@@ -49,8 +49,9 @@ public class AppInfo {
 		String name = "unknown";
 		String address = "";
 		try {
-			name = InetAddress.getLocalHost().getHostName();
-			address = InetAddress.getLocalHost().getHostAddress();
+			InetAddress localhost = InetAddress.getLocalHost();
+			name = localhost.getHostName();
+			address = localhost.getHostAddress();
 		} catch (UnknownHostException e) {
 		}
 		HOSTNAME = name;
@@ -71,20 +72,28 @@ public class AppInfo {
 		NODEPATH = sb.toString();
 	}
 
-	public static void setName(String name) {
+	public static void setAppName(String name) {
 		AppInfo.name = name;
 	}
 
-	public static void setHome(String home) {
+	public static void setAppHome(String home) {
 		AppInfo.home = home;
 	}
 
-	public static void setVersion(String version) {
+	public static void setAppVersion(String version) {
 		AppInfo.version = version;
 	}
 
 	public static Stage getStage() {
 		return STAGE;
+	}
+
+	public static String getAppName() {
+		return name;
+	}
+
+	public static String getAppVersion() {
+		return version;
 	}
 
 	public static String getAppHome() {
