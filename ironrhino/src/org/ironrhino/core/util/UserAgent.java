@@ -6,11 +6,11 @@ public class UserAgent implements Serializable {
 
 	private String userAgent;
 
-	private String name;
+	private String name = "unknown";
 
-	private String platform;
+	private String platform = "unknown";
 
-	private String version;
+	private String version = "unknown";
 
 	private int majorVersion;
 
@@ -42,8 +42,6 @@ public class UserAgent implements Serializable {
 				platform = "android";
 			} else if (lower.contains("iphone") || lower.contains("ios")) {
 				platform = "ios";
-			} else {
-				platform = "unknown";
 			}
 			if (lower.contains("webkit")) {
 				name = "webkit";
@@ -57,9 +55,6 @@ public class UserAgent implements Serializable {
 						index));
 			} else if (userAgent.contains("Mozilla")) {
 				name = "mozilla";
-			} else {
-				name = "unknown";
-				version = "unknown";
 			}
 			setVersion(version);
 		}
@@ -75,7 +70,7 @@ public class UserAgent implements Serializable {
 
 	public void setVersion(String version) {
 		this.version = version;
-		if (version != null&&!version.equals("unknown")) {
+		if (version != null && !version.equals("unknown")) {
 			String[] arr = version.split("\\.");
 			try {
 				majorVersion = Integer.parseInt(arr[0]);
