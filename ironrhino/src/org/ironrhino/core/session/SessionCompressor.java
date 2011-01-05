@@ -4,8 +4,8 @@ public interface SessionCompressor<T> {
 
 	public boolean supportsKey(String key);
 
-	public String compress(T value);
+	public String compress(T value) throws Exception;
 
-	public T uncompress(String string);
+	public T uncompress(String string) throws Exception;
 
 }

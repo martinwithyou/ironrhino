@@ -10,10 +10,11 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.type.TypeReference;
+import org.ironrhino.core.session.impl.DefaultSessionCompressor;
+import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.codehaus.jackson.type.TypeReference;
-import org.ironrhino.core.util.JsonUtils;
 import org.springframework.context.ApplicationContext;
 
 @Singleton
@@ -22,13 +23,15 @@ public class SessionCompressorManager {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 
-	private TypeReference<Map<String, String>> type = new TypeReference<Map<String, String>>() {
+	private TypeReference<Map<String, String>> mapStringStringType = new TypeReference<Map<String, String>>() {
 	};
 
 	@Inject
 	private ApplicationContext ctx;
 
 	private Collection<SessionCompressor> compressors;
+
+	private SessionCompressor defaultSessionCompressor = new DefaultSessionCompressor();
 
 	@PostConstruct
 	public void afterPropertiesSet() {
@@ -41,28 +44,28 @@ public class SessionCompressorManager {
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			String key = entry.getKey();
 			Object value = entry.getValue();
-			if (value != null && value instanceof String) {
-				compressedMap.put(key, (String) value);
+			if (key == null || value == null)
 				continue;
-			}
 			SessionCompressor compressor = null;
-			for (SessionCompressor var : compressors) {
+			for (SessionCompressor var : compressors)
 				if (var.supportsKey(key)) {
 					compressor = var;
 					break;
 				}
-			}
-			if (compressor != null) {
+			if (compressor == null)
+				compressor = defaultSessionCompressor;
+			try {
 				String s = compressor.compress(value);
-				if (StringUtils.isNotBlank(s))
+				if (s != null)
 					compressedMap.put(key, s);
-			} else {
-				log.error("No compressor for " + key + ",it won't be saved");
+			} catch (Exception e) {
+				log
+						.error("compress error for " + key
+								+ ",it won't be saved", e);
 			}
 		}
-		if (!compressedMap.isEmpty())
-			return JsonUtils.toJson(compressedMap);
-		return null;
+		return compressedMap.isEmpty() ? null : JsonUtils.toJson(compressedMap);
+
 	}
 
 	public void uncompress(WrappedHttpSession session, String str) {
@@ -70,14 +73,13 @@ public class SessionCompressorManager {
 		if (StringUtils.isNotBlank(str)) {
 			Map<String, String> compressedMap = null;
 			try {
-				compressedMap = JsonUtils.fromJson(str, type);
+				compressedMap = JsonUtils.fromJson(str, mapStringStringType);
 			} catch (Exception e) {
-				log.info(e.getMessage(), e);
+				log.error(e.getMessage(), e);
 			}
 			if (compressedMap != null)
 				for (Map.Entry<String, String> entry : compressedMap.entrySet()) {
 					String key = entry.getKey();
-					String value = entry.getValue();
 					SessionCompressor compressor = null;
 					for (SessionCompressor var : compressors) {
 						if (var.supportsKey(key)) {
@@ -85,10 +87,15 @@ public class SessionCompressorManager {
 							break;
 						}
 					}
-					if (compressor != null) {
-						map.put(key, compressor.uncompress(value));
-					} else {
-						map.put(key, value);
+					if (compressor == null)
+						compressor = defaultSessionCompressor;
+					try {
+						Object value = compressor.uncompress(entry.getValue());
+						if (value != null)
+							map.put(key, value);
+					} catch (Exception e) {
+						log.error("uncompress error for " + key
+								+ ",it won't be restored", e);
 					}
 				}
 		}
