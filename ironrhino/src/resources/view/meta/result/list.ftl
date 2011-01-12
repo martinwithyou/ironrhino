@@ -32,6 +32,7 @@
 		</#if>
 		<@rttheadtd name=label cellName=entityName+'.'+key width=config['width']! cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited/>
 	</#list>
+	<#assign index=0>
 	<#list uiConfigs?keys as key>
 		<#if !(naturalIds?keys?seq_contains(key))>
 			<#assign config=uiConfigs[key]>
@@ -58,7 +59,8 @@
 			<#else>
 				<#assign cellEdit=''/>
 			</#if>
-			<@rttheadtd name=label width=config['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited/>
+			<#assign index=index+1>
+			<@rttheadtd name=label width=config['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==uiConfigs?size)/>
 		</#if>
 	</#list>
 <@rtmiddle readonly=readonly/>
