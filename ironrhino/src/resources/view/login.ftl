@@ -7,16 +7,15 @@
 </@authorize>
 </head>
 <body>
-<div><@includePage path="/login/intro"/></div>
-	<div style="margin:auto;width:300px;font-size:1.1em;">
-		<@s.form id="login" action="login" method="post" cssClass="ajax focus">
-			<@s.hidden id="targetUrl" name="targetUrl" />
-			<@s.textfield label="%{getText('username')}" name="username" cssClass="required"/>
-			<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
-			<@s.checkbox label="%{getText('rememberme')}" name="rememberme"/>
-			<@captcha/>
-			<@s.submit value="%{getText('login')}" />
-		</@s.form>
-	</div>
+<div style="margin:auto;width:300px;font-size:1.1em;">
+	<@s.form id="login" action="login" method="post" cssClass="ajax focus">
+		<@s.hidden id="targetUrl" name="targetUrl" />
+		<@s.textfield label="%{getText('username')}" name="username" cssClass="required"/>
+		<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
+		<@s.checkbox label="%{getText('rememberme')}" name="rememberme"/>
+		<@captcha/>
+		<@s.submit value="%{getText('login')}" />
+	</@s.form>
+</div>
 </body>
 </html></#escape>

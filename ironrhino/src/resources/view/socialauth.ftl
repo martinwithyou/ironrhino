@@ -24,7 +24,6 @@
 </li>
 </#list>
 </ul>
-<div><@includePage path="/socialauth/intro"/></div>
 </#if>
 </body>
 </html></#escape>
