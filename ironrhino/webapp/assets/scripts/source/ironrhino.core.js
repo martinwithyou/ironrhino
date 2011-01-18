@@ -385,10 +385,12 @@ Ajax = {
 				else {
 					var start = html.indexOf('>', html.indexOf('<body')) + 1;
 					var end = html.indexOf('</body>');
-					if (end > 0)
-						$('body').html(html.substring(start, end));
+					if (div.find('#content').length)
+						$('#' + key).html(div.find('#content').html());
+					else if (div.find('body').length)
+						$('#' + key).html(div.find('body').html());
 					else
-						$('body').html(html.substring(start));
+						$('#' + key).html(html);
 				}
 				if (!options.quiet && (typeof $.effects != 'undefined'))
 					$('#' + key).effect('highlight');
@@ -443,7 +445,8 @@ Ajax = {
 	title : ''
 };
 
-function ajax(options) {
+function ajaxOptions(options) {
+	options = options || {};
 	if (!options.header)
 		options.header = {};
 	$.extend(options.header, {
@@ -462,7 +465,11 @@ function ajax(options) {
 		if (success && !(data.fieldErrors || data.actionErrors))
 			success(data, textStatus, XMLHttpRequest);
 	};
-	$.ajax(options);
+	return options;
+}
+
+function ajax(options) {
+	$.ajax(ajaxOptions(options));
 }
 
 var CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
@@ -649,7 +656,12 @@ Observation.common = function(container) {
 		$('textarea').elastic();
 	if (typeof $.fn.tabs != 'undefined')
 		$('div.tabs', container).each(function() {
-					$(this).tabs().tabs('select', $(this).attr('tab'))
+					$(this).tabs({
+								select : function(event, ui) {
+									$(ui.panel).trigger('load');
+								}
+							}).tabs('select', $(this).attr('tab'));
+
 				});
 	if (typeof $.fn.corner != 'undefined' && $.browser.msie
 			&& $.browser.version <= 8)
