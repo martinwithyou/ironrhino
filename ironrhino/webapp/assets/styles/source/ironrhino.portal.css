@@ -2,9 +2,15 @@
 	width: 33.33%;
 	float: left;
 	}
+.portal-column.half { 
+	width: 50%;
+	}
+.portal-column.full { 
+	width: 100%;
+	}
 .portal-column.empty {
 	padding-bottom: 100px;
-}
+	}
 .portlet { 
 	margin: 0 1em 1em 0; 
 	}
