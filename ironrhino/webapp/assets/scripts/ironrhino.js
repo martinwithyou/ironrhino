@@ -25315,12 +25315,12 @@ Message = {
 									oneAtTime : false,
 									appendType : 'append'
 								}).css({
-									'position' : 'absolute',
-									'marginTop' : '40px',
+									'position' : 'fixed',
+									'top' : '40px',
 									'right' : '40px',
 									'width' : '250px',
 									'min-height' : '50px',
-									'z-index' : '999'
+									'z-index' : '9999'
 								});
 			for (var i = 0; i < messages.length; i++) {
 				$('#notification').jnotifyAddMessage({
