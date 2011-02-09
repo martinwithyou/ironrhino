@@ -8,17 +8,21 @@ import org.codehaus.jackson.*;
 import org.codehaus.jackson.io.*;
 import org.codehaus.jackson.util.CharTypes;
 
+/**
+ * {@link JsonGenerator} that outputs JSON content using a {@link java.io.Writer}
+ * which handles character encoding.
+ */
 public final class WriterBasedGenerator
     extends JsonGeneratorBase
 {
-    final static int SHORT_WRITE = 32;
+    final protected static int SHORT_WRITE = 32;
 
-    final static char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
+    final protected static char[] HEX_CHARS = CharTypes.copyHexChars();
 
     /*
-    ////////////////////////////////////////////////////
-    // Configuration
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Configuration
+    /**********************************************************
      */
 
     final protected IOContext _ioContext;
@@ -26,9 +30,9 @@ public final class WriterBasedGenerator
     final protected Writer _writer;
     
     /*
-    ////////////////////////////////////////////////////
-    // Output buffering
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Output buffering
+    /**********************************************************
      */
 
     /**
@@ -61,9 +65,9 @@ public final class WriterBasedGenerator
     protected char[] _entityBuffer;
 
     /*
-    ////////////////////////////////////////////////////
-    // Life-cycle
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Life-cycle
+    /**********************************************************
      */
 
     public WriterBasedGenerator(IOContext ctxt, int features, ObjectCodec codec,
@@ -75,54 +79,129 @@ public final class WriterBasedGenerator
         _outputBuffer = ctxt.allocConcatBuffer();
         _outputEnd = _outputBuffer.length;
     }
-
+    
     /*
-    ////////////////////////////////////////////////////
-    // Output method implementations, structural
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Overridden methods
+    /**********************************************************
+     */
+
+    /* Most overrides in this section are just to make methods final,
+     * to allow better inlining...
      */
 
     @Override
-	protected void _writeStartArray()
-        throws IOException, JsonGenerationException
+    public final void writeFieldName(String name)  throws IOException, JsonGenerationException
     {
-        if (_outputTail >= _outputEnd) {
-            _flushBuffer();
+        int status = _writeContext.writeFieldName(name);
+        if (status == JsonWriteContext.STATUS_EXPECT_VALUE) {
+            _reportError("Can not write a field name, expecting a value");
         }
-        _outputBuffer[_outputTail++] = '[';
+        _writeFieldName(name, (status == JsonWriteContext.STATUS_OK_AFTER_COMMA));
     }
 
     @Override
-    protected void _writeEndArray()
+    public final void writeStringField(String fieldName, String value)
         throws IOException, JsonGenerationException
     {
-        if (_outputTail >= _outputEnd) {
-            _flushBuffer();
+        writeFieldName(fieldName);
+        writeString(value);
+    }
+    
+    @Override
+    public final void writeFieldName(SerializedString name)
+        throws IOException, JsonGenerationException
+    {
+        // Object is a value, need to verify it's allowed
+        int status = _writeContext.writeFieldName(name.getValue());
+        if (status == JsonWriteContext.STATUS_EXPECT_VALUE) {
+            _reportError("Can not write a field name, expecting a value");
         }
-        _outputBuffer[_outputTail++] = ']';
+        _writeFieldName(name, (status == JsonWriteContext.STATUS_OK_AFTER_COMMA));
     }
 
     @Override
-    protected void _writeStartObject()
+    public final void writeFieldName(SerializableString name)
         throws IOException, JsonGenerationException
     {
-        if (_outputTail >= _outputEnd) {
-            _flushBuffer();
+        // Object is a value, need to verify it's allowed
+        int status = _writeContext.writeFieldName(name.getValue());
+        if (status == JsonWriteContext.STATUS_EXPECT_VALUE) {
+            _reportError("Can not write a field name, expecting a value");
         }
-        _outputBuffer[_outputTail++] = '{';
+        _writeFieldName(name, (status == JsonWriteContext.STATUS_OK_AFTER_COMMA));
+    }
+    
+    /*
+    /**********************************************************
+    /* Output method implementations, structural
+    /**********************************************************
+     */
+
+    @Override
+    public final void writeStartArray() throws IOException, JsonGenerationException
+    {
+        _verifyValueWrite("start an array");
+        _writeContext = _writeContext.createChildArrayContext();
+        if (_cfgPrettyPrinter != null) {
+            _cfgPrettyPrinter.writeStartArray(this);
+        } else {
+            if (_outputTail >= _outputEnd) {
+                _flushBuffer();
+            }
+            _outputBuffer[_outputTail++] = '[';
+        }
     }
 
     @Override
-    protected void _writeEndObject()
-        throws IOException, JsonGenerationException
+    public final void writeEndArray() throws IOException, JsonGenerationException
     {
-        if (_outputTail >= _outputEnd) {
-            _flushBuffer();
+        if (!_writeContext.inArray()) {
+            _reportError("Current context not an ARRAY but "+_writeContext.getTypeDesc());
         }
-        _outputBuffer[_outputTail++] = '}';
+        if (_cfgPrettyPrinter != null) {
+            _cfgPrettyPrinter.writeEndArray(this, _writeContext.getEntryCount());
+        } else {
+            if (_outputTail >= _outputEnd) {
+                _flushBuffer();
+            }
+            _outputBuffer[_outputTail++] = ']';
+        }
+        _writeContext = _writeContext.getParent();
     }
 
     @Override
+    public final void writeStartObject() throws IOException, JsonGenerationException
+    {
+        _verifyValueWrite("start an object");
+        _writeContext = _writeContext.createChildObjectContext();
+        if (_cfgPrettyPrinter != null) {
+            _cfgPrettyPrinter.writeStartObject(this);
+        } else {
+            if (_outputTail >= _outputEnd) {
+                _flushBuffer();
+            }
+            _outputBuffer[_outputTail++] = '{';
+        }
+    }
+
+    @Override
+    public final void writeEndObject() throws IOException, JsonGenerationException
+    {
+        if (!_writeContext.inObject()) {
+            _reportError("Current context not an object but "+_writeContext.getTypeDesc());
+        }
+        _writeContext = _writeContext.getParent();
+        if (_cfgPrettyPrinter != null) {
+            _cfgPrettyPrinter.writeEndObject(this, _writeContext.getEntryCount());
+        } else {
+            if (_outputTail >= _outputEnd) {
+                _flushBuffer();
+            }
+            _outputBuffer[_outputTail++] = '}';
+        }
+    }
+
     protected void _writeFieldName(String name, boolean commaBefore)
         throws IOException, JsonGenerationException
     {
@@ -157,6 +236,46 @@ public final class WriterBasedGenerator
         _outputBuffer[_outputTail++] = '"';
     }
 
+    public void _writeFieldName(SerializableString name, boolean commaBefore)
+        throws IOException, JsonGenerationException
+    {
+        if (_cfgPrettyPrinter != null) {
+            _writePPFieldName(name, commaBefore);
+            return;
+        }
+        // for fast+std case, need to output up to 2 chars, comma, dquote
+        if ((_outputTail + 1) >= _outputEnd) {
+            _flushBuffer();
+        }
+        if (commaBefore) {
+            _outputBuffer[_outputTail++] = ',';
+        }
+        /* To support [JACKSON-46], we'll do this:
+         * (Quostion: should quoting of spaces (etc) still be enabled?)
+         */
+        final char[] quoted = name.asQuotedChars();
+        if (!isEnabled(Feature.QUOTE_FIELD_NAMES)) {
+            writeRaw(quoted, 0, quoted.length);
+            return;
+        }
+        // we know there's room for at least one more char
+        _outputBuffer[_outputTail++] = '"';
+        // The beef:
+        final int qlen = quoted.length;
+        if ((_outputTail + qlen + 1) >= _outputEnd) {
+            writeRaw(quoted, 0, qlen);
+            // and closing quotes; need room for one more char:
+            if (_outputTail >= _outputEnd) {
+                _flushBuffer();
+            }
+            _outputBuffer[_outputTail++] = '"';
+        } else {
+            System.arraycopy(quoted, 0, _outputBuffer, _outputTail, qlen);
+            _outputTail += qlen;
+            _outputBuffer[_outputTail++] = '"';
+        }
+    }
+    
     /**
      * Specialized version of <code>_writeFieldName</code>, off-lined
      * to keep the "fast path" as simple (and hopefully fast) as possible.
@@ -185,10 +304,35 @@ public final class WriterBasedGenerator
         }
     }
 
+    protected final void _writePPFieldName(SerializableString name, boolean commaBefore)
+        throws IOException, JsonGenerationException
+    {
+        if (commaBefore) {
+            _cfgPrettyPrinter.writeObjectEntrySeparator(this);
+        } else {
+            _cfgPrettyPrinter.beforeObjectEntries(this);
+        }
+    
+        final char[] quoted = name.asQuotedChars();
+        if (isEnabled(Feature.QUOTE_FIELD_NAMES)) { // standard
+            if (_outputTail >= _outputEnd) {
+                _flushBuffer();
+            }
+            _outputBuffer[_outputTail++] = '"';
+            writeRaw(quoted, 0, quoted.length);
+            if (_outputTail >= _outputEnd) {
+                _flushBuffer();
+            }
+            _outputBuffer[_outputTail++] = '"';
+        } else { // non-standard, omit quotes
+            writeRaw(quoted, 0, quoted.length);
+        }
+    }
+
     /*
-    ////////////////////////////////////////////////////
-    // Output method implementations, textual
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Output method implementations, textual
+    /**********************************************************
      */
 
     @Override
@@ -229,10 +373,57 @@ public final class WriterBasedGenerator
         _outputBuffer[_outputTail++] = '"';
     }
 
+    @Override
+    public final void writeString(SerializableString sstr)
+        throws IOException, JsonGenerationException
+    {
+        _verifyValueWrite("write text value");
+        if (_outputTail >= _outputEnd) {
+            _flushBuffer();
+        }
+        _outputBuffer[_outputTail++] = '"';
+        // Note: copied from writeRaw:
+        char[] text = sstr.asQuotedChars();
+        final int len = text.length;
+        // Only worth buffering if it's a short write?
+        if (len < SHORT_WRITE) {
+            int room = _outputEnd - _outputTail;
+            if (len > room) {
+                _flushBuffer();
+            }
+            System.arraycopy(text, 0, _outputBuffer, _outputTail, len);
+            _outputTail += len;
+        } else {
+            // Otherwise, better just pass through:
+            _flushBuffer();
+            _writer.write(text, 0, len);
+        }
+        if (_outputTail >= _outputEnd) {
+            _flushBuffer();
+        }
+        _outputBuffer[_outputTail++] = '"';
+    }
+
+    @Override
+    public void writeRawUTF8String(byte[] text, int offset, int length)
+        throws IOException, JsonGenerationException
+    {
+        // could add support for buffering if we really want it...
+        _reportUnsupportedOperation();
+    }
+
+    @Override
+    public void writeUTF8String(byte[] text, int offset, int length)
+        throws IOException, JsonGenerationException
+    {
+        // could add support for buffering if we really want it...
+        _reportUnsupportedOperation();
+    }
+    
     /*
-    ////////////////////////////////////////////////////
-    // Output method implementations, unprocessed ("raw")
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Output method implementations, unprocessed ("raw")
+    /**********************************************************
      */
 
     @Override
@@ -296,37 +487,13 @@ public final class WriterBasedGenerator
     }
 
     @Override
-	public void writeRaw(char c)
+    public void writeRaw(char c)
         throws IOException, JsonGenerationException
     {
         if (_outputTail >= _outputEnd) {
             _flushBuffer();
         }
         _outputBuffer[_outputTail++] = c;
-    }
-
-    @Override
-    public void writeRawValue(String text)
-        throws IOException, JsonGenerationException
-    {
-        _verifyValueWrite("write raw value");
-        writeRaw(text);
-    }
-
-    @Override
-    public void writeRawValue(String text, int offset, int len)
-        throws IOException, JsonGenerationException
-    {
-        _verifyValueWrite("write raw value");
-        writeRaw(text, offset, len);
-    }
-
-    @Override
-    public void writeRawValue(char[] text, int offset, int len)
-        throws IOException, JsonGenerationException
-    {
-        _verifyValueWrite("write raw value");
-        writeRaw(text, offset, len);
     }
 
     private void writeRawLong(String text)
@@ -356,9 +523,9 @@ public final class WriterBasedGenerator
     }
 
     /*
-    ////////////////////////////////////////////////////
-    // Output method implementations, base64-encoded binary
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Output method implementations, base64-encoded binary
+    /**********************************************************
      */
 
     @Override
@@ -380,9 +547,9 @@ public final class WriterBasedGenerator
     }
 
     /*
-    ////////////////////////////////////////////////////
-    // Output method implementations, primitive
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Output method implementations, primitive
+    /**********************************************************
      */
 
     @Override
@@ -558,9 +725,9 @@ public final class WriterBasedGenerator
     }
 
     /*
-    ////////////////////////////////////////////////////
-    // Implementations for other methods
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Implementations for other methods
+    /**********************************************************
      */
 
     @Override
@@ -627,9 +794,9 @@ public final class WriterBasedGenerator
     }
 
     /*
-    ////////////////////////////////////////////////////
-    // Low-level output handling
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Low-level output handling
+    /**********************************************************
      */
 
     @Override
@@ -637,7 +804,11 @@ public final class WriterBasedGenerator
         throws IOException
     {
         _flushBuffer();
-        _writer.flush();
+        if (_writer != null) {
+            if (isEnabled(Feature.FLUSH_PASSED_TO_STREAM)) {
+                _writer.flush();
+            }
+        }
     }
 
     @Override
@@ -692,9 +863,9 @@ public final class WriterBasedGenerator
     }
 
     /*
-    ////////////////////////////////////////////////////
-    // Internal methods, low-level writing
-    ////////////////////////////////////////////////////
+    /**********************************************************
+    /* Internal methods, low-level writing
+    /**********************************************************
      */
 
     private void _writeString(String text)
@@ -1016,5 +1187,4 @@ public final class WriterBasedGenerator
             _writer.write(_outputBuffer, offset, len);
         }
     }
-
 }

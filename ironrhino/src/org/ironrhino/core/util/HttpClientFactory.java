@@ -45,16 +45,16 @@ public class HttpClientFactory {
 		HttpProtocolParams.setUseExpectContinue(params, true);
 		HttpConnectionParams.setConnectionTimeout(params, 5000);
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(new Scheme("http", PlainSocketFactory
-				.getSocketFactory(), 80));
-		schemeRegistry.register(new Scheme("https", SSLSocketFactory
-				.getSocketFactory(), 443));
+		schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory
+				.getSocketFactory()));
+		schemeRegistry.register(new Scheme("https", 443, SSLSocketFactory
+				.getSocketFactory()));
 		ClientConnectionManager clientConnectionManager;
 		if (single)
-			clientConnectionManager = new SingleClientConnManager(params,
+			clientConnectionManager = new SingleClientConnManager(
 					schemeRegistry);
 		else
-			clientConnectionManager = new ThreadSafeClientConnManager(params,
+			clientConnectionManager = new ThreadSafeClientConnManager(
 					schemeRegistry);
 		DefaultHttpClient httpclient = new DefaultHttpClient(
 				clientConnectionManager, params);
