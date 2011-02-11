@@ -289,6 +289,16 @@ public class PageAction extends BaseAction {
 	@Inject
 	private transient SettingControl settingControl;
 
+	private String suffix;
+
+	public String getSuffix() {
+		return suffix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+
 	public Map<String, String> getFiles() {
 		return files;
 	}
@@ -299,10 +309,23 @@ public class PageAction extends BaseAction {
 				Constants.SETTING_KEY_FILE_STORAGE_PATH, "/assets");
 		String path = getHomePath(getUid());
 		List<String> list = fileStorage.listFiles(path);
+
 		files = new LinkedHashMap<String, String>();
-		for (String s : list)
+		String[] suffixes = null;
+		if (StringUtils.isNotBlank(suffix))
+			suffixes = suffix.toLowerCase().split(",");
+		for (String s : list) {
+			if (suffixes != null) {
+				boolean matches = false;
+				for (String sf : suffixes)
+					if (s.toLowerCase().endsWith("." + sf))
+						matches = true;
+				if (!matches)
+					continue;
+			}
 			files.put(s, new StringBuilder(fileStoragePath).append(path)
 					.append("/").append(s).toString());
+		}
 		return JSON;
 	}
 
