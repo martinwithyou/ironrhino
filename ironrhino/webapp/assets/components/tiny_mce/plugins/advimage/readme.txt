@@ -1,1 +1,0 @@
-add <script type="text/javascript" src="js/browseimage.js"></script> to image.htm
