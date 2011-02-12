@@ -159,39 +159,33 @@ e&&e.document?e.document.compatMode==="CSS1Compat"&&e.document.documentElement["
 $(function(){
 	var pageid = $('#page_id',window.parent.document).val();
 	if(pageid){
-		var html = '<li id="browse_tab"><span><a href="javascript:mcTabs.displayTab(\'browse_tab\',\'browse_panel\');" onmousedown="return browseimage();">浏览</a></span></li>';
+		var html = '<li id="browse_tab"><span><a href="javascript:mcTabs.displayTab(\'browse_tab\',\'browse_panel\');" onmousedown="return browsemedia();">浏览</a></span></li>';
 		$('#general_tab').after(html);
 		html = '<div id="browse_panel" class="panel">加载中...</div>';
 		$('#general_panel').after(html);
 		var url = window.parent.location.href;
 		url = url.substring(0,url.indexOf('/common/'));
-		html = '<a href="'+url+'/common/upload?folder=/page/'+pageid+'" style="margin-left:120px;text-decoration:none;font-weight:bold;" target="_blank">上传</a>';
+		html = '<a href="'+url+'/common/upload?folder=/page/'+pageid+'" style="margin-left:100px;text-decoration:none;font-weight:bold;" target="_blank">上传</a>';
 		$('#insert').after(html);
 	}
 });
-function browseimage() {
+function browsemedia() {
 	var pageid = $('#page_id',window.parent.document).val();
 	var url = window.parent.location.href;
 	url = url.substring(0,url.indexOf('/common/'));
-	$.getJSON(url+'/common/page/files/'+pageid+'?suffix=jpg,gif,png,bmp', function(data) {
+	$.getJSON(url+'/common/page/files/'+pageid+'?suffix=swf,mpg,fla,wmv,mov,avi', function(data) {
 	 	var panel = $('#browse_panel');
 		var html = '';
 		 $.each(data, function(key, val) {
-   	 	html += '<img src="'
-					+ val
-					+ '" alt="'
-					+ key
-					+ '" title="'
-					+ key
-					+ '" onclick="selectimage(this)" style="margin:0 5px;width:100px;height:100px;cursor:pointer;"/>';
+   	 	html += '<span onclick="selectmedia(this)" style="display:block;float:left;margin:0 5px;width:120px;height:30px;cursor:pointer;text-align:center;" src="'+val+'">'+key+'</span>';
   		});
 		panel.html(html);
 	});
 	return false;
 }
 
-function selectimage(img) {
-	$('#src').val(img.src);
-	ImageDialog.showPreviewImage(img.src);
+function selectmedia(span) {
+	$('#src').val($(span).attr('src'));
+	generatePreview();
 	mcTabs.displayTab('general_tab', 'general_panel');
 }
