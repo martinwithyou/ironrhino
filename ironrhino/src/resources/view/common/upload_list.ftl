@@ -4,7 +4,7 @@
 <title>${action.getText('upload')}</title>
 <style>
 td.center {text-align:center;}
-div.hover { border: 1px dashed #333; }
+div.hover { border: 2px dashed #333; }
 </style>
 <script>
 	function select(el){
@@ -51,84 +51,7 @@ div.hover { border: 1px dashed #333; }
 			f = r;
 		}
 	}
-	function handleFiles(files){
-		if(!files)return;
-		var uploadurl = $('#upload_form').attr('action')+'?'+$('#upload_form').serialize();
-		var inputname = $('#upload_form input[type="file"]').attr('name');
-		Indicator.show();
-		if($.browser.webkit){
-			// upload one by one
-			for(var i=0;i<files.length;i++){
-			  var f = files[i];
-			  var reader = new FileReader();
-			  reader.sourceFile = f;
-			  var completed = 0;
-			  var xhr = new XMLHttpRequest();
-			  var boundary = 'xxxxxxxxx';
-			  reader.onload = function(evt) {
-			  	xhr.open('POST', uploadurl,false);
-			  	xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='+boundary); 
-			  	var f = evt.target.sourceFile;
-			  	var bb = new BlobBuilder();
-			  	bb.append('--');bb.append(boundary);bb.append('\r\n');
-			  	bb.append('Content-Disposition: form-data; name=');bb.append(inputname);bb.append('; filename=');bb.append(f.name);bb.append('\r\n');
-				bb.append('Content-Type: ');bb.append(f.type);bb.append('\r\n\r\n');
-				bb.append(evt.target.result);bb.append('\r\n');
-				bb.append('--');bb.append(boundary);bb.append('--');
-				xhr.send(bb.getBlob());
-				completed++;
-				if(completed==files.length){
-					Ajax.handleResponse(xhr.responseText,{replacement:'files'});
-					Indicator.hide();
-				}
-			  };
-			  reader.readAsArrayBuffer(f);    
-		  	}
-		  	return;
-		}
-		
-		
-		var xhr = new XMLHttpRequest();
-		var boundary = 'xxxxxxxxx';
-		xhr.open('POST', uploadurl, true);
-		xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='+boundary); 
-		xhr.onreadystatechange = function() {
-	    if (xhr.readyState == 4) {
-	      if ((xhr.status >= 200 && xhr.status <= 200) || xhr.status == 304) {
-	        if (xhr.responseText != '') {
-	        	Ajax.handleResponse(xhr.responseText,{replacement:'files'});
-	        	Indicator.hide();
-	        }
-	      }
-	    }
-	  	}
-	  body = compose(files,inputname,boundary);
-	  if(body){
-		  if(xhr.sendAsBinary)
-		  	xhr.sendAsBinary(body);
-		  else
-		  	xhr.send(body);
-	  	}else{
-	  		xhr.abort();
-	  	}
-	}
-	function compose(files,inputname,boundary){
-		if($.browser.mozilla){
-		  var body = '';
-		  for(var i=0;i<files.length;i++){
-		  	  body += '--' + boundary + '\r\n';
-			  body += 'Content-Disposition: form-data; name='+inputname+'; filename=' + files[i].name + '\r\n';  
-			  body += 'Content-Type: '+files[i].type+'\r\n\r\n';  
-			  body += files[i].getAsBinary() + '\r\n';  
-		  }
-		  body += '--' + boundary + '--';
-		  return body;
-		}else if($.browser.webkit){
-			//TODO wait FileReaderSync
-			return null;
-		}
-	}
-	////////////////////////////////////////
+	
 	$(function(){
 		$('#more').click(function(){
 			addMore(1);		
@@ -145,7 +68,15 @@ div.hover { border: 1px dashed #333; }
 			.get(0).ondrop = function(e){
 				e.preventDefault();
 				$(this).removeClass('hover');
-				handleFiles(e.dataTransfer.files);
+	        	$.ajaxupload(e.dataTransfer.files,{
+	        		url:$('#upload_form').attr('action')+'?'+$('#upload_form').serialize(),
+	        		name:$('#upload_form input[type="file"]').attr('name'),
+	        		beforeSend:Indicator.show,
+	        		success:function(xhr){
+	        			Ajax.handleResponse(xhr.responseText,{replacement:'files'});
+	        			Indicator.hide();
+	        		}
+	        	});
 				return true;
 			};
 		}

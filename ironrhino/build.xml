@@ -126,6 +126,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxupload.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.checkbox.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.marquee.js" />
@@ -154,6 +155,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.throttle-debounce-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxupload.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.marquee.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />

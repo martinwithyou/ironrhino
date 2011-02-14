@@ -153,28 +153,144 @@ f.top,left:d.left-f.left}},offsetParent:function(){return this.map(function(){fo
 "pageXOffset"]:c.support.boxModel&&j.document.documentElement[d]||j.document.body[d]:e[d]}});c.each(["Height","Width"],function(a,b){var d=b.toLowerCase();c.fn["inner"+b]=function(){return this[0]?c.css(this[0],d,false,"padding"):null};c.fn["outer"+b]=function(f){return this[0]?c.css(this[0],d,false,f?"margin":"border"):null};c.fn[d]=function(f){var e=this[0];if(!e)return f==null?null:this;if(c.isFunction(f))return this.each(function(j){var i=c(this);i[d](f.call(this,j,i[d]()))});return"scrollTo"in
 e&&e.document?e.document.compatMode==="CSS1Compat"&&e.document.documentElement["client"+b]||e.document.body["client"+b]:e.nodeType===9?Math.max(e.documentElement["client"+b],e.body["scroll"+b],e.documentElement["scroll"+b],e.body["offset"+b],e.documentElement["offset"+b]):f===w?c.css(e,d):this.css(d,typeof f==="string"?f:f+"px")}});A.jQuery=A.$=c})(window);
 
+/**
+** ironrhino.ajaxupload.js
+*/
+(function($) {
+	$.ajaxupload = function(files, options) {
+		if (!files)
+			return;
+		var _options = {
+			url : document.location.href,
+			name : 'file'
+		};
+		options = options || {};
+		$.extend(_options, options);
+		options = _options;
+		if (typeof options['beforeSend'] != 'undefined')
+			options['beforeSend']();
+		if ($.browser.webkit) {
+			// upload one by one
+			for (var i = 0; i < files.length; i++) {
+				var f = files[i];
+				var reader = new FileReader();
+				reader.sourceFile = f;
+				var completed = 0;
+				var xhr = new XMLHttpRequest();
+				var boundary = 'xxxxxxxxx';
+				reader.onload = function(evt) {
+					xhr.open('POST', options.url, false);
+					xhr.setRequestHeader('Content-Type',
+							'multipart/form-data, boundary=' + boundary);
+					var f = evt.target.sourceFile;
+					var bb = new BlobBuilder();
+					bb.append('--');
+					bb.append(boundary);
+					bb.append('\r\n');
+					bb.append('Content-Disposition: form-data; name=');
+					bb.append(options.name);
+					bb.append('; filename=');
+					bb.append(f.name);
+					bb.append('\r\n');
+					bb.append('Content-Type: ');
+					bb.append(f.type);
+					bb.append('\r\n\r\n');
+					bb.append(evt.target.result);
+					bb.append('\r\n');
+					bb.append('--');
+					bb.append(boundary);
+					bb.append('--');
+					xhr.send(bb.getBlob());
+					completed++;
+					if (completed == files.length) {
+						if (typeof options['success'] != 'undefined')
+							options['success'](xhr);
+					}
+				};
+				reader.readAsArrayBuffer(f);
+			}
+			return;
+		}
+
+		var xhr = new XMLHttpRequest();
+		var boundary = 'xxxxxxxxx';
+		xhr.open('POST', options.url, true);
+		xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='
+						+ boundary);
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == 4) {
+				if ((xhr.status >= 200 && xhr.status <= 200)
+						|| xhr.status == 304) {
+					if (xhr.responseText != '') {
+						if (typeof options['success'] != 'undefined')
+							options['success'](xhr);
+					}
+				}
+			}
+		}
+		body = compose(files, options.name, boundary);
+		if (body) {
+			if (xhr.sendAsBinary)
+				xhr.sendAsBinary(body);
+			else
+				xhr.send(body);
+		} else {
+			xhr.abort();
+		}
+
+	}
+
+	function compose(files, name, boundary) {
+		if ($.browser.mozilla) {
+			var body = '';
+			for (var i = 0; i < files.length; i++) {
+				body += '--' + boundary + '\r\n';
+				body += 'Content-Disposition: form-data; name=' + name
+						+ '; filename=' + files[i].name + '\r\n';
+				body += 'Content-Type: ' + files[i].type + '\r\n\r\n';
+				body += files[i].getAsBinary() + '\r\n';
+			}
+			body += '--' + boundary + '--';
+			return body;
+		} else if ($.browser.webkit) {
+			// TODO wait FileReaderSync
+			return null;
+		}
+	}
+
+})(jQuery);
 
 
 
 $(function(){
 	var pageid = $('#page_id',window.parent.document).val();
-	if(pageid){
-		var html = '<li id="browse_tab"><span><a href="javascript:mcTabs.displayTab(\'browse_tab\',\'browse_panel\');" onmousedown="return browseimage();">浏览</a></span></li>';
-		$('#general_tab').after(html);
-		html = '<div id="browse_panel" class="panel">加载中...</div>';
-		$('#general_panel').after(html);
-		var url = window.parent.location.href;
-		url = url.substring(0,url.indexOf('/common/'));
-		html = '<a href="'+url+'/common/upload?folder=/page/'+pageid+'" style="margin-left:120px;text-decoration:none;font-weight:bold;" target="_blank">上传</a>';
-		$('#insert').after(html);
-	}
+	if(!pageid)return;
+	var html = '<li id="browse_tab"><span><a href="javascript:mcTabs.displayTab(\'browse_tab\',\'browse_panel\');" onmousedown="return browse();">浏览</a></span></li>';
+	$('#general_tab').after(html);
+	html = '<div id="browse_panel" class="panel">加载中...</div>';
+	$('#general_panel').after(html);
+	var baseurl = window.parent.location.href;
+	baseurl = baseurl.substring(0,baseurl.indexOf('/common/'));
+	html = '<a href="'+baseurl+'/common/upload?folder=/page/'+pageid+'" style="margin-left:120px;text-decoration:none;font-weight:bold;" target="_blank">上传</a>';
+	$('#insert').after(html);
 });
-function browseimage() {
+function browse() {
 	var pageid = $('#page_id',window.parent.document).val();
-	var url = window.parent.location.href;
-	url = url.substring(0,url.indexOf('/common/'));
-	$.getJSON(url+'/common/page/files/'+pageid+'?suffix=jpg,gif,png,bmp', function(data) {
-	 	var panel = $('#browse_panel');
+	var baseurl = window.parent.location.href;
+	baseurl = baseurl.substring(0,baseurl.indexOf('/common/'));
+	var panel = $('#browse_panel');
+	panel.bind('dragover',function(e){$(this).css('border','2px dashed #333');return false;})
+		.bind('dragleave',function(e){$(this).css('border','0');return false;})
+		.get(0).ondrop = function(e){
+			e.preventDefault();
+			$(this).css('border','0');
+			$.ajaxupload(e.dataTransfer.files,{
+				url:baseurl+'/common/upload?folder=/page/'+pageid,
+				success:browse
+			});
+			return true;
+		};
+	$.getJSON(baseurl+'/common/page/files/'+pageid+'?suffix=jpg,gif,png,bmp', function(data) {
 		var html = '';
 		 $.each(data, function(key, val) {
    	 	html += '<img src="'
@@ -183,14 +299,14 @@ function browseimage() {
 					+ key
 					+ '" title="'
 					+ key
-					+ '" onclick="selectimage(this)" style="margin:0 5px;width:100px;height:100px;cursor:pointer;"/>';
+					+ '" onclick="select(this)" style="margin:0 5px;width:100px;height:100px;cursor:pointer;"/>';
   		});
 		panel.html(html);
 	});
 	return false;
 }
 
-function selectimage(img) {
+function select(img) {
 	$('#src').val(img.src);
 	ImageDialog.showPreviewImage(img.src);
 	mcTabs.displayTab('general_tab', 'general_panel');
