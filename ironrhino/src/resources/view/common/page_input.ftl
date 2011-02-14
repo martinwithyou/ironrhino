@@ -7,7 +7,6 @@
 <script type="text/javascript">
 $(function() {
 		$('#display_page_head').click(function(){$('#page_head').toggle()});
-		$('#upload').click();
 
 		var cmsPath= $('meta[name="cms_path"]').attr('content') || '';
 		var options = {
@@ -58,12 +57,10 @@ $(function() {
 				$('.draft').show();
 				$('.draftDate').text(date);
 				$('#preview').attr('href',path+'?preview=true');
-				$('#upload').attr('href',CONTEXT_PATH+'/common/upload?folder=/page/'+page.id);
 			}else{
 				//save
 				$('.draft').hide();
 				$('#view').attr('href',path);
-				$('#upload').attr('href',CONTEXT_PATH+'/common/upload?folder=/page/'+page.id);
 			}
 			}else{
 				document.location.href=document.location.href;
@@ -141,11 +138,6 @@ $(function() {
 	<@s.textarea id="page_head" name="page.head" cols="100" rows="3" cssStyle="display:none;"/>
 	<div class="field">
 		<@button id="display_page_head" text="${action.getText('edit')}${action.getText('head')}"/>
-		<#if page.id??>
-		<@button id="upload" type="link" text="${action.getText('upload')}" href="${getUrl('/common/upload?folder=/page/'+page.id)}" target="_blank"/>
-		<#else>
-		<@button id="upload" type="link" text="${action.getText('upload')}" target="_blank"/>
-		</#if>
 	</div>
 	<div class="field">
 	<@s.submit id="draft" value="%{getText('draft')}" theme="simple"/>
