@@ -271,7 +271,7 @@ $(function(){
 		$('#general_panel').after(html);
 		var baseurl = window.parent.location.href;
 		baseurl = baseurl.substring(0,baseurl.indexOf('/common/'));
-		html = '<a href="'+baseurl+'/common/upload?folder=/page/'+pageid+'" style="margin-left:100px;text-decoration:none;font-weight:bold;" target="_blank">上传</a>';
+		html = '<a href="'+baseurl+'/common/upload?folder=/page/'+pageid+'" style="margin-left:100px;text-decoration:none;font-weight:bold;" target="_blank">管理文件</a>';
 		$('#insert').after(html);
 	}
 });
