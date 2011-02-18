@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class AppInfoListener implements ServletContextListener {
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private Logger logger;
 
 	public void contextDestroyed(ServletContextEvent event) {
 		System.clearProperty(AppInfo.getAppName() + ".home");
@@ -37,6 +37,7 @@ public class AppInfoListener implements ServletContextListener {
 						.getAppHome());
 		System.setProperty(AppInfo.getAppName() + ".context", ctx
 				.getRealPath("/"));
+		logger = LoggerFactory.getLogger(getClass());
 		logger
 				.info(
 						"app.name={},app.version={},app.stage={},app.home={},hostname={},hostaddress={}",
