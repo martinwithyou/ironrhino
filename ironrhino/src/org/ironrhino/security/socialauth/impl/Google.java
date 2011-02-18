@@ -61,7 +61,7 @@ public class Google extends AbstractOAuthProvider {
 		p.setId(generateId(uid));
 		p.setName(name);
 		p.setDisplayName(displayName);
-		p.setLocation(data.get("location").getTextValue());
+//		p.setLocation(data.get("location").getTextValue());
 		p.setImage(entry.get("thumbnailUrl").getTextValue());
 		return p;
 	}
