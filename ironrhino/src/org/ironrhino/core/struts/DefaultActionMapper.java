@@ -100,15 +100,17 @@ public class DefaultActionMapper extends AbstractActionMapper {
 				if (mapping != null)
 					return mapping;
 			}
-			
-			String location = DirectPageResult.getTemplateLocation(uri);
+
+			String location = DirectPageResult
+					.getTemplateLocation(org.ironrhino.core.util.StringUtils
+							.toCamelCase(uri));
 			if (location != null) {
 				mapping = new ActionMapping();
 				mapping.setNamespace(DirectPageAction.NAMESPACE);
 				mapping.setName(DirectPageAction.ACTION_NAME);
 				return mapping;
 			}
-			
+
 			return null;
 		}
 
