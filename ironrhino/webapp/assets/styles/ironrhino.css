@@ -1395,6 +1395,7 @@ button.btn>span {
 }
 
 a.btn:link,a.btn:visited,a.btn:hover {
+	margin: 2px;
 	text-decoration: none;
 }
 input[type="text"],input[type="password"],select,textarea {
