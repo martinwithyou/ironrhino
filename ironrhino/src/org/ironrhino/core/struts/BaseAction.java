@@ -132,27 +132,19 @@ public class BaseAction extends ActionSupport {
 	}
 
 	public String list() {
-		return NONE;
+		return SUCCESS;
 	}
 
 	public String save() {
-		return NONE;
-	}
-
-	public String create() {
-		return save();
-	}
-
-	public String update() {
-		return save();
+		return SUCCESS;
 	}
 
 	public String view() {
-		return NONE;
+		return VIEW;
 	}
 
 	public String delete() {
-		return NONE;
+		return SUCCESS;
 	}
 
 	@Before(priority = 20)

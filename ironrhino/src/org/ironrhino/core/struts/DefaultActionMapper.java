@@ -62,9 +62,6 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		String uri = getUri(request);
 		Configuration config = configManager.getConfiguration();
 
-		// if have a extension it is normal request
-		if (uri.lastIndexOf('.') > uri.lastIndexOf('/'))
-			return null;
 		String namespace = null;
 		String name = null;
 		String methodAndUid = null;

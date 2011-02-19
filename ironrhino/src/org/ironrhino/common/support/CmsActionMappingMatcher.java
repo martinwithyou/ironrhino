@@ -15,6 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.ironrhino.common.Constants;
+import org.ironrhino.common.action.ColumnPageAction;
+import org.ironrhino.common.action.DisplayPageAction;
+import org.ironrhino.common.action.IssuePageAction;
+import org.ironrhino.common.action.SeriesPageAction;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.struts.ActionMappingMatcher;
@@ -66,8 +70,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 		if (uri.startsWith(pagePathPrefix)) {
 			String pagePath = uri.substring(pagePathPrefix.length() - 1);
 			ActionMapping mapping = new ActionMapping();
-			mapping.setNamespace("/");
-			mapping.setName("displayPage");
+			mapping.setNamespace(DisplayPageAction.NAMESPACE);
+			mapping.setName(DisplayPageAction.ACTION_NAME);
 			Map<String, Object> params = new HashMap<String, Object>(3);
 			params.put(DefaultActionMapper.ID, pagePath);
 			mapping.setParams(params);
@@ -78,8 +82,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 					DEFAULT_PAGE_PATH_PREFIX).toString();
 			if (uri.equals("/" + name) || uri.startsWith(pageurl)) {
 				ActionMapping mapping = new ActionMapping();
-				mapping.setNamespace("/");
-				mapping.setName("seriesPage");
+				mapping.setNamespace(SeriesPageAction.NAMESPACE);
+				mapping.setName(SeriesPageAction.ACTION_NAME);
 				Map<String, Object> params = new HashMap<String, Object>(3);
 				params.put("name", name);
 				if (uri.startsWith(pageurl)) {
@@ -98,8 +102,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			if (uri.equals("/" + name) || uri.startsWith(listurl)
 					|| uri.startsWith(pageurl)) {
 				ActionMapping mapping = new ActionMapping();
-				mapping.setNamespace("/");
-				mapping.setName("columnPage");
+				mapping.setNamespace(ColumnPageAction.NAMESPACE);
+				mapping.setName(ColumnPageAction.ACTION_NAME);
 				Map<String, Object> params = new HashMap<String, Object>(3);
 				params.put("name", name);
 				if (uri.startsWith(listurl)) {
@@ -131,8 +135,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			if (uri.equals("/" + name) || uri.startsWith(listurl)
 					|| uri.startsWith(pageurl)) {
 				ActionMapping mapping = new ActionMapping();
-				mapping.setNamespace("/");
-				mapping.setName("issuePage");
+				mapping.setNamespace(IssuePageAction.NAMESPACE);
+				mapping.setName(IssuePageAction.ACTION_NAME);
 				Map<String, Object> params = new HashMap<String, Object>(3);
 				params.put("name", name);
 				if (uri.startsWith(listurl)) {

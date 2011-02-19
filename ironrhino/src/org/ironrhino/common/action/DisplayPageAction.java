@@ -13,10 +13,13 @@ import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.security.model.UserRole;
 
-@AutoConfig(namespace = "/")
+@AutoConfig(namespace = DisplayPageAction.NAMESPACE, actionName = DisplayPageAction.ACTION_NAME)
 public class DisplayPageAction extends BaseAction {
 
 	private static final long serialVersionUID = -5865373753326653067L;
+
+	public static final String NAMESPACE = "/";
+	public static final String ACTION_NAME = "_display_page_";
 
 	private Page page;
 

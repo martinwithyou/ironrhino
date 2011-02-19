@@ -14,10 +14,13 @@ import org.ironrhino.core.struts.RequestDecoratorMapper;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.interceptor.annotations.Before;
 
-@AutoConfig(namespace = "/")
+@AutoConfig(namespace = SeriesPageAction.NAMESPACE, actionName = SeriesPageAction.ACTION_NAME)
 public class SeriesPageAction extends BaseAction {
 
 	private static final long serialVersionUID = -6230162538415715316L;
+
+	public static final String NAMESPACE = "/";
+	public static final String ACTION_NAME = "_series_page_";
 
 	@Inject
 	protected PageManager pageManager;
