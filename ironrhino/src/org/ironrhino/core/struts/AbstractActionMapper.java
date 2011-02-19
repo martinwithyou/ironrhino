@@ -13,7 +13,7 @@ public abstract class AbstractActionMapper implements ActionMapper {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
-	public String getUri(HttpServletRequest request) {
+	public static String getUri(HttpServletRequest request) {
 		// handle http dispatcher includes.
 		String uri = (String) request
 				.getAttribute("javax.servlet.include.servlet_path");

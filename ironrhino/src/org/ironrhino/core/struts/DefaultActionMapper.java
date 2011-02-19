@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.ironrhino.common.action.DirectPageAction;
 import org.ironrhino.core.model.ResultPage;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -99,6 +100,15 @@ public class DefaultActionMapper extends AbstractActionMapper {
 				if (mapping != null)
 					return mapping;
 			}
+			
+			String location = DirectPageResult.getTemplateLocation(uri);
+			if (location != null) {
+				mapping = new ActionMapping();
+				mapping.setNamespace(DirectPageAction.NAMESPACE);
+				mapping.setName(DirectPageAction.ACTION_NAME);
+				return mapping;
+			}
+			
 			return null;
 		}
 
