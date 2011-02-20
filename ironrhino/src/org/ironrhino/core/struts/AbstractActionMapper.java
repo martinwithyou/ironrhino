@@ -21,9 +21,8 @@ public abstract class AbstractActionMapper implements ActionMapper {
 			uri = request.getRequestURI();
 			uri = uri.substring(request.getContextPath().length());
 		}
-		// uri = org.apache.struts2.RequestUtils.getServletPath(request);
-		if (uri.equals("/") || "".equals(uri))
-			return "/index";
+		if (uri.endsWith("/"))
+			uri += "index";
 		return uri;
 	}
 
