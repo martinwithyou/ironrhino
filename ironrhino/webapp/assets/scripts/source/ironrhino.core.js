@@ -447,6 +447,8 @@ Ajax = {
 
 function ajaxOptions(options) {
 	options = options || {};
+	if (!options.dataType)
+		options.dataType = 'text';
 	if (!options.header)
 		options.header = {};
 	$.extend(options.header, {
