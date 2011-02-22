@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -33,6 +34,19 @@ public class RequestUtils {
 		}
 		String queryString = request.getQueryString();
 		return queryString != null ? queryString : "";
+	}
+
+	public static Map<String, String> getParametersMap(
+			HttpServletRequest request) {
+		Map<String, String> map = new HashMap<String, String>();
+		for (Map.Entry<String, String[]> entry : request.getParameterMap()
+				.entrySet()) {
+			String name = entry.getKey();
+			String[] value = entry.getValue();
+			if (value != null && value.length > 0)
+				map.put(name, value[0]);
+		}
+		return map;
 	}
 
 	public static String getRemoteAddr(HttpServletRequest request) {
