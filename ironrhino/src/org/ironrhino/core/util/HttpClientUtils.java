@@ -133,6 +133,10 @@ public class HttpClientUtils {
 		}
 	}
 
+	public static String getResponseText(String url) {
+		return getResponseText(url, null, "UTF-8");
+	}
+
 	public static String getResponseText(String url, Map<String, String> params) {
 		return getResponseText(url, params, "UTF-8");
 	}
