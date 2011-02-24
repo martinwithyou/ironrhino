@@ -9,7 +9,6 @@ import javax.servlet.jsp.tagext.Tag;
 import ognl.OgnlContext;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.model.Secured;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
@@ -18,10 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.taglibs.authz.AuthorizeTag;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -110,15 +107,9 @@ public class AuthzUtils {
 	}
 
 	public static void autoLogin(UserDetails ud) {
-		SecurityContext sc = new SecurityContextImpl();
+		SecurityContext sc = SecurityContextHolder.getContext();
 		Authentication auth = new UsernamePasswordAuthenticationToken(ud, ud
 				.getPassword(), ud.getAuthorities());
 		sc.setAuthentication(auth);
-		ServletActionContext
-				.getRequest()
-				.getSession()
-				.setAttribute(
-						HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-						sc);
 	}
 }

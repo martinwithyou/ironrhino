@@ -8,7 +8,7 @@ import org.ironrhino.core.session.SessionCompressor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,22 +37,16 @@ public class SecurityContextSessionCompressor implements
 	}
 
 	public SecurityContext uncompress(String username) {
-		if (username != null) {
-			UserDetails ud = null;
-			try {
-				ud = userDetailsService.loadUserByUsername(username);
-			} catch (UsernameNotFoundException e) {
-				return null;
-			}
-			if (ud != null && ud.isEnabled() && ud.isAccountNonExpired()
-					&& ud.isAccountNonLocked() && ud.isCredentialsNonExpired()) {
-				SecurityContext sc = new SecurityContextImpl();
-				Authentication auth = new UsernamePasswordAuthenticationToken(
-						ud, ud.getPassword(), ud.getAuthorities());
-				sc.setAuthentication(auth);
-				return sc;
-			}
+		SecurityContext sc = SecurityContextHolder.getContext();
+		try {
+			UserDetails ud = userDetailsService.loadUserByUsername(username);
+			if (ud.isEnabled() && ud.isAccountNonExpired()
+					&& ud.isAccountNonLocked() && ud.isCredentialsNonExpired())
+				sc.setAuthentication(new UsernamePasswordAuthenticationToken(
+						ud, ud.getPassword(), ud.getAuthorities()));
+		} catch (UsernameNotFoundException e) {
+			e.printStackTrace();
 		}
-		return null;
+		return sc;
 	}
 }
