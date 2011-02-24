@@ -2,7 +2,9 @@ package org.ironrhino.core.servlet;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -17,16 +19,18 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.ironrhino.core.util.HttpClientFactory;
+import org.apache.http.message.BasicNameValuePair;
+import org.ironrhino.core.util.HttpClientUtils;
 
 public class WebProxyFilter implements Filter {
 
@@ -85,15 +89,22 @@ public class WebProxyFilter implements Filter {
 		} else {
 			httpRequest = new HttpGet(uri);
 		}
-		HttpParams params = new BasicHttpParams();
-		Enumeration<String> en = request.getParameterNames();
-		while (en.hasMoreElements()) {
-			String name = en.nextElement();
-			for (String value : request.getParameterValues(name))
-				if (queryString == null || !queryString.contains(name + "="))
-					params.setParameter(name, value);
+		if (httpRequest instanceof HttpEntityEnclosingRequestBase) {
+			Enumeration<String> en = request.getParameterNames();
+			if (en.hasMoreElements()) {
+				List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+				while (en.hasMoreElements()) {
+					String name = en.nextElement();
+					for (String value : request.getParameterValues(name))
+						if (queryString == null
+								|| !queryString.contains(name + "="))
+							nvps.add(new BasicNameValuePair(name, value));
+				}
+				((HttpEntityEnclosingRequestBase) httpRequest)
+						.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+			}
 		}
-		httpRequest.setParams(params);
+
 		HttpEntity entity = null;
 		try {
 			HttpResponse rsp = httpClient.execute(httpRequest);
@@ -101,6 +112,7 @@ public class WebProxyFilter implements Filter {
 			StatusLine sl = rsp.getStatusLine();
 			if (sl.getStatusCode() >= 300) {
 				response.sendError(sl.getStatusCode(), sl.getReasonPhrase());
+				httpRequest.abort();
 				return;
 			}
 
@@ -120,7 +132,7 @@ public class WebProxyFilter implements Filter {
 		String s = config.getInitParameter("checkSameOrigin");
 		if (StringUtils.isNotBlank(s))
 			checkSameOrigin = Boolean.parseBoolean(s.trim());
-		httpClient = HttpClientFactory.create();
+		httpClient = HttpClientUtils.getDefaultInstance();
 	}
 
 }

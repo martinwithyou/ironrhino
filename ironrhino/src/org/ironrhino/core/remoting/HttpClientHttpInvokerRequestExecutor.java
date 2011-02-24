@@ -13,7 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.params.HttpConnectionParams;
-import org.ironrhino.core.util.HttpClientFactory;
+import org.ironrhino.core.util.HttpClientUtils;
 import org.springframework.remoting.httpinvoker.AbstractHttpInvokerRequestExecutor;
 import org.springframework.remoting.httpinvoker.HttpInvokerClientConfiguration;
 import org.springframework.remoting.support.RemoteInvocationResult;
@@ -26,7 +26,7 @@ public class HttpClientHttpInvokerRequestExecutor extends
 	private HttpClient httpClient;
 
 	public HttpClientHttpInvokerRequestExecutor() {
-		httpClient = HttpClientFactory.create();
+		httpClient = HttpClientUtils.create();
 		setTimeout(DEFAULT_TIMEOUT);
 	}
 
