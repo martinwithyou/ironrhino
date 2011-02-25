@@ -21,6 +21,7 @@ import org.ironrhino.common.action.IssuePageAction;
 import org.ironrhino.common.action.SeriesPageAction;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.core.event.EntityOperationEvent;
+import org.ironrhino.core.struts.AbstractActionMapper;
 import org.ironrhino.core.struts.ActionMappingMatcher;
 import org.ironrhino.core.struts.DefaultActionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 
 	public ActionMapping tryMatch(HttpServletRequest request,
 			DefaultActionMapper actionMapper) {
-		String uri = actionMapper.getUri(request);
+		String uri = AbstractActionMapper.getUri(request);
 		String encoding = actionMapper.getEncoding();
 		if (uri.startsWith(pagePathPrefix)) {
 			String pagePath = uri.substring(pagePathPrefix.length() - 1);
