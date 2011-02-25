@@ -1,5 +1,6 @@
 package org.ironrhino.security.socialauth.impl;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import net.oauth.OAuthServiceProvider;
 import net.oauth.client.OAuthClient;
 import net.oauth.client.URLConnectionClient;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.util.JsonUtils;
@@ -60,8 +62,13 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 
 	@PostConstruct
 	public void init() {
-		serviceProvider = new OAuthServiceProvider(getRequestTokenUrl(),
-				getAuthorizeUrl(), getAccessTokenUrl());
+		String key = getConsumerKey();
+		String secret = getConsumerSecret();
+		if (StringUtils.isEmpty(key) || StringUtils.isEmpty(secret))
+			forceDisabled = true;
+		else
+			serviceProvider = new OAuthServiceProvider(getRequestTokenUrl(),
+					getAuthorizeUrl(), getAccessTokenUrl());
 	}
 
 	public String getLoginRedirectURL(HttpServletRequest request,
@@ -77,11 +84,9 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 		map.put(OAuth.OAUTH_TOKEN, accessor.requestToken);
 		map.put(OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret);
 		saveToken(request, map);
-		map.remove(OAuth.OAUTH_TOKEN_SECRET);
-		map.put(OAuth.OAUTH_CALLBACK, returnToURL);
-		OAuthMessage response = client.invoke(accessor,
-				serviceProvider.userAuthorizationURL, map.entrySet());
-		return response.URL;
+		return new StringBuilder(getAuthorizeUrl()).append("?oauth_token=")
+				.append(accessor.requestToken).append("&oauth_callback=")
+				.append(URLEncoder.encode(returnToURL, "UTF-8")).toString();
 	}
 
 	public Profile getProfile(HttpServletRequest request) throws Exception {
