@@ -10,13 +10,20 @@ public abstract class AbstractAuthProvider implements AuthProvider {
 	@Inject
 	protected SettingControl settingControl;
 
+	protected boolean forceDisabled;
+
+	public void setForceDisabled(boolean forceDisabled) {
+		this.forceDisabled = forceDisabled;
+	}
+
 	public String getName() {
 		return getClass().getSimpleName().toLowerCase();
 	}
 
 	public boolean isEnabled() {
-		return settingControl.getBooleanValue("socialauth." + getName()
-				+ ".enabled", true);
+		return !forceDisabled
+				&& settingControl.getBooleanValue("socialauth." + getName()
+						+ ".enabled", true);
 	}
 
 	public int getDisplayOrder() {
