@@ -3,11 +3,15 @@ package org.ironrhino.core.struts;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Csrf;
+import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.security.captcha.CaptchaManager;
 import org.ironrhino.core.security.csrf.CsrfManager;
 import org.ironrhino.core.util.AnnotationUtils;
@@ -26,6 +30,8 @@ public class BaseAction extends ActionSupport {
 
 	private static final long serialVersionUID = -3183957331611790404L;
 
+	private static final String SESSION_KEY_CURRENT_PASSWORD_THRESHOLD = "c_p_t";
+
 	public static final String LIST = "list";
 	public static final String VIEW = "view";
 	public static final String REFERER = "referer";
@@ -41,6 +47,8 @@ public class BaseAction extends ActionSupport {
 	private String[] id;
 
 	protected String keyword;
+
+	protected String currentPassword;
 
 	protected String originalActionName;
 
@@ -90,6 +98,10 @@ public class BaseAction extends ActionSupport {
 
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
+	}
+
+	public void setCurrentPassword(String currentPassword) {
+		this.currentPassword = currentPassword;
 	}
 
 	public String getUid() {
@@ -206,6 +218,35 @@ public class BaseAction extends ActionSupport {
 				&& !csrfManager
 						.validateToken(ServletActionContext.getRequest()))
 			addActionError(getText("csrf.error"));
+		validateCurrentPassword();
+	}
+
+	private void validateCurrentPassword() {
+		CurrentPassword currentPasswordAnn = getAnnotation(CurrentPassword.class);
+		if (currentPasswordAnn == null)
+			return;
+		HttpServletRequest request = ServletActionContext.getRequest();
+		HttpSession session = request.getSession();
+		String currentPasswordThreshold = (String) session
+				.getAttribute(SESSION_KEY_CURRENT_PASSWORD_THRESHOLD);
+		int threshold = org.ironrhino.core.util.StringUtils
+				.isNumericOnly(currentPasswordThreshold) ? Integer
+				.valueOf(currentPasswordThreshold) : 0;
+		boolean valid = currentPassword != null
+				&& AuthzUtils.isPasswordValid(currentPassword);
+		if (!valid) {
+			addFieldError("currentPassword", getText("currentPassword.error"));
+			threshold++;
+			if (threshold >= currentPasswordAnn.threshold()) {
+				session.invalidate();
+				targetUrl = RequestUtils.getRequestUri(request);
+			} else {
+				session.setAttribute(SESSION_KEY_CURRENT_PASSWORD_THRESHOLD,
+						String.valueOf(threshold));
+			}
+		} else {
+			session.removeAttribute(SESSION_KEY_CURRENT_PASSWORD_THRESHOLD);
+		}
 	}
 
 	@BeforeResult

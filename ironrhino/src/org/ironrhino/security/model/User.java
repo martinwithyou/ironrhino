@@ -19,7 +19,7 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
-import org.ironrhino.core.util.CodecUtils;
+import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +31,8 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	private static final long serialVersionUID = -6135434863820342822L;
 
 	public static final String USERNAME_REGEX = "^[\\w\\(\\)]{3,20}$";
+
+	public static final String USERNAME_REGEX_FOR_SIGNUP = "^[\\w\\]{3,20}$";
 
 	@NaturalId(caseInsensitive = true)
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
@@ -157,7 +159,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	}
 
 	public boolean isPasswordValid(String legiblePassword) {
-		return this.password.equals(CodecUtils.digest(legiblePassword));
+		return AuthzUtils.isPasswordValid(this, legiblePassword);
 	}
 
 	public void setAuthorities(Collection<GrantedAuthority> authorities) {
@@ -181,7 +183,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	}
 
 	public void setLegiblePassword(String legiblePassword) {
-		this.password = CodecUtils.digest(legiblePassword);
+		this.password = AuthzUtils.encodePassword(this, legiblePassword);
 	}
 
 	public void setModifyDate(Date modifyDate) {

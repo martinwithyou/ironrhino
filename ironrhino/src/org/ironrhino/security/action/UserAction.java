@@ -17,6 +17,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.Authorize;
+import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
@@ -51,8 +52,6 @@ public class UserAction extends BaseAction {
 
 	private ResultPage<User> resultPage;
 
-	private String currentPassword;
-
 	private String password;
 
 	private String confirmPassword;
@@ -62,14 +61,6 @@ public class UserAction extends BaseAction {
 
 	@Autowired(required = false)
 	private transient CompassSearchService compassSearchService;
-
-	public String getCurrentPassword() {
-		return currentPassword;
-	}
-
-	public void setCurrentPassword(String currentPassword) {
-		this.currentPassword = currentPassword;
-	}
 
 	public String[] getRoleId() {
 		return roleId;
@@ -254,13 +245,10 @@ public class UserAction extends BaseAction {
 
 	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
 	@InputConfig(resultName = "password")
+	@CurrentPassword
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, trim = true, fieldName = "password", key = "validation.required") }, expressions = { @ExpressionValidator(expression = "password == confirmPassword", key = "confirmPassword.error") })
 	public String password() {
 		User user = AuthzUtils.getUserDetails(User.class);
-		if (user == null || !user.isPasswordValid(currentPassword)) {
-			addFieldError("currentPassword", getText("currentPassword.error"));
-			return "password";
-		}
 		user.setLegiblePassword(password);
 		userManager.save(user);
 		addActionMessage(getText("save.success"));

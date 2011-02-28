@@ -13,6 +13,8 @@ import org.ironrhino.core.model.Secured;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.SaltSource;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -111,5 +113,28 @@ public class AuthzUtils {
 		Authentication auth = new UsernamePasswordAuthenticationToken(ud, ud
 				.getPassword(), ud.getAuthorities());
 		sc.setAuthentication(auth);
+	}
+
+	public static String encodePassword(UserDetails ud, String input) {
+		PasswordEncoder encoder = ApplicationContextUtils
+				.getBean(PasswordEncoder.class);
+		SaltSource ss = ApplicationContextUtils.getBean(SaltSource.class);
+		return encoder
+				.encodePassword(input, ss != null ? ss.getSalt(ud) : null);
+	}
+
+	public static boolean isPasswordValid(UserDetails ud, String password) {
+		PasswordEncoder encoder = ApplicationContextUtils
+				.getBean(PasswordEncoder.class);
+		SaltSource ss = ApplicationContextUtils.getBean(SaltSource.class);
+		return encoder.isPasswordValid(ud.getPassword(), password,
+				ss != null ? ss.getSalt(ud) : null);
+	}
+
+	public static boolean isPasswordValid(String password) {
+		Object principal = SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+		return principal instanceof UserDetails ? isPasswordValid(
+				(UserDetails) principal, password) : false;
 	}
 }

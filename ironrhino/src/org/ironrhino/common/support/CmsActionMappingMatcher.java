@@ -21,9 +21,9 @@ import org.ironrhino.common.action.IssuePageAction;
 import org.ironrhino.common.action.SeriesPageAction;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.core.event.EntityOperationEvent;
-import org.ironrhino.core.struts.AbstractActionMapper;
 import org.ironrhino.core.struts.ActionMappingMatcher;
 import org.ironrhino.core.struts.DefaultActionMapper;
+import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEvent;
@@ -66,7 +66,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 
 	public ActionMapping tryMatch(HttpServletRequest request,
 			DefaultActionMapper actionMapper) {
-		String uri = AbstractActionMapper.getUri(request);
+		String uri = RequestUtils.getRequestUri(request);
 		String encoding = actionMapper.getEncoding();
 		if (uri.startsWith(pagePathPrefix)) {
 			String pagePath = uri.substring(pagePathPrefix.length() - 1);
@@ -74,8 +74,13 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			mapping.setNamespace(DisplayPageAction.NAMESPACE);
 			mapping.setName(DisplayPageAction.ACTION_NAME);
 			Map<String, Object> params = new HashMap<String, Object>(3);
-			params.put(DefaultActionMapper.ID, pagePath);
-			mapping.setParams(params);
+			try {
+				params.put(DefaultActionMapper.ID, URLDecoder.decode(pagePath,
+						encoding));
+				mapping.setParams(params);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			return mapping;
 		}
 		for (String name : seriesesList) {

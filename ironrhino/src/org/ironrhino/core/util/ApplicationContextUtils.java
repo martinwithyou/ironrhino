@@ -1,6 +1,7 @@
 package org.ironrhino.core.util;
 
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -17,7 +18,19 @@ public class ApplicationContextUtils {
 	}
 
 	public static Object getBean(String name) {
-		return getApplicationContext().getBean(name);
+		try {
+			return getApplicationContext().getBean(name);
+		} catch (BeansException e) {
+			return null;
+		}
+	}
+
+	public static <T> T getBean(Class<T> t) {
+		try {
+			return getApplicationContext().getBean(t);
+		} catch (BeansException e) {
+			return null;
+		}
 	}
 
 }

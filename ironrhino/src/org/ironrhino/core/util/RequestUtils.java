@@ -90,6 +90,17 @@ public class RequestUtils {
 		return sb.toString();
 	}
 
+	public static String getRequestUri(HttpServletRequest request) {
+		// handle http dispatcher includes.
+		String uri = (String) request
+				.getAttribute("javax.servlet.include.servlet_path");
+		if (uri == null) {
+			uri = request.getRequestURI();
+			uri = uri.substring(request.getContextPath().length());
+		}
+		return uri;
+	}
+
 	public static String getCookieValue(HttpServletRequest request,
 			String cookieName) {
 		Cookie[] cookies = request.getCookies();
