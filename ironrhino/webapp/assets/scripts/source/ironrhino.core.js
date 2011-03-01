@@ -15,9 +15,11 @@
 	var $ajax = $.ajax;
 	$.ajax = function(options) {
 		options.url = UrlUtils.makeSameOrigin(options.url);
+		options.xhrFields = {
+			withCredentials : true
+		};
 		var temp = options.beforeSend;
 		options.beforeSend = function(xhr) {
-			xhr.withCredentials = 'true';
 			// xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 			if (options.header)
 				for (var key in options.header)
