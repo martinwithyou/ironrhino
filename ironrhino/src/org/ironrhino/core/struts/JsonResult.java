@@ -12,7 +12,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.ironrhino.core.metadata.JsonConfig;
-import org.ironrhino.core.security.csrf.CsrfManager;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.beans.BeanUtils;
 
@@ -42,9 +41,6 @@ public class JsonResult implements Result {
 
 		boolean hasErrors = false;
 		Map<String, Object> map = new HashMap<String, Object>();
-		Object csrf = invocation.getStack().findValue(CsrfManager.KEY_CSRF);
-		if (csrf != null)
-			map.put(CsrfManager.KEY_CSRF, csrf);
 		if (action instanceof ValidationAware) {
 			ValidationAware validationAwareAction = (ValidationAware) action;
 			if (validationAwareAction.hasErrors()) {
@@ -58,18 +54,18 @@ public class JsonResult implements Result {
 							validationAwareAction.getFieldErrors());
 				}
 				return JsonUtils.toJson(map);
-			} 
-//			else {
-//				map.put("hasErrors", false);
-//			}
+			}
+			// else {
+			// map.put("hasErrors", false);
+			// }
 			if (validationAwareAction.hasActionMessages()) {
-//				map.put("hasActionMessages", true);
+				// map.put("hasActionMessages", true);
 				map.put("actionMessages",
 						validationAwareAction.getActionMessages());
-			} 
-//			else {
-//				map.put("hasActionMessages", false);
-//			}
+			}
+			// else {
+			// map.put("hasActionMessages", false);
+			// }
 		}
 		if (!hasErrors) {
 			if (jsonConfig == null || jsonConfig.propertyName() == null
@@ -109,7 +105,7 @@ public class JsonResult implements Result {
 			out.print('(');
 		}
 		out.print(json);
-		if (StringUtils.isNotBlank(jsonp)) 
+		if (StringUtils.isNotBlank(jsonp))
 			out.print(')');
 		out.flush();
 		out.close();

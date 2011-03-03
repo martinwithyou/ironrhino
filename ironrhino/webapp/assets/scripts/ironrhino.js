@@ -25706,8 +25706,6 @@ Ajax = {
 			Ajax.fire(target, 'onsuccess', data);
 		} else {
 			Ajax.jsonResult = data;
-			if (data.csrf)
-				$('input[name="csrf"]').val(data.csrf);
 			if (data.fieldErrors || data.actionErrors) {
 				hasError = true;
 				if (options.onerror)

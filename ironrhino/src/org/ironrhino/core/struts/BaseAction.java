@@ -13,9 +13,9 @@ import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Csrf;
 import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.security.captcha.CaptchaManager;
-import org.ironrhino.core.security.csrf.CsrfManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
+import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,6 +31,7 @@ public class BaseAction extends ActionSupport {
 	private static final long serialVersionUID = -3183957331611790404L;
 
 	private static final String SESSION_KEY_CURRENT_PASSWORD_THRESHOLD = "c_p_t";
+	private static final String COOKIE_KEY_CSRF = "csrf";
 
 	public static final String LIST = "list";
 	public static final String VIEW = "view";
@@ -67,12 +68,16 @@ public class BaseAction extends ActionSupport {
 	@Autowired
 	protected transient CaptchaManager captchaManager;
 
-	@Autowired
-	protected transient CsrfManager csrfManager;
+	public void setCsrf(String csrf) {
+		this.csrf = csrf;
+	}
 
 	public String getCsrf() {
-		if (csrfRequired && csrf == null)
-			csrf = csrfManager.createToken(ServletActionContext.getRequest());
+		if (csrfRequired && csrf == null) {
+			csrf = CodecUtils.nextId();
+			RequestUtils.saveCookie(ServletActionContext.getRequest(),
+					ServletActionContext.getResponse(), COOKIE_KEY_CSRF, csrf);
+		}
 		return csrf;
 	}
 
@@ -214,10 +219,12 @@ public class BaseAction extends ActionSupport {
 				&& !captchaManager.validate(ServletActionContext.getRequest(),
 						ServletActionContext.getRequest().getSession().getId()))
 			addFieldError(CaptchaManager.KEY_CAPTCHA, getText("captcha.error"));
-		if (csrfRequired
-				&& !csrfManager
-						.validateToken(ServletActionContext.getRequest()))
-			addActionError(getText("csrf.error"));
+		if (csrfRequired) {
+			String value = RequestUtils.getCookieValue(
+					ServletActionContext.getRequest(), COOKIE_KEY_CSRF);
+			if (csrf == null || !csrf.equals(value))
+				addActionError(getText("csrf.error"));
+		}
 		validateCurrentPassword();
 	}
 
