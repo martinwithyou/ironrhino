@@ -31,7 +31,7 @@ public class BaseAction extends ActionSupport {
 	private static final long serialVersionUID = -3183957331611790404L;
 
 	private static final String SESSION_KEY_CURRENT_PASSWORD_THRESHOLD = "c_p_t";
-	private static final String COOKIE_KEY_CSRF = "csrf";
+	private static final String COOKIE_NAME_CSRF = "csrf";
 
 	public static final String LIST = "list";
 	public static final String VIEW = "view";
@@ -76,7 +76,7 @@ public class BaseAction extends ActionSupport {
 		if (csrfRequired && csrf == null) {
 			csrf = CodecUtils.nextId();
 			RequestUtils.saveCookie(ServletActionContext.getRequest(),
-					ServletActionContext.getResponse(), COOKIE_KEY_CSRF, csrf);
+					ServletActionContext.getResponse(), COOKIE_NAME_CSRF, csrf);
 		}
 		return csrf;
 	}
@@ -221,7 +221,7 @@ public class BaseAction extends ActionSupport {
 			addFieldError(CaptchaManager.KEY_CAPTCHA, getText("captcha.error"));
 		if (csrfRequired) {
 			String value = RequestUtils.getCookieValue(
-					ServletActionContext.getRequest(), COOKIE_KEY_CSRF);
+					ServletActionContext.getRequest(), COOKIE_NAME_CSRF);
 			if (csrf == null || !csrf.equals(value))
 				addActionError(getText("csrf.error"));
 		}
