@@ -1,6 +1,6 @@
 package org.apache.struts2.sitemesh;
 
-import org.apache.commons.lang.xwork.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 
