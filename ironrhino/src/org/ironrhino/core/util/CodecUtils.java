@@ -10,6 +10,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
 public class CodecUtils {
+	
+	public static final String DEFAULT_ENCODING = "UTF-8";
 
 	private static ThreadLocal<MessageDigest> MD5 = new ThreadLocal<MessageDigest>() {
 
@@ -43,7 +45,15 @@ public class CodecUtils {
 	}
 
 	public static byte[] md5(String input) {
-		return md5(input.getBytes());
+		return md5(input, DEFAULT_ENCODING);
+	}
+
+	public static byte[] md5(String input, String encoding) {
+		try {
+			return md5(input.getBytes(encoding));
+		} catch (UnsupportedEncodingException e) {
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
 	}
 
 	public static String md5Hex(byte[] input) {
@@ -51,7 +61,15 @@ public class CodecUtils {
 	}
 
 	public static String md5Hex(String input) {
-		return Hex.encodeHexString(md5(input.getBytes()));
+		return md5Hex(input, DEFAULT_ENCODING);
+	}
+
+	public static String md5Hex(String input, String encoding) {
+		try {
+			return md5Hex(input.getBytes(encoding));
+		} catch (UnsupportedEncodingException e) {
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
 	}
 
 	public static byte[] sha(byte[] input) {
@@ -62,7 +80,15 @@ public class CodecUtils {
 	}
 
 	public static byte[] sha(String input) {
-		return sha(input.getBytes());
+		return sha(input, DEFAULT_ENCODING);
+	}
+
+	public static byte[] sha(String input, String encoding) {
+		try {
+			return sha(input.getBytes(encoding));
+		} catch (UnsupportedEncodingException e) {
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
 	}
 
 	public static String shaHex(byte[] input) {
@@ -70,12 +96,20 @@ public class CodecUtils {
 	}
 
 	public static String shaHex(String input) {
-		return Hex.encodeHexString(sha(input.getBytes()));
+		return shaHex(input, DEFAULT_ENCODING);
 	}
 
-	public static String encode(String input) {
+	public static String shaHex(String input, String encoding) {
 		try {
-			byte[] bytes = Base64.encodeBase64(input.getBytes("UTF-8"));
+			return shaHex(input.getBytes(encoding));
+		} catch (UnsupportedEncodingException e) {
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+	}
+
+	public static String fuzzify(String input) {
+		try {
+			byte[] bytes = Base64.encodeBase64(input.getBytes(DEFAULT_ENCODING));
 			swap(bytes);
 			return new String(bytes);
 		} catch (UnsupportedEncodingException e) {
@@ -83,11 +117,11 @@ public class CodecUtils {
 		}
 	}
 
-	public static String decode(String input) {
+	public static String defuzzify(String input) {
 		try {
 			byte[] bytes = input.getBytes();
 			swap(bytes);
-			return new String(Base64.decodeBase64(bytes), "UTF-8");
+			return new String(Base64.decodeBase64(bytes), DEFAULT_ENCODING);
 		} catch (UnsupportedEncodingException e) {
 			return input;
 		}
