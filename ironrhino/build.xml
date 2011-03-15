@@ -37,6 +37,12 @@
 		<mkdir dir="${test.classes.dir}" />
 	</target>
 
+	<target name="clean">
+		<delete dir="${classes.dir}" />
+		<delete dir="${test.classes.dir}" />
+		<delete dir="${target.dir}" />
+	</target>
+
 	<target name="compile">
 		<antcall target="clean" />
 		<antcall target="init" />
@@ -364,12 +370,12 @@
 		<move file="${reference.dir}/html" todir="${target.dir}/docs" />
 	</target>
 
-
-
-	<target name="clean">
-		<delete dir="${classes.dir}" />
-		<delete dir="${test.classes.dir}" />
-		<delete dir="${target.dir}" />
+	<target name="dist">
+		<exec executable="svn" dir="${basedir}">
+			<arg value="update" />
+		</exec>
+		<antcall target="compile" />
+		<antcall target="jar" />
 	</target>
 
 </project>
