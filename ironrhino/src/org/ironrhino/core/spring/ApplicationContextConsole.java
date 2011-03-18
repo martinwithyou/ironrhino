@@ -13,24 +13,24 @@ import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.event.SetPropertyEvent;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ExpressionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.support.PropertiesLoaderSupport;
 
 @Singleton
 @Named("applicationContextConsole")
-public class ApplicationContextConsole implements ApplicationListener {
+public class ApplicationContextConsole implements
+		ApplicationListener<SetPropertyEvent> {
 
 	private static final Pattern SET_PROPERTY_EXPRESSION_PATTERN = Pattern
 			.compile("(^[a-zA-Z][a-zA-Z0-9_\\-]*\\.[a-zA-Z][a-zA-Z0-9_\\-]*\\s*=\\s*.+$)");
@@ -140,14 +140,12 @@ public class ApplicationContextConsole implements ApplicationListener {
 		return matcher.matches();
 	}
 
-	public void onApplicationEvent(ApplicationEvent event) {
-		if (event instanceof SetPropertyEvent) {
-			String expression = ((SetPropertyEvent) event).getExpression();
-			try {
-				executeSetProperty(expression, false);
-			} catch (Exception e) {
-				log.error("execute '" + expression + "' error", e);
-			}
+	public void onApplicationEvent(SetPropertyEvent event) {
+		String expression = event.getExpression();
+		try {
+			executeSetProperty(expression, false);
+		} catch (Exception e) {
+			log.error("execute '" + expression + "' error", e);
 		}
 	}
 

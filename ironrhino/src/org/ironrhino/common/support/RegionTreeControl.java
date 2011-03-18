@@ -15,11 +15,12 @@ import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.BeanUtils;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
-@Singleton@Named("regionTreeControl")
-public class RegionTreeControl implements ApplicationListener {
+@Singleton
+@Named("regionTreeControl")
+public class RegionTreeControl implements
+		ApplicationListener<EntityOperationEvent> {
 
 	private Region regionTree;
 
@@ -90,21 +91,17 @@ public class RegionTreeControl implements ApplicationListener {
 		r.getParent().getChildren().remove(r);
 	}
 
-	public void onApplicationEvent(ApplicationEvent event) {
+	public void onApplicationEvent(EntityOperationEvent event) {
 		if (regionTree == null)
 			return;
-		if (event instanceof EntityOperationEvent) {
-			EntityOperationEvent ev = (EntityOperationEvent) event;
-			if (ev.getEntity() instanceof Region) {
-				Region region = (Region) ev.getEntity();
-				if (ev.getType() == EntityOperationType.CREATE)
-					create(region);
-				else if (ev.getType() == EntityOperationType.UPDATE)
-					update(region);
-				else if (ev.getType() == EntityOperationType.DELETE)
-					delete(region);
-			}
+		if (event.getEntity() instanceof Region) {
+			Region region = (Region) event.getEntity();
+			if (event.getType() == EntityOperationType.CREATE)
+				create(region);
+			else if (event.getType() == EntityOperationType.UPDATE)
+				update(region);
+			else if (event.getType() == EntityOperationType.DELETE)
+				delete(region);
 		}
-
 	}
 }

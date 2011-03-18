@@ -26,13 +26,12 @@ import org.ironrhino.core.struts.DefaultActionMapper;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
 @Named
 @Singleton
 public class CmsActionMappingMatcher implements ActionMappingMatcher,
-		ApplicationListener {
+		ApplicationListener<EntityOperationEvent> {
 
 	public static final String DEFAULT_PAGE_PATH_PREFIX = "/p/";
 
@@ -75,8 +74,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			mapping.setName(DisplayPageAction.ACTION_NAME);
 			Map<String, Object> params = new HashMap<String, Object>(3);
 			try {
-				params.put(DefaultActionMapper.ID, URLDecoder.decode(pagePath,
-						encoding));
+				params.put(DefaultActionMapper.ID,
+						URLDecoder.decode(pagePath, encoding));
 				mapping.setParams(params);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
@@ -84,8 +83,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			return mapping;
 		}
 		for (String name : seriesesList) {
-			String pageurl = new StringBuilder("/").append(name).append(
-					DEFAULT_PAGE_PATH_PREFIX).toString();
+			String pageurl = new StringBuilder("/").append(name)
+					.append(DEFAULT_PAGE_PATH_PREFIX).toString();
 			if (uri.equals("/" + name) || uri.startsWith(pageurl)) {
 				ActionMapping mapping = new ActionMapping();
 				mapping.setNamespace(SeriesPageAction.NAMESPACE);
@@ -93,18 +92,18 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				Map<String, Object> params = new HashMap<String, Object>(3);
 				params.put("name", name);
 				if (uri.startsWith(pageurl)) {
-					params.put(DefaultActionMapper.ID, uri.substring(pageurl
-							.length()));
+					params.put(DefaultActionMapper.ID,
+							uri.substring(pageurl.length()));
 				}
 				mapping.setParams(params);
 				return mapping;
 			}
 		}
 		for (String name : columnsList) {
-			String listurl = new StringBuilder("/").append(name).append(
-					"/list/").toString();
-			String pageurl = new StringBuilder("/").append(name).append(
-					DEFAULT_PAGE_PATH_PREFIX).toString();
+			String listurl = new StringBuilder("/").append(name)
+					.append("/list/").toString();
+			String pageurl = new StringBuilder("/").append(name)
+					.append(DEFAULT_PAGE_PATH_PREFIX).toString();
 			if (uri.equals("/" + name) || uri.startsWith(listurl)
 					|| uri.startsWith(pageurl)) {
 				ActionMapping mapping = new ActionMapping();
@@ -134,10 +133,10 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			}
 		}
 		for (String name : issuesList) {
-			String listurl = new StringBuilder("/").append(name).append(
-					"/list/").toString();
-			String pageurl = new StringBuilder("/").append(name).append(
-					DEFAULT_PAGE_PATH_PREFIX).toString();
+			String listurl = new StringBuilder("/").append(name)
+					.append("/list/").toString();
+			String pageurl = new StringBuilder("/").append(name)
+					.append(DEFAULT_PAGE_PATH_PREFIX).toString();
 			if (uri.equals("/" + name) || uri.startsWith(listurl)
 					|| uri.startsWith(pageurl)) {
 				ActionMapping mapping = new ActionMapping();
@@ -205,21 +204,18 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 		issuesList = list;
 	}
 
-	public void onApplicationEvent(ApplicationEvent event) {
-		if (event instanceof EntityOperationEvent) {
-			EntityOperationEvent ev = (EntityOperationEvent) event;
-			if (ev.getEntity() instanceof Setting) {
-				Setting settingInEvent = (Setting) ev.getEntity();
-				if (settingInEvent.getKey().equals(
-						Constants.SETTING_KEY_CMS_SERIESES)) {
-					buildSerieses();
-				} else if (settingInEvent.getKey().equals(
-						Constants.SETTING_KEY_CMS_COLUMNS)) {
-					buildColumns();
-				} else if (settingInEvent.getKey().equals(
-						Constants.SETTING_KEY_CMS_ISSUES)) {
-					buildIssues();
-				}
+	public void onApplicationEvent(EntityOperationEvent event) {
+		if (event.getEntity() instanceof Setting) {
+			Setting settingInEvent = (Setting) event.getEntity();
+			if (settingInEvent.getKey().equals(
+					Constants.SETTING_KEY_CMS_SERIESES)) {
+				buildSerieses();
+			} else if (settingInEvent.getKey().equals(
+					Constants.SETTING_KEY_CMS_COLUMNS)) {
+				buildColumns();
+			} else if (settingInEvent.getKey().equals(
+					Constants.SETTING_KEY_CMS_ISSUES)) {
+				buildIssues();
 			}
 		}
 	}

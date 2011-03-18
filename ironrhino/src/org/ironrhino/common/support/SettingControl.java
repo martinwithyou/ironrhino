@@ -9,20 +9,20 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.criterion.Order;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.service.BaseManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
 @Singleton
 @Named("settingControl")
-public class SettingControl implements ApplicationListener {
+public class SettingControl implements
+		ApplicationListener<EntityOperationEvent> {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
@@ -42,8 +42,8 @@ public class SettingControl implements ApplicationListener {
 	public void refresh() {
 		baseManager.setEntityClass(Setting.class);
 		List<Setting> list = baseManager.findAll(Order.asc("key"));
-		Map<String, Setting> temp = new ConcurrentHashMap<String, Setting>(list
-				.size(), 1);
+		Map<String, Setting> temp = new ConcurrentHashMap<String, Setting>(
+				list.size(), 1);
 		for (Setting s : list)
 			temp.put(s.getKey(), s);
 		settings = temp;
@@ -93,32 +93,28 @@ public class SettingControl implements ApplicationListener {
 		return new String[0];
 	}
 
-	public void onApplicationEvent(ApplicationEvent event) {
-		if (event instanceof EntityOperationEvent) {
-			EntityOperationEvent ev = (EntityOperationEvent) event;
-			if (ev.getEntity() instanceof Setting) {
-				Setting settingInEvent = (Setting) ev.getEntity();
-				if (ev.getType() == EntityOperationType.CREATE) {
-					settings.put(settingInEvent.getKey(), settingInEvent);
-				} else {
-					Setting settingInMemory = null;
-					for (Setting setting : settings.values()) {
-						if (setting.getId().equals(settingInEvent.getId())) {
-							settingInMemory = setting;
-							break;
-						}
+	public void onApplicationEvent(EntityOperationEvent event) {
+		if (event.getEntity() instanceof Setting) {
+			Setting settingInEvent = (Setting) event.getEntity();
+			if (event.getType() == EntityOperationType.CREATE) {
+				settings.put(settingInEvent.getKey(), settingInEvent);
+			} else {
+				Setting settingInMemory = null;
+				for (Setting setting : settings.values()) {
+					if (setting.getId().equals(settingInEvent.getId())) {
+						settingInMemory = setting;
+						break;
 					}
-					if (settingInMemory != null)
-						if (ev.getType() == EntityOperationType.UPDATE) {
-							settings.remove(settingInMemory.getKey());
-							BeanUtils.copyProperties(settingInEvent,
-									settingInMemory);
-							settings.put(settingInMemory.getKey(),
-									settingInMemory);
-						} else if (ev.getType() == EntityOperationType.DELETE) {
-							settings.remove(settingInMemory.getKey());
-						}
 				}
+				if (settingInMemory != null)
+					if (event.getType() == EntityOperationType.UPDATE) {
+						settings.remove(settingInMemory.getKey());
+						BeanUtils.copyProperties(settingInEvent,
+								settingInMemory);
+						settings.put(settingInMemory.getKey(), settingInMemory);
+					} else if (event.getType() == EntityOperationType.DELETE) {
+						settings.remove(settingInMemory.getKey());
+					}
 			}
 		}
 	}
