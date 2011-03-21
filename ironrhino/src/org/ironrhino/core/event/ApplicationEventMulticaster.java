@@ -7,7 +7,9 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
+import org.springframework.security.access.event.AuthorizedEvent;
 
 @Named
 @Singleton
@@ -21,6 +23,12 @@ public class ApplicationEventMulticaster extends
 	@PostConstruct
 	public void afterPropertiesSet() {
 		setTaskExecutor(taskExecutor);
+	}
+
+	@Override
+	public void multicastEvent(ApplicationEvent event) {
+		if (!(event instanceof AuthorizedEvent))
+			super.multicastEvent(event);
 	}
 
 }
