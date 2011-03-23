@@ -44,9 +44,21 @@
 	<bean id="rememberMeServices"
 		class="org.ironrhino.core.spring.security.DefaultTokenBasedRememberMeServices"
 		p:key="youcannotguessme" p:parameter="rememberme" p:cookieName="rm"
-		p:userDetailsService-ref="userManager" />
+		p:userDetailsService-ref="userManager" />	
+		
 	<bean id="passwordEncoder"
 		class="org.ironrhino.core.spring.security.MixedPasswordEncoder" />
+	
+	<!--	
+	<bean id="passwordEncoder"
+		class="org.ironrhino.core.spring.security.password.MultiVersionPasswordEncoder" >
+		<property name="versions">
+			<list>
+				<bean class="org.ironrhino.core.spring.security.password.V1PasswordEncoder"/>
+			</list>
+		</property>
+	</bean>
+	-->
 
 	<!--
 		<bean id="switchUserProcessingFilter"
