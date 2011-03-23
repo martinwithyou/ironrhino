@@ -3,17 +3,17 @@ package org.ironrhino.security.socialauth.impl;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import net.oauth.OAuthAccessor;
-import net.oauth.OAuthMessage;
-import net.oauth.client.OAuthClient;
-
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.security.socialauth.Profile;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named("sohu")
 @Singleton
-public class Sohu extends AbstractOAuthProvider {
+public class Sohu extends ScribeOAuthProvider {
 
 	@Value("${sohu.requestTokenUrl:http://api.t.sohu.com/oauth/request_token}")
 	private String requestTokenUrl;
@@ -44,11 +44,12 @@ public class Sohu extends AbstractOAuthProvider {
 	}
 
 	@Override
-	protected Profile doGetProfile(OAuthClient client, OAuthAccessor accessor)
-			throws Exception {
-		OAuthMessage message = client.invoke(accessor,
-				"http://api.t.sohu.com/account/verify_credentials.json", null);
-		String json = message.readBodyAsString();
+	protected Profile doGetProfile(Token accessToken) throws Exception {
+		OAuthRequest request = new OAuthRequest(Verb.GET,
+				"http://api.t.sohu.com/account/verify_credentials.json");
+		oauthService.signRequest(accessToken, request);
+		Response response = request.send();
+		String json = response.getBody();
 		JsonNode data = mapper.readValue(json, JsonNode.class);
 		String uid = data.get("id").getTextValue();
 		String name = data.get("name").getTextValue();

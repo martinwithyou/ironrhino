@@ -3,17 +3,17 @@ package org.ironrhino.security.socialauth.impl;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import net.oauth.OAuthAccessor;
-import net.oauth.OAuthMessage;
-import net.oauth.client.OAuthClient;
-
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.security.socialauth.Profile;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named("netease")
 @Singleton
-public class Netease extends AbstractOAuthProvider {
+public class Netease extends ScribeOAuthProvider {
 
 	@Value("${netease.requestTokenUrl:http://api.t.163.com/oauth/request_token}")
 	private String requestTokenUrl;
@@ -42,13 +42,14 @@ public class Netease extends AbstractOAuthProvider {
 	public String getAccessTokenUrl() {
 		return accessTokenUrl;
 	}
-
+	
 	@Override
-	protected Profile doGetProfile(OAuthClient client, OAuthAccessor accessor)
-			throws Exception {
-		OAuthMessage message = client.invoke(accessor,
-				"http://api.t.163.com/account/verify_credentials.json", null);
-		String json = message.readBodyAsString();
+	protected Profile doGetProfile(Token accessToken) throws Exception {
+		OAuthRequest request = new OAuthRequest(Verb.GET,
+				"http://api.t.163.com/account/verify_credentials.json");
+		oauthService.signRequest(accessToken, request);
+		Response response = request.send();
+		String json = response.getBody();
 		JsonNode data = mapper.readValue(json, JsonNode.class);
 		String uid = data.get("id").getTextValue();
 		String name = data.get("name").getTextValue();

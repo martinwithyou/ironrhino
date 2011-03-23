@@ -3,26 +3,19 @@ package org.ironrhino.security.socialauth.impl;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import net.oauth.OAuthAccessor;
-import net.oauth.OAuthMessage;
-import net.oauth.client.OAuthClient;
-
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.security.socialauth.Profile;
+import org.scribe.builder.api.DefaultApi10a;
+import org.scribe.builder.api.GoogleApi;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named("google")
 @Singleton
-public class Google extends AbstractOAuthProvider {
-
-	@Value("${google.requestTokenUrl:https://www.google.com/accounts/OAuthGetRequestToken}")
-	private String requestTokenUrl;
-
-	@Value("${google.authorizeUrl:https://www.google.com/accounts/OAuthAuthorizeToken}")
-	private String authorizeUrl;
-
-	@Value("${google.accessTokenUrl:https://www.google.com/accounts/OAuthGetAccessToken}")
-	private String accessTokenUrl;
+public class Google extends ScribeOAuthProvider {
 
 	@Value("${google.logo:http://www.google.com/images/logos/accounts_logo.gif}")
 	private String logo;
@@ -31,27 +24,33 @@ public class Google extends AbstractOAuthProvider {
 		return logo;
 	}
 
+	@Override
 	public String getRequestTokenUrl() {
-		return requestTokenUrl;
-	}
-
-	public String getAuthorizeUrl() {
-		return authorizeUrl;
-	}
-
-	public String getAccessTokenUrl() {
-		return accessTokenUrl;
+		return null;
 	}
 
 	@Override
-	protected Profile doGetProfile(OAuthClient client, OAuthAccessor accessor)
-			throws Exception {
-		OAuthMessage message = client
-				.invoke(
-						accessor,
-						"http://www-opensocial.googleusercontent.com/api/people/@me/@self",
-						null);
-		String json = message.readBodyAsString();
+	public String getAuthorizeUrl() {
+		return null;
+	}
+
+	@Override
+	public String getAccessTokenUrl() {
+		return null;
+	}
+
+	@Override
+	public DefaultApi10a getApi() {
+		return new GoogleApi();
+	}
+
+	@Override
+	protected Profile doGetProfile(Token accessToken) throws Exception {
+		OAuthRequest request = new OAuthRequest(Verb.GET,
+				"http://www-opensocial.googleusercontent.com/api/people/@me/@self");
+		oauthService.signRequest(accessToken, request);
+		Response response = request.send();
+		String json = response.getBody();
 		JsonNode data = mapper.readValue(json, JsonNode.class);
 		JsonNode entry = data.get("entry");
 		String uid = entry.get("id").getTextValue();
@@ -61,7 +60,7 @@ public class Google extends AbstractOAuthProvider {
 		p.setId(generateId(uid));
 		p.setName(name);
 		p.setDisplayName(displayName);
-//		p.setLocation(data.get("location").getTextValue());
+		// p.setLocation(data.get("location").getTextValue());
 		p.setImage(entry.get("thumbnailUrl").getTextValue());
 		return p;
 	}

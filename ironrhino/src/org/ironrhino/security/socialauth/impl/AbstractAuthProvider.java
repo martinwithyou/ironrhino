@@ -4,9 +4,13 @@ import javax.inject.Inject;
 
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.security.socialauth.AuthProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractAuthProvider implements AuthProvider {
 
+	protected static Logger logger = LoggerFactory.getLogger(AuthProvider.class);
+	
 	@Inject
 	protected SettingControl settingControl;
 
