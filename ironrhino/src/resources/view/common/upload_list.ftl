@@ -51,6 +51,17 @@ div.hover { border: 2px dashed #333; }
 			f = r;
 		}
 	}
+	function upload(files){
+		$.ajaxupload(files,{
+	        		url:$('#upload_form').attr('action')+'?'+$('#upload_form').serialize(),
+	        		name:$('#upload_form input[type="file"]').attr('name'),
+	        		beforeSend:Indicator.show,
+	        		success:function(xhr){
+	        			Ajax.handleResponse(xhr.responseText,{replacement:'files'});
+	        			Indicator.hide();
+	        		}
+	        	});
+	}
 	
 	$(function(){
 		$('#more').click(function(){
@@ -58,7 +69,7 @@ div.hover { border: 2px dashed #333; }
 		});
 		if (typeof window.FileReader != 'undefined') {
 			$('#upload_form input[type="file"]').change(function(){
-					handleFiles(this.files);
+					upload(this.files);
 					$(this).closest('div').remove();
 					addMore(1);
 					return false;
@@ -68,15 +79,7 @@ div.hover { border: 2px dashed #333; }
 			.get(0).ondrop = function(e){
 				e.preventDefault();
 				$(this).removeClass('hover');
-	        	$.ajaxupload(e.dataTransfer.files,{
-	        		url:$('#upload_form').attr('action')+'?'+$('#upload_form').serialize(),
-	        		name:$('#upload_form input[type="file"]').attr('name'),
-	        		beforeSend:Indicator.show,
-	        		success:function(xhr){
-	        			Ajax.handleResponse(xhr.responseText,{replacement:'files'});
-	        			Indicator.hide();
-	        		}
-	        	});
+				upload(e.dataTransfer.files);
 				return true;
 			};
 		}
