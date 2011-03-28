@@ -40,8 +40,13 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpClientUtils {
+
+	private static Logger logger = LoggerFactory
+			.getLogger(HttpClientUtils.class);
 
 	static class HttpClientHolder {
 		static HttpClient httpClient = create();
@@ -142,25 +147,40 @@ public class HttpClientUtils {
 	}
 
 	public static String getResponseText(String url,
+			Map<String, String> params, Map<String, String> headers) {
+		return getResponseText(url, params, headers, "UTF-8");
+	}
+
+	public static String getResponseText(String url,
 			Map<String, String> params, String encoding) {
+		return getResponseText(url, params, null, encoding);
+	}
+
+	public static String getResponseText(String url,
+			Map<String, String> params, Map<String, String> headers,
+			String encoding) {
 		HttpGet httpRequest = null;
 		try {
 			StringBuilder sb = new StringBuilder(url);
 			if (params != null && params.size() > 0) {
 				sb.append(url.indexOf('?') < 0 ? '?' : '&');
 				for (Map.Entry<String, String> entry : params.entrySet()) {
-					sb.append(entry.getKey()).append("=").append(
-							URLEncoder.encode(entry.getValue(), encoding))
-							.append("&");
+					sb.append(entry.getKey())
+							.append("=")
+							.append(URLEncoder.encode(entry.getValue(),
+									encoding)).append("&");
 				}
 				sb.deleteCharAt(sb.length() - 1);
 			}
 			httpRequest = new HttpGet(sb.toString());
+			if (headers != null && headers.size() > 0)
+				for (Map.Entry<String, String> entry : headers.entrySet())
+					httpRequest.addHeader(entry.getKey(), entry.getValue());
 			return getDefaultInstance().execute(httpRequest,
 					new BasicResponseHandler());
 		} catch (Exception e) {
 			httpRequest.abort();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -170,7 +190,18 @@ public class HttpClientUtils {
 	}
 
 	public static String postResponseText(String url,
+			Map<String, String> params, Map<String, String> headers) {
+		return postResponseText(url, params, headers, "UTF-8");
+	}
+
+	public static String postResponseText(String url,
 			Map<String, String> params, String encoding) {
+		return postResponseText(url, params, null, encoding);
+	}
+
+	public static String postResponseText(String url,
+			Map<String, String> params, Map<String, String> headers,
+			String encoding) {
 		HttpPost httpRequest = new HttpPost(url);
 		try {
 			if (params != null && params.size() > 0) {
@@ -180,11 +211,14 @@ public class HttpClientUtils {
 							.getValue()));
 				httpRequest.setEntity(new UrlEncodedFormEntity(nvps, encoding));
 			}
+			if (headers != null && headers.size() > 0)
+				for (Map.Entry<String, String> entry : headers.entrySet())
+					httpRequest.addHeader(entry.getKey(), entry.getValue());
 			return getDefaultInstance().execute(httpRequest,
 					new BasicResponseHandler());
 		} catch (Exception e) {
 			httpRequest.abort();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
