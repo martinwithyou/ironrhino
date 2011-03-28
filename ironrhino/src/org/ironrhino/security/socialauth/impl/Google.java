@@ -28,6 +28,7 @@ public class Google extends OAuth20Provider {
 	// private String scope =
 	// "https://www-opensocial.googleusercontent.com/api/people/ https://www.google.com/m8/feeds/";
 
+	@Override
 	public String getLogo() {
 		return logo;
 	}
@@ -42,6 +43,7 @@ public class Google extends OAuth20Provider {
 		return accessTokenEndpoint;
 	}
 
+	@Override
 	public String getScope() {
 		return scope;
 	}
@@ -50,16 +52,23 @@ public class Google extends OAuth20Provider {
 		return settingControl.getStringValue("socialauth." + getName()
 				+ ".accessKey");
 	}
+	
+	@Override
+	public boolean isUseAuthorizationHeader() {
+		return true;
+	}
+
 
 	@Override
 	protected Profile doGetProfile(String token) throws Exception {
 		String content = invoke(token,
-				"http://www-opensocial.googleusercontent.com/api/people/@me/@self");
+				"http://www-opensocial.googleusercontent.com/api/people/%40me/%40self");
 		JsonNode data = mapper.readValue(content, JsonNode.class);
 		JsonNode entry = data.get("entry");
 		String uid = entry.get("id").getTextValue();
-		String name = entry.get("name").get("formatted").getTextValue();
-		String displayName = data.get("displayName").getTextValue();
+		//String name = entry.get("name").get("formatted").getTextValue();
+		String name = entry.get("displayName").getTextValue();
+		String displayName = entry.get("displayName").getTextValue();
 		Profile p = new Profile();
 		p.setId(generateId(uid));
 		p.setName(name);

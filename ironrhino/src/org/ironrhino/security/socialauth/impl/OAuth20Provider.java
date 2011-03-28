@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.util.RequestUtils;
@@ -20,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class OAuth20Provider extends AbstractAuthProvider {
 
-	private static Logger logger = LoggerFactory
+	protected static Logger logger = LoggerFactory
 			.getLogger(OAuth20Provider.class);
 
 	protected static ObjectMapper mapper = new ObjectMapper();
@@ -80,6 +81,8 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
+			} else {
+				return returnToURL;
 			}
 		}
 		StringBuilder sb = new StringBuilder(getAuthorizeUrl()).append('?')
@@ -154,7 +157,7 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 		if (!isUseAuthorizationHeader())
 			map.put("oauth_token", accessToken);
 		else
-			map.put("Authorization", "BEARER " + accessToken);
+			map.put("Authorization", "OAuth " + accessToken);
 		return invoke(protectedURL, isUseAuthorizationHeader() ? null : map,
 				isUseAuthorizationHeader() ? map : null);
 	}
@@ -247,6 +250,7 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 			this.create_time = create_time;
 		}
 
+		@NotInJson
 		public boolean isExpired() {
 			if (expires_in <= 0 || create_time <= 0)
 				return false;
