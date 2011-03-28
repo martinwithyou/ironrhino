@@ -73,6 +73,9 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 
 	public String getLoginRedirectURL(HttpServletRequest request,
 			String returnToURL) throws Exception {
+		Map<String, String> accessToken = restoreToken(request, "access");
+		if (accessToken != null)
+			return returnToURL;
 		OAuthConsumer consumer = new OAuthConsumer(returnToURL,
 				getConsumerKey(), getConsumerSecret(), serviceProvider);
 		OAuthAccessor accessor = new OAuthAccessor(consumer);
@@ -83,7 +86,7 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 		map.clear();
 		map.put(OAuth.OAUTH_TOKEN, accessor.requestToken);
 		map.put(OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret);
-		saveToken(request, map);
+		saveToken(request, map, "request");
 		return new StringBuilder(getAuthorizeUrl()).append("?oauth_token=")
 				.append(accessor.requestToken).append("&oauth_callback=")
 				.append(URLEncoder.encode(returnToURL, "UTF-8")).toString();
@@ -94,18 +97,26 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 				getConsumerSecret(), serviceProvider);
 		OAuthAccessor accessor = new OAuthAccessor(consumer);
 		OAuthClient client = new OAuthClient(new URLConnectionClient());
-		Map<String, String> map = restoreToken(request);
-		accessor.requestToken = map.get(OAuth.OAUTH_TOKEN);
-		accessor.tokenSecret = map.get(OAuth.OAUTH_TOKEN_SECRET);
-		map.clear();
-		String oauth_verifier = request.getParameter(OAuth.OAUTH_VERIFIER);
-		if (oauth_verifier != null)
-			map.put(OAuth.OAUTH_VERIFIER, oauth_verifier);
-		client.getAccessToken(accessor, "GET", map.entrySet());
-		map.clear();
-		map.put(OAuth.OAUTH_TOKEN, accessor.accessToken);
-		map.put(OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret);
-		saveToken(request, map);
+		Map<String, String> accessToken = restoreToken(request, "access");
+		if (accessToken == null) {
+			Map<String, String> requestToken = restoreToken(request, "request");
+			removeToken(request, "request");
+			accessor.requestToken = requestToken.get(OAuth.OAUTH_TOKEN);
+			accessor.tokenSecret = requestToken.get(OAuth.OAUTH_TOKEN_SECRET);
+			requestToken.clear();
+			String oauth_verifier = request.getParameter(OAuth.OAUTH_VERIFIER);
+			if (oauth_verifier != null)
+				requestToken.put(OAuth.OAUTH_VERIFIER, oauth_verifier);
+			client.getAccessToken(accessor, "GET", requestToken.entrySet());
+			requestToken.clear();
+			accessToken = requestToken;
+			accessToken.put(OAuth.OAUTH_TOKEN, accessor.accessToken);
+			accessToken.put(OAuth.OAUTH_TOKEN_SECRET, accessor.tokenSecret);
+			saveToken(request, accessToken, "access");
+		} else {
+			accessor.accessToken = accessToken.get(OAuth.OAUTH_TOKEN);
+			accessor.tokenSecret = accessToken.get(OAuth.OAUTH_TOKEN_SECRET);
+		}
 		return doGetProfile(client, accessor);
 	}
 
@@ -114,7 +125,7 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 
 	protected OAuthMessage sendRequest(HttpServletRequest request, Map map,
 			String url) throws Exception {
-		Map<String, String> token = restoreToken(request);
+		Map<String, String> token = restoreToken(request, "access");
 		OAuthConsumer consumer = new OAuthConsumer(null, getConsumerKey(),
 				getConsumerSecret(), serviceProvider);
 		OAuthAccessor accessor = new OAuthAccessor(consumer);
@@ -126,18 +137,29 @@ public abstract class AbstractOAuthProvider extends AbstractAuthProvider {
 	}
 
 	protected void saveToken(HttpServletRequest request,
-			Map<String, String> token) {
-		request.getSession().setAttribute(getName() + "_token",
+			Map<String, String> token, String type) {
+		request.getSession().setAttribute(tokenSessionKey(type),
 				JsonUtils.toJson(token));
 	}
 
-	protected Map<String, String> restoreToken(HttpServletRequest request)
-			throws Exception {
-		String key = getName() + "_token";
-		String json = (String) request.getSession().getAttribute(key);
+	protected void removeToken(HttpServletRequest request, String type) {
+		request.getSession().removeAttribute(tokenSessionKey(type));
+	}
+
+	protected Map<String, String> restoreToken(HttpServletRequest request,
+			String type) throws Exception {
+		String json = (String) request.getSession().getAttribute(
+				tokenSessionKey(type));
+		if (StringUtils.isBlank(json))
+			return null;
 		return JsonUtils.fromJson(json,
 				new TypeReference<Map<String, String>>() {
 				});
+	}
+
+	private String tokenSessionKey(String type) {
+		return new StringBuffer(getName()).append('_').append(type)
+				.append("_token").toString();
 	}
 
 	protected String generateId(String uid) {

@@ -1,6 +1,5 @@
 package org.ironrhino.security.socialauth.impl;
 
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -106,8 +105,12 @@ public abstract class ScribeOAuthProvider extends AbstractAuthProvider {
 
 	public String getLoginRedirectURL(HttpServletRequest request,
 			String returnToURL) throws Exception {
+		Token accessToken = restoreToken(request, "access");
+		if (accessToken != null)
+			return returnToURL;
+
 		Token requestToken = oauthService.getRequestToken();
-		saveToken(request, requestToken);
+		saveToken(request, requestToken, "request");
 		return new StringBuilder(getAuthorizeUrl()).append('?')
 				.append(OAuthConstants.TOKEN).append('=')
 				.append(requestToken.getToken()).append('&')
@@ -116,42 +119,50 @@ public abstract class ScribeOAuthProvider extends AbstractAuthProvider {
 	}
 
 	public Profile getProfile(HttpServletRequest request) throws Exception {
-		Token requestToken = restoreToken(request);
-		String oauth_verifier = request.getParameter(OAuth.OAUTH_VERIFIER);
-		Token accessToken = oauthService.getAccessToken(requestToken,
-				new Verifier(oauth_verifier));
-		saveToken(request, accessToken);
+		Token accessToken = restoreToken(request, "access");
+		if (accessToken == null) {
+			Token requestToken = restoreToken(request, "request");
+			removeToken(request, "request");
+			String oauth_verifier = request.getParameter(OAuth.OAUTH_VERIFIER);
+			accessToken = oauthService.getAccessToken(requestToken,
+					new Verifier(oauth_verifier));
+			saveToken(request, accessToken, "access");
+		}
 		return doGetProfile(accessToken);
 	}
 
 	protected abstract Profile doGetProfile(Token accessToken) throws Exception;
 
-	protected void saveToken(HttpServletRequest request, Token token) {
+	protected void saveToken(HttpServletRequest request, Token token,
+			String type) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("token", token.getToken());
 		map.put("secret", token.getSecret());
-		request.getSession().setAttribute(getName() + "_token",
-				JsonUtils.toJson(map));
+		request.getSession().setAttribute(tokenSessionKey(type), JsonUtils.toJson(map));
 	}
 
-	protected Token restoreToken(HttpServletRequest request) throws Exception {
-		String key = getName() + "_token";
-		String json = (String) request.getSession().getAttribute(key);
+	protected void removeToken(HttpServletRequest request, String type) {
+		request.getSession().removeAttribute(tokenSessionKey(type));
+	}
+
+	protected Token restoreToken(HttpServletRequest request, String type)
+			throws Exception {
+		String json = (String) request.getSession().getAttribute(tokenSessionKey(type));
+		if (StringUtils.isBlank(json))
+			return null;
 		Map<String, String> map = JsonUtils.fromJson(json,
 				new TypeReference<Map<String, String>>() {
 				});
 		return new Token(map.get("token"), map.get("secret"));
 	}
+	
+	private String tokenSessionKey(String type){
+		return  new StringBuffer(getName()).append('_').append(type)
+		.append("_token").toString();
+	}
 
 	protected String generateId(String uid) {
 		return "(" + getName() + ")" + uid;
-	}
-
-	public static void main(String[] args) throws Exception {
-		System.out
-				.println(URLDecoder
-						.decode("%E9%94%99%E8%AF%AF%3A%E7%AD%BE%E5%90%8D%E5%80%BC%E4%B8%8D%E5%90%88%E6%B3%95%21",
-								"UTF-8"));
 	}
 
 }
