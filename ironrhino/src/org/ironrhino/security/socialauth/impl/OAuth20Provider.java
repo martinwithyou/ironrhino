@@ -155,10 +155,13 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 			map.put("oauth_token", accessToken);
 		else
 			map.put("Authorization", "BEARER " + accessToken);
-		return HttpClientUtils.getResponseText(protectedURL,
-				isUseAuthorizationHeader() ? null : map,
+		return invoke(protectedURL, isUseAuthorizationHeader() ? null : map,
 				isUseAuthorizationHeader() ? map : null);
+	}
 
+	protected String invoke(String protectedURL, Map<String, String> params,
+			Map<String, String> headers) {
+		return HttpClientUtils.getResponseText(protectedURL, params, headers);
 	}
 
 	protected abstract Profile doGetProfile(String accessToken)
