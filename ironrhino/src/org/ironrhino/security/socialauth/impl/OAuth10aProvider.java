@@ -287,7 +287,7 @@ public abstract class OAuth10aProvider extends AbstractAuthProvider {
 		}
 
 		public static String getNonce() {
-			return CodecUtils.randomString(32);
+			return CodecUtils.randomString(8).toLowerCase();
 		}
 
 		public static String percentEncode(String string) {
