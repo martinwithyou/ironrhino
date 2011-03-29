@@ -15,6 +15,10 @@ public abstract class AbstractAuthProvider implements AuthProvider {
 	protected SettingControl settingControl;
 
 	protected boolean forceDisabled;
+	
+	public boolean isDiscoverable() {
+		return false;
+	}
 
 	public void setForceDisabled(boolean forceDisabled) {
 		this.forceDisabled = forceDisabled;

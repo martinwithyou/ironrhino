@@ -3,17 +3,14 @@ package org.ironrhino.security.socialauth.impl;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import net.oauth.OAuthAccessor;
-import net.oauth.OAuthMessage;
-import net.oauth.client.OAuthClient;
-
 import org.codehaus.jackson.JsonNode;
+import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.socialauth.Profile;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named("qq")
 @Singleton
-public class QQ extends AbstractOAuthProvider {
+public class QQ extends OAuth10aProvider {
 
 	@Value("${qq.requestTokenUrl:https://open.t.qq.com/cgi-bin/request_token}")
 	private String requestTokenUrl;
@@ -43,13 +40,20 @@ public class QQ extends AbstractOAuthProvider {
 		return accessTokenUrl;
 	}
 
+	public boolean isUseAuthorizationHeader() {
+		return false;
+	}
+
+	public boolean isIncludeCallbackWhenRequestToken() {
+		return true;
+	}
+
 	@Override
-	protected Profile doGetProfile(OAuthClient client, OAuthAccessor accessor)
-			throws Exception {
-		OAuthMessage message = client.invoke(accessor,
-				"http://open.t.qq.com/api/user/info?format=json", null);
-		String json = message.readBodyAsString();
-		JsonNode data = mapper.readValue(json, JsonNode.class).get("data");
+	protected Profile doGetProfile(OAuth10aToken token) throws Exception {
+		String json = invoke(token,
+				"http://open.t.qq.com/api/user/info?format=json");
+		JsonNode data = JsonUtils.getObjectMapper()
+				.readValue(json, JsonNode.class).get("data");
 		JsonNode node = data.get("uid");
 		String uid = null;
 		String name = data.get("name").getTextValue();

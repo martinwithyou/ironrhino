@@ -3,18 +3,36 @@ package org.ironrhino.core.util;
 import java.io.Reader;
 import java.io.StringReader;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 public class XmlUtils {
 
+	private static DocumentBuilder documentBuilder;
+
 	private static XPath _xpath = XPathFactory.newInstance().newXPath();
+
+	public static DocumentBuilder getDocumentBuilder() {
+		if (documentBuilder == null) {
+			try {
+				documentBuilder = DocumentBuilderFactory.newInstance()
+						.newDocumentBuilder();
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			}
+		}
+		return documentBuilder;
+	}
 
 	public static String eval(String xpath, Reader reader) {
 		try {
@@ -30,6 +48,16 @@ public class XmlUtils {
 		return eval(xpath, new StringReader(source));
 	}
 
+	public static String eval(String xpath, Node context) {
+		try {
+			XPathExpression xpe = _xpath.compile(xpath);
+			return xpe.evaluate(context);
+		} catch (XPathExpressionException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
 	public static NodeList evalNodeList(String xpath, Reader reader) {
 		try {
 			XPathExpression xpe = _xpath.compile(xpath);
@@ -43,6 +71,16 @@ public class XmlUtils {
 
 	public static NodeList evalNodeList(String xpath, String source) {
 		return evalNodeList(xpath, new StringReader(source));
+	}
+
+	public static NodeList evalNodeList(String xpath, Node context) {
+		try {
+			XPathExpression xpe = _xpath.compile(xpath);
+			return (NodeList) xpe.evaluate(context, XPathConstants.NODESET);
+		} catch (XPathExpressionException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

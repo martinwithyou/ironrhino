@@ -4,16 +4,13 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.codehaus.jackson.JsonNode;
+import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.socialauth.Profile;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.Token;
-import org.scribe.model.Verb;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named("netease")
 @Singleton
-public class Netease extends ScribeOAuthProvider {
+public class Netease extends OAuth10aProvider  {
 
 	@Value("${netease.requestTokenUrl:http://api.t.163.com/oauth/request_token}")
 	private String requestTokenUrl;
@@ -44,13 +41,10 @@ public class Netease extends ScribeOAuthProvider {
 	}
 	
 	@Override
-	protected Profile doGetProfile(Token accessToken) throws Exception {
-		OAuthRequest request = new OAuthRequest(Verb.GET,
-				"http://api.t.163.com/account/verify_credentials.json");
-		oauthService.signRequest(accessToken, request);
-		Response response = request.send();
-		String json = response.getBody();
-		JsonNode data = mapper.readValue(json, JsonNode.class);
+	protected Profile doGetProfile(OAuth10aToken token) throws Exception {
+		String json = invoke(token,
+		"http://api.t.163.com/account/verify_credentials.json");
+		JsonNode data = JsonUtils.getObjectMapper().readValue(json, JsonNode.class);
 		String uid = data.get("id").getTextValue();
 		String name = data.get("name").getTextValue();
 		String displayName = data.get("screen_name").getTextValue();

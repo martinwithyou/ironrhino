@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
@@ -23,8 +22,6 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 
 	protected static Logger logger = LoggerFactory
 			.getLogger(OAuth20Provider.class);
-
-	protected static ObjectMapper mapper = new ObjectMapper();
 
 	protected static DocumentBuilderFactory factory = DocumentBuilderFactory
 			.newInstance();
@@ -53,10 +50,6 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 	public String getClientSecret() {
 		return settingControl.getStringValue("socialauth." + getName()
 				+ ".clientSecret");
-	}
-
-	public boolean isDiscoverable() {
-		return false;
 	}
 
 	@PostConstruct
@@ -202,7 +195,7 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 		return "(" + getName() + ")" + uid;
 	}
 
-	public static class OAuth20AccessToken {
+	public static class OAuth20AccessToken implements java.io.Serializable{
 
 		private String access_token;
 		private String token_type;

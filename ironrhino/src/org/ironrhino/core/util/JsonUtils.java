@@ -83,6 +83,10 @@ public class JsonUtils {
 						org.codehaus.jackson.map.DeserializationConfig.Feature.READ_ENUMS_USING_TO_STRING,
 						true);
 	}
+	
+	public static ObjectMapper getObjectMapper(){
+		return objectMapper;
+	}
 
 	public static String toJson(Object object) {
 		try {

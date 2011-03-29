@@ -4,16 +4,13 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.codehaus.jackson.JsonNode;
+import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.socialauth.Profile;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.Token;
-import org.scribe.model.Verb;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named("sina")
 @Singleton
-public class Sina extends ScribeOAuthProvider {
+public class Sina extends OAuth10aProvider {
 
 	@Value("${sina.requestTokenUrl:http://api.t.sina.com.cn/oauth/request_token}")
 	private String requestTokenUrl;
@@ -42,15 +39,12 @@ public class Sina extends ScribeOAuthProvider {
 	public String getAccessTokenUrl() {
 		return accessTokenUrl;
 	}
-	
+
 	@Override
-	protected Profile doGetProfile(Token accessToken) throws Exception {
-		OAuthRequest request = new OAuthRequest(Verb.GET,
+	protected Profile doGetProfile(OAuth10aToken token) throws Exception {
+		String json = invoke(token,
 				"http://api.t.sina.com.cn/account/verify_credentials.json");
-		oauthService.signRequest(accessToken, request);
-		Response response = request.send();
-		String json = response.getBody();
-		JsonNode data = mapper.readValue(json, JsonNode.class);
+		JsonNode data = JsonUtils.getObjectMapper().readValue(json, JsonNode.class);
 		String uid = String.valueOf(data.get("id").getLongValue());
 		String name = data.get("name").getTextValue();
 		String displayName = data.get("screen_name").getTextValue();
