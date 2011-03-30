@@ -727,7 +727,19 @@ Observation.common = function(container) {
 								limit : $(this).attr('limit') || 100
 							});
 				});
-
+	if (typeof $.fn.tipsy != 'undefined')
+		$('.tipsyed,:input[title]', container).each(function() {
+					var options = {
+						html : true,
+						fade : true,
+						gravity : $(this).attr('gravity') || 'w'
+					};
+					if ($(this).is(':input')){
+						options.trigger = 'focus';
+						options.gravity = 'w';
+					}
+					$(this).tipsy(options);
+				});
 	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {
 			var id = this.id;
