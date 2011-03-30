@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.servlet.jsp.tagext.Tag;
-
 import ognl.OgnlContext;
 
 import org.apache.commons.lang.StringUtils;
@@ -20,7 +18,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.taglibs.authz.AuthorizeTag;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -47,15 +44,30 @@ public class AuthzUtils {
 			Object o = ExpressionUtils.eval(expression, ognl.getValues());
 			return o != null && o.toString().equals("true");
 		}
-		try {
-			AuthorizeTag tag = new AuthorizeTag();
-			tag.setIfAllGranted(ifAllGranted);
-			tag.setIfAnyGranted(ifAnyGranted);
-			tag.setIfNotGranted(ifNotGranted);
-			return tag.doStartTag() == Tag.EVAL_BODY_INCLUDE;
-		} catch (Exception e) {
+		List<String> roles = getRoleNames();
+		if (StringUtils.isNotBlank(ifAllGranted)) {
+			String[] arr = ifAllGranted.split(",");
+			for (String s : arr)
+				if (!roles.contains(s.trim()))
+					return false;
+			return true;
+		}else if(StringUtils.isNotBlank(ifAnyGranted)) {
+			String[] arr = ifAnyGranted.split(",");
+			for (String s : arr)
+				if (roles.contains(s.trim()))
+					return true;
 			return false;
+		}else if(StringUtils.isNotBlank(ifNotGranted)) {
+			String[] arr = ifNotGranted.split(",");
+			boolean b = true;
+			for (String s : arr)
+				if (roles.contains(s.trim())){
+					b = false;
+					break;
+				}
+			return b;
 		}
+		return false;
 	}
 
 	public static List<String> getRoleNames() {
@@ -110,8 +122,8 @@ public class AuthzUtils {
 
 	public static void autoLogin(UserDetails ud) {
 		SecurityContext sc = SecurityContextHolder.getContext();
-		Authentication auth = new UsernamePasswordAuthenticationToken(ud, ud
-				.getPassword(), ud.getAuthorities());
+		Authentication auth = new UsernamePasswordAuthenticationToken(ud,
+				ud.getPassword(), ud.getAuthorities());
 		sc.setAuthentication(auth);
 	}
 
