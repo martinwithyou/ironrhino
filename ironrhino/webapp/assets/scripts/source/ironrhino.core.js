@@ -246,7 +246,7 @@ Message = {
 			field = $(field);
 			// field.parent().append(Message.compose(msg, 'field_error'));
 
-			var prompt = $('<div class="fieldError closeonclick"><div class="fieldErrorContent">'
+			var prompt = $('<div class="fieldError removeonclick"><div class="fieldErrorContent">'
 					+ msg + '</div><div>').insertAfter(field);
 			var arrow = $('<div class="fieldErrorArrow"/>')
 					.html('<div class="line10"><!-- --></div><div class="line9"><!-- --></div><div class="line8"><!-- --></div><div class="line7"><!-- --></div><div class="line6"><!-- --></div><div class="line5"><!-- --></div><div class="line4"><!-- --></div><div class="line3"><!-- --></div><div class="line2"><!-- --></div><div class="line1"><!-- --></div>')
@@ -547,7 +547,7 @@ Initialization.common = function() {
 					return;
 				}
 			});
-	$('.closeonclick').live('click', function() {
+	$('.removeonclick').live('click', function() {
 				$(this).remove()
 			});
 	$.alerts.okButton = MessageBundle.get('confirm');
