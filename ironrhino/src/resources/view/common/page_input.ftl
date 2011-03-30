@@ -128,7 +128,7 @@ $(function() {
 </script>
 </head>
 <body>
-<@s.form id="form" action="draft" method="post" cssClass="ajax">
+<@s.form id="form" action="draft" method="post" cssClass="ajax" cssStyle="padding-top:25px;">
 	<@s.hidden id="page_id" name="page.id" />
 	<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50"/>
 	<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" cssClass="integer"/>

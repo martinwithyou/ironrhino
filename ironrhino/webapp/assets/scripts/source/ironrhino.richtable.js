@@ -171,6 +171,7 @@ Richtable = {
 				Dialog.adapt(win);
 				if (url.indexOf('?') > 0)
 					url = url.substring(0, url.indexOf('?'));
+				$('#_window_ form').css('padding-top','25px');	
 				var inputform = $('#_window_ form.ajax');
 				if (inputform.length) {
 					$(':input:visible', inputform).filter(function(i) {

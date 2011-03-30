@@ -1,5 +1,5 @@
 /*!
- * jQuery JavaScript Library v1.5.1
+ * jQuery JavaScript Library v1.5.2rc1
  * http://jquery.com/
  *
  * Copyright 2011, John Resig
@@ -11,7 +11,7 @@
  * Copyright 2011, The Dojo Foundation
  * Released under the MIT, BSD, and GPL Licenses.
  *
- * Date: Wed Feb 23 13:55:29 2011 -0500
+ * Date: Thu Mar 24 20:12:31 2011 -0400
  */
 (function( window, undefined ) {
 
@@ -69,14 +69,8 @@ var jQuery = function( selector, context ) {
 	// For matching the engine and version of the browser
 	browserMatch,
 
-	// Has the ready events already been bound?
-	readyBound = false,
-
 	// The deferred used on DOM ready
 	readyList,
-
-	// Promise methods
-	promiseMethods = "then done fail isResolved isRejected promise".split( " " ),
 
 	// The ready event handler
 	DOMContentLoaded,
@@ -202,7 +196,7 @@ jQuery.fn = jQuery.prototype = {
 	selector: "",
 
 	// The current version of jQuery being used
-	jquery: "1.5.1",
+	jquery: "1.5.2rc1",
 
 	// The default length of a jQuery object is 0
 	length: 0,
@@ -427,11 +421,11 @@ jQuery.extend({
 	},
 
 	bindReady: function() {
-		if ( readyBound ) {
+		if ( readyList ) {
 			return;
 		}
 
-		readyBound = true;
+		readyList = jQuery._Deferred();
 
 		// Catch cases where $(document).ready() is called after the
 		// browser event has already occurred.
@@ -811,171 +805,6 @@ jQuery.extend({
 		return (new Date()).getTime();
 	},
 
-	// Create a simple deferred (one callbacks list)
-	_Deferred: function() {
-		var // callbacks list
-			callbacks = [],
-			// stored [ context , args ]
-			fired,
-			// to avoid firing when already doing so
-			firing,
-			// flag to know if the deferred has been cancelled
-			cancelled,
-			// the deferred itself
-			deferred  = {
-
-				// done( f1, f2, ...)
-				done: function() {
-					if ( !cancelled ) {
-						var args = arguments,
-							i,
-							length,
-							elem,
-							type,
-							_fired;
-						if ( fired ) {
-							_fired = fired;
-							fired = 0;
-						}
-						for ( i = 0, length = args.length; i < length; i++ ) {
-							elem = args[ i ];
-							type = jQuery.type( elem );
-							if ( type === "array" ) {
-								deferred.done.apply( deferred, elem );
-							} else if ( type === "function" ) {
-								callbacks.push( elem );
-							}
-						}
-						if ( _fired ) {
-							deferred.resolveWith( _fired[ 0 ], _fired[ 1 ] );
-						}
-					}
-					return this;
-				},
-
-				// resolve with given context and args
-				resolveWith: function( context, args ) {
-					if ( !cancelled && !fired && !firing ) {
-						firing = 1;
-						try {
-							while( callbacks[ 0 ] ) {
-								callbacks.shift().apply( context, args );
-							}
-						}
-						// We have to add a catch block for
-						// IE prior to 8 or else the finally
-						// block will never get executed
-						catch (e) {
-							throw e;
-						}
-						finally {
-							fired = [ context, args ];
-							firing = 0;
-						}
-					}
-					return this;
-				},
-
-				// resolve with this as context and given arguments
-				resolve: function() {
-					deferred.resolveWith( jQuery.isFunction( this.promise ) ? this.promise() : this, arguments );
-					return this;
-				},
-
-				// Has this deferred been resolved?
-				isResolved: function() {
-					return !!( firing || fired );
-				},
-
-				// Cancel
-				cancel: function() {
-					cancelled = 1;
-					callbacks = [];
-					return this;
-				}
-			};
-
-		return deferred;
-	},
-
-	// Full fledged deferred (two callbacks list)
-	Deferred: function( func ) {
-		var deferred = jQuery._Deferred(),
-			failDeferred = jQuery._Deferred(),
-			promise;
-		// Add errorDeferred methods, then and promise
-		jQuery.extend( deferred, {
-			then: function( doneCallbacks, failCallbacks ) {
-				deferred.done( doneCallbacks ).fail( failCallbacks );
-				return this;
-			},
-			fail: failDeferred.done,
-			rejectWith: failDeferred.resolveWith,
-			reject: failDeferred.resolve,
-			isRejected: failDeferred.isResolved,
-			// Get a promise for this deferred
-			// If obj is provided, the promise aspect is added to the object
-			promise: function( obj ) {
-				if ( obj == null ) {
-					if ( promise ) {
-						return promise;
-					}
-					promise = obj = {};
-				}
-				var i = promiseMethods.length;
-				while( i-- ) {
-					obj[ promiseMethods[i] ] = deferred[ promiseMethods[i] ];
-				}
-				return obj;
-			}
-		} );
-		// Make sure only one callback list will be used
-		deferred.done( failDeferred.cancel ).fail( deferred.cancel );
-		// Unexpose cancel
-		delete deferred.cancel;
-		// Call given func if any
-		if ( func ) {
-			func.call( deferred, deferred );
-		}
-		return deferred;
-	},
-
-	// Deferred helper
-	when: function( object ) {
-		var lastIndex = arguments.length,
-			deferred = lastIndex <= 1 && object && jQuery.isFunction( object.promise ) ?
-				object :
-				jQuery.Deferred(),
-			promise = deferred.promise();
-
-		if ( lastIndex > 1 ) {
-			var array = slice.call( arguments, 0 ),
-				count = lastIndex,
-				iCallback = function( index ) {
-					return function( value ) {
-						array[ index ] = arguments.length > 1 ? slice.call( arguments, 0 ) : value;
-						if ( !( --count ) ) {
-							deferred.resolveWith( promise, array );
-						}
-					};
-				};
-			while( ( lastIndex-- ) ) {
-				object = array[ lastIndex ];
-				if ( object && jQuery.isFunction( object.promise ) ) {
-					object.promise().then( iCallback(lastIndex), deferred.reject );
-				} else {
-					--count;
-				}
-			}
-			if ( !count ) {
-				deferred.resolveWith( promise, array );
-			}
-		} else if ( deferred !== object ) {
-			deferred.resolve( object );
-		}
-		return promise;
-	},
-
 	// Use of jQuery.browser is frowned upon.
 	// More details: http://docs.jquery.com/Utilities/jQuery.browser
 	uaMatch: function( ua ) {
@@ -1013,9 +842,6 @@ jQuery.extend({
 
 	browser: {}
 });
-
-// Create readyList deferred
-readyList = jQuery._Deferred();
 
 // Populate the class2type map
 jQuery.each("Boolean Number String Function Array Date RegExp Object".split(" "), function(i, name) {
@@ -1090,6 +916,175 @@ return jQuery;
 })();
 
 
+var // Promise methods
+	promiseMethods = "then done fail isResolved isRejected promise".split( " " ),
+	// Static reference to slice
+	sliceDeferred = [].slice;
+
+jQuery.extend({
+	// Create a simple deferred (one callbacks list)
+	_Deferred: function() {
+		var // callbacks list
+			callbacks = [],
+			// stored [ context , args ]
+			fired,
+			// to avoid firing when already doing so
+			firing,
+			// flag to know if the deferred has been cancelled
+			cancelled,
+			// the deferred itself
+			deferred  = {
+
+				// done( f1, f2, ...)
+				done: function() {
+					if ( !cancelled ) {
+						var args = arguments,
+							i,
+							length,
+							elem,
+							type,
+							_fired;
+						if ( fired ) {
+							_fired = fired;
+							fired = 0;
+						}
+						for ( i = 0, length = args.length; i < length; i++ ) {
+							elem = args[ i ];
+							type = jQuery.type( elem );
+							if ( type === "array" ) {
+								deferred.done.apply( deferred, elem );
+							} else if ( type === "function" ) {
+								callbacks.push( elem );
+							}
+						}
+						if ( _fired ) {
+							deferred.resolveWith( _fired[ 0 ], _fired[ 1 ] );
+						}
+					}
+					return this;
+				},
+
+				// resolve with given context and args
+				resolveWith: function( context, args ) {
+					if ( !cancelled && !fired && !firing ) {
+						// make sure args are available (#8421)
+						args = args || [];
+						firing = 1;
+						try {
+							while( callbacks[ 0 ] ) {
+								callbacks.shift().apply( context, args );
+							}
+						}
+						finally {
+							fired = [ context, args ];
+							firing = 0;
+						}
+					}
+					return this;
+				},
+
+				// resolve with this as context and given arguments
+				resolve: function() {
+					deferred.resolveWith( this, arguments );
+					return this;
+				},
+
+				// Has this deferred been resolved?
+				isResolved: function() {
+					return !!( firing || fired );
+				},
+
+				// Cancel
+				cancel: function() {
+					cancelled = 1;
+					callbacks = [];
+					return this;
+				}
+			};
+
+		return deferred;
+	},
+
+	// Full fledged deferred (two callbacks list)
+	Deferred: function( func ) {
+		var deferred = jQuery._Deferred(),
+			failDeferred = jQuery._Deferred(),
+			promise;
+		// Add errorDeferred methods, then and promise
+		jQuery.extend( deferred, {
+			then: function( doneCallbacks, failCallbacks ) {
+				deferred.done( doneCallbacks ).fail( failCallbacks );
+				return this;
+			},
+			fail: failDeferred.done,
+			rejectWith: failDeferred.resolveWith,
+			reject: failDeferred.resolve,
+			isRejected: failDeferred.isResolved,
+			// Get a promise for this deferred
+			// If obj is provided, the promise aspect is added to the object
+			promise: function( obj ) {
+				if ( obj == null ) {
+					if ( promise ) {
+						return promise;
+					}
+					promise = obj = {};
+				}
+				var i = promiseMethods.length;
+				while( i-- ) {
+					obj[ promiseMethods[i] ] = deferred[ promiseMethods[i] ];
+				}
+				return obj;
+			}
+		} );
+		// Make sure only one callback list will be used
+		deferred.done( failDeferred.cancel ).fail( deferred.cancel );
+		// Unexpose cancel
+		delete deferred.cancel;
+		// Call given func if any
+		if ( func ) {
+			func.call( deferred, deferred );
+		}
+		return deferred;
+	},
+
+	// Deferred helper
+	when: function( firstParam ) {
+		var args = arguments,
+			i = 0,
+			length = args.length,
+			count = length,
+			deferred = length <= 1 && firstParam && jQuery.isFunction( firstParam.promise ) ?
+				firstParam :
+				jQuery.Deferred();
+		function resolveFunc( i ) {
+			return function( value ) {
+				args[ i ] = arguments.length > 1 ? sliceDeferred.call( arguments, 0 ) : value;
+				if ( !( --count ) ) {
+					deferred.resolveWith( deferred, args );
+				}
+			};
+		}
+		if ( length > 1 ) {
+			for( ; i < length; i++ ) {
+				if ( args[ i ] && jQuery.isFunction( args[ i ].promise ) ) {
+					args[ i ].promise().then( resolveFunc(i), deferred.reject );
+				} else {
+					--count;
+				}
+			}
+			if ( !count ) {
+				deferred.resolveWith( deferred, args );
+			}
+		} else if ( deferred !== firstParam ) {
+			deferred.resolveWith( deferred, length ? [ firstParam ] : [] );
+		}
+		return deferred.promise();
+	}
+});
+
+
+
+
 (function() {
 
 	jQuery.support = {};
@@ -1157,7 +1152,8 @@ return jQuery;
 		boxModel: null,
 		inlineBlockNeedsLayout: false,
 		shrinkWrapBlocks: false,
-		reliableHiddenOffsets: true
+		reliableHiddenOffsets: true,
+		reliableMarginRight: true
 	};
 
 	input.checked = true;
@@ -1277,6 +1273,17 @@ return jQuery;
 		// (IE < 8 fail this test)
 		jQuery.support.reliableHiddenOffsets = jQuery.support.reliableHiddenOffsets && tds[0].offsetHeight === 0;
 		div.innerHTML = "";
+
+		// Check if div with explicit width and no margin-right incorrectly
+		// gets computed margin-right based on width of container. For more
+		// info see bug #3333
+		// Fails in WebKit before Feb 2011 nightlies
+		// WebKit Bug 13343 - getComputedStyle returns wrong value for margin-right
+		if ( document.defaultView && document.defaultView.getComputedStyle ) {
+			div.style.width = "1px";
+			div.style.marginRight = "0";
+			jQuery.support.reliableMarginRight = ( parseInt(document.defaultView.getComputedStyle(div).marginRight, 10) || 0 ) === 0;
+		}
 
 		body.removeChild( div ).style.display = "none";
 		div = tds = null;
@@ -2194,10 +2201,10 @@ jQuery.event = {
 		}
 
 		if ( !eventHandle ) {
-			elemData.handle = eventHandle = function() {
+			elemData.handle = eventHandle = function( e ) {
 				// Handle the second event of a trigger and when
 				// an event is called after a page has unloaded
-				return typeof jQuery !== "undefined" && !jQuery.event.triggered ?
+				return typeof jQuery !== "undefined" && jQuery.event.triggered !== e.type ?
 					jQuery.event.handle.apply( eventHandle.elem, arguments ) :
 					undefined;
 			};
@@ -2504,7 +2511,7 @@ jQuery.event = {
 							target[ "on" + targetType ] = null;
 						}
 
-						jQuery.event.triggered = true;
+						jQuery.event.triggered = event.type;
 						target[ targetType ]();
 					}
 
@@ -2515,7 +2522,7 @@ jQuery.event = {
 					target[ "on" + targetType ] = old;
 				}
 
-				jQuery.event.triggered = false;
+				jQuery.event.triggered = undefined;
 			}
 		}
 	},
@@ -2785,7 +2792,7 @@ var withinElement = function( event ) {
 
 		// Chrome does something similar, the parentNode property
 		// can be accessed but is null.
-		if ( parent !== document && !parent.parentNode ) {
+		if ( parent && parent !== document && !parent.parentNode ) {
 			return;
 		}
 		// Traverse up the tree
@@ -2992,19 +2999,33 @@ function trigger( type, elem, args ) {
 // Create "bubbling" focus and blur events
 if ( document.addEventListener ) {
 	jQuery.each({ focus: "focusin", blur: "focusout" }, function( orig, fix ) {
+	
+		// Attach a single capturing handler while someone wants focusin/focusout
+		var attaches = 0;
+		
 		jQuery.event.special[ fix ] = {
 			setup: function() {
-				this.addEventListener( orig, handler, true );
+				if ( attaches++ === 0 ) {
+					document.addEventListener( orig, handler, true );
+				}
 			},
 			teardown: function() {
-				this.removeEventListener( orig, handler, true );
+				if ( --attaches === 0 ) {
+					document.removeEventListener( orig, handler, true );
+				}
 			}
 		};
 
-		function handler( e ) {
-			e = jQuery.event.fix( e );
+		function handler( donor ) {
+			// Donor event is always a native one; fix it and switch its type.
+			// Let focusin/out handler cancel the donor focus/blur event.
+			var e = jQuery.event.fix( donor );
 			e.type = fix;
-			return jQuery.event.handle.call( this, e );
+			e.originalEvent = {};
+			jQuery.event.trigger( e, null, e.target );
+			if ( e.isDefaultPrevented() ) {
+				donor.preventDefault();
+			}
 		}
 	});
 }
@@ -3918,10 +3939,12 @@ var Expr = Sizzle.selectors = {
 		},
 
 		text: function( elem ) {
+			var attr = elem.getAttribute( "type" ), type = elem.type;
 			// IE6 and 7 will map elem.type to 'text' for new HTML5 types (search, etc) 
 			// use getAttribute instead to test this case
-			return "text" === elem.getAttribute( 'type' );
+			return "text" === type && ( attr === type || attr === null );
 		},
+
 		radio: function( elem ) {
 			return "radio" === elem.type;
 		},
@@ -4496,19 +4519,23 @@ if ( document.querySelectorAll ) {
 
 (function(){
 	var html = document.documentElement,
-		matches = html.matchesSelector || html.mozMatchesSelector || html.webkitMatchesSelector || html.msMatchesSelector,
-		pseudoWorks = false;
-
-	try {
-		// This should fail with an exception
-		// Gecko does not error, returns false instead
-		matches.call( document.documentElement, "[test!='']:sizzle" );
-	
-	} catch( pseudoError ) {
-		pseudoWorks = true;
-	}
+		matches = html.matchesSelector || html.mozMatchesSelector || html.webkitMatchesSelector || html.msMatchesSelector;
 
 	if ( matches ) {
+		// Check to see if it's possible to do matchesSelector
+		// on a disconnected node (IE 9 fails this)
+		var disconnectedMatch = !matches.call( document.createElement( "div" ), "div" ),
+			pseudoWorks = false;
+
+		try {
+			// This should fail with an exception
+			// Gecko does not error, returns false instead
+			matches.call( document.documentElement, "[test!='']:sizzle" );
+	
+		} catch( pseudoError ) {
+			pseudoWorks = true;
+		}
+
 		Sizzle.matchesSelector = function( node, expr ) {
 			// Make sure that attribute selectors are quoted
 			expr = expr.replace(/\=\s*([^'"\]]*)\s*\]/g, "='$1']");
@@ -4516,7 +4543,15 @@ if ( document.querySelectorAll ) {
 			if ( !Sizzle.isXML( node ) ) {
 				try { 
 					if ( pseudoWorks || !Expr.match.PSEUDO.test( expr ) && !/!=/.test( expr ) ) {
-						return matches.call( node, expr );
+						var ret = matches.call( node, expr );
+
+						// IE 9's matchesSelector returns false on disconnected nodes
+						if ( ret || !disconnectedMatch ||
+								// As well, disconnected nodes are said to be in a document
+								// fragment in IE 9, so check for that
+								node.document && node.document.nodeType !== 11 ) {
+							return ret;
+						}
 					}
 				} catch(e) {}
 			}
@@ -5260,7 +5295,9 @@ jQuery.fn.extend({
 				}
 			});
 		} else {
-			return this.pushStack( jQuery(jQuery.isFunction(value) ? value() : value), "replaceWith", value );
+			return this.length ?
+				this.pushStack( jQuery(jQuery.isFunction(value) ? value() : value), "replaceWith", value ) :
+				this;
 		}
 	},
 
@@ -5944,6 +5981,25 @@ if ( !jQuery.support.opacity ) {
 	};
 }
 
+jQuery(function() {
+	// This hook cannot be added until DOM ready because the support test
+	// for it is not run until after DOM ready
+	if ( !jQuery.support.reliableMarginRight ) {
+		jQuery.cssHooks.marginRight = {
+			get: function( elem, computed ) {
+				// WebKit Bug 13343 - getComputedStyle returns wrong value for margin-right
+				// Work around by temporarily setting element display to inline-block
+				var ret = "0px",
+					display = elem.style.display;
+				elem.style.display = "inline-block";
+				ret = getComputedStyle( elem, "margin-right", "margin-right" );
+				elem.style.display = display;
+				return ret;
+			}
+		};
+	}
+});
+
 if ( document.defaultView && document.defaultView.getComputedStyle ) {
 	getComputedStyle = function( elem, newName, name ) {
 		var ret, defaultView, computedStyle;
@@ -6048,7 +6104,7 @@ var r20 = /%20/g,
 	rheaders = /^(.*?):[ \t]*([^\r\n]*)\r?$/mg, // IE leaves an \r character at EOL
 	rinput = /^(?:color|date|datetime|email|hidden|month|number|password|range|search|tel|text|time|url|week)$/i,
 	// #7653, #8125, #8152: local protocol detection
-	rlocalProtocol = /(?:^file|^widget|\-extension):$/,
+	rlocalProtocol = /^(?:about|app|app\-storage|.+\-extension|file|widget):$/,
 	rnoContent = /^(?:GET|HEAD)$/,
 	rprotocol = /^\/\//,
 	rquery = /\?/,
@@ -6060,7 +6116,7 @@ var r20 = /%20/g,
 	rucHeadersFunc = function( _, $1, $2 ) {
 		return $1 + $2.toUpperCase();
 	},
-	rurl = /^([\w\+\.\-]+:)\/\/([^\/?#:]*)(?::(\d+))?/,
+	rurl = /^([\w\+\.\-]+:)(?:\/\/([^\/?#:]*)(?::(\d+))?)?/,
 
 	// Keep a copy of the old load method
 	_load = jQuery.fn.load,
@@ -6102,7 +6158,7 @@ try {
 }
 
 // Segment location into parts
-ajaxLocParts = rurl.exec( ajaxLocation.toLowerCase() );
+ajaxLocParts = rurl.exec( ajaxLocation.toLowerCase() ) || [];
 
 // Base "constructor" for jQuery.ajaxPrefilter and jQuery.ajaxTransport
 function addToPrefiltersOrTransports( structure ) {
@@ -7024,7 +7080,7 @@ function ajaxConvert( s, response ) {
 
 
 var jsc = jQuery.now(),
-	jsre = /(\=)\?(&|$)|()\?\?()/i;
+	jsre = /(\=)\?(&|$)|\?\?/i;
 
 // Default jsonp settings
 jQuery.ajaxSetup({
@@ -7285,11 +7341,12 @@ if ( jQuery.support.ajax ) {
 						xhr.overrideMimeType( s.mimeType );
 					}
 
-					// Requested-With header
-					// Not set for crossDomain requests with no content
-					// (see why at http://trac.dojotoolkit.org/ticket/9486)
-					// Won't change header if already provided
-					if ( !( s.crossDomain && !s.hasContent ) && !headers["X-Requested-With"] ) {
+					// X-Requested-With header
+					// For cross-domain requests, seeing as conditions for a preflight are
+					// akin to a jigsaw puzzle, we simply never set it to be sure.
+					// (it can always be set on a per-request basis or even using ajaxSetup)
+					// For same-domain requests, won't change header if already provided.
+					if ( !s.crossDomain && !headers["X-Requested-With"] ) {
 						headers[ "X-Requested-With" ] = "XMLHttpRequest";
 					}
 
@@ -8123,10 +8180,10 @@ jQuery.offset = {
 			curOffset = curElem.offset(),
 			curCSSTop = jQuery.css( elem, "top" ),
 			curCSSLeft = jQuery.css( elem, "left" ),
-			calculatePosition = (position === "absolute" && jQuery.inArray('auto', [curCSSTop, curCSSLeft]) > -1),
+			calculatePosition = ((position === "absolute" || position === "fixed") && jQuery.inArray('auto', [curCSSTop, curCSSLeft]) > -1),
 			props = {}, curPosition = {}, curTop, curLeft;
 
-		// need to be able to calculate position if either top or left is auto and position is absolute
+		// need to be able to calculate position if either top or left is auto and position is either absolute or fixed
 		if ( calculatePosition ) {
 			curPosition = curElem.position();
 		}

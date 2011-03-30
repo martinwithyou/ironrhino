@@ -242,9 +242,31 @@ Message = {
 	},
 	showFieldError : function(field, msg, msgKey) {
 		var msg = msg || MessageBundle.get(msgKey);
-		if (field && $(field).length)
-			$(field).parent().append(Message.compose(msg, 'field_error'));
-		else
+		if (field && $(field).length) {
+			field = $(field);
+			// field.parent().append(Message.compose(msg, 'field_error'));
+
+			var prompt = $('<div class="fieldError closeonclick"><div class="fieldErrorContent">'
+					+ msg + '</div><div>').insertAfter(field);
+			var arrow = $('<div class="fieldErrorArrow"/>')
+					.html('<div class="line10"><!-- --></div><div class="line9"><!-- --></div><div class="line8"><!-- --></div><div class="line7"><!-- --></div><div class="line6"><!-- --></div><div class="line5"><!-- --></div><div class="line4"><!-- --></div><div class="line3"><!-- --></div><div class="line2"><!-- --></div><div class="line1"><!-- --></div>')
+					.appendTo(prompt);
+			var promptTopPosition, promptleftPosition, marginTopSize;
+			var fieldWidth = field.width();
+			var promptHeight = prompt.height();
+			promptTopPosition = field.position().top;
+			promptleftPosition = field.position().left + fieldWidth - 30;
+			marginTopSize = -promptHeight;
+			prompt.css({
+						"top" : promptTopPosition + "px",
+						"left" : promptleftPosition + "px",
+						"marginTop" : marginTopSize + "px",
+						"opacity" : 0
+					});
+			prompt.animate({
+						"opacity" : 0.8
+					});
+		} else
 			Message.showActionError(msg);
 	}
 };
@@ -253,7 +275,7 @@ Form = {
 	focus : function(form) {
 		var arr = $(':input:visible', form).get();
 		for (var i = 0; i < arr.length; i++) {
-			if ($('.field_error', $(arr[i]).parent()).length) {
+			if ($('.fieldError,.field_error', $(arr[i]).parent()).length) {
 				setTimeout(function() {
 							$(arr[i]).focus();
 						}, 50);
@@ -263,7 +285,7 @@ Form = {
 	},
 	validate : function(target) {
 		if ($(target).attr('tagName') != 'FORM') {
-			$('.field_error', $(target).parent()).remove();
+			$('.fieldError,.field_error', $(target).parent()).fadeIn().remove();
 			if ($(target).hasClass('required') && !$(target).val()) {
 				if ($(target).attr('tagName') == 'SELECT')
 					Message.showFieldError(target, null, 'selection.required');
@@ -525,6 +547,9 @@ Initialization.common = function() {
 					return;
 				}
 			});
+	$('.closeonclick').live('click', function() {
+				$(this).remove()
+			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
 	$('.menu li a').each(function() {
@@ -612,8 +637,14 @@ Initialization.history = function() {
 }
 
 Observation.common = function(container) {
-	$('div.action_error,div.action_message,div.field_error,ul.action_error li,ul.action_message li')
+	$('div.action_error,div.action_message,ul.action_error li,ul.action_message li')
 			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
+	$('div.field_error').each(function() {
+				var text = $(this).text();
+				var field = $(':input', $(this).parent());
+				$(this).remove();
+				Message.showFieldError(field, text);
+			});
 	var ele = ($(container).attr('tagName') == 'FORM' && $(container)
 			.hasClass('focus')) ? container : $('.focus:eq(0)', container);
 	if (ele.attr('tagName') != 'FORM') {
