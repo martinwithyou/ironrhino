@@ -25998,6 +25998,8 @@ Ajax = {
 					options.onsuccess.apply(window);
 				Ajax.fire(target, 'onsuccess', data);
 			}
+			Message.showActionError(data.actionErrors, target);
+			Message.showActionMessage(data.actionMessages, target);
 			if (data.fieldErrors) {
 				if (target) {
 					for (key in data.fieldErrors)
@@ -26009,8 +26011,6 @@ Ajax = {
 						Message.showActionError(data.fieldErrors[key]);
 				}
 			}
-			Message.showActionError(data.actionErrors, target);
-			Message.showActionMessage(data.actionMessages, target);
 		}
 		if (target && target.tagName == 'FORM') {
 			setTimeout(function() {
@@ -26298,7 +26298,7 @@ Observation.common = function(container) {
 						fade : true,
 						gravity : $(this).attr('gravity') || 'w'
 					};
-					if ($(this).is(':input')){
+					if ($(this).is(':input')) {
 						options.trigger = 'focus';
 						options.gravity = 'w';
 					}
