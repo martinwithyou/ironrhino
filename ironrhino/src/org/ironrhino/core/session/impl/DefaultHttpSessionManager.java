@@ -2,6 +2,7 @@ package org.ironrhino.core.session.impl;
 
 import java.math.BigInteger;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Value;
 public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
+
+	public static final String REQUEST_ATTRIBUTE_KEY_SESSION_MAP = "_session_map_in_request_";
 
 	public static final String DEFAULT_SESSION_TRACKER_NAME = "T";
 
@@ -85,6 +88,16 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	}
 
 	public void initialize(WrappedHttpSession session) {
+
+		//simulated session
+		Map<String, Object> sessionMap = (Map<String, Object>) session
+				.getRequest().getAttribute(REQUEST_ATTRIBUTE_KEY_SESSION_MAP);
+		if (sessionMap != null) {
+			session.getRequest().removeAttribute(
+					REQUEST_ATTRIBUTE_KEY_SESSION_MAP);
+			session.getAttrMap().putAll(sessionMap);
+			return;
+		}
 
 		String sessionTracker = session.getSessionTracker();
 		long now = session.getNow();
@@ -151,8 +164,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		if (sessionTrackerChanged) {
 			session.resetSessionTracker();
 			RequestUtils.saveCookie(session.getRequest(),
-					session.getResponse(), getSessionTrackerName(), session
-							.getSessionTracker(), true);
+					session.getResponse(), getSessionTrackerName(),
+					session.getSessionTracker(), true);
 		}
 		doSave(session);
 	}
@@ -161,8 +174,8 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.setInvalid(true);
 		session.getAttrMap().clear();
 		if (!session.isRequestedSessionIdFromURL()) {
-			RequestUtils.deleteCookie(session.getRequest(), session
-					.getResponse(), getSessionTrackerName(), true);
+			RequestUtils.deleteCookie(session.getRequest(),
+					session.getResponse(), getSessionTrackerName(), true);
 		}
 		doInvalidate(session);
 		session.setId(CodecUtils.nextId(SALT));
@@ -177,11 +190,11 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		StringBuilder sb = new StringBuilder();
 		sb.append(session.getId());
 		sb.append(SESSION_TRACKER_SEPERATOR);
-		sb.append(NumberUtils.decimalToX(62, BigInteger.valueOf(session
-				.getCreationTime())));
+		sb.append(NumberUtils.decimalToX(62,
+				BigInteger.valueOf(session.getCreationTime())));
 		sb.append(SESSION_TRACKER_SEPERATOR);
-		sb.append(NumberUtils.decimalToX(62, BigInteger.valueOf(session
-				.getLastAccessedTime())));
+		sb.append(NumberUtils.decimalToX(62,
+				BigInteger.valueOf(session.getLastAccessedTime())));
 		return CodecUtils.swap(sb.toString());
 	}
 

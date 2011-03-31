@@ -33,7 +33,7 @@ import org.springframework.context.ApplicationContext;
 @Named
 public class AccessFilter implements Filter {
 
-	private Logger accesLog = LoggerFactory.getLogger("access");
+	private Logger accessLog = LoggerFactory.getLogger("access");
 
 	private Logger accesWarnLog = LoggerFactory.getLogger("access-warn");
 
@@ -102,21 +102,11 @@ public class AccessFilter implements Filter {
 			}
 		}
 
-		for (AccessHandler interceptor : handlers) {
-			String pattern = interceptor.getPattern();
-			if (StringUtils.isBlank(pattern)
-					|| org.ironrhino.core.util.StringUtils.matchesWildcard(uri,
-							pattern)) {
-				if (interceptor.handle(request, response))
-					return;
-			}
-		}
-
 		request.setAttribute("userAgent", new UserAgent(request
 				.getHeader("User-Agent")));
 		MDC.put("remoteAddr", RequestUtils.getRemoteAddr(request));
 		MDC.put("method", request.getMethod());
-		StringBuilder url = new StringBuilder(request.getRequestURI());
+		StringBuffer url = request.getRequestURL();
 		if (StringUtils.isNotBlank(request.getQueryString()))
 			url.append('?').append(request.getQueryString());
 		MDC.put("url", url.toString());
@@ -131,7 +121,19 @@ public class AccessFilter implements Filter {
 		if (s != null)
 			MDC.put("username", s);
 		if (print && request.getHeader("Last-Event-Id") == null)
-			accesLog.info("");
+			accessLog.info("");
+		
+		for (AccessHandler interceptor : handlers) {
+			String pattern = interceptor.getPattern();
+			if (StringUtils.isBlank(pattern)
+					|| org.ironrhino.core.util.StringUtils.matchesWildcard(uri,
+							pattern)) {
+				if (interceptor.handle(request, response)){
+					MDC.clear();
+					return;
+				}
+			}
+		}
 
 		long start = System.currentTimeMillis();
 		chain.doFilter(req, resp);
