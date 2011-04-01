@@ -9,14 +9,12 @@ import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
-import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.spring.security.DefaultUsernamePasswordAuthenticationFilter;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -42,9 +40,6 @@ public class LoginAction extends BaseAction {
 
 	@Inject
 	private transient DefaultUsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
-
-	@Autowired(required = false)
-	private HttpSessionManager httpSessionManager;
 
 	public String getUsername() {
 		return username;
@@ -91,17 +86,11 @@ public class LoginAction extends BaseAction {
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
-			return SUCCESS;
 		}
 		if (authResult != null)
 			try {
 				usernamePasswordAuthenticationFilter.success(request, response,
 						authResult);
-				if (request.isRequestedSessionIdFromURL()
-						&& httpSessionManager != null)
-					response.setHeader(httpSessionManager
-							.getSessionTrackerName(), request.getSession()
-							.getId());
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
