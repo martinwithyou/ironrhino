@@ -1,16 +1,20 @@
-package org.ironrhino.security.oauth;
+package org.ironrhino.security.oauth.server.component;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.servlet.AccessHandler;
 import org.ironrhino.core.session.impl.DefaultHttpSessionManager;
+import org.ironrhino.security.oauth.server.model.Authorization;
+import org.ironrhino.security.oauth.server.service.OAuthManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +24,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
+@Singleton
+@Named
 @Order(Integer.MIN_VALUE + 1)
 public class OAuthHandler implements AccessHandler {
 
@@ -61,9 +67,9 @@ public class OAuthHandler implements AccessHandler {
 			}
 		}
 		if (StringUtils.isNotBlank(token)) {
-			Authorization authorization = oauthManager.getAuthorization(token);
+			Authorization authorization = oauthManager.retrieve(token);
 			if (authorization != null) {
-				String[] scopes = authorization.getScopes();
+				String[] scopes = authorization.getScope().split("\\s");
 				boolean authorized = (scopes == null);
 				if (!authorized && scopes != null) {
 					for (String s : scopes) {
@@ -75,7 +81,7 @@ public class OAuthHandler implements AccessHandler {
 					}
 				}
 				if (authorized) {
-					UserDetails ud = authorization.getUser();
+					UserDetails ud = authorization.getGrantor();
 					SecurityContext sc = SecurityContextHolder.getContext();
 					Authentication auth = new UsernamePasswordAuthenticationToken(
 							ud, ud.getPassword(), ud.getAuthorities());

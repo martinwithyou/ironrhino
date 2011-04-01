@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.ironrhino.security.oauth.server.model"
+	default-lazy="true">
+	<class name="Client" table="oauth_client">
+		<id name="id" type="java.lang.String" length="32" unsaved-value="null">
+			<generator class="uuid" />
+		</id>
+		<natural-id mutable="true">
+			<property name="name" not-null="true" />
+		</natural-id>
+		<property name="secret" not-null="true" />
+		<property name="redirectUri" />
+		<property name="description" />
+		<property name="enabled" />
+		<property name="createDate" />
+		<property name="modifyDate" />
+		<many-to-one name="owner" class="org.ironrhino.security.model.User" not-null="false" lazy="proxy" />
+	</class>
+</hibernate-mapping>
