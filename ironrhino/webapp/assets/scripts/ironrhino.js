@@ -27834,18 +27834,19 @@ Richtable = {
 			template = $('#' + templateId).text();
 		} else {
 			if (type == 'textarea') {
-				template = '<textarea onblur="Richtable.updateCell(this)" type="text" class="text" value="" style="width: 100%;"/>';
+				template = '<textarea type="text" class="text" value="" style="width: 100%;"/>';
 			} else if (type == 'date')
 				template = '<input type="text" class="text date" value="" style="width: 100%;"/>';
 			else if (type == 'boolean')
-				template = '<select onblur="Richtable.updateCell(this)" style="width: 100%;"><option value="true">'
+				template = '<select style="width: 100%;"><option value="true">'
 						+ MessageBundle.get('true')
 						+ '</option><option value="false">'
 						+ MessageBundle.get('false') + '</option></select>';
 			else
-				template = '<input onblur="Richtable.updateCell(this)" type="text" class="text" value="" style="width: 100%;"/>';
+				template = '<input type="text" class="text" value="" style="width: 100%;"/>';
 		}
 		ce.html(template);
+		$(':input',ce).blur(function(){Richtable.updateCell(this)});
 		var select = $('select', ce);
 		if (value && select.length) {
 			var arr = $('option', select).toArray();
@@ -27873,7 +27874,7 @@ Richtable = {
 		cell.attr('cellValue', ce.val());
 		var editType = ce.attr('tagName');
 		if (editType == 'SELECT')
-			cell.text($('option[selected]', ce).text());
+			cell.text($('option:selected', ce).text());
 		else if (editType == 'CHECKBOX' || editType == 'RADIO')
 			cell.text(ce.next().text());
 		else
