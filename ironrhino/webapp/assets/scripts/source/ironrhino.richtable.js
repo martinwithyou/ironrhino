@@ -143,12 +143,23 @@ Richtable = {
 		form = form || $('form.richtable');
 		if (!dontpushstate && typeof history.pushState != 'undefined') {
 			var url = form.attr('action');
-			var param = form.serialize();
-			if (param) {
-				param = param.replace('resultPage.pageNo', 'pn');
-				param = param.replace('resultPage.pageSize', 'ps');
-				param = param.replace(/&keyword=$/, '');
-				url += (url.indexOf('?') > 0 ? '&' : '?') + param;
+			var params = form.serializeArray();
+			if (params) {
+				$.map(params, function(v, i) {
+							if (v.name == 'resultPage.pageNo')
+								v.name = 'pn';
+							else if (v.name == 'resultPage.pageSize')
+								v.name = 'ps';
+							else if (v.name == 'check') {
+								v.name = '';
+								v.value = '';
+							} else if (v.name == 'keyword' && !v.value) {
+								v.name = '';
+								v.value = '';
+							}
+						});
+				url += (url.indexOf('?') > 0 ? '&' : '?')
+						+ $.param(params).replace(/(&=)|(=&)/g, '');
 			}
 			history.pushState(url, '', url);
 		}
@@ -171,7 +182,7 @@ Richtable = {
 				Dialog.adapt(win);
 				if (url.indexOf('?') > 0)
 					url = url.substring(0, url.indexOf('?'));
-				$('#_window_ form').css('padding-top','25px');	
+				$('#_window_ form').css('padding-top', '25px');
 				var inputform = $('#_window_ form.ajax');
 				if (inputform.length) {
 					$(':input:visible', inputform).filter(function(i) {
@@ -469,7 +480,9 @@ Richtable = {
 				template = '<input type="text" class="text" value="" style="width: 100%;"/>';
 		}
 		ce.html(template);
-		$(':input',ce).blur(function(){Richtable.updateCell(this)});
+		$(':input', ce).blur(function() {
+					Richtable.updateCell(this)
+				});
 		var select = $('select', ce);
 		if (value && select.length) {
 			var arr = $('option', select).toArray();
