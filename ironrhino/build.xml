@@ -111,8 +111,8 @@
 			<filelist>
 				<file name="${webapp.dir}/assets/scripts/source/jquery-1.5.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.10.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.10.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.11.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.11.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.history-2.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.rc4-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
@@ -174,18 +174,7 @@
 		</concat>
 		<concat destfile="${webapp.dir}/assets/styles/ironrhino.css" encoding="utf-8" fixlastline="yes">
 			<filelist>
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.core.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.resizable.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.selectable.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.accordion.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.autocomplete.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.button.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.dialog.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.slider.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.tabs.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.datepicker.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.progressbar.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.ui.theme.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.ui.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.loadmask.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.tipsy.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
