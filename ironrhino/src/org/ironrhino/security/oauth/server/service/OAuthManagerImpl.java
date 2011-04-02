@@ -1,14 +1,19 @@
 package org.ironrhino.security.oauth.server.service;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.CodecUtils;
+import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
@@ -125,6 +130,20 @@ public class OAuthManagerImpl implements OAuthManager {
 				.findByNaturalId(accessToken);
 		if (auth != null)
 			baseManager.delete(auth);
+	}
+
+	public List<Authorization> findAuthorizationsByGrantor(User grantor) {
+		baseManager.setEntityClass(Authorization.class);
+		DetachedCriteria dc = baseManager.detachedCriteria();
+		dc.add(Restrictions.eq("grantor", grantor));
+		dc.addOrder(Order.desc("modifyDate"));
+		return baseManager.findListByCriteria(dc);
+	}
+
+	public void removeExpired() {
+		baseManager.executeUpdate(
+				"delete from Authorization a where a.modifyDate < ?",
+				DateUtils.addDays(new Date(), -7));
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.ironrhino.security.oauth.server.service;
 
+import java.util.List;
+
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
@@ -22,5 +24,9 @@ public interface OAuthManager {
 	public Authorization refresh(String refreshToken);
 
 	public void revoke(String accessToken);
+
+	public List<Authorization> findAuthorizationsByGrantor(User grantor);
+
+	public void removeExpired();
 
 }
