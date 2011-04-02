@@ -1,4 +1,4 @@
-package org.ironrhino.security.socialauth.impl;
+package org.ironrhino.security.oauth.client.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -10,15 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.core.util.RequestUtils;
-import org.ironrhino.security.socialauth.Profile;
+import org.ironrhino.security.oauth.client.model.OAuth20Token;
+import org.ironrhino.security.oauth.client.model.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class OAuth20Provider extends AbstractAuthProvider {
+public abstract class OAuth20Provider extends AbstractOAuthProvider {
 
 	protected static Logger logger = LoggerFactory
 			.getLogger(OAuth20Provider.class);
@@ -38,50 +37,49 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 		return null;
 	}
 
-	public boolean isUseAuthorizationHeader() {
-		return false;
-	}
-
 	public String getClientId() {
-		return settingControl.getStringValue("socialauth." + getName()
-				+ ".clientId");
+		return settingControl
+				.getStringValue("oauth." + getName() + ".clientId");
 	}
 
 	public String getClientSecret() {
-		return settingControl.getStringValue("socialauth." + getName()
+		return settingControl.getStringValue("oauth." + getName()
 				+ ".clientSecret");
+	}
+
+	public boolean isEnabled() {
+		return super.isEnabled() && StringUtils.isNotBlank(getClientId());
 	}
 
 	@PostConstruct
 	public void afterPropertiesSet() {
-		String key = getClientId();
-		String secret = getClientSecret();
-		if (StringUtils.isEmpty(key) || StringUtils.isEmpty(secret)) {
-			forceDisabled = true;
-			logger.warn("key or secret is empty, disabled " + getName());
+		String clientId = getClientId();
+		String clientSecret = getClientSecret();
+		if (StringUtils.isEmpty(clientId) || StringUtils.isEmpty(clientSecret)) {
+			logger.warn(getName() + " clientId or clientSecret is empty");
 		}
 	}
 
-	public String getLoginRedirectURL(HttpServletRequest request,
-			String returnToURL) throws Exception {
-		OAuth20AccessToken accessToken = restoreToken(request);
+	public String getAuthRedirectURL(HttpServletRequest request,
+			String targetUrl) throws Exception {
+		OAuth20Token accessToken = restoreToken(request);
 		if (accessToken != null) {
 			if (accessToken.isExpired()) {
 				try {
 					accessToken = refreshToken(accessToken);
 					saveToken(request, accessToken);
-					return returnToURL;
+					return targetUrl;
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
 			} else {
-				return returnToURL;
+				return targetUrl;
 			}
 		}
 		StringBuilder sb = new StringBuilder(getAuthorizeUrl()).append('?')
 				.append("client_id").append('=').append(getClientId())
 				.append('&').append("redirect_uri").append('=')
-				.append(URLEncoder.encode(returnToURL, "UTF-8"));
+				.append(URLEncoder.encode(targetUrl, "UTF-8"));
 		sb.append("&response_type=code");
 		String scope = getScope();
 		if (StringUtils.isNotBlank(scope))
@@ -99,7 +97,7 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 
 	public Profile getProfile(HttpServletRequest request) throws Exception {
 
-		OAuth20AccessToken accessToken = restoreToken(request);
+		OAuth20Token accessToken = restoreToken(request);
 		if (accessToken != null) {
 			if (accessToken.isExpired()) {
 				try {
@@ -116,12 +114,11 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 			params.put("code", request.getParameter("code"));
 			params.put("client_id", getClientId());
 			params.put("client_secret", getClientSecret());
-			params.put("redirect_uri", RequestUtils.getBaseUrl(request)
-					+ RequestUtils.getRequestUri(request));
+			params.put("redirect_uri", request.getRequestURL().toString());
 			params.put("grant_type", "authorization_code");
 			String content = HttpClientUtils.postResponseText(
 					getAccessTokenEndpoint(), params);
-			accessToken = JsonUtils.fromJson(content, OAuth20AccessToken.class);
+			accessToken = JsonUtils.fromJson(content, OAuth20Token.class);
 			saveToken(request, accessToken);
 		}
 		return doGetProfile(accessToken.getAccess_token());
@@ -129,7 +126,7 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 
 	public String invoke(HttpServletRequest request, String protectedURL)
 			throws Exception {
-		OAuth20AccessToken accessToken = restoreToken(request);
+		OAuth20Token accessToken = restoreToken(request);
 		if (accessToken == null)
 			throw new IllegalAccessException("must already authorized");
 		if (accessToken.isExpired()) {
@@ -163,8 +160,7 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 	protected abstract Profile doGetProfile(String accessToken)
 			throws Exception;
 
-	public OAuth20AccessToken refreshToken(OAuth20AccessToken accessToken)
-			throws Exception {
+	public OAuth20Token refreshToken(OAuth20Token accessToken) throws Exception {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("client_id", getClientId());
 		params.put("client_secret", getClientSecret());
@@ -172,86 +168,22 @@ public abstract class OAuth20Provider extends AbstractAuthProvider {
 		params.put("grant_type", "refresh_token");
 		String content = HttpClientUtils.postResponseText(
 				getAccessTokenEndpoint(), params);
-		return JsonUtils.fromJson(content, OAuth20AccessToken.class);
+		return JsonUtils.fromJson(content, OAuth20Token.class);
 	}
 
-	protected void saveToken(HttpServletRequest request,
-			OAuth20AccessToken token) {
+	protected void saveToken(HttpServletRequest request, OAuth20Token token) {
 		token.setCreate_time((int) System.currentTimeMillis() / 1000);
 		request.getSession().setAttribute(getName() + "_token",
 				JsonUtils.toJson(token));
 	}
 
-	protected OAuth20AccessToken restoreToken(HttpServletRequest request)
+	protected OAuth20Token restoreToken(HttpServletRequest request)
 			throws Exception {
 		String key = getName() + "_token";
 		String json = (String) request.getSession().getAttribute(key);
 		if (StringUtils.isBlank(json))
 			return null;
-		return JsonUtils.fromJson(json, OAuth20AccessToken.class);
-	}
-
-	protected String generateId(String uid) {
-		return "(" + getName() + ")" + uid;
-	}
-
-	public static class OAuth20AccessToken implements java.io.Serializable{
-
-		private String access_token;
-		private String token_type;
-		private int expires_in;
-		private int create_time;
-		private String refresh_token;
-
-		public String getAccess_token() {
-			return access_token;
-		}
-
-		public void setAccess_token(String access_token) {
-			this.access_token = access_token;
-		}
-
-		public String getToken_type() {
-			return token_type;
-		}
-
-		public void setToken_type(String token_type) {
-			this.token_type = token_type;
-		}
-
-		public int getExpires_in() {
-			return expires_in;
-		}
-
-		public void setExpires_in(int expires_in) {
-			this.expires_in = expires_in;
-		}
-
-		public String getRefresh_token() {
-			return refresh_token;
-		}
-
-		public void setRefresh_token(String refresh_token) {
-			this.refresh_token = refresh_token;
-		}
-
-		public int getCreate_time() {
-			return create_time;
-		}
-
-		public void setCreate_time(int create_time) {
-			this.create_time = create_time;
-		}
-
-		@NotInJson
-		public boolean isExpired() {
-			if (expires_in <= 0 || create_time <= 0)
-				return false;
-			int offset = 60;
-			int current = (int) System.currentTimeMillis() / 1000;
-			return current - create_time > expires_in - offset;
-		}
-
+		return JsonUtils.fromJson(json, OAuth20Token.class);
 	}
 
 }

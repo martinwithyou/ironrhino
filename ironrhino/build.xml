@@ -19,7 +19,8 @@
 	<property name="security-jar.name" value="ironrhino-security-${version}.jar" />
 	<property name="security-config-jar.name" value="ironrhino-security-config-${version}.jar" />
 	<property name="security-loginrecord-jar.name" value="ironrhino-security-loginrecord-${version}.jar" />
-	<property name="security-socialauth-jar.name" value="ironrhino-security-socialauth-${version}.jar" />
+	<property name="security-oauth-client-jar.name" value="ironrhino-security-oauth-client-${version}.jar" />
+	<property name="security-oauth-server-jar.name" value="ironrhino-security-oauth-server-${version}.jar" />
 	<property name="war.name" value="ironrhino.war" />
 
 	<path id="lib.classpath">
@@ -96,10 +97,11 @@
 		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,com/opensymphony/**,org/apache/**,org/codehaus/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**" excludes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/remoting/**" />
 		<jar jarfile="${target.dir}/${core-ext-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/remoting/**" />
 		<jar jarfile="${target.dir}/${common-hbm-jar.name}" basedir="${classes.dir}" includes="resources/hibernate/common/**" />
-		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**,org/ironrhino/security/socialauth/**,org/ironrhino/security/oauth/**" />
+		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**,org/ironrhino/security/oauth/**,org/ironrhino/security/oauth/**" />
 		<jar jarfile="${target.dir}/${security-config-jar.name}" basedir="${classes.dir}" includes="resources/spring/applicationContext-security.xml" />
 		<jar jarfile="${target.dir}/${security-loginrecord-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
-		<jar jarfile="${target.dir}/${security-socialauth-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/socialauth/**,resources/view/socialauth*" />
+		<jar jarfile="${target.dir}/${security-oauth-client-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/oauth/client/**,resources/view/oauth.ftl" />
+		<jar jarfile="${target.dir}/${security-oauth-server-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/oauth/server/**,resources/view/oauth2*" />
 	</target>
 
 
@@ -107,7 +109,7 @@
 	<target name="compress">
 		<concat destfile="${webapp.dir}/assets/scripts/ironrhino.js" encoding="utf-8" fixlastline="yes">
 			<filelist>
-				<file name="${webapp.dir}/assets/scripts/source/jquery-1.5.1.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery-1.5.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.10.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.10.js" />

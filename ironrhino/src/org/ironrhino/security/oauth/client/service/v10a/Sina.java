@@ -1,11 +1,13 @@
-package org.ironrhino.security.socialauth.impl;
+package org.ironrhino.security.oauth.client.service.v10a;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.security.socialauth.Profile;
+import org.ironrhino.security.oauth.client.model.OAuth10aToken;
+import org.ironrhino.security.oauth.client.model.Profile;
+import org.ironrhino.security.oauth.client.service.OAuth10aProvider;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named("sina")

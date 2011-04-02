@@ -1,4 +1,4 @@
-package org.ironrhino.security.socialauth;
+package org.ironrhino.security.oauth.client.action;
 
 import java.net.URLEncoder;
 import java.util.List;
@@ -16,22 +16,18 @@ import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.security.Constants;
 import org.ironrhino.security.model.User;
+import org.ironrhino.security.oauth.client.model.Profile;
+import org.ironrhino.security.oauth.client.service.OAuthProvider;
+import org.ironrhino.security.oauth.client.service.OAuthProviderManager;
 import org.ironrhino.security.service.UserManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @AutoConfig(namespace = "/")
-public class SocialauthAction extends BaseAction {
+public class OauthAction extends BaseAction {
 
 	private static final long serialVersionUID = 8175406892708878896L;
 
-	private static final String SESSION_KEY_SOCIAL = "_social";
-
-	protected static Logger log = LoggerFactory
-			.getLogger(SocialauthAction.class);
-
-	private List<AuthProvider> providers;
+	private List<OAuthProvider> providers;
 
 	@Inject
 	private transient UserManager userManager;
@@ -40,48 +36,47 @@ public class SocialauthAction extends BaseAction {
 	private transient SettingControl settingControl;
 
 	@Inject
-	private transient AuthProviderManager authProviderManager;
+	private transient OAuthProviderManager oauthProviderManager;
 
-	public List<AuthProvider> getProviders() {
+	public List<OAuthProvider> getProviders() {
 		return providers;
 	}
 
 	public String execute() {
-		if (isEnabled())
-			providers = authProviderManager.getProviders();
-		return SUCCESS;
-	}
-
-	public String preauth() {
 		if (!isEnabled())
 			return ACCESSDENIED;
-		try {
+		String id = getUid();
+		if (StringUtils.isBlank(id)) {
+			providers = oauthProviderManager.getProviders();
+			return SUCCESS;
+		} else {
 			HttpServletRequest request = ServletActionContext.getRequest();
-			AuthProvider provider = authProviderManager.lookup(getUid());
-			String returnToUrl = "/socialauth/auth";
-			if (StringUtils.isNotBlank(targetUrl))
-				returnToUrl += "?targetUrl="
-						+ URLEncoder.encode(targetUrl, "UTF-8");
-			targetUrl = provider.getLoginRedirectURL(request, RequestUtils
-					.getBaseUrl(request)
-					+ returnToUrl);
-			request.getSession().setAttribute(SESSION_KEY_SOCIAL, getUid());
-		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				OAuthProvider provider = (OAuthProvider) oauthProviderManager
+						.lookup(getUid());
+				if (provider == null)
+					return ACCESSDENIED;
+				StringBuilder sb = new StringBuilder(
+						RequestUtils.getBaseUrl(request));
+				sb.append("/oauth/auth/").append(provider.getName());
+				if (StringUtils.isNotBlank(targetUrl))
+					sb.append("?targetUrl=").append(
+							URLEncoder.encode(targetUrl, "UTF-8"));
+				targetUrl = provider.getAuthRedirectURL(request, sb.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return REDIRECT;
 		}
-		return REDIRECT;
 	}
 
 	public String auth() {
-		if (!isEnabled())
-			return ACCESSDENIED;
 		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
-			AuthProvider provider = (AuthProvider) authProviderManager
-					.lookup((String) request.getSession().getAttribute(
-							SESSION_KEY_SOCIAL));
-			request.getSession().removeAttribute(SESSION_KEY_SOCIAL);
-
+			OAuthProvider provider = (OAuthProvider) oauthProviderManager
+					.lookup(getUid());
+			if (provider == null)
+				return ACCESSDENIED;
 			Profile p = provider.getProfile(request);
 			if (p == null)
 				return ACCESSDENIED;
@@ -118,6 +113,6 @@ public class SocialauthAction extends BaseAction {
 		return settingControl.getBooleanValue(
 				Constants.SETTING_KEY_SIGNUP_ENABLED, false)
 				&& settingControl.getBooleanValue(
-						Constants.SETTING_KEY_SOCIALAUTH_ENABLED, false);
+						Constants.SETTING_KEY_OAUTH_ENABLED, false);
 	}
 }

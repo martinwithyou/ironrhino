@@ -1,4 +1,4 @@
-package org.ironrhino.security.socialauth;
+package org.ironrhino.security.oauth.client.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,34 +15,34 @@ import org.springframework.context.ApplicationContext;
 
 @Named
 @Singleton
-public class AuthProviderManager {
+public class OAuthProviderManager {
 
 	@Inject
 	private ApplicationContext ctx;
 
-	private Collection<AuthProvider> providers;
+	private Collection<OAuthProvider> providers;
 
 	@PostConstruct
 	public void afterPropertiesSet() {
-		providers = ctx.getBeansOfType(AuthProvider.class).values();
+		providers = ctx.getBeansOfType(OAuthProvider.class).values();
 	}
 
-	public List<AuthProvider> getProviders() {
-		List<AuthProvider> list = new ArrayList<AuthProvider>(providers.size());
-		for (AuthProvider p : providers)
+	public List<OAuthProvider> getProviders() {
+		List<OAuthProvider> list = new ArrayList<OAuthProvider>(providers.size());
+		for (OAuthProvider p : providers)
 			if (p.isEnabled())
 				list.add(p);
 		Collections.sort(list);
 		return list;
 	}
 
-	public AuthProvider lookup(String id) {
+	public OAuthProvider lookup(String id) {
 		if (StringUtils.isBlank(id))
 			return null;
 		String name = id;
 		if (name.indexOf("://") > 0)
 			name = "openid";
-		for (AuthProvider p : providers)
+		for (OAuthProvider p : providers)
 			if (p.isEnabled() && name.equals(p.getName()))
 				return p;
 		return null;

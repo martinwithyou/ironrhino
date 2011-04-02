@@ -10,10 +10,8 @@
 		<security:intercept-url pattern="/assets/**" filters="none"/>
 		<security:intercept-url pattern="/common/**" access="ROLE_ADMINISTRATOR"/>
 		<security:intercept-url pattern="/login" access="ROLE_BUILTIN_ANONYMOUS"/>
-		<security:intercept-url pattern="/signup" access="ROLE_BUILTIN_ANONYMOUS"/>
-		<security:intercept-url pattern="/signup/**" access="ROLE_BUILTIN_ANONYMOUS"/>
-		<security:intercept-url pattern="/socialauth" access="ROLE_BUILTIN_ANONYMOUS"/>
-		<security:intercept-url pattern="/socialauth/**" access="ROLE_BUILTIN_ANONYMOUS"/>
+		<security:intercept-url pattern="/signup*/**" access="ROLE_BUILTIN_ANONYMOUS"/>
+		<security:intercept-url pattern="/oauth*/**" access="ROLE_BUILTIN_ANONYMOUS"/>
 		<security:intercept-url pattern="/setup" access="ROLE_BUILTIN_ANONYMOUS"/>
 		<security:intercept-url pattern="/**" access="ROLE_BUILTIN_USER"/>
 		<security:session-management session-fixation-protection="migrateSession" />

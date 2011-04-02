@@ -21,8 +21,6 @@ import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
 import org.ironrhino.security.oauth.server.service.OAuthManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -36,7 +34,6 @@ public class Oauth2Action extends BaseAction {
 
 	private static final long serialVersionUID = 8175470892708878896L;
 
-	protected static Logger log = LoggerFactory.getLogger(Oauth2Action.class);
 
 	@Inject
 	private transient OAuthManager oauthManager;
@@ -207,7 +204,7 @@ public class Oauth2Action extends BaseAction {
 					usernamePasswordAuthenticationFilter.unsuccess(request,
 							response, failed);
 				} catch (Exception e) {
-					log.error(e.getMessage(), e);
+					e.printStackTrace();
 				}
 				return INPUT;
 			}
@@ -217,7 +214,7 @@ public class Oauth2Action extends BaseAction {
 							response, authResult);
 					grantor = (User) authResult.getPrincipal();
 				} catch (Exception e) {
-					log.error(e.getMessage(), e);
+					e.printStackTrace();
 				}
 
 		}

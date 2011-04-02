@@ -1,4 +1,4 @@
-package org.ironrhino.security.socialauth.impl;
+package org.ironrhino.security.oauth.client.service.v20;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +11,9 @@ import org.codehaus.jackson.JsonNode;
 import org.compass.core.util.reader.StringReader;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.util.XmlUtils;
-import org.ironrhino.security.socialauth.Profile;
-import org.ironrhino.security.socialauth.Profile.Contact;
+import org.ironrhino.security.oauth.client.model.Profile;
+import org.ironrhino.security.oauth.client.model.Profile.Contact;
+import org.ironrhino.security.oauth.client.service.OAuth20Provider;
 import org.springframework.beans.factory.annotation.Value;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -55,7 +56,7 @@ public class Google extends OAuth20Provider {
 	}
 
 	public String getAccessKey() {
-		return settingControl.getStringValue("socialauth." + getName()
+		return settingControl.getStringValue("oauth." + getName()
 				+ ".accessKey");
 	}
 

@@ -1,4 +1,4 @@
-package org.ironrhino.security.socialauth;
+package org.ironrhino.security.oauth.client.model;
 
 import java.util.Collection;
 

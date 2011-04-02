@@ -1,4 +1,4 @@
-package org.ironrhino.security.socialauth.impl;
+package org.ironrhino.security.oauth.client.service;
 
 import java.net.URL;
 import java.net.URLEncoder;
@@ -18,9 +18,10 @@ import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.security.socialauth.Profile;
+import org.ironrhino.security.oauth.client.model.OAuth10aToken;
+import org.ironrhino.security.oauth.client.model.Profile;
 
-public abstract class OAuth10aProvider extends AbstractAuthProvider {
+public abstract class OAuth10aProvider extends AbstractOAuthProvider {
 
 	public abstract String getRequestTokenUrl();
 
@@ -32,46 +33,44 @@ public abstract class OAuth10aProvider extends AbstractAuthProvider {
 		return null;
 	}
 
-	public boolean isUseAuthorizationHeader() {
-		return true;
-	}
-
 	public boolean isIncludeCallbackWhenRequestToken() {
 		return false;
 	}
 
 	public String getConsumerKey() {
-		return settingControl.getStringValue("socialauth." + getName()
+		return settingControl.getStringValue("oauth." + getName()
 				+ ".consumerKey");
 	}
 
 	public String getConsumerSecret() {
-		return settingControl.getStringValue("socialauth." + getName()
+		return settingControl.getStringValue("oauth." + getName()
 				+ ".consumerSecret");
+	}
+
+	public boolean isEnabled() {
+		return super.isEnabled() && StringUtils.isNotBlank(getConsumerKey());
 	}
 
 	@PostConstruct
 	public void afterPropertiesSet() {
 		String key = getConsumerKey();
 		String secret = getConsumerSecret();
-		if (StringUtils.isEmpty(key) || StringUtils.isEmpty(secret)) {
-			forceDisabled = true;
-			logger.warn("key or secret is empty, disabled " + getName());
-		}
+		if (StringUtils.isEmpty(key) || StringUtils.isEmpty(secret))
+			logger.warn(getName() + " key or secret is empty");
 	}
 
-	public String getLoginRedirectURL(HttpServletRequest request,
-			String returnToURL) throws Exception {
+	public String getAuthRedirectURL(HttpServletRequest request,
+			String targetUrl) throws Exception {
 		OAuth10aToken accessToken = restoreToken(request, "access");
 		if (accessToken != null)
-			return returnToURL;
+			return targetUrl;
 
 		String responseBody = null;
 		Map<String, String> map = null;
 
 		if (isIncludeCallbackWhenRequestToken()) {
 			map = new HashMap<String, String>();
-			map.put("oauth_callback", returnToURL);
+			map.put("oauth_callback", targetUrl);
 		}
 		if (isUseAuthorizationHeader()) {
 			Map<String, String> headers = getAuthorizationHeaders("GET",
@@ -91,7 +90,7 @@ public abstract class OAuth10aProvider extends AbstractAuthProvider {
 				.append('=').append(requestToken.getToken());
 		if (!isIncludeCallbackWhenRequestToken())
 			sb.append('&').append("oauth_callback").append("=")
-					.append(URLEncoder.encode(returnToURL, "UTF-8"));
+					.append(URLEncoder.encode(targetUrl, "UTF-8"));
 		return sb.toString();
 	}
 
@@ -181,10 +180,6 @@ public abstract class OAuth10aProvider extends AbstractAuthProvider {
 				.append("_token").toString();
 	}
 
-	protected String generateId(String uid) {
-		return "(" + getName() + ")" + uid;
-	}
-
 	protected Map<String, String> getAuthorizationHeaders(String method,
 			String url, Map<String, String> params, String realm, String token,
 			String tokenSecret) {
@@ -255,29 +250,6 @@ public abstract class OAuth10aProvider extends AbstractAuthProvider {
 			logger.error(e.getMessage(), e);
 		}
 		return oauthparams;
-	}
-
-	public static class OAuth10aToken implements java.io.Serializable {
-
-		private String token;
-		private String secret;
-
-		public String getToken() {
-			return token;
-		}
-
-		public void setToken(String token) {
-			this.token = token;
-		}
-
-		public String getSecret() {
-			return secret;
-		}
-
-		public void setSecret(String secret) {
-			this.secret = secret;
-		}
-
 	}
 
 	private static class Utils {
@@ -363,8 +335,8 @@ public abstract class OAuth10aProvider extends AbstractAuthProvider {
 			map.putAll(params);
 			StringBuilder psb = new StringBuilder();
 			for (Map.Entry<String, String> entry : map.entrySet())
-				psb.append('&').append(percentEncode(entry.getKey())).append('=')
-						.append(percentEncode(entry.getValue()));
+				psb.append('&').append(percentEncode(entry.getKey()))
+						.append('=').append(percentEncode(entry.getValue()));
 			psb.deleteCharAt(0);
 			sb.append(percentEncode(psb.toString()));
 			return sb.toString();

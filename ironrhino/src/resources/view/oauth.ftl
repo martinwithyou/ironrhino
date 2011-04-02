@@ -11,16 +11,9 @@
 <ul class="clearfix">
 <#list providers as var>
 <li style="float:left;width:200px;">
-<#if !var.discoverable>
-	<a href="${ssoServerBase!}/socialauth/preauth?id=${var.name}<#if targetUrl??>&targetUrl=${targetUrl?url}</#if>">
-		<img src="${var.logo}" alt="${var.name}" style="padding:5px 0 0 5px;"/>
-	</a>
-<#else>
-	<form method="post" action="${ssoServerBase!}/socialauth/preauth<#if targetUrl??>?targetUrl=${targetUrl?url}</#if>" class="line">
-	<img src="${var.logo}" alt="${var.name}" style="padding:5px 0 0 5px;"/>
-	<input type="text" name="id" size="30"/>
-	</form>
-</#if>
+<a href="${ssoServerBase!}/oauth?id=${var.name}<#if targetUrl??>&targetUrl=${targetUrl?url}</#if>">
+	<img src="${var.logo}" alt="${var.name}" style="padding:5px 0 0 5px;max-width:195px;"/>
+</a>
 </li>
 </#list>
 </ul>

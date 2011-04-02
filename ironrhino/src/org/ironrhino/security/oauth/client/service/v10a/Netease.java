@@ -1,27 +1,29 @@
-package org.ironrhino.security.socialauth.impl;
+package org.ironrhino.security.oauth.client.service.v10a;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.security.socialauth.Profile;
+import org.ironrhino.security.oauth.client.model.OAuth10aToken;
+import org.ironrhino.security.oauth.client.model.Profile;
+import org.ironrhino.security.oauth.client.service.OAuth10aProvider;
 import org.springframework.beans.factory.annotation.Value;
 
-@Named("sohu")
+@Named("netease")
 @Singleton
-public class Sohu extends OAuth10aProvider {
+public class Netease extends OAuth10aProvider  {
 
-	@Value("${sohu.requestTokenUrl:http://api.t.sohu.com/oauth/request_token}")
+	@Value("${netease.requestTokenUrl:http://api.t.163.com/oauth/request_token}")
 	private String requestTokenUrl;
 
-	@Value("${sohu.authorizeUrl:http://api.t.sohu.com/oauth/authorize}")
+	@Value("${netease.authorizeUrl:http://api.t.163.com/oauth/authenticate}")
 	private String authorizeUrl;
 
-	@Value("${sohu.accessTokenUrl:http://api.t.sohu.com/oauth/access_token}")
+	@Value("${netease.accessTokenUrl:http://api.t.163.com/oauth/access_token}")
 	private String accessTokenUrl;
 
-	@Value("${sohu.logo:http://s1.cr.itc.cn/img/t/logo_sp6.png}")
+	@Value("${netease.logo:http://img3.cache.netease.com/t/img10/index/logo.png}")
 	private String logo;
 
 	public String getLogo() {
@@ -39,11 +41,11 @@ public class Sohu extends OAuth10aProvider {
 	public String getAccessTokenUrl() {
 		return accessTokenUrl;
 	}
-
+	
 	@Override
 	protected Profile doGetProfile(OAuth10aToken token) throws Exception {
 		String json = invoke(token,
-		"http://api.t.sohu.com/account/verify_credentials.json");
+		"http://api.t.163.com/account/verify_credentials.json");
 		JsonNode data = JsonUtils.getObjectMapper().readValue(json, JsonNode.class);
 		String uid = data.get("id").getTextValue();
 		String name = data.get("name").getTextValue();
@@ -56,4 +58,5 @@ public class Sohu extends OAuth10aProvider {
 		p.setImage(data.get("profile_image_url").getTextValue());
 		return p;
 	}
+
 }
