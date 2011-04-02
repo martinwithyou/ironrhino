@@ -1,5 +1,5 @@
 /*!
- * jQuery JavaScript Library v1.5.2rc1
+ * jQuery JavaScript Library v1.5.2
  * http://jquery.com/
  *
  * Copyright 2011, John Resig
@@ -11,7 +11,7 @@
  * Copyright 2011, The Dojo Foundation
  * Released under the MIT, BSD, and GPL Licenses.
  *
- * Date: Thu Mar 24 20:12:31 2011 -0400
+ * Date: Thu Mar 31 15:28:23 2011 -0400
  */
 (function( window, undefined ) {
 
@@ -196,7 +196,7 @@ jQuery.fn = jQuery.prototype = {
 	selector: "",
 
 	// The current version of jQuery being used
-	jquery: "1.5.2rc1",
+	jquery: "1.5.2",
 
 	// The default length of a jQuery object is 0
 	length: 0,
@@ -1060,7 +1060,10 @@ jQuery.extend({
 			return function( value ) {
 				args[ i ] = arguments.length > 1 ? sliceDeferred.call( arguments, 0 ) : value;
 				if ( !( --count ) ) {
-					deferred.resolveWith( deferred, args );
+					// Strange bug in FF4:
+					// Values changed onto the arguments object sometimes end up as undefined values
+					// outside the $.when method. Cloning the object into a fresh array solves the issue
+					deferred.resolveWith( deferred, sliceDeferred.call( args, 0 ) );
 				}
 			};
 		}
@@ -1171,15 +1174,15 @@ jQuery.extend({
 				script = document.createElement("script"),
 				id = "script" + jQuery.now();
 
+			// Make sure that the execution of code works by injecting a script
+			// tag with appendChild/createTextNode
+			// (IE doesn't support this, fails, and uses .text instead)
 			try {
 				script.appendChild( document.createTextNode( "window." + id + "=1;" ) );
 			} catch(e) {}
 
 			root.insertBefore( script, root.firstChild );
 
-			// Make sure that the execution of code works by injecting a script
-			// tag with appendChild/createTextNode
-			// (IE doesn't support this, fails, and uses .text instead)
 			if ( window[ id ] ) {
 				_scriptEval = true;
 				delete window[ id ];
@@ -1188,8 +1191,6 @@ jQuery.extend({
 			}
 
 			root.removeChild( script );
-			// release memory in IE
-			root = script = id  = null;
 		}
 
 		return _scriptEval;
@@ -1282,7 +1283,7 @@ jQuery.extend({
 		if ( document.defaultView && document.defaultView.getComputedStyle ) {
 			div.style.width = "1px";
 			div.style.marginRight = "0";
-			jQuery.support.reliableMarginRight = ( parseInt(document.defaultView.getComputedStyle(div).marginRight, 10) || 0 ) === 0;
+			jQuery.support.reliableMarginRight = ( parseInt(document.defaultView.getComputedStyle(div, null).marginRight, 10) || 0 ) === 0;
 		}
 
 		body.removeChild( div ).style.display = "none";
@@ -1308,8 +1309,6 @@ jQuery.extend({
 			el.setAttribute(eventName, "return;");
 			isSupported = typeof el[eventName] === "function";
 		}
-		el = null;
-
 		return isSupported;
 	};
 
@@ -5744,7 +5743,8 @@ function evalScript( i, elem ) {
 var ralpha = /alpha\([^)]*\)/i,
 	ropacity = /opacity=([^)]*)/,
 	rdashAlpha = /-([a-z])/ig,
-	rupper = /([A-Z])/g,
+	// fixed for IE9, see #8346
+	rupper = /([A-Z]|^ms)/g,
 	rnumpx = /^-?\d+(?:px)?$/i,
 	rnum = /^-?\d/,
 
@@ -5989,11 +5989,14 @@ jQuery(function() {
 			get: function( elem, computed ) {
 				// WebKit Bug 13343 - getComputedStyle returns wrong value for margin-right
 				// Work around by temporarily setting element display to inline-block
-				var ret = "0px",
-					display = elem.style.display;
-				elem.style.display = "inline-block";
-				ret = getComputedStyle( elem, "margin-right", "margin-right" );
-				elem.style.display = display;
+				var ret;
+				jQuery.swap( elem, { "display": "inline-block" }, function() {
+					if ( computed ) {
+						ret = curCSS( elem, "margin-right", "marginRight" );
+					} else {
+						ret = elem.style.marginRight;
+					}
+				});
 				return ret;
 			}
 		};
@@ -6416,7 +6419,6 @@ jQuery.extend({
 		cache: null,
 		traditional: false,
 		headers: {},
-		crossDomain: null,
 		*/
 
 		accepts: {
@@ -6701,7 +6703,7 @@ jQuery.extend({
 		s.dataTypes = jQuery.trim( s.dataType || "*" ).toLowerCase().split( rspacesAjax );
 
 		// Determine if a cross-domain request is in order
-		if ( !s.crossDomain ) {
+		if ( s.crossDomain == null ) {
 			parts = rurl.exec( s.url.toLowerCase() );
 			s.crossDomain = !!( parts &&
 				( parts[ 1 ] != ajaxLocParts[ 1 ] || parts[ 2 ] != ajaxLocParts[ 2 ] ||
@@ -8036,8 +8038,8 @@ if ( "getBoundingClientRect" in document.documentElement ) {
 			win = getWindow(doc),
 			clientTop  = docElem.clientTop  || body.clientTop  || 0,
 			clientLeft = docElem.clientLeft || body.clientLeft || 0,
-			scrollTop  = (win.pageYOffset || jQuery.support.boxModel && docElem.scrollTop  || body.scrollTop ),
-			scrollLeft = (win.pageXOffset || jQuery.support.boxModel && docElem.scrollLeft || body.scrollLeft),
+			scrollTop  = win.pageYOffset || jQuery.support.boxModel && docElem.scrollTop  || body.scrollTop,
+			scrollLeft = win.pageXOffset || jQuery.support.boxModel && docElem.scrollLeft || body.scrollLeft,
 			top  = box.top  + scrollTop  - clientTop,
 			left = box.left + scrollLeft - clientLeft;
 
@@ -8150,7 +8152,6 @@ jQuery.offset = {
 		this.doesNotIncludeMarginInBodyOffset = (body.offsetTop !== bodyMarginTop);
 
 		body.removeChild( container );
-		body = container = innerDiv = checkDiv = table = td = null;
 		jQuery.offset.initialize = jQuery.noop;
 	},
 
@@ -8180,7 +8181,7 @@ jQuery.offset = {
 			curOffset = curElem.offset(),
 			curCSSTop = jQuery.css( elem, "top" ),
 			curCSSLeft = jQuery.css( elem, "left" ),
-			calculatePosition = ((position === "absolute" || position === "fixed") && jQuery.inArray('auto', [curCSSTop, curCSSLeft]) > -1),
+			calculatePosition = (position === "absolute" || position === "fixed") && jQuery.inArray('auto', [curCSSTop, curCSSLeft]) > -1,
 			props = {}, curPosition = {}, curTop, curLeft;
 
 		// need to be able to calculate position if either top or left is auto and position is either absolute or fixed
