@@ -27,7 +27,7 @@
 <form id="${entityName}_form" action="${getUrl(action)}" method="post" class="richtable ajax view" <#if entityName!=action&&entityName!=''> entity="${entityName}"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
-<#if name!='_'&&name!='pn'&&name!='ps'&&!name?starts_with('resultPage.')&&name!='keyword'>
+<#if name!='_'&&name!='pn'&&name!='ps'&&!name?starts_with('resultPage.')&&name!='keyword'&&name!='check'>
 <input type="hidden" name="${name}" value="${Parameters[name]}" />
 </#if>
 </#list>
