@@ -18,14 +18,10 @@ import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		Watcher, ChildrenCallback {
 
-	@Autowired(required = false)
-	@Qualifier("cachedThreadPool")
 	private ExecutorService cachedThreadPool;
 
 	private ZooKeeper zooKeeper;
@@ -51,6 +47,10 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	public void setMaxRetryTimes(int maxRetryTimes) {
 		this.maxRetryTimes = maxRetryTimes;
+	}
+
+	public void setCachedThreadPool(ExecutorService cachedThreadPool) {
+		this.cachedThreadPool = cachedThreadPool;
 	}
 
 	@Override
