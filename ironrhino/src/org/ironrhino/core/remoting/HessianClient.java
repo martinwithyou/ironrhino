@@ -74,6 +74,10 @@ public class HessianClient extends HessianProxyFactoryBean {
 		}
 	}
 
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
+	}
+
 	@Override
 	public void setServiceUrl(String serviceUrl) {
 		super.setServiceUrl(serviceUrl);

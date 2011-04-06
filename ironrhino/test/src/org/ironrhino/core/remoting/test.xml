@@ -4,5 +4,5 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.ZookeeperServiceRegistry" p:connectString="localhost:2181/remoting"/>
-	<bean id="userManager" class="org.ironrhino.core.remoting.HessianClient" p:serviceInterface="org.ironrhino.security.service.UserManager" />
+	<bean id="userManager" class="org.ironrhino.core.remoting.HessianClient" p:serviceRegistry-ref="serviceRegistry" p:serviceInterface="org.ironrhino.security.service.UserManager"/>
 </beans>

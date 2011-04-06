@@ -19,7 +19,8 @@ import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 
 public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
-	private static Logger log = LoggerFactory.getLogger(HttpInvokerClient.class);
+	private static Logger log = LoggerFactory
+			.getLogger(HttpInvokerClient.class);
 
 	@Autowired(required = false)
 	private ServiceRegistry serviceRegistry;
@@ -41,9 +42,9 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	private List<String> asyncMethods;
 
 	private boolean urlFromDiscovery;
-	
+
 	private boolean poll;
-	
+
 	public void setPoll(boolean poll) {
 		this.poll = poll;
 	}
@@ -76,6 +77,10 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 		}
 	}
 
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
+	}
+
 	@Override
 	public void afterPropertiesSet() {
 		String serviceName = getServiceInterface().getName();
@@ -91,7 +96,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
-		if(poll)
+		if (poll)
 			setServiceUrl(discoverServiceUrl(getServiceInterface().getName()));
 		if (cachedThreadPool != null && asyncMethods != null) {
 			String name = invocation.getMethod().getName();
