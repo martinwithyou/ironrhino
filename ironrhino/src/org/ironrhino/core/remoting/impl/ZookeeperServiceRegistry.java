@@ -7,24 +7,20 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PreDestroy;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
+import org.apache.zookeeper.AsyncCallback.ChildrenCallback;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException.Code;
+import org.apache.zookeeper.KeeperException.NoNodeException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
-import org.apache.zookeeper.AsyncCallback.ChildrenCallback;
-import org.apache.zookeeper.KeeperException.Code;
-import org.apache.zookeeper.KeeperException.NoNodeException;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-@Singleton
-@Named("serviceRegistry")
 public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		Watcher, ChildrenCallback {
 
@@ -174,8 +170,8 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 					CreateMode.EPHEMERAL);
 			onRegister(serviceName, host);
 		} catch (NoNodeException e) {
-			String parentNode = new StringBuilder().append('/').append(
-					serviceName).toString();
+			String parentNode = new StringBuilder().append('/')
+					.append(serviceName).toString();
 			try {
 				zooKeeper.create(parentNode, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
 						CreateMode.PERSISTENT);
