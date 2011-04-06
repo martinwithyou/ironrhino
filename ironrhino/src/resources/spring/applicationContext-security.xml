@@ -9,6 +9,7 @@
 		entry-point-ref="entryPoint" access-decision-manager-ref="accessDecisionManager">
 		<security:intercept-url pattern="/assets/**" filters="none"/>
 		<security:intercept-url pattern="/common/**" access="ROLE_ADMINISTRATOR"/>
+		<security:intercept-url pattern="/remoting/**" access="ROLE_BUILTIN_ANONYMOUS"/>
 		<security:intercept-url pattern="/login" access="ROLE_BUILTIN_ANONYMOUS"/>
 		<security:intercept-url pattern="/signup*/**" access="ROLE_BUILTIN_ANONYMOUS"/>
 		<security:intercept-url pattern="/oauth*/**" access="ROLE_BUILTIN_ANONYMOUS"/>
