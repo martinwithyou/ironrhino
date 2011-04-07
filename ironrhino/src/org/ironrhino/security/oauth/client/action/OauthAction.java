@@ -97,8 +97,6 @@ public class OauthAction extends BaseAction {
 					}
 				user.setName(StringUtils.isNotBlank(p.getName()) ? p.getName()
 						: p.getDisplayName());
-				if (id.indexOf("://") > 0)
-					user.setOpenid(id);
 				userManager.save(user);
 			}
 			if (user != null)

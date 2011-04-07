@@ -28,7 +28,8 @@ public class OAuthProviderManager {
 	}
 
 	public List<OAuthProvider> getProviders() {
-		List<OAuthProvider> list = new ArrayList<OAuthProvider>(providers.size());
+		List<OAuthProvider> list = new ArrayList<OAuthProvider>(
+				providers.size());
 		for (OAuthProvider p : providers)
 			if (p.isEnabled())
 				list.add(p);
@@ -39,11 +40,8 @@ public class OAuthProviderManager {
 	public OAuthProvider lookup(String id) {
 		if (StringUtils.isBlank(id))
 			return null;
-		String name = id;
-		if (name.indexOf("://") > 0)
-			name = "openid";
 		for (OAuthProvider p : providers)
-			if (p.isEnabled() && name.equals(p.getName()))
+			if (p.isEnabled() && id.equals(p.getName()))
 				return p;
 		return null;
 	}

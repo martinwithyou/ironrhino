@@ -3,6 +3,7 @@ package org.ironrhino.core.model;
 import org.apache.commons.lang.StringUtils;
 import org.compass.annotations.Index;
 import org.compass.annotations.SearchableId;
+import org.ironrhino.core.metadata.NotInJson;
 
 public class BaseEntity extends Entity<String> {
 
@@ -19,6 +20,7 @@ public class BaseEntity extends Entity<String> {
 			this.id = id;
 	}
 
+	@NotInJson
 	public boolean isNew() {
 		return id == null || StringUtils.isBlank(id);
 	}

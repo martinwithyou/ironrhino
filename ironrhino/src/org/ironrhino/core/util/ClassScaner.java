@@ -195,7 +195,7 @@ public class ClassScaner {
 			"org.aopalliance", "org.apache", "org.aspectj", "org.codehaus",
 			"org.compass", "org.dom4j", "org.drools", "org.eclipse",
 			"org.hibernate", "org.jasig", "org.jcp", "org.jencks", "org.mvel2",
-			"org.openid4java", "org.quartz", "org.slf4j",
-			"org.springframework", "org.ironrhino.core" };
+			"org.quartz", "org.slf4j", "org.springframework",
+			"org.ironrhino.core" };
 
 }

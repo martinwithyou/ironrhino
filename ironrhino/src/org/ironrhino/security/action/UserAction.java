@@ -18,6 +18,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CurrentPassword;
+import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
@@ -275,6 +276,13 @@ public class UserAction extends BaseAction {
 	public String inputprofile() {
 		user = AuthzUtils.getUserDetails(User.class);
 		return "profile";
+	}
+
+	@JsonConfig(root = "user")
+	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_ANONYMOUS)
+	public String self() {
+		user = AuthzUtils.getUserDetails(User.class);
+		return JSON;
 	}
 
 }

@@ -47,14 +47,14 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email,args[0].openid]}")
+	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email}")
 	public void delete(User user) {
 		super.delete(user);
 	}
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email,args[0].openid]}")
+	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email}")
 	public void save(User user) {
 		super.save(user);
 	}
@@ -68,8 +68,6 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		User user;
 		if (username.indexOf('@') > 0)
 			user = findByNaturalId("email", username);
-		else if (username.indexOf("://") > 0)
-			user = findByNaturalId("openid", username);
 		else
 			user = findByNaturalId(username);
 		if (user == null)
@@ -114,8 +112,8 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 					} else {
 						candidate = candidate
 								.substring(candidate.indexOf('.') + 1);
-						candidate = candidate.substring(0, candidate
-								.indexOf('.'));
+						candidate = candidate.substring(0,
+								candidate.indexOf('.'));
 					}
 				}
 			} catch (MalformedURLException e) {

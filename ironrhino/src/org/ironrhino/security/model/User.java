@@ -40,6 +40,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	private String username;
 
 	@NotInCopy
+	@NotInJson
 	private String password;
 
 	@SearchableProperty(boost = 2)
@@ -48,19 +49,18 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	@SearchableProperty(boost = 3)
 	private String email;
 
-	@SearchableProperty(boost = 3)
-	@NotInCopy
-	private String openid;
-
 	@SearchableProperty
 	private String phone;
 
+	@NotInJson
 	private boolean enabled = true;
 
 	@NotInCopy
+	@NotInJson
 	private Date createDate = new Date();
 
 	@NotInCopy
+	@NotInJson
 	private Collection<GrantedAuthority> authorities;
 
 	@NotInCopy
@@ -73,6 +73,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	private Map<String, String> attributes;
 
 	@NotInCopy
+	@NotInJson
 	private Date modifyDate;
 
 	@NotInCopy
@@ -97,14 +98,6 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	public String getEmail() {
 		return email;
-	}
-
-	public String getOpenid() {
-		return openid;
-	}
-
-	public void setOpenid(String openid) {
-		this.openid = openid;
 	}
 
 	public Date getModifyDate() {
@@ -132,6 +125,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	}
 
 	@NotInCopy
+	@NotInJson
 	public String getRolesAsString() {
 		if (roles.size() > 0)
 			return StringUtils.join(roles.iterator(), ',');
@@ -142,14 +136,17 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 		return username;
 	}
 
+	@NotInJson
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	@NotInJson
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	@NotInJson
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
