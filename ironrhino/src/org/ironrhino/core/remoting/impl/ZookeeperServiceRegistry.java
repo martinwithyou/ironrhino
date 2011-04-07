@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PreDestroy;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.zookeeper.AsyncCallback.ChildrenCallback;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException.Code;
@@ -56,7 +57,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	@Override
 	public void prepare() {
 		try {
-			if (connectString != null)
+			if (StringUtils.isNotBlank(connectString))
 				zooKeeper = new ZooKeeper(connectString, sessionTimeout, this);
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
