@@ -14,7 +14,7 @@ import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.xwork2.inject.Inject;
 
-public class MyFreeMarkerPageFilter extends SiteMeshFilter {
+public class MyFreemarkerPageFilter extends SiteMeshFilter {
 	/*
 	 * @see com.opensymphony.module.sitemesh.Factory.SITEMESH_FACTORY
 	 */
