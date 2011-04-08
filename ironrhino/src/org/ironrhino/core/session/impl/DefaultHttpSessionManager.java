@@ -95,7 +95,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		if (sessionMap != null) {
 			session.getRequest().removeAttribute(
 					REQUEST_ATTRIBUTE_KEY_SESSION_MAP);
-			session.getAttrMap().putAll(sessionMap);
+			session.setAttrMap(sessionMap);
 			return;
 		}
 

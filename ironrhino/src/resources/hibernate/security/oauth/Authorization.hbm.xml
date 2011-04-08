@@ -12,12 +12,13 @@
 			<property name="accessToken" not-null="true" />
 		</natural-id>
 		<property name="code" unique="true" />
+		<property name="scope" />
 		<property name="expiresIn" />
 		<property name="refreshToken" unique="true" />
 		<property name="responseType" not-null="true" />
 		<property name="modifyDate" not-null="true"/>
 		<property name="createDate" not-null="true"/>
-		<many-to-one name="grantor" class="org.ironrhino.security.model.User" not-null="false" lazy="proxy" />
+		<many-to-one name="grantor" class="org.ironrhino.security.model.User" not-null="false" fetch="join" />
 		<many-to-one name="client" class="Client" not-null="true"  fetch="join" />
 	</class>
 </hibernate-mapping>

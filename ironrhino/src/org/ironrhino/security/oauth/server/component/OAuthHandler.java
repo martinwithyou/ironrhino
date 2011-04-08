@@ -15,6 +15,7 @@ import org.ironrhino.core.servlet.AccessHandler;
 import org.ironrhino.core.session.impl.DefaultHttpSessionManager;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.service.OAuthManager;
+import org.ironrhino.security.service.UserManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,11 +30,14 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 @Order(Integer.MIN_VALUE + 1)
 public class OAuthHandler implements AccessHandler {
 
-	@Value("${api.pattern:/api/*}")
+	@Value("${api.pattern:/user/self}")
 	private String apiPattern;
 
 	@Inject
 	private OAuthManager oauthManager;
+
+	@Inject
+	private UserManager userManager;
 
 	@Override
 	public String getPattern() {
@@ -68,8 +72,10 @@ public class OAuthHandler implements AccessHandler {
 		}
 		if (StringUtils.isNotBlank(token)) {
 			Authorization authorization = oauthManager.retrieve(token);
-			if (authorization != null) {
-				String[] scopes = authorization.getScope().split("\\s");
+			if (authorization != null && authorization.getGrantor() != null) {
+				String[] scopes = null;
+				if (StringUtils.isNotBlank(authorization.getScope()))
+					scopes = authorization.getScope().split("\\s");
 				boolean authorized = (scopes == null);
 				if (!authorized && scopes != null) {
 					for (String s : scopes) {
@@ -81,7 +87,9 @@ public class OAuthHandler implements AccessHandler {
 					}
 				}
 				if (authorized) {
-					UserDetails ud = authorization.getGrantor();
+					UserDetails ud = userManager
+							.loadUserByUsername(authorization.getGrantor()
+									.getUsername());
 					SecurityContext sc = SecurityContextHolder.getContext();
 					Authentication auth = new UsernamePasswordAuthenticationToken(
 							ud, ud.getPassword(), ud.getAuthorities());
