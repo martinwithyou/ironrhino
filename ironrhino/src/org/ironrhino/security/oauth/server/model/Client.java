@@ -8,6 +8,7 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 
@@ -22,7 +23,7 @@ public class Client extends BaseEntity {
 	private String name;
 
 	@UiConfig(displayOrder = 2, size = 50)
-	private String secret;
+	private String secret = CodecUtils.nextId();
 
 	@UiConfig(displayOrder = 3, size = 50)
 	private String redirectUri;
