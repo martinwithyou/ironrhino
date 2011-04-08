@@ -104,6 +104,10 @@ public class OauthAction extends BaseAction {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		// OAuth2.0
+		String state = request.getParameter("state");
+		if (StringUtils.isNotBlank(state))
+			targetUrl = state;
 		return REDIRECT;
 	}
 

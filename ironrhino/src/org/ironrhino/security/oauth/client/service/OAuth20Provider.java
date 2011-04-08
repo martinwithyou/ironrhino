@@ -33,10 +33,6 @@ public abstract class OAuth20Provider extends AbstractOAuthProvider {
 		return null;
 	}
 
-	public String getState() {
-		return null;
-	}
-
 	public String getClientId() {
 		return settingControl
 				.getStringValue("oauth." + getName() + ".clientId");
@@ -76,6 +72,11 @@ public abstract class OAuth20Provider extends AbstractOAuthProvider {
 				return targetUrl;
 			}
 		}
+		String state = null;
+		if (targetUrl.indexOf('?') > 0) {
+			state = targetUrl.substring(targetUrl.lastIndexOf('=') + 1);
+			targetUrl = targetUrl.substring(0, targetUrl.indexOf('?'));
+		}
 		StringBuilder sb = new StringBuilder(getAuthorizeUrl()).append('?')
 				.append("client_id").append('=').append(getClientId())
 				.append('&').append("redirect_uri").append('=')
@@ -89,7 +90,7 @@ public abstract class OAuth20Provider extends AbstractOAuthProvider {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-		String state = getState();
+
 		if (StringUtils.isNotBlank(state))
 			sb.append('&').append("state").append('=').append(state);
 		return sb.toString();

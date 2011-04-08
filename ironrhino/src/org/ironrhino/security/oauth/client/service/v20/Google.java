@@ -80,26 +80,30 @@ public class Google extends OAuth20Provider {
 		// p.setLocation(data.get("location").getTextValue());
 		p.setImage(entry.get("thumbnailUrl").getTextValue());
 
-		content = invoke(token,
-				"https://www.google.com/m8/feeds/contacts/default/full");
-		Document doc = XmlUtils.getDocumentBuilder().parse(
-				new InputSource(new StringReader(content)));
-		String name = XmlUtils.eval("/feed/author/name", doc);
-		p.setName(name);
-		String email = XmlUtils.eval("/feed/author/email", doc);
-		p.setEmail(email);
-		NodeList nodelist = XmlUtils.evalNodeList("/feed/entry", doc);
-		if (nodelist != null) {
-			p.setContacts(new ArrayList<Contact>(nodelist.getLength()));
-			for (int i = 0; i < nodelist.getLength(); i++) {
-				Contact c = new Contact();
-				p.getContacts().add(c);
-				Element ele = (Element) nodelist.item(i);
-				c.setName(((Element) ele.getElementsByTagName("title").item(0))
-						.getTextContent());
-				c.setEmail(((Element) ele.getElementsByTagName("gd:email")
-						.item(0)).getAttribute("address"));
+		try {
+			content = invoke(token,
+					"https://www.google.com/m8/feeds/contacts/default/full");
+			Document doc = XmlUtils.getDocumentBuilder().parse(
+					new InputSource(new StringReader(content)));
+			String name = XmlUtils.eval("/feed/author/name", doc);
+			p.setName(name);
+			String email = XmlUtils.eval("/feed/author/email", doc);
+			p.setEmail(email);
+			NodeList nodelist = XmlUtils.evalNodeList("/feed/entry", doc);
+			if (nodelist != null) {
+				p.setContacts(new ArrayList<Contact>(nodelist.getLength()));
+				for (int i = 0; i < nodelist.getLength(); i++) {
+					Contact c = new Contact();
+					p.getContacts().add(c);
+					Element ele = (Element) nodelist.item(i);
+					c.setName(((Element) ele.getElementsByTagName("title")
+							.item(0)).getTextContent());
+					c.setEmail(((Element) ele.getElementsByTagName("gd:email")
+							.item(0)).getAttribute("address"));
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return p;
 	}
