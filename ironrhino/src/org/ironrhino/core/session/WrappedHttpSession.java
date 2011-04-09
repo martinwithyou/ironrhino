@@ -75,8 +75,8 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 				httpSessionManager.getSessionTrackerName());
 		if (StringUtils.isBlank(sessionTracker)
 				&& httpSessionManager.supportSessionTrackerFromURL()) {
-			sessionTracker = request.getHeader(httpSessionManager
-					.getSessionTrackerName());
+			sessionTracker = (String) request
+					.getAttribute(HttpSessionManager.REQUEST_ATTRIBUTE_SESSION_TRACKER_IN_URL);
 			if (StringUtils.isBlank(sessionTracker))
 				sessionTracker = request.getParameter(httpSessionManager
 						.getSessionTrackerName());

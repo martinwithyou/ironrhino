@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.servlet.AccessHandler;
-import org.ironrhino.core.session.impl.DefaultHttpSessionManager;
+import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.service.OAuthManager;
 import org.ironrhino.security.service.UserManager;
@@ -99,7 +99,7 @@ public class OAuthHandler implements AccessHandler {
 							.put(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
 									sc);
 					request.setAttribute(
-							DefaultHttpSessionManager.REQUEST_ATTRIBUTE_KEY_SESSION_MAP,
+							HttpSessionManager.REQUEST_ATTRIBUTE_KEY_SESSION_MAP,
 							sessionMap);
 					return false;
 				} else {

@@ -26,12 +26,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public static final String REQUEST_ATTRIBUTE_KEY_SESSION_MAP = "_session_map_in_request_";
-
-	public static final String DEFAULT_SESSION_TRACKER_NAME = "T";
-
-	public static final String DEFAULT_COOKIE_NAME_LOCALE = "locale";
-
 	private static final String SALT = "awpeqaidasdfaioiaoduifayzuxyaaokadoaifaodiaoi";
 
 	private static final String SESSION_TRACKER_SEPERATOR = "-";
@@ -89,7 +83,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	public void initialize(WrappedHttpSession session) {
 
-		//simulated session
+		// simulated session
 		Map<String, Object> sessionMap = (Map<String, Object>) session
 				.getRequest().getAttribute(REQUEST_ATTRIBUTE_KEY_SESSION_MAP);
 		if (sessionMap != null) {
