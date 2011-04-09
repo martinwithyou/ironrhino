@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
@@ -19,7 +20,7 @@ import org.springframework.security.web.util.RedirectUrlBuilder;
 public class DefaultLoginUrlAuthenticationEntryPoint extends
 		LoginUrlAuthenticationEntryPoint {
 
-	@Value("${sso.server.base:}")
+	@Value("${ssoServerBase:}")
 	private String ssoServerBase;
 
 	public void setSsoServerBase(String ssoServerBase) {
@@ -49,6 +50,12 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 		}
 		StringBuilder loginUrl = new StringBuilder();
 		if (StringUtils.isBlank(ssoServerBase)) {
+			String baseUrl = RequestUtils.getBaseUrl(request);
+			if(StringUtils.isNotBlank(targetUrl)&& targetUrl.startsWith(baseUrl)){
+				targetUrl = targetUrl.substring(baseUrl.length());
+				if(targetUrl.equals("/"))
+					targetUrl = "";
+			}
 			URL url = null;
 			try {
 				url = new URL(request.getRequestURL().toString());

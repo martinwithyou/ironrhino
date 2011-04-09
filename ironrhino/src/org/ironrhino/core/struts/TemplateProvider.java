@@ -41,7 +41,7 @@ public class TemplateProvider {
 	@Value("${assetsBase:}")
 	private String assetsBase;
 
-	@Value("${sso.server.base:}")
+	@Value("${ssoServerBase:}")
 	private String ssoServerBase;
 
 	private Configuration configuration;
