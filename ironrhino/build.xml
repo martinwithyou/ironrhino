@@ -97,11 +97,11 @@
 		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,com/opensymphony/**,org/apache/**,org/codehaus/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**" excludes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/remoting/**" />
 		<jar jarfile="${target.dir}/${core-ext-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/remoting/**" />
 		<jar jarfile="${target.dir}/${common-hbm-jar.name}" basedir="${classes.dir}" includes="resources/hibernate/common/**" />
-		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**,org/ironrhino/security/oauth/**,org/ironrhino/security/oauth/**" />
+		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**,org/ironrhino/security/oauth/**,resources/hibernate/security/oauth/**" />
 		<jar jarfile="${target.dir}/${security-config-jar.name}" basedir="${classes.dir}" includes="resources/spring/applicationContext-security.xml" />
 		<jar jarfile="${target.dir}/${security-loginrecord-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
 		<jar jarfile="${target.dir}/${security-oauth-client-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/oauth/client/**,resources/view/oauth.ftl" />
-		<jar jarfile="${target.dir}/${security-oauth-server-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/oauth/server/**,resources/view/oauth2*" />
+		<jar jarfile="${target.dir}/${security-oauth-server-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/oauth/server/**,resources/hibernate/security/oauth/**,resources/view/oauth2*" />
 	</target>
 
 
