@@ -25,9 +25,10 @@ public class RequestUtils {
 				if (entry.getKey().toLowerCase().contains("password"))
 					continue;
 				for (String value : entry.getValue()) {
-					sb.append(entry.getKey()).append('=').append(
-							value.length() > 256 ? value.substring(0, 256)
-									: value).append('&');
+					sb.append(entry.getKey())
+							.append('=')
+							.append(value.length() > 256 ? value.substring(0,
+									256) : value).append('&');
 				}
 			}
 			return sb.toString();
@@ -60,21 +61,34 @@ public class RequestUtils {
 		return StringUtils.isNotBlank(addr) ? addr : request.getRemoteAddr();
 	}
 
+	public static String trimPathParameter(String url) {
+		if (url == null)
+			return null;
+		int i = url.indexOf(';');
+		return i > -1 ? url.substring(0, i) : url;
+	}
+	
 	public static String getBaseUrl(HttpServletRequest request) {
-		StringBuffer sb = request.getRequestURL();
-		sb.delete(sb.length() - request.getServletPath().length(), sb.length());
-		return sb.toString();
+		String url = trimPathParameter(request.getRequestURL().toString());
+		return url.substring(0,url.length()-request.getServletPath().length());
 	}
 
 	public static String getBaseUrl(HttpServletRequest request, boolean secured) {
-		String host = request.getServerName();
-		String schema = request.getScheme();
-		if ((schema.equalsIgnoreCase("https") && secured)
-				|| (schema.equalsIgnoreCase("http") && !secured)) {
-			String url = request.getRequestURL().toString();
-			return url.substring(0, url.indexOf(request.getServletPath()));
+		URL url = null;
+		try {
+			url = new URL(request.getRequestURL().toString());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
 		}
-		int port = request.getServerPort();
+		String host = url.getHost();
+		String protocol = url.getProtocol();
+		if ((protocol.equalsIgnoreCase("https") && secured)
+				|| (protocol.equalsIgnoreCase("http") && !secured)) {
+			return getBaseUrl(request);
+		}
+		int port = url.getPort();
+		if (port <= 0)
+			port = url.getDefaultPort();
 		String contextPath = request.getContextPath();
 		StringBuilder sb = new StringBuilder();
 		sb.append(secured ? "https://" : "http://");
@@ -98,7 +112,7 @@ public class RequestUtils {
 			uri = request.getRequestURI();
 			uri = uri.substring(request.getContextPath().length());
 		}
-		return uri;
+		return trimPathParameter(uri);
 	}
 
 	public static String getCookieValue(HttpServletRequest request,

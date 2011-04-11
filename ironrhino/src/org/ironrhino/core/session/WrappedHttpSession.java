@@ -237,10 +237,6 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		this.sessionTracker = sessionTracker;
 	}
 
-	public void resetSessionTracker() {
-		this.sessionTracker = httpSessionManager.getSessionTracker(this);
-	}
-
 	public void setId(String id) {
 		this.id = id;
 	}

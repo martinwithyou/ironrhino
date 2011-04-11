@@ -153,10 +153,9 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			session.setLastAccessedTime(session.getNow());
 			sessionTrackerChanged = true;
 		}
-		// if (!session.isRequestedSessionIdFromURL() && sessionTrackerChanged)
-		// {
-		if (sessionTrackerChanged) {
-			session.resetSessionTracker();
+		if (!session.isRequestedSessionIdFromURL() && sessionTrackerChanged) {
+			// if (sessionTrackerChanged) {
+			session.setSessionTracker(this.getSessionTracker(session));
 			RequestUtils.saveCookie(session.getRequest(),
 					session.getResponse(), getSessionTrackerName(),
 					session.getSessionTracker(), true);
@@ -175,7 +174,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.setId(CodecUtils.nextId(SALT));
 		session.setCreationTime(session.getNow());
 		session.setLastAccessedTime(session.getNow());
-		session.resetSessionTracker();
+		session.setSessionTracker(this.getSessionTracker(session));
 	}
 
 	public String getSessionTracker(WrappedHttpSession session) {

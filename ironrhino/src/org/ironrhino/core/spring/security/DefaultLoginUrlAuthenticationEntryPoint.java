@@ -51,6 +51,7 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 		StringBuilder loginUrl = new StringBuilder();
 		if (StringUtils.isBlank(ssoServerBase)) {
 			String baseUrl = RequestUtils.getBaseUrl(request);
+			targetUrl = RequestUtils.trimPathParameter(targetUrl);
 			if(StringUtils.isNotBlank(targetUrl)&& targetUrl.startsWith(baseUrl)){
 				targetUrl = targetUrl.substring(baseUrl.length());
 				if(targetUrl.equals("/"))

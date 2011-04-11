@@ -48,8 +48,6 @@ public class CacheBasedHttpSessionStore implements HttpSessionStore {
 
 	public void invalidate(WrappedHttpSession session) {
 		cacheManager.delete(session.getId(), CACHE_NAMESPACE);
-		session.setId(null);
-		session.setSessionTracker(null);
 	}
 
 }
