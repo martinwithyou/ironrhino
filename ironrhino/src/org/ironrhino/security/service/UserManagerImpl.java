@@ -47,14 +47,14 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email}")
+	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email]}")
 	public void delete(User user) {
 		super.delete(user);
 	}
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email}")
+	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email]}")
 	public void save(User user) {
 		super.save(user);
 	}
