@@ -31,8 +31,8 @@ public class MailService {
 	private MailSender mailSender;
 
 	@Inject
-	@Named("cachedThreadPool")
-	private ExecutorService cachedThreadPool;
+	@Named("executorService")
+	private ExecutorService executorService;
 
 	private boolean forceLocalAsync;
 
@@ -59,7 +59,7 @@ public class MailService {
 	public void send(final SimpleMailMessage smm, final boolean useHtmlFormat) {
 		if (jmsTemplate == null || forceLocalAsync) {
 			// localAsync
-			cachedThreadPool.execute(new Runnable() {
+			executorService.execute(new Runnable() {
 				@Override
 				public void run() {
 					mailSender.send(smm, useHtmlFormat);

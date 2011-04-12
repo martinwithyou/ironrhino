@@ -111,7 +111,7 @@ public class WebSocketServer {
 			}
 		}
 		if (executorService == null)
-			executorService = Executors.newCachedThreadPool();
+			executorService = Executors.newFixedThreadPool(2);
 		try {
 			if (serverSocket == null) {
 				serverSocket = new ServerSocket(port);
@@ -136,7 +136,7 @@ public class WebSocketServer {
 								}
 							final WebSocketHandler handler = temp;
 							if (handler != null)
-								executorService.submit(new Runnable() {
+								executorService.execute(new Runnable() {
 									public void run() {
 										handler.setWebSocket(ws);
 										try {

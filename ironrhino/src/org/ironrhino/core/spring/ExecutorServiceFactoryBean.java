@@ -11,24 +11,24 @@ import javax.inject.Singleton;
 import org.springframework.beans.factory.FactoryBean;
 
 @Singleton
-@Named("cachedThreadPool")
-public class CachedThreadPoolFactoryBean implements
+@Named("executorService")
+public class ExecutorServiceFactoryBean implements
 		FactoryBean<ExecutorService> {
 
-	private ExecutorService cachedThreadPool;
+	private ExecutorService executorService;
 
 	@PostConstruct
 	public void init() {
-		cachedThreadPool = Executors.newCachedThreadPool();
+		executorService = Executors.newCachedThreadPool();
 	}
 
 	@PreDestroy
 	public void destroy() {
-		cachedThreadPool.shutdown();
+		executorService.shutdown();
 	}
 
 	public ExecutorService getObject() throws Exception {
-		return cachedThreadPool;
+		return executorService;
 	}
 
 	public Class<? extends ExecutorService> getObjectType() {

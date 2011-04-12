@@ -15,7 +15,7 @@ public class ApplicationEventMulticaster extends
 		SimpleApplicationEventMulticaster {
 
 	@Autowired(required = false)
-	@Named("cachedThreadPool")
+	@Named("executorService")
 	private ExecutorService taskExecutor;
 
 	@PostConstruct

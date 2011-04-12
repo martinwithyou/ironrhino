@@ -23,7 +23,7 @@ import org.ironrhino.core.util.JsonUtils;
 public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		Watcher, ChildrenCallback {
 
-	private ExecutorService cachedThreadPool;
+	private ExecutorService executorService;
 
 	private ZooKeeper zooKeeper;
 
@@ -50,8 +50,8 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		this.maxRetryTimes = maxRetryTimes;
 	}
 
-	public void setCachedThreadPool(ExecutorService cachedThreadPool) {
-		this.cachedThreadPool = cachedThreadPool;
+	public void setExecutorService(ExecutorService executorService) {
+		this.executorService = executorService;
 	}
 
 	@Override
@@ -113,8 +113,8 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 			}
 		};
-		if (cachedThreadPool != null) {
-			cachedThreadPool.submit(runnable);
+		if (executorService != null) {
+			executorService.execute(runnable);
 		} else {
 			new Thread(runnable).start();
 		}

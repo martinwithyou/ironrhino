@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 
@@ -25,6 +26,7 @@ public class FileChangeMonitor {
 	private int period = 5000;
 
 	@Autowired(required = false)
+	@Qualifier("executorService")
 	private ExecutorService executorService;
 
 	@Autowired
@@ -56,7 +58,7 @@ public class FileChangeMonitor {
 					FileChangeListener.class).values())
 				addListener(listener);
 		if (executorService == null) {
-			executorService = Executors.newCachedThreadPool();
+			executorService = Executors.newFixedThreadPool(2);
 			executorServiceNeedClose = true;
 		}
 		timer = new Timer(true);

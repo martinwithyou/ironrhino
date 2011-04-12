@@ -27,8 +27,8 @@ public class HessianClient extends HessianProxyFactoryBean {
 	private ServiceRegistry serviceRegistry;
 
 	@Autowired(required = false)
-	@Qualifier("cachedThreadPool")
-	private ExecutorService cachedThreadPool;
+	@Qualifier("executorService")
+	private ExecutorService executorService;
 
 	private String host;
 
@@ -109,10 +109,10 @@ public class HessianClient extends HessianProxyFactoryBean {
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
-		if (cachedThreadPool != null && asyncMethods != null) {
+		if (executorService != null && asyncMethods != null) {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
-				cachedThreadPool.execute(new Runnable() {
+				executorService.execute(new Runnable() {
 
 					public void run() {
 						try {
