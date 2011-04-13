@@ -2,8 +2,8 @@ package org.ironrhino.core.chart;
 
 
 public class ChartUtils {
-	public static int caculateSteps(double max) {
-		double d = max / 10;
+	public static int caculateSteps(Number max) {
+		double d = max.doubleValue() / 10;
 		if (d < 1)
 			return 1;
 		int i = (int) d;
@@ -42,11 +42,11 @@ public class ChartUtils {
 	private static final String[] stepColors = new String[] { "#ffeeee",
 			"#ffaaaa", "#ff8888", "#ff55555", "#ff0000" };
 
-	public static String caculateStepColor(double max, double value) {
+	public static String caculateStepColor(Number max, Number value) {
 		int steps = stepColors.length;
-		double single = max / steps;
+		double single = max.doubleValue() / steps;
 		for (int i = 0; i < steps; i++) {
-			if (value >= single * i && value < single * (i + 1))
+			if (value.doubleValue() >= single * i && value.doubleValue() < single * (i + 1))
 				return stepColors[i];
 		}
 		return stepColors[stepColors.length - 1];

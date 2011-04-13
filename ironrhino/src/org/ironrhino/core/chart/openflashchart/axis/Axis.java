@@ -11,11 +11,11 @@ public abstract class Axis implements Serializable {
 	private String colour;
 	@JsonProperty("grid-colour")
 	private String gridColour;
-	private Double steps;
+	private Integer steps;
 	private Integer offset;
 	private Integer _3d;
-	private Double min;
-	private Double max;
+	private Number min;
+	private Number max;
 
 	public Integer getStroke() {
 		return stroke;
@@ -47,17 +47,13 @@ public abstract class Axis implements Serializable {
 
 	}
 
-	public Double getSteps() {
+	public Integer getSteps() {
 		return steps;
 	}
 
-	public void setSteps(Double steps) {
-		this.steps = steps;
-
-	}
 
 	public void setSteps(Integer steps) {
-		this.steps = steps.doubleValue();
+		this.steps = steps;
 
 	}
 
@@ -82,38 +78,30 @@ public abstract class Axis implements Serializable {
 
 	}
 
-	public Double getMin() {
+	public Number getMin() {
 		return min;
 	}
 
-	public void setMin(Double min) {
+	public void setMin(Number min) {
 		this.min = min;
 
 	}
 
-	public void setMin(Integer min) {
-		this.min = min.doubleValue();
 
-	}
-
-	public Double getMax() {
+	public Number getMax() {
 		return max;
 	}
 
-	public void setMax(Double max) {
+	public void setMax(Number max) {
 		this.max = max;
 
 	}
 
-	public void setMax(Integer max) {
-		this.max = max.doubleValue();
 
-	}
-
-	public void setRange(Number min, Number max, Number step) {
-		setMin(min.doubleValue());
-		setMax(max.doubleValue());
-		setSteps(step.doubleValue());
+	public void setRange(Number min, Number max, Integer step) {
+		setMin(min);
+		setMax(max);
+		setSteps(step);
 
 	}
 

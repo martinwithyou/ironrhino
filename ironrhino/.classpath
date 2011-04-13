@@ -92,5 +92,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-1.7.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.7.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zookeeper-3.3.3.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-pool-1.5.6.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
