@@ -1,6 +1,5 @@
 package org.ironrhino.core.remoting.impl;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,25 +11,29 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.zookeeper.AsyncCallback.ChildrenCallback;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException.Code;
-import org.apache.zookeeper.KeeperException.NoNodeException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.data.Stat;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;
 
 public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 		Watcher, ChildrenCallback {
 
+	public static final String DEFAULT_ZOOKEEPER_PATH = "/remoting";
+
 	private ExecutorService executorService;
 
 	private ZooKeeper zooKeeper;
 
-	// private String connectString = "localhost:2181/remoting";
-	private String connectString;
+	// private String zookeeperConnectString = "localhost:2181";
+	private String zookeeperConnectString;
 
-	private int sessionTimeout = 3000;
+	private String zookeeperPath = DEFAULT_ZOOKEEPER_PATH;
+
+	private int zookeeperSessionTimeout = 10000;
 
 	private int maxRetryTimes = 5;
 
@@ -38,12 +41,16 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 
 	private boolean ready;
 
-	public void setConnectString(String connectString) {
-		this.connectString = connectString;
+	public void setZookeeperConnectString(String zookeeperConnectString) {
+		this.zookeeperConnectString = zookeeperConnectString;
 	}
 
-	public void setSessionTimeout(int sessionTimeout) {
-		this.sessionTimeout = sessionTimeout;
+	public void setZookeeperPath(String zookeeperPath) {
+		this.zookeeperPath = zookeeperPath;
+	}
+
+	public void setZookeeperSessionTimeout(int zookeeperSessionTimeout) {
+		this.zookeeperSessionTimeout = zookeeperSessionTimeout;
 	}
 
 	public void setMaxRetryTimes(int maxRetryTimes) {
@@ -57,9 +64,15 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 	@Override
 	public void prepare() {
 		try {
-			if (StringUtils.isNotBlank(connectString))
-				zooKeeper = new ZooKeeper(connectString, sessionTimeout, this);
-		} catch (IOException e) {
+			if (StringUtils.isNotBlank(zookeeperConnectString)) {
+				zooKeeper = new ZooKeeper(zookeeperConnectString,
+						zookeeperSessionTimeout, this);
+				Stat stat = zooKeeper.exists(zookeeperPath, false);
+				if (stat == null)
+					zooKeeper.create(zookeeperPath, null,
+							ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+			}
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
 
@@ -107,10 +120,8 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 		final String host = AppInfo.getHostAddress();
 		final String services = JsonUtils.toJson(discoveredServices);
 		Runnable runnable = new Runnable() {
-
 			public void run() {
-				doWriteDiscoveredServices(host, services, 3);
-
+				doWriteDiscoveredServices(host, services, maxRetryTimes);
 			}
 		};
 		if (executorService != null) {
@@ -123,7 +134,8 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 	private void doLookup(String serviceName, int retryTimes) {
 		retryTimes--;
 		try {
-			List<String> children = zooKeeper.getChildren("/" + serviceName,
+			List<String> children = zooKeeper.getChildren(new StringBuilder(
+					zookeeperPath).append("/").append(serviceName).toString(),
 					true);
 			if (children != null && children.size() > 0)
 				importServices.put(serviceName, children);
@@ -138,10 +150,10 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 	private void doWriteDiscoveredServices(String host, String services,
 			int retryTimes) {
 		retryTimes--;
-		String node = new StringBuilder().append('/').append(host).toString();
+		String node = new StringBuilder().append(zookeeperPath).append("/")
+				.append(host).toString();
 		byte[] data = services.getBytes();
 		try {
-
 			zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
 					CreateMode.EPHEMERAL);
 		} catch (Exception e1) {
@@ -163,30 +175,18 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 			log.error("error register " + serviceName + "@" + host);
 			return;
 		}
-		String node = new StringBuilder().append('/').append(serviceName)
-				.append('/').append(host).toString();
-		byte[] data = "".getBytes();
+		String node = new StringBuilder().append(zookeeperPath).append("/")
+				.append(serviceName).toString();
 		try {
-			zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
+			Stat stat = zooKeeper.exists(node, false);
+			if (stat == null)
+				zooKeeper.create(node, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
+						CreateMode.PERSISTENT);
+			node = new StringBuilder(node).append('/').append(host).toString();
+			zooKeeper.create(node, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
 					CreateMode.EPHEMERAL);
 			onRegister(serviceName, host);
-		} catch (NoNodeException e) {
-			String parentNode = new StringBuilder().append('/')
-					.append(serviceName).toString();
-			try {
-				zooKeeper.create(parentNode, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
-						CreateMode.PERSISTENT);
-			} catch (Exception e1) {
-				log.info(e1.getMessage(), e1);
-				try {
-					Thread.sleep(2000);
-					zooKeeper.create(parentNode, data,
-							ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-				} catch (Exception ie) {
-				}
-			}
-			doRegister(serviceName, host, retryTimes + 1);
-		} catch (Exception e1) {
+		} catch (Exception e) {
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException ie) {
@@ -206,7 +206,7 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 		} else if (event.getType() == Event.EventType.NodeChildrenChanged) {
 			String path = event.getPath();
 			if (path != null) {
-				String serviceName = path.substring(1);
+				String serviceName = path.substring(zookeeperPath.length() + 1);
 				if (importServices.containsKey(serviceName)) {
 					zooKeeper.getChildren(path, true, this, null);
 				}
@@ -230,7 +230,7 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 			zooKeeper.getChildren(path, true, this, null);
 			return;
 		}
-		String serviceName = path.substring(1);
+		String serviceName = path.substring(zookeeperPath.length() + 1);
 		importServices.put(serviceName, children);
 	}
 
