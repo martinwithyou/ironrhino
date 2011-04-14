@@ -44,7 +44,7 @@ public interface UserManager extends BaseManager<User>, UserDetailsService {
     	然后在服务器端和客户端都在spring里面配置使用zookeeper管理远程服务,客户端可以省略host属性因为会自动查找host,port默认是8080
 		<programlisting>
 		<![CDATA[
-			<bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.ZookeeperServiceRegistry" p:connectString="localhost:2181/remoting"/>
+			<bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.DefaultServiceRegistry" p:connectString="localhost:2181/remoting"/>
 		]]>
 		</programlisting>    	
 	</para>

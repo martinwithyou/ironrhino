@@ -20,7 +20,7 @@ import org.apache.zookeeper.ZooKeeper;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;
 
-public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
+public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 		Watcher, ChildrenCallback {
 
 	private ExecutorService executorService;
