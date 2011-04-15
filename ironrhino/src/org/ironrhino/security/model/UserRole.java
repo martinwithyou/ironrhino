@@ -22,11 +22,17 @@ public interface UserRole {
 				Set<Class> set = ClassScaner.scanAssignable(
 						ClassScaner.getAppPackages(), UserRole.class);
 				for (Class c : set) {
-					Field[] fields = c.getDeclaredFields();
-					for (Field f : fields) {
-						if (f.getName().startsWith("ROLE_BUILTIN_"))
-							continue;
-						roles.add(f.getName());
+					if (Enum.class.isAssignableFrom(c)) {
+						for (Object en : c.getEnumConstants()) {
+							roles.add(en.toString());
+						}
+					} else {
+						Field[] fields = c.getDeclaredFields();
+						for (Field f : fields) {
+							if (f.getName().startsWith("ROLE_BUILTIN_"))
+								continue;
+							roles.add(f.getName());
+						}
 					}
 				}
 			}
