@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
@@ -13,6 +16,8 @@ import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.zookeeper.WatchedEventListener;
 
+@Singleton
+@Named("serviceRegistry")
 public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 		WatchedEventListener {
 
@@ -30,16 +35,16 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 
 	private boolean ready;
 
-	public void setZooKeeper(ZooKeeper zooKeeper) {
-		this.zooKeeper = zooKeeper;
-	}
-
 	public void setZooKeeperPath(String zooKeeperPath) {
 		this.zooKeeperPath = zooKeeperPath;
 	}
 
 	public void setMaxRetryTimes(int maxRetryTimes) {
 		this.maxRetryTimes = maxRetryTimes;
+	}
+
+	public void setZooKeeper(ZooKeeper zooKeeper) {
+		this.zooKeeper = zooKeeper;
 	}
 
 	public void setExecutorService(ExecutorService executorService) {
