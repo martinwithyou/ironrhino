@@ -8,8 +8,16 @@ public class Main {
 	
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("classpath*:org/ironrhino/core/remoting/test.xml");
-		UserManager um = ctx.getBean(UserManager.class);
-		System.out.println(um.suggestUsername("test@google.com"));
+		UserManager userManagerHessian = (UserManager)ctx.getBean("userManagerHessian");
+		System.out.println(userManagerHessian.suggestUsername("test@google.com"));
+		System.out.println(userManagerHessian.suggestUsername("test@google.com"));
+		System.out.println(userManagerHessian.suggestUsername("test@google.com"));
+		System.out.println(userManagerHessian.suggestUsername("test@google.com"));
+		UserManager userManagerHttpInvoker = (UserManager)ctx.getBean("userManagerHttpInvoker");
+		System.out.println(userManagerHttpInvoker.suggestUsername("test@google.com"));
+		System.out.println(userManagerHttpInvoker.suggestUsername("test@google.com"));
+		System.out.println(userManagerHttpInvoker.suggestUsername("test@google.com"));
+		System.out.println(userManagerHttpInvoker.suggestUsername("test@google.com"));
 		ctx.close();
 	}
 

@@ -8,13 +8,13 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ironrhino.core.metadata.Remoting;
 import org.ironrhino.core.remoting.HessianClient;
 import org.ironrhino.core.remoting.HttpInvokerClient;
 import org.ironrhino.core.remoting.ServiceRegistry;
 import org.ironrhino.core.util.AnnotationUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -44,8 +44,8 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 			converted = true;
 			Map<String, Object> map = new HashMap<String, Object>();
 			for (Map.Entry<String, Object> entry : exportServices.entrySet())
-				map.put(entry.getKey(), beanFactory.getBean((String) entry
-						.getValue()));
+				map.put(entry.getKey(),
+						beanFactory.getBean((String) entry.getValue()));
 			exportServices = map;
 		}
 		return exportServices;
@@ -114,7 +114,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 	}
 
 	protected void onDiscover(String serviceName, String host) {
-		log.info("discovered " + serviceName + "@" + host);
+
 	}
 
 	protected void onRegister(String serviceName, String host) {

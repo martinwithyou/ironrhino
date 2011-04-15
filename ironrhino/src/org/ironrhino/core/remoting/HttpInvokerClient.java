@@ -8,12 +8,10 @@ import java.util.concurrent.ExecutorService;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.remoting.RemoteAccessException;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 
@@ -22,11 +20,8 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	private static Logger log = LoggerFactory
 			.getLogger(HttpInvokerClient.class);
 
-	@Autowired(required = false)
 	private ServiceRegistry serviceRegistry;
 
-	@Autowired(required = false)
-	@Qualifier("executorService")
 	private ExecutorService executorService;
 
 	private String host;
@@ -42,6 +37,8 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	private List<String> asyncMethods;
 
 	private boolean urlFromDiscovery;
+
+	private boolean discovered; // for lazy discover from serviceRegistry
 
 	private boolean poll;
 
@@ -81,14 +78,16 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 		this.serviceRegistry = serviceRegistry;
 	}
 
+	public void setExecutorService(ExecutorService executorService) {
+		this.executorService = executorService;
+	}
+
 	@Override
 	public void afterPropertiesSet() {
-		String serviceName = getServiceInterface().getName();
 		String serviceUrl = getServiceUrl();
 		if (serviceUrl == null) {
-			serviceUrl = discoverServiceUrl(serviceName);
-			log.info("locate service url:" + serviceUrl);
-			setServiceUrl(serviceUrl);
+			setServiceUrl("http://fakeurl/");
+			discovered = false;
 			urlFromDiscovery = true;
 		}
 		super.afterPropertiesSet();
@@ -96,7 +95,10 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
-		if (poll)
+		if (!discovered) {
+			setServiceUrl(discoverServiceUrl(getServiceInterface().getName()));
+			discovered = true;
+		} else if (poll)
 			setServiceUrl(discoverServiceUrl(getServiceInterface().getName()));
 		if (executorService != null && asyncMethods != null) {
 			String name = invocation.getMethod().getName();
@@ -145,6 +147,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 				String ho = serviceRegistry.discover(serviceName);
 				if (ho != null) {
 					sb.append(ho);
+					log.info("discovered " + serviceName + "@" + ho);
 				} else {
 					sb.append("localhost");
 					log.error("couldn't discover service:" + serviceName);

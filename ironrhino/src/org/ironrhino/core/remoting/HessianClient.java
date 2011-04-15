@@ -9,13 +9,11 @@ import java.util.concurrent.ExecutorService;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.remoting.RemoteAccessException;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 
@@ -23,11 +21,8 @@ public class HessianClient extends HessianProxyFactoryBean {
 
 	private static Logger log = LoggerFactory.getLogger(HessianClient.class);
 
-	@Autowired(required = false)
 	private ServiceRegistry serviceRegistry;
 
-	@Autowired(required = false)
-	@Qualifier("executorService")
 	private ExecutorService executorService;
 
 	private String host;
@@ -43,6 +38,8 @@ public class HessianClient extends HessianProxyFactoryBean {
 	private List<String> asyncMethods;
 
 	private boolean urlFromDiscovery;
+
+	private boolean discovered; // for lazy discover from serviceRegistry
 
 	private boolean reset;
 
@@ -78,6 +75,10 @@ public class HessianClient extends HessianProxyFactoryBean {
 		this.serviceRegistry = serviceRegistry;
 	}
 
+	public void setExecutorService(ExecutorService executorService) {
+		this.executorService = executorService;
+	}
+
 	@Override
 	public void setServiceUrl(String serviceUrl) {
 		super.setServiceUrl(serviceUrl);
@@ -86,13 +87,11 @@ public class HessianClient extends HessianProxyFactoryBean {
 
 	@Override
 	public void afterPropertiesSet() {
-		String serviceName = getServiceInterface().getName();
 		String serviceUrl = getServiceUrl();
 		if (serviceUrl == null) {
-			serviceUrl = discoverServiceUrl(serviceName);
-			log.info("locate service url:" + serviceUrl);
-			setServiceUrl(serviceUrl);
+			setServiceUrl("http://fakeurl/");
 			reset = false;
+			discovered = false;
 			urlFromDiscovery = true;
 		}
 		setHessian2(true);
@@ -109,6 +108,14 @@ public class HessianClient extends HessianProxyFactoryBean {
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
+		if (urlFromDiscovery && !discovered) {
+			String serviceUrl = discoverServiceUrl(getServiceInterface()
+					.getName());
+			setServiceUrl(serviceUrl);
+			reset();
+			discovered = true;
+		}
+
 		if (executorService != null && asyncMethods != null) {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
@@ -157,6 +164,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 				String ho = serviceRegistry.discover(serviceName);
 				if (ho != null) {
 					sb.append(ho);
+					log.info("discovered " + serviceName + "@" + ho);
 				} else {
 					sb.append("localhost");
 					log.error("couldn't discover service:" + serviceName);
