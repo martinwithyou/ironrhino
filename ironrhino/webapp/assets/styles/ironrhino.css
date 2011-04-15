@@ -1181,7 +1181,7 @@ text-decoration: none;
 .series .chapter{
 	float:left;
 	width: 80%;
-	padding: 10px;
+	padding:0 10px;
 }
 .series .chapter .title{
 	text-align:center;
@@ -1206,9 +1206,10 @@ text-decoration: none;
 .column .catalog .selected{
 	font-weight:bold;
 }
-.column .list{
+.column .list,.column .chapter{
 	float:left;
 	width: 80%;
+	padding:0 10px;
 }
 
 .issue .title{
