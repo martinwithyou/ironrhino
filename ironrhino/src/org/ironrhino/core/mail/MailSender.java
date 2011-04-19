@@ -10,6 +10,7 @@ import javax.mail.internet.MimeUtility;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -102,5 +103,16 @@ public class MailSender {
 		}
 		return StringUtils.join(array, ",");
 	}
+
+	public void send(MimeMessage mimeMessage) throws MailException {
+		javaMailSender.send(mimeMessage);
+	}
+
+	public void send(MimeMessagePreparator mimeMessagePreparator)
+			throws MailException {
+		javaMailSender.send(mimeMessagePreparator);
+	}
+	
+	
 
 }
