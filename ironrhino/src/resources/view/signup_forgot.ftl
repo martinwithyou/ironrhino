@@ -8,7 +8,7 @@
 </head>
 <body>
 <@s.form method="post" cssClass="ajax reset">
-	<@s.textfield label="%{getText('email')}" name="account.email" cssClass="required email"/>
+	<@s.textfield label="%{getText('email')}" name="email" cssClass="required email"/>
 	<@captcha/>
 	<@s.submit value="%{getText('confirm')}" />
 </@s.form>
