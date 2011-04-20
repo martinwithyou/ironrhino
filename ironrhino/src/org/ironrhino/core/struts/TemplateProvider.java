@@ -1,5 +1,6 @@
 package org.ironrhino.core.struts;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -57,8 +58,8 @@ public class TemplateProvider {
 	public Map getAllSharedVariables() {
 		Map<String, String> allSharedVariables = new HashMap<String, String>();
 		if (StringUtils.isNotBlank(base))
-			allSharedVariables.put("base", org.ironrhino.core.util.StringUtils
-					.trimTailSlash(base));
+			allSharedVariables.put("base",
+					org.ironrhino.core.util.StringUtils.trimTailSlash(base));
 		if (StringUtils.isNotBlank(assetsBase))
 			allSharedVariables.put("assetsBase",
 					org.ironrhino.core.util.StringUtils
@@ -88,8 +89,8 @@ public class TemplateProvider {
 
 	public Template getTemplate(String templateName) throws IOException {
 		Locale loc = getConfiguration().getLocale();
-		return getTemplate(templateName, loc, getConfiguration().getEncoding(
-				loc), true);
+		return getTemplate(templateName, loc,
+				getConfiguration().getEncoding(loc), true);
 	}
 
 	public Template getTemplate(String templateName, Locale locale,
@@ -117,11 +118,16 @@ public class TemplateProvider {
 					arg3);
 		String name = ftlLocation + (templateName.indexOf('/') != 0 ? "/" : "")
 				+ templateName;
-		Template t = getConfiguration().getTemplate(name, arg1, arg2, arg3);
-		if (t == null) {
-			name = ftlClasspath + (templateName.indexOf('/') != 0 ? "/" : "")
-					+ templateName;
+		Template t = null;
+		try {
 			t = getConfiguration().getTemplate(name, arg1, arg2, arg3);
+		} catch (FileNotFoundException e) {
+			if (t == null) {
+				name = ftlClasspath
+						+ (templateName.indexOf('/') != 0 ? "/" : "")
+						+ templateName;
+				t = getConfiguration().getTemplate(name, arg1, arg2, arg3);
+			}
 		}
 		return t;
 	}

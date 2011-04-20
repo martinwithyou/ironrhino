@@ -1,5 +1,6 @@
 package org.ironrhino.core.mail;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -7,12 +8,10 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.ironrhino.core.struts.TemplateProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ironrhino.core.struts.TemplateProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.JmsException;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.mail.SimpleMailMessage;
 
 import freemarker.template.Template;
@@ -25,7 +24,7 @@ public class MailService {
 	private TemplateProvider templateProvider;
 
 	@Autowired(required = false)
-	private JmsTemplate jmsTemplate;
+	private SimpleMailMessageWrapperQueue simpleMailMessageWrapperQueue;
 
 	@Inject
 	private MailSender mailSender;
@@ -48,7 +47,8 @@ public class MailService {
 		this.forceLocalAsync = forceLocalAsync;
 	}
 
-	public void setForceLocalAsyncFailureThreshold(int forceLocalAsyncFailureThreshold) {
+	public void setForceLocalAsyncFailureThreshold(
+			int forceLocalAsyncFailureThreshold) {
 		this.forceLocalAsyncFailureThreshold = forceLocalAsyncFailureThreshold;
 	}
 
@@ -57,7 +57,7 @@ public class MailService {
 	}
 
 	public void send(final SimpleMailMessage smm, final boolean useHtmlFormat) {
-		if (jmsTemplate == null || forceLocalAsync) {
+		if (simpleMailMessageWrapperQueue == null || forceLocalAsync) {
 			// localAsync
 			executorService.execute(new Runnable() {
 				@Override
@@ -69,9 +69,9 @@ public class MailService {
 		}
 		try {
 			// asynchronized by jms
-			jmsTemplate.convertAndSend(new SimpleMailMessageWrapper(smm,
-					useHtmlFormat));
-		} catch (JmsException e) {
+			simpleMailMessageWrapperQueue.produce(new SimpleMailMessageWrapper(
+					smm, useHtmlFormat));
+		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 			_failureCount++;
 			if (_failureCount >= forceLocalAsyncFailureThreshold) {

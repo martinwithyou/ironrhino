@@ -8,25 +8,14 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 
-/**
- * send synchronized mail
- * 
- * @author zym
- * 
- */
 public class MailSender {
 
-	private Logger log = LoggerFactory.getLogger(MailSender.class);
-
-	private String defaultFrom = "billgates@gmail.com";
+	private String defaultFrom = "zhouyanming@gmail.com";
 
 	private String defaultTo = "zhouyanming@gmail.com";
 
@@ -59,26 +48,22 @@ public class MailSender {
 		if (smm.getTo() == null || smm.getTo().length == 0)
 			smm.setTo(defaultTo);
 		for (final String to : smm.getTo()) {
-			try {
-				javaMailSender.send(new MimeMessagePreparator() {
-					public void prepare(MimeMessage mimeMessage)
-							throws MessagingException {
-						MimeMessageHelper message = new MimeMessageHelper(
-								mimeMessage, true, "UTF-8");
-						if (StringUtils.isNotBlank(smm.getFrom()))
-							message.setFrom(encode(smm.getFrom()));
-						else
-							message.setFrom(encode(defaultFrom));
-						if (StringUtils.isNotBlank(smm.getReplyTo()))
-							message.setReplyTo(encode(smm.getReplyTo()));
-						message.setTo(encode(to));
-						message.setSubject(smm.getSubject());
-						message.setText(smm.getText(), useHtmlFormat);
-					}
-				});
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
+			javaMailSender.send(new MimeMessagePreparator() {
+				public void prepare(MimeMessage mimeMessage)
+						throws MessagingException {
+					MimeMessageHelper message = new MimeMessageHelper(
+							mimeMessage, true, "UTF-8");
+					if (StringUtils.isNotBlank(smm.getFrom()))
+						message.setFrom(encode(smm.getFrom()));
+					else
+						message.setFrom(encode(defaultFrom));
+					if (StringUtils.isNotBlank(smm.getReplyTo()))
+						message.setReplyTo(encode(smm.getReplyTo()));
+					message.setTo(encode(to));
+					message.setSubject(smm.getSubject());
+					message.setText(smm.getText(), useHtmlFormat);
+				}
+			});
 		}
 	}
 
@@ -104,15 +89,12 @@ public class MailSender {
 		return StringUtils.join(array, ",");
 	}
 
-	public void send(MimeMessage mimeMessage) throws MailException {
+	public void send(MimeMessage mimeMessage) {
 		javaMailSender.send(mimeMessage);
 	}
 
-	public void send(MimeMessagePreparator mimeMessagePreparator)
-			throws MailException {
+	public void send(MimeMessagePreparator mimeMessagePreparator) {
 		javaMailSender.send(mimeMessagePreparator);
 	}
-	
-	
 
 }

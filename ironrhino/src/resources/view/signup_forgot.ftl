@@ -7,7 +7,7 @@
 </@authorize>
 </head>
 <body>
-<@s.form method="post" cssClass="ajax reset">
+<@s.form method="post" action="forgot" cssClass="ajax reset">
 	<@s.textfield label="%{getText('email')}" name="email" cssClass="required email"/>
 	<@captcha/>
 	<@s.submit value="%{getText('confirm')}" />

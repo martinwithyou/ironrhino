@@ -193,9 +193,7 @@ public class ClassScaner {
 			"com.chenlb", "com.mysql", "com.opensymphony", "freemarker",
 			"javassist", "net.sf", "net.sourceforge", "ognl", "org.antlr",
 			"org.aopalliance", "org.apache", "org.aspectj", "org.codehaus",
-			"org.compass", "org.dom4j", "org.drools", "org.eclipse",
-			"org.hibernate", "org.jasig", "org.jcp", "org.jencks", "org.mvel2",
-			"org.quartz", "org.slf4j", "org.springframework",
-			"org.ironrhino.core" };
+			"org.compass", "org.dom4j", "org.hibernate", "org.mvel2",
+			"org.slf4j", "org.springframework", "org.ironrhino.core" };
 
 }

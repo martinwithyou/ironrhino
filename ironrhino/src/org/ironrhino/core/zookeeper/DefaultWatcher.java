@@ -3,9 +3,6 @@ package org.ironrhino.core.zookeeper;
 import java.util.Collection;
 import java.util.List;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.zookeeper.AsyncCallback.ChildrenCallback;
 import org.apache.zookeeper.AsyncCallback.DataCallback;
 import org.apache.zookeeper.KeeperException.Code;
@@ -17,8 +14,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-@Singleton
-@Named("defaultWatcher")
 public class DefaultWatcher implements Watcher, ChildrenCallback, DataCallback,
 		ApplicationContextAware {
 

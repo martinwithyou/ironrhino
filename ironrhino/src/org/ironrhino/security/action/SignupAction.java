@@ -161,7 +161,7 @@ public class SignupAction extends BaseAction {
 
 	@InputConfig(resultName = "forgot")
 	@Captcha(always = true)
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "user.email", key = "validation.invalid") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "email", key = "validation.invalid") })
 	public String forgot() {
 		User user = userManager.findByNaturalId("email", email);
 		if (user == null) {

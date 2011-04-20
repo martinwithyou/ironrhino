@@ -1,14 +1,14 @@
 package org.ironrhino.core.event;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.jms.Destination;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.jms.core.JmsTemplate;
 
 @Singleton
 @Named("eventPublisher")
@@ -18,15 +18,15 @@ public class EventPublisher {
 	private ApplicationEventPublisher publisher;
 
 	@Autowired(required = false)
-	private JmsTemplate jmsTemplate;
-
-	@Autowired(required = false)
-	@Named("applicationEventDestination")
-	private Destination applicationEventDestination;
+	private ApplicationEventPubSub applicationEventPubSub;
 
 	public void publish(ApplicationEvent event, boolean global) {
-		if (jmsTemplate != null && global) {
-			jmsTemplate.convertAndSend(applicationEventDestination, event);
+		if (applicationEventPubSub != null && global) {
+			try {
+				applicationEventPubSub.publish(event);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		} else {
 			publisher.publishEvent(event);
 		}

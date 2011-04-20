@@ -1,16 +1,10 @@
 package org.ironrhino.core.zookeeper;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.zookeeper.ZooKeeper;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
-@Singleton
-@Named("zooKeeper")
 public class ZooKeeperFactoryBean implements FactoryBean<ZooKeeper>,
 		InitializingBean, DisposableBean {
 
@@ -35,17 +29,12 @@ public class ZooKeeperFactoryBean implements FactoryBean<ZooKeeper>,
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		if (StringUtils.isNotBlank(connectString)) {
-			zooKeeper = new ZooKeeper(connectString, sessionTimeout,
-					defaultWatcher);
-			defaultWatcher.injectZooKeeper(zooKeeper);
-		}
-		;
+		zooKeeper = new ZooKeeper(connectString, sessionTimeout, defaultWatcher);
+		defaultWatcher.injectZooKeeper(zooKeeper);
 	}
 
 	public void destroy() throws Exception {
-		if (zooKeeper != null)
-			zooKeeper.close();
+		zooKeeper.close();
 	}
 
 	public ZooKeeper getObject() throws Exception {
