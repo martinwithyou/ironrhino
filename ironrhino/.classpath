@@ -69,7 +69,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-security-web-3.0.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.4.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/guava-r09.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-3.6.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jsoup-1.5.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mysql-connector-java-5.1.15.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/poi-3.7.jar"/>
@@ -82,5 +81,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.7.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zookeeper-3.3.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/rabbitmq-client-2.4.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-commons-annotations-3.2.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-core-3.6.3.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
