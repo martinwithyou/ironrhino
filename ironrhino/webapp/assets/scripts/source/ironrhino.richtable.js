@@ -100,7 +100,7 @@ Richtable = {
 		p = url.indexOf(';');
 		if (p > 0)
 			url = url.substring(0, p);
-		if (url.indexOf('/') != 0) {
+		if (url.indexOf('/') != 0 && url.indexOf('://') < 0) {
 			var hash = document.location.hash;
 			if (hash.indexOf('!') == 1)
 				url = CONTEXT_PATH
