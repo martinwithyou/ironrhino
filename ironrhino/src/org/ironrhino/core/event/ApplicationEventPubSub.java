@@ -47,8 +47,13 @@ public class ApplicationEventPubSub extends PubSubBase<ApplicationEvent> {
 	}
 
 	public void publish(ApplicationEvent message) throws IOException {
-		channel.basicPublish(exchangeName, getRoutingKey(), null,
-				SerializationUtils.serialize(message));
+		lock.lock();
+		try {
+			channel.basicPublish(exchangeName, getRoutingKey(), null,
+					SerializationUtils.serialize(message));
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	protected void consume(byte[] message) {

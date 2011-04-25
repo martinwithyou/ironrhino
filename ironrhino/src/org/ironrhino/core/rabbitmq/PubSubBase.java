@@ -1,5 +1,8 @@
 package org.ironrhino.core.rabbitmq;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -28,6 +31,8 @@ public class PubSubBase<T> {
 	protected String routingKey = "";
 
 	protected Thread consumerThread;
+	
+	protected Lock lock = new ReentrantLock();
 
 	public PubSubBase() {
 		Class clazz = ReflectionUtils.getGenericClass(getClass());

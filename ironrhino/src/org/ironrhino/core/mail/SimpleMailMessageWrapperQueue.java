@@ -47,8 +47,13 @@ public class SimpleMailMessageWrapperQueue extends
 	}
 
 	public void produce(SimpleMailMessageWrapper message) throws IOException {
-		channel.basicPublish("", getQueueName(), null,
-				SerializationUtils.serialize(message));
+		lock.lock();
+		try {
+			channel.basicPublish("", getQueueName(), null,
+					SerializationUtils.serialize(message));
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	protected void consume(byte[] message) {

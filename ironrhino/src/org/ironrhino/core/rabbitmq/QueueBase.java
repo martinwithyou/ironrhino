@@ -1,5 +1,8 @@
 package org.ironrhino.core.rabbitmq;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -25,6 +28,8 @@ public class QueueBase<T> {
 	protected boolean durable = true;
 
 	protected Thread consumerThread;
+	
+	protected Lock lock = new ReentrantLock();
 
 	public String getQueueName() {
 		return queueName;
