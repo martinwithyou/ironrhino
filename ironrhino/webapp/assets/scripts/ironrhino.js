@@ -8462,7 +8462,7 @@ jQuery.cookie = function (key, value, options) {
     return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? decode(result[1]) : null;
 };
 /*!
- * jQuery UI 1.8.11
+ * jQuery UI 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -8481,7 +8481,7 @@ if ( $.ui.version ) {
 }
 
 $.extend( $.ui, {
-	version: "1.8.11",
+	version: "1.8.12",
 
 	keyCode: {
 		ALT: 18,
@@ -8770,7 +8770,7 @@ $.extend( $.ui, {
 
 })( jQuery );
 /*!
- * jQuery UI Widget 1.8.11
+ * jQuery UI Widget 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -9032,7 +9032,7 @@ $.Widget.prototype = {
 
 })( jQuery );
 /*!
- * jQuery UI Mouse 1.8.11
+ * jQuery UI Mouse 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -9188,7 +9188,7 @@ $.widget("ui.mouse", {
 
 })(jQuery);
 /*
- * jQuery UI Draggable 1.8.11
+ * jQuery UI Draggable 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -9650,7 +9650,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 });
 
 $.extend($.ui.draggable, {
-	version: "1.8.11"
+	version: "1.8.12"
 });
 
 $.ui.plugin.add("draggable", "connectToSortable", {
@@ -9987,7 +9987,7 @@ $.ui.plugin.add("draggable", "zIndex", {
 
 })(jQuery);
 /*
- * jQuery UI Droppable 1.8.11
+ * jQuery UI Droppable 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -10135,7 +10135,7 @@ $.widget("ui.droppable", {
 });
 
 $.extend($.ui.droppable, {
-	version: "1.8.11"
+	version: "1.8.12"
 });
 
 $.ui.intersect = function(draggable, droppable, toleranceMode) {
@@ -10272,7 +10272,7 @@ $.ui.ddmanager = {
 
 })(jQuery);
 /*
- * jQuery UI Resizable 1.8.11
+ * jQuery UI Resizable 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -10792,7 +10792,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 });
 
 $.extend($.ui.resizable, {
-	version: "1.8.11"
+	version: "1.8.12"
 });
 
 /*
@@ -11084,7 +11084,7 @@ var isNumber = function(value) {
 
 })(jQuery);
 /*
- * jQuery UI Selectable 1.8.11
+ * jQuery UI Selectable 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -11345,12 +11345,12 @@ $.widget("ui.selectable", $.ui.mouse, {
 });
 
 $.extend($.ui.selectable, {
-	version: "1.8.11"
+	version: "1.8.12"
 });
 
 })(jQuery);
 /*
- * jQuery UI Sortable 1.8.11
+ * jQuery UI Sortable 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -11966,6 +11966,10 @@ $.widget("ui.sortable", $.ui.mouse, {
 		for (var i = this.items.length - 1; i >= 0; i--){
 			var item = this.items[i];
 
+			//We ignore calculating positions of all connected containers when we're not over them
+			if(item.instance != this.currentContainer && this.currentContainer && item.item[0] != this.currentItem[0])
+				continue;
+
 			var t = this.options.toleranceElement ? $(this.options.toleranceElement, item.item) : item.item;
 
 			if (!fast) {
@@ -12418,12 +12422,12 @@ $.widget("ui.sortable", $.ui.mouse, {
 });
 
 $.extend($.ui.sortable, {
-	version: "1.8.11"
+	version: "1.8.12"
 });
 
 })(jQuery);
 /*
- * jQuery UI Effects 1.8.11
+ * jQuery UI Effects 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -12731,7 +12735,7 @@ $.fn.extend({
 /******************************************************************************/
 
 $.extend($.effects, {
-	version: "1.8.11",
+	version: "1.8.12",
 
 	// Saves a set of properties in a data storage
 	save: function(element, set) {
@@ -13170,7 +13174,7 @@ $.extend($.easing,
 
 })(jQuery);
 /*
- * jQuery UI Effects Blind 1.8.11
+ * jQuery UI Effects Blind 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13219,7 +13223,7 @@ $.effects.blind = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Bounce 1.8.11
+ * jQuery UI Effects Bounce 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13297,7 +13301,7 @@ $.effects.bounce = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Clip 1.8.11
+ * jQuery UI Effects Clip 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13351,7 +13355,7 @@ $.effects.clip = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Drop 1.8.11
+ * jQuery UI Effects Drop 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13401,7 +13405,7 @@ $.effects.drop = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Explode 1.8.11
+ * jQuery UI Effects Explode 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13480,7 +13484,7 @@ $.effects.explode = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Fade 1.8.11
+ * jQuery UI Effects Fade 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13512,7 +13516,7 @@ $.effects.fade = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Fold 1.8.11
+ * jQuery UI Effects Fold 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13568,7 +13572,7 @@ $.effects.fold = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Highlight 1.8.11
+ * jQuery UI Effects Highlight 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13618,7 +13622,7 @@ $.effects.highlight = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Pulsate 1.8.11
+ * jQuery UI Effects Pulsate 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13669,7 +13673,7 @@ $.effects.pulsate = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Scale 1.8.11
+ * jQuery UI Effects Scale 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13847,7 +13851,7 @@ $.effects.size = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Shake 1.8.11
+ * jQuery UI Effects Shake 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13904,7 +13908,7 @@ $.effects.shake = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Slide 1.8.11
+ * jQuery UI Effects Slide 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13954,7 +13958,7 @@ $.effects.slide = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Effects Transfer 1.8.11
+ * jQuery UI Effects Transfer 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -13999,7 +14003,7 @@ $.effects.transfer = function(o) {
 
 })(jQuery);
 /*
- * jQuery UI Accordion 1.8.11
+ * jQuery UI Accordion 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -14518,7 +14522,7 @@ $.widget( "ui.accordion", {
 });
 
 $.extend( $.ui.accordion, {
-	version: "1.8.11",
+	version: "1.8.12",
 	animations: {
 		slide: function( options, additions ) {
 			options = $.extend({
@@ -14610,7 +14614,7 @@ $.extend( $.ui.accordion, {
 
 })( jQuery );
 /*
- * jQuery UI Autocomplete 1.8.11
+ * jQuery UI Autocomplete 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -15222,7 +15226,7 @@ $.widget("ui.menu", {
 
 }(jQuery));
 /*
- * jQuery UI Button 1.8.11
+ * jQuery UI Button 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -15405,21 +15409,17 @@ $.widget( "ui.button", {
 	},
 
 	_determineButtonType: function() {
-		
+
 		if ( this.element.is(":checkbox") ) {
 			this.type = "checkbox";
+		} else if ( this.element.is(":radio") ) {
+			this.type = "radio";
+		} else if ( this.element.is("input") ) {
+			this.type = "input";
 		} else {
-			if ( this.element.is(":radio") ) {
-				this.type = "radio";
-			} else {
-				if ( this.element.is("input") ) {
-					this.type = "input";
-				} else {
-					this.type = "button";
-				}
-			}
+			this.type = "button";
 		}
-		
+
 		if ( this.type === "checkbox" || this.type === "radio" ) {
 			// we don't search against the document in case the element
 			// is disconnected from the DOM
@@ -15609,7 +15609,7 @@ $.widget( "ui.buttonset", {
 
 }( jQuery ) );
 /*
- * jQuery UI Datepicker 1.8.11
+ * jQuery UI Datepicker 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -15622,7 +15622,7 @@ $.widget( "ui.buttonset", {
  */
 (function( $, undefined ) {
 
-$.extend($.ui, { datepicker: { version: "1.8.11" } });
+$.extend($.ui, { datepicker: { version: "1.8.12" } });
 
 var PROP_NAME = 'datepicker';
 var dpuuid = new Date().getTime();
@@ -16699,7 +16699,7 @@ $.extend(Datepicker.prototype, {
 		}
 		var date = this._daylightSavingAdjust(new Date(year, month - 1, day));
 		if (date.getFullYear() != year || date.getMonth() + 1 != month || date.getDate() != day)
-			throw 'Invalid date'; // E.g. 31/02/*
+			throw 'Invalid date'; // E.g. 31/02/00
 		return date;
 	},
 
@@ -17185,40 +17185,42 @@ $.extend(Datepicker.prototype, {
 		if (!showMonthAfterYear)
 			html += monthHtml + (secondary || !(changeMonth && changeYear) ? '&#xa0;' : '');
 		// year selection
-		inst.yearshtml = '';
-		if (secondary || !changeYear)
-			html += '<span class="ui-datepicker-year">' + drawYear + '</span>';
-		else {
-			// determine range of years to display
-			var years = this._get(inst, 'yearRange').split(':');
-			var thisYear = new Date().getFullYear();
-			var determineYear = function(value) {
-				var year = (value.match(/c[+-].*/) ? drawYear + parseInt(value.substring(1), 10) :
-					(value.match(/[+-].*/) ? thisYear + parseInt(value, 10) :
-					parseInt(value, 10)));
-				return (isNaN(year) ? thisYear : year);
-			};
-			var year = determineYear(years[0]);
-			var endYear = Math.max(year, determineYear(years[1] || ''));
-			year = (minDate ? Math.max(year, minDate.getFullYear()) : year);
-			endYear = (maxDate ? Math.min(endYear, maxDate.getFullYear()) : endYear);
-			inst.yearshtml += '<select class="ui-datepicker-year" ' +
-				'onchange="DP_jQuery_' + dpuuid + '.datepicker._selectMonthYear(\'#' + inst.id + '\', this, \'Y\');" ' +
-				'onclick="DP_jQuery_' + dpuuid + '.datepicker._clickMonthYear(\'#' + inst.id + '\');"' +
-				'>';
-			for (; year <= endYear; year++) {
-				inst.yearshtml += '<option value="' + year + '"' +
-					(year == drawYear ? ' selected="selected"' : '') +
-					'>' + year + '</option>';
-			}
-			inst.yearshtml += '</select>';
-			//when showing there is no need for later update
-			if( ! $.browser.mozilla ){
-				html += inst.yearshtml;
-				inst.yearshtml = null;
-			} else {
-				// will be replaced later with inst.yearshtml
-				html += '<select class="ui-datepicker-year"><option value="' + drawYear + '" selected="selected">' + drawYear + '</option></select>';
+		if ( !inst.yearshtml ) {
+			inst.yearshtml = '';
+			if (secondary || !changeYear)
+				html += '<span class="ui-datepicker-year">' + drawYear + '</span>';
+			else {
+				// determine range of years to display
+				var years = this._get(inst, 'yearRange').split(':');
+				var thisYear = new Date().getFullYear();
+				var determineYear = function(value) {
+					var year = (value.match(/c[+-].*/) ? drawYear + parseInt(value.substring(1), 10) :
+						(value.match(/[+-].*/) ? thisYear + parseInt(value, 10) :
+						parseInt(value, 10)));
+					return (isNaN(year) ? thisYear : year);
+				};
+				var year = determineYear(years[0]);
+				var endYear = Math.max(year, determineYear(years[1] || ''));
+				year = (minDate ? Math.max(year, minDate.getFullYear()) : year);
+				endYear = (maxDate ? Math.min(endYear, maxDate.getFullYear()) : endYear);
+				inst.yearshtml += '<select class="ui-datepicker-year" ' +
+					'onchange="DP_jQuery_' + dpuuid + '.datepicker._selectMonthYear(\'#' + inst.id + '\', this, \'Y\');" ' +
+					'onclick="DP_jQuery_' + dpuuid + '.datepicker._clickMonthYear(\'#' + inst.id + '\');"' +
+					'>';
+				for (; year <= endYear; year++) {
+					inst.yearshtml += '<option value="' + year + '"' +
+						(year == drawYear ? ' selected="selected"' : '') +
+						'>' + year + '</option>';
+				}
+				inst.yearshtml += '</select>';
+				//when showing there is no need for later update
+				if( ! $.browser.mozilla ){
+					html += inst.yearshtml;
+					inst.yearshtml = null;
+				} else {
+					// will be replaced later with inst.yearshtml
+					html += '<select class="ui-datepicker-year"><option value="' + drawYear + '" selected="selected">' + drawYear + '</option></select>';
+				}
 			}
 		}
 		html += this._get(inst, 'yearSuffix');
@@ -17374,7 +17376,7 @@ $.fn.datepicker = function(options){
 $.datepicker = new Datepicker(); // singleton instance
 $.datepicker.initialized = false;
 $.datepicker.uuid = new Date().getTime();
-$.datepicker.version = "1.8.11";
+$.datepicker.version = "1.8.12";
 
 // Workaround for #4055
 // Add another global to avoid noConflict issues with inline event handlers
@@ -17382,7 +17384,7 @@ window['DP_jQuery_' + dpuuid] = $;
 
 })(jQuery);
 /*
- * jQuery UI Dialog 1.8.11
+ * jQuery UI Dialog 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -17420,6 +17422,18 @@ var uiDialogClasses =
 		maxWidth: true,
 		minHeight: true,
 		minWidth: true
+	},
+	// support for jQuery 1.3.2 - handle common attrFn methods for dialog
+	attrFn = $.attrFn || {
+		val: true,
+		css: true,
+		html: true,
+		text: true,
+		data: true,
+		width: true,
+		height: true,
+		offset: true,
+		click: true
 	};
 
 $.widget("ui.dialog", {
@@ -17759,12 +17773,21 @@ $.widget("ui.dialog", {
 					{ click: props, text: name } :
 					props;
 				var button = $('<button type="button"></button>')
-					.attr( props, true )
-					.unbind('click')
 					.click(function() {
 						props.click.apply(self.element[0], arguments);
 					})
 					.appendTo(uiButtonSet);
+				// can't use .attr( props, true ) with jQuery 1.3.2.
+				$.each( props, function( key, value ) {
+					if ( key === "click" ) {
+						return;
+					}
+					if ( key in attrFn ) {
+						button[ key ]( value );
+					} else {
+						button.attr( key, value );
+					}
+				});
 				if ($.fn.button) {
 					button.button();
 				}
@@ -18064,7 +18087,7 @@ $.widget("ui.dialog", {
 });
 
 $.extend($.ui.dialog, {
-	version: "1.8.11",
+	version: "1.8.12",
 
 	uuid: 0,
 	maxZ: 0,
@@ -18239,7 +18262,7 @@ $.extend($.ui.dialog.overlay.prototype, {
 
 }(jQuery));
 /*
- * jQuery UI Position 1.8.11
+ * jQuery UI Position 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -18491,7 +18514,7 @@ if ( !$.offset.setOffset ) {
 
 }( jQuery ));
 /*
- * jQuery UI Progressbar 1.8.11
+ * jQuery UI Progressbar 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -18587,6 +18610,7 @@ $.widget( "ui.progressbar", {
 		}
 
 		this.valueDiv
+			.toggle( value > this.min )
 			.toggleClass( "ui-corner-right", value === this.options.max )
 			.width( percentage.toFixed(0) + "%" );
 		this.element.attr( "aria-valuenow", value );
@@ -18594,12 +18618,12 @@ $.widget( "ui.progressbar", {
 });
 
 $.extend( $.ui.progressbar, {
-	version: "1.8.11"
+	version: "1.8.12"
 });
 
 })( jQuery );
 /*
- * jQuery UI Slider 1.8.11
+ * jQuery UI Slider 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -19066,6 +19090,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 			this.options.value = this._trimAlignValue( newValue );
 			this._refreshValue();
 			this._change( null, 0 );
+			return;
 		}
 
 		return this._value();
@@ -19080,6 +19105,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 			this.options.values[ index ] = this._trimAlignValue( newValue );
 			this._refreshValue();
 			this._change( null, index );
+			return;
 		}
 
 		if ( arguments.length ) {
@@ -19276,12 +19302,12 @@ $.widget( "ui.slider", $.ui.mouse, {
 });
 
 $.extend( $.ui.slider, {
-	version: "1.8.11"
+	version: "1.8.12"
 });
 
 }(jQuery));
 /*
- * jQuery UI Tabs 1.8.11
+ * jQuery UI Tabs 1.8.12
  *
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -19980,7 +20006,7 @@ $.widget( "ui.tabs", {
 });
 
 $.extend( $.ui.tabs, {
-	version: "1.8.11"
+	version: "1.8.12"
 });
 
 /*
@@ -26327,17 +26353,34 @@ Observation.common = function(container) {
 							});
 				});
 	if (typeof $.fn.tipsy != 'undefined')
-		$('.tipsyed,:input[title]', container).each(function() {
+		$('.tiped,:input[title]', container).each(function() {
+					var t = $(this);
 					var options = {
 						html : true,
 						fade : true,
-						gravity : $(this).attr('gravity') || 'w'
+						gravity : t.attr('gravity') || 'w'
 					};
-					if ($(this).is(':input')) {
+					if (!t.attr('title') && t.attr('tipurl'))
+						t.attr('title', MessageBundle.get('ajax.loading'));
+					t.hover(function() {
+								if (t.attr('tipurl'))
+									$.ajax({
+												url : t.attr('tipurl'),
+												global : false,
+												dataType : 'html',
+												success : function(data) {
+													t.attr('title', data);
+													t.tipsy(true).show();
+												}
+											});
+							}, function() {
+								t.removeAttr('tipurl');
+							});
+					if (t.is(':input')) {
 						options.trigger = 'focus';
 						options.gravity = 'w';
 					}
-					$(this).tipsy(options);
+					t.tipsy(options);
 				});
 	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {
@@ -26728,6 +26771,57 @@ Observation.ajaxpanel = function(container) {
 	$('.ajaxpanel .load', container).click(function() {
 				$(this).closest('.ajaxpanel').trigger('load');
 			});
+};
+(function($) {
+	$.fn.multiautocomplete = function() {
+		$(this).each(function() {
+			var t = $(this);
+			var source = t.attr('source');
+			if (source.indexOf('[') > 0)
+				source = $.parseJSON(source);
+			var local = source.constructor == Array;
+			var delimiter = t.attr('delimiter') || ',';
+			t.autocomplete({
+						source : local ? source : function(request, response) {
+							$.getJSON(source, {
+										term : extractLast(request.term,
+												delimiter)
+									}, response);
+						},
+						search : function() {
+							if (local)
+								return true;
+							var term = extractLast(this.value, delimiter);
+							if (term.length < 1) {
+								return false;
+							}
+						},
+						focus : function() {
+							return false;
+						},
+						select : function(event, ui) {
+							var terms = split(this.value, delimiter);
+							terms.pop();
+							terms.push(ui.item.value);
+							terms.push('');
+							this.value = terms.join(delimiter);
+							return false;
+						}
+					});
+		});
+
+		return this;
+	};
+	function split(val, delimiter) {
+		return val.split(new RegExp(delimiter + '\s*', 'gi'));
+	}
+	function extractLast(term, delimiter) {
+		return split(term, delimiter).pop();
+	}
+})(jQuery);
+
+Observation.multiautocomplete = function(container) {
+	$(':input.multiautocomplete', container).multiautocomplete();
 };
 (function($) {
 	$.fn.checkbox = function() {

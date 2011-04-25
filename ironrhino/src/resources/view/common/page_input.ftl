@@ -86,43 +86,6 @@ $(function() {
 			};
 			}
 		);
-		
-		//input tags
-		function split(val) {
-			return val.split(/,\s*/);
-		}
-		function extractLast(term) {
-			return split(term).pop();
-		}
-		$('input[name="page.tagsAsString"]').autocomplete({
-			source: function(request, response) {
-				$.getJSON("suggest", {
-					term: extractLast(request.term)
-				}, response);
-			},
-			search: function() {
-				// custom minLength
-				var term = extractLast(this.value);
-				if (term.length < 1) {
-					return false;
-				}
-			},
-			focus: function() {
-				// prevent value inserted on focus
-				return false;
-			},
-			select: function(event, ui) {
-				var terms = split( this.value );
-				// remove the current input
-				terms.pop();
-				// add the selected item
-				terms.push( ui.item.value );
-				// add placeholder to get the comma-and-space at the end
-				terms.push("");
-				this.value = terms.join(",");
-				return false;
-			}
-		});
 });
 
 </script>
@@ -132,7 +95,7 @@ $(function() {
 	<@s.hidden id="page_id" name="page.id" />
 	<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50"/>
 	<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" cssClass="integer"/>
-	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50"/>
+	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="multiautocomplete" source="suggest"/>
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50"/>
 	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="50" rows="12"/>
 	<@s.textarea id="page_head" name="page.head" cols="100" rows="3" cssStyle="display:none;"/>

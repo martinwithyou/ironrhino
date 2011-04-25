@@ -728,17 +728,34 @@ Observation.common = function(container) {
 							});
 				});
 	if (typeof $.fn.tipsy != 'undefined')
-		$('.tipsyed,:input[title]', container).each(function() {
+		$('.tiped,:input[title]', container).each(function() {
+					var t = $(this);
 					var options = {
 						html : true,
 						fade : true,
-						gravity : $(this).attr('gravity') || 'w'
+						gravity : t.attr('gravity') || 'w'
 					};
-					if ($(this).is(':input')) {
+					if (!t.attr('title') && t.attr('tipurl'))
+						t.attr('title', MessageBundle.get('ajax.loading'));
+					t.hover(function() {
+								if (t.attr('tipurl'))
+									$.ajax({
+												url : t.attr('tipurl'),
+												global : false,
+												dataType : 'html',
+												success : function(data) {
+													t.attr('title', data);
+													t.tipsy(true).show();
+												}
+											});
+							}, function() {
+								t.removeAttr('tipurl');
+							});
+					if (t.is(':input')) {
 						options.trigger = 'focus';
 						options.gravity = 'w';
 					}
-					$(this).tipsy(options);
+					t.tipsy(options);
 				});
 	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {

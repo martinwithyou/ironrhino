@@ -111,8 +111,8 @@
 			<filelist>
 				<file name="${webapp.dir}/assets/scripts/source/jquery-1.5.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.11.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.11.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.12.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.12.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.history-2.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.rc4-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
@@ -137,6 +137,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxupload.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.multiautocomplete.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.checkbox.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.marquee.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.sortabletable.js" />

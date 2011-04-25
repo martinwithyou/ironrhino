@@ -6,7 +6,7 @@
 <body>
 	<#if !displayForNative>
 	<#if client??>
-	<div>grant access of ${authorization.scope!} to <strong title="${client.description!}" class="tipsyed">${client.name}</strong></div>
+	<div>grant access of ${authorization.scope!} to <strong title="${client.description!}" class="tiped">${client.name}</strong></div>
 	</#if>
 	<@s.form id="grant_form" action="grant" method="post">
 		<#if id??><@s.hidden name="id" /></#if>
