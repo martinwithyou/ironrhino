@@ -26352,7 +26352,10 @@ Observation.common = function(container) {
 								limit : $(this).attr('limit') || 100
 							});
 				});
-	if (typeof $.fn.tipsy != 'undefined')
+	if (typeof $.fn.tipsy != 'undefined') {
+		$('div.tipsy').live('mouseout', function() {
+					$(this).remove();
+				});
 		$('.tiped,:input[title]', container).each(function() {
 					var t = $(this);
 					var options = {
@@ -26382,6 +26385,7 @@ Observation.common = function(container) {
 					}
 					t.tipsy(options);
 				});
+	}
 	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {
 			var id = this.id;
