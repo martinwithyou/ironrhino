@@ -6,9 +6,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.ironrhino.core.util.NumberUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -26,13 +28,13 @@ public class CyclicMySQLMaxValueIncrementer extends
 
 	private Date lastInsertTimestamp;
 
-	private String cycleType = "day";
+	private CycleType cycleType = CycleType.day;
 
-	public String getCycleType() {
+	public CycleType getCycleType() {
 		return cycleType;
 	}
 
-	public void setCycleType(String cycleType) {
+	public void setCycleType(CycleType cycleType) {
 		this.cycleType = cycleType;
 	}
 
@@ -150,32 +152,70 @@ public class CyclicMySQLMaxValueIncrementer extends
 		return this.nextId;
 	}
 
-	private static boolean inSameCycle(String cycleType, Date date) {
+	private static boolean inSameCycle(CycleType cycleType, Date date) {
 		if (date == null)
 			return true;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		Calendar now = Calendar.getInstance();
-		if ("minute".equalsIgnoreCase(cycleType))
+		switch (cycleType) {
+		case minute:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
 					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
 					&& now.get(Calendar.HOUR_OF_DAY) == cal
 							.get(Calendar.HOUR_OF_DAY) && now
 					.get(Calendar.MINUTE) == cal.get(Calendar.MINUTE));
-		else if ("hour".equalsIgnoreCase(cycleType))
+		case hour:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
 					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && now
 					.get(Calendar.HOUR_OF_DAY) == cal.get(Calendar.HOUR_OF_DAY));
-		else if ("day".equalsIgnoreCase(cycleType))
+		case day:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
 					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && now
 					.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR));
-		else if ("month".equalsIgnoreCase(cycleType))
+		case month:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && now
 					.get(Calendar.MONTH) == cal.get(Calendar.MONTH));
-		else if ("year".equalsIgnoreCase(cycleType))
+		case year:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR));
-		return true;
+		default:
+			return true;
+		}
+	}
+
+	static enum CycleType {
+		minute, hour, day, month, year
+	}
+
+	@Override
+	public String nextStringValue() throws DataAccessException {
+		String pattern = "";
+		switch (cycleType) {
+		case minute:
+			pattern = "yyyyMMddHHmm";
+			break;
+		case hour:
+			pattern = "yyyyMMddHH";
+			break;
+		case day:
+			pattern = "yyyyMMdd";
+			break;
+		case month:
+			pattern = "yyyyMM";
+			break;
+		case year:
+			pattern = "yyyy";
+			break;
+		default:
+			break;
+		}
+		return new SimpleDateFormat(pattern).format(new Date())
+				+ NumberUtils.format(nextIntValue(), getPaddingLength());
+	}
+
+	@Override
+	public long nextLongValue() throws DataAccessException {
+		return Long.valueOf(nextStringValue());
 	}
 
 }
