@@ -305,7 +305,7 @@ Richtable = {
 	enter : function(event) {
 		var btn = event.target;
 		var form = $(btn).closest('form');
-		if ($(btn).attr('tagName') != 'BUTTON' || $(btn).attr('tagName') != 'A')
+		if ($(btn).prop('tagName') != 'BUTTON' || $(btn).prop('tagName') != 'A')
 			btn = $(btn).closest('.btn');
 		if (btn.attr('onclick'))
 			return;
@@ -319,7 +319,7 @@ Richtable = {
 	click : function(event) {
 		var btn = event.target;
 		var form = $(btn).closest('form');
-		if ($(btn).attr('tagName') != 'BUTTON' || $(btn).attr('tagName') != 'A')
+		if ($(btn).prop('tagName') != 'BUTTON' || $(btn).prop('tagName') != 'A')
 			btn = $(btn).closest('.btn');
 		if (btn.attr('onclick'))
 			return;
@@ -508,7 +508,7 @@ Richtable = {
 		var cell = ce.parent();
 		cell.removeClass('editing');
 		cell.attr('cellValue', ce.val());
-		var editType = ce.attr('tagName');
+		var editType = ce.prop('tagName');
 		if (editType == 'SELECT')
 			cell.text($('option:selected', ce).text());
 		else if (editType == 'CHECKBOX' || editType == 'RADIO')

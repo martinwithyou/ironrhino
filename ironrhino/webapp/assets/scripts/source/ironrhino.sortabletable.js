@@ -2,7 +2,7 @@
 
 	$.fn.sortableTable = function() {
 		this.each(function() {
-					if ('TABLE' == $(this).attr('tagName'))
+					if ('TABLE' == $(this).prop('tagName'))
 						SortableTable.init(this, {
 									tableScroll : SortableTable.options.tableScroll
 								});

@@ -109,7 +109,7 @@
 	<target name="compress">
 		<concat destfile="${webapp.dir}/assets/scripts/ironrhino.js" encoding="utf-8" fixlastline="yes">
 			<filelist>
-				<file name="${webapp.dir}/assets/scripts/source/jquery-1.5.2.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery-1.6.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.12.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.12.js" />

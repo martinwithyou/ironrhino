@@ -284,10 +284,10 @@ Form = {
 		}
 	},
 	validate : function(target) {
-		if ($(target).attr('tagName') != 'FORM') {
+		if ($(target).prop('tagName') != 'FORM') {
 			$('.fieldError,.field_error', $(target).parent()).fadeIn().remove();
 			if ($(target).hasClass('required') && !$(target).val()) {
-				if ($(target).attr('tagName') == 'SELECT')
+				if ($(target).prop('tagName') == 'SELECT')
 					Message.showFieldError(target, null, 'selection.required');
 				else
 					Message.showFieldError(target, null, 'required');
@@ -388,7 +388,7 @@ Ajax = {
 			var replacement = {};
 			var entries = (options.replacement
 					|| $(target).attr('replacement')
-					|| ($(target).attr('tagName') == 'FORM' ? $(target)
+					|| ($(target).prop('tagName') == 'FORM' ? $(target)
 							.attr('id') : null) || Ajax.defaultRepacement)
 					.split(',');
 			for (var i = 0; i < entries.length; i++) {
@@ -645,9 +645,9 @@ Observation.common = function(container) {
 				$(this).remove();
 				Message.showFieldError(field, text);
 			});
-	var ele = ($(container).attr('tagName') == 'FORM' && $(container)
+	var ele = ($(container).prop('tagName') == 'FORM' && $(container)
 			.hasClass('focus')) ? container : $('.focus:eq(0)', container);
-	if (ele.attr('tagName') != 'FORM') {
+	if (ele.prop('tagName') != 'FORM') {
 		ele.focus();
 	} else {
 		var arr = $(':input:visible', ele).toArray();
@@ -815,7 +815,7 @@ Observation.common = function(container) {
 		if (typeof targetId != 'string')
 			targetId = '';
 		var entries = ($(target).attr('replacement') || ($(target)
-				.attr('tagName') == 'FORM' ? targetId : '')).split(',');
+				.prop('tagName') == 'FORM' ? targetId : '')).split(',');
 		for (var i = 0; i < entries.length; i++) {
 			var entry = entries[i];
 			var ss = entry.split(':', 2);

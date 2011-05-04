@@ -11,7 +11,7 @@
 								if (!marquee.hasClass('stop'))
 									$(
 											$(':first-child', marquee)
-													.attr('tagName')
+													.prop('tagName')
 													+ ':eq(0)', marquee)
 											.fadeOut('slow', function() {
 												$(this).appendTo(marquee)

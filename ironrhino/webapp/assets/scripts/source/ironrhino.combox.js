@@ -8,7 +8,7 @@
 	function combox(ele) {
 		var name = $(ele).attr('name');
 		var value = $(ele).val();
-		if ($(ele).attr('tagName') == 'SELECT') {
+		if ($(ele).prop('tagName') == 'SELECT') {
 			var input = $(ele.nextSibling);
 			if (name == input.attr('name')) {
 				input.attr('disabled', false);
