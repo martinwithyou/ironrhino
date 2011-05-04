@@ -496,7 +496,6 @@ public class EntityAction extends BaseAction {
 					if (lists == null)
 						lists = new HashMap<String, List>();
 					BaseManager em = getEntityManager(returnType);
-					em.setEntityClass(returnType);
 					lists.put(pd.getName(), em.findAll());
 					map.put(pd.getName(), uci);
 					continue;
