@@ -314,8 +314,8 @@ public class EntityAction extends BaseAction {
 								UiConfig.class);
 						String listKey = uiConfig != null ? uiConfig.listKey()
 								: UiConfig.DEFAULT_LIST_KEY;
-						BeanWrapperImpl temp = new BeanWrapperImpl(returnType
-								.newInstance());
+						BeanWrapperImpl temp = new BeanWrapperImpl(
+								returnType.newInstance());
 						temp.setPropertyValue(listKey, parameterValue);
 						baseManager.setEntityClass(returnType);
 						Object obj;
@@ -323,8 +323,8 @@ public class EntityAction extends BaseAction {
 							obj = baseManager.get((Serializable) temp
 									.getPropertyValue(listKey));
 						else
-							obj = baseManager.findByNaturalId(listKey, temp
-									.getPropertyValue(listKey));
+							obj = baseManager.findByNaturalId(listKey,
+									temp.getPropertyValue(listKey));
 						pd.getWriteMethod()
 								.invoke(entity, new Object[] { obj });
 					}
@@ -481,8 +481,8 @@ public class EntityAction extends BaseAction {
 							lists = new HashMap<String, List>();
 						Method method = pd.getReadMethod().getReturnType()
 								.getMethod("values", new Class[0]);
-						lists.put(pd.getName(), Arrays.asList((Enum[]) method
-								.invoke(null)));
+						lists.put(pd.getName(),
+								Arrays.asList((Enum[]) method.invoke(null)));
 					} catch (Exception e) {
 						log.error(e.getMessage(), e);
 					}
@@ -513,7 +513,7 @@ public class EntityAction extends BaseAction {
 					uci.addCssClass("double");
 				} else if (Date.class.isAssignableFrom(returnType)) {
 					uci.addCssClass("date");
-					if(StringUtils.isBlank(uci.getCellEdit()))
+					if (StringUtils.isBlank(uci.getCellEdit()))
 						uci.setCellEdit("click,date");
 				} else if (String.class == returnType
 						&& pd.getName().toLowerCase().contains("email")) {
@@ -643,13 +643,13 @@ public class EntityAction extends BaseAction {
 
 		public String getCssClass() {
 			if (required)
-				return this.cssClass += " required";
-			else
-				return this.cssClass;
+				this.cssClass += (this.cssClass.length() > 0 ? " " : "")
+						+ "required";
+			return this.cssClass;
 		}
 
 		public void addCssClass(String cssClass) {
-			this.cssClass += " " + cssClass;
+			this.cssClass += (this.cssClass.length() > 0 ? " " : "") + cssClass;
 		}
 
 		public boolean isReadonly() {

@@ -8,50 +8,47 @@
 	<#if !entity.new>
 	<@s.hidden name="${entityName}.id" />
 	</#if>
-	<#list naturalIds?keys as key>
+	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
 		<#assign label=key>
 		<#if config.displayName??>
 			<#assign label=config.displayName>
 		</#if>
+		<#if naturalIds?keys?seq_contains(key)>
+			<#assign readonly=!naturalIdMutable&&!action.isNew()>
+		<#else>
+			<#assign readonly=config.readonly>
+		</#if>
 		<#if config.type=='input'>
-			<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(!naturalIdMutable&&!action.isNew())?string}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" />
-		</#if>
-		<#if config.type=='textarea'>
-			<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(!naturalIdMutable&&!action.isNew())?string}" cssClass="${config.cssClass}" cols="50" rows="5" />
-		</#if>
-		<#if config.type=='checkbox'>
-			<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(!naturalIdMutable&&!action.isNew())?string}" cssClass="${config.cssClass}" />
-		</#if>
-		<#if config.type=='select'>
-			<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${(!naturalIdMutable&&!action.isNew())?string}" cssClass="${config.cssClass}" list="${config.list}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue=""/>
-		</#if>
-	</#list>
-
-	<#list uiConfigs?keys as key>
-		<#if !naturalIds?keys?seq_contains(key)>
-			<#assign config=uiConfigs[key]>
-			<#assign label=key>
-			<#if config.displayName??>
-				<#assign label=config.displayName>
-			</#if>
-			<#if config.type=='input'>
-				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" readonly="config.readonly" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" />
-			</#if>
-			<#if config.type=='textarea'>
-				<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" readonly="${config.readonly?string}" cssClass="${config.cssClass}" cols="50" rows="5" />
-			</#if>
-			<#if config.type=='checkbox'>
-				<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" />
-			</#if>
-			<#if config.type=='select'>
-				<#if config.required&&!entity.new>
-					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"/>
+				<#if !readonly>
+					<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" />
 				<#else>
-					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue=""/>
+					<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" readonly="true" />
 				</#if>
 			</#if>
-		</#if>
+			<#if config.type=='textarea'>
+				<#if !readonly>
+					<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cols="50" rows="5" />
+				<#else>
+					<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cols="50" rows="5" readonly="true" />
+				</#if>
+			</#if>
+			<#if config.type=='checkbox'>
+				<#if !readonly>
+					<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" />
+				<#else>
+					<@s.hidden name="${entityName}.${key}" />
+					<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" disabled="true" />
+				</#if>
+			</#if>
+			<#if config.type=='select'>
+				<#if !readonly>
+					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue=""/>
+				<#else>
+					<@s.hidden name="${entityName}.${key}" />
+					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue="" disabled="true" />
+				</#if>
+			</#if>
 	</#list>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
