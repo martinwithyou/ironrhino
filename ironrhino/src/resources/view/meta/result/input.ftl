@@ -45,7 +45,7 @@
 				<#if !readonly>
 					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue=""/>
 				<#else>
-					<@s.hidden name="${entityName}.${key}" />
+					<@s.hidden name="${entityName}.${key}" value="%{${entityName+'.'+key+'.id'}}"/>
 					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue="" disabled="true" />
 				</#if>
 			</#if>
