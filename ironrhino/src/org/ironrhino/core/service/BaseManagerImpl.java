@@ -63,6 +63,9 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 	}
 
 	public void setEntityClass(Class<T> clazz) {
+		if (entityClass != null)
+			throw new IllegalArgumentException(
+					"cannot change entity class for Generic Manager");
 		entityClassHolder.set(clazz);
 	}
 
@@ -231,8 +234,8 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 					* resultPage.getPageSize());
 		}
 		if (!(resultPage.isCounting() && totalRecord == 0))
-			resultPage.setResult(findBetweenListByCriteria(resultPage
-					.getDetachedCriteria(), start, end));
+			resultPage.setResult(findBetweenListByCriteria(
+					resultPage.getDetachedCriteria(), start, end));
 		else
 			resultPage.setResult(Collections.EMPTY_LIST);
 		resultPage.setStart(start);
