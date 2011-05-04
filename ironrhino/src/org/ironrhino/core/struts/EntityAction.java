@@ -113,17 +113,18 @@ public class EntityAction extends BaseAction {
 		return (AutoConfig) getEntityClass().getAnnotation(AutoConfig.class);
 	}
 
-	private void checkEntityManager() {
-		String entityManagerName = getEntityName() + "Manager";
+	private BaseManager getEntityManager(Class entityClass){
+		String entityManagerName = StringUtils.uncapitalize(entityClass.getSimpleName()) + "Manager";
 		try {
 			Object bean = ApplicationContextUtils.getBean(entityManagerName);
 			if (bean != null)
-				baseManager = (BaseManager) bean;
+				return (BaseManager) bean;
 			else
-				baseManager.setEntityClass(getEntityClass());
+				baseManager.setEntityClass(entityClass);
 		} catch (NoSuchBeanDefinitionException e) {
-			baseManager.setEntityClass(getEntityClass());
+			baseManager.setEntityClass(entityClass);
 		}
+		return baseManager;
 	}
 
 	@Override
@@ -132,8 +133,8 @@ public class EntityAction extends BaseAction {
 		searchable = (ac != null) && ac.searchable();
 		if (!searchable || StringUtils.isBlank(keyword)
 				|| compassSearchService == null) {
-			checkEntityManager();
-			DetachedCriteria dc = baseManager.detachedCriteria();
+			BaseManager entityManager = getEntityManager(getEntityClass());
+			DetachedCriteria dc = entityManager.detachedCriteria();
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setDetachedCriteria(dc);
@@ -147,7 +148,7 @@ public class EntityAction extends BaseAction {
 					dc.addOrder(Order.asc(arr[arr.length - 1]));
 			} else if (Ordered.class.isAssignableFrom(getEntityClass()))
 				dc.addOrder(Order.asc("displayOrder"));
-			resultPage = baseManager.findByResultPage(resultPage);
+			resultPage = entityManager.findByResultPage(resultPage);
 		} else {
 			String query = keyword.trim();
 			CompassCriteria cc = new CompassCriteria();
@@ -182,13 +183,13 @@ public class EntityAction extends BaseAction {
 	public String input() {
 		if (readonly())
 			return ACCESSDENIED;
-		checkEntityManager();
+		BaseManager entityManager = getEntityManager(getEntityClass());
 		if (getUid() != null) {
 			try {
 				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
 						.newInstance());
 				bw.setPropertyValue("id", getUid());
-				entity = baseManager.get((Serializable) bw
+				entity = entityManager.get((Serializable) bw
 						.getPropertyValue("id"));
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -209,7 +210,7 @@ public class EntityAction extends BaseAction {
 	public String save() {
 		if (readonly())
 			return ACCESSDENIED;
-		checkEntityManager();
+		BaseManager entityManager = getEntityManager(getEntityClass());
 		entity = constructEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
 		Persistable persisted = null;
@@ -234,7 +235,7 @@ public class EntityAction extends BaseAction {
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
-				persisted = baseManager.findByNaturalId(caseInsensitive, args);
+				persisted = entityManager.findByNaturalId(caseInsensitive, args);
 				if (persisted != null) {
 					it = naturalIds.keySet().iterator();
 					while (it.hasNext()) {
@@ -260,7 +261,7 @@ public class EntityAction extends BaseAction {
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
-				persisted = baseManager.findByNaturalId(caseInsensitive, args);
+				persisted = entityManager.findByNaturalId(caseInsensitive, args);
 				if (persisted != null
 						&& !persisted.getId().equals(entity.getId())) {
 					it = naturalIds.keySet().iterator();
@@ -277,7 +278,7 @@ public class EntityAction extends BaseAction {
 			}
 			try {
 				if (persisted == null)
-					persisted = baseManager.get((Serializable) bw
+					persisted = entityManager.get((Serializable) bw
 							.getPropertyValue("id"));
 				BeanWrapperImpl bwp = new BeanWrapperImpl(persisted);
 				Set<String> names = getUiConfigs().keySet();
@@ -317,13 +318,13 @@ public class EntityAction extends BaseAction {
 						BeanWrapperImpl temp = new BeanWrapperImpl(
 								returnType.newInstance());
 						temp.setPropertyValue(listKey, parameterValue);
-						baseManager.setEntityClass(returnType);
+						BaseManager em = getEntityManager(returnType);
 						Object obj;
 						if (listKey.equals(UiConfig.DEFAULT_LIST_KEY))
-							obj = baseManager.get((Serializable) temp
+							obj = em.get((Serializable) temp
 									.getPropertyValue(listKey));
 						else
-							obj = baseManager.findByNaturalId(listKey,
+							obj = em.findByNaturalId(listKey,
 									temp.getPropertyValue(listKey));
 						pd.getWriteMethod()
 								.invoke(entity, new Object[] { obj });
@@ -334,20 +335,20 @@ public class EntityAction extends BaseAction {
 			log.error(e.getMessage(), e);
 		}
 
-		baseManager.save(entity);
+		entityManager.save(entity);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
 
 	@Override
 	public String view() {
-		checkEntityManager();
+		BaseManager entityManager = getEntityManager(getEntityClass());
 		if (getUid() != null) {
 			try {
 				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
 						.newInstance());
 				bw.setPropertyValue("id", getUid());
-				entity = baseManager.get((Serializable) bw
+				entity = entityManager.get((Serializable) bw
 						.getPropertyValue("id"));
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -361,7 +362,7 @@ public class EntityAction extends BaseAction {
 	public String delete() {
 		if (readonly())
 			return ACCESSDENIED;
-		checkEntityManager();
+		BaseManager entityManager = getEntityManager(getEntityClass());
 		String[] arr = getId();
 		Serializable[] id = (arr != null) ? new Serializable[arr.length]
 				: new Serializable[0];
@@ -379,18 +380,18 @@ public class EntityAction extends BaseAction {
 			List list;
 			if (id.length == 1) {
 				list = new ArrayList(1);
-				list.add(baseManager.get(id[0]));
+				list.add(entityManager.get(id[0]));
 			} else {
-				DetachedCriteria dc = baseManager.detachedCriteria();
+				DetachedCriteria dc = entityManager.detachedCriteria();
 				dc.add(Restrictions.in("id", id));
-				list = baseManager.findListByCriteria(dc);
+				list = entityManager.findListByCriteria(dc);
 			}
 
 			if (list.size() > 0) {
 				boolean deletable = true;
 				for (Object obj : list) {
 					Persistable entity = (Persistable) obj;
-					if (!baseManager.canDelete(entity)) {
+					if (!entityManager.canDelete(entity)) {
 						deletable = false;
 						addActionError(getText("delete.forbidden",
 								new String[] { entity.toString() }));
@@ -399,7 +400,7 @@ public class EntityAction extends BaseAction {
 				}
 				if (deletable) {
 					for (Object obj : list)
-						baseManager.delete((Persistable) obj);
+						entityManager.delete((Persistable) obj);
 					addActionMessage(getText("delete.success"));
 				}
 			}
@@ -494,8 +495,9 @@ public class EntityAction extends BaseAction {
 					uci.setExcludeIfNotEdited(true);
 					if (lists == null)
 						lists = new HashMap<String, List>();
-					baseManager.setEntityClass(returnType);
-					lists.put(pd.getName(), baseManager.findAll());
+					BaseManager em = getEntityManager(returnType);
+					em.setEntityClass(returnType);
+					lists.put(pd.getName(), em.findAll());
 					map.put(pd.getName(), uci);
 					continue;
 				}
