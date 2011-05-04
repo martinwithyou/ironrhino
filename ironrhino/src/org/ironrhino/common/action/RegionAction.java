@@ -147,8 +147,11 @@ public class RegionAction extends BaseAction {
 
 	@Override
 	public String delete() {
-		String[] id = getId();
-		if (id != null) {
+		String[] arr = getId();
+		Long[] id = (arr != null) ? new Long[arr.length] : new Long[0];
+		for (int i = 0; i < id.length; i++)
+			id[i] = Long.valueOf(arr[i]);
+		if (id.length > 0) {
 			List<Region> list;
 			if (id.length == 1) {
 				list = new ArrayList<Region>(1);
@@ -256,8 +259,8 @@ public class RegionAction extends BaseAction {
 				addActionError(getText("validation.required"));
 				return SUCCESS;
 			}
-			Set<Class> set = ClassScaner.scanAssignable(ClassScaner
-					.getAppPackages(), Persistable.class);
+			Set<Class> set = ClassScaner.scanAssignable(
+					ClassScaner.getAppPackages(), Persistable.class);
 			for (Class clz : set) {
 				if (clz.equals(Region.class))
 					continue;
@@ -265,16 +268,16 @@ public class RegionAction extends BaseAction {
 						.getPropertyDescriptors(clz);
 				for (PropertyDescriptor pd : pds) {
 					if (pd.getReadMethod() != null
-							&& pd.getReadMethod().getReturnType().equals(
-									Region.class)
+							&& pd.getReadMethod().getReturnType()
+									.equals(Region.class)
 							&& pd.getWriteMethod() != null) {
 						String name = pd.getName();
-						String hql = new StringBuilder("update ").append(
-								clz.getName()).append(" t set t.").append(name)
-								.append(".id=? where t.").append(name).append(
-										".id=?").toString();
-						baseManager.executeUpdate(hql, target.getId(), source
-								.getId());
+						String hql = new StringBuilder("update ")
+								.append(clz.getName()).append(" t set t.")
+								.append(name).append(".id=? where t.")
+								.append(name).append(".id=?").toString();
+						baseManager.executeUpdate(hql, target.getId(),
+								source.getId());
 					}
 				}
 			}
