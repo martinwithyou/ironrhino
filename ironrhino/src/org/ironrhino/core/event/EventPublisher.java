@@ -18,14 +18,19 @@ public class EventPublisher {
 	private ApplicationEventPublisher publisher;
 
 	@Autowired(required = false)
-	private ApplicationEventPubSub applicationEventPubSub;
+	private ApplicationEventRedisTopic applicationEventRedisTopic;
+
+	@Autowired(required = false)
+	private ApplicationEventRabbitTopic applicationEventRabbitTopic;
 
 	public void publish(ApplicationEvent event, boolean global) {
-		if (applicationEventPubSub != null && global) {
+		if (applicationEventRedisTopic != null && global) {
+			applicationEventRedisTopic.publish(event);
+		} else if (applicationEventRabbitTopic != null && global) {
 			try {
-				applicationEventPubSub.publish(event);
+				applicationEventRabbitTopic.publish(event);
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				e.printStackTrace();
 			}
 		} else {
 			publisher.publishEvent(event);

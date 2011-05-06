@@ -24,7 +24,10 @@ public class MailService {
 	private TemplateProvider templateProvider;
 
 	@Autowired(required = false)
-	private SimpleMailMessageWrapperQueue simpleMailMessageWrapperQueue;
+	private SimpleMailMessageWrapperRedisQueue simpleMailMessageWrapperRedisQueue;
+
+	@Autowired(required = false)
+	private SimpleMailMessageWrapperRabbitQueue simpleMailMessageWrapperRabbitQueue;
 
 	@Inject
 	private MailSender mailSender;
@@ -57,7 +60,8 @@ public class MailService {
 	}
 
 	public void send(final SimpleMailMessage smm, final boolean useHtmlFormat) {
-		if (simpleMailMessageWrapperQueue == null || forceLocalAsync) {
+		if ((simpleMailMessageWrapperRedisQueue == null && simpleMailMessageWrapperRabbitQueue == null)
+				|| forceLocalAsync) {
 			// localAsync
 			executorService.execute(new Runnable() {
 				@Override
@@ -68,9 +72,14 @@ public class MailService {
 			return;
 		}
 		try {
-			// asynchronized by jms
-			simpleMailMessageWrapperQueue.produce(new SimpleMailMessageWrapper(
-					smm, useHtmlFormat));
+			if (simpleMailMessageWrapperRedisQueue != null)
+				simpleMailMessageWrapperRedisQueue
+						.produce(new SimpleMailMessageWrapper(smm,
+								useHtmlFormat));
+			else if (simpleMailMessageWrapperRabbitQueue != null)
+				simpleMailMessageWrapperRabbitQueue
+						.produce(new SimpleMailMessageWrapper(smm,
+								useHtmlFormat));
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 			_failureCount++;

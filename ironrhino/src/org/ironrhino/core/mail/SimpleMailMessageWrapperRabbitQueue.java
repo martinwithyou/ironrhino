@@ -4,15 +4,15 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.ironrhino.core.rabbitmq.QueueBase;
+import org.ironrhino.core.rabbitmq.RabbitQueue;
 import org.springframework.util.SerializationUtils;
 
 import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 
-public class SimpleMailMessageWrapperQueue extends
-		QueueBase<SimpleMailMessageWrapper> {
+public class SimpleMailMessageWrapperRabbitQueue extends
+		RabbitQueue<SimpleMailMessageWrapper> {
 
 	@Inject
 	private MailSender mailSender;
@@ -27,7 +27,9 @@ public class SimpleMailMessageWrapperQueue extends
 				while (true) {
 					try {
 						delivery = consumer.nextDelivery();
-						consume(delivery.getBody());
+						SimpleMailMessageWrapper smmw = (SimpleMailMessageWrapper) SerializationUtils
+								.deserialize(delivery.getBody());
+						consume(smmw);
 						channel.basicAck(delivery.getEnvelope()
 								.getDeliveryTag(), false);
 					} catch (ShutdownSignalException e) {
@@ -56,9 +58,7 @@ public class SimpleMailMessageWrapperQueue extends
 		}
 	}
 
-	protected void consume(byte[] message) {
-		SimpleMailMessageWrapper smmw = (SimpleMailMessageWrapper) SerializationUtils
-				.deserialize(message);
+	public void consume(SimpleMailMessageWrapper smmw) {
 		mailSender.send(smmw.getSimpleMailMessage(), smmw.isUseHtmlFormat());
 	}
 

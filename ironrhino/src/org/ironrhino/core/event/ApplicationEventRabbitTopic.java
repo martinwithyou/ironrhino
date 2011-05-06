@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.ironrhino.core.rabbitmq.PubSubBase;
+import org.ironrhino.core.rabbitmq.RabbitTopic;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.util.SerializationUtils;
 
@@ -12,7 +12,7 @@ import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 
-public class ApplicationEventPubSub extends PubSubBase<ApplicationEvent> {
+public class ApplicationEventRabbitTopic extends RabbitTopic<ApplicationEvent> {
 
 	@Inject
 	private EventPublisher eventPublisher;
@@ -29,7 +29,9 @@ public class ApplicationEventPubSub extends PubSubBase<ApplicationEvent> {
 				while (true) {
 					try {
 						delivery = consumer.nextDelivery();
-						consume(delivery.getBody());
+						ApplicationEvent event = (ApplicationEvent) SerializationUtils
+								.deserialize(delivery.getBody());
+						subscribe(event);
 					} catch (ShutdownSignalException e) {
 						break;
 					} catch (ConsumerCancelledException e) {
@@ -56,10 +58,8 @@ public class ApplicationEventPubSub extends PubSubBase<ApplicationEvent> {
 		}
 	}
 
-	protected void consume(byte[] message) {
-		eventPublisher.publish(
-				(ApplicationEvent) SerializationUtils.deserialize(message),
-				false);
+	public void subscribe(ApplicationEvent event) {
+		eventPublisher.publish(event, false);
 	}
 
 }
