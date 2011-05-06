@@ -28,8 +28,13 @@ public class SimpleMailMessageWrapperRedisQueue extends
 			@Override
 			public void run() {
 				while (!stop) {
-					SimpleMailMessageWrapper smmw = queue.remove();
-					consume(smmw);
+					try {
+						SimpleMailMessageWrapper smmw = queue.take();
+						consume(smmw);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					
 				}
 			}
 

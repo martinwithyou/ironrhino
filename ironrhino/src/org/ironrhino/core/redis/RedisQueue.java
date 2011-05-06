@@ -18,6 +18,14 @@ public abstract class RedisQueue<T extends Serializable> implements
 	@Inject
 	private RedisTemplate redisTemplate;
 
+	public void setQueueName(String queueName) {
+		this.queueName = queueName;
+	}
+
+	public void setRedisTemplate(RedisTemplate redisTemplate) {
+		this.redisTemplate = redisTemplate;
+	}
+
 	protected BlockingDeque<T> queue;
 
 	public RedisQueue() {
