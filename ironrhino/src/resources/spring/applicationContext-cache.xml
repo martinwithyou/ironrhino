@@ -10,8 +10,18 @@
 		</constructor-arg>
 	</bean>
 	<!--
-			<bean id="cacheManager" class="org.ironrhino.core.cache.impl.XMemcachedCacheManager" p:serverAddress="${memcached.serverAddress:localhost:11211}"/>
-			<bean id="cacheManager" class="org.ironrhino.core.cache.impl.MemcachedCacheManager" p:serverAddress="${memcached.serverAddress:localhost:11211}"/>
-			<bean id="cacheManager" class="org.ironrhino.core.cache.impl.RedisCacheManager"/>
-		-->
+	<bean id="cacheManager" class="org.ironrhino.core.cache.impl.XMemcachedCacheManager" p:serverAddress="${memcached.serverAddress:localhost:11211}"/>
+	<bean id="cacheManager" class="org.ironrhino.core.cache.impl.MemcachedCacheManager" p:serverAddress="${memcached.serverAddress:localhost:11211}"/>
+	<bean id="cacheManager" class="org.ironrhino.core.cache.impl.RedisCacheManager">
+		<property name="redisTemplate">
+			<bean class="org.springframework.data.keyvalue.redis.core.RedisTemplate"
+				p:connectionFactory-ref="redisConnectionFactory">
+				<property name="keySerializer">
+					<bean
+						class="org.springframework.data.keyvalue.redis.serializer.StringRedisSerializer" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	-->
 </beans>
