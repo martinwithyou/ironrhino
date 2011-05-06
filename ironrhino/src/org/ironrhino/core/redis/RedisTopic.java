@@ -15,7 +15,7 @@ import org.springframework.data.keyvalue.redis.listener.RedisMessageListenerCont
 import org.springframework.data.keyvalue.redis.listener.Topic;
 
 public abstract class RedisTopic<T extends Serializable> implements
-		MessageListener, org.ironrhino.core.message.Topic<T> {
+		org.ironrhino.core.message.Topic<T> {
 
 	protected String channelName;
 
@@ -41,14 +41,13 @@ public abstract class RedisTopic<T extends Serializable> implements
 	@PostConstruct
 	public void afterPropertiesSet() {
 		Topic topic = new ChannelTopic(channelName);
-		messageListenerContainer.addMessageListener(this,
-				Collections.singleton(topic));
-	}
-
-	@Override
-	public void onMessage(Message message, byte[] pattern) {
-		subscribe((T) redisTemplate.getValueSerializer().deserialize(
-				message.getBody()));
+		messageListenerContainer.addMessageListener(new MessageListener() {
+			@Override
+			public void onMessage(Message message, byte[] pattern) {
+				subscribe((T) redisTemplate.getValueSerializer().deserialize(
+						message.getBody()));
+			}
+		}, Collections.singleton(topic));
 	}
 
 	public void publish(T message) {
