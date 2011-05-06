@@ -17,6 +17,8 @@ public interface CacheManager {
 			String namespace);
 
 	public Object get(String key, String namespace);
+	
+	public Object get(String key, String namespace, int timeToLive);
 
 	public void delete(String key, String namespace);
 
@@ -31,9 +33,11 @@ public interface CacheManager {
 
 	public boolean containsKey(String key, String namespace);
 
-	public boolean add(String key, Object value, int timeToLive,
+	public boolean putIfAbsent(String key, Object value, int timeToLive,
 			String namespace);
 
 	public boolean supportsTimeToIdle();
+	
+	public boolean supportsUpdateTimeToLive();
 
 }

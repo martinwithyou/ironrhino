@@ -22,9 +22,20 @@ public class CacheBasedHttpSessionStore implements HttpSessionStore {
 	@Inject
 	private CacheManager cacheManager;
 
+	public void setCacheManager(CacheManager cacheManager) {
+		this.cacheManager = cacheManager;
+	}
+
 	public void initialize(WrappedHttpSession session) {
-		sessionCompressorManager.uncompress(session, (String) cacheManager.get(
-				session.getId(), CACHE_NAMESPACE));
+		String sessionString;
+		if (!cacheManager.supportsTimeToIdle()
+				&& cacheManager.supportsUpdateTimeToLive())
+			sessionString = (String) cacheManager.get(session.getId(),
+					CACHE_NAMESPACE, session.getMaxInactiveInterval());
+		else
+			sessionString = (String) cacheManager.get(session.getId(),
+					CACHE_NAMESPACE);
+		sessionCompressorManager.uncompress(session, sessionString);
 	}
 
 	public void save(WrappedHttpSession session) {
@@ -35,14 +46,18 @@ public class CacheBasedHttpSessionStore implements HttpSessionStore {
 		}
 		if (cacheManager.supportsTimeToIdle()) {
 			if (session.isDirty())
-				cacheManager.put(session.getId(), sessionString, session
-						.getMaxInactiveInterval(), -1, CACHE_NAMESPACE);
+				cacheManager.put(session.getId(), sessionString,
+						session.getMaxInactiveInterval(), -1, CACHE_NAMESPACE);
+		} else if (cacheManager.supportsUpdateTimeToLive()) {
+			if (session.isDirty())
+				cacheManager.put(session.getId(), sessionString, -1,
+						session.getMaxInactiveInterval(), CACHE_NAMESPACE);
 		} else {
 			if (session.isDirty()
 					|| session.getNow() - session.getLastAccessedTime() > session
 							.getMinActiveInterval() * 1000)
-				cacheManager.put(session.getId(), sessionString, session
-						.getMaxInactiveInterval(), CACHE_NAMESPACE);
+				cacheManager.put(session.getId(), sessionString,
+						session.getMaxInactiveInterval(), CACHE_NAMESPACE);
 		}
 	}
 

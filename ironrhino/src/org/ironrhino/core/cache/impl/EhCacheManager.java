@@ -43,7 +43,7 @@ public class EhCacheManager implements CacheManager {
 					&& timeToLive > 0 ? Integer.valueOf(timeToLive) : null));
 	}
 
-	public Serializable get(String key, String namespace) {
+	public Object get(String key, String namespace) {
 		if (key == null)
 			return null;
 		if (StringUtils.isBlank(namespace))
@@ -53,6 +53,25 @@ public class EhCacheManager implements CacheManager {
 			return null;
 		Element element = cache.get(key);
 		return element != null ? element.getValue() : null;
+	}
+
+	public Object get(String key, String namespace, int timeToLive) {
+		if (key == null)
+			return null;
+		if (StringUtils.isBlank(namespace))
+			namespace = DEFAULT_NAMESPACE;
+		Cache cache = ehCacheManager.getCache(namespace);
+		if (cache == null)
+			return null;
+		Element element = cache.get(key);
+		if (element != null) {
+			if (element.getTimeToIdle() != timeToLive) {
+				element.setTimeToIdle(timeToLive);
+				cache.put(element);
+			}
+			return element.getValue();
+		}
+		return null;
 
 	}
 
@@ -121,16 +140,22 @@ public class EhCacheManager implements CacheManager {
 			return false;
 	}
 
-	public boolean add(String key, Object value, int timeToLive,
+	public boolean putIfAbsent(String key, Object value, int timeToLive,
 			String namespace) {
-		if (containsKey(key, namespace))
+		if (key == null || value == null)
 			return false;
-		put(key, value, timeToLive, namespace);
-		return true;
+		if (StringUtils.isBlank(namespace))
+			namespace = DEFAULT_NAMESPACE;
+		Cache cache = ehCacheManager.getCache(namespace);
+		return cache
+				.putIfAbsent(new Element(key, value, null, null, timeToLive)) != null;
 	}
 
 	public boolean supportsTimeToIdle() {
 		return true;
 	}
 
+	public boolean supportsUpdateTimeToLive(){
+		return true;
+	}
 }

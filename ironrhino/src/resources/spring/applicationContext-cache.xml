@@ -10,6 +10,8 @@
 		</constructor-arg>
 	</bean>
 	<!--
-		<bean id="cacheManager" class="org.ironrhino.core.cache.impl.MemcachedCacheManager" p:serverAddress="localhost:11211"/>
-	-->
+			<bean id="cacheManager" class="org.ironrhino.core.cache.impl.XMemcachedCacheManager" p:serverAddress="${memcached.serverAddress:localhost:11211}"/>
+			<bean id="cacheManager" class="org.ironrhino.core.cache.impl.MemcachedCacheManager" p:serverAddress="${memcached.serverAddress:localhost:11211}"/>
+			<bean id="cacheManager" class="org.ironrhino.core.cache.impl.RedisCacheManager"/>
+		-->
 </beans>

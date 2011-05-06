@@ -17,13 +17,6 @@ import org.ironrhino.core.metadata.CheckCache;
 import org.ironrhino.core.metadata.FlushCache;
 import org.springframework.beans.factory.annotation.Value;
 
-/**
- * cache some data
- * 
- * @author zhouyanming
- * @see org.ironrhino.core.metadata.CheckCache
- * @see org.ironrhino.core.metadata.FlushCache
- */
 @Aspect
 @Singleton
 @Named
@@ -51,18 +44,24 @@ public class CacheAspect extends BaseAspect {
 			throws Throwable {
 		String namespace = eval(checkCache.namespace(), jp, null).toString();
 		String key = evalString(checkCache.key(), jp, null);
+
 		if (key == null || isBypass())
 			return jp.proceed();
-		String keyMutex = key + MUTEX;
+		String keyMutex = MUTEX + key;
 		if (CacheContext.isForceFlush()) {
 			cacheManager.delete(key, namespace);
 		} else {
-			Object value = cacheManager.get(key, namespace);
+			int timeToIdle = evalInt(checkCache.timeToIdle(), jp, null);
+			Object value = (timeToIdle > 0 && !cacheManager
+					.supportsTimeToIdle()) ? cacheManager.get(key, namespace,
+					timeToIdle) : cacheManager.get(key, namespace);
 			if (value != null) {
 				eval(checkCache.onHit(), jp, value);
 				return value;
 			} else {
-				if (mutex && !cacheManager.add(keyMutex, "", 180, namespace)) {
+				if (mutex
+						&& !cacheManager.putIfAbsent(keyMutex, "", 180,
+								namespace)) {
 					Thread.sleep(mutexWait);
 					value = cacheManager.get(key, namespace);
 					if (value != null) {

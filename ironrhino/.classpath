@@ -83,5 +83,9 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/rabbitmq-client-2.4.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-commons-annotations-3.2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-core-3.6.3.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jedis-1.5.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-data-keyvalue-core-1.0.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-data-redis-1.0.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-pool-1.5.6.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>

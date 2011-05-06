@@ -112,6 +112,27 @@ public class MemcachedCacheManager implements CacheManager {
 		}
 	}
 
+	public Object get(String key, String namespace, int timeToLive) {
+		if (key == null)
+			return null;
+		if (timeToLive <= 0)
+			return get(key, namespace);
+		if (StringUtils.isBlank(namespace))
+			namespace = DEFAULT_NAMESPACE;
+		Object value = null;
+		try {
+			String actualKey = generateKey(key, namespace);
+			value = memcached.get(actualKey);
+			if (value != null) {
+				memcached.set(actualKey, timeToLive, value);
+			}
+			return value;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return value;
+		}
+	}
+
 	public void delete(String key, String namespace) {
 		if (key == null)
 			return;
@@ -135,9 +156,7 @@ public class MemcachedCacheManager implements CacheManager {
 			String namespace) {
 		if (map == null)
 			return;
-		for (Map.Entry<String, Object> entry : map.entrySet())
-			put(entry.getKey(), entry.getValue(), timeToIdle, timeToLive,
-					namespace);
+		mput(map, timeToLive, namespace);
 	}
 
 	public Map<String, Object> mget(Collection<String> keys, String namespace) {
@@ -178,7 +197,7 @@ public class MemcachedCacheManager implements CacheManager {
 		}
 	}
 
-	public boolean add(String key, Object value, int timeToLive,
+	public boolean putIfAbsent(String key, Object value, int timeToLive,
 			String namespace) {
 		try {
 			return memcached
@@ -197,6 +216,10 @@ public class MemcachedCacheManager implements CacheManager {
 	}
 
 	public boolean supportsTimeToIdle() {
+		return false;
+	}
+	
+	public boolean supportsUpdateTimeToLive(){
 		return false;
 	}
 
