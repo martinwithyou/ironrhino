@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.spring.security.DefaultUsernamePasswordAuthenticationFilter;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
@@ -34,9 +35,11 @@ public class Oauth2Action extends BaseAction {
 
 	private static final long serialVersionUID = 8175470892708878896L;
 
-
 	@Inject
 	private transient OAuthManager oauthManager;
+
+	@Inject
+	private transient BaseManager<Client> baseManager;
 
 	@Inject
 	private transient DefaultUsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
@@ -163,8 +166,12 @@ public class Oauth2Action extends BaseAction {
 
 	public String auth() {
 		try {
-			authorization = oauthManager.generate(client_id, redirect_uri,
-					scope, response_type);
+			baseManager.setEntityClass(Client.class);
+			Client client = (Client) baseManager.get(client_id);
+			if (client == null)
+				throw new IllegalArgumentException("CLIENT_ID_INVALID");
+			authorization = oauthManager.generate(client, redirect_uri, scope,
+					response_type);
 			client = authorization.getClient();
 			setUid(authorization.getId());
 		} catch (Exception e) {

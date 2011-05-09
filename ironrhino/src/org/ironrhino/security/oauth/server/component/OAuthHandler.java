@@ -29,6 +29,8 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 @Named
 @Order(Integer.MIN_VALUE + 1)
 public class OAuthHandler implements AccessHandler {
+	
+	public static final String REQUEST_ATTRIBUTE_KEY_OAUTH_REQUEST = "_OAUTH_REQUEST";
 
 	@Value("${api.pattern:/user/self}")
 	private String apiPattern;
@@ -101,6 +103,7 @@ public class OAuthHandler implements AccessHandler {
 					request.setAttribute(
 							HttpSessionManager.REQUEST_ATTRIBUTE_KEY_SESSION_MAP,
 							sessionMap);
+					request.setAttribute(REQUEST_ATTRIBUTE_KEY_OAUTH_REQUEST, true);
 					return false;
 				} else {
 					errorMessage = "Unauthorized Scope";

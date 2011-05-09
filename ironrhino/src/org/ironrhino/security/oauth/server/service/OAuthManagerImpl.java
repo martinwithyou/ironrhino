@@ -1,5 +1,6 @@
 package org.ironrhino.security.oauth.server.service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -13,10 +14,10 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.CodecUtils;
-import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Singleton
 @Named("oauthManager")
@@ -25,12 +26,18 @@ public class OAuthManagerImpl implements OAuthManager {
 	@Inject
 	private BaseManager baseManager;
 
-	public Authorization generate(String clientId, String redirectUri,
+	private long expireTime = DEFAULT_EXPIRE_TIME;
+
+	public void setExpireTime(long expireTime) {
+		this.expireTime = expireTime;
+	}
+
+	public long getExpireTime() {
+		return expireTime;
+	}
+
+	public Authorization generate(Client client, String redirectUri,
 			String scope, String responseType) {
-		baseManager.setEntityClass(Client.class);
-		Client client = (Client) baseManager.get(clientId);
-		if (client == null)
-			throw new IllegalArgumentException("CLIENT_ID_INVALID");
 		if (!client.supportsRedirectUri(redirectUri))
 			throw new IllegalArgumentException("REDIRECT_URI_MISMATCH");
 		Authorization auth = new Authorization();
@@ -48,12 +55,10 @@ public class OAuthManagerImpl implements OAuthManager {
 		Authorization auth = (Authorization) baseManager.get(authorizationId);
 		if (auth == null)
 			throw new IllegalArgumentException("BAD_AUTH");
-		if (auth.isClientSide()) {
-			auth.setAccessToken(CodecUtils.nextId());
-		} else {
-			auth.setCode(CodecUtils.nextId());
-		}
 		auth.setGrantor(grantor);
+		auth.setModifyDate(new Date());
+		if (!auth.isClientSide())
+			auth.setCode(CodecUtils.nextId());
 		baseManager.save(auth);
 		return auth;
 	}
@@ -140,10 +145,12 @@ public class OAuthManagerImpl implements OAuthManager {
 		return baseManager.findListByCriteria(dc);
 	}
 
+	@Scheduled(cron = "0 30 23 * * ?")
 	public void removeExpired() {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.SECOND, (int) (-expireTime));
 		baseManager.executeUpdate(
 				"delete from Authorization a where a.modifyDate < ?",
-				DateUtils.addDays(new Date(), -7));
+				cal.getTime());
 	}
-
 }

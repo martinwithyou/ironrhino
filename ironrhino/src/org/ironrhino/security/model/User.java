@@ -78,11 +78,11 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	@NotInCopy
 	@NotInJson
-	private User createUser;
+	private transient User createUser;
 
 	@NotInCopy
 	@NotInJson
-	private User modifyUser;
+	private transient User modifyUser;
 
 	public Collection<GrantedAuthority> getAuthorities() {
 		return authorities;
