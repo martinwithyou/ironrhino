@@ -451,7 +451,7 @@ Ajax = {
 		if (target && target.tagName == 'FORM') {
 			setTimeout(function() {
 						$('button[type="submit"]', target)
-								.removeAttr('disabled');
+								.prop('disabled',false);
 						Captcha.refresh()
 					}, 100);
 			if (!hasError && $(target).hasClass('reset')) {
@@ -832,7 +832,7 @@ Observation.common = function(container) {
 					if (!Form.validate(target))
 						return false;
 					Indicator.text = $(target).attr('indicator');
-					$('button[type="submit"]', target).attr('disabled', true);
+					$('button[type="submit"]', target).prop('disabled', true);
 					Ajax.fire(target, 'onloading');
 				},
 				error : function() {
@@ -840,7 +840,7 @@ Observation.common = function(container) {
 					if (target && target.tagName == 'FORM')
 						setTimeout(function() {
 									$('button[type="submit"]', target)
-											.removeAttr('disabled');
+											.prop('disabled',false);
 								}, 100);
 					Ajax.fire(target, 'onerror');
 				},

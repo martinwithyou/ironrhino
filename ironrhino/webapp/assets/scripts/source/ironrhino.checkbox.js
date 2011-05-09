@@ -26,7 +26,7 @@
 					if (table.hasClass('treeTable')) {
 						var checked = this.checked;
 						$('tr.child-of-node-' + this.value, table)
-								.find('input[type=checkbox]').attr('checked',
+								.find('input[type=checkbox]').prop('checked',
 										checked).end().each(function() {
 											if (checked)
 												$(this).addClass('selected');

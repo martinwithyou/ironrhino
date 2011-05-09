@@ -11,7 +11,7 @@
 		if ($(ele).prop('tagName') == 'SELECT') {
 			var input = $(ele.nextSibling);
 			if (name == input.attr('name')) {
-				input.attr('disabled', false);
+				input.prop('disabled', false);
 				input.val(value);
 				input.show();
 			} else {
@@ -29,21 +29,21 @@
 			var options = $('option', select);
 			var has = false;
 			for (var i = 0; i < options.length; i++) {
-				$(options[i]).attr('selected', false);
+				$(options[i]).prop('selected', false);
 				if ($(options[i]).val() == value) {
 					has = true;
-					$(options[i]).attr('selected', true);
+					$(options[i]).prop('selected', true);
 				}
 			}
 			if (!has)
 				select.append('<option value="' + value
 						+ '" selected="selected">' + value + '</option>');
 			select.show();
-			select.attr('disabled', false);
+			select.prop('disabled', false);
 			select.focus();
 		}
 		$(ele).hide();
-		$(ele).attr('disabled', true);
+		$(ele).prop('disabled', true);
 	}
 })(jQuery);
 

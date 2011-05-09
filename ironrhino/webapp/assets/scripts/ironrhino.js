@@ -26567,7 +26567,7 @@ Ajax = {
 		if (target && target.tagName == 'FORM') {
 			setTimeout(function() {
 						$('button[type="submit"]', target)
-								.removeAttr('disabled');
+								.prop('disabled',false);
 						Captcha.refresh()
 					}, 100);
 			if (!hasError && $(target).hasClass('reset')) {
@@ -26948,7 +26948,7 @@ Observation.common = function(container) {
 					if (!Form.validate(target))
 						return false;
 					Indicator.text = $(target).attr('indicator');
-					$('button[type="submit"]', target).attr('disabled', true);
+					$('button[type="submit"]', target).prop('disabled', true);
 					Ajax.fire(target, 'onloading');
 				},
 				error : function() {
@@ -26956,7 +26956,7 @@ Observation.common = function(container) {
 					if (target && target.tagName == 'FORM')
 						setTimeout(function() {
 									$('button[type="submit"]', target)
-											.removeAttr('disabled');
+											.prop('disabled',false);
 								}, 100);
 					Ajax.fire(target, 'onerror');
 				},
@@ -27346,7 +27346,7 @@ Observation.multiautocomplete = function(container) {
 					if (table.hasClass('treeTable')) {
 						var checked = this.checked;
 						$('tr.child-of-node-' + this.value, table)
-								.find('input[type=checkbox]').attr('checked',
+								.find('input[type=checkbox]').prop('checked',
 										checked).end().each(function() {
 											if (checked)
 												$(this).addClass('selected');
@@ -27960,7 +27960,7 @@ Observation.portal = function(container) {
 		if ($(ele).prop('tagName') == 'SELECT') {
 			var input = $(ele.nextSibling);
 			if (name == input.attr('name')) {
-				input.attr('disabled', false);
+				input.prop('disabled', false);
 				input.val(value);
 				input.show();
 			} else {
@@ -27978,21 +27978,21 @@ Observation.portal = function(container) {
 			var options = $('option', select);
 			var has = false;
 			for (var i = 0; i < options.length; i++) {
-				$(options[i]).attr('selected', false);
+				$(options[i]).prop('selected', false);
 				if ($(options[i]).val() == value) {
 					has = true;
-					$(options[i]).attr('selected', true);
+					$(options[i]).prop('selected', true);
 				}
 			}
 			if (!has)
 				select.append('<option value="' + value
 						+ '" selected="selected">' + value + '</option>');
 			select.show();
-			select.attr('disabled', false);
+			select.prop('disabled', false);
 			select.focus();
 		}
 		$(ele).hide();
-		$(ele).attr('disabled', true);
+		$(ele).prop('disabled', true);
 	}
 })(jQuery);
 
@@ -28493,7 +28493,7 @@ Richtable = {
 			var arr = $('option', select).toArray();
 			for (var i = 0; i < arr.length; i++) {
 				if (arr[i].value == value || $(arr[i]).text() == value) {
-					$(arr[i]).attr('selected', true);
+					$(arr[i]).prop('selected', true);
 					break;
 				}
 			};

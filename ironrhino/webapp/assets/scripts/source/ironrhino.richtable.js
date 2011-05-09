@@ -492,7 +492,7 @@ Richtable = {
 			var arr = $('option', select).toArray();
 			for (var i = 0; i < arr.length; i++) {
 				if (arr[i].value == value || $(arr[i]).text() == value) {
-					$(arr[i]).attr('selected', true);
+					$(arr[i]).prop('selected', true);
 					break;
 				}
 			};
