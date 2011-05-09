@@ -31,50 +31,52 @@ public class JsonUtils {
 		SerializationConfig config = objectMapper.getSerializationConfig();
 		config.setSerializationInclusion(Inclusion.NON_NULL);
 		config.set(Feature.WRITE_ENUMS_USING_TO_STRING, true);
-		config = config.withAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+		config = config
+				.withAnnotationIntrospector(new JacksonAnnotationIntrospector() {
 
-			@Override
-			public boolean isHandled(Annotation ann) {
-				return true;
-			}
-
-			@Override
-			public boolean isIgnorableField(AnnotatedField f) {
-				return super.isIgnorableField(f) || isIgnorable(f);
-			}
-
-			@Override
-			public boolean isIgnorableMethod(AnnotatedMethod m) {
-				return super.isIgnorableMethod(m) || isIgnorable(m);
-			}
-
-			private boolean isIgnorable(Annotated a) {
-				boolean b = (a.getAnnotation(NotInJson.class) != null);
-				if (b)
-					return b;
-				if (a.getAnnotated() instanceof Method) {
-					Method m = (Method) a.getAnnotated();
-					Class clazz = m.getDeclaringClass();
-					if (m.getParameterTypes().length > 0
-							|| clazz.getName().startsWith("java."))
-						return true;
-					String name = a.getName();
-					if (name.startsWith("get"))
-						name = name.substring(3);
-					else if (name.startsWith("is"))
-						name = name.substring(2);
-					else
-						return true;
-					name = StringUtils.uncapitalize(name);
-					try {
-						Field field = clazz.getDeclaredField(name);
-						return (field.getAnnotation(NotInJson.class) != null);
-					} catch (NoSuchFieldException e) {
+					@Override
+					public boolean isHandled(Annotation ann) {
+						return super.isHandled(ann) || ann instanceof NotInJson;
 					}
-				}
-				return false;
-			}
-		});
+
+					@Override
+					public boolean isIgnorableField(AnnotatedField f) {
+						return super.isIgnorableField(f) || isIgnorable(f);
+					}
+
+					@Override
+					public boolean isIgnorableMethod(AnnotatedMethod m) {
+						return super.isIgnorableMethod(m) || isIgnorable(m);
+					}
+
+					private boolean isIgnorable(Annotated a) {
+						if ((a.getAnnotation(NotInJson.class) != null))
+							return true;
+						if (a.getAnnotated() instanceof Method) {
+							Method m = (Method) a.getAnnotated();
+							Class clazz = m.getDeclaringClass();
+							if (m.getParameterTypes().length > 0
+									|| clazz.getName().startsWith("java."))
+								return true;
+							String name = a.getName();
+							if (name.startsWith("get"))
+								name = name.substring(3);
+							else if (name.startsWith("is"))
+								name = name.substring(2);
+							else
+								return true;
+							name = StringUtils.uncapitalize(name);
+							try {
+								Field field = clazz.getDeclaredField(name);
+								return (field.getAnnotation(NotInJson.class) != null || m
+										.getAnnotation(NotInJson.class) != null);
+							} catch (NoSuchFieldException e) {
+								return (m.getAnnotation(NotInJson.class) != null);
+							}
+						}
+						return false;
+					}
+				});
 		objectMapper.setSerializationConfig(config);
 		objectMapper
 				.getDeserializationConfig()
