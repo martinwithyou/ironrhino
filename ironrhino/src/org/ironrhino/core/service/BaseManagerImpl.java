@@ -91,6 +91,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		}
 		if (obj instanceof BaseTreeableEntity) {
 			final BaseTreeableEntity entity = (BaseTreeableEntity) obj;
+			boolean childrenNeedChange = false;
 			if (entity.isNew()) {
 				FlushMode mode = session.getFlushMode();
 				session.setFlushMode(FlushMode.MANUAL);
@@ -98,6 +99,12 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 				session.save(entity);
 				session.flush();
 				session.setFlushMode(mode);
+			} else {
+				childrenNeedChange = (entity.getParent() == null
+						&& entity.getLevel() != 1 || entity.getLevel()
+						- entity.getParent().getLevel() != 1)
+						&& entity.isHasChildren();
+
 			}
 			String fullId;
 			if (entity.getParent() == null)
@@ -107,6 +114,13 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 						+ String.valueOf(entity.getId());
 			entity.setFullId(fullId);
 			entity.setLevel(fullId.split("\\.").length);
+			session.saveOrUpdate(obj);
+			if (childrenNeedChange) {
+				for (Object c : entity.getChildren()) {
+					save((T) c);
+				}
+			}
+			return;
 		}
 		session.saveOrUpdate(obj);
 	}
