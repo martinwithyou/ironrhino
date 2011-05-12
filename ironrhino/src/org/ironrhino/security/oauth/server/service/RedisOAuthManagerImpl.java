@@ -1,6 +1,5 @@
 package org.ironrhino.security.oauth.server.service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +14,7 @@ import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
 import org.springframework.data.keyvalue.redis.core.RedisTemplate;
+
 
 public class RedisOAuthManagerImpl implements OAuthManager {
 
@@ -69,7 +69,8 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 			redisTemplate.opsForValue().set(namespace + auth.getAccessToken(),
 					auth, expireTime, TimeUnit.SECONDS);
 			stringRedisTemplate.opsForValue().set(
-					namespace + auth.getRefreshToken(), auth.getAccessToken());
+					namespace + auth.getRefreshToken(),
+					namespace + auth.getAccessToken());
 		} else {
 			auth.setCode(CodecUtils.nextId());
 			redisTemplate.delete(key);
@@ -79,7 +80,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		stringRedisTemplate.opsForList().leftPush(
 				new StringBuilder(namespace).append("grantor:")
 						.append(auth.getGrantor().getUsername()).toString(),
-				auth.getAccessToken());
+				namespace + auth.getAccessToken());
 		return auth;
 	}
 
@@ -110,7 +111,8 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		redisTemplate.opsForValue().set(namespace + auth.getAccessToken(),
 				auth, expireTime, TimeUnit.SECONDS);
 		stringRedisTemplate.opsForValue().set(
-				namespace + auth.getRefreshToken(), auth.getAccessToken());
+				namespace + auth.getRefreshToken(),
+				namespace + auth.getAccessToken());
 		return auth;
 	}
 
@@ -131,10 +133,8 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 
 	public Authorization refresh(String refreshToken) {
 		String keyRefreshToken = namespace + refreshToken;
-		String accessToken = stringRedisTemplate.opsForValue().get(
-				keyRefreshToken);
 		Authorization auth = redisTemplate.opsForValue().get(
-				namespace + accessToken);
+				stringRedisTemplate.opsForValue().get(keyRefreshToken));
 		String keyAccessToken = namespace + auth.getAccessToken();
 		redisTemplate.delete(keyAccessToken);
 		auth.setAccessToken(CodecUtils.nextId());
@@ -142,7 +142,8 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		redisTemplate.opsForValue().set(namespace + auth.getAccessToken(),
 				auth, expireTime, TimeUnit.SECONDS);
 		stringRedisTemplate.opsForValue().set(
-				namespace + auth.getRefreshToken(), auth.getAccessToken());
+				namespace + auth.getRefreshToken(),
+				namespace + auth.getAccessToken());
 		return auth;
 	}
 
@@ -151,10 +152,10 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		Authorization auth = redisTemplate.opsForValue().get(key);
 		redisTemplate.delete(key);
 		redisTemplate.delete(namespace + auth.getRefreshToken());
-		redisTemplate.opsForList().remove(
+		stringRedisTemplate.opsForList().remove(
 				new StringBuilder(namespace).append("grantor:")
 						.append(auth.getGrantor().getUsername()).toString(), 0,
-				accessToken);
+				namespace + accessToken);
 	}
 
 	public List<Authorization> findAuthorizationsByGrantor(User grantor) {
@@ -164,10 +165,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 				keyForList, 0, -1);
 		if (tokens == null || tokens.isEmpty())
 			return Collections.EMPTY_LIST;
-		List<Authorization> result = new ArrayList<Authorization>(tokens.size());
-		for (String accessToken : tokens)
-			result.add(redisTemplate.opsForValue().get(namespace + accessToken));
-		return result;
+		return redisTemplate.opsForValue().multiGet(tokens);
 	}
 
 }
