@@ -15,17 +15,8 @@
 		</property>
 	</bean>
 	<bean id="stringRedisTemplate"
-		class="org.springframework.data.keyvalue.redis.core.RedisTemplate"
-		p:connectionFactory-ref="redisConnectionFactory">
-		<property name="keySerializer">
-			<bean
-				class="org.springframework.data.keyvalue.redis.serializer.StringRedisSerializer" />
-		</property>
-		<property name="valueSerializer">
-			<bean
-				class="org.springframework.data.keyvalue.redis.serializer.StringRedisSerializer" />
-		</property>
-	</bean>
+		class="org.springframework.data.keyvalue.redis.core.StringRedisTemplate"
+		p:connectionFactory-ref="redisConnectionFactory" />
 	<redis:listener-container connection-factory="redisConnectionFactory"
 		task-executor="executorService">
 	</redis:listener-container>
