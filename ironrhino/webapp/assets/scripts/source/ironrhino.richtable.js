@@ -139,9 +139,9 @@ Richtable = {
 					+ document.location.search.substring(1);
 		return url;
 	},
-	reload : function(form, dontpushstate) {
+	reload : function(form, pushstate) {
 		form = form || $('form.richtable');
-		if (!dontpushstate && typeof history.pushState != 'undefined') {
+		if (pushstate && typeof history.pushState != 'undefined') {
 			var url = form.attr('action');
 			var params = form.serializeArray();
 			if (params) {
@@ -158,8 +158,9 @@ Richtable = {
 								v.value = '';
 							}
 						});
-				url += (url.indexOf('?') > 0 ? '&' : '?')
-						+ $.param(params).replace(/(&=)|(=&)/g, '');
+				var param = $.param(params).replace(/(&=)|(=&)/g, '');
+				if (param)
+					url += (url.indexOf('?') > 0 ? '&' : '?') + param;
 			}
 			history.pushState(url, '', url);
 		}
@@ -291,7 +292,7 @@ Richtable = {
 			close : function() {
 				if (reloadonclose
 						&& !$('#_window_ form.ajax').hasClass('dontreload'))
-					Richtable.reload(form, true);
+					Richtable.reload(form);
 				$('#_window_ ').html('');
 				win.dialog('destroy');
 			},
@@ -346,7 +347,7 @@ Richtable = {
 		var action = $(btn).attr('action');
 		var view = $(btn).attr('view');
 		if (action == 'reload')
-			Richtable.reload(form, true);
+			Richtable.reload(form);
 		else if (action == 'enter')
 			Richtable.enter(event);
 		else if (action == 'save')
@@ -369,7 +370,7 @@ Richtable = {
 											type : 'POST',
 											dataType : 'json',
 											success : function() {
-												Richtable.reload(form, true)
+												Richtable.reload(form)
 											}
 										});
 							}
@@ -383,7 +384,7 @@ Richtable = {
 							type : 'POST',
 							dataType : 'json',
 							success : function() {
-								Richtable.reload(form, true)
+								Richtable.reload(form)
 							}
 						});
 			}
@@ -557,7 +558,7 @@ Observation.richtable = function(container) {
 		$('.firstPage', container).click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
-					Richtable.reload(form);
+					Richtable.reload(form, true);
 					return false;
 				});
 		$('.prevPage', container).click(function(event) {
@@ -565,7 +566,7 @@ Observation.richtable = function(container) {
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) - 1
 							});
-					Richtable.reload(form);
+					Richtable.reload(form, true);
 					return false;
 				});
 		$('.nextPage', container).click(function(event) {
@@ -573,36 +574,36 @@ Observation.richtable = function(container) {
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) + 1
 							});
-					Richtable.reload(form);
+					Richtable.reload(form, true);
 					return false;
 				});
 		$('.lastPage', container).click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val($('.totalPage', form).text());
-					Richtable.reload(form);
+					Richtable.reload(form, true);
 					return false;
 				});
 		$('.inputPage', container).change(function(event) {
 					var form = $(event.target).closest('form');
-					Richtable.reload(form);
+					Richtable.reload(form, true);
 					event.preventDefault();
 				});
 		$('select.pageSize', container).change(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
-					Richtable.reload(form);
+					Richtable.reload(form, true);
 				});
 		$('input[name="keyword"]', container).keydown(function(event) {
 					var form = $(event.target).closest('form');
 					if (event.keyCode == 13) {
 						$('.inputPage', form).val(1);
-						Richtable.reload(form);
+						Richtable.reload(form, true);
 						return false;
 					}
 				}).next().click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
-					Richtable.reload(form);
+					Richtable.reload(form, true);
 					return false;
 				});
 

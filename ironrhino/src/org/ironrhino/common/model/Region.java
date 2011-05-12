@@ -48,23 +48,16 @@ public class Region extends BaseTreeableEntity<Region> {
 		this.displayOrder = displayOrder;
 	}
 
-	String fullname = null;
-
 	@Override
 	@SearchableProperty(boost = 2)
 	public String getFullname() {
-		if (fullname == null)
-			fullname = super.getFullname();
-		return fullname;
+		return super.getFullname();
 	}
 
-	String shortFullname;
 
 	@NotInJson
 	public String getShortFullname() {
-		if (shortFullname == null)
-			shortFullname = RegionUtils.shortenAddress(getFullname());
-		return shortFullname;
+		return RegionUtils.shortenAddress(getFullname());
 	}
 
 	@Override

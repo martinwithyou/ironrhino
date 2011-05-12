@@ -101,8 +101,10 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 				session.setFlushMode(mode);
 			} else {
 				childrenNeedChange = (entity.getParent() == null
-						&& entity.getLevel() != 1 || entity.getLevel()
-						- entity.getParent().getLevel() != 1)
+						&& entity.getLevel() != 1
+						|| entity.getLevel() - entity.getParent().getLevel() != 1 || !entity
+						.getFullId().startsWith(
+								entity.getParent().getFullId() + "."))
 						&& entity.isHasChildren();
 
 			}

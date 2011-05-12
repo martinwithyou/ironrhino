@@ -71,19 +71,38 @@ public class RegionTreeControl implements
 		Region r = regionTree.getDescendantOrSelfById(region.getId());
 		if (!r.getFullId().equals(region.getFullId())) {
 			r.getParent().getChildren().remove(r);
+			String str = region.getFullId();
+			long newParentId = 0;
+			if (str.indexOf('.') > 0) {
+				str = str.substring(0, str.lastIndexOf('.'));
+				if (str.indexOf('.') > 0)
+					str = str.substring(str.lastIndexOf('.') + 1);
+				newParentId = Long.valueOf(str);
+			}
 			Region newParent;
-			if (region.getParent() == null)
+			if (newParentId == 0)
 				newParent = regionTree;
 			else
-				newParent = regionTree.getDescendantOrSelfById(region
-						.getParent().getId());
+				newParent = regionTree.getDescendantOrSelfById(newParentId);
 			r.setParent(newParent);
 			newParent.getChildren().add(r);
+			resetChildren(r);
 		}
 		BeanUtils.copyProperties(region, r,
 				new String[] { "parent", "children" });
 		if (r.getParent().getChildren() instanceof List)
 			Collections.sort((List<Region>) r.getParent().getChildren());
+	}
+
+	private void resetChildren(Region region) {
+		if (region.isHasChildren())
+			for (Region r : region.getChildren()) {
+				String fullId = (r.getParent()).getFullId() + "."
+						+ String.valueOf(r.getId());
+				r.setFullId(fullId);
+				r.setLevel(fullId.split("\\.").length);
+				resetChildren(r);
+			}
 	}
 
 	private void delete(Region region) {

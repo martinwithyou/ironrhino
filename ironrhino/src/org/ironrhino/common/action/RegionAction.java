@@ -236,9 +236,14 @@ public class RegionAction extends BaseAction {
 				addActionError(getText("validation.required"));
 				return SUCCESS;
 			}
-			source.setParent(target);
-			baseManager.save(source);
-			addActionMessage(getText("operate.success"));
+			if (!(source.getParent() == null && target == null || source
+					.getParent() != null
+					&& target != null
+					&& source.getParent().getId() == target.getId())) {
+				source.setParent(target);
+				baseManager.save(source);
+				addActionMessage(getText("operate.success"));
+			}
 		}
 		return SUCCESS;
 	}

@@ -25,9 +25,9 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	protected int displayOrder;
 
-	protected T parent;
+	protected transient T parent;
 
-	protected Collection<T> children = new HashSet<T>(0);
+	protected transient Collection<T> children = new HashSet<T>(0);
 
 	@NotInJson
 	public String getFullId() {
