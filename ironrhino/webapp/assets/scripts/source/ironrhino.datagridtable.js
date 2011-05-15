@@ -52,13 +52,13 @@
 	var rename = function(tbody) {
 		$('tr', tbody).each(function(i) {
 			$(':input', this).each(function() {
-				var name = $(this).attr('name');
+				var name = $(this).prop('name');
 				var j = name.indexOf('[');
 				if (j < 0)
 					return;
 				name = name.substring(0, j + 1) + i
 						+ name.substring(name.indexOf(']'));
-				$(this).attr('name', name);
+				$(this).prop('name', name);
 			});
 		});
 	}
