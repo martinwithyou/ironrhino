@@ -26255,6 +26255,7 @@ Indicator = {
 			ind.addClass('loading');
 		ind.html(Indicator.text || MessageBundle.get('ajax.loading'));
 		ind.show();
+		Indicator.text = '';
 	},
 	showError : function() {
 		Indicator.text = MessageBundle.get('ajax.error');
