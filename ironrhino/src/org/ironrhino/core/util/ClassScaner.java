@@ -105,6 +105,7 @@ public class ClassScaner {
 
 	public Set<Class> doScan(String basePackage) {
 		Set<Class> classes = new HashSet<Class>();
+		Resource resource = null;
 		try {
 			String searchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
 					+ org.springframework.util.ClassUtils
@@ -113,9 +114,8 @@ public class ClassScaner {
 					+ "/**/*.class";
 			Resource[] resources = this.resourcePatternResolver
 					.getResources(searchPath);
-
 			for (int i = 0; i < resources.length; i++) {
-				Resource resource = resources[i];
+				resource = resources[i];
 				if (resource.isReadable()) {
 					MetadataReader metadataReader = this.metadataReaderFactory
 							.getMetadataReader(resource);
@@ -133,7 +133,7 @@ public class ClassScaner {
 			}
 		} catch (IOException ex) {
 			throw new BeanDefinitionStoreException(
-					"I/O failure during classpath scanning", ex);
+					"I/O failure during classpath scanning " + resource, ex);
 		}
 		return classes;
 	}
@@ -193,7 +193,8 @@ public class ClassScaner {
 			"com.chenlb", "com.mysql", "com.opensymphony", "freemarker",
 			"javassist", "net.sf", "net.sourceforge", "ognl", "org.antlr",
 			"org.aopalliance", "org.apache", "org.aspectj", "org.codehaus",
-			"org.compass", "org.dom4j", "org.hibernate", "org.mvel2",
-			"org.slf4j", "org.springframework", "org.ironrhino.core" };
+			"org.compass", "org.dom4j", "org.eclipse", "org.hibernate",
+			"org.mvel2", "org.slf4j", "org.springframework",
+			"org.ironrhino.core" };
 
 }
