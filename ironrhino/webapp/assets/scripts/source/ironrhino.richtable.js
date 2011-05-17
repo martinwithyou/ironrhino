@@ -187,7 +187,8 @@ Richtable = {
 				var inputform = $('#_window_ form.ajax');
 				if (inputform.length) {
 					$(':input:visible', inputform).filter(function(i) {
-								return !$(this).val();
+								return !($(this).val() || $(this)
+										.hasClass('date'));
 							}).eq(0).focus();
 					if (!inputform.hasClass('keepopen')) {
 						$(':input', inputform).change(function(e) {
