@@ -33,6 +33,11 @@ public class JsonUtils {
 		config.set(Feature.WRITE_ENUMS_USING_TO_STRING, true);
 		config = config
 				.withAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+					
+					@Override
+					public String findEnumValue(Enum<?> value) {
+						return value.toString();
+					}
 
 					@Override
 					public boolean isHandled(Annotation ann) {
