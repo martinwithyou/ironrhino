@@ -7,6 +7,16 @@ td.center {text-align:center;}
 div.hover { border: 2px dashed #333; }
 </style>
 <script>
+	Observation.uploaditem = function(container){
+		$('.selectthis').click(function(){select(this)}).dblclick(function(){select(this)});
+		$('.uploaditem',container).attr('draggable',true).each(function(){
+			var t = $(this);
+			this.ondragstart = function(e){
+			 e.dataTransfer.effectAllowed = 'copy';
+      		 e.dataTransfer.setData('Text', $('input[type="checkbox"]',t.closest('tr')).attr('value'));
+		};
+		});
+	};
 	function select(el){
 		try{
 		 	var s = window.getSelection();
@@ -52,15 +62,16 @@ div.hover { border: 2px dashed #333; }
 		}
 	}
 	function upload(files){
-		$.ajaxupload(files,{
-	        		url:$('#upload_form').attr('action')+'?'+$('#upload_form').serialize(),
-	        		name:$('#upload_form input[type="file"]').attr('name'),
-	        		beforeSend:Indicator.show,
-	        		success:function(xhr){
-	        			Ajax.handleResponse(xhr.responseText,{replacement:'files'});
-	        			Indicator.hide();
-	        		}
-	        	});
+		if(files&&files.length)
+			$.ajaxupload(files,{
+		        		url:$('#upload_form').attr('action')+'?'+$('#upload_form').serialize(),
+		        		name:$('#upload_form input[type="file"]').attr('name'),
+		        		beforeSend:Indicator.show,
+		        		success:function(xhr){
+		        			Ajax.handleResponse(xhr.responseText,{replacement:'files'});
+		        			Indicator.hide();
+		        		}
+		        	});
 	}
 	
 	$(function(){
@@ -82,7 +93,22 @@ div.hover { border: 2px dashed #333; }
 				upload(e.dataTransfer.files);
 				return true;
 			};
-		}
+			
+			document.body.ondrop = function(e){
+				var id = e.dataTransfer.getData('Text');
+				if(!id)return true;
+				//if(!id || $(e.target).parents('#upload_form').length)return true;
+				if (e.stopPropagation) e.stopPropagation();
+				$.alerts.confirm(MessageBundle.get('confirm.delete'),
+						MessageBundle.get('select'), function(b) {
+							if (b) {
+								$('#files input[value="'+id+'"]').attr('checked',true);
+								del();
+							}
+						});
+			}
+		}		
+
 	});
 </script>
 </head>
@@ -120,9 +146,9 @@ div.hover { border: 2px dashed #333; }
 	<#list files.entrySet() as entry>
 	<tr>
 		<td class="center"><#if entry.key!='..'><input type="checkbox" name="id" value="${entry.key}"/></#if></td>
-		<td><#if entry.value><a style="color:#1c5a50;" href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank">${entry.key}</a><#else><a style="color:blue;" class="ajax view" replacement="files" href="<@url value="/common/upload/list${folderEncoded}/${entry.key?replace('..','__')?url}"/>">${entry.key}</a></#if></td>
-		<td class="center"><#if entry.value && ['jpg','gif','png','bmp']?seq_contains(entry.key?lower_case?split('.')?last)><a href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank"><img src="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" style="width:50px;height:50px;"/></a></#if></td>
-		<td><#if entry.value><span onclick="select(this)" ondblclick="select(this)"><@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/></span></#if></td>
+		<td><#if entry.value><a class="uploaditem" style="color:#1c5a50;" href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank">${entry.key}</a><#else><a style="color:blue;" class="ajax view" replacement="files" href="<@url value="/common/upload/list${folderEncoded}/${entry.key?replace('..','__')?url}"/>">${entry.key}</a></#if></td>
+		<td class="center"><#if entry.value && ['jpg','gif','png','bmp']?seq_contains(entry.key?lower_case?split('.')?last)><a href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank"><img class="uploaditem" src="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" style="width:50px;height:50px;"/></a></#if></td>
+		<td><#if entry.value><span class="selectthis"><@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/></span></#if></td>
 	</tr>
 	</#list>
 	</tbody>

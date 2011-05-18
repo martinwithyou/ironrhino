@@ -15,6 +15,8 @@
  * * ironrhino.ajaxupload.js
  */
 (function($) {
+	if (!window.BlobBuilder && window.WebKitBlobBuilder)
+		window.BlobBuilder = window.WebKitBlobBuilder;
 	$.ajaxupload = function(files, options) {
 		if (!files)
 			return;
@@ -148,6 +150,17 @@ $(function(){
 	baseurl = baseurl.substring(0,baseurl.indexOf('/common/'));
 	html = '<input id="files" type="file" multiple="true" onchange="upload(this.files)" style="width:130px;margin-left:10px;position:relative;"/><a href="'+baseurl+'/common/upload?folder=/page/'+pageid+'" style="margin-left:60px;text-decoration:none;font-weight:bold;" target="_blank">管理文件</a>';
 	$('#insert').after(html);
+	document.body.ondrop = function(e){
+	var id = e.dataTransfer.getData('Text');
+	if(!id)return true;
+	if (e.stopPropagation) e.stopPropagation();
+	if (confirm('确定删除?')) {
+		$.post(baseurl+'/common/upload/delete',{
+			folder:'/page/'+pageid,
+			id:id
+		},browse);
+	}
+	}
 });
 
 function upload(files){
@@ -185,6 +198,13 @@ function browse() {
 					+ '" onclick="select(this)" style="margin:0 5px;width:100px;height:100px;cursor:pointer;"/>';
   		});
 		panel.html(html);
+		$('img',panel).attr('draggable',true).each(function(){
+			var t = $(this);
+			this.ondragstart = function(e){
+			 e.dataTransfer.effectAllowed = 'copy';
+      		 e.dataTransfer.setData('Text', t.attr('title'));
+		};
+		});
 		$('#files').replaceWith($('#files').clone());
 		mcTabs.displayTab('browse_tab', 'browse_panel');
 	});

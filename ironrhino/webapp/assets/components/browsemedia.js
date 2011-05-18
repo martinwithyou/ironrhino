@@ -15,6 +15,8 @@
  * * ironrhino.ajaxupload.js
  */
 (function($) {
+	if (!window.BlobBuilder && window.WebKitBlobBuilder)
+		window.BlobBuilder = window.WebKitBlobBuilder;
 	$.ajaxupload = function(files, options) {
 		if (!files)
 			return;
@@ -139,15 +141,25 @@
 
 $(function(){
 	var pageid = $('#page_id',window.parent.document).val();
-	if(pageid){
-		var html = '<li id="browse_tab"><span><a href="javascript:mcTabs.displayTab(\'browse_tab\',\'browse_panel\');" onmousedown="return browse();">浏览</a></span></li>';
-		$('#general_tab').after(html);
-		html = '<div id="browse_panel" class="panel">加载中...</div>';
-		$('#general_panel').after(html);
-		var baseurl = window.parent.location.href;
-		baseurl = baseurl.substring(0,baseurl.indexOf('/common/'));
-		html = '<input id="files" type="file" multiple="true" onchange="upload(this.files)" style="width:130px;position:relative;"/><a href="'+baseurl+'/common/upload?folder=/page/'+pageid+'" style="margin-left:35px;text-decoration:none;font-weight:bold;" target="_blank">管理文件</a>';
-		$('#insert').after(html);
+	if(!pageid)return;
+	var html = '<li id="browse_tab"><span><a href="javascript:mcTabs.displayTab(\'browse_tab\',\'browse_panel\');" onmousedown="return browse();">浏览</a></span></li>';
+	$('#general_tab').after(html);
+	html = '<div id="browse_panel" class="panel">加载中...</div>';
+	$('#general_panel').after(html);
+	var baseurl = window.parent.location.href;
+	baseurl = baseurl.substring(0,baseurl.indexOf('/common/'));
+	html = '<input id="files" type="file" multiple="true" onchange="upload(this.files)" style="width:130px;position:relative;"/><a href="'+baseurl+'/common/upload?folder=/page/'+pageid+'" style="margin-left:35px;text-decoration:none;font-weight:bold;" target="_blank">管理文件</a>';
+	$('#insert').after(html);
+	document.body.ondrop = function(e){
+	var id = e.dataTransfer.getData('Text');
+	if(!id)return true;
+	if (e.stopPropagation) e.stopPropagation();
+	if (confirm('确定删除?')) {
+		$.post(baseurl+'/common/upload/delete',{
+			folder:'/page/'+pageid,
+			id:id
+		},browse);
+	}
 	}
 });
 
@@ -180,6 +192,13 @@ function browse() {
    	 	html += '<span onclick="select(this)" style="display:block;float:left;margin:0 5px;width:120px;height:30px;cursor:pointer;text-align:center;" src="'+val+'">'+key+'</span>';
   		});
 		panel.html(html);
+		$('span',panel).attr('draggable',true).each(function(){
+			var t = $(this);
+			this.ondragstart = function(e){
+			 e.dataTransfer.effectAllowed = 'copy';
+      		 e.dataTransfer.setData('Text', t.text());
+		};
+		});
 		$('#files').replaceWith($('#files').clone());
 		mcTabs.displayTab('browse_tab', 'browse_panel');
 	});

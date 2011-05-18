@@ -27160,6 +27160,8 @@ Captcha = {
 	}
 };
 (function($) {
+	if (!window.BlobBuilder && window.WebKitBlobBuilder)
+		window.BlobBuilder = window.WebKitBlobBuilder;
 	$.ajaxupload = function(files, options) {
 		if (!files)
 			return;
