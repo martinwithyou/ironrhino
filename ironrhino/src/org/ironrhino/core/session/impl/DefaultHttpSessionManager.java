@@ -69,6 +69,30 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			+ DEFAULT_MINACTIVEINTERVAL + "}")
 	private int minActiveInterval;
 
+	public String getDefaultLocaleName() {
+		return defaultLocaleName;
+	}
+
+	public void setDefaultLocaleName(String defaultLocaleName) {
+		this.defaultLocaleName = defaultLocaleName;
+	}
+
+	public int getMaxInactiveInterval() {
+		return maxInactiveInterval;
+	}
+
+	public void setMaxInactiveInterval(int maxInactiveInterval) {
+		this.maxInactiveInterval = maxInactiveInterval;
+	}
+
+	public int getMinActiveInterval() {
+		return minActiveInterval;
+	}
+
+	public void setMinActiveInterval(int minActiveInterval) {
+		this.minActiveInterval = minActiveInterval;
+	}
+
 	public String getLocaleCookieName() {
 		return localeCookieName;
 	}

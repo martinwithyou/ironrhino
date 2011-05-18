@@ -32,20 +32,16 @@ public class AppInfoListener implements ServletContextListener {
 		if (StringUtils.isNotBlank(home)) {
 			AppInfo.setAppHome(home);
 		}
-		System
-				.setProperty(AppInfo.getAppName() + ".home", AppInfo
-						.getAppHome());
-		System.setProperty(AppInfo.getAppName() + ".context", ctx
-				.getRealPath("/"));
+		System.setProperty(AppInfo.getAppName() + ".home", AppInfo.getAppHome());
+		System.setProperty(AppInfo.getAppName() + ".context",
+				ctx.getRealPath("/"));
 		logger = LoggerFactory.getLogger(getClass());
-		logger
-				.info(
-						"app.name={},app.version={},app.stage={},app.home={},hostname={},hostaddress={}",
-						new String[] { AppInfo.getAppName(),
-								AppInfo.getAppVersion(),
-								AppInfo.getStage().toString(),
-								AppInfo.getAppHome(), AppInfo.getHostName(),
-								AppInfo.getHostAddress() });
+		logger.info(
+				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={}",
+				new String[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
+						AppInfo.getInstanceId(), AppInfo.getStage().toString(),
+						AppInfo.getAppHome(), AppInfo.getHostName(),
+						AppInfo.getHostAddress() });
 	}
 
 }

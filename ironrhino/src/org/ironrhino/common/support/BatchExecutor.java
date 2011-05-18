@@ -36,7 +36,7 @@ public class BatchExecutor {
 	public void execute() {
 		for (String cmd : commands) {
 			try {
-				applicationContextConsole.execute(cmd);
+				applicationContextConsole.execute(cmd, false);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				if (mailService != null) {

@@ -19,6 +19,8 @@ public class AppInfo {
 
 	private static String name = "app";
 
+	private static String _instanceId;
+
 	private static String home;
 
 	private static String version = "1.0.0";
@@ -32,6 +34,7 @@ public class AppInfo {
 	private static final String NODEPATH;
 
 	static {
+		_instanceId = CodecUtils.nextId();
 		String stage = System.getProperty(KEY_STAGE);
 		if (stage == null)
 			stage = System.getenv(KEY_STAGE);
@@ -90,6 +93,10 @@ public class AppInfo {
 
 	public static String getAppName() {
 		return name;
+	}
+
+	public static String getInstanceId() {
+		return getAppName() + "-" + _instanceId;
 	}
 
 	public static String getAppVersion() {

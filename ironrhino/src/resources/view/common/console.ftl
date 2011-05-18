@@ -5,12 +5,13 @@
 </head>
 <body>
 <@s.form id="form" action="console" method="post" cssClass="ajax focus">
-	<@s.textfield theme="simple" id="cmd" name="cmd" size="50"/>
+	<span>${action.getText('expression')}:</span><@s.textfield theme="simple" id="expression" name="expression" size="50"/>
+	<span>${action.getText('global')}:</span><@s.checkbox theme="simple" id="global" name="global"/>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 </@s.form>
 <div id="dashboard" style="margin:10px;">
-	<@button text="compassGps.index()" onclick="$('#cmd').val($(this).text());$('#form').submit()"/>
-	<@button text="freemarkerConfiguration.clearTemplateCache()" onclick="$('#cmd').val($(this).text());$('#form').submit()"/>
+	<@button text="compassGps.index()" onclick="$('#expression').val($(this).text());$('#global').attr('checked',false);$('#form').submit()"/>
+	<@button text="freemarkerConfiguration.clearTemplateCache()" onclick="$('#expression').val($(this).text());$('#global').attr('checked',true);$('#form').submit()"/>
 </div>
 </body>
 </html></#escape>

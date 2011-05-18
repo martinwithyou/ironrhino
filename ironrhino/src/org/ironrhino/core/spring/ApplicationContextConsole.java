@@ -15,9 +15,10 @@ import javax.servlet.ServletContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.ironrhino.core.event.EventPublisher;
-import org.ironrhino.core.event.SetPropertyEvent;
+import org.ironrhino.core.event.ExpressionEvent;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.ironrhino.core.util.AnnotationUtils;
+import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.ExpressionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ import org.springframework.core.io.support.PropertiesLoaderSupport;
 @Singleton
 @Named("applicationContextConsole")
 public class ApplicationContextConsole implements
-		ApplicationListener<SetPropertyEvent> {
+		ApplicationListener<ExpressionEvent> {
 
 	private static final Pattern SET_PROPERTY_EXPRESSION_PATTERN = Pattern
 			.compile("(^[a-zA-Z][a-zA-Z0-9_\\-]*\\.[a-zA-Z][a-zA-Z0-9_\\-]*\\s*=\\s*.+$)");
@@ -81,17 +82,20 @@ public class ApplicationContextConsole implements
 		return beans;
 	}
 
-	public Object execute(String expression) throws Exception {
+	public Object execute(String expression, boolean global) throws Exception {
+		Object value = null;
 		try {
 			if (isSetProperyExpression(expression)) {
-				executeSetProperty(expression, true);
-				return null;
+				executeSetProperty(expression);
 			} else {
-				return executeMethodInvocation(expression);
+				value = executeMethodInvocation(expression);
 			}
+			if (global)
+				eventPublisher.publish(new ExpressionEvent(expression), true);
 		} catch (Exception e) {
 			throw e;
 		}
+		return value;
 	}
 
 	private Object executeMethodInvocation(String expression) throws Exception {
@@ -102,27 +106,22 @@ public class ApplicationContextConsole implements
 		}
 	}
 
-	private void executeSetProperty(String expression, boolean global)
-			throws Exception {
-		if (global) {
-			eventPublisher.publish(new SetPropertyEvent(expression), true);
-		} else {
-			try {
-				Object bean = null;
-				if (expression.indexOf('=') > 0) {
-					bean = getBeans().get(
-							expression.substring(0, expression.indexOf('.')));
-				}
-				ExpressionUtils.evalExpression(expression, getBeans());
-				if (bean != null) {
-					Method m = AnnotationUtils.getAnnotatedMethod(
-							bean.getClass(), PostPropertiesReset.class);
-					if (m != null)
-						m.invoke(bean, new Object[0]);
-				}
-			} catch (Exception e) {
-				throw e;
+	private void executeSetProperty(String expression) throws Exception {
+		try {
+			Object bean = null;
+			if (expression.indexOf('=') > 0) {
+				bean = getBeans().get(
+						expression.substring(0, expression.indexOf('.')));
 			}
+			ExpressionUtils.evalExpression(expression, getBeans());
+			if (bean != null) {
+				Method m = AnnotationUtils.getAnnotatedMethod(bean.getClass(),
+						PostPropertiesReset.class);
+				if (m != null)
+					m.invoke(bean, new Object[0]);
+			}
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 
@@ -140,10 +139,12 @@ public class ApplicationContextConsole implements
 		return matcher.matches();
 	}
 
-	public void onApplicationEvent(SetPropertyEvent event) {
+	public void onApplicationEvent(ExpressionEvent event) {
+		if (event.getInstanceId().equals(AppInfo.getInstanceId()))
+			return;
 		String expression = event.getExpression();
 		try {
-			executeSetProperty(expression, false);
+			execute(expression, false);
 		} catch (Exception e) {
 			log.error("execute '" + expression + "' error", e);
 		}

@@ -1,14 +1,12 @@
 package org.ironrhino.core.event;
 
-import org.springframework.context.ApplicationEvent;
-
-public class SetPropertyEvent extends ApplicationEvent {
+public class ExpressionEvent extends BaseEvent {
 
 	private static final long serialVersionUID = 6493345801143748086L;
 
 	private String expression;
 
-	public SetPropertyEvent(String expression) {
+	public ExpressionEvent(String expression) {
 		super(expression);
 		this.expression = expression;
 	}
