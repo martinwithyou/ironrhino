@@ -451,8 +451,8 @@ Ajax = {
 		}
 		if (target && target.tagName == 'FORM') {
 			setTimeout(function() {
-						$('button[type="submit"]', target)
-								.prop('disabled',false);
+						$('button[type="submit"]', target).prop('disabled',
+								false);
 						Captcha.refresh()
 					}, 100);
 			if (!hasError && $(target).hasClass('reset')) {
@@ -571,13 +571,20 @@ var _historied_ = false;
 Initialization.history = function() {
 	if (HISTORY_ENABLED) {
 		if (SESSION_HISTORY_SUPPORT) {
+			if ($.browser.mozilla) {
+				var url = document.location.href;
+				history.replaceState({
+							url : url
+						}, '', url);
+				_historied_ = true;
+			}
 			window.onpopstate = function(event) {
 				var url = document.location.href;
 				if (event.state && _historied_) {
 					ajax({
 								url : url,
-								cache : true,
 								replaceTitle : true,
+								replacement : event.state.replacement,
 								success : function() {
 									$('.menu li a').each(function() {
 										if (this.href == url) {
@@ -592,7 +599,9 @@ Initialization.history = function() {
 								}
 							});
 				} else {
-					history.replaceState(url, '', url);
+					history.replaceState({
+								url : url
+							}, '', url);
 					_historied_ = true;
 				}
 			};
@@ -840,8 +849,8 @@ Observation.common = function(container) {
 					Form.focus(target);
 					if (target && target.tagName == 'FORM')
 						setTimeout(function() {
-									$('button[type="submit"]', target)
-											.prop('disabled',false);
+									$('button[type="submit"]', target).prop(
+											'disabled', false);
 								}, 100);
 					Ajax.fire(target, 'onerror');
 				},
@@ -878,14 +887,20 @@ Observation.common = function(container) {
 			$(this).click(function() {
 				if (!Ajax.fire(target, 'onprepare'))
 					return false;
-				if (HISTORY_ENABLED && $(this).hasClass('view')
-						&& !$(this).attr('replacement')) {
+				if (HISTORY_ENABLED
+						&& $(this).hasClass('view')
+						&& ($(this).hasClass('history') || !$(this)
+								.attr('replacement'))) {
 					var hash = this.href;
 					if (UrlUtils.isSameDomain(hash)) {
 						hash = hash.substring(hash.indexOf('//') + 2);
 						hash = hash.substring(hash.indexOf('/'));
 						if (SESSION_HISTORY_SUPPORT) {
-							history.pushState(hash, '', hash);
+							history.pushState({
+										replacement : $(this)
+												.attr('replacement'),
+										url : hash
+									}, '', hash);
 						} else {
 							if (CONTEXT_PATH)
 								hash = hash.substring(CONTEXT_PATH.length);
