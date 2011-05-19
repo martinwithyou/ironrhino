@@ -4,7 +4,7 @@
 <title>${action.getText('upload')}</title>
 <style>
 td.center {text-align:center;}
-div.hover { border: 2px dashed #333; }
+.hover { border: 2px dashed #333; }
 </style>
 <script>
 	Observation.uploaditem = function(container){
@@ -85,7 +85,7 @@ div.hover { border: 2px dashed #333; }
 					addMore(1);
 					return false;
 				});
-			$('#upload_form').closest('div').bind('dragover',function(e){$(this).addClass('hover');return false;})
+			$('#upload_form').bind('dragover',function(e){$(this).addClass('hover');return false;})
 			.bind('dragleave',function(e){$(this).removeClass('hover');return false;})
 			.get(0).ondrop = function(e){
 				e.preventDefault();
@@ -94,10 +94,13 @@ div.hover { border: 2px dashed #333; }
 				return true;
 			};
 			
-			document.body.ondrop = function(e){
+			$(document.body).bind('dragover',function(e){return false;})[0].ondrop = function(e){
 				var id = e.dataTransfer.getData('Text');
-				if(!id)return true;
-				//if(!id || $(e.target).parents('#upload_form').length)return true;
+				var target = $(e.target);
+				if(!id ||target.is('#upload_form') || target.parents('#upload_form').length)return true;
+				var i = id.lastIndexOf('/');
+				if(i>0)id = id.substring(i+1);
+				if(e.preventDefault)e.preventDefault();
 				if (e.stopPropagation) e.stopPropagation();
 				$.alerts.confirm(MessageBundle.get('confirm.delete'),
 						MessageBundle.get('select'), function(b) {
