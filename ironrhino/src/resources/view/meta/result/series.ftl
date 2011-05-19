@@ -18,7 +18,7 @@
 	<ul class="catalog">
 		<#list pages as var>
 		<#assign selected=page?? && page.path==var.path/>
-		<li<#if selected> class="selected"</#if>><#if selected><span><#else><a href="<@url value="/${name}/p${var.path}"/>" class="ajax view"></#if>${var.title}<#if selected></span><#else></a></#if></li>
+		<li<#if selected> class="selected"</#if>><#if selected><span><#else><a href="<@url value="/${name}/p${var.path}"/>" class="ajax view history"></#if>${var.title}<#if selected></span><#else></a></#if></li>
 		</#list>
 	</ul>
 	<#if page??>
@@ -28,8 +28,8 @@
 		</div>
 		<#if showBar>
 		<div class="bar">
-			<#if previousPage??><a href="<@url value="/${name}/p${previousPage.path}"/>" class="ajax view">${action.getText('previouspage')}:${previousPage.title}</a></#if>
-			<#if nextPage??><a href="<@url value="/${name}/p${nextPage.path}"/>" class="ajax view">${action.getText('nextpage')}:${nextPage.title}</a></#if>
+			<#if previousPage??><a href="<@url value="/${name}/p${previousPage.path}"/>" class="ajax view history">${action.getText('previouspage')}:${previousPage.title}</a></#if>
+			<#if nextPage??><a href="<@url value="/${name}/p${nextPage.path}"/>" class="ajax view history">${action.getText('nextpage')}:${nextPage.title}</a></#if>
 		</div>
 		</#if>
 	</div>

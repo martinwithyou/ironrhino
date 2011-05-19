@@ -18,7 +18,7 @@ ${action.getText('current.location')}:
 	</dd>
 </#list>
 </dl>
-<@pagination class="ajax view" replacement="list" cache="true"/>
+<@pagination class="ajax view history" replacement="list" cache="true"/>
 </div>
 </div>
 </body>

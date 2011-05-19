@@ -18,7 +18,7 @@ ${action.getText('current.location')}:
 <ul class="catalog">
 <#list columns as var>
 <#assign selected=column?? && column==var/>
-<li<#if selected> class="selected"</#if>><#if selected><span><#else><a href="<@url value="/${name}/list/${var}"/>" class="ajax view"></#if>${var}<#if selected></span><#else></a></#if></li>
+<li<#if selected> class="selected"</#if>><#if selected><span><#else><a href="<@url value="/${name}/list/${var}"/>" class="ajax view history"></#if>${var}<#if selected></span><#else></a></#if></li>
 </#list>
 </ul>
 <div class="list">
@@ -29,7 +29,7 @@ ${action.getText('current.location')}:
 	</dd>
 </#list>
 </dl>
-<@pagination class="ajax view" replacement="list" cache="true"/>
+<@pagination class="ajax view history" replacement="list" cache="true"/>
 </div>
 </div>
 </body>

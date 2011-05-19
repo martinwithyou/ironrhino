@@ -18,7 +18,7 @@ ${action.getText('current.location')}:
 <ul class="catalog">
 <#list columns as var>
 <#assign selected=column?? && column==var/>
-<li<#if selected> class="selected"</#if>><a href="<@url value="/${name}/list/${var}"/>" class="ajax view">${var}</a></li>
+<li<#if selected> class="selected"</#if>><a href="<@url value="/${name}/list/${var}"/>" class="ajax view history">${var}</a></li>
 </#list>
 </ul>
 <#if page??>
