@@ -12,6 +12,8 @@ public class LabelValue implements Serializable {
 
 	private String value;
 
+	private Boolean selected;
+
 	public LabelValue() {
 	}
 
@@ -40,6 +42,14 @@ public class LabelValue implements Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public boolean isSelected() {
+		return selected != null && selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 }
