@@ -28859,27 +28859,30 @@ Observation.richtable = function(container) {
 			$.extend(treeoptions, (new Function("return "
 							+ ($(current).attr('treeoptions') || '{}')))());
 			var _click = function() {
+				var id = $(this).closest('li').attr('id');
+				var name = $(this).text();
+				var fullname = name;
+				var full = treeoptions.full || false;
+				if (full) {
+					var p = this.parentNode.parentNode.parentNode.parentNode;
+					while (p && p.tagName == 'LI') {
+						fullname = $('a span', p).get(0).innerHTML + fullname;
+						p = p.parentNode.parentNode;
+					}
+				}
 				if (treeoptions.name) {
 					var nametarget = $('#' + treeoptions.name);
-					var full = treeoptions.full || false;
-					var name = $(this).text();
-					if (full) {
-						var p = this.parentNode.parentNode.parentNode.parentNode;
-						while (p && p.tagName == 'LI') {
-							name = $('a span', p).get(0).innerHTML + name;
-							p = p.parentNode.parentNode;
-						}
-					}
 					if (nametarget.is(':input'))
-						nametarget.val(name);
+						nametarget.val(full ? fullname : name);
 					else {
-						nametarget.text(name).after('<a>x</a>').next().css({
-									'cursor' : 'pointer',
-									'color' : '#black',
-									'margin-left' : '5px',
-									'padding' : '0 5px',
-									'border' : 'solid 1px #FFC000'
-								}).click(function() {
+						nametarget.text(full ? fullname : name)
+								.after('<a>x</a>').next().css({
+											'cursor' : 'pointer',
+											'color' : '#black',
+											'margin-left' : '5px',
+											'padding' : '0 5px',
+											'border' : 'solid 1px #FFC000'
+										}).click(function() {
 									nametarget
 											.text(MessageBundle.get('select'));
 									$('#' + treeoptions.id).val('');
@@ -28889,13 +28892,18 @@ Observation.richtable = function(container) {
 				}
 				if (treeoptions.id) {
 					var idtarget = $('#' + treeoptions.id);
-					var id = $(this).closest('li').attr('id');
 					if (idtarget.is(':input'))
 						idtarget.val(id);
 					else
 						idtarget.text(id);
 				}
 				$("#_tree_window").dialog('close');
+				if (treeoptions.select)
+					treeoptions.select({
+								id : id,
+								name : name,
+								fullname : fullname
+							});
 			};
 			var options = {
 				url : treeoptions.url,
@@ -28957,6 +28965,8 @@ Observation.richtable = function(container) {
 								idtarget.text(id);
 						}
 						$("#_tree_window").dialog('close');
+						if (treeoptions.select)
+							treeoptions.select(treenode);
 					};
 					$('#_tree_').treearea(treeoptions);
 				} else
