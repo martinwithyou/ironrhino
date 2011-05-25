@@ -15,7 +15,7 @@
 /*
  * changes by zhouyanming
  * 1.change "source" to "0";
- * 2.change this.text to (this.text||this.name)
+ * 2.change attr('id',this.id) to data('treenode',this), change this.text to (this.name)
  * 3.add <a> out of <span> 
  * 4.add setting.onclick to <span>
  * 5.if settings.unique=true will call toggle on siblings,if not add $this.hasClass('collapsable') will load siblings's data
@@ -25,7 +25,12 @@
 function load(settings, root, child, container) {
 	$.getJSON(settings.url, {root: root}, function(response) {
 		function createNode(parent) {
-			var current = $("<li/>").attr("id", this.id || "").html("<a><span>" + (this.text||this.name) + "</span></a>").appendTo(parent);
+			var parentTreenode = $(parent).parent('li').data('treenode');
+			if(parentTreenode)
+				this.fullname = (parentTreenode.fullname||parentTreenode.name) + (settings.separator || '')+ this.name;
+			else
+				this.fullname = this.name;
+			var current = $("<li/>").data('treenode',this).html("<a><span>" + (this.name) + "</span></a>").appendTo(parent);
 			if(settings.click)
 				$("span",current).click(settings.click);
 			if (this.classes) {
@@ -69,7 +74,7 @@ $.fn.treeview = function(settings) {
 			if ($this.hasClass('collapsable')&&$this.hasClass("hasChildren")) {
 				var childList = $this.removeClass("hasChildren").find("ul");
 				childList.empty();
-				load(settings, this.id, childList, container);
+				load(settings, $(this).data('treenode').id, childList, container);
 			}
 			if (userToggle) {
 				userToggle.apply(this, arguments);

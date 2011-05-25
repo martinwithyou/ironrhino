@@ -23513,7 +23513,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 /*
  * changes by zhouyanming
  * 1.change "source" to "0";
- * 2.change this.text to (this.text||this.name)
+ * 2.change attr('id',this.id) to data('treenode',this), change this.text to (this.name)
  * 3.add <a> out of <span> 
  * 4.add setting.onclick to <span>
  * 5.if settings.unique=true will call toggle on siblings,if not add $this.hasClass('collapsable') will load siblings's data
@@ -23523,7 +23523,12 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 function load(settings, root, child, container) {
 	$.getJSON(settings.url, {root: root}, function(response) {
 		function createNode(parent) {
-			var current = $("<li/>").attr("id", this.id || "").html("<a><span>" + (this.text||this.name) + "</span></a>").appendTo(parent);
+			var parentTreenode = $(parent).parent('li').data('treenode');
+			if(parentTreenode)
+				this.fullname = (parentTreenode.fullname||parentTreenode.name) + (settings.separator || '')+ this.name;
+			else
+				this.fullname = this.name;
+			var current = $("<li/>").data('treenode',this).html("<a><span>" + (this.name) + "</span></a>").appendTo(parent);
 			if(settings.click)
 				$("span",current).click(settings.click);
 			if (this.classes) {
@@ -23567,7 +23572,7 @@ $.fn.treeview = function(settings) {
 			if ($this.hasClass('collapsable')&&$this.hasClass("hasChildren")) {
 				var childList = $this.removeClass("hasChildren").find("ul");
 				childList.empty();
-				load(settings, this.id, childList, container);
+				load(settings, $(this).data('treenode').id, childList, container);
 			}
 			if (userToggle) {
 				userToggle.apply(this, arguments);
@@ -28792,16 +28797,17 @@ Observation.richtable = function(container) {
 				var id = null;
 				var target = null;
 				$('span', area).each(function() {
-							if (!match) {
-								var name = $(this).text();
-								if (fullname.indexOf(name) == 0) {
-									match = true;
-									target = $(this);
-									fullname = fullname.substring(name.length);
-									id = target.data('treenode').id;
-								}
-							}
-						});
+					if (!match) {
+						var name = $(this).text();
+						if (fullname.indexOf(name) == 0) {
+							match = true;
+							target = $(this);
+							fullname = fullname.substring(name.length
+									+ _treeoptions.separator.length);
+							id = target.data('treenode').id;
+						}
+					}
+				});
 				if (match)
 					if (fullname.length) {
 						expand(_treeoptions, treearea, target, callback);
@@ -28850,16 +28856,18 @@ Observation.richtable = function(container) {
 			url += (url.indexOf('?') > -1 ? '&' : '?') + 'r=' + Math.random();
 		$.getJSON(url, function(data) {
 			$.each(data, function() {
-				if (treeoptions.full) {
-					var fullname = '';
-					$('.area', treearea).each(function() {
-								$('span', this).each(function() {
-											if ($(this).hasClass('selected'))
-												fullname += $(this).text();
-										});
-							});
-					this.fullname = fullname + this.name;
-				}
+				var fullname = '';
+				$('.area', treearea).each(function() {
+					$('span', this).each(function() {
+						if ($(this).hasClass('selected'))
+							fullname += (fullname
+									? (treeoptions.separator || '')
+									: '')
+									+ $(this).text();
+					});
+				});
+				this.fullname = fullname + (treeoptions.separator || '')
+						+ this.name;
 				var span = $('<span/>').text(this.name).data('treenode', this)
 						.appendTo(area).click(function(ev) {
 							var target = $(ev.target);
@@ -28891,71 +28899,14 @@ Observation.richtable = function(container) {
 		$(this).css('cursor', 'pointer').click(function() {
 			current = $(this);
 			var treeoptions = {
+				separator : '',
 				full : true,
 				cache : true
 			}
 			$.extend(treeoptions, (new Function("return "
 							+ ($(current).attr('treeoptions') || '{}')))());
-			var _click = function() {
-				var id = $(this).closest('li').attr('id');
-				var name = $(this).text();
-				var fullname = name;
-				var full = treeoptions.full || false;
-				if (full) {
-					var p = this.parentNode.parentNode.parentNode.parentNode;
-					while (p && p.tagName == 'LI') {
-						fullname = $('a span', p).get(0).innerHTML + fullname;
-						p = p.parentNode.parentNode;
-					}
-				}
-				if (treeoptions.name) {
-					var nametarget = $('#' + treeoptions.name);
-					if (nametarget.is(':input'))
-						nametarget.val(full ? fullname : name);
-					else {
-						nametarget.text(full ? fullname : name);
-						if (!nametarget.next('a.close').length)
-							nametarget.after('<a class="close">x</a>').next()
-									.css({
-												'cursor' : 'pointer',
-												'color' : '#black',
-												'margin-left' : '5px',
-												'padding' : '0 5px',
-												'border' : 'solid 1px #FFC000'
-											}).click(function() {
-										nametarget.text(MessageBundle
-												.get('select'));
-										$('#' + treeoptions.id).val('');
-										$(this).remove();
-									});
-					}
-				}
-				if (treeoptions.id) {
-					var idtarget = $('#' + treeoptions.id);
-					if (idtarget.is(':input'))
-						idtarget.val(id);
-					else
-						idtarget.text(id);
-				}
-				$("#_tree_window").dialog('close');
-				if (treeoptions.select)
-					treeoptions.select({
-								id : id,
-								name : name,
-								fullname : fullname
-							});
-			};
-			var options = {
-				url : treeoptions.url,
-				click : _click,
-				collapsed : true,
-				placeholder : MessageBundle.get('ajax.loading'),
-				unique : true
-			};
-			if (!treeoptions.cache) {
-				options.url = options.url + '?r=' + Math.random();
+			if (!treeoptions.cache)
 				$('#_tree_window').remove();
-			}
 			if (!$('#_tree_window').length) {
 				$('<div id="_tree_window" title="'
 						+ MessageBundle.get('select')
@@ -28965,54 +28916,34 @@ Observation.richtable = function(container) {
 							width : 500,
 							minHeight : 500
 						});
+				if (treeoptions.name) {
+					var nametarget = $('#' + treeoptions.name);
+					treeoptions.value = nametarget.is(':input') ? nametarget
+							.val() : nametarget.text();
+				}
 				if (treeoptions.type != 'treeview') {
-					if (treeoptions.name) {
-						var nametarget = $('#' + treeoptions.name);
-						treeoptions.value = nametarget.is(':input')
-								? nametarget.val()
-								: nametarget.text();
-					}
 					treeoptions.click = function(treenode) {
-						if (treeoptions.name) {
-							var nametarget = $('#' + treeoptions.name);
-							var name = treeoptions.full || false
-									? treenode.fullname
-									: treenode.name;
-							if (nametarget.is(':input'))
-								nametarget.val(name);
-							else {
-								nametarget.text(name);
-								if (!nametarget.next('a.close').length)
-									nametarget.after('<a class="close">x</a>')
-											.next().css({
-														'cursor' : 'pointer',
-														'color' : '#black',
-														'margin-left' : '5px',
-														'padding' : '0 5px',
-														'border' : 'solid 1px #FFC000'
-													}).click(function() {
-												nametarget.text(MessageBundle
-														.get('select'));
-												$('#' + treeoptions.id).val('');
-												$(this).remove();
-											});
-							}
-						}
-						if (treeoptions.id) {
-							var idtarget = $('#' + treeoptions.id);
-							var id = treenode.id;
-							if (idtarget.is(':input'))
-								idtarget.val(id);
-							else
-								idtarget.text(id);
-						}
-						$("#_tree_window").dialog('close');
-						if (treeoptions.select)
-							treeoptions.select(treenode);
+						doclick(treenode, treeoptions);
 					};
 					$('#_tree_').treearea(treeoptions);
-				} else
+				} else {
+					var options = {
+						url : treeoptions.url,
+						click : function() {
+							var treenode = $(this).closest('li')
+									.data('treenode');
+							doclick(treenode, treeoptions);
+						},
+						collapsed : true,
+						placeholder : MessageBundle.get('ajax.loading'),
+						unique : true,
+						separator : treeoptions.separator,
+						value : treeoptions.value
+					};
+					if (!treeoptions.cache)
+						options.url = options.url + '?r=' + Math.random();
 					$('#_tree_').treeview(options);
+				}
 			} else {
 				$('#_tree_window').dialog('open');
 			}
@@ -29020,6 +28951,43 @@ Observation.richtable = function(container) {
 		});
 		return this;
 	};
+
+	function doclick(treenode, treeoptions) {
+		if (treeoptions.name) {
+			var nametarget = $('#' + treeoptions.name);
+			var name = treeoptions.full || false
+					? treenode.fullname
+					: treenode.name;
+			if (nametarget.is(':input'))
+				nametarget.val(name);
+			else {
+				nametarget.text(name);
+				if (!nametarget.next('a.close').length)
+					nametarget.after('<a class="close">x</a>').next().css({
+								'cursor' : 'pointer',
+								'color' : '#black',
+								'margin-left' : '5px',
+								'padding' : '0 5px',
+								'border' : 'solid 1px #FFC000'
+							}).click(function() {
+								nametarget.text(MessageBundle.get('select'));
+								$('#' + treeoptions.id).val('');
+								$(this).remove();
+							});
+			}
+		}
+		if (treeoptions.id) {
+			var idtarget = $('#' + treeoptions.id);
+			var id = treenode.id;
+			if (idtarget.is(':input'))
+				idtarget.val(id);
+			else
+				idtarget.text(id);
+		}
+		$('#_tree_window').dialog('close');
+		if (treeoptions.select)
+			treeoptions.select(treenode);
+	}
 
 })(jQuery);
 

@@ -13,16 +13,17 @@
 				var id = null;
 				var target = null;
 				$('span', area).each(function() {
-							if (!match) {
-								var name = $(this).text();
-								if (fullname.indexOf(name) == 0) {
-									match = true;
-									target = $(this);
-									fullname = fullname.substring(name.length);
-									id = target.data('treenode').id;
-								}
-							}
-						});
+					if (!match) {
+						var name = $(this).text();
+						if (fullname.indexOf(name) == 0) {
+							match = true;
+							target = $(this);
+							fullname = fullname.substring(name.length
+									+ _treeoptions.separator.length);
+							id = target.data('treenode').id;
+						}
+					}
+				});
 				if (match)
 					if (fullname.length) {
 						expand(_treeoptions, treearea, target, callback);
@@ -71,16 +72,18 @@
 			url += (url.indexOf('?') > -1 ? '&' : '?') + 'r=' + Math.random();
 		$.getJSON(url, function(data) {
 			$.each(data, function() {
-				if (treeoptions.full) {
-					var fullname = '';
-					$('.area', treearea).each(function() {
-								$('span', this).each(function() {
-											if ($(this).hasClass('selected'))
-												fullname += $(this).text();
-										});
-							});
-					this.fullname = fullname + this.name;
-				}
+				var fullname = '';
+				$('.area', treearea).each(function() {
+					$('span', this).each(function() {
+						if ($(this).hasClass('selected'))
+							fullname += (fullname
+									? (treeoptions.separator || '')
+									: '')
+									+ $(this).text();
+					});
+				});
+				this.fullname = fullname + (treeoptions.separator || '')
+						+ this.name;
 				var span = $('<span/>').text(this.name).data('treenode', this)
 						.appendTo(area).click(function(ev) {
 							var target = $(ev.target);
