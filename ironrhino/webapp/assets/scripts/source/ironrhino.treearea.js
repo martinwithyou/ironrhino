@@ -15,7 +15,9 @@
 				$('span', area).each(function() {
 					if (!match) {
 						var name = $(this).text();
-						if (fullname.indexOf(name) == 0) {
+						if (fullname == name
+								|| fullname.indexOf(name
+										+ _treeoptions.separator) == 0) {
 							match = true;
 							target = $(this);
 							fullname = fullname.substring(name.length
@@ -82,7 +84,8 @@
 									+ $(this).text();
 					});
 				});
-				this.fullname = fullname + (treeoptions.separator || '')
+				this.fullname = fullname
+						+ (fullname ? (treeoptions.separator || '') : '')
 						+ this.name;
 				var span = $('<span/>').text(this.name).data('treenode', this)
 						.appendTo(area).click(function(ev) {
