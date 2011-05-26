@@ -628,7 +628,7 @@ Initialization.history = function() {
 								cache : true,
 								replaceTitle : true,
 								success : function() {
-									$('.menu li').each(function() {
+									$('.menu li a').each(function() {
 										if ($(this).attr('href') == url) {
 											$('li a', $(this).closest('.menu'))
 													.removeClass('selected');
