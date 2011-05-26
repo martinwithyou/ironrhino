@@ -1,9 +1,6 @@
 (function($) {
 	$.fn.datagridTable = function(options) {
-		var onadd = options ? options.onadd : null;
-		var onremove = options ? options.onremove : null;
-		var onmoveup = options ? options.onmoveup : null;
-		var onmovedown = options ? options.onmovedown : null;
+		options = options || {};
 		$(this).each(function() {
 					if ($(this).hasClass('datagrided'))
 						return;
@@ -13,34 +10,34 @@
 					$('tbody tr input:last', this).keydown(function(event) {
 								if (event.keyCode == 13) {
 									event.preventDefault();
-									addRow(event, onadd);
+									addRow(event, options);
 								}
 							});
 					$('tbody tr input:first', this).keydown(function(event) {
 								if (event.keyCode == 8
 										&& !$(event.target).val()) {
 									event.preventDefault();
-									removeRow(event, onremove);
+									removeRow(event, options);
 								}
 							});
 					$('.add', this).click(function(event) {
-								addRow(event, onadd)
+								addRow(event, options)
 							});
 					$('.remove', this).click(function(event) {
-								removeRow(event, onremove)
+								removeRow(event, options)
 							});
 					$('.moveup', this).click(function(event) {
-								moveupRow(event, onmoveup)
+								moveupRow(event, options)
 							});
 					$('.movedown', this).click(function(event) {
-								movedownRow(event, onmovedown)
+								movedownRow(event, options)
 							});
 				})
 
 		return this;
 	};
 
-	var addRow = function(event, onadd) {
+	var addRow = function(event, options) {
 		var row = $(event.target).closest('tr');
 		var r = row.clone(true);
 		$('*', r).removeAttr('id');
@@ -56,24 +53,24 @@
 		row.after(r);
 		$(':input', r).eq(0).focus();
 		rename(row.closest('tbody'));
-		if (onadd)
-			onadd.apply(r.get(0));
+		if (options.onadd)
+			options.onadd.apply(r.get(0));
 	};
-	var removeRow = function(event, onremove) {
+	var removeRow = function(event, options) {
 		var row = $(event.target).closest('tr');
+		if (options.onbeforeremove
+				&& options.onbeforeremove.apply(row.get(0)) === false)
+			return;
 		if (row.closest('tbody').children().length > 1) {
 			$(':input', row.prev()).eq(0).focus();
-			var ret;
-			if (onremove)
-				ret = onremove.apply(row.get(0));
-			if (ret !== false) {
-				var tbody = row.closest('tbody');
-				row.remove();
-				rename(tbody);
-			}
+			var tbody = row.closest('tbody');
+			row.remove();
+			rename(tbody);
+			if (options.onremove)
+				options.onremove();
 		}
 	};
-	var moveupRow = function(event, onmoveup) {
+	var moveupRow = function(event, options) {
 		var row = $(event.target).closest('tr');
 		if (row.closest('tbody').children().length > 1) {
 			$(row).fadeOut(function() {
@@ -83,12 +80,12 @@
 							$(this).insertAfter($(this).siblings(':last'))
 									.fadeIn();
 						rename($(this).closest('tbody'));
-						if (onmoveup)
-							onmoveup.apply(this);
+						if (options.onmoveup)
+							options.onmoveup.apply(this);
 					});
 		}
 	};
-	var movedownRow = function(event, onmovedown) {
+	var movedownRow = function(event, options) {
 		var row = $(event.target).closest('tr');
 		if (row.closest('tbody').children().length > 1) {
 			$(row).fadeOut(function() {
@@ -98,8 +95,8 @@
 							$(this).insertBefore($(this).siblings(':first'))
 									.fadeIn();
 						rename($(this).closest('tbody'));
-						if (onmovedown)
-							onmovedown.apply(this);
+						if (options.onmovedown)
+							options.onmovedown.apply(this);
 					});
 		}
 	};
