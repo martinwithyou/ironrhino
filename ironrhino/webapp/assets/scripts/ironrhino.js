@@ -27978,39 +27978,46 @@ Observation.sortableTable = function(container) {
 	};
 	var removeRow = function(event, onremove) {
 		var row = $(event.target).closest('tr');
-		if ($('tr', row.parent()).length > 1) {
+		if (row.closest('tbody').children().length > 1) {
 			$(':input', row.prev()).eq(0).focus();
 			var ret;
 			if (onremove)
 				ret = onremove.apply(row.get(0));
 			if (ret !== false) {
+				var tbody = row.closest('tbody');
 				row.remove();
-				rename(row.closest('tbody'));
+				rename(tbody);
 			}
 		}
 	};
 	var moveupRow = function(event, onmoveup) {
 		var row = $(event.target).closest('tr');
-		if ($('tr', row.parent()).length > 1) {
-			if ($(row).prev().length)
-				$(row).insertBefore($(row).prev());
-			else
-				$(row).insertAfter($(row).siblings(':last'));
-			rename(row.closest('tbody'));
-			if (onmoveup)
-				onmoveup.apply(row.get(0));
+		if (row.closest('tbody').children().length > 1) {
+			$(row).fadeOut(function() {
+						if ($(this).prev().length)
+							$(this).insertBefore($(this).prev()).fadeIn();
+						else
+							$(this).insertAfter($(this).siblings(':last'))
+									.fadeIn();
+						rename($(this).closest('tbody'));
+						if (onmoveup)
+							onmoveup.apply(this);
+					});
 		}
 	};
 	var movedownRow = function(event, onmovedown) {
 		var row = $(event.target).closest('tr');
-		if ($('tr', row.parent()).length > 1) {
-			if ($(row).next().length)
-				$(row).insertAfter($(row).next());
-			else
-				$(row).insertBefore($(row).siblings(':first'));
-			rename(row.closest('tbody'));
-			if (onmovedown)
-				onmovedown.apply(row.get(0));
+		if (row.closest('tbody').children().length > 1) {
+			$(row).fadeOut(function() {
+						if ($(this).next().length)
+							$(this).insertAfter($(this).next()).fadeIn();
+						else
+							$(this).insertBefore($(this).siblings(':first'))
+									.fadeIn();
+						rename($(this).closest('tbody'));
+						if (onmovedown)
+							onmovedown.apply(this);
+					});
 		}
 	};
 	var rename = function(tbody) {
