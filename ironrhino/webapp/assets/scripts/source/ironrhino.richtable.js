@@ -183,9 +183,13 @@ Richtable = {
 				Dialog.adapt(win);
 				if (url.indexOf('?') > 0)
 					url = url.substring(0, url.indexOf('?'));
+				var pathname = document.location.pathname;
+				var hash = document.location.hash;
+				if (hash.indexOf('!') == 1)
+					pathname = CONTEXT_PATH + hash.substring(2);
 				$('#_window_ form').css('padding-top', '25px');
-				var inputform = $('#_window_ form.ajax');
-				if (inputform.length) {
+				$('#_window_ form.ajax').each(function() {
+					var inputform = $(this);
 					$(':input:visible', inputform).filter(function(i) {
 								return !($(this).val() || $(this)
 										.hasClass('date'));
@@ -219,10 +223,6 @@ Richtable = {
 									});
 						}
 					}
-					var pathname = document.location.pathname;
-					var hash = document.location.hash;
-					if (hash.indexOf('!') == 1)
-						pathname = CONTEXT_PATH + hash.substring(2);
 					var action = inputform.attr('action');
 					if (action.indexOf('http') != 0 && action.indexOf('/') != 0) {
 						action = pathname
@@ -248,7 +248,7 @@ Richtable = {
 							};
 						});
 					}
-				}
+				});
 				$('#_window_ a').each(function() {
 					var href = $(this).attr('href');
 					if (href && href.indexOf('http') != 0

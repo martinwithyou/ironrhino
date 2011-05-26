@@ -50,14 +50,17 @@
 		}
 	};
 	var rename = function(tbody) {
+		var level = parseInt($(tbody).closest('table').attr('level') || '1');
 		$('tr', tbody).each(function(i) {
 			$(':input', this).each(function() {
 				var name = $(this).prop('name');
-				var j = name.indexOf('[');
+				var j = -1;
+				for (var k = 0; k < level; k++)
+					j = name.indexOf('[', j + 1);
 				if (j < 0)
 					return;
 				name = name.substring(0, j + 1) + i
-						+ name.substring(name.indexOf(']'));
+						+ name.substring(name.indexOf(']', j));
 				$(this).prop('name', name);
 			});
 		});

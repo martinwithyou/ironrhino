@@ -27967,14 +27967,17 @@ Observation.sortableTable = function(container) {
 		}
 	};
 	var rename = function(tbody) {
+		var level = parseInt($(tbody).closest('table').attr('level') || '1');
 		$('tr', tbody).each(function(i) {
 			$(':input', this).each(function() {
 				var name = $(this).prop('name');
-				var j = name.indexOf('[');
+				var j = -1;
+				for (var k = 0; k < level; k++)
+					j = name.indexOf('[', j + 1);
 				if (j < 0)
 					return;
 				name = name.substring(0, j + 1) + i
-						+ name.substring(name.indexOf(']'));
+						+ name.substring(name.indexOf(']', j));
 				$(this).prop('name', name);
 			});
 		});
@@ -28372,9 +28375,13 @@ Richtable = {
 				Dialog.adapt(win);
 				if (url.indexOf('?') > 0)
 					url = url.substring(0, url.indexOf('?'));
+				var pathname = document.location.pathname;
+				var hash = document.location.hash;
+				if (hash.indexOf('!') == 1)
+					pathname = CONTEXT_PATH + hash.substring(2);
 				$('#_window_ form').css('padding-top', '25px');
-				var inputform = $('#_window_ form.ajax');
-				if (inputform.length) {
+				$('#_window_ form.ajax').each(function() {
+					var inputform = $(this);
 					$(':input:visible', inputform).filter(function(i) {
 								return !($(this).val() || $(this)
 										.hasClass('date'));
@@ -28408,10 +28415,6 @@ Richtable = {
 									});
 						}
 					}
-					var pathname = document.location.pathname;
-					var hash = document.location.hash;
-					if (hash.indexOf('!') == 1)
-						pathname = CONTEXT_PATH + hash.substring(2);
 					var action = inputform.attr('action');
 					if (action.indexOf('http') != 0 && action.indexOf('/') != 0) {
 						action = pathname
@@ -28437,7 +28440,7 @@ Richtable = {
 							};
 						});
 					}
-				}
+				});
 				$('#_window_ a').each(function() {
 					var href = $(this).attr('href');
 					if (href && href.indexOf('http') != 0
