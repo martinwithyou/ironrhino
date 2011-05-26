@@ -2,24 +2,31 @@
 	$.fn.datagridTable = function(options) {
 		var onadd = options ? options.onadd : null;
 		var onremove = options ? options.onremove : null;
-		$('tbody tr input:last', this).keydown(function(event) {
-					if (event.keyCode == 13) {
-						event.preventDefault();
-						addRow(event, onadd);
-					}
-				});
-		$('tbody tr input:first', this).keydown(function(event) {
-					if (event.keyCode == 8 && !$(event.target).val()) {
-						event.preventDefault();
-						removeRow(event, onremove);
-					}
-				});
-		$('button.add', this).click(function(event) {
-					addRow(event, onadd)
-				});
-		$('button.remove', this).click(function(event) {
-					removeRow(event, onremove)
-				});
+		$(this).each(function() {
+					if ($(this).hasClass('datagrided'))
+						return;
+					$(this).addClass('datagrided');
+					$('tbody tr input:last', this).keydown(function(event) {
+								if (event.keyCode == 13) {
+									event.preventDefault();
+									addRow(event, onadd);
+								}
+							});
+					$('tbody tr input:first', this).keydown(function(event) {
+								if (event.keyCode == 8
+										&& !$(event.target).val()) {
+									event.preventDefault();
+									removeRow(event, onremove);
+								}
+							});
+					$('.add', this).click(function(event) {
+								addRow(event, onadd)
+							});
+					$('.remove', this).click(function(event) {
+								removeRow(event, onremove)
+							});
+				})
+
 		return this;
 	};
 
@@ -50,8 +57,8 @@
 		}
 	};
 	var rename = function(tbody) {
-		var level = parseInt($(tbody).closest('table').attr('level') || '1');
-		$('tr', tbody).each(function(i) {
+		var level = $(tbody).parents('table.datagrided').length;
+		$(tbody).children('tr').each(function(i) {
 			$(':input', this).each(function() {
 				var name = $(this).prop('name');
 				var j = -1;
