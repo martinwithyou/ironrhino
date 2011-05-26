@@ -2,10 +2,14 @@
 	$.fn.datagridTable = function(options) {
 		var onadd = options ? options.onadd : null;
 		var onremove = options ? options.onremove : null;
+		var onmoveup = options ? options.onmoveup : null;
+		var onmovedown = options ? options.onmovedown : null;
 		$(this).each(function() {
 					if ($(this).hasClass('datagrided'))
 						return;
 					$(this).addClass('datagrided');
+					if ($(this).parents('.datagrided').length)
+						return;
 					$('tbody tr input:last', this).keydown(function(event) {
 								if (event.keyCode == 13) {
 									event.preventDefault();
@@ -25,6 +29,12 @@
 					$('.remove', this).click(function(event) {
 								removeRow(event, onremove)
 							});
+					$('.moveup', this).click(function(event) {
+								moveupRow(event, onmoveup)
+							});
+					$('.movedown', this).click(function(event) {
+								movedownRow(event, onmovedown)
+							});
 				})
 
 		return this;
@@ -39,6 +49,10 @@
 		$('input.filterselect', this).next('select').html(function() {
 					return $(this).data('innerHTML')
 				});
+		$('.datagrided tr', r).each(function(i) {
+					if (i > 0)
+						$(this).remove();
+				});
 		row.after(r);
 		$(':input', r).eq(0).focus();
 		rename(row.closest('tbody'));
@@ -49,11 +63,37 @@
 		var row = $(event.target).closest('tr');
 		if ($('tr', row.parent()).length > 1) {
 			$(':input', row.prev()).eq(0).focus();
+			var ret;
 			if (onremove)
-				onremove.apply(row.get(0));
-			var tbody = row.closest('tbody');
-			row.remove();
-			rename(tbody);
+				ret = onremove.apply(row.get(0));
+			if (ret !== false) {
+				row.remove();
+				rename(row.closest('tbody'));
+			}
+		}
+	};
+	var moveupRow = function(event, onmoveup) {
+		var row = $(event.target).closest('tr');
+		if ($('tr', row.parent()).length > 1) {
+			if ($(row).prev().length)
+				$(row).insertBefore($(row).prev());
+			else
+				$(row).insertAfter($(row).siblings(':last'));
+			rename(row.closest('tbody'));
+			if (onmoveup)
+				onmoveup.apply(row.get(0));
+		}
+	};
+	var movedownRow = function(event, onmovedown) {
+		var row = $(event.target).closest('tr');
+		if ($('tr', row.parent()).length > 1) {
+			if ($(row).next().length)
+				$(row).insertAfter($(row).next());
+			else
+				$(row).insertBefore($(row).siblings(':first'));
+			rename(row.closest('tbody'));
+			if (onmovedown)
+				onmovedown.apply(row.get(0));
 		}
 	};
 	var rename = function(tbody) {
