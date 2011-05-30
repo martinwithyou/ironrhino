@@ -2,123 +2,120 @@
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title>Region Map</title>
-<#if (Parameters.type!)=='satellite'>
-	<script src="http://maps.google.com/maps?file=api&amp;v=2"
-		type="text/javascript"></script>
-<#else>
-	<script src="http://ditu.google.com/maps?file=api&amp;v=2"
-		type="text/javascript"></script>
-</#if>
-<script type="text/javascript">
-var lat = ${Parameters.lat!22.5162};
-var lng = ${Parameters.lng!114.050128};
-var zoom = ${Parameters.zoom!8};
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&region=CN"></script> 
+<script type="text/javascript"> 
+
 var map;
-var mgr;
-$(window).unload(GUnload);
-
-	function _click(){
-		
-	}
-	Initialization.treeview= function(){
-		$("#treeview").treeview({
-			url: "<@url value="/region/children"/>",
-			click:_click,
-			collapsed: true,
-			unique: true
-
-		});
-		}
-		
-Initialization.GLoad=function(){
-return;
-		map = new GMap2($('map_container'));
-		map.setCenter(new GLatLng(lat, lng), zoom);
-		map.addControl(new GLargeMapControl());
-		map.addControl(new GOverviewMapControl());
-<#if Parameters.type??&&'satellite'==Parameters.type>
-		map.addControl(new GMapTypeControl());
-		map.setMapType(G_SATELLITE_MAP);
+  
+function initialize() {
+  map = new google.maps.Map(document.getElementById("map_container"), {
+    zoom: ${Parameters.zoom!8},
+<#if Parameters.lat??>
+    center: new google.maps.LatLng(${Parameters.lat!}, ${Parameters.lng!}),
 </#if>
-		//map.enableDoubleClickZoom();
-		//map.enableScrollWheelZoom();
-		mgr = new GMarkerManager(map);
-		mark();
-		GEvent.addListener(map, 'moveend', mark);
-		GEvent.addListener(map, 'singlerightclick', function(point){map.panTo(gpoint2glatlng(point))});
-}
-
-function gpoint2glatlng(point){
-var lat1=map.getBounds().getNorthEast().lat();
-var lng1=map.getBounds().getSouthWest().lng();
-var lat2=map.getBounds().getSouthWest().lat();
-var lng2=map.getBounds().getNorthEast().lng();
-var height=map.getSize().height;
-lng1=lng1+(point.x/map.getSize().width)*(lng2-lng1);
-lat1=lat1+(point.y/map.getSize().height)*(lat2-lat1);
-return new GLatLng(lat1,lng1);
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+<#if !Parameters.lat??>
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
+    }, function() {
+       map.setCenter(new google.maps.LatLng(22.5162, 114.050128));
+    });
+  }
+</#if>
+	//google.maps.event.addListener(map, 'bounds_changed', mark);
+	google.maps.event.addListener(map, 'idle', mark);
+	setTimeout(mark,1000);
 }
 
 function mark(){
-		var bounds = map.getBounds();
-		var southWest = bounds.getSouthWest();
-		var northEast = bounds.getNorthEast();
-		GDownloadUrl('<@url value="/common/region/mark?southWest="/>'+southWest.lat()+','+southWest.lng()+'&northEast='+northEast.lat()+','+northEast.lng()+'&zoom='+map.getZoom(), function(data, responseCode) {
-        var markers = eval('('+data+')');
-  		for (var i = 0; i < markers.length; i++) 
-  			addMarker(markers[i]);
-		});
+	var bounds = map.getBounds();
+	var southWest = bounds.getSouthWest();
+	var northEast = bounds.getNorthEast();
+	var url = '<@url value="/common/region/mark?southWest="/>'+southWest.lat()+','+southWest.lng()+'&northEast='+northEast.lat()+','+northEast.lng()+'&zoom='+map.getZoom();
+	$.ajax({
+		url:url, 
+		global:false,
+		dataType:'json',
+		success:function(regions) {
+			for (var i = 0; i < regions.length; i++) 
+				addMarker(regions[i]);
+			}
+	});
 }
 
 function addMarker(region){
-		var point = new GLatLng(region.latitude,region.longitude);
-    	var marker = new GMarker(point);
-    	var level = region.level;
-    	if(level<=1)
-    		mgr.addMarker(marker);
-    	else if(level<=2)
-    		mgr.addMarker(marker,5);
-    	else
-    		mgr.addMarker(marker,7);
-    	mgr.refresh();
-    	GEvent.addListener(marker, "click", function() {
-    		marker.openInfoWindow(document.createTextNode(region.name));
+		var marker = new google.maps.Marker({
+		      position: new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude), 
+		      map: map, 
+		      title:region.name
+		}); 
+    	google.maps.event.addListener(marker, "click", function() {
+	    	  var infowindow = new google.maps.InfoWindow();
+		      infowindow.setContent(region.name);
+		      infowindow.setPosition(marker.getPosition());
+		      infowindow.open(map);
   		});
 }
 
 function moveTo(region){
-if(region.latitude)
-	map.panTo(new GLatLng(region.latitude,region.longitude));
+	if(region.coordinate && region.coordinate.latitude){
+		map.panTo(new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude));
+		addMarker(region);
+	}else{
+		alert('mot mark yet');
+	}
 }
 
 function saveLatLng(region){
-if(!confirm('map center to '+region.name+'?'))
-return;
-region.latitude=map.getCenter().lat();
-region.longitude=map.getCenter().lng();
-var url='<@url value="/common/region/save?region.id="/>'+region.id+'&region.latitude='+region.latitude+'&region.longitude='+region.longitude;
-new $.ajax({url:url,dataType:true,success:function(){addMarker(region)}});
+	if(!confirm('map center to '+region.name+'?'))
+		return;
+	region.coordinate = {
+		latitude:map.getCenter().lat(),
+		longitude:map.getCenter().lng()
+	};
+	var url='<@url value="/common/region/save?region.id="/>'+region.id+'&region.coordinate.latitude='+region.coordinate.latitude+'&region.coordinate.longitude='+region.coordinate.longitude;
+	$.ajax({url:url,global:false,success:function(){addMarker(region)}});
 }
 
-function switchTo(type){
-url='<@url value="/common/region/map?"/>'+(type?'type='+type:'')+'&lat='+map.getCenter().lat()+'&lng='+map.getCenter().lng()+'&zoom='+map.getZoom();
-window.location.href=url;
-}
-</script>
-</head>
+
+
+$(function(){
+	$("#regionTree").treeview({
+		url: '<@url value="/region/children"/>'+ '?r=' + Math.random(),
+		click:function(){
+			var region = $(this).closest('li').data('treenode');
+			if($('.saveLatLng').css('font-weight')=='normal'){
+				moveTo(region);
+			}else{
+				saveLatLng(region);
+			}
+		},
+		collapsed: true,
+		unique: true
+	});
+	$('.moveTo').click(function(){
+		$(this).css('font-weight','bold');
+		$('.saveLatLng').css('font-weight','normal');
+	});
+	$('.saveLatLng').click(function(){
+		$(this).css('font-weight','bold');
+		$('.moveTo').css('font-weight','normal');
+	});
+	initialize();
+});
+</script> 
+</head> 
 <body>
-<div style="float: left; width: 20%;">
-<div><a class="link" onclick="moveTo()">move mode</a><a class="link" onclick="saveLatLng()">mark mode</a></div>
-<@s.action var="region" namespace="/" name="region" executeResult="false"/>
-<@s.property value="#attr.region.treeViewHtml" escape="false" />
+<div class="clearfix">
+  <div style="float: left; width: 20%;height: 600px;overflow:scroll;">
+	<div style="margin-bottom:10px;"><span class="moveTo" style="font-weight:bold;cursor:pointer;">move mode</span><span class="saveLatLng" style="margin-left:10px;cursor:pointer;">mark mode</span></div>
+	<div id="regionTree"></div>
+	</div>
+	<div style="float: left; width: 80%;">
+	<div id="map_container" style="height: 600px;"></div>
+	</div>
 </div>
-<div style="float: left; width: 80%;">
-<div><#if Parameters.type??&&'satellite'==Parameters.type>
-	<a class="link" onclick="switchTo('map')">map </a>
-<#else>
-	<a class="link" onclick="switchTo('satellite')">satellite</a>
-</#if></div>
-<div id="map_container" style="height: 600px;"></div>
-</div>
-</body>
+</body> 
 </html></#escape>

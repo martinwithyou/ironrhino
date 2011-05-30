@@ -202,8 +202,8 @@ public class RegionAction extends BaseAction {
 		DetachedCriteria dc = baseManager.detachedCriteria();
 		if (levels != null)
 			dc.add(Restrictions.in("level", levels));
-		dc.add(Restrictions.and(Restrictions.between("latitude", bottom, top),
-				Restrictions.between("longitude", left, right)));
+		dc.add(Restrictions.and(Restrictions.between("coordinate.latitude", bottom, top),
+				Restrictions.between("coordinate.longitude", left, right)));
 		list = baseManager.findListByCriteria(dc);
 		return JSON;
 	}
