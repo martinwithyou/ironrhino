@@ -15,28 +15,18 @@ public class Region extends BaseTreeableEntity<Region> {
 
 	private static final long serialVersionUID = 8878381261391688086L;
 
-	private Double latitude;
-
-	private Double longitude;
+	private Coordinate coordinate;
 
 	public Region() {
 
 	}
 
-	public Double getLatitude() {
-		return latitude;
+	public Coordinate getCoordinate() {
+		return coordinate;
 	}
 
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-
-	public Double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
+	public void setCoordinate(Coordinate coordinate) {
+		this.coordinate = coordinate;
 	}
 
 	public Region(String name) {
@@ -53,7 +43,6 @@ public class Region extends BaseTreeableEntity<Region> {
 	public String getFullname() {
 		return super.getFullname();
 	}
-
 
 	@NotInJson
 	public String getShortFullname() {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.ironrhino.common.model.Coordinate;
 import org.ironrhino.common.model.Region;
 
 public class RegionUtils {
@@ -64,16 +65,16 @@ public class RegionUtils {
 		Location loc = LocationParser.parse(host);
 		if (loc == null)
 			return null;
-		Region firstRegion = getChildOrSelfByName(regionTree, loc
-				.getFirstArea());
+		Region firstRegion = getChildOrSelfByName(regionTree,
+				loc.getFirstArea());
 		if (firstRegion == null)
 			return null;
-		Region secondRegion = getChildOrSelfByName(firstRegion, loc
-				.getSecondArea());
+		Region secondRegion = getChildOrSelfByName(firstRegion,
+				loc.getSecondArea());
 		if (secondRegion == null)
 			return firstRegion;
-		Region thirdRegion = getChildOrSelfByName(secondRegion, loc
-				.getThirdArea());
+		Region thirdRegion = getChildOrSelfByName(secondRegion,
+				loc.getThirdArea());
 		if (thirdRegion == null)
 			return secondRegion;
 		else
@@ -109,6 +110,21 @@ public class RegionUtils {
 		if (region.getChildren().size() > 0)
 			return parseByAddress(address, region);
 		return region;
+	}
+
+	private static double earth_radius = 6371000;
+
+	public static long distance(Coordinate c1, Coordinate c2) {
+		Double latitude = (c1.getLatitude() - c2.getLatitude()) * Math.PI / 180;
+		Double longitude = (c1.getLongitude() - c2.getLongitude()) * Math.PI
+				/ 180;
+		Double aDouble = Math.sin(latitude / 2) * Math.sin(latitude / 2)
+				+ Math.cos(c1.getLatitude() * Math.PI / 180)
+				* Math.cos(c2.getLatitude() * Math.PI / 180)
+				* Math.sin(longitude / 2) * Math.sin(longitude / 2);
+		Double distance = 2 * Math.atan2(Math.sqrt(aDouble),
+				Math.sqrt(1 - aDouble));
+		return Math.round((earth_radius * distance) * 1000) / 1000;
 	}
 
 }

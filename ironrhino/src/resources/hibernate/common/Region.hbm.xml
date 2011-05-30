@@ -14,8 +14,10 @@
 		<property name="name" not-null="true" />
 		<property name="level" />
 		<property name="displayOrder" />
-		<property name="latitude" />
-		<property name="longitude" />
+		<component name="coordinate">
+			<property name="latitude" />
+			<property name="longitude" />
+		</component>
 		<many-to-one name="parent" class="Region" column="parentId" />
 		<set name="children" inverse="true" cascade="delete" lazy="true"
 			order-by="displayOrder,name">

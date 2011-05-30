@@ -132,9 +132,9 @@ public class RegionAction extends BaseAction {
 		} else {
 			Region temp = region;
 			region = baseManager.get(temp.getId());
-			if (temp.getLatitude() != null) {
-				region.setLatitude(temp.getLatitude());
-				region.setLongitude(temp.getLongitude());
+			if (temp.getCoordinate() != null
+					&& temp.getCoordinate().getLatitude() != null) {
+				region.setCoordinate(temp.getCoordinate());
 			} else {
 				region.setName(temp.getName());
 				region.setDisplayOrder(temp.getDisplayOrder());
