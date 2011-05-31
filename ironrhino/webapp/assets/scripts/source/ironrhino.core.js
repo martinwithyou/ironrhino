@@ -571,16 +571,13 @@ var _historied_ = false;
 Initialization.history = function() {
 	if (HISTORY_ENABLED) {
 		if (SESSION_HISTORY_SUPPORT) {
-			if ($.browser.mozilla) {
-				var url = document.location.href;
-				history.replaceState({
-							url : url
-						}, '', url);
-				_historied_ = true;
-			}
+			var url = document.location.href;
+			history.replaceState({
+						url : url
+					}, '', url);
 			window.onpopstate = function(event) {
 				var url = document.location.href;
-				if (event.state && _historied_) {
+				if (event.state) {
 					ajax({
 								url : url,
 								replaceTitle : true,
@@ -598,11 +595,6 @@ Initialization.history = function() {
 									'X-Fragment' : '_'
 								}
 							});
-				} else {
-					history.replaceState({
-								url : url
-							}, '', url);
-					_historied_ = true;
 				}
 			};
 			return;
