@@ -26,6 +26,7 @@ import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.CompassCriteria;
 import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.struts.TemplateProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
@@ -49,6 +50,9 @@ public class PageAction extends BaseAction {
 
 	@Autowired(required = false)
 	private transient CompassSearchService compassSearchService;
+
+	@Autowired
+	private transient TemplateProvider templateProvider;
 
 	@com.opensymphony.xwork2.inject.Inject(value = "ironrhino.cmsPath", required = false)
 	public void setCmsPath(String val) {
@@ -274,8 +278,8 @@ public class PageAction extends BaseAction {
 		for (Map.Entry<String, Integer> entry : map.entrySet()) {
 			LabelValue lv = new LabelValue();
 			lv.setValue(entry.getKey());
-			lv.setLabel(new StringBuilder(entry.getKey()).append("(").append(
-					entry.getValue()).append(")").toString());
+			lv.setLabel(new StringBuilder(entry.getKey()).append("(")
+					.append(entry.getValue()).append(")").toString());
 			suggestions.add(lv);
 		}
 		return JSON;
@@ -305,8 +309,6 @@ public class PageAction extends BaseAction {
 
 	@JsonConfig(root = "files")
 	public String files() {
-		String fileStoragePath = settingControl.getStringValue(
-				Constants.SETTING_KEY_FILE_STORAGE_PATH, "/assets");
 		String path = getHomePath(getUid());
 		List<String> list = fileStorage.listFiles(path);
 
@@ -323,8 +325,13 @@ public class PageAction extends BaseAction {
 				if (!matches)
 					continue;
 			}
-			files.put(s, new StringBuilder(fileStoragePath).append(path)
-					.append("/").append(s).toString());
+			files.put(
+					s,
+					new StringBuilder(templateProvider.getAssetsBase())
+							.append(settingControl.getStringValue(
+									Constants.SETTING_KEY_FILE_STORAGE_PATH,
+									"/assets")).append(path).append("/")
+							.append(s).toString());
 		}
 		return JSON;
 	}

@@ -6,14 +6,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -47,6 +48,18 @@ public class TemplateProvider {
 
 	private Configuration configuration;
 
+	public String getBase() {
+		return base != null ? base : "";
+	}
+
+	public String getAssetsBase() {
+		return assetsBase != null ? assetsBase : "";
+	}
+
+	public String getSsoServerBase() {
+		return ssoServerBase != null ? ssoServerBase : "";
+	}
+
 	public String getFtlLocation() {
 		return org.ironrhino.core.util.StringUtils.trimTailSlash(ftlLocation);
 	}
@@ -58,17 +71,24 @@ public class TemplateProvider {
 	public Map getAllSharedVariables() {
 		Map<String, String> allSharedVariables = new HashMap<String, String>();
 		if (StringUtils.isNotBlank(base))
-			allSharedVariables.put("base",
-					org.ironrhino.core.util.StringUtils.trimTailSlash(base));
+			allSharedVariables.put("base", base);
 		if (StringUtils.isNotBlank(assetsBase))
-			allSharedVariables.put("assetsBase",
-					org.ironrhino.core.util.StringUtils
-							.trimTailSlash(assetsBase));
+			allSharedVariables.put("assetsBase", assetsBase);
 		if (StringUtils.isNotBlank(ssoServerBase))
-			allSharedVariables.put("ssoServerBase",
-					org.ironrhino.core.util.StringUtils
-							.trimTailSlash(ssoServerBase));
+			allSharedVariables.put("ssoServerBase", ssoServerBase);
 		return allSharedVariables;
+	}
+
+	@PostConstruct
+	public void afterPropertiesSet() {
+		if (StringUtils.isNotBlank(base))
+			base = org.ironrhino.core.util.StringUtils.trimTailSlash(base);
+		if (StringUtils.isNotBlank(assetsBase))
+			assetsBase = org.ironrhino.core.util.StringUtils
+					.trimTailSlash(assetsBase);
+		if (StringUtils.isNotBlank(ssoServerBase))
+			ssoServerBase = org.ironrhino.core.util.StringUtils
+					.trimTailSlash(ssoServerBase);
 	}
 
 	private Configuration getConfiguration() {
