@@ -279,7 +279,7 @@ public class UserAction extends BaseAction {
 	}
 
 	@JsonConfig(root = "user")
-	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_ANONYMOUS)
+	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
 	public String self() {
 		user = AuthzUtils.getUserDetails(User.class);
 		return JSON;
