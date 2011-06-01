@@ -20,12 +20,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.core.util.UserAgent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 
@@ -102,8 +102,8 @@ public class AccessFilter implements Filter {
 			}
 		}
 
-		request.setAttribute("userAgent", new UserAgent(request
-				.getHeader("User-Agent")));
+		request.setAttribute("userAgent",
+				new UserAgent(request.getHeader("User-Agent")));
 		MDC.put("remoteAddr", RequestUtils.getRemoteAddr(request));
 		MDC.put("method", request.getMethod());
 		StringBuffer url = request.getRequestURL();
@@ -122,13 +122,21 @@ public class AccessFilter implements Filter {
 			MDC.put("username", s);
 		if (print && request.getHeader("Last-Event-Id") == null)
 			accessLog.info("");
-		
-		for (AccessHandler interceptor : handlers) {
-			String pattern = interceptor.getPattern();
-			if (StringUtils.isBlank(pattern)
-					|| org.ironrhino.core.util.StringUtils.matchesWildcard(uri,
-							pattern)) {
-				if (interceptor.handle(request, response)){
+
+		for (AccessHandler handler : handlers) {
+			String pattern = handler.getPattern();
+			boolean matched = StringUtils.isBlank(pattern);
+			if (!matched) {
+				String[] arr = pattern.split(",");
+				for (String pa : arr)
+					if (org.ironrhino.core.util.StringUtils.matchesWildcard(
+							uri, pa)) {
+						matched = true;
+						break;
+					}
+			}
+			if (matched) {
+				if (handler.handle(request, response)) {
 					MDC.clear();
 					return;
 				}
@@ -140,8 +148,9 @@ public class AccessFilter implements Filter {
 		long responseTime = System.currentTimeMillis() - start;
 		if (responseTime > responseTimeThreshold) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(RequestUtils.serializeData(request)).append(
-					" response time:").append(responseTime).append("ms");
+			sb.append(RequestUtils.serializeData(request))
+					.append(" response time:").append(responseTime)
+					.append("ms");
 			accesWarnLog.warn(sb.toString());
 		}
 		MDC.clear();
