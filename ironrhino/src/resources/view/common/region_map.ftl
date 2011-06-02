@@ -86,7 +86,7 @@ $(function(){
 		url: '<@url value="/region/children"/>'+ '?r=' + Math.random(),
 		click:function(){
 			var region = $(this).closest('li').data('treenode');
-			if($('.saveLatLng').css('font-weight')=='normal'){
+			if($('.moveTo').hasClass('selected')){
 				moveTo(region);
 			}else{
 				saveLatLng(region);
@@ -96,12 +96,12 @@ $(function(){
 		unique: true
 	});
 	$('.moveTo').click(function(){
-		$(this).css('font-weight','bold');
-		$('.saveLatLng').css('font-weight','normal');
+		$(this).addClass('selected').css('font-weight','bold');
+		$('.saveLatLng').removeClass('selected').css('font-weight','normal');
 	});
 	$('.saveLatLng').click(function(){
-		$(this).css('font-weight','bold');
-		$('.moveTo').css('font-weight','normal');
+		$(this).addClass('selected').css('font-weight','bold');
+		$('.moveTo').removeClass('selected').css('font-weight','normal');
 	});
 	initialize();
 });
@@ -110,7 +110,7 @@ $(function(){
 <body>
 <div class="clearfix">
   <div style="float: left; width: 20%;height: 600px;overflow:scroll;">
-	<div style="margin-bottom:10px;"><span class="moveTo" style="font-weight:bold;cursor:pointer;">move mode</span><span class="saveLatLng" style="margin-left:10px;cursor:pointer;">mark mode</span></div>
+	<div style="margin-bottom:10px;"><span class="moveTo selected" style="font-weight:bold;cursor:pointer;">move mode</span><span class="saveLatLng" style="margin-left:10px;cursor:pointer;">mark mode</span></div>
 	<div id="regionTree"></div>
 	</div>
 	<div style="float: left; width: 80%;">
