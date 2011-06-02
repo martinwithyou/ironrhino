@@ -24,16 +24,15 @@ function initialize() {
     });
   }
 </#if>
-	//google.maps.event.addListener(map, 'bounds_changed', mark);
-	google.maps.event.addListener(map, 'idle', mark);
-	setTimeout(mark,1000);
+	google.maps.event.addListener(map, 'idle', getMarkers);
+	setTimeout(getMarkers,1000);
 }
 
-function mark(){
+function getMarkers(){
 	var bounds = map.getBounds();
 	var southWest = bounds.getSouthWest();
 	var northEast = bounds.getNorthEast();
-	var url = '<@url value="/common/region/mark?southWest="/>'+southWest.lat()+','+southWest.lng()+'&northEast='+northEast.lat()+','+northEast.lng()+'&zoom='+map.getZoom();
+	var url = '<@url value="/common/region/markers?southWest="/>'+southWest.lat()+','+southWest.lng()+'&northEast='+northEast.lat()+','+northEast.lng()+'&zoom='+map.getZoom();
 	$.ajax({
 		url:url, 
 		global:false,
@@ -68,7 +67,7 @@ function moveTo(region){
 	}
 }
 
-function saveLatLng(region){
+function mark(region){
 	if(!confirm('map center to '+region.name+'?'))
 		return;
 	region.coordinate = {
@@ -89,19 +88,11 @@ $(function(){
 			if($('.moveTo').hasClass('selected')){
 				moveTo(region);
 			}else{
-				saveLatLng(region);
+				mark(region);
 			}
 		},
 		collapsed: true,
 		unique: true
-	});
-	$('.moveTo').click(function(){
-		$(this).addClass('selected').css('font-weight','bold');
-		$('.saveLatLng').removeClass('selected').css('font-weight','normal');
-	});
-	$('.saveLatLng').click(function(){
-		$(this).addClass('selected').css('font-weight','bold');
-		$('.moveTo').removeClass('selected').css('font-weight','normal');
 	});
 	initialize();
 });
@@ -110,7 +101,10 @@ $(function(){
 <body>
 <div class="clearfix">
   <div style="float: left; width: 20%;height: 600px;overflow:scroll;">
-	<div style="margin-bottom:10px;"><span class="moveTo selected" style="font-weight:bold;cursor:pointer;">move mode</span><span class="saveLatLng" style="margin-left:10px;cursor:pointer;">mark mode</span></div>
+	<div class="switch" style="margin:10px;text-align:center;">
+		<@button class="moveTo selected" text="move"/>
+		<@button class="mark" text="mark"/>
+	</div>
 	<div id="regionTree"></div>
 	</div>
 	<div style="float: left; width: 80%;">

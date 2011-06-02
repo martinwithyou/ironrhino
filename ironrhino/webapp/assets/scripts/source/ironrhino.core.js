@@ -640,7 +640,13 @@ Initialization.history = function() {
 
 Observation.common = function(container) {
 	$('div.action_error,div.action_message,ul.action_error li,ul.action_message li')
-			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
+			.each(function() {
+				var t = $(this);
+				if (!$('div.close', t).length)
+					t
+							.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
+			});
+
 	$('div.field_error').each(function() {
 				var text = $(this).text();
 				var field = $(':input', $(this).parent());
@@ -763,6 +769,14 @@ Observation.common = function(container) {
 					t.tipsy(options);
 				});
 	}
+	$('.switch', container).each(function() {
+		var t = $(this);
+		t.children().css('cursor', 'pointer').click(function() {
+					t.children().removeClass('selected').css('font-weight',
+							'normal');
+					$(this).addClass('selected').css('font-weight', 'bold');
+				}).filter('.selected').css('font-weight', 'bold');
+	});
 	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {
 			var id = this.id;

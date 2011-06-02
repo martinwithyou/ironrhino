@@ -19,7 +19,7 @@
 		window.BlobBuilder = window.WebKitBlobBuilder;
 	$.ajaxupload = function(files, options) {
 		if (!files)
-			return;
+			return false;
 		var _options = {
 			url : document.location.href,
 			name : 'file'
@@ -27,8 +27,6 @@
 		options = options || {};
 		$.extend(_options, options);
 		options = _options;
-		if (typeof options['beforeSend'] != 'undefined')
-			options['beforeSend']();
 		var xhr = new XMLHttpRequest();
 		var boundary = 'xxxxxxxxx';
 		xhr.open('POST', options.url, true);
@@ -76,23 +74,28 @@
 						body.append('--');
 						body.append(boundary);
 						body.append('--');
+						if (typeof options['beforeSend'] != 'undefined')
+							options['beforeSend']();
 						xhr.send(body.getBlob());
 					}
 				};
 				reader.readAsArrayBuffer(f);
 			}
-			return;
+			return true;
 		}
 		body = compose(files, options.name, boundary);
 		if (body) {
+			if (typeof options['beforeSend'] != 'undefined')
+				options['beforeSend']();
 			if (xhr.sendAsBinary)
 				xhr.sendAsBinary(body);
 			else
 				xhr.send(body);
+				return true;
 		} else {
 			xhr.abort();
 		}
-
+		return false;
 	}
 
 	function compose(files, name, boundary) {
@@ -119,7 +122,7 @@
 			bb.append(boundary);
 			bb.append('--');
 			return bb.getBlob();
-		} else if ($.browser.mozilla) {
+		} else if (files[0].getAsBinary) {
 			var body = '';
 			for (var i = 0; i < files.length; i++) {
 				body += '--' + boundary + '\r\n';
@@ -131,14 +134,14 @@
 			body += '--' + boundary + '--';
 			return body;
 		} else {
-
+			return null;
 		}
 	}
 
 })(jQuery);
 
 
-
+var inputfiles = '<input id="files" type="file" multiple="true" onchange="upload(this.files)" style="width:130px;margin-left:10px;position:relative;"/>';
 $(function(){
 	var pageid = $('#page_id',window.parent.document).val();
 	if(!pageid)return;
@@ -148,7 +151,7 @@ $(function(){
 	$('#general_panel').after(html);
 	var baseurl = window.parent.location.href;
 	baseurl = baseurl.substring(0,baseurl.indexOf('/common/'));
-	html = '<input id="files" type="file" multiple="true" onchange="upload(this.files)" style="width:130px;margin-left:10px;position:relative;"/><a href="'+baseurl+'/common/upload?folder=/page/'+pageid+'" style="margin-left:60px;text-decoration:none;font-weight:bold;" target="_blank">管理文件</a>';
+	html = inputfiles + '<a href="'+baseurl+'/common/upload?folder=/page/'+pageid+'" style="margin-left:60px;text-decoration:none;font-weight:bold;" target="_blank">管理文件</a>';
 	$('#insert').after(html);
 	$(document.body).bind('dragover',function(e){return false;})[0].ondrop = function(e){
 	var id = e.dataTransfer.getData('Text');
@@ -209,7 +212,7 @@ function browse() {
       		 e.dataTransfer.setData('Text', t.attr('title'));
 		};
 		});
-		$('#files').replaceWith($('#files').clone());
+		$('#files').replaceWith($(inputfiles));
 		mcTabs.displayTab('browse_tab', 'browse_panel');
 	});
 	return false;

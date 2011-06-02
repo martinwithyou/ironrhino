@@ -3,7 +3,7 @@
 		window.BlobBuilder = window.WebKitBlobBuilder;
 	$.ajaxupload = function(files, options) {
 		if (!files)
-			return;
+			return false;
 		var _options = {
 			url : document.location.href,
 			name : 'file'
@@ -11,8 +11,6 @@
 		options = options || {};
 		$.extend(_options, options);
 		options = _options;
-		if (typeof options['beforeSend'] != 'undefined')
-			options['beforeSend']();
 		var xhr = new XMLHttpRequest();
 		var boundary = 'xxxxxxxxx';
 		xhr.open('POST', options.url, true);
@@ -60,23 +58,28 @@
 						body.append('--');
 						body.append(boundary);
 						body.append('--');
+						if (typeof options['beforeSend'] != 'undefined')
+							options['beforeSend']();
 						xhr.send(body.getBlob());
 					}
 				};
 				reader.readAsArrayBuffer(f);
 			}
-			return;
+			return true;
 		}
 		body = compose(files, options.name, boundary);
 		if (body) {
+			if (typeof options['beforeSend'] != 'undefined')
+				options['beforeSend']();
 			if (xhr.sendAsBinary)
 				xhr.sendAsBinary(body);
 			else
 				xhr.send(body);
+				return true;
 		} else {
 			xhr.abort();
 		}
-
+		return false;
 	}
 
 	function compose(files, name, boundary) {
@@ -103,7 +106,7 @@
 			bb.append(boundary);
 			bb.append('--');
 			return bb.getBlob();
-		} else if ($.browser.mozilla) {
+		} else if (files[0].getAsBinary) {
 			var body = '';
 			for (var i = 0; i < files.length; i++) {
 				body += '--' + boundary + '\r\n';
@@ -115,7 +118,7 @@
 			body += '--' + boundary + '--';
 			return body;
 		} else {
-
+			return null;
 		}
 	}
 

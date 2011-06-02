@@ -26967,7 +26967,13 @@ Initialization.history = function() {
 
 Observation.common = function(container) {
 	$('div.action_error,div.action_message,ul.action_error li,ul.action_message li')
-			.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
+			.each(function() {
+				var t = $(this);
+				if (!$('div.close', t).length)
+					t
+							.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
+			});
+
 	$('div.field_error').each(function() {
 				var text = $(this).text();
 				var field = $(':input', $(this).parent());
@@ -27090,6 +27096,14 @@ Observation.common = function(container) {
 					t.tipsy(options);
 				});
 	}
+	$('.switch', container).each(function() {
+		var t = $(this);
+		t.children().css('cursor', 'pointer').click(function() {
+					t.children().removeClass('selected').css('font-weight',
+							'normal');
+					$(this).addClass('selected').css('font-weight', 'bold');
+				}).filter('.selected').css('font-weight', 'bold');
+	});
 	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {
 			var id = this.id;
@@ -27311,7 +27325,7 @@ Captcha = {
 		window.BlobBuilder = window.WebKitBlobBuilder;
 	$.ajaxupload = function(files, options) {
 		if (!files)
-			return;
+			return false;
 		var _options = {
 			url : document.location.href,
 			name : 'file'
@@ -27319,8 +27333,6 @@ Captcha = {
 		options = options || {};
 		$.extend(_options, options);
 		options = _options;
-		if (typeof options['beforeSend'] != 'undefined')
-			options['beforeSend']();
 		var xhr = new XMLHttpRequest();
 		var boundary = 'xxxxxxxxx';
 		xhr.open('POST', options.url, true);
@@ -27368,23 +27380,28 @@ Captcha = {
 						body.append('--');
 						body.append(boundary);
 						body.append('--');
+						if (typeof options['beforeSend'] != 'undefined')
+							options['beforeSend']();
 						xhr.send(body.getBlob());
 					}
 				};
 				reader.readAsArrayBuffer(f);
 			}
-			return;
+			return true;
 		}
 		body = compose(files, options.name, boundary);
 		if (body) {
+			if (typeof options['beforeSend'] != 'undefined')
+				options['beforeSend']();
 			if (xhr.sendAsBinary)
 				xhr.sendAsBinary(body);
 			else
 				xhr.send(body);
+				return true;
 		} else {
 			xhr.abort();
 		}
-
+		return false;
 	}
 
 	function compose(files, name, boundary) {
@@ -27411,7 +27428,7 @@ Captcha = {
 			bb.append(boundary);
 			bb.append('--');
 			return bb.getBlob();
-		} else if ($.browser.mozilla) {
+		} else if (files[0].getAsBinary) {
 			var body = '';
 			for (var i = 0; i < files.length; i++) {
 				body += '--' + boundary + '\r\n';
@@ -27423,7 +27440,7 @@ Captcha = {
 			body += '--' + boundary + '--';
 			return body;
 		} else {
-
+			return null;
 		}
 	}
 
