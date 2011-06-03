@@ -731,11 +731,13 @@ public class EntityAction extends BaseAction {
 					.getParameters();
 			try {
 				ReflectionContextState.setCreatingNullObjects(context, true);
+				ReflectionContextState.setDenyMethodExecution(context, true);
 				for (Map.Entry<String, Object> entry : parameters.entrySet())
 					if (acceptedPattern.matcher(entry.getKey()).matches())
 						temp.setValue(entry.getKey(), entry.getValue());
 			} finally {
 				ReflectionContextState.setCreatingNullObjects(context, false);
+				ReflectionContextState.setDenyMethodExecution(context, false);
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
