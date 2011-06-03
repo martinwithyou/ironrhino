@@ -15,7 +15,6 @@
 	<property name="skeleton-zip.name" value="ironrhino-skeleton-${version}.zip" />
 	<property name="core-jar.name" value="ironrhino-core-${version}.jar" />
 	<property name="core-ext-jar.name" value="ironrhino-core-ext-${version}.jar" />
-	<property name="common-hbm-jar.name" value="ironrhino-common-hbm-${version}.jar" />
 	<property name="security-jar.name" value="ironrhino-security-${version}.jar" />
 	<property name="security-config-jar.name" value="ironrhino-security-config-${version}.jar" />
 	<property name="security-loginrecord-jar.name" value="ironrhino-security-loginrecord-${version}.jar" />
@@ -90,13 +89,11 @@
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${core-jar.name}" />
 		<delete file="${target.dir}/${core-ext-jar.name}" />
-		<delete file="${target.dir}/${common-hbm-jar.name}" />
 		<delete file="${target.dir}/${security-jar.name}" />
 		<delete file="${target.dir}/${security-config-jar.name}" />
 		<delete file="${target.dir}/${security-loginrecord-jar.name}" />
-		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,com/opensymphony/**,org/apache/**,org/codehaus/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**" excludes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/zookeeper/**,org/ironrhino/core/remoting/**" />
+		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,com/opensymphony/**,org/apache/**,org/codehaus/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**,resources/hibernate/common/**" excludes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/zookeeper/**,org/ironrhino/core/remoting/**" />
 		<jar jarfile="${target.dir}/${core-ext-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/zookeeper/**,org/ironrhino/core/remoting/**" />
-		<jar jarfile="${target.dir}/${common-hbm-jar.name}" basedir="${classes.dir}" includes="resources/hibernate/common/**" />
 		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl,resources/view/signup*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**,org/ironrhino/security/oauth/**,resources/hibernate/security/oauth/**" />
 		<jar jarfile="${target.dir}/${security-config-jar.name}" basedir="${classes.dir}" includes="resources/spring/applicationContext-security.xml" />
 		<jar jarfile="${target.dir}/${security-loginrecord-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
