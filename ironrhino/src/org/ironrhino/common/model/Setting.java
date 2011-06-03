@@ -2,7 +2,6 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -13,13 +12,13 @@ import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
-import org.ironrhino.security.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @RecordAware
 @PublishAware
 @AutoConfig(searchable = true, order = "key asc")
 @Searchable(alias = "setting")
-public class Setting extends BaseEntity implements Recordable<User> {
+public class Setting extends BaseEntity implements Recordable {
 
 	private static final long serialVersionUID = -8352037603261222984L;
 
@@ -42,11 +41,11 @@ public class Setting extends BaseEntity implements Recordable<User> {
 
 	@NotInCopy
 	@UiConfig(hide = true)
-	private User createUser;
+	private UserDetails createUser;
 
 	@NotInCopy
 	@UiConfig(hide = true)
-	private User modifyUser;
+	private UserDetails modifyUser;
 
 	public Setting() {
 
@@ -89,24 +88,20 @@ public class Setting extends BaseEntity implements Recordable<User> {
 		this.modifyDate = modifyDate;
 	}
 
-	public User getCreateUser() {
+	public UserDetails getCreateUser() {
 		return createUser;
 	}
 
-	public void setCreateUser(User createUser) {
+	public void setCreateUser(UserDetails createUser) {
 		this.createUser = createUser;
 	}
 
-	public User getModifyUser() {
+	public UserDetails getModifyUser() {
 		return modifyUser;
 	}
 
-	public void setModifyUser(User modifyUser) {
+	public void setModifyUser(UserDetails modifyUser) {
 		this.modifyUser = modifyUser;
 	}
 
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
 }

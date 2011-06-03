@@ -44,11 +44,11 @@ public class LabelValue implements Serializable {
 		this.value = value;
 	}
 
-	public boolean isSelected() {
-		return selected != null && selected;
+	public Boolean getSelected() {
+		return selected;
 	}
 
-	public void setSelected(boolean selected) {
+	public void setSelected(Boolean selected) {
 		this.selected = selected;
 	}
 

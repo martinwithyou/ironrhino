@@ -49,10 +49,6 @@ public class SettingControl implements
 		settings = temp;
 	}
 
-	public Setting get(String key) {
-		return settings.get(key);
-	}
-
 	public int getIntValue(String key) {
 		return getIntValue(key, 0);
 	}

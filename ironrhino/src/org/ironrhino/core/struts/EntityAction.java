@@ -17,12 +17,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts2.ServletActionContext;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
@@ -42,6 +41,8 @@ import org.ironrhino.core.search.CompassSearchService;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
 public class EntityAction extends BaseAction {
 
@@ -113,8 +115,9 @@ public class EntityAction extends BaseAction {
 		return (AutoConfig) getEntityClass().getAnnotation(AutoConfig.class);
 	}
 
-	private BaseManager getEntityManager(Class entityClass){
-		String entityManagerName = StringUtils.uncapitalize(entityClass.getSimpleName()) + "Manager";
+	private BaseManager getEntityManager(Class entityClass) {
+		String entityManagerName = StringUtils.uncapitalize(entityClass
+				.getSimpleName()) + "Manager";
 		try {
 			Object bean = ApplicationContextUtils.getBean(entityManagerName);
 			if (bean != null)
@@ -235,7 +238,8 @@ public class EntityAction extends BaseAction {
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
-				persisted = entityManager.findByNaturalId(caseInsensitive, args);
+				persisted = entityManager
+						.findByNaturalId(caseInsensitive, args);
 				if (persisted != null) {
 					it = naturalIds.keySet().iterator();
 					while (it.hasNext()) {
@@ -261,7 +265,8 @@ public class EntityAction extends BaseAction {
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
-				persisted = entityManager.findByNaturalId(caseInsensitive, args);
+				persisted = entityManager
+						.findByNaturalId(caseInsensitive, args);
 				if (persisted != null
 						&& !persisted.getId().equals(entity.getId())) {
 					it = naturalIds.keySet().iterator();
@@ -719,22 +724,32 @@ public class EntityAction extends BaseAction {
 		Persistable entity = null;
 		try {
 			entity = (Persistable) getEntityClass().newInstance();
-			Map<String, String[]> map = ServletActionContext.getRequest()
-					.getParameterMap();
 			ValueStack temp = valueStackFactory.createValueStack();
 			temp.set(getEntityName(), entity);
-			for (Map.Entry<String, String[]> entry : map.entrySet())
-				temp.setValue(entry.getKey(), entry.getValue());
+			Map<String, Object> context = temp.getContext();
+			Map<String, Object> parameters = ActionContext.getContext()
+					.getParameters();
+			try {
+				ReflectionContextState.setCreatingNullObjects(context, true);
+				for (Map.Entry<String, Object> entry : parameters.entrySet())
+					if (acceptedPattern.matcher(entry.getKey()).matches())
+						temp.setValue(entry.getKey(), entry.getValue());
+			} finally {
+				ReflectionContextState.setCreatingNullObjects(context, false);
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
 		return entity;
 	}
 
-	@Inject
-	private transient ValueStackFactory valueStackFactory;
+	private static Pattern acceptedPattern = Pattern
+			.compile("[a-zA-Z0-9\\.\\]\\[\\(\\)_'\\s]+"); // com.opensymphony.xwork2.interceptor.ParametersInterceptor
 
 	@Inject("ironrhino-autoconfig")
 	private transient PackageProvider packageProvider;
+
+	@Inject
+	private transient ValueStackFactory valueStackFactory;
 
 }
