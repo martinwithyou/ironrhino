@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
-<title><#if entity.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('dictionary')}</title>
+<title><#if dictionary.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('dictionary')}</title>
 </head>
 <body>
 <@s.form action="save" method="post" cssClass="ajax">
@@ -20,8 +20,8 @@
 				</thead>
 				<tbody>
 					<#assign size = 0>
-					<#if entity.items?? && entity.items?size gt 0>
-						<#assign size = entity.items?size-1>
+					<#if dictionary.items?? && dictionary.items?size gt 0>
+						<#assign size = dictionary.items?size-1>
 					</#if>
 					<#list 0..size as index>
 					<tr>

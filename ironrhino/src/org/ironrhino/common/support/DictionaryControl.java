@@ -1,6 +1,7 @@
 package org.ironrhino.common.support;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,9 +51,16 @@ public class DictionaryControl implements
 		map = temp;
 	}
 
-	public List<LabelValue> getItems(String name) {
+	public Map<String, String> getItems(String name) {
 		Dictionary dict = map.get(name);
-		return dict != null ? dict.getItems() : Collections.EMPTY_LIST;
+		if (dict == null)
+			return Collections.EMPTY_MAP;
+		List<LabelValue> items = dict.getItems();
+		Map<String, String> map = new LinkedHashMap<String, String>(
+				items.size(), 1);
+		for (LabelValue lv : items)
+			map.put(lv.getValue(), lv.getLabel());
+		return map;
 	}
 
 	public void onApplicationEvent(EntityOperationEvent event) {
