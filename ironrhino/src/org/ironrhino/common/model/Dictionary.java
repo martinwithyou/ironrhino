@@ -17,8 +17,6 @@ import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.util.JsonUtils;
 
-import com.opensymphony.xwork2.util.CreateIfNull;
-
 @PublishAware
 @AutoConfig(searchable = true, order = "name asc")
 @Searchable(alias = "dictionary")
@@ -51,7 +49,6 @@ public class Dictionary extends BaseEntity {
 		return items;
 	}
 
-	@CreateIfNull
 	public void setItems(List<LabelValue> items) {
 		this.items = items;
 	}
