@@ -1,6 +1,5 @@
 package org.ironrhino.core.remoting;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
@@ -99,7 +98,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 	}
 
 	@PostPropertiesReset
-	public void reset() throws IOException {
+	public void reset() {
 		if (reset) {
 			reset = false;
 			super.afterPropertiesSet();
