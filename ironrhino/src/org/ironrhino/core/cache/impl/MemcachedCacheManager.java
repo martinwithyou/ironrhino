@@ -119,17 +119,12 @@ public class MemcachedCacheManager implements CacheManager {
 			return get(key, namespace);
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
-		Object value = null;
 		try {
-			String actualKey = generateKey(key, namespace);
-			value = memcached.get(actualKey);
-			if (value != null) {
-				memcached.set(actualKey, timeToLive, value);
-			}
-			return value;
+			return memcached.getAndTouch(generateKey(key, namespace),
+					timeToLive);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return value;
+			return null;
 		}
 	}
 
@@ -218,9 +213,9 @@ public class MemcachedCacheManager implements CacheManager {
 	public boolean supportsTimeToIdle() {
 		return false;
 	}
-	
-	public boolean supportsUpdateTimeToLive(){
-		return false;
+
+	public boolean supportsUpdateTimeToLive() {
+		return true;
 	}
 
 }

@@ -17,10 +17,10 @@ import net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator;
 import net.rubyeye.xmemcached.utils.AddrUtil;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.metadata.PostPropertiesReset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 public class XMemcachedCacheManager implements CacheManager {
@@ -111,17 +111,12 @@ public class XMemcachedCacheManager implements CacheManager {
 			return get(key, namespace);
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
-		Object value = null;
 		try {
-			String actualKey = generateKey(key, namespace);
-			value = memcached.get(actualKey);
-			if (value != null) {
-				memcached.setWithNoReply(actualKey, timeToLive, value);
-			}
-			return value;
+			return memcached.getAndTouch(generateKey(key, namespace),
+					timeToLive);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			return value;
+			return null;
 		}
 	}
 
@@ -211,9 +206,9 @@ public class XMemcachedCacheManager implements CacheManager {
 	public boolean supportsTimeToIdle() {
 		return false;
 	}
-	
-	public boolean supportsUpdateTimeToLive(){
-		return false;
+
+	public boolean supportsUpdateTimeToLive() {
+		return true;
 	}
 
 }
