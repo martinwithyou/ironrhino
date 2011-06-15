@@ -37,8 +37,12 @@ public class RedisCacheManager implements CacheManager {
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		try {
-			redisTemplate.opsForValue().set(generateKey(key, namespace), value, timeToLive,
-					TimeUnit.SECONDS);
+			if (timeToLive > 0)
+				redisTemplate.opsForValue().set(generateKey(key, namespace),
+						value, timeToLive, TimeUnit.SECONDS);
+			else
+				redisTemplate.opsForValue().set(generateKey(key, namespace),
+						value);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
