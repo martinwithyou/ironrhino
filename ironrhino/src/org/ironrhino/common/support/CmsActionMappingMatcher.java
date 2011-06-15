@@ -207,14 +207,12 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 	public void onApplicationEvent(EntityOperationEvent event) {
 		if (event.getEntity() instanceof Setting) {
 			Setting settingInEvent = (Setting) event.getEntity();
-			if (settingInEvent.getKey().equals(
-					Constants.SETTING_KEY_CMS_SERIESES)) {
+			String key = settingInEvent.getKey();
+			if (key.equals(Constants.SETTING_KEY_CMS_SERIESES)
+					|| key.equals(Constants.SETTING_KEY_CMS_COLUMNS)
+					|| key.equals(Constants.SETTING_KEY_CMS_ISSUES)) {
 				buildSerieses();
-			} else if (settingInEvent.getKey().equals(
-					Constants.SETTING_KEY_CMS_COLUMNS)) {
 				buildColumns();
-			} else if (settingInEvent.getKey().equals(
-					Constants.SETTING_KEY_CMS_ISSUES)) {
 				buildIssues();
 			}
 		}
