@@ -119,7 +119,19 @@ public abstract class OAuth20Provider extends AbstractOAuthProvider {
 			params.put("grant_type", "authorization_code");
 			String content = HttpClientUtils.postResponseText(
 					getAccessTokenEndpoint(), params);
-			accessToken = JsonUtils.fromJson(content, OAuth20Token.class);
+			if (JsonUtils.isValidJson(content)) {
+				accessToken = JsonUtils.fromJson(content, OAuth20Token.class);
+			} else {
+				accessToken = new OAuth20Token();
+				String[] arr1 = content.split("&");
+				for (String s : arr1) {
+					String[] arr2 = s.split("=", 2);
+					if (arr2.length > 1 && arr2[0].equals("access_token"))
+						accessToken.setAccess_token(arr2[1]);
+					else if (arr2.length > 1 && arr2[0].equals("token_type"))
+						accessToken.setToken_type(arr2[1]);
+				}
+			}
 			saveToken(request, accessToken);
 		}
 		return doGetProfile(accessToken.getAccess_token());

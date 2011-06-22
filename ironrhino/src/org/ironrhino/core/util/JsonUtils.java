@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.SerializationConfig.Feature;
@@ -33,7 +34,7 @@ public class JsonUtils {
 		config.set(Feature.WRITE_ENUMS_USING_TO_STRING, true);
 		config = config
 				.withAnnotationIntrospector(new JacksonAnnotationIntrospector() {
-					
+
 					@Override
 					public String findEnumValue(Enum<?> value) {
 						return value.toString();
@@ -99,6 +100,15 @@ public class JsonUtils {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return null;
+		}
+	}
+
+	public static boolean isValidJson(String content) {
+		try {
+			JsonUtils.getObjectMapper().readValue(content, JsonNode.class);
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
 	}
 
