@@ -5,39 +5,56 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang.time.FastDateFormat;
+
 public class DateUtils {
 	public static final String DATE10 = "yyyy-MM-dd";
 
+	private static final FastDateFormat DATE10_DF = FastDateFormat
+			.getInstance(DATE10);
+
 	public static final String DATE8 = "yyyyMMdd";
+
+	private static final FastDateFormat DATE8_DF = FastDateFormat
+			.getInstance(DATE8);
 
 	public static final String YEARMONTH = "yyyyMM";
 
+	private static final FastDateFormat YEARMONTH_DF = FastDateFormat
+			.getInstance(YEARMONTH);
+
 	public static final String DATETIME = "yyyy-MM-dd HH:mm:ss";
+
+	private static final FastDateFormat DATETIME_DF = FastDateFormat
+			.getInstance(DATETIME);
 
 	public static final String TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSSS";
 
+	private static final FastDateFormat TIMESTAMP_DF = FastDateFormat
+			.getInstance(TIMESTAMP);
+
 	public static String formatDate10(Date date) {
-		return new SimpleDateFormat(DATE10).format(date);
+		return DATE10_DF.format(date);
 	}
 
 	public static String formatDate8(Date date) {
-		return new SimpleDateFormat(DATE8).format(date);
+		return DATE8_DF.format(date);
 	}
 
 	public static String formatTimestamp(Date date) {
-		return new SimpleDateFormat(TIMESTAMP).format(date);
+		return TIMESTAMP_DF.format(date);
 	}
 
 	public static String formatDatetime(Date date) {
-		return new SimpleDateFormat(DATETIME).format(date);
+		return DATETIME_DF.format(date);
 	}
 
 	public static String formatYearMonth(Date date) {
-		return new SimpleDateFormat(YEARMONTH).format(date);
+		return YEARMONTH_DF.format(date);
 	}
 
 	public static String format(Date date, String pattern) {
-		return new SimpleDateFormat(pattern).format(date);
+		return FastDateFormat.getInstance(pattern).format(date);
 	}
 
 	public static Date addDays(Date date, int days) {
