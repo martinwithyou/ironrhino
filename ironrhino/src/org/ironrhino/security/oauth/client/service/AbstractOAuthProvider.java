@@ -38,7 +38,11 @@ public abstract class AbstractOAuthProvider implements OAuthProvider {
 	protected boolean isUseAuthorizationHeader() {
 		return true;
 	}
-
+	
+	protected String getAuthorizationHeaderType(){
+		return "OAuth";
+	}
+	
 	protected String generateId(String uid) {
 		return "(" + getName() + ")" + uid;
 	}

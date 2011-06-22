@@ -160,7 +160,8 @@ public abstract class OAuth20Provider extends AbstractOAuthProvider {
 		if (!isUseAuthorizationHeader())
 			map.put("oauth_token", accessToken);
 		else
-			map.put("Authorization", "OAuth " + accessToken);
+			map.put("Authorization", getAuthorizationHeaderType() + " "
+					+ accessToken);
 		return invoke(protectedURL, isUseAuthorizationHeader() ? null : map,
 				isUseAuthorizationHeader() ? map : null);
 	}
@@ -185,7 +186,7 @@ public abstract class OAuth20Provider extends AbstractOAuthProvider {
 	}
 
 	protected void saveToken(HttpServletRequest request, OAuth20Token token) {
-		token.setCreate_time((int) System.currentTimeMillis() / 1000);
+		token.setCreate_time(System.currentTimeMillis());
 		request.getSession().setAttribute(getName() + "_token",
 				JsonUtils.toJson(token));
 	}

@@ -186,7 +186,8 @@ public abstract class OAuth10aProvider extends AbstractOAuthProvider {
 		Map<String, String> oauthparams = getOAuthParams(method, url, params,
 				token, tokenSecret);
 		StringBuilder sb = new StringBuilder();
-		sb.append("OAuth realm=\"");
+		sb.append(getAuthorizationHeaderType());
+		sb.append(" realm=\"");
 		if (realm != null)
 			sb.append(realm);
 		sb.append("\",");

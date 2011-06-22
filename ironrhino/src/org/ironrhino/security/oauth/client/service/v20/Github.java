@@ -46,7 +46,11 @@ public class Github extends OAuth20Provider {
 
 	@Override
 	public boolean isUseAuthorizationHeader() {
-		return false;
+		return true;
+	}
+	
+	protected String getAuthorizationHeaderType(){
+		return "Token";
 	}
 
 	@Override

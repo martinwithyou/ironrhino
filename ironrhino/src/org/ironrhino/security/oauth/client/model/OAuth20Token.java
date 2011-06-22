@@ -7,7 +7,7 @@ public class OAuth20Token implements java.io.Serializable {
 	private String access_token;
 	private String token_type;
 	private int expires_in;
-	private int create_time;
+	private long create_time;
 	private String refresh_token;
 
 	public String getAccess_token() {
@@ -42,11 +42,11 @@ public class OAuth20Token implements java.io.Serializable {
 		this.refresh_token = refresh_token;
 	}
 
-	public int getCreate_time() {
+	public long getCreate_time() {
 		return create_time;
 	}
 
-	public void setCreate_time(int create_time) {
+	public void setCreate_time(long create_time) {
 		this.create_time = create_time;
 	}
 
@@ -55,8 +55,7 @@ public class OAuth20Token implements java.io.Serializable {
 		if (expires_in <= 0 || create_time <= 0)
 			return false;
 		int offset = 60;
-		int current = (int) System.currentTimeMillis() / 1000;
-		return current - create_time > expires_in - offset;
+		return System.currentTimeMillis() - create_time > (expires_in - offset) * 1000;
 	}
 
 }
