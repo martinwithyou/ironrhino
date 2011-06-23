@@ -73,8 +73,6 @@ public class RoundRobin<T> {
 
 		public static final int DEFAULT_WEIGHT = 1;
 
-		private static final long serialVersionUID = -5014563629634040181L;
-
 		private T target;
 
 		private int weight = DEFAULT_WEIGHT;
