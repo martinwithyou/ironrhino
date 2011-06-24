@@ -8,9 +8,9 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.core.metadata.Remoting;
 import org.ironrhino.core.remoting.HessianClient;
 import org.ironrhino.core.remoting.HttpInvokerClient;
+import org.ironrhino.core.remoting.Remoting;
 import org.ironrhino.core.remoting.ServiceRegistry;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.slf4j.Logger;

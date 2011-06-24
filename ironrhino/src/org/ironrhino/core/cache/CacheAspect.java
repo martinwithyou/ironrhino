@@ -13,8 +13,6 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.aop.BaseAspect;
-import org.ironrhino.core.metadata.CheckCache;
-import org.ironrhino.core.metadata.FlushCache;
 import org.springframework.beans.factory.annotation.Value;
 
 @Aspect

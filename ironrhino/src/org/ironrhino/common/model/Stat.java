@@ -4,8 +4,8 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.ironrhino.core.dataroute.DataRoute;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.DataRoute;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.stat.Key;

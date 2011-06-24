@@ -2,8 +2,8 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
+import org.ironrhino.core.dataroute.DataRoute;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.DataRoute;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 

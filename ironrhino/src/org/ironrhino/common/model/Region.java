@@ -3,9 +3,9 @@ package org.ironrhino.common.model;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 import org.ironrhino.common.util.RegionUtils;
+import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NotInJson;
-import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.BaseTreeableEntity;
 
 @PublishAware

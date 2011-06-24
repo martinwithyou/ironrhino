@@ -12,8 +12,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
-import org.ironrhino.core.metadata.CheckCache;
-import org.ironrhino.core.metadata.FlushCache;
+import org.ironrhino.core.cache.CheckCache;
+import org.ironrhino.core.cache.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;

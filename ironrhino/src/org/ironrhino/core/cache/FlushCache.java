@@ -1,4 +1,4 @@
-package org.ironrhino.core.metadata;
+package org.ironrhino.core.cache;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -6,7 +6,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.ironrhino.core.cache.CacheManager;
 
 @Target(METHOD)
 @Retention(RUNTIME)

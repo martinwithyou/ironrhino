@@ -13,7 +13,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.common.model.Record;
 import org.ironrhino.core.event.EntityOperationType;
-import org.ironrhino.core.metadata.RecordAware;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.util.AuthzUtils;
 import org.springframework.core.Ordered;

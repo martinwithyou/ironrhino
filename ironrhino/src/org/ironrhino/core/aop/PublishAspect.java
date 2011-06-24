@@ -11,7 +11,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.event.EventPublisher;
-import org.ironrhino.core.metadata.PublishAware;
 import org.ironrhino.core.model.Persistable;
 
 @Aspect

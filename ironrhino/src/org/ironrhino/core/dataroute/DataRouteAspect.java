@@ -8,7 +8,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.aop.BaseAspect;
-import org.ironrhino.core.metadata.DataRoute;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
 import org.springframework.transaction.annotation.Transactional;

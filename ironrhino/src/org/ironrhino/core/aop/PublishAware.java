@@ -1,4 +1,4 @@
-package org.ironrhino.core.metadata;
+package org.ironrhino.core.aop;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
