@@ -3,6 +3,7 @@ package org.ironrhino.core.dataroute;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -36,18 +37,33 @@ public class DataRouteAspect extends BaseAspect {
 		return jp.proceed();
 	}
 
+	@Around("execution(public * *(..)) and @annotation(dataRoute))")
+	public Object determineGroup(ProceedingJoinPoint jp, DataRoute dataRoute)
+			throws Throwable {
+		String groupName = evalString(dataRoute.value(), jp, null);
+		if (StringUtils.isNotBlank(groupName))
+			DataRouteContext.setName(groupName);
+		return jp.proceed();
+	}
+
 	@Around("execution(public * *(..)) and target(baseManager)")
 	public Object determineGroup(ProceedingJoinPoint jp, BaseManager baseManager)
 			throws Throwable {
-		DataRoute dr = null;
-		Class<? extends Persistable> entityClass = baseManager.getEntityClass();
-		if (entityClass == null
-				|| (dr = entityClass.getAnnotation(DataRoute.class)) == null)
-			return jp.proceed();
-		String groupName = evalString(dr.value(), jp, null);
-		if (groupName == null)
-			return jp.proceed();
-		DataRouteContext.setName(groupName);
+		DataRoute dataRoute = null;
+		Object target = jp.getTarget();
+		if (target != null)
+			dataRoute = target.getClass().getAnnotation(DataRoute.class);
+		if (dataRoute == null) {
+			Class<? extends Persistable> entityClass = baseManager
+					.getEntityClass();
+			if (entityClass != null)
+				dataRoute = entityClass.getAnnotation(DataRoute.class);
+		}
+		if (dataRoute != null) {
+			String groupName = evalString(dataRoute.value(), jp, null);
+			if (StringUtils.isNotBlank(groupName))
+				DataRouteContext.setName(groupName);
+		}
 		return jp.proceed();
 	}
 
