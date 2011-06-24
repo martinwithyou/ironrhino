@@ -6,6 +6,9 @@
 <script type="text/javascript" src="<@url value="/assets/components/tiny_mce/jquery.tinymce.js"/>"></script>
 <script type="text/javascript">
 $(function() {
+		window.pageid = function(){		//for tinymce browseimage.js
+			return $('#page_id').val();
+		}
 		$('#display_page_head').click(function(){$('#page_head').toggle()});
 
 		var cmsPath= $('meta[name="cms_path"]').attr('content') || '';

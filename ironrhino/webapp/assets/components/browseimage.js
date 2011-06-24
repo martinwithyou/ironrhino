@@ -143,7 +143,7 @@
 
 var inputfiles = '<input id="files" type="file" multiple="true" onchange="upload(this.files)" style="width:130px;margin-left:10px;position:relative;"/>';
 $(function(){
-	var pageid = $('#page_id',window.parent.document).val();
+	var pageid = window.parent.pageid();
 	if(!pageid)return;
 	var html = '<li id="browse_tab"><span><a href="javascript:mcTabs.displayTab(\'browse_tab\',\'browse_panel\');" onmousedown="return browse();">浏览</a></span></li>';
 	$('#general_tab').after(html);
@@ -171,7 +171,7 @@ $(function(){
 });
 
 function upload(files){
-	var pageid = $('#page_id',window.parent.document).val();
+	var pageid = window.parent.pageid();
 	var baseurl = window.parent.location.href;
 	baseurl = baseurl.substring(0,baseurl.indexOf('/common/'));
 	$.ajaxupload(files,{
@@ -181,7 +181,7 @@ function upload(files){
 }
 
 function browse() {
-	var pageid = $('#page_id',window.parent.document).val();
+	var pageid = window.parent.pageid();
 	var baseurl = window.parent.location.href;
 	baseurl = baseurl.substring(0,baseurl.indexOf('/common/'));
 	var panel = $('#browse_panel');
