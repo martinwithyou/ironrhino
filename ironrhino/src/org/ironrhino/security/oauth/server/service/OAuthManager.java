@@ -7,7 +7,7 @@ import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
 
 public interface OAuthManager {
-	
+
 	public static final long DEFAULT_EXPIRE_TIME = 14 * 24 * 3600;
 
 	public Authorization generate(Client client, String redirectUri,
@@ -28,7 +28,17 @@ public interface OAuthManager {
 	public void revoke(String accessToken);
 
 	public List<Authorization> findAuthorizationsByGrantor(User grantor);
-	
+
 	public long getExpireTime();
+	
+	public void removeExpired();
+
+	public void saveClient(Client client);
+
+	public void deleteClient(Client client);
+
+	public Client findClientById(String clientId);
+	
+	public List<Client> findClientByOwner(User user);
 
 }

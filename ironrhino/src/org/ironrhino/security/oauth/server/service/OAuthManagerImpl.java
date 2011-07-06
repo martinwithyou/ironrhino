@@ -153,4 +153,25 @@ public class OAuthManagerImpl implements OAuthManager {
 				"delete from Authorization a where a.modifyDate < ?",
 				cal.getTime());
 	}
+
+	public void saveClient(Client client) {
+		baseManager.save(client);
+	}
+
+	public void deleteClient(Client client) {
+		baseManager.delete(client);
+	}
+
+	public Client findClientById(String clientId) {
+		baseManager.setEntityClass(Client.class);
+		return (Client) baseManager.get(clientId);
+	}
+
+	public List<Client> findClientByOwner(User owner) {
+		baseManager.setEntityClass(Client.class);
+		DetachedCriteria dc = baseManager.detachedCriteria();
+		dc.add(Restrictions.eq("owner", owner));
+		dc.addOrder(Order.asc("createDate"));
+		return baseManager.findListByCriteria(dc);
+	}
 }
