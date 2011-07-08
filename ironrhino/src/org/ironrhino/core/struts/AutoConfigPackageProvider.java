@@ -106,7 +106,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 				Class c = Class.forName(name);
 				AutoConfig ac = (AutoConfig) c.getAnnotation(AutoConfig.class);
 				if (ac != null) {
-					log.info("load autoconfig from " + c.getName());
+					log.info("Loading autoconfig from " + c.getName());
 					String defaultNamespace = ac.namespace();
 					if (defaultNamespace.equals(""))
 						defaultNamespace = "/"
