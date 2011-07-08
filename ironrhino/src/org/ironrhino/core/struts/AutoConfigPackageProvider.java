@@ -2,8 +2,6 @@ package org.ironrhino.core.struts;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,64 +62,34 @@ public class AutoConfigPackageProvider implements PackageProvider {
 
 	protected Map<String, Set<String>> configPackages() {
 		Map<String, Set<String>> packages = new HashMap<String, Set<String>>();
-		ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-		List<String> packagePrefixes = new ArrayList<String>();
-		packagePrefixes.add("org");
-		packagePrefixes.add("com");
-		packagePrefixes.add("net");
-		List<Resource> list = new ArrayList<Resource>(100);
-		for (String packagePrefix : packagePrefixes) {
-			String searchPath = new StringBuilder(
-					ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)
-					.append(packagePrefix).append("/**/*/package-info.class")
-					.toString();
-			try {
-				Resource[] resources = resourcePatternResolver
-						.getResources(searchPath);
-				list.addAll(Arrays.asList(resources));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		Set<String> packagePrefixes = new HashSet<String>();
+		for (String pck : ClassScaner.getAppPackages()) {
+			int i = pck.indexOf('.');
+			packagePrefixes.add(i > 0 ? pck.substring(0, i) : pck);
 		}
-		for (Resource res : list) {
-			String name = "";
-			try {
-				name = res.getURI().toString();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			if (name.startsWith("jar:file:/")) {
-				String code = ".jar!/";
-				name = name.substring(name.indexOf(code) + code.length());
-			} else if (name.startsWith("file:/")) {
-				String code = "/WEB-INF/classes/";
-				name = name.substring(name.indexOf(code) + code.length());
-			}
-			name = name.substring(0, name.lastIndexOf('.'));
-			name = org.springframework.util.ClassUtils
-					.convertResourcePathToClassName(name);
-			String packageName = name.substring(0, name.length()
-					- ".package-info".length());
-			try {
-				Class c = Class.forName(name);
-				AutoConfig ac = (AutoConfig) c.getAnnotation(AutoConfig.class);
-				if (ac != null) {
-					log.info("Loading autoconfig from " + c.getName());
-					String defaultNamespace = ac.namespace();
-					if (defaultNamespace.equals(""))
-						defaultNamespace = "/"
-								+ packageName.substring(packageName
-										.lastIndexOf('.') + 1);
-					Set<String> set = packages.get(ac.namespace());
-					if (set == null) {
-						set = new HashSet<String>();
-						packages.put(defaultNamespace, set);
-					}
-
-					set.add(packageName);
+		Set<Class> packageInfos = new HashSet<Class>();
+		for (String packagePrefix : packagePrefixes)
+			packageInfos.addAll(ClassScaner.scanAnnotatedPackage(packagePrefix,
+					AutoConfig.class));
+		for (Class packageInfo : packageInfos) {
+			String name = packageInfo.getName();
+			String packageName = name.substring(0, name.lastIndexOf('.'));
+			AutoConfig ac = (AutoConfig) packageInfo
+					.getAnnotation(AutoConfig.class);
+			if (ac != null) {
+				log.info("Loading autoconfig from " + name);
+				String defaultNamespace = ac.namespace();
+				if (defaultNamespace.equals(""))
+					defaultNamespace = "/"
+							+ packageName.substring(packageName
+									.lastIndexOf('.') + 1);
+				Set<String> set = packages.get(ac.namespace());
+				if (set == null) {
+					set = new HashSet<String>();
+					packages.put(defaultNamespace, set);
 				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+
+				set.add(packageName);
 			}
 		}
 

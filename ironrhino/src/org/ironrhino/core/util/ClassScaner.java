@@ -103,15 +103,30 @@ public class ClassScaner {
 		return set;
 	}
 
+	public static Set<Class> scanAnnotatedPackage(String basePackage,
+			Class<? extends Annotation>... annotations) {
+		ClassScaner cs = new ClassScaner();
+		for (Class anno : annotations)
+			cs.addIncludeFilter(new AnnotationTypeFilter(anno));
+		return cs.doScan(basePackage, "/**/*/package-info.class");
+	}
+
 	public Set<Class> doScan(String basePackage) {
+		return doScan(basePackage, null);
+	}
+
+	public Set<Class> doScan(String basePackage, String pattern) {
+		if (org.apache.commons.lang.StringUtils.isBlank(pattern))
+			pattern = "/**/*.class";
 		Set<Class> classes = new HashSet<Class>();
 		Resource resource = null;
 		try {
-			String searchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
-					+ org.springframework.util.ClassUtils
+			String searchPath = new StringBuilder(
+					ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)
+					.append(org.springframework.util.ClassUtils
 							.convertClassNameToResourcePath(SystemPropertyUtils
-									.resolvePlaceholders(basePackage))
-					+ "/**/*.class";
+									.resolvePlaceholders(basePackage)))
+					.append(pattern).toString();
 			Resource[] resources = this.resourcePatternResolver
 					.getResources(searchPath);
 			for (int i = 0; i < resources.length; i++) {
@@ -145,11 +160,11 @@ public class ClassScaner {
 			}
 		}
 		for (TypeFilter tf : this.includeFilters) {
-			if (tf.match(metadataReader, this.metadataReaderFactory)) {
-				return true;
+			if (!tf.match(metadataReader, this.metadataReaderFactory)) {
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public static String[] getAppPackages() {
@@ -190,10 +205,11 @@ public class ClassScaner {
 
 	private static String[] excludePackages = new String[] { "java", "javax",
 			"com.sun", "sun", "org.w3c", "org.xml", "antlr", "com.caucho",
-			"com.chenlb", "com.mysql", "com.opensymphony", "freemarker",
-			"javassist", "net.sf", "net.sourceforge", "ognl", "org.antlr",
-			"org.aopalliance", "org.apache", "org.aspectj", "org.codehaus",
-			"org.compass", "org.dom4j", "org.eclipse", "org.hibernate",
+			"com.chenlb", "com.google", "com.jolbox", "com.mysql",
+			"com.opensymphony", "freemarker", "javassist", "jsr166y", "net.sf",
+			"net.sourceforge", "ognl", "org.antlr", "org.aopalliance",
+			"org.apache", "org.aspectj", "org.codehaus", "org.compass",
+			"org.dom4j", "org.eclipse", "org.hibernate", "org.ietf",
 			"org.mvel2", "org.slf4j", "org.springframework",
 			"org.ironrhino.core" };
 
