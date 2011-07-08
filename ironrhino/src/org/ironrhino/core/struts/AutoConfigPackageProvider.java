@@ -2,6 +2,7 @@ package org.ironrhino.core.struts;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -49,7 +50,8 @@ public class AutoConfigPackageProvider implements PackageProvider {
 
 	private String defaultActionClass = EntityAction.class.getName();
 
-	private Map<String, Set<String>> packages = new HashMap<String, Set<String>>();
+	@Inject(value = "ironrhino.autoconfig.packages", required = false)
+	private String packageConfigInXml;
 
 	private Configuration configuration;
 
@@ -60,13 +62,74 @@ public class AutoConfigPackageProvider implements PackageProvider {
 	@Inject
 	private ObjectFactory objectFactory;
 
-	@Inject("ironrhino.autoconfig.packages")
-	public void setPackages(String val) {
-		if (StringUtils.isNotBlank(val)) {
-			String[] array = val.split(";");
+	protected Map<String, Set<String>> configPackages() {
+		Map<String, Set<String>> packages = new HashMap<String, Set<String>>();
+		ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+		List<String> packagePrefixes = new ArrayList<String>();
+		packagePrefixes.add("org");
+		packagePrefixes.add("com");
+		packagePrefixes.add("net");
+		List<Resource> list = new ArrayList<Resource>(100);
+		for (String packagePrefix : packagePrefixes) {
+			String searchPath = new StringBuilder(
+					ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)
+					.append(packagePrefix).append("/**/*/package-info.class")
+					.toString();
+			try {
+				Resource[] resources = resourcePatternResolver
+						.getResources(searchPath);
+				list.addAll(Arrays.asList(resources));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		for (Resource res : list) {
+			String name = "";
+			try {
+				name = res.getURI().toString();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			if (name.startsWith("jar:file:/")) {
+				String code = ".jar!/";
+				name = name.substring(name.indexOf(code) + code.length());
+			} else if (name.startsWith("file:/")) {
+				String code = "/WEB-INF/classes/";
+				name = name.substring(name.indexOf(code) + code.length());
+			}
+			name = name.substring(0, name.lastIndexOf('.'));
+			name = org.springframework.util.ClassUtils
+					.convertResourcePathToClassName(name);
+			String packageName = name.substring(0, name.length()
+					- ".package-info".length());
+			try {
+				Class c = Class.forName(name);
+				AutoConfig ac = (AutoConfig) c.getAnnotation(AutoConfig.class);
+				if (ac != null) {
+					log.info("load autoconfig from " + c.getName());
+					String defaultNamespace = ac.namespace();
+					if (defaultNamespace.equals(""))
+						defaultNamespace = "/"
+								+ packageName.substring(packageName
+										.lastIndexOf('.') + 1);
+					Set<String> set = packages.get(ac.namespace());
+					if (set == null) {
+						set = new HashSet<String>();
+						packages.put(defaultNamespace, set);
+					}
+
+					set.add(packageName);
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (StringUtils.isNotBlank(packageConfigInXml)) {
+			String[] array = packageConfigInXml.split(";");
 			for (String s : array) {
 				String[] arr = s.split(":");
-				String defaultNamespace = "";
+				String defaultNamespace = "/";
 				String packs;
 				if (arr.length == 1) {
 					packs = arr[0];
@@ -79,9 +142,22 @@ public class AutoConfigPackageProvider implements PackageProvider {
 					set = new HashSet<String>();
 					packages.put(defaultNamespace, set);
 				}
-				set.addAll(Arrays.asList(packs.split(",")));
+				for (String p : packs.split(",")) {
+					for (Map.Entry<String, Set<String>> entry : packages
+							.entrySet()) {
+						if (entry.getValue().contains(p)) {
+							entry.getValue().remove(p);
+							log.warn(
+									"package {} have been overriden from {} to {} in struts.xml",
+									new String[] { p, entry.getKey(),
+											defaultNamespace });
+						}
+					}
+					set.add(p);
+				}
 			}
 		}
+		return packages;
 	}
 
 	public void init(Configuration configuration) throws ConfigurationException {
@@ -95,13 +171,13 @@ public class AutoConfigPackageProvider implements PackageProvider {
 					.getResources(searchPath);
 			for (Resource res : resources) {
 				String name = res.getURI().toString();
-				String source = name.substring(0, name
-						.indexOf("/resources/i18n/"));
+				String source = name.substring(0,
+						name.indexOf("/resources/i18n/"));
 				name = name.substring(name.indexOf("resources/i18n/"));
 				name = name.substring(0, name.lastIndexOf('.'));
 				if (name.lastIndexOf('_') > name.lastIndexOf('/'))
-					name = name.substring(0, name.indexOf('_', name
-							.lastIndexOf('/')));
+					name = name.substring(0,
+							name.indexOf('_', name.lastIndexOf('/')));
 				name = org.springframework.util.ClassUtils
 						.convertResourcePathToClassName(name);
 				if (messageBunldes.containsKey(name)
@@ -123,16 +199,17 @@ public class AutoConfigPackageProvider implements PackageProvider {
 	}
 
 	public void loadPackages() throws ConfigurationException {
+		Map<String, Set<String>> packages = configPackages();
 		if (packages.size() == 0)
 			return;
-
 		for (String defaultNamespace : packages.keySet()) {
-			Set<Class> entityClasses = ClassScaner.scanAnnotated(packages.get(
-					defaultNamespace).toArray(new String[0]), AutoConfig.class);
-			if (entityClasses.size() == 0)
+			Set<Class> classes = ClassScaner.scanAnnotated(
+					packages.get(defaultNamespace).toArray(new String[0]),
+					AutoConfig.class);
+			if (classes.size() == 0)
 				continue;
 			packageLoader = new PackageLoader();
-			for (Class clazz : entityClasses) {
+			for (Class clazz : classes) {
 				processAutoConfigClass(clazz, defaultNamespace);
 			}
 			for (PackageConfig packageConfig : packageLoader
@@ -145,14 +222,12 @@ public class AutoConfigPackageProvider implements PackageProvider {
 							packageConfig);
 					for (ActionConfig ac : packageConfig.getActionConfigs()
 							.values())
-						log
-								.info("mapping "
-										+ ac.getClassName()
-										+ " to "
-										+ packageConfig.getNamespace()
-										+ (packageConfig.getNamespace()
-												.endsWith("/") ? "" : "/")
-										+ ac.getName());
+						log.info("mapping "
+								+ ac.getClassName()
+								+ " to "
+								+ packageConfig.getNamespace()
+								+ (packageConfig.getNamespace().endsWith("/") ? ""
+										: "/") + ac.getName());
 				} else {
 					Map<String, ActionConfig> actionConfigs = new LinkedHashMap<String, ActionConfig>(
 							pc.getActionConfigs());
@@ -165,8 +240,9 @@ public class AutoConfigPackageProvider implements PackageProvider {
 									+ actionConfigs.get(actionName)
 											.getClassName()
 									+ "',ignore autoconfig on action class '"
-									+ packageConfig.getActionConfigs().get(
-											actionName).getClassName() + "'");
+									+ packageConfig.getActionConfigs()
+											.get(actionName).getClassName()
+									+ "'");
 							continue;
 						}
 						ActionConfig ac = packageConfig.getActionConfigs().get(
@@ -194,6 +270,8 @@ public class AutoConfigPackageProvider implements PackageProvider {
 	}
 
 	protected void processAutoConfigClass(Class cls, String defaultNamespace) {
+		if (cls.getSimpleName().equals("package-info"))
+			return;
 		AutoConfig ac = (AutoConfig) cls.getAnnotation(AutoConfig.class);
 		String[] arr = getNamespaceAndActionName(cls, defaultNamespace);
 		String namespace = arr[0];
