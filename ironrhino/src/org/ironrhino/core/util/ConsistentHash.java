@@ -37,6 +37,9 @@
 
 package org.ironrhino.core.util;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -55,18 +58,34 @@ public class ConsistentHash<K, V> {
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(true);
 	private ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
 	private ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
+	private Hash hash;
+	private int pointsPerWeight = 100;
 
 	public ConsistentHash(Map<V, Integer> nodes) {
+		this(nodes, null);
+	}
+
+	public ConsistentHash(Map<V, Integer> nodes, Hash hash) {
 		if (nodes != null)
 			this.nodes = nodes;
+		if (hash == null)
+			hash = new MurmurHash();
+		this.hash = hash;
 		setup();
 	}
 
 	public ConsistentHash(Collection<V> nodes) {
+		this(nodes, null);
+	}
+
+	public ConsistentHash(Collection<V> nodes, Hash hash) {
 		if (nodes != null && nodes.size() > 0) {
 			for (V v : nodes)
 				this.nodes.put(v, 1);
 		}
+		if (hash == null)
+			hash = new MurmurHash();
+		this.hash = hash;
 		setup();
 	}
 
@@ -106,13 +125,14 @@ public class ConsistentHash<K, V> {
 			totalWeights = 0;
 			for (Iterator<Integer> it = nodes.values().iterator(); it.hasNext();)
 				totalWeights += (it.next()).intValue();
+			totalWeights *= pointsPerWeight;
 			points = new Point[totalWeights];
 			int point = 0;
 			for (Iterator<V> keys = nodes.keySet().iterator(); keys.hasNext();) {
 				Object node = keys.next();
-				int n = nodes.get(node).intValue();
+				int n = nodes.get(node).intValue() * pointsPerWeight;
 				for (int i = 0; i < n; i++)
-					points[point++] = new Point(md5hash(node.toString() + "/"
+					points[point++] = new Point(hash.hash(node.toString() + "/"
 							+ i), node);
 			}
 			Arrays.sort(points);
@@ -125,9 +145,14 @@ public class ConsistentHash<K, V> {
 		if (key == null) {
 			return null;
 		}
+		String tobeHash = key.toString();
+		int i = tobeHash.indexOf('{');
+		int j = tobeHash.indexOf('}');
+		if (i > -1 && j > i)
+			tobeHash = tobeHash.substring(i + 1, j);
 		readLock.lock();
 		try {
-			int hashValue = hash(key.toString());
+			long hashValue = hash.hash(tobeHash);
 			if (points == null || points.length == 0)
 				return null;
 			if (hashValue < points[0].start)
@@ -148,30 +173,142 @@ public class ConsistentHash<K, V> {
 		}
 	}
 
-	private static int hash(String s) {
-		int h = s.hashCode();
-		return (h << 28) ^ (h << 24) ^ (h << 16) ^ h;
+	public static interface Hash {
+		public long hash(String s);
 	}
 
-	private static int md5hash(String s) {
-		byte[] digest = CodecUtils.md5(s.getBytes());
-		int hash = ((digest[12] & 0xff) << 24) | ((digest[13] & 0xff) << 16)
-				| ((digest[14] & 0xff) << 8) | (digest[15] & 0xff);
-		return Math.abs(hash);
+	/**
+	 * This is a very fast, non-cryptographic hash suitable for general
+	 * hash-based lookup. See http://murmurhash.googlepages.com/ for more
+	 * details.
+	 * <p/>
+	 * <p>
+	 * The C version of MurmurHash 2.0 found at that site was ported to Java by
+	 * Andrzej Bialecki (ab at getopt org).
+	 * </p>
+	 */
+	public static class MurmurHash implements Hash {
+
+		public static int hash(byte[] data, int seed) {
+			return hash(ByteBuffer.wrap(data), seed);
+		}
+
+		public static int hash(byte[] data, int offset, int length, int seed) {
+			return hash(ByteBuffer.wrap(data, offset, length), seed);
+		}
+
+		public static int hash(ByteBuffer buf, int seed) {
+			ByteOrder byteOrder = buf.order();
+			buf.order(ByteOrder.LITTLE_ENDIAN);
+
+			int m = 0x5bd1e995;
+			int r = 24;
+
+			int h = seed ^ buf.remaining();
+
+			int k;
+			while (buf.remaining() >= 4) {
+				k = buf.getInt();
+
+				k *= m;
+				k ^= k >>> r;
+				k *= m;
+
+				h *= m;
+				h ^= k;
+			}
+
+			if (buf.remaining() > 0) {
+				ByteBuffer finish = ByteBuffer.allocate(4).order(
+						ByteOrder.LITTLE_ENDIAN);
+				// for big-endian version, use this first:
+				// finish.position(4-buf.remaining());
+				finish.put(buf).rewind();
+				h ^= finish.getInt();
+				h *= m;
+			}
+
+			h ^= h >>> 13;
+			h *= m;
+			h ^= h >>> 15;
+
+			buf.order(byteOrder);
+			return h;
+		}
+
+		public static long hash64A(byte[] data, int seed) {
+			return hash64A(ByteBuffer.wrap(data), seed);
+		}
+
+		public static long hash64A(byte[] data, int offset, int length, int seed) {
+			return hash64A(ByteBuffer.wrap(data, offset, length), seed);
+		}
+
+		public static long hash64A(ByteBuffer buf, int seed) {
+			ByteOrder byteOrder = buf.order();
+			buf.order(ByteOrder.LITTLE_ENDIAN);
+
+			long m = 0xc6a4a7935bd1e995L;
+			int r = 47;
+
+			long h = seed ^ (buf.remaining() * m);
+
+			long k;
+			while (buf.remaining() >= 8) {
+				k = buf.getLong();
+
+				k *= m;
+				k ^= k >>> r;
+				k *= m;
+
+				h ^= k;
+				h *= m;
+			}
+
+			if (buf.remaining() > 0) {
+				ByteBuffer finish = ByteBuffer.allocate(8).order(
+						ByteOrder.LITTLE_ENDIAN);
+				// for big-endian version, do this first:
+				// finish.position(8-buf.remaining());
+				finish.put(buf).rewind();
+				h ^= finish.getLong();
+				h *= m;
+			}
+
+			h ^= h >>> r;
+			h *= m;
+			h ^= h >>> r;
+
+			buf.order(byteOrder);
+			return h;
+		}
+
+		public long hash(byte[] key) {
+			return hash64A(key, 0x1234ABCD);
+		}
+
+		public long hash(String key) {
+			try {
+				return hash(key.getBytes("UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				return 0;
+			}
+		}
 	}
 
 	private static class Point<V> implements Comparable<Point<V>> {
 
-		int start;
+		Long start;
 		V node;
 
-		Point(int start, V node) {
+		Point(long start, V node) {
 			this.start = start;
 			this.node = node;
 		}
 
 		public int compareTo(Point<V> o) {
-			return start - o.start;
+			return start.compareTo(o.start);
 		}
 
 		@Override
@@ -181,7 +318,7 @@ public class ConsistentHash<K, V> {
 
 		@Override
 		public int hashCode() {
-			return start;
+			return start.hashCode();
 		}
 
 		@Override
