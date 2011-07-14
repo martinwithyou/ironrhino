@@ -59,7 +59,7 @@ public class ConsistentHash<K, V> {
 	private ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
 	private ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
 	private Hash hash;
-	private int pointsPerWeight = 100;
+	private int pointsPerWeight = 160;
 
 	public ConsistentHash(Map<V, Integer> nodes) {
 		this(nodes, null);
