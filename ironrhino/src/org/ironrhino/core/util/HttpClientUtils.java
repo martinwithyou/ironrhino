@@ -9,13 +9,18 @@ import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -201,6 +206,45 @@ public class HttpClientUtils {
 			if (headers != null && headers.size() > 0)
 				for (Map.Entry<String, String> entry : headers.entrySet())
 					httpRequest.addHeader(entry.getKey(), entry.getValue());
+			return getDefaultInstance().execute(httpRequest,
+					new BasicResponseHandler());
+		} catch (Exception e) {
+			httpRequest.abort();
+			logger.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
+	public static String post(String url, String entity) {
+		return invoke("POST", url, entity);
+	}
+
+	public static String put(String url, String entity) {
+		return invoke("PUT", url, entity);
+	}
+
+	public static String delete(String url) {
+		return invoke("DELETE", url, null);
+	}
+
+	public static String get(String url) {
+		return invoke("GET", url, null);
+	}
+
+	private static String invoke(String method, String url, String entity) {
+		HttpRequestBase httpRequest = null;
+		if (method.equalsIgnoreCase("GET"))
+			httpRequest = new HttpGet(url);
+		else if (method.equalsIgnoreCase("POST"))
+			httpRequest = new HttpPost(url);
+		else if (method.equalsIgnoreCase("PUT"))
+			httpRequest = new HttpPut(url);
+		else if (method.equalsIgnoreCase("DELETE"))
+			httpRequest = new HttpDelete(url);
+		try {
+			if (entity != null)
+				((HttpEntityEnclosingRequestBase) httpRequest)
+						.setEntity(new StringEntity(entity, "UTF-8"));
 			return getDefaultInstance().execute(httpRequest,
 					new BasicResponseHandler());
 		} catch (Exception e) {
