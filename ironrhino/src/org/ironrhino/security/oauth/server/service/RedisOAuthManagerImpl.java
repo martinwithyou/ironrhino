@@ -16,7 +16,7 @@ import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
-import org.springframework.data.keyvalue.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 
 public class RedisOAuthManagerImpl implements OAuthManager {
 

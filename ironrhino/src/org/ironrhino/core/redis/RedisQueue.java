@@ -7,8 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.ironrhino.core.util.ReflectionUtils;
-import org.springframework.data.keyvalue.redis.core.RedisTemplate;
-import org.springframework.data.keyvalue.redis.support.collections.DefaultRedisList;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.support.collections.DefaultRedisList;
 
 public abstract class RedisQueue<T extends Serializable> implements
 		org.ironrhino.core.message.Queue<T> {

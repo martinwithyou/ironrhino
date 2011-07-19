@@ -7,12 +7,12 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.ironrhino.core.util.ReflectionUtils;
-import org.springframework.data.keyvalue.redis.connection.Message;
-import org.springframework.data.keyvalue.redis.connection.MessageListener;
-import org.springframework.data.keyvalue.redis.core.RedisTemplate;
-import org.springframework.data.keyvalue.redis.listener.ChannelTopic;
-import org.springframework.data.keyvalue.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.keyvalue.redis.listener.Topic;
+import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.Topic;
 
 public abstract class RedisTopic<T extends Serializable> implements
 		org.ironrhino.core.message.Topic<T> {
