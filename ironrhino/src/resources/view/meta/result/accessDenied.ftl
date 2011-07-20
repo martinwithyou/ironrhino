@@ -11,6 +11,13 @@
 </@authorize>
 </head>
 <body>
-<div style="text-align:center;">${action.getText('access.denied')}</div>
+<div style="text-align:center;">
+<@authorize ifNotGranted="ROLE_BUILTIN_USER">
+<a href="<@url value="${ssoServerBase!}/login?targetUrl=${returnUrl?url}"/>">${action.getText('login.required')}</a>
+</@authorize>
+<@authorize ifAnyGranted="ROLE_BUILTIN_USER">
+${action.getText('access.denied')}
+</@authorize>
+</div>
 </body>
 </html></#escape>
