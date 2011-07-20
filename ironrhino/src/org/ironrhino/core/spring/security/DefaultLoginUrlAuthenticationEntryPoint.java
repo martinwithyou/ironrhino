@@ -30,6 +30,10 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 	@Override
 	protected String buildRedirectUrlToLoginPage(HttpServletRequest request,
 			HttpServletResponse response, AuthenticationException authException) {
+		return buildRedirectUrlToLoginPage(request);
+	}
+
+	public String buildRedirectUrlToLoginPage(HttpServletRequest request) {
 		String targetUrl = null;
 		String redirectUrl = null;
 		SavedRequest savedRequest = (SavedRequest) request.getSession()
@@ -42,19 +46,28 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 				if (StringUtils.isBlank(queryString)) {
 					targetUrl = dsr.getRequestURL();
 				} else {
-					targetUrl = new StringBuilder(dsr.getRequestURL()).append(
-							"?").append(queryString).toString();
+					targetUrl = new StringBuilder(dsr.getRequestURL())
+							.append("?").append(queryString).toString();
 				}
 			} else
 				targetUrl = savedRequest.getRedirectUrl();
+		} else {
+			String queryString = request.getQueryString();
+			if (StringUtils.isBlank(queryString)) {
+				targetUrl = request.getRequestURL().toString();
+			} else {
+				targetUrl = new StringBuilder(request.getRequestURL())
+						.append("?").append(queryString).toString();
+			}
 		}
 		StringBuilder loginUrl = new StringBuilder();
 		if (StringUtils.isBlank(ssoServerBase)) {
 			String baseUrl = RequestUtils.getBaseUrl(request);
 			targetUrl = RequestUtils.trimPathParameter(targetUrl);
-			if(StringUtils.isNotBlank(targetUrl)&& targetUrl.startsWith(baseUrl)){
+			if (StringUtils.isNotBlank(targetUrl)
+					&& targetUrl.startsWith(baseUrl)) {
 				targetUrl = targetUrl.substring(baseUrl.length());
-				if(targetUrl.equals("/"))
+				if (targetUrl.equals("/"))
 					targetUrl = "";
 			}
 			URL url = null;
@@ -83,10 +96,10 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 		}
 		try {
 			if (StringUtils.isNotBlank(targetUrl))
-				loginUrl.append('?').append(
-						DefaultUsernamePasswordAuthenticationFilter.TARGET_URL)
-						.append('=').append(
-								URLEncoder.encode(targetUrl, "UTF-8"));
+				loginUrl.append('?')
+						.append(DefaultUsernamePasswordAuthenticationFilter.TARGET_URL)
+						.append('=')
+						.append(URLEncoder.encode(targetUrl, "UTF-8"));
 			redirectUrl = loginUrl.toString();
 			if (isForceHttps() && redirectUrl.startsWith("http://")) {
 				URL url = new URL(redirectUrl);
