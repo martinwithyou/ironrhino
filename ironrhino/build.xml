@@ -46,7 +46,7 @@
 	<target name="compile">
 		<antcall target="clean" />
 		<antcall target="init" />
-		<javac srcdir="${src.dir}" destdir="${classes.dir}">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" encoding="utf-8">
 			<classpath refid="lib.classpath" />
 		</javac>
 		<copy todir="${classes.dir}">
