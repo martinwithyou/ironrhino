@@ -30,7 +30,8 @@ public interface UserRole {
 					} else {
 						Field[] fields = c.getDeclaredFields();
 						for (Field f : fields) {
-							if (f.getName().startsWith("ROLE_BUILTIN_"))
+							if (f.getName().equals(ROLES_READ_FROM_SETTING)
+									|| f.getName().startsWith("ROLE_BUILTIN_"))
 								continue;
 							roles.add(f.getName());
 						}
