@@ -197,11 +197,9 @@ public class BaseAction extends ActionSupport {
 	private String readRolesFromSettingIfNecessary(String role) {
 		if (!UserRole.ROLES_READ_FROM_SETTING.equals(role))
 			return role;
-		String fullQualifyMethodName = new StringBuilder(getClass().getName())
-				.append('.')
-				.append(ActionContext.getContext().getActionInvocation()
-						.getProxy().getMethod()).append("()").toString();
-		return settingControl.getStringValue(fullQualifyMethodName, role);
+		String key = "resource:"
+				+ RequestUtils.getRequestUri(ServletActionContext.getRequest());
+		return settingControl.getStringValue(key, role);
 	}
 
 	@Before(priority = 10)
