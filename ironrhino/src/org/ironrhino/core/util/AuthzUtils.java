@@ -2,9 +2,9 @@ package org.ironrhino.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-
-import ognl.OgnlContext;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.model.Secured;
@@ -18,8 +18,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.opensymphony.xwork2.ActionContext;
 
 public class AuthzUtils {
 
@@ -39,9 +37,9 @@ public class AuthzUtils {
 	public static boolean authorize(String ifAllGranted, String ifAnyGranted,
 			String ifNotGranted, String expression) {
 		if (StringUtils.isNotBlank(expression)) {
-			OgnlContext ognl = (OgnlContext) ActionContext.getContext()
-					.getContextMap();
-			Object o = ExpressionUtils.eval(expression, ognl.getValues());
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("user", getUserDetails(UserDetails.class));
+			Object o = ExpressionUtils.eval(expression, map);
 			return o != null && o.toString().equals("true");
 		}
 		List<String> roles = getRoleNames();
@@ -51,17 +49,17 @@ public class AuthzUtils {
 				if (!roles.contains(s.trim()))
 					return false;
 			return true;
-		}else if(StringUtils.isNotBlank(ifAnyGranted)) {
+		} else if (StringUtils.isNotBlank(ifAnyGranted)) {
 			String[] arr = ifAnyGranted.split(",");
 			for (String s : arr)
 				if (roles.contains(s.trim()))
 					return true;
 			return false;
-		}else if(StringUtils.isNotBlank(ifNotGranted)) {
+		} else if (StringUtils.isNotBlank(ifNotGranted)) {
 			String[] arr = ifNotGranted.split(",");
 			boolean b = true;
 			for (String s : arr)
-				if (roles.contains(s.trim())){
+				if (roles.contains(s.trim())) {
 					b = false;
 					break;
 				}

@@ -8,6 +8,7 @@ import org.ironrhino.core.util.ClassScaner;
 
 public interface UserRole {
 
+	public static final String ROLES_READ_FROM_SETTING = "ROLES_READ_FROM_SETTING";
 	public static final String ROLE_BUILTIN_ANONYMOUS = "ROLE_BUILTIN_ANONYMOUS";
 	public static final String ROLE_BUILTIN_USER = "ROLE_BUILTIN_USER";
 	public static final String ROLE_ADMINISTRATOR = "ROLE_ADMINISTRATOR";

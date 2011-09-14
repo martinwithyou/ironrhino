@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Csrf;
@@ -17,6 +18,7 @@ import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.RequestUtils;
+import org.ironrhino.security.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -67,6 +69,9 @@ public class BaseAction extends ActionSupport {
 
 	@Autowired
 	protected transient CaptchaManager captchaManager;
+
+	@Autowired
+	protected transient SettingControl settingControl;
 
 	public void setCsrf(String csrf) {
 		this.csrf = csrf;
@@ -168,8 +173,10 @@ public class BaseAction extends ActionSupport {
 	public String preAction() throws Exception {
 		Authorize authorize = findAuthorize();
 		if (authorize != null) {
-			boolean passed = AuthzUtils.authorize(authorize.ifAllGranted(),
-					authorize.ifAnyGranted(), authorize.ifNotGranted(),
+			boolean passed = AuthzUtils.authorize(
+					readRolesFromSettingIfNecessary(authorize.ifAllGranted()),
+					readRolesFromSettingIfNecessary(authorize.ifAnyGranted()),
+					readRolesFromSettingIfNecessary(authorize.ifNotGranted()),
 					authorize.expression());
 			if (!passed) {
 				addActionError(getText("access.denied"));
@@ -185,6 +192,16 @@ public class BaseAction extends ActionSupport {
 		}
 		csrfRequired = !captchaRequired && getAnnotation(Csrf.class) != null;
 		return null;
+	}
+
+	private String readRolesFromSettingIfNecessary(String role) {
+		if (!UserRole.ROLES_READ_FROM_SETTING.equals(role))
+			return role;
+		String fullQualifyMethodName = new StringBuilder(getClass().getName())
+				.append('.')
+				.append(ActionContext.getContext().getActionInvocation()
+						.getProxy().getMethod()).append("()").toString();
+		return settingControl.getStringValue(fullQualifyMethodName, role);
 	}
 
 	@Before(priority = 10)
