@@ -19,6 +19,7 @@
 <!ENTITY misc-mail  SYSTEM "misc-mail.xml">
 <!ENTITY misc-stat  SYSTEM "misc-stat.xml">
 <!ENTITY misc-cms  SYSTEM "misc-cms.xml">
+<!ENTITY misc-oauth  SYSTEM "misc-oauth.xml">
 ]>
 
 <book>
@@ -71,6 +72,7 @@
     &misc-mail;
     &misc-stat;
     &misc-cms;
+	&misc-oauth;
   </part>
 
 </book>
