@@ -4,8 +4,8 @@
 		数据源配置,以下配置了两个数据库集群,一个是mainGroup,一个是miscGroup,每个组又包含一个主数据库和几个从数据库,从数据库可读可写,数据的同步由数据库集群去实现(比如文件复制)
 		<programlisting>
 		<![CDATA[
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+		<?xml version="1.0" encoding="UTF-8"?>
+		<beans xmlns="http://www.springframework.org/schema/beans"
 			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			xmlns:p="http://www.springframework.org/schema/p"
 			xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
@@ -138,8 +138,6 @@
 				p:maxIdle="${dataSource.maxIdle}" 
 				p:minIdle="${dataSource.minIdle}"
 				p:maxWait="${dataSource.maxWait}" />
-
-
 			<bean id="miscGroupMaster"
 				class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 				p:url="${jdbc.url}" p:username="${jdbc.username}"
@@ -212,31 +210,24 @@
 				p:maxIdle="${dataSource.maxIdle}" 
 				p:minIdle="${dataSource.minIdle}"
 				p:maxWait="${dataSource.maxWait}" />
-
-</beans>
-
-
-		]]>
-					
-					
+			</beans>
+		]]>			
 		</programlisting>
-		    
 		    @DataRoute可以打在model类上面,下面的实例表明Record的操作都走miscGroup组
 		<programlisting>
 		<![CDATA[
+		package org.ironrhino.common.model;
 
-package org.ironrhino.common.model;
+		import java.util.Date;
 
-import java.util.Date;
+		import org.ironrhino.core.metadata.AutoConfig;
+		import org.ironrhino.core.metadata.DataRoute;
+		import org.ironrhino.core.metadata.UiConfig;
+		import org.ironrhino.core.model.BaseEntity;
 
-import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.DataRoute;
-import org.ironrhino.core.metadata.UiConfig;
-import org.ironrhino.core.model.BaseEntity;
-
-@DataRoute("miscGroup")
-@AutoConfig(readonly = true,order = "recordDate desc")
-public class Record extends BaseEntity {
+		@DataRoute("miscGroup")
+		@AutoConfig(readonly = true,order = "recordDate desc")
+		public class Record extends BaseEntity {
 
 			private static final long serialVersionUID = -8287907984213799302L;
 
@@ -317,34 +308,28 @@ public class Record extends BaseEntity {
 				this.operatorClass = operatorClass;
 			}
 
-}
-
-
+		}
 		]]>
 		</programlisting>
-		
 		@DataRoute也可以打在service类的方法上面,下面的实例表明当username为admin的时候走mainGroup,否则走miscGroup
 		<programlisting>
 		<![CDATA[
+			package org.ironrhino.security.service;
 
-package org.ironrhino.security.service;
+			import javax.inject.Named;
+			import javax.inject.Singleton;
 
+			import org.ironrhino.core.metadata.CheckCache;
+			import org.ironrhino.core.metadata.FlushCache;
+			import org.ironrhino.core.service.BaseManagerImpl;
+			import org.ironrhino.security.model.User;
+			import org.springframework.security.core.userdetails.UsernameNotFoundException;
+			import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import org.ironrhino.core.metadata.CheckCache;
-import org.ironrhino.core.metadata.FlushCache;
-import org.ironrhino.core.service.BaseManagerImpl;
-import org.ironrhino.security.model.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
-
-@Singleton
-@Named("userManager")
-public class UserManagerImpl extends BaseManagerImpl<User> implements
-				UserManager {
-
+			@Singleton
+			@Named("userManager")
+			public class UserManagerImpl extends BaseManagerImpl<User> implements
+							UserManager {
 
 			@Transactional(readOnly = true)
 			@DataRoute(value="${args[0]=='admin'?'mainGroup':'miscGroup'}")
@@ -354,12 +339,36 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 					throw new UsernameNotFoundException("No such Username");
 				return user;
 			}
-
-}
-
-
+		}
 		]]>
 		</programlisting>
+		<programlisting>
+		<![CDATA[
+		@DataRoute("${target.route(args[0])}")
+		public User loadUserByUsername(String username) {
+			......
+		}
+
+		public String route(String username) {
+			return username != null && username.length() < 6 ? "mainGroup" : "miscGroup";
+		}
+		]]>
+		</programlisting>
+
+		这样可以在方法级别把一张表放到不同的库
+
+		不同的表放不同的库,在Entity类上面加写死的,比如@DataRoute("miscGroup")可以参考Record.java
+		上述标注代码中target是被代理的对象
+		比如是 ProductManagerImpl的实例:  ${target.route(args[0].user.username)}
+		这种标注写法在表达式中，然后在ProductManagerImpl里的方法
+		<programlisting>
+		<![CDATA[
+		public String route(String username){
+		 ...
+		}
+		]]>
+		</programlisting>
+		省略的地方就是路由规则，比如根据username取模来定义
 	</para>
 
 </chapter>

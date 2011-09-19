@@ -24,68 +24,65 @@ public interface UserRole extends org.ironrhino.security.model.UserRole {
 		控制action的权限,使用@Authorize,参数的意义可以参考spring security的Authorize jsg标签,可以打在方法上,如果方法上没有则查找类上有没有,这样可以控制什么角色的用户可以访问
 		<programlisting>
 		<![CDATA[
-package com.mycompany.action;
+			package com.mycompany.action;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+			import java.util.ArrayList;
+			import java.util.Collections;
+			import java.util.List;
 
-import javax.inject.Inject;
+			import javax.inject.Inject;
 
-import org.apache.commons.lang.StringUtils;
-import org.ironrhino.core.metadata.Authorize;
-import org.compass.core.CompassHit;
-import org.compass.core.support.search.CompassSearchResults;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
-import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.search.CompassCriteria;
-import org.ironrhino.core.search.CompassSearchService;
-import org.ironrhino.core.struts.BaseAction;
+			import org.apache.commons.lang.StringUtils;
+			import org.ironrhino.core.metadata.Authorize;
+			import org.compass.core.CompassHit;
+			import org.compass.core.support.search.CompassSearchResults;
+			import org.hibernate.criterion.DetachedCriteria;
+			import org.hibernate.criterion.Restrictions;
+			import org.ironrhino.core.model.ResultPage;
+			import org.ironrhino.core.search.CompassCriteria;
+			import org.ironrhino.core.search.CompassSearchService;
+			import org.ironrhino.core.struts.BaseAction;
 
-import com.mycompany.model.UserRole;
-import com.mycompany.model.Customer;
-import com.mycompany.service.CustomerManager;
+			import com.mycompany.model.UserRole;
+			import com.mycompany.model.Customer;
+			import com.mycompany.service.CustomerManager;
 
-@Authorize(ifAnyGranted = UserRole.ROLE_SALESMAN)
-public class CustomerAction extends BaseAction {
+			@Authorize(ifAnyGranted = UserRole.ROLE_SALESMAN)
+			public class CustomerAction extends BaseAction {
 
-	private static final long serialVersionUID = 4331302727890834065L;
+				private static final long serialVersionUID = 4331302727890834065L;
 
+				private ResultPage<Customer> resultPage;
 
-	private ResultPage<Customer> resultPage;
+				@Inject
+				private transient CustomerManager customerManager;
 
+				public ResultPage<Customer> getResultPage() {
+					return resultPage;
+				}
 
-	@Inject
-	private transient CustomerManager customerManager;
+				public void setResultPage(ResultPage<Customer> resultPage) {
+					this.resultPage = resultPage;
+				}
 
+				@Override
+				public String execute() {
+					DetachedCriteria dc = customerManager.detachedCriteria();
+					if (resultPage == null)
+						resultPage = new ResultPage<Customer>();
+					resultPage.setDetachedCriteria(dc);
+					resultPage.addOrder(org.hibernate.criterion.Order.asc("name"));
+					resultPage = customerManager.findByResultPage(resultPage);
+					return LIST;
+				}
 
-	public ResultPage<Customer> getResultPage() {
-		return resultPage;
-	}
+				@Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
+				public String delete() {
+					customerManager.delete(customerManager.get(getUid()));
+					return SUCCESS;
+				}
 
-	public void setResultPage(ResultPage<Customer> resultPage) {
-		this.resultPage = resultPage;
-	}
-
-	@Override
-	public String execute() {
-		DetachedCriteria dc = customerManager.detachedCriteria();
-		if (resultPage == null)
-			resultPage = new ResultPage<Customer>();
-		resultPage.setDetachedCriteria(dc);
-		resultPage.addOrder(org.hibernate.criterion.Order.asc("name"));
-		resultPage = customerManager.findByResultPage(resultPage);
-		return LIST;
-	}
-
-	@Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
-	public String delete() {
-		customerManager.delete(customerManager.get(getUid()));
-		return SUCCESS;
-	}
-
-}
+			}
 		]]>
 		</programlisting>
 		以上实例表明ROLE_SALESMAN可以查看customer列表,但是需要ROLE_ADMINISTRATOR才可以删除customer
@@ -107,6 +104,47 @@ public class CustomerAction extends BaseAction {
 	<para>
 		高级用户可以参考ironrhino-security.jar定制自己的用户系统和配置自己的applicationContext-security.xml
 	</para>
+
+
+	<para>
+    	另外，在框架中已经定义了默认角色
+		<programlisting>
+		<![CDATA[
+			package org.ironrhino.security.model;
+
+			public interface UserRole { {
+
+				public static final String ROLES_READ_FROM_SETTING = "ROLES_READ_FROM_SETTING";
+				public static final String ROLE_BUILTIN_ANONYMOUS = "ROLE_BUILTIN_ANONYMOUS";
+				public static final String ROLE_BUILTIN_USER = "ROLE_BUILTIN_USER";
+				public static final String ROLE_ADMINISTRATOR = "ROLE_ADMINISTRATOR";
+
+			}
+		]]>
+		</programlisting>
+		其中ROLES_READ_FROM_SETTING是可变角色名称,根据Setting模型中设置的值进行匹配,即可达到运行期间变换角色权限的目的
+	</para>
+	<para>
+		Web层action类中权限设置:
+		1、在需要配置权限的action方法前面标注
+		   @Authorize(ifAnyGranted = UserRole.ROLES_READ_FROM_SETTING)
+		2、在Setting模型中增加键值配置： 键：resource:/user/password       值：ROLE_ADMINISTRATOR,ROLE_BUILTIN_USER
+		   本句权限设置的含义是/user/password的URI访问权限是管理员和登录用户
+		   key设置是以resource:开头,后面跟需要权限控制的URI路径
+		   values值是以角色名称保存，ROLE_开头，多个值中间用逗号分隔  
+	</para>
+	<para>
+		页面ftl模板写法：
+		<programlisting>
+		<![CDATA[
+			<@authorize ifAnyGranted="ROLES_READ_FROM_SETTING" resource="/user/password">
+				<li><a href="<@url value="${ssoServerBase!}/user/password"/>">${action.getText('change')}${action.getText('password')}</a></li>
+			</@authorize>
+		]]>
+		</programlisting>
+		resource="..."引号中间是设置权限访问控制的URI
+	</para>
+
 </chapter>
 
 

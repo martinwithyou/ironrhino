@@ -5,28 +5,25 @@
     	对外发布服务实例
 		<programlisting>
 		<![CDATA[
-package org.ironrhino.security.service;
+			package org.ironrhino.security.service;
 
-import org.ironrhino.core.metadata.Remoting;
-import org.ironrhino.core.service.BaseManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
+			import org.ironrhino.core.metadata.Remoting;
+			import org.ironrhino.core.service.BaseManager;
+			import org.springframework.security.core.userdetails.UserDetailsService;
 
-import org.ironrhino.security.model.User;
+			import org.ironrhino.security.model.User;
 
-@Remoting
-public interface UserManager extends BaseManager<User>, UserDetailsService {
-
-			public User loadUserByUsername(String username);
-
-}
-
+			@Remoting
+			public interface UserManager extends BaseManager<User>, UserDetailsService {
+				public User loadUserByUsername(String username);
+			}
 		]]>
 		</programlisting>
 		对接远程服务配置实例
 		<programlisting>
 		<![CDATA[
-<?xml version="1.0" encoding="UTF-8"?>
-<beans default-autowire="byName"
+		<?xml version="1.0" encoding="UTF-8"?>
+		<beans default-autowire="byName"
 			xmlns="http://www.springframework.org/schema/beans"
 			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			xmlns:p="http://www.springframework.org/schema/p"
@@ -35,7 +32,7 @@ public interface UserManager extends BaseManager<User>, UserDetailsService {
 			xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 			<bean id="hessianUserManager" class="org.ironrhino.core.remoting.HessianClient" p:serviceInterface="org.ironrhino.security.service.UserManager" p:host="localhost" p:port="8080"/>
 			<bean id="httpInvokerUserManager" class="org.ironrhino.core.remoting.HttpInvokerClient" p:serviceInterface="org.ironrhino.security.service.UserManager" p:host="localhost" p:port="8080"/>
-</beans>
+		</beans>
 		]]>
 		</programlisting>
 	</para>
@@ -47,6 +44,46 @@ public interface UserManager extends BaseManager<User>, UserDetailsService {
 			<bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.DefaultServiceRegistry" p:connectString="localhost:2181/remoting"/>
 		]]>
 		</programlisting>    	
+	</para>
+	<para>
+		接下来的内容是通过zookeeper发布远程接口调用配置
+
+		一、服务端环境搭建
+		1、下载zookeeper
+		   http://labs.renren.com/apache-mirror/zookeeper/stable/zookeeper-3.3.3.tar.gz
+		   解开压缩包，假定把zookeeper放在根目录下
+		   进入zookeeper目录，在conf目录下创建一个配置文件zoo.cfg，然后指定其中的内容为
+			  tickTime=2000
+			  dataDir=/zookeeper/zookeeper_data (根据自己需要修改)
+			  clientPort=2181
+
+		2、在文件applicationContext.properties增加一行,让服务器知道怎么连zookeeper
+			  serviceRegistry.zookeeper.connectString=localhost:2181/remoting
+
+		   如果connectString是根目录,比如localhost:2181/ 省略以下步骤:
+		   启动zkServer.cmd，然后启动zkCli.cmd，输入 create /remoting ""
+		   相当于创建了一个叫remoting的目录，系统会将服务都注册到这个目录下
+		   （后面配置均以服务发布在remoting目录下为基础）
+
+		3、在需要发布成远程服务的接口文件前增加@Remoting标注，然后启动服务器。
+		   系统会自动将服务对外发布两种方式,hessian和httpinvoker发布远程调用接口格式如下,${serviceName}是接口的全名比如test.service.UserService：
+			  http://host:port/remoting/hessian/${serviceName}
+			  http://host:port/remoting/httpinvoker/${serviceName}
+		   
+		4、可以到zookeeper/bin目录下，启动zkCli.cmd命令，输入
+		   ls /remoting 可以看到发布了哪些服务
+		   进一步输入命令：ls /remoting/${serviceName}
+		   可以看到哪台机器发布了该服务
+
+		二、客户端配置
+		   服务端将标注有@Remoting的接口通过zookeeper自动对外发布成服务后，
+		   客户端通过下列简单的配置即可实现调用zookeeper远程接口：
+		<programlisting>
+		<![CDATA[
+		  <bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.ZookeeperServiceRegistry" p:connectString="localhost:2181/remoting"/>
+		  <bean id="userManager" class="org.ironrhino.core.remoting.HttpInvokerClient" p:serviceRegistry-ref="serviceRegistry" p:serviceInterface="org.ironrhino.security.service.UserManager"/>
+		]]>
+		</programlisting> 
 	</para>
 </chapter>
 
