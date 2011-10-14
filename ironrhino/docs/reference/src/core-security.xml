@@ -114,7 +114,6 @@ public interface UserRole extends org.ironrhino.security.model.UserRole {
 
 			public interface UserRole { {
 
-				public static final String ROLES_READ_FROM_SETTING = "ROLES_READ_FROM_SETTING";
 				public static final String ROLE_BUILTIN_ANONYMOUS = "ROLE_BUILTIN_ANONYMOUS";
 				public static final String ROLE_BUILTIN_USER = "ROLE_BUILTIN_USER";
 				public static final String ROLE_ADMINISTRATOR = "ROLE_ADMINISTRATOR";
@@ -122,12 +121,11 @@ public interface UserRole extends org.ironrhino.security.model.UserRole {
 			}
 		]]>
 		</programlisting>
-		其中ROLES_READ_FROM_SETTING是可变角色名称,根据Setting模型中设置的值进行匹配,即可达到运行期间变换角色权限的目的
 	</para>
 	<para>
 		Web层action类中权限设置:
 		1、在需要配置权限的action方法前面标注
-		   @Authorize(ifAnyGranted = UserRole.ROLES_READ_FROM_SETTING)
+		   @Authorize(ifAnyGranted = "org.ironrhino.common.support.SettingResourceRoleMapper")
 		2、在Setting模型中增加键值配置： 键：resource:/user/password       值：ROLE_ADMINISTRATOR,ROLE_BUILTIN_USER
 		   本句权限设置的含义是/user/password的URI访问权限是管理员和登录用户
 		   key设置是以resource:开头,后面跟需要权限控制的URI路径
@@ -137,7 +135,7 @@ public interface UserRole extends org.ironrhino.security.model.UserRole {
 		页面ftl模板写法：
 		<programlisting>
 		<![CDATA[
-			<@authorize ifAnyGranted="ROLES_READ_FROM_SETTING" resource="/user/password">
+			<@authorize ifAnyGranted="org.ironrhino.common.support.SettingResourceRoleMapper" resource="/user/password">
 				<li><a href="<@url value="${ssoServerBase!}/user/password"/>">${action.getText('change')}${action.getText('password')}</a></li>
 			</@authorize>
 		]]>

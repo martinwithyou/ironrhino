@@ -1,14 +1,14 @@
-<#macro authorize ifAllGranted="" ifAnyGranted="" ifNotGranted="" expression="" resource="">
-<#if ifAllGranted=='ROLES_READ_FROM_SETTING'>
-<#local ifAllGranted=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getStringValue('resource:'+resource,ifAllGranted)>
+<#macro authorize ifAllGranted="" ifAnyGranted="" ifNotGranted="" resource="">
+<#if ifAllGranted!=''>
+<#local ifAllGranted=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('resourceRoleMapperManager').map(ifAllGranted,resource,statics['org.ironrhino.core.util.AuthzUtils'].getUserDetails())>
 </#if>
-<#if ifAnyGranted=='ROLES_READ_FROM_SETTING'>
-<#local ifAnyGranted=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getStringValue('resource:'+resource,ifAnyGranted)>
+<#if ifAnyGranted!=''>
+<#local ifAnyGranted=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('resourceRoleMapperManager').map(ifAnyGranted,resource,statics['org.ironrhino.core.util.AuthzUtils'].getUserDetails())>
 </#if>
-<#if ifNotGranted=='ROLES_READ_FROM_SETTING'>
-<#local ifNotGranted=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getStringValue('resource:'+resource,ifNotGranted)>
+<#if ifNotGranted!=''>
+<#local ifNotGranted=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('resourceRoleMapperManager').map(ifNotGranted,resource,statics['org.ironrhino.core.util.AuthzUtils'].getUserDetails())>
 </#if>
-<#if statics['org.ironrhino.core.util.AuthzUtils'].authorize(ifAllGranted,ifAnyGranted,ifNotGranted,expression)>
+<#if statics['org.ironrhino.core.util.AuthzUtils'].authorize(ifAllGranted,ifAnyGranted,ifNotGranted)>
 <#nested>
 </#if>
 </#macro>

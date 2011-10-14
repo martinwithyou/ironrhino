@@ -8,18 +8,18 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Csrf;
 import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.security.captcha.CaptchaManager;
+import org.ironrhino.core.security.rrm.ResourceRoleMapperManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.RequestUtils;
-import org.ironrhino.security.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -71,7 +71,7 @@ public class BaseAction extends ActionSupport {
 	protected transient CaptchaManager captchaManager;
 
 	@Autowired
-	protected transient SettingControl settingControl;
+	protected transient ResourceRoleMapperManager resourceRoleMapperManager;
 
 	public void setCsrf(String csrf) {
 		this.csrf = csrf;
@@ -174,10 +174,9 @@ public class BaseAction extends ActionSupport {
 		Authorize authorize = findAuthorize();
 		if (authorize != null) {
 			boolean passed = AuthzUtils.authorize(
-					readRolesFromSettingIfNecessary(authorize.ifAllGranted()),
-					readRolesFromSettingIfNecessary(authorize.ifAnyGranted()),
-					readRolesFromSettingIfNecessary(authorize.ifNotGranted()),
-					authorize.expression());
+					mapRole(authorize.ifAllGranted()),
+					mapRole(authorize.ifAnyGranted()),
+					mapRole(authorize.ifNotGranted()));
 			if (!passed) {
 				addActionError(getText("access.denied"));
 				return ACCESSDENIED;
@@ -194,12 +193,11 @@ public class BaseAction extends ActionSupport {
 		return null;
 	}
 
-	private String readRolesFromSettingIfNecessary(String role) {
-		if (!UserRole.ROLES_READ_FROM_SETTING.equals(role))
-			return role;
-		String key = "resource:"
-				+ RequestUtils.getRequestUri(ServletActionContext.getRequest());
-		return settingControl.getStringValue(key, role);
+	private String mapRole(String role) {
+		String resource = RequestUtils.getRequestUri(ServletActionContext
+				.getRequest());
+		UserDetails user = AuthzUtils.getUserDetails();
+		return resourceRoleMapperManager.map(role, resource, user);
 	}
 
 	@Before(priority = 10)

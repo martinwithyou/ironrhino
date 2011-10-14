@@ -2,9 +2,7 @@ package org.ironrhino.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.model.Secured;
@@ -35,13 +33,7 @@ public class AuthzUtils {
 	}
 
 	public static boolean authorize(String ifAllGranted, String ifAnyGranted,
-			String ifNotGranted, String expression) {
-		if (StringUtils.isNotBlank(expression)) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("user", getUserDetails(UserDetails.class));
-			Object o = ExpressionUtils.eval(expression, map);
-			return o != null && o.toString().equals("true");
-		}
+			String ifNotGranted) {
 		List<String> roles = getRoleNames();
 		if (StringUtils.isNotBlank(ifAllGranted)) {
 			String[] arr = ifAllGranted.split(",");
@@ -101,6 +93,10 @@ public class AuthzUtils {
 		if (auth == null)
 			return null;
 		return auth.getName();
+	}
+
+	public static UserDetails getUserDetails() {
+		return getUserDetails(UserDetails.class);
 	}
 
 	public static <T extends UserDetails> T getUserDetails(Class<T> clazz) {
