@@ -70,9 +70,9 @@ public class DictionaryControl implements
 				map.put(dictInEvent.getName(), dictInEvent);
 			} else {
 				Dictionary dictInMemory = null;
-				for (Dictionary Dictionary : map.values()) {
-					if (Dictionary.getId().equals(dictInEvent.getId())) {
-						dictInMemory = Dictionary;
+				for (Dictionary dictionary : map.values()) {
+					if (dictionary.getId().equals(dictInEvent.getId())) {
+						dictInMemory = dictionary;
 						break;
 					}
 				}
