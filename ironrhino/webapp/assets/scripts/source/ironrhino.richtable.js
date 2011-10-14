@@ -449,6 +449,7 @@ Richtable = {
 							type : 'POST',
 							data : params,
 							dataType : 'json',
+							header : {'X-Edit' : 'cell'},
 							onsuccess : function() {
 								$(row).removeClass('edited');
 								$('td', row).removeClass('edited')

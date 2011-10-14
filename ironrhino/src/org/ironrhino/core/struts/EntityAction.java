@@ -286,10 +286,18 @@ public class EntityAction extends BaseAction {
 					persisted = entityManager.get((Serializable) bw
 							.getPropertyValue("id"));
 				BeanWrapperImpl bwp = new BeanWrapperImpl(persisted);
-				Set<String> names = getUiConfigs().keySet();
-				if (!naturalIdMutable)
-					names.removeAll(naturalIds.keySet());
-				for (String name : names) {
+				Map<String, UiConfigImpl> uiConfigs = getUiConfigs();
+				for (Map.Entry<String, UiConfigImpl> entry : uiConfigs
+						.entrySet()) {
+					if (entry.getValue().isReadonly())
+						continue;
+					if ("none".equals(entry.getValue().getCellEdit())
+							&& "cell".equals(ServletActionContext.getRequest()
+									.getHeader("X-Edit"))) // save from celledit
+						continue;
+					String name = entry.getKey();
+					if (!naturalIdMutable && naturalIds.keySet().contains(name))
+						continue;
 					if (Persistable.class.isAssignableFrom(bwp
 							.getPropertyDescriptor(name).getReadMethod()
 							.getReturnType()))
@@ -589,6 +597,9 @@ public class EntityAction extends BaseAction {
 			this.template = config.template();
 			this.width = config.width();
 			this.cellEdit = config.cellEdit();
+			this.excludeIfNotEdited = config.excludeIfNotEdited();
+			if (this.excludeIfNotEdited)
+				cssClass = "excludeIfNotEdited";
 		}
 
 		public boolean isRequired() {
@@ -688,6 +699,12 @@ public class EntityAction extends BaseAction {
 
 		public void setExcludeIfNotEdited(boolean excludeIfNotEdited) {
 			this.excludeIfNotEdited = excludeIfNotEdited;
+			if (this.excludeIfNotEdited
+					&& !this.cssClass.contains("excludeIfNotEdited"))
+				cssClass += "excludeIfNotEdited";
+			if (!this.excludeIfNotEdited
+					&& this.cssClass.contains("excludeIfNotEdited"))
+				cssClass = cssClass.replace("excludeIfNotEdited", "");
 		}
 
 		public String getCellEdit() {

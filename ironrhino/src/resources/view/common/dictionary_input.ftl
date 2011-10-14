@@ -7,6 +7,7 @@
 <@s.form action="save" method="post" cssClass="ajax">
 	<@s.hidden name="dictionary.id" />
 	<@s.textfield label="%{getText('name')}" name="dictionary.name" />
+	<@s.textfield label="%{getText('description')}" name="dictionary.description" />
 	<div class="field">
 		<label class="field" for="items">${action.getText('items')}</label>
 		<div id="items">

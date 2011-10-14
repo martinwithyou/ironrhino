@@ -12,6 +12,7 @@
 		<natural-id mutable="true">
 			<property name="name" not-null="true" />
 		</natural-id>
+		<property name="description" />
 		<property name="itemsAsString" column="items" length="1024"/>
 	</class>
 </hibernate-mapping>
