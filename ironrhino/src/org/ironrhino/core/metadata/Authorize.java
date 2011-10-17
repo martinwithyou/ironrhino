@@ -16,5 +16,7 @@ public @interface Authorize {
 	String ifAnyGranted() default "";
 
 	String ifNotGranted() default "";
+	
+	String resourceName() default "";
 
 }

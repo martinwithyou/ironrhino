@@ -368,7 +368,8 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			actionClass = cls.getName().replace("model", "action") + "Action";
 			if (!ClassUtils.isPresent(actionClass, getClass().getClassLoader()))
 				actionClass = defaultActionClass;
-			entityClassURLMapping.put(namespace + (namespace.endsWith("/")?"": "/") + actionName, cls);
+			entityClassURLMapping.put(namespace
+					+ (namespace.endsWith("/") ? "" : "/") + actionName, cls);
 		} else if (Action.class.isAssignableFrom(cls)) {
 			actionName = StringUtils.uncapitalize(cls.getSimpleName());
 			if (actionName.endsWith("Action"))
@@ -386,9 +387,12 @@ public class AutoConfigPackageProvider implements PackageProvider {
 	}
 
 	public Class getEntityClass(String namespace, String actionName) {
-		if (namespace.endsWith("/"))
-			namespace = "";
-		return entityClassURLMapping.get(namespace + "/" + actionName);
+		return entityClassURLMapping.get(namespace
+				+ (namespace.endsWith("/") ? "" : "/") + actionName);
+	}
+
+	public Collection<PackageConfig> getAllPackageConfigs() {
+		return configuration.getPackageConfigs().values();
 	}
 
 }

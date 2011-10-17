@@ -18,23 +18,24 @@ public interface UserRole {
 
 		public static Set<String> getAllRoles() {
 			if (roles == null) {
-				roles = new LinkedHashSet<String>();
+				Set<String> temp = new LinkedHashSet<String>();
 				Set<Class> set = ClassScaner.scanAssignable(
 						ClassScaner.getAppPackages(), UserRole.class);
 				for (Class c : set) {
 					if (Enum.class.isAssignableFrom(c)) {
 						for (Object en : c.getEnumConstants()) {
-							roles.add(en.toString());
+							temp.add(en.toString());
 						}
 					} else {
 						Field[] fields = c.getDeclaredFields();
 						for (Field f : fields) {
 							if (f.getName().startsWith("ROLE_BUILTIN_"))
 								continue;
-							roles.add(f.getName());
+							temp.add(f.getName());
 						}
 					}
 				}
+				roles = temp;
 			}
 			return roles;
 		}

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.ironrhino.security.acl.model"
+	default-lazy="true">
+	<class name="Acl" table="acl">
+		<id name="id" type="java.lang.String" length="32" unsaved-value="null">
+			<generator class="uuid" />
+		</id>
+		<natural-id mutable="true">
+			<property name="username" not-null="true"  length="50"/>
+			<property name="resource" not-null="true"  length="150"/>
+		</natural-id>
+		<property name="permitted" />
+	</class>
+</hibernate-mapping>
