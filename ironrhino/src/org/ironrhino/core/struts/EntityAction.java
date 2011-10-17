@@ -287,23 +287,38 @@ public class EntityAction extends BaseAction {
 							.getPropertyValue("id"));
 				BeanWrapperImpl bwp = new BeanWrapperImpl(persisted);
 				Map<String, UiConfigImpl> uiConfigs = getUiConfigs();
-				for (Map.Entry<String, UiConfigImpl> entry : uiConfigs
-						.entrySet()) {
-					if (entry.getValue().isReadonly())
+				Set<String> editedPropertyNames = new HashSet<String>();
+				String propertyName = null;
+				for (String parameterName : ServletActionContext.getRequest()
+						.getParameterMap().keySet()) {
+					if (parameterName.startsWith(getEntityName() + '.')) {
+						propertyName = parameterName.substring(parameterName
+								.indexOf('.') + 1);
+						if (propertyName.indexOf('.') > 0)
+							propertyName = propertyName.substring(0,
+									propertyName.indexOf('.'));
+						if (propertyName.indexOf('[') > 0)
+							propertyName = propertyName.substring(0,
+									propertyName.indexOf('['));
+					}
+					UiConfigImpl uiConfig = uiConfigs.get(propertyName);
+					if (uiConfig == null)
 						continue;
-					if ("none".equals(entry.getValue().getCellEdit())
-							&& "cell".equals(ServletActionContext.getRequest()
-									.getHeader("X-Edit"))) // save from celledit
+					if (uiConfig.isReadonly())
 						continue;
-					String name = entry.getKey();
-					if (!naturalIdMutable && naturalIds.keySet().contains(name))
+					if (!naturalIdMutable
+							&& naturalIds.keySet().contains(propertyName))
 						continue;
 					if (Persistable.class.isAssignableFrom(bwp
-							.getPropertyDescriptor(name).getReadMethod()
-							.getReturnType()))
+							.getPropertyDescriptor(propertyName)
+							.getReadMethod().getReturnType()))
 						continue;
-					bwp.setPropertyValue(name, bw.getPropertyValue(name));
+					editedPropertyNames.add(propertyName);
 				}
+
+				for (String name : editedPropertyNames)
+					bwp.setPropertyValue(name, bw.getPropertyValue(name));
+
 				bw = bwp;
 				entity = persisted;
 			} catch (Exception e) {
