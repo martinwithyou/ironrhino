@@ -9,6 +9,7 @@ import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableComponent;
 import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.aop.PublishAware;
+import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -16,10 +17,12 @@ import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.util.JsonUtils;
+import org.ironrhino.security.model.UserRole;
 
 @PublishAware
 @AutoConfig(searchable = true, order = "name asc")
 @Searchable(alias = "dictionary")
+@Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 public class Dictionary extends BaseEntity {
 
 	private static final long serialVersionUID = -8352037604261222984L;
