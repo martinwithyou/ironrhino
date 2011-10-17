@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -70,7 +71,7 @@ public class PermitAction extends BaseAction {
 
 	private void scanResources() {
 		if (resourcesCache == null) {
-			HashMap<String, String> temp = new HashMap<String, String>();
+			HashMap<String, String> temp = new LinkedHashMap<String, String>();
 			Collection<PackageConfig> pcs = ((AutoConfigPackageProvider) packageProvider)
 					.getAllPackageConfigs();
 			for (PackageConfig pc : pcs) {
@@ -109,7 +110,7 @@ public class PermitAction extends BaseAction {
 			}
 			resourcesCache = temp;
 		}
-		resources = new HashMap<String, String>(resourcesCache.size());
+		resources = new LinkedHashMap<String, String>(resourcesCache.size());
 		for (Map.Entry<String, String> entry : resourcesCache.entrySet())
 			resources.put(entry.getKey(), getText(entry.getValue()));
 	}
