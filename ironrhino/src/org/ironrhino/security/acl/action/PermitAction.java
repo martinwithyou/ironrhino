@@ -78,6 +78,8 @@ public class PermitAction extends BaseAction {
 				for (ActionConfig ac : acs) {
 					try {
 						Class c = Class.forName(ac.getClassName());
+						if (!BaseAction.class.isAssignableFrom(c))
+							continue;
 						Set<Method> methods = AnnotationUtils
 								.getAnnotatedMethods(c, Authorize.class);
 						for (Method m : methods) {
