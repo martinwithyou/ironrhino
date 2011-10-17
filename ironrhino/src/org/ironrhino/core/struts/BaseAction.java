@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.interceptor.annotations.Before;
 import com.opensymphony.xwork2.interceptor.annotations.BeforeResult;
@@ -194,8 +195,12 @@ public class BaseAction extends ActionSupport {
 	}
 
 	private String mapRole(String role) {
-		String resource = RequestUtils.getRequestUri(ServletActionContext
-				.getRequest());
+		ActionProxy ap = ActionContext.getContext().getActionInvocation().getProxy();
+		StringBuilder sb = new StringBuilder(ap.getNamespace());
+		sb.append(ap.getNamespace().endsWith("/")?"":"/");
+		sb.append(ap.getActionName());
+		sb.append(ap.getMethod().equals("execute")?"":"/"+ap.getMethod());
+		String resource = sb.toString();
 		UserDetails user = AuthzUtils.getUserDetails();
 		return resourceRoleMapperManager.map(role, resource, user);
 	}
