@@ -13,11 +13,13 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Redirect;
 import org.ironrhino.core.struts.AutoConfigPackageProvider;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.struts.EntityAction;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.security.acl.component.AclResourceRoleMapper;
 import org.ironrhino.security.acl.model.Acl;
@@ -81,6 +83,30 @@ public class PermitAction extends BaseAction {
 						Class c = Class.forName(ac.getClassName());
 						if (!BaseAction.class.isAssignableFrom(c))
 							continue;
+						if (EntityAction.class.equals(c)) {
+							Class entityClass = ((AutoConfigPackageProvider) packageProvider)
+									.getEntityClass(pc.getNamespace(),
+											ac.getName());
+							Authorize authorize = (Authorize) entityClass
+									.getAnnotation(Authorize.class);
+							if (authorize == null)
+								continue;
+							if (authorize.ifAnyGranted().equals(
+									AclResourceRoleMapper.class.getName())
+									|| authorize.ifAllGranted().equals(
+											AclResourceRoleMapper.class
+													.getName())) {
+								StringBuilder sb = new StringBuilder();
+								sb.append(pc.getNamespace())
+										.append(pc.getNamespace().endsWith("/") ? ""
+												: "/").append(ac.getName());
+								String s = sb.toString();
+								temp.put(s, null);
+								temp.put(s + "/input", null);
+								temp.put(s + "/save", null);
+							}
+							continue;
+						}
 						Set<Method> methods = AnnotationUtils
 								.getAnnotatedMethods(c, Authorize.class);
 						for (Method m : methods) {
@@ -97,10 +123,8 @@ public class PermitAction extends BaseAction {
 												: "/").append(ac.getName());
 								if (!m.getName().equals("execute"))
 									sb.append("/").append(m.getName());
-								temp.put(
-										sb.toString(),
-										!authorize.resourceName().equals("") ? authorize
-												.resourceName() : sb.toString());
+								temp.put(sb.toString(),
+										authorize.resourceName());
 							}
 						}
 					} catch (ClassNotFoundException e) {
@@ -112,7 +136,8 @@ public class PermitAction extends BaseAction {
 		}
 		resources = new LinkedHashMap<String, String>(resourcesCache.size());
 		for (Map.Entry<String, String> entry : resourcesCache.entrySet())
-			resources.put(entry.getKey(), getText(entry.getValue()));
+			resources.put(entry.getKey(), getText(StringUtils.isBlank(entry
+					.getValue()) ? entry.getKey() : entry.getValue()));
 	}
 
 	@Override
