@@ -104,6 +104,7 @@ public class PermitAction extends BaseAction {
 								temp.put(s, null);
 								temp.put(s + "/input", null);
 								temp.put(s + "/save", null);
+								temp.put(s + "/delete", null);
 							}
 							continue;
 						}
