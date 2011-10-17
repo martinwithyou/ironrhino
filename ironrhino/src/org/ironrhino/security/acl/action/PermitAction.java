@@ -1,6 +1,7 @@
 package org.ironrhino.security.acl.action;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -108,24 +109,67 @@ public class PermitAction extends BaseAction {
 							}
 							continue;
 						}
-						Set<Method> methods = AnnotationUtils
-								.getAnnotatedMethods(c, Authorize.class);
-						for (Method m : methods) {
-							Authorize authorize = m
-									.getAnnotation(Authorize.class);
-							if (authorize.ifAnyGranted().equals(
-									AclResourceRoleMapper.class.getName())
-									|| authorize.ifAllGranted().equals(
-											AclResourceRoleMapper.class
-													.getName())) {
+						Authorize authorizeOnClass = (Authorize) c
+								.getAnnotation(Authorize.class);
+						if (authorizeOnClass == null
+								|| (!authorizeOnClass.ifAnyGranted().equals(
+										AclResourceRoleMapper.class.getName()) && !authorizeOnClass
+										.ifAllGranted().equals(
+												AclResourceRoleMapper.class
+														.getName()))) {
+							Set<Method> methods = AnnotationUtils
+									.getAnnotatedMethods(c, Authorize.class);
+							for (Method m : methods) {
+								Authorize authorize = m
+										.getAnnotation(Authorize.class);
+								if (authorize.ifAnyGranted().equals(
+										AclResourceRoleMapper.class.getName())
+										|| authorize.ifAllGranted().equals(
+												AclResourceRoleMapper.class
+														.getName())) {
+									StringBuilder sb = new StringBuilder();
+									sb.append(pc.getNamespace())
+											.append(pc.getNamespace().endsWith(
+													"/") ? "" : "/")
+											.append(ac.getName());
+									if (!m.getName().equals("execute"))
+										sb.append("/").append(m.getName());
+									temp.put(sb.toString(),
+											authorize.resourceName());
+								}
+							}
+						} else if (authorizeOnClass.ifAnyGranted().equals(
+								AclResourceRoleMapper.class.getName())
+								|| authorizeOnClass.ifAllGranted().equals(
+										AclResourceRoleMapper.class.getName())) {
+							for (Method m : c.getMethods()) {
+								int mod = m.getModifiers();
+								if (!Modifier.isPublic(mod)
+										|| Modifier.isStatic(mod)
+										|| !m.getReturnType().equals(
+												String.class)
+										|| m.getParameterTypes().length != 0)
+									continue;
+								Authorize authorize = m
+										.getAnnotation(Authorize.class);
+								if (authorize != null
+										&& (!authorize.ifAnyGranted().equals(
+												AclResourceRoleMapper.class
+														.getName()) && !authorize
+												.ifAllGranted()
+												.equals(AclResourceRoleMapper.class
+														.getName())))
+									continue;
 								StringBuilder sb = new StringBuilder();
 								sb.append(pc.getNamespace())
 										.append(pc.getNamespace().endsWith("/") ? ""
 												: "/").append(ac.getName());
 								if (!m.getName().equals("execute"))
 									sb.append("/").append(m.getName());
-								temp.put(sb.toString(),
-										authorize.resourceName());
+								temp.put(
+										sb.toString(),
+										authorize != null ? authorize
+												.resourceName() : null);
 							}
 						}
 					} catch (ClassNotFoundException e) {
@@ -193,4 +237,5 @@ public class PermitAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
+
 }
