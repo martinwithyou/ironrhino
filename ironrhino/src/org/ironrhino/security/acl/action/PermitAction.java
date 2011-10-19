@@ -18,19 +18,17 @@ import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Redirect;
+import org.ironrhino.core.security.dynauth.DynamicAuthorizer;
 import org.ironrhino.core.struts.AutoConfigPackageProvider;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.struts.EntityAction;
 import org.ironrhino.core.util.AnnotationUtils;
-import org.ironrhino.security.acl.component.AclResourceRoleMapper;
 import org.ironrhino.security.acl.model.Acl;
 import org.ironrhino.security.acl.service.AclManager;
-import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
-import org.ironrhino.security.service.UserManager;
+import org.ironrhino.security.service.UsernameRoleMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
@@ -49,10 +47,9 @@ public class PermitAction extends BaseAction {
 
 	private String username;
 
-	private Map<String, String> resources;
+	private String role;
 
-	@Inject
-	private transient UserManager userManager;
+	private Map<String, String> resources;
 
 	@Inject
 	private transient AclManager aclManager;
@@ -66,6 +63,14 @@ public class PermitAction extends BaseAction {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public Map<String, String> getResources() {
@@ -90,13 +95,9 @@ public class PermitAction extends BaseAction {
 											ac.getName());
 							Authorize authorize = (Authorize) entityClass
 									.getAnnotation(Authorize.class);
-							if (authorize == null)
-								continue;
-							if (authorize.ifAnyGranted().equals(
-									AclResourceRoleMapper.class.getName())
-									|| authorize.ifAllGranted().equals(
-											AclResourceRoleMapper.class
-													.getName())) {
+							if (authorize != null
+									&& !authorize.authorizer().equals(
+											DynamicAuthorizer.class)) {
 								StringBuilder sb = new StringBuilder();
 								sb.append(pc.getNamespace())
 										.append(pc.getNamespace().endsWith("/") ? ""
@@ -112,21 +113,15 @@ public class PermitAction extends BaseAction {
 						Authorize authorizeOnClass = (Authorize) c
 								.getAnnotation(Authorize.class);
 						if (authorizeOnClass == null
-								|| (!authorizeOnClass.ifAnyGranted().equals(
-										AclResourceRoleMapper.class.getName()) && !authorizeOnClass
-										.ifAllGranted().equals(
-												AclResourceRoleMapper.class
-														.getName()))) {
+								|| authorizeOnClass.authorizer().equals(
+										DynamicAuthorizer.class)) {
 							Set<Method> methods = AnnotationUtils
 									.getAnnotatedMethods(c, Authorize.class);
 							for (Method m : methods) {
 								Authorize authorize = m
 										.getAnnotation(Authorize.class);
-								if (authorize.ifAnyGranted().equals(
-										AclResourceRoleMapper.class.getName())
-										|| authorize.ifAllGranted().equals(
-												AclResourceRoleMapper.class
-														.getName())) {
+								if (!authorize.authorizer().equals(
+										DynamicAuthorizer.class)) {
 									StringBuilder sb = new StringBuilder();
 									sb.append(pc.getNamespace())
 											.append(pc.getNamespace().endsWith(
@@ -134,14 +129,12 @@ public class PermitAction extends BaseAction {
 											.append(ac.getName());
 									if (!m.getName().equals("execute"))
 										sb.append("/").append(m.getName());
-									temp.put(sb.toString(),
-											authorize.resourceName());
+									temp.put(sb.toString(), null);
 								}
 							}
-						} else if (authorizeOnClass.ifAnyGranted().equals(
-								AclResourceRoleMapper.class.getName())
-								|| authorizeOnClass.ifAllGranted().equals(
-										AclResourceRoleMapper.class.getName())) {
+						} else if (authorizeOnClass != null
+								&& !authorizeOnClass.authorizer().equals(
+										DynamicAuthorizer.class)) {
 							for (Method m : c.getMethods()) {
 								int mod = m.getModifiers();
 								if (!Modifier.isPublic(mod)
@@ -153,12 +146,8 @@ public class PermitAction extends BaseAction {
 								Authorize authorize = m
 										.getAnnotation(Authorize.class);
 								if (authorize != null
-										&& (!authorize.ifAnyGranted().equals(
-												AclResourceRoleMapper.class
-														.getName()) && !authorize
-												.ifAllGranted()
-												.equals(AclResourceRoleMapper.class
-														.getName())))
+										&& authorize.authorizer().equals(
+												DynamicAuthorizer.class))
 									continue;
 								StringBuilder sb = new StringBuilder();
 								sb.append(pc.getNamespace())
@@ -166,10 +155,7 @@ public class PermitAction extends BaseAction {
 												: "/").append(ac.getName());
 								if (!m.getName().equals("execute"))
 									sb.append("/").append(m.getName());
-								temp.put(
-										sb.toString(),
-										authorize != null ? authorize
-												.resourceName() : null);
+								temp.put(sb.toString(), null);
 							}
 						}
 					} catch (ClassNotFoundException e) {
@@ -188,15 +174,11 @@ public class PermitAction extends BaseAction {
 	@Override
 	public String input() {
 		scanResources();
-		User user = null;
-		try {
-			user = (User) userManager.loadUserByUsername(username);
-			if (user == null)
-				return ACCESSDENIED;
-		} catch (UsernameNotFoundException e) {
+		if (StringUtils.isBlank(role) && StringUtils.isNotBlank(username))
+			role = UsernameRoleMapper.map(username);
+		if (StringUtils.isBlank(role))
 			return ACCESSDENIED;
-		}
-		List<Acl> acls = aclManager.findAclsByUsername(user.getUsername());
+		List<Acl> acls = aclManager.findAclsByRole(role);
 		List<String> permitted = new ArrayList<String>();
 		for (Acl acl : acls) {
 			if (acl.isPermitted())
@@ -211,14 +193,10 @@ public class PermitAction extends BaseAction {
 	@InputConfig(methodName = "input")
 	public String execute() {
 		scanResources();
-		User user = null;
-		try {
-			user = (User) userManager.loadUserByUsername(username);
-			if (user == null)
-				return ACCESSDENIED;
-		} catch (UsernameNotFoundException e) {
+		if (StringUtils.isBlank(role) && StringUtils.isNotBlank(username))
+			role = UsernameRoleMapper.map(username);
+		if (StringUtils.isBlank(role))
 			return ACCESSDENIED;
-		}
 		String[] ids = getId();
 		List<String> permitted;
 		if (ids == null || ids.length == 0)
@@ -226,13 +204,11 @@ public class PermitAction extends BaseAction {
 		else
 			permitted = Arrays.asList(ids);
 		for (String resource : resources.keySet()) {
-			Acl acl = aclManager.findAcl(user.getUsername(), resource);
+			Acl acl = aclManager.findAcl(role, resource);
 			if (acl != null)
 				acl.setPermitted(permitted.contains(resource));
 			else
-				acl = new Acl(user.getUsername(), resource,
-						permitted.contains(resource));
-
+				acl = new Acl(role, resource, permitted.contains(resource));
 			aclManager.save(acl);
 		}
 		return SUCCESS;

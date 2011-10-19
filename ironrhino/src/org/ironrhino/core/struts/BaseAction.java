@@ -13,7 +13,8 @@ import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Csrf;
 import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.security.captcha.CaptchaManager;
-import org.ironrhino.core.security.rrm.ResourceRoleMapperManager;
+import org.ironrhino.core.security.dynauth.DynamicAuthorizer;
+import org.ironrhino.core.security.dynauth.DynamicAuthorizerManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
@@ -72,7 +73,7 @@ public class BaseAction extends ActionSupport {
 	protected transient CaptchaManager captchaManager;
 
 	@Autowired
-	protected transient ResourceRoleMapperManager resourceRoleMapperManager;
+	protected transient DynamicAuthorizerManager dynamicAuthorizerManager;
 
 	public void setCsrf(String csrf) {
 		this.csrf = csrf;
@@ -174,11 +175,24 @@ public class BaseAction extends ActionSupport {
 	public String preAction() throws Exception {
 		Authorize authorize = findAuthorize();
 		if (authorize != null) {
-			boolean passed = AuthzUtils.authorize(
-					mapRole(authorize.ifAllGranted()),
-					mapRole(authorize.ifAnyGranted()),
-					mapRole(authorize.ifNotGranted()));
-			if (!passed) {
+			boolean authorized;
+			if (!authorize.authorizer().equals(DynamicAuthorizer.class)) {
+				ActionProxy ap = ActionContext.getContext()
+						.getActionInvocation().getProxy();
+				StringBuilder sb = new StringBuilder(ap.getNamespace());
+				sb.append(ap.getNamespace().endsWith("/") ? "" : "/");
+				sb.append(ap.getActionName());
+				sb.append(ap.getMethod().equals("execute") ? "" : "/"
+						+ ap.getMethod());
+				String resource = sb.toString();
+				UserDetails user = AuthzUtils.getUserDetails();
+				authorized = dynamicAuthorizerManager.authorize(
+						authorize.authorizer(), user, resource);
+			} else {
+				authorized = AuthzUtils.authorize(authorize.ifAllGranted(),
+						authorize.ifAnyGranted(), authorize.ifNotGranted());
+			}
+			if (!authorized) {
 				addActionError(getText("access.denied"));
 				return ACCESSDENIED;
 			}
@@ -192,17 +206,6 @@ public class BaseAction extends ActionSupport {
 		}
 		csrfRequired = !captchaRequired && getAnnotation(Csrf.class) != null;
 		return null;
-	}
-
-	private String mapRole(String role) {
-		ActionProxy ap = ActionContext.getContext().getActionInvocation().getProxy();
-		StringBuilder sb = new StringBuilder(ap.getNamespace());
-		sb.append(ap.getNamespace().endsWith("/")?"":"/");
-		sb.append(ap.getActionName());
-		sb.append(ap.getMethod().equals("execute")?"":"/"+ap.getMethod());
-		String resource = sb.toString();
-		UserDetails user = AuthzUtils.getUserDetails();
-		return resourceRoleMapperManager.map(role, resource, user);
 	}
 
 	@Before(priority = 10)

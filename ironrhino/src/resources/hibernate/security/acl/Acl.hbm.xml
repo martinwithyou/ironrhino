@@ -9,7 +9,7 @@
 			<generator class="uuid" />
 		</id>
 		<natural-id mutable="true">
-			<property name="username" not-null="true"  length="50"/>
+			<property name="role" not-null="true"  length="50"/>
 			<property name="resource" not-null="true"  length="150"/>
 		</natural-id>
 		<property name="permitted" />

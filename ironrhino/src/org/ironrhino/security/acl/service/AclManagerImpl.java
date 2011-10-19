@@ -19,27 +19,27 @@ public class AclManagerImpl extends BaseManagerImpl<Acl> implements AclManager {
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "acl", key = "${args[0].username+args[0].resource}")
+	@FlushCache(namespace = "acl", key = "${args[0].role+args[0].resource}")
 	public void delete(Acl acl) {
 		super.delete(acl);
 	}
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "acl", key = "${args[0].username+args[0].resource}")
+	@FlushCache(namespace = "acl", key = "${args[0].role+args[0].resource}")
 	public void save(Acl acl) {
 		super.save(acl);
 	}
 
 	@Transactional(readOnly = true)
 	@CheckCache(namespace = "acl", key = "${args[0]+args[1]}")
-	public Acl findAcl(String username, String resource) {
-		return findByNaturalId("username", username, "resource", resource);
+	public Acl findAcl(String role, String resource) {
+		return findByNaturalId("role", role, "resource", resource);
 	}
 
-	public List<Acl> findAclsByUsername(String username) {
+	public List<Acl> findAclsByRole(String role) {
 		DetachedCriteria dc = detachedCriteria();
-		dc.add(Restrictions.eq("username", username));
+		dc.add(Restrictions.eq("role", role));
 		return findListByCriteria(dc);
 	}
 

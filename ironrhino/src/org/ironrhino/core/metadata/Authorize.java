@@ -7,7 +7,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target( { METHOD, TYPE })
+import org.ironrhino.core.security.dynauth.DynamicAuthorizer;
+
+@Target({ METHOD, TYPE })
 @Retention(RUNTIME)
 public @interface Authorize {
 	// equals to tag security:authorize
@@ -16,7 +18,7 @@ public @interface Authorize {
 	String ifAnyGranted() default "";
 
 	String ifNotGranted() default "";
-	
-	String resourceName() default "";
+
+	Class<? extends DynamicAuthorizer> authorizer() default DynamicAuthorizer.class;
 
 }

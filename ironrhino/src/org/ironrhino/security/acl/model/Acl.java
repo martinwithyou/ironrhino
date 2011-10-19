@@ -7,13 +7,13 @@ import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.security.model.UserRole;
 
-@AutoConfig(order = "username asc")
+@AutoConfig(order = "role asc")
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 public class Acl extends BaseEntity {
 
 	@NaturalId(mutable = true)
 	@UiConfig(displayOrder = 1)
-	private String username;
+	private String role;
 
 	@NaturalId(mutable = true)
 	@UiConfig(displayOrder = 2)
@@ -25,18 +25,18 @@ public class Acl extends BaseEntity {
 	public Acl() {
 	}
 
-	public Acl(String username, String resource, boolean permitted) {
-		this.username = username;
+	public Acl(String role, String resource, boolean permitted) {
+		this.role = role;
 		this.resource = resource;
 		this.permitted = permitted;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getRole() {
+		return role;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getResource() {

@@ -7,8 +7,8 @@ import org.ironrhino.security.acl.model.Acl;
 
 public interface AclManager extends BaseManager<Acl> {
 
-	public Acl findAcl(String username, String resource);
+	public Acl findAcl(String role, String resource);
 
-	public List<Acl> findAclsByUsername(String username);
+	public List<Acl> findAclsByRole(String role);
 
 }

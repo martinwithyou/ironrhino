@@ -5,7 +5,7 @@
 </head>
 <body>
 <@s.form  method="post" cssClass="ajax">
-	<@s.hidden name="username" />
+	<@s.hidden name="role" />
 	<@s.checkboxlist name="id" list="resources" listKey="key" listValue="value"/>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
