@@ -27808,7 +27808,12 @@ Observation.multiautocomplete = function(container) {
 				return;
 			if (!this.name) {
 				var b = this.checked;
-				$('input[type=checkbox][name]', this.form).each(function() {
+				var group = $(this).closest('.checkboxgroup');
+				if (!group.length)
+					group = this.form;
+				if (!group)
+					return;
+				$('input[type=checkbox][name]', group).each(function() {
 							this.checked = b;
 							var tr = $(this).closest('tr');
 							if (tr) {
@@ -27873,31 +27878,6 @@ Observation.multiautocomplete = function(container) {
 		});
 		return this;
 	}
-
-	$('a.delete_selected').each(function() {
-				this.onprepare = function() {
-					var params = [];
-					$('input[type=checkbox]', $(this).closest('form')).each(
-							function() {
-								if (this.name && this.checked) {
-									params.push(this.name + '=' + this.value)
-								}
-							});
-					var url = $(this).attr('_href');
-					if (!url) {
-						url = this.href;
-						$(this).attr('_href', url);
-					}
-					url += (url.indexOf('?') > 0 ? '&' : '?')
-							+ params.join('&');
-					this.href = url;
-					return true;
-				};
-				this.onsuccess = function() {
-					$(this).attr('href', $(this).attr('_href'));
-				}
-			});
-
 })(jQuery);
 
 Observation.checkbox = function(container) {

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +29,8 @@ import org.ironrhino.security.service.UsernameRoleMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
@@ -43,13 +44,11 @@ public class PermitAction extends BaseAction {
 
 	protected static Logger log = LoggerFactory.getLogger(PermitAction.class);
 
-	private static Map<String, String> resourcesCache;
+	private static Map<String, Collection<String>> resources;
 
 	private String username;
 
 	private String role;
-
-	private Map<String, String> resources;
 
 	@Inject
 	private transient AclManager aclManager;
@@ -73,13 +72,10 @@ public class PermitAction extends BaseAction {
 		this.role = role;
 	}
 
-	public Map<String, String> getResources() {
-		return resources;
-	}
+	public Map<String, Collection<String>> getResources() {
 
-	private void scanResources() {
-		if (resourcesCache == null) {
-			HashMap<String, String> temp = new LinkedHashMap<String, String>();
+		if (resources == null) {
+			Multimap<String, String> temp = ArrayListMultimap.create();
 			Collection<PackageConfig> pcs = ((AutoConfigPackageProvider) packageProvider)
 					.getAllPackageConfigs();
 			for (PackageConfig pc : pcs) {
@@ -103,10 +99,12 @@ public class PermitAction extends BaseAction {
 										.append(pc.getNamespace().endsWith("/") ? ""
 												: "/").append(ac.getName());
 								String s = sb.toString();
-								temp.put(s, null);
-								temp.put(s + "/input", null);
-								temp.put(s + "/save", null);
-								temp.put(s + "/delete", null);
+								temp.put(authorize.resourceGroup(), s);
+								temp.put(authorize.resourceGroup(), s
+										+ "/input");
+								temp.put(authorize.resourceGroup(), s + "/save");
+								temp.put(authorize.resourceGroup(), s
+										+ "/delete");
 							}
 							continue;
 						}
@@ -129,7 +127,8 @@ public class PermitAction extends BaseAction {
 											.append(ac.getName());
 									if (!m.getName().equals("execute"))
 										sb.append("/").append(m.getName());
-									temp.put(sb.toString(), null);
+									temp.put(authorize.resourceGroup(),
+											sb.toString());
 								}
 							}
 						} else if (authorizeOnClass != null
@@ -155,7 +154,12 @@ public class PermitAction extends BaseAction {
 												: "/").append(ac.getName());
 								if (!m.getName().equals("execute"))
 									sb.append("/").append(m.getName());
-								temp.put(sb.toString(), null);
+								temp.put(
+										authorize != null ? authorize
+												.resourceGroup()
+												: authorizeOnClass
+														.resourceGroup(), sb
+												.toString());
 							}
 						}
 					} catch (ClassNotFoundException e) {
@@ -163,17 +167,19 @@ public class PermitAction extends BaseAction {
 					}
 				}
 			}
-			resourcesCache = temp;
+			Map<String, Collection<String>> map = temp.asMap();
+			resources = new LinkedHashMap<String, Collection<String>>(
+					map.size());
+			List<String> groups = new ArrayList(map.keySet());
+			Collections.sort(groups);
+			for (String group : groups)
+				resources.put(group, map.get(group));
 		}
-		resources = new LinkedHashMap<String, String>(resourcesCache.size());
-		for (Map.Entry<String, String> entry : resourcesCache.entrySet())
-			resources.put(entry.getKey(), getText(StringUtils.isBlank(entry
-					.getValue()) ? entry.getKey() : entry.getValue()));
+		return resources;
 	}
 
 	@Override
 	public String input() {
-		scanResources();
 		if (StringUtils.isBlank(role) && StringUtils.isNotBlank(username))
 			role = UsernameRoleMapper.map(username);
 		if (StringUtils.isBlank(role))
@@ -192,7 +198,6 @@ public class PermitAction extends BaseAction {
 	@Redirect
 	@InputConfig(methodName = "input")
 	public String execute() {
-		scanResources();
 		if (StringUtils.isBlank(role) && StringUtils.isNotBlank(username))
 			role = UsernameRoleMapper.map(username);
 		if (StringUtils.isBlank(role))
@@ -203,13 +208,15 @@ public class PermitAction extends BaseAction {
 			permitted = Collections.EMPTY_LIST;
 		else
 			permitted = Arrays.asList(ids);
-		for (String resource : resources.keySet()) {
-			Acl acl = aclManager.findAcl(role, resource);
-			if (acl != null)
-				acl.setPermitted(permitted.contains(resource));
-			else
-				acl = new Acl(role, resource, permitted.contains(resource));
-			aclManager.save(acl);
+		for (Collection<String> resourceList : resources.values()) {
+			for (String resource : resourceList) {
+				Acl acl = aclManager.findAcl(role, resource);
+				if (acl != null)
+					acl.setPermitted(permitted.contains(resource));
+				else
+					acl = new Acl(role, resource, permitted.contains(resource));
+				aclManager.save(acl);
+			}
 		}
 		return SUCCESS;
 	}
