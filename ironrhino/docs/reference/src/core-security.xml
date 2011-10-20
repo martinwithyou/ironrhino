@@ -123,24 +123,24 @@ public interface UserRole extends org.ironrhino.security.model.UserRole {
 		</programlisting>
 	</para>
 	<para>
+	<![CDATA[
 		Web层action类中权限设置:
-		1、在需要配置权限的action方法前面标注
-		   @Authorize(ifAnyGranted = "org.ironrhino.common.support.SettingResourceRoleMapper")
-		2、在Setting模型中增加键值配置： 键：resource:/user/password       值：ROLE_ADMINISTRATOR,ROLE_BUILTIN_USER
-		   本句权限设置的含义是/user/password的URI访问权限是管理员和登录用户
-		   key设置是以resource:开头,后面跟需要权限控制的URI路径
-		   values值是以角色名称保存，ROLE_开头，多个值中间用逗号分隔  
+		1、 在需要配置权限的action方法前面标注
+		    @Authorize(authorizer = AclDynamicAuthorizer.class)
+		2、 访问permit?role=ROLE_角色名称, 可以对指定角色进行授权;
+			访问permit?username=用户名, 可以对指定用户进行授权;
+	]]>
 	</para>
 	<para>
 		页面ftl模板写法：
 		<programlisting>
 		<![CDATA[
-			<@authorize ifAnyGranted="org.ironrhino.common.support.SettingResourceRoleMapper" resource="/user/password">
+			<@authorize authorizer="org.ironrhino.security.acl.component.AclDynamicAuthorizer" resource="/user/password"> 
 				<li><a href="<@url value="${ssoServerBase!}/user/password"/>">${action.getText('change')}${action.getText('password')}</a></li>
 			</@authorize>
 		]]>
 		</programlisting>
-		resource="..."引号中间是设置权限访问控制的URI
+		resource="..."引号中间是需要设置权限访问控制的URI
 	</para>
 
 </chapter>
