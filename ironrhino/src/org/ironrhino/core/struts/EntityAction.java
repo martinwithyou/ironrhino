@@ -228,6 +228,16 @@ public class EntityAction extends BaseAction {
 			try {
 				// for fetch default value by construct
 				entity = (Persistable) getEntityClass().newInstance();
+				BeanWrapperImpl bw = new BeanWrapperImpl(entity);
+				Set<String> naturalIds = getNaturalIds().keySet();
+				if (getUid() != null && naturalIds.size() == 1) {
+					bw.setPropertyValue(naturalIds.iterator().next(), getUid());
+				}
+				for (String name : ServletActionContext.getRequest()
+						.getParameterMap().keySet()) {
+					bw.setPropertyValue(name, ServletActionContext.getRequest()
+							.getParameter(name));
+				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
