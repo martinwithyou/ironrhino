@@ -101,7 +101,7 @@
 		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl,resources/view/signup*.ftl" excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**,org/ironrhino/security/oauth/**,resources/hibernate/security/oauth/**,org/ironrhino/security/acl/**,resources/hibernate/security/acl/**" />
 		<jar jarfile="${target.dir}/${security-config-jar.name}" basedir="${classes.dir}" includes="resources/spring/applicationContext-security.xml" />
 		<jar jarfile="${target.dir}/${security-loginrecord-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
-		<jar jarfile="${target.dir}/${security-acl-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/acl/**,resources/hibernate/acl/**" />
+		<jar jarfile="${target.dir}/${security-acl-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/acl/**,resources/hibernate/acl/**,resources/view/permit*" />
 		<jar jarfile="${target.dir}/${security-oauth-client-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/oauth/client/**,resources/view/oauth.ftl" />
 		<jar jarfile="${target.dir}/${security-oauth-server-jar.name}" basedir="${classes.dir}" includes="org/ironrhino/security/oauth/server/**,resources/hibernate/security/oauth/**,resources/view/oauth2*" />
 	</target>

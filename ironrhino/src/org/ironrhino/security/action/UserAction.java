@@ -3,10 +3,8 @@ package org.ironrhino.security.action;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -27,8 +25,8 @@ import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
-import org.ironrhino.security.model.UserRole.UserRoleHelper;
 import org.ironrhino.security.service.UserManager;
+import org.ironrhino.security.service.UserRoleManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
@@ -59,6 +57,9 @@ public class UserAction extends BaseAction {
 
 	@Inject
 	private transient UserManager userManager;
+
+	@Inject
+	private transient UserRoleManager userRoleManager;
 
 	@Autowired(required = false)
 	private transient CompassSearchService compassSearchService;
@@ -159,10 +160,10 @@ public class UserAction extends BaseAction {
 			while (it.hasNext())
 				roleId[i++] = it.next();
 		}
-		roles = new LinkedHashMap<String, String>();
-		Set<String> set = UserRoleHelper.getAllRoles();
-		for (String name : set)
-			roles.put(name, getText(name));
+		roles = userRoleManager.getAllRoles();
+		for (Map.Entry<String, String> entry : roles.entrySet())
+			if (StringUtils.isBlank(entry.getValue()))
+				entry.setValue(getText(entry.getKey()));
 		return INPUT;
 	}
 

@@ -4,19 +4,13 @@
 <title>${action.getText('permit')}</title>
 </head>
 <body>
-<@s.form  method="post" cssClass="ajax">
-	<@s.hidden name="role" />
-	<#list resources?keys as group>
-	<div class="checkboxgroup">
-		<div style="padding-bottom:10px;"><#if group!=''><input type="checkbox" style="margin-right:5px;"/>${action.getText(group)}</#if></div>
-		<div style="padding:0 0 30px 30px;">
-		<#list resources[group] as resource>
-			<input type="checkbox" style="margin:0 5px 0 10px;" name="id" value="${resource}"<#if id?? && id?seq_contains(resource)> checked="checked"</#if>/>${action.getText(resource)}
-		</#list>
-		</div>
-	</div>
-	</#list>
-	<@s.submit value="%{getText('save')}" />
-</@s.form>
+<div style="margin-bottom:20px;" class="switch">
+<#list roles?keys as role>
+<@button type="link" href="permit/input?role=${role}" class="ajax view" replacement="save" style="margin:0 5px;" text="${roles[role]}"/>
+</#list>
+<form action="${getUrl('/permit/input')}" method="get" class="line ajax view" replacement="save" style="margin-right:5px;float:right;"><span>${action.getText('username')}:</span><input type="text" name="username"/><@button type="submit" text="${action.getText('confirm')}"/></form>
+</div>
+<div id="save">
+</div>
 </body>
 </html></#escape>

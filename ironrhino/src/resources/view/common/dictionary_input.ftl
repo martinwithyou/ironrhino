@@ -14,8 +14,8 @@
 			<table border="0" class="datagrid" style="width:90%;text-align:center;">
 				<thead>
 					<tr>
-						<td>${action.getText('label')}</td>
 						<td>${action.getText('value')}</td>
+						<td>${action.getText('label')}</td>
 						<td></td>
 					</tr>
 				</thead>
@@ -26,8 +26,8 @@
 					</#if>
 					<#list 0..size as index>
 					<tr>
-						<td><@s.textfield theme="simple" name="dictionary.items[${index}].label"/></td>
 						<td><@s.textfield theme="simple" name="dictionary.items[${index}].value"/></td>
+						<td><@s.textfield theme="simple" name="dictionary.items[${index}].label"/></td>
 						<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 					</tr>
 					</#list>

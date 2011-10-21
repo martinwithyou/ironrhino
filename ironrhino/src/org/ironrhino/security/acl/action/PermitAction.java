@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.Redirect;
 import org.ironrhino.core.security.dynauth.DynamicAuthorizer;
 import org.ironrhino.core.struts.AutoConfigPackageProvider;
 import org.ironrhino.core.struts.BaseAction;
@@ -25,6 +24,7 @@ import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.security.acl.model.Acl;
 import org.ironrhino.security.acl.service.AclManager;
 import org.ironrhino.security.model.UserRole;
+import org.ironrhino.security.service.UserRoleManager;
 import org.ironrhino.security.service.UsernameRoleMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,10 +48,15 @@ public class PermitAction extends BaseAction {
 
 	private String username;
 
+	private Map<String, String> roles;
+
 	private String role;
 
 	@Inject
 	private transient AclManager aclManager;
+
+	@Inject
+	private transient UserRoleManager userRoleManager;
 
 	@com.opensymphony.xwork2.inject.Inject("ironrhino-autoconfig")
 	private transient PackageProvider packageProvider;
@@ -72,8 +77,11 @@ public class PermitAction extends BaseAction {
 		this.role = role;
 	}
 
-	public Map<String, Collection<String>> getResources() {
+	public Map<String, String> getRoles() {
+		return roles;
+	}
 
+	public Map<String, Collection<String>> getResources() {
 		if (resources == null) {
 			Multimap<String, String> temp = ArrayListMultimap.create();
 			Collection<PackageConfig> pcs = ((AutoConfigPackageProvider) packageProvider)
@@ -178,6 +186,14 @@ public class PermitAction extends BaseAction {
 		return resources;
 	}
 
+	public String execute() {
+		roles = userRoleManager.getAllRoles();
+		for (Map.Entry<String, String> entry : roles.entrySet())
+			if (StringUtils.isBlank(entry.getValue()))
+				entry.setValue(getText(entry.getKey()));
+		return SUCCESS;
+	}
+
 	@Override
 	public String input() {
 		if (StringUtils.isBlank(role) && StringUtils.isNotBlank(username))
@@ -191,13 +207,12 @@ public class PermitAction extends BaseAction {
 				permitted.add(acl.getResource());
 		}
 		setId(permitted.toArray(new String[0]));
-		return SUCCESS;
+		return INPUT;
 	}
 
 	@Override
-	@Redirect
 	@InputConfig(methodName = "input")
-	public String execute() {
+	public String save() {
 		if (StringUtils.isBlank(role) && StringUtils.isNotBlank(username))
 			role = UsernameRoleMapper.map(username);
 		if (StringUtils.isBlank(role))
@@ -218,6 +233,7 @@ public class PermitAction extends BaseAction {
 				aclManager.save(acl);
 			}
 		}
+		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
 
