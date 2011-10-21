@@ -146,6 +146,7 @@ public class EntityAction extends BaseAction {
 			if (entity == null && naturalIds.size() > 0) {
 				Serializable[] paramters = new Serializable[naturalIds.size() * 2];
 				int i = 0;
+				boolean satisfied = true;
 				for (String naturalId : naturalIds) {
 					paramters[i] = naturalId;
 					i++;
@@ -155,11 +156,14 @@ public class EntityAction extends BaseAction {
 							.getPropertyValue(naturalId);
 					if (value != null)
 						paramters[i] = value;
-					else
-						throw new IllegalArgumentException();
+					else {
+						satisfied = false;
+						break;
+					}
 					i++;
 				}
-				entity = entityManager.findByNaturalId(paramters);
+				if (satisfied)
+					entity = entityManager.findByNaturalId(paramters);
 			}
 
 		} catch (Exception e) {
