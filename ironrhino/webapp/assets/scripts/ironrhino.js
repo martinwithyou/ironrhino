@@ -26732,7 +26732,7 @@ Message = {
 			messages = a;
 		}
 		if (!$('#message').length)
-			$('<div id="message></div>"').prependTo($('#content'));
+			$('<div id="message"></div>').prependTo($('#content'));
 		if (typeof $.fn.jnotifyInizialize != 'undefined') {
 			if (!$('#notification').length)
 				$('<div id="notification"><div>').prependTo(document.body)
