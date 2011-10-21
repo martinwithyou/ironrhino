@@ -26,8 +26,6 @@ public class RegionAction extends BaseAction {
 
 	private Long parentId;
 
-	private String rolesAsString;
-
 	private transient BaseManager<Region> baseManager;
 
 	private Collection<Region> list;
@@ -66,14 +64,6 @@ public class RegionAction extends BaseAction {
 
 	public Collection<Region> getList() {
 		return list;
-	}
-
-	public String getRolesAsString() {
-		return rolesAsString;
-	}
-
-	public void setRolesAsString(String rolesAsString) {
-		this.rolesAsString = rolesAsString;
 	}
 
 	public Long getParentId() {
@@ -202,7 +192,8 @@ public class RegionAction extends BaseAction {
 		DetachedCriteria dc = baseManager.detachedCriteria();
 		if (levels != null)
 			dc.add(Restrictions.in("level", levels));
-		dc.add(Restrictions.and(Restrictions.between("coordinate.latitude", bottom, top),
+		dc.add(Restrictions.and(
+				Restrictions.between("coordinate.latitude", bottom, top),
 				Restrictions.between("coordinate.longitude", left, right)));
 		list = baseManager.findListByCriteria(dc);
 		return JSON;
