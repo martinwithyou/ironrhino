@@ -114,11 +114,25 @@ public class RegionAction extends BaseAction {
 
 	@Override
 	public String save() {
+		Collection<Region> siblings = null;
 		if (region.isNew()) {
 			if (parentId != null) {
 				Region parent = baseManager.get(parentId);
 				region.setParent(parent);
+				siblings = parent.getChildren();
+			} else {
+				DetachedCriteria dc = baseManager.detachedCriteria();
+				dc.add(Restrictions.isNull("parent"));
+				dc.addOrder(Order.asc("displayOrder"));
+				dc.addOrder(Order.asc("name"));
+				siblings = baseManager.findListByCriteria(dc);
 			}
+			for (Region sibling : siblings)
+				if (sibling.getName().equals(region.getName())) {
+					addFieldError("region.name",
+							getText("validation.already.exists"));
+					return INPUT;
+				}
 		} else {
 			Region temp = region;
 			region = baseManager.get(temp.getId());
@@ -126,10 +140,28 @@ public class RegionAction extends BaseAction {
 					&& temp.getCoordinate().getLatitude() != null) {
 				region.setCoordinate(temp.getCoordinate());
 			} else {
+				if (!region.getName().equals(temp.getName())) {
+					if (region.getParent() == null) {
+						DetachedCriteria dc = baseManager.detachedCriteria();
+						dc.add(Restrictions.isNull("parent"));
+						dc.addOrder(Order.asc("displayOrder"));
+						dc.addOrder(Order.asc("name"));
+						siblings = baseManager.findListByCriteria(dc);
+					} else {
+						siblings = region.getParent().getChildren();
+					}
+					for (Region sibling : siblings)
+						if (sibling.getName().equals(temp.getName())) {
+							addFieldError("region.name",
+									getText("validation.already.exists"));
+							return INPUT;
+						}
+				}
 				region.setName(temp.getName());
 				region.setDisplayOrder(temp.getDisplayOrder());
 			}
 		}
+
 		baseManager.save(region);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;

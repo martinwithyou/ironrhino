@@ -1,0 +1,126 @@
+package org.ironrhino.common.support;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import org.ironrhino.common.model.TreeNode;
+import org.ironrhino.core.event.EntityOperationEvent;
+import org.ironrhino.core.event.EntityOperationType;
+import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.util.BeanUtils;
+import org.springframework.context.ApplicationListener;
+
+@Singleton
+@Named("treeNodeControl")
+public class TreeNodeControl implements
+		ApplicationListener<EntityOperationEvent> {
+
+	private TreeNode tree;
+
+	@Inject
+	private BaseManager<TreeNode> baseManager;
+
+	public void buildTreeNodeTree() {
+		baseManager.setEntityClass(TreeNode.class);
+		tree = baseManager.loadTree();
+	}
+
+	@PostConstruct
+	public void afterPropertiesSet() throws Exception {
+		buildTreeNodeTree();
+	}
+
+	public TreeNode getTree(String name) {
+		TreeNode subtree = null;
+		for (TreeNode t : tree.getChildren())
+			if (t.getName().equals(name)) {
+				addLevel(t, 1);
+				subtree = t;
+				break;
+			}
+		return subtree;
+	}
+
+	private void addLevel(TreeNode treeNode, int delta) {
+		treeNode.setLevel(treeNode.getLevel() + delta);
+		for (TreeNode t : treeNode.getChildren())
+			addLevel(t, delta);
+	}
+
+	private void create(TreeNode treeNode) {
+		TreeNode parent;
+		if (treeNode.getParent() == null)
+			parent = tree;
+		else
+			parent = tree.getDescendantOrSelfById(treeNode.getParent().getId());
+		TreeNode r = new TreeNode();
+		BeanUtils.copyProperties(treeNode, r, new String[] { "parent",
+				"children" });
+		r.setParent(parent);
+		parent.getChildren().add(r);
+		if (parent.getChildren() instanceof List)
+			Collections.sort((List<TreeNode>) parent.getChildren());
+	}
+
+	private void update(TreeNode treeNode) {
+		TreeNode r = tree.getDescendantOrSelfById(treeNode.getId());
+		if (!r.getFullId().equals(treeNode.getFullId())) {
+			r.getParent().getChildren().remove(r);
+			String str = treeNode.getFullId();
+			long newParentId = 0;
+			if (str.indexOf('.') > 0) {
+				str = str.substring(0, str.lastIndexOf('.'));
+				if (str.indexOf('.') > 0)
+					str = str.substring(str.lastIndexOf('.') + 1);
+				newParentId = Long.valueOf(str);
+			}
+			TreeNode newParent;
+			if (newParentId == 0)
+				newParent = tree;
+			else
+				newParent = tree.getDescendantOrSelfById(newParentId);
+			r.setParent(newParent);
+			newParent.getChildren().add(r);
+			resetChildren(r);
+		}
+		BeanUtils.copyProperties(treeNode, r, new String[] { "parent",
+				"children" });
+		if (r.getParent().getChildren() instanceof List)
+			Collections.sort((List<TreeNode>) r.getParent().getChildren());
+	}
+
+	private void resetChildren(TreeNode treeNode) {
+		if (treeNode.isHasChildren())
+			for (TreeNode r : treeNode.getChildren()) {
+				String fullId = (r.getParent()).getFullId() + "."
+						+ String.valueOf(r.getId());
+				r.setFullId(fullId);
+				r.setLevel(fullId.split("\\.").length);
+				resetChildren(r);
+			}
+	}
+
+	private void delete(TreeNode treeNode) {
+		TreeNode r = tree.getDescendantOrSelfById(treeNode.getId());
+		r.getParent().getChildren().remove(r);
+	}
+
+	public void onApplicationEvent(EntityOperationEvent event) {
+		if (tree == null)
+			return;
+		if (event.getEntity() instanceof TreeNode) {
+			TreeNode treeNode = (TreeNode) event.getEntity();
+			if (event.getType() == EntityOperationType.CREATE)
+				create(treeNode);
+			else if (event.getType() == EntityOperationType.UPDATE)
+				update(treeNode);
+			else if (event.getType() == EntityOperationType.DELETE)
+				delete(treeNode);
+		}
+	}
+}
