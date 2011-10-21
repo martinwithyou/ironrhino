@@ -24,10 +24,13 @@ import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.security.acl.model.Acl;
 import org.ironrhino.security.acl.service.AclManager;
 import org.ironrhino.security.model.UserRole;
+import org.ironrhino.security.service.UserManager;
 import org.ironrhino.security.service.UserRoleManager;
 import org.ironrhino.security.service.UsernameRoleMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -54,6 +57,9 @@ public class PermitAction extends BaseAction {
 
 	@Inject
 	private transient AclManager aclManager;
+
+	@Inject
+	private transient UserManager userManager;
 
 	@Inject
 	private transient UserRoleManager userRoleManager;
@@ -196,8 +202,14 @@ public class PermitAction extends BaseAction {
 
 	@Override
 	public String input() {
-		if (StringUtils.isBlank(role) && StringUtils.isNotBlank(username))
-			role = UsernameRoleMapper.map(username);
+		if (StringUtils.isBlank(role) && StringUtils.isNotBlank(username)) {
+			try {
+				UserDetails user = userManager.loadUserByUsername(username);
+				role = UsernameRoleMapper.map(user.getUsername());
+			} catch (UsernameNotFoundException e) {
+				addActionError(getText("validation.not.exists"));
+			}
+		}
 		if (StringUtils.isBlank(role))
 			return ACCESSDENIED;
 		List<Acl> acls = aclManager.findAclsByRole(role);
