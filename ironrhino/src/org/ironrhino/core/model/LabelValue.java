@@ -8,22 +8,18 @@ import org.compass.annotations.SearchableProperty;
 @Searchable(root = false, alias = "labelValue")
 public class LabelValue implements Serializable {
 
-	private String label;
-
 	private String value;
+
+	private String label;
 
 	private Boolean selected;
 
 	public LabelValue() {
 	}
 
-	public LabelValue(String name, String value) {
-		this.label = name;
+	public LabelValue(String value, String label) {
 		this.value = value;
-	}
-
-	public LabelValue(String name) {
-		this.label = name;
+		this.label = label;
 	}
 
 	@SearchableProperty
@@ -31,8 +27,8 @@ public class LabelValue implements Serializable {
 		return label;
 	}
 
-	public void setLabel(String name) {
-		this.label = name;
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	@SearchableProperty

@@ -1,7 +1,9 @@
 package org.ironrhino.common.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
@@ -38,7 +40,7 @@ public class Dictionary extends BaseEntity {
 	private String description;
 
 	@SearchableComponent
-	@UiConfig(displayOrder = 3, cellEdit = "none", excludeIfNotEdited = true, template = "{<#assign index=0><#list value as item>\"${item.label!}\":\"${item.value!}\"<#assign index=index+1><#if index!=value?size>,</#if></#list>}")
+	@UiConfig(displayOrder = 3, cellEdit = "none", excludeIfNotEdited = true, template = "${entity.getItemsAsString()!}")
 	private List<LabelValue> items = new ArrayList<LabelValue>();
 
 	public Dictionary() {
@@ -73,15 +75,21 @@ public class Dictionary extends BaseEntity {
 	public String getItemsAsString() {
 		if (items == null || items.isEmpty())
 			return null;
-		return JsonUtils.toJson(items);
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		for (LabelValue lv : items)
+			map.put(lv.getValue(), lv.getLabel());
+		return JsonUtils.toJson(map);
 	}
 
 	public void setItemsAsString(String str) {
 		if (StringUtils.isNotBlank(str))
 			try {
-				items = JsonUtils.fromJson(str,
-						new TypeReference<List<LabelValue>>() {
+				Map<String, String> map = JsonUtils.fromJson(str,
+						new TypeReference<Map<String, String>>() {
 						});
+				items = new ArrayList<LabelValue>(map.size());
+				for (Map.Entry<String, String> entry : map.entrySet())
+					items.add(new LabelValue(entry.getKey(), entry.getValue()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
