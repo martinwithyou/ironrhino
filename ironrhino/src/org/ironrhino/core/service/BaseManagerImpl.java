@@ -274,7 +274,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 	}
 
 	@Transactional(readOnly = true)
-	public T findByNaturalId(Object... objects) {
+	public T findByNaturalId(Serializable... objects) {
 		if (objects.length == 1) {
 			Criteria c = sessionFactory.getCurrentSession().createCriteria(
 					getEntityClass());

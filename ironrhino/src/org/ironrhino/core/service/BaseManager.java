@@ -42,7 +42,7 @@ public interface BaseManager<T extends Persistable> {
 
 	public long countAll();
 
-	public T findByNaturalId(Object... objects);
+	public T findByNaturalId(Serializable... objects);
 
 	public T findByNaturalId(boolean caseInsensitive, Object... objects);
 

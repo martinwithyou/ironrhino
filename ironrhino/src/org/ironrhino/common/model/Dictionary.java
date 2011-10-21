@@ -34,7 +34,6 @@ public class Dictionary extends BaseEntity {
 	@UiConfig(displayOrder = 1)
 	private String name;
 
-	@NaturalId(caseInsensitive = true, mutable = true)
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 2)
 	private String description;
