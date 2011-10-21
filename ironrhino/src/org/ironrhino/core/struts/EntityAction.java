@@ -130,6 +130,43 @@ public class EntityAction extends BaseAction {
 		return baseManager;
 	}
 
+	private void tryFindEntity() {
+		BaseManager entityManager = getEntityManager(getEntityClass());
+		try {
+			BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
+					.newInstance());
+			Set<String> naturalIds = getNaturalIds().keySet();
+			if (getUid() != null) {
+				bw.setPropertyValue("id", getUid());
+				Serializable id = (Serializable) bw.getPropertyValue("id");
+				entity = entityManager.get(id);
+				if (entity == null && naturalIds.size() == 1)
+					entity = entityManager.findByNaturalId(id);
+			}
+			if (entity == null && naturalIds.size() > 0) {
+				Serializable[] paramters = new Serializable[naturalIds.size() * 2];
+				int i = 0;
+				for (String naturalId : naturalIds) {
+					paramters[i] = naturalId;
+					i++;
+					bw.setPropertyValue(naturalId, ServletActionContext
+							.getRequest().getParameter(naturalId));
+					Serializable value = (Serializable) bw
+							.getPropertyValue(naturalId);
+					if (value != null)
+						paramters[i] = value;
+					else
+						throw new IllegalArgumentException();
+					i++;
+				}
+				entity = entityManager.findByNaturalId(paramters);
+			}
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
 	@Override
 	public String list() {
 		AutoConfig ac = getAutoConfig();
@@ -186,40 +223,7 @@ public class EntityAction extends BaseAction {
 	public String input() {
 		if (readonly())
 			return ACCESSDENIED;
-		BaseManager entityManager = getEntityManager(getEntityClass());
-		try {
-			BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
-					.newInstance());
-			Set<String> naturalIds = getNaturalIds().keySet();
-			if (getUid() != null) {
-				bw.setPropertyValue("id", getUid());
-				Serializable id = (Serializable) bw.getPropertyValue("id");
-				entity = entityManager.get(id);
-				if (entity == null && naturalIds.size() == 1)
-					entity = entityManager.findByNaturalId(id);
-			}
-			if (entity == null && naturalIds.size() > 0) {
-				Serializable[] paramters = new Serializable[naturalIds.size() * 2];
-				int i = 0;
-				for (String naturalId : naturalIds) {
-					paramters[i] = naturalId;
-					i++;
-					bw.setPropertyValue(naturalId, ServletActionContext
-							.getRequest().getParameter(naturalId));
-					Serializable value = (Serializable) bw
-							.getPropertyValue(naturalId);
-					if (value != null)
-						paramters[i] = value;
-					else
-						throw new IllegalArgumentException();
-					i++;
-				}
-				entity = entityManager.findByNaturalId(paramters);
-			}
-
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
+		tryFindEntity();
 		if (entity == null)
 			try {
 				// for fetch default value by construct
@@ -393,18 +397,7 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String view() {
-		BaseManager entityManager = getEntityManager(getEntityClass());
-		if (getUid() != null) {
-			try {
-				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
-						.newInstance());
-				bw.setPropertyValue("id", getUid());
-				entity = entityManager.get((Serializable) bw
-						.getPropertyValue("id"));
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-		}
+		tryFindEntity();
 		setEntity(entity);
 		return VIEW;
 	}
