@@ -225,8 +225,6 @@ public class PermitAction extends BaseAction {
 	@Override
 	@InputConfig(methodName = "input")
 	public String save() {
-		if (StringUtils.isBlank(role) && StringUtils.isNotBlank(username))
-			role = UsernameRoleMapper.map(username);
 		if (StringUtils.isBlank(role))
 			return ACCESSDENIED;
 		String[] ids = getId();
