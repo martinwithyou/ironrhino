@@ -175,8 +175,10 @@ public class BaseAction extends ActionSupport {
 	public String preAction() throws Exception {
 		Authorize authorize = findAuthorize();
 		if (authorize != null) {
-			boolean authorized;
-			if (!authorize.authorizer().equals(DynamicAuthorizer.class)) {
+			boolean authorized = AuthzUtils.authorize(authorize.ifAllGranted(),
+					authorize.ifAnyGranted(), authorize.ifNotGranted());
+			if (!authorized
+					&& !authorize.authorizer().equals(DynamicAuthorizer.class)) {
 				ActionProxy ap = ActionContext.getContext()
 						.getActionInvocation().getProxy();
 				StringBuilder sb = new StringBuilder(ap.getNamespace());
@@ -188,9 +190,6 @@ public class BaseAction extends ActionSupport {
 				UserDetails user = AuthzUtils.getUserDetails();
 				authorized = dynamicAuthorizerManager.authorize(
 						authorize.authorizer(), user, resource);
-			} else {
-				authorized = AuthzUtils.authorize(authorize.ifAllGranted(),
-						authorize.ifAnyGranted(), authorize.ifNotGranted());
 			}
 			if (!authorized) {
 				addActionError(getText("access.denied"));
