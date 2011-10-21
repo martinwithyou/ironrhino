@@ -13,6 +13,13 @@
 <@button text='${action.getText(\'save\')}' action='save'/>
 <@button text='${action.getText(\'delete\')}' action='delete'/>
 <@button text='${action.getText(\'reload\')}' action='reload'/>
+<#if region?? && parentId??>
+<#if region.parent??>
+<@button text='${action.getText(\'upward\')}' type='link' href='${getUrl(\'/common/region?parentId=\'+region.parent.id)}'/>
+<#else>
+<@button text='${action.getText(\'upward\')}' type='link' href='${getUrl(\'/common/region\')}'/>
+</#if>
+</#if>
 <@button text='${action.getText(\'move\')}' onclick='$(\'#move\').toggle()'/>
 <@button text='${action.getText(\'merge\')}' onclick='$(\'#merge\').toggle()'/>
 ">
