@@ -4,7 +4,7 @@
 <title><#if dictionary.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('dictionary')}</title>
 </head>
 <body>
-<@s.form action="save" method="post" cssClass="ajax" cssStyle="text-align:center;">
+<@s.form action="${getUrl('/common/dictionary/save')}" method="post" cssClass="ajax" cssStyle="text-align:center;">
 	<@s.hidden name="dictionary.id" />
 	<div style="float:left;width:40%;"><span>${action.getText('name')}: </pan><@s.textfield theme="simple" label="%{getText('name')}" name="dictionary.name" /></div>
 	<div style="float:left;width:40%;"><span>${action.getText('description')}: </pan><@s.textfield theme="simple" label="%{getText('description')}" name="dictionary.description" /></div>
