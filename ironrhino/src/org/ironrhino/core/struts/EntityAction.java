@@ -187,16 +187,38 @@ public class EntityAction extends BaseAction {
 		if (readonly())
 			return ACCESSDENIED;
 		BaseManager entityManager = getEntityManager(getEntityClass());
-		if (getUid() != null) {
-			try {
-				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
-						.newInstance());
+		try {
+			BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
+					.newInstance());
+			Set<String> naturalIds = getNaturalIds().keySet();
+			if (getUid() != null) {
 				bw.setPropertyValue("id", getUid());
-				entity = entityManager.get((Serializable) bw
-						.getPropertyValue("id"));
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+				Serializable id = (Serializable) bw.getPropertyValue("id");
+				entity = entityManager.get(id);
+				if (entity == null && naturalIds.size() == 1)
+					entity = entityManager.findByNaturalId(id);
 			}
+			if (entity == null && naturalIds.size() > 0) {
+				Serializable[] paramters = new Serializable[naturalIds.size() * 2];
+				int i = 0;
+				for (String naturalId : naturalIds) {
+					paramters[i] = naturalId;
+					i++;
+					bw.setPropertyValue(naturalId, ServletActionContext
+							.getRequest().getParameter(naturalId));
+					Serializable value = (Serializable) bw
+							.getPropertyValue(naturalId);
+					if (value != null)
+						paramters[i] = value;
+					else
+						throw new IllegalArgumentException();
+					i++;
+				}
+				entity = entityManager.findByNaturalId(paramters);
+			}
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 		}
 		if (entity == null)
 			try {
@@ -353,7 +375,8 @@ public class EntityAction extends BaseAction {
 									.getPropertyValue(listKey));
 						else
 							obj = em.findByNaturalId(listKey,
-									temp.getPropertyValue(listKey));
+									(Serializable) temp
+											.getPropertyValue(listKey));
 						pd.getWriteMethod()
 								.invoke(entity, new Object[] { obj });
 					}
