@@ -208,7 +208,7 @@ Message = {
 			messages = a;
 		}
 		if (!$('#message').length)
-			$('<div id="message></div>"').prependTo($('#content'));
+			$('<div id="message"></div>').prependTo($('#content'));
 		if (typeof $.fn.jnotifyInizialize != 'undefined') {
 			$('#message').jnotifyInizialize({
 						oneAtTime : false
@@ -216,7 +216,7 @@ Message = {
 			for (var i = 0; i < messages.length; i++)
 				$('#message').jnotifyAddMessage({
 							text : messages[i],
-							permanent : true,
+							permanent : false,
 							type : 'error'
 						});
 			return;
@@ -437,6 +437,7 @@ Ajax = {
 			}
 			Message.showActionError(data.actionErrors, target);
 			Message.showActionMessage(data.actionMessages, target);
+			
 			if (data.fieldErrors) {
 				if (target) {
 					for (key in data.fieldErrors)
