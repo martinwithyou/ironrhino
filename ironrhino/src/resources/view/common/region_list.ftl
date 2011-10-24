@@ -4,7 +4,7 @@
 <title>${action.getText('region')}${action.getText('list')}</title>
 </head>
 <body>
-<#assign columns={"name":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"}}>
+<#assign columns={"name":{"cellEdit":"click"},"areacode":{"cellEdit":"click"},"postcode":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"}}>
 <#assign actionColumnButtons=r"
 <@button text='${action.getText(\'enter\')}' action='enter'/>
 ">

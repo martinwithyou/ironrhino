@@ -8,6 +8,8 @@
 	<@s.hidden name="parentId" />
 	<@s.hidden name="region.id" />
 	<@s.textfield label="%{getText('name')}" name="region.name" />
+	<@s.textfield label="%{getText('areacode')}" name="region.areacode" />
+	<@s.textfield label="%{getText('postcode')}" name="region.postcode" />
 	<@s.textfield label="%{getText('displayOrder')}" name="region.displayOrder" cssClass="integer"/>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>

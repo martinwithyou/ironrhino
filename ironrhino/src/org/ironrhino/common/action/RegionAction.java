@@ -158,6 +158,8 @@ public class RegionAction extends BaseAction {
 						}
 				}
 				region.setName(temp.getName());
+				region.setAreacode(temp.getAreacode());
+				region.setPostcode(temp.getPostcode());
 				region.setDisplayOrder(temp.getDisplayOrder());
 			}
 		}
