@@ -1,12 +1,12 @@
-package org.ironrhino;
+package initdata;
 
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
-import org.ironrhino.security.service.UserManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class InitData {
+public class InitUser {
 
 	static BaseManager baseManager;
 
@@ -17,17 +17,16 @@ public class InitData {
 		System.setProperty("ironrhino.context", System.getProperty("user.home")
 				+ "/" + System.getProperty("app.name"));
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-				new String[] {
-						"resources/spring/applicationContext-common.xml",
+				new String[] { "initdata/applicationContext-initdata.xml",
 						"resources/spring/applicationContext-ds.xml",
 						"resources/spring/applicationContext-hibernate.xml" });
-		UserManager userManager = (UserManager) ctx.getBean("userManager");
+		BaseManager baseManager = (BaseManager) ctx.getBean("baseManager");
 		User admin = new User();
 		admin.setUsername("admin");
-		admin.setLegiblePassword("password");
+		admin.setPassword(CodecUtils.digest("password"));
 		admin.setEnabled(true);
 		admin.getRoles().add(UserRole.ROLE_ADMINISTRATOR);
-		userManager.save(admin);
+		baseManager.save(admin);
 	}
 
 }
