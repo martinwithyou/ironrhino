@@ -15,10 +15,30 @@ public class Region extends BaseTreeableEntity<Region> {
 
 	private static final long serialVersionUID = 8878381261391688086L;
 
+	private String areacode;
+
+	private String postcode;
+
 	private Coordinate coordinate;
 
 	public Region() {
 
+	}
+
+	public String getAreacode() {
+		return areacode;
+	}
+
+	public void setAreacode(String areacode) {
+		this.areacode = areacode;
+	}
+
+	public String getPostcode() {
+		return postcode;
+	}
+
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
 	}
 
 	public Coordinate getCoordinate() {
