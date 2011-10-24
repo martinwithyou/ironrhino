@@ -103,7 +103,7 @@
 			includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,com/opensymphony/**,org/apache/**,org/codehaus/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**,resources/hibernate/common/**"
 			excludes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/zookeeper/**,org/ironrhino/core/remoting/**">
 			<manifest>
-				<attribute name="Ironrhino-Component-Id" value="ironrhino.core" />
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-core" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
 			</manifest>
@@ -111,61 +111,68 @@
 		<jar jarfile="${target.dir}/${core-ext-jar.name}" basedir="${classes.dir}"
 			includes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/zookeeper/**,org/ironrhino/core/remoting/**">
 			<manifest>
-				<attribute name="Ironrhino-Component-Id" value="ironrhino.core.ext" />
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-core-ext" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}"
 			includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl,resources/view/signup*.ftl"
 			excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**,org/ironrhino/security/oauth/**,resources/hibernate/security/oauth/**,org/ironrhino/security/acl/**,resources/hibernate/security/acl/**">
 			<manifest>
-				<attribute name="Ironrhino-Component-Id" value="ironrhino.security" />
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-security" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-config-jar.name}" basedir="${classes.dir}"
 			includes="resources/spring/applicationContext-security.xml">
 			<manifest>
-				<attribute name="Ironrhino-Component-Id" value="ironrhino.security.config" />
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-config" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-loginrecord-jar.name}"
 			basedir="${classes.dir}"
 			includes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**">
 			<manifest>
-				<attribute name="Ironrhino-Component-Id" value="ironrhino.security.loginrecord" />
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-loginrecord" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-acl-jar.name}" basedir="${classes.dir}"
 			includes="org/ironrhino/security/acl/**,resources/hibernate/acl/**,resources/view/permit*">
 			<manifest>
-				<attribute name="Ironrhino-Component-Id" value="ironrhino.security.acl" />
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-acl" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-oauth-client-jar.name}"
 			basedir="${classes.dir}"
 			includes="org/ironrhino/security/oauth/client/**,resources/view/oauth.ftl">
 			<manifest>
-				<attribute name="Ironrhino-Component-Id" value="ironrhino.security.oauth.client" />
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-oauth-client" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-oauth-server-jar.name}"
 			basedir="${classes.dir}"
 			includes="org/ironrhino/security/oauth/server/**,resources/hibernate/security/oauth/**,resources/view/oauth2*">
 			<manifest>
-				<attribute name="Ironrhino-Component-Id" value="ironrhino.security.oauth.server" />
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-oauth-server" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
 			</manifest>
 		</jar>
 	</target>

@@ -6,16 +6,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import org.apache.commons.io.IOUtils;
 
 public class FileUtils {
 
@@ -88,33 +84,19 @@ public class FileUtils {
 	}
 
 	public static Map<String, String> parseManifestFile(File jarfile) {
-		InputStream input = null;
 		try {
 			JarFile jar = new JarFile(jarfile);
-			JarEntry entry = jar.getJarEntry(JarFile.MANIFEST_NAME);
-			if (entry == null || entry.isDirectory())
-				return null;
-			input = jar.getInputStream(entry);
-			List<String> list = IOUtils.readLines(input);
-			Map<String, String> map = new LinkedHashMap<String, String>(
-					list.size());
-			for (String line : list) {
-				if (line.trim().equals(""))
-					continue;
-				String[] arr = line.split(":", 2);
-				map.put(arr[0].trim(), arr.length > 1 ? arr[1].trim() : null);
-			}
+			Manifest mf = jar.getManifest();
+			Map<String, String> map = new HashMap<String, String>(mf
+					.getMainAttributes().size());
+			for (Map.Entry<Object, Object> entry : mf.getMainAttributes()
+					.entrySet())
+				map.put(entry.getKey().toString(), entry.getValue().toString());
 			return map;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		} finally {
-			if (input != null)
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 		}
 	}
 
