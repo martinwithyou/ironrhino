@@ -69,6 +69,23 @@ public class Region extends BaseTreeableEntity<Region> {
 		return RegionUtils.shortenAddress(getFullname());
 	}
 
+	public Region getDescendantOrSelfByAreacode(String areacode) {
+		if (areacode == null)
+			throw new IllegalArgumentException("areacode must not be null");
+		if (areacode.equals(this.getAreacode()))
+			return this;
+		for (Region t : getChildren()) {
+			if (areacode.equals(t.getAreacode())) {
+				return t;
+			} else {
+				Region tt = t.getDescendantOrSelfByAreacode(areacode);
+				if (tt != null)
+					return tt;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public String toString() {
 		return getFullname();
