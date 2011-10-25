@@ -4,8 +4,8 @@ import java.util.Date;
 
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
+import org.ironrhino.common.record.RecordAware;
 import org.ironrhino.core.aop.PublishAware;
-import org.ironrhino.core.aop.RecordAware;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;

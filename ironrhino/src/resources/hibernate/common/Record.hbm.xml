@@ -2,12 +2,12 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
 	"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="org.ironrhino.common.model"
+<hibernate-mapping package="org.ironrhino.common.record"
 	default-lazy="true">
 	<class name="Record" table="common_record">
 		<id name="id" type="java.lang.String" 
 			length="32" unsaved-value="null">
-			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
+			<generator class="uuid" />
 		</id>
 		<property name="operatorId" index="operatorId" />
 		<property name="operatorClass" />

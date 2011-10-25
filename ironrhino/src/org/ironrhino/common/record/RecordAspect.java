@@ -1,4 +1,4 @@
-package org.ironrhino.core.aop;
+package org.ironrhino.common.record;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.ironrhino.common.model.Record;
+import org.ironrhino.core.aop.AopContext;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.util.AuthzUtils;
