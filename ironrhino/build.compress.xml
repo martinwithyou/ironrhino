@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="ironrhino-compress" default="compress" basedir=".">
+
+	<property name="version" value="1.0" />
+	<property name="webapp.dir" location="${basedir}/webapp" />
+	<property name="lib.dir" location="${basedir}/lib" />
+	<property name="classes.dir" location="${webapp.dir}/WEB-INF/classes" />
+	<property name="target.dir" location="${basedir}/target" />
+
+
+	<target name="compress">
+		<concat destfile="${webapp.dir}/assets/scripts/ironrhino.js"
+			encoding="utf-8" fixlastline="yes">
+			<filelist>
+				<file name="${webapp.dir}/assets/scripts/source/jquery-1.6.4.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.16.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.16.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.history-2.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.rc4-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.corner-2.0.9.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.loadmask-0.4.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.bgiframe-2.1.1.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/jquery.truncatable-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.tmpl-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.elastic-1.6.3.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.jnotify-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.tipsy-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview-1.4.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/jquery.treeview.async-0.1.my.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/jquery.treeTable-2.3.0.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/jquery.clickmenu-0.1.6.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/jquery.columnmanager-0.2.5.my.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/jquery.throttle-debounce-1.1.js" />
+				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxupload.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/ironrhino.multiautocomplete.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.checkbox.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.marquee.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/ironrhino.sortabletable.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/ironrhino.datagridtable.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/ironrhino.filterselect.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.portal.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.combox.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.richtable.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.treearea.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.treeselect.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/ironrhino.filtercolumn.js" />
+			</filelist>
+		</concat>
+		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-lite-njq.js"
+			encoding="utf-8" fixlastline="yes">
+			<filelist>
+				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.rc4-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.36.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.history-2.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.jnotify-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.tipsy-1.0.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/jquery.throttle-debounce-1.1.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxupload.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.marquee.js" />
+				<file
+					name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
+			</filelist>
+		</concat>
+		<concat destfile="${webapp.dir}/assets/styles/ironrhino.css"
+			encoding="utf-8" fixlastline="yes">
+			<filelist>
+				<file name="${webapp.dir}/assets/styles/source/jquery.ui.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.loadmask.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.tipsy.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.my.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.jnotify.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.clickmenu.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.reset.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.cms.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.button.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.portal.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.menu.css" />
+				<file
+					name="${webapp.dir}/assets/styles/source/ironrhino.sortabletable.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.richtable.css" />
+				<file
+					name="${webapp.dir}/assets/styles/source/ironrhino.filtercolumn.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.treearea.css" />
+			</filelist>
+		</concat>
+		<concat destfile="${webapp.dir}/assets/styles/ironrhino-lite.css"
+			encoding="utf-8" fixlastline="yes">
+			<filelist>
+				<file name="${webapp.dir}/assets/styles/source/jquery.jnotify.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.tipsy.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.reset.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.cms.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.button.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.menu.css" />
+			</filelist>
+		</concat>
+		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
+			<arg
+				line=" --js=./webapp/assets/scripts/ironrhino.js --js_output_file=./webapp/assets/scripts/ironrhino-min.js" />
+		</java>
+		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
+			<arg
+				line=" --js=./webapp/assets/scripts/ironrhino-lite-njq.js --js_output_file=./webapp/assets/scripts/ironrhino-lite-njq-min.js" />
+		</java>
+		<delete file="${basedir}/webapp/assets/scripts/ironrhino-lite-njq.js" />
+		<java jar="${lib.dir}/yuicompressor-2.4.6.jar" fork="true">
+			<arg
+				line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-min.css ./webapp/assets/styles/ironrhino.css" />
+		</java>
+		<java jar="${lib.dir}/yuicompressor-2.4.6.jar" fork="true">
+			<arg
+				line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-lite-min.css ./webapp/assets/styles/ironrhino-lite.css" />
+		</java>
+		<delete file="${basedir}/webapp/assets/styles/ironrhino-lite.css" />
+		<java jar="${lib.dir}/yuicompressor-2.4.6.jar" fork="true">
+			<arg
+				line=" --charset utf-8 --type css -o ./webapp/assets/styles/app-min.css ./webapp/assets/styles/app.css" />
+		</java>
+	</target>
+
+</project>
