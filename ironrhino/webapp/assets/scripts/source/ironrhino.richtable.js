@@ -92,8 +92,14 @@ ECSideUtil = {
 Richtable = {
 	getBaseUrl : function(form) {
 		form = form || $('form.richtable');
+		var action = form[0].action;
 		var entity = form.attr('entity');
-		var url = entity ? entity : form[0].action;
+		var url;
+		if (action.indexOf('/') == 0 || action.indexOf('://') > 0)
+			url = entity ? action.substring(0, action.lastIndexOf('/') + 1)
+					+ entity : action;
+		else
+			url = entity ? entity : form[0].action;
 		var p = url.indexOf('?');
 		if (p > 0)
 			url = url.substring(0, p);
@@ -449,7 +455,9 @@ Richtable = {
 							type : 'POST',
 							data : params,
 							dataType : 'json',
-							header : {'X-Edit' : 'cell'},
+							header : {
+								'X-Edit' : 'cell'
+							},
 							onsuccess : function() {
 								$(row).removeClass('edited');
 								$('td', row).removeClass('edited')
