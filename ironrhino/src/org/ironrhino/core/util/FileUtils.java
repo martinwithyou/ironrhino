@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
@@ -87,6 +88,9 @@ public class FileUtils {
 		try {
 			JarFile jar = new JarFile(jarfile);
 			Manifest mf = jar.getManifest();
+			Attributes attrs = mf.getMainAttributes();
+			if (attrs == null)
+				return null;
 			Map<String, String> map = new HashMap<String, String>(mf
 					.getMainAttributes().size());
 			for (Map.Entry<Object, Object> entry : mf.getMainAttributes()

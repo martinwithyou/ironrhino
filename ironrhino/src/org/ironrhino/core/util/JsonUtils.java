@@ -30,8 +30,8 @@ public class JsonUtils {
 		objectMapper = new ObjectMapper();
 		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 		SerializationConfig config = objectMapper.getSerializationConfig();
-		config.setSerializationInclusion(Inclusion.NON_NULL);
-		config.set(Feature.WRITE_ENUMS_USING_TO_STRING, true);
+		config.withSerializationInclusion(Inclusion.NON_NULL);
+		config.with(Feature.WRITE_ENUMS_USING_TO_STRING);
 		config = config
 				.withAnnotationIntrospector(new JacksonAnnotationIntrospector() {
 
@@ -86,8 +86,7 @@ public class JsonUtils {
 		objectMapper.setSerializationConfig(config);
 		objectMapper
 				.getDeserializationConfig()
-				.set(org.codehaus.jackson.map.DeserializationConfig.Feature.READ_ENUMS_USING_TO_STRING,
-						true);
+				.with(org.codehaus.jackson.map.DeserializationConfig.Feature.READ_ENUMS_USING_TO_STRING);
 	}
 
 	public static ObjectMapper getObjectMapper() {
