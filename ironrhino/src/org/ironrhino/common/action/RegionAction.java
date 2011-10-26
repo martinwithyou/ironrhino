@@ -18,6 +18,11 @@ import org.ironrhino.core.util.ClassScaner;
 import org.ironrhino.core.util.HtmlUtils;
 import org.springframework.beans.BeanUtils;
 
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
+
 public class RegionAction extends BaseAction {
 
 	private static final long serialVersionUID = -4643055307938016102L;
@@ -113,6 +118,9 @@ public class RegionAction extends BaseAction {
 	}
 
 	@Override
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "region.name", trim = true, key = "validation.required") }, stringLengthFields = {
+			@StringLengthFieldValidator(type = ValidatorType.FIELD, fieldName = "region.areacode", maxLength = "6", key = "validation.invalid"),
+			@StringLengthFieldValidator(type = ValidatorType.FIELD, fieldName = "region.postcode", maxLength = "6", key = "validation.invalid") })
 	public String save() {
 		Collection<Region> siblings = null;
 		if (region.isNew()) {
