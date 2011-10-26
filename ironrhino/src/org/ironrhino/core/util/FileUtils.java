@@ -88,6 +88,8 @@ public class FileUtils {
 		try {
 			JarFile jar = new JarFile(jarfile);
 			Manifest mf = jar.getManifest();
+			if (mf == null)
+				return null;
 			Attributes attrs = mf.getMainAttributes();
 			if (attrs == null)
 				return null;
