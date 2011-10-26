@@ -17,7 +17,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class InitRegion {
 
 	static BaseManager baseManager;
-	
+
 	static Map<String, String> regionAreacodeMap = regionAreacodeMap();
 
 	public static void main(String... strings) throws Exception {
@@ -51,9 +51,11 @@ public class InitRegion {
 	private static Map<String, String> regionAreacodeMap() {
 		List<String> lines = null;
 		try {
-			lines = IOUtils.readLines(Thread.currentThread()
-					.getContextClassLoader()
-					.getResourceAsStream("resources/data/region_code.txt"));
+			lines = IOUtils.readLines(
+					Thread.currentThread()
+							.getContextClassLoader()
+							.getResourceAsStream(
+									"resources/data/region_code.txt"), "utf-8");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
