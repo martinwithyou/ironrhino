@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -18,6 +19,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.util.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 @Singleton
 @Named
@@ -35,6 +37,9 @@ public class InstallationManager {
 
 	private List<Component> backupedComponents;
 
+	@Value("${installationManager.directory:}")
+	private String directory;
+
 	@Inject
 	private ServletContext servletContext;
 
@@ -50,12 +55,18 @@ public class InstallationManager {
 		return backupedComponents;
 	}
 
+	@PostConstruct
+	public void init() {
+		if (StringUtils.isBlank(directory))
+			directory = servletContext.getRealPath("/WEB-INF/lib");
+	}
+
 	private synchronized void scanComponents() {
 		List<Component> list = new ArrayList<Component>();
 		backupedComponents = new ArrayList<Component>();
-		File directory = new File(servletContext.getRealPath("/WEB-INF/lib"));
-		if (directory.isDirectory()) {
-			File[] files = directory.listFiles(new FilenameFilter() {
+		File dir = new File(this.directory);
+		if (dir.isDirectory()) {
+			File[] files = dir.listFiles(new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
 					return name.endsWith(".jar") || name.endsWith(".jar.bak");
@@ -171,8 +182,7 @@ public class InstallationManager {
 			oldcomp.setRealPath(oldcomp.getRealPath() + ".bak");
 			getBackupedComponents().add(oldcomp);
 		}
-		String newfilename = new StringBuilder(
-				servletContext.getRealPath("/WEB-INF/lib/"))
+		String newfilename = new StringBuilder(directory)
 				.append(File.separator).append(newcomp.getId()).append("-")
 				.append(newcomp.getVersion()).append(".jar").toString();
 		try {
@@ -202,8 +212,7 @@ public class InstallationManager {
 			throw new RuntimeException("component(" + id
 					+ ") doesn't installed yet");
 		try {
-			new File(comp.getRealPath()
-					+ ".uninstall").delete();
+			new File(comp.getRealPath() + ".uninstall").delete();
 			org.apache.commons.io.FileUtils.moveFile(
 					new File(comp.getRealPath()), new File(comp.getRealPath()
 							+ ".uninstall"));
@@ -249,8 +258,7 @@ public class InstallationManager {
 			getInstalledComponents().remove(instcomp);
 		}
 
-		String newfilename = new StringBuilder(
-				servletContext.getRealPath("/WEB-INF/lib/"))
+		String newfilename = new StringBuilder(directory)
 				.append(File.separator).append(backcomp.getId()).append("-")
 				.append(backcomp.getVersion()).append(".jar").toString();
 		try {
