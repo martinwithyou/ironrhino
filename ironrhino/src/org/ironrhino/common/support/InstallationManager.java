@@ -67,7 +67,7 @@ public class InstallationManager {
 						|| !manifest.containsKey(IRONRHINO_COMPONENT_ID))
 					continue;
 				Component component = new Component(manifest);
-				component.setRealPath(f.getName());
+				component.setRealPath(f.getAbsolutePath());
 				(f.getName().endsWith(".jar") ? list : backupedComponents)
 						.add(component);
 			}
