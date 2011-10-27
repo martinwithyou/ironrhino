@@ -7,21 +7,36 @@
 	<property name="target.dir" location="${basedir}/target" />
 	<property name="core-jar.name" value="ironrhino-core-${version}.jar" />
 	<property name="core-ext-jar.name" value="ironrhino-core-ext-${version}.jar" />
+	<property name="core-ext-jar.includes" value="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/zookeeper/**,org/ironrhino/core/remoting/**" />
 	<property name="common-setting-jar.name" value="ironrhino-common-setting-${version}.jar" />
+	<property name="common-setting-jar.includes" value="org/ironrhino/common/**/Setting*,resources/hibernate/common/Setting*" />
 	<property name="common-cms-jar.name" value="ironrhino-common-cms-${version}.jar" />
+	<property name="common-cms-jar.includes" value="org/ironrhino/common/**/*Page*,org/ironrhino/common/**/Cms*,resources/hibernate/common/Page*,resources/view/common/page*" />
 	<property name="common-dictionary-jar.name" value="ironrhino-common-dictionary-${version}.jar" />
+	<property name="common-dictionary-jar.includes" value="org/ironrhino/common/**/Dictionary*,resources/hibernate/common/Dictionary*,resources/view/common/dictionary*" />
 	<property name="common-treenode-jar.name" value="ironrhino-common-treenode-${version}.jar" />
+	<property name="common-treenode-jar.includes" value="org/ironrhino/common/**/TreeNode*,resources/hibernate/common/TreeNode*,resources/view/common/treeNode*" />
 	<property name="common-region-jar.name" value="ironrhino-common-region-${version}.jar" />
+	<property name="common-region-jar.includes" value="org/ironrhino/common/**/Region*,org/ironrhino/common/**/Location*,org/ironrhino/common/model/Coordinate*,resources/hibernate/common/Region*,resources/view/**/region*" />
 	<property name="common-stat-jar.name" value="ironrhino-common-stat-${version}.jar" />
+	<property name="common-stat-jar.includes" value="org/ironrhino/common/model/Stat.class,org/ironrhino/common/support/Stat*,org/ironrhino/common/**/Monitor*,resources/hibernate/common/Stat*,resources/view/common/monitor*" />
 	<property name="common-record-jar.name" value="ironrhino-common-record-${version}.jar" />
+	<property name="common-record-jar.includes" value="org/ironrhino/common/record/*,resources/hibernate/common/Record*" />
+	<property name="common-upload-jar.name" value="ironrhino-common-upload-${version}.jar" />
+	<property name="common-upload-jar.includes" value="org/ironrhino/common/**/Upload*,resources/view/common/upload*" />
+	<property name="common-install-jar.name" value="ironrhino-common-install-${version}.jar" />
+	<property name="common-install-jar.includes" value="org/ironrhino/common/**/Install*,resources/view/common/install*" />
 	<property name="security-jar.name" value="ironrhino-security-${version}.jar" />
 	<property name="security-config-jar.name" value="ironrhino-security-config-${version}.jar" />
+	<property name="security-config-jar.includes" value="resources/spring/applicationContext-security.xml" />
 	<property name="security-loginrecord-jar.name" value="ironrhino-security-loginrecord-${version}.jar" />
+	<property name="security-loginrecord-jar.includes" value="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
 	<property name="security-acl-jar.name" value="ironrhino-security-acl-${version}.jar" />
-	<property name="security-oauth-client-jar.name"
-		value="ironrhino-security-oauth-client-${version}.jar" />
-	<property name="security-oauth-server-jar.name"
-		value="ironrhino-security-oauth-server-${version}.jar" />
+	<property name="security-acl-jar.includes" value="org/ironrhino/security/acl/**,resources/hibernate/security/acl/**,resources/view/permit*" />
+	<property name="security-oauth-client-jar.name" value="ironrhino-security-oauth-client-${version}.jar" />
+	<property name="security-oauth-client-jar.includes" value="org/ironrhino/security/oauth/client/**,resources/view/oauth.ftl" />
+	<property name="security-oauth-server-jar.name" value="ironrhino-security-oauth-server-${version}.jar" />
+	<property name="security-oauth-server-jar.includes" value="org/ironrhino/security/oauth/server/**,resources/hibernate/security/oauth/**,resources/view/oauth2*" />
 
 	<target name="jar">
 		<mkdir dir="${target.dir}" />
@@ -34,6 +49,8 @@
 		<delete file="${target.dir}/${common-region-jar.name}" />
 		<delete file="${target.dir}/${common-stat-jar.name}" />
 		<delete file="${target.dir}/${common-record-jar.name}" />
+		<delete file="${target.dir}/${common-upload-jar.name}" />
+		<delete file="${target.dir}/${common-install-jar.name}" />
 		<delete file="${target.dir}/${security-jar.name}" />
 		<delete file="${target.dir}/${security-config-jar.name}" />
 		<delete file="${target.dir}/${security-loginrecord-jar.name}" />
@@ -42,7 +59,7 @@
 		<delete file="${target.dir}/${security-oauth-server-jar.name}" />
 		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}"
 			includes="struts-plugin.xml,xwork-conversion.properties,META-INF/**,org/apache/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**,resources/hibernate/common/**"
-			excludes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/zookeeper/**,org/ironrhino/core/remoting/**,org/ironrhino/common/**/Setting*,resources/hibernate/common/Setting*,org/ironrhino/common/**/*Page*,org/ironrhino/common/**/Cms*,resources/hibernate/common/Page*,resources/view/common/page*,org/ironrhino/common/**/Dictionary*,resources/hibernate/common/Dictionary*,resources/view/common/dictionary*,org/ironrhino/common/**/TreeNode*,resources/hibernate/common/TreeNode*,resources/view/common/treeNode*,org/ironrhino/common/**/Region*,org/ironrhino/common/**/Location*,org/ironrhino/common/model/Coordinate*,resources/hibernate/common/Region*,resources/view/**/region*,org/ironrhino/common/model/Stat.class,org/ironrhino/common/support/Stat*,org/ironrhino/common/**/Monitor*,resources/hibernate/common/Stat*,resources/view/common/monitor*,org/ironrhino/common/record/*,resources/hibernate/common/Record*">
+			excludes="${core-ext-jar.includes},${common-setting-jar.includes},${common-cms-jar.includes},${common-dictionary-jar.includes},${common-treenode-jar.includes},${common-region-jar.includes},${common-stat-jar.includes},${common-record-jar.includes},${common-upload-jar.includes},${common-install-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-core" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -50,7 +67,7 @@
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${core-ext-jar.name}" basedir="${classes.dir}"
-			includes="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/zookeeper/**,org/ironrhino/core/remoting/**">
+			includes="${core-ext-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-core-ext" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -59,7 +76,7 @@
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${common-setting-jar.name}" basedir="${classes.dir}"
-			includes="org/ironrhino/common/**/Setting*,resources/hibernate/common/Setting*">
+			includes="${common-setting-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-setting" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -68,17 +85,17 @@
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${common-cms-jar.name}" basedir="${classes.dir}"
-			includes="org/ironrhino/common/**/*Page*,org/ironrhino/common/**/Cms*,resources/hibernate/common/Page*,resources/view/common/page*">
+			includes="${common-cms-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-cms" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
-				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-common-setting" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-common-setting,ironrhino-common-upload" />
 			</manifest>
 		</jar>
 		
 		<jar jarfile="${target.dir}/${common-dictionary-jar.name}" basedir="${classes.dir}"
-			includes="org/ironrhino/common/**/Dictionary*,resources/hibernate/common/Dictionary*,resources/view/common/dictionary*">
+			includes="${common-dictionary-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-dictionary" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -87,7 +104,7 @@
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${common-treenode-jar.name}" basedir="${classes.dir}"
-			includes="org/ironrhino/common/**/TreeNode*,resources/hibernate/common/TreeNode*,resources/view/common/treeNode*">
+			includes="${common-treenode-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-treenode" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -96,7 +113,7 @@
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${common-region-jar.name}" basedir="${classes.dir}"
-			includes="org/ironrhino/common/**/Region*,org/ironrhino/common/**/Location*,org/ironrhino/common/model/Coordinate*,resources/hibernate/common/Region*,resources/view/**/region*">
+			includes="${common-region-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-region" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -105,7 +122,7 @@
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${common-stat-jar.name}" basedir="${classes.dir}"
-			includes="org/ironrhino/common/model/Stat.class,org/ironrhino/common/support/Stat*,org/ironrhino/common/**/Monitor*,resources/hibernate/common/Stat*,resources/view/common/monitor*">
+			includes="${common-stat-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-stat" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -114,7 +131,7 @@
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${common-record-jar.name}" basedir="${classes.dir}"
-			includes="org/ironrhino/common/record/*,resources/hibernate/common/Record*">
+			includes="${common-record-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-record" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -122,9 +139,27 @@
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
+		<jar jarfile="${target.dir}/${common-upload-jar.name}" basedir="${classes.dir}"
+			includes="${common-upload-jar.includes}">
+			<manifest>
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-upload" />
+				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
+				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
+			</manifest>
+		</jar>
+		<jar jarfile="${target.dir}/${common-install-jar.name}" basedir="${classes.dir}"
+			includes="${common-install-jar.includes}">
+			<manifest>
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-install" />
+				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
+				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
+			</manifest>
+		</jar>
 		<jar jarfile="${target.dir}/${security-jar.name}" basedir="${classes.dir}"
 			includes="org/ironrhino/security/**,resources/hibernate/security/**,resources/i18n/security/**,resources/view/login.ftl,resources/view/user_*.ftl,resources/view/signup*.ftl"
-			excludes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**,org/ironrhino/security/oauth/**,resources/hibernate/security/oauth/**,org/ironrhino/security/acl/**,resources/hibernate/security/acl/**">
+			excludes="${security-config-jar.includes},${security-loginrecord-jar.includes},${security-acl-jar.includes},${security-oauth-client-jar.includes},${security-oauth-server-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -133,7 +168,7 @@
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-config-jar.name}" basedir="${classes.dir}"
-			includes="resources/spring/applicationContext-security.xml">
+			includes="${security-config-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-config" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -143,7 +178,7 @@
 		</jar>
 		<jar jarfile="${target.dir}/${security-loginrecord-jar.name}"
 			basedir="${classes.dir}"
-			includes="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**">
+			includes="${security-loginrecord-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-loginrecord" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -152,7 +187,7 @@
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-acl-jar.name}" basedir="${classes.dir}"
-			includes="org/ironrhino/security/acl/**,resources/hibernate/acl/**,resources/view/permit*">
+			includes="${security-acl-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-acl" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -162,7 +197,7 @@
 		</jar>
 		<jar jarfile="${target.dir}/${security-oauth-client-jar.name}"
 			basedir="${classes.dir}"
-			includes="org/ironrhino/security/oauth/client/**,resources/view/oauth.ftl">
+			includes="${security-oauth-client-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-oauth-client" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -172,7 +207,7 @@
 		</jar>
 		<jar jarfile="${target.dir}/${security-oauth-server-jar.name}"
 			basedir="${classes.dir}"
-			includes="org/ironrhino/security/oauth/server/**,resources/hibernate/security/oauth/**,resources/view/oauth2*">
+			includes="${security-oauth-server-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-oauth-server" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
