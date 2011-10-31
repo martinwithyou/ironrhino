@@ -1709,6 +1709,22 @@ div.top label {
 .sortasc span.sort{
 	border-color:transparent transparent #222 transparent;
 }
+table .resizeTitle {
+	float: left;
+	width: 90%;
+	text-align: center;
+}
+table .resizeBar {
+	padding: 0px;
+	margin: 0px;
+	float: right;
+	cursor: col-resize;
+	width: 3px;
+	height: 24px;
+	font-size: 1px;
+	background-color: #cccccc;
+	display: inline;
+}
 table.richtable thead {
 	background: #d5d5d5;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d5d5d5), to(#d5d5d5), color-stop(.5,#b0b0b0));
@@ -1756,22 +1772,6 @@ table.richtable td,th {
 	height: 24px;
 	text-align: center;
 	overflow: visible;
-}
-.richtable .resizeTitle {
-	float: left;
-	width: 90%;
-	text-align: center;
-}
-.richtable .resizeBar {
-	padding: 0px;
-	margin: 0px;
-	float: right;
-	cursor: e-resize;
-	width: 3px;
-	height: 24px;
-	font-size: 1px;
-	background-color: #cccccc;
-	display: inline;
 }
 .richtable .odd a,.even a {
 	color: Black;

@@ -46,22 +46,6 @@ table.richtable td,th {
 	text-align: center;
 	overflow: visible;
 }
-.richtable .resizeTitle {
-	float: left;
-	width: 90%;
-	text-align: center;
-}
-.richtable .resizeBar {
-	padding: 0px;
-	margin: 0px;
-	float: right;
-	cursor: e-resize;
-	width: 3px;
-	height: 24px;
-	font-size: 1px;
-	background-color: #cccccc;
-	display: inline;
-}
 .richtable .odd a,.even a {
 	color: Black;
 }
