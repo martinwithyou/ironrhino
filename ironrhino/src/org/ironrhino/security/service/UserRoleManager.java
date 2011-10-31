@@ -1,29 +1,36 @@
 package org.ironrhino.security.service;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.ironrhino.common.support.DictionaryControl;
 import org.ironrhino.core.util.ClassScaner;
 import org.ironrhino.security.model.UserRole;
+import org.springframework.context.ApplicationContext;
 
 @Singleton
 @Named
 public class UserRoleManager {
 
-	public static final String DICTIONARY_NAME = "CustomRole";
-
 	private Set<String> staticRoles;
 
+	private Collection<UserRoleProvider> providers;
+
 	@Inject
-	private DictionaryControl dictionaryControl;
+	private ApplicationContext ctx;
+
+	@PostConstruct
+	public void init() {
+		providers = ctx.getBeansOfType(UserRoleProvider.class).values();
+	}
 
 	public Set<String> getStaticRoles() {
 		if (staticRoles == null) {
@@ -50,7 +57,13 @@ public class UserRoleManager {
 	}
 
 	public Map<String, String> getCustomRoles() {
-		return dictionaryControl.getItems(DICTIONARY_NAME);
+		Map<String, String> customRoles = new LinkedHashMap<String, String>();
+		for (UserRoleProvider p : providers) {
+			Map<String, String> map = p.getRoles();
+			if (map != null)
+				customRoles.putAll(map);
+		}
+		return customRoles;
 	}
 
 	public Map<String, String> getAllRoles() {

@@ -164,7 +164,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
-				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-common-dictionary" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-config-jar.name}" basedir="${classes.dir}"
@@ -192,7 +192,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-acl" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
-				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security,ironrhino-common-dictionary" />
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-oauth-client-jar.name}"
