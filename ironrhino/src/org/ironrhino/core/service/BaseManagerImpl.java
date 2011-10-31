@@ -275,6 +275,13 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	@Transactional(readOnly = true)
 	public T findByNaturalId(Serializable... objects) {
+		if (objects.length == 1 && objects[0].getClass().isArray()) {
+			Object[] objs = (Object[]) objects[0];
+			Serializable[] arr = new Serializable[objs.length];
+			for (int i = 0; i < objs.length; i++)
+				arr[i] = (Serializable) objs[i];
+			objects = arr;
+		}
 		if (objects.length == 1) {
 			Criteria c = sessionFactory.getCurrentSession().createCriteria(
 					getEntityClass());
