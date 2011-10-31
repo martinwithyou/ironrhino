@@ -35,9 +35,7 @@ public class AppInfo {
 
 	static {
 		_instanceId = CodecUtils.nextId();
-		String stage = System.getProperty(KEY_STAGE);
-		if (stage == null)
-			stage = System.getenv(KEY_STAGE);
+		String stage = getEnv(KEY_STAGE);
 		Stage s = null;
 		if (stage != null)
 			try {
@@ -60,9 +58,7 @@ public class AppInfo {
 		HOSTNAME = name;
 		HOSTADDRESS = address;
 
-		String rack = System.getProperty(KEY_RACK);
-		if (rack == null)
-			rack = System.getenv(KEY_RACK);
+		String rack = getEnv(KEY_RACK);
 		if (rack == null)
 			rack = DEFAULT_RACK;
 		StringBuilder sb = new StringBuilder();
@@ -121,6 +117,13 @@ public class AppInfo {
 
 	public static String getNodePath() {
 		return NODEPATH;
+	}
+
+	private static String getEnv(String key) {
+		String value = System.getProperty(key);
+		if (value == null)
+			value = System.getenv(key);
+		return value;
 	}
 
 	public static enum Stage {
