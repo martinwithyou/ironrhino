@@ -21,6 +21,7 @@ import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.fs.FileStorage;
+import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.model.ResultPage;
@@ -91,9 +92,8 @@ public class PageAction extends BaseAction {
 		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
 			DetachedCriteria dc = pageManager.detachedCriteria();
 			if (StringUtils.isNotBlank(keyword))
-				dc.add((Restrictions.or(
-						Restrictions.like("path", keyword, MatchMode.ANYWHERE),
-						Restrictions.like("title", keyword, MatchMode.ANYWHERE))));
+				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE, "path",
+						"title"));
 			dc.addOrder(Order.asc("displayOrder"));
 			dc.addOrder(Order.asc("path"));
 			if (resultPage == null)

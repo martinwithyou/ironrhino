@@ -15,6 +15,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.metadata.JsonConfig;
@@ -118,9 +119,8 @@ public class UserAction extends BaseAction {
 		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
 			DetachedCriteria dc = userManager.detachedCriteria();
 			if (StringUtils.isNotBlank(keyword))
-				dc.add((Restrictions.or(Restrictions.like("username", keyword,
-						MatchMode.ANYWHERE), Restrictions.like("name", keyword,
-						MatchMode.ANYWHERE))));
+				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
+						"username", "name"));
 			dc.addOrder(Order.asc("username"));
 			if (resultPage == null)
 				resultPage = new ResultPage<User>();

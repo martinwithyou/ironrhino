@@ -69,10 +69,10 @@ public class BaseAction extends ActionSupport {
 
 	protected boolean csrfRequired;
 
-	@Autowired
+	@Autowired(required = false)
 	protected transient CaptchaManager captchaManager;
 
-	@Autowired
+	@Autowired(required = false)
 	protected transient DynamicAuthorizerManager dynamicAuthorizerManager;
 
 	public void setCsrf(String csrf) {
@@ -177,7 +177,7 @@ public class BaseAction extends ActionSupport {
 		if (authorize != null) {
 			boolean authorized = AuthzUtils.authorize(authorize.ifAllGranted(),
 					authorize.ifAnyGranted(), authorize.ifNotGranted());
-			if (!authorized
+			if (!authorized && dynamicAuthorizerManager != null
 					&& !authorize.authorizer().equals(DynamicAuthorizer.class)) {
 				ActionProxy ap = ActionContext.getContext()
 						.getActionInvocation().getProxy();
@@ -197,7 +197,7 @@ public class BaseAction extends ActionSupport {
 			}
 		}
 		Captcha captcha = getAnnotation(Captcha.class);
-		if (captcha != null) {
+		if (captcha != null && captchaManager != null) {
 			boolean[] array = captchaManager.isCaptchaRequired(
 					ServletActionContext.getRequest(), captcha);
 			captchaRequired = array[0];
@@ -234,7 +234,8 @@ public class BaseAction extends ActionSupport {
 
 	@Override
 	public void validate() {
-		if (captchaRequired
+		if (captchaManager != null
+				&& captchaRequired
 				&& !firstReachCaptchaThreshold
 				&& !captchaManager.validate(ServletActionContext.getRequest(),
 						ServletActionContext.getRequest().getSession().getId()))
