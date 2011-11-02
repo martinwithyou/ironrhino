@@ -67,6 +67,8 @@ public class RegionTreeControl implements
 
 	private void update(Region region) {
 		Region r = regionTree.getDescendantOrSelfById(region.getId());
+		boolean needsort = r.compareTo(region) != 0
+				|| !r.getFullId().equals(region.getFullId());
 		if (!r.getFullId().equals(region.getFullId())) {
 			r.getParent().getChildren().remove(r);
 			String str = region.getFullId();
@@ -88,7 +90,8 @@ public class RegionTreeControl implements
 		}
 		BeanUtils.copyProperties(region, r,
 				new String[] { "parent", "children" });
-		Collections.sort(r.getParent().getChildren());
+		if (needsort)
+			Collections.sort(r.getParent().getChildren());
 	}
 
 	private void resetChildren(Region region) {

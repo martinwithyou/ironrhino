@@ -67,6 +67,8 @@ public class TreeNodeControl implements
 
 	private void update(TreeNode treeNode) {
 		TreeNode r = tree.getDescendantOrSelfById(treeNode.getId());
+		boolean needsort = r.compareTo(treeNode) != 0
+				|| !r.getFullId().equals(treeNode.getFullId());
 		if (!r.getFullId().equals(treeNode.getFullId())) {
 			r.getParent().getChildren().remove(r);
 			String str = treeNode.getFullId();
@@ -88,7 +90,8 @@ public class TreeNodeControl implements
 		}
 		BeanUtils.copyProperties(treeNode, r, new String[] { "parent",
 				"children" });
-		Collections.sort(r.getParent().getChildren());
+		if (needsort)
+			Collections.sort(r.getParent().getChildren());
 	}
 
 	private void resetChildren(TreeNode treeNode) {
