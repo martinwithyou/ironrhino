@@ -1,5 +1,6 @@
 package org.ironrhino.common.support;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class TreeNodeControl implements
 		else
 			parent = tree.getDescendantOrSelfById(treeNode.getParent().getId());
 		TreeNode r = new TreeNode();
+		r.setChildren(new ArrayList<TreeNode>());
 		BeanUtils.copyProperties(treeNode, r, new String[] { "parent",
 				"children" });
 		r.setParent(parent);

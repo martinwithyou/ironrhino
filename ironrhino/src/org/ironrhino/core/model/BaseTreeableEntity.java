@@ -103,7 +103,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		return children;
 	}
 
-	public void setChildren(List<T> children) {
+	public void setChildren(Collection<T> children) {
 		this.children = children;
 	}
 

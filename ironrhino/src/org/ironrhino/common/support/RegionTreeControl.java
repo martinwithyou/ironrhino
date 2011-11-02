@@ -1,5 +1,6 @@
 package org.ironrhino.common.support;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class RegionTreeControl implements
 			parent = regionTree.getDescendantOrSelfById(region.getParent()
 					.getId());
 		Region r = new Region();
+		r.setChildren(new ArrayList<Region>());
 		BeanUtils.copyProperties(region, r,
 				new String[] { "parent", "children" });
 		r.setParent(parent);
