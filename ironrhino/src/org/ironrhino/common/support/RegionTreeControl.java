@@ -1,7 +1,6 @@
 package org.ironrhino.common.support;
 
 import java.util.Collections;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -63,8 +62,7 @@ public class RegionTreeControl implements
 				new String[] { "parent", "children" });
 		r.setParent(parent);
 		parent.getChildren().add(r);
-		if (parent.getChildren() instanceof List)
-			Collections.sort((List<Region>) parent.getChildren());
+		Collections.sort(parent.getChildren());
 	}
 
 	private void update(Region region) {
@@ -90,8 +88,7 @@ public class RegionTreeControl implements
 		}
 		BeanUtils.copyProperties(region, r,
 				new String[] { "parent", "children" });
-		if (r.getParent().getChildren() instanceof List)
-			Collections.sort((List<Region>) r.getParent().getChildren());
+		Collections.sort(r.getParent().getChildren());
 	}
 
 	private void resetChildren(Region region) {
