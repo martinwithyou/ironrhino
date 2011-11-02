@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.Authorize;
@@ -114,8 +115,18 @@ public class UserAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		if (compassSearchService == null || StringUtils.isBlank(keyword)) {
+		if (StringUtils.isBlank(keyword)) {
 			DetachedCriteria dc = userManager.detachedCriteria();
+			dc.addOrder(Order.asc("username"));
+			if (resultPage == null)
+				resultPage = new ResultPage<User>();
+			resultPage.setDetachedCriteria(dc);
+			resultPage = userManager.findByResultPage(resultPage);
+		} else if (compassSearchService == null) {
+			DetachedCriteria dc = userManager.detachedCriteria();
+			dc.add((Restrictions.or(
+					Restrictions.like("username", keyword, MatchMode.ANYWHERE),
+					Restrictions.like("name", keyword, MatchMode.ANYWHERE))));
 			dc.addOrder(Order.asc("username"));
 			if (resultPage == null)
 				resultPage = new ResultPage<User>();
