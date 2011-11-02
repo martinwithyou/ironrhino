@@ -23,9 +23,12 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.compass.annotations.SearchableProperty;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.Authorize;
@@ -173,12 +176,37 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String list() {
+		Set<String> searchablePropertyNames = new HashSet<String>();
+		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
+			if (entry.getValue().isSearchable())
+				searchablePropertyNames.add(entry.getKey());
+		}
 		AutoConfig ac = getAutoConfig();
-		searchable = (ac != null) && ac.searchable();
+		searchable = (ac != null) && ac.searchable()
+				|| searchablePropertyNames.size() > 0;
 		if (!searchable || StringUtils.isBlank(keyword)
-				|| compassSearchService == null) {
+				|| (searchable && compassSearchService == null)) {
 			BaseManager entityManager = getEntityManager(getEntityClass());
 			DetachedCriteria dc = entityManager.detachedCriteria();
+			if (searchable && StringUtils.isNotBlank(keyword)
+					&& searchablePropertyNames.size() > 0) {
+				Iterator<String> it = searchablePropertyNames.iterator();
+				Criterion c = null;
+				int i = 0;
+				while (it.hasNext()) {
+					String name = it.next();
+					if (i == 0) {
+						c = Restrictions
+								.like(name, keyword, MatchMode.ANYWHERE);
+					} else {
+						c = Restrictions.or(c, Restrictions.like(name, keyword,
+								MatchMode.ANYWHERE));
+					}
+					i++;
+				}
+				if (c != null)
+					dc.add(c);
+			}
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setDetachedCriteria(dc);
@@ -515,6 +543,16 @@ public class EntityAction extends BaseAction {
 			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
 					.getPropertyDescriptors(clazz);
 			for (PropertyDescriptor pd : pds) {
+				SearchableProperty searchableProperty = pd.getReadMethod()
+						.getAnnotation(SearchableProperty.class);
+				if (searchableProperty == null)
+					try {
+						Field f = clazz.getDeclaredField(pd.getName());
+						if (f != null)
+							searchableProperty = f
+									.getAnnotation(SearchableProperty.class);
+					} catch (Exception e) {
+					}
 				UiConfig uiConfig = pd.getReadMethod().getAnnotation(
 						UiConfig.class);
 				if (uiConfig == null)
@@ -583,6 +621,10 @@ public class EntityAction extends BaseAction {
 						|| returnType == Boolean.class) {
 					uci.setType("checkbox");
 				}
+
+				if (String.class == returnType && searchableProperty != null)
+					uci.setSearchable(true);
+
 				if (getNaturalIds().containsKey(pd.getName()))
 					uci.setRequired(true);
 				map.put(pd.getName(), uci);
@@ -625,6 +667,7 @@ public class EntityAction extends BaseAction {
 		private String listKey = UiConfig.DEFAULT_LIST_KEY;
 		private String listValue = UiConfig.DEFAULT_LIST_VALUE;
 		private String cellEdit = "";
+		private boolean searchable;
 
 		public UiConfigImpl() {
 		}
@@ -647,6 +690,7 @@ public class EntityAction extends BaseAction {
 			this.excludeIfNotEdited = config.excludeIfNotEdited();
 			if (this.excludeIfNotEdited)
 				cssClass = "excludeIfNotEdited";
+			this.searchable = config.searchable();
 		}
 
 		public boolean isRequired() {
@@ -760,6 +804,14 @@ public class EntityAction extends BaseAction {
 
 		public void setCellEdit(String cellEdit) {
 			this.cellEdit = cellEdit;
+		}
+
+		public boolean isSearchable() {
+			return searchable;
+		}
+
+		public void setSearchable(boolean searchable) {
+			this.searchable = searchable;
 		}
 
 	}

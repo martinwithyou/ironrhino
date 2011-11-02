@@ -13,6 +13,7 @@ import org.apache.struts2.ServletActionContext;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.Constants;
@@ -89,6 +90,10 @@ public class PageAction extends BaseAction {
 	public String list() {
 		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
 			DetachedCriteria dc = pageManager.detachedCriteria();
+			if (StringUtils.isNotBlank(keyword))
+				dc.add((Restrictions.or(
+						Restrictions.like("path", keyword, MatchMode.ANYWHERE),
+						Restrictions.like("title", keyword, MatchMode.ANYWHERE))));
 			dc.addOrder(Order.asc("displayOrder"));
 			dc.addOrder(Order.asc("path"));
 			if (resultPage == null)

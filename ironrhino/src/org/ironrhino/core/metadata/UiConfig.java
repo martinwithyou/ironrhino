@@ -30,6 +30,8 @@ public @interface UiConfig {
 	boolean readonly() default false;
 
 	boolean hide() default false;
+	
+	boolean searchable() default false;
 
 	String template() default "";
 

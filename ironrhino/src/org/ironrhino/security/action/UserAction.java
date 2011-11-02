@@ -115,18 +115,12 @@ public class UserAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		if (StringUtils.isBlank(keyword)) {
+		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
 			DetachedCriteria dc = userManager.detachedCriteria();
-			dc.addOrder(Order.asc("username"));
-			if (resultPage == null)
-				resultPage = new ResultPage<User>();
-			resultPage.setDetachedCriteria(dc);
-			resultPage = userManager.findByResultPage(resultPage);
-		} else if (compassSearchService == null) {
-			DetachedCriteria dc = userManager.detachedCriteria();
-			dc.add((Restrictions.or(
-					Restrictions.like("username", keyword, MatchMode.ANYWHERE),
-					Restrictions.like("name", keyword, MatchMode.ANYWHERE))));
+			if (StringUtils.isNotBlank(keyword))
+				dc.add((Restrictions.or(Restrictions.like("username", keyword,
+						MatchMode.ANYWHERE), Restrictions.like("name", keyword,
+						MatchMode.ANYWHERE))));
 			dc.addOrder(Order.asc("username"));
 			if (resultPage == null)
 				resultPage = new ResultPage<User>();
