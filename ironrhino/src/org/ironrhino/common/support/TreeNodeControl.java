@@ -53,7 +53,7 @@ public class TreeNodeControl implements
 			addLevel(t, delta);
 	}
 
-	private void create(TreeNode treeNode) {
+	private synchronized void create(TreeNode treeNode) {
 		TreeNode parent;
 		if (treeNode.getParent() == null)
 			parent = tree;
@@ -69,7 +69,7 @@ public class TreeNodeControl implements
 			Collections.sort((List) parent.getChildren());
 	}
 
-	private void update(TreeNode treeNode) {
+	private synchronized void update(TreeNode treeNode) {
 		TreeNode r = tree.getDescendantOrSelfById(treeNode.getId());
 		boolean needsort = r.compareTo(treeNode) != 0
 				|| !r.getFullId().equals(treeNode.getFullId());
@@ -109,7 +109,7 @@ public class TreeNodeControl implements
 			}
 	}
 
-	private void delete(TreeNode treeNode) {
+	private synchronized void delete(TreeNode treeNode) {
 		TreeNode r = tree.getDescendantOrSelfById(treeNode.getId());
 		r.getParent().getChildren().remove(r);
 	}
