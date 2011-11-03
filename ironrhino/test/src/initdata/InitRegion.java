@@ -35,6 +35,7 @@ public class InitRegion {
 		for (Region region : regions) {
 			save(region);
 		}
+		ctx.close();
 	}
 
 	private static void save(Region region) {

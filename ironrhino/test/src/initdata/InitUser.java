@@ -27,6 +27,7 @@ public class InitUser {
 		admin.setEnabled(true);
 		admin.getRoles().add(UserRole.ROLE_ADMINISTRATOR);
 		baseManager.save(admin);
+		ctx.close();
 	}
 
 }
