@@ -21,10 +21,10 @@
 			<property name="longitude" />
 		</component>
 		<many-to-one name="parent" class="Region" column="parentId" />
-		<set name="children" inverse="true" cascade="delete" lazy="true"
-			order-by="displayOrder,name">
+		<list name="children" inverse="true" cascade="delete" lazy="true">
 			<key column="parentId" />
+			<list-index column="displayOrder" />
 			<one-to-many class="Region" />
-		</set>
+		</list>
 	</class>
 </hibernate-mapping>

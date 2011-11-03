@@ -1,6 +1,6 @@
 package org.ironrhino.core.model;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface Treeable<T extends Treeable> {
 
@@ -8,5 +8,5 @@ public interface Treeable<T extends Treeable> {
 
 	public T getParent();
 
-	public Collection<T> getChildren();
+	public List<T> getChildren();
 }

@@ -17,10 +17,10 @@
 		<property name="description" />
 		<property name="attributesAsString" length="1024" />
 		<many-to-one name="parent" class="TreeNode" column="parentId" />
-		<set name="children" inverse="true" cascade="delete" lazy="true"
-			order-by="displayOrder,name">
+		<list name="children" inverse="true" cascade="delete" lazy="true">
 			<key column="parentId" />
+			<list-index column="displayOrder" />
 			<one-to-many class="TreeNode" />
-		</set>
+		</list>
 	</class>
 </hibernate-mapping>
