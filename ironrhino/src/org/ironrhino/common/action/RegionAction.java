@@ -269,6 +269,10 @@ public class RegionAction extends BaseAction {
 				addActionError(getText("validation.required"));
 				return SUCCESS;
 			}
+			if (target != null && source.getId().equals(target.getId())) {
+				addActionError(getText("validation.invalid"));
+				return SUCCESS;
+			}
 			if (!(source.getParent() == null && target == null || source
 					.getParent() != null
 					&& target != null
@@ -292,9 +296,13 @@ public class RegionAction extends BaseAction {
 			} catch (Exception e) {
 
 			}
-			if (source == null || target == null || !source.isLeaf()
-					|| !target.isLeaf()) {
+			if (source == null || target == null) {
 				addActionError(getText("validation.required"));
+				return SUCCESS;
+			}
+			if (!source.isLeaf() || !target.isLeaf()
+					|| source.getId().equals(target.getId())) {
+				addActionError(getText("validation.invalid"));
 				return SUCCESS;
 			}
 			Set<Class> set = ClassScaner.scanAssignable(
