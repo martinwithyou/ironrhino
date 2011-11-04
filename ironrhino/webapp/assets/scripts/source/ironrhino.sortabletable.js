@@ -1,13 +1,9 @@
 (function($) {
 
 	$.fn.sortableTable = function() {
-		this.each(function() {
-					if ('TABLE' == $(this).prop('tagName'))
-						SortableTable.init(this, {
-									tableScroll : SortableTable.options.tableScroll
-								});
+		return this.each(function() {
+					SortableTable.init(this);
 				});
-		return this;
 	};
 
 	var SortableTable = {
@@ -20,11 +16,11 @@
 				if (!$(this).hasClass(SortableTable.options.nosortClass)) {
 					if (!$('div.sort', this).length) {
 						$(this)
+								.addClass(SortableTable.options.columnClass)
 								.prepend('<div class="sort"><span class="sort"></span></div>');
 						$('div.sort', this).click(function() {
 									SortableTable._sort.apply(this.parentNode)
 								});
-						$(this).addClass(SortableTable.options.columnClass);
 					}
 				}
 			});
@@ -38,7 +34,7 @@
 		sort : function(table, index, order) {
 			var cell;
 			if (typeof index == 'number') {
-				if (!table || (table.tagName && table.tagName != "TABLE"))
+				if (!table || ($(table).prop('tagName') != "TABLE"))
 					return;
 				index = Math.min(table.rows[0].cells.length, index);
 				index = Math.max(1, index);
@@ -61,19 +57,19 @@
 
 			var hcells = SortableTable.getHeaderCells(null, cell);
 			$(hcells).each(function(i) {
-						if (i == index) {
-							if (order == 1) {
-								$(this).removeClass(op.descendingClass);
-								$(this).addClass(op.ascendingClass);
-							} else {
-								$(this).removeClass(op.ascendingClass);
-								$(this).addClass(op.descendingClass);
-							}
-						} else {
-							$(this).removeClass(op.ascendingClass);
-							$(this).removeClass(op.descendingClass);
-						}
-					});
+				if (i == index)
+					if (order == 1)
+						$(this).removeClass(op.descendingClass)
+								.addClass(op.ascendingClass);
+					else
+						$(this).removeClass(op.ascendingClass)
+								.addClass(op.descendingClass);
+
+				else
+					$(this).removeClass(op.ascendingClass)
+							.removeClass(op.descendingClass);
+
+			});
 
 			var rows = $.makeArray(SortableTable.getBodyRows(table));
 			var datatype = SortableTable.getDataType(cell, index, table);
@@ -191,8 +187,7 @@
 					});
 		},
 		getBodyRows : function(table) {
-			if ($(table).hasClass(SortableTable.options.tableScrollClass)
-					|| table.tHead && table.tHead.rows.length > 0) {
+			if (table.tHead && table.tHead.rows.length > 0) {
 				return table.tBodies[0].rows;
 			} else {
 				table.rows.shift();
@@ -261,8 +256,6 @@
 			}
 		},
 		options : {
-			autoLoad : true,
-			tableSelector : ['table.sortable'],
 			columnClass : 'sortcol',
 			descendingClass : 'sortdesc',
 			ascendingClass : 'sortasc',
