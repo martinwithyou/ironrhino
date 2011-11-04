@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.compass.annotations.SearchableId;
 import org.compass.annotations.SearchableProperty;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
@@ -190,8 +191,7 @@ public class EntityAction extends BaseAction {
 			BaseManager entityManager = getEntityManager(getEntityClass());
 			DetachedCriteria dc = entityManager.detachedCriteria();
 			Criterion filtering = CriterionUtils.filter(constructEntity(),
-					ServletActionContext.getRequest().getParameterMap()
-							.keySet().toArray(new String[0]));
+					searchablePropertyNames.toArray(new String[0]));
 			if (filtering != null)
 				dc.add(filtering);
 			if (searchable && StringUtils.isNotBlank(keyword)
@@ -544,6 +544,15 @@ public class EntityAction extends BaseAction {
 									.getAnnotation(SearchableProperty.class);
 					} catch (Exception e) {
 					}
+				SearchableId searchableId = pd.getReadMethod().getAnnotation(
+						SearchableId.class);
+				if (searchableId == null)
+					try {
+						Field f = clazz.getDeclaredField(pd.getName());
+						if (f != null)
+							searchableId = f.getAnnotation(SearchableId.class);
+					} catch (Exception e) {
+					}
 				UiConfig uiConfig = pd.getReadMethod().getAnnotation(
 						UiConfig.class);
 				if (uiConfig == null)
@@ -613,7 +622,8 @@ public class EntityAction extends BaseAction {
 					uci.setType("checkbox");
 				}
 
-				if (String.class == returnType && searchableProperty != null)
+				if (String.class == returnType
+						&& (searchableProperty != null || searchableId != null))
 					uci.setSearchable(true);
 
 				if (getNaturalIds().containsKey(pd.getName()))
