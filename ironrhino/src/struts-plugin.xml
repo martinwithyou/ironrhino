@@ -5,15 +5,16 @@
 <struts>
 	<bean type="com.opensymphony.xwork2.config.PackageProvider" name="ironrhino-autoconfig"
 		class="org.ironrhino.core.struts.AutoConfigPackageProvider" />
-	<bean type="org.apache.struts2.views.freemarker.FreemarkerManager" class="org.ironrhino.core.struts.MyFreemarkerManager" />
+	<bean type="org.apache.struts2.views.freemarker.FreemarkerManager"
+		class="org.ironrhino.core.struts.MyFreemarkerManager" />
 	<constant name="struts.devMode" value="false" />
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
-	<constant name="struts.mapper.class"
-		value="org.ironrhino.core.struts.DefaultActionMapper" />
+	<constant name="struts.mapper.class" value="org.ironrhino.core.struts.DefaultActionMapper" />
 	<constant name="struts.url.includeParams" value="none" />
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	<constant name="struts.multipart.maxSize" value="5242880" />
-	<constant name="struts.freemarker.templatesCache.updateDelay" value="1800" />
+	<constant name="struts.freemarker.templatesCache.updateDelay"
+		value="1800" />
 	<constant name="struts.freemarker.mru.max.strong.size" value="250" />
 	<package name="ironrhino-default" extends="struts-default">
 		<result-types>
@@ -23,12 +24,13 @@
 				class="org.ironrhino.core.struts.AccessDeniedResult" />
 			<result-type name="directPage"
 				class="org.ironrhino.core.struts.DirectPageResult" />
-			<result-type name="json"
-				class="org.ironrhino.core.struts.JsonResult" />
+			<result-type name="json" class="org.ironrhino.core.struts.JsonResult" />
 			<result-type name="referer"
 				class="org.ironrhino.core.struts.RefererResult" />
-			<result-type name="jasper" 
-				class="org.apache.struts2.views.jasperreports.JasperReportsResult"/>
+			<result-type name="jasper"
+				class="org.apache.struts2.views.jasperreports.JasperReportsResult" />
+			<result-type name="dynamicreports"
+				class="org.ironrhino.core.struts.DynamicReportsResult" />
 		</result-types>
 		<interceptors>
 			<interceptor name="exception"
@@ -55,9 +57,10 @@
 			<result name="json" type="json" />
 			<result name="referer" type="referer" />
 			<result name="redirect" type="redirect">${targetUrl}</result>
-			<result name="accessDenied" type="accessDenied"/>
-			<result name="directPage" type="directPage"/>
-			<result name="error" type="autoconfig"/>
+			<result name="accessDenied" type="accessDenied" />
+			<result name="directPage" type="directPage" />
+			<result name="dynamicreports" type="dynamicreports" />
+			<result name="error" type="autoconfig" />
 		</global-results>
 	</package>
 </struts>

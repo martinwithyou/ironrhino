@@ -86,5 +86,7 @@
 	<classpathentry kind="lib" path="lib/org.springframework.test-3.0.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-core-3.6.8.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-net-3.0.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/dynamicreports-core-2.3.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-beanutils-1.8.3.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
