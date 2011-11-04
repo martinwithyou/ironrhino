@@ -1,10 +1,14 @@
 package org.ironrhino.core.hibernate;
 
+import java.util.Date;
+
+import org.apache.struts2.ServletActionContext;
 import org.compass.core.util.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.model.Persistable;
+import org.ironrhino.core.util.DateUtils;
 import org.springframework.beans.BeanWrapperImpl;
 
 public class CriterionUtils {
@@ -36,16 +40,26 @@ public class CriterionUtils {
 				continue;
 			Object value = null;
 			try {
+				if (ServletActionContext.getRequest().getParameter(
+						prefix + name) == null)
+					continue;
 				value = bw.getPropertyValue(name);
 			} catch (Exception e) {
 				continue;
 			}
 			if (value == null)
 				continue;
-			if (c == null)
-				c = Restrictions.eq(name, value);
+			Criterion temp = null;
+			if (value instanceof Date)
+				temp = Restrictions.between(name,
+						DateUtils.beginOfDay((Date) value),
+						DateUtils.endOfDay((Date) value));
 			else
-				c = Restrictions.and(c, Restrictions.eq(name, value));
+				temp = Restrictions.eq(name, value);
+			if (c == null)
+				c = temp;
+			else
+				c = Restrictions.and(c, temp);
 		}
 		return c;
 	}
