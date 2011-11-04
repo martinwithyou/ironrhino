@@ -372,7 +372,7 @@ public class EntityAction extends BaseAction {
 						continue;
 					if (Persistable.class.isAssignableFrom(bwp
 							.getPropertyDescriptor(propertyName)
-							.getReadMethod().getReturnType()))
+							.getPropertyType()))
 						continue;
 					editedPropertyNames.add(propertyName);
 				}
@@ -390,10 +390,15 @@ public class EntityAction extends BaseAction {
 			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
 					.getPropertyDescriptors(entity.getClass());
 			for (PropertyDescriptor pd : pds) {
-				Class returnType = pd.getReadMethod().getReturnType();
+				Class returnType = pd.getPropertyType();
 				if (Persistable.class.isAssignableFrom(returnType)) {
 					String parameterValue = ServletActionContext.getRequest()
 							.getParameter(getEntityName() + "." + pd.getName());
+					if (parameterValue == null)
+						parameterValue = ServletActionContext.getRequest()
+								.getParameter(
+										getEntityName() + "." + pd.getName()
+												+ ".id");
 					if (parameterValue == null) {
 						continue;
 					} else if (StringUtils.isBlank(parameterValue)) {
@@ -569,7 +574,7 @@ public class EntityAction extends BaseAction {
 						|| pd.getReadMethod() == null
 						|| hides.contains(pd.getName()))
 					continue;
-				Class returnType = pd.getReadMethod().getReturnType();
+				Class returnType = pd.getPropertyType();
 				if (returnType.isEnum()) {
 					UiConfigImpl uci = new UiConfigImpl(uiConfig);
 					uci.setType("select");
