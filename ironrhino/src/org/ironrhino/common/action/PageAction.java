@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -91,6 +92,10 @@ public class PageAction extends BaseAction {
 	public String list() {
 		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
 			DetachedCriteria dc = pageManager.detachedCriteria();
+			Criterion filtering = CriterionUtils.filter(page, "id", "path",
+					"title");
+			if (filtering != null)
+				dc.add(filtering);
 			if (StringUtils.isNotBlank(keyword))
 				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE, "path",
 						"title"));

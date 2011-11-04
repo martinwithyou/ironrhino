@@ -26,6 +26,7 @@ import org.apache.struts2.ServletActionContext;
 import org.compass.annotations.SearchableProperty;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -188,6 +189,11 @@ public class EntityAction extends BaseAction {
 				|| (searchable && compassSearchService == null)) {
 			BaseManager entityManager = getEntityManager(getEntityClass());
 			DetachedCriteria dc = entityManager.detachedCriteria();
+			Criterion filtering = CriterionUtils.filter(constructEntity(),
+					ServletActionContext.getRequest().getParameterMap()
+							.keySet().toArray(new String[0]));
+			if (filtering != null)
+				dc.add(filtering);
 			if (searchable && StringUtils.isNotBlank(keyword)
 					&& searchablePropertyNames.size() > 0)
 				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,

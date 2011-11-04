@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.compass.core.CompassHit;
 import org.compass.core.support.search.CompassSearchResults;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -118,6 +119,10 @@ public class UserAction extends BaseAction {
 	public String execute() {
 		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
 			DetachedCriteria dc = userManager.detachedCriteria();
+			Criterion filtering = CriterionUtils.filter(user, "id", "username",
+					"name", "enabled");
+			if (filtering != null)
+				dc.add(filtering);
 			if (StringUtils.isNotBlank(keyword))
 				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
 						"username", "name"));
