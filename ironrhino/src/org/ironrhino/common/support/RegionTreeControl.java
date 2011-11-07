@@ -52,11 +52,15 @@ public class RegionTreeControl implements
 
 	private synchronized void create(Region region) {
 		Region parent;
-		if (region.getParent() == null)
+		String fullId = region.getFullId();
+		if (region.getId().toString().equals(fullId)) {
 			parent = regionTree;
-		else
-			parent = regionTree.getDescendantOrSelfById(region.getParent()
-					.getId());
+		} else {
+			String parentId = fullId.substring(0, fullId.lastIndexOf('.'));
+			if (parentId.indexOf('.') > -1)
+				parentId = parentId.substring(parentId.lastIndexOf('.') + 1);
+			parent = regionTree.getDescendantOrSelfById(Long.valueOf(parentId));
+		}
 		Region r = new Region();
 		BeanUtils.copyProperties(region, r,
 				new String[] { "parent", "children" });

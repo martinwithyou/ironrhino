@@ -53,10 +53,15 @@ public class TreeNodeControl implements
 
 	private synchronized void create(TreeNode treeNode) {
 		TreeNode parent;
-		if (treeNode.getParent() == null)
+		String fullId = treeNode.getFullId();
+		if (treeNode.getId().toString().equals(fullId)) {
 			parent = tree;
-		else
-			parent = tree.getDescendantOrSelfById(treeNode.getParent().getId());
+		} else {
+			String parentId = fullId.substring(0, fullId.lastIndexOf('.'));
+			if (parentId.indexOf('.') > -1)
+				parentId = parentId.substring(parentId.lastIndexOf('.') + 1);
+			parent = tree.getDescendantOrSelfById(Long.valueOf(parentId));
+		}
 		TreeNode r = new TreeNode();
 		BeanUtils.copyProperties(treeNode, r, new String[] { "parent",
 				"children" });
