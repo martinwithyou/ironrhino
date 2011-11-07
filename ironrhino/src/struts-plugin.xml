@@ -27,7 +27,7 @@
 			<result-type name="json" class="org.ironrhino.core.struts.JsonResult" />
 			<result-type name="referer"
 				class="org.ironrhino.core.struts.RefererResult" />
-			<result-type name="jasper"
+			<result-type name="jasperreports"
 				class="org.apache.struts2.views.jasperreports.JasperReportsResult" />
 			<result-type name="dynamicreports"
 				class="org.ironrhino.core.struts.DynamicReportsResult" />
