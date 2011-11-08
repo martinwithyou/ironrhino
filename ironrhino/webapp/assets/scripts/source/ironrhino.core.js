@@ -1,3 +1,4 @@
+var MODERN_BROWSER = !$.browser.msie || $.browser.version > 8;
 (function() {
 	var d = document.domain;
 	if (!d.match(/^(\d+\.){3}\d+$/)) {
@@ -13,22 +14,14 @@
 	}
 	$.ajaxSettings.traditional = true;
 	var $ajax = $.ajax;
-	$.ajax = function(options) {
-		options.url = UrlUtils.makeSameOrigin(options.url);
-		options.xhrFields = {
-			withCredentials : true
-		};
-		var temp = options.beforeSend;
-		options.beforeSend = function(xhr) {
-			// xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-			if (options.header)
-				for (var key in options.header)
-					xhr.setRequestHeader(key, options.header[key]);
-			if (temp)
-				temp(xhr);
+	if (MODERN_BROWSER)
+		$.ajax = function(options) {
+			options.url = UrlUtils.makeSameOrigin(options.url);
+			options.xhrFields = {
+				withCredentials : true
+			};
+			return $ajax(options);
 		}
-		return $ajax(options);
-	}
 
 	if (typeof $.rc4EncryptStr != 'undefined'
 			&& ($('meta[name="pe"]').attr('content') != 'false')) {
@@ -477,9 +470,9 @@ function ajaxOptions(options) {
 	options = options || {};
 	if (!options.dataType)
 		options.dataType = 'text';
-	if (!options.header)
-		options.header = {};
-	$.extend(options.header, {
+	if (!options.headers)
+		options.headers = {};
+	$.extend(options.headers, {
 				'X-Data-Type' : options.dataType
 			});
 	var beforeSend = options.beforeSend;
@@ -568,13 +561,15 @@ Initialization.common = function() {
 			});
 };
 
-var HISTORY_ENABLED = (typeof history.pushState != 'undefined' || typeof $.history != 'undefined')
+var HISTORY_ENABLED = MODERN_BROWSER
+		&& (typeof history.pushState != 'undefined' || typeof $.history != 'undefined')
 		&& ($('meta[name="history_enabled"]').attr('content') != 'false');
-var SESSION_HISTORY_SUPPORT = typeof history.pushState != 'undefined'
-		&& document.location.hash.indexOf('#!/') != 0;
-var _historied_ = false;
-Initialization.history = function() {
-	if (HISTORY_ENABLED) {
+if (HISTORY_ENABLED) {
+	var SESSION_HISTORY_SUPPORT = typeof history.pushState != 'undefined'
+			&& document.location.hash.indexOf('#!/') != 0;
+	var _historied_ = false;
+	Initialization.history = function() {
+
 		if (SESSION_HISTORY_SUPPORT) {
 			var url = document.location.href;
 			history.replaceState({
@@ -596,7 +591,7 @@ Initialization.history = function() {
 										}
 									});
 								},
-								header : {
+								headers : {
 									'X-Fragment' : '_'
 								}
 							});
@@ -633,7 +628,7 @@ Initialization.history = function() {
 										}
 									});
 								},
-								header : {
+								headers : {
 									'X-Fragment' : '_'
 								}
 							});
@@ -870,14 +865,14 @@ Observation.common = function(container) {
 								'target' : target
 							});
 				},
-				header : {}
+				headers : {}
 			};
 			if (!$(this).hasClass('view'))
-				$.extend(options.header, {
+				$.extend(options.headers, {
 							'X-Data-Type' : 'json'
 						});
 			if (ids.length > 0)
-				$.extend(options.header, {
+				$.extend(options.headers, {
 							'X-Fragment' : ids.join(',')
 						});
 			$(this).bind('submit', function() {
@@ -934,21 +929,21 @@ Observation.common = function(container) {
 					error : function() {
 						Ajax.fire(target, 'onerror');
 					},
-					header : {}
+					headers : {}
 				};
 				var _opt = {
 					'target' : target
 				};
 				if (!$(this).hasClass('view'))
-					$.extend(options.header, {
+					$.extend(options.headers, {
 								'X-Data-Type' : 'json'
 							});
 				if (ids.length > 0) {
-					$.extend(options.header, {
+					$.extend(options.headers, {
 								'X-Fragment' : ids.join(',')
 							});
 				} else {
-					$.extend(options.header, {
+					$.extend(options.headers, {
 								'X-Fragment' : '_'
 							});
 					_opt.replaceTitle = true;

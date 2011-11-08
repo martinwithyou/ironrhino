@@ -364,7 +364,7 @@ Richtable = {
 							type : 'POST',
 							data : params,
 							dataType : 'json',
-							header : {
+							headers : {
 								'X-Edit' : 'cell'
 							},
 							onsuccess : function() {
