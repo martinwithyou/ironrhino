@@ -2,6 +2,7 @@ package org.ironrhino.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.compass.annotations.SearchableId;
@@ -26,7 +27,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	protected transient T parent;
 
-	protected transient List<T> children = new ArrayList<T>(0);
+	protected transient Collection<T> children = new HashSet<T>(0);
 
 	@NotInJson
 	public String getFullId() {
@@ -98,11 +99,11 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	@NotInCopy
 	@NotInJson
-	public List<T> getChildren() {
+	public Collection<T> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<T> children) {
+	public void setChildren(Collection<T> children) {
 		this.children = children;
 	}
 

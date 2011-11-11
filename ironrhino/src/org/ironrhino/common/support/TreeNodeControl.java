@@ -1,6 +1,8 @@
 package org.ironrhino.common.support;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -63,11 +65,13 @@ public class TreeNodeControl implements
 			parent = tree.getDescendantOrSelfById(Long.valueOf(parentId));
 		}
 		TreeNode r = new TreeNode();
+		r.setChildren(new ArrayList<TreeNode>());
 		BeanUtils.copyProperties(treeNode, r, new String[] { "parent",
 				"children" });
 		r.setParent(parent);
 		parent.getChildren().add(r);
-		Collections.sort(parent.getChildren());
+		if (parent.getChildren() instanceof List)
+			Collections.sort((List) parent.getChildren());
 	}
 
 	private synchronized void update(TreeNode treeNode) {
@@ -95,8 +99,8 @@ public class TreeNodeControl implements
 		}
 		BeanUtils.copyProperties(treeNode, r, new String[] { "parent",
 				"children" });
-		if (needsort)
-			Collections.sort(r.getParent().getChildren());
+		if (needsort && r.getParent().getChildren() instanceof List)
+			Collections.sort((List) r.getParent().getChildren());
 	}
 
 	private void resetChildren(TreeNode treeNode) {
