@@ -200,14 +200,19 @@ Message = {
 			a.push(messages);
 			messages = a;
 		}
-		if (!$('#message').length)
-			$('<div id="message"></div>').prependTo($('#content'));
+		var parent = $('#content');
+		var msg;
+		if ($('#_window_').parents('.ui-dialog').length) 
+			parent = $('#_window_');
+		if (!$('#message', parent).length)
+			$('<div id="message"></div>').prependTo(parent);
+		msg = $('#message', parent);
 		if (typeof $.fn.jnotifyInizialize != 'undefined') {
-			$('#message').jnotifyInizialize({
+			msg.jnotifyInizialize({
 						oneAtTime : false
 					});
 			for (var i = 0; i < messages.length; i++)
-				$('#message').jnotifyAddMessage({
+				msg.jnotifyAddMessage({
 							text : messages[i],
 							disappearTime : 10000,
 							permanent : false,
