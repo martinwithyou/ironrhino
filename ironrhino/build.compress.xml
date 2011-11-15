@@ -151,16 +151,16 @@
 				line=" --js=./webapp/assets/scripts/ironrhino-lite-njq.js --js_output_file=./webapp/assets/scripts/ironrhino-lite-njq-min.js" />
 		</java>
 		<delete file="${basedir}/webapp/assets/scripts/ironrhino-lite-njq.js" />
-		<java jar="${lib.dir}/yuicompressor-2.4.6.jar" fork="true">
+		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
 			<arg
 				line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-min.css ./webapp/assets/styles/ironrhino.css" />
 		</java>
-		<java jar="${lib.dir}/yuicompressor-2.4.6.jar" fork="true">
+		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
 			<arg
 				line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-lite-min.css ./webapp/assets/styles/ironrhino-lite.css" />
 		</java>
 		<delete file="${basedir}/webapp/assets/styles/ironrhino-lite.css" />
-		<java jar="${lib.dir}/yuicompressor-2.4.6.jar" fork="true">
+		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
 			<arg
 				line=" --charset utf-8 --type css -o ./webapp/assets/styles/app-min.css ./webapp/assets/styles/app.css" />
 		</java>
