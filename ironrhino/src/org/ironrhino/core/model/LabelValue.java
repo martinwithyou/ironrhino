@@ -2,14 +2,17 @@ package org.ironrhino.core.model;
 
 import java.io.Serializable;
 
+import org.compass.annotations.Index;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 
 @Searchable(root = false, alias = "labelValue")
 public class LabelValue implements Serializable {
 
+	@SearchableProperty(boost = 2, index = Index.NOT_ANALYZED)
 	private String value;
 
+	@SearchableProperty(boost = 2, index = Index.NOT_ANALYZED)
 	private String label;
 
 	private Boolean selected;
@@ -22,7 +25,6 @@ public class LabelValue implements Serializable {
 		this.label = label;
 	}
 
-	@SearchableProperty
 	public String getLabel() {
 		return label;
 	}
@@ -31,7 +33,6 @@ public class LabelValue implements Serializable {
 		this.label = label;
 	}
 
-	@SearchableProperty
 	public String getValue() {
 		return value;
 	}
