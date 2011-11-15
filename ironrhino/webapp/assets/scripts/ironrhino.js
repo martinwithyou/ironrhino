@@ -28507,14 +28507,12 @@ Observation.sortableTable = function(container) {
 		if (options.onbeforeremove
 				&& options.onbeforeremove.apply(row.get(0)) === false)
 			return;
-		if (row.closest('tbody').children().length > 1) {
-			$(':input', row.prev()).eq(0).focus();
-			var tbody = row.closest('tbody');
-			row.remove();
-			rename(tbody);
-			if (options.onremove)
-				options.onremove();
-		}
+		$(':input', row.prev()).eq(0).focus();
+		var tbody = row.closest('tbody');
+		row.remove();
+		rename(tbody);
+		if (options.onremove)
+			options.onremove();
 	};
 	var moveupRow = function(event, options) {
 		var row = $(event.target).closest('tr');
