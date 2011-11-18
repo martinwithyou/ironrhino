@@ -1642,7 +1642,7 @@ div.top label {
 .menu li {
 	float:left;
 }
-.menu li a {
+.menu li a,.menu li span {
 	width: auto !important;
 	width: 60px;
 	min-width:60px;
