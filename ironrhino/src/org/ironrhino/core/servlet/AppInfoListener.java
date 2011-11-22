@@ -33,8 +33,9 @@ public class AppInfoListener implements ServletContextListener {
 			AppInfo.setAppHome(home);
 		}
 		System.setProperty(AppInfo.getAppName() + ".home", AppInfo.getAppHome());
-		System.setProperty(AppInfo.getAppName() + ".context",
-				ctx.getRealPath("/"));
+		String context = ctx.getRealPath("/");
+		if (context != null)
+			System.setProperty(AppInfo.getAppName() + ".context", context);
 		logger = LoggerFactory.getLogger(getClass());
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={}",
