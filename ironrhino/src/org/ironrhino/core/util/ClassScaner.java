@@ -155,12 +155,16 @@ public class ClassScaner {
 
 	protected boolean matches(MetadataReader metadataReader) throws IOException {
 		for (TypeFilter tf : this.excludeFilters) {
-			if (tf.match(metadataReader, this.metadataReaderFactory)) {
+			try {
+				return !tf.match(metadataReader, this.metadataReaderFactory);
+			} catch (Exception e) {
 				return false;
 			}
 		}
 		for (TypeFilter tf : this.includeFilters) {
-			if (!tf.match(metadataReader, this.metadataReaderFactory)) {
+			try {
+				return tf.match(metadataReader, this.metadataReaderFactory);
+			} catch (Exception e) {
 				return false;
 			}
 		}

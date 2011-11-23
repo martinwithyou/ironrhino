@@ -27006,7 +27006,7 @@ Message = {
 			for (var i = 0; i < messages.length; i++)
 				msg.jnotifyAddMessage({
 							text : messages[i],
-							disappearTime : 10000,
+							disappearTime : 60000,
 							permanent : false,
 							type : 'error'
 						});
