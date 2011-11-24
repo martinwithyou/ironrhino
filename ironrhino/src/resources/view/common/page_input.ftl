@@ -100,7 +100,7 @@ $(function() {
 	<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" cssClass="integer"/>
 	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="multiautocomplete" source="suggest"/>
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50"/>
-	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="50" rows="12"/>
+	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="50" rows="16"/>
 	<@s.textarea id="page_head" name="page.head" cols="100" rows="3" cssStyle="display:none;"/>
 	<div class="field">
 		<@button id="display_page_head" text="${action.getText('edit')}${action.getText('head')}"/>

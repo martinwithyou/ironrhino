@@ -30,7 +30,7 @@
 <#noescape>${head}</#noescape>
 </head>
 <body>
-<div id="content">
+<div id="content" class="simple">
 <div id="message">
 <@s.actionerror cssClass="action_error" />
 <@s.actionmessage cssClass="action_message" />
