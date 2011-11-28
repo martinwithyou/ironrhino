@@ -43,7 +43,7 @@
 	function expand(treeoptions, treearea, target, callback) {
 		var level = 0;
 		var areas = $('.area', treearea);
-		var id = 0;
+		var id = treeoptions.root || 0;
 		if (target) {
 			id = $(target).data('treenode').id;
 			$('span', target.closest('.area')).removeClass('selected');

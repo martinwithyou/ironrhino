@@ -61,7 +61,8 @@
 							placeholder : MessageBundle.get('ajax.loading'),
 							unique : true,
 							separator : treeoptions.separator,
-							value : treeoptions.value
+							value : treeoptions.value,
+							root : treeoptions.root
 						};
 						if (!treeoptions.cache)
 							options.url = options.url + '?r=' + Math.random();

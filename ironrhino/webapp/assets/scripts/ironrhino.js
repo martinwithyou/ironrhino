@@ -24095,7 +24095,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 			return proxied.apply(this, arguments);
 		}
 		var container = this;
-		load(settings, "0", this, container);
+		load(settings, settings.root || "0", this, container);
 		var userToggle = settings.toggle;
 		return proxied.call(this, $.extend({}, settings, {
 			collapsed : true,
@@ -29341,7 +29341,7 @@ Observation.richtable = function(container) {
 	function expand(treeoptions, treearea, target, callback) {
 		var level = 0;
 		var areas = $('.area', treearea);
-		var id = 0;
+		var id = treeoptions.root || 0;
 		if (target) {
 			id = $(target).data('treenode').id;
 			$('span', target.closest('.area')).removeClass('selected');
@@ -29473,7 +29473,8 @@ Observation.richtable = function(container) {
 							placeholder : MessageBundle.get('ajax.loading'),
 							unique : true,
 							separator : treeoptions.separator,
-							value : treeoptions.value
+							value : treeoptions.value,
+							root : treeoptions.root
 						};
 						if (!treeoptions.cache)
 							options.url = options.url + '?r=' + Math.random();

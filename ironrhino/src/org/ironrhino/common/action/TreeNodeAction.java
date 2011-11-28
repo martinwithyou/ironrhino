@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.TreeNode;
+import org.ironrhino.common.support.TreeNodeControl;
+import org.ironrhino.core.metadata.Authorize;
+import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.security.model.UserRole;
 
 public class TreeNodeAction extends BaseAction {
 
@@ -18,6 +24,11 @@ public class TreeNodeAction extends BaseAction {
 	private TreeNode treeNode;
 
 	private Long parentId;
+
+	private long root;
+
+	@Inject
+	private transient TreeNodeControl treeNodeControl;
 
 	private transient BaseManager<TreeNode> baseManager;
 
@@ -33,6 +44,14 @@ public class TreeNodeAction extends BaseAction {
 
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
+	}
+
+	public long getRoot() {
+		return root;
+	}
+
+	public void setRoot(long root) {
+		this.root = root;
 	}
 
 	public TreeNode getTreeNode() {
@@ -161,6 +180,19 @@ public class TreeNodeAction extends BaseAction {
 			}
 		}
 		return SUCCESS;
+	}
+
+	@JsonConfig(root = "list")
+	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
+	public String children() {
+		TreeNode treeNode;
+		if (root < 1)
+			treeNode = treeNodeControl.getTree();
+		else
+			treeNode = treeNodeControl.getTree().getDescendantOrSelfById(root);
+		if (treeNode != null)
+			list = treeNode.getChildren();
+		return JSON;
 	}
 
 }

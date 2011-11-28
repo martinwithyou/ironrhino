@@ -36,6 +36,10 @@ public class TreeNodeControl implements
 		buildTreeNodeTree();
 	}
 
+	public TreeNode getTree() {
+		return tree;
+	}
+
 	public TreeNode getTree(String name) {
 		TreeNode subtree = null;
 		for (TreeNode t : tree.getChildren())
