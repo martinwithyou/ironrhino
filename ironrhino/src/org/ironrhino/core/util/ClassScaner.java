@@ -208,13 +208,13 @@ public class ClassScaner {
 	}
 
 	private static String[] excludePackages = new String[] { "java", "javax",
-			"com.sun", "sun", "org.w3c", "org.xml", "antlr", "com.caucho",
-			"com.chenlb", "com.google", "com.jolbox", "com.mysql",
-			"com.opensymphony", "freemarker", "javassist", "jsr166y", "net.sf",
-			"net.sourceforge", "ognl", "org.antlr", "org.aopalliance",
-			"org.apache", "org.aspectj", "org.codehaus", "org.compass",
-			"org.dom4j", "org.eclipse", "org.hibernate", "org.ietf",
-			"org.mvel2", "org.slf4j", "org.springframework",
-			"org.ironrhino.core" };
+			"com.sun", "sun", "org.w3c", "org.xml", "antlr", "com.bea",
+			"com.caucho", "com.chenlb", "com.google", "com.ibm", "com.jolbox",
+			"com.mysql", "com.opensymphony", "com.oracle", "freemarker",
+			"javassist", "jsr166y", "net.sf", "net.sourceforge", "ognl",
+			"org.antlr", "org.aopalliance", "org.apache", "org.aspectj",
+			"org.codehaus", "org.compass", "org.dom4j", "org.eclipse",
+			"org.hibernate", "org.ietf", "org.mvel2", "org.slf4j",
+			"org.springframework", "org.ironrhino.core", "weblogic" };
 
 }
