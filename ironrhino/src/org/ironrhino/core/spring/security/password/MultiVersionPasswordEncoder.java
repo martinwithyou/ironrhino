@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class MultiVersionPasswordEncoder implements PasswordEncoder {
 
@@ -34,22 +34,24 @@ public class MultiVersionPasswordEncoder implements PasswordEncoder {
 		}
 	}
 
-	public String encodePassword(String rawPass, Object salt) {
+	@Override
+	public String encode(CharSequence rawPassword) {
+		if (rawPassword == null)
+			return null;
 		VersionedPasswordEncoder pd = map.get(map.lastKey());
-		return new StringBuilder(pd.encodePassword(rawPass, salt)).append('#')
+		return new StringBuilder(pd.encode(rawPassword)).append('#')
 				.append(pd.getVersion()).toString();
 	}
 
-	public boolean isPasswordValid(String encPass, String rawPass, Object salt) {
-		if (encPass == null)
-			encPass = "";
-		if (rawPass == null)
-			rawPass = "";
-		int i = encPass.indexOf('#');
+	@Override
+	public boolean matches(CharSequence rawPassword, String encodedPassword) {
+		if (encodedPassword == null)
+			encodedPassword = "";
+		int i = encodedPassword.indexOf('#');
 		int version = 1;
 		if (i > 0) {
-			version = Integer.valueOf(encPass.substring(i + 1));
-			encPass = encPass.substring(0, i);
+			version = Integer.valueOf(encodedPassword.substring(i + 1));
+			encodedPassword = encodedPassword.substring(0, i);
 		}
 		VersionedPasswordEncoder pd = map.get(version);
 		if (pd == null) {
@@ -58,7 +60,7 @@ public class MultiVersionPasswordEncoder implements PasswordEncoder {
 					"no PasswordDigester of version {}, use version {} instead ",
 					version, map.lastKey());
 		}
-		return encPass.equals(pd.encodePassword(rawPass, salt));
+		return pd.matches(rawPassword, encodedPassword);
 	}
 
 	public boolean isLastVersion(String encPass) {

@@ -4,8 +4,10 @@ import org.ironrhino.core.util.CodecUtils;
 
 public class V1PasswordEncoder extends VersionedPasswordEncoder {
 
-	public String encodePassword(String rawPass, Object salt) {
-		return CodecUtils.digest(rawPass);
+	public String encode(CharSequence rawPassword) {
+		if (rawPassword == null)
+			return null;
+		return CodecUtils.digest(rawPassword.toString());
 	}
 
 }

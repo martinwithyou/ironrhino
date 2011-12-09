@@ -9,13 +9,12 @@ import org.ironrhino.core.model.Secured;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.SaltSource;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class AuthzUtils {
 
@@ -124,17 +123,13 @@ public class AuthzUtils {
 	public static String encodePassword(UserDetails ud, String input) {
 		PasswordEncoder encoder = ApplicationContextUtils
 				.getBean(PasswordEncoder.class);
-		SaltSource ss = ApplicationContextUtils.getBean(SaltSource.class);
-		return encoder
-				.encodePassword(input, ss != null ? ss.getSalt(ud) : null);
+		return encoder.encode(input);
 	}
 
 	public static boolean isPasswordValid(UserDetails ud, String password) {
 		PasswordEncoder encoder = ApplicationContextUtils
 				.getBean(PasswordEncoder.class);
-		SaltSource ss = ApplicationContextUtils.getBean(SaltSource.class);
-		return encoder.isPasswordValid(ud.getPassword(), password,
-				ss != null ? ss.getSalt(ud) : null);
+		return encoder.matches(password,ud.getPassword());
 	}
 
 	public static boolean isPasswordValid(String password) {

@@ -3,7 +3,7 @@ package org.ironrhino.core.spring.security.password;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 
-import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public abstract class VersionedPasswordEncoder implements PasswordEncoder {
 
@@ -31,11 +31,14 @@ public abstract class VersionedPasswordEncoder implements PasswordEncoder {
 		this.version = version;
 	}
 
-	public boolean isPasswordValid(String encPass, String rawPass, Object salt) {
-		if (encPass == null)
-			encPass = "";
-		if (rawPass == null)
-			rawPass = "";
-		return encPass.equals(encodePassword(rawPass, salt));
+	@Override
+	public boolean matches(CharSequence rawPassword, String encodedPassword) {
+		if (rawPassword == null)
+			rawPassword = "";
+		if (encodedPassword == null)
+			encodedPassword = "";
+		rawPassword = encode(rawPassword);
+		return encodedPassword.equals(rawPassword);
 	}
+
 }

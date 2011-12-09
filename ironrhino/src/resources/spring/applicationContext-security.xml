@@ -26,6 +26,12 @@
 			<security:custom-filter ref="switchUserProcessingFilter" position="SWITCH_USER_FILTER"/>
 			-->
 	</security:http>
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider user-service-ref="userManager">
+			<security:password-encoder ref="passwordEncoder" />
+		</security:authentication-provider>
+		<security:authentication-provider ref="rememberMeAuthenticationProvider" />  
+	</security:authentication-manager>
 	
 	<bean
 		id="accessDecisionManager"
@@ -40,6 +46,22 @@
 		</property>
 	</bean>
 	
+	<bean id="entryPoint" class="org.ironrhino.core.spring.security.DefaultLoginUrlAuthenticationEntryPoint"
+		p:forceHttps="false" >
+		<constructor-arg value="/login"/>
+	</bean>
+	
+	<bean id="authenticationFilter"
+		class="org.ironrhino.core.spring.security.DefaultUsernamePasswordAuthenticationFilter"
+		p:usernameParameter="username" p:passwordParameter="password"
+		p:filterProcessesUrl="/check" p:authenticationManager-ref="authenticationManager"
+		p:rememberMeServices-ref="rememberMeServices">
+	</bean>
+	
+	<bean id="rememberMeAuthenticationProvider"  
+		class="org.springframework.security.authentication.RememberMeAuthenticationProvider" 
+		p:key="${rememberMe.key:youcannotguessme}"/>
+		
 	<bean id="rememberMeServices"
 		class="org.ironrhino.core.spring.security.DefaultTokenBasedRememberMeServices"
 		p:parameter="rememberme" p:cookieName="rm">
@@ -67,24 +89,5 @@
 			p:userDetailsService-ref="userManager" p:switchUserUrl="/switch"
 			p:exitUserUrl="/exit" p:targetUrl="/" />
 		-->
-	
-	<security:authentication-manager alias="authenticationManager">
-		<security:authentication-provider user-service-ref="userManager">
-			<security:password-encoder ref="passwordEncoder" />
-		</security:authentication-provider>
-		<security:authentication-provider ref="rememberMeAuthenticationProvider" />  
-	</security:authentication-manager>
-	<bean id="entryPoint" class="org.ironrhino.core.spring.security.DefaultLoginUrlAuthenticationEntryPoint"
-		p:forceHttps="false" >
-		<constructor-arg value="/login"/>
-	</bean>
-	<bean id="authenticationFilter"
-		class="org.ironrhino.core.spring.security.DefaultUsernamePasswordAuthenticationFilter"
-		p:usernameParameter="username" p:passwordParameter="password"
-		p:filterProcessesUrl="/check" p:authenticationManager-ref="authenticationManager"
-		p:rememberMeServices-ref="rememberMeServices">
-	</bean>
-	<bean id="rememberMeAuthenticationProvider"  
-		class="org.springframework.security.authentication.RememberMeAuthenticationProvider" 
-		p:key="${rememberMe.key:youcannotguessme}"/>
+
 </beans>

@@ -1,22 +1,25 @@
 package org.ironrhino.core.spring.security;
 
 import org.ironrhino.core.util.CodecUtils;
-import org.springframework.security.authentication.encoding.BasePasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class MixedPasswordEncoder extends BasePasswordEncoder {
+public class MixedPasswordEncoder implements PasswordEncoder {
 
-	public String encodePassword(String rawPass, Object salt) {
-		String saltedPass = mergePasswordAndSalt(rawPass, salt, false);
-		return CodecUtils.digest(saltedPass);
+	@Override
+	public String encode(CharSequence rawPassword) {
+		if (rawPassword == null)
+			return null;
+		return CodecUtils.digest(rawPassword.toString());
 	}
 
-	public boolean isPasswordValid(String encPass, String rawPass, Object salt) {
-		if (encPass == null)
-			encPass = "";
-		if (rawPass == null)
-			rawPass = "";
-		rawPass = encodePassword(rawPass, salt);
-		return encPass.equals(rawPass);
+	@Override
+	public boolean matches(CharSequence rawPassword, String encodedPassword) {
+		if (rawPassword == null)
+			rawPassword = "";
+		if (encodedPassword == null)
+			encodedPassword = "";
+		rawPassword = encode(rawPassword);
+		return encodedPassword.equals(rawPassword);
 	}
 
 }
