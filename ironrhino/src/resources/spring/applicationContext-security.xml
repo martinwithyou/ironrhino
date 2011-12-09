@@ -26,7 +26,7 @@
 			<security:custom-filter ref="switchUserProcessingFilter" position="SWITCH_USER_FILTER"/>
 			-->
 	</security:http>
-	<security:authentication-manager alias="authenticationManager">
+	<security:authentication-manager alias="authenticationManager" erase-credentials="true">
 		<security:authentication-provider user-service-ref="userManager">
 			<security:password-encoder ref="passwordEncoder" />
 		</security:authentication-provider>
