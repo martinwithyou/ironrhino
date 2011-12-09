@@ -63,7 +63,7 @@ public class AuthzUtils {
 	public static List<String> getRoleNames() {
 		List<String> roleNames = new ArrayList<String>();
 		if (SecurityContextHolder.getContext().getAuthentication() != null) {
-			Collection<GrantedAuthority> authz = SecurityContextHolder
+			Collection<GrantedAuthority> authz = (Collection<GrantedAuthority>) SecurityContextHolder
 					.getContext().getAuthentication().getAuthorities();
 			if (authz != null)
 				for (GrantedAuthority var : authz)

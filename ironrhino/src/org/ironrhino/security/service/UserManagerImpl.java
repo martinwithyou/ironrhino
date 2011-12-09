@@ -20,7 +20,7 @@ import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,16 +78,16 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	private void populateAuthorities(User user) {
 		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
-		auths.add(new GrantedAuthorityImpl(UserRole.ROLE_BUILTIN_ANONYMOUS));
-		auths.add(new GrantedAuthorityImpl(UserRole.ROLE_BUILTIN_USER));
+		auths.add(new SimpleGrantedAuthority(UserRole.ROLE_BUILTIN_ANONYMOUS));
+		auths.add(new SimpleGrantedAuthority(UserRole.ROLE_BUILTIN_USER));
 		for (String role : user.getRoles())
-			auths.add(new GrantedAuthorityImpl(role));
+			auths.add(new SimpleGrantedAuthority(role));
 		if (mappers != null)
 			for (UserRoleMapper mapper : mappers) {
 				String[] roles = mapper.map(user);
 				if (roles != null)
 					for (String role : roles)
-						auths.add(new GrantedAuthorityImpl(role));
+						auths.add(new SimpleGrantedAuthority(role));
 			}
 		user.setAuthorities(auths);
 	}

@@ -5,11 +5,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.util.StringUtils;
 
 public class DefaultTokenBasedRememberMeServices extends
 		TokenBasedRememberMeServices {
+
+	public DefaultTokenBasedRememberMeServices(String key,
+			UserDetailsService userDetailsService) {
+		super(key, userDetailsService);
+	}
 
 	@Override
 	protected int calculateLoginLifetime(HttpServletRequest request,

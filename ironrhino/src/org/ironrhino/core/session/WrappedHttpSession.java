@@ -17,7 +17,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang.StringUtils;
 import org.ironrhino.core.util.RequestUtils;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 public class WrappedHttpSession implements Serializable, HttpSession {
 
@@ -149,11 +148,7 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 
 	public void setAttribute(String key, Object object) {
 		attrMap.put(key, object);
-		if (isRequestedSessionIdFromURL()
-				|| !HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY
-						.equals(key)) {
-			dirty = true;
-		}
+		dirty = true;
 	}
 
 	public Object getAttribute(String key) {

@@ -34,7 +34,7 @@ public class DefaultUsernamePasswordAuthenticationFilter extends
 	public void success(HttpServletRequest request,
 			HttpServletResponse response, Authentication authResult)
 			throws IOException, ServletException {
-		super.successfulAuthentication(request, response, authResult);
+		super.successfulAuthentication(request, response, null, authResult);
 	}
 
 	public void unsuccess(HttpServletRequest request,

@@ -26,6 +26,9 @@ public class AuthenticationFailureHandler extends
 		DefaultAuthenticationFailureHandler {
 
 	@Inject
+	private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
+
+	@Inject
 	private UserManager userManager;
 
 	@Override
@@ -34,11 +37,9 @@ public class AuthenticationFailureHandler extends
 			throws IOException, ServletException {
 		super.onAuthenticationFailure(request, response, e);
 		LoginRecord loginRecord = new LoginRecord();
-		loginRecord
-				.setUsername((String) request
-						.getSession()
-						.getAttribute(
-								UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY));
+		loginRecord.setUsername((String) request
+				.getParameter(usernamePasswordAuthenticationFilter
+						.getUsernameParameter()));
 		loginRecord.setAddress(RequestUtils.getRemoteAddr(request));
 		loginRecord.setFailed(true);
 		loginRecord.setCause(e.getMessage());
