@@ -33,7 +33,7 @@ public class TestServlet extends HttpServlet {
 					if (response.getStatusLine().getStatusCode() != HttpServletResponse.SC_OK)
 						logger.warn("test failed,no response,please check it");
 					else
-						logger.warn("test succussful");
+						logger.info("test succussful");
 				} catch (Exception e) {
 					httpRequest.abort();
 					logger.error("test failed", e);

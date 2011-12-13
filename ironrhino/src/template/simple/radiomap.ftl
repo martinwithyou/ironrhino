@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: radiomap.ftl 720258 2008-11-24 19:05:16Z musachy $
+ * $Id: radiomap.ftl 1211023 2011-12-06 17:01:50Z wesw $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -37,7 +37,7 @@
  name="${parameters.name?html}"<#rt/>
 </#if>
  id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
-<#if tag.contains(parameters.nameValue?default(''), itemKeyStr) ||  tag.contains(parameters.nameValue?default(''), itemValue)>
+<#if tag.contains(parameters.nameValue?default(''), itemKeyStr) || tag.contains(parameters.nameValue?default(''), itemValue)>
  checked="checked"<#rt/>
 </#if>
 <#if itemKey??>
@@ -55,6 +55,7 @@
 <#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
+<#include "/${parameters.templateDir}/simple/css.ftl" />
 <#if parameters.title??>
  title="${parameters.title?html}"<#rt/>
 </#if>
