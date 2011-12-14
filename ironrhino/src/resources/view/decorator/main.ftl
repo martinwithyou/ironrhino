@@ -26,7 +26,7 @@
 <link href="<@url value="/assets/styles/ironrhino${modernBrowser?string('-min','')}.css"/>" media="screen" rel="stylesheet" type="text/css" />
 <#if !modernBrowser><link href="<@url value="/assets/styles/ie.css"/>" media="all" rel="stylesheet" type="text/css" /></#if>
 <link href="<@url value="/assets/styles/app${modernBrowser?string('-min','')}.css"/>" media="screen" rel="stylesheet" type="text/css" />
-<script src="<@url value="/assets/scripts/ironrhino.js"/>" type="text/javascript"></script>
+<script src="<@url value="/assets/scripts/ironrhino${modernBrowser?string('-min','')}.js"/>" type="text/javascript"></script>
 <#noescape>${head}</#noescape>
 </head>
 

@@ -1,5 +1,22 @@
 (function($) {
+
+	function check(group) {
+		var allchecked = true;
+		var boxes = $('input[type=checkbox][name]', group);
+		for (var i = 0; i < boxes.length; i++)
+			if (!boxes[i].checked) {
+				allchecked = false;
+				break;
+			}
+		$('input[type=checkbox]:not(.normal):not([name])', group).prop(
+				'checked', allchecked);
+	}
+
 	$.fn.checkbox = function() {
+		$('.checkboxgroup', this).each(function() {
+					check(this);
+				});
+
 		$('input[type=checkbox]', this).click(function(event) {
 			if ($(this).hasClass('normal'))
 				return;
@@ -10,6 +27,7 @@
 					group = this.form;
 				if (!group)
 					return;
+					
 				$('input[type=checkbox][name]', group).each(function() {
 							this.checked = b;
 							var tr = $(this).closest('tr');
@@ -71,6 +89,7 @@
 				}
 				$('input[type=checkbox]', this.form).removeClass('lastClicked');
 				$(this).addClass('lastClicked');
+				check(group);
 			}
 		});
 		return this;
