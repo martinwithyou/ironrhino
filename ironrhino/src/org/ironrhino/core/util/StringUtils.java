@@ -2,6 +2,7 @@ package org.ironrhino.core.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Locale;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
@@ -504,6 +505,25 @@ public class StringUtils {
 			urlCode = urlCode.substring(p, p + 9);
 		}
 		return utf8codeCheck(urlCode);
+	}
+
+	public static String trimLocale(String s) {
+		if (s == null)
+			return null;
+		if (s.indexOf('_') < 0)
+			return s;
+		for (Locale locale : Locale.getAvailableLocales()) {
+			String suffix = "_" + locale.getLanguage();
+			if (s.endsWith(suffix))
+				return s.substring(0, s.length() - suffix.length());
+			suffix += "_" + locale.getCountry();
+			if (s.endsWith(suffix))
+				return s.substring(0, s.length() - suffix.length());
+			suffix += "_" + locale.getVariant();
+			if (s.endsWith(suffix))
+				return s.substring(0, s.length() - suffix.length());
+		}
+		return s;
 	}
 
 }

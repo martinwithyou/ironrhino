@@ -142,10 +142,8 @@ public class AutoConfigPackageProvider implements PackageProvider {
 				String source = name.substring(0,
 						name.indexOf("/resources/i18n/"));
 				name = name.substring(name.indexOf("resources/i18n/"));
-				name = name.substring(0, name.lastIndexOf('.'));
-				if (name.lastIndexOf('_') > name.lastIndexOf('/'))
-					name = name.substring(0,
-							name.indexOf('_', name.lastIndexOf('/')));
+				name = org.ironrhino.core.util.StringUtils.trimLocale(name
+						.substring(0, name.lastIndexOf('.')));
 				name = org.springframework.util.ClassUtils
 						.convertResourcePathToClassName(name);
 				if (messageBunldes.containsKey(name)
