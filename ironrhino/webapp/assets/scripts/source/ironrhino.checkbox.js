@@ -20,24 +20,22 @@
 		$('input[type=checkbox]', this).click(function(event) {
 			if ($(this).hasClass('normal'))
 				return;
+			var group = $(this).closest('.checkboxgroup');
+			if (!group.length)
+				group = this.form;
 			if (!this.name) {
 				var b = this.checked;
-				var group = $(this).closest('.checkboxgroup');
-				if (!group.length)
-					group = this.form;
-				if (!group)
-					return;
-					
-				$('input[type=checkbox][name]', group).each(function() {
-							this.checked = b;
-							var tr = $(this).closest('tr');
-							if (tr) {
-								if (b)
-									tr.addClass('selected');
-								else
-									tr.removeClass('selected');
-							}
-						});
+				if (group)
+					$('input[type=checkbox][name]', group).each(function() {
+								this.checked = b;
+								var tr = $(this).closest('tr');
+								if (tr) {
+									if (b)
+										tr.addClass('selected');
+									else
+										tr.removeClass('selected');
+								}
+							});
 			} else {
 				if (!event.shiftKey) {
 					var tr = $(this).closest('tr');
