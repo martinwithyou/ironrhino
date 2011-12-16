@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.hibernate.criterion.DetachedCriteria;
 
 public class ResultPage<T> implements Serializable {
 
@@ -32,7 +31,7 @@ public class ResultPage<T> implements Serializable {
 
 	private Collection<T> result = new ArrayList<T>();
 
-	private DetachedCriteria detachedCriteria;
+	private Object criteria;
 
 	private boolean reverse;
 
@@ -109,12 +108,12 @@ public class ResultPage<T> implements Serializable {
 		this.totalRecord = totalRecord;
 	}
 
-	public DetachedCriteria getDetachedCriteria() {
-		return detachedCriteria;
+	public Object getCriteria() {
+		return criteria;
 	}
 
-	public void setDetachedCriteria(DetachedCriteria detachedCriteria) {
-		this.detachedCriteria = detachedCriteria;
+	public void setCriteria(Object criteria) {
+		this.criteria = criteria;
 	}
 
 	public boolean isFirst() {
@@ -153,22 +152,22 @@ public class ResultPage<T> implements Serializable {
 			if (pn <= 1)
 				return sb.toString();
 			else
-				return sb.append(
-						StringUtils.isNotBlank(parameterString) ? "&" : "?")
-						.append(PAGENO_PARAM_NAME).append("=").append(pn)
-						.toString();
+				return sb
+						.append(StringUtils.isNotBlank(parameterString) ? "&"
+								: "?").append(PAGENO_PARAM_NAME).append("=")
+						.append(pn).toString();
 		} else {
 			if (pn <= 1)
-				return sb.append(
-						StringUtils.isNotBlank(parameterString) ? "&" : "?")
-						.append(PAGESIZE_PARAM_NAME).append("=").append(
-								pageSize).toString();
-			else
-				return sb.append(
-						StringUtils.isNotBlank(parameterString) ? "&" : "?")
-						.append(PAGENO_PARAM_NAME).append("=").append(pn)
-						.append("&").append(PAGESIZE_PARAM_NAME).append("=")
+				return sb
+						.append(StringUtils.isNotBlank(parameterString) ? "&"
+								: "?").append(PAGESIZE_PARAM_NAME).append("=")
 						.append(pageSize).toString();
+			else
+				return sb
+						.append(StringUtils.isNotBlank(parameterString) ? "&"
+								: "?").append(PAGENO_PARAM_NAME).append("=")
+						.append(pn).append("&").append(PAGESIZE_PARAM_NAME)
+						.append("=").append(pageSize).toString();
 		}
 	}
 
@@ -187,15 +186,14 @@ public class ResultPage<T> implements Serializable {
 						|| name.equals("_")
 						|| name.equals(PAGENO_PARAM_NAME)
 						|| name.equals(PAGESIZE_PARAM_NAME)
-						|| name
-								.startsWith(StringUtils
-										.uncapitalize(ResultPage.class
-												.getSimpleName()) + '.'))
+						|| name.startsWith(StringUtils
+								.uncapitalize(ResultPage.class.getSimpleName()) + '.'))
 					continue;
 				for (String value : values)
-					sb.append(name).append('=').append(
-							value.length() > 256 ? value.substring(0, 256)
-									: value).append('&');
+					sb.append(name)
+							.append('=')
+							.append(value.length() > 256 ? value.substring(0,
+									256) : value).append('&');
 			}
 			if (sb.length() > 0)
 				sb.deleteCharAt(sb.length() - 1);

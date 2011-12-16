@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Query;
@@ -31,6 +29,8 @@ import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.core.util.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
@@ -211,9 +211,11 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	@Transactional(readOnly = true)
 	public ResultPage<T> findByResultPage(ResultPage<T> resultPage) {
+		DetachedCriteria detachedCriteria = (DetachedCriteria) resultPage
+				.getCriteria();
 		long totalRecord = -1;
 		if (resultPage.isCounting()) {
-			totalRecord = countByCriteria(resultPage.getDetachedCriteria());
+			totalRecord = countByCriteria(detachedCriteria);
 			resultPage.setTotalRecord(totalRecord);
 			if (resultPage.getPageSize() < 1)
 				resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
@@ -225,19 +227,14 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 			else if (resultPage.getPageNo() > resultPage.getTotalPage())
 				resultPage.setPageNo(resultPage.getTotalPage());
 		}
-		resultPage.getDetachedCriteria().setProjection(null);
-		resultPage.getDetachedCriteria().setResultTransformer(
-				CriteriaSpecification.ROOT_ENTITY);
+		detachedCriteria.setProjection(null);
+		detachedCriteria
+				.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		Map<String, Boolean> sorts = resultPage.getSorts();
 		if (sorts.size() > 0) {
-			for (Map.Entry<String, Boolean> entry : sorts.entrySet()) {
-				if (entry.getValue())
-					resultPage.getDetachedCriteria().addOrder(
-							Order.desc(entry.getKey()));
-				else
-					resultPage.getDetachedCriteria().addOrder(
-							Order.asc(entry.getKey()));
-			}
+			for (Map.Entry<String, Boolean> entry : sorts.entrySet())
+				detachedCriteria.addOrder(entry.getValue() ? Order.desc(entry
+						.getKey()) : Order.asc(entry.getKey()));
 		}
 		int start, end;
 		if (!resultPage.isReverse()) {
@@ -250,8 +247,8 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 					* resultPage.getPageSize());
 		}
 		if (!(resultPage.isCounting() && totalRecord == 0))
-			resultPage.setResult(findBetweenListByCriteria(
-					resultPage.getDetachedCriteria(), start, end));
+			resultPage.setResult(findBetweenListByCriteria(detachedCriteria,
+					start, end));
 		else
 			resultPage.setResult(Collections.EMPTY_LIST);
 		resultPage.setStart(start);

@@ -200,7 +200,7 @@ public class EntityAction extends BaseAction {
 						searchablePropertyNames.toArray(new String[0])));
 			if (resultPage == null)
 				resultPage = new ResultPage();
-			resultPage.setDetachedCriteria(dc);
+			resultPage.setCriteria(dc);
 			if (ac != null && StringUtils.isNotBlank(ac.order())) {
 				String[] arr = ac.order().split("\\s");
 				if (arr[arr.length - 1].equalsIgnoreCase("asc"))

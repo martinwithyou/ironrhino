@@ -237,7 +237,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 				dc.addOrder(Order.asc("displayOrder"));
 			}
 
-			resultPage.setDetachedCriteria(dc);
+			resultPage.setCriteria(dc);
 			resultPage = findByResultPage(resultPage);
 		}
 		return resultPage;

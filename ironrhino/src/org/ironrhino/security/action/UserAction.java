@@ -129,7 +129,7 @@ public class UserAction extends BaseAction {
 			dc.addOrder(Order.asc("username"));
 			if (resultPage == null)
 				resultPage = new ResultPage<User>();
-			resultPage.setDetachedCriteria(dc);
+			resultPage.setCriteria(dc);
 			resultPage = userManager.findByResultPage(resultPage);
 		} else {
 			String query = keyword.trim();

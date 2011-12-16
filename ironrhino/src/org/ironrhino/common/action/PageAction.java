@@ -103,7 +103,7 @@ public class PageAction extends BaseAction {
 			dc.addOrder(Order.asc("path"));
 			if (resultPage == null)
 				resultPage = new ResultPage<Page>();
-			resultPage.setDetachedCriteria(dc);
+			resultPage.setCriteria(dc);
 			resultPage = pageManager.findByResultPage(resultPage);
 		} else {
 			String query = keyword.trim();
