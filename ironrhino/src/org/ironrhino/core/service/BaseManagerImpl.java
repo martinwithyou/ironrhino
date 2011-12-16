@@ -231,11 +231,9 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		detachedCriteria
 				.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		Map<String, Boolean> sorts = resultPage.getSorts();
-		if (sorts.size() > 0) {
-			for (Map.Entry<String, Boolean> entry : sorts.entrySet())
-				detachedCriteria.addOrder(entry.getValue() ? Order.desc(entry
-						.getKey()) : Order.asc(entry.getKey()));
-		}
+		for (Map.Entry<String, Boolean> entry : sorts.entrySet())
+			detachedCriteria.addOrder(entry.getValue() ? Order.desc(entry
+					.getKey()) : Order.asc(entry.getKey()));
 		int start, end;
 		if (!resultPage.isReverse()) {
 			start = (resultPage.getPageNo() - 1) * resultPage.getPageSize();
