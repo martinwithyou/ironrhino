@@ -1,4 +1,4 @@
-package org.ironrhino.core.search;
+package org.ironrhino.core.search.compass;
 
 import java.util.Set;
 

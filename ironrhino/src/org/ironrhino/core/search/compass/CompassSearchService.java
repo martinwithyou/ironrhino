@@ -1,25 +1,34 @@
-package org.ironrhino.core.search;
+package org.ironrhino.core.search.compass;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.compass.core.Compass;
 import org.compass.core.CompassCallback;
 import org.compass.core.CompassDetachedHits;
+import org.compass.core.CompassHit;
 import org.compass.core.CompassHits;
 import org.compass.core.CompassQuery;
-import org.compass.core.CompassQueryFilterBuilder;
+import org.compass.core.CompassQuery.SortDirection;
 import org.compass.core.CompassSession;
 import org.compass.core.CompassTemplate;
 import org.compass.core.engine.SearchEngineQueryParseException;
 import org.compass.core.support.search.CompassSearchResults;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.search.SearchCriteria;
+import org.ironrhino.core.search.SearchService;
+import org.ironrhino.core.search.SearchStat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-public class CompassSearchService {
+public class CompassSearchService implements SearchService {
 
 	protected Logger log = LoggerFactory.getLogger(CompassSearchService.class);
 
@@ -31,13 +40,44 @@ public class CompassSearchService {
 
 	private CompassTemplate compassTemplate;
 
-	public CompassSearchResults search(final CompassCriteria criteria) {
+	public ResultPage search(ResultPage resultPage) {
+		CompassSearchResults searchResults = search(
+				(CompassSearchCriteria) resultPage.getCriteria(),
+				resultPage.getPageNo(), resultPage.getPageSize());
+		resultPage.setTotalRecord(searchResults.getTotalHits());
+		CompassHit[] hits = searchResults.getHits();
+		if (hits != null) {
+			List list = new ArrayList(hits.length);
+			for (CompassHit ch : searchResults.getHits())
+				list.add(ch.getData());
+			resultPage.setResult(list);
+		}
+		return resultPage;
+	}
+
+	public List search(SearchCriteria searchCriteria) {
+		CompassSearchResults searchResults = search(
+				(CompassSearchCriteria) searchCriteria, -1, -1);
+		CompassHit[] hits = searchResults.getHits();
+		if (hits != null) {
+			List list = new ArrayList(hits.length);
+			for (CompassHit ch : searchResults.getHits())
+				list.add(ch.getData());
+			return list;
+		} else {
+			return Collections.EMPTY_LIST;
+		}
+	}
+
+	public CompassSearchResults search(final CompassSearchCriteria criteria,
+			final int pageNo, final int pageSize) {
 		if (criteria == null)
 			return null;
 		CompassSearchResults searchResults = (CompassSearchResults) getCompassTemplate()
 				.execute(new CompassCallback() {
 					public Object doInCompass(CompassSession session) {
-						return performSearch(criteria, session);
+						return performSearch(criteria, pageNo, pageSize,
+								session);
 					}
 				});
 		if (searchStat != null)
@@ -45,9 +85,8 @@ public class CompassSearchService {
 		return searchResults;
 	}
 
-	protected CompassSearchResults performSearch(CompassCriteria criteria,
-			CompassSession session) {
-		int pageSize = criteria.getPageSize();
+	protected CompassSearchResults performSearch(CompassSearchCriteria criteria,
+			int pageNo, int pageSize, CompassSession session) {
 		long time = System.currentTimeMillis();
 		CompassQuery query = null;
 		try {
@@ -64,7 +103,6 @@ public class CompassSearchService {
 
 		CompassDetachedHits detachedHits;
 		CompassSearchResults.Page[] pages = null;
-		int pageNo = criteria.getPageNo();
 		if (pageSize < 0 || pageSize == Integer.MAX_VALUE) {
 			doProcessBeforeDetach(criteria, session, hits, -1, -1);
 			detachedHits = hits.detach();
@@ -108,7 +146,7 @@ public class CompassSearchService {
 		return searchResults;
 	}
 
-	protected CompassQuery buildQuery(CompassCriteria criteria,
+	protected CompassQuery buildQuery(CompassSearchCriteria criteria,
 			CompassSession session) {
 		String queryString = criteria.getQuery().replaceAll("\\\\", "").trim();
 		if (queryString.startsWith(":"))
@@ -121,80 +159,21 @@ public class CompassSearchService {
 			query.setAliases(criteria.getAliases());
 		if (criteria.getBoost() != null)
 			query.setBoost(criteria.getBoost());
-
-		if (criteria.getConditions().size() > 0) {
-			CompassQueryFilterBuilder builder = session.queryFilterBuilder();
-			if (criteria.getConditions().size() == 1) {
-				CompassCondition condition = criteria.getConditions()
-						.iterator().next();
-				if (condition.getType() == CompassConditionType.BETWEEN)
-					query.setFilter(builder.between(condition.getName(),
-							condition.getLow(), condition.getHigh(), true,
-							false));
-				else if (condition.getType() == CompassConditionType.GE)
-					query.setFilter(builder.ge(condition.getName(), condition
-							.getValue()));
-				else if (condition.getType() == CompassConditionType.GT)
-					query.setFilter(builder.gt(condition.getName(), condition
-							.getValue()));
-				else if (condition.getType() == CompassConditionType.LE)
-					query.setFilter(builder.le(condition.getName(), condition
-							.getValue()));
-				else if (condition.getType() == CompassConditionType.LT)
-					query.setFilter(builder.lt(condition.getName(), condition
-							.getValue()));
-			} else {
-				CompassQueryFilterBuilder.CompassBooleanQueryFilterBuilder cc = builder
-						.bool();
-				for (CompassCondition condition : criteria.getConditions())
-					if (condition.getType() == CompassConditionType.BETWEEN)
-						cc = cc.and(builder.between(condition.getName(),
-								condition.getLow(), condition.getHigh(), true,
-								false));
-					else if (condition.getType() == CompassConditionType.GE)
-						cc = cc.and(builder.ge(condition.getName(), condition
-								.getValue()));
-					else if (condition.getType() == CompassConditionType.GT)
-						cc = cc.and(builder.gt(condition.getName(), condition
-								.getValue()));
-					else if (condition.getType() == CompassConditionType.LE)
-						cc = cc.and(builder.le(condition.getName(), condition
-								.getValue()));
-					else if (condition.getType() == CompassConditionType.LT)
-						cc = cc.and(builder.lt(condition.getName(), condition
-								.getValue()));
-				query.setFilter(cc.toFilter());
-			}
-		}
-		for (CompassSort sort : criteria.getSorts()) {
-			query.addSort(sort.getName(), sort.getType(), sort.getDirection());
+		if(criteria.getFilter()!=null)
+			query.setFilter(criteria.getFilter());
+		for (Map.Entry<String, Boolean> entry : criteria.getSorts().entrySet()) {
+			query.addSort(entry.getKey(), entry.getValue()?SortDirection.REVERSE:SortDirection.AUTO);
 		}
 		return query;
 	}
 
-	protected void doProcessBeforeDetach(CompassCriteria criteria,
+	protected void doProcessBeforeDetach(CompassSearchCriteria criteria,
 			CompassSession session, CompassHits hits, int from, int size) {
 		// do it in browser use javascript
 		// highlight(criteria, session, hits, from, size);
 	}
 
-	protected void highlight(CompassCriteria criteria, CompassSession session,
-			CompassHits hits, int from, int size) {
-		int hitsLength = hits.getLength();
-		if (from < 0) {
-			from = 0;
-			size = hits.getLength();
-		}
-		String[] highlightFields = criteria.getHighlightFields();
-		if (highlightFields == null) {
-			return;
-		}
-		for (int i = from; i < (from + size) && i < hitsLength; i++)
-			for (String highlightField : highlightFields)
-				hits.highlighter(i).fragment(highlightField);
-	}
-
-	protected void doProcessAfterDetach(CompassCriteria criteria,
+	protected void doProcessAfterDetach(CompassSearchCriteria criteria,
 			CompassSession session, CompassDetachedHits hits) {
 
 	}

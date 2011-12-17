@@ -7,6 +7,7 @@ import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.search.compass.CompassSearchCriteria;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.struts.RequestDecoratorMapper;
 
@@ -62,7 +63,9 @@ public class IssuePageAction extends BaseAction {
 	public String list() {
 		if (resultPage == null)
 			resultPage = new ResultPage<Page>();
-		resultPage.getSorts().put("createDate", true);
+		CompassSearchCriteria criteria = new CompassSearchCriteria();
+		criteria.addSort("createDate", true);
+		resultPage.setCriteria(criteria);
 		resultPage = pageManager.findResultPageByTag(resultPage, getName());
 		return "issuelist";
 	}

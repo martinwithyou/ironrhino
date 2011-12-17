@@ -25,8 +25,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.compass.annotations.SearchableId;
 import org.compass.annotations.SearchableProperty;
-import org.compass.core.CompassHit;
-import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -41,8 +39,8 @@ import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.search.CompassCriteria;
-import org.ironrhino.core.search.CompassSearchService;
+import org.ironrhino.core.search.compass.CompassSearchCriteria;
+import org.ironrhino.core.search.compass.CompassSearchService;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
@@ -214,28 +212,15 @@ public class EntityAction extends BaseAction {
 			resultPage = entityManager.findByResultPage(resultPage);
 		} else {
 			String query = keyword.trim();
-			CompassCriteria cc = new CompassCriteria();
-			cc.setQuery(query);
-			cc.setAliases(new String[] { getEntityName() });
+			CompassSearchCriteria criteria = new CompassSearchCriteria();
+			criteria.setQuery(query);
+			criteria.setAliases(new String[] { getEntityName() });
 			if (Ordered.class.isAssignableFrom(getEntityClass()))
-				cc.addSort("displayOrder", "INT", false);
+				criteria.addSort("displayOrder", false);
 			if (resultPage == null)
 				resultPage = new ResultPage();
-			cc.setPageNo(resultPage.getPageNo());
-			cc.setPageSize(resultPage.getPageSize());
-			CompassSearchResults searchResults = compassSearchService
-					.search(cc);
-			resultPage.setTotalRecord(searchResults.getTotalHits());
-			CompassHit[] hits = searchResults.getHits();
-			if (hits != null) {
-				List list = new ArrayList(hits.length);
-				for (CompassHit ch : searchResults.getHits()) {
-					list.add(ch.getData());
-				}
-				resultPage.setResult(list);
-			} else {
-				resultPage.setResult(Collections.EMPTY_LIST);
-			}
+			resultPage.setCriteria(criteria);
+			resultPage = compassSearchService.search(resultPage);
 		}
 		readonly = readonly();
 

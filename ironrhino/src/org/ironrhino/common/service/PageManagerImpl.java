@@ -14,8 +14,6 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
-import org.compass.core.CompassHit;
-import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -24,8 +22,8 @@ import org.ironrhino.common.model.Page;
 import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.cache.FlushCache;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.search.CompassCriteria;
-import org.ironrhino.core.search.CompassSearchService;
+import org.ironrhino.core.search.compass.CompassSearchCriteria;
+import org.ironrhino.core.search.compass.CompassSearchService;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,19 +134,10 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 					sb.append(" AND ").append("tags:").append(tag[i]);
 				query = sb.toString();
 			}
-			CompassCriteria cc = new CompassCriteria();
-			cc.setQuery(query);
-			cc.setPageSize(Integer.MAX_VALUE);
-			cc.setAliases(new String[] { "page" });
-			CompassSearchResults searchResults = compassSearchService
-					.search(cc);
-			CompassHit[] hits = searchResults.getHits();
-			if (hits == null)
-				return Collections.EMPTY_LIST;
-			list = new ArrayList(hits.length);
-			for (CompassHit ch : searchResults.getHits()) {
-				list.add((Page) ch.getData());
-			}
+			CompassSearchCriteria criteria = new CompassSearchCriteria();
+			criteria.setQuery(query);
+			criteria.setAliases(new String[] { "page" });
+			list = compassSearchService.search(criteria);
 		} else {
 			DetachedCriteria dc = detachedCriteria();
 			for (int i = 0; i < tag.length; i++) {
@@ -178,42 +167,27 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			return resultPage;
 		}
 
+		String query = null;
+		if (tag.length == 1) {
+			query = "tags:" + tag[0];
+		} else {
+			StringBuilder sb = new StringBuilder();
+			sb.append("tags:").append(tag[0]);
+			for (int i = 1; i < tag.length; i++)
+				sb.append(" AND ").append("tags:").append(tag[i]);
+			query = sb.toString();
+		}
+		CompassSearchCriteria criteria = (CompassSearchCriteria) resultPage
+				.getCriteria();
+		if (criteria == null)
+			criteria = new CompassSearchCriteria();
+		criteria.setQuery(query);
+		criteria.setAliases(new String[] { "page" });
+		if (criteria.getSorts().size() == 0)
+			criteria.addSort("displayOrder", false);
+
 		if (compassSearchService != null) {
-			String query = null;
-			if (tag.length == 1) {
-				query = "tags:" + tag[0];
-			} else {
-				StringBuilder sb = new StringBuilder();
-				sb.append("tags:").append(tag[0]);
-				for (int i = 1; i < tag.length; i++)
-					sb.append(" AND ").append("tags:").append(tag[i]);
-				query = sb.toString();
-			}
-			CompassCriteria cc = new CompassCriteria();
-			cc.setQuery(query);
-			cc.setPageNo(resultPage.getPageNo());
-			cc.setPageSize(resultPage.getPageSize());
-			cc.setAliases(new String[] { "page" });
-			Map<String, Boolean> sorts = resultPage.getSorts();
-			if (sorts.size() > 0) {
-				for (Map.Entry<String, Boolean> entry : sorts.entrySet())
-					cc.addSort(entry.getKey(), null, entry.getValue());
-			} else {
-				cc.addSort("displayOrder", null, false);
-			}
-			CompassSearchResults searchResults = compassSearchService
-					.search(cc);
-			CompassHit[] hits = searchResults.getHits();
-			if (hits == null) {
-				resultPage.setResult(Collections.EMPTY_LIST);
-				return resultPage;
-			}
-			List<Page> list = new ArrayList(hits.length);
-			for (CompassHit ch : searchResults.getHits()) {
-				list.add((Page) ch.getData());
-			}
-			resultPage.setTotalRecord(searchResults.getTotalHits());
-			resultPage.setResult(list);
+			resultPage = compassSearchService.search(resultPage);
 		} else {
 			DetachedCriteria dc = detachedCriteria();
 			for (int i = 0; i < tag.length; i++) {
@@ -225,17 +199,11 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 										.like("tagsAsString", "," + tag[i]
 												+ ",", MatchMode.ANYWHERE)))));
 			}
-			Map<String, Boolean> sorts = resultPage.getSorts();
-			if (sorts.size() > 0) {
-				for (Map.Entry<String, Boolean> entry : sorts.entrySet()) {
-					if (entry.getValue())
-						dc.addOrder(Order.desc(entry.getKey()));
-					else
-						dc.addOrder(Order.asc(entry.getKey()));
-				}
-			} else {
-				dc.addOrder(Order.asc("displayOrder"));
-			}
+
+			for (Map.Entry<String, Boolean> entry : criteria.getSorts()
+					.entrySet())
+				dc.addOrder(entry.getValue() ? Order.desc(entry.getKey())
+						: Order.asc(entry.getKey()));
 
 			resultPage.setCriteria(dc);
 			resultPage = findByResultPage(resultPage);
@@ -246,26 +214,20 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	public Map<String, Integer> findMatchedTags(String keyword) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		if (compassSearchService != null) {
-			CompassCriteria cc = new CompassCriteria();
+			CompassSearchCriteria cc = new CompassSearchCriteria();
 			cc.setQuery(new StringBuilder("tags:").append("*").append(keyword)
 					.append("*").toString());
 			cc.setAliases(new String[] { "page" });
-			cc.setPageSize(Integer.MAX_VALUE);
-			CompassSearchResults searchResults = compassSearchService
-					.search(cc);
-			CompassHit[] hits = searchResults.getHits();
-			if (hits != null) {
-				for (CompassHit ch : searchResults.getHits()) {
-					Page p = (Page) ch.getData();
-					for (String tag : p.getTags()) {
-						if (!tag.contains(keyword))
-							continue;
-						Integer count = map.get(tag);
-						if (count != null)
-							map.put(tag, map.get(tag) + 1);
-						else
-							map.put(tag, 1);
-					}
+			List<Page> list = compassSearchService.search(cc);
+			for (Page p : list) {
+				for (String tag : p.getTags()) {
+					if (!tag.contains(keyword))
+						continue;
+					Integer count = map.get(tag);
+					if (count != null)
+						map.put(tag, map.get(tag) + 1);
+					else
+						map.put(tag, 1);
 				}
 			}
 		} else {

@@ -76,8 +76,8 @@ import org.compass.core.support.search.CompassSearchResults;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.search.CompassCriteria;
-import org.ironrhino.core.search.CompassSearchService;
+import org.ironrhino.core.search.compass.CompassCriteria;
+import org.ironrhino.core.search.compass.CompassSearchService;
 import org.ironrhino.core.struts.BaseAction;
 
 import com.mycompany.model.Customer;
