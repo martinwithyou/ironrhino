@@ -41,6 +41,10 @@ public class CompassSearchService implements SearchService {
 	private CompassTemplate compassTemplate;
 
 	public ResultPage search(ResultPage resultPage) {
+		return search(resultPage, null);
+	}
+
+	public ResultPage search(ResultPage resultPage, Mapper mapper) {
 		CompassSearchResults searchResults = search(
 				(CompassSearchCriteria) resultPage.getCriteria(),
 				resultPage.getPageNo(), resultPage.getPageSize());
@@ -49,20 +53,26 @@ public class CompassSearchService implements SearchService {
 		if (hits != null) {
 			List list = new ArrayList(hits.length);
 			for (CompassHit ch : searchResults.getHits())
-				list.add(ch.getData());
+				list.add(mapper == null ? ch.getData() : mapper.map(ch
+						.getData()));
 			resultPage.setResult(list);
 		}
 		return resultPage;
 	}
 
 	public List search(SearchCriteria searchCriteria) {
+		return search(searchCriteria, null);
+	}
+
+	public List search(SearchCriteria searchCriteria, Mapper mapper) {
 		CompassSearchResults searchResults = search(
 				(CompassSearchCriteria) searchCriteria, -1, -1);
 		CompassHit[] hits = searchResults.getHits();
 		if (hits != null) {
 			List list = new ArrayList(hits.length);
 			for (CompassHit ch : searchResults.getHits())
-				list.add(ch.getData());
+				list.add(mapper == null ? ch.getData() : mapper.map(ch
+						.getData()));
 			return list;
 		} else {
 			return Collections.EMPTY_LIST;
@@ -85,8 +95,9 @@ public class CompassSearchService implements SearchService {
 		return searchResults;
 	}
 
-	protected CompassSearchResults performSearch(CompassSearchCriteria criteria,
-			int pageNo, int pageSize, CompassSession session) {
+	protected CompassSearchResults performSearch(
+			CompassSearchCriteria criteria, int pageNo, int pageSize,
+			CompassSession session) {
 		long time = System.currentTimeMillis();
 		CompassQuery query = null;
 		try {
@@ -159,10 +170,12 @@ public class CompassSearchService implements SearchService {
 			query.setAliases(criteria.getAliases());
 		if (criteria.getBoost() != null)
 			query.setBoost(criteria.getBoost());
-		if(criteria.getFilter()!=null)
+		if (criteria.getFilter() != null)
 			query.setFilter(criteria.getFilter());
 		for (Map.Entry<String, Boolean> entry : criteria.getSorts().entrySet()) {
-			query.addSort(entry.getKey(), entry.getValue()?SortDirection.REVERSE:SortDirection.AUTO);
+			query.addSort(entry.getKey(),
+					entry.getValue() ? SortDirection.REVERSE
+							: SortDirection.AUTO);
 		}
 		return query;
 	}

@@ -10,4 +10,14 @@ public interface SearchService {
 
 	public List search(SearchCriteria searchCriteria);
 
+	public ResultPage search(ResultPage resultPage, Mapper mapper);
+
+	public List search(SearchCriteria searchCriteria, Mapper mapper);
+
+	public static interface Mapper {
+
+		public Object map(Object source);
+
+	}
+
 }

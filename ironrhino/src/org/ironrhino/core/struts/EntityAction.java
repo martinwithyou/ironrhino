@@ -39,6 +39,7 @@ import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.search.SearchService.Mapper;
 import org.ironrhino.core.search.compass.CompassSearchCriteria;
 import org.ironrhino.core.search.compass.CompassSearchService;
 import org.ironrhino.core.service.BaseManager;
@@ -220,7 +221,13 @@ public class EntityAction extends BaseAction {
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(criteria);
-			resultPage = compassSearchService.search(resultPage);
+
+			resultPage = compassSearchService.search(resultPage, new Mapper() {
+				public Object map(Object source) {
+					return baseManager.get(((Persistable) source).getId());
+				}
+			});
+
 		}
 		readonly = readonly();
 
