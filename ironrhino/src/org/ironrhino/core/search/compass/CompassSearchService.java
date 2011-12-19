@@ -48,6 +48,8 @@ public class CompassSearchService implements SearchService {
 		CompassSearchResults searchResults = search(
 				(CompassSearchCriteria) resultPage.getCriteria(),
 				resultPage.getPageNo(), resultPage.getPageSize());
+		if (searchResults == null)
+			return resultPage;
 		resultPage.setTotalRecord(searchResults.getTotalHits());
 		CompassHit[] hits = searchResults.getHits();
 		if (hits != null) {
@@ -57,8 +59,6 @@ public class CompassSearchService implements SearchService {
 						.getData());
 				if (data != null)
 					list.add(data);
-				else
-					resultPage.setTotalRecord(resultPage.getTotalRecord() - 1);
 			}
 			resultPage.setResult(list);
 		}
@@ -72,6 +72,8 @@ public class CompassSearchService implements SearchService {
 	public List search(SearchCriteria searchCriteria, Mapper mapper) {
 		CompassSearchResults searchResults = search(
 				(CompassSearchCriteria) searchCriteria, -1, -1);
+		if (searchResults == null)
+			return Collections.EMPTY_LIST;
 		CompassHit[] hits = searchResults.getHits();
 		if (hits != null) {
 			List list = new ArrayList(hits.length);

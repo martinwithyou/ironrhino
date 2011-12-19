@@ -179,8 +179,10 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		}
 		CompassSearchCriteria criteria = (CompassSearchCriteria) resultPage
 				.getCriteria();
-		if (criteria == null)
+		if (criteria == null){
 			criteria = new CompassSearchCriteria();
+			resultPage.setCriteria(criteria);
+		}
 		criteria.setQuery(query);
 		criteria.setAliases(new String[] { "page" });
 		if (criteria.getSorts().size() == 0)
