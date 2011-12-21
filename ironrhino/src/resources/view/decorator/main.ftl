@@ -1,3 +1,4 @@
+<#assign requestURI=request.requestURI?substring(request.contextPath?length)/>
 <#assign modernBrowser = false/>
 <#assign ua = request.getAttribute('userAgent')/>
 <#if ua?? && (ua.name!='msie' || ua.majorVersion gt 8)>
@@ -5,7 +6,6 @@
 </#if>
 <#if modernBrowser>
 <!DOCTYPE html>
-<#assign requestURI=request.requestURI?substring(request.contextPath?length)/>
 <html>
 <#else>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
