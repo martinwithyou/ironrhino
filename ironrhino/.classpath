@@ -22,7 +22,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-pool-1.5.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/compass-2.2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/dynamicreports-core-2.3.2.jar"/>
+	<classpathentry kind="lib" path="D:/workspace/ironrhino/webapp/WEB-INF/lib/dynamicreports-core-2.3.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.5.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/freemarker-2.3.18.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/guava-10.0.1.jar"/>
