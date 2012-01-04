@@ -88,7 +88,7 @@ public class CyclicMySQLMaxValueIncrementer extends
 			} else {
 				stmt.execute("CREATE TABLE `" + getIncrementerName() + "` ("
 						+ columnName + " INT NOT NULL DEFAULT 0," + columnName
-						+ "_TIMESTAMP BIGINT) TYPE=MYISAM");
+						+ "_TIMESTAMP BIGINT) ");
 				stmt.execute("INSERT INTO `" + getIncrementerName()
 						+ "` VALUES(0,null)");
 			}
