@@ -28110,14 +28110,14 @@ Observation.multiautocomplete = function(container) {
 				return;
 			var group = $(this).closest('.checkboxgroup');
 			if (!group.length)
-				group = this.form;
+				group = $(this).closest('form.richtable');
 			if (!this.name) {
 				var b = this.checked;
-				if (group)
+				if (group.length)
 					$('input[type=checkbox][name]', group).each(function() {
 								this.checked = b;
 								var tr = $(this).closest('tr');
-								if (tr) {
+								if (tr.length) {
 									if (b)
 										tr.addClass('selected');
 									else
@@ -28127,7 +28127,7 @@ Observation.multiautocomplete = function(container) {
 			} else {
 				if (!event.shiftKey) {
 					var tr = $(this).closest('tr');
-					if (tr) {
+					if (group.length && tr) {
 						if (this.checked)
 							tr.addClass('selected');
 						else
