@@ -6,7 +6,7 @@ import org.compass.annotations.Index;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 
-@Searchable(root = false, alias = "labelValue")
+@Searchable(root = false)
 public class LabelValue implements Serializable {
 
 	@SearchableProperty(boost = 2, index = Index.NOT_ANALYZED)
