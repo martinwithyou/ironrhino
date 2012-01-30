@@ -343,7 +343,9 @@ public class EntityAction extends BaseAction {
 				String propertyName = null;
 				for (String parameterName : ServletActionContext.getRequest()
 						.getParameterMap().keySet()) {
-					if (parameterName.startsWith(getEntityName() + '.')) {
+					if (parameterName.startsWith(getEntityName() + '.')
+							|| parameterName.startsWith("__checkbox_"
+									+ getEntityName() + '.')) {
 						propertyName = parameterName.substring(parameterName
 								.indexOf('.') + 1);
 						if (propertyName.indexOf('.') > 0)

@@ -28127,8 +28127,8 @@ Observation.multiautocomplete = function(container) {
 			} else {
 				if (!event.shiftKey) {
 					var tr = $(this).closest('tr');
-					if (group.length && tr) {
-						if (this.checked)
+					if (tr) {
+						if (group.length && this.checked)
 							tr.addClass('selected');
 						else
 							tr.removeClass('selected');
@@ -28762,6 +28762,9 @@ Observation.portal = function(container) {
 (function($) {
 	$.fn.combox = function() {
 		this.keydown(function(event) {
+					combox(this)
+				});
+		this.dblclick(function(event) {
 					combox(this)
 				});
 		return this;

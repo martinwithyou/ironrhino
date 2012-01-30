@@ -3,6 +3,9 @@
 		this.keydown(function(event) {
 					combox(this)
 				});
+		this.dblclick(function(event) {
+					combox(this)
+				});
 		return this;
 	};
 	function combox(ele) {

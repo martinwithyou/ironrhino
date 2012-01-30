@@ -39,8 +39,8 @@
 			} else {
 				if (!event.shiftKey) {
 					var tr = $(this).closest('tr');
-					if (group.length && tr) {
-						if (this.checked)
+					if (tr) {
+						if (group.length && this.checked)
 							tr.addClass('selected');
 						else
 							tr.removeClass('selected');
