@@ -177,6 +177,7 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String list() {
+		final BaseManager entityManager = getEntityManager(getEntityClass());
 		Set<String> searchablePropertyNames = new HashSet<String>();
 		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
 			if (entry.getValue().isSearchable())
@@ -187,7 +188,6 @@ public class EntityAction extends BaseAction {
 				|| searchablePropertyNames.size() > 0;
 		if (!searchable || StringUtils.isBlank(keyword)
 				|| (searchable && compassSearchService == null)) {
-			BaseManager entityManager = getEntityManager(getEntityClass());
 			DetachedCriteria dc = entityManager.detachedCriteria();
 			Criterion filtering = CriterionUtils.filter(constructEntity(),
 					searchablePropertyNames.toArray(new String[0]));
@@ -221,10 +221,9 @@ public class EntityAction extends BaseAction {
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(criteria);
-
 			resultPage = compassSearchService.search(resultPage, new Mapper() {
 				public Object map(Object source) {
-					return baseManager.get(((Persistable) source).getId());
+					return entityManager.get(((Persistable) source).getId());
 				}
 			});
 
