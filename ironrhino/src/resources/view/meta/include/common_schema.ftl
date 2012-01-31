@@ -1,6 +1,21 @@
 <#macro editAttributes schema={} schemaName="" attributes=[] parameterNamePrefix="">
 	<#if schemaName!="" && !schema.name??>
-		<#local schema=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findByNaturalId(true,[schemaName])!>
+		<#if schemaName?index_of(",") gt 0>
+			<#local schemaNames = schemaName?split(",")>
+			<#list schemaNames as name>
+				<#local temp=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findByNaturalId(true,[name])!>
+				<#local tempisnotnull=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findByNaturalId(true,[name])??>
+				<#if tempisnotnull>
+					<#if !schema.name?? && temp??>
+						<#local schema=temp>
+					<#elseif schema.name?? && temp??>
+						<#local schema=schema.merge(temp)>
+					</#if>
+				</#if>
+			</#list>
+		<#else>
+			<#local schema=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findByNaturalId(true,[schemaName])!>
+		</#if>
 	</#if>
 	<table border="0" class="datagrid" style="width:100%;">
 		<thead>

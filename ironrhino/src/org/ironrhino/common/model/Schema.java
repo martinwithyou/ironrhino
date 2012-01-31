@@ -97,7 +97,7 @@ public class Schema extends BaseEntity {
 			Iterator<String> it2 = f.getValues().iterator();
 			while (it2.hasNext()) {
 				String value = it2.next();
-				if (values.contains(value) || StringUtils.isBlank(value)){
+				if (values.contains(value) || StringUtils.isBlank(value)) {
 					it2.remove();
 					continue;
 				}
@@ -123,6 +123,22 @@ public class Schema extends BaseEntity {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+	}
+
+	public Schema merge(Schema other) {
+		if (other != null)
+			fields.addAll(other.getFields());
+		Set<String> names = new HashSet<String>();
+		Iterator<Field> it = fields.iterator();
+		while (it.hasNext()) {
+			Field f = it.next();
+			if (names.contains(f.getName()) || StringUtils.isBlank(f.getName())) {
+				it.remove();
+				continue;
+			}
+			names.add(f.getName());
+		}
+		return this;
 	}
 
 	@Searchable(root = false)
