@@ -51,6 +51,10 @@ public class DictionaryControl implements
 		map = temp;
 	}
 
+	public Dictionary getDictionary(String name) {
+		return map.get(name);
+	}
+
 	public Map<String, String> getItems(String name) {
 		Dictionary dict = map.get(name);
 		if (dict == null)

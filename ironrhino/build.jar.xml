@@ -17,7 +17,7 @@
 		value="org/ironrhino/common/**/*Page*,org/ironrhino/common/**/Cms*,resources/hibernate/common/Page*,resources/view/common/page*,resources/view/meta/include/common_cms.ftl" />
 	<property name="common-dictionary-jar.name" value="ironrhino-common-dictionary-${version}.jar" />
 	<property name="common-dictionary-jar.includes"
-		value="org/ironrhino/common/**/Dictionary*,resources/hibernate/common/Dictionary*,resources/view/common/dictionary*" />
+		value="org/ironrhino/common/**/Dictionary*,resources/hibernate/common/Dictionary*,resources/view/common/dictionary*,resources/view/meta/include/common_dictionary.ftl" />
 	<property name="common-schema-jar.name" value="ironrhino-common-schema-${version}.jar" />
 	<property name="common-schema-jar.includes"
 		value="org/ironrhino/common/**/Schema*,resources/hibernate/common/Schema*,resources/view/common/schema*,resources/view/meta/include/common_schema.ftl" />
