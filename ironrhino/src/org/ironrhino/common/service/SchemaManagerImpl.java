@@ -1,0 +1,15 @@
+package org.ironrhino.common.service;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import org.ironrhino.common.model.Schema;
+import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.BaseManagerImpl;
+
+@Singleton
+@Named("schemaManager")
+public class SchemaManagerImpl extends BaseManagerImpl<Schema> implements
+		BaseManager<Schema> {
+
+}
