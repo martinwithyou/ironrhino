@@ -248,11 +248,15 @@ public class EntityAction extends BaseAction {
 					bw.setPropertyValue(naturalIds.iterator().next(), getUid());
 				}
 				Set<String> editablePropertyNames = getUiConfigs().keySet();
-				for (String name : ServletActionContext.getRequest()
+				for (String parameterName : ServletActionContext.getRequest()
 						.getParameterMap().keySet()) {
-					if (editablePropertyNames.contains(name))
-						bw.setPropertyValue(name, ServletActionContext
-								.getRequest().getParameter(name));
+					String propertyName = parameterName;
+					if (propertyName.startsWith(getEntityName() + "."))
+						propertyName = propertyName.substring(propertyName
+								.indexOf('.') + 1);
+					if (editablePropertyNames.contains(propertyName))
+						bw.setPropertyValue(propertyName, ServletActionContext
+								.getRequest().getParameter(parameterName));
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
