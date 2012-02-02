@@ -3,11 +3,6 @@
 <head>
 <title><#if page.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('page')}</title>
 <meta name="cms_path" content="${cmsPath}" />
-<style>
-ul.tagbox {
-	width:60%;
-}
-</style>
 <script type="text/javascript" src="<@url value="/assets/components/tiny_mce/jquery.tinymce.js"/>"></script>
 <script type="text/javascript">
 $(function() {

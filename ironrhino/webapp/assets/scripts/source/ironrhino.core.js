@@ -777,7 +777,9 @@ Observation.common = function(container) {
 	if (typeof $.fn.tagBox != 'undefined') {
 		$(':input.tagbox').each(function() {
 					var t = $(this);
+					var width = t.width();
 					t.tagBox();
+					t.next().width(width);
 					if (t.hasClass('multiautocomplete')) {
 						t.next().find('.input input').multiautocomplete({
 									source : t.attr('source'),
