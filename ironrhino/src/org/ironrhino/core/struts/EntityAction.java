@@ -691,8 +691,9 @@ public class EntityAction extends BaseAction {
 			this.width = config.width();
 			this.cellEdit = config.cellEdit();
 			this.excludeIfNotEdited = config.excludeIfNotEdited();
+			this.cssClass = config.cssClass();
 			if (this.excludeIfNotEdited)
-				cssClass = "excludeIfNotEdited";
+				cssClass += " excludeIfNotEdited";
 			this.searchable = config.searchable();
 		}
 

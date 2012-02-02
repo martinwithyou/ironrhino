@@ -7,7 +7,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target( { METHOD, FIELD })
+@Target({ METHOD, FIELD })
 @Retention(RUNTIME)
 public @interface UiConfig {
 
@@ -23,6 +23,8 @@ public @interface UiConfig {
 
 	int size() default 0;
 
+	String cssClass() default "";
+
 	int displayOrder() default Integer.MAX_VALUE;
 
 	boolean required() default false;
@@ -30,7 +32,7 @@ public @interface UiConfig {
 	boolean readonly() default false;
 
 	boolean hide() default false;
-	
+
 	boolean searchable() default false;
 
 	String template() default "";
@@ -42,7 +44,7 @@ public @interface UiConfig {
 	String listKey() default DEFAULT_LIST_KEY;
 
 	String listValue() default DEFAULT_LIST_VALUE;
-	
+
 	String cellEdit() default "";
 
 }
