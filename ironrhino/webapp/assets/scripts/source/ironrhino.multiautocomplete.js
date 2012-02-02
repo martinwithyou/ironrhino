@@ -1,12 +1,18 @@
 (function($) {
-	$.fn.multiautocomplete = function() {
+	$.fn.multiautocomplete = function(options) {
+		if (!options)
+			options = {};
 		$(this).each(function() {
 			var t = $(this);
-			var source = t.attr('source');
+			var source = options.source;
+			if (!source)
+				source = t.attr('source');
 			if (source.indexOf('[') > 0)
 				source = $.parseJSON(source);
 			var local = source.constructor == Array;
-			var delimiter = t.attr('delimiter') || ',';
+			var delimiter = options.delimiter;
+			if (!delimiter)
+				delimiter = t.attr('delimiter') || ',';
 			t.autocomplete({
 						source : local ? source : function(request, response) {
 							$.getJSON(source, {
@@ -25,7 +31,8 @@
 						focus : function() {
 							return false;
 						},
-						select : function(event, ui) {
+						select : options.select ? options.select : function(
+								event, ui) {
 							var terms = split(this.value, delimiter);
 							terms.pop();
 							terms.push(ui.item.value);

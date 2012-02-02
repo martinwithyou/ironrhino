@@ -202,7 +202,7 @@ Message = {
 		}
 		var parent = $('#content');
 		var msg;
-		if ($('#_window_').parents('.ui-dialog').length) 
+		if ($('#_window_').parents('.ui-dialog').length)
 			parent = $('#_window_');
 		if (!$('#message', parent).length)
 			$('<div id="message"></div>').prependTo(parent);
@@ -772,6 +772,24 @@ Observation.common = function(container) {
 						options.gravity = 'w';
 					}
 					t.tipsy(options);
+				});
+	}
+	if (typeof $.fn.tagBox != 'undefined') {
+		$(':input.tagbox').each(function() {
+					var t = $(this);
+					t.tagBox();
+					if (t.hasClass('multiautocomplete')) {
+						t.next().find('.input input').multiautocomplete({
+									source : t.attr('source'),
+									select : function(e, ui) {
+										e.preventDefault();
+										if (e.keyCode != 13) {
+											$(this).val(ui.item.value);
+											$(this).trigger("selectTag");
+										}
+									}
+								});
+					}
 				});
 	}
 	$('.switch', container).each(function() {

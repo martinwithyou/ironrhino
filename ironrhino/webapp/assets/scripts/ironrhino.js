@@ -23811,6 +23811,194 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 	};
     
 })(jQuery);
+// jQuery autoGrowInput plugin by James Padolsey
+// See related thread: http://stackoverflow.com/questions/931207/is-there-a-jquery-autogrow-plugin-for-text-fields
+    
+(function($) {
+    
+    $.fn.autoGrowInput = function(o) {
+        o = $.extend({
+            maxWidth: 1000,
+            minWidth: 0,
+            comfortZone: 70
+        }, o);
+    
+        this.each(function() {
+
+            var minWidth = o.minWidth || $(this).width(),
+                val = '',
+                input = $(this),
+                testSubject = $('<tester/>').css({
+                    position: 'absolute',
+                    top: -9999,
+                    left: -9999,
+                    width: 'auto',
+                    fontSize: input.css('fontSize'),
+                    fontFamily: input.css('fontFamily'),
+                    fontWeight: input.css('fontWeight'),
+                    letterSpacing: input.css('letterSpacing'),
+                    whiteSpace: 'nowrap'
+                }),
+                check = function() {
+                
+                    if (val === (val = input.val())) {return;}
+                
+                    // Enter new content into testSubject
+                    var escaped = val.replace(/&/g, '&amp;').replace(/\s/g,'&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    testSubject.html(escaped);
+                
+                    // Calculate new width + whether to change
+                    var testerWidth = testSubject.width(),
+                        newWidth = (testerWidth + o.comfortZone) >= minWidth ? testerWidth + o.comfortZone : minWidth,
+                        currentWidth = input.width(),
+                        isValidWidthChange = (newWidth < currentWidth && newWidth >= minWidth)
+                                             || (newWidth > minWidth && newWidth < o.maxWidth);
+                
+                    // Animate width
+                    if (isValidWidthChange) {
+                        input.width(newWidth);
+                    }
+                
+                };
+            
+            testSubject.insertAfter(input);
+        
+            $(this).bind('keyup keydown blur update', check);
+        
+        });
+    return this;
+    };
+})(jQuery);
+/*
+*   jQuery tagbox
+*   -------------
+*   Released under the MIT, BSD, and GPL Licenses.
+*   Copyright 2011 Daniel Stocks
+*
+*   Dependencies:
+*   ------------
+*   jquery.autoGrowInput.js
+*  
+*/
+
+(function($) {
+    
+    function TagBox(input, options) {
+
+        var self = this;
+        
+        self.options = options
+        self.delimit_key = 188
+        self.delimit_expr = /\s*,\s*/
+
+        if(options.delimit_by_space) {
+            self.delimit_key = 32 
+            self.delimit_expr = /\s+/
+        }
+
+        var val = input.val();
+        var tags = []
+        if(val) { 
+            tags = input.val().split(self.delimit_expr);
+        }
+        self.input = input
+        self.tagInput = $('<input>', {
+            'type' : 'text',
+            'keydown' : function(e) {
+                if(e.keyCode == 13 || e.keyCode == self.delimit_key ) {
+                    $(this).trigger("selectTag");
+                    e.preventDefault();
+                }
+            },
+            'blur' : function(e) {
+                $(this).val("");
+            }
+        });
+        
+        self.tagInput.bind("selectTag", function() {
+            if(!$(this).val()) {
+                return;
+            }
+            self.addTag($(this).val());
+            $(this).val("");
+        });
+        
+        self.tagbox = $('<ul>', {
+            "class" : "tagbox",
+            click : function(e) {
+                self.tagInput.focus();
+            }
+        });
+
+        self.tags = []
+        
+        input.after(self.tagbox).hide();
+
+        self.inputHolder = $('<li class="input">');
+        self.tagbox.append(self.inputHolder);
+        self.inputHolder.append(self.tagInput);
+        self.tagInput.autoGrowInput();
+        
+        for(tag in tags) {
+            self.addTag(tags[tag]);
+        }
+    }
+    
+    TagBox.prototype = {
+        
+        addTag : function(label) {
+            
+            var self = this;
+            var tag = $('<li class="tag">' + $('<div>').text(label).remove().html() + '</li>');
+            
+            this.tags.push(label);
+
+            tag.append($('<a>', {
+                "href" : "#",
+                "class": "close",
+                "text": "close",
+                click: function(e) {
+                    e.preventDefault();
+                    var index = self.tagbox.find("li").index($(this).parent());
+                    self.removeTag(index);
+                }
+            }));
+            self.inputHolder.before(tag);
+            self.updateInput();
+        },
+        removeTag : function(index) {
+            
+            this.tagbox.find("li").eq(index).remove();
+            this.tags.splice(index, 1);
+            this.updateInput();
+        },
+        updateInput : function() {
+            
+            var tags;
+            if(this.options.delimit_by_space) {
+                tags = this.tags.join(" ");
+            } else {
+                tags = this.tags.join(",");
+            }
+            this.input.val(tags);
+        }
+    }
+    
+    $.fn.tagBox = function(options) {
+
+        var defaults = {
+            delimit_by_space : false 
+        }
+        var options = $.extend(defaults, options);
+        return this.each(function() {
+            
+            var input = $(this);
+            var tagbox = new TagBox(input, options);
+        });
+    }
+})(jQuery);
+
+
 /*
  * Treeview 1.4 - jQuery plugin to hide and show branches of a tree
  * 
@@ -27054,7 +27242,7 @@ Message = {
 		}
 		var parent = $('#content');
 		var msg;
-		if ($('#_window_').parents('.ui-dialog').length) 
+		if ($('#_window_').parents('.ui-dialog').length)
 			parent = $('#_window_');
 		if (!$('#message', parent).length)
 			$('<div id="message"></div>').prependTo(parent);
@@ -27626,6 +27814,24 @@ Observation.common = function(container) {
 					t.tipsy(options);
 				});
 	}
+	if (typeof $.fn.tagBox != 'undefined') {
+		$(':input.tagbox').each(function() {
+					var t = $(this);
+					t.tagBox();
+					if (t.hasClass('multiautocomplete')) {
+						t.next().find('.input input').multiautocomplete({
+									source : t.attr('source'),
+									select : function(e, ui) {
+										e.preventDefault();
+										if (e.keyCode != 13) {
+											$(this).val(ui.item.value);
+											$(this).trigger("selectTag");
+										}
+									}
+								});
+					}
+				});
+	}
 	$('.switch', container).each(function() {
 		var t = $(this);
 		t.children().css('cursor', 'pointer').click(function() {
@@ -28036,14 +28242,20 @@ Observation.ajaxpanel = function(container) {
 			});
 };
 (function($) {
-	$.fn.multiautocomplete = function() {
+	$.fn.multiautocomplete = function(options) {
+		if (!options)
+			options = {};
 		$(this).each(function() {
 			var t = $(this);
-			var source = t.attr('source');
+			var source = options.source;
+			if (!source)
+				source = t.attr('source');
 			if (source.indexOf('[') > 0)
 				source = $.parseJSON(source);
 			var local = source.constructor == Array;
-			var delimiter = t.attr('delimiter') || ',';
+			var delimiter = options.delimiter;
+			if (!delimiter)
+				delimiter = t.attr('delimiter') || ',';
 			t.autocomplete({
 						source : local ? source : function(request, response) {
 							$.getJSON(source, {
@@ -28062,7 +28274,8 @@ Observation.ajaxpanel = function(container) {
 						focus : function() {
 							return false;
 						},
-						select : function(event, ui) {
+						select : options.select ? options.select : function(
+								event, ui) {
 							var terms = split(this.value, delimiter);
 							terms.pop();
 							terms.push(ui.item.value);

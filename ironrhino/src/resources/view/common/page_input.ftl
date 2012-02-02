@@ -3,6 +3,11 @@
 <head>
 <title><#if page.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('page')}</title>
 <meta name="cms_path" content="${cmsPath}" />
+<style>
+ul.tagbox {
+	width:60%;
+}
+</style>
 <script type="text/javascript" src="<@url value="/assets/components/tiny_mce/jquery.tinymce.js"/>"></script>
 <script type="text/javascript">
 $(function() {
@@ -94,11 +99,11 @@ $(function() {
 </script>
 </head>
 <body>
-<@s.form id="form" action="draft" method="post" cssClass="ajax" cssStyle="padding-top:25px;">
+<@s.form id="form" action="draft" method="post" cssClass="ajax" cssStyle="padding-top:11px;">
 	<@s.hidden id="page_id" name="page.id" />
 	<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50"/>
 	<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" cssClass="integer"/>
-	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="multiautocomplete" source="suggest"/>
+	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tagbox multiautocomplete" source="suggest"/>
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50"/>
 	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="50" rows="16"/>
 	<@s.textarea id="page_head" name="page.head" cols="100" rows="3" cssStyle="display:none;"/>

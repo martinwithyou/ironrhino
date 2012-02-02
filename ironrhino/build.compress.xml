@@ -30,6 +30,8 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.jnotify-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.tipsy-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.autoGrowInput-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.tagBox-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview-1.4.js" />
 				<file
 					name="${webapp.dir}/assets/scripts/source/jquery.treeview.async-0.1.my.js" />
@@ -82,6 +84,8 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.jnotify-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.tipsy-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.autoGrowInput-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.tagBox-1.0.js" />
 				<file
 					name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
 				<file
@@ -103,6 +107,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.ui.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.loadmask.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.tipsy.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.tagBox.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.jnotify.css" />
