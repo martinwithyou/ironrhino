@@ -136,6 +136,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.jnotify.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.tipsy.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.tagBox.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.reset.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
