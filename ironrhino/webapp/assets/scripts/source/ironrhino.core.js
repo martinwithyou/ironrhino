@@ -376,6 +376,8 @@ Ajax = {
 		return true;
 	},
 	handleResponse : function(data, options) {
+		if (!data)
+			return;
 		var hasError = false;
 		var target = options.target;
 		if ((typeof data == 'string')

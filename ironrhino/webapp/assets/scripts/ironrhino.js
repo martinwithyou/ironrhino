@@ -27416,6 +27416,8 @@ Ajax = {
 		return true;
 	},
 	handleResponse : function(data, options) {
+		if (!data)
+			return;
 		var hasError = false;
 		var target = options.target;
 		if ((typeof data == 'string')
@@ -28057,6 +28059,42 @@ Captcha = {
 				});
 		$('input.captcha').val('');
 	}
+};
+(function($) {
+	$.fn.checkavailable = function() {
+		this.each(function() {
+					var t = $(this);
+					t.bind('checkavailable', function() {
+						if (!t.val())
+							return;
+						var inputs = $('input[type=hidden]', t.closest('form'))
+								.not('[name^="__"]').add(t);
+						var url = t.attr('checkurl');
+						if (!url) {
+							url = t.closest('form').prop('action');
+							url = url.substring(0, url.lastIndexOf('/'))
+									+ '/checkavailable';
+						}
+						ajax({
+									global : false,
+									target : t.closest('form')[0],
+									url : url,
+									data : inputs.serialize()
+								});
+
+					}).change(function() {
+								t.addClass('dirty');
+							}).blur(function() {
+								if (t.hasClass('dirty'))
+									t.trigger('checkavailable');
+							});
+				})
+		return this;
+	};
+})(jQuery);
+
+Observation.checkavailable = function(container) {
+	$(':input.checkavailable', container).checkavailable();
 };
 (function($) {
 	if (!window.BlobBuilder && window.WebKitBlobBuilder)

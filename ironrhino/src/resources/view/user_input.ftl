@@ -11,12 +11,12 @@
 		<@s.password label="%{getText('password')}" name="password"/>
 		<@s.password label="%{getText('confirmPassword')}" name="confirmPassword"/>
 	<#else>
-		<@s.textfield label="%{getText('username')}" name="user.username" cssClass="required"/>
+		<@s.textfield label="%{getText('username')}" name="user.username" cssClass="required checkavailable" checkurl="${getUrl('/user/checkavailable')}"/>
 		<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
 		<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" cssClass="required"/>
 	</#if>
 	<@s.textfield label="%{getText('name')}" name="user.name" cssClass="required"/>
-	<@s.textfield label="%{getText('email')}" name="user.email" cssClass="email"/>
+	<@s.textfield label="%{getText('email')}" name="user.email" cssClass="email checkavailable" checkurl="${getUrl('/user/checkavailable')}"/>
 	<@s.textfield label="%{getText('phone')}" name="user.phone"/>
 	<@s.checkbox label="%{getText('enabled')}" name="user.enabled" />
 	<@s.checkboxlist label="%{getText('role')}" name="roleId" list="roles" listKey="key" listValue="value"/>

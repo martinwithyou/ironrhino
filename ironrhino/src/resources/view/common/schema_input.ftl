@@ -6,7 +6,7 @@
 <body>
 <@s.form action="${getUrl('/common/schema/save')}" method="post" cssClass="ajax" cssStyle="text-align:center;">
 	<@s.hidden name="schema.id" />
-	<div style="float:left;width:30%;"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required"/></div>
+	<div style="float:left;width:30%;"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable"/></div>
 	<div style="float:left;width:40%;"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description" /></div>
 	<div style="float:left;width:30%;"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" /></div>
 	<table border="0" class="datagrid" style="width:100%;padding-top:10px;">

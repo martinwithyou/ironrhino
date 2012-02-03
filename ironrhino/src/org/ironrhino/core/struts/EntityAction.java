@@ -269,6 +269,19 @@ public class EntityAction extends BaseAction {
 	public String save() {
 		if (readonly())
 			return ACCESSDENIED;
+		if (!makeEntityValid())
+			return INPUT;
+		BaseManager entityManager = getEntityManager(getEntityClass());
+		entityManager.save(entity);
+		addActionMessage(getText("save.success"));
+		return SUCCESS;
+	}
+
+	public String checkavailable() {
+		return makeEntityValid() ? NONE : INPUT;
+	}
+
+	private boolean makeEntityValid() {
 		BaseManager entityManager = getEntityManager(getEntityClass());
 		entity = constructEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
@@ -302,7 +315,7 @@ public class EntityAction extends BaseAction {
 						addFieldError(getEntityName() + "." + it.next(),
 								getText("validation.already.exists"));
 					}
-					return INPUT;
+					return false;
 				}
 			}
 		} else {
@@ -330,7 +343,7 @@ public class EntityAction extends BaseAction {
 						addFieldError(getEntityName() + "." + it.next(),
 								getText("validation.already.exists"));
 					}
-					return INPUT;
+					return false;
 				}
 				if (persisted != null
 						&& !persisted.getId().equals(entity.getId())) {
@@ -426,10 +439,7 @@ public class EntityAction extends BaseAction {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-
-		entityManager.save(entity);
-		addActionMessage(getText("save.success"));
-		return SUCCESS;
+		return true;
 	}
 
 	@Override
@@ -628,8 +638,11 @@ public class EntityAction extends BaseAction {
 						&& (searchableProperty != null || searchableId != null))
 					uci.setSearchable(true);
 
-				if (getNaturalIds().containsKey(pd.getName()))
+				if (getNaturalIds().containsKey(pd.getName())) {
 					uci.setRequired(true);
+					if (getNaturalIds().size() == 1)
+						uci.addCssClass("checkavailable");
+				}
 				map.put(pd.getName(), uci);
 			}
 			List<Map.Entry<String, UiConfigImpl>> list = new ArrayList<Map.Entry<String, UiConfigImpl>>();

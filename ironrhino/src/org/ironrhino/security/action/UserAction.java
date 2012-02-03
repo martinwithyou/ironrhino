@@ -164,37 +164,10 @@ public class UserAction extends BaseAction {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.username", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "validation.required") }, emails = { @EmailValidator(fieldName = "user.email", key = "validation.invalid") }, regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "user.username", expression = User.USERNAME_REGEX, key = "validation.invalid") }, fieldExpressions = { @FieldExpressionValidator(expression = "password == confirmPassword", fieldName = "confirmPassword", key = "confirmPassword.error") })
 	public String save() {
+		if (!makeEntityValid())
+			return INPUT;
 		if (StringUtils.isBlank(user.getEmail()))
 			user.setEmail(null);
-		if (user.isNew()) {
-			user.setUsername(user.getUsername().toLowerCase());
-			if (userManager.findByNaturalId(user.getUsername()) != null) {
-				addFieldError("user.username",
-						getText("validation.already.exists"));
-				return INPUT;
-			}
-			if (StringUtils.isNotBlank(user.getEmail())
-					&& userManager.findByNaturalId("email", user.getEmail()) != null) {
-				addFieldError("user.email",
-						getText("validation.already.exists"));
-				return INPUT;
-			}
-			user.setLegiblePassword(password);
-		} else {
-
-			User temp = user;
-			user = userManager.get(temp.getId());
-			if (StringUtils.isNotBlank(temp.getEmail())
-					&& !temp.getEmail().equals(user.getEmail())
-					&& userManager.findByNaturalId("email", temp.getEmail()) != null) {
-				addFieldError("user.email",
-						getText("validation.already.exists"));
-				return INPUT;
-			}
-			BeanUtils.copyProperties(temp, user);
-			if (StringUtils.isNotBlank(password))
-				user.setLegiblePassword(password);
-		}
 		user.getRoles().clear();
 		if (roleId != null) {
 			for (String role : roleId)
@@ -203,6 +176,50 @@ public class UserAction extends BaseAction {
 		userManager.save(user);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
+	}
+
+	public String checkavailable() {
+		return makeEntityValid() ? NONE : INPUT;
+	}
+
+	private boolean makeEntityValid() {
+		if (user == null) {
+			addActionError(getText("access.denied"));
+			return false;
+		}
+		if (StringUtils.isBlank(user.getEmail()))
+			user.setEmail(null);
+		if (user.isNew()) {
+			if (StringUtils.isNotBlank(user.getUsername())) {
+				user.setUsername(user.getUsername().toLowerCase());
+				if (userManager.findByNaturalId(user.getUsername()) != null) {
+					addFieldError("user.username",
+							getText("validation.already.exists"));
+					return false;
+				}
+			}
+			if (StringUtils.isNotBlank(user.getEmail())
+					&& userManager.findByNaturalId("email", user.getEmail()) != null) {
+				addFieldError("user.email",
+						getText("validation.already.exists"));
+				return false;
+			}
+			user.setLegiblePassword(password);
+		} else {
+			User temp = user;
+			user = userManager.get(temp.getId());
+			if (StringUtils.isNotBlank(temp.getEmail())
+					&& !temp.getEmail().equals(user.getEmail())
+					&& userManager.findByNaturalId("email", temp.getEmail()) != null) {
+				addFieldError("user.email",
+						getText("validation.already.exists"));
+				return false;
+			}
+			BeanUtils.copyProperties(temp, user);
+			if (StringUtils.isNotBlank(password))
+				user.setLegiblePassword(password);
+		}
+		return true;
 	}
 
 	@Override
