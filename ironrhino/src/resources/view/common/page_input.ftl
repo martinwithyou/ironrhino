@@ -34,11 +34,13 @@ $(function() {
 		var ed = tinymce.EditorManager.get('page_content');
 		$('#draft').click(function(){
 			if(!$('#form').attr('dirty')&&!ed.isDirty()) return false;
-			$('#form').attr('action','draft');
+			var action = $('#form').attr('action');
+			$('#form').attr('action',action.substring(0,action.lastIndexOf('/')+1)+'draft');
 			ed.save();
 		});
 		$('#save').click(function(){
-			$('#form').attr('action','save');
+			var action = $('#form').attr('action');
+			$('#form').attr('action',action.substring(0,action.lastIndexOf('/')+1)+'save');
 			ed.save();
 		});
 		ed.onKeyUp.add(function(ed, e) {
@@ -71,7 +73,8 @@ $(function() {
 		};
 		setInterval(function(){
 			if(($('#form').attr('dirty')||ed.isDirty())&&$('#page_path').val()){
-				$('#form').attr('action','draft');
+				var action = $('#form').attr('action');
+				$('#form').attr('action',action.substring(0,action.lastIndexOf('/')+1)+'draft');
 				ed.save();
 				form.submit();
 				}
@@ -82,7 +85,8 @@ $(function() {
 		});
 		$('#drop').click(function(){
 			var form = $('#form');
-			form.attr('action','drop');
+			var action = $('#form').attr('action');
+			$('#form').attr('action',action.substring(0,action.lastIndexOf('/')+1)+'drop');
 			$('#page_content').text('');
 			form[0].onsuccess=function(){
 				document.location.href = document.location.href;
@@ -94,17 +98,27 @@ $(function() {
 </script>
 </head>
 <body>
-<@s.form id="form" action="draft" method="post" cssClass="ajax" cssStyle="padding-top:11px;">
+<@s.form id="form" action="${getUrl('/common/page/draft')}" method="post" cssClass="ajax" cssStyle="padding-top:11px;">
 	<@s.hidden id="page_id" name="page.id" />
-	<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50"/>
-	<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" cssClass="integer"/>
-	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tagbox multiautocomplete" source="suggest"/>
+	<#if Parameters.brief??>
+		<@s.hidden name="page.path"/>
+		<@s.hidden name="page.displayOrder"/>
+		<@s.hidden name="page.tagsAsString"/>
+	<#else>
+		<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50"/>
+		<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" cssClass="integer"/>
+		<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tagbox multiautocomplete" source="suggest"/>
+	</#if>
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50"/>
 	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="50" rows="16"/>
-	<@s.textarea id="page_head" name="page.head" cols="100" rows="3" cssStyle="display:none;"/>
-	<div class="field">
-		<@button id="display_page_head" text="${action.getText('edit')}${action.getText('head')}"/>
-	</div>
+	<#if Parameters.brief??>
+		<@s.hidden name="page.head"/>
+	<#else>
+		<@s.textarea id="page_head" name="page.head" cols="100" rows="3" cssStyle="display:none;"/>
+		<div class="field">
+			<@button id="display_page_head" text="${action.getText('edit')}${action.getText('head')}"/>
+		</div>
+	</#if>
 	<div class="field">
 	<@s.submit id="draft" value="%{getText('draft')}" theme="simple"/>
 	<span class="draft" <#if !draft>style="display: none;"</#if>>

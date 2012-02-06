@@ -5,8 +5,10 @@
 </head>
 <body>
 <@s.form action="save" method="post" cssClass="ajax">
+	<#if !region.new>
+		<@s.hidden name="region.id" />
+	</#if>
 	<@s.hidden name="parentId" />
-	<@s.hidden name="region.id" />
 	<@s.textfield label="%{getText('name')}" name="region.name" />
 	<@s.textfield label="%{getText('areacode')}" name="region.areacode" maxlength="6" size="6"/>
 	<@s.textfield label="%{getText('postcode')}" name="region.postcode" maxlength="6" size="6"/>

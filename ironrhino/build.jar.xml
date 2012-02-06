@@ -11,7 +11,7 @@
 		value="org/ironrhino/core/dataroute/**,org/ironrhino/core/cache/impl/*Mem*,org/ironrhino/core/fs/impl/Hdfs*,org/ironrhino/core/zookeeper/**,org/ironrhino/core/remoting/**" />
 	<property name="common-setting-jar.name" value="ironrhino-common-setting-${version}.jar" />
 	<property name="common-setting-jar.includes"
-		value="org/ironrhino/common/**/Setting*,resources/hibernate/common/Setting*,resources/view/meta/include/common_setting.ftl" />
+		value="org/ironrhino/common/**/Setting*,resources/hibernate/common/Setting*,resources/view/common/setting*,resources/view/meta/include/common_setting.ftl" />
 	<property name="common-cms-jar.name" value="ironrhino-common-cms-${version}.jar" />
 	<property name="common-cms-jar.includes"
 		value="org/ironrhino/common/**/*Page*,org/ironrhino/common/**/Cms*,resources/hibernate/common/Page*,resources/view/common/page*,resources/view/meta/include/common_cms.ftl" />

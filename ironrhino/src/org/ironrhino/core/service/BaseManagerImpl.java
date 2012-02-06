@@ -265,6 +265,8 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	@Transactional(readOnly = true)
 	public T findByNaturalId(Serializable... objects) {
+		if (objects == null || objects.length == 0)
+			return null;
 		if (objects.length == 1 && objects[0].getClass().isArray()) {
 			Object[] objs = (Object[]) objects[0];
 			Serializable[] arr = new Serializable[objs.length];

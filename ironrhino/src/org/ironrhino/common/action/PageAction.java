@@ -119,7 +119,19 @@ public class PageAction extends BaseAction {
 
 	@Override
 	public String input() {
-		page = pageManager.get(getUid());
+		String id = getUid();
+		if (StringUtils.isNotBlank(id)) {
+			page = pageManager.get(id);
+			if (page == null)
+				page = pageManager.findByNaturalId(id);
+			if (page == null && !id.startsWith("/"))
+				page = pageManager.findByNaturalId("/" + id);
+		} else if (page != null) {
+			if (page.getId() != null)
+				page = pageManager.get(page.getId());
+			else if (page.getPath() != null)
+				page = pageManager.findByNaturalId(page.getPath());
+		}
 		if (page == null) {
 			page = new Page();
 			if (StringUtils.isNotBlank(keyword) && keyword.startsWith("tags:")) {

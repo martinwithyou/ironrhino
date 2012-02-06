@@ -5,8 +5,10 @@
 </head>
 <body>
 <@s.form action="save" method="post" cssClass="ajax">
+	<#if !treeNode.new>
+		<@s.hidden name="treeNode.id" />
+	</#if>
 	<@s.hidden name="parentId" />
-	<@s.hidden name="treeNode.id" />
 	<@s.textfield label="%{getText('name')}" name="treeNode.name" />
 	<@s.textfield label="%{getText('description')}" name="treeNode.description" />
 	<@s.textfield label="%{getText('displayOrder')}" name="treeNode.displayOrder" cssClass="integer"/>
