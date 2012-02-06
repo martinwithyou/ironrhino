@@ -45,6 +45,7 @@ import org.ironrhino.core.search.compass.CompassSearchService;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
+import org.ironrhino.core.util.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
@@ -65,13 +66,13 @@ public class EntityAction extends BaseAction {
 
 	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
 
-	private transient BaseManager<Persistable> baseManager;
+	private transient BaseManager<Persistable> _baseManager;
 
 	private ResultPage resultPage;
 
 	private Persistable entity;
 
-	private Map<String, UiConfigImpl> uiConfigs;
+	private Map<String, UiConfigImpl> _uiConfigs;
 
 	private Map<String, List> lists;
 
@@ -107,7 +108,7 @@ public class EntityAction extends BaseAction {
 	}
 
 	public void setBaseManager(BaseManager baseManager) {
-		this.baseManager = baseManager;
+		this._baseManager = baseManager;
 	}
 
 	private boolean readonly() {
@@ -127,11 +128,11 @@ public class EntityAction extends BaseAction {
 			if (bean != null)
 				return (BaseManager) bean;
 			else
-				baseManager.setEntityClass(entityClass);
+				_baseManager.setEntityClass(entityClass);
 		} catch (NoSuchBeanDefinitionException e) {
-			baseManager.setEntityClass(entityClass);
+			_baseManager.setEntityClass(entityClass);
 		}
-		return baseManager;
+		return _baseManager;
 	}
 
 	private void tryFindEntity() {
@@ -226,10 +227,8 @@ public class EntityAction extends BaseAction {
 					return entityManager.get(((Persistable) source).getId());
 				}
 			});
-
 		}
 		readonly = readonly();
-
 		return LIST;
 	}
 
@@ -318,6 +317,13 @@ public class EntityAction extends BaseAction {
 					return false;
 				}
 			}
+			try {
+				Persistable temp = entity;
+				entity = (Persistable) getEntityClass().newInstance();
+				BeanUtils.copyProperties(temp, entity);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
 		} else {
 			if (naturalIdMutable && naturalIds.size() > 0) {
 				Object[] args = new Object[naturalIds.size() * 2];
@@ -397,43 +403,47 @@ public class EntityAction extends BaseAction {
 			}
 		}
 		try {
+			Set<String> editablePropertyNames = getUiConfigs().keySet();
 			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
 					.getPropertyDescriptors(entity.getClass());
 			for (PropertyDescriptor pd : pds) {
+				if (!editablePropertyNames.contains(pd.getName()))
+					continue;
 				Class returnType = pd.getPropertyType();
-				if (Persistable.class.isAssignableFrom(returnType)) {
-					String parameterValue = ServletActionContext.getRequest()
-							.getParameter(getEntityName() + "." + pd.getName());
-					if (parameterValue == null)
-						parameterValue = ServletActionContext.getRequest()
-								.getParameter(
-										getEntityName() + "." + pd.getName()
-												+ ".id");
-					if (parameterValue == null) {
-						continue;
-					} else if (StringUtils.isBlank(parameterValue)) {
-						pd.getWriteMethod().invoke(entity,
-								new Object[] { null });
-					} else {
-						UiConfig uiConfig = pd.getReadMethod().getAnnotation(
-								UiConfig.class);
-						String listKey = uiConfig != null ? uiConfig.listKey()
-								: UiConfig.DEFAULT_LIST_KEY;
-						BeanWrapperImpl temp = new BeanWrapperImpl(
-								returnType.newInstance());
-						temp.setPropertyValue(listKey, parameterValue);
-						BaseManager em = getEntityManager(returnType);
-						Object obj;
-						if (listKey.equals(UiConfig.DEFAULT_LIST_KEY))
-							obj = em.get((Serializable) temp
-									.getPropertyValue(listKey));
-						else
-							obj = em.findByNaturalId(listKey,
-									(Serializable) temp
-											.getPropertyValue(listKey));
-						pd.getWriteMethod()
-								.invoke(entity, new Object[] { obj });
-					}
+				if (!Persistable.class.isAssignableFrom(returnType))
+					continue;
+				String parameterValue = ServletActionContext.getRequest()
+						.getParameter(getEntityName() + "." + pd.getName());
+				if (parameterValue == null)
+					parameterValue = ServletActionContext.getRequest()
+							.getParameter(
+									getEntityName() + "." + pd.getName()
+											+ ".id");
+				if (parameterValue == null)
+					parameterValue = ServletActionContext.getRequest()
+							.getParameter(pd.getName() + "Id");
+				if (parameterValue == null) {
+					continue;
+				} else if (StringUtils.isBlank(parameterValue)) {
+					pd.getWriteMethod().invoke(entity, new Object[] { null });
+				} else {
+					UiConfig uiConfig = pd.getReadMethod().getAnnotation(
+							UiConfig.class);
+					String listKey = uiConfig != null ? uiConfig.listKey()
+							: UiConfig.DEFAULT_LIST_KEY;
+					BeanWrapperImpl temp = new BeanWrapperImpl(
+							returnType.newInstance());
+					temp.setPropertyValue(listKey, parameterValue);
+					BaseManager em = getEntityManager(returnType);
+					Object obj;
+					if (listKey.equals(UiConfig.DEFAULT_LIST_KEY))
+						obj = em.get((Serializable) temp
+								.getPropertyValue(listKey));
+					else
+						obj = em.findByNaturalId(listKey,
+								(Serializable) temp.getPropertyValue(listKey));
+					pd.getWriteMethod().invoke(entity, new Object[] { obj });
+					em = getEntityManager(getEntityClass());
 				}
 			}
 		} catch (Exception e) {
@@ -537,7 +547,7 @@ public class EntityAction extends BaseAction {
 	}
 
 	public Map<String, UiConfigImpl> getUiConfigs() {
-		if (uiConfigs == null) {
+		if (_uiConfigs == null) {
 			Class clazz = getEntityClass();
 			Set<String> hides = new HashSet<String>();
 			hides.addAll(AnnotationUtils.getAnnotatedPropertyNames(clazz,
@@ -608,6 +618,7 @@ public class EntityAction extends BaseAction {
 					BaseManager em = getEntityManager(returnType);
 					lists.put(pd.getName(), em.findAll());
 					map.put(pd.getName(), uci);
+					em = getEntityManager(getEntityClass());
 					continue;
 				}
 				UiConfigImpl uci = new UiConfigImpl(uiConfig);
@@ -663,9 +674,9 @@ public class EntityAction extends BaseAction {
 			map = new LinkedHashMap<String, UiConfigImpl>();
 			for (Map.Entry<String, UiConfigImpl> entry : list)
 				map.put(entry.getKey(), entry.getValue());
-			uiConfigs = map;
+			_uiConfigs = map;
 		}
-		return uiConfigs;
+		return _uiConfigs;
 	}
 
 	public static class UiConfigImpl {
