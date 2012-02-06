@@ -4,7 +4,7 @@
 	</#if>
 	<select name="${parameterName}" class="<#if required> required</#if><#if !strict> combox</#if>">
 		<option value="">${action.getText('select')}</option>
-		<#if dictionary??>
+		<#if dictionary?? && dictionary.items??>
 		<#list dictionary.items as lv>
 		<option value="${lv.value}"<#if value=lv.value> selected="selected"</#if>>${lv.label}</option>
 		</#list>
