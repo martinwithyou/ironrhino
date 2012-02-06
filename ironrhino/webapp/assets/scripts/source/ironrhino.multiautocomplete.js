@@ -15,10 +15,16 @@
 				delimiter = t.attr('delimiter') || ',';
 			t.autocomplete({
 						source : local ? source : function(request, response) {
-							$.getJSON(source, {
-										term : extractLast(request.term,
-												delimiter)
-									}, response);
+							$.ajax({
+										global : false,
+										url : source,
+										dataType : 'json',
+										data : {
+											term : extractLast(request.term,
+													delimiter)
+										},
+										success : response
+									});
 						},
 						search : function() {
 							if (local)
