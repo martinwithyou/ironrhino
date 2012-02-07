@@ -13,6 +13,7 @@ MessageBundle = {
 		'no.selection' : 'no selection',
 		'no.modification' : 'no modification',
 		'select' : 'please select',
+		'select.one' : 'please select one record',
 		'confirm.delete' : 'are sure to delete?',
 		'confirm.save' : 'are sure to save?',
 		'confirm.exit' : 'you have unsaved modification,are sure to exit?'
@@ -34,6 +35,7 @@ MessageBundle = {
 		'remove' : '删除',
 		'browse' : '浏览文件',
 		'select' : '请选择',
+		'select.one' : '请选择一条',
 		'save' : '保存',
 		'restore' : '还原',
 		'cancel' : '取消',

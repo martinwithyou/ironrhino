@@ -101,3 +101,16 @@ table.richtable td,th {
 	width:15%;
 	text-align:right;
 }
+
+.ui-dialog .richtable .toolbar .pagination{
+	width:35%;
+}
+.ui-dialog .richtable .toolbar .action{
+	width:13%;
+}
+.ui-dialog .richtable .toolbar .search{
+	width:30%;
+}
+.ui-dialog .richtable .toolbar .status{
+	width:22%;
+}

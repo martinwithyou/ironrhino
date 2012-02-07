@@ -1,5 +1,5 @@
-<#macro richtable columns entityName action='' actionColumnWidth='60px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckbox=true>
-<@rtstart action=action?has_content?string(action,request.requestURI?substring(request.contextPath?length)) entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckbox=showCheckbox/>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='60px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckbox=true columnfilterable=true>
+<@rtstart formid=formid action=action?has_content?string(action,request.requestURI?substring(request.contextPath?length)) entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckbox=showCheckbox columnfilterable=columnfilterable/>
 <#list columns?keys as name>
 <#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
 <@rttheadtd name=name class=columns[name]['class']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
@@ -23,8 +23,8 @@
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable searchable=searchable searchButtons=searchButtons showPageSize=showPageSize/>
 </#macro>
 
-<#macro rtstart action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true showCheckbox=true>
-<form id="${entityName}_form" action="${getUrl(action)}" method="post" class="richtable ajax view" <#if entityName!=action&&entityName!=''> entity="${entityName}"</#if>>
+<#macro rtstart formid='',action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true showCheckbox=true columnfilterable=true>
+<form id="<#if formid!=''>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view" <#if entityName!=action&&entityName!=''> entity="${entityName}"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
 <#if name!='_'&&name!='pn'&&name!='ps'&&!name?starts_with('resultPage.')&&name!='keyword'&&name!='check'>
@@ -32,10 +32,10 @@
 </#if>
 </#list>
 </#if>
-<table class="richtable<#if sortable> sortable</#if> filtercolumn highlightrow<#if resizable> resizable</#if>"<#if resizable> minColWidth="40"</#if>>
+<table class="richtable<#if sortable> sortable</#if><#if columnfilterable> filtercolumn</#if> highlightrow<#if resizable> resizable</#if>"<#if resizable> minColWidth="40"</#if>>
 <thead>
 <tr>
-<#if !readonly && showCheckbox>
+<#if showCheckbox>
 <td class="nosort" width="30px"><input type="checkbox" class="checkbox"/></td>
 </#if>
 </#macro>
@@ -61,7 +61,7 @@ ${action.getText(name)}
 
 <#macro rttbodytrstart entity odd readonly=false showCheckbox=true>
 <tr class="${odd?string('odd','even')}"<#if (readonly||!showCheckbox)&&entity.id??> rowid="${entity.id?string}"</#if>>
-<#if !readonly && showCheckbox><td class="checkbox"><input type="checkbox" name="check"<#if entity.id??> value="${entity.id?string}"</#if>/></td></#if>
+<#if showCheckbox><td class="checkbox"><input type="checkbox" name="check"<#if entity.id??> value="${entity.id?string}"</#if>/></td></#if>
 </#macro>
 
 <#macro rttbodytd value,entity,celleditable=true,template=''>

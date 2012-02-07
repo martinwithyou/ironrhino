@@ -56,6 +56,8 @@ Richtable = {
 	},
 	reload : function(form, pushstate) {
 		form = form || $('form.richtable');
+		if (form.parents('div.ui-dialog').length)
+			pushstate = false;
 		if (pushstate && typeof history.pushState != 'undefined') {
 			var url = form.attr('action');
 			var params = form.serializeArray();
@@ -318,6 +320,8 @@ Richtable = {
 							Message.showMessage('no.selection');
 							return false;
 						}
+						if (!url)
+							return true;
 						url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
 					}
 				}
