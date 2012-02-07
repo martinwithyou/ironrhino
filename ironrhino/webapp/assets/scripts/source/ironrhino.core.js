@@ -1023,3 +1023,14 @@ Captcha = {
 		$('input.captcha').val('');
 	}
 };
+Array.prototype.unique = function() {
+	var newArray = [];
+	var provisionalTable = {};
+	for (var i = 0, item; (item = this[i]) != null; i++) {
+		if (!provisionalTable[item]) {
+			newArray.push(item);
+			provisionalTable[item] = true;
+		}
+	}
+	return newArray;
+};

@@ -60,16 +60,33 @@
 									.push($($(this).closest('tr')[0].cells[pickoptions.nameindex])
 											.text());
 						});
+						var separator = pickoptions.separator;
 						if (pickoptions.name) {
 							var nametarget = $('#' + pickoptions.name);
-							var name = names.join(pickoptions.separator);
+							var name = names.join(separator);
 							if (nametarget.is(':input')) {
-								nametarget.val(name);
+								if (pickoptions.multiple)
+									nametarget.val((nametarget.val()
+											+ (nametarget.val()
+													? separator
+													: '') + name)
+											.split(separator).unique()
+											.join(separator));
+								else
+									nametarget.val(name);
 								var form = nametarget.closest('form');
 								if (!form.hasClass('nodirty'))
 									form.addClass('dirty');
 							} else {
-								nametarget.text(name);
+								if (pickoptions.multiple) {
+									nametarget.text(((nametarget
+											.hasClass('dirty') ? nametarget
+											.text()
+											+ separator : '') + name)
+											.split(separator).unique()
+											.join(separator)).addClass('dirty');
+								} else
+									nametarget.text(name);
 								if (!nametarget.next('a.close').length)
 									nametarget.after('<a class="close">x</a>')
 											.next().css({
@@ -89,9 +106,18 @@
 						}
 						if (pickoptions.id) {
 							var idtarget = $('#' + pickoptions.id);
-							var id = ids.join(pickoptions.separator);;
+							var id = ids.join(separator);
 							if (idtarget.is(':input')) {
-								idtarget.val(id);
+								if (pickoptions.multiple)
+									idtarget
+											.val((idtarget.val()
+													+ (idtarget.val()
+															? separator
+															: '') + id)
+													.split(separator).unique()
+													.join(separator));
+								else
+									idtarget.val(id);
 								var form = idtarget.closest('form');
 								if (!form.hasClass('nodirty'))
 									form.addClass('dirty');
