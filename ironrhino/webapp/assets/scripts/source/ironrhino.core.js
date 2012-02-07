@@ -380,6 +380,8 @@ Ajax = {
 			return;
 		var hasError = false;
 		var target = options.target;
+		if (target && $(target).parents('div.ui-dialog').length)
+			options.quiet = true;
 		if ((typeof data == 'string')
 				&& (data.indexOf('{') == 0 || data.indexOf('[') == 0))
 			data = $.parseJSON(data);
@@ -646,15 +648,16 @@ if (HISTORY_ENABLED) {
 }
 
 Observation.common = function(container) {
-	$('div.action_error,div.action_message,ul.action_error li,ul.action_message li')
-			.each(function() {
-				var t = $(this);
-				if (!$('div.close', t).length)
-					t
-							.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
-			});
+	$(
+			'div.action_error,div.action_message,ul.action_error li,ul.action_message li',
+			container).each(function() {
+		var t = $(this);
+		if (!$('div.close', t).length)
+			t
+					.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
+	});
 
-	$('div.field_error').each(function() {
+	$('div.field_error', container).each(function() {
 				var text = $(this).text();
 				var field = $(':input', $(this).parent());
 				$(this).remove();
@@ -695,13 +698,13 @@ Observation.common = function(container) {
 						$(this).attr('maxlength', '255');
 				}
 			});
-	$('.highlightrow tbody tr').hover(function() {
+	$('.highlightrow tbody tr', container).hover(function() {
 				$(this).addClass('highlight');
 			}, function() {
 				$(this).removeClass('highlight');
 			});
 	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
-		$('textarea').elastic();
+		$('textarea', container).elastic();
 	if (typeof $.fn.tabs != 'undefined')
 		$('div.tabs', container).each(function() {
 					$(this).tabs({
@@ -777,7 +780,7 @@ Observation.common = function(container) {
 				});
 	}
 	if (typeof $.fn.tagBox != 'undefined') {
-		$(':input.tagbox').each(function() {
+		$(':input.tagbox', container).each(function() {
 					var t = $(this);
 					var width = t.width();
 					t.tagBox();

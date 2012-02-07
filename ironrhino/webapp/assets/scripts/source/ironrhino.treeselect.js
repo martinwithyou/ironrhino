@@ -83,9 +83,12 @@
 			var name = treeoptions.full || false
 					? treenode.fullname
 					: treenode.name;
-			if (nametarget.is(':input'))
+			if (nametarget.is(':input')) {
 				nametarget.val(name);
-			else {
+				var form = nametarget.closest('form');
+				if (!form.hasClass('nodirty'))
+					form.addClass('dirty');
+			} else {
 				nametarget.text(name);
 				if (!nametarget.next('a.close').length)
 					nametarget.after('<a class="close">x</a>').next().css({
@@ -105,9 +108,12 @@
 		if (treeoptions.id) {
 			var idtarget = $('#' + treeoptions.id);
 			var id = treenode.id;
-			if (idtarget.is(':input'))
+			if (idtarget.is(':input')) {
 				idtarget.val(id);
-			else
+				var form = idtarget.closest('form');
+				if (!form.hasClass('nodirty'))
+					form.addClass('dirty');
+			} else
 				idtarget.text(id);
 		}
 		$('#_tree_window').dialog('close');

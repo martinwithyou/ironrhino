@@ -171,6 +171,11 @@ public class BaseAction extends ActionSupport {
 		return SUCCESS;
 	}
 
+	public String pick() {
+		execute();
+		return "pick";
+	}
+
 	@Before(priority = 20)
 	public String preAction() throws Exception {
 		Authorize authorize = findAuthorize();

@@ -33,7 +33,7 @@
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
 						.appendTo(document.body).dialog({
-									width : 600,
+									width : 650,
 									minHeight : 500
 								});
 				if (win.html() && typeof $.fn.mask != 'undefined')
@@ -57,14 +57,18 @@
 						checkbox.each(function() {
 							ids.push($(this).val());
 							names
-									.push($($(this).closest('tr')[0].cells[pickoptions.nameindex]).text());
+									.push($($(this).closest('tr')[0].cells[pickoptions.nameindex])
+											.text());
 						});
 						if (pickoptions.name) {
 							var nametarget = $('#' + pickoptions.name);
 							var name = names.join(pickoptions.separator);
-							if (nametarget.is(':input'))
+							if (nametarget.is(':input')) {
 								nametarget.val(name);
-							else {
+								var form = nametarget.closest('form');
+								if (!form.hasClass('nodirty'))
+									form.addClass('dirty');
+							} else {
 								nametarget.text(name);
 								if (!nametarget.next('a.close').length)
 									nametarget.after('<a class="close">x</a>')
@@ -86,9 +90,12 @@
 						if (pickoptions.id) {
 							var idtarget = $('#' + pickoptions.id);
 							var id = ids.join(pickoptions.separator);;
-							if (idtarget.is(':input'))
+							if (idtarget.is(':input')) {
 								idtarget.val(id);
-							else
+								var form = idtarget.closest('form');
+								if (!form.hasClass('nodirty'))
+									form.addClass('dirty');
+							} else
 								idtarget.text(id);
 						}
 						win.dialog('destroy');

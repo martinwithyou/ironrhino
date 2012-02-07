@@ -27422,6 +27422,8 @@ Ajax = {
 			return;
 		var hasError = false;
 		var target = options.target;
+		if (target && $(target).parents('div.ui-dialog').length)
+			options.quiet = true;
 		if ((typeof data == 'string')
 				&& (data.indexOf('{') == 0 || data.indexOf('[') == 0))
 			data = $.parseJSON(data);
@@ -27688,15 +27690,16 @@ if (HISTORY_ENABLED) {
 }
 
 Observation.common = function(container) {
-	$('div.action_error,div.action_message,ul.action_error li,ul.action_message li')
-			.each(function() {
-				var t = $(this);
-				if (!$('div.close', t).length)
-					t
-							.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
-			});
+	$(
+			'div.action_error,div.action_message,ul.action_error li,ul.action_message li',
+			container).each(function() {
+		var t = $(this);
+		if (!$('div.close', t).length)
+			t
+					.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
+	});
 
-	$('div.field_error').each(function() {
+	$('div.field_error', container).each(function() {
 				var text = $(this).text();
 				var field = $(':input', $(this).parent());
 				$(this).remove();
@@ -27737,13 +27740,13 @@ Observation.common = function(container) {
 						$(this).attr('maxlength', '255');
 				}
 			});
-	$('.highlightrow tbody tr').hover(function() {
+	$('.highlightrow tbody tr', container).hover(function() {
 				$(this).addClass('highlight');
 			}, function() {
 				$(this).removeClass('highlight');
 			});
 	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
-		$('textarea').elastic();
+		$('textarea', container).elastic();
 	if (typeof $.fn.tabs != 'undefined')
 		$('div.tabs', container).each(function() {
 					$(this).tabs({
@@ -27819,7 +27822,7 @@ Observation.common = function(container) {
 				});
 	}
 	if (typeof $.fn.tagBox != 'undefined') {
-		$(':input.tagbox').each(function() {
+		$(':input.tagbox', container).each(function() {
 					var t = $(this);
 					var width = t.width();
 					t.tagBox();
@@ -29840,9 +29843,12 @@ Observation.richtable = function(container) {
 			var name = treeoptions.full || false
 					? treenode.fullname
 					: treenode.name;
-			if (nametarget.is(':input'))
+			if (nametarget.is(':input')) {
 				nametarget.val(name);
-			else {
+				var form = nametarget.closest('form');
+				if (!form.hasClass('nodirty'))
+					form.addClass('dirty');
+			} else {
 				nametarget.text(name);
 				if (!nametarget.next('a.close').length)
 					nametarget.after('<a class="close">x</a>').next().css({
@@ -29862,9 +29868,12 @@ Observation.richtable = function(container) {
 		if (treeoptions.id) {
 			var idtarget = $('#' + treeoptions.id);
 			var id = treenode.id;
-			if (idtarget.is(':input'))
+			if (idtarget.is(':input')) {
 				idtarget.val(id);
-			else
+				var form = idtarget.closest('form');
+				if (!form.hasClass('nodirty'))
+					form.addClass('dirty');
+			} else
 				idtarget.text(id);
 		}
 		$('#_tree_window').dialog('close');
@@ -29912,7 +29921,7 @@ Observation.treeselect = function(container) {
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
 						.appendTo(document.body).dialog({
-									width : 600,
+									width : 650,
 									minHeight : 500
 								});
 				if (win.html() && typeof $.fn.mask != 'undefined')
@@ -29936,14 +29945,18 @@ Observation.treeselect = function(container) {
 						checkbox.each(function() {
 							ids.push($(this).val());
 							names
-									.push($($(this).closest('tr')[0].cells[pickoptions.nameindex]).text());
+									.push($($(this).closest('tr')[0].cells[pickoptions.nameindex])
+											.text());
 						});
 						if (pickoptions.name) {
 							var nametarget = $('#' + pickoptions.name);
 							var name = names.join(pickoptions.separator);
-							if (nametarget.is(':input'))
+							if (nametarget.is(':input')) {
 								nametarget.val(name);
-							else {
+								var form = nametarget.closest('form');
+								if (!form.hasClass('nodirty'))
+									form.addClass('dirty');
+							} else {
 								nametarget.text(name);
 								if (!nametarget.next('a.close').length)
 									nametarget.after('<a class="close">x</a>')
@@ -29965,9 +29978,12 @@ Observation.treeselect = function(container) {
 						if (pickoptions.id) {
 							var idtarget = $('#' + pickoptions.id);
 							var id = ids.join(pickoptions.separator);;
-							if (idtarget.is(':input'))
+							if (idtarget.is(':input')) {
 								idtarget.val(id);
-							else
+								var form = idtarget.closest('form');
+								if (!form.hasClass('nodirty'))
+									form.addClass('dirty');
+							} else
 								idtarget.text(id);
 						}
 						win.dialog('destroy');

@@ -140,11 +140,6 @@ public class UserAction extends BaseAction {
 		}
 		return LIST;
 	}
-	
-	public String pick() {
-		execute();
-		return "pick";
-	}
 
 	@Override
 	public String input() {
