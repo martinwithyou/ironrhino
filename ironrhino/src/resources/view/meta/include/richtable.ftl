@@ -1,5 +1,5 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='60px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckbox=true columnfilterable=true>
-<@rtstart formid=formid action=action?has_content?string(action,request.requestURI?substring(request.contextPath?length)) entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckbox=showCheckbox columnfilterable=columnfilterable/>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='60px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
+<@rtstart formid=formid action=action?has_content?string(action,request.requestURI?substring(request.contextPath?length)) entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable/>
 <#list columns?keys as name>
 <#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
 <@rttheadtd name=name class=columns[name]['class']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
@@ -9,7 +9,7 @@
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
 <#local index=index+1>
-<@rttbodytrstart entity=entity odd=(index%2==1) readonly=readonly showCheckbox=showCheckbox/>
+<@rttbodytrstart entity=entity odd=(index%2==1) readonly=readonly showCheckColumn=showCheckColumn multipleCheck=multipleCheck/>
 <#list columns?keys as name>
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>
@@ -23,7 +23,7 @@
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable searchable=searchable searchButtons=searchButtons showPageSize=showPageSize/>
 </#macro>
 
-<#macro rtstart formid='',action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true showCheckbox=true columnfilterable=true>
+<#macro rtstart formid='',action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true>
 <form id="<#if formid!=''>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view" <#if entityName!=action&&entityName!=''> entity="${entityName}"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
@@ -35,8 +35,8 @@
 <table class="richtable<#if sortable> sortable</#if><#if columnfilterable> filtercolumn</#if> highlightrow<#if resizable> resizable</#if>"<#if resizable> minColWidth="40"</#if>>
 <thead>
 <tr>
-<#if showCheckbox>
-<td class="nosort" width="30px"><input type="checkbox" class="checkbox"/></td>
+<#if showCheckColumn>
+<td class="nosort" width="30px"><#if multipleCheck><input type="checkbox" class="checkbox"/></#if></td>
 </#if>
 </#macro>
 
@@ -59,9 +59,9 @@ ${action.getText(name)}
 <tbody>
 </#macro>
 
-<#macro rttbodytrstart entity odd readonly=false showCheckbox=true>
-<tr class="${odd?string('odd','even')}"<#if (readonly&&!showCheckbox)&&entity.id??> rowid="${entity.id?string}"</#if>>
-<#if showCheckbox><td class="checkbox"><input type="checkbox" name="check"<#if entity.id??> value="${entity.id?string}"</#if>/></td></#if>
+<#macro rttbodytrstart entity odd readonly=false showCheckColumn=true multipleCheck=true>
+<tr class="${odd?string('odd','even')}"<#if (readonly&&!showCheckColumn)&&entity.id??> rowid="${entity.id?string}"</#if>>
+<#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if entity.id??> value="${entity.id?string}"</#if>/></td></#if>
 </#macro>
 
 <#macro rttbodytd value,entity,celleditable=true,template=''>

@@ -26980,7 +26980,6 @@ MessageBundle = {
 		'no.selection' : 'no selection',
 		'no.modification' : 'no modification',
 		'select' : 'please select',
-		'select.one' : 'please select one record',
 		'confirm.delete' : 'are sure to delete?',
 		'confirm.save' : 'are sure to save?',
 		'confirm.exit' : 'you have unsaved modification,are sure to exit?'
@@ -27002,7 +27001,6 @@ MessageBundle = {
 		'remove' : '删除',
 		'browse' : '浏览文件',
 		'select' : '请选择',
-		'select.one' : '请选择一条',
 		'save' : '保存',
 		'restore' : '还原',
 		'cancel' : '取消',
@@ -29945,69 +29943,117 @@ Observation.treeselect = function(container) {
 					if (typeof $.fn.mask != 'undefined')
 						win.unmask();
 					Dialog.adapt(win);
-					$('button.confirm', target).live('click', function() {
-						var checkbox = $('tbody :checked', target);
-						var length = checkbox.length;
-						if (!pickoptions.multiple && length > 1) {
-							Message.showMessage('select.one');
-							return false;
-						}
-						var ids = [], names = [];
-						checkbox.each(function() {
-							ids.push($(this).val());
-							names
-									.push($($(this).closest('tr')[0].cells[pickoptions.nameindex])
-											.text());
-						});
-						var separator = pickoptions.separator;
-						if (pickoptions.name) {
-							var nametarget = $('#' + pickoptions.name);
-							var name = names.join(separator);
-							if (nametarget.is(':input')) {
-								if (pickoptions.multiple)
+					if (!pickoptions.multiple) {
+						$('tbody input[type=radio]', target).live('click',
+								function() {
+									var id = $(this).val();
+									var name = $($(this).closest('tr')[0].cells[pickoptions.nameindex])
+											.text();
+									if (pickoptions.name) {
+										var nametarget = $('#'
+												+ pickoptions.name);
+										if (nametarget.is(':input')) {
+											nametarget.val(name);
+											var form = nametarget
+													.closest('form');
+											if (!form.hasClass('nodirty'))
+												form.addClass('dirty');
+										} else {
+											nametarget.text(name);
+											if (!nametarget.next('a.close').length)
+												nametarget
+														.after('<a class="close">x</a>')
+														.next()
+														.css({
+															'cursor' : 'pointer',
+															'color' : '#black',
+															'margin-left' : '5px',
+															'padding' : '0 5px',
+															'border' : 'solid 1px #FFC000'
+														})
+														.click(function(event) {
+															nametarget
+																	.text(MessageBundle
+																			.get('select'));
+															$('#'
+																	+ pickoptions.id)
+																	.val('');
+															$(this).remove();
+															event
+																	.stopPropagation();
+														});
+										}
+									}
+									if (pickoptions.id) {
+										var idtarget = $('#' + pickoptions.id);
+										if (idtarget.is(':input')) {
+											idtarget.val(id);
+											var form = idtarget.closest('form');
+											if (!form.hasClass('nodirty'))
+												form.addClass('dirty');
+										} else
+											idtarget.text(id);
+									}
+									win.dialog('destroy');
+									return false;
+								});
+
+					} else {
+						$('button.confirm', target).live('click', function() {
+							var checkbox = $('tbody :checked', target);
+							var ids = [], names = [];
+							checkbox.each(function() {
+								ids.push($(this).val());
+								names
+										.push($($(this).closest('tr')[0].cells[pickoptions.nameindex])
+												.text());
+							});
+							var separator = pickoptions.separator;
+							if (pickoptions.name) {
+								var nametarget = $('#' + pickoptions.name);
+								var name = names.join(separator);
+								if (nametarget.is(':input')) {
 									nametarget.val((nametarget.val()
 											+ (nametarget.val()
 													? separator
 													: '') + name)
 											.split(separator).unique()
 											.join(separator));
-								else
-									nametarget.val(name);
-								var form = nametarget.closest('form');
-								if (!form.hasClass('nodirty'))
-									form.addClass('dirty');
-							} else {
-								if (pickoptions.multiple) {
+									var form = nametarget.closest('form');
+									if (!form.hasClass('nodirty'))
+										form.addClass('dirty');
+								} else {
 									nametarget.text(((nametarget
 											.hasClass('dirty') ? nametarget
 											.text()
 											+ separator : '') + name)
 											.split(separator).unique()
 											.join(separator)).addClass('dirty');
-								} else
-									nametarget.text(name);
-								if (!nametarget.next('a.close').length)
-									nametarget.after('<a class="close">x</a>')
-											.next().css({
-														'cursor' : 'pointer',
-														'color' : '#black',
-														'margin-left' : '5px',
-														'padding' : '0 5px',
-														'border' : 'solid 1px #FFC000'
-													}).click(function(event) {
-												nametarget.text(MessageBundle
-														.get('select'));
-												$('#' + pickoptions.id).val('');
-												$(this).remove();
-												event.stopPropagation();
-											});
+									if (!nametarget.next('a.close').length)
+										nametarget
+												.after('<a class="close">x</a>')
+												.next().css({
+													'cursor' : 'pointer',
+													'color' : '#black',
+													'margin-left' : '5px',
+													'padding' : '0 5px',
+													'border' : 'solid 1px #FFC000'
+												}).click(function(event) {
+													nametarget
+															.text(MessageBundle
+																	.get('select'))
+															.removeClass('dirty');
+													$('#' + pickoptions.id)
+															.val('');
+													$(this).remove();
+													event.stopPropagation();
+												});
+								}
 							}
-						}
-						if (pickoptions.id) {
-							var idtarget = $('#' + pickoptions.id);
-							var id = ids.join(separator);
-							if (idtarget.is(':input')) {
-								if (pickoptions.multiple)
+							if (pickoptions.id) {
+								var idtarget = $('#' + pickoptions.id);
+								var id = ids.join(separator);
+								if (idtarget.is(':input')) {
 									idtarget
 											.val((idtarget.val()
 													+ (idtarget.val()
@@ -30015,20 +30061,22 @@ Observation.treeselect = function(container) {
 															: '') + id)
 													.split(separator).unique()
 													.join(separator));
-								else
-									idtarget.val(id);
-								var form = idtarget.closest('form');
-								if (!form.hasClass('nodirty'))
-									form.addClass('dirty');
-							} else
-								idtarget.text(id);
-						}
-						win.dialog('destroy');
-						return false;
-					});
+									var form = idtarget.closest('form');
+									if (!form.hasClass('nodirty'))
+										form.addClass('dirty');
+								} else
+									idtarget.text(id);
+							}
+							win.dialog('destroy');
+							return false;
+						});
+					}
 				};
+				var url = pickoptions.url;
+				if (url.indexOf('multiple') < 0 && pickoptions.multiple)
+					url += (url.indexOf('?') > 0 ? '&' : '?') + 'multiple=true'
 				ajax({
-							url : pickoptions.url,
+							url : url,
 							cache : false,
 							target : target,
 							replacement : '_pick_window:content',

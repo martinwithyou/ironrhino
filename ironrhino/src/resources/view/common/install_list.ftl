@@ -14,7 +14,7 @@
 <#assign bottomButtons=r"
 <@button text='${action.getText(\'install\')}' onclick='$(\'#install\').toggle()'/>
 ">
-<@richtable entityName="install" columns=columns actionColumnButtons=actionColumnButtons actionColumnWidth="180px" bottomButtons=bottomButtons showCheckbox=false/>
+<@richtable entityName="install" columns=columns actionColumnButtons=actionColumnButtons actionColumnWidth="180px" bottomButtons=bottomButtons showCheckColumn=false/>
 <form id="install" action="install/install" method="post" enctype="multipart/form-data" style="display:none;text-align:center;padding-top:20px;" class="line">
 <input type="file" name="file" style="width:194px;"/><@s.submit theme="simple" value="${action.getText('upload')}"/>
 </form>
