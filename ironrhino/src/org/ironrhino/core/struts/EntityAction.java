@@ -232,11 +232,6 @@ public class EntityAction extends BaseAction {
 		return LIST;
 	}
 
-	public String pick() {
-		list();
-		return "pick";
-	}
-
 	@Override
 	public String input() {
 		if (readonly())
