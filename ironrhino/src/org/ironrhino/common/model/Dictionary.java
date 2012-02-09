@@ -39,7 +39,8 @@ public class Dictionary extends BaseEntity {
 	private String description;
 
 	@SearchableComponent
-	@UiConfig(displayOrder = 3, cellEdit = "none", excludeIfNotEdited = true, template = "${entity.getItemsAsString()!}")
+	//@UiConfig(displayOrder = 3, cellEdit = "none", excludeIfNotEdited = true, template = "${entity.getItemsAsString()!}")
+	@UiConfig(displayOrder = 3, hideInList = true)
 	private List<LabelValue> items = new ArrayList<LabelValue>();
 
 	public Dictionary() {

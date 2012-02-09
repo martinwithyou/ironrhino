@@ -8,31 +8,33 @@
 	<#assign index=0>
 	<#list uiConfigs?keys as key>
 			<#assign config=uiConfigs[key]>
-			<#assign label=key>
-			<#if config.displayName??>
-				<#assign label=config.displayName>
-			</#if>
-			<#if !(readonly||config.readonly) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
-				<#assign cellEdit=config.cellEdit!/>
-				<#if cellEdit==''>
-					<#if config.type=='input'>
-						<#assign cellEdit='click'/>
-					</#if>
-					<#if config.type=='textarea'>
-						<#assign cellEdit='click,textarea'/>
-					</#if>
-					<#if config.type=='checkbox'>
-						<#assign cellEdit='click,boolean'/>
-					</#if>
-					<#if config.type=='select'>
-						<#assign cellEdit='click,select,rt_select_template_'+key/>
-					</#if>
+			<#if !config.hideInList>
+				<#assign label=key>
+				<#if config.displayName??>
+					<#assign label=config.displayName>
 				</#if>
-			<#else>
-				<#assign cellEdit=''/>
+				<#if !(readonly||config.readonly) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
+					<#assign cellEdit=config.cellEdit!/>
+					<#if cellEdit==''>
+						<#if config.type=='input'>
+							<#assign cellEdit='click'/>
+						</#if>
+						<#if config.type=='textarea'>
+							<#assign cellEdit='click,textarea'/>
+						</#if>
+						<#if config.type=='checkbox'>
+							<#assign cellEdit='click,boolean'/>
+						</#if>
+						<#if config.type=='select'>
+							<#assign cellEdit='click,select,rt_select_template_'+key/>
+						</#if>
+					</#if>
+				<#else>
+					<#assign cellEdit=''/>
+				</#if>
+				<#assign index=index+1>
+				<@rttheadtd name=label width=config['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==uiConfigs?size)/>
 			</#if>
-			<#assign index=index+1>
-			<@rttheadtd name=label width=config['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==uiConfigs?size)/>
 	</#list>
 <@rtmiddle readonly=readonly/>
 <#assign index=0>
@@ -40,7 +42,10 @@
 <#assign index=index+1>
 <@rttbodytrstart entity=entity odd=(index%2==1) readonly=readonly/>
 	<#list uiConfigs?keys as key>
-		<@rttbodytd entity=entity value=entity[key]! template=uiConfigs[key].template/>
+		<#assign config=uiConfigs[key]>
+		<#if !config.hideInList>
+			<@rttbodytd entity=entity value=entity[key]! template=uiConfigs[key].template/>
+		</#if>
 	</#list>	
 <@rttbodytrend entity=entity readonly=readonly/>
 </#list>
@@ -49,18 +54,20 @@
 <div style="display: none">
 <#list uiConfigs?keys as key>
 	<#assign config=uiConfigs[key]>
-	<#if config.type=='select'>
-	<textarea id="rt_select_template_${key}">
-	<select onblur="Richtable.updateCell(this)"
-			style="width: 100%;" name="${entityName}.${key}">
-			<#if !config.required>
-			<option value=""></option>
-			</#if>
-			<#list lists[key] as var>
-			<option value="<#if config.listKey=='name'&&var.name()??>${var.name()}<#else>${var[config.listKey]}</#if>">${var[config.listValue]}</option>
-			</#list>
-	</select>
-	</textarea>
+	<#if !config.hideInList>
+		<#if config.type=='select'>
+		<textarea id="rt_select_template_${key}">
+		<select onblur="Richtable.updateCell(this)"
+				style="width: 100%;" name="${entityName}.${key}">
+				<#if !config.required>
+				<option value=""></option>
+				</#if>
+				<#list lists[key] as var>
+				<option value="<#if config.listKey=='name'&&var.name()??>${var.name()}<#else>${var[config.listKey]}</#if>">${var[config.listValue]}</option>
+				</#list>
+		</select>
+		</textarea>
+		</#if>
 	</#if>
 </#list></div>
 </#if>

@@ -42,7 +42,8 @@ public class Schema extends BaseEntity {
 	private boolean strict;
 
 	@SearchableComponent
-	@UiConfig(displayOrder = 4, cellEdit = "none", excludeIfNotEdited = true, template = "${entity.getFieldsAsString()!}")
+	// @UiConfig(displayOrder = 4, cellEdit = "none", excludeIfNotEdited = true, template = "${entity.getFieldsAsString()!}")
+	@UiConfig(displayOrder = 4, hideInList = true)
 	private List<Field> fields = new ArrayList<Field>();
 
 	public Schema() {

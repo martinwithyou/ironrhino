@@ -693,6 +693,7 @@ public class EntityAction extends BaseAction {
 		private boolean readonly;
 		private int displayOrder;
 		private String displayName;
+		private boolean hideInList;
 		private String template;
 		private String width;
 		private boolean excludeIfNotEdited;
@@ -716,6 +717,7 @@ public class EntityAction extends BaseAction {
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.displayName()))
 				this.displayName = config.displayName();
+			this.hideInList = config.hideInList();
 			this.template = config.template();
 			this.width = config.width();
 			this.cellEdit = config.cellEdit();
@@ -724,6 +726,14 @@ public class EntityAction extends BaseAction {
 			if (this.excludeIfNotEdited)
 				cssClass += " excludeIfNotEdited";
 			this.searchable = config.searchable();
+		}
+
+		public boolean isHideInList() {
+			return hideInList;
+		}
+
+		public void setHideInList(boolean hideInList) {
+			this.hideInList = hideInList;
 		}
 
 		public boolean isRequired() {

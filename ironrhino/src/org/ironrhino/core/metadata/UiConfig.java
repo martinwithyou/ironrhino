@@ -32,6 +32,8 @@ public @interface UiConfig {
 	boolean readonly() default false;
 
 	boolean hide() default false;
+	
+	boolean hideInList() default false;
 
 	boolean searchable() default false;
 
