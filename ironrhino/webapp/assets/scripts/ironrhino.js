@@ -28063,16 +28063,20 @@ Captcha = {
 		$('input.captcha').val('');
 	}
 };
-Array.prototype.unique = function() {
-	var newArray = [];
-	var provisionalTable = {};
-	for (var i = 0, item; (item = this[i]) != null; i++) {
-		if (!provisionalTable[item]) {
-			newArray.push(item);
-			provisionalTable[item] = true;
+ArrayUtils = {
+	unique : function(arr) {
+		if (arr) {
+			var arr2 = [];
+			var provisionalTable = {};
+			for (var i = 0, item; (item = arr[i]) != null; i++) {
+				if (!provisionalTable[item]) {
+					arr2.push(item);
+					provisionalTable[item] = true;
+				}
+			}
+			return arr2;
 		}
 	}
-	return newArray;
 };
 (function($) {
 	$.fn.checkavailable = function() {
@@ -29782,15 +29786,9 @@ Observation.richtable = function(container) {
 			var nametarget = null;
 			if (treeoptions.name) {
 				nametarget = $('#' + treeoptions.name);
-				var close = nametarget.next('a.close');
+				var close = nametarget.children('a.close');
 				if (close.length)
-					close.css({
-								'cursor' : 'pointer',
-								'color' : '#black',
-								'margin-left' : '5px',
-								'padding' : '0 5px',
-								'border' : 'solid 1px #FFC000'
-							}).click(function(event) {
+					close.click(function(event) {
 								nametarget.text(MessageBundle.get('select'));
 								$('#' + treeoptions.id).val('');
 								$(this).remove();
@@ -29859,19 +29857,13 @@ Observation.richtable = function(container) {
 					form.addClass('dirty');
 			} else {
 				nametarget.text(name);
-				if (!nametarget.next('a.close').length)
-					nametarget.after('<a class="close">x</a>').next().css({
-								'cursor' : 'pointer',
-								'color' : '#black',
-								'margin-left' : '5px',
-								'padding' : '0 5px',
-								'border' : 'solid 1px #FFC000'
-							}).click(function(event) {
-								nametarget.text(MessageBundle.get('select'));
-								$('#' + treeoptions.id).val('');
-								$(this).remove();
-								event.stopPropagation();
-							});
+				$('<a class="close">x</a>').appendTo(nametarget).click(
+						function(event) {
+							nametarget.text(MessageBundle.get('select'));
+							$('#' + treeoptions.id).val('');
+							$(this).remove();
+							event.stopPropagation();
+						});
 			}
 		}
 		if (treeoptions.id) {
@@ -29910,15 +29902,9 @@ Observation.treeselect = function(container) {
 			var nametarget = null;
 			if (pickoptions.name) {
 				nametarget = $('#' + pickoptions.name);
-				var close = nametarget.next('a.close');
+				var close = nametarget.children('a.close');
 				if (close.length)
-					close.css({
-								'cursor' : 'pointer',
-								'color' : '#black',
-								'margin-left' : '5px',
-								'padding' : '0 5px',
-								'border' : 'solid 1px #FFC000'
-							}).click(function(event) {
+					close.click(function(event) {
 								nametarget.text(MessageBundle.get('select'));
 								$('#' + pickoptions.id).val('');
 								$(this).remove();
@@ -29960,28 +29946,17 @@ Observation.treeselect = function(container) {
 												form.addClass('dirty');
 										} else {
 											nametarget.text(name);
-											if (!nametarget.next('a.close').length)
-												nametarget
-														.after('<a class="close">x</a>')
-														.next()
-														.css({
-															'cursor' : 'pointer',
-															'color' : '#black',
-															'margin-left' : '5px',
-															'padding' : '0 5px',
-															'border' : 'solid 1px #FFC000'
-														})
-														.click(function(event) {
-															nametarget
-																	.text(MessageBundle
-																			.get('select'));
-															$('#'
-																	+ pickoptions.id)
-																	.val('');
-															$(this).remove();
-															event
-																	.stopPropagation();
-														});
+											$('<a class="close">x</a>')
+													.appendTo(nametarget)
+													.click(function(event) {
+														nametarget
+																.text(MessageBundle
+																		.get('select'));
+														$('#' + pickoptions.id)
+																.val('');
+														$(this).remove();
+														event.stopPropagation();
+													});
 										}
 									}
 									if (pickoptions.id) {
@@ -30013,54 +29988,52 @@ Observation.treeselect = function(container) {
 								var nametarget = $('#' + pickoptions.name);
 								var name = names.join(separator);
 								if (nametarget.is(':input')) {
-									nametarget.val((nametarget.val()
-											+ (nametarget.val()
-													? separator
-													: '') + name)
-											.split(separator).unique()
-											.join(separator));
+									nametarget
+											.val((nametarget.val() + ArrayUtils
+													.unique((nametarget.val()
+															? separator
+															: '')
+															+ name)
+													.split(separator))
+													.join(separator));
 									var form = nametarget.closest('form');
 									if (!form.hasClass('nodirty'))
 										form.addClass('dirty');
 								} else {
-									nametarget.text(((nametarget
-											.hasClass('dirty') ? nametarget
-											.text()
-											+ separator : '') + name)
-											.split(separator).unique()
-											.join(separator)).addClass('dirty');
-									if (!nametarget.next('a.close').length)
-										nametarget
-												.after('<a class="close">x</a>')
-												.next().css({
-													'cursor' : 'pointer',
-													'color' : '#black',
-													'margin-left' : '5px',
-													'padding' : '0 5px',
-													'border' : 'solid 1px #FFC000'
-												}).click(function(event) {
-													nametarget
-															.text(MessageBundle
-																	.get('select'))
-															.removeClass('dirty');
-													$('#' + pickoptions.id)
-															.val('');
-													$(this).remove();
-													event.stopPropagation();
-												});
+									var picked = nametarget.data('picked')
+											|| '';
+									picked = ArrayUtils.unique(((picked
+											? picked + separator
+											: '') + name).split(separator))
+											.join(separator);
+									nametarget.data('picked', picked)
+											.text(picked);
+									$('<a class="close">x</a>')
+											.appendTo(nametarget).click(
+													function(event) {
+														nametarget
+																.text(MessageBundle
+																		.get('select'))
+																.data('picked',
+																		'');
+														$('#' + pickoptions.id)
+																.val('');
+														$(this).remove();
+														event.stopPropagation();
+													});
 								}
 							}
 							if (pickoptions.id) {
 								var idtarget = $('#' + pickoptions.id);
 								var id = ids.join(separator);
 								if (idtarget.is(':input')) {
-									idtarget
-											.val((idtarget.val()
+									idtarget.val(ArrayUtils
+											.unique((idtarget.val()
 													+ (idtarget.val()
 															? separator
 															: '') + id)
-													.split(separator).unique()
-													.join(separator));
+													.split(separator))
+											.join(separator));
 									var form = idtarget.closest('form');
 									if (!form.hasClass('nodirty'))
 										form.addClass('dirty');

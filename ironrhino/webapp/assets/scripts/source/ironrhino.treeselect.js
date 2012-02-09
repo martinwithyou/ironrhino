@@ -13,15 +13,9 @@
 			var nametarget = null;
 			if (treeoptions.name) {
 				nametarget = $('#' + treeoptions.name);
-				var close = nametarget.next('a.close');
+				var close = nametarget.children('a.close');
 				if (close.length)
-					close.css({
-								'cursor' : 'pointer',
-								'color' : '#black',
-								'margin-left' : '5px',
-								'padding' : '0 5px',
-								'border' : 'solid 1px #FFC000'
-							}).click(function(event) {
+					close.click(function(event) {
 								nametarget.text(MessageBundle.get('select'));
 								$('#' + treeoptions.id).val('');
 								$(this).remove();
@@ -90,19 +84,13 @@
 					form.addClass('dirty');
 			} else {
 				nametarget.text(name);
-				if (!nametarget.next('a.close').length)
-					nametarget.after('<a class="close">x</a>').next().css({
-								'cursor' : 'pointer',
-								'color' : '#black',
-								'margin-left' : '5px',
-								'padding' : '0 5px',
-								'border' : 'solid 1px #FFC000'
-							}).click(function(event) {
-								nametarget.text(MessageBundle.get('select'));
-								$('#' + treeoptions.id).val('');
-								$(this).remove();
-								event.stopPropagation();
-							});
+				$('<a class="close">x</a>').appendTo(nametarget).click(
+						function(event) {
+							nametarget.text(MessageBundle.get('select'));
+							$('#' + treeoptions.id).val('');
+							$(this).remove();
+							event.stopPropagation();
+						});
 			}
 		}
 		if (treeoptions.id) {

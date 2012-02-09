@@ -1169,6 +1169,14 @@ div.action_message,ul.action_message li {
 	background: url(../images/msg.png) 0px -22px no-repeat;
 }
 
+.treeselect a.close,.listpick a.close {
+	cursor : pointer;
+	color : #black;
+	margin-left : 5px;
+	padding : 0 5px;
+	border : solid 1px #FFC000;
+}
+
 img.captcha {
 	height: 25px;
 	width: 100px;

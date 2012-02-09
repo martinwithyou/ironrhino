@@ -40,7 +40,7 @@
 			<#if !readonly>
 				<div class="field listpick" pickoptions="{'url':'<@url value="${config.pickUrl}"/>','name':'${key}','id':'${key}Id'}">
 					<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
-					<#if entity[key]??><span id="${key}">${entity[key]!}</span><a class="close">x</a><#else><span id="${key}">...</span></#if>
+					<span id="${key}"><#if entity[key]??>${entity[key]!}<a class="close">x</a><#else>...</#if></span>
 				</div>
 			<#else>
 				<div class="field">

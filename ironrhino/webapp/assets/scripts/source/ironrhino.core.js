@@ -1023,14 +1023,18 @@ Captcha = {
 		$('input.captcha').val('');
 	}
 };
-Array.prototype.unique = function() {
-	var newArray = [];
-	var provisionalTable = {};
-	for (var i = 0, item; (item = this[i]) != null; i++) {
-		if (!provisionalTable[item]) {
-			newArray.push(item);
-			provisionalTable[item] = true;
+ArrayUtils = {
+	unique : function(arr) {
+		if (arr) {
+			var arr2 = [];
+			var provisionalTable = {};
+			for (var i = 0, item; (item = arr[i]) != null; i++) {
+				if (!provisionalTable[item]) {
+					arr2.push(item);
+					provisionalTable[item] = true;
+				}
+			}
+			return arr2;
 		}
 	}
-	return newArray;
 };
