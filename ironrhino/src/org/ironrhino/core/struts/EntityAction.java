@@ -556,6 +556,8 @@ public class EntityAction extends BaseAction {
 			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
 					.getPropertyDescriptors(clazz);
 			for (PropertyDescriptor pd : pds) {
+				if (pd.getWriteMethod() == null)
+					continue;
 				SearchableProperty searchableProperty = pd.getReadMethod()
 						.getAnnotation(SearchableProperty.class);
 				if (searchableProperty == null)
@@ -616,9 +618,27 @@ public class EntityAction extends BaseAction {
 					if (StringUtils.isBlank(uci.getPickUrl())) {
 						String url = ((AutoConfigPackageProvider) packageProvider)
 								.getEntityUrl(returnType);
-						if (url != null)
-							uci.setPickUrl(url + "/pick");
+						if (url != null) {
+							StringBuilder sb = new StringBuilder(url);
+							sb.append("/pick");
+							List<String> columns = new ArrayList<String>();
+							for (String column : "name,description,code"
+									.split(","))
+								try {
+									if (returnType.getMethod("get"
+											+ StringUtils.capitalize(column),
+											new Class[0]) != null)
+										columns.add(column);
+								} catch (NoSuchMethodException e) {
+								}
+							if (!columns.isEmpty()) {
+								sb.append("?columns="
+										+ StringUtils.join(columns, ','));
+							}
+							uci.setPickUrl(sb.toString());
+						}
 					}
+					map.put(pd.getName(), uci);
 					continue;
 				}
 				UiConfigImpl uci = new UiConfigImpl(uiConfig);
@@ -686,7 +706,7 @@ public class EntityAction extends BaseAction {
 		private int size;
 		private String cssClass = "";
 		private boolean readonly;
-		private int displayOrder;
+		private int displayOrder = Integer.MAX_VALUE;
 		private String displayName;
 		private boolean hideInList;
 		private String template;
