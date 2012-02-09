@@ -697,6 +697,7 @@ public class EntityAction extends BaseAction {
 		private String cellEdit = "";
 		private boolean searchable;
 		private String pickUrl = "";
+		private String dictionaryName = "";
 
 		public UiConfigImpl() {
 		}
@@ -723,6 +724,7 @@ public class EntityAction extends BaseAction {
 				cssClass += " excludeIfNotEdited";
 			this.searchable = config.searchable();
 			this.pickUrl = config.pickUrl();
+			this.dictionaryName = config.dictionaryName();
 		}
 
 		public boolean isHideInList() {
@@ -739,6 +741,14 @@ public class EntityAction extends BaseAction {
 
 		public void setPickUrl(String pickUrl) {
 			this.pickUrl = pickUrl;
+		}
+
+		public String getDictionaryName() {
+			return dictionaryName;
+		}
+
+		public void setDictionaryName(String dictionaryName) {
+			this.dictionaryName = dictionaryName;
 		}
 
 		public boolean isRequired() {

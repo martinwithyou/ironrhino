@@ -19,7 +19,7 @@ public @interface UiConfig {
 
 	String displayName() default "";
 
-	String type() default DEFAULT_TYPE;
+	String type() default DEFAULT_TYPE; //input,textarea,select,checkbox,listpick,dictionary...
 
 	int size() default 0;
 
@@ -50,5 +50,7 @@ public @interface UiConfig {
 	String cellEdit() default "";
 	
 	String pickUrl () default "";
+	
+	String dictionaryName() default "";
 	
 }

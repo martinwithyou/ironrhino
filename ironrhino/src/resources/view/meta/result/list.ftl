@@ -18,15 +18,18 @@
 					<#if cellEdit==''>
 						<#if config.type=='input'>
 							<#assign cellEdit='click'/>
-						</#if>
-						<#if config.type=='textarea'>
+						<#elseif config.type=='textarea'>
 							<#assign cellEdit='click,textarea'/>
-						</#if>
-						<#if config.type=='checkbox'>
+						<#elseif config.type=='checkbox'>
 							<#assign cellEdit='click,boolean'/>
-						</#if>
-						<#if config.type=='select'>
+						<#elseif config.type=='select'>
 							<#assign cellEdit='click,select,rt_select_template_'+key/>
+						<#elseif config.type=='dictionary'>
+							<#if selectDictionary??>
+								<#assign cellEdit='click,select,rt_select_template_'+key/>
+							<#else>
+								<#assign cellEdit='click'/>
+							</#if>	
 						</#if>
 					</#if>
 				<#else>
@@ -44,7 +47,11 @@
 	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
 		<#if !config.hideInList>
-			<@rttbodytd entity=entity value=entity[key]! template=uiConfigs[key].template/>
+			<#assign value = entity[key]!>
+			<#if config.type=='dictionary' && selectDictionary??>
+							<#assign value=getDictionaryLabel(config.dictionaryName,value)/>	
+			</#if>
+			<@rttbodytd entity=entity value=value template=uiConfigs[key].template/>
 		</#if>
 	</#list>	
 <@rttbodytrend entity=entity readonly=readonly/>
@@ -66,6 +73,10 @@
 				<option value="<#if config.listKey=='name'&&var.name()??>${var.name()}<#else>${var[config.listKey]}</#if>">${var[config.listValue]}</option>
 				</#list>
 		</select>
+		</textarea>
+		<#elseif config.type=='dictionary' && selectDictionary??>
+		<textarea id="rt_select_template_${key}">
+		<@selectDictionary dictionaryName=config.dictionaryName id=key name="${entityName}.${key}" required=config.required  onblur="Richtable.updateCell(this)" style="width: 100%;"/>
 		</textarea>
 		</#if>
 	</#if>

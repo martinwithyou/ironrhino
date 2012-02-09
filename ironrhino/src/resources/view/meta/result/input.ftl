@@ -19,9 +19,7 @@
 		<#else>
 			<#assign readonly=config.readonly>
 		</#if>
-		<#if config.type=='input'>
-			<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" readonly="${readonly?string}" />
-		<#elseif config.type=='textarea'>
+		<#if config.type=='textarea'>
 			<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cols="50" rows="5" readonly="${readonly?string}" />
 		<#elseif config.type=='checkbox'>
 			<#if !readonly>
@@ -50,6 +48,18 @@
 					<span id="${key}">${entity[key]!}</span>
 				</div>
 			</#if>
+		<#elseif config.type=='dictionary' && selectDictionary??>
+			<div class="field">
+			<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+			<#if !readonly>
+				<@selectDictionary dictionaryName=config.dictionaryName id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required/>
+			<#else>
+				<@s.hidden name="${entityName}.${key}"/>
+				<span id="${key}"><@displayDictionaryLabel dictionaryName=config.dictionaryName value="${entity[key]!}"/></span>
+			</#if>
+			</div>
+		<#else>	
+			<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" readonly="${readonly?string}" />
 		</#if>
 	</#list>
 	<@s.submit value="%{getText('save')}" />
