@@ -281,6 +281,7 @@ public class EntityAction extends BaseAction {
 	}
 
 	private boolean makeEntityValid() {
+		Map<String, UiConfigImpl> uiConfigs = getUiConfigs();
 		BaseManager entityManager = getEntityManager(getEntityClass());
 		entity = constructEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
@@ -316,6 +317,23 @@ public class EntityAction extends BaseAction {
 					}
 					return false;
 				}
+				for (Map.Entry<String, UiConfigImpl> entry : uiConfigs
+						.entrySet())
+					if (entry.getValue().isUnique()
+							&& StringUtils.isNotBlank(ServletActionContext
+									.getRequest().getParameter(
+											getEntityName() + '.'
+													+ entry.getKey()))) {
+						persisted = entityManager.findByNaturalId(entry
+								.getKey(), (Serializable) bw
+								.getPropertyValue(entry.getKey()));
+						if (persisted != null) {
+							addFieldError(
+									getEntityName() + "." + entry.getKey(),
+									getText("validation.already.exists"));
+							return false;
+						}
+					}
 			}
 			try {
 				Persistable temp = entity;
@@ -351,6 +369,26 @@ public class EntityAction extends BaseAction {
 					}
 					return false;
 				}
+
+				for (Map.Entry<String, UiConfigImpl> entry : uiConfigs
+						.entrySet())
+					if (entry.getValue().isUnique()
+							&& StringUtils.isNotBlank(ServletActionContext
+									.getRequest().getParameter(
+											getEntityName() + '.'
+													+ entry.getKey()))) {
+						persisted = entityManager.findByNaturalId(entry
+								.getKey(), (Serializable) bw
+								.getPropertyValue(entry.getKey()));
+						if (persisted != null
+								&& !persisted.getId().equals(entity.getId())) {
+							addFieldError(
+									getEntityName() + "." + entry.getKey(),
+									getText("validation.already.exists"));
+							return false;
+						}
+					}
+
 				if (persisted != null
 						&& !persisted.getId().equals(entity.getId())) {
 					persisted = null;
@@ -361,7 +399,6 @@ public class EntityAction extends BaseAction {
 					persisted = entityManager.get((Serializable) bw
 							.getPropertyValue("id"));
 				BeanWrapperImpl bwp = new BeanWrapperImpl(persisted);
-				Map<String, UiConfigImpl> uiConfigs = getUiConfigs();
 				Set<String> editedPropertyNames = new HashSet<String>();
 				String propertyName = null;
 				for (String parameterName : ServletActionContext.getRequest()
@@ -703,6 +740,7 @@ public class EntityAction extends BaseAction {
 
 		private String type = UiConfig.DEFAULT_TYPE;
 		private boolean required;
+		private boolean unique;
 		private int size;
 		private String cssClass = "";
 		private boolean readonly;
@@ -729,6 +767,7 @@ public class EntityAction extends BaseAction {
 			this.listKey = config.listKey();
 			this.listValue = config.listValue();
 			this.required = config.required();
+			this.unique = config.unique();
 			this.size = config.size();
 			this.readonly = config.readonly();
 			this.displayOrder = config.displayOrder();
@@ -777,6 +816,14 @@ public class EntityAction extends BaseAction {
 
 		public void setRequired(boolean required) {
 			this.required = required;
+		}
+
+		public boolean isUnique() {
+			return unique;
+		}
+
+		public void setUnique(boolean unique) {
+			this.unique = unique;
 		}
 
 		public String getDisplayName() {
@@ -831,6 +878,9 @@ public class EntityAction extends BaseAction {
 			if (required)
 				this.cssClass += (this.cssClass.length() > 0 ? " " : "")
 						+ "required";
+			if (unique)
+				this.cssClass += (this.cssClass.length() > 0 ? " " : "")
+						+ "checkavailable";
 			return this.cssClass;
 		}
 

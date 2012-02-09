@@ -28,6 +28,8 @@ public @interface UiConfig {
 	int displayOrder() default Integer.MAX_VALUE;
 
 	boolean required() default false;
+	
+	boolean unique() default false;
 
 	boolean readonly() default false;
 
