@@ -611,14 +611,14 @@ public class EntityAction extends BaseAction {
 					continue;
 				} else if (Persistable.class.isAssignableFrom(returnType)) {
 					UiConfigImpl uci = new UiConfigImpl(uiConfig);
-					uci.setType("select");
+					uci.setType("listpick");
 					uci.setExcludeIfNotEdited(true);
-					if (lists == null)
-						lists = new HashMap<String, List>();
-					BaseManager em = getEntityManager(returnType);
-					lists.put(pd.getName(), em.findAll());
-					map.put(pd.getName(), uci);
-					em = getEntityManager(getEntityClass());
+					if (StringUtils.isBlank(uci.getPickUrl())) {
+						String url = ((AutoConfigPackageProvider) packageProvider)
+								.getEntityUrl(returnType);
+						if (url != null)
+							uci.setPickUrl(url + "/pick");
+					}
 					continue;
 				}
 				UiConfigImpl uci = new UiConfigImpl(uiConfig);
@@ -696,6 +696,7 @@ public class EntityAction extends BaseAction {
 		private String listValue = UiConfig.DEFAULT_LIST_VALUE;
 		private String cellEdit = "";
 		private boolean searchable;
+		private String pickUrl = "";
 
 		public UiConfigImpl() {
 		}
@@ -721,6 +722,7 @@ public class EntityAction extends BaseAction {
 			if (this.excludeIfNotEdited)
 				cssClass += " excludeIfNotEdited";
 			this.searchable = config.searchable();
+			this.pickUrl = config.pickUrl();
 		}
 
 		public boolean isHideInList() {
@@ -729,6 +731,14 @@ public class EntityAction extends BaseAction {
 
 		public void setHideInList(boolean hideInList) {
 			this.hideInList = hideInList;
+		}
+
+		public String getPickUrl() {
+			return pickUrl;
+		}
+
+		public void setPickUrl(String pickUrl) {
+			this.pickUrl = pickUrl;
 		}
 
 		public boolean isRequired() {
@@ -900,7 +910,7 @@ public class EntityAction extends BaseAction {
 	}
 
 	private static Pattern acceptedPattern = Pattern
-			.compile("[a-zA-Z0-9\\.\\]\\[\\(\\)_'\\s]+"); // com.opensymphony.xwork2.interceptor.ParametersInterceptor
+			.compile("\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['\\w+'\\])|(\\('\\w+'\\)))*"); // com.opensymphony.xwork2.interceptor.ParametersInterceptor
 
 	@Inject("ironrhino-autoconfig")
 	private transient PackageProvider packageProvider;

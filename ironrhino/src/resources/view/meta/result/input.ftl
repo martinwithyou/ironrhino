@@ -21,24 +21,34 @@
 		</#if>
 		<#if config.type=='input'>
 			<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" readonly="${readonly?string}" />
-		</#if>
-		<#if config.type=='textarea'>
+		<#elseif config.type=='textarea'>
 			<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cols="50" rows="5" readonly="${readonly?string}" />
-		</#if>
-		<#if config.type=='checkbox'>
+		<#elseif config.type=='checkbox'>
 			<#if !readonly>
 				<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" />
 			<#else>
 				<@s.hidden name="${entityName}.${key}" />
 				<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" disabled="true" />
 			</#if>
-		</#if>
-		<#if config.type=='select'>
+		<#elseif config.type=='select'>
 			<#if !readonly>
 				<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue=""/>
 			<#else>
 				<@s.hidden name="${entityName}.${key}" value="%{${entityName+'.'+key+'.id'}}"/>
 				<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue="" disabled="true" />
+			</#if>
+		<#elseif config.type=='listpick'>
+			<@s.hidden id="${key}Id" name="${entityName}.${key}.id" />
+			<#if !readonly>
+				<div class="field listpick" pickoptions="{'url':'<@url value="${config.pickUrl}"/>','name':'${key}','id':'${key}Id'}">
+					<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+					<#if entity[key]??><span id="${key}">${entity[key]!}</span><a class="close">x</a><#else><span id="${key}">...</span></#if>
+				</div>
+			<#else>
+				<div class="field">
+					<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+					<span id="${key}">${entity[key]!}</span>
+				</div>
 			</#if>
 		</#if>
 	</#list>

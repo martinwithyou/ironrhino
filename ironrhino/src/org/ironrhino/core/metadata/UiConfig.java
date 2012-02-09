@@ -48,5 +48,7 @@ public @interface UiConfig {
 	String listValue() default DEFAULT_LIST_VALUE;
 
 	String cellEdit() default "";
-
+	
+	String pickUrl () default "";
+	
 }

@@ -388,6 +388,13 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		return entityClassURLMapping.get(namespace
 				+ (namespace.endsWith("/") ? "" : "/") + actionName);
 	}
+	
+	public String getEntityUrl(Class entityClass){
+		for(Map.Entry<String, Class> entry : entityClassURLMapping.entrySet())
+			if(entry.getValue().equals(entityClass))
+				return entry.getKey();
+		return null;
+	}
 
 	public Collection<PackageConfig> getAllPackageConfigs() {
 		return configuration.getPackageConfigs().values();
