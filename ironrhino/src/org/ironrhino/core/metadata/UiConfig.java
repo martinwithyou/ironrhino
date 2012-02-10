@@ -22,6 +22,8 @@ public @interface UiConfig {
 	String type() default DEFAULT_TYPE; //input,textarea,select,checkbox,listpick,dictionary...
 
 	int size() default 0;
+	
+	int maxlength() default 0;
 
 	String cssClass() default "";
 

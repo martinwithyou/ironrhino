@@ -742,6 +742,7 @@ public class EntityAction extends BaseAction {
 		private boolean required;
 		private boolean unique;
 		private int size;
+		private int maxlength;
 		private String cssClass = "";
 		private boolean readonly;
 		private int displayOrder = Integer.MAX_VALUE;
@@ -769,6 +770,7 @@ public class EntityAction extends BaseAction {
 			this.required = config.required();
 			this.unique = config.unique();
 			this.size = config.size();
+			this.maxlength = config.maxlength();
 			this.readonly = config.readonly();
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.displayName()))
@@ -856,6 +858,14 @@ public class EntityAction extends BaseAction {
 
 		public void setSize(int size) {
 			this.size = size;
+		}
+
+		public int getMaxlength() {
+			return maxlength;
+		}
+
+		public void setMaxlength(int maxlength) {
+			this.maxlength = maxlength;
 		}
 
 		public String getListKey() {

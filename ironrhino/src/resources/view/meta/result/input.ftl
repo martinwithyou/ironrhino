@@ -58,8 +58,12 @@
 				<span id="${key}"><@displayDictionaryLabel dictionaryName=config.dictionaryName value="${entity[key]!}"/></span>
 			</#if>
 			</div>
-		<#else>	
-			<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" readonly="${readonly?string}" />
+		<#else>
+			<#if config.maxlength gt 0>
+				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" maxlength="${(config.maxlength)}" readonly="${readonly?string}" />
+			<#else>
+				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" readonly="${readonly?string}" />
+			</#if>
 		</#if>
 	</#list>
 	<@s.submit value="%{getText('save')}" />
