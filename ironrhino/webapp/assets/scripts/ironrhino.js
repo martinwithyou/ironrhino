@@ -28808,7 +28808,7 @@ Observation.sortableTable = function(container) {
 		var r = row.clone(true);
 		$('*', r).removeAttr('id');
 		$('span.info', r).html('');
-		$(':input', r).val('').removeAttr('keyupValidate');
+		$(':input', r).val('').prop('readonly',false).removeAttr('keyupValidate');
 		$('input.filterselect', this).next('select').html(function() {
 					return $(this).data('innerHTML')
 				});
@@ -28817,8 +28817,12 @@ Observation.sortableTable = function(container) {
 						$(this).remove();
 				});
 		row.after(r);
-		$(':input', r).eq(0).focus();
 		rename(row.closest('tbody'));
+		$('select.textonadd', r).each(function() {
+			$(this).replaceWith('<input type="text" name="'
+					+ $(this).attr('name') + '">');
+		});
+		$(':input', r).eq(0).focus();
 		if (options.onadd)
 			options.onadd.apply(r.get(0));
 	};

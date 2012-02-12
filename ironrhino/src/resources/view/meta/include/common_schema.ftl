@@ -1,4 +1,4 @@
-<#macro editAttributes schemaName attributes=[] parameterNamePrefix="">
+<#macro editAttributes schemaName attributes=[] parameterNamePrefix=""  headerKey="" headerValue="">
 	<#if schemaName?index_of(",") gt 0>
 		<#local schemaNames = schemaName?split(",")>
 		<#list schemaNames as name>
@@ -38,13 +38,13 @@
 				<tr>
 					<td><@s.textfield theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name}" readonly=field.strict?string/></td>
 					<td>
-						<select name="${parameterNamePrefix}attributes[${index}].value" class="<#if field.required> required</#if><#if !field.strict> combox</#if>">
-							<option value="">${action.getText('select')}</option>
+						<select name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combox</#if>">
+							<option value="${headerKey}">${headerValue}</option>
 							<#list field.values as value>
 							<option value="${value}"<#if persistValueExists && persistValue=value> selected="selected"</#if>>${value}</option>
 							</#list>
 							<#if !field.strict && persistValueExists && persistValue!='' && !field.values?seq_contains(persistValue)>
-							<option value="${persistValue}" selected="selected">${persistValue}</option>
+							<option value="${persistValue}" selected="ed">${persistValue}</option>
 							</#if>
 						</select>
 					</td>
