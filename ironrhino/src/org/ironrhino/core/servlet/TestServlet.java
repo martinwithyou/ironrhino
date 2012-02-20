@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.ironrhino.core.util.HttpClientUtils;
@@ -16,31 +15,44 @@ public class TestServlet extends HttpServlet {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	public void init() {
-		String url = getInitParameter("url");
-		if (StringUtils.isBlank(url)) {
-			String contextPath = getServletContext().getContextPath();
-			url = "http://localhost"
-					+ (contextPath.indexOf('/') == 0 ? "" : "/") + contextPath;
-		}
-		final String testurl = url;
+		final String url = getInitParameter("url");
 		new Thread() {
 			public void run() {
-				logger.info("testing: " + testurl);
-				HttpRequestBase httpRequest = new HttpGet(testurl);
-				try {
-					HttpResponse response = HttpClientUtils
-							.getDefaultInstance().execute(httpRequest);
-					if (response.getStatusLine().getStatusCode() != HttpServletResponse.SC_OK)
-						logger.warn("test failed,no response,please check it");
-					else
+				if (StringUtils.isNotBlank(url)) {
+					if (test(url))
 						logger.info("test succussful");
-				} catch (Exception e) {
-					httpRequest.abort();
-					logger.error("test failed", e);
+					else
+						logger.warn("test failed,no response,please check it");
+				} else {
+					String contextPath = getServletContext().getContextPath();
+					String testurl = "http://localhost"
+							+ (contextPath.indexOf('/') == 0 ? "" : "/")
+							+ contextPath;
+					if (test(testurl))
+						logger.info("test succussful");
+					else {
+						testurl = "http://localhost:8080"
+								+ (contextPath.indexOf('/') == 0 ? "" : "/")
+								+ contextPath;
+						if (test(testurl))
+							logger.info("test succussful");
+						else
+							logger.warn("test failed,no response,please check it");
+					}
 				}
-
 			}
 		}.start();
 	}
 
+	private boolean test(String testurl) {
+		logger.info("testing: " + testurl);
+		HttpRequestBase httpRequest = new HttpGet(testurl);
+		try {
+			return HttpClientUtils.getDefaultInstance().execute(httpRequest)
+					.getStatusLine().getStatusCode() == HttpServletResponse.SC_OK;
+		} catch (Exception e) {
+			httpRequest.abort();
+			return false;
+		}
+	}
 }
