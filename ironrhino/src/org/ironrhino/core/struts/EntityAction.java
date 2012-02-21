@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -987,8 +986,7 @@ public class EntityAction extends BaseAction {
 				ReflectionContextState.setCreatingNullObjects(context, true);
 				ReflectionContextState.setDenyMethodExecution(context, true);
 				for (Map.Entry<String, Object> entry : parameters.entrySet())
-					if (acceptedPattern.matcher(entry.getKey()).matches())
-						temp.setValue(entry.getKey(), entry.getValue());
+					temp.setParameter(entry.getKey(), entry.getValue());
 			} finally {
 				ReflectionContextState.setCreatingNullObjects(context, false);
 				ReflectionContextState.setDenyMethodExecution(context, false);
@@ -998,9 +996,6 @@ public class EntityAction extends BaseAction {
 		}
 		return entity;
 	}
-
-	private static Pattern acceptedPattern = Pattern
-			.compile("\\w+((\\.\\w+)|(\\[\\d+\\])|(\\(\\d+\\))|(\\['\\w+'\\])|(\\('\\w+'\\)))*"); // com.opensymphony.xwork2.interceptor.ParametersInterceptor
 
 	@Inject("ironrhino-autoconfig")
 	private transient PackageProvider packageProvider;
