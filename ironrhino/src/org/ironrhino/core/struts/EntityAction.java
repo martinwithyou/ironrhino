@@ -985,8 +985,11 @@ public class EntityAction extends BaseAction {
 			try {
 				ReflectionContextState.setCreatingNullObjects(context, true);
 				ReflectionContextState.setDenyMethodExecution(context, true);
-				for (Map.Entry<String, Object> entry : parameters.entrySet())
-					temp.setParameter(entry.getKey(), entry.getValue());
+				for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+					String name = entry.getKey();
+					if (name.startsWith(getEntityName() + "."))
+						temp.setParameter(name, entry.getValue());
+				}
 			} finally {
 				ReflectionContextState.setCreatingNullObjects(context, false);
 				ReflectionContextState.setDenyMethodExecution(context, false);
