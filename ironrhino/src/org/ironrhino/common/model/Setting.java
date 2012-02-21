@@ -31,6 +31,10 @@ public class Setting extends BaseEntity implements Recordable {
 	@SearchableProperty
 	private String value = "";
 
+	@UiConfig(displayOrder = 3, type = "textarea")
+	@SearchableProperty
+	private String description = "";
+
 	@NotInCopy
 	@UiConfig(hide = true)
 	private Date createDate = new Date();
@@ -70,6 +74,14 @@ public class Setting extends BaseEntity implements Recordable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Date getCreateDate() {

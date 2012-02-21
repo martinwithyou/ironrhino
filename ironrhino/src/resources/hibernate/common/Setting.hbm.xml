@@ -13,6 +13,7 @@
 			<property name="key" column="skey" not-null="true" />
 		</natural-id>
 		<property name="value" />
+		<property name="description" />
 		<property name="createDate" />
 		<property name="modifyDate" />
 		<many-to-one name="createUser" class="org.ironrhino.security.model.User" column="createUser" not-null="false" lazy="proxy" />

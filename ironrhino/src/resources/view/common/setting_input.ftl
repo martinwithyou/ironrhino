@@ -4,16 +4,20 @@
 <title><#if setting.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('setting')}</title>
 </head>
 <body>
-<@s.form action="${getUrl('/common/setting/save')}" method="post" cssClass="ajax" cssStyle="text-align:center;">
+<@s.form action="${getUrl('/common/setting/save')}" method="post" cssClass="ajax">
 	<#if !setting.new>
 		<@s.hidden name="setting.id" />
 	</#if>
 	<#if Parameters.brief??>
 		<@s.hidden name="setting.key"/>
+		<@s.textarea label="%{getText('description')}" name="setting.description" cols="50" rows="1" tabindex="-1" readonly=true cssStyle="border:none;resize:none;outline:none;"/>
 	<#else>
 		<@s.textfield label="%{getText('key')}" name="setting.key" cssClass="required checkavailable"/>
 	</#if>
-	<@s.textfield label="%{getText('value')}" name="setting.value" />
+	<@s.textarea label="%{getText('value')}" name="setting.value" cols="50" rows="5" />
+	<#if !Parameters.brief??>
+		<@s.textarea label="%{getText('description')}" name="setting.description" cols="50" rows="5" />
+	</#if>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>
