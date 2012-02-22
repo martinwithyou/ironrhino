@@ -44,6 +44,8 @@ public @interface UiConfig {
 	String template() default "";
 
 	String width() default "";
+	
+	String dynamicAttributes() default ""; //json map
 
 	boolean excludeIfNotEdited() default false;
 

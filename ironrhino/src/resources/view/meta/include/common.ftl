@@ -65,10 +65,10 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
   <#return '<button'+(_id!)+(_type!)+(_onclick!)+(_class)+'><span><span>'+text+'</span></span></button>'>
 </#function>
 
-<#macro button text="" type="" class="" extra...>
-<#if !extra?is_hash_ex><#local extra={}></#if>
+<#macro button text="" type="" class="" dynamicAttributes...>
+<#if !dynamicAttributes?is_hash_ex><#local dynamicAttributes={}></#if>
 <#if text==''>
-	<#local text=(extra['id']!'')?replace('_', ' ')>
+	<#local text=(dynamicAttributes['id']!'')?replace('_', ' ')>
 </#if>
 <#if class!=''>
 	<#local class='btn '+class>
@@ -85,7 +85,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <#local _type=' type="'+type+'"'>
 </#if>
 </#if>
-<${tag} <#list extra?keys as attr>${attr}="${extra[attr]?html}" </#list>${_type!} class="${class}"><span><span>${text}</span></span></${tag}><#t>
+<${tag} <#list dynamicAttributes?keys as attr>${attr}="${dynamicAttributes[attr]?html}" </#list>${_type!} class="${class}"><span><span>${text}</span></span></${tag}><#t>
 </#macro>
 
 <#function getUrl value secure=''>

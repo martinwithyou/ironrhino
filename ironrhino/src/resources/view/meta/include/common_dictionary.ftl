@@ -1,6 +1,6 @@
-<#macro selectDictionary dictionaryName value="" required=false  headerKey="" headerValue="" strict=true extra...>
+<#macro selectDictionary dictionaryName value="" required=false  headerKey="" headerValue="" strict=true dynamicAttributes...>
 	<#local dictionary=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getDictionary(dictionaryName)!>
-	<select class="<#if required> required</#if><#if !strict> combox</#if> ${extra['class']!}"<#list extra?keys as attr><#if attr!='class'> ${attr}="${extra[attr]?html}"</#if></#list>>
+	<select class="<#if required> required</#if><#if !strict> combox</#if> ${dynamicAttributes['class']!}"<#list dynamicAttributes?keys as attr><#if attr!='class' && attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>>
 		<option value="${headerKey}">${headerValue}</option>
 		<#if dictionary?? && dictionary.items??>
 		<#list dictionary.items as lv>

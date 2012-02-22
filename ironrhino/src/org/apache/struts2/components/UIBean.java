@@ -517,8 +517,8 @@ public abstract class UIBean extends Component {
 		evaluateParams();
 		try {
 			super.end(writer, body, false);
-			mergeTemplate(writer, buildTemplateName(template,
-					getDefaultTemplate()));
+			mergeTemplate(writer,
+					buildTemplateName(template, getDefaultTemplate()));
 		} catch (Exception e) {
 			throw new StrutsException(e);
 		} finally {
@@ -835,8 +835,7 @@ public abstract class UIBean extends Component {
 					addParameter((String) entry.getKey(), entry.getValue());
 				}
 			} else {
-				LOG
-						.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
+				LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
 			}
 
 			// TODO: this is to keep backward compatibility, remove once when
@@ -862,9 +861,7 @@ public abstract class UIBean extends Component {
 			if (tooltipDelayParam != null)
 				this.addParameter("tooltipDelay", tooltipDelayParam);
 			if (this.tooltipDelay != null)
-				this
-						.addParameter("tooltipDelay",
-								findString(this.tooltipDelay));
+				this.addParameter("tooltipDelay", findString(this.tooltipDelay));
 
 			if (this.javascriptTooltip != null) {
 				Boolean jsTooltips = (Boolean) findValue(
@@ -932,8 +929,7 @@ public abstract class UIBean extends Component {
 		if (form != null) {
 			form.addParameter("customOnsubmitEnabled", Boolean.TRUE);
 		} else {
-			LOG
-					.warn("Cannot find an Ancestor form, custom onsubmit is NOT enabled");
+			LOG.warn("Cannot find an Ancestor form, custom onsubmit is NOT enabled");
 		}
 	}
 
@@ -1225,7 +1221,7 @@ public abstract class UIBean extends Component {
 	}
 
 	public void setDynamicAttributes(Map<String, Object> dynamicAttributes) {
-		this.dynamicAttributes = dynamicAttributes;
+			this.dynamicAttributes.putAll(dynamicAttributes);
 	}
 
 	@Override
@@ -1240,7 +1236,8 @@ public abstract class UIBean extends Component {
 				.hasNext();) {
 			Map.Entry entry = (Map.Entry) iterator.next();
 			String key = (String) entry.getKey();
-			if (!standardAttributes.contains(key))
+			if (!key.equals("dynamicAttributes")
+					&& !standardAttributes.contains(key))
 				dynamicAttributes.put(key, entry.getValue());
 		}
 	}

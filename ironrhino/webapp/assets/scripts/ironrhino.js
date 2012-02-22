@@ -28063,7 +28063,7 @@ Observation.common = function(container) {
 			}, function() {
 				$(this).removeClass('highlight');
 			});
-	$(':input.changeEditAttributes', container).change(function() {
+	$(':input.conjunct', container).change(function() {
 				var t = $(this);
 				var f = $(this).closest('form');
 				var hid = $(':input[type=hidden][name$=".id"]', f);
@@ -28073,7 +28073,8 @@ Observation.common = function(container) {
 				else
 					url = 'input';
 				var data = {};
-				data['id'] = hid.val();
+				if (hid.val())
+					data['id'] = hid.val();
 				data[t.attr('name')] = t.val();
 				ajax({
 							global : false,
@@ -28081,7 +28082,7 @@ Observation.common = function(container) {
 							method : 'GET',
 							url : url,
 							data : data,
-							replacement : 'editAttributes'
+							replacement : t.attr('replacement')
 						});
 			});
 	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')

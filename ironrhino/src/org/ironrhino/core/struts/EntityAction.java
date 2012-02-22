@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.codehaus.jackson.type.TypeReference;
 import org.compass.annotations.SearchableId;
 import org.compass.annotations.SearchableProperty;
 import org.hibernate.criterion.Criterion;
@@ -45,6 +46,7 @@ import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.BeanUtils;
+import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
@@ -140,7 +142,7 @@ public class EntityAction extends BaseAction {
 			BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
 					.newInstance());
 			Set<String> naturalIds = getNaturalIds().keySet();
-			if (getUid() != null) {
+			if (StringUtils.isNotBlank(getUid())) {
 				bw.setPropertyValue("id", getUid());
 				Serializable id = (Serializable) bw.getPropertyValue("id");
 				entity = entityManager.get(id);
@@ -754,6 +756,7 @@ public class EntityAction extends BaseAction {
 		private boolean hideInList;
 		private String template;
 		private String width;
+		private Map<String, String> dynamicAttributes = Collections.EMPTY_MAP;
 		private boolean excludeIfNotEdited;
 		private String listKey = UiConfig.DEFAULT_LIST_KEY;
 		private String listValue = UiConfig.DEFAULT_LIST_VALUE;
@@ -782,6 +785,15 @@ public class EntityAction extends BaseAction {
 			this.hideInList = config.hideInList();
 			this.template = config.template();
 			this.width = config.width();
+			if (StringUtils.isNotBlank(config.dynamicAttributes()))
+				try {
+					this.dynamicAttributes = JsonUtils.fromJson(
+							config.dynamicAttributes(),
+							new TypeReference<Map<String, String>>() {
+							});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			this.cellEdit = config.cellEdit();
 			this.excludeIfNotEdited = config.excludeIfNotEdited();
 			this.cssClass = config.cssClass();
@@ -814,6 +826,14 @@ public class EntityAction extends BaseAction {
 
 		public void setTemplateName(String templateName) {
 			this.templateName = templateName;
+		}
+
+		public Map<String, String> getDynamicAttributes() {
+			return dynamicAttributes;
+		}
+
+		public void setDynamicAttributes(Map<String, String> dynamicAttributes) {
+			this.dynamicAttributes = dynamicAttributes;
 		}
 
 		public boolean isRequired() {
