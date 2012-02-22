@@ -238,27 +238,28 @@ public class EntityAction extends BaseAction {
 		tryFindEntity();
 		if (entity == null)
 			try {
-				// for fetch default value by construct
 				entity = (Persistable) getEntityClass().newInstance();
-				BeanWrapperImpl bw = new BeanWrapperImpl(entity);
-				Set<String> naturalIds = getNaturalIds().keySet();
-				if (getUid() != null && naturalIds.size() == 1) {
-					bw.setPropertyValue(naturalIds.iterator().next(), getUid());
-				}
-				Set<String> editablePropertyNames = getUiConfigs().keySet();
-				for (String parameterName : ServletActionContext.getRequest()
-						.getParameterMap().keySet()) {
-					String propertyName = parameterName;
-					if (propertyName.startsWith(getEntityName() + "."))
-						propertyName = propertyName.substring(propertyName
-								.indexOf('.') + 1);
-					if (editablePropertyNames.contains(propertyName))
-						bw.setPropertyValue(propertyName, ServletActionContext
-								.getRequest().getParameter(parameterName));
-				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
+		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
+		if (entity.isNew()) {
+			Set<String> naturalIds = getNaturalIds().keySet();
+			if (getUid() != null && naturalIds.size() == 1) {
+				bw.setPropertyValue(naturalIds.iterator().next(), getUid());
+			}
+		}
+		Set<String> editablePropertyNames = getUiConfigs().keySet();
+		for (String parameterName : ServletActionContext.getRequest()
+				.getParameterMap().keySet()) {
+			String propertyName = parameterName;
+			if (propertyName.startsWith(getEntityName() + "."))
+				propertyName = propertyName
+						.substring(propertyName.indexOf('.') + 1);
+			if (editablePropertyNames.contains(propertyName))
+				bw.setPropertyValue(propertyName, ServletActionContext
+						.getRequest().getParameter(parameterName));
+		}
 		setEntity(entity);
 		return INPUT;
 	}

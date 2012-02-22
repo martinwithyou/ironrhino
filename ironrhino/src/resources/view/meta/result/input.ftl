@@ -52,7 +52,7 @@
 			<div class="field">
 			<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
 			<#if !readonly>
-				<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required/>
+				<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required class=config.cssClass!/>
 			<#else>
 				<@s.hidden name="${entityName}.${key}"/>
 				<span id="${key}"><@displayDictionaryLabel dictionaryName=evalTemplate(config.templateName) value="${entity[key]!}"/></span>

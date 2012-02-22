@@ -703,6 +703,25 @@ Observation.common = function(container) {
 			}, function() {
 				$(this).removeClass('highlight');
 			});
+	$(':input.changeEditAttributes', container).change(function() {
+				var t = $(this);
+				var f = $(this).closest('form');
+				var hid = $(':input[type=hidden][name$=".id"]', f);
+				var url = f.attr('action');
+				if (url.indexOf('/') > -1)
+					url = url.substring(0, url.lastIndexOf('/')) + '/input';
+				else
+					url = 'input';
+				var data = {};
+				data['id'] = hid.val();
+				data[t.attr('name')] = t.val();
+				ajax({
+							method : 'GET',
+							url : url,
+							data : data,
+							replacement : 'editAttributes'
+						});
+			});
 	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
 		$('textarea', container).elastic();
 	if (typeof $.fn.tabs != 'undefined')
