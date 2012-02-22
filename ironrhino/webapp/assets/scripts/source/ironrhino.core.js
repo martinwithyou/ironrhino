@@ -716,6 +716,8 @@ Observation.common = function(container) {
 				data['id'] = hid.val();
 				data[t.attr('name')] = t.val();
 				ajax({
+							global : false,
+							quiet : true,
 							method : 'GET',
 							url : url,
 							data : data,
