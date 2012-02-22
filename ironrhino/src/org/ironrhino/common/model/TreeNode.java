@@ -10,13 +10,14 @@ import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.model.Attributable;
 import org.ironrhino.core.model.Attribute;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.util.JsonUtils;
 
 @PublishAware
 @AutoConfig
-public class TreeNode extends BaseTreeableEntity<TreeNode> {
+public class TreeNode extends BaseTreeableEntity<TreeNode> implements Attributable{
 
 	private static final long serialVersionUID = 8878337541387688086L;
 

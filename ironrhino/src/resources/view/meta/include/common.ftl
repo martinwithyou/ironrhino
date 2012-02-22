@@ -1,3 +1,18 @@
+<#function evalTemplate template>
+	<#local i=template?index_of('${')/>
+	<#if i lt 0>
+		<#return template>
+	<#else>
+		<#local str1=template?substring(0,i)/>
+		<#local str2=template?substring(i+2)/>
+		<#local j=str2?index_of('}')/>
+		<#local expression=str2?substring(0,j)/>
+		<#local str2=str2?substring(j+1)/>
+		<#local template=str1+expression?eval?string+str2/>
+		<#return evalTemplate(template)>
+	</#if>
+</#function>
+
 <#macro authorize ifAllGranted="" ifAnyGranted="" ifNotGranted="" authorizer="" resource="">
 	<#if statics['org.ironrhino.core.util.AuthzUtils'].authorize(ifAllGranted,ifAnyGranted,ifNotGranted) || (authorizer!="" &&  statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dynamicAuthorizerManager').authorize(authorizer,statics['org.ironrhino.core.util.AuthzUtils'].getUserDetails(),resource))>
 		<#nested>

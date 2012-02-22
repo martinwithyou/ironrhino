@@ -49,7 +49,7 @@
 		<#if !config.hideInList>
 			<#assign value = entity[key]!>
 			<#if config.type=='dictionary' && selectDictionary??>
-							<#assign value=getDictionaryLabel(config.dictionaryName,value)/>	
+							<#assign value=getDictionaryLabel(evalTemplate(config.templateName),value)/>	
 			</#if>
 			<@rttbodytd entity=entity value=value template=uiConfigs[key].template/>
 		</#if>
@@ -76,7 +76,7 @@
 		</textarea>
 		<#elseif config.type=='dictionary' && selectDictionary??>
 		<textarea id="rt_select_template_${key}">
-		<@selectDictionary dictionaryName=config.dictionaryName id=key name="${entityName}.${key}" required=config.required  onblur="Richtable.updateCell(this)" style="width: 100%;"/>
+		<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" required=config.required  onblur="Richtable.updateCell(this)" style="width: 100%;"/>
 		</textarea>
 		</#if>
 	</#if>

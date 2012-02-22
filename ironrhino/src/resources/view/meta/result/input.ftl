@@ -52,12 +52,18 @@
 			<div class="field">
 			<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
 			<#if !readonly>
-				<@selectDictionary dictionaryName=config.dictionaryName id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required/>
+				<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required/>
 			<#else>
 				<@s.hidden name="${entityName}.${key}"/>
-				<span id="${key}"><@displayDictionaryLabel dictionaryName=config.dictionaryName value="${entity[key]!}"/></span>
+				<span id="${key}"><@displayDictionaryLabel dictionaryName=evalTemplate(config.templateName) value="${entity[key]!}"/></span>
 			</#if>
 			</div>
+		<#elseif config.type=='schema'>
+			<#if editAttributes??>
+				<div id="editAttributes">
+				<@editAttributes schemaName=evalTemplate(config.templateName) attributes=entity.attributes parameterNamePrefix=entityName+'.'/>
+				</div>
+			</#if>
 		<#else>
 			<#if config.maxlength gt 0>
 				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" maxlength="${(config.maxlength)}" readonly="${readonly?string}" />

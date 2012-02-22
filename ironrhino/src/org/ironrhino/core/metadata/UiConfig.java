@@ -19,10 +19,10 @@ public @interface UiConfig {
 
 	String displayName() default "";
 
-	String type() default DEFAULT_TYPE; //input,textarea,select,checkbox,listpick,dictionary...
+	String type() default DEFAULT_TYPE; // input,textarea,select,checkbox,listpick,dictionary,schema...
 
 	int size() default 0;
-	
+
 	int maxlength() default 0;
 
 	String cssClass() default "";
@@ -30,13 +30,13 @@ public @interface UiConfig {
 	int displayOrder() default Integer.MAX_VALUE;
 
 	boolean required() default false;
-	
+
 	boolean unique() default false;
 
 	boolean readonly() default false;
 
 	boolean hide() default false;
-	
+
 	boolean hideInList() default false;
 
 	boolean searchable() default false;
@@ -52,9 +52,9 @@ public @interface UiConfig {
 	String listValue() default DEFAULT_LIST_VALUE;
 
 	String cellEdit() default "";
-	
-	String pickUrl () default "";
-	
-	String dictionaryName() default "";
-	
+
+	String pickUrl() default "";// for listpick
+
+	String templateName() default ""; // for dictionary,schema
+
 }

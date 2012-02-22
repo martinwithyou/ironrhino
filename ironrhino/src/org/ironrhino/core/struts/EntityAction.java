@@ -658,13 +658,17 @@ public class EntityAction extends BaseAction {
 							StringBuilder sb = new StringBuilder(url);
 							sb.append("/pick");
 							List<String> columns = new ArrayList<String>();
-							for (String column : "name,description,code"
+							for (String column : "fullname,name,description,code"
 									.split(","))
 								try {
 									if (returnType.getMethod("get"
 											+ StringUtils.capitalize(column),
-											new Class[0]) != null)
-										columns.add(column);
+											new Class[0]) != null) {
+										if (!columns.contains("fullname")
+												&& column.equals("name")
+												|| !column.equals("name"))
+											columns.add(column);
+									}
 								} catch (NoSuchMethodException e) {
 								}
 							if (!columns.isEmpty()) {
@@ -755,7 +759,7 @@ public class EntityAction extends BaseAction {
 		private String cellEdit = "";
 		private boolean searchable;
 		private String pickUrl = "";
-		private String dictionaryName = "";
+		private String templateName = "";
 
 		public UiConfigImpl() {
 		}
@@ -784,7 +788,7 @@ public class EntityAction extends BaseAction {
 				cssClass += " excludeIfNotEdited";
 			this.searchable = config.searchable();
 			this.pickUrl = config.pickUrl();
-			this.dictionaryName = config.dictionaryName();
+			this.templateName = config.templateName();
 		}
 
 		public boolean isHideInList() {
@@ -803,12 +807,12 @@ public class EntityAction extends BaseAction {
 			this.pickUrl = pickUrl;
 		}
 
-		public String getDictionaryName() {
-			return dictionaryName;
+		public String getTemplateName() {
+			return templateName;
 		}
 
-		public void setDictionaryName(String dictionaryName) {
-			this.dictionaryName = dictionaryName;
+		public void setTemplateName(String templateName) {
+			this.templateName = templateName;
 		}
 
 		public boolean isRequired() {
