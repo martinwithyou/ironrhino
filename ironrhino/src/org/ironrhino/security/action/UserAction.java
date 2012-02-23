@@ -143,7 +143,12 @@ public class UserAction extends BaseAction {
 
 	@Override
 	public String input() {
-		user = userManager.get(getUid());
+		String id = getUid();
+		if (StringUtils.isNotBlank(id)) {
+			user = userManager.get(id);
+			if (user == null)
+				user = userManager.findByNaturalId(id);
+		}
 		if (user == null) {
 			user = new User();
 		} else {

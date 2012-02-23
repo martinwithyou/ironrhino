@@ -98,7 +98,7 @@ $(function() {
 </script>
 </head>
 <body>
-<@s.form id="form" action="${getUrl('/common/page/draft')}" method="post" cssClass="ajax" cssStyle="padding-top:13px;">
+<@s.form id="form" action="${getUrl(actionBaseUrl+'/draft')}" method="post" cssClass="ajax" cssStyle="padding-top:13px;">
 	<@s.hidden id="page_id" name="page.id" />
 	<#if Parameters.brief??>
 		<@s.hidden name="page.path"/>

@@ -104,6 +104,14 @@ public class BaseAction extends ActionSupport {
 		this.targetUrl = targetUrl;
 	}
 
+	public String getActionBaseUrl() {
+		ActionProxy proxy = ActionContext.getContext().getActionInvocation()
+				.getProxy();
+		String actionName = proxy.getActionName();
+		String namespace = proxy.getNamespace();
+		return namespace + (namespace.endsWith("/") ? "" : "/") + actionName;
+	}
+
 	public String getKeyword() {
 		return keyword;
 	}

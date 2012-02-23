@@ -4,7 +4,7 @@
 <title><#if schema.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('schema')}</title>
 </head>
 <body>
-<@s.form action="${getUrl('/common/schema/save')}" method="post" cssClass="ajax" cssStyle="text-align:center;">
+<@s.form action="${getUrl(actionBaseUrl+'/save')}" method="post" cssClass="ajax" cssStyle="text-align:center;">
 	<#if !schema.new>
 		<@s.hidden name="schema.id" />
 	</#if>
