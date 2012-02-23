@@ -59,6 +59,13 @@
 		value="org/ironrhino/security/oauth/server/**,resources/hibernate/security/oauth/**,resources/view/oauth2*" />
 
 	<target name="jar">
+		<loadfile property="entries" srcFile="${basedir}/.svn/entries"
+			encoding="utf-8" />
+		<script language="javascript">
+			<![CDATA[
+			project.setProperty("revision",entries.split('\n')[3]);
+			]]>
+		</script>
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${core-jar.name}" />
 		<delete file="${target.dir}/${core-ext-jar.name}" />
@@ -84,6 +91,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-core" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${core-ext-jar.name}" basedir="${classes.dir}"
@@ -92,6 +100,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-core-ext" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -101,6 +110,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-setting" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -110,6 +120,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-cms" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence"
 					value="ironrhino-core,ironrhino-common-setting,ironrhino-common-upload" />
 			</manifest>
@@ -120,6 +131,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-dictionary" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -129,6 +141,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-schema" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -138,6 +151,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-treenode" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -147,6 +161,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-region" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -156,6 +171,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-stat" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -165,6 +181,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-record" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -174,6 +191,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-upload" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -183,6 +201,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-install" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -193,6 +212,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
@@ -202,6 +222,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-config" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
 			</manifest>
 		</jar>
@@ -211,6 +232,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-loginrecord" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
 			</manifest>
 		</jar>
@@ -220,6 +242,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-acl" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence"
 					value="ironrhino-core,ironrhino-security,ironrhino-common-dictionary" />
 			</manifest>
@@ -230,6 +253,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-oauth-client" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
 			</manifest>
 		</jar>
@@ -239,6 +263,7 @@
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-oauth-server" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
 			</manifest>
 		</jar>
