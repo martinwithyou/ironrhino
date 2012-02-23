@@ -1,5 +1,5 @@
 <#function evalTemplate template>
-	<#assign value><@template?interpret /></#assign>
+	<#local value><@template?interpret /></#local>
 	<#return value/>
 </#function>
 
