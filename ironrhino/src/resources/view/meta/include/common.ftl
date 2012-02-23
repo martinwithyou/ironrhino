@@ -1,16 +1,6 @@
 <#function evalTemplate template>
-	<#local i=template?index_of('${')/>
-	<#if i lt 0>
-		<#return template>
-	<#else>
-		<#local str1=template?substring(0,i)/>
-		<#local str2=template?substring(i+2)/>
-		<#local j=str2?index_of('}')/>
-		<#local expression=str2?substring(0,j)/>
-		<#local str2=str2?substring(j+1)/>
-		<#local template=str1+expression?eval?string+str2/>
-		<#return evalTemplate(template)>
-	</#if>
+	<#assign value><@template?interpret /></#assign>
+	<#return value/>
 </#function>
 
 <#macro authorize ifAllGranted="" ifAnyGranted="" ifNotGranted="" authorizer="" resource="">
