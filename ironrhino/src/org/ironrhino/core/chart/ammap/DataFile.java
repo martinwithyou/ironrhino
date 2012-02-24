@@ -24,17 +24,17 @@ public class DataFile implements Serializable {
 	static {
 		try {
 			template = new Template("DataFile",
-					new InputStreamReader(DataFile.class
-							.getResourceAsStream("DataFile.ftl"), "UTF-8"),
-					null);
+					new InputStreamReader(
+							DataFile.class.getResourceAsStream("DataFile.ftl"),
+							"UTF-8"), null);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	public DataFile() {
-		ChinaArea[] array = new ChinaArea[] { ChinaArea.CN_11, ChinaArea.CN_91,
-				ChinaArea.CN_92 };
+		ChinaArea[] array = new ChinaArea[] { ChinaArea.CN_BJ, ChinaArea.HK,
+				ChinaArea.MO };
 		for (ChinaArea ca : array)
 			movies.put(ca.getName(), ca.getDisplayName());
 	}

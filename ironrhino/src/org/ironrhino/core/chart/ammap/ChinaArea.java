@@ -5,10 +5,10 @@ import java.util.ResourceBundle;
 
 public enum ChinaArea {
 
-	CN_11, CN_12, CN_13, CN_14, CN_15, CN_21, CN_22, CN_23, CN_31, CN_32, CN_33, CN_34, CN_35, CN_36, CN_37, CN_41, CN_42, CN_43, CN_44, CN_45, CN_46, CN_50, CN_51, CN_52, CN_53, CN_54, CN_61, CN_62, CN_63, CN_64, CN_65, CN_91, CN_92, TW;
+	CN_BJ, CN_TJ, CN_HB, CN_SX, CN_NM, CN_LN, CN_JL, CN_HL, CN_SH, CN_JS, CN_ZJ, CN_AH, CN_FJ, CN_JX, CN_SD, CN_HE, CN_HU, CN_HN, CN_GD, CN_GX, CN_HA, CN_CQ, CN_SC, CN_GZ, CN_YN, CN_XZ, CN_SA, CN_GS, CN_QH, CN_NX, CN_XJ, HK, MO, TW;
 
-	static ResourceBundle resources = ResourceBundle.getBundle(ChinaArea.class
-			.getName(), Locale.CHINA);
+	static ResourceBundle resources = ResourceBundle.getBundle(
+			ChinaArea.class.getName(), Locale.CHINA);
 
 	public String getName() {
 		return name();
