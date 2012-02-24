@@ -66,8 +66,12 @@ public class SettingControl implements
 
 	public boolean getBooleanValue(String key, boolean defaultValue) {
 		Setting s = settings.get(key);
-		if (s != null && StringUtils.isNotBlank(s.getValue()))
-			return Boolean.parseBoolean(s.getValue().trim());
+		if (s != null && StringUtils.isNotBlank(s.getValue())) {
+			String value = s.getValue().trim();
+			return value.equalsIgnoreCase("true")
+					|| value.equalsIgnoreCase("yes")
+					|| value.equalsIgnoreCase("1");
+		}
 		return defaultValue;
 	}
 
