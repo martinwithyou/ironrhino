@@ -14,10 +14,10 @@
 </#function>
 
 <#macro cache key scope="application" timeToIdle="-1" timeToLive="3600">
-<#assign keyExists=statics['org.ironrhino.core.cache.CacheContext'].eval(key)??>
-<#assign content=statics['org.ironrhino.core.cache.CacheContext'].getPageFragment(key,scope)!>
+<#local keyExists=statics['org.ironrhino.core.cache.CacheContext'].eval(key)??>
+<#local content=statics['org.ironrhino.core.cache.CacheContext'].getPageFragment(key,scope)!>
 <#if keyExists&&content??&&content?length gt 0>${content}<#else>
-<#assign content><#nested/></#assign>  
+<#local content><#nested/></#local>  
 ${content}
 ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,scope,timeToIdle,timeToLive)}
 </#if>

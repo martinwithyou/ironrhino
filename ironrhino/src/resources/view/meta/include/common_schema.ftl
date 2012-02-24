@@ -73,10 +73,10 @@
 				</#list>
 				</#if>
 				<#else>
-					<#assign size = 0>
+					<#local size = 0>
 					<#local isnew=true>
 					<#if attributes?? && attributes?size gt 0>
-						<#assign size = attributes?size-1>
+						<#local size = attributes?size-1>
 						<#local isnew=false>
 					</#if>
 					<#list 0..size as index>
