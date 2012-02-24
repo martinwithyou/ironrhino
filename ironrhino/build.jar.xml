@@ -59,11 +59,22 @@
 		value="org/ironrhino/security/oauth/server/**,resources/hibernate/security/oauth/**,resources/view/oauth2*" />
 
 	<target name="jar">
-		<loadfile property="entries" srcFile="${basedir}/.svn/entries"
-			encoding="utf-8" />
 		<script language="javascript">
 			<![CDATA[
-			project.setProperty("revision",entries.split('\n')[3]);
+			importPackage(java.io);
+			var is = new FileInputStream(project.getProperty('basedir')+'/.svn/entries');
+			var br = new BufferedReader(new InputStreamReader(is,'utf-8'));
+			var line;
+			var lineno = 0;
+			while(line=br.readLine()){
+				if(lineno==3){
+					project.setProperty("revision",line);
+					break;
+				}
+				lineno++;
+			}
+			br.close();
+			is.close();
 			]]>
 		</script>
 		<mkdir dir="${target.dir}" />
