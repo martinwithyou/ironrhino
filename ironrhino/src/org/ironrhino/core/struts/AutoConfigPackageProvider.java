@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.util.ClassScaner;

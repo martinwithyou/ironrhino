@@ -17,7 +17,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 

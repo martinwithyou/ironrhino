@@ -1,6 +1,6 @@
 package org.ironrhino.core.session.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.session.SessionCompressor;
 import org.ironrhino.core.util.JsonUtils;
 

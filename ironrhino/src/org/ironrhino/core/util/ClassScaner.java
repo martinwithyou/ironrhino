@@ -116,7 +116,7 @@ public class ClassScaner {
 	}
 
 	public Set<Class> doScan(String basePackage, String pattern) {
-		if (org.apache.commons.lang.StringUtils.isBlank(pattern))
+		if (org.apache.commons.lang3.StringUtils.isBlank(pattern))
 			pattern = "/**/*.class";
 		Set<Class> classes = new HashSet<Class>();
 		Resource resource = null;

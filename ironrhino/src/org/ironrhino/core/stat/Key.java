@@ -2,7 +2,7 @@ package org.ironrhino.core.stat;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class Key implements Serializable, Comparable<Key> {
 

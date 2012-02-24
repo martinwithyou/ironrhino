@@ -7,7 +7,7 @@ import java.util.Map;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
 
 public class EhCacheManager implements CacheManager {

@@ -2,7 +2,7 @@ package org.ironrhino.common.action;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.Constants;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;

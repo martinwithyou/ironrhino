@@ -20,7 +20,7 @@ public class StringUtils {
 		 * Parse sentence。
 		 */
 		public String parse(String str) {
-			if (org.apache.commons.lang.StringUtils.isEmpty(str)) {
+			if (org.apache.commons.lang3.StringUtils.isEmpty(str)) {
 				return str;
 			}
 

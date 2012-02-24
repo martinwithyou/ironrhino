@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 

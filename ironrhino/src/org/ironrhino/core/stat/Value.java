@@ -3,7 +3,7 @@ package org.ironrhino.core.stat;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class Value implements Serializable {
 

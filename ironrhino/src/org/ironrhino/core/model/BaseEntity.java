@@ -1,6 +1,6 @@
 package org.ironrhino.core.model;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.compass.annotations.Index;
 import org.compass.annotations.SearchableId;
 import org.ironrhino.core.metadata.NotInJson;

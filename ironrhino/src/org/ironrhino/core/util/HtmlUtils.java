@@ -47,10 +47,10 @@ public class HtmlUtils {
 		Source source = new Source(html);
 		Iterator<Element> it = source.getAllElements().iterator();
 		if (it.hasNext()) {
-			return org.apache.commons.lang.StringUtils.abbreviate(it.next()
+			return org.apache.commons.lang3.StringUtils.abbreviate(it.next()
 					.getTextExtractor().toString(), abbr);
 		} else
-			return org.apache.commons.lang.StringUtils.abbreviate(
+			return org.apache.commons.lang3.StringUtils.abbreviate(
 					source.toString(), abbr);
 	}
 

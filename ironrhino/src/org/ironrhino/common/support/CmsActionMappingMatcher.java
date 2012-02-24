@@ -12,7 +12,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.ironrhino.common.Constants;
 import org.ironrhino.common.action.ColumnPageAction;

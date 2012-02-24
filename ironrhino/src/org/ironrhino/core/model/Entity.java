@@ -3,7 +3,7 @@ package org.ironrhino.core.model;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.util.AnnotationUtils;
 

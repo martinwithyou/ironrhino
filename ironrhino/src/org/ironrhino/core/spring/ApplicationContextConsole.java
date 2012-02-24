@@ -12,7 +12,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.event.ExpressionEvent;
