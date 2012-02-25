@@ -9,11 +9,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.ScopesHashModel;
 import org.ironrhino.core.util.AppInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -22,6 +22,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
+import freemarker.cache.StrongCacheStorage;
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
@@ -57,6 +58,7 @@ public class MyFreemarkerManager extends FreemarkerManager {
 		if (AppInfo.getStage() == AppInfo.Stage.DEVELOPMENT)
 			configuration.setSetting(Configuration.TEMPLATE_UPDATE_DELAY_KEY,
 					"5");
+		configuration.setCacheStorage(new StrongCacheStorage());
 		configuration
 				.setTemplateExceptionHandler(new TemplateExceptionHandler() {
 					public void handleTemplateException(TemplateException ex,
