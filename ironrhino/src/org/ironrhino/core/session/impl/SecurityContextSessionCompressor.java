@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.session.SessionCompressor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,23 +31,29 @@ public class SecurityContextSessionCompressor implements
 	public String compress(SecurityContext sc) {
 		if (sc != null) {
 			Authentication auth = sc.getAuthentication();
-			if (auth != null && auth.isAuthenticated())
-				return auth.getName();
+			if (auth != null && auth.isAuthenticated()) {
+				UserDetails ud = (UserDetails) auth.getPrincipal();
+				return new StringBuilder(ud.getPassword()).append(",")
+						.append(ud.getUsername()).toString();
+			}
 		}
 		return null;
 	}
 
-	public SecurityContext uncompress(String username) {
+	public SecurityContext uncompress(String string) {
 		SecurityContext sc = SecurityContextHolder.getContext();
-		try {
-			UserDetails ud = userDetailsService.loadUserByUsername(username);
-			if (ud.isEnabled() && ud.isAccountNonExpired()
-					&& ud.isAccountNonLocked() && ud.isCredentialsNonExpired())
-				sc.setAuthentication(new UsernamePasswordAuthenticationToken(
-						ud, ud.getPassword(), ud.getAuthorities()));
-		} catch (UsernameNotFoundException e) {
-			e.printStackTrace();
-		}
+		if (StringUtils.isNotBlank(string))
+			try {
+				String[] arr = string.split(",", 2);
+				UserDetails ud = userDetailsService.loadUserByUsername(arr[1]);
+				if (ud.getPassword().equals(arr[0]) && ud.isEnabled()
+						&& ud.isAccountNonExpired() && ud.isAccountNonLocked()
+						&& ud.isCredentialsNonExpired())
+					sc.setAuthentication(new UsernamePasswordAuthenticationToken(
+							ud, ud.getPassword(), ud.getAuthorities()));
+			} catch (UsernameNotFoundException e) {
+				e.printStackTrace();
+			}
 		return sc;
 	}
 }
