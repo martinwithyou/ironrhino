@@ -4,10 +4,8 @@ import java.lang.annotation.Annotation;
 import java.text.SimpleDateFormat;
 
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.SerializationConfig.Feature;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.codehaus.jackson.map.introspect.Annotated;
 import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
@@ -26,16 +24,9 @@ public class JsonUtils {
 		objectMapper = new ObjectMapper();
 		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 		SerializationConfig config = objectMapper.getSerializationConfig();
-		config = config
-				.withSerializationInclusion(Inclusion.NON_NULL)
-				.with(Feature.WRITE_ENUMS_USING_TO_STRING)
+		config = config.withSerializationInclusion(Inclusion.NON_NULL)
 				.withAnnotationIntrospector(
 						new JacksonAnnotationIntrospector() {
-
-							@Override
-							public String findEnumValue(Enum<?> value) {
-								return value.toString();
-							}
 
 							@Override
 							public boolean isHandled(Annotation ann) {
@@ -54,10 +45,6 @@ public class JsonUtils {
 
 						});
 		objectMapper.setSerializationConfig(config);
-		DeserializationConfig dconfig = objectMapper.getDeserializationConfig();
-		dconfig = dconfig
-				.with(org.codehaus.jackson.map.DeserializationConfig.Feature.READ_ENUMS_USING_TO_STRING);
-		objectMapper.setDeserializationConfig(dconfig);
 	}
 
 	public static ObjectMapper getObjectMapper() {

@@ -30,7 +30,7 @@
 				<#assign href=requestURI>
 				<#assign index=0>
 				<#list Parameters?keys as name>
-				<#if name!='_'&&name!='parentId'>
+				<#if name!='_'&&name!='parentId'&&name!='keyword'>
 				<#assign href=href+(index==0)?string('?','&')+name+'='+Parameters[name]>
 				<#assign index=index+1>
 				</#if>

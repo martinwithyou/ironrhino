@@ -17,10 +17,13 @@ public class SchemaField implements Serializable {
 	@SearchableProperty(boost = 2, index = Index.NOT_ANALYZED)
 	private List<String> values = new ArrayList<String>();
 
+	@SearchableProperty(index = Index.NO)
 	private SchemaFieldType type;
 
+	@SearchableProperty(index = Index.NO)
 	private boolean required;
 
+	@SearchableProperty(index = Index.NO)
 	private boolean strict;
 
 	public String getName() {

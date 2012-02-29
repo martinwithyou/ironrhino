@@ -7,6 +7,7 @@ import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseTreeableEntity;
+import org.ironrhino.core.util.StringUtils;
 
 @PublishAware
 @AutoConfig
@@ -62,6 +63,16 @@ public class Region extends BaseTreeableEntity<Region> {
 	@SearchableProperty(boost = 2)
 	public String getFullname() {
 		return super.getFullname();
+	}
+
+	@SearchableProperty(boost = 3)
+	public String getNameAsPinyin() {
+		return StringUtils.pinyin(name);
+	}
+
+	@SearchableProperty(boost = 3)
+	public String getNameAsPinyinAbbr() {
+		return StringUtils.pinyinAbbr(name);
 	}
 
 	@NotInJson

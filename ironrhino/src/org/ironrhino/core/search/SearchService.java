@@ -14,9 +14,9 @@ public interface SearchService {
 
 	public List search(SearchCriteria searchCriteria, Mapper mapper);
 
-	public static interface Mapper {
+	public static interface Mapper<S,T> {
 
-		public Object map(Object source);
+		public T map(S source);
 
 	}
 

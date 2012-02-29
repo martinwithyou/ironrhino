@@ -6,17 +6,24 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Region;
+import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.Persistable;
+import org.ironrhino.core.search.SearchService.Mapper;
+import org.ironrhino.core.search.compass.CompassSearchCriteria;
+import org.ironrhino.core.search.compass.CompassSearchService;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.ClassScaner;
 import org.ironrhino.core.util.HtmlUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
@@ -42,6 +49,9 @@ public class RegionAction extends BaseAction {
 	private int zoom;
 
 	private boolean async;
+
+	@Autowired(required = false)
+	private transient CompassSearchService compassSearchService;
 
 	public boolean isAsync() {
 		return async;
@@ -94,17 +104,35 @@ public class RegionAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		if (parentId != null && parentId > 0) {
-			region = baseManager.get(parentId);
+		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
+			if (parentId != null && parentId > 0) {
+				region = baseManager.get(parentId);
+			} else {
+				region = new Region();
+				DetachedCriteria dc = baseManager.detachedCriteria();
+				dc.add(Restrictions.isNull("parent"));
+				dc.addOrder(Order.asc("displayOrder"));
+				dc.addOrder(Order.asc("name"));
+				if (StringUtils.isNotBlank(keyword))
+					dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
+							"name", "areacode", "postcode"));
+				region.setChildren(baseManager.findListByCriteria(dc));
+			}
+			list = region.getChildren();
 		} else {
-			region = new Region();
-			DetachedCriteria dc = baseManager.detachedCriteria();
-			dc.add(Restrictions.isNull("parent"));
-			dc.addOrder(Order.asc("displayOrder"));
-			dc.addOrder(Order.asc("name"));
-			region.setChildren(baseManager.findListByCriteria(dc));
+			String query = keyword.trim();
+			CompassSearchCriteria criteria = new CompassSearchCriteria();
+			criteria.setQuery(query);
+			criteria.setAliases(new String[] { "region" });
+			criteria.addSort("displayOrder", false);
+			list = compassSearchService.search(criteria,
+					new Mapper<Region, Region>() {
+						@Override
+						public Region map(Region source) {
+							return baseManager.get(source.getId());
+						}
+					});
 		}
-		list = region.getChildren();
 		return LIST;
 	}
 
