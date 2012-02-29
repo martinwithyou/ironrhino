@@ -29,7 +29,7 @@
 				<#list schema.fields as field>
 				<#local persistValueExists=false>
 				<#list attributes as attr>
-					<#if attr.name==field.name>
+					<#if attr.name==field.name && attr.value??>
 						<#local persistValue=attr.value>
 						<#local persistValueExists=true>
 						<#break/>
@@ -38,15 +38,33 @@
 				<tr>
 					<td><@s.textfield theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name}" readonly=field.strict?string/></td>
 					<td>
-						<select name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combox</#if>">
-							<option value="${headerKey}">${headerValue}</option>
-							<#list field.values as value>
-							<option value="${value}"<#if persistValueExists && persistValue=value> selected="selected"</#if>>${value}</option>
-							</#list>
-							<#if !field.strict && persistValueExists && persistValue!='' && !field.values?seq_contains(persistValue)>
-							<option value="${persistValue}" selected="ed">${persistValue}</option>
+						<#if field.type??>
+							<#local type=field.type.name()/>
+						<#else>
+							<#local type='SELECT'/>
+						</#if>
+						<#if type=='SELECT'>
+							<select name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combox</#if>">
+								<option value="${headerKey}">${headerValue}</option>
+								<#list field.values as value>
+								<option value="${value}"<#if persistValueExists && persistValue=value> selected="selected"</#if>>${value}</option>
+								</#list>
+								<#if !field.strict && persistValueExists && persistValue!='' && !field.values?seq_contains(persistValue)>
+								<option value="${persistValue}" selected="ed">${persistValue}</option>
+								</#if>
+							</select>
+						<#elseif type=='CHECKBOX'>
+							<#if persistValueExists>
+								<#local persistValueArray=persistValue?split(',')/>
+							<#else>
+								<#local persistValueArray=[]/>
 							</#if>
-						</select>
+							<#list field.values as value>
+								<input type="checkbox" name="${parameterNamePrefix}attributes[${index}].value" value="${value}" class="textonadd"<#list persistValueArray as tempValue><#if tempValue=value> checked="checked"<#break/></#if></#list>/><span class="removeonadd">${value}</span>
+							</#list>
+						<#elseif type=='INPUT'>
+							<input type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if persistValueExists> value="${persistValue}"</#if><#if field.required> class="required"</#if>/>
+						</#if>
 					</td>
 					<td><#if !schema.strict><@button text="+" class="add"/><@button text="-" class="remove"/></#if><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/>
 					</td>

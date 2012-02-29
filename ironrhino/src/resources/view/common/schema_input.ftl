@@ -22,6 +22,7 @@
 			<tr>
 				<td>${action.getText('name')}</td>
 				<td>${action.getText('value')}</td>
+				<td>${action.getText('type')}</td>
 				<td>${action.getText('required')}</td>
 				<td>${action.getText('strict')}</td>
 				<td></td>
@@ -34,7 +35,7 @@
 			</#if>
 			<#list 0..size as index>
 			<tr style="background-color:#F5F5F5;">
-				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssClass="required"/></td>
+				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssClass="required" cssStyle="width:120px;"/></td>
 				<td>
 					<table border="0" class="datagrid">
 						<tbody>
@@ -44,13 +45,14 @@
 							</#if>
 							<#list 0..size as index2>
 							<tr>
-								<td><@s.textfield theme="simple" name="schema.fields[${index}].values[${index2}]" cssClass="required"/></td>
+								<td><@s.textfield theme="simple" name="schema.fields[${index}].values[${index2}]" cssStyle="width:150px;"/></td>
 								<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 							</tr>
 							</#list>
 						</tbody>
 					</table>
 				</td>
+				<td><@s.select theme="simple" name="schema.fields[${index}].type" cssStyle="width:60px;" list="@org.ironrhino.common.model.SchemaFieldType@values()" listKey="name" listValue="displayName"/></td>
 				<td><@s.checkbox theme="simple" name="schema.fields[${index}].required"/></td>
 				<td><@s.checkbox theme="simple" name="schema.fields[${index}].strict"/></td>
 				<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>

@@ -29125,7 +29125,9 @@ Observation.sortableTable = function(container) {
 		var r = row.clone(true);
 		$('*', r).removeAttr('id');
 		$('span.info', r).html('');
-		$(':input', r).val('').prop('readonly',false).removeAttr('keyupValidate');
+		$(':input[type!=checkbox][type!=radio]', r).val('');
+		$('input[type=checkbox],input[type=radio]', r).prop('checked', false);
+		$(':input').prop('readonly', false).removeAttr('keyupValidate');
 		$('input.filterselect', this).next('select').html(function() {
 					return $(this).data('innerHTML')
 				});
@@ -29139,6 +29141,19 @@ Observation.sortableTable = function(container) {
 			$(this).replaceWith('<input type="text" name="'
 					+ $(this).attr('name') + '">');
 		});
+		var checkboxname = '';
+		$('input.textonadd[type=checkbox]', r).each(function() {
+			if (!checkboxname || checkboxname != $(this).attr('name')) {
+				$(this).replaceWith('<input type="text" name="'
+						+ $(this).attr('name') + '">');
+				checkboxname = $(this).attr('name');
+			} else {
+				$(this).remove();
+			}
+		});
+		$('.removeonadd', r).remove();
+		$('.hideonadd', r).hide();
+		$('.showonadd', r).show();
 		$(':input', r).eq(0).focus();
 		if (options.onadd)
 			options.onadd.apply(r.get(0));
