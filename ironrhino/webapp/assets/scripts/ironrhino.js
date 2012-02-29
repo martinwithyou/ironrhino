@@ -27624,41 +27624,46 @@ Form = {
 	validate : function(target) {
 		if ($(target).prop('tagName') != 'FORM') {
 			$('.fieldError,.field_error', $(target).parent()).fadeIn().remove();
-			if ($(target).hasClass('required') && !$(target).val()) {
-				if ($(target).prop('tagName') == 'SELECT')
-					Message.showFieldError(target, null, 'selection.required');
-				else
-					Message.showFieldError(target, null, 'required');
-				return false;
-			} else if ($(target).hasClass('email')
-					&& $(target).val()
-					&& !$(target)
-							.val()
-							.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-				Message.showFieldError(target, null, 'email');
-				return false;
-			} else if ($(target).hasClass('integer') && $(target).val()) {
-				if ($(target).hasClass('positive')
-						&& !$(target).val().match(/^[+]?\d*$/)) {
-					Message.showFieldError(target, null, 'integer.positive');
+			if ($(target).is(':visible') && !$(target).prop('disabled')) {
+				if ($(target).hasClass('required') && !$(target).val()) {
+					if ($(target).prop('tagName') == 'SELECT')
+						Message.showFieldError(target, null,
+								'selection.required');
+					else
+						Message.showFieldError(target, null, 'required');
 					return false;
-				}
-				if (!$(target).hasClass('positive')
-						&& !$(target).val().match(/^[-+]?\d*$/)) {
-					Message.showFieldError(target, null, 'integer');
+				} else if ($(target).hasClass('email')
+						&& $(target).val()
+						&& !$(target)
+								.val()
+								.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
+					Message.showFieldError(target, null, 'email');
 					return false;
-				}
-				return true;
-			} else if ($(target).hasClass('double') && $(target).val()) {
-				if ($(target).hasClass('positive')
-						&& !$(target).val().match(/^[+]?\d+(\.\d+)?$/)) {
-					Message.showFieldError(target, null, 'double.positive');
-					return false;
-				}
-				if (!$(target).hasClass('positive')
-						&& !$(target).val().match(/^[-+]?\d+(\.\d+)?$/)) {
-					Message.showFieldError(target, null, 'double');
-					return false;
+				} else if ($(target).hasClass('integer') && $(target).val()) {
+					if ($(target).hasClass('positive')
+							&& !$(target).val().match(/^[+]?\d*$/)) {
+						Message
+								.showFieldError(target, null,
+										'integer.positive');
+						return false;
+					}
+					if (!$(target).hasClass('positive')
+							&& !$(target).val().match(/^[-+]?\d*$/)) {
+						Message.showFieldError(target, null, 'integer');
+						return false;
+					}
+					return true;
+				} else if ($(target).hasClass('double') && $(target).val()) {
+					if ($(target).hasClass('positive')
+							&& !$(target).val().match(/^[+]?\d+(\.\d+)?$/)) {
+						Message.showFieldError(target, null, 'double.positive');
+						return false;
+					}
+					if (!$(target).hasClass('positive')
+							&& !$(target).val().match(/^[-+]?\d+(\.\d+)?$/)) {
+						Message.showFieldError(target, null, 'double');
+						return false;
+					}
 				}
 				return true;
 			} else {
@@ -28037,6 +28042,12 @@ Observation.common = function(container) {
 				$(this).addClass('highlight');
 			}, function() {
 				$(this).removeClass('highlight');
+			});
+	$(':input.linkage_switch', container).change(function() {
+				var c = $(this).closest('.linkage');
+				var type = this.value;
+				$('.linkage_component', c).show();
+				$('.linkage_component.' + type, c).hide();
 			});
 	$(':input.conjunct', container).change(function() {
 				var t = $(this);

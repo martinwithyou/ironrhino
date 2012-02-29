@@ -4,7 +4,7 @@
 <title><#if schema.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('schema')}</title>
 </head>
 <body>
-<@s.form action="${getUrl(actionBaseUrl+'/save')}" method="post" cssClass="ajax" cssStyle="text-align:center;">
+<@s.form id="schema_input" action="${getUrl(actionBaseUrl+'/save')}" method="post" cssClass="ajax" cssStyle="text-align:center;">
 	<#if !schema.new>
 		<@s.hidden name="schema.id" />
 	</#if>
@@ -34,10 +34,14 @@
 				<#assign size = schema.fields?size-1>
 			</#if>
 			<#list 0..size as index>
-			<tr style="background-color:#F5F5F5;">
+			<#assign type="SELECT"/>
+			<#if schema.fields[index]?? && schema.fields[index].type??>
+			<#assign type=schema.fields[index].type.name()/>
+			</#if>
+			<tr style="background-color:#F5F5F5;" class="linkage">
 				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssClass="required" cssStyle="width:120px;"/></td>
 				<td>
-					<table border="0" class="datagrid">
+					<table border="0" class="datagrid showonadd linkage_component INPUT"<#if type=='INPUT'> style="display:none;"</#if>>
 						<tbody>
 							<#assign size = 0>
 							<#if schema.fields[index]?? && schema.fields[index].values?? && schema.fields[index].values?size gt 0>
@@ -45,16 +49,16 @@
 							</#if>
 							<#list 0..size as index2>
 							<tr>
-								<td><@s.textfield theme="simple" name="schema.fields[${index}].values[${index2}]" cssStyle="width:150px;"/></td>
+								<td><@s.textfield theme="simple" name="schema.fields[${index}].values[${index2}]" cssClass="required" cssStyle="width:150px;"/></td>
 								<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 							</tr>
 							</#list>
 						</tbody>
 					</table>
 				</td>
-				<td><@s.select theme="simple" name="schema.fields[${index}].type" cssStyle="width:60px;" list="@org.ironrhino.common.model.SchemaFieldType@values()" listKey="name" listValue="displayName"/></td>
+				<td><@s.select theme="simple" name="schema.fields[${index}].type" cssClass="linkage_switch" cssStyle="width:60px;" list="@org.ironrhino.common.model.SchemaFieldType@values()" listKey="name" listValue="displayName"/></td>
 				<td><@s.checkbox theme="simple" name="schema.fields[${index}].required"/></td>
-				<td><@s.checkbox theme="simple" name="schema.fields[${index}].strict"/></td>
+				<td><span class="showonadd linkage_component INPUT CHECKBOX"<#if type=='INPUT' || type=='CHECKBOX'> style="display:none;"</#if>><@s.checkbox theme="simple" name="schema.fields[${index}].strict"/></span></td>
 				<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 			</tr>
 			</#list>
