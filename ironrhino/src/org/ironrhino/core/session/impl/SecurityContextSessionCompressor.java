@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.session.SessionCompressor;
+import org.ironrhino.core.util.CodecUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -33,8 +34,8 @@ public class SecurityContextSessionCompressor implements
 			Authentication auth = sc.getAuthentication();
 			if (auth != null && auth.isAuthenticated()) {
 				UserDetails ud = (UserDetails) auth.getPrincipal();
-				return new StringBuilder(ud.getPassword()).append(",")
-						.append(ud.getUsername()).toString();
+				return new StringBuilder(CodecUtils.md5Hex(ud.getPassword()))
+						.append(",").append(ud.getUsername()).toString();
 			}
 		}
 		return null;
@@ -46,8 +47,9 @@ public class SecurityContextSessionCompressor implements
 			try {
 				String[] arr = string.split(",", 2);
 				UserDetails ud = userDetailsService.loadUserByUsername(arr[1]);
-				if (ud.getPassword().equals(arr[0]) && ud.isEnabled()
-						&& ud.isAccountNonExpired() && ud.isAccountNonLocked()
+				if (CodecUtils.md5Hex(ud.getPassword()).equals(arr[0])
+						&& ud.isEnabled() && ud.isAccountNonExpired()
+						&& ud.isAccountNonLocked()
 						&& ud.isCredentialsNonExpired())
 					sc.setAuthentication(new UsernamePasswordAuthenticationToken(
 							ud, ud.getPassword(), ud.getAuthorities()));
