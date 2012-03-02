@@ -5,15 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.aspectj.lang.JoinPoint;
-import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.ExpressionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,9 +19,6 @@ public class BaseAspect implements Ordered {
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	protected int order;
-
-	@Inject
-	private ApplicationContextConsole applicationContextConsole;
 
 	protected boolean isBypass() {
 		return AopContext.isBypass(this.getClass());
@@ -140,33 +134,6 @@ public class BaseAspect implements Ordered {
 			log.error(e.getMessage(), e);
 			return null;
 		}
-	}
-
-	public boolean config(String key, boolean _default) {
-		String value = applicationContextConsole.getConfigValue(key);
-		return StringUtils.isNotBlank(value) ? Boolean.valueOf(value)
-				: _default;
-	}
-
-	public String config(String key, String _default) {
-		String value = applicationContextConsole.getConfigValue(key);
-		return StringUtils.isNotBlank(value) ? value : _default;
-	}
-
-	public long config(String key, long _default) {
-		String value = applicationContextConsole.getConfigValue(key);
-		return StringUtils.isNotBlank(value) ? Long.valueOf(value) : _default;
-	}
-
-	public int config(String key, int _default) {
-		String value = applicationContextConsole.getConfigValue(key);
-		return StringUtils.isNotBlank(value) ? Integer.valueOf(value)
-				: _default;
-	}
-
-	public double config(String key, double _default) {
-		String value = applicationContextConsole.getConfigValue(key);
-		return StringUtils.isNotBlank(value) ? Double.valueOf(value) : _default;
 	}
 
 }

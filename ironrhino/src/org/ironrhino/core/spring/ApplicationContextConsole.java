@@ -3,7 +3,6 @@ package org.ironrhino.core.spring;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,10 +22,8 @@ import org.ironrhino.core.util.ExpressionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
-import org.springframework.core.io.support.PropertiesLoaderSupport;
 
 @Singleton
 @Named("applicationContextConsole")
@@ -49,11 +46,6 @@ public class ApplicationContextConsole implements
 
 	private Map<String, Object> beans = new HashMap<String, Object>();
 
-	@Autowired(required = false)
-	private PropertyPlaceholderConfigurer propertyPlaceholderConfigurer;
-
-	private Properties properties;
-
 	public Map<String, Object> getBeans() {
 		if (beans.isEmpty()) {
 			if (servletContext != null)
@@ -66,17 +58,6 @@ public class ApplicationContextConsole implements
 				if (StringUtils.isAlphanumeric(beanName)
 						&& ctx.isSingleton(beanName))
 					beans.put(beanName, ctx.getBean(beanName));
-			}
-			try {
-				if (propertyPlaceholderConfigurer != null) {
-					Method method = PropertiesLoaderSupport.class
-							.getDeclaredMethod("mergeProperties", new Class[0]);
-					method.setAccessible(true);
-					properties = (Properties) method.invoke(
-							propertyPlaceholderConfigurer, new Object[0]);
-				}
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
 			}
 		}
 		return beans;
@@ -123,15 +104,6 @@ public class ApplicationContextConsole implements
 		} catch (Exception e) {
 			throw e;
 		}
-	}
-
-	public String getConfigValue(String key) {
-		String value = null;
-		if (properties != null)
-			value = properties.getProperty(key);
-		if (value == null)
-			value = System.getProperty(key);
-		return value;
 	}
 
 	private static boolean isSetProperyExpression(String expression) {

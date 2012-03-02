@@ -181,7 +181,7 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 
 	@Override
 	public boolean supports(String path) {
-		if (path != null) {
+		if (path != null && path.startsWith(zooKeeperPath)) {
 			String serviceName = path.substring(zooKeeperPath.length() + 1);
 			return importServices.containsKey(serviceName);
 		}
