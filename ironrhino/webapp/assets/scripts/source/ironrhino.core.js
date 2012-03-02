@@ -737,7 +737,7 @@ Observation.common = function(container) {
 						});
 			});
 	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
-		$('textarea', container).elastic();
+		$('textarea.elastic', container).elastic();
 	if (typeof $.fn.tabs != 'undefined')
 		$('div.tabs', container).each(function() {
 					$(this).tabs({
