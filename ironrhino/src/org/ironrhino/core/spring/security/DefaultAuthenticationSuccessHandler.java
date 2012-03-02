@@ -21,7 +21,7 @@ public class DefaultAuthenticationSuccessHandler implements
 		String username = authentication.getName();
 		if (request.isRequestedSessionIdFromCookie())
 			RequestUtils.saveCookie(request, response, COOKIE_NAME_LOGIN_USER,
-					username, 365 * 24 * 3600, true);
+					username, 365 * 24 * 3600, true, false);
 	}
 
 }

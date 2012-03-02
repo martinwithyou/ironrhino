@@ -67,10 +67,11 @@ public class RequestUtils {
 		int i = url.indexOf(';');
 		return i > -1 ? url.substring(0, i) : url;
 	}
-	
+
 	public static String getBaseUrl(HttpServletRequest request) {
 		String url = trimPathParameter(request.getRequestURL().toString());
-		return url.substring(0,url.length()-request.getServletPath().length());
+		return url.substring(0, url.length()
+				- request.getServletPath().length());
 	}
 
 	public static String getBaseUrl(HttpServletRequest request, boolean secured) {
@@ -138,18 +139,20 @@ public class RequestUtils {
 	public static void saveCookie(HttpServletRequest request,
 			HttpServletResponse response, String cookieName,
 			String cookieValue, boolean global) {
-		saveCookie(request, response, cookieName, cookieValue, -1, global);
+		saveCookie(request, response, cookieName, cookieValue, -1, global,
+				false);
 	}
 
 	public static void saveCookie(HttpServletRequest request,
 			HttpServletResponse response, String cookieName,
-			String cookieValue, int maxAge) {
-		saveCookie(request, response, cookieName, cookieValue, maxAge, false);
+			String cookieValue, boolean global, boolean httpOnly) {
+		saveCookie(request, response, cookieName, cookieValue, -1, global,
+				httpOnly);
 	}
 
 	public static void saveCookie(HttpServletRequest request,
 			HttpServletResponse response, String cookieName,
-			String cookieValue, int maxAge, boolean global) {
+			String cookieValue, int maxAge, boolean global, boolean httpOnly) {
 		String domain = null;
 		String path = "".equals(request.getContextPath()) ? "/" : request
 				.getContextPath();
@@ -158,17 +161,19 @@ public class RequestUtils {
 			path = "/";
 		}
 		saveCookie(request, response, cookieName, cookieValue, maxAge, domain,
-				path);
+				path, httpOnly);
 	}
 
 	public static void saveCookie(HttpServletRequest request,
 			HttpServletResponse response, String cookieName,
-			String cookieValue, int maxAge, String domain, String path) {
+			String cookieValue, int maxAge, String domain, String path,
+			boolean httpOnly) {
 		try {
 			cookieValue = URLEncoder.encode(cookieValue, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 		}
 		Cookie cookie = new Cookie(cookieName, cookieValue);
+		cookie.setHttpOnly(httpOnly);
 		if (StringUtils.isNotBlank(domain))
 			cookie.setDomain(domain);
 		cookie.setMaxAge(maxAge);

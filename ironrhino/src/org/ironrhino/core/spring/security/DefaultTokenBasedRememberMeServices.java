@@ -46,7 +46,7 @@ public class DefaultTokenBasedRememberMeServices extends
 			HttpServletRequest request, HttpServletResponse response) {
 		String cookieValue = encodeCookie(tokens);
 		RequestUtils.saveCookie(request, response, getCookieName(),
-				cookieValue, maxAge, true);
+				cookieValue, maxAge, true, true);
 	}
 
 	@Override
