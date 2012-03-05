@@ -85,5 +85,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-net-3.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-pool-1.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jasperreports-4.5.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zookeeper-recipes-lock-3.3.4.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>

@@ -2,9 +2,9 @@ package org.ironrhino.core.coordination.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PostConstruct;
@@ -25,7 +25,7 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
-	private Map<String, List<String>> groups = new HashMap<String, List<String>>();
+	private Map<String, List<String>> groups = new ConcurrentHashMap<String, List<String>>();
 
 	private ExecutorService executorService;
 
@@ -125,8 +125,8 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 						CreateMode.PERSISTENT);
 			String memberNode = new StringBuilder(groupNode).append('/')
 					.append(instanceId).toString();
-			zooKeeper.create(memberNode, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
-					CreateMode.EPHEMERAL);
+			zooKeeper.create(memberNode, AppInfo.getHostAddress().getBytes(),
+					ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 			List<String> children = zooKeeper.getChildren(groupNode, true);
 			groups.put(group, children);
 		} catch (Exception e) {
