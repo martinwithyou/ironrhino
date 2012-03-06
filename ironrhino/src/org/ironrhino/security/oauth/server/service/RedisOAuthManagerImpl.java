@@ -10,14 +10,19 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.metadata.ClusterProfile;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
 import org.springframework.data.redis.core.RedisTemplate;
 
+@Singleton
+@Named("oauthManager")
+@ClusterProfile
 public class RedisOAuthManagerImpl implements OAuthManager {
 
 	private RedisTemplate<String, Authorization> authorizationRedisTemplate;

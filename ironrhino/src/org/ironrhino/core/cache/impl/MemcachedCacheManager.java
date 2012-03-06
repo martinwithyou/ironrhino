@@ -9,21 +9,18 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import net.spy.memcached.AddrUtil;
-import net.spy.memcached.BinaryConnectionFactory;
-import net.spy.memcached.ConnectionFactory;
-import net.spy.memcached.DefaultConnectionFactory;
-import net.spy.memcached.HashAlgorithm;
-import net.spy.memcached.KetamaNodeLocator;
-import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.MemcachedNode;
-import net.spy.memcached.NodeLocator;
+import net.rubyeye.xmemcached.MemcachedClient;
+import net.rubyeye.xmemcached.MemcachedClientBuilder;
+import net.rubyeye.xmemcached.XMemcachedClientBuilder;
+import net.rubyeye.xmemcached.command.BinaryCommandFactory;
+import net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator;
+import net.rubyeye.xmemcached.utils.AddrUtil;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.metadata.PostPropertiesReset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 public class MemcachedCacheManager implements CacheManager {
@@ -60,26 +57,20 @@ public class MemcachedCacheManager implements CacheManager {
 	@PreDestroy
 	public void destroy() {
 		if (memcached != null)
-			memcached.shutdown();
+			try {
+				memcached.shutdown();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	}
 
 	private MemcachedClient build(String serverAddress) throws IOException {
 		Assert.hasLength(serverAddress);
-		ConnectionFactory cf = new BinaryConnectionFactory(
-				DefaultConnectionFactory.DEFAULT_OP_QUEUE_LEN,
-				DefaultConnectionFactory.DEFAULT_READ_BUFFER_SIZE,
-				HashAlgorithm.KETAMA_HASH) {
-			@Override
-			public NodeLocator createLocator(List<MemcachedNode> nodes) {
-				return new KetamaNodeLocator(nodes, getHashAlg());
-			}
-
-			@Override
-			public long getOperationTimeout() {
-				return 2000;
-			}
-		};
-		return new MemcachedClient(cf, AddrUtil.getAddresses(serverAddress));
+		MemcachedClientBuilder builder = new XMemcachedClientBuilder(
+				AddrUtil.getAddresses(serverAddress));
+		builder.setSessionLocator(new KetamaMemcachedSessionLocator());
+		builder.setCommandFactory(new BinaryCommandFactory());
+		return builder.build();
 	}
 
 	public void put(String key, Object value, int timeToLive, String namespace) {
@@ -93,7 +84,8 @@ public class MemcachedCacheManager implements CacheManager {
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		try {
-			memcached.set(generateKey(key, namespace), timeToLive, value);
+			memcached.setWithNoReply(generateKey(key, namespace), timeToLive,
+					value);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -134,7 +126,7 @@ public class MemcachedCacheManager implements CacheManager {
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		try {
-			memcached.delete(generateKey(key, namespace));
+			memcached.deleteWithNoReply(generateKey(key, namespace));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -163,7 +155,7 @@ public class MemcachedCacheManager implements CacheManager {
 		for (String key : keys)
 			list.add(generateKey(key, namespace));
 		try {
-			return memcached.getBulk(list);
+			return memcached.get(list);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return null;
@@ -196,8 +188,9 @@ public class MemcachedCacheManager implements CacheManager {
 			String namespace) {
 		try {
 			return memcached
-					.add(generateKey(key, namespace), timeToLive, value).get();
+					.add(generateKey(key, namespace), timeToLive, value);
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			return false;
 		}
 	}

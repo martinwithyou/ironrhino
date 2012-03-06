@@ -4,13 +4,20 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.recipes.lock.WriteLock;
 import org.ironrhino.core.coordination.LockService;
+import org.ironrhino.core.metadata.ClusterProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Singleton
+@Named("lockService")
+@ClusterProfile
 public class ZooKeeperLockService implements LockService {
 
 	public static final String DEFAULT_ZOOKEEPER_PATH = "/lock";

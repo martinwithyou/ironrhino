@@ -57,6 +57,9 @@
 	<logger name="org.apache.struts2.components.ServletUrlRenderer" additivity="true">
 		<level value="ERROR"/>
 	</logger>
+	<logger name="org.springframework.core.type.classreading.AnnotationAttributesReadingVisitor" additivity="true">
+		<level value="ERROR"/>
+	</logger>
 	<logger name="org.ironrhino.core.remoting" additivity="false">
 		<level value="INFO"/>
 		<appender-ref ref="REMOTING"/>

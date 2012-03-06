@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.ironrhino.core.metadata.DefaultProfile;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
@@ -21,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 @Singleton
 @Named("oauthManager")
+@DefaultProfile
 public class OAuthManagerImpl implements OAuthManager {
 
 	@Inject

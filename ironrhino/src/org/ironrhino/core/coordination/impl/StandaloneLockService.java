@@ -10,9 +10,11 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.ironrhino.core.coordination.LockService;
+import org.ironrhino.core.metadata.DefaultProfile;
 
 @Singleton
 @Named("lockService")
+@DefaultProfile
 public class StandaloneLockService implements LockService {
 
 	private Map<String, Lock> locks = new ConcurrentHashMap<String, Lock>();

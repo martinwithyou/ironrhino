@@ -9,10 +9,12 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.ironrhino.core.coordination.Membership;
+import org.ironrhino.core.metadata.DefaultProfile;
 import org.ironrhino.core.util.AppInfo;
 
 @Singleton
 @Named("membership")
+@DefaultProfile
 public class StandaloneMembership implements Membership {
 
 	private Map<String, List<String>> groups = new HashMap<String, List<String>>();

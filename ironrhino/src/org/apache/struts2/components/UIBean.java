@@ -294,7 +294,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *  <tr>
  *     <td>Attribute</td>
  *     <td>Data Type</td>
- *     <td>Default</td>
+ *     <td>DefaultProfile</td>
  *     <td>Description</td>
  *  </tr>
  *  <tr>
@@ -578,7 +578,7 @@ public abstract class UIBean extends Component {
             templateDir = stack.findString("#attr.templateDir");
         }
 
-        // Default template set
+        // DefaultProfile template set
         if ((templateDir == null) || (templateDir.equals(""))) {
             templateDir = defaultTemplateDir;
         }
@@ -611,7 +611,7 @@ public abstract class UIBean extends Component {
             theme = stack.findString("#attr.theme");
         }
 
-        // Default theme set
+        // DefaultProfile theme set
         if ((theme == null) || (theme.equals(""))) {
             theme = defaultUITheme;
         }
