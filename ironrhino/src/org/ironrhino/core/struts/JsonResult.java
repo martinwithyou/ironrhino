@@ -86,6 +86,8 @@ public class JsonResult implements Result {
 
 	public void execute(ActionInvocation invocation) throws Exception {
 		String jsonp = ServletActionContext.getRequest().getParameter("jsonp");
+		if (StringUtils.isBlank(jsonp))
+			jsonp = ServletActionContext.getRequest().getParameter("callback");
 		String json = generateJson(invocation);
 		HttpServletResponse response = ServletActionContext.getResponse();
 		if (StringUtils.isNotBlank(jsonp))
@@ -93,7 +95,6 @@ public class JsonResult implements Result {
 					+ encoding);
 		else
 			response.setContentType("application/json;charset=" + encoding);
-		// response.setContentType("text/javascript;charset=" + encoding);
 		if (!response.containsHeader("Cache-Control")) {
 			response.setHeader("Cache-Control", "no-cache");
 			response.setHeader("Pragma", "no-cache");
