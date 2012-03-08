@@ -4,6 +4,7 @@ import org.ironrhino.core.metadata.NotInJson;
 
 public class OAuth20Token implements java.io.Serializable {
 
+	private static final long serialVersionUID = 3664222731669918663L;
 	private String access_token;
 	private String token_type;
 	private int expires_in;

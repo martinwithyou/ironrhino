@@ -11,6 +11,8 @@ import org.compass.annotations.SearchableProperty;
 @Searchable(root = false)
 public class SchemaField implements Serializable {
 
+	private static final long serialVersionUID = 9104177103768030668L;
+
 	@SearchableProperty(boost = 2, index = Index.NOT_ANALYZED)
 	private String name;
 

@@ -16,6 +16,8 @@ import org.ironrhino.security.model.UserRole;
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 public class Authorization extends BaseEntity {
 
+	private static final long serialVersionUID = -559379341059695550L;
+
 	@NaturalId
 	@UiConfig(displayOrder = 1)
 	private String accessToken = CodecUtils.nextId();

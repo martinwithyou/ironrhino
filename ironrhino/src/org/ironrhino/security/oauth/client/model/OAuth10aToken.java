@@ -2,6 +2,8 @@ package org.ironrhino.security.oauth.client.model;
 
 public class OAuth10aToken implements java.io.Serializable {
 
+	private static final long serialVersionUID = 1320442804849307877L;
+
 	private String token;
 
 	private String secret;

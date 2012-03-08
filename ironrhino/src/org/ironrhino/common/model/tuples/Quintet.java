@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class Quintet<A, B, C, D, E> implements Serializable {
 
+	private static final long serialVersionUID = 1820545026759463994L;
+
 	private A a;
 
 	private B b;

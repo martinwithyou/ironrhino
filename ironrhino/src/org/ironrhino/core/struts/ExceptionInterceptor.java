@@ -9,6 +9,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
 public class ExceptionInterceptor extends AbstractInterceptor {
 
+	private static final long serialVersionUID = 6419734583295725844L;
 	protected static final Logger log = LoggerFactory
 			.getLogger(ExceptionInterceptor.class);
 

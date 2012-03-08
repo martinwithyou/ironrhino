@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class Sextet<A, B, C, D, E, F> implements Serializable {
 
+	private static final long serialVersionUID = -722962451869753894L;
+
 	private A a;
 
 	private B b;

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class Triplet<A, B, C> implements Serializable {
 
+	private static final long serialVersionUID = -41533742214141900L;
+
 	private A a;
 
 	private B b;

@@ -11,6 +11,8 @@ import org.ironrhino.security.model.UserRole;
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 public class Acl extends BaseEntity {
 
+	private static final long serialVersionUID = 7186455276739721437L;
+
 	@NaturalId(mutable = true)
 	@UiConfig(displayOrder = 1)
 	private String role;

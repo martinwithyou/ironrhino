@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class Decade<A, B, C, D, E, F, G, H, I, J> implements Serializable {
 
+	private static final long serialVersionUID = 2057926095491457209L;
+
 	private A a;
 
 	private B b;

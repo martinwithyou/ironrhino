@@ -275,6 +275,8 @@ public class InstallationManager {
 
 	public static class Component implements Serializable {
 
+		private static final long serialVersionUID = 6347907725689068877L;
+		
 		private String id;
 		private String vendor;
 		private String version;

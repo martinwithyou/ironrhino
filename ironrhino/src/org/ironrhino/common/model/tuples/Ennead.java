@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class Ennead<A, B, C, D, E, F, G, H, I> implements Serializable {
 
+	private static final long serialVersionUID = 7719827982786190039L;
+
 	private A a;
 
 	private B b;

@@ -16,6 +16,8 @@ import org.ironrhino.security.model.UserRole;
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 public class Client extends BaseEntity {
 
+	private static final long serialVersionUID = -7297737795748467475L;
+
 	public static final String OAUTH_OOB = "urn:ietf:wg:oauth:2.0:oob";
 
 	@NaturalId(caseInsensitive = true, mutable = true)

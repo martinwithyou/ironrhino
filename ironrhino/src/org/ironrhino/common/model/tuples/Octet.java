@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class Octet<A, B, C, D, E, F, G, H> implements Serializable {
 
+	private static final long serialVersionUID = 5814884804875760320L;
+
 	private A a;
 
 	private B b;

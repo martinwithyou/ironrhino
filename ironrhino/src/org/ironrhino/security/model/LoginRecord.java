@@ -11,6 +11,8 @@ import org.ironrhino.core.model.BaseEntity;
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 public class LoginRecord extends BaseEntity {
 
+	private static final long serialVersionUID = -7691080078972338500L;
+
 	@UiConfig(displayOrder = 1)
 	private String username;
 

@@ -155,7 +155,7 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 				.toString();
 		try {
 			Stat stat = zooKeeper.exists(memberNode, true);
-			if (stat == null)
+			if (stat != null)
 				zooKeeper.delete(memberNode, stat.getVersion());
 		} catch (Exception e) {
 			try {

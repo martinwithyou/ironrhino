@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class UserAgent implements Serializable {
 
+	private static final long serialVersionUID = 7964528679540704029L;
+
 	private String userAgent;
 
 	private String name = "unknown";

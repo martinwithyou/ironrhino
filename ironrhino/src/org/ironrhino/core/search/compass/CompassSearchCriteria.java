@@ -5,6 +5,8 @@ import org.ironrhino.core.search.SearchCriteria;
 
 public class CompassSearchCriteria extends SearchCriteria {
 
+	private static final long serialVersionUID = 8069132090861765822L;
+
 	private String[] aliases;
 
 	private Float boost;

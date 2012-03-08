@@ -21,6 +21,8 @@ import org.ironrhino.core.util.RequestUtils;
 @AutoConfig(namespace = "/")
 public class LocaleAction extends BaseAction {
 
+	private static final long serialVersionUID = -4036864903754537469L;
+
 	private String lang;
 
 	private Locale[] availableLocales;

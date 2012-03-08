@@ -9,6 +9,8 @@ import org.compass.annotations.SearchableProperty;
 @Searchable(root = false)
 public class LabelValue implements Serializable {
 
+	private static final long serialVersionUID = 7629652470042630809L;
+
 	@SearchableProperty(boost = 2, index = Index.NOT_ANALYZED)
 	private String value;
 

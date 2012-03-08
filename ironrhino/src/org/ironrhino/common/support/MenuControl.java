@@ -156,6 +156,8 @@ public class MenuControl {
 
 	public static class MenuNode extends BaseTreeableEntity<MenuNode> {
 
+		private static final long serialVersionUID = 5262995463588604661L;
+
 		private String url;
 
 		private Authorize authorize;

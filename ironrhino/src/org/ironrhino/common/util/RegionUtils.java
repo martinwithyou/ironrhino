@@ -15,6 +15,8 @@ public class RegionUtils {
 			.split(",");
 
 	public static final Map<String, String> mapping = new HashMap<String, String>() {
+		private static final long serialVersionUID = 1843445431842190721L;
+
 		{
 			put("广西壮族自治区", "广西");
 			put("西藏自治区", "西藏");
