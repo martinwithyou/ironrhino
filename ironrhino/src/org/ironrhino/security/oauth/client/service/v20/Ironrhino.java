@@ -22,7 +22,11 @@ public class Ironrhino extends OAuth20Provider {
 	@Value("${ironrhino.accessTokenEndpoint:http://localhost/oauth2/token}")
 	private String accessTokenEndpoint;
 
-	private String scope = "http://localhost/";
+	@Value("${ironrhino.scope:http://localhost/}")
+	private String scope;
+
+	@Value("${ironrhino.profileUrl:http://localhost/user/self}")
+	private String profileUrl;
 
 	@Override
 	public String getLogo() {
@@ -44,6 +48,11 @@ public class Ironrhino extends OAuth20Provider {
 		return scope;
 	}
 
+	@Override
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+
 	public String getAccessKey() {
 		return settingControl.getStringValue("oauth." + getName()
 				+ ".accessKey");
@@ -55,11 +64,10 @@ public class Ironrhino extends OAuth20Provider {
 	}
 
 	@Override
-	protected Profile doGetProfile(String token) throws Exception {
-		String content = invoke(token, "http://localhost/user/self");
+	protected Profile getProfileFromContent(String content) throws Exception {
 		User user = JsonUtils.fromJson(content, User.class);
 		Profile p = new Profile();
-		p.setId(user.getUsername());
+		p.setUid(user.getUsername());
 		p.setDisplayName(user.getName());
 		return p;
 	}

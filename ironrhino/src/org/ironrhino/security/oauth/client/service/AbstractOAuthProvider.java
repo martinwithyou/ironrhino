@@ -3,6 +3,7 @@ package org.ironrhino.security.oauth.client.service;
 import javax.inject.Inject;
 
 import org.ironrhino.common.support.SettingControl;
+import org.ironrhino.security.oauth.client.model.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +39,18 @@ public abstract class AbstractOAuthProvider implements OAuthProvider {
 	protected boolean isUseAuthorizationHeader() {
 		return true;
 	}
-	
-	protected String getAuthorizationHeaderType(){
+
+	protected String getAuthorizationHeaderType() {
 		return "OAuth";
 	}
-	
-	protected String generateId(String uid) {
+
+	protected String generateUid(String uid) {
 		return "(" + getName() + ")" + uid;
 	}
+
+	public abstract String getProfileUrl();
+
+	protected abstract Profile getProfileFromContent(String content) throws Exception;
 
 	public String toString() {
 		return getName();

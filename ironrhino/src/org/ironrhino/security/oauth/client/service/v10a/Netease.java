@@ -5,14 +5,13 @@ import javax.inject.Singleton;
 
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.security.oauth.client.model.OAuth10aToken;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth10aProvider;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named("netease")
 @Singleton
-public class Netease extends OAuth10aProvider  {
+public class Netease extends OAuth10aProvider {
 
 	@Value("${netease.requestTokenUrl:http://api.t.163.com/oauth/request_token}")
 	private String requestTokenUrl;
@@ -25,6 +24,14 @@ public class Netease extends OAuth10aProvider  {
 
 	@Value("${netease.logo:http://img3.cache.netease.com/t/img10/index/logo.png}")
 	private String logo;
+
+	@Value("${netease.profileUrl:http://api.t.163.com/account/verify_credentials.json}")
+	private String profileUrl;
+
+	@Override
+	public String getProfileUrl() {
+		return profileUrl;
+	}
 
 	public String getLogo() {
 		return logo;
@@ -41,21 +48,20 @@ public class Netease extends OAuth10aProvider  {
 	public String getAccessTokenUrl() {
 		return accessTokenUrl;
 	}
-	
+
 	@Override
-	protected Profile doGetProfile(OAuth10aToken token) throws Exception {
-		String json = invoke(token,
-		"http://api.t.163.com/account/verify_credentials.json");
-		JsonNode data = JsonUtils.getObjectMapper().readValue(json, JsonNode.class);
+	protected Profile getProfileFromContent(String content) throws Exception {
+		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
+				JsonNode.class);
 		String uid = data.get("id").getTextValue();
 		String name = data.get("name").getTextValue();
 		String displayName = data.get("screen_name").getTextValue();
 		Profile p = new Profile();
-		p.setId(generateId(uid));
+		p.setUid(generateUid(uid));
 		p.setName(name);
 		p.setDisplayName(displayName);
 		p.setLocation(data.get("location").getTextValue());
-		p.setImage(data.get("profile_image_url").getTextValue());
+		p.setPicture(data.get("profile_image_url").getTextValue());
 		return p;
 	}
 

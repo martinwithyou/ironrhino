@@ -80,7 +80,7 @@ public class OauthAction extends BaseAction {
 			Profile p = provider.getProfile(request);
 			if (p == null)
 				return ACCESSDENIED;
-			String id = p.getId();
+			String id = p.getUid();
 			User user = null;
 			try {
 				user = (User) userManager.loadUserByUsername(id);

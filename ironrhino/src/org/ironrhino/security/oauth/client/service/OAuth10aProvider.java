@@ -121,7 +121,9 @@ public abstract class OAuth10aProvider extends AbstractOAuthProvider {
 			accessToken = Utils.extractToken(responseBody);
 			saveToken(request, accessToken, "access");
 		}
-		return doGetProfile(accessToken);
+		String content = invoke(accessToken,
+				"http://api.douban.com/people/%40me");
+		return getProfileFromContent(content);
 	}
 
 	public String invoke(HttpServletRequest request, String protectedURL)
@@ -152,9 +154,6 @@ public abstract class OAuth10aProvider extends AbstractOAuthProvider {
 			Map<String, String> headers) {
 		return HttpClientUtils.getResponseText(protectedURL, params, headers);
 	}
-
-	protected abstract Profile doGetProfile(OAuth10aToken accessToken)
-			throws Exception;
 
 	protected void saveToken(HttpServletRequest request, OAuth10aToken token,
 			String type) {

@@ -4,19 +4,19 @@ import java.util.Collection;
 
 public class Profile {
 
-	private String id;
-
-	private String site;
+	private String uid;
 
 	private String email;
 
 	private String country;
 
-	private String language;
-
 	private String name;
 
 	private String displayName;
+	
+	private String locale;
+	
+	private String link;
 
 	private String dob;
 
@@ -24,7 +24,7 @@ public class Profile {
 
 	private String location;
 
-	private String image;
+	private String picture;
 
 	private Collection<Contact> contacts;
 
@@ -52,12 +52,12 @@ public class Profile {
 		this.country = country;
 	}
 
-	public String getLanguage() {
-		return language;
+	public String getLocale() {
+		return locale;
 	}
 
-	public void setLanguage(String language) {
-		this.language = language;
+	public void setLocale(String locale) {
+		this.locale = locale;
 	}
 
 	public String getName() {
@@ -100,28 +100,28 @@ public class Profile {
 		this.location = location;
 	}
 
-	public String getImage() {
-		return image;
+	public String getPicture() {
+		return picture;
 	}
 
-	public void setImage(String image) {
-		this.image = image;
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 
-	public String getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getSite() {
-		return site;
+	public String getLink() {
+		return link;
 	}
 
-	public void setSite(String site) {
-		this.site = site;
+	public void setLink(String link) {
+		this.link = link;
 	}
 
 	public static class Contact {

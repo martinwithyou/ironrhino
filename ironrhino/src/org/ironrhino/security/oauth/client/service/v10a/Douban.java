@@ -5,7 +5,6 @@ import javax.inject.Singleton;
 
 import org.compass.core.util.reader.StringReader;
 import org.ironrhino.core.util.XmlUtils;
-import org.ironrhino.security.oauth.client.model.OAuth10aToken;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth10aProvider;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +27,14 @@ public class Douban extends OAuth10aProvider {
 	@Value("${douban.logo:http://img3.douban.com/pics/nav/lg_main_a6.png}")
 	private String logo;
 
+	@Value("${douban.profileUrl:http://api.douban.com/people/%40me}")
+	private String profileUrl;
+
+	@Override
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+
 	public String getLogo() {
 		return logo;
 	}
@@ -45,16 +52,15 @@ public class Douban extends OAuth10aProvider {
 	}
 
 	@Override
-	protected Profile doGetProfile(OAuth10aToken token) throws Exception {
-		String xml = invoke(token,
-				"http://api.douban.com/people/%40me");
-		Document doc = XmlUtils.getDocumentBuilder().parse(new InputSource(new StringReader(xml)));
+	protected Profile getProfileFromContent(String content) throws Exception {
+		Document doc = XmlUtils.getDocumentBuilder().parse(
+				new InputSource(new StringReader(content)));
 		String uid = doc.getElementsByTagName("db:uid").item(0)
 				.getTextContent();
 		String displayName = doc.getElementsByTagName("title").item(0)
 				.getTextContent();
 		Profile p = new Profile();
-		p.setId(generateId(uid));
+		p.setUid(generateUid(uid));
 		p.setDisplayName(displayName);
 		return p;
 	}

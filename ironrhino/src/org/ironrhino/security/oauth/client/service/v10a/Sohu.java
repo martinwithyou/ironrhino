@@ -5,7 +5,6 @@ import javax.inject.Singleton;
 
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.security.oauth.client.model.OAuth10aToken;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth10aProvider;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +25,14 @@ public class Sohu extends OAuth10aProvider {
 	@Value("${sohu.logo:http://s1.cr.itc.cn/img/t/logo_sp6.png}")
 	private String logo;
 
+	@Value("${sohu.profileUrl:http://api.t.sohu.com/account/verify_credentials.json}")
+	private String profileUrl;
+
+	@Override
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+
 	public String getLogo() {
 		return logo;
 	}
@@ -43,19 +50,18 @@ public class Sohu extends OAuth10aProvider {
 	}
 
 	@Override
-	protected Profile doGetProfile(OAuth10aToken token) throws Exception {
-		String json = invoke(token,
-		"http://api.t.sohu.com/account/verify_credentials.json");
-		JsonNode data = JsonUtils.getObjectMapper().readValue(json, JsonNode.class);
+	protected Profile getProfileFromContent(String content) throws Exception {
+		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
+				JsonNode.class);
 		String uid = data.get("id").getTextValue();
 		String name = data.get("name").getTextValue();
 		String displayName = data.get("screen_name").getTextValue();
 		Profile p = new Profile();
-		p.setId(generateId(uid));
+		p.setUid(generateUid(uid));
 		p.setName(name);
 		p.setDisplayName(displayName);
 		p.setLocation(data.get("location").getTextValue());
-		p.setImage(data.get("profile_image_url").getTextValue());
+		p.setPicture(data.get("profile_image_url").getTextValue());
 		return p;
 	}
 }

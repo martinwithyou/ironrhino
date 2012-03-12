@@ -134,7 +134,8 @@ public abstract class OAuth20Provider extends AbstractOAuthProvider {
 			}
 			saveToken(request, accessToken);
 		}
-		return doGetProfile(accessToken.getAccess_token());
+		String content = invoke(accessToken.getAccess_token(), getProfileUrl());
+		return getProfileFromContent(content);
 	}
 
 	public String invoke(HttpServletRequest request, String protectedURL)
@@ -170,9 +171,6 @@ public abstract class OAuth20Provider extends AbstractOAuthProvider {
 			Map<String, String> headers) {
 		return HttpClientUtils.getResponseText(protectedURL, params, headers);
 	}
-
-	protected abstract Profile doGetProfile(String accessToken)
-			throws Exception;
 
 	public OAuth20Token refreshToken(OAuth20Token accessToken) throws Exception {
 		Map<String, String> params = new HashMap<String, String>();

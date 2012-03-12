@@ -1,6 +1,5 @@
 package org.ironrhino.security.oauth.client.service.v20;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,17 +7,10 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.codehaus.jackson.JsonNode;
-import org.compass.core.util.reader.StringReader;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.core.util.XmlUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
-import org.ironrhino.security.oauth.client.model.Profile.Contact;
 import org.ironrhino.security.oauth.client.service.OAuth20Provider;
 import org.springframework.beans.factory.annotation.Value;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 @Named("google")
 @Singleton
@@ -33,7 +25,11 @@ public class Google extends OAuth20Provider {
 	@Value("${google.accessTokenEndpoint:https://accounts.google.com/o/oauth2/token}")
 	private String accessTokenEndpoint;
 
-	private String scope = "https://www-opensocial.googleusercontent.com/api/people/ https://www.google.com/m8/feeds/";
+	@Value("${google.scope:https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile}")
+	private String scope;
+
+	@Value("${google.profileUrl:https://www.googleapis.com/oauth2/v1/userinfo}")
+	private String profileUrl;
 
 	@Override
 	public String getLogo() {
@@ -55,6 +51,11 @@ public class Google extends OAuth20Provider {
 		return scope;
 	}
 
+	@Override
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+
 	public String getAccessKey() {
 		return settingControl.getStringValue("oauth." + getName()
 				+ ".accessKey");
@@ -66,45 +67,18 @@ public class Google extends OAuth20Provider {
 	}
 
 	@Override
-	protected Profile doGetProfile(String token) throws Exception {
-		String content = invoke(token,
-				"http://www-opensocial.googleusercontent.com/api/people/%40me/%40self");
+	protected Profile getProfileFromContent(String content) throws Exception {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
-		JsonNode entry = data.get("entry");
-		String uid = entry.get("id").getTextValue();
-		String displayName = entry.get("displayName").getTextValue();
 		Profile p = new Profile();
-		p.setId(generateId(uid));
-		p.setDisplayName(displayName);
-		// p.setLocation(data.get("location").getTextValue());
-		p.setImage(entry.get("thumbnailUrl").getTextValue());
-
-		try {
-			content = invoke(token,
-					"https://www.google.com/m8/feeds/contacts/default/full");
-			Document doc = XmlUtils.getDocumentBuilder().parse(
-					new InputSource(new StringReader(content)));
-			String name = XmlUtils.eval("/feed/author/name", doc);
-			p.setName(name);
-			String email = XmlUtils.eval("/feed/author/email", doc);
-			p.setEmail(email);
-			NodeList nodelist = XmlUtils.evalNodeList("/feed/entry", doc);
-			if (nodelist != null) {
-				p.setContacts(new ArrayList<Contact>(nodelist.getLength()));
-				for (int i = 0; i < nodelist.getLength(); i++) {
-					Contact c = new Contact();
-					p.getContacts().add(c);
-					Element ele = (Element) nodelist.item(i);
-					c.setName(((Element) ele.getElementsByTagName("title")
-							.item(0)).getTextContent());
-					c.setEmail(((Element) ele.getElementsByTagName("gd:email")
-							.item(0)).getAttribute("address"));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		p.setUid(generateUid(data.get("id").getTextValue()));
+		p.setDisplayName(data.get("name").getTextValue());
+		p.setName(data.get("name").getTextValue());
+		p.setEmail(data.get("email").getTextValue());
+		p.setGender(data.get("gender").getTextValue());
+		p.setLocale(data.get("locale").getTextValue());
+		p.setLink(data.get("link").getTextValue());
+		p.setPicture(data.get("picture").getTextValue());
 		return p;
 	}
 

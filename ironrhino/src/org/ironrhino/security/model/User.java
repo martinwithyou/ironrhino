@@ -50,6 +50,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	private String email;
 
 	@SearchableProperty
+	@NotInJson
 	private String phone;
 
 	@NotInJson

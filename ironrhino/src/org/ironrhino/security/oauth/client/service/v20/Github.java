@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Singleton
 public class Github extends OAuth20Provider {
 
-	@Value("${github.logo:https://a248.e.akamai.net/assets.github.com/images/modules/header/logov5-hover.png}")
+	@Value("${github.logo:https://a248.e.akamai.net/assets.github.com/images/modules/header/logov7@4x-hover.png}")
 	private String logo;
 
 	@Value("${github.authorizeUrl:https://github.com/login/oauth/authorize}")
@@ -22,7 +22,11 @@ public class Github extends OAuth20Provider {
 	@Value("${github.accessTokenEndpoint:https://github.com/login/oauth/access_token}")
 	private String accessTokenEndpoint;
 
-	private String scope = "user";
+	@Value("${github.scope:user}")
+	private String scope;
+
+	@Value("${github.profileUrl:https://api.github.com/user}")
+	private String profileUrl;
 
 	@Override
 	public String getLogo() {
@@ -45,24 +49,28 @@ public class Github extends OAuth20Provider {
 	}
 
 	@Override
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+
+	@Override
 	public boolean isUseAuthorizationHeader() {
 		return true;
 	}
-	
-	protected String getAuthorizationHeaderType(){
+
+	protected String getAuthorizationHeaderType() {
 		return "Token";
 	}
 
 	@Override
-	protected Profile doGetProfile(String token) throws Exception {
-		String content = invoke(token, "https://api.github.com/user");
+	protected Profile getProfileFromContent(String content) throws Exception {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
 		String uid = data.get("login").getTextValue();
 		Profile p = new Profile();
-		p.setId(generateId(uid));
+		p.setUid(generateUid(uid));
 		p.setDisplayName(uid);
-		p.setImage(data.get("avatar_url").getTextValue());
+		p.setPicture(data.get("avatar_url").getTextValue());
 		return p;
 	}
 
