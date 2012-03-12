@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.HttpClientUtils;
@@ -21,9 +20,6 @@ public abstract class OAuth20Provider extends AbstractOAuthProvider {
 
 	protected static Logger logger = LoggerFactory
 			.getLogger(OAuth20Provider.class);
-
-	protected static DocumentBuilderFactory factory = DocumentBuilderFactory
-			.newInstance();
 
 	public abstract String getAuthorizeUrl();
 
