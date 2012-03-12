@@ -15,7 +15,7 @@
 	<#else>
 		<#local schema=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findByNaturalId(true,[schemaName])!>
 	</#if>
-	<table border="0" class="datagrid" style="width:100%;">
+	<table border="0" class="datagrid nullable" style="width:100%;">
 		<thead>
 			<tr>
 				<td>${action.getText('name')}</td>

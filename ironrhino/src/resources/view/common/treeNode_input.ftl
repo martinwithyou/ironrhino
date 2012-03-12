@@ -12,7 +12,7 @@
 	<@s.textfield label="%{getText('name')}" name="treeNode.name" />
 	<@s.textfield label="%{getText('description')}" name="treeNode.description" />
 	<@s.textfield label="%{getText('displayOrder')}" name="treeNode.displayOrder" cssClass="integer"/>
-	<table border="0" class="datagrid" style="width:100%;padding-top:10px;">
+	<table border="0" class="datagrid nullable" style="width:100%;padding-top:10px;">
 		<thead>
 			<tr>
 				<td>${action.getText('name')}</td>

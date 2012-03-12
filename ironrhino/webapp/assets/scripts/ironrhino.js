@@ -29171,11 +29171,13 @@ Observation.sortableTable = function(container) {
 	};
 	var removeRow = function(event, options) {
 		var row = $(event.target).closest('tr');
-		if (options.onbeforeremove
+		var tbody = row.closest('tbody');
+		var table = tbody.closest('table.datagrided');
+		if (!table.hasClass('nullable') && $('tr', tbody).length == 1
+				|| options.onbeforeremove
 				&& options.onbeforeremove.apply(row.get(0)) === false)
 			return;
 		$(':input', row.prev()).eq(0).focus();
-		var tbody = row.closest('tbody');
 		row.remove();
 		rename(tbody);
 		if (options.onremove)
@@ -29225,7 +29227,7 @@ Observation.sortableTable = function(container) {
 						+ name.substring(name.indexOf(']', j));
 				$(this).prop('name', name);
 			});
-		});
+		}).closest('form').addClass('dirty');
 	}
 })(jQuery);
 
