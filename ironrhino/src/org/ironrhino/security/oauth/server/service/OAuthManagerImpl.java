@@ -114,7 +114,7 @@ public class OAuthManagerImpl implements OAuthManager {
 			if (auth.getExpiresIn() > 0) {
 				long offset = System.currentTimeMillis()
 						- auth.getModifyDate().getTime();
-				if (offset > auth.getExpiresIn() * 1000)
+				if (offset/1000 > auth.getExpiresIn())
 					return null;
 			}
 		}

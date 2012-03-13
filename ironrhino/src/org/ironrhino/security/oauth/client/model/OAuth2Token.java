@@ -65,7 +65,7 @@ public class OAuth2Token implements java.io.Serializable {
 		if (expires_in <= 0 || create_time <= 0)
 			return false;
 		int offset = 60;
-		return System.currentTimeMillis() - create_time > (expires_in - offset) * 1000;
+		return (System.currentTimeMillis() - create_time) / 1000 > (expires_in - offset);
 	}
 
 }
