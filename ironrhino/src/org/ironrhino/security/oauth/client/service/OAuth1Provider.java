@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.security.oauth.client.model.OAuth10aToken;
+import org.ironrhino.security.oauth.client.model.OAuth1Token;
 import org.ironrhino.security.oauth.client.model.Profile;
 
 public abstract class OAuth1Provider extends AbstractOAuthProvider {
@@ -61,7 +61,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 
 	public String getAuthRedirectURL(HttpServletRequest request,
 			String targetUrl) throws Exception {
-		OAuth10aToken accessToken = restoreToken(request, "access");
+		OAuth1Token accessToken = restoreToken(request, "access");
 		if (accessToken != null)
 			return targetUrl;
 
@@ -83,7 +83,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 			responseBody = HttpClientUtils.getResponseText(
 					getRequestTokenUrl(), params, Collections.EMPTY_MAP);
 		}
-		OAuth10aToken requestToken = Utils.extractToken(responseBody);
+		OAuth1Token requestToken = Utils.extractToken(responseBody);
 		saveToken(request, requestToken, "request");
 		StringBuilder sb = new StringBuilder(getAuthorizeUrl());
 		sb.append(sb.indexOf("?") > 0 ? '&' : '?').append("oauth_token")
@@ -95,9 +95,9 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 	}
 
 	public Profile getProfile(HttpServletRequest request) throws Exception {
-		OAuth10aToken accessToken = restoreToken(request, "access");
+		OAuth1Token accessToken = restoreToken(request, "access");
 		if (accessToken == null) {
-			OAuth10aToken requestToken = restoreToken(request, "request");
+			OAuth1Token requestToken = restoreToken(request, "request");
 			removeToken(request, "request");
 			String oauth_verifier = request.getParameter("oauth_verifier");
 			Map<String, String> map = new HashMap<String, String>();
@@ -128,14 +128,14 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 
 	public String invoke(HttpServletRequest request, String protectedURL)
 			throws Exception {
-		OAuth10aToken accessToken = restoreToken(request, "access");
+		OAuth1Token accessToken = restoreToken(request, "access");
 		if (accessToken == null)
 			throw new IllegalAccessException("must already authorized");
 		return invoke(accessToken, protectedURL);
 
 	}
 
-	public String invoke(OAuth10aToken accessToken, String protectedURL)
+	public String invoke(OAuth1Token accessToken, String protectedURL)
 			throws Exception {
 		Map<String, String> map;
 
@@ -155,7 +155,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 		return HttpClientUtils.getResponseText(protectedURL, params, headers);
 	}
 
-	protected void saveToken(HttpServletRequest request, OAuth10aToken token,
+	protected void saveToken(HttpServletRequest request, OAuth1Token token,
 			String type) {
 		request.getSession().setAttribute(tokenSessionKey(type),
 				JsonUtils.toJson(token));
@@ -165,13 +165,13 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 		request.getSession().removeAttribute(tokenSessionKey(type));
 	}
 
-	protected OAuth10aToken restoreToken(HttpServletRequest request, String type)
+	protected OAuth1Token restoreToken(HttpServletRequest request, String type)
 			throws Exception {
 		String json = (String) request.getSession().getAttribute(
 				tokenSessionKey(type));
 		if (StringUtils.isBlank(json))
 			return null;
-		return JsonUtils.fromJson(json, OAuth10aToken.class);
+		return JsonUtils.fromJson(json, OAuth1Token.class);
 	}
 
 	private String tokenSessionKey(String type) {
@@ -273,8 +273,8 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 			}
 		}
 
-		public static OAuth10aToken extractToken(String formdata) {
-			OAuth10aToken token = new OAuth10aToken();
+		public static OAuth1Token extractToken(String formdata) {
+			OAuth1Token token = new OAuth1Token();
 			Map<String, String> data = parseFormData(formdata);
 			token.setToken(data.get("oauth_token"));
 			token.setSecret(data.get("oauth_token_secret"));

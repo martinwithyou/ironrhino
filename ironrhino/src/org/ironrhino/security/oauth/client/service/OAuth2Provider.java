@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.security.oauth.client.model.OAuth20Token;
+import org.ironrhino.security.oauth.client.model.OAuth2Token;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +58,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 
 	public String getAuthRedirectURL(HttpServletRequest request,
 			String targetUrl) throws Exception {
-		OAuth20Token accessToken = restoreToken(request);
+		OAuth2Token accessToken = restoreToken(request);
 		if (accessToken != null) {
 			if (accessToken.isExpired()) {
 				try {
@@ -98,7 +98,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 
 	public Profile getProfile(HttpServletRequest request) throws Exception {
 
-		OAuth20Token accessToken = restoreToken(request);
+		OAuth2Token accessToken = restoreToken(request);
 		if (accessToken != null) {
 			if (accessToken.isExpired()) {
 				try {
@@ -121,9 +121,9 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 			String content = HttpClientUtils.postResponseText(
 					getAccessTokenEndpoint(), params);
 			if (JsonUtils.isValidJson(content)) {
-				accessToken = JsonUtils.fromJson(content, OAuth20Token.class);
+				accessToken = JsonUtils.fromJson(content, OAuth2Token.class);
 			} else {
-				accessToken = new OAuth20Token();
+				accessToken = new OAuth2Token();
 				String[] arr1 = content.split("&");
 				for (String s : arr1) {
 					String[] arr2 = s.split("=", 2);
@@ -141,7 +141,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 
 	public String invoke(HttpServletRequest request, String protectedURL)
 			throws Exception {
-		OAuth20Token accessToken = restoreToken(request);
+		OAuth2Token accessToken = restoreToken(request);
 		if (accessToken == null)
 			throw new IllegalAccessException("must already authorized");
 		if (accessToken.isExpired()) {
@@ -173,7 +173,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		return HttpClientUtils.getResponseText(protectedURL, params, headers);
 	}
 
-	public OAuth20Token refreshToken(OAuth20Token accessToken) throws Exception {
+	public OAuth2Token refreshToken(OAuth2Token accessToken) throws Exception {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("client_id", getClientId());
 		params.put("client_secret", getClientSecret());
@@ -181,22 +181,22 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		params.put("grant_type", "refresh_token");
 		String content = HttpClientUtils.postResponseText(
 				getAccessTokenEndpoint(), params);
-		return JsonUtils.fromJson(content, OAuth20Token.class);
+		return JsonUtils.fromJson(content, OAuth2Token.class);
 	}
 
-	protected void saveToken(HttpServletRequest request, OAuth20Token token) {
+	protected void saveToken(HttpServletRequest request, OAuth2Token token) {
 		token.setCreate_time(System.currentTimeMillis());
 		request.getSession().setAttribute(getName() + "_token",
 				JsonUtils.toJson(token));
 	}
 
-	protected OAuth20Token restoreToken(HttpServletRequest request)
+	protected OAuth2Token restoreToken(HttpServletRequest request)
 			throws Exception {
 		String key = getName() + "_token";
 		String json = (String) request.getSession().getAttribute(key);
 		if (StringUtils.isBlank(json))
 			return null;
-		return JsonUtils.fromJson(json, OAuth20Token.class);
+		return JsonUtils.fromJson(json, OAuth2Token.class);
 	}
 
 }
