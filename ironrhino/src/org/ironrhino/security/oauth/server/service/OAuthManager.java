@@ -12,6 +12,8 @@ public interface OAuthManager {
 
 	public Authorization generate(Client client, String redirectUri,
 			String scope, String responseType) throws Exception;
+	
+	public Authorization reuse(Authorization authorization);
 
 	public Authorization grant(String authorizationId, User grantor)
 			throws Exception;

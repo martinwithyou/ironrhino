@@ -52,6 +52,12 @@ public class OAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	public Authorization reuse(Authorization auth) {
+		auth.setCode(CodecUtils.nextId());
+		baseManager.save(auth);
+		return auth;
+	}
+
 	public Authorization grant(String authorizationId, User grantor) {
 		baseManager.setEntityClass(Authorization.class);
 		Authorization auth = (Authorization) baseManager.get(authorizationId);

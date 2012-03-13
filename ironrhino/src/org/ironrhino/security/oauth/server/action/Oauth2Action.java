@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -28,6 +29,8 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+
+import com.google.common.base.Objects;
 
 @AutoConfig(namespace = "/")
 public class Oauth2Action extends BaseAction {
@@ -171,6 +174,21 @@ public class Oauth2Action extends BaseAction {
 			Client client = oauthManager.findClientById(client_id);
 			if (client == null)
 				throw new IllegalArgumentException("CLIENT_ID_INVALID");
+			User grantor = AuthzUtils.getUserDetails(User.class);
+			List<Authorization> auths = oauthManager
+					.findAuthorizationsByGrantor(grantor);
+			for (Authorization auth : auths) {
+				if (Objects.equal(auth.getClient(), client)
+						&& Objects.equal(auth.getResponseType(), response_type)
+						&& Objects.equal(auth.getScope(), scope)) {
+					authorization = auth;
+					break;
+				}
+			}
+			if (authorization != null) {
+				authorization = oauthManager.reuse(authorization);
+				return grant();
+			}
 			authorization = oauthManager.generate(client, redirect_uri, scope,
 					response_type);
 			client = authorization.getClient();
@@ -228,7 +246,8 @@ public class Oauth2Action extends BaseAction {
 
 		}
 		try {
-			authorization = oauthManager.grant(getUid(), grantor);
+			if (authorization == null)
+				authorization = oauthManager.grant(getUid(), grantor);
 			displayForNative = authorization.getClient().isNative();
 			granted = true;
 			if (displayForNative) {

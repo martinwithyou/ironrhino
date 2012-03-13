@@ -71,6 +71,17 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	public Authorization reuse(Authorization auth) {
+		auth.setCode(CodecUtils.nextId());
+		authorizationRedisTemplate.opsForValue().set(
+				NAMESPACE_AUTHORIZATION + auth.getId(), auth, expireTime,
+				TimeUnit.SECONDS);
+		authorizationRedisTemplate.opsForValue().set(
+				NAMESPACE_AUTHORIZATION + auth.getCode(), auth, expireTime,
+				TimeUnit.SECONDS);
+		return auth;
+	}
+
 	public Authorization grant(String authorizationId, User grantor) {
 		String key = NAMESPACE_AUTHORIZATION + authorizationId;
 		Authorization auth = authorizationRedisTemplate.opsForValue().get(key);
