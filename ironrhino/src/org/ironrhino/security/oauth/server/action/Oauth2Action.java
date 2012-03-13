@@ -53,6 +53,7 @@ public class Oauth2Action extends BaseAction {
 	private String response_type;
 	private String grant_type;
 	private String state;
+	private String approval_prompt;
 	private Authorization authorization;
 	private Client client;
 
@@ -153,6 +154,14 @@ public class Oauth2Action extends BaseAction {
 		this.response_type = response_type;
 	}
 
+	public String getApproval_prompt() {
+		return approval_prompt;
+	}
+
+	public void setApproval_prompt(String approval_prompt) {
+		this.approval_prompt = approval_prompt;
+	}
+
 	public boolean isDisplayForNative() {
 		return displayForNative;
 	}
@@ -175,19 +184,22 @@ public class Oauth2Action extends BaseAction {
 			if (client == null)
 				throw new IllegalArgumentException("CLIENT_ID_INVALID");
 			User grantor = AuthzUtils.getUserDetails(User.class);
-			List<Authorization> auths = oauthManager
-					.findAuthorizationsByGrantor(grantor);
-			for (Authorization auth : auths) {
-				if (Objects.equal(auth.getClient(), client)
-						&& Objects.equal(auth.getResponseType(), response_type)
-						&& Objects.equal(auth.getScope(), scope)) {
-					authorization = auth;
-					break;
+			if (!"force".equals(approval_prompt) && grantor != null) {
+				List<Authorization> auths = oauthManager
+						.findAuthorizationsByGrantor(grantor);
+				for (Authorization auth : auths) {
+					if (Objects.equal(auth.getClient(), client)
+							&& Objects.equal(auth.getResponseType(),
+									response_type)
+							&& Objects.equal(auth.getScope(), scope)) {
+						authorization = auth;
+						break;
+					}
 				}
-			}
-			if (authorization != null) {
-				authorization = oauthManager.reuse(authorization);
-				return grant();
+				if (authorization != null) {
+					authorization = oauthManager.reuse(authorization);
+					return grant();
+				}
 			}
 			authorization = oauthManager.generate(client, redirect_uri, scope,
 					response_type);
