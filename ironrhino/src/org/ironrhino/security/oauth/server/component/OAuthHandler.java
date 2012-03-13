@@ -29,7 +29,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 @Named
 @Order(Integer.MIN_VALUE + 1)
 public class OAuthHandler implements AccessHandler {
-	
+
 	public static final String REQUEST_ATTRIBUTE_KEY_OAUTH_REQUEST = "_OAUTH_REQUEST";
 
 	@Value("${api.pattern:/user/self}")
@@ -55,8 +55,11 @@ public class OAuthHandler implements AccessHandler {
 			String header = request.getHeader("Authorization");
 			if (header != null) {
 				header = header.trim();
-				if (header.startsWith("OAuth ")) {
-					header = header.substring("OAuth ".length());
+				if (header.toLowerCase().startsWith("bearer ")) {
+					// oauth 2.0
+					token = header.substring("bearer ".length());
+				} else if (header.toLowerCase().startsWith("oauth ")) {
+					header = header.substring("oauth ".length());
 					int i = header.indexOf("oauth_token=");
 					if (i < 0) {
 						// oauth 2.0
@@ -67,9 +70,8 @@ public class OAuthHandler implements AccessHandler {
 						token = header.substring(0, header.indexOf("\""));
 					}
 				} else {
-					errorMessage = "invalid Authorization header,must starts with OAuth ";
+					errorMessage = "invalid Authorization header,must starts with OAuth or Bearer";
 				}
-
 			}
 		}
 		if (StringUtils.isNotBlank(token)) {
@@ -103,7 +105,8 @@ public class OAuthHandler implements AccessHandler {
 					request.setAttribute(
 							HttpSessionManager.REQUEST_ATTRIBUTE_KEY_SESSION_MAP,
 							sessionMap);
-					request.setAttribute(REQUEST_ATTRIBUTE_KEY_OAUTH_REQUEST, true);
+					request.setAttribute(REQUEST_ATTRIBUTE_KEY_OAUTH_REQUEST,
+							true);
 					return false;
 				} else {
 					errorMessage = "Unauthorized Scope";

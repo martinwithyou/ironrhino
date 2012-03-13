@@ -58,9 +58,6 @@ public class Github extends OAuth20Provider {
 		return true;
 	}
 
-	protected String getAuthorizationHeaderType() {
-		return "Token";
-	}
 
 	@Override
 	protected Profile getProfileFromContent(String content) throws Exception {

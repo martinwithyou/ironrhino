@@ -42,6 +42,10 @@ public abstract class OAuth20Provider extends AbstractOAuthProvider {
 	public boolean isEnabled() {
 		return super.isEnabled() && StringUtils.isNotBlank(getClientId());
 	}
+	
+	protected String getAuthorizationHeaderType() {
+		return "Bearer";
+	}
 
 	@PostConstruct
 	public void afterPropertiesSet() {
