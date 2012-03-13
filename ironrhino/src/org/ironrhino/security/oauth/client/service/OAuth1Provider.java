@@ -21,7 +21,7 @@ import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.OAuth10aToken;
 import org.ironrhino.security.oauth.client.model.Profile;
 
-public abstract class OAuth10aProvider extends AbstractOAuthProvider {
+public abstract class OAuth1Provider extends AbstractOAuthProvider {
 
 	public abstract String getRequestTokenUrl();
 

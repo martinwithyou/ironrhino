@@ -1,4 +1,4 @@
-package org.ironrhino.security.oauth.client.service.v10a;
+package org.ironrhino.security.oauth.client.service.v1;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -6,26 +6,26 @@ import javax.inject.Singleton;
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
-import org.ironrhino.security.oauth.client.service.OAuth10aProvider;
+import org.ironrhino.security.oauth.client.service.OAuth1Provider;
 import org.springframework.beans.factory.annotation.Value;
 
-@Named("qq")
+@Named("sohu")
 @Singleton
-public class QQ extends OAuth10aProvider {
+public class Sohu extends OAuth1Provider {
 
-	@Value("${qq.requestTokenUrl:https://open.t.qq.com/cgi-bin/request_token}")
+	@Value("${sohu.requestTokenUrl:http://api.t.sohu.com/oauth/request_token}")
 	private String requestTokenUrl;
 
-	@Value("${qq.authorizeUrl:https://open.t.qq.com/cgi-bin/authorize}")
+	@Value("${sohu.authorizeUrl:http://api.t.sohu.com/oauth/authorize}")
 	private String authorizeUrl;
 
-	@Value("${qq.accessTokenUrl:https://open.t.qq.com/cgi-bin/access_token}")
+	@Value("${sohu.accessTokenUrl:http://api.t.sohu.com/oauth/access_token}")
 	private String accessTokenUrl;
 
-	@Value("${qq.logo:http://www.qq.com/images/logo.gif}")
+	@Value("${sohu.logo:http://s1.cr.itc.cn/img/t/logo_sp6.png}")
 	private String logo;
-	
-	@Value("${qq.profileUrl:http://open.t.qq.com/api/user/info?format=json}")
+
+	@Value("${sohu.profileUrl:http://api.t.sohu.com/account/verify_credentials.json}")
 	private String profileUrl;
 
 	@Override
@@ -49,33 +49,19 @@ public class QQ extends OAuth10aProvider {
 		return accessTokenUrl;
 	}
 
-	public boolean isUseAuthorizationHeader() {
-		return false;
-	}
-
-	public boolean isIncludeCallbackWhenRequestToken() {
-		return true;
-	}
-
 	@Override
 	protected Profile getProfileFromContent(String content) throws Exception {
-		JsonNode data = JsonUtils.getObjectMapper()
-				.readValue(content, JsonNode.class).get("data");
-		JsonNode node = data.get("uid");
-		String uid = null;
+		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
+				JsonNode.class);
+		String uid = data.get("id").getTextValue();
 		String name = data.get("name").getTextValue();
-		if (node != null)
-			uid = node.getTextValue();
-		else
-			uid = name;
-		String displayName = data.get("nick").getTextValue();
+		String displayName = data.get("screen_name").getTextValue();
 		Profile p = new Profile();
 		p.setUid(generateUid(uid));
-		p.setName(displayName);
+		p.setName(name);
 		p.setDisplayName(displayName);
 		p.setLocation(data.get("location").getTextValue());
-		p.setPicture(data.get("head").getTextValue());
+		p.setPicture(data.get("profile_image_url").getTextValue());
 		return p;
 	}
-
 }

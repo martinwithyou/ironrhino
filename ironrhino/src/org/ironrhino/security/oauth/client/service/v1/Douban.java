@@ -1,4 +1,4 @@
-package org.ironrhino.security.oauth.client.service.v10a;
+package org.ironrhino.security.oauth.client.service.v1;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -6,14 +6,14 @@ import javax.inject.Singleton;
 import org.compass.core.util.reader.StringReader;
 import org.ironrhino.core.util.XmlUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
-import org.ironrhino.security.oauth.client.service.OAuth10aProvider;
+import org.ironrhino.security.oauth.client.service.OAuth1Provider;
 import org.springframework.beans.factory.annotation.Value;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 @Named("douban")
 @Singleton
-public class Douban extends OAuth10aProvider {
+public class Douban extends OAuth1Provider {
 
 	@Value("${douban.requestTokenUrl:http://www.douban.com/service/auth/request_token}")
 	private String requestTokenUrl;

@@ -1,31 +1,31 @@
-package org.ironrhino.security.oauth.client.service.v20;
+package org.ironrhino.security.oauth.client.service.v2;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.client.model.Profile;
-import org.ironrhino.security.oauth.client.service.OAuth20Provider;
+import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
 
-@Named("ironrhino")
+@Named("github")
 @Singleton
-public class Ironrhino extends OAuth20Provider {
+public class Github extends OAuth2Provider {
 
-	@Value("${ironrhino.logo:http://localhost/assets/images/logo.gif}")
+	@Value("${github.logo:https://a248.e.akamai.net/assets.github.com/images/modules/header/logov7@4x-hover.png}")
 	private String logo;
 
-	@Value("${ironrhino.authorizeUrl:http://localhost/oauth2/auth}")
+	@Value("${github.authorizeUrl:https://github.com/login/oauth/authorize}")
 	private String authorizeUrl;
 
-	@Value("${ironrhino.accessTokenEndpoint:http://localhost/oauth2/token}")
+	@Value("${github.accessTokenEndpoint:https://github.com/login/oauth/access_token}")
 	private String accessTokenEndpoint;
 
-	@Value("${ironrhino.scope:http://localhost/}")
+	@Value("${github.scope:user}")
 	private String scope;
 
-	@Value("${ironrhino.profileUrl:http://localhost/user/self}")
+	@Value("${github.profileUrl:https://api.github.com/user}")
 	private String profileUrl;
 
 	@Override
@@ -53,22 +53,21 @@ public class Ironrhino extends OAuth20Provider {
 		return profileUrl;
 	}
 
-	public String getAccessKey() {
-		return settingControl.getStringValue("oauth." + getName()
-				+ ".accessKey");
-	}
-
 	@Override
 	public boolean isUseAuthorizationHeader() {
 		return true;
 	}
 
+
 	@Override
 	protected Profile getProfileFromContent(String content) throws Exception {
-		User user = JsonUtils.fromJson(content, User.class);
+		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
+				JsonNode.class);
+		String uid = data.get("login").getTextValue();
 		Profile p = new Profile();
-		p.setUid(user.getUsername());
-		p.setDisplayName(user.getName());
+		p.setUid(generateUid(uid));
+		p.setDisplayName(uid);
+		p.setPicture(data.get("avatar_url").getTextValue());
 		return p;
 	}
 

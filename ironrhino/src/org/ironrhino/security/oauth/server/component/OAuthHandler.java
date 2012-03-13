@@ -65,7 +65,7 @@ public class OAuthHandler implements AccessHandler {
 						// oauth 2.0
 						token = header;
 					} else {
-						// oauth 1.0a
+						// oauth 1.0
 						header = header.substring(header.indexOf("\"", i) + 1);
 						token = header.substring(0, header.indexOf("\""));
 					}

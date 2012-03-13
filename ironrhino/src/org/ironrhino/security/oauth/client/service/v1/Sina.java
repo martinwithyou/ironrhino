@@ -1,4 +1,4 @@
-package org.ironrhino.security.oauth.client.service.v10a;
+package org.ironrhino.security.oauth.client.service.v1;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -6,26 +6,26 @@ import javax.inject.Singleton;
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
-import org.ironrhino.security.oauth.client.service.OAuth10aProvider;
+import org.ironrhino.security.oauth.client.service.OAuth1Provider;
 import org.springframework.beans.factory.annotation.Value;
 
-@Named("sohu")
+@Named("sina")
 @Singleton
-public class Sohu extends OAuth10aProvider {
+public class Sina extends OAuth1Provider {
 
-	@Value("${sohu.requestTokenUrl:http://api.t.sohu.com/oauth/request_token}")
+	@Value("${sina.requestTokenUrl:http://api.t.sina.com.cn/oauth/request_token}")
 	private String requestTokenUrl;
 
-	@Value("${sohu.authorizeUrl:http://api.t.sohu.com/oauth/authorize}")
+	@Value("${sina.authorizeUrl:http://api.t.sina.com.cn/oauth/authorize}")
 	private String authorizeUrl;
 
-	@Value("${sohu.accessTokenUrl:http://api.t.sohu.com/oauth/access_token}")
+	@Value("${sina.accessTokenUrl:http://api.t.sina.com.cn/oauth/access_token}")
 	private String accessTokenUrl;
 
-	@Value("${sohu.logo:http://s1.cr.itc.cn/img/t/logo_sp6.png}")
+	@Value("${sina.logo:http://i1.sinaimg.cn/home/deco/2009/0330/logo_home.gif}")
 	private String logo;
 
-	@Value("${sohu.profileUrl:http://api.t.sohu.com/account/verify_credentials.json}")
+	@Value("${sina.profileUrl:http://api.t.sina.com.cn/account/verify_credentials.json}")
 	private String profileUrl;
 
 	@Override
@@ -53,7 +53,7 @@ public class Sohu extends OAuth10aProvider {
 	protected Profile getProfileFromContent(String content) throws Exception {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
-		String uid = data.get("id").getTextValue();
+		String uid = String.valueOf(data.get("id").getLongValue());
 		String name = data.get("name").getTextValue();
 		String displayName = data.get("screen_name").getTextValue();
 		Profile p = new Profile();

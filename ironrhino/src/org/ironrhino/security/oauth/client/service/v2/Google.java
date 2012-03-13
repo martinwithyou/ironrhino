@@ -1,4 +1,4 @@
-package org.ironrhino.security.oauth.client.service.v20;
+package org.ironrhino.security.oauth.client.service.v2;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,12 +9,12 @@ import javax.inject.Singleton;
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
-import org.ironrhino.security.oauth.client.service.OAuth20Provider;
+import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
 
 @Named("google")
 @Singleton
-public class Google extends OAuth20Provider {
+public class Google extends OAuth2Provider {
 
 	@Value("${google.logo:http://www.google.com/images/logos/accounts_logo.gif}")
 	private String logo;

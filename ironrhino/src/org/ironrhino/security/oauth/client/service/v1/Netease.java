@@ -1,4 +1,4 @@
-package org.ironrhino.security.oauth.client.service.v10a;
+package org.ironrhino.security.oauth.client.service.v1;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -6,26 +6,26 @@ import javax.inject.Singleton;
 import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
-import org.ironrhino.security.oauth.client.service.OAuth10aProvider;
+import org.ironrhino.security.oauth.client.service.OAuth1Provider;
 import org.springframework.beans.factory.annotation.Value;
 
-@Named("sina")
+@Named("netease")
 @Singleton
-public class Sina extends OAuth10aProvider {
+public class Netease extends OAuth1Provider {
 
-	@Value("${sina.requestTokenUrl:http://api.t.sina.com.cn/oauth/request_token}")
+	@Value("${netease.requestTokenUrl:http://api.t.163.com/oauth/request_token}")
 	private String requestTokenUrl;
 
-	@Value("${sina.authorizeUrl:http://api.t.sina.com.cn/oauth/authorize}")
+	@Value("${netease.authorizeUrl:http://api.t.163.com/oauth/authenticate}")
 	private String authorizeUrl;
 
-	@Value("${sina.accessTokenUrl:http://api.t.sina.com.cn/oauth/access_token}")
+	@Value("${netease.accessTokenUrl:http://api.t.163.com/oauth/access_token}")
 	private String accessTokenUrl;
 
-	@Value("${sina.logo:http://i1.sinaimg.cn/home/deco/2009/0330/logo_home.gif}")
+	@Value("${netease.logo:http://img3.cache.netease.com/t/img10/index/logo.png}")
 	private String logo;
 
-	@Value("${sina.profileUrl:http://api.t.sina.com.cn/account/verify_credentials.json}")
+	@Value("${netease.profileUrl:http://api.t.163.com/account/verify_credentials.json}")
 	private String profileUrl;
 
 	@Override
@@ -53,7 +53,7 @@ public class Sina extends OAuth10aProvider {
 	protected Profile getProfileFromContent(String content) throws Exception {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
-		String uid = String.valueOf(data.get("id").getLongValue());
+		String uid = data.get("id").getTextValue();
 		String name = data.get("name").getTextValue();
 		String displayName = data.get("screen_name").getTextValue();
 		Profile p = new Profile();
@@ -64,4 +64,5 @@ public class Sina extends OAuth10aProvider {
 		p.setPicture(data.get("profile_image_url").getTextValue());
 		return p;
 	}
+
 }

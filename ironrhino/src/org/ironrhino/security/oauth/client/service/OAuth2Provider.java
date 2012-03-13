@@ -16,10 +16,10 @@ import org.ironrhino.security.oauth.client.model.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class OAuth20Provider extends AbstractOAuthProvider {
+public abstract class OAuth2Provider extends AbstractOAuthProvider {
 
 	protected static Logger logger = LoggerFactory
-			.getLogger(OAuth20Provider.class);
+			.getLogger(OAuth2Provider.class);
 
 	public abstract String getAuthorizeUrl();
 
