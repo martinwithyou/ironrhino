@@ -55,6 +55,8 @@ public class Oauth2Action extends BaseAction {
 
 	private Map<String, Object> tojson;
 	private boolean displayForNative;
+	private boolean granted;
+	private boolean denied;
 
 	public String getUsername() {
 		return username;
@@ -152,8 +154,12 @@ public class Oauth2Action extends BaseAction {
 		return displayForNative;
 	}
 
-	public void setDisplayForNative(boolean displayForNative) {
-		this.displayForNative = displayForNative;
+	public boolean isGranted() {
+		return granted;
+	}
+
+	public boolean isDenied() {
+		return denied;
 	}
 
 	public String execute() {
@@ -168,6 +174,7 @@ public class Oauth2Action extends BaseAction {
 			authorization = oauthManager.generate(client, redirect_uri, scope,
 					response_type);
 			client = authorization.getClient();
+			displayForNative = client.isNative();
 			setUid(authorization.getId());
 		} catch (Exception e) {
 			try {
@@ -222,30 +229,31 @@ public class Oauth2Action extends BaseAction {
 		}
 		try {
 			authorization = oauthManager.grant(getUid(), grantor);
-			if (authorization.getClient().isNative()) {
-				addActionMessage("please copy this code: "
-						+ authorization.getCode());
-				displayForNative = true;
+			displayForNative = authorization.getClient().isNative();
+			granted = true;
+			if (displayForNative) {
 				return INPUT;
-			}
-			StringBuilder sb = new StringBuilder(redirect_uri);
-			if (authorization.isClientSide()) {
-				sb.append("#");
-				sb.append("access_token=").append(
-						authorization.getAccessToken());
-				sb.append("&expires_in=").append(authorization.getExpiresIn());
 			} else {
-				sb.append(sb.indexOf("?") > 0 ? "&" : "?").append("code=")
-						.append(authorization.getCode());
-			}
-			if (StringUtils.isNotBlank(state))
-				try {
-					sb.append("&state=").append(
-							URLEncoder.encode(state, "UTF-8"));
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
+				StringBuilder sb = new StringBuilder(redirect_uri);
+				if (authorization.isClientSide()) {
+					sb.append("#");
+					sb.append("access_token=").append(
+							authorization.getAccessToken());
+					sb.append("&expires_in=").append(
+							authorization.getExpiresIn());
+				} else {
+					sb.append(sb.indexOf("?") > 0 ? "&" : "?").append("code=")
+							.append(authorization.getCode());
 				}
-			targetUrl = sb.toString();
+				if (StringUtils.isNotBlank(state))
+					try {
+						sb.append("&state=").append(
+								URLEncoder.encode(state, "UTF-8"));
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				targetUrl = sb.toString();
+			}
 		} catch (Exception e) {
 			try {
 				ServletActionContext.getResponse().sendError(
@@ -260,8 +268,8 @@ public class Oauth2Action extends BaseAction {
 
 	public String deny() {
 		oauthManager.deny(getUid());
+		denied = true;
 		if (Client.OAUTH_OOB.equals(redirect_uri)) {
-			addActionMessage("you denied this access request");
 			displayForNative = true;
 			return INPUT;
 		}

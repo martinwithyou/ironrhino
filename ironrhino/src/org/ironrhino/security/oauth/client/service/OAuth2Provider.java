@@ -42,7 +42,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 	public boolean isEnabled() {
 		return super.isEnabled() && StringUtils.isNotBlank(getClientId());
 	}
-	
+
 	protected String getAuthorizationHeaderType() {
 		return "Bearer";
 	}
@@ -109,7 +109,8 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 				}
 			}
 		} else {
-			if (StringUtils.isNotBlank(request.getParameter("error")))
+			String error = request.getParameter("error");
+			if (StringUtils.isNotBlank(error))
 				return null;
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("code", request.getParameter("code"));

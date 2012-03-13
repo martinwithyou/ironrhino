@@ -78,8 +78,10 @@ public class OauthAction extends BaseAction {
 			if (provider == null)
 				return ACCESSDENIED;
 			Profile p = provider.getProfile(request);
-			if (p == null)
-				return ACCESSDENIED;
+			if (p == null){
+				targetUrl = "/oauth";
+				return REDIRECT;
+			}
 			String id = p.getUid();
 			User user = null;
 			try {
