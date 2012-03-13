@@ -2,6 +2,7 @@ package org.ironrhino.security.oauth.server.model;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
@@ -117,7 +118,8 @@ public class Client extends BaseEntity {
 	}
 
 	public boolean supportsRedirectUri(String redirectUri) {
-		return this.redirectUri == null || this.redirectUri.equals(redirectUri);
+		return StringUtils.isBlank(this.redirectUri)
+				|| this.redirectUri.equals(redirectUri);
 	}
 
 	@UiConfig(hide = true)
