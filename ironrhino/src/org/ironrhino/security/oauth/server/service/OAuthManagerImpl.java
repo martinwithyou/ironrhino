@@ -54,6 +54,7 @@ public class OAuthManagerImpl implements OAuthManager {
 
 	public Authorization reuse(Authorization auth) {
 		auth.setCode(CodecUtils.nextId());
+		auth.setModifyDate(new Date());
 		baseManager.save(auth);
 		return auth;
 	}
@@ -111,12 +112,8 @@ public class OAuthManagerImpl implements OAuthManager {
 				baseManager.delete(auth);
 				return null;
 			}
-			if (auth.getExpiresIn() > 0) {
-				long offset = System.currentTimeMillis()
-						- auth.getModifyDate().getTime();
-				if (offset/1000 > auth.getExpiresIn())
-					return null;
-			}
+			if (auth.getLifetime() < 0)
+				return null;
 		}
 		return auth;
 	}

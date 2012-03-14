@@ -73,6 +73,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 
 	public Authorization reuse(Authorization auth) {
 		auth.setCode(CodecUtils.nextId());
+		auth.setModifyDate(new Date());
 		authorizationRedisTemplate.opsForValue().set(
 				NAMESPACE_AUTHORIZATION + auth.getId(), auth, expireTime,
 				TimeUnit.SECONDS);
@@ -149,14 +150,9 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		String key = NAMESPACE_AUTHORIZATION + accessToken;
 		Authorization auth = authorizationRedisTemplate.opsForValue().get(key);
 		authorizationRedisTemplate.expire(key, expireTime, TimeUnit.SECONDS);
-		if (auth != null) {
-			if (auth.getExpiresIn() > 0) {
-				long offset = System.currentTimeMillis()
-						- auth.getModifyDate().getTime();
-				if (offset/1000 > auth.getExpiresIn())
-					return null;
-			}
-		}
+		if (auth != null)
+			if (auth.getLifetime() < 0)
+				return null;
 		return auth;
 	}
 

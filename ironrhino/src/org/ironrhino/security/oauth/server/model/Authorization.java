@@ -107,6 +107,12 @@ public class Authorization extends BaseEntity {
 		this.expiresIn = expiresIn;
 	}
 
+	public int getLifetime() {
+		return expiresIn > 0 ? expiresIn
+				- (int) (System.currentTimeMillis() - modifyDate.getTime() / 1000)
+				: Integer.MAX_VALUE;
+	}
+
 	public String getRefreshToken() {
 		return refreshToken;
 	}

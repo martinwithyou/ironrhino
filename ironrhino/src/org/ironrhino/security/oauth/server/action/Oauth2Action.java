@@ -53,6 +53,7 @@ public class Oauth2Action extends BaseAction {
 	private String response_type;
 	private String grant_type;
 	private String state;
+	private String access_token;
 	private String approval_prompt;
 	private Authorization authorization;
 	private Client client;
@@ -96,6 +97,14 @@ public class Oauth2Action extends BaseAction {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public String getAccess_token() {
+		return access_token;
+	}
+
+	public void setAccess_token(String access_token) {
+		this.access_token = access_token;
 	}
 
 	public String getCode() {
@@ -346,6 +355,21 @@ public class Oauth2Action extends BaseAction {
 				e1.printStackTrace();
 			}
 			return NONE;
+		}
+		return JSON;
+	}
+
+	@JsonConfig(root = "tojson")
+	public String tokeninfo() {
+		tojson = new HashMap<String, Object>();
+		authorization = oauthManager.retrieve(access_token);
+		if (authorization == null) {
+			tojson.put("error", "invalid_token");
+		} else {
+			tojson.put("client_id", authorization.getClient().getId());
+			tojson.put("username", authorization.getGrantor().getUsername());
+			tojson.put("expires_in", authorization.getLifetime());
+			tojson.put("scope", authorization.getScope());
 		}
 		return JSON;
 	}

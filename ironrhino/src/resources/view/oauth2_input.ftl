@@ -2,7 +2,7 @@
 <#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
 <head>
 <title><#if displayForNative && granted>Success code=${authorization.code}<#elseif displayForNative && denied>denied<#else>${action.getText('grant')}</#if></title>
-<#if displayForNative><meta name="decorator" content="none"/></#if>
+<meta name="decorator" content="none"/>
 </head>
 <body>
 	<#if displayForNative && granted>
@@ -26,8 +26,12 @@
 			<@captcha/>
 			</@authorize>
 			<div class="field">
-			<@s.submit value="%{getText('grant')}" theme="simple"/>
-			<@s.submit value="%{getText('deny')}" theme="simple" onclick="document.getElementById('grant_form').action='deny';"/>
+			<#if Parameters.login??>
+				<@s.submit value="%{getText('login')}" theme="simple"/>
+			<#else>
+				<@s.submit value="%{getText('grant')}" theme="simple"/>
+				<@s.submit value="%{getText('deny')}" theme="simple" onclick="document.getElementById('grant_form').action='deny';"/>
+			</#if>
 			</div>
 		</@s.form>
 	</#if>

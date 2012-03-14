@@ -109,13 +109,13 @@ public class OAuthHandler implements AccessHandler {
 							true);
 					return false;
 				} else {
-					errorMessage = "Unauthorized Scope";
+					errorMessage = "unauthorized_scope";
 				}
 			} else {
-				errorMessage = "token is invalid or expired";
+				errorMessage = "invalid_token";
 			}
 		} else {
-			errorMessage = "missing oauth_token parameter or Authorization header";
+			errorMessage = "missing_token";
 		}
 		try {
 			if (errorMessage != null)
