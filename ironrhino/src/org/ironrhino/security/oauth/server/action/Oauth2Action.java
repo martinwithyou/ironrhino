@@ -374,4 +374,10 @@ public class Oauth2Action extends BaseAction {
 		return JSON;
 	}
 
+	@JsonConfig(root = "tojson")
+	public String revoketoken() {
+		oauthManager.revoke(access_token);
+		return NONE;
+	}
+
 }
