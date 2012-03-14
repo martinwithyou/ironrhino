@@ -213,6 +213,7 @@ public class UserAction extends BaseAction {
 		} else {
 			User temp = user;
 			user = userManager.get(temp.getId());
+			userManager.evict(user);
 			if (StringUtils.isNotBlank(temp.getEmail())
 					&& !temp.getEmail().equals(user.getEmail())
 					&& userManager.findByNaturalId("email", temp.getEmail()) != null) {
@@ -276,6 +277,8 @@ public class UserAction extends BaseAction {
 	@InputConfig(methodName = "inputprofile")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "validation.required") }, emails = { @EmailValidator(fieldName = "user.email", key = "validation.invalid") })
 	public String profile() {
+		if (!makeEntityValid())
+			return INPUT;
 		User userInSession = AuthzUtils.getUserDetails(User.class);
 		if (userInSession == null || user == null) {
 			return "profile";

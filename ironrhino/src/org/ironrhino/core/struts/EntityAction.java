@@ -362,6 +362,7 @@ public class EntityAction extends BaseAction {
 				}
 				persisted = entityManager
 						.findByNaturalId(caseInsensitive, args);
+				entityManager.evict(persisted);
 				if (persisted != null
 						&& !persisted.getId().equals(entity.getId())) {
 					it = naturalIds.keySet().iterator();
@@ -382,6 +383,7 @@ public class EntityAction extends BaseAction {
 						persisted = entityManager.findByNaturalId(entry
 								.getKey(), (Serializable) bw
 								.getPropertyValue(entry.getKey()));
+						entityManager.evict(persisted);
 						if (persisted != null
 								&& !persisted.getId().equals(entity.getId())) {
 							addFieldError(

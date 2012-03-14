@@ -143,6 +143,11 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		return (T) sessionFactory.getCurrentSession().get(getEntityClass(), id);
 	}
 
+	public void evict(T obj) {
+		if (obj != null)
+			sessionFactory.getCurrentSession().evict(obj);
+	}
+
 	public DetachedCriteria detachedCriteria() {
 		return DetachedCriteria.forClass(getEntityClass());
 	}

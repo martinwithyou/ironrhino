@@ -5,8 +5,9 @@
 </head>
 <body>
 <@s.form action="profile" method="post" cssClass="ajax">
+	<@s.hidden name="user.id"/>
 	<@s.textfield label="%{getText('name')}" name="user.name" cssClass="required"/>
-	<@s.textfield label="%{getText('email')}" name="user.email" cssClass="email"/>
+	<@s.textfield label="%{getText('email')}" name="user.email" cssClass="email checkavailable"/>
 	<@s.textfield label="%{getText('phone')}" name="user.phone"/>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
