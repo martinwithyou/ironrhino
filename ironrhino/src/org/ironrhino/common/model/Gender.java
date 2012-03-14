@@ -3,7 +3,7 @@ package org.ironrhino.common.model;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
-public enum Sex {
+public enum Gender {
 
 	MALE, FEMALE;
 
@@ -20,9 +20,9 @@ public enum Sex {
 		}
 	}
 
-	public static Sex parse(String name) {
+	public static Gender parse(String name) {
 		if (name != null)
-			for (Sex en : values())
+			for (Gender en : values())
 				if (name.equals(en.name()) || name.equals(en.getDisplayName()))
 					return en;
 		return null;
