@@ -121,8 +121,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 			accessToken = Utils.extractToken(responseBody);
 			saveToken(request, accessToken, "access");
 		}
-		String content = invoke(accessToken,
-				"http://api.douban.com/people/%40me");
+		String content = invoke(accessToken, getProfileUrl());
 		return getProfileFromContent(content);
 	}
 
