@@ -12,7 +12,7 @@
 		<@s.hidden name="setting.key"/>
 		<@s.textarea label="%{getText('description')}" name="setting.description" cols="50" rows="1" tabindex="-1" readonly=true cssStyle="border:none;resize:none;outline:none;"/>
 	<#else>
-		<@s.textfield label="%{getText('key')}" name="setting.key" cssClass="required checkavailable"/>
+		<@s.textfield label="%{getText('key')}" name="setting.key" cssClass="required checkavailable" size="50"/>
 	</#if>
 	<@s.textarea label="%{getText('value')}" name="setting.value" cols="50" rows="5" />
 	<#if !Parameters.brief??>

@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.OAuth2Token;
@@ -43,8 +44,16 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		return super.isEnabled() && StringUtils.isNotBlank(getClientId());
 	}
 
+	protected String getAuthorizationHeaderName() {
+		return "Authorization";
+	}
+
 	protected String getAuthorizationHeaderType() {
 		return "Bearer";
+	}
+
+	protected String getAccessTokenParameterName() {
+		return "oauth_token";
 	}
 
 	@PostConstruct
@@ -121,7 +130,16 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 			String content = HttpClientUtils.postResponseText(
 					getAccessTokenEndpoint(), params);
 			if (JsonUtils.isValidJson(content)) {
-				accessToken = JsonUtils.fromJson(content, OAuth2Token.class);
+				Map<String, String> map = JsonUtils.fromJson(content,
+						new TypeReference<Map<String, String>>() {
+						});
+				accessToken = new OAuth2Token();
+				accessToken.setAccess_token(map.get("access_token"));
+				accessToken.setToken_type(map.get("token_type"));
+				accessToken.setRefresh_token(map.get("refresh_token"));
+				if (map.get("expires_in") != null)
+					accessToken.setExpires_in(Integer.valueOf(map
+							.get("expires_in")));
 			} else {
 				accessToken = new OAuth2Token();
 				String[] arr1 = content.split("&");
@@ -166,10 +184,10 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 			throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
 		if (!isUseAuthorizationHeader())
-			map.put("oauth_token", accessToken);
+			map.put(getAccessTokenParameterName(), accessToken);
 		else
-			map.put("Authorization", getAuthorizationHeaderType() + " "
-					+ accessToken);
+			map.put(getAuthorizationHeaderName(), getAuthorizationHeaderType()
+					+ " " + accessToken);
 		return invoke(protectedURL, isUseAuthorizationHeader() ? null : map,
 				isUseAuthorizationHeader() ? map : null);
 	}
