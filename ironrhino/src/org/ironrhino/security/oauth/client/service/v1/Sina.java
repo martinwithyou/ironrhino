@@ -22,7 +22,7 @@ public class Sina extends OAuth1Provider {
 	@Value("${sina.accessTokenUrl:http://api.t.sina.com.cn/oauth/access_token}")
 	private String accessTokenUrl;
 
-	@Value("${sina.logo:http://i1.sinaimg.cn/home/deco/2009/0330/logo_home.gif}")
+	@Value("${sina.logo:http://timg.sjs.sinajs.cn/t35/appstyle/opent/images/app/logo_zx.png}")
 	private String logo;
 
 	@Value("${sina.profileUrl:http://api.t.sina.com.cn/account/verify_credentials.json}")

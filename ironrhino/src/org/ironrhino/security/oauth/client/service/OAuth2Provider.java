@@ -136,7 +136,13 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 			saveToken(request, accessToken);
 		}
 		String content = invoke(accessToken.getAccess_token(), getProfileUrl());
-		return getProfileFromContent(content);
+		Profile p = getProfileFromContent(content);
+		postProcessProfile(p, accessToken.getAccess_token());
+		return p;
+	}
+
+	protected void postProcessProfile(Profile p, String accessToken)
+			throws Exception {
 	}
 
 	public String invoke(HttpServletRequest request, String protectedURL)

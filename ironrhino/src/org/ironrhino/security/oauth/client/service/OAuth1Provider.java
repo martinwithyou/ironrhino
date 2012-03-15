@@ -122,7 +122,13 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 			saveToken(request, accessToken, "access");
 		}
 		String content = invoke(accessToken, getProfileUrl());
-		return getProfileFromContent(content);
+		Profile p = getProfileFromContent(content);
+		postProcessProfile(p, accessToken);
+		return p;
+	}
+
+	protected void postProcessProfile(Profile p, OAuth1Token accessToken)
+			throws Exception {
 	}
 
 	public String invoke(HttpServletRequest request, String protectedURL)
