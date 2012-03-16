@@ -50,9 +50,16 @@ public class AppInfo {
 		String name = "unknown";
 		String address = "";
 		try {
-			InetAddress localhost = InetAddress.getLocalHost();
-			name = localhost.getHostName();
-			address = localhost.getHostAddress();
+			InetAddress[] addresses = InetAddress.getAllByName(InetAddress
+					.getLocalHost().getHostName());
+			for (InetAddress addr : addresses) {
+				String ip = addr.getHostAddress();
+				if (ip.split("\\.").length != 4 || ip.startsWith("169.254."))
+					continue;
+				name = addr.getHostName();
+				address = ip;
+				break;
+			}
 		} catch (UnknownHostException e) {
 		}
 		HOSTNAME = name;
