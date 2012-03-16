@@ -20,15 +20,21 @@
 			<#if scope??><@s.hidden name="scope" /></#if>
 			<#if response_type??><@s.hidden name="response_type" /></#if>
 			<#if state??><@s.hidden name="state" /></#if>
+			<#if Parameters.login??>
+				<input type="hidden" name="login" value="${Parameters.login!}"/>
+				<@s.textfield label="%{getText('username')}" name="username"/>
+				<@s.password label="%{getText('password')}" name="password"/>
+				<@captcha/>
+			<#else>
 			<@authorize ifNotGranted="ROLE_BUILTIN_USER">
 				<@s.textfield label="%{getText('username')}" name="username"/>
 				<@s.password label="%{getText('password')}" name="password"/>
-			<@captcha/>
+				<@captcha/>
 			</@authorize>
 			<@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 				<div>login as ${authentication('principal.username')},or <a href="<@url value="${ssoServerBase!}/logout?referer=1"/>">${action.getText('logout')}</a></div>
-			<@captcha/>
 			</@authorize>
+			</#if>
 			<div class="field">
 			<#if Parameters.login??>
 				<@s.submit value="%{getText('login')}" theme="simple"/>

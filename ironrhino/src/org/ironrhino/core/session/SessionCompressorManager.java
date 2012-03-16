@@ -59,9 +59,7 @@ public class SessionCompressorManager {
 				if (s != null)
 					compressedMap.put(key, s);
 			} catch (Exception e) {
-				log
-						.error("compress error for " + key
-								+ ",it won't be saved", e);
+				log.error("compress error for " + key + ",it won't be saved", e);
 			}
 		}
 		return compressedMap.isEmpty() ? null : JsonUtils.toJson(compressedMap);
@@ -76,6 +74,8 @@ public class SessionCompressorManager {
 				compressedMap = JsonUtils.fromJson(str, mapStringStringType);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
+				session.invalidate();
+				return;
 			}
 			if (compressedMap != null)
 				for (Map.Entry<String, String> entry : compressedMap.entrySet()) {

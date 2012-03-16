@@ -32,7 +32,7 @@ public class OAuthHandler implements AccessHandler {
 
 	public static final String REQUEST_ATTRIBUTE_KEY_OAUTH_REQUEST = "_OAUTH_REQUEST";
 
-	@Value("${api.pattern:/user/self}")
+	@Value("${api.pattern:/user/self,/oauth2/tokeninfo,/oauth2/revoketoken}")
 	private String apiPattern;
 
 	@Inject

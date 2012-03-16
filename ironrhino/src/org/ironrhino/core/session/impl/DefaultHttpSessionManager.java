@@ -111,8 +111,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		Map<String, Object> sessionMap = (Map<String, Object>) session
 				.getRequest().getAttribute(REQUEST_ATTRIBUTE_KEY_SESSION_MAP);
 		if (sessionMap != null) {
-			session.getRequest().removeAttribute(
-					REQUEST_ATTRIBUTE_KEY_SESSION_MAP);
 			session.setAttrMap(sessionMap);
 			return;
 		}
@@ -166,6 +164,13 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	}
 
 	public void save(WrappedHttpSession session) {
+		// simulated session
+		if (session.getRequest()
+				.getAttribute(REQUEST_ATTRIBUTE_KEY_SESSION_MAP) != null) {
+			session.getRequest().removeAttribute(
+					REQUEST_ATTRIBUTE_KEY_SESSION_MAP);
+			return;
+		}
 		boolean sessionTrackerChanged = false;
 		if (session.isInvalid()) {
 			sessionTrackerChanged = true;
