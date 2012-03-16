@@ -265,7 +265,7 @@
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
 				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
-				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-common-setting,ironrhino-security" />
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${security-oauth-server-jar.name}"

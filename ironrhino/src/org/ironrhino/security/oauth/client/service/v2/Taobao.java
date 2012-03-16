@@ -35,7 +35,7 @@ public class Taobao extends OAuth2Provider {
 	@Value("${taobao.scope:}")
 	private String scope;
 
-	@Value("${taobao.profileUrl:http://gw.api.taobao.com/router/rest?format=json&v=2.0&method=taobao.user.get&fields=user_id,nick,sex}")
+	@Value("${taobao.profileUrl:http://gw.api.taobao.com/router/rest?method=taobao.user.get&fields=user_id,nick,sex}")
 	private String profileUrl;
 
 	@Override
@@ -100,6 +100,8 @@ public class Taobao extends OAuth2Provider {
 			Map<String, String> headers) {
 		if (params == null)
 			params = new HashMap<String, String>();
+		params.put("format", "json");
+		params.put("v", "2.0");
 		params.put("sign_method", "md5");
 		params.put("sign", sign(protectedURL, params));
 		return super.invoke(protectedURL, params, headers);
