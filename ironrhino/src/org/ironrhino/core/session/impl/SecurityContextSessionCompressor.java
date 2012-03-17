@@ -1,5 +1,7 @@
 package org.ironrhino.core.session.impl;
 
+import java.security.cert.X509Certificate;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -32,6 +34,8 @@ public class SecurityContextSessionCompressor implements
 	public String compress(SecurityContext sc) {
 		if (sc != null) {
 			Authentication auth = sc.getAuthentication();
+			if(auth.getCredentials() instanceof X509Certificate)
+				return null;
 			if (auth != null && auth.isAuthenticated()) {
 				UserDetails ud = (UserDetails) auth.getPrincipal();
 				return new StringBuilder(CodecUtils.md5Hex(ud.getPassword()))

@@ -47,8 +47,8 @@ public class AppInfo {
 		else
 			STAGE = Stage.PRODUCTION;
 
-		String name = "unknown";
-		String address = "";
+		String name = null;
+		String address = "127.0.0.1";
 		try {
 			InetAddress[] addresses = InetAddress.getAllByName(InetAddress
 					.getLocalHost().getHostName());
@@ -60,7 +60,12 @@ public class AppInfo {
 				address = ip;
 				break;
 			}
+			if (name == null) {
+				InetAddress addr = InetAddress.getLocalHost();
+				name = addr.getHostName();
+			}
 		} catch (UnknownHostException e) {
+			name = "unknown";
 		}
 		HOSTNAME = name;
 		HOSTADDRESS = address;

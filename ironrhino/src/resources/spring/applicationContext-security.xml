@@ -7,6 +7,7 @@
 	<security:http pattern="/assets/**" security="none" />
 	<security:http access-denied-page="/WEB-INF/view/jsp/error/403.jsp"
 		entry-point-ref="entryPoint" access-decision-manager-ref="accessDecisionManager">
+		<security:x509 subject-principal-regex="CN=(.*?)," user-service-ref="userManager"/>
 		<security:intercept-url pattern="/common/**"
 			access="ROLE_ADMINISTRATOR" />
 		<security:intercept-url pattern="/remoting/**"
