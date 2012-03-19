@@ -21,6 +21,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.BaseTreeableEntity;
+import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.ResultPage;
@@ -263,8 +264,12 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		Criteria c = sessionFactory.getCurrentSession().createCriteria(
 				getEntityClass());
 		c.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		for (Order order : orders)
-			c.addOrder(order);
+		if (orders.length == 0) {
+			if (Ordered.class.isAssignableFrom(getEntityClass()))
+				c.addOrder(Order.asc("displayOrder"));
+		} else
+			for (Order order : orders)
+				c.addOrder(order);
 		return c.list();
 	}
 

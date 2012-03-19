@@ -29114,16 +29114,16 @@ Observation.sortableTable = function(container) {
 									removeRow(event, options);
 								}
 							});
-					$('.add', this).click(function(event) {
+					$('tbody tr .add', this).click(function(event) {
 								addRow(event, options)
 							});
-					$('.remove', this).click(function(event) {
+					$('tbody tr .remove', this).click(function(event) {
 								removeRow(event, options)
 							});
-					$('.moveup', this).click(function(event) {
+					$('tbody tr .moveup', this).click(function(event) {
 								moveupRow(event, options)
 							});
-					$('.movedown', this).click(function(event) {
+					$('tbody tr .movedown', this).click(function(event) {
 								movedownRow(event, options)
 							});
 				})
