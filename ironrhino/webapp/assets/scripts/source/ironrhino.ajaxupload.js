@@ -13,7 +13,7 @@
 		if (!options.progress) {
 			progress = $('#_uploadprogress');
 			if (!progress.length)
-				progress = $('<meter id="_uploadprogress" style="position: fixed;z-index: 10001;left: 45%;top: 0px;width: 100px;" min="0" max="100" value="0">0</meter>')
+				progress = $('<progress id="_uploadprogress" style="position: fixed;z-index: 10001;left: 45%;top: 0px;width: 100px;" min="0" max="100" value="0">0</progress>')
 						.appendTo(document.body);
 		} else {
 			progress = $(options.progress);

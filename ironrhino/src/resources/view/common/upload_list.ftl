@@ -127,7 +127,7 @@ td.center {text-align:center;}
 	<span style="margin-left:10px;margin-right:10px;">${action.getText('autorename')}:</span><@s.checkbox theme="simple" name="autorename"/>
 	</div>
 	</div>
-<table id="files" style="margin-top:50px;width:100%;">
+<table id="files" class="checkboxgroup" style="margin-top:50px;width:100%;">
 	<caption style="font-size:120%;font-weight:bold;"><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder" style="margin-left:10px;">${folder}<#if !folder?ends_with('/')>/</#if></span></caption>
 	<thead>
 	<tr style="font-weight:bold;">
