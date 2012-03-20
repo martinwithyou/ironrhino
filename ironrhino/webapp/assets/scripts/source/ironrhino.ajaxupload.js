@@ -1,6 +1,4 @@
 (function($) {
-	if (!window.BlobBuilder && window.WebKitBlobBuilder)
-		window.BlobBuilder = window.WebKitBlobBuilder;
 	$.ajaxupload = function(files, options) {
 		if (!files)
 			return false;
@@ -11,11 +9,17 @@
 		options = options || {};
 		$.extend(_options, options);
 		options = _options;
+		var progress;
+		if (!options.progress) {
+			progress = $('#_uploadprogress');
+			if (!progress.length)
+				progress = $('<meter id="_uploadprogress" style="position: fixed;z-index: 10001;left: 45%;top: 0px;width: 100px;" min="0" max="100" value="0">0</meter>')
+						.appendTo(document.body);
+		} else {
+			progress = $(options.progress);
+		}
 		var xhr = new XMLHttpRequest();
-		var boundary = 'xxxxxxxxx';
-		xhr.open('POST', options.url, true);
-		xhr.setRequestHeader('Content-Type', 'multipart/form-data, boundary='
-						+ boundary);
+		xhr.open('POST', options.url);
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4) {
 				if ((xhr.status >= 200 && xhr.status <= 200)
@@ -27,57 +31,82 @@
 				}
 			}
 		}
-		if (typeof FileReader != 'undefined'
-				&& typeof BlobBuilder != 'undefined') {
-			for (var i = 0; i < files.length; i++) {
-				var f = files[i];
-				var reader = new FileReader();
-				reader.sourceFile = f;
-				var completed = 0;
-				var boundary = 'xxxxxxxxx';
-				var body = new BlobBuilder();
-				reader.onload = function(evt) {
-					var f = evt.target.sourceFile;
-					var bb = new BlobBuilder();
-					bb.append('--');
-					bb.append(boundary);
-					bb.append('\r\n');
-					bb.append('Content-Disposition: form-data; name=');
-					bb.append(options.name);
-					bb.append('; filename=');
-					bb.append(f.name);
-					bb.append('\r\n');
-					bb.append('Content-Type: ');
-					bb.append(f.type);
-					bb.append('\r\n\r\n');
-					bb.append(evt.target.result);
-					bb.append('\r\n');
-					body.append(bb.getBlob());
-					completed++;
-					if (completed == files.length) {
-						body.append('--');
-						body.append(boundary);
-						body.append('--');
-						if (typeof options['beforeSend'] != 'undefined')
-							options['beforeSend']();
-						xhr.send(body.getBlob());
+		if (progress && progress.length) {
+			xhr.onload = function() {
+				progress.val(100).html(100).hide();
+			};
+			if ("upload" in xhr) {
+				xhr.upload.onprogress = function(event) {
+					if (event.lengthComputable) {
+						var complete = (event.loaded / event.total * 100 | 0);
+						progress.val(complete).html(complete).show();
 					}
-				};
-				reader.readAsArrayBuffer(f);
+				}
 			}
-			return true;
 		}
-		body = compose(files, options.name, boundary);
-		if (body) {
-			if (typeof options['beforeSend'] != 'undefined')
-				options['beforeSend']();
-			if (xhr.sendAsBinary)
-				xhr.sendAsBinary(body);
-			else
-				xhr.send(body);
-				return true;
+		if (!!window.FormData) {
+			var formData = new FormData();
+			for (var i = 0; i < files.length; i++)
+				formData.append(options.name, files[i]);
+			xhr.send(formData);
 		} else {
-			xhr.abort();
+			var boundary = 'xxxxxxxxx';
+			xhr.setRequestHeader('Content-Type',
+					'multipart/form-data, boundary=' + boundary);
+			if (!window.BlobBuilder && window.WebKitBlobBuilder)
+				window.BlobBuilder = window.WebKitBlobBuilder;
+			if (typeof FileReader != 'undefined'
+					&& typeof BlobBuilder != 'undefined') {
+				for (var i = 0; i < files.length; i++) {
+					var f = files[i];
+					var reader = new FileReader();
+					reader.sourceFile = f;
+					var completed = 0;
+					var boundary = 'xxxxxxxxx';
+					var body = new BlobBuilder();
+					reader.onload = function(evt) {
+						var f = evt.target.sourceFile;
+						var bb = new BlobBuilder();
+						bb.append('--');
+						bb.append(boundary);
+						bb.append('\r\n');
+						bb.append('Content-Disposition: form-data; name=');
+						bb.append(options.name);
+						bb.append('; filename=');
+						bb.append(f.name);
+						bb.append('\r\n');
+						bb.append('Content-Type: ');
+						bb.append(f.type);
+						bb.append('\r\n\r\n');
+						bb.append(evt.target.result);
+						bb.append('\r\n');
+						body.append(bb.getBlob());
+						completed++;
+						if (completed == files.length) {
+							body.append('--');
+							body.append(boundary);
+							body.append('--');
+							if (typeof options['beforeSend'] != 'undefined')
+								options['beforeSend']();
+							xhr.send(body.getBlob());
+						}
+					};
+					reader.readAsArrayBuffer(f);
+				}
+				return true;
+			}
+			body = compose(files, options.name, boundary);
+			if (body) {
+				if (typeof options['beforeSend'] != 'undefined')
+					options['beforeSend']();
+				if (xhr.sendAsBinary)
+					xhr.sendAsBinary(body);
+				else
+					xhr.send(body);
+				return true;
+			} else {
+				xhr.abort();
+			}
 		}
 		return false;
 	}
