@@ -47,7 +47,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ognl-3.0.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/pinyin4j-2.5.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/poi-3.7.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/rabbitmq-client-2.4.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/rabbitmq-client-2.8.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/sitemesh-2.4.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/slf4j-api-1.6.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/slf4j-log4j12-1.6.4.jar"/>
