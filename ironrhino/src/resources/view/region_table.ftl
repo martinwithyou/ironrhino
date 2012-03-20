@@ -18,7 +18,7 @@
 <title>region table</title>
 </head>
 <body>
-<table class="treeTable" width="100%">
+<table class="treeTable checkboxgroup" width="100%">
   <thead>
     <tr>
       <th width="10%"><input type="checkbox"/></th>
