@@ -193,7 +193,11 @@ Richtable = {
 			win.html('<iframe style="width:100%;height:550px;border:0;"/>');
 			url += (url.indexOf('?') > 0 ? '&' : '?') + 'decorator=simple&'
 					+ Math.random();
-			$('#_window_ > iframe')[0].src = url;
+			var iframe = $('#_window_ > iframe')[0];
+			iframe.src = url;
+			iframe.onload = function(){
+				Dialog.adapt(win,iframe);
+			}
 		}
 		if (!useiframe)
 			if (win.html() && typeof $.fn.mask != 'undefined')
