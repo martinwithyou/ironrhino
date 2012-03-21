@@ -1,9 +1,12 @@
 package org.ironrhino.common.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
@@ -39,9 +42,12 @@ public class Dictionary extends BaseEntity {
 	private String description;
 
 	@SearchableComponent
-	//@UiConfig(displayOrder = 3, cellEdit = "none", excludeIfNotEdited = true, template = "${entity.getItemsAsString()!}")
+	// @UiConfig(displayOrder = 3, cellEdit = "none", excludeIfNotEdited = true,
+	// template = "${entity.getItemsAsString()!}")
 	@UiConfig(displayOrder = 3, hideInList = true)
 	private List<LabelValue> items = new ArrayList<LabelValue>();
+
+	private Map<String, List<LabelValue>> groupedItems;
 
 	public Dictionary() {
 
@@ -68,6 +74,7 @@ public class Dictionary extends BaseEntity {
 	}
 
 	public void setItems(List<LabelValue> items) {
+		groupedItems = null;
 		this.items = items;
 	}
 
@@ -75,24 +82,58 @@ public class Dictionary extends BaseEntity {
 	public String getItemsAsString() {
 		if (items == null || items.isEmpty())
 			return null;
-		Map<String, String> map = new LinkedHashMap<String, String>();
-		for (LabelValue lv : items)
-			map.put(lv.getValue(), lv.getLabel());
-		return JsonUtils.toJson(map);
+		return JsonUtils.toJson(items);
 	}
 
 	public void setItemsAsString(String str) {
+		groupedItems = null;
 		if (StringUtils.isNotBlank(str))
 			try {
-				Map<String, String> map = JsonUtils.fromJson(str,
-						new TypeReference<Map<String, String>>() {
+				items = JsonUtils.fromJson(str,
+						new TypeReference<List<LabelValue>>() {
 						});
-				items = new ArrayList<LabelValue>(map.size());
-				for (Map.Entry<String, String> entry : map.entrySet())
-					items.add(new LabelValue(entry.getKey(), entry.getValue()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+	}
+
+	@UiConfig(hide = true)
+	@NotInCopy
+	public Map<String, List<LabelValue>> getGroupedItems() {
+		if (groupedItems == null) {
+			Set<String> groups = new LinkedHashSet<String>();
+			for (LabelValue item : items) {
+				String group = item.getGroup();
+				if (StringUtils.isBlank(group))
+					group = "";
+				else
+					group = group.trim();
+				groups.add(group);
+			}
+			groupedItems = new LinkedHashMap<String, List<LabelValue>>(
+					groups.size(), 1);
+			for (String g : groups) {
+				Iterator<LabelValue> it = items.iterator();
+				while (it.hasNext()) {
+					LabelValue item = it.next();
+					String group = item.getGroup();
+					if (StringUtils.isBlank(group))
+						group = "";
+					else
+						group = group.trim();
+					if (g.equals(group)) {
+						List<LabelValue> list = groupedItems.get(group);
+						if (list == null) {
+							list = new ArrayList<LabelValue>();
+							groupedItems.put(group, list);
+						}
+						list.add(item);
+						it.remove();
+					}
+				}
+			}
+		}
+		return groupedItems;
 	}
 
 }

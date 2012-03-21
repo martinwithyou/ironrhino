@@ -20,6 +20,7 @@
 			<tr>
 				<td>${action.getText('value')}</td>
 				<td>${action.getText('label')}</td>
+				<td>${action.getText('group')}</td>
 				<td></td>
 			</tr>
 		</thead>
@@ -32,6 +33,7 @@
 			<tr>
 				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required"/></td>
 				<td><@s.textfield theme="simple" name="dictionary.items[${index}].label" cssClass="required"/></td>
+				<td><@s.textfield theme="simple" name="dictionary.items[${index}].group"/></td>
 				<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 			</tr>
 			</#list>
