@@ -58,7 +58,9 @@ public class RequestUtils {
 			if (StringUtils.isNotBlank(addr) && (index = addr.indexOf(',')) > 0)
 				addr = addr.substring(0, index);
 		}
-		return StringUtils.isNotBlank(addr) ? addr : request.getRemoteAddr();
+		addr = StringUtils.isNotBlank(addr) ? addr : request.getRemoteAddr();
+		addr = addr != null ? addr : "";
+		return addr;
 	}
 
 	public static String trimPathParameter(String url) {
