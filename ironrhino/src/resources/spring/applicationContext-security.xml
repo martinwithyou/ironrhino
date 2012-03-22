@@ -58,7 +58,7 @@
 
 	<bean id="entryPoint"
 		class="org.ironrhino.core.spring.security.DefaultLoginUrlAuthenticationEntryPoint"
-		p:forceHttps="false">
+		p:forceHttps="${login.forceHttps:false}">
 		<constructor-arg value="/login" />
 	</bean>
 
