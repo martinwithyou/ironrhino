@@ -1,24 +1,18 @@
 package org.ironrhino.common.support;
 
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
 import org.ironrhino.common.model.Dictionary;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
-import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.BeanUtils;
 import org.slf4j.Logger;
@@ -59,55 +53,18 @@ public class DictionaryControl implements
 		return map.get(name);
 	}
 
-	public Map<String, String> getItems(String name) {
+	public Map<String, String> getItemsAsMap(String name) {
 		Dictionary dict = map.get(name);
 		if (dict == null)
 			return Collections.EMPTY_MAP;
-		List<LabelValue> items = dict.getItems();
-		Map<String, String> map = new LinkedHashMap<String, String>(
-				items.size(), 1);
-		for (LabelValue lv : items)
-			map.put(lv.getValue(), lv.getLabel());
-		return map;
+		return dict.getItemsAsMap();
 	}
 
-	public Map<String, Map<String, String>> getGroupedItems(String name) {
+	public Map<String, Map<String, String>> getItemsAsGroup(String name) {
 		Dictionary dict = map.get(name);
 		if (dict == null)
 			return Collections.EMPTY_MAP;
-		List<LabelValue> items = dict.getItems();
-		Set<String> groups = new LinkedHashSet<String>();
-		for (LabelValue item : items) {
-			String group = item.getGroup();
-			if (StringUtils.isBlank(group))
-				group = "";
-			else
-				group = group.trim();
-			groups.add(group);
-		}
-		Map<String, Map<String, String>> groupedItems = new LinkedHashMap<String, Map<String, String>>(
-				groups.size(), 1);
-		for (String g : groups) {
-			Iterator<LabelValue> it = items.iterator();
-			while (it.hasNext()) {
-				LabelValue item = it.next();
-				String group = item.getGroup();
-				if (StringUtils.isBlank(group))
-					group = "";
-				else
-					group = group.trim();
-				if (g.equals(group)) {
-					Map<String, String> map = groupedItems.get(group);
-					if (map == null) {
-						map = new LinkedHashMap<String, String>();
-						groupedItems.put(group, map);
-					}
-					map.put(item.getValue(), item.getLabel());
-					it.remove();
-				}
-			}
-		}
-		return groupedItems;
+		return dict.getItemsAsGroup();
 	}
 
 	public void onApplicationEvent(EntityOperationEvent event) {

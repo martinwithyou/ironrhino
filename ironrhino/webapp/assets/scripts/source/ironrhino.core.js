@@ -708,12 +708,19 @@ Observation.common = function(container) {
 			}, function() {
 				$(this).removeClass('highlight');
 			});
-	$(':input.linkage_switch', container).change(function() {
-				var c = $(this).closest('.linkage');
-				var type = this.value;
-				$('.linkage_component', c).show();
-				$('.linkage_component.' + type, c).hide();
-			});
+	$('.linkage', container).each(function() {
+		var c = this;
+		var sw = $('.linkage_switch', c);
+		$('.linkage_component', c).show();
+		$('.linkage_component.' + sw.val(), c).hide().filter(':input').val('');
+		sw.change(function() {
+					var c = $(this).closest('.linkage');
+					var sw = $(this);
+					$('.linkage_component', c).show();
+					$('.linkage_component.' + sw.val(), c).hide()
+							.filter(':input').val('');
+				});
+	});
 	$(':input.conjunct', container).change(function() {
 				var t = $(this);
 				var f = $(this).closest('form');

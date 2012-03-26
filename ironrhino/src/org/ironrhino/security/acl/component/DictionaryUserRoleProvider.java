@@ -19,7 +19,7 @@ public class DictionaryUserRoleProvider implements UserRoleProvider {
 	private DictionaryControl dictionaryControl;
 
 	public Map<String, String> getRoles() {
-		return dictionaryControl.getItems(DICTIONARY_NAME);
+		return dictionaryControl.getItemsAsMap(DICTIONARY_NAME);
 	}
 
 }

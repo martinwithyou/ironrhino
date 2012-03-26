@@ -1,12 +1,9 @@
 package org.ironrhino.common.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
@@ -47,8 +44,6 @@ public class Dictionary extends BaseEntity {
 	@UiConfig(displayOrder = 3, hideInList = true)
 	private List<LabelValue> items = new ArrayList<LabelValue>();
 
-	private Map<String, List<LabelValue>> groupedItems;
-
 	public Dictionary() {
 
 	}
@@ -74,7 +69,6 @@ public class Dictionary extends BaseEntity {
 	}
 
 	public void setItems(List<LabelValue> items) {
-		groupedItems = null;
 		this.items = items;
 	}
 
@@ -86,7 +80,6 @@ public class Dictionary extends BaseEntity {
 	}
 
 	public void setItemsAsString(String str) {
-		groupedItems = null;
 		if (StringUtils.isNotBlank(str))
 			try {
 				items = JsonUtils.fromJson(str,
@@ -99,41 +92,55 @@ public class Dictionary extends BaseEntity {
 
 	@UiConfig(hide = true)
 	@NotInCopy
-	public Map<String, List<LabelValue>> getGroupedItems() {
-		if (groupedItems == null) {
-			Set<String> groups = new LinkedHashSet<String>();
-			for (LabelValue item : items) {
-				String group = item.getGroup();
-				if (StringUtils.isBlank(group))
+	public Map<String, String> getItemsAsMap() {
+		Map<String, String> map = new LinkedHashMap<String, String>(
+				items.size(), 1);
+		for (LabelValue lv : items)
+			if (StringUtils.isNotBlank(lv.getLabel())
+					&& StringUtils.isNotBlank(lv.getValue()))
+				map.put(lv.getValue(), lv.getLabel());
+		return map;
+	}
+
+	@UiConfig(hide = true)
+	@NotInCopy
+	public Map<String, Map<String, String>> getItemsAsGroup() {
+		Map<String, Map<String, String>> map = new LinkedHashMap<String, Map<String, String>>(
+				items.size(), 1);
+		String group = "";
+		for (LabelValue lv : items) {
+			if (StringUtils.isBlank(lv.getValue())) {
+				String label = lv.getLabel();
+				if ((StringUtils.isBlank(label) || label.equals(group) || label
+						.endsWith("/" + group))
+						&& StringUtils.isNotBlank(group)) {
 					group = "";
-				else
-					group = group.trim();
-				groups.add(group);
-			}
-			groupedItems = new LinkedHashMap<String, List<LabelValue>>(
-					groups.size(), 1);
-			for (String g : groups) {
-				Iterator<LabelValue> it = items.iterator();
-				while (it.hasNext()) {
-					LabelValue item = it.next();
-					String group = item.getGroup();
-					if (StringUtils.isBlank(group))
-						group = "";
-					else
-						group = group.trim();
-					if (g.equals(group)) {
-						List<LabelValue> list = groupedItems.get(group);
-						if (list == null) {
-							list = new ArrayList<LabelValue>();
-							groupedItems.put(group, list);
-						}
-						list.add(item);
-						it.remove();
-					}
+				} else {
+					group = label;
 				}
+			} else {
+				Map<String, String> temp = map.get(group);
+				if (temp == null) {
+					temp = new LinkedHashMap<String, String>();
+					map.put(group, temp);
+				}
+				temp.put(lv.getValue(), lv.getLabel());
 			}
 		}
-		return groupedItems;
+		return map;
+	}
+
+	@UiConfig(hide = true)
+	@NotInCopy
+	public boolean isGroupable() {
+		boolean groupable = false;
+		for (LabelValue item : items) {
+			if (StringUtils.isBlank(item.getValue())) {
+				groupable = true;
+				break;
+			}
+		}
+		return groupable;
 	}
 
 }

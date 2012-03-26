@@ -17,8 +17,6 @@ public class LabelValue implements Serializable {
 	@SearchableProperty(boost = 2, index = Index.NOT_ANALYZED)
 	private String label;
 
-	private String group;
-
 	private Boolean selected;
 
 	public LabelValue() {
@@ -29,26 +27,12 @@ public class LabelValue implements Serializable {
 		this.label = label;
 	}
 
-	public LabelValue(String value, String label, String group) {
-		this.value = value;
-		this.label = label;
-		this.group = group;
-	}
-
 	public String getLabel() {
 		return label;
 	}
 
 	public void setLabel(String label) {
 		this.label = label;
-	}
-
-	public String getGroup() {
-		return group;
-	}
-
-	public void setGroup(String group) {
-		this.group = group;
 	}
 
 	public String getValue() {

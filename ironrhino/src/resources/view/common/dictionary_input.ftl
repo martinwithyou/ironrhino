@@ -18,9 +18,9 @@
 	<table border="0" class="datagrid" style="width:100%;padding-top:10px;">
 		<thead>
 			<tr>
-				<td>${action.getText('value')}</td>
 				<td>${action.getText('label')}</td>
-				<td>${action.getText('group')}</td>
+				<td>${action.getText('value')}</td>
+				<td>${action.getText('type')}</td>
 				<td></td>
 			</tr>
 		</thead>
@@ -30,10 +30,13 @@
 				<#assign size = dictionary.items?size-1>
 			</#if>
 			<#list 0..size as index>
-			<tr>
-				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required"/></td>
-				<td><@s.textfield theme="simple" name="dictionary.items[${index}].label" cssClass="required"/></td>
-				<td><@s.textfield theme="simple" name="dictionary.items[${index}].group"/></td>
+			<tr class="linkage">
+				<td><@s.textfield theme="simple" name="dictionary.items[${index}].label"/></td>
+				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required showonadd linkage_component group"/></td>
+				<td><select class="linkage_switch" style="width:80px;">
+						<option value="option">${action.getText('option')}</option>
+						<option value="group"<#if dictionary.items[index]?? && dictionary.items[index].value?? && !dictionary.items[index].value?has_content>selected="selected"</#if>>${action.getText('group')}</option>
+					</select></td>
 				<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 			</tr>
 			</#list>

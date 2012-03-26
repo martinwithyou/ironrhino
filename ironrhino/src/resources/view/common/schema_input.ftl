@@ -41,7 +41,7 @@
 			<tr style="background-color:#F5F5F5;" class="linkage">
 				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssClass="required" cssStyle="width:120px;"/></td>
 				<td>
-					<table border="0" class="datagrid showonadd linkage_component INPUT"<#if type=='INPUT'> style="display:none;"</#if>>
+					<table border="0" class="datagrid showonadd linkage_component INPUT">
 						<tbody>
 							<#assign size = 0>
 							<#if schema.fields[index]?? && schema.fields[index].values?? && schema.fields[index].values?size gt 0>
@@ -57,8 +57,8 @@
 					</table>
 				</td>
 				<td><@s.select theme="simple" name="schema.fields[${index}].type" cssClass="linkage_switch" cssStyle="width:60px;" list="@org.ironrhino.common.model.SchemaFieldType@values()" listKey="name" listValue="displayName"/></td>
-				<td><span class="showonadd linkage_component CHECKBOX"<#if type=='CHECKBOX'> style="display:none;"</#if>><@s.checkbox theme="simple" name="schema.fields[${index}].required"/></span></td>
-				<td><span class="showonadd linkage_component INPUT CHECKBOX"<#if type=='INPUT' || type=='CHECKBOX'> style="display:none;"</#if>><@s.checkbox theme="simple" name="schema.fields[${index}].strict"/></span></td>
+				<td><span class="showonadd linkage_component CHECKBOX"><@s.checkbox theme="simple" name="schema.fields[${index}].required"/></span></td>
+				<td><span class="showonadd linkage_component INPUT CHECKBOX"><@s.checkbox theme="simple" name="schema.fields[${index}].strict"/></span></td>
 				<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 			</tr>
 			</#list>
