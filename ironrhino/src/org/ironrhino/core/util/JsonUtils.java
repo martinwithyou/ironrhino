@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.text.SimpleDateFormat;
 
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -45,6 +46,9 @@ public class JsonUtils {
 
 						});
 		objectMapper.setSerializationConfig(config);
+		DeserializationConfig dconfig = objectMapper.getDeserializationConfig();
+		dconfig = dconfig.without(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper.setDeserializationConfig(dconfig);
 	}
 
 	public static ObjectMapper getObjectMapper() {
