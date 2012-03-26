@@ -22,7 +22,8 @@
 								event.stopPropagation();
 							});
 			}
-			current.css('cursor', 'pointer').click(function() {
+			var func = function() {
+
 				$('#_pick_window').remove();
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
@@ -166,7 +167,15 @@
 							replacement : '_pick_window:content',
 							quiet : true
 						});
-			});
+
+			};
+			current.css('cursor', 'pointer').click(func).keydown(
+					function(event) {
+						if (event.keyCode == 13) {
+							func();
+							return false;
+						}
+					});
 		});
 		return this;
 	};
@@ -174,5 +183,5 @@
 })(jQuery);
 
 Observation.listpick = function(container) {
-	$('.listpick', container).listpick();
+	$('.listpick', container).attr('tabindex', '0').listpick();
 };

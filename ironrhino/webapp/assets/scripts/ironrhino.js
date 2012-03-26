@@ -29839,8 +29839,8 @@ Richtable = {
 					+ Math.random();
 			var iframe = $('#_window_ > iframe')[0];
 			iframe.src = url;
-			iframe.onload = function(){
-				Dialog.adapt(win,iframe);
+			iframe.onload = function() {
+				Dialog.adapt(win, iframe);
 			}
 		}
 		if (!useiframe)
@@ -30318,7 +30318,8 @@ Observation.richtable = function(container) {
 								event.stopPropagation();
 							});
 			}
-			current.css('cursor', 'pointer').click(function() {
+			var func = function() {
+
 				if (!treeoptions.cache)
 					$('#_tree_window').remove();
 				if (!$('#_tree_window').length) {
@@ -30362,7 +30363,14 @@ Observation.richtable = function(container) {
 					$('#_tree_window').dialog('open');
 				}
 
-			});
+			};
+			current.css('cursor', 'pointer').click(func).keydown(
+					function(event) {
+						if (event.keyCode == 13) {
+							func();
+							return false;
+						}
+					});
 		});
 		return this;
 	};
@@ -30408,7 +30416,7 @@ Observation.richtable = function(container) {
 })(jQuery);
 
 Observation.treeselect = function(container) {
-	$('.treeselect', container).treeselect();
+	$('.treeselect', container).attr('tabindex', '0').treeselect();
 };
 (function($) {
 	var current;
@@ -30434,7 +30442,8 @@ Observation.treeselect = function(container) {
 								event.stopPropagation();
 							});
 			}
-			current.css('cursor', 'pointer').click(function() {
+			var func = function() {
+
 				$('#_pick_window').remove();
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
@@ -30578,7 +30587,15 @@ Observation.treeselect = function(container) {
 							replacement : '_pick_window:content',
 							quiet : true
 						});
-			});
+
+			};
+			current.css('cursor', 'pointer').click(func).keydown(
+					function(event) {
+						if (event.keyCode == 13) {
+							func();
+							return false;
+						}
+					});
 		});
 		return this;
 	};
@@ -30586,7 +30603,7 @@ Observation.treeselect = function(container) {
 })(jQuery);
 
 Observation.listpick = function(container) {
-	$('.listpick', container).listpick();
+	$('.listpick', container).attr('tabindex', '0').listpick();
 };
 ( function($) {
 	SearchHighlighter = {

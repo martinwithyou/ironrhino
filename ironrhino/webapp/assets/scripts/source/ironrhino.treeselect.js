@@ -22,7 +22,8 @@
 								event.stopPropagation();
 							});
 			}
-			current.css('cursor', 'pointer').click(function() {
+			var func = function() {
+
 				if (!treeoptions.cache)
 					$('#_tree_window').remove();
 				if (!$('#_tree_window').length) {
@@ -66,7 +67,14 @@
 					$('#_tree_window').dialog('open');
 				}
 
-			});
+			};
+			current.css('cursor', 'pointer').click(func).keydown(
+					function(event) {
+						if (event.keyCode == 13) {
+							func();
+							return false;
+						}
+					});
 		});
 		return this;
 	};
@@ -112,5 +120,5 @@
 })(jQuery);
 
 Observation.treeselect = function(container) {
-	$('.treeselect', container).treeselect();
+	$('.treeselect', container).attr('tabindex', '0').treeselect();
 };

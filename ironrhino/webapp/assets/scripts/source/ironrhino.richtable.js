@@ -195,8 +195,8 @@ Richtable = {
 					+ Math.random();
 			var iframe = $('#_window_ > iframe')[0];
 			iframe.src = url;
-			iframe.onload = function(){
-				Dialog.adapt(win,iframe);
+			iframe.onload = function() {
+				Dialog.adapt(win, iframe);
 			}
 		}
 		if (!useiframe)
