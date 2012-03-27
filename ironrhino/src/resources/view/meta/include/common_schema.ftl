@@ -20,7 +20,7 @@
 			<tr>
 				<td>${action.getText('name')}</td>
 				<td>${action.getText('value')}</td>
-				<td></td>
+				<td><@button text="+" class="add"/></td>
 			</tr>
 		</thead>
 		<tbody>

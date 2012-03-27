@@ -153,18 +153,8 @@ public class Dictionary extends BaseEntity implements Validatable {
 			Set<String> labels = new HashSet<String>(items.size());
 			for (int i = 0; i < items.size(); i++) {
 				LabelValue lv = items.get(i);
-				if (StringUtils.isNotBlank(lv.getLabel())
-						&& StringUtils.isNotBlank(lv.getValue())) {
-					String label = lv.getLabel();
+				if (StringUtils.isNotBlank(lv.getValue())) {
 					String value = lv.getValue();
-					if (labels.contains(label)) {
-						ValidationException ve = new ValidationException();
-						ve.addFieldError("dictionary.items[" + i + "].label",
-								"validation.already.exists");
-						throw ve;
-					} else {
-						labels.add(label);
-					}
 					if (values.contains(value)) {
 						ValidationException ve = new ValidationException();
 						ve.addFieldError("dictionary.items[" + i + "].value",
@@ -172,6 +162,22 @@ public class Dictionary extends BaseEntity implements Validatable {
 						throw ve;
 					} else {
 						values.add(value);
+					}
+					if (StringUtils.isNotBlank(lv.getLabel())) {
+						String label = lv.getLabel();
+						if (labels.contains(label)) {
+							ValidationException ve = new ValidationException();
+							ve.addFieldError("dictionary.items[" + i
+									+ "].label", "validation.already.exists");
+							throw ve;
+						} else {
+							labels.add(label);
+						}
+					} else {
+						ValidationException ve = new ValidationException();
+						ve.addFieldError("dictionary.items[" + i + "].label",
+								"validation.required");
+						throw ve;
 					}
 
 				}

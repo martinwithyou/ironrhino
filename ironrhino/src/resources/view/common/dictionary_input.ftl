@@ -29,7 +29,7 @@
 				<td>${action.getText('label')}</td>
 				<td>${action.getText('value')}</td>
 				<td>${action.getText('type')}</td>
-				<td></td>
+				<td><@button text="+" class="add"/></td>
 			</tr>
 		</thead>
 		<tbody>

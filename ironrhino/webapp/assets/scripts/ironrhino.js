@@ -29277,43 +29277,48 @@ Observation.sortableTable = function(container) {
 	$.fn.datagridTable = function(options) {
 		options = options || {};
 		$(this).each(function() {
-					if ($(this).hasClass('datagrided'))
-						return;
-					$(this).addClass('datagrided');
-					if ($(this).parents('.datagrided').length)
-						return;
-					$('tbody tr input:last', this).keydown(function(event) {
-								if (event.keyCode == 13) {
-									event.preventDefault();
-									addRow(event, options);
-								}
-							});
-					$('tbody tr input:first', this).keydown(function(event) {
-								if (event.keyCode == 8
-										&& !$(event.target).val()) {
-									event.preventDefault();
-									removeRow(event, options);
-								}
-							});
-					$('tbody tr .add', this).click(function(event) {
-								addRow(event, options)
-							});
-					$('tbody tr .remove', this).click(function(event) {
-								removeRow(event, options)
-							});
-					$('tbody tr .moveup', this).click(function(event) {
-								moveupRow(event, options)
-							});
-					$('tbody tr .movedown', this).click(function(event) {
-								movedownRow(event, options)
-							});
-				})
+			if ($(this).hasClass('datagrided'))
+				return;
+			$(this).addClass('datagrided');
+			if ($(this).parents('.datagrided').length)
+				return;
+			$('tbody input:last', this).keydown(function(event) {
+						if (event.keyCode == 13) {
+							event.preventDefault();
+							addRow(event, options);
+						}
+					});
+			$('tbody input:first', this).keydown(function(event) {
+						if (event.keyCode == 8 && !$(event.target).val()) {
+							event.preventDefault();
+							removeRow(event, options);
+						}
+					});
+			$('thead .add', this).click(function(event) {
+				var rows = $(event.target).closest('table.datagrided')
+						.children('tbody').children();
+				if (rows.length > 0)
+					addRow(event, options, rows.eq(0), true);
+			});
+			$('tbody .add', this).click(function(event) {
+						addRow(event, options)
+					});
+			$('tbody .remove', this).click(function(event) {
+						removeRow(event, options)
+					});
+			$('tbody .moveup', this).click(function(event) {
+						moveupRow(event, options)
+					});
+			$('tbody .movedown', this).click(function(event) {
+						movedownRow(event, options)
+					});
+		})
 
 		return this;
 	};
 
-	var addRow = function(event, options) {
-		var row = $(event.target).closest('tr');
+	var addRow = function(event, options, row, before) {
+		var row = row || $(event.target).closest('tr');
 		var r = row.clone(true);
 		$('*', r).removeAttr('id');
 		$('span.info', r).html('');
@@ -29327,7 +29332,10 @@ Observation.sortableTable = function(container) {
 					if (i > 0)
 						$(this).remove();
 				});
-		row.after(r);
+		if (before)
+			r.insertBefore(row);
+		else
+			row.after(r);
 		rename(row.closest('tbody'));
 		$('select.textonadd', r).each(function() {
 			$(this).replaceWith('<input type="text" name="'
