@@ -18,6 +18,17 @@
 		<div style="float:left;width:30%;"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" /></div>
 	</#if>
 	<table border="0" class="datagrid" style="width:100%;padding-top:10px;">
+		<style scoped>
+		tr.SELECT{
+			background-color:#F5F5F5;
+		}
+		tr.CHECKBOX{
+			background-color:#E5E5E5;
+		}
+		tr.INPUT{
+			background-color:#D8D8D8;
+		}
+		</style>
 		<thead>
 			<tr>
 				<td>${action.getText('name')}</td>
@@ -38,10 +49,10 @@
 			<#if schema.fields[index]?? && schema.fields[index].type??>
 			<#assign type=schema.fields[index].type.name()/>
 			</#if>
-			<tr style="background-color:#F5F5F5;" class="linkage">
+			<tr class="linkage">
 				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssClass="required" cssStyle="width:120px;"/></td>
 				<td>
-					<table border="0" class="datagrid showonadd linkage_component INPUT">
+					<table border="0" class="datagrid showonadd linkage_component SELECT CHECKBOX">
 						<tbody>
 							<#assign size = 0>
 							<#if schema.fields[index]?? && schema.fields[index].values?? && schema.fields[index].values?size gt 0>
@@ -57,8 +68,8 @@
 					</table>
 				</td>
 				<td><@s.select theme="simple" name="schema.fields[${index}].type" cssClass="linkage_switch" cssStyle="width:60px;" list="@org.ironrhino.common.model.SchemaFieldType@values()" listKey="name" listValue="displayName"/></td>
-				<td><span class="showonadd linkage_component CHECKBOX"><@s.checkbox theme="simple" name="schema.fields[${index}].required"/></span></td>
-				<td><span class="showonadd linkage_component INPUT CHECKBOX"><@s.checkbox theme="simple" name="schema.fields[${index}].strict"/></span></td>
+				<td><span class="showonadd linkage_component SELECT INPUT"><@s.checkbox theme="simple" name="schema.fields[${index}].required"/></span></td>
+				<td><span class="showonadd linkage_component SELECT"><@s.checkbox theme="simple" name="schema.fields[${index}].strict"/></span></td>
 				<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 			</tr>
 			</#list>

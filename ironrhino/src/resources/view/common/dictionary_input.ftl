@@ -16,6 +16,14 @@
 		<div style="float:left;width:40%;"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="dictionary.description" /></div>
 	</#if>
 	<table border="0" class="datagrid" style="width:100%;padding-top:10px;">
+		<style scoped>
+		tr.option{
+			background-color:#F5F5F5;
+		}
+		tr.group{
+			background-color:#E5E5E5;
+		}
+		</style>
 		<thead>
 			<tr>
 				<td>${action.getText('label')}</td>
@@ -32,7 +40,7 @@
 			<#list 0..size as index>
 			<tr class="linkage">
 				<td><@s.textfield theme="simple" name="dictionary.items[${index}].label"/></td>
-				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required showonadd linkage_component group"/></td>
+				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required showonadd linkage_component option"/></td>
 				<td><select class="linkage_switch" style="width:80px;">
 						<option value="option">${action.getText('option')}</option>
 						<option value="group"<#if dictionary.items[index]?? && dictionary.items[index].value?? && !dictionary.items[index].value?has_content>selected="selected"</#if>>${action.getText('group')}</option>

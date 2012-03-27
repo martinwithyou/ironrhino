@@ -28182,19 +28182,22 @@ Observation.common = function(container) {
 				$(this).removeClass('highlight');
 			});
 	$('.linkage', container).each(function() {
-		var c = this;
+		var c = $(this);
+		c.data('originalclass', c.attr('class'));
 		var sw = $('.linkage_switch', c);
 		$('.linkage_component', c).show();
-		$('.linkage_component.' + sw.val(), c).hide().filter(':input').val('');
+		$('.linkage_component', c).not('.' + sw.val()).hide().filter(':input')
+				.val('');
+		c.attr('class', c.data('originalclass') + ' ' + sw.val());
 		sw.change(function() {
 					var c = $(this).closest('.linkage');
 					var sw = $(this);
 					$('.linkage_component', c).show();
-					$('.linkage_component.' + sw.val(), c).hide()
+					$('.linkage_component', c).not('.' + sw.val()).hide()
 							.filter(':input').val('');
+					c.attr('class', c.data('originalclass') + ' ' + sw.val());
 				});
 	});
-
 	$(':input.conjunct', container).change(function() {
 				var t = $(this);
 				var f = $(this).closest('form');
