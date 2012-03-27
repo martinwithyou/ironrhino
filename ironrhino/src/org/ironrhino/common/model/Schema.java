@@ -17,13 +17,15 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.model.Validatable;
+import org.ironrhino.core.struts.ValidationException;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.model.UserRole;
 
 @AutoConfig(searchable = true, order = "name asc")
 @Searchable(alias = "schema")
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
-public class Schema extends BaseEntity {
+public class Schema extends BaseEntity implements Validatable {
 
 	private static final long serialVersionUID = -8352037604269012984L;
 
@@ -83,36 +85,6 @@ public class Schema extends BaseEntity {
 
 	@NotInCopy
 	public String getFieldsAsString() {
-		if (fields == null)
-			return null;
-		Set<String> names = new HashSet<String>();
-		Iterator<SchemaField> it = fields.iterator();
-		while (it.hasNext()) {
-			SchemaField f = it.next();
-			if (names.contains(f.getName()) || StringUtils.isBlank(f.getName())) {
-				it.remove();
-				continue;
-			}
-			if (!f.getType().equals(SchemaFieldType.INPUT)) {
-				Set<String> values = new HashSet<String>();
-				Iterator<String> it2 = f.getValues().iterator();
-				while (it2.hasNext()) {
-					String value = it2.next();
-					if (values.contains(value) || StringUtils.isBlank(value)) {
-						it2.remove();
-						continue;
-					}
-					values.add(value);
-				}
-				if (f.getValues().isEmpty()) {
-					it.remove();
-					continue;
-				}
-			}
-			names.add(f.getName());
-		}
-		if (fields.isEmpty())
-			return null;
 		return JsonUtils.toJson(fields);
 	}
 
@@ -141,6 +113,84 @@ public class Schema extends BaseEntity {
 			names.add(f.getName());
 		}
 		return this;
+	}
+
+	public void validate() {
+		if (fields == null || fields.size() == 0) {
+			ValidationException ve = new ValidationException();
+			ve.addActionError("validation.required");
+			throw ve;
+		} else {
+			boolean hasGroup = false;
+			boolean needApendBlankGroup = false;
+			Set<String> names = new HashSet<String>();
+			for (int i = 0; i < fields.size(); i++) {
+				SchemaField f = fields.get(i);
+				if (f.getType().equals(SchemaFieldType.GROUP)) {
+					hasGroup = true;
+					continue;
+				}
+				if (StringUtils.isBlank(f.getName())) {
+					ValidationException ve = new ValidationException();
+					ve.addFieldError("schema.fields[" + i + "].name",
+							"validation.required");
+					throw ve;
+				} else {
+					if (names.contains(f.getName())) {
+						ValidationException ve = new ValidationException();
+						ve.addFieldError("schema.fields[" + i + "].name",
+								"validation.already.exists");
+						throw ve;
+					} else {
+						names.add(f.getName());
+					}
+				}
+				if (f.getType().equals(SchemaFieldType.SELECT)
+						|| f.getType().equals(SchemaFieldType.CHECKBOX)) {
+					List<String> values = f.getValues();
+					if (values == null || values.size() == 0
+							|| values.size() == 1
+							&& StringUtils.isBlank(values.get(0))) {
+						ValidationException ve = new ValidationException();
+						ve.addFieldError("schema.fields[" + i + "].values[0]",
+								"validation.required");
+						throw ve;
+					} else {
+						Set<String> set = new HashSet<String>();
+						for (int j = 0; j < values.size(); j++) {
+							String value = values.get(j);
+							if (StringUtils.isBlank(value)) {
+								ValidationException ve = new ValidationException();
+								ve.addFieldError("schema.fields[" + i
+										+ "].values[" + j + "]",
+										"validation.required");
+								throw ve;
+							} else {
+								if (set.contains(value)) {
+									ValidationException ve = new ValidationException();
+									ve.addFieldError("schema.fields[" + i
+											+ "].values[" + j + "]",
+											"validation.already.exists");
+									throw ve;
+								} else {
+									set.add(value);
+								}
+							}
+						}
+					}
+				} else {
+					f.setValues(null);
+				}
+				if (hasGroup && i == fields.size() - 1)
+					needApendBlankGroup = hasGroup && i == fields.size() - 1;
+			}
+			if (needApendBlankGroup) {
+				SchemaField f = new SchemaField();
+				f.setName("");
+				f.setType(SchemaFieldType.GROUP);
+				fields.add(f);
+			}
+		}
 	}
 
 }

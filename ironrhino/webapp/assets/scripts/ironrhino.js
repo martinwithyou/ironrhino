@@ -29296,7 +29296,7 @@ Observation.sortableTable = function(container) {
 					});
 			$('thead .add', this).click(function(event) {
 				var rows = $(event.target).closest('table.datagrided')
-						.children('tbody').children();
+						.children('tbody').children().not('.nontemplate');
 				if (rows.length > 0)
 					addRow(event, options, rows.eq(0), true);
 			});
@@ -29317,7 +29317,7 @@ Observation.sortableTable = function(container) {
 		return this;
 	};
 
-	var addRow = function(event, options, row, before) {
+	var addRow = function(event, options, row, first) {
 		var row = row || $(event.target).closest('tr');
 		var r = row.clone(true);
 		$('*', r).removeAttr('id');
@@ -29332,8 +29332,8 @@ Observation.sortableTable = function(container) {
 					if (i > 0)
 						$(this).remove();
 				});
-		if (before)
-			r.insertBefore(row);
+		if (first)
+			row.parent().prepend(r);
 		else
 			row.after(r);
 		rename(row.closest('tbody'));

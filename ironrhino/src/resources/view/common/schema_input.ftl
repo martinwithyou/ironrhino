@@ -19,13 +19,10 @@
 	</#if>
 	<table border="0" class="datagrid" style="width:100%;padding-top:10px;">
 		<style scoped>
-		tr.SELECT{
+		tr.linkage{
 			background-color:#F5F5F5;
 		}
-		tr.CHECKBOX{
-			background-color:#E5E5E5;
-		}
-		tr.INPUT{
+		tr.GROUP{
 			background-color:#D8D8D8;
 		}
 		</style>
@@ -36,7 +33,7 @@
 				<td>${action.getText('type')}</td>
 				<td>${action.getText('required')}</td>
 				<td>${action.getText('strict')}</td>
-				<td></td>
+				<td><@button text="+" class="add"/></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -45,12 +42,10 @@
 				<#assign size = schema.fields?size-1>
 			</#if>
 			<#list 0..size as index>
-			<#assign type="SELECT"/>
 			<#if schema.fields[index]?? && schema.fields[index].type??>
-			<#assign type=schema.fields[index].type.name()/>
 			</#if>
 			<tr class="linkage">
-				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssClass="required" cssStyle="width:120px;"/></td>
+				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssStyle="width:120px;"/></td>
 				<td>
 					<table border="0" class="datagrid showonadd linkage_component SELECT CHECKBOX">
 						<tbody>

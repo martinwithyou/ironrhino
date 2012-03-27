@@ -4,7 +4,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 public enum SchemaFieldType {
-	SELECT, CHECKBOX, INPUT;
+	SELECT, CHECKBOX, INPUT,GROUP;
 	public String getName() {
 		return name();
 	}

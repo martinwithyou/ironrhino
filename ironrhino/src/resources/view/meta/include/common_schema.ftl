@@ -27,6 +27,14 @@
 			<#if schema?? && schema.name??>
 				<#local index = 0>
 				<#list schema.fields as field>
+				<#if field.type??>
+					<#local type=field.type.name()/>
+				<#else>
+					<#local type='SELECT'/>
+				</#if>
+				<#if type=='GROUP'>
+				<tr class="nontemplate" style="background-color:#F0F0F0;height:1em;"><td colspan="3">${field.name}<@s.hidden theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name}"/></td></tr>
+				<#else>
 				<#local persistValueExists=false>
 				<#list attributes as attr>
 					<#if attr.name==field.name && attr.value??>
@@ -38,11 +46,6 @@
 				<tr>
 					<td><@s.textfield theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name}" readonly=field.strict?string/></td>
 					<td>
-						<#if field.type??>
-							<#local type=field.type.name()/>
-						<#else>
-							<#local type='SELECT'/>
-						</#if>
 						<#if type=='SELECT'>
 							<select name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combox</#if>">
 								<option value="${headerKey}">${headerValue}</option>
@@ -69,6 +72,7 @@
 					<td><#if !schema.strict><@button text="+" class="add"/><@button text="-" class="remove"/></#if><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/>
 					</td>
 				</tr>
+				</#if>
 				<#local index = index+1>
 				</#list>
 				<#if !schema.strict>
@@ -80,7 +84,7 @@
 							<#break/>
 						</#if>
 					</#list>
-					<#if !inschema>
+					<#if !inschema && attr.value?? && attr.value?has_content>
 					<tr>
 						<td><input type="text" name="${parameterNamePrefix}attributes[${index}].name" value="${attr.name!}"/></td>
 						<td><input type="text" name="${parameterNamePrefix}attributes[${index}].value" value="${attr.value!}"/></td>
@@ -97,12 +101,16 @@
 						<#local size = attributes?size-1>
 						<#local isnew=false>
 					</#if>
-					<#list 0..size as index>
-					<tr>
-						<td><input type="text" name="${parameterNamePrefix}attributes[${index}].name"<#if !isnew> value="${attributes[index].name!}</#if>"/></td>
-						<td><input type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if !isnew> value="${attributes[index].value!}</#if>"/></td>
-						<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
-					</tr>
+					<#local index = 0>
+					<#list 0..size as var>
+						<#if attributes[var].value?? && attributes[var].value?has_content>
+							<tr>
+								<td><input type="text" name="${parameterNamePrefix}attributes[${index}].name"<#if !isnew> value="${attributes[var].name!}</#if>"/></td>
+								<td><input type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if !isnew> value="${attributes[var].value!}</#if>"/></td>
+								<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+							</tr>
+							<#local index = index+1>
+						</#if>
 					</#list>
 				</#if>
 		</tbody>

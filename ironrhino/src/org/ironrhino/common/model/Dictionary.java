@@ -148,7 +148,11 @@ public class Dictionary extends BaseEntity implements Validatable {
 	}
 
 	public void validate() {
-		if (items.size() > 0) {
+		if (items == null || items.size() == 0) {
+			ValidationException ve = new ValidationException();
+			ve.addActionError("validation.required");
+			throw ve;
+		} else {
 			Set<String> values = new HashSet<String>(items.size());
 			Set<String> labels = new HashSet<String>(items.size());
 			for (int i = 0; i < items.size(); i++) {
