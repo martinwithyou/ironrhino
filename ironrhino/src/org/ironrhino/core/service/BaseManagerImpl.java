@@ -81,11 +81,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		Session session = sessionFactory.getCurrentSession();
 		if (obj instanceof Validatable) {
 			Validatable v = (Validatable) obj;
-			try {
-				v.validate();
-			} catch (RuntimeException e) {
-				throw e;
-			}
+			v.validate();
 		}
 		if (obj instanceof Recordable) {
 			Recordable r = (Recordable) obj;
