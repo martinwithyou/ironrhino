@@ -52,6 +52,7 @@
 	</table>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
+<@selectDictionary dictionaryName="CustomRole"/>
 </body>
 </html></#escape>
 

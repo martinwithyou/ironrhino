@@ -14,7 +14,7 @@
 				<#list items as lv>
 					<#if !lv.value?? || !lv.value?has_content>
 						<#local label = lv.label/>
-						<#if (!label?has_content || label == group || label?ends_with('/'+group)) && group?has_content>
+						<#if (!label?has_content) && group?has_content>
 							<#local group = ""/>
 							</optgroup>
 						<#else>

@@ -115,8 +115,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 		for (LabelValue lv : items) {
 			if (StringUtils.isBlank(lv.getValue())) {
 				String label = lv.getLabel();
-				if ((StringUtils.isBlank(label) || label.equals(group) || label
-						.endsWith("/" + group))
+				if ((StringUtils.isBlank(label))
 						&& StringUtils.isNotBlank(group)) {
 					group = "";
 				} else {
@@ -139,7 +138,8 @@ public class Dictionary extends BaseEntity implements Validatable {
 	public boolean isGroupable() {
 		boolean groupable = false;
 		for (LabelValue item : items) {
-			if (StringUtils.isBlank(item.getValue())) {
+			if (StringUtils.isNotBlank(item.getLabel())
+					&& StringUtils.isBlank(item.getValue())) {
 				groupable = true;
 				break;
 			}
