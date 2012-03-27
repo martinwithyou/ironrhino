@@ -1,9 +1,11 @@
 package org.ironrhino.common.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.type.TypeReference;
@@ -18,6 +20,8 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.LabelValue;
+import org.ironrhino.core.model.Validatable;
+import org.ironrhino.core.struts.ValidationException;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.model.UserRole;
 
@@ -25,7 +29,7 @@ import org.ironrhino.security.model.UserRole;
 @AutoConfig(searchable = true, order = "name asc")
 @Searchable(alias = "dictionary")
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
-public class Dictionary extends BaseEntity {
+public class Dictionary extends BaseEntity implements Validatable {
 
 	private static final long serialVersionUID = -8352037604261222984L;
 
@@ -141,6 +145,39 @@ public class Dictionary extends BaseEntity {
 			}
 		}
 		return groupable;
+	}
+
+	public void validate() {
+		if (items.size() > 0) {
+			Set<String> values = new HashSet<String>(items.size());
+			Set<String> labels = new HashSet<String>(items.size());
+			for (int i = 0; i < items.size(); i++) {
+				LabelValue lv = items.get(i);
+				if (StringUtils.isNotBlank(lv.getLabel())
+						&& StringUtils.isNotBlank(lv.getValue())) {
+					String label = lv.getLabel();
+					String value = lv.getValue();
+					if (labels.contains(label)) {
+						ValidationException ve = new ValidationException();
+						ve.addFieldError("dictionary.items[" + i + "].label",
+								"validation.already.exists");
+						throw ve;
+					} else {
+						labels.add(label);
+					}
+					if (values.contains(value)) {
+						ValidationException ve = new ValidationException();
+						ve.addFieldError("dictionary.items[" + i + "].value",
+								"validation.already.exists");
+						throw ve;
+					} else {
+						values.add(value);
+					}
+
+				}
+			}
+
+		}
 	}
 
 }

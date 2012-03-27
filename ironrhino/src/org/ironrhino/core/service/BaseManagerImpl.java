@@ -25,6 +25,7 @@ import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.model.Validatable;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
@@ -78,6 +79,14 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 	@Transactional
 	public void save(T obj) {
 		Session session = sessionFactory.getCurrentSession();
+		if (obj instanceof Validatable) {
+			Validatable v = (Validatable) obj;
+			try {
+				v.validate();
+			} catch (RuntimeException e) {
+				throw e;
+			}
+		}
 		if (obj instanceof Recordable) {
 			Recordable r = (Recordable) obj;
 			Date date = new Date();
