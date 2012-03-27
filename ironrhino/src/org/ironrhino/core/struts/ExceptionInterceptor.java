@@ -40,7 +40,8 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 									findText(s));
 					}
 				} else {
-					validationAwareAction.addActionError(e.getMessage());
+					validationAwareAction.addActionError(findText(e
+							.getMessage()));
 					log.error(e.getMessage(), e);
 				}
 			}
@@ -49,9 +50,9 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 		return result;
 	}
 
-	private String findText(String text) {
-		return LocalizedTextUtil.findText(getClass(), text, ActionContext
-				.getContext().getLocale(), text, null);
+	private static String findText(String text) {
+		return LocalizedTextUtil.findText(ExceptionInterceptor.class, text,
+				ActionContext.getContext().getLocale(), text, null);
 	}
 
 }
