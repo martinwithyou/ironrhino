@@ -12,7 +12,7 @@
 		<concat destfile="${webapp.dir}/assets/scripts/ironrhino.js"
 			encoding="utf-8" fixlastline="yes">
 			<filelist>
-				<file name="${webapp.dir}/assets/scripts/source/jquery-1.7.2.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery-1.7.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.8.18.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.8.18.js" />
@@ -26,8 +26,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.jnotify-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.tipsy-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.autoGrowInput-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.tagBox-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.textext-1.3.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview-1.4.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeview.async-0.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.treeTable-2.3.0.js" />
@@ -43,7 +42,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.checkavailable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxupload.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
-				<file name="${webapp.dir}/assets/scripts/source/ironrhino.multiautocomplete.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.checkbox.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.marquee.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.sortabletable.js" />
@@ -51,6 +49,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.filterselect.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.portal.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.combox.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.tags.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.resizabletable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.richtable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.treearea.js" />
@@ -71,13 +70,13 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.jnotify-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.alerts-1.1.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.tipsy-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.autoGrowInput-1.0.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.tagBox-1.0.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.textext-1.3.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.throttle-debounce-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.checkavailable.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.tags.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxupload.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.marquee.js" />
@@ -91,7 +90,6 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.ui.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.loadmask.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.tipsy.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.tagBox.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.jnotify.css" />
@@ -120,7 +118,6 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.jnotify.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.tipsy.css" />
-				<file name="${webapp.dir}/assets/styles/source/jquery.tagBox.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.reset.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.layout.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />

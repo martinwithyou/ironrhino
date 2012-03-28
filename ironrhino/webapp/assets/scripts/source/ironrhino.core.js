@@ -823,26 +823,6 @@ Observation.common = function(container) {
 					t.tipsy(options);
 				});
 	}
-	if (typeof $.fn.tagBox != 'undefined') {
-		$(':input.tagbox', container).each(function() {
-					var t = $(this);
-					var width = t.width();
-					t.tagBox();
-					t.next().width(width);
-					if (t.hasClass('multiautocomplete')) {
-						t.next().find('.input input').multiautocomplete({
-									source : t.attr('source'),
-									select : function(e, ui) {
-										e.preventDefault();
-										if (e.keyCode != 13) {
-											$(this).val(ui.item.value);
-											$(this).trigger("selectTag");
-										}
-									}
-								});
-					}
-				});
-	}
 	$('.switch', container).each(function() {
 		var t = $(this);
 		t.children().css('cursor', 'pointer').click(function() {

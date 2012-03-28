@@ -107,7 +107,7 @@ $(function() {
 	<#else>
 		<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50"/>
 		<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" cssClass="integer"/>
-		<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tagbox multiautocomplete" source="suggest"/>
+		<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tags" source="${getUrl('/common/page/suggest')}"/>
 	</#if>
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50"/>
 	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="50" rows="16"/>

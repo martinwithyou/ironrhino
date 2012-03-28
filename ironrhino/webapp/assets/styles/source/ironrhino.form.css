@@ -166,3 +166,7 @@ div.top label {
 	border: none;
 	background: #ddd;
 }
+
+div.text-core{
+	display:inline-block;
+}

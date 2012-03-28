@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -276,7 +275,6 @@ public class PageAction extends BaseAction {
 
 	@JsonConfig(root = "suggestions")
 	public String suggest() {
-		keyword = ServletActionContext.getRequest().getParameter("term");
 		if (StringUtils.isBlank(keyword))
 			return NONE;
 		Map<String, Integer> map = pageManager.findMatchedTags(keyword);
