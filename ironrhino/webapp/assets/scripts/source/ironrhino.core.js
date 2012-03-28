@@ -1025,7 +1025,8 @@ var Dialog = {
 			} else if (iframe.contentWindow) {
 				doc = iframe.contentWindow.document;
 			}
-			var height = $(doc).height() + ($.browser.mozilla ? 10 : 0);
+			var height = $(doc).height()
+					+ ($.browser.webkit ? -3 : ($.browser.mozilla ? 10 : 0));
 			$(d).dialog('option', 'title', doc.title);
 			$(d).dialog('option', 'minHeight', height);
 			$(iframe).height(height);

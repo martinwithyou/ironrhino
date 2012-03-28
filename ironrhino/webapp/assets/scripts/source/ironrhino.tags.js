@@ -11,8 +11,11 @@ Observation.tags = function(container) {
 						if (typeof suggestion == 'string') {
 							return suggestion;
 						} else {
-							return '<div value="' + suggestion.value + '">'
-									+ suggestion.label + '</div>';
+							if (!suggestion.label)
+								return suggestion.value;
+							else
+								return '<div value="' + suggestion.value + '">'
+										+ suggestion.label + '</div>';
 						}
 					}
 				},
