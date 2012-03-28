@@ -34155,7 +34155,6 @@ Observation.tags = function(container) {
 		$('input.tags', container).each(function() {
 			var t = $(this);
 			var options = {
-				plugins : 'tags prompt focus autocomplete ajax arrow',
 				prompt : '...',
 				autocomplete : {
 					dropdownMaxHeight : '200px',
@@ -34194,7 +34193,8 @@ Observation.tags = function(container) {
 				else
 					options.tagsItems = value.split(',');
 			}
-			if (t.attr('source'))
+			if (t.attr('source')) {
+				options.plugins = 'tags prompt focus autocomplete ajax arrow';
 				options.ajax = {
 					global : false,
 					url : t.attr('source'),
@@ -34204,7 +34204,10 @@ Observation.tags = function(container) {
 							'keyword' : q
 						};
 					}
-				}
+				};
+			} else {
+				options.plugins = 'tags prompt focus';
+			}
 			t.val('').textext(options);
 		});
 	}
