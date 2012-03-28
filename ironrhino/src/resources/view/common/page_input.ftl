@@ -3,6 +3,24 @@
 <head>
 <title><#if page.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('page')}</title>
 <meta name="cms_path" content="${cmsPath}" />
+<#if Parameters.decorator??>
+<style>
+body {
+	background:#FFFFFF;
+}
+#content {
+	padding: 10px;
+	margin-bottom: 10px;
+	background:#fff;
+	border-radius: 0;
+	-webkit-border-radius:  0;
+	-moz-border-radius:  0 ;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}
+</#if>
+</style>
 <script type="text/javascript" src="<@url value="/assets/components/tiny_mce/jquery.tinymce.js"/>"></script>
 <script type="text/javascript">
 $(function() {
