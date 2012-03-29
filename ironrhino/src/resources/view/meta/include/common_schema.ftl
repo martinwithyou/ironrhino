@@ -103,7 +103,7 @@
 					</#if>
 					<#local index = 0>
 					<#list 0..size as var>
-						<#if attributes[var].value?? && attributes[var].value?has_content>
+						<#if isnew || attributes[var].value?? && attributes[var].value?has_content>
 							<tr>
 								<td><input type="text" name="${parameterNamePrefix}attributes[${index}].name"<#if !isnew> value="${attributes[var].name!}</#if>"/></td>
 								<td><input type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if !isnew> value="${attributes[var].value!}</#if>"/></td>
@@ -115,4 +115,47 @@
 				</#if>
 		</tbody>
 	</table>
+</#macro>
+
+<#macro printAttributes attributes grouping=true>
+	<#if attributes?? && attributes?size gt 0>
+		<#if !grouping>
+			<ul class="attributes">
+			<#list attributes as attr>
+				<#if attr.value?? && attr.value?has_content>
+					<li><span class="name">${attr.name}:<span><span class="value">${attr.value}</span></li>
+				</#if>
+			</#list>
+			</ul>
+		<#else>
+			<ul class="attributes">
+			<#local group = ""/>
+			<#local index = 0/>
+			<#list attributes as attr>
+				<#if !attr.value?? || !attr.value?has_content>
+					<#local name = attr.name/>
+					<#if (!name?has_content)>
+						<#local group = ""/>
+						</ul></li>
+					<#else>
+						<#if group?has_content>
+							</ul></li>
+						</#if>
+						<#local group = name/>
+						<#if group?has_content>
+							<li class="group"><span class="group">${group}</span>
+							<ul>
+						</#if>
+					</#if>
+				<#else>
+					<li><span class="name">${attr.name}:<span><span class="value">${attr.value}</span></li>
+					<#if group?has_content && index==attributes?size-1>
+						</ul></li>
+					</#if>
+				</#if>
+				<#local index = index+1/>
+			</#list>
+			</ul>
+		</#if>
+	</#if>
 </#macro>

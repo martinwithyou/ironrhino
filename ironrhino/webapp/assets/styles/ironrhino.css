@@ -1160,11 +1160,32 @@ tr.selected {
 }
 
 .crumbs{
-margin: 10px;
+	margin: 10px;
 }
 .crumbs a {
-color: #36C;
-text-decoration: none;
+	color: #36C;
+	text-decoration: none;
+}
+
+ul.attributes li{
+	display: block;
+    float: left;
+    width: 200px;
+    overflow: hidden;
+    margin-right: 20px;
+    padding-top: 5px;
+    text-indent: 5px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+ul.attributes li span.value{
+    padding-left: 10px;
+}
+ul.attributes span.group{
+	font-weight:bold;
+}
+ul.attributes li.group ul{
+	padding-left:10px;
 }
 .editme{
 	margin:0px;
