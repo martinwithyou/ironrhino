@@ -15,7 +15,7 @@
 		<div style="float:left;width:40%;"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="dictionary.name" cssClass="required checkavailable"/></div>
 		<div style="float:left;width:40%;"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="dictionary.description" /></div>
 	</#if>
-	<table border="0" class="datagrid" style="width:100%;padding-top:10px;">
+	<table border="0" class="datagrid highlightrow" style="width:100%;padding-top:10px;">
 		<style scoped>
 		tr.option{
 			background-color:#F5F5F5;
@@ -29,7 +29,7 @@
 				<td>${action.getText('label')}</td>
 				<td>${action.getText('value')}</td>
 				<td>${action.getText('type')}</td>
-				<td><@button text="+" class="add"/></td>
+				<td class="manipulate"><@button text="+" class="add"/></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -45,7 +45,7 @@
 						<option value="option">${action.getText('option')}</option>
 						<option value="group"<#if dictionary.items[index]?? && dictionary.items[index].value?? && !dictionary.items[index].value?has_content>selected="selected"</#if>>${action.getText('group')}</option>
 					</select></td>
-				<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+				<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 			</tr>
 			</#list>
 		</tbody>

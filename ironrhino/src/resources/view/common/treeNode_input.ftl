@@ -12,12 +12,12 @@
 	<@s.textfield label="%{getText('name')}" name="treeNode.name" />
 	<@s.textfield label="%{getText('description')}" name="treeNode.description" />
 	<@s.textfield label="%{getText('displayOrder')}" name="treeNode.displayOrder" cssClass="integer"/>
-	<table border="0" class="datagrid nullable" style="width:100%;padding-top:10px;">
+	<table border="0" class="datagrid highlightrow nullable" style="width:100%;padding-top:10px;">
 		<thead>
 			<tr>
 				<td>${action.getText('name')}</td>
 				<td>${action.getText('value')}</td>
-				<td><@button text="+" class="add"/></td>
+				<td class="manipulate"><@button text="+" class="add"/></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -29,7 +29,7 @@
 			<tr>
 				<td><@s.textfield theme="simple" name="treeNode.attributes[${index}].name"/></td>
 				<td><@s.textfield theme="simple" name="treeNode.attributes[${index}].value"/></td>
-				<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+				<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 			</tr>
 			</#list>
 		</tbody>

@@ -15,12 +15,14 @@
 	<#else>
 		<#local schema=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findByNaturalId(true,[schemaName])!>
 	</#if>
-	<table border="0" class="datagrid nullable" style="width:100%;">
+	<table border="0" class="datagrid highlightrow nullable" style="width:100%;">
 		<thead>
 			<tr>
 				<td>${action.getText('name')}</td>
 				<td>${action.getText('value')}</td>
-				<td><@button text="+" class="add"/></td>
+				<#if !schema.strict?? || !schema.strict>
+				<td class="manipulate"><@button text="+" class="add"/></td>
+				</#if>
 			</tr>
 		</thead>
 		<tbody>
@@ -33,7 +35,12 @@
 					<#local type='SELECT'/>
 				</#if>
 				<#if type=='GROUP'>
-				<tr class="nontemplate" style="background-color:#F0F0F0;height:1em;"><td colspan="3">${field.name}<@s.hidden theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name}"/></td></tr>
+				<tr class="nontemplate" style="background-color:#F0F0F0;height:1em;">
+					<td colspan="2">${field.name}<@s.hidden theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name}"/></td>
+					<#if !schema.strict>
+					<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+					</#if>
+				</tr>
 				<#else>
 				<#local persistValueExists=false>
 				<#list attributes as attr>
@@ -69,8 +76,9 @@
 							<input type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if persistValueExists> value="${persistValue}"</#if><#if field.required> class="required"</#if>/>
 						</#if>
 					</td>
-					<td><#if !schema.strict><@button text="+" class="add"/><@button text="-" class="remove"/></#if><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/>
-					</td>
+					<#if !schema.strict>
+					<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+					</#if>
 				</tr>
 				</#if>
 				<#local index = index+1>
@@ -88,7 +96,7 @@
 					<tr>
 						<td><input type="text" name="${parameterNamePrefix}attributes[${index}].name" value="${attr.name!}"/></td>
 						<td><input type="text" name="${parameterNamePrefix}attributes[${index}].value" value="${attr.value!}"/></td>
-						<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+						<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 					</tr>
 					<#local index = index+1>
 					</#if>
@@ -107,7 +115,7 @@
 							<tr>
 								<td><input type="text" name="${parameterNamePrefix}attributes[${index}].name"<#if !isnew> value="${attributes[var].name!}</#if>"/></td>
 								<td><input type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if !isnew> value="${attributes[var].value!}</#if>"/></td>
-								<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+								<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 							</tr>
 							<#local index = index+1>
 						</#if>

@@ -5,6 +5,10 @@
 			if ($(this).hasClass('datagrided'))
 				return;
 			$(this).addClass('datagrided');
+			$('td.manipulate').css({
+						'width' : '100px',
+						'text-align' : 'left'
+					});
 			if ($(this).parents('.datagrided').length)
 				return;
 			$('tbody input:last', this).keydown(function(event) {
@@ -20,10 +24,10 @@
 						}
 					});
 			$('thead .add', this).click(function(event) {
-				var rows = $(event.target).closest('table.datagrided')
-						.children('tbody').children().not('.nontemplate');
-				if (rows.length > 0)
-					addRow(event, options, rows.eq(0), true);
+				var row = $(event.target).closest('table.datagrided')
+						.children('tbody').children(':not(.nontemplate):eq(0)');
+				if (row.length > 0)
+					addRow(event, options, row.eq(0), true);
 			});
 			$('tbody .add', this).click(function(event) {
 						addRow(event, options)
@@ -43,7 +47,12 @@
 	};
 
 	var addRow = function(event, options, row, first) {
-		var row = row || $(event.target).closest('tr');
+		var current = $(event.target).closest('tr');
+		var row = row
+				|| $(event.target).closest('tbody')
+						.children(':not(.nontemplate):eq(0)');
+		if (!row.length)
+			return;
 		var r = row.clone(true);
 		$('*', r).removeAttr('id');
 		$('span.info', r).html('');
@@ -60,7 +69,7 @@
 		if (first)
 			row.parent().prepend(r);
 		else
-			row.after(r);
+			current.after(r);
 		rename(row.closest('tbody'));
 		$('select.textonadd', r).each(function() {
 			$(this).replaceWith('<input type="text" name="'

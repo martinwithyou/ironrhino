@@ -17,7 +17,7 @@
 		<div style="float:left;width:40%;"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description" /></div>
 		<div style="float:left;width:30%;"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" /></div>
 	</#if>
-	<table border="0" class="datagrid" style="width:100%;padding-top:10px;">
+	<table border="0" class="datagrid highlightrow highlightrow" style="width:100%;padding-top:10px;">
 		<style scoped>
 		tr.linkage{
 			background-color:#F5F5F5;
@@ -33,7 +33,7 @@
 				<td>${action.getText('type')}</td>
 				<td>${action.getText('required')}</td>
 				<td>${action.getText('strict')}</td>
-				<td><@button text="+" class="add"/></td>
+				<td class="manipulate"><@button text="+" class="add"/></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -56,7 +56,7 @@
 							<#list 0..size as index2>
 							<tr>
 								<td><@s.textfield theme="simple" name="schema.fields[${index}].values[${index2}]" cssClass="required" cssStyle="width:150px;"/></td>
-								<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+								<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 							</tr>
 							</#list>
 						</tbody>
@@ -65,7 +65,7 @@
 				<td><@s.select theme="simple" name="schema.fields[${index}].type" cssClass="linkage_switch" cssStyle="width:60px;" list="@org.ironrhino.common.model.SchemaFieldType@values()" listKey="name" listValue="displayName"/></td>
 				<td><span class="showonadd linkage_component SELECT INPUT"><@s.checkbox theme="simple" name="schema.fields[${index}].required"/></span></td>
 				<td><span class="showonadd linkage_component SELECT"><@s.checkbox theme="simple" name="schema.fields[${index}].strict"/></span></td>
-				<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+				<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
 			</tr>
 			</#list>
 		</tbody>
