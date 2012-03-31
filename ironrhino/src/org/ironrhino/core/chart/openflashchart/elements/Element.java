@@ -21,13 +21,13 @@ public abstract class Element implements Serializable {
 	private Boolean gradientFill;
 	@JsonProperty("key-on-click")
 	private String key_on_click;
-	private List values = new ArrayList();
+	private List<Object> values = new ArrayList<Object>();
 
 	protected Element(String type) {
 		this.type = type;
 	}
 
-	public void setValues(List values) {
+	public void setValues(List<Object> values) {
 		this.values = values;
 	}
 
@@ -66,7 +66,7 @@ public abstract class Element implements Serializable {
 
 	}
 
-	public List getValues() {
+	public List<Object> getValues() {
 		return values;
 	}
 

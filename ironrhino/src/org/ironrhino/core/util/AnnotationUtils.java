@@ -14,10 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanWrapperImpl;
-
+@SuppressWarnings("unchecked")
 public class AnnotationUtils {
 
-	private static Map<String, Object> cache = new ConcurrentHashMap<String, Object>(250);
+	private static Map<String, Object> cache = new ConcurrentHashMap<String, Object>(
+			250);
 
 	public static Method getAnnotatedMethod(Class clazz,
 			Class<? extends Annotation> annotaionClass) {
@@ -116,8 +117,9 @@ public class AnnotationUtils {
 				for (PropertyDescriptor pd : pds)
 					if (pd.getReadMethod() != null
 							&& pd.getReadMethod().getAnnotation(annotaionClass) != null)
-						map.put(pd.getName(), pd.getReadMethod().getAnnotation(
-								annotaionClass));
+						map.put(pd.getName(),
+								pd.getReadMethod()
+										.getAnnotation(annotaionClass));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -156,12 +158,12 @@ public class AnnotationUtils {
 		return null;
 	}
 
-	public static <T extends Annotation> T getAnnotation(Class clazz,
+	public static <T extends Annotation> T getAnnotation(Class<?> clazz,
 			Class<T> annotationClass) {
 		T annotation = null;
 		Class c = clazz;
 		while (annotation == null && c != null) {
-			annotation = (T) clazz.getAnnotation(annotationClass);
+			annotation = clazz.getAnnotation(annotationClass);
 			c = clazz.getSuperclass();
 			if (c == null || c.getClass().equals(Object.class))
 				break;

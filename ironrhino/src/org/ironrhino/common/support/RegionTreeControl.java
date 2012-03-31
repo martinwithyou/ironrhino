@@ -52,6 +52,7 @@ public class RegionTreeControl implements
 		return RegionUtils.parseByAddress(address, regionTree);
 	}
 
+	@SuppressWarnings("unchecked")
 	private synchronized void create(Region region) {
 		Region parent;
 		String fullId = region.getFullId();
@@ -73,6 +74,7 @@ public class RegionTreeControl implements
 			Collections.sort((List) parent.getChildren());
 	}
 
+	@SuppressWarnings("unchecked")
 	private synchronized void update(Region region) {
 		Region r = regionTree.getDescendantOrSelfById(region.getId());
 		boolean needsort = r.compareTo(region) != 0

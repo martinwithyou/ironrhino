@@ -53,6 +53,7 @@ public class AccessFilter implements Filter {
 	@Value("${accessFilter.excludePatterns:" + DEFAULT_EXCLUDEPATTERNS + "}")
 	private String excludePatterns = DEFAULT_EXCLUDEPATTERNS;
 
+	@SuppressWarnings("unchecked")
 	private List<String> excludePatternsList = Collections.EMPTY_LIST;
 
 	private Collection<AccessHandler> handlers;

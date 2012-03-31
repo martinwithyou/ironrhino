@@ -87,6 +87,7 @@ public class CacheAspect extends BaseAspect {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@AfterReturning("@annotation(flushCache)")
 	public void remove(JoinPoint jp, FlushCache flushCache) {
 		String namespace = eval(flushCache.namespace(), jp, null).toString();

@@ -11,7 +11,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 	List<Iterator<T>> iterators = new ArrayList<Iterator<T>>();
 
 	public CompositeIterator(Iterator<T>... iterators) {
-		for (Iterator it : iterators)
+		for (Iterator<T> it : iterators)
 			if (it != null)
 				this.iterators.add(it);
 		if (this.iterators.size() == 0)

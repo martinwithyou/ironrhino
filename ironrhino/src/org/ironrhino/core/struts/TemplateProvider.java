@@ -68,7 +68,7 @@ public class TemplateProvider {
 		return org.ironrhino.core.util.StringUtils.trimTailSlash(ftlClasspath);
 	}
 
-	public Map getAllSharedVariables() {
+	public Map<String, String> getAllSharedVariables() {
 		Map<String, String> allSharedVariables = new HashMap<String, String>();
 		if (StringUtils.isNotBlank(base))
 			allSharedVariables.put("base", base);

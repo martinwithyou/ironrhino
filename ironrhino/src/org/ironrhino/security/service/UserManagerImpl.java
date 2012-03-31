@@ -47,20 +47,20 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email]}")
+	@FlushCache(namespace = "user", key = "${[user.username,user.email]}")
 	public void delete(User user) {
 		super.delete(user);
 	}
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "user", key = "${[args[0].username,args[0].email]}")
+	@FlushCache(namespace = "user", key = "${[user.username,user.email]}")
 	public void save(User user) {
 		super.save(user);
 	}
 
 	@Transactional(readOnly = true)
-	@CheckCache(namespace = "user", key = "${args[0]}")
+	@CheckCache(namespace = "user", key = "${username}")
 	public User loadUserByUsername(String username) {
 		if (StringUtils.isEmpty(username))
 			return null;

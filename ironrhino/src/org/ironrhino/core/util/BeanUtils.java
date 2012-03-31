@@ -37,6 +37,7 @@ public class BeanUtils {
 		return deepClone(source, null, ignoreProperties);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T extends BaseTreeableEntity<T>> T deepClone(T source,
 			ObjectFilter filter, String... ignoreProperties) {
 		if (filter != null && !filter.accept(source))

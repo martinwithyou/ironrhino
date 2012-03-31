@@ -34,7 +34,7 @@ public class JavaSourceExecutor {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		StandardJavaFileManager stdFileManager = compiler
 				.getStandardFileManager(null, null, null);
-		JavaFileManager fileManager = new ForwardingJavaFileManager(
+		JavaFileManager fileManager = new ForwardingJavaFileManager<StandardJavaFileManager>(
 				stdFileManager) {
 
 			@Override
@@ -43,7 +43,7 @@ public class JavaSourceExecutor {
 					throws IOException {
 				JavaFileObject jfo = super.getJavaFileForOutput(location,
 						className, kind, sibling);
-				return new ForwardingJavaFileObject(jfo) {
+				return new ForwardingJavaFileObject<JavaFileObject>(jfo) {
 
 					@Override
 					public OutputStream openOutputStream() throws IOException {
@@ -78,10 +78,10 @@ public class JavaSourceExecutor {
 			}
 			throw new RuntimeException(sb.toString());
 		}
-		Class clazz = ByteArrayClassLoader.getInstance().loadClass(
+		Class<?> clazz = ByteArrayClassLoader.getInstance().loadClass(
 				source.getClassName());
 		Object instance = clazz.newInstance();
-		Method method = clazz.getMethod("run");
+		Method method = clazz.getMethod("run",new Class[0]);
 		if (method.getReturnType() == Void.TYPE) {
 			int mod = method.getModifiers();
 			if (!Modifier.isStatic(mod) && Modifier.isPublic(mod))
@@ -162,7 +162,7 @@ public class JavaSourceExecutor {
 		}
 
 		@Override
-		public Class findClass(String name) {
+		public Class<?> findClass(String name) {
 			byte[] classData = bytes.remove(name).toByteArray();
 			return defineClass(name, classData, 0, classData.length);
 		}

@@ -23,6 +23,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Singleton
 @Named("oauthManager")
 @DefaultProfile
+@SuppressWarnings("unchecked")
 public class OAuthManagerImpl implements OAuthManager {
 
 	@Inject

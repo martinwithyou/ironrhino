@@ -51,7 +51,7 @@ public class RegionAction extends BaseAction {
 	private boolean async;
 
 	@Autowired(required = false)
-	private transient CompassSearchService compassSearchService;
+	private transient CompassSearchService<Region> compassSearchService;
 
 	public boolean isAsync() {
 		return async;
@@ -97,7 +97,7 @@ public class RegionAction extends BaseAction {
 		this.region = region;
 	}
 
-	public void setBaseManager(BaseManager baseManager) {
+	public void setBaseManager(BaseManager<Region> baseManager) {
 		baseManager.setEntityClass(Region.class);
 		this.baseManager = baseManager;
 	}

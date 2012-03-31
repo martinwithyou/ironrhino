@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.ExpressionUtils;
+import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -38,15 +39,29 @@ public class BaseAspect implements Ordered {
 		template = template.trim();
 		if (template.length() == 0)
 			return "";
-
 		Map<String, Object> context = new HashMap<String, Object>();
-		context.put("_this", jp.getThis());
-		context.put("target", jp.getTarget());
-		context.put("aspect", this);
-		if (retval != null)
+		Object[] args = jp.getArgs();
+		String[] paramNames = ReflectionUtils.getParameterNames(jp);
+		if (paramNames == null) {
+			log.warn("Unable to resolve method parameter names for method: "
+					+ jp.getStaticPart().getSignature()
+					+ ". Debug symbol information is required if you are using parameter names in expressions.");
+		} else {
+			for (int i = 0; i < args.length; i++)
+				context.put(paramNames[i], args[i]);
+		}
+		if (!context.containsKey("_this"))
+			context.put("_this", jp.getThis());
+		if (!context.containsKey("target"))
+			context.put("target", jp.getTarget());
+		if (!context.containsKey("aspect"))
+			context.put("aspect", this);
+		if (retval != null && !context.containsKey("retval"))
 			context.put("retval", retval);
-		context.put("args", jp.getArgs());
-		context.put("user", AuthzUtils.getUserDetails(UserDetails.class));
+		if (!context.containsKey("args"))
+			context.put("args", jp.getArgs());
+		if (!context.containsKey("user"))
+			context.put("user", AuthzUtils.getUserDetails(UserDetails.class));
 		return ExpressionUtils.eval(template, context);
 	}
 

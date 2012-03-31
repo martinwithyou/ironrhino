@@ -105,6 +105,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		return supportSessionTrackerFromURL;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void initialize(WrappedHttpSession session) {
 
 		// simulated session

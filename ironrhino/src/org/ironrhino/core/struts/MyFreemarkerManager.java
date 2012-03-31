@@ -44,7 +44,7 @@ public class MyFreemarkerManager extends FreemarkerManager {
 				.getWebApplicationContext(servletContext).getBean(
 						"templateProvider", TemplateProvider.class);
 		Configuration configuration = super.createConfiguration(servletContext);
-		Map globalVariables = new HashMap();
+		Map<String, Object> globalVariables = new HashMap<String, Object>();
 		globalVariables.putAll(templateProvider.getAllSharedVariables());
 		globalVariables.put("statics", BeansWrapper.getDefaultInstance()
 				.getStaticModels());

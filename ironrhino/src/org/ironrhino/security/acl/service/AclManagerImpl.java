@@ -19,20 +19,20 @@ public class AclManagerImpl extends BaseManagerImpl<Acl> implements AclManager {
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "acl", key = "${args[0].role+args[0].resource}")
+	@FlushCache(namespace = "acl", key = "${acl.role+acl.resource}")
 	public void delete(Acl acl) {
 		super.delete(acl);
 	}
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "acl", key = "${args[0].role+args[0].resource}")
+	@FlushCache(namespace = "acl", key = "${acl.role+acl.resource}")
 	public void save(Acl acl) {
 		super.save(acl);
 	}
 
 	@Transactional(readOnly = true)
-	@CheckCache(namespace = "acl", key = "${args[0]+args[1]}")
+	@CheckCache(namespace = "acl", key = "${role+resource}")
 	public Acl findAcl(String role, String resource) {
 		return findByNaturalId("role", role, "resource", resource);
 	}

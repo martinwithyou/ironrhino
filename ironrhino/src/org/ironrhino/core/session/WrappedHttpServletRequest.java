@@ -70,7 +70,7 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 	}
 
 	@Override
-	public Map getParameterMap() {
+	public Map<String, String[]> getParameterMap() {
 		Map<String, String[]> map = super.getParameterMap();
 		for (Map.Entry<String, String[]> entry : map.entrySet()) {
 			String name = entry.getKey();

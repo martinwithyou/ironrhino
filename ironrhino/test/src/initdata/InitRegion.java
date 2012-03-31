@@ -38,6 +38,7 @@ public class InitRegion {
 		ctx.close();
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void save(Region region) {
 		region.setAreacode(regionAreacodeMap.get(region.getName()));
 		baseManager.save(region);

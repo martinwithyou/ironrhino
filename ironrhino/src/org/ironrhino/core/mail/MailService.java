@@ -91,11 +91,11 @@ public class MailService {
 		}
 	}
 
-	public void send(SimpleMailMessage smm, String templateName, Map model) {
+	public void send(SimpleMailMessage smm, String templateName, Map<String,Object> model) {
 		send(smm, templateName, model, true);
 	}
 
-	public void send(SimpleMailMessage smm, String templateName, Map model,
+	public void send(SimpleMailMessage smm, String templateName, Map<String,Object> model,
 			boolean useHtmlFormat) {
 		if (templateProvider == null)
 			throw new RuntimeException("No templateProvider setted");

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,23 +59,23 @@ public class MenuControl {
 			Collection<ActionConfig> acs = pc.getActionConfigs().values();
 			for (ActionConfig ac : acs) {
 				try {
-					Class c = Class.forName(ac.getClassName());
+					Class<?> c = Class.forName(ac.getClassName());
 					if (EntityAction.class.equals(c)) {
-						Class entityClass = ((AutoConfigPackageProvider) packageProvider)
+						Class<?> entityClass = ((AutoConfigPackageProvider) packageProvider)
 								.getEntityClass(pc.getNamespace(), ac.getName());
-						Menu menu = (Menu) entityClass
+						Menu menu = entityClass
 								.getAnnotation(Menu.class);
 						if (menu != null) {
 							StringBuilder sb = new StringBuilder();
 							sb.append(pc.getNamespace())
 									.append(pc.getNamespace().endsWith("/") ? ""
 											: "/").append(ac.getName());
-							mapping.put(sb.toString(), new Pair(menu,
+							mapping.put(sb.toString(), new Pair<Menu,Authorize>(menu,
 									entityClass.getAnnotation(Authorize.class)));
 						}
 						continue;
 					}
-					Menu menuOnClass = (Menu) c.getAnnotation(Menu.class);
+					Menu menuOnClass = c.getAnnotation(Menu.class);
 					Authorize authorizeOnClass = (Authorize) c
 							.getAnnotation(Authorize.class);
 					if (menuOnClass != null) {
@@ -82,7 +83,7 @@ public class MenuControl {
 						sb.append(pc.getNamespace())
 								.append(pc.getNamespace().endsWith("/") ? ""
 										: "/").append(ac.getName());
-						mapping.put(sb.toString(), new Pair(menuOnClass,
+						mapping.put(sb.toString(), new Pair<Menu,Authorize>(menuOnClass,
 								authorizeOnClass));
 					}
 					Set<Method> methods = AnnotationUtils.getAnnotatedMethods(
@@ -96,7 +97,7 @@ public class MenuControl {
 										: "/").append(ac.getName());
 						if (!m.getName().equals("execute"))
 							sb.append("/").append(m.getName());
-						mapping.put(sb.toString(), new Pair(menu,
+						mapping.put(sb.toString(), new Pair<Menu,Authorize>(menu,
 								authorize == null ? authorizeOnClass
 										: authorize));
 					}
@@ -121,14 +122,15 @@ public class MenuControl {
 
 	private void filterUnauthorized(MenuNode node) {
 		List<MenuNode> list = new ArrayList<MenuNode>();
-		List<MenuNode> children = (List) node.getChildren();
-		for (int i = 0; i < children.size(); i++) {
-			MenuNode child = children.get(i);
+		Collection<MenuNode> children = node.getChildren();
+		Iterator<MenuNode> it = children.iterator();
+		while (it.hasNext()) {
+			MenuNode child = it.next();
 			if (hasPermission(child)) {
 				list.add(child);
 				filterUnauthorized(child);
 			}else{
-				child.getParent().getChildren().remove(child);
+				it.remove();
 			}
 		}
 		if (list.size() == 0 && node.getUrl() == null
@@ -227,6 +229,7 @@ public class MenuControl {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private MenuNode assemble(Map<String, Pair<Menu, Authorize>> mapping) {
 		List<Map.Entry<String, Pair<Menu, Authorize>>> list = new ArrayList<Map.Entry<String, Pair<Menu, Authorize>>>();
 		list.addAll(mapping.entrySet());
@@ -258,11 +261,11 @@ public class MenuControl {
 						mn.setName(str);
 						mn.setParent(parent);
 						if (!(parent.getChildren() instanceof List)) {
-							List children = new ArrayList<MenuNode>();
+							List<MenuNode> children = new ArrayList<MenuNode>();
 							children.addAll(parent.getChildren());
 							parent.setChildren(children);
 						}
-						Collections.sort((List) parent.getChildren());
+						Collections.sort((List<MenuNode>) parent.getChildren());
 						parent.getChildren().add(mn);
 					}
 					parent = mn;
@@ -270,7 +273,7 @@ public class MenuControl {
 			}
 			node.setParent(parent);
 			if (!(parent.getChildren() instanceof List)) {
-				List children = new ArrayList<MenuNode>();
+				List<MenuNode> children = new ArrayList<MenuNode>();
 				children.addAll(parent.getChildren());
 				parent.setChildren(children);
 			}

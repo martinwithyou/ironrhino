@@ -17,6 +17,7 @@ public class BatchExecutor {
 
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 
+	@SuppressWarnings("unchecked")
 	private List<String> commands = Collections.EMPTY_LIST;
 
 	@Inject

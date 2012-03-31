@@ -160,7 +160,8 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		dirty = true;
 	}
 
-	public Enumeration getAttributeNames() {
+	@SuppressWarnings("unchecked")
+	public Enumeration<String> getAttributeNames() {
 		return new IteratorEnumeration(attrMap.keySet().iterator());
 	}
 
@@ -288,6 +289,7 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 	}
 
 	@Deprecated
+	@SuppressWarnings("unchecked")
 	public String[] getValueNames() {
 		List names = new ArrayList();
 

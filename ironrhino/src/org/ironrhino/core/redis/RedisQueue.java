@@ -16,13 +16,13 @@ public abstract class RedisQueue<T extends Serializable> implements
 	protected String queueName;
 
 	@Inject
-	private RedisTemplate redisTemplate;
+	private RedisTemplate<String,T> redisTemplate;
 
 	public void setQueueName(String queueName) {
 		this.queueName = queueName;
 	}
 
-	public void setRedisTemplate(RedisTemplate redisTemplate) {
+	public void setRedisTemplate(RedisTemplate<String,T> redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
 

@@ -62,7 +62,7 @@ public class UserAction extends BaseAction {
 	private transient UserRoleManager userRoleManager;
 
 	@Autowired(required = false)
-	private transient CompassSearchService compassSearchService;
+	private transient CompassSearchService<User> compassSearchService;
 
 	public String[] getRoleId() {
 		return roleId;

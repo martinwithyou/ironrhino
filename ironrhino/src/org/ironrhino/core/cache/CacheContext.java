@@ -107,6 +107,7 @@ public class CacheContext {
 		return sb.toString();
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Object eval(String template) {
 		if (template == null)
 			return null;

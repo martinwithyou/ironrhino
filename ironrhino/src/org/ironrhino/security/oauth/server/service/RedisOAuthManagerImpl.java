@@ -49,6 +49,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return expireTime;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setRedisTemplate(RedisTemplate redisTemplate) {
 		this.authorizationRedisTemplate = redisTemplate;
 		this.clientRedisTemplate = redisTemplate;
@@ -184,6 +185,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 						+ auth.getGrantor().getUsername(), 0, accessToken);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Authorization> findAuthorizationsByGrantor(User grantor) {
 		String keyForList = NAMESPACE_AUTHORIZATION_GRANTOR
 				+ grantor.getUsername();
@@ -227,6 +229,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return clientRedisTemplate.opsForValue().get(key);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Client> findClientByOwner(User owner) {
 		String keyForSet = NAMESPACE_CLIENT_OWNER + owner.getUsername();
 		Set<String> ids = stringRedisTemplate.opsForSet().members(keyForSet);

@@ -35,11 +35,11 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		PageManager {
 
 	@Autowired(required = false)
-	private transient CompassSearchService compassSearchService;
+	private transient CompassSearchService<Page> compassSearchService;
 
 	@Override
 	@Transactional
-	@FlushCache(key = "${args[0].path}", namespace = "page", renew = "${args[0]}")
+	@FlushCache(key = "${page.path}", namespace = "page", renew = "${page}")
 	public void save(Page page) {
 		page.setDraft(null);
 		page.setDraftDate(null);
@@ -48,13 +48,13 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 
 	@Override
 	@Transactional
-	@FlushCache(key = "${args[0].path}", namespace = "page")
+	@FlushCache(key = "${page.path}", namespace = "page")
 	public void delete(Page page) {
 		super.delete(page);
 	}
 
 	@Transactional(readOnly = true)
-	@CheckCache(key = "${args[0]}", namespace = "page", eternal = true)
+	@CheckCache(key = "${path}", namespace = "page", eternal = true)
 	public Page getByPath(String path) {
 		Page page = findByNaturalId(path);
 		if (page != null)
@@ -119,6 +119,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return findListByTag(new String[] { tag });
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Page> findListByTag(String... tag) {
 		if (tag.length == 0 || StringUtils.isBlank(tag[0]))
 			return Collections.EMPTY_LIST;
@@ -160,6 +161,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return findResultPageByTag(resultPage, new String[] { tag });
 	}
 
+	@SuppressWarnings("unchecked")
 	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,
 			String... tag) {
 		if (tag.length == 0 || StringUtils.isBlank(tag[0])) {
@@ -246,7 +248,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 				}
 			}
 		}
-		List<Map.Entry<String, Integer>> temp = new ArrayList(map.size());
+		List<Map.Entry<String, Integer>> temp = new ArrayList<Map.Entry<String, Integer>>(map.size());
 		temp.addAll(map.entrySet());
 		Collections.sort(temp, new Comparator<Map.Entry<String, Integer>>() {
 			@Override

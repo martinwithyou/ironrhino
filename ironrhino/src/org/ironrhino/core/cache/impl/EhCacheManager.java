@@ -106,6 +106,7 @@ public class EhCacheManager implements CacheManager {
 							.valueOf(timeToLive) : null));
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> mget(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return null;

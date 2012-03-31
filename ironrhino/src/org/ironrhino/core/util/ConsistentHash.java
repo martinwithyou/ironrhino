@@ -80,6 +80,7 @@ public class ConsistentHash<K, V> {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void setup() {
 		writeLock.lock();
 		try {

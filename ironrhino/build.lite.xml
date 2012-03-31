@@ -32,7 +32,7 @@
 	<target name="compile">
 		<antcall target="clean" />
 		<antcall target="init" />
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8">
+		<javac includeantruntime="false" debug="true" debuglevel="vars,lines" srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8">
 			<classpath refid="lib.classpath" />
 		</javac>
 		<copy todir="${classes.dir}">
@@ -46,7 +46,7 @@
 
 	<target name="test" depends="compile">
 		<mkdir dir="${test.classes.dir}" />
-		<javac srcdir="${test.src.dir}" destdir="${test.classes.dir}">
+		<javac includeantruntime="false" debug="true" debuglevel="vars,lines" srcdir="${test.src.dir}" destdir="${test.classes.dir}">
 			<classpath>
 				<path refid="lib.classpath" />
 				<pathelement location="${classes.dir}" />

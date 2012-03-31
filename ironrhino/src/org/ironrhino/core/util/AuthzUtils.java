@@ -59,6 +59,7 @@ public class AuthzUtils {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<String> getRoleNames() {
 		List<String> roleNames = new ArrayList<String>();
 		if (SecurityContextHolder.getContext().getAuthentication() != null) {
@@ -98,6 +99,7 @@ public class AuthzUtils {
 		return getUserDetails(UserDetails.class);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T extends UserDetails> T getUserDetails(Class<T> clazz) {
 		SecurityContext sc = SecurityContextHolder.getContext();
 		if (sc == null)

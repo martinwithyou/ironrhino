@@ -96,14 +96,14 @@ public class PermitAction extends BaseAction {
 				Collection<ActionConfig> acs = pc.getActionConfigs().values();
 				for (ActionConfig ac : acs) {
 					try {
-						Class c = Class.forName(ac.getClassName());
+						Class<?> c = Class.forName(ac.getClassName());
 						if (!BaseAction.class.isAssignableFrom(c))
 							continue;
 						if (EntityAction.class.equals(c)) {
-							Class entityClass = ((AutoConfigPackageProvider) packageProvider)
+							Class<?> entityClass = ((AutoConfigPackageProvider) packageProvider)
 									.getEntityClass(pc.getNamespace(),
 											ac.getName());
-							Authorize authorize = (Authorize) entityClass
+							Authorize authorize = entityClass
 									.getAnnotation(Authorize.class);
 							if (authorize != null
 									&& !authorize.authorizer().equals(
@@ -122,7 +122,7 @@ public class PermitAction extends BaseAction {
 							}
 							continue;
 						}
-						Authorize authorizeOnClass = (Authorize) c
+						Authorize authorizeOnClass = c
 								.getAnnotation(Authorize.class);
 						if (authorizeOnClass == null
 								|| authorizeOnClass.authorizer().equals(
@@ -184,7 +184,7 @@ public class PermitAction extends BaseAction {
 			Map<String, Collection<String>> map = temp.asMap();
 			resources = new LinkedHashMap<String, Collection<String>>(
 					map.size());
-			List<String> groups = new ArrayList(map.keySet());
+			List<String> groups = new ArrayList<String>(map.keySet());
 			Collections.sort(groups);
 			for (String group : groups)
 				resources.put(group, map.get(group));
@@ -223,6 +223,7 @@ public class PermitAction extends BaseAction {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	@InputConfig(methodName = "input")
 	public String save() {
 		if (StringUtils.isBlank(role))

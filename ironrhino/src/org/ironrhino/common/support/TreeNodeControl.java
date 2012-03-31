@@ -57,6 +57,7 @@ public class TreeNodeControl implements
 			addLevel(t, delta);
 	}
 
+	@SuppressWarnings("unchecked")
 	private synchronized void create(TreeNode treeNode) {
 		TreeNode parent;
 		String fullId = treeNode.getFullId();
@@ -78,6 +79,7 @@ public class TreeNodeControl implements
 			Collections.sort((List) parent.getChildren());
 	}
 
+	@SuppressWarnings("unchecked")
 	private synchronized void update(TreeNode treeNode) {
 		TreeNode r = tree.getDescendantOrSelfById(treeNode.getId());
 		boolean needsort = r.compareTo(treeNode) != 0

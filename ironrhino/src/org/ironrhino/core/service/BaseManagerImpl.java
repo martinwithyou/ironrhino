@@ -38,6 +38,7 @@ import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
+@SuppressWarnings("unchecked")
 public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	protected Logger log = LoggerFactory.getLogger(BaseManagerImpl.class);

@@ -48,7 +48,7 @@ public class PageAction extends BaseAction {
 	private String cmsPath = "/p/";
 
 	@Autowired(required = false)
-	private transient CompassSearchService compassSearchService;
+	private transient CompassSearchService<Page> compassSearchService;
 
 	@Autowired
 	private transient TemplateProvider templateProvider;
@@ -109,7 +109,7 @@ public class PageAction extends BaseAction {
 			criteria.addSort("displayOrder", false);
 			criteria.addSort("path", false);
 			if (resultPage == null)
-				resultPage = new ResultPage();
+				resultPage = new ResultPage<Page>();
 			resultPage.setCriteria(criteria);
 			resultPage = compassSearchService.search(resultPage);
 		}

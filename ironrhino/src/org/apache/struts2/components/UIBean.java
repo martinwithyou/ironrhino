@@ -421,6 +421,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * </pre>
  *
  */
+@SuppressWarnings("unchecked")
 public abstract class UIBean extends Component {
     private static final Logger LOG = LoggerFactory.getLogger(UIBean.class);
 

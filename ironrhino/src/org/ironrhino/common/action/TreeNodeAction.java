@@ -62,7 +62,7 @@ public class TreeNodeAction extends BaseAction {
 		this.treeNode = treeNode;
 	}
 
-	public void setBaseManager(BaseManager baseManager) {
+	public void setBaseManager(BaseManager<TreeNode> baseManager) {
 		baseManager.setEntityClass(TreeNode.class);
 		this.baseManager = baseManager;
 	}

@@ -73,6 +73,7 @@ public class JsonUtils {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T> T fromJson(String json, TypeReference<T> type)
 			throws Exception {
 		return (T) objectMapper.readValue(json, type);

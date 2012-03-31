@@ -1,5 +1,6 @@
 package initdata;
 
+import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
@@ -10,6 +11,7 @@ public class InitUser {
 
 	static BaseManager baseManager;
 
+	@SuppressWarnings("unchecked")
 	public static void main(String... strings) throws Exception {
 		System.setProperty("app.name", "ironrhino");
 		System.setProperty("ironrhino.home", System.getProperty("user.home")
@@ -20,7 +22,7 @@ public class InitUser {
 				new String[] { "initdata/applicationContext-initdata.xml",
 						"resources/spring/applicationContext-ds.xml",
 						"resources/spring/applicationContext-hibernate.xml" });
-		BaseManager baseManager = (BaseManager) ctx.getBean("baseManager");
+		BaseManager<Persistable> baseManager = (BaseManager<Persistable>) ctx.getBean("baseManager");
 		User admin = new User();
 		admin.setUsername("admin");
 		admin.setPassword(CodecUtils.digest("password"));

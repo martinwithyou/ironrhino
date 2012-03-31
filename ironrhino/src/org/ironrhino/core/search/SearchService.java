@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.ironrhino.core.model.ResultPage;
 
-public interface SearchService {
+public interface SearchService<T> {
 
-	public ResultPage search(ResultPage resultPage);
+	public ResultPage search(ResultPage<T> resultPage);
 
 	public List search(SearchCriteria searchCriteria);
 
-	public ResultPage search(ResultPage resultPage, Mapper mapper);
+	public ResultPage search(ResultPage<T> resultPage,  Mapper<T,T> mapper);
 
-	public List search(SearchCriteria searchCriteria, Mapper mapper);
+	public List search(SearchCriteria searchCriteria,  Mapper<T,T> mapper);
 
 	public static interface Mapper<S,T> {
 

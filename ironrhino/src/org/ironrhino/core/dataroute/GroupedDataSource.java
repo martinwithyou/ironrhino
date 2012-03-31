@@ -108,7 +108,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 			for (String name : writeSlaveNames.keySet())
 				writeSlaves.put(name, (DataSource) beanFactory.getBean(name));
 			writeSlaves.put(masterName, master);
-			writeRoundRobin = new RoundRobin(writeSlaveNames,
+			writeRoundRobin = new RoundRobin<String>(writeSlaveNames,
 					new RoundRobin.UsableChecker<String>() {
 						public boolean isUsable(String target) {
 							DataSource ds = writeSlaves.get(target);
@@ -119,7 +119,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 		if (readSlaveNames != null && readSlaveNames.size() > 0) {
 			for (String name : readSlaveNames.keySet())
 				readSlaves.put(name, (DataSource) beanFactory.getBean(name));
-			readRoundRobin = new RoundRobin(readSlaveNames,
+			readRoundRobin = new RoundRobin<String>(readSlaveNames,
 					new RoundRobin.UsableChecker<String>() {
 						public boolean isUsable(String target) {
 							DataSource ds = readSlaves.get(target);

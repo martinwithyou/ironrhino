@@ -94,6 +94,7 @@ public class TextFileIterator<T> implements Iterator<T> {
 		throw new UnsupportedOperationException();
 	}
 
+	@SuppressWarnings("unchecked")
 	protected T transform(String line, File f) {
 		// hook to be override
 		return (T) line;

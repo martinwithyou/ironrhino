@@ -108,7 +108,7 @@ public class EntityAction extends BaseAction {
 		this.resultPage = resultPage;
 	}
 
-	public void setBaseManager(BaseManager baseManager) {
+	public void setBaseManager(BaseManager<Persistable> baseManager) {
 		this._baseManager = baseManager;
 	}
 
@@ -118,16 +118,17 @@ public class EntityAction extends BaseAction {
 	}
 
 	private AutoConfig getAutoConfig() {
-		return (AutoConfig) getEntityClass().getAnnotation(AutoConfig.class);
+		return getEntityClass().getAnnotation(AutoConfig.class);
 	}
 
-	private BaseManager getEntityManager(Class entityClass) {
+	@SuppressWarnings("unchecked")
+	private BaseManager<Persistable> getEntityManager(Class<Persistable> entityClass) {
 		String entityManagerName = StringUtils.uncapitalize(entityClass
 				.getSimpleName()) + "Manager";
 		try {
 			Object bean = ApplicationContextUtils.getBean(entityManagerName);
 			if (bean != null)
-				return (BaseManager) bean;
+				return (BaseManager<Persistable>) bean;
 			else
 				_baseManager.setEntityClass(entityClass);
 		} catch (NoSuchBeanDefinitionException e) {
@@ -178,6 +179,7 @@ public class EntityAction extends BaseAction {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public String list() {
 		final BaseManager entityManager = getEntityManager(getEntityClass());
 		Set<String> searchablePropertyNames = new HashSet<String>();
@@ -272,7 +274,7 @@ public class EntityAction extends BaseAction {
 			return ACCESSDENIED;
 		if (!makeEntityValid())
 			return INPUT;
-		BaseManager entityManager = getEntityManager(getEntityClass());
+		BaseManager<Persistable> entityManager = getEntityManager(getEntityClass());
 		entityManager.save(entity);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
@@ -282,9 +284,10 @@ public class EntityAction extends BaseAction {
 		return makeEntityValid() ? NONE : INPUT;
 	}
 
+	@SuppressWarnings("unchecked")
 	private boolean makeEntityValid() {
 		Map<String, UiConfigImpl> uiConfigs = getUiConfigs();
-		BaseManager entityManager = getEntityManager(getEntityClass());
+		BaseManager<Persistable> entityManager = getEntityManager(getEntityClass());
 		entity = constructEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
 		Persistable persisted = null;
@@ -450,7 +453,7 @@ public class EntityAction extends BaseAction {
 			for (PropertyDescriptor pd : pds) {
 				if (!editablePropertyNames.contains(pd.getName()))
 					continue;
-				Class returnType = pd.getPropertyType();
+				Class<Persistable> returnType = (Class<Persistable>)pd.getPropertyType();
 				if (!Persistable.class.isAssignableFrom(returnType))
 					continue;
 				String parameterValue = ServletActionContext.getRequest()
@@ -504,7 +507,7 @@ public class EntityAction extends BaseAction {
 	public String delete() {
 		if (readonly())
 			return ACCESSDENIED;
-		BaseManager entityManager = getEntityManager(getEntityClass());
+		BaseManager<Persistable> entityManager = getEntityManager(getEntityClass());
 		String[] arr = getId();
 		Serializable[] id = (arr != null) ? new Serializable[arr.length]
 				: new Serializable[0];
@@ -519,9 +522,9 @@ public class EntityAction extends BaseAction {
 			log.error(e.getMessage(), e);
 		}
 		if (id.length > 0) {
-			List list;
+			List<Persistable> list;
 			if (id.length == 1) {
-				list = new ArrayList(1);
+				list = new ArrayList<Persistable>(1);
 				list.add(entityManager.get(id[0]));
 			} else {
 				DetachedCriteria dc = entityManager.detachedCriteria();
@@ -634,7 +637,7 @@ public class EntityAction extends BaseAction {
 						|| pd.getReadMethod() == null
 						|| hides.contains(pd.getName()))
 					continue;
-				Class returnType = pd.getPropertyType();
+				Class<?> returnType = pd.getPropertyType();
 				if (returnType.isEnum()) {
 					UiConfigImpl uci = new UiConfigImpl(uiConfig);
 					uci.setType("select");
@@ -758,6 +761,7 @@ public class EntityAction extends BaseAction {
 		private boolean hideInList;
 		private String template;
 		private String width;
+		@SuppressWarnings("unchecked")
 		private Map<String, String> dynamicAttributes = Collections.EMPTY_MAP;
 		private boolean excludeIfNotEdited;
 		private String listKey = UiConfig.DEFAULT_LIST_KEY;
@@ -981,7 +985,7 @@ public class EntityAction extends BaseAction {
 	}
 
 	// need call once before view
-	private Class getEntityClass() {
+	private Class<Persistable> getEntityClass() {
 		if (entityClass == null) {
 			ActionProxy proxy = ActionContext.getContext()
 					.getActionInvocation().getProxy();
@@ -993,7 +997,7 @@ public class EntityAction extends BaseAction {
 		return entityClass;
 	}
 
-	private Class entityClass;
+	private Class<Persistable> entityClass;
 
 	private void setEntity(Persistable entity) {
 		ValueStack vs = ActionContext.getContext().getValueStack();

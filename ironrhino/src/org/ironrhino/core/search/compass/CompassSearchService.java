@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-public class CompassSearchService implements SearchService {
+public class CompassSearchService<T> implements SearchService<T> {
 
 	protected Logger log = LoggerFactory.getLogger(CompassSearchService.class);
 
@@ -40,11 +40,12 @@ public class CompassSearchService implements SearchService {
 
 	private CompassTemplate compassTemplate;
 
-	public ResultPage search(ResultPage resultPage) {
+	public ResultPage<T> search(ResultPage<T> resultPage) {
 		return search(resultPage, null);
 	}
 
-	public ResultPage search(ResultPage resultPage, Mapper mapper) {
+	@SuppressWarnings("unchecked")
+	public ResultPage<T> search(ResultPage<T> resultPage, Mapper<T, T> mapper) {
 		CompassSearchResults searchResults = search(
 				(CompassSearchCriteria) resultPage.getCriteria(),
 				resultPage.getPageNo(), resultPage.getPageSize());
@@ -53,9 +54,9 @@ public class CompassSearchService implements SearchService {
 		resultPage.setTotalRecord(searchResults.getTotalHits());
 		CompassHit[] hits = searchResults.getHits();
 		if (hits != null) {
-			List list = new ArrayList(hits.length);
+			List<T> list = new ArrayList<T>(hits.length);
 			for (CompassHit ch : searchResults.getHits()) {
-				Object data = mapper == null ? ch.getData() : mapper.map(ch
+				T data = mapper == null ? (T) ch.getData() : mapper.map((T) ch
 						.getData());
 				if (data != null)
 					list.add(data);
@@ -65,20 +66,21 @@ public class CompassSearchService implements SearchService {
 		return resultPage;
 	}
 
-	public List search(SearchCriteria searchCriteria) {
+	public List<T> search(SearchCriteria searchCriteria) {
 		return search(searchCriteria, null);
 	}
 
-	public List search(SearchCriteria searchCriteria, Mapper mapper) {
+	@SuppressWarnings("unchecked")
+	public List<T> search(SearchCriteria searchCriteria, Mapper<T, T> mapper) {
 		CompassSearchResults searchResults = search(
 				(CompassSearchCriteria) searchCriteria, -1, -1);
 		if (searchResults == null)
 			return Collections.EMPTY_LIST;
 		CompassHit[] hits = searchResults.getHits();
 		if (hits != null) {
-			List list = new ArrayList(hits.length);
+			List<T> list = new ArrayList<T>(hits.length);
 			for (CompassHit ch : searchResults.getHits()) {
-				Object data = mapper == null ? ch.getData() : mapper.map(ch
+				T data = mapper == null ? (T) ch.getData() : mapper.map((T) ch
 						.getData());
 				if (data != null)
 					list.add(data);
@@ -94,7 +96,7 @@ public class CompassSearchService implements SearchService {
 		if (criteria == null)
 			return null;
 		CompassSearchResults searchResults = (CompassSearchResults) getCompassTemplate()
-				.execute(new CompassCallback() {
+				.execute(new CompassCallback<Object>() {
 					public Object doInCompass(CompassSession session) {
 						return performSearch(criteria, pageNo, pageSize,
 								session);

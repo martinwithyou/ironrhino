@@ -39,6 +39,7 @@ public abstract class RedisTopic<T extends Serializable> implements
 	}
 
 	@PostConstruct
+	@SuppressWarnings("unchecked")
 	public void afterPropertiesSet() {
 		Topic topic = new ChannelTopic(channelName);
 		messageListenerContainer.addMessageListener(new MessageListener() {

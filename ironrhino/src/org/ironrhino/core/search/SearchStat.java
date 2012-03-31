@@ -65,6 +65,7 @@ public class SearchStat {
 		map.put(keyword, hits);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Integer> suggest(String keyword, int limit) {
 		if (directory == null || StringUtils.isBlank(keyword))
 			return Collections.EMPTY_MAP;

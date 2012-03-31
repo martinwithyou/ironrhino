@@ -66,15 +66,25 @@ public class ClassScaner {
 	public static Set<Class> scanAnnotated(String basePackage,
 			Class<? extends Annotation>... annotations) {
 		ClassScaner cs = new ClassScaner();
-		for (Class anno : annotations)
+		for (Class<? extends Annotation> anno : annotations)
 			cs.addIncludeFilter(new AnnotationTypeFilter(anno));
 		return cs.doScan(basePackage);
 	}
 
 	public static Set<Class> scanAnnotated(String[] basePackages,
+			Class<? extends Annotation> annotation) {
+		ClassScaner cs = new ClassScaner();
+			cs.addIncludeFilter(new AnnotationTypeFilter(annotation));
+		Set<Class> classes = new HashSet<Class>();
+		for (String s : basePackages)
+			classes.addAll(cs.doScan(s));
+		return  classes;
+	}
+	
+	public static Set<Class> scanAnnotated(String[] basePackages,
 			Class<? extends Annotation>... annotations) {
 		ClassScaner cs = new ClassScaner();
-		for (Class anno : annotations)
+		for (Class<? extends Annotation> anno : annotations)
 			cs.addIncludeFilter(new AnnotationTypeFilter(anno));
 		Set<Class> classes = new HashSet<Class>();
 		for (String s : basePackages)
@@ -102,11 +112,18 @@ public class ClassScaner {
 			set.addAll(cs.doScan(s));
 		return set;
 	}
+	
+	public static Set<Class> scanAnnotatedPackage(String basePackage,
+			Class<? extends Annotation> annotation) {
+		ClassScaner cs = new ClassScaner();
+			cs.addIncludeFilter(new AnnotationTypeFilter(annotation));
+		return cs.doScan(basePackage, "/**/*/package-info.class");
+	}
 
 	public static Set<Class> scanAnnotatedPackage(String basePackage,
 			Class<? extends Annotation>... annotations) {
 		ClassScaner cs = new ClassScaner();
-		for (Class anno : annotations)
+		for (Class<? extends Annotation> anno : annotations)
 			cs.addIncludeFilter(new AnnotationTypeFilter(anno));
 		return cs.doScan(basePackage, "/**/*/package-info.class");
 	}

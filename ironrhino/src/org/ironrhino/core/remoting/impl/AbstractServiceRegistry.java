@@ -51,6 +51,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		return exportServices;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void init() {
 		prepare();
 		String[] beanNames = beanFactory.getBeanDefinitionNames();

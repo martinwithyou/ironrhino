@@ -10,17 +10,17 @@ public class RoundRobin<T> {
 
 	protected List<TargetWrapper<T>> targetWrappers = new ArrayList<TargetWrapper<T>>();
 
-	protected UsableChecker usableChecker;
+	protected UsableChecker<T> usableChecker;
 
 	public RoundRobin(Collection<T> targets) {
 		this(targets, null);
 	}
 
-	public RoundRobin(Collection<T> targets, UsableChecker usableChecker) {
+	public RoundRobin(Collection<T> targets, UsableChecker<T> usableChecker) {
 		if (targets == null || targets.size() == 0)
 			throw new IllegalArgumentException("no target");
 		for (T target : targets) {
-			TargetWrapper tw = new TargetWrapper<T>(target);
+			TargetWrapper<T> tw = new TargetWrapper<T>(target);
 			targetWrappers.add(tw);
 		}
 		this.usableChecker = usableChecker;
@@ -30,11 +30,11 @@ public class RoundRobin<T> {
 		this(targets, null);
 	}
 
-	public RoundRobin(Map<T, Integer> targets, UsableChecker usableChecker) {
+	public RoundRobin(Map<T, Integer> targets, UsableChecker<T> usableChecker) {
 		if (targets == null || targets.size() == 0)
 			throw new IllegalArgumentException("no target");
 		for (Map.Entry<T, Integer> entry : targets.entrySet()) {
-			TargetWrapper tw = new TargetWrapper<T>(entry.getKey(), entry
+			TargetWrapper<T> tw = new TargetWrapper<T>(entry.getKey(), entry
 					.getValue());
 			targetWrappers.add(tw);
 		}

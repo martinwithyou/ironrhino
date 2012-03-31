@@ -71,10 +71,10 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		for (String packagePrefix : packagePrefixes)
 			packageInfos.addAll(ClassScaner.scanAnnotatedPackage(packagePrefix,
 					AutoConfig.class));
-		for (Class packageInfo : packageInfos) {
+		for (Class<?> packageInfo : packageInfos) {
 			String name = packageInfo.getName();
 			String packageName = name.substring(0, name.lastIndexOf('.'));
-			AutoConfig ac = (AutoConfig) packageInfo
+			AutoConfig ac = packageInfo
 					.getAnnotation(AutoConfig.class);
 			if (ac != null) {
 				log.info("Loading autoconfig from " + name);
@@ -175,7 +175,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 			if (classes.size() == 0)
 				continue;
 			packageLoader = new PackageLoader();
-			for (Class clazz : classes) {
+			for (Class<Persistable> clazz : classes) {
 				processAutoConfigClass(clazz, defaultNamespace);
 			}
 			for (PackageConfig packageConfig : packageLoader
@@ -235,10 +235,10 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		initialized = true;
 	}
 
-	protected void processAutoConfigClass(Class cls, String defaultNamespace) {
+	protected void processAutoConfigClass(Class<Persistable> cls, String defaultNamespace) {
 		if (cls.getSimpleName().equals("package-info"))
 			return;
-		AutoConfig ac = (AutoConfig) cls.getAnnotation(AutoConfig.class);
+		AutoConfig ac = cls.getAnnotation(AutoConfig.class);
 		String[] arr = getNamespaceAndActionName(cls, defaultNamespace);
 		String namespace = arr[0];
 		String actionName = arr[1];
@@ -351,13 +351,13 @@ public class AutoConfigPackageProvider implements PackageProvider {
 
 	}
 
-	private Map<String, Class> entityClassURLMapping = new ConcurrentHashMap<String, Class>();
+	private Map<String, Class<Persistable>> entityClassURLMapping = new ConcurrentHashMap<String, Class<Persistable>>();
 
-	public String[] getNamespaceAndActionName(Class cls, String defaultNamespace) {
+	public String[] getNamespaceAndActionName(Class<Persistable> cls, String defaultNamespace) {
 		String actionName = null;
 		String namespace = null;
 		String actionClass = null;
-		AutoConfig ac = (AutoConfig) cls.getAnnotation(AutoConfig.class);
+		AutoConfig ac = cls.getAnnotation(AutoConfig.class);
 		if (Persistable.class.isAssignableFrom(cls)) {
 			actionName = StringUtils.uncapitalize(cls.getSimpleName());
 			namespace = ac.namespace();
@@ -384,13 +384,13 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		return new String[] { namespace, actionName, actionClass };
 	}
 
-	public Class getEntityClass(String namespace, String actionName) {
+	public Class<Persistable> getEntityClass(String namespace, String actionName) {
 		return entityClassURLMapping.get(namespace
 				+ (namespace.endsWith("/") ? "" : "/") + actionName);
 	}
 	
 	public String getEntityUrl(Class entityClass){
-		for(Map.Entry<String, Class> entry : entityClassURLMapping.entrySet())
+		for(Map.Entry<String, Class<Persistable>> entry : entityClassURLMapping.entrySet())
 			if(entry.getValue().equals(entityClass))
 				return entry.getKey();
 		return null;

@@ -59,6 +59,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 			logger.warn(getName() + " key or secret is empty");
 	}
 
+	@SuppressWarnings("unchecked")
 	public String getAuthRedirectURL(HttpServletRequest request,
 			String targetUrl) throws Exception {
 		OAuth1Token accessToken = restoreToken(request, "access");
@@ -94,6 +95,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 		return sb.toString();
 	}
 
+	@SuppressWarnings("unchecked")
 	public Profile getProfile(HttpServletRequest request) throws Exception {
 		OAuth1Token accessToken = restoreToken(request, "access");
 		if (accessToken == null) {

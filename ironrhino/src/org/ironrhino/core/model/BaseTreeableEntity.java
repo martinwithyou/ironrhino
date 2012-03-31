@@ -10,6 +10,7 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 
+@SuppressWarnings("unchecked")
 public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		Entity<Long> implements Treeable<T>, Ordered {
 

@@ -176,6 +176,7 @@ public class StatControl {
 		return getResult(date, date);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, List<TreeNode>> getResult(Date from, Date to) {
 		Date today = new Date();
 		if (from == null)
@@ -257,10 +258,12 @@ public class StatControl {
 		return criticalDate;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Value> getPeriodResult(Key key, Date date, boolean cumulative) {
 		return (List<Value>) getPeriodResult(key, date, cumulative, false);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, List<Value>> getPerHostPeriodResult(Key key, Date date,
 			boolean cumulative) {
 		return (Map<String, List<Value>>) getPeriodResult(key, date,

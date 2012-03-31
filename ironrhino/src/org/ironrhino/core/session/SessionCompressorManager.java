@@ -38,6 +38,7 @@ public class SessionCompressorManager {
 		compressors = ctx.getBeansOfType(SessionCompressor.class).values();
 	}
 
+	@SuppressWarnings("unchecked")
 	public String compress(WrappedHttpSession session) {
 		Map<String, Object> map = session.getAttrMap();
 		Map<String, String> compressedMap = new HashMap<String, String>();
