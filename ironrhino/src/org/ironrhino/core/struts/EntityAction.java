@@ -82,7 +82,7 @@ public class EntityAction extends BaseAction {
 	private boolean searchable;
 
 	@Autowired(required = false)
-	private transient CompassSearchService compassSearchService;
+	private transient CompassSearchService<Persistable> compassSearchService;
 
 	public Map<String, List> getLists() {
 		return lists;
@@ -225,9 +225,9 @@ public class EntityAction extends BaseAction {
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(criteria);
-			resultPage = compassSearchService.search(resultPage, new Mapper() {
-				public Object map(Object source) {
-					return entityManager.get(((Persistable) source).getId());
+			resultPage = compassSearchService.search(resultPage, new Mapper<Persistable>() {
+				public Persistable map(Persistable source) {
+					return entityManager.get(source.getId());
 				}
 			});
 		}

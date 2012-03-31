@@ -45,7 +45,7 @@ public class CompassSearchService<T> implements SearchService<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public ResultPage<T> search(ResultPage<T> resultPage, Mapper<T, T> mapper) {
+	public ResultPage<T> search(ResultPage<T> resultPage, Mapper<T> mapper) {
 		CompassSearchResults searchResults = search(
 				(CompassSearchCriteria) resultPage.getCriteria(),
 				resultPage.getPageNo(), resultPage.getPageSize());
@@ -71,7 +71,7 @@ public class CompassSearchService<T> implements SearchService<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> search(SearchCriteria searchCriteria, Mapper<T, T> mapper) {
+	public List<T> search(SearchCriteria searchCriteria, Mapper<T> mapper) {
 		CompassSearchResults searchResults = search(
 				(CompassSearchCriteria) searchCriteria, -1, -1);
 		if (searchResults == null)

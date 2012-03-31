@@ -126,7 +126,7 @@ public class RegionAction extends BaseAction {
 			criteria.setAliases(new String[] { "region" });
 			criteria.addSort("displayOrder", false);
 			list = compassSearchService.search(criteria,
-					new Mapper<Region, Region>() {
+					new Mapper<Region>() {
 						@Override
 						public Region map(Region source) {
 							return baseManager.get(source.getId());

@@ -12,9 +12,9 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 
 public interface BaseManager<T extends Persistable> {
 
-	public Class<T> getEntityClass();
+	public Class<? extends Persistable> getEntityClass();
 
-	public void setEntityClass(Class<T> clazz);
+	public void setEntityClass(Class<? extends Persistable> clazz);
 
 	public void save(T obj);
 

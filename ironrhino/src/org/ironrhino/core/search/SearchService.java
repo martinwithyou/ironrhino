@@ -10,13 +10,13 @@ public interface SearchService<T> {
 
 	public List search(SearchCriteria searchCriteria);
 
-	public ResultPage search(ResultPage<T> resultPage,  Mapper<T,T> mapper);
+	public ResultPage search(ResultPage<T> resultPage,  Mapper<T> mapper);
 
-	public List search(SearchCriteria searchCriteria,  Mapper<T,T> mapper);
+	public List search(SearchCriteria searchCriteria,  Mapper<T> mapper);
 
-	public static interface Mapper<S,T> {
+	public static interface Mapper<T> {
 
-		public T map(S source);
+		public T map(T source);
 
 	}
 
