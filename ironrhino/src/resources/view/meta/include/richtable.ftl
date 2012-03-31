@@ -60,7 +60,7 @@ ${action.getText(name)}
 </#macro>
 
 <#macro rttbodytrstart entity odd readonly=false showCheckColumn=true multipleCheck=true>
-<tr class="${odd?string('odd','even')}"<#if (readonly&&!showCheckColumn)&&entity.id??> rowid="${entity.id?string}"</#if>>
+<tr class="${odd?string('odd','even')}"<#if !showCheckColumn&&entity.id??> rowid="${entity.id?string}"</#if>>
 <#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if entity.id??> value="${entity.id?string}"</#if>/></td></#if>
 </#macro>
 
