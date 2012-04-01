@@ -69,7 +69,7 @@
 	 */
 	function TextExtPlugin() {};
 
-	var stringify = (JSON || {}).stringify,
+	var stringify = (window.JSON || {}).stringify,
 		slice     = Array.prototype.slice,
 
 		UNDEFINED = 'undefined',
@@ -472,7 +472,7 @@
 
 	// Freak out if there's no JSON.stringify function found
 	if(!stringify)
-		throw new Error('JSON.stringify() not found');
+		stringify = function(){alert('JSON.stringify() not found')};
 
 	/**
 	 * Returns object property by name where name is dot-separated and object is multiple levels deep.
@@ -4774,7 +4774,7 @@
 		return node;
 	};
 })(jQuery);
-;(function(a){var b=document,c="getElementsByTagName",d=b[c]("head")[0]||b[c]("body")[0],e=b.createElement("style");e.innerHTML=a,d.appendChild(e)})('\n.text-core {\
+;if(!$.browser.msie ||$.browser.version > '8')(function(a){var b=document,c="getElementsByTagName",d=b[c]("head")[0]||b[c]("body")[0],e=b.createElement("style");e.innerHTML=a,d.appendChild(e)})('\n.text-core {\
   position: relative;\
 }\
 .text-core .text-wrap {\

@@ -1,5 +1,5 @@
 Observation.tags = function(container) {
-	if (typeof $.fn.textext != 'undefined') {
+	if (typeof $.fn.textext != 'undefined' && (!$.browser.msie ||$.browser.version > '8' )) {
 		$('input.tags', container).each(function() {
 			var t = $(this);
 			var options = {

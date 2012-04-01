@@ -24025,7 +24025,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 	 */
 	function TextExtPlugin() {};
 
-	var stringify = (JSON || {}).stringify,
+	var stringify = (window.JSON || {}).stringify,
 		slice     = Array.prototype.slice,
 
 		UNDEFINED = 'undefined',
@@ -24428,7 +24428,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 
 	// Freak out if there's no JSON.stringify function found
 	if(!stringify)
-		throw new Error('JSON.stringify() not found');
+		stringify = function(){alert('JSON.stringify() not found')};
 
 	/**
 	 * Returns object property by name where name is dot-separated and object is multiple levels deep.
@@ -28730,7 +28730,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 		return node;
 	};
 })(jQuery);
-;(function(a){var b=document,c="getElementsByTagName",d=b[c]("head")[0]||b[c]("body")[0],e=b.createElement("style");e.innerHTML=a,d.appendChild(e)})('\n.text-core {\
+;if(!$.browser.msie ||$.browser.version > '8')(function(a){var b=document,c="getElementsByTagName",d=b[c]("head")[0]||b[c]("body")[0],e=b.createElement("style");e.innerHTML=a,d.appendChild(e)})('\n.text-core {\
   position: relative;\
 }\
 .text-core .text-wrap {\
@@ -34160,7 +34160,7 @@ Observation.combox = function(container) {
 	$('select.combox', container).combox();
 };
 Observation.tags = function(container) {
-	if (typeof $.fn.textext != 'undefined') {
+	if (typeof $.fn.textext != 'undefined' && (!$.browser.msie ||$.browser.version > '8' )) {
 		$('input.tags', container).each(function() {
 			var t = $(this);
 			var options = {
