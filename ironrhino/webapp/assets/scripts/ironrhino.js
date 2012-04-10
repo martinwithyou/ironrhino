@@ -33013,10 +33013,13 @@ Observation.common = function(container) {
 						return false;
 					});
 			$('input', this).keyup($.debounce(500, function(ev) {
-						if (ev.keyCode != 13)
+						if (!$(this).hasClass('email') && ev.keyCode != 13)
 							Form.validate(this);
 						return true;
-					}));
+					})).blur(function(ev) {
+						Form.validate(this);
+						return true;
+					});
 			$('select', this).change(function() {
 						Form.validate(this);
 						return true;
