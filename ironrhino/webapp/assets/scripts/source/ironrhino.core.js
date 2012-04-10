@@ -412,25 +412,27 @@ Ajax = {
 			var div = $('<div/>').html(html);
 			// others
 			for (var key in replacement) {
-				if (!options.quiet)
+				var r = $('#' + key);
+				if (key == Ajax.defaultRepacement && !r.length)
+					r = $('body');
+				if (!options.quiet && r.length)
 					$('html,body').animate({
-								scrollTop : $('#' + key).offset().top - 50
+								scrollTop : r.offset().top - 50
 							}, 100);
-				if (div.find('#' + replacement[key]).length)
-					$('#' + key).html(div.find('#' + replacement[key]).html());
-				else {
-					var start = html.indexOf('>', html.indexOf('<body')) + 1;
-					var end = html.indexOf('</body>');
+				var rep = div.find('#' + replacement[key]);
+				if (rep.length) {
+					r.html(rep.html());
+				} else {
 					if (div.find('#content').length)
-						$('#' + key).html(div.find('#content').html());
+						r.html(div.find('#content').html());
 					else if (div.find('body').length)
-						$('#' + key).html(div.find('body').html());
+						r.html(div.find('body').html());
 					else
-						$('#' + key).html(html);
+						r.html(html);
 				}
 				if (!options.quiet && (typeof $.effects != 'undefined'))
-					$('#' + key).effect('highlight');
-				_observe($('#' + key));
+					r.effect('highlight');
+				_observe(r);
 			}
 			div.remove();
 			Ajax.fire(target, 'onsuccess', data);
