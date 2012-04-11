@@ -26,12 +26,9 @@ public class ConcurrentAspect extends BaseAspect {
 	public Object control(ProceedingJoinPoint jp,
 			ConcurrencyControl concurrencyControl) throws Throwable {
 		String key = jp.getSignature().toLongString();
-		Semaphore semaphore = map.get(key);
-		if (semaphore == null) {
-			semaphore = new Semaphore(evalInt(concurrencyControl.permits(), jp,
-					null), evalBoolean(concurrencyControl.fair(), jp, null));
-			map.put(key, semaphore);
-		}
+		Semaphore semaphore = map.putIfAbsent(key,
+				new Semaphore(evalInt(concurrencyControl.permits(), jp, null),
+						evalBoolean(concurrencyControl.fair(), jp, null)));
 		if (!concurrencyControl.block()) {
 			if (semaphore.tryAcquire(concurrencyControl.timeout(),
 					TimeUnit.MILLISECONDS)) {

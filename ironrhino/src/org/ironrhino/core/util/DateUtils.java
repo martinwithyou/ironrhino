@@ -303,16 +303,16 @@ public class DateUtils {
 			@SuppressWarnings("unused")
 			int yearCyl, monCyl, dayCyl;
 			int leapMonth = 0;
-			Date baseDate = null;
-			try {
-				baseDate = chineseDateFormat.parse("1900年1月31日");
-			} catch (ParseException e) {
-				e.printStackTrace(); // To change body of catch statement use
-										// Options | File Templates.
-			}
-
+			Calendar baseCalendar = Calendar.getInstance();
+			baseCalendar.set(Calendar.YEAR, 1900);
+			baseCalendar.set(Calendar.MONTH, 0);
+			baseCalendar.set(Calendar.DAY_OF_MONTH, 31);
+			baseCalendar.set(Calendar.HOUR, 0);
+			baseCalendar.set(Calendar.MINUTE, 0);
+			baseCalendar.set(Calendar.SECOND, 0);
 			// 求出和1900年1月31日相差的天数
-			int offset = (int) ((cal.getTime().getTime() - baseDate.getTime()) / 86400000L);
+			int offset = (int) ((cal.getTime().getTime() - baseCalendar
+					.getTimeInMillis()) / 86400000L);
 			dayCyl = offset + 40;
 			monCyl = 14;
 

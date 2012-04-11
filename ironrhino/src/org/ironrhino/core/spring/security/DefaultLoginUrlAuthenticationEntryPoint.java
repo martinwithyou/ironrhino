@@ -85,7 +85,8 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 			String scheme = request.getScheme();
 			int serverPort = getPortResolver().getServerPort(request);
 			urlBuilder.setScheme(scheme);
-			urlBuilder.setServerName(url.getHost());
+			if (url != null)
+				urlBuilder.setServerName(url.getHost());
 			urlBuilder.setPort(serverPort);
 			urlBuilder.setContextPath(request.getContextPath());
 			urlBuilder.setPathInfo(getLoginFormUrl());

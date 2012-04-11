@@ -50,8 +50,9 @@ public class InitRegion {
 			save(child);
 	}
 
+	@SuppressWarnings("unchecked")
 	private static Map<String, String> regionAreacodeMap() {
-		List<String> lines = null;
+		List<String> lines = Collections.EMPTY_LIST;
 		try {
 			lines = IOUtils.readLines(
 					Thread.currentThread()

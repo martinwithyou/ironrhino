@@ -14,11 +14,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -122,7 +121,8 @@ public class EntityAction extends BaseAction {
 	}
 
 	@SuppressWarnings("unchecked")
-	private BaseManager<Persistable> getEntityManager(Class<Persistable> entityClass) {
+	private BaseManager<Persistable> getEntityManager(
+			Class<Persistable> entityClass) {
 		String entityManagerName = StringUtils.uncapitalize(entityClass
 				.getSimpleName()) + "Manager";
 		try {
@@ -225,11 +225,12 @@ public class EntityAction extends BaseAction {
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(criteria);
-			resultPage = compassSearchService.search(resultPage, new Mapper<Persistable>() {
-				public Persistable map(Persistable source) {
-					return entityManager.get(source.getId());
-				}
-			});
+			resultPage = compassSearchService.search(resultPage,
+					new Mapper<Persistable>() {
+						public Persistable map(Persistable source) {
+							return entityManager.get(source.getId());
+						}
+					});
 		}
 		readonly = readonly();
 		return LIST;
@@ -247,7 +248,7 @@ public class EntityAction extends BaseAction {
 				log.error(e.getMessage(), e);
 			}
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
-		if (entity.isNew()) {
+		if (entity != null && entity.isNew()) {
 			Set<String> naturalIds = getNaturalIds().keySet();
 			if (getUid() != null && naturalIds.size() == 1) {
 				bw.setPropertyValue(naturalIds.iterator().next(), getUid());
@@ -453,7 +454,8 @@ public class EntityAction extends BaseAction {
 			for (PropertyDescriptor pd : pds) {
 				if (!editablePropertyNames.contains(pd.getName()))
 					continue;
-				Class<Persistable> returnType = (Class<Persistable>)pd.getPropertyType();
+				Class<Persistable> returnType = (Class<Persistable>) pd
+						.getPropertyType();
 				if (!Persistable.class.isAssignableFrom(returnType))
 					continue;
 				String parameterValue = ServletActionContext.getRequest()
@@ -596,7 +598,7 @@ public class EntityAction extends BaseAction {
 			Set<String> hides = new HashSet<String>();
 			hides.addAll(AnnotationUtils.getAnnotatedPropertyNames(clazz,
 					NotInCopy.class));
-			Map<String, UiConfigImpl> map = new HashMap<String, UiConfigImpl>();
+			final Map<String, UiConfigImpl> map = new HashMap<String, UiConfigImpl>();
 			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
 					.getPropertyDescriptors(clazz);
 			for (PropertyDescriptor pd : pds) {
@@ -724,31 +726,23 @@ public class EntityAction extends BaseAction {
 				}
 				map.put(pd.getName(), uci);
 			}
-			List<Map.Entry<String, UiConfigImpl>> list = new ArrayList<Map.Entry<String, UiConfigImpl>>();
-			list.addAll(map.entrySet());
-			Collections.sort(list,
-					new Comparator<Map.Entry<String, UiConfigImpl>>() {
-						public int compare(Entry<String, UiConfigImpl> o1,
-								Entry<String, UiConfigImpl> o2) {
-							int i = Integer.valueOf(
-									o1.getValue().getDisplayOrder()).compareTo(
-									o2.getValue().getDisplayOrder());
-							if (i == 0)
-								return o1.getKey().compareTo(o2.getKey());
-							else
-								return i;
-						}
-					});
-			map = new LinkedHashMap<String, UiConfigImpl>();
-			for (Map.Entry<String, UiConfigImpl> entry : list)
-				map.put(entry.getKey(), entry.getValue());
-			_uiConfigs = map;
+			Map<String, UiConfigImpl> sortedMap = new TreeMap<String, UiConfigImpl>(new Comparator<String>() {
+				public int compare(String o1,
+						String o2) {
+					int i = Integer.valueOf(
+							map.get(o1).getDisplayOrder()).compareTo(
+							map.get(o2).getDisplayOrder());
+						return i != 0? i: o1.compareTo(o2);
+				}
+			});
+			sortedMap.putAll(map);
+			_uiConfigs = sortedMap;
 		}
 		return _uiConfigs;
 	}
 
-	public static class UiConfigImpl {
-
+	public static class UiConfigImpl implements Serializable{
+		private static final long serialVersionUID = -5963246979386241924L;
 		private String type = UiConfig.DEFAULT_TYPE;
 		private boolean required;
 		private boolean unique;

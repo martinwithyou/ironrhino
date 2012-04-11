@@ -123,7 +123,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		int i = candidate.indexOf('@');
 		if (i > 0)
 			candidate = candidate.substring(0, i);
-		candidate.replace('.', '_');
+		candidate = candidate.replace('.', '_');
 		User user = findByNaturalId(candidate);
 		if (user == null)
 			return candidate;

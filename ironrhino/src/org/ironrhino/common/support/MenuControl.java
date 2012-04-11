@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -230,20 +231,17 @@ public class MenuControl {
 	}
 
 	@SuppressWarnings("unchecked")
-	private MenuNode assemble(Map<String, Pair<Menu, Authorize>> mapping) {
-		List<Map.Entry<String, Pair<Menu, Authorize>>> list = new ArrayList<Map.Entry<String, Pair<Menu, Authorize>>>();
-		list.addAll(mapping.entrySet());
+	private MenuNode assemble(final Map<String, Pair<Menu, Authorize>> mapping) {
 		MenuNode root = new MenuNode();
-		Collections.sort(list,
-				new Comparator<Map.Entry<String, Pair<Menu, Authorize>>>() {
-					public int compare(
-							Map.Entry<String, Pair<Menu, Authorize>> o1,
-							Map.Entry<String, Pair<Menu, Authorize>> o2) {
-						return o1.getValue().getA().parents().length
-								- o2.getValue().getA().parents().length;
-					}
-				});
-		for (Map.Entry<String, Pair<Menu, Authorize>> entry : list) {
+		Map<String, Pair<Menu, Authorize>> sortedMap = new TreeMap<String, Pair<Menu, Authorize>>(new Comparator<String>() {
+			public int compare(String o1,
+					String o2) {
+				return mapping.get(o1).getA().parents().length
+						- mapping.get(o2).getA().parents().length;
+			}
+		});
+		sortedMap.putAll(mapping);
+		for (Map.Entry<String, Pair<Menu, Authorize>> entry : sortedMap.entrySet()) {
 			String url = entry.getKey();
 			Menu menu = entry.getValue().getA();
 			MenuNode node = new MenuNode();

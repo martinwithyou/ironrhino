@@ -2,22 +2,17 @@ package org.ironrhino.common.support;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -39,6 +34,8 @@ import org.ironrhino.core.stat.analysis.PeriodAnalyzer;
 import org.ironrhino.core.stat.analysis.TreeNode;
 import org.ironrhino.core.util.CompositeIterator;
 import org.ironrhino.core.util.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @Singleton
@@ -92,19 +89,9 @@ public class StatControl {
 					Calendar calendar = Calendar.getInstance();
 					int currentHour = 0;
 					Map<Key, Value> map = new HashMap<Key, Value>();
-
 					private void save() {
-						List<Map.Entry<Key, Value>> list = new ArrayList<Map.Entry<Key, Value>>();
-						list.addAll(map.entrySet());
-						Collections.sort(list,
-								new Comparator<Map.Entry<Key, Value>>() {
-									public int compare(Entry<Key, Value> o1,
-											Entry<Key, Value> o2) {
-										return o1.getKey().compareTo(
-												o2.getKey());
-									}
-								});
-						for (Map.Entry<Key, Value> entry : list)
+						Map<Key, Value> sortedMap = new TreeMap<Key, Value>(map);
+						for (Map.Entry<Key, Value> entry : sortedMap.entrySet())
 							baseManager.save(new Stat(entry.getKey(), entry
 									.getValue(), new Date(entry.getKey()
 									.getLastWriteTime()), host));

@@ -189,7 +189,7 @@ public class Oauth2Action extends BaseAction {
 
 	public String auth() {
 		try {
-			Client client = oauthManager.findClientById(client_id);
+			client = oauthManager.findClientById(client_id);
 			if (client == null)
 				throw new IllegalArgumentException("CLIENT_ID_INVALID");
 			User grantor = AuthzUtils.getUserDetails(User.class);
@@ -337,7 +337,7 @@ public class Oauth2Action extends BaseAction {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-		Client client = new Client();
+		client = new Client();
 		client.setId(client_id);
 		client.setSecret(client_secret);
 		client.setRedirectUri(redirect_uri);

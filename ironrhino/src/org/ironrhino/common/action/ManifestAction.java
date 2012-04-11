@@ -1,6 +1,7 @@
 package org.ironrhino.common.action;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +57,7 @@ public class ManifestAction extends BaseAction {
 		if (StringUtils.isBlank(version)) {
 			// TODO calculate version
 		}
-
+		fallbacks = new HashMap<String, String>();
 		ServletActionContext.getResponse()
 				.setContentType("text/cache-manifest");
 		return "manifest";

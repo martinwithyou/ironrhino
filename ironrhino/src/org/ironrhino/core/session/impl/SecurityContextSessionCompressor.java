@@ -34,12 +34,15 @@ public class SecurityContextSessionCompressor implements
 	public String compress(SecurityContext sc) {
 		if (sc != null) {
 			Authentication auth = sc.getAuthentication();
-			if(auth.getCredentials() instanceof X509Certificate)
-				return null;
-			if (auth != null && auth.isAuthenticated()) {
-				UserDetails ud = (UserDetails) auth.getPrincipal();
-				return new StringBuilder(CodecUtils.md5Hex(ud.getPassword()))
-						.append(",").append(ud.getUsername()).toString();
+			if (auth != null) {
+				if (auth.getCredentials() instanceof X509Certificate)
+					return null;
+				if (auth.isAuthenticated()) {
+					UserDetails ud = (UserDetails) auth.getPrincipal();
+					return new StringBuilder(
+							CodecUtils.md5Hex(ud.getPassword())).append(",")
+							.append(ud.getUsername()).toString();
+				}
 			}
 		}
 		return null;

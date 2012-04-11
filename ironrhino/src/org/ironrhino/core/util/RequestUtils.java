@@ -77,21 +77,24 @@ public class RequestUtils {
 	}
 
 	public static String getBaseUrl(HttpServletRequest request, boolean secured) {
+		String host = "localhost";
+		String protocol = "http";
+		int port = 80;
 		URL url = null;
 		try {
 			url = new URL(request.getRequestURL().toString());
+			host = url.getHost();
+			protocol = url.getProtocol();
+			port = url.getPort();
+			if (port <= 0)
+				port = url.getDefaultPort();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-		String host = url.getHost();
-		String protocol = url.getProtocol();
 		if ((protocol.equalsIgnoreCase("https") && secured)
 				|| (protocol.equalsIgnoreCase("http") && !secured)) {
 			return getBaseUrl(request);
 		}
-		int port = url.getPort();
-		if (port <= 0)
-			port = url.getDefaultPort();
 		String contextPath = request.getContextPath();
 		StringBuilder sb = new StringBuilder();
 		sb.append(secured ? "https://" : "http://");

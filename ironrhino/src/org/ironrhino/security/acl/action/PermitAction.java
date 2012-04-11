@@ -47,7 +47,7 @@ public class PermitAction extends BaseAction {
 
 	protected static Logger log = LoggerFactory.getLogger(PermitAction.class);
 
-	private static Map<String, Collection<String>> resources;
+	private static volatile  Map<String, Collection<String>> resources;
 
 	private String username;
 
@@ -89,105 +89,121 @@ public class PermitAction extends BaseAction {
 
 	public Map<String, Collection<String>> getResources() {
 		if (resources == null) {
-			Multimap<String, String> temp = ArrayListMultimap.create();
-			Collection<PackageConfig> pcs = ((AutoConfigPackageProvider) packageProvider)
-					.getAllPackageConfigs();
-			for (PackageConfig pc : pcs) {
-				Collection<ActionConfig> acs = pc.getActionConfigs().values();
-				for (ActionConfig ac : acs) {
-					try {
-						Class<?> c = Class.forName(ac.getClassName());
-						if (!BaseAction.class.isAssignableFrom(c))
-							continue;
-						if (EntityAction.class.equals(c)) {
-							Class<?> entityClass = ((AutoConfigPackageProvider) packageProvider)
-									.getEntityClass(pc.getNamespace(),
-											ac.getName());
-							Authorize authorize = entityClass
-									.getAnnotation(Authorize.class);
-							if (authorize != null
-									&& !authorize.authorizer().equals(
-											DynamicAuthorizer.class)) {
-								StringBuilder sb = new StringBuilder();
-								sb.append(pc.getNamespace())
-										.append(pc.getNamespace().endsWith("/") ? ""
-												: "/").append(ac.getName());
-								String s = sb.toString();
-								temp.put(authorize.resourceGroup(), s);
-								temp.put(authorize.resourceGroup(), s
-										+ "/input");
-								temp.put(authorize.resourceGroup(), s + "/save");
-								temp.put(authorize.resourceGroup(), s
-										+ "/delete");
-							}
-							continue;
-						}
-						Authorize authorizeOnClass = c
-								.getAnnotation(Authorize.class);
-						if (authorizeOnClass == null
-								|| authorizeOnClass.authorizer().equals(
-										DynamicAuthorizer.class)) {
-							Set<Method> methods = AnnotationUtils
-									.getAnnotatedMethods(c, Authorize.class);
-							for (Method m : methods) {
-								Authorize authorize = m
-										.getAnnotation(Authorize.class);
-								if (!authorize.authorizer().equals(
-										DynamicAuthorizer.class)) {
-									StringBuilder sb = new StringBuilder();
-									sb.append(pc.getNamespace())
-											.append(pc.getNamespace().endsWith(
-													"/") ? "" : "/")
-											.append(ac.getName());
-									if (!m.getName().equals("execute"))
-										sb.append("/").append(m.getName());
-									temp.put(authorize.resourceGroup(),
-											sb.toString());
+			synchronized (PermitAction.class) {
+				if (resources == null) {
+					Multimap<String, String> temp = ArrayListMultimap.create();
+					Collection<PackageConfig> pcs = ((AutoConfigPackageProvider) packageProvider)
+							.getAllPackageConfigs();
+					for (PackageConfig pc : pcs) {
+						Collection<ActionConfig> acs = pc.getActionConfigs()
+								.values();
+						for (ActionConfig ac : acs) {
+							try {
+								Class<?> c = Class.forName(ac.getClassName());
+								if (!BaseAction.class.isAssignableFrom(c))
+									continue;
+								if (EntityAction.class.equals(c)) {
+									Class<?> entityClass = ((AutoConfigPackageProvider) packageProvider)
+											.getEntityClass(pc.getNamespace(),
+													ac.getName());
+									Authorize authorize = entityClass
+											.getAnnotation(Authorize.class);
+									if (authorize != null
+											&& !authorize.authorizer().equals(
+													DynamicAuthorizer.class)) {
+										StringBuilder sb = new StringBuilder();
+										sb.append(pc.getNamespace())
+												.append(pc.getNamespace()
+														.endsWith("/") ? ""
+														: "/")
+												.append(ac.getName());
+										String s = sb.toString();
+										temp.put(authorize.resourceGroup(), s);
+										temp.put(authorize.resourceGroup(), s
+												+ "/input");
+										temp.put(authorize.resourceGroup(), s
+												+ "/save");
+										temp.put(authorize.resourceGroup(), s
+												+ "/delete");
+									}
+									continue;
 								}
-							}
-						} else if (authorizeOnClass != null
-								&& !authorizeOnClass.authorizer().equals(
-										DynamicAuthorizer.class)) {
-							for (Method m : c.getMethods()) {
-								int mod = m.getModifiers();
-								if (!Modifier.isPublic(mod)
-										|| Modifier.isStatic(mod)
-										|| !m.getReturnType().equals(
-												String.class)
-										|| m.getParameterTypes().length != 0)
-									continue;
-								Authorize authorize = m
+								Authorize authorizeOnClass = c
 										.getAnnotation(Authorize.class);
-								if (authorize != null
-										&& authorize.authorizer().equals(
-												DynamicAuthorizer.class))
-									continue;
-								StringBuilder sb = new StringBuilder();
-								sb.append(pc.getNamespace())
-										.append(pc.getNamespace().endsWith("/") ? ""
-												: "/").append(ac.getName());
-								if (!m.getName().equals("execute"))
-									sb.append("/").append(m.getName());
-								temp.put(
-										authorize != null ? authorize
-												.resourceGroup()
-												: authorizeOnClass
-														.resourceGroup(), sb
-												.toString());
+								if (authorizeOnClass == null
+										|| authorizeOnClass
+												.authorizer()
+												.equals(DynamicAuthorizer.class)) {
+									Set<Method> methods = AnnotationUtils
+											.getAnnotatedMethods(c,
+													Authorize.class);
+									for (Method m : methods) {
+										Authorize authorize = m
+												.getAnnotation(Authorize.class);
+										if (!authorize.authorizer().equals(
+												DynamicAuthorizer.class)) {
+											StringBuilder sb = new StringBuilder();
+											sb.append(pc.getNamespace())
+													.append(pc.getNamespace()
+															.endsWith("/") ? ""
+															: "/")
+													.append(ac.getName());
+											if (!m.getName().equals("execute"))
+												sb.append("/").append(
+														m.getName());
+											temp.put(authorize.resourceGroup(),
+													sb.toString());
+										}
+									}
+								} else if (authorizeOnClass != null
+										&& !authorizeOnClass
+												.authorizer()
+												.equals(DynamicAuthorizer.class)) {
+									for (Method m : c.getMethods()) {
+										int mod = m.getModifiers();
+										if (!Modifier.isPublic(mod)
+												|| Modifier.isStatic(mod)
+												|| !m.getReturnType().equals(
+														String.class)
+												|| m.getParameterTypes().length != 0)
+											continue;
+										Authorize authorize = m
+												.getAnnotation(Authorize.class);
+										if (authorize != null
+												&& authorize
+														.authorizer()
+														.equals(DynamicAuthorizer.class))
+											continue;
+										StringBuilder sb = new StringBuilder();
+										sb.append(pc.getNamespace())
+												.append(pc.getNamespace()
+														.endsWith("/") ? ""
+														: "/")
+												.append(ac.getName());
+										if (!m.getName().equals("execute"))
+											sb.append("/").append(m.getName());
+										temp.put(
+												authorize != null ? authorize
+														.resourceGroup()
+														: authorizeOnClass
+																.resourceGroup(),
+												sb.toString());
+									}
+								}
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
 							}
 						}
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
 					}
+					Map<String, Collection<String>> map = temp.asMap();
+					resources = new LinkedHashMap<String, Collection<String>>(
+							map.size());
+					List<String> groups = new ArrayList<String>(map.keySet());
+					Collections.sort(groups);
+					for (String group : groups)
+						resources.put(group, map.get(group));
 				}
 			}
-			Map<String, Collection<String>> map = temp.asMap();
-			resources = new LinkedHashMap<String, Collection<String>>(
-					map.size());
-			List<String> groups = new ArrayList<String>(map.keySet());
-			Collections.sort(groups);
-			for (String group : groups)
-				resources.put(group, map.get(group));
 		}
 		return resources;
 	}

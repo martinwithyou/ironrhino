@@ -3,6 +3,7 @@ package org.ironrhino.common.model;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class Logistics implements Serializable {
@@ -52,6 +53,11 @@ public class Logistics implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+	
+	@Override
+	public int hashCode(){
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

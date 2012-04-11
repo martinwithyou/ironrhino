@@ -9,12 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 
@@ -138,22 +137,15 @@ public class LocalFileStorage extends AbstractFileStorage {
 				return false;
 			}
 		});
-		List<Map.Entry<String, Boolean>> list = new ArrayList<Map.Entry<String, Boolean>>();
-		list.addAll(map.entrySet());
-		Collections.sort(list, new Comparator<Map.Entry<String, Boolean>>() {
-			@Override
-			public int compare(Map.Entry<String, Boolean> o1,
-					Map.Entry<String, Boolean> o2) {
-				int i = o2.getValue().compareTo(o1.getValue());
-				if (i == 0)
-					return o1.getKey().compareTo(o2.getKey());
-				else
-					return i;
-			}
-		});
-		Map<String, Boolean> result = new LinkedHashMap<String, Boolean>();
-		for (Map.Entry<String, Boolean> entry : list)
-			result.put(entry.getKey(), entry.getValue());
-		return result;
+		Map<String, Boolean> sortedMap = new TreeMap<String, Boolean>(
+				new Comparator<String>() {
+					@Override
+					public int compare(String o1, String o2) {
+						int i = map.get(o2).compareTo(map.get(o1));
+						return i != 0 ? i : o1.compareTo(o2);
+					}
+				});
+		sortedMap.putAll(map);
+		return sortedMap;
 	}
 }

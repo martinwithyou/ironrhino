@@ -2,14 +2,10 @@ package org.ironrhino.core.websocket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -92,20 +88,16 @@ public class WebSocketServer {
 			return;
 		if (mapping.size() > 0) {
 			// sort mapping by uri
-			List<Map.Entry<String, WebSocketHandler>> list = new ArrayList<Map.Entry<String, WebSocketHandler>>();
-			list.addAll(mapping.entrySet());
-			Collections.sort(list,
-					new Comparator<Map.Entry<String, WebSocketHandler>>() {
+			Map<String, WebSocketHandler> sortedMap = new TreeMap<String, WebSocketHandler>(
+					new Comparator<String>() {
 						@Override
-						public int compare(Entry<String, WebSocketHandler> o1,
-								Entry<String, WebSocketHandler> o2) {
-							return o2.getKey().split("/").length
-									- o1.getKey().split("/").length;
+						public int compare(String o1, String o2) {
+							return o2.split("/").length - o1.split("/").length;
 						}
 					});
-			mapping = new LinkedHashMap<String, WebSocketHandler>();
-			for (Map.Entry<String, WebSocketHandler> entry : list) {
-				mapping.put(entry.getKey(), entry.getValue());
+			sortedMap.putAll(mapping);
+			mapping = sortedMap;
+			for (Map.Entry<String, WebSocketHandler> entry : mapping.entrySet()) {
 				logger.info("mapping {} to {}", entry.getValue().getClass()
 						.getName(), entry.getKey());
 			}
@@ -122,15 +114,15 @@ public class WebSocketServer {
 				public void run() {
 					while (running) {
 						try {
-							final WebSocket ws = new WebSocket(serverSocket
-									.accept(), timeout);
+							final WebSocket ws = new WebSocket(
+									serverSocket.accept(), timeout);
 							String requestUri = ws.getRequestUri();
 							WebSocketHandler temp = null;
 							for (Map.Entry<String, WebSocketHandler> entry : mapping
 									.entrySet())
 								if (org.ironrhino.core.util.StringUtils
-										.matchesWildcard(requestUri, entry
-												.getKey())) {
+										.matchesWildcard(requestUri,
+												entry.getKey())) {
 									temp = entry.getValue();
 									break;
 								}

@@ -1,13 +1,12 @@
 package org.ironrhino.common.service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -181,7 +180,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		}
 		CompassSearchCriteria criteria = (CompassSearchCriteria) resultPage
 				.getCriteria();
-		if (criteria == null){
+		if (criteria == null) {
 			criteria = new CompassSearchCriteria();
 			resultPage.setCriteria(criteria);
 		}
@@ -216,7 +215,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	}
 
 	public Map<String, Integer> findMatchedTags(String keyword) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		final Map<String, Integer> map = new HashMap<String, Integer>();
 		if (compassSearchService != null) {
 			CompassSearchCriteria cc = new CompassSearchCriteria();
 			cc.setQuery(new StringBuilder("tags:").append("*").append(keyword)
@@ -248,18 +247,15 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 				}
 			}
 		}
-		List<Map.Entry<String, Integer>> temp = new ArrayList<Map.Entry<String, Integer>>(map.size());
-		temp.addAll(map.entrySet());
-		Collections.sort(temp, new Comparator<Map.Entry<String, Integer>>() {
-			@Override
-			public int compare(Map.Entry<String, Integer> o1,
-					Map.Entry<String, Integer> o2) {
-				return o2.getValue().compareTo(o1.getValue());
-			}
-		});
-		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
-		for (Map.Entry<String, Integer> entry : temp)
-			result.put(entry.getKey(), entry.getValue());
-		return result;
+		Map<String, Integer> sortedMap = new TreeMap<String, Integer>(
+				new Comparator<String>() {
+					@Override
+					public int compare(String o1, String o2) {
+						return map.get(o2).compareTo(map.get(o1));
+					}
+				});
+		sortedMap.putAll(map);
+		return sortedMap;
 	}
+
 }

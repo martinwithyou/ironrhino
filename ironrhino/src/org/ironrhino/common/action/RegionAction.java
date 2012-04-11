@@ -125,13 +125,12 @@ public class RegionAction extends BaseAction {
 			criteria.setQuery(query);
 			criteria.setAliases(new String[] { "region" });
 			criteria.addSort("displayOrder", false);
-			list = compassSearchService.search(criteria,
-					new Mapper<Region>() {
-						@Override
-						public Region map(Region source) {
-							return baseManager.get(source.getId());
-						}
-					});
+			list = compassSearchService.search(criteria, new Mapper<Region>() {
+				@Override
+				public Region map(Region source) {
+					return baseManager.get(source.getId());
+				}
+			});
 		}
 		return LIST;
 	}
@@ -304,7 +303,7 @@ public class RegionAction extends BaseAction {
 			if (!(source.getParent() == null && target == null || source
 					.getParent() != null
 					&& target != null
-					&& source.getParent().getId() == target.getId())) {
+					&& source.getParent().getId().equals(target.getId()))) {
 				source.setParent(target);
 				baseManager.save(source);
 				addActionMessage(getText("operate.success"));

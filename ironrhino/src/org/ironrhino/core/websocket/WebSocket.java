@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class WebSocket {
+public final class WebSocket {
 
 	protected Socket socket;
 	protected InputStream in;
