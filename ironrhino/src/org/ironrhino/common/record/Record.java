@@ -28,10 +28,10 @@ public class Record extends BaseEntity {
 	@UiConfig(width = "140px", displayOrder = 5)
 	private Date recordDate;
 
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private String operatorClass;
 
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private String entityToString;
 
 	public String getAction() {

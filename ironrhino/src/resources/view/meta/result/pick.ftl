@@ -25,7 +25,7 @@
 <#assign columns={}>
 <#if columnNames??>
 	<#list columnNames as column>
-		<#if !uiConfigs?? || !uiConfigs[column].hideInList>
+		<#if !uiConfigs?? || !uiConfigs[column].hiddenInList>
 			<#if treeable && column == 'name'||column == 'fullname'>
 				<#assign href=requestURI>
 				<#assign index=0>

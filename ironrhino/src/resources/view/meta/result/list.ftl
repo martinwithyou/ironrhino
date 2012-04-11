@@ -8,7 +8,7 @@
 	<#assign index=0>
 	<#list uiConfigs?keys as key>
 			<#assign config=uiConfigs[key]>
-			<#if !config.hideInList>
+			<#if !config.hiddenInList>
 				<#assign label=key>
 				<#if config.displayName??>
 					<#assign label=config.displayName>
@@ -46,7 +46,7 @@
 <@rttbodytrstart entity=entity odd=(index%2==1) readonly=readonly/>
 	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
-		<#if !config.hideInList>
+		<#if !config.hiddenInList>
 			<#assign value = entity[key]!>
 			<#if config.type=='dictionary' && selectDictionary??>
 							<#assign value=getDictionaryLabel(evalTemplate(config.templateName),value)/>	
@@ -61,7 +61,7 @@
 <div style="display: none">
 <#list uiConfigs?keys as key>
 	<#assign config=uiConfigs[key]>
-	<#if !config.hideInList>
+	<#if !config.hiddenInList>
 		<#if config.type=='select'>
 		<textarea id="rt_select_template_${key}">
 		<select onblur="Richtable.updateCell(this)"

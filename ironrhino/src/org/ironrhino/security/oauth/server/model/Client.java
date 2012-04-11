@@ -35,18 +35,18 @@ public class Client extends BaseEntity {
 	private String description;
 
 	@NotInCopy
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private User owner;
 
 	@UiConfig(displayOrder = 5)
 	private boolean enabled = true;
 
 	@NotInCopy
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private Date modifyDate;
 
 	@NotInCopy
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private Date createDate = new Date();
 
 	public String getName() {
@@ -122,7 +122,7 @@ public class Client extends BaseEntity {
 				|| this.redirectUri.equals(redirectUri);
 	}
 
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	public boolean isNative() {
 		return OAUTH_OOB.equals(redirectUri);
 	}

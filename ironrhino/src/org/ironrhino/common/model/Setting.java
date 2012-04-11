@@ -36,19 +36,19 @@ public class Setting extends BaseEntity implements Recordable {
 	private String description = "";
 
 	@NotInCopy
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private Date createDate = new Date();
 
 	@NotInCopy
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private Date modifyDate;
 
 	@NotInCopy
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private UserDetails createUser;
 
 	@NotInCopy
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private UserDetails modifyUser;
 
 	public Setting() {

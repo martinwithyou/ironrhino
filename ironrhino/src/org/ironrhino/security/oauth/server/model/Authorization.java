@@ -44,11 +44,11 @@ public class Authorization extends BaseEntity {
 	private String responseType = "code";
 
 	@NotInCopy
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private Date modifyDate = new Date();
 
 	@NotInCopy
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private Date createDate = new Date();
 
 	public String getAccessToken() {

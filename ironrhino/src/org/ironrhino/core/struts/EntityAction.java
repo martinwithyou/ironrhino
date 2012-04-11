@@ -630,7 +630,7 @@ public class EntityAction extends BaseAction {
 							uiConfig = f.getAnnotation(UiConfig.class);
 					} catch (Exception e) {
 					}
-				if (uiConfig != null && uiConfig.hide())
+				if (uiConfig != null && uiConfig.hidden())
 					continue;
 				if ("new".equals(pd.getName()) || "id".equals(pd.getName())
 						|| "class".equals(pd.getName())
@@ -758,7 +758,7 @@ public class EntityAction extends BaseAction {
 		private boolean readonly;
 		private int displayOrder = Integer.MAX_VALUE;
 		private String displayName;
-		private boolean hideInList;
+		private boolean hiddenInList;
 		private String template;
 		private String width;
 		@SuppressWarnings("unchecked")
@@ -788,7 +788,7 @@ public class EntityAction extends BaseAction {
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.displayName()))
 				this.displayName = config.displayName();
-			this.hideInList = config.hideInList();
+			this.hiddenInList = config.hiddenInList();
 			this.template = config.template();
 			this.width = config.width();
 			if (StringUtils.isNotBlank(config.dynamicAttributes()))
@@ -810,12 +810,12 @@ public class EntityAction extends BaseAction {
 			this.templateName = config.templateName();
 		}
 
-		public boolean isHideInList() {
-			return hideInList;
+		public boolean isHiddenInList() {
+			return hiddenInList;
 		}
 
-		public void setHideInList(boolean hideInList) {
-			this.hideInList = hideInList;
+		public void setHiddenInList(boolean hiddenInList) {
+			this.hiddenInList = hiddenInList;
 		}
 
 		public String getPickUrl() {

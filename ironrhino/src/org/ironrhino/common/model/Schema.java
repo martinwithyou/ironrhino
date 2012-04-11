@@ -44,7 +44,7 @@ public class Schema extends BaseEntity implements Validatable {
 	@SearchableComponent
 	// @UiConfig(displayOrder = 4, cellEdit = "none", excludeIfNotEdited = true,
 	// template = "${entity.getFieldsAsString()!}")
-	@UiConfig(displayOrder = 4, hideInList = true)
+	@UiConfig(displayOrder = 4, hiddenInList = true)
 	private List<SchemaField> fields = new ArrayList<SchemaField>();
 
 	public Schema() {

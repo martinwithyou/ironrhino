@@ -20,10 +20,10 @@ public class Stat extends KeyValuePair implements Persistable {
 
 	private String id;
 
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private String keyAsString;
 
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	private String valueAsString;
 
 	public Stat() {
@@ -51,13 +51,13 @@ public class Stat extends KeyValuePair implements Persistable {
 	}
 
 	@Override
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	public Key getKey() {
 		return key;
 	}
 
 	@Override
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	public Value getValue() {
 		return value;
 	}

@@ -45,7 +45,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 	@SearchableComponent
 	// @UiConfig(displayOrder = 3, cellEdit = "none", excludeIfNotEdited = true,
 	// template = "${entity.getItemsAsString()!}")
-	@UiConfig(displayOrder = 3, hideInList = true)
+	@UiConfig(displayOrder = 3, hiddenInList = true)
 	private List<LabelValue> items = new ArrayList<LabelValue>();
 
 	public Dictionary() {
@@ -94,7 +94,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 			}
 	}
 
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	@NotInCopy
 	public Map<String, String> getItemsAsMap() {
 		Map<String, String> map = new LinkedHashMap<String, String>(
@@ -106,7 +106,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 		return map;
 	}
 
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	@NotInCopy
 	public Map<String, Map<String, String>> getItemsAsGroup() {
 		Map<String, Map<String, String>> map = new LinkedHashMap<String, Map<String, String>>(
@@ -133,7 +133,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 		return map;
 	}
 
-	@UiConfig(hide = true)
+	@UiConfig(hidden = true)
 	@NotInCopy
 	public boolean isGroupable() {
 		boolean groupable = false;
