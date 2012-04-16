@@ -1,6 +1,5 @@
 package org.ironrhino.core.cache;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,7 +36,7 @@ public class CacheAspect extends BaseAspect {
 		order = -100;
 	}
 
-	@Around("execution(public java.io.Serializable+ *(..)) and @annotation(checkCache)")
+	@Around("execution(public * *(..)) and @annotation(checkCache)")
 	public Object get(ProceedingJoinPoint jp, CheckCache checkCache)
 			throws Throwable {
 		String namespace = eval(checkCache.namespace(), jp, null).toString();
@@ -70,7 +69,7 @@ public class CacheAspect extends BaseAspect {
 				eval(checkCache.onMiss(), jp, null);
 			}
 		}
-		Serializable result = (Serializable) jp.proceed();
+		Object result = jp.proceed();
 		if (result != null && evalBoolean(checkCache.when(), jp, result)) {
 			if (checkCache.eternal()) {
 				cacheManager.put(key, result, 0, namespace);
