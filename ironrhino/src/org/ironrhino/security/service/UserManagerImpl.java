@@ -15,12 +15,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.cache.FlushCache;
 import org.ironrhino.core.service.BaseManagerImpl;
+import org.ironrhino.core.spring.security.FallbackUserDetailsService;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +37,10 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	private ApplicationContext ctx;
 
 	private Collection<UserRoleMapper> mappers;
+
+	@Autowired(required = false)
+	@Qualifier("fallbackUserDetailsService")
+	private FallbackUserDetailsService fallbackUserDetailsService;
 
 	@PostConstruct
 	public void afterPropertiesSet() {
@@ -61,7 +69,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	@Transactional(readOnly = true)
 	@CheckCache(namespace = "user", key = "${username}")
-	public User loadUserByUsername(String username) {
+	public UserDetails loadUserByUsername(String username) {
 		if (StringUtils.isEmpty(username))
 			return null;
 		username = username.toLowerCase();
@@ -70,6 +78,8 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 			user = findByNaturalId("email", username);
 		else
 			user = findByNaturalId(username);
+		if (user == null && fallbackUserDetailsService != null)
+			return fallbackUserDetailsService.loadUserByUsername(username);
 		if (user == null)
 			throw new UsernameNotFoundException("No such Username");
 		populateAuthorities(user);

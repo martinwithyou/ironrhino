@@ -267,9 +267,11 @@ public class UserAction extends BaseAction {
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, trim = true, fieldName = "password", key = "validation.required") }, expressions = { @ExpressionValidator(expression = "password == confirmPassword", key = "confirmPassword.error") })
 	public String password() {
 		User user = AuthzUtils.getUserDetails(User.class);
-		user.setLegiblePassword(password);
-		userManager.save(user);
-		addActionMessage(getText("save.success"));
+		if (user != null) {
+			user.setLegiblePassword(password);
+			userManager.save(user);
+			addActionMessage(getText("save.success"));
+		}
 		return "password";
 	}
 
@@ -301,8 +303,10 @@ public class UserAction extends BaseAction {
 	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
 	public String self() {
 		user = AuthzUtils.getUserDetails(User.class);
-		user.setCreateUser(null);
-		user.setModifyUser(null);
+		if (user != null) {
+			user.setCreateUser(null);
+			user.setModifyUser(null);
+		}
 		return JSON;
 	}
 

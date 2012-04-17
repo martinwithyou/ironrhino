@@ -940,7 +940,8 @@ Observation.common = function(container) {
 							Form.validate(this);
 						return true;
 					})).blur(function(ev) {
-						Form.validate(this);
+						if (this.value != this.defaultValue)
+							Form.validate(this);
 						return true;
 					});
 			$('select', this).change(function() {

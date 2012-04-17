@@ -193,6 +193,8 @@ public class Oauth2Action extends BaseAction {
 			if (client == null)
 				throw new IllegalArgumentException("CLIENT_ID_INVALID");
 			User grantor = AuthzUtils.getUserDetails(User.class);
+			if (grantor == null)
+				throw new IllegalArgumentException("GRANTOR_INVALID");
 			if (!"force".equals(approval_prompt) && grantor != null) {
 				List<Authorization> auths = oauthManager
 						.findAuthorizationsByGrantor(grantor);
