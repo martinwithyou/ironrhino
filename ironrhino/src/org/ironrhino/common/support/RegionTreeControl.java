@@ -14,7 +14,7 @@ import org.ironrhino.common.model.Region;
 import org.ironrhino.common.util.RegionUtils;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
-import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.BeanUtils;
 import org.springframework.context.ApplicationListener;
 
@@ -26,11 +26,11 @@ public class RegionTreeControl implements
 	private Region regionTree;
 
 	@Inject
-	private BaseManager<Region> baseManager;
+	private EntityManager<Region> entityManager;
 
 	public void buildRegionTree() {
-		baseManager.setEntityClass(Region.class);
-		regionTree = baseManager.loadTree();
+		entityManager.setEntityClass(Region.class);
+		regionTree = entityManager.loadTree();
 	}
 
 	@PostConstruct

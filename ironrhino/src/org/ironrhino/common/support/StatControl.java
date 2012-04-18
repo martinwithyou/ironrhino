@@ -23,7 +23,7 @@ import org.ironrhino.core.chart.openflashchart.axis.XAxis;
 import org.ironrhino.core.chart.openflashchart.axis.YAxis;
 import org.ironrhino.core.chart.openflashchart.elements.BarChart;
 import org.ironrhino.core.chart.openflashchart.elements.LineChart;
-import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.stat.Key;
 import org.ironrhino.core.stat.KeyValuePair;
 import org.ironrhino.core.stat.Value;
@@ -44,10 +44,11 @@ public class StatControl {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
-	private BaseManager<Stat> baseManager;
+	private EntityManager<Stat> entityManager;
 
-	public void setBaseManager(BaseManager<Stat> baseManager) {
-		this.baseManager = baseManager;
+	public void setEntityManager(EntityManager<Stat> entityManager) {
+		entityManager.setEntityClass(Stat.class);
+		this.entityManager = entityManager;
 	}
 
 	@Scheduled(cron = "0 5 0 * * ?")
@@ -73,12 +74,12 @@ public class StatControl {
 			cal.set(Calendar.MINUTE, 59);
 			cal.set(Calendar.SECOND, 59);
 			Date end = cal.getTime();
-			baseManager.setEntityClass(Stat.class);
-			DetachedCriteria dc = baseManager.detachedCriteria();
+			entityManager.setEntityClass(Stat.class);
+			DetachedCriteria dc = entityManager.detachedCriteria();
 			dc.add(Restrictions.eq("host", host));
 			dc.add(Restrictions.between("date", start, end));
 			dc.addOrder(Order.desc("date"));
-			Stat stat = baseManager.findByCriteria(dc);
+			Stat stat = entityManager.findByCriteria(dc);
 			final Date lastStatDate;
 			if (stat != null)
 				lastStatDate = stat.getDate();
@@ -92,7 +93,7 @@ public class StatControl {
 					private void save() {
 						Map<Key, Value> sortedMap = new TreeMap<Key, Value>(map);
 						for (Map.Entry<Key, Value> entry : sortedMap.entrySet())
-							baseManager.save(new Stat(entry.getKey(), entry
+							entityManager.save(new Stat(entry.getKey(), entry
 									.getValue(), new Date(entry.getKey()
 									.getLastWriteTime()), host));
 						map.clear();
@@ -199,10 +200,10 @@ public class StatControl {
 			cal.set(Calendar.MINUTE, 59);
 			cal.set(Calendar.SECOND, 59);
 			Date end = cal.getTime();
-			baseManager.setEntityClass(Stat.class);
-			DetachedCriteria dc = baseManager.detachedCriteria();
+			entityManager.setEntityClass(Stat.class);
+			DetachedCriteria dc = entityManager.detachedCriteria();
 			dc.add(Restrictions.between("date", start, end));
-			List<Stat> list = baseManager.findListByCriteria(dc);
+			List<Stat> list = entityManager.findListByCriteria(dc);
 			try {
 				if (list.size() > 0) {
 					Iterator<? extends KeyValuePair> it1 = list.iterator();
@@ -274,11 +275,11 @@ public class StatControl {
 			cal.set(Calendar.MINUTE, 59);
 			cal.set(Calendar.SECOND, 59);
 			Date end = cal.getTime();
-			baseManager.setEntityClass(Stat.class);
-			DetachedCriteria dc = baseManager.detachedCriteria();
+			entityManager.setEntityClass(Stat.class);
+			DetachedCriteria dc = entityManager.detachedCriteria();
 			dc.add(Restrictions.eq("keyAsString", key.toString()));
 			dc.add(Restrictions.between("date", start, end));
-			List<Stat> list = baseManager.findListByCriteria(dc);
+			List<Stat> list = entityManager.findListByCriteria(dc);
 			analyzer = new PeriodAnalyzer(key, list.iterator());
 			analyzer.setCumulative(cumulative);
 		}

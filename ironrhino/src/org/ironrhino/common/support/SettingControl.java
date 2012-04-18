@@ -13,7 +13,7 @@ import org.hibernate.criterion.Order;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
-import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -28,10 +28,10 @@ public class SettingControl implements
 
 	private Map<String, Setting> settings;
 
-	private BaseManager<Setting> baseManager;
+	private EntityManager<Setting> entityManager;
 
-	public void setBaseManager(BaseManager<Setting> baseManager) {
-		this.baseManager = baseManager;
+	public void setEntityManager(EntityManager<Setting> entityManager) {
+		this.entityManager = entityManager;
 	}
 
 	@PostConstruct
@@ -40,8 +40,8 @@ public class SettingControl implements
 	}
 
 	public void refresh() {
-		baseManager.setEntityClass(Setting.class);
-		List<Setting> list = baseManager.findAll(Order.asc("key"));
+		entityManager.setEntityClass(Setting.class);
+		List<Setting> list = entityManager.findAll(Order.asc("key"));
 		Map<String, Setting> temp = new ConcurrentHashMap<String, Setting>(
 				list.size(), 1);
 		for (Setting s : list)

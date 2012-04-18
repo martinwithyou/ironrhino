@@ -13,7 +13,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.DefaultProfile;
-import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
@@ -27,7 +27,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class OAuthManagerImpl implements OAuthManager {
 
 	@Inject
-	private BaseManager baseManager;
+	private EntityManager entityManager;
 
 	private long expireTime = DEFAULT_EXPIRE_TIME;
 
@@ -49,40 +49,40 @@ public class OAuthManagerImpl implements OAuthManager {
 			auth.setScope(scope);
 		if (StringUtils.isNotBlank(responseType))
 			auth.setResponseType(responseType);
-		baseManager.save(auth);
+		entityManager.save(auth);
 		return auth;
 	}
 
 	public Authorization reuse(Authorization auth) {
 		auth.setCode(CodecUtils.nextId());
 		auth.setModifyDate(new Date());
-		baseManager.save(auth);
+		entityManager.save(auth);
 		return auth;
 	}
 
 	public Authorization grant(String authorizationId, User grantor) {
-		baseManager.setEntityClass(Authorization.class);
-		Authorization auth = (Authorization) baseManager.get(authorizationId);
+		entityManager.setEntityClass(Authorization.class);
+		Authorization auth = (Authorization) entityManager.get(authorizationId);
 		if (auth == null)
 			throw new IllegalArgumentException("BAD_AUTH");
 		auth.setGrantor(grantor);
 		auth.setModifyDate(new Date());
 		if (!auth.isClientSide())
 			auth.setCode(CodecUtils.nextId());
-		baseManager.save(auth);
+		entityManager.save(auth);
 		return auth;
 	}
 
 	public void deny(String authorizationId) {
-		baseManager.setEntityClass(Authorization.class);
-		Authorization auth = (Authorization) baseManager.get(authorizationId);
+		entityManager.setEntityClass(Authorization.class);
+		Authorization auth = (Authorization) entityManager.get(authorizationId);
 		if (auth != null)
-			baseManager.delete(auth);
+			entityManager.delete(auth);
 	}
 
 	public Authorization authenticate(String code, Client client) {
-		baseManager.setEntityClass(Authorization.class);
-		Authorization auth = (Authorization) baseManager.findByNaturalId(
+		entityManager.setEntityClass(Authorization.class);
+		Authorization auth = (Authorization) entityManager.findByNaturalId(
 				"code", code);
 		if (auth == null)
 			throw new IllegalArgumentException("CODE_INVALID");
@@ -100,17 +100,17 @@ public class OAuthManagerImpl implements OAuthManager {
 		auth.setCode(null);
 		auth.setRefreshToken(CodecUtils.nextId());
 		auth.setModifyDate(new Date());
-		baseManager.save(auth);
+		entityManager.save(auth);
 		return auth;
 	}
 
 	public Authorization retrieve(String accessToken) {
-		baseManager.setEntityClass(Authorization.class);
-		Authorization auth = (Authorization) baseManager
+		entityManager.setEntityClass(Authorization.class);
+		Authorization auth = (Authorization) entityManager
 				.findByNaturalId(accessToken);
 		if (auth != null) {
 			if (!auth.getClient().isEnabled()) {
-				baseManager.delete(auth);
+				entityManager.delete(auth);
 				return null;
 			}
 			if (auth.getLifetime() < 0)
@@ -120,64 +120,64 @@ public class OAuthManagerImpl implements OAuthManager {
 	}
 
 	public Authorization refresh(String refreshToken) {
-		baseManager.setEntityClass(Authorization.class);
-		Authorization auth = (Authorization) baseManager.findByNaturalId(
+		entityManager.setEntityClass(Authorization.class);
+		Authorization auth = (Authorization) entityManager.findByNaturalId(
 				"refreshToken", refreshToken);
 		if (auth != null) {
 			if (!auth.getClient().isEnabled()) {
-				baseManager.delete(auth);
+				entityManager.delete(auth);
 				return null;
 			}
 			auth.setAccessToken(CodecUtils.nextId());
 			auth.setModifyDate(new Date());
-			baseManager.save(auth);
+			entityManager.save(auth);
 		}
 		return auth;
 	}
 
 	public void revoke(String accessToken) {
-		baseManager.setEntityClass(Authorization.class);
-		Authorization auth = (Authorization) baseManager
+		entityManager.setEntityClass(Authorization.class);
+		Authorization auth = (Authorization) entityManager
 				.findByNaturalId(accessToken);
 		if (auth != null)
-			baseManager.delete(auth);
+			entityManager.delete(auth);
 	}
 
 	public List<Authorization> findAuthorizationsByGrantor(User grantor) {
-		baseManager.setEntityClass(Authorization.class);
-		DetachedCriteria dc = baseManager.detachedCriteria();
+		entityManager.setEntityClass(Authorization.class);
+		DetachedCriteria dc = entityManager.detachedCriteria();
 		dc.add(Restrictions.eq("grantor", grantor));
 		dc.addOrder(Order.desc("modifyDate"));
-		return baseManager.findListByCriteria(dc);
+		return entityManager.findListByCriteria(dc);
 	}
 
 	@Scheduled(cron = "0 30 23 * * ?")
 	public void removeExpired() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.SECOND, (int) (-expireTime));
-		baseManager.executeUpdate(
+		entityManager.executeUpdate(
 				"delete from Authorization a where a.modifyDate < ?",
 				cal.getTime());
 	}
 
 	public void saveClient(Client client) {
-		baseManager.save(client);
+		entityManager.save(client);
 	}
 
 	public void deleteClient(Client client) {
-		baseManager.delete(client);
+		entityManager.delete(client);
 	}
 
 	public Client findClientById(String clientId) {
-		baseManager.setEntityClass(Client.class);
-		return (Client) baseManager.get(clientId);
+		entityManager.setEntityClass(Client.class);
+		return (Client) entityManager.get(clientId);
 	}
 
 	public List<Client> findClientByOwner(User owner) {
-		baseManager.setEntityClass(Client.class);
-		DetachedCriteria dc = baseManager.detachedCriteria();
+		entityManager.setEntityClass(Client.class);
+		DetachedCriteria dc = entityManager.detachedCriteria();
 		dc.add(Restrictions.eq("owner", owner));
 		dc.addOrder(Order.asc("createDate"));
-		return baseManager.findListByCriteria(dc);
+		return entityManager.findListByCriteria(dc);
 	}
 }

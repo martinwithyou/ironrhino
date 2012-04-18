@@ -141,7 +141,13 @@ public class LocalFileStorage extends AbstractFileStorage {
 				new Comparator<String>() {
 					@Override
 					public int compare(String o1, String o2) {
-						int i = map.get(o2).compareTo(map.get(o1));
+						Boolean b1 = map.get(o1);
+						Boolean b2 = map.get(o2);
+						if (b2 == null)
+							return -1;
+						if (b1 == null)
+							return 1;
+						int i = b2.compareTo(b1);
 						return i != 0 ? i : o1.compareTo(o2);
 					}
 				});

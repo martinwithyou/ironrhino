@@ -1,7 +1,7 @@
 package initdata;
 
 import org.ironrhino.core.model.Persistable;
-import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
@@ -9,7 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class InitUser {
 
-	static BaseManager baseManager;
+	static EntityManager entityManager;
 
 	@SuppressWarnings("unchecked")
 	public static void main(String... strings) throws Exception {
@@ -22,13 +22,13 @@ public class InitUser {
 				new String[] { "initdata/applicationContext-initdata.xml",
 						"resources/spring/applicationContext-ds.xml",
 						"resources/spring/applicationContext-hibernate.xml" });
-		BaseManager<Persistable> baseManager = (BaseManager<Persistable>) ctx.getBean("baseManager");
+		EntityManager<Persistable> entityManager = (EntityManager<Persistable>) ctx.getBean("entityManager");
 		User admin = new User();
 		admin.setUsername("admin");
 		admin.setPassword(CodecUtils.digest("password"));
 		admin.setEnabled(true);
 		admin.getRoles().add(UserRole.ROLE_ADMINISTRATOR);
-		baseManager.save(admin);
+		entityManager.save(admin);
 		ctx.close();
 	}
 

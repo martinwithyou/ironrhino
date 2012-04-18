@@ -36,8 +36,6 @@
 	</bean>
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager" />
-	<bean id="baseManager"
-		class="org.ironrhino.core.service.BaseManagerImpl" primary="true" />
 	<bean
 		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 	<tx:annotation-driven order="0"/>

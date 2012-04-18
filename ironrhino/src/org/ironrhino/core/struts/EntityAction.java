@@ -42,6 +42,7 @@ import org.ironrhino.core.search.SearchService.Mapper;
 import org.ironrhino.core.search.compass.CompassSearchCriteria;
 import org.ironrhino.core.search.compass.CompassSearchService;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.BeanUtils;
@@ -66,7 +67,8 @@ public class EntityAction extends BaseAction {
 
 	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
 
-	private transient BaseManager<Persistable> _baseManager;
+	@javax.inject.Inject
+	private transient EntityManager<Persistable> _entityManager;
 
 	private ResultPage resultPage;
 
@@ -107,10 +109,6 @@ public class EntityAction extends BaseAction {
 		this.resultPage = resultPage;
 	}
 
-	public void setBaseManager(BaseManager<Persistable> baseManager) {
-		this._baseManager = baseManager;
-	}
-
 	private boolean readonly() {
 		AutoConfig ac = getAutoConfig();
 		return (ac != null) && ac.readonly();
@@ -130,11 +128,11 @@ public class EntityAction extends BaseAction {
 			if (bean != null)
 				return (BaseManager<Persistable>) bean;
 			else
-				_baseManager.setEntityClass(entityClass);
+				_entityManager.setEntityClass(entityClass);
 		} catch (NoSuchBeanDefinitionException e) {
-			_baseManager.setEntityClass(entityClass);
+			_entityManager.setEntityClass(entityClass);
 		}
-		return _baseManager;
+		return _entityManager;
 	}
 
 	private void tryFindEntity() {
@@ -602,13 +600,14 @@ public class EntityAction extends BaseAction {
 			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
 					.getPropertyDescriptors(clazz);
 			for (PropertyDescriptor pd : pds) {
+				String propertyName = pd.getName();
 				if (pd.getWriteMethod() == null)
 					continue;
 				SearchableProperty searchableProperty = pd.getReadMethod()
 						.getAnnotation(SearchableProperty.class);
 				if (searchableProperty == null)
 					try {
-						Field f = clazz.getDeclaredField(pd.getName());
+						Field f = clazz.getDeclaredField(propertyName);
 						if (f != null)
 							searchableProperty = f
 									.getAnnotation(SearchableProperty.class);
@@ -618,7 +617,7 @@ public class EntityAction extends BaseAction {
 						SearchableId.class);
 				if (searchableId == null)
 					try {
-						Field f = clazz.getDeclaredField(pd.getName());
+						Field f = clazz.getDeclaredField(propertyName);
 						if (f != null)
 							searchableId = f.getAnnotation(SearchableId.class);
 					} catch (Exception e) {
@@ -627,17 +626,17 @@ public class EntityAction extends BaseAction {
 						UiConfig.class);
 				if (uiConfig == null)
 					try {
-						Field f = clazz.getDeclaredField(pd.getName());
+						Field f = clazz.getDeclaredField(propertyName);
 						if (f != null)
 							uiConfig = f.getAnnotation(UiConfig.class);
 					} catch (Exception e) {
 					}
 				if (uiConfig != null && uiConfig.hidden())
 					continue;
-				if ("new".equals(pd.getName()) || "id".equals(pd.getName())
-						|| "class".equals(pd.getName())
+				if ("new".equals(propertyName) || "id".equals(propertyName)
+						|| "class".equals(propertyName)
 						|| pd.getReadMethod() == null
-						|| hides.contains(pd.getName()))
+						|| hides.contains(propertyName))
 					continue;
 				Class<?> returnType = pd.getPropertyType();
 				if (returnType.isEnum()) {
@@ -650,12 +649,12 @@ public class EntityAction extends BaseAction {
 							lists = new HashMap<String, List>();
 						Method method = pd.getReadMethod().getReturnType()
 								.getMethod("values", new Class[0]);
-						lists.put(pd.getName(),
+						lists.put(propertyName,
 								Arrays.asList((Enum[]) method.invoke(null)));
 					} catch (Exception e) {
 						log.error(e.getMessage(), e);
 					}
-					map.put(pd.getName(), uci);
+					map.put(propertyName, uci);
 					continue;
 				} else if (Persistable.class.isAssignableFrom(returnType)) {
 					UiConfigImpl uci = new UiConfigImpl(uiConfig);
@@ -688,7 +687,7 @@ public class EntityAction extends BaseAction {
 							uci.setPickUrl(sb.toString());
 						}
 					}
-					map.put(pd.getName(), uci);
+					map.put(propertyName, uci);
 					continue;
 				}
 				UiConfigImpl uci = new UiConfigImpl(uiConfig);
@@ -724,24 +723,29 @@ public class EntityAction extends BaseAction {
 					if (getNaturalIds().size() == 1)
 						uci.addCssClass("checkavailable");
 				}
-				map.put(pd.getName(), uci);
+				map.put(propertyName, uci);
 			}
-			Map<String, UiConfigImpl> sortedMap = new TreeMap<String, UiConfigImpl>(new Comparator<String>() {
-				public int compare(String o1,
-						String o2) {
-					int i = Integer.valueOf(
-							map.get(o1).getDisplayOrder()).compareTo(
-							map.get(o2).getDisplayOrder());
-						return i != 0? i: o1.compareTo(o2);
-				}
-			});
+			Map<String, UiConfigImpl> sortedMap = new TreeMap<String, UiConfigImpl>(
+					new Comparator<String>() {
+						public int compare(String o1, String o2) {
+							UiConfigImpl uci1 = map.get(o1);
+							UiConfigImpl uci2 = map.get(o2);
+							if (uci1 == null)
+								return -1;
+							if (uci2 == null)
+								return 1;
+							int i = Integer.valueOf(uci1.getDisplayOrder())
+									.compareTo(uci2.getDisplayOrder());
+							return i != 0 ? i : o1.compareTo(o2);
+						}
+					});
 			sortedMap.putAll(map);
 			_uiConfigs = sortedMap;
 		}
 		return _uiConfigs;
 	}
 
-	public static class UiConfigImpl implements Serializable{
+	public static class UiConfigImpl implements Serializable {
 		private static final long serialVersionUID = -5963246979386241924L;
 		private String type = UiConfig.DEFAULT_TYPE;
 		private boolean required;

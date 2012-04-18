@@ -20,8 +20,8 @@ import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Singleton
 @Named("userManager")
+@Primary
 public class UserManagerImpl extends BaseManagerImpl<User> implements
 		UserManager {
 
@@ -39,7 +40,6 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	private Collection<UserRoleMapper> mappers;
 
 	@Autowired(required = false)
-	@Qualifier("fallbackUserDetailsService")
 	private FallbackUserDetailsService fallbackUserDetailsService;
 
 	@PostConstruct

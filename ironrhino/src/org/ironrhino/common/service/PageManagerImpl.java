@@ -251,7 +251,13 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 				new Comparator<String>() {
 					@Override
 					public int compare(String o1, String o2) {
-						return map.get(o2).compareTo(map.get(o1));
+						Integer i1 = map.get(o1);
+						Integer i2 = map.get(o2);
+						if (i1 == null)
+							return 1;
+						if (i2 == null)
+							return -1;
+						return i2.compareTo(i1);
 					}
 				});
 		sortedMap.putAll(map);

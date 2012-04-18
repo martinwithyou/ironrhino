@@ -23,9 +23,9 @@ public class ReflectionUtils {
 		if (genType instanceof ParameterizedType) {
 			ParameterizedType pramType = (ParameterizedType) genType;
 			Type[] params = pramType.getActualTypeArguments();
-			if ((params != null) && (params.length > index)) {
-				return (Class) params[index];
-			}
+			if ((params != null) && (params.length > index))
+				return params[index] instanceof Class ? (Class) params[index]
+						: null;
 		}
 		return null;
 	}

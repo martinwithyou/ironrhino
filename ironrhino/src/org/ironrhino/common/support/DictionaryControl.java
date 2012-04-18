@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -13,7 +14,7 @@ import org.hibernate.criterion.Order;
 import org.ironrhino.common.model.Dictionary;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
-import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,8 @@ public class DictionaryControl implements
 
 	private Map<String, Dictionary> map;
 
-	private BaseManager<Dictionary> baseManager;
-
-	public void setBaseManager(BaseManager<Dictionary> baseManager) {
-		this.baseManager = baseManager;
-	}
+	@Inject
+	private EntityManager<Dictionary> entityManager;
 
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
@@ -40,8 +38,8 @@ public class DictionaryControl implements
 	}
 
 	public void refresh() {
-		baseManager.setEntityClass(Dictionary.class);
-		List<Dictionary> list = baseManager.findAll(Order.asc("name"));
+		entityManager.setEntityClass(Dictionary.class);
+		List<Dictionary> list = entityManager.findAll(Order.asc("name"));
 		Map<String, Dictionary> temp = new ConcurrentHashMap<String, Dictionary>(
 				list.size(), 1);
 		for (Dictionary d : list)

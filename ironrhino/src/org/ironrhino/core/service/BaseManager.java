@@ -14,12 +14,10 @@ public interface BaseManager<T extends Persistable> {
 
 	public Class<? extends Persistable> getEntityClass();
 
-	public void setEntityClass(Class<? extends Persistable> clazz);
-
 	public void save(T obj);
 
 	public T get(Serializable id);
-	
+
 	public void evict(T obj);
 
 	public void delete(T obj);

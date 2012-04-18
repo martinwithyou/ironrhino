@@ -43,9 +43,7 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 
 	protected Logger log = LoggerFactory.getLogger(BaseManagerImpl.class);
 
-	protected Class<T> entityClass;
-
-	private ThreadLocal<Class<? extends Persistable>> entityClassHolder = new ThreadLocal<Class<? extends Persistable>>();
+	private Class<T> entityClass;
 
 	protected SessionFactory sessionFactory;
 
@@ -64,17 +62,8 @@ public class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
 		entityClass = clazz;
 	}
 
-	public void setEntityClass(Class<? extends Persistable> clazz) {
-		if (entityClass != null)
-			throw new IllegalArgumentException(
-					"cannot change entity class for Generic Manager");
-		entityClassHolder.set(clazz);
-	}
-
 	public Class<? extends Persistable> getEntityClass() {
-		if (entityClass != null)
-			return entityClass;
-		return entityClassHolder.get();
+		return entityClass;
 	}
 
 	@Transactional

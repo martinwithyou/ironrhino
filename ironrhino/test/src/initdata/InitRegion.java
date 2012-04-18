@@ -11,12 +11,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.util.RegionParser;
-import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class InitRegion {
 
-	static BaseManager baseManager;
+	static EntityManager entityManager;
 
 	static Map<String, String> regionAreacodeMap = regionAreacodeMap();
 
@@ -30,7 +30,7 @@ public class InitRegion {
 				new String[] { "initdata/applicationContext-initdata.xml",
 						"resources/spring/applicationContext-ds.xml",
 						"resources/spring/applicationContext-hibernate.xml" });
-		baseManager = (BaseManager) ctx.getBean("baseManager");
+		entityManager = (EntityManager) ctx.getBean("entityManager");
 		List<Region> regions = RegionParser.parse();
 		for (Region region : regions) {
 			save(region);
@@ -41,7 +41,7 @@ public class InitRegion {
 	@SuppressWarnings("unchecked")
 	private static void save(Region region) {
 		region.setAreacode(regionAreacodeMap.get(region.getName()));
-		baseManager.save(region);
+		entityManager.save(region);
 		List<Region> list = new ArrayList<Region>();
 		for (Region child : region.getChildren())
 			list.add(child);

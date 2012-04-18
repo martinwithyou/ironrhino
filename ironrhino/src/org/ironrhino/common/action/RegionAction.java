@@ -18,7 +18,7 @@ import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.search.SearchService.Mapper;
 import org.ironrhino.core.search.compass.CompassSearchCriteria;
 import org.ironrhino.core.search.compass.CompassSearchService;
-import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.ClassScaner;
 import org.ironrhino.core.util.HtmlUtils;
@@ -38,7 +38,7 @@ public class RegionAction extends BaseAction {
 
 	private Long parentId;
 
-	private transient BaseManager<Region> baseManager;
+	private transient EntityManager<Region> entityManager;
 
 	private Collection<Region> list;
 
@@ -97,26 +97,26 @@ public class RegionAction extends BaseAction {
 		this.region = region;
 	}
 
-	public void setBaseManager(BaseManager<Region> baseManager) {
-		baseManager.setEntityClass(Region.class);
-		this.baseManager = baseManager;
+	public void setEntityManager(EntityManager<Region> entityManager) {
+		entityManager.setEntityClass(Region.class);
+		this.entityManager = entityManager;
 	}
 
 	@Override
 	public String execute() {
 		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
 			if (parentId != null && parentId > 0) {
-				region = baseManager.get(parentId);
+				region = entityManager.get(parentId);
 			} else {
 				region = new Region();
-				DetachedCriteria dc = baseManager.detachedCriteria();
+				DetachedCriteria dc = entityManager.detachedCriteria();
 				dc.add(Restrictions.isNull("parent"));
 				dc.addOrder(Order.asc("displayOrder"));
 				dc.addOrder(Order.asc("name"));
 				if (StringUtils.isNotBlank(keyword))
 					dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
 							"name", "areacode", "postcode"));
-				region.setChildren(baseManager.findListByCriteria(dc));
+				region.setChildren(entityManager.findListByCriteria(dc));
 			}
 			list = region.getChildren();
 		} else {
@@ -128,7 +128,7 @@ public class RegionAction extends BaseAction {
 			list = compassSearchService.search(criteria, new Mapper<Region>() {
 				@Override
 				public Region map(Region source) {
-					return baseManager.get(source.getId());
+					return entityManager.get(source.getId());
 				}
 			});
 		}
@@ -138,7 +138,7 @@ public class RegionAction extends BaseAction {
 	@Override
 	public String input() {
 		if (getUid() != null)
-			region = baseManager.get(Long.valueOf(getUid()));
+			region = entityManager.get(Long.valueOf(getUid()));
 		if (region == null)
 			region = new Region();
 		return INPUT;
@@ -152,15 +152,15 @@ public class RegionAction extends BaseAction {
 		Collection<Region> siblings = null;
 		if (region.isNew()) {
 			if (parentId != null) {
-				Region parent = baseManager.get(parentId);
+				Region parent = entityManager.get(parentId);
 				region.setParent(parent);
 				siblings = parent.getChildren();
 			} else {
-				DetachedCriteria dc = baseManager.detachedCriteria();
+				DetachedCriteria dc = entityManager.detachedCriteria();
 				dc.add(Restrictions.isNull("parent"));
 				dc.addOrder(Order.asc("displayOrder"));
 				dc.addOrder(Order.asc("name"));
-				siblings = baseManager.findListByCriteria(dc);
+				siblings = entityManager.findListByCriteria(dc);
 			}
 			for (Region sibling : siblings)
 				if (sibling.getName().equals(region.getName())) {
@@ -170,18 +170,18 @@ public class RegionAction extends BaseAction {
 				}
 		} else {
 			Region temp = region;
-			region = baseManager.get(temp.getId());
+			region = entityManager.get(temp.getId());
 			if (temp.getCoordinate() != null
 					&& temp.getCoordinate().getLatitude() != null) {
 				region.setCoordinate(temp.getCoordinate());
 			} else {
 				if (!region.getName().equals(temp.getName())) {
 					if (region.getParent() == null) {
-						DetachedCriteria dc = baseManager.detachedCriteria();
+						DetachedCriteria dc = entityManager.detachedCriteria();
 						dc.add(Restrictions.isNull("parent"));
 						dc.addOrder(Order.asc("displayOrder"));
 						dc.addOrder(Order.asc("name"));
-						siblings = baseManager.findListByCriteria(dc);
+						siblings = entityManager.findListByCriteria(dc);
 					} else {
 						siblings = region.getParent().getChildren();
 					}
@@ -199,7 +199,7 @@ public class RegionAction extends BaseAction {
 			}
 		}
 
-		baseManager.save(region);
+		entityManager.save(region);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
@@ -214,16 +214,16 @@ public class RegionAction extends BaseAction {
 			List<Region> list;
 			if (id.length == 1) {
 				list = new ArrayList<Region>(1);
-				list.add(baseManager.get(id[0]));
+				list.add(entityManager.get(id[0]));
 			} else {
-				DetachedCriteria dc = baseManager.detachedCriteria();
+				DetachedCriteria dc = entityManager.detachedCriteria();
 				dc.add(Restrictions.in("id", id));
-				list = baseManager.findListByCriteria(dc);
+				list = entityManager.findListByCriteria(dc);
 			}
 			if (list.size() > 0) {
 				boolean deletable = true;
 				for (Region temp : list) {
-					if (!baseManager.canDelete(temp)) {
+					if (!entityManager.canDelete(temp)) {
 						addActionError(temp.getName()
 								+ getText("delete.forbidden",
 										new String[] { temp.getName() }));
@@ -233,7 +233,7 @@ public class RegionAction extends BaseAction {
 				}
 				if (deletable) {
 					for (Region temp : list)
-						baseManager.delete(temp);
+						entityManager.delete(temp);
 					addActionMessage(getText("delete.success"));
 				}
 			}
@@ -258,13 +258,13 @@ public class RegionAction extends BaseAction {
 		Double top = new Double(array[0]);
 		Double right = new Double(array[1]);
 		Integer[] levels = zoom2level(zoom);
-		DetachedCriteria dc = baseManager.detachedCriteria();
+		DetachedCriteria dc = entityManager.detachedCriteria();
 		if (levels != null)
 			dc.add(Restrictions.in("level", levels));
 		dc.add(Restrictions.and(
 				Restrictions.between("coordinate.latitude", bottom, top),
 				Restrictions.between("coordinate.longitude", left, right)));
-		list = baseManager.findListByCriteria(dc);
+		list = entityManager.findListByCriteria(dc);
 		return JSON;
 	}
 
@@ -286,9 +286,9 @@ public class RegionAction extends BaseAction {
 			Region source = null;
 			Region target = null;
 			try {
-				source = baseManager.get(Long.valueOf(id[0]));
+				source = entityManager.get(Long.valueOf(id[0]));
 				if (Long.valueOf(id[1]) > 0)
-					target = baseManager.get(Long.valueOf(id[1]));
+					target = entityManager.get(Long.valueOf(id[1]));
 			} catch (Exception e) {
 
 			}
@@ -305,7 +305,7 @@ public class RegionAction extends BaseAction {
 					&& target != null
 					&& source.getParent().getId().equals(target.getId()))) {
 				source.setParent(target);
-				baseManager.save(source);
+				entityManager.save(source);
 				addActionMessage(getText("operate.success"));
 			}
 		}
@@ -318,8 +318,8 @@ public class RegionAction extends BaseAction {
 			Region source = null;
 			Region target = null;
 			try {
-				source = baseManager.get(Long.valueOf(id[0]));
-				target = baseManager.get(Long.valueOf(id[1]));
+				source = entityManager.get(Long.valueOf(id[0]));
+				target = entityManager.get(Long.valueOf(id[1]));
 			} catch (Exception e) {
 
 			}
@@ -349,12 +349,12 @@ public class RegionAction extends BaseAction {
 								.append(clz.getName()).append(" t set t.")
 								.append(name).append(".id=? where t.")
 								.append(name).append(".id=?").toString();
-						baseManager.executeUpdate(hql, target.getId(),
+						entityManager.executeUpdate(hql, target.getId(),
 								source.getId());
 					}
 				}
 			}
-			baseManager.delete(source);
+			entityManager.delete(source);
 			addActionMessage(getText("operate.success"));
 		}
 		return SUCCESS;

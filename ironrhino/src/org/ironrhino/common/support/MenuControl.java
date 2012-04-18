@@ -64,15 +64,16 @@ public class MenuControl {
 					if (EntityAction.class.equals(c)) {
 						Class<?> entityClass = ((AutoConfigPackageProvider) packageProvider)
 								.getEntityClass(pc.getNamespace(), ac.getName());
-						Menu menu = entityClass
-								.getAnnotation(Menu.class);
+						Menu menu = entityClass.getAnnotation(Menu.class);
 						if (menu != null) {
 							StringBuilder sb = new StringBuilder();
 							sb.append(pc.getNamespace())
 									.append(pc.getNamespace().endsWith("/") ? ""
 											: "/").append(ac.getName());
-							mapping.put(sb.toString(), new Pair<Menu,Authorize>(menu,
-									entityClass.getAnnotation(Authorize.class)));
+							mapping.put(
+									sb.toString(),
+									new Pair<Menu, Authorize>(menu, entityClass
+											.getAnnotation(Authorize.class)));
 						}
 						continue;
 					}
@@ -84,8 +85,8 @@ public class MenuControl {
 						sb.append(pc.getNamespace())
 								.append(pc.getNamespace().endsWith("/") ? ""
 										: "/").append(ac.getName());
-						mapping.put(sb.toString(), new Pair<Menu,Authorize>(menuOnClass,
-								authorizeOnClass));
+						mapping.put(sb.toString(), new Pair<Menu, Authorize>(
+								menuOnClass, authorizeOnClass));
 					}
 					Set<Method> methods = AnnotationUtils.getAnnotatedMethods(
 							c, Menu.class);
@@ -98,8 +99,8 @@ public class MenuControl {
 										: "/").append(ac.getName());
 						if (!m.getName().equals("execute"))
 							sb.append("/").append(m.getName());
-						mapping.put(sb.toString(), new Pair<Menu,Authorize>(menu,
-								authorize == null ? authorizeOnClass
+						mapping.put(sb.toString(), new Pair<Menu, Authorize>(
+								menu, authorize == null ? authorizeOnClass
 										: authorize));
 					}
 				} catch (ClassNotFoundException e) {
@@ -130,7 +131,7 @@ public class MenuControl {
 			if (hasPermission(child)) {
 				list.add(child);
 				filterUnauthorized(child);
-			}else{
+			} else {
 				it.remove();
 			}
 		}
@@ -233,15 +234,22 @@ public class MenuControl {
 	@SuppressWarnings("unchecked")
 	private MenuNode assemble(final Map<String, Pair<Menu, Authorize>> mapping) {
 		MenuNode root = new MenuNode();
-		Map<String, Pair<Menu, Authorize>> sortedMap = new TreeMap<String, Pair<Menu, Authorize>>(new Comparator<String>() {
-			public int compare(String o1,
-					String o2) {
-				return mapping.get(o1).getA().parents().length
-						- mapping.get(o2).getA().parents().length;
-			}
-		});
+		Map<String, Pair<Menu, Authorize>> sortedMap = new TreeMap<String, Pair<Menu, Authorize>>(
+				new Comparator<String>() {
+					public int compare(String o1, String o2) {
+						Pair<Menu, Authorize> p1 = mapping.get(o1);
+						Pair<Menu, Authorize> p2 = mapping.get(o2);
+						if (p1 == null)
+							return -1;
+						if (p2 == null)
+							return 1;
+						return p1.getA().parents().length
+								- p2.getA().parents().length;
+					}
+				});
 		sortedMap.putAll(mapping);
-		for (Map.Entry<String, Pair<Menu, Authorize>> entry : sortedMap.entrySet()) {
+		for (Map.Entry<String, Pair<Menu, Authorize>> entry : sortedMap
+				.entrySet()) {
 			String url = entry.getKey();
 			Menu menu = entry.getValue().getA();
 			MenuNode node = new MenuNode();

@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 import org.ironrhino.common.model.TreeNode;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
-import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.BeanUtils;
 import org.springframework.context.ApplicationListener;
 
@@ -24,11 +24,11 @@ public class TreeNodeControl implements
 	private TreeNode tree;
 
 	@Inject
-	private BaseManager<TreeNode> baseManager;
+	private EntityManager<TreeNode> entityManager;
 
 	public void buildTreeNodeTree() {
-		baseManager.setEntityClass(TreeNode.class);
-		tree = baseManager.loadTree();
+		entityManager.setEntityClass(TreeNode.class);
+		tree = entityManager.loadTree();
 	}
 
 	@PostConstruct

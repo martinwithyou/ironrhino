@@ -13,7 +13,7 @@ import org.ironrhino.common.model.TreeNode;
 import org.ironrhino.common.support.TreeNodeControl;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.JsonConfig;
-import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.security.model.UserRole;
 
@@ -30,7 +30,7 @@ public class TreeNodeAction extends BaseAction {
 	@Inject
 	private transient TreeNodeControl treeNodeControl;
 
-	private transient BaseManager<TreeNode> baseManager;
+	private transient EntityManager<TreeNode> entityManager;
 
 	private Collection<TreeNode> list;
 
@@ -62,22 +62,22 @@ public class TreeNodeAction extends BaseAction {
 		this.treeNode = treeNode;
 	}
 
-	public void setBaseManager(BaseManager<TreeNode> baseManager) {
-		baseManager.setEntityClass(TreeNode.class);
-		this.baseManager = baseManager;
+	public void setEntityManager(EntityManager<TreeNode> entityManager) {
+		entityManager.setEntityClass(TreeNode.class);
+		this.entityManager = entityManager;
 	}
 
 	@Override
 	public String execute() {
 		if (parentId != null && parentId > 0) {
-			treeNode = baseManager.get(parentId);
+			treeNode = entityManager.get(parentId);
 		} else {
 			treeNode = new TreeNode();
-			DetachedCriteria dc = baseManager.detachedCriteria();
+			DetachedCriteria dc = entityManager.detachedCriteria();
 			dc.add(Restrictions.isNull("parent"));
 			dc.addOrder(Order.asc("displayOrder"));
 			dc.addOrder(Order.asc("name"));
-			treeNode.setChildren(baseManager.findListByCriteria(dc));
+			treeNode.setChildren(entityManager.findListByCriteria(dc));
 		}
 		list = treeNode.getChildren();
 		return LIST;
@@ -86,7 +86,7 @@ public class TreeNodeAction extends BaseAction {
 	@Override
 	public String input() {
 		if (getUid() != null)
-			treeNode = baseManager.get(Long.valueOf(getUid()));
+			treeNode = entityManager.get(Long.valueOf(getUid()));
 		if (treeNode == null)
 			treeNode = new TreeNode();
 		return INPUT;
@@ -97,15 +97,15 @@ public class TreeNodeAction extends BaseAction {
 		Collection<TreeNode> siblings = null;
 		if (treeNode.isNew()) {
 			if (parentId != null) {
-				TreeNode parent = baseManager.get(parentId);
+				TreeNode parent = entityManager.get(parentId);
 				treeNode.setParent(parent);
 				siblings = parent.getChildren();
 			} else {
-				DetachedCriteria dc = baseManager.detachedCriteria();
+				DetachedCriteria dc = entityManager.detachedCriteria();
 				dc.add(Restrictions.isNull("parent"));
 				dc.addOrder(Order.asc("displayOrder"));
 				dc.addOrder(Order.asc("name"));
-				siblings = baseManager.findListByCriteria(dc);
+				siblings = entityManager.findListByCriteria(dc);
 			}
 			for (TreeNode sibling : siblings)
 				if (sibling.getName().equals(treeNode.getName())) {
@@ -115,14 +115,14 @@ public class TreeNodeAction extends BaseAction {
 				}
 		} else {
 			TreeNode temp = treeNode;
-			treeNode = baseManager.get(temp.getId());
+			treeNode = entityManager.get(temp.getId());
 			if (!treeNode.getName().equals(temp.getName())) {
 				if (treeNode.getParent() == null) {
-					DetachedCriteria dc = baseManager.detachedCriteria();
+					DetachedCriteria dc = entityManager.detachedCriteria();
 					dc.add(Restrictions.isNull("parent"));
 					dc.addOrder(Order.asc("displayOrder"));
 					dc.addOrder(Order.asc("name"));
-					siblings = baseManager.findListByCriteria(dc);
+					siblings = entityManager.findListByCriteria(dc);
 				} else {
 					siblings = treeNode.getParent().getChildren();
 				}
@@ -140,7 +140,7 @@ public class TreeNodeAction extends BaseAction {
 			if (temp.getAttributes() != null && temp.getAttributes().size() > 0)
 				treeNode.setAttributes(temp.getAttributes());
 		}
-		baseManager.save(treeNode);
+		entityManager.save(treeNode);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
@@ -155,16 +155,16 @@ public class TreeNodeAction extends BaseAction {
 			List<TreeNode> list;
 			if (id.length == 1) {
 				list = new ArrayList<TreeNode>(1);
-				list.add(baseManager.get(id[0]));
+				list.add(entityManager.get(id[0]));
 			} else {
-				DetachedCriteria dc = baseManager.detachedCriteria();
+				DetachedCriteria dc = entityManager.detachedCriteria();
 				dc.add(Restrictions.in("id", id));
-				list = baseManager.findListByCriteria(dc);
+				list = entityManager.findListByCriteria(dc);
 			}
 			if (list.size() > 0) {
 				boolean deletable = true;
 				for (TreeNode temp : list) {
-					if (!baseManager.canDelete(temp)) {
+					if (!entityManager.canDelete(temp)) {
 						addActionError(temp.getName()
 								+ getText("delete.forbidden",
 										new String[] { temp.getName() }));
@@ -174,7 +174,7 @@ public class TreeNodeAction extends BaseAction {
 				}
 				if (deletable) {
 					for (TreeNode temp : list)
-						baseManager.delete(temp);
+						entityManager.delete(temp);
 					addActionMessage(getText("delete.success"));
 				}
 			}
