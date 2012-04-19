@@ -215,6 +215,23 @@ public class HttpClientUtils {
 		return null;
 	}
 
+	public static String postResponseText(String url, String body,
+			Map<String, String> headers, String encoding) {
+		HttpPost httpRequest = new HttpPost(url);
+		try {
+			httpRequest.setEntity(new StringEntity(body, encoding));
+			if (headers != null && headers.size() > 0)
+				for (Map.Entry<String, String> entry : headers.entrySet())
+					httpRequest.addHeader(entry.getKey(), entry.getValue());
+			return getDefaultInstance().execute(httpRequest,
+					new BasicResponseHandler());
+		} catch (Exception e) {
+			httpRequest.abort();
+			logger.error(e.getMessage(), e);
+		}
+		return null;
+	}
+
 	public static String post(String url, String entity) {
 		return invoke("POST", url, entity);
 	}
