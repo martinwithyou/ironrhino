@@ -61,7 +61,7 @@ CREATE TABLE activemq_acks(CONTAINER VARCHAR(250) NOT NULL, SUB_DEST VARCHAR(250
 			</listitem>
 			<listitem>
 				<para>
-        	执行test/src/org/ironrhino/InitData.java,会插入一个默认的管理员账号,用户名是admin,密码是password,其实是在user表里面插入了一条记录,password是单向加密过的
+        	执行test/src/initdata/InitUser.java,会插入一个默认的管理员账号,用户名是admin,密码是password,其实是在user表里面插入了一条记录,password是单向加密过的
 				</para>
 			</listitem>
 			<listitem>
