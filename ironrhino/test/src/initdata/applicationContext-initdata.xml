@@ -13,5 +13,6 @@
 			</list>
 		</property>
 	</bean>
+	<bean id="entityManager" class="org.ironrhino.core.service.EntityManagerImpl"/>
 	<context:annotation-config />
 </beans>
