@@ -243,12 +243,16 @@ public class BaseAction extends ActionSupport {
 			}
 		}
 		if ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method)) {
-			BufferedReader reader = ServletActionContext.getRequest()
-					.getReader();
-			List<String> lines = IOUtils.readLines(reader);
-			if (lines != null && lines.size() > 0)
-				requestBody = StringUtils.join(lines, "\n");
-			reader.close();
+			try {
+				BufferedReader reader = ServletActionContext.getRequest()
+						.getReader();
+				List<String> lines = IOUtils.readLines(reader);
+				if (lines != null && lines.size() > 0)
+					requestBody = StringUtils.join(lines, "\n");
+				reader.close();
+			} catch (IllegalStateException e) {
+				
+			}
 		}
 		return null;
 	}
