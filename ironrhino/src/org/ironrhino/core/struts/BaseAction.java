@@ -251,8 +251,6 @@ public class BaseAction extends ActionSupport {
 			List<String> lines = IOUtils.readLines(reader);
 			if (lines != null && lines.size() > 0)
 				requestBody = StringUtils.join(lines, "\n");
-			if (requestBody != null)
-				System.out.println(requestBody);
 			reader.close();
 			return null;
 		}

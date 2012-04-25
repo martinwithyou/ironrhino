@@ -43,7 +43,8 @@ public class AuthenticationFailureHandler extends
 		loginRecord.setAddress(RequestUtils.getRemoteAddr(request));
 		loginRecord.setFailed(true);
 		loginRecord.setCause(e.getMessage());
-		save(loginRecord);
+		if (loginRecord.getUsername() != null)
+			save(loginRecord);
 	}
 
 	private void save(final LoginRecord loginRecord) {

@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: radiomap.ftl 1211023 2011-12-06 17:01:50Z wesw $
+ * $Id: radiomap.ftl 1328526 2012-04-20 22:19:41Z lukaszlenart $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -61,6 +61,7 @@
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
 /><#rt/>
 <label for="${parameters.id?html}${itemKeyStr?html}"><#rt/>
     ${itemValue}<#t/>
