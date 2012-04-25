@@ -16,10 +16,16 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.commons.io.FileUtils;
+import org.ironrhino.core.metadata.DefaultProfile;
 import org.springframework.util.Assert;
 
+@Singleton
+@Named("fileStorage")
+@DefaultProfile
 public class LocalFileStorage extends AbstractFileStorage {
 
 	private File directory;

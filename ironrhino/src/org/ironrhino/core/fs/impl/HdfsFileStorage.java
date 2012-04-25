@@ -15,14 +15,20 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.ironrhino.core.fs.FileStorage;
+import org.ironrhino.core.metadata.ClusterProfile;
 import org.springframework.util.Assert;
 
+@Singleton
+@Named("fileStorage")
+@ClusterProfile
 public class HdfsFileStorage extends AbstractFileStorage {
 
 	private FileSystem hdfs;
@@ -232,8 +238,8 @@ public class HdfsFileStorage extends AbstractFileStorage {
 					int i = Boolean.valueOf(o1.isDirectory()).compareTo(
 							Boolean.valueOf(o2.isDirectory()));
 					if (i == 0)
-						return o1.getPath().getName().compareTo(
-								o2.getPath().getName());
+						return o1.getPath().getName()
+								.compareTo(o2.getPath().getName());
 					else
 						return i;
 				}
