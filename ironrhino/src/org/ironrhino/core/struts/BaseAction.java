@@ -2,7 +2,6 @@ package org.ironrhino.core.struts;
 
 import java.io.BufferedReader;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -226,12 +225,10 @@ public class BaseAction extends ActionSupport {
 	}
 
 	@Before(priority = 10)
-	public String returnInput() throws Exception {
+	public String returnInputOrExtractRequestBody() throws Exception {
+		String method = ServletActionContext.getRequest().getMethod();
 		InputConfig inputConfig = getAnnotation(InputConfig.class);
-		if (inputConfig == null)
-			return null;
-		if (!"POST".equalsIgnoreCase(ServletActionContext.getRequest()
-				.getMethod())) {
+		if (inputConfig != null && "GET".equalsIgnoreCase(method)) {
 			returnInput = true;
 			if (!inputConfig.methodName().equals("")) {
 				ActionInvocation ai = ActionContext.getContext()
@@ -239,21 +236,21 @@ public class BaseAction extends ActionSupport {
 				originalActionName = ai.getProxy().getActionName();
 				originalMethod = ai.getProxy().getMethod();
 				// ai.getProxy().setMethod(annotation.methodName());
-				Method method = this.getClass().getMethod(
-						inputConfig.methodName());
-				return (String) method.invoke(this);
+				return (String) this.getClass()
+						.getMethod(inputConfig.methodName()).invoke(this);
 			} else {
 				return inputConfig.resultName();
 			}
-		} else {
+		}
+		if ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method)) {
 			BufferedReader reader = ServletActionContext.getRequest()
 					.getReader();
 			List<String> lines = IOUtils.readLines(reader);
 			if (lines != null && lines.size() > 0)
 				requestBody = StringUtils.join(lines, "\n");
 			reader.close();
-			return null;
 		}
+		return null;
 	}
 
 	@Override
