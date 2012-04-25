@@ -1,11 +1,14 @@
 package org.ironrhino.core.struts;
 
+import java.io.BufferedReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.Authorize;
@@ -52,6 +55,8 @@ public class BaseAction extends ActionSupport {
 	private String[] id;
 
 	protected String keyword;
+
+	protected String requestBody;
 
 	protected String currentPassword;
 
@@ -241,6 +246,14 @@ public class BaseAction extends ActionSupport {
 				return inputConfig.resultName();
 			}
 		} else {
+			BufferedReader reader = ServletActionContext.getRequest()
+					.getReader();
+			List<String> lines = IOUtils.readLines(reader);
+			if (lines != null && lines.size() > 0)
+				requestBody = StringUtils.join(lines, "\n");
+			if (requestBody != null)
+				System.out.println(requestBody);
+			reader.close();
 			return null;
 		}
 	}
