@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="test/classes" path="test/src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_03"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjrt-1.6.12.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/aspectjweaver-1.6.12.jar"/>
@@ -86,5 +85,6 @@
 	<classpathentry kind="lib" path="lib/spring-test-3.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/closure-compiler.jar"/>
 	<classpathentry kind="lib" path="lib/yuicompressor.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
