@@ -9,7 +9,7 @@ public class Context {
 
 	public static ThreadLocal<Map<String, String[]>> PARAMETERS_MAP = new ThreadLocal<Map<String, String[]>>();
 
-	public static ThreadLocal<Class> SERVICE = new ThreadLocal<Class>();
+	public static ThreadLocal<Class<?>> SERVICE = new ThreadLocal<Class<?>>();
 
 	public static String get(String key) {
 		Map<String, String[]> m = PARAMETERS_MAP.get();

@@ -49,7 +49,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return expireTime;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setRedisTemplate(RedisTemplate redisTemplate) {
 		this.authorizationRedisTemplate = redisTemplate;
 		this.clientRedisTemplate = redisTemplate;

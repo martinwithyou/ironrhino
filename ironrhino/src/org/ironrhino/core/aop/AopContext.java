@@ -5,18 +5,18 @@ import java.util.List;
 
 public class AopContext {
 
-	private static ThreadLocal<List<Class>> bypass = new ThreadLocal<List<Class>>();
+	private static ThreadLocal<List<Class<?>>> bypass = new ThreadLocal<List<Class<?>>>();
 
-	public static void setBypass(Class clazz) {
-		List<Class> list = bypass.get();
+	public static void setBypass(Class<?> clazz) {
+		List<Class<?>> list = bypass.get();
 		if (list == null)
-			list = new ArrayList<Class>(5);
+			list = new ArrayList<Class<?>>(5);
 		list.add(clazz);
 		bypass.set(list);
 	}
 
-	public static boolean isBypass(Class clazz) {
-		List<Class> list = bypass.get();
+	public static boolean isBypass(Class<?> clazz) {
+		List<Class<?>> list = bypass.get();
 		if (list == null) {
 			return false;
 		}

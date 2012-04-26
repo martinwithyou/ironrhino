@@ -26,7 +26,7 @@ public class CriterionUtils {
 		return c;
 	}
 
-	public static Criterion filter(Persistable entity, String... names) {
+	public static Criterion filter(Persistable<?> entity, String... names) {
 		if (entity == null || names.length == 0)
 			return null;
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);

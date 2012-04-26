@@ -7,6 +7,7 @@ import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+@SuppressWarnings("rawtypes")
 public class InitUser {
 
 	static EntityManager entityManager;

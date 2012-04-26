@@ -10,9 +10,9 @@ import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-public interface BaseManager<T extends Persistable> {
+public interface BaseManager<T extends Persistable<?>> {
 
-	public Class<? extends Persistable> getEntityClass();
+	public Class<? extends Persistable<?>> getEntityClass();
 
 	public void save(T obj);
 
@@ -54,8 +54,8 @@ public interface BaseManager<T extends Persistable> {
 
 	public int executeUpdate(String queryString, Object... args);
 
-	public Object execute(HibernateCallback callback);
+	public <K> K execute(HibernateCallback<K> callback);
 
-	public Object executeFind(HibernateCallback callback);
+	public <K> K executeFind(HibernateCallback<K> callback);
 
 }

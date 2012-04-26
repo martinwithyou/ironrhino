@@ -6,17 +6,17 @@ public class EntityOperationEvent extends BaseEvent {
 
 	private static final long serialVersionUID = -3336231774669978161L;
 
-	private Persistable entity;
+	private Persistable<?> entity;
 
 	private EntityOperationType type;
 
-	public EntityOperationEvent(Persistable entity, EntityOperationType type) {
+	public EntityOperationEvent(Persistable<?> entity, EntityOperationType type) {
 		super(entity);
 		this.entity = entity;
 		this.type = type;
 	}
 
-	public Persistable getEntity() {
+	public Persistable<?> getEntity() {
 		return entity;
 	}
 

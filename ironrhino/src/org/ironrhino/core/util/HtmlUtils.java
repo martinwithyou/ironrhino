@@ -16,6 +16,7 @@ import net.htmlparser.jericho.Tag;
 
 import org.ironrhino.core.model.BaseTreeableEntity;
 
+@SuppressWarnings("rawtypes")
 public class HtmlUtils {
 
 	public static String getTreeViewHtml(Collection children, boolean async) {

@@ -15,9 +15,9 @@ public class LocalCompassBean extends org.compass.spring.LocalCompassBean {
 		setPostProcessor(new LocalCompassBeanPostProcessor() {
 			public void process(CompassConfiguration config)
 					throws ConfigurationException {
-				Set<Class> set = ClassScaner.scanAnnotated(
+				Set<Class<?>> set = ClassScaner.scanAnnotated(
 						ClassScaner.getAppPackages(), Searchable.class);
-				for (Class c : set)
+				for (Class<?> c : set)
 					config.addClass(c);
 			}
 		});

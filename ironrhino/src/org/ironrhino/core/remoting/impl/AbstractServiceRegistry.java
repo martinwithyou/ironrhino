@@ -59,7 +59,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 			BeanDefinition bd = beanFactory.getBeanDefinition(beanName);
 			if (!bd.isSingleton())
 				continue;
-			Class clazz = null;
+			Class<?> clazz = null;
 			try {
 				clazz = Class.forName(bd.getBeanClassName());
 			} catch (Exception e) {
@@ -71,9 +71,9 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 						.getPropertyValue("serviceInterface").getValue();
 				importServices.put(serviceName, Collections.EMPTY_LIST);
 			} else {
-				Class[] interfaces = clazz.getInterfaces();
+				Class<?>[] interfaces = clazz.getInterfaces();
 				if (interfaces != null) {
-					for (Class inte : interfaces) {
+					for (Class<?> inte : interfaces) {
 						Remoting remoting = AnnotationUtils.getAnnotation(inte,
 								Remoting.class);
 						if (remoting != null) {

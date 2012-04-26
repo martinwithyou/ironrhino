@@ -24,7 +24,7 @@ public class HessianServer extends HessianServiceExporter {
 
 	private static ThreadLocal<Object> service = new ThreadLocal<Object>();
 
-	private Map<Class, HessianSkeleton> skeletons = new HashMap<Class, HessianSkeleton>();
+	private Map<Class<?>, HessianSkeleton> skeletons = new HashMap<Class<?>, HessianSkeleton>();
 
 	private ServiceRegistry serviceRegistry;
 
@@ -50,7 +50,7 @@ public class HessianServer extends HessianServiceExporter {
 					return;
 				}
 			}
-			Class clazz = Class.forName(interfaceName);
+			Class<?> clazz = Class.forName(interfaceName);
 			Context.SERVICE.set(clazz);
 			HessianSkeleton skeleton = skeletons.get(getServiceInterface());
 			if (skeleton != null) {
@@ -82,7 +82,7 @@ public class HessianServer extends HessianServiceExporter {
 			for (Map.Entry<String, Object> entry : serviceRegistry
 					.getExportServices().entrySet()) {
 				try {
-					Class intf = Class.forName(entry.getKey());
+					Class<?> intf = Class.forName(entry.getKey());
 					Context.SERVICE.set(intf);
 					service.set(entry.getValue());
 					skeletons.put(intf, new HessianSkeleton(
@@ -102,7 +102,7 @@ public class HessianServer extends HessianServiceExporter {
 	}
 
 	@Override
-	public Class getServiceInterface() {
+	public Class<?> getServiceInterface() {
 		return Context.SERVICE.get();
 	}
 

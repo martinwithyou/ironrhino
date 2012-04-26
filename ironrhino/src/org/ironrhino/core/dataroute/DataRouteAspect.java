@@ -45,7 +45,7 @@ public class DataRouteAspect extends BaseAspect {
 		return jp.proceed();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Around("execution(public * *(..)) and target(baseManager)")
 	public Object determineGroup(ProceedingJoinPoint jp, BaseManager baseManager)
 			throws Throwable {
@@ -54,7 +54,7 @@ public class DataRouteAspect extends BaseAspect {
 		if (target != null)
 			dataRoute = target.getClass().getAnnotation(DataRoute.class);
 		if (dataRoute == null) {
-			Class<Persistable> entityClass = baseManager
+			Class<Persistable<?>> entityClass = baseManager
 					.getEntityClass();
 			if (entityClass != null)
 				dataRoute = entityClass.getAnnotation(DataRoute.class);

@@ -15,7 +15,7 @@ public class BeanUtils {
 
 	private static final Logger log = LoggerFactory.getLogger(BeanUtils.class);
 
-	public static boolean hasProperty(Class clazz, String name) {
+	public static boolean hasProperty(Class<?> clazz, String name) {
 		if (org.springframework.beans.BeanUtils.getPropertyDescriptor(clazz,
 				name) != null)
 			return true;

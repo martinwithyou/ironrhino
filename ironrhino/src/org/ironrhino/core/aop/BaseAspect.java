@@ -137,6 +137,7 @@ public class BaseAspect implements Ordered {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected List evalList(String template, JoinPoint jp, Object retval) {
 		try {
 			Object obj = eval(template, jp, retval);

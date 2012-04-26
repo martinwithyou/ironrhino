@@ -48,8 +48,8 @@ public class AuthenticationFailureHandler extends
 	}
 
 	private void save(final LoginRecord loginRecord) {
-		userManager.execute(new HibernateCallback() {
-			public Object doInHibernate(Session session)
+		userManager.execute(new HibernateCallback<LoginRecord>() {
+			public LoginRecord doInHibernate(Session session)
 					throws HibernateException, SQLException {
 				session.save(loginRecord);
 				return null;

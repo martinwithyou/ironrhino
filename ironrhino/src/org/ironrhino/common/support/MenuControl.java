@@ -231,7 +231,7 @@ public class MenuControl {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private MenuNode assemble(final Map<String, Pair<Menu, Authorize>> mapping) {
 		MenuNode root = new MenuNode();
 		Map<String, Pair<Menu, Authorize>> sortedMap = new TreeMap<String, Pair<Menu, Authorize>>(

@@ -32,7 +32,7 @@ public class RecordAspect extends HibernateDaoSupport implements Ordered {
 	private int order;
 
 	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(recordAware)")
-	public Object save(ProceedingJoinPoint call, Persistable entity,
+	public Object save(ProceedingJoinPoint call, Persistable<?> entity,
 			RecordAware recordAware) throws Throwable {
 		if (AopContext.isBypass(this.getClass()))
 			return call.proceed();
@@ -44,14 +44,14 @@ public class RecordAspect extends HibernateDaoSupport implements Ordered {
 	}
 
 	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(recordAware)")
-	public void delete(Persistable entity, RecordAware recordAware) {
+	public void delete(Persistable<?> entity, RecordAware recordAware) {
 		if (AopContext.isBypass(this.getClass()))
 			return;
 		record(entity, EntityOperationType.DELETE);
 	}
 
 	// record to database,may change to use logger system
-	private void record(Persistable entity, EntityOperationType action) {
+	private void record(Persistable<?> entity, EntityOperationType action) {
 		try {
 			Record record = new Record();
 			UserDetails ud = AuthzUtils.getUserDetails(UserDetails.class);

@@ -40,6 +40,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 @Singleton
 @Named("statControl")
+@SuppressWarnings("rawtypes")
 public class StatControl {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
@@ -90,6 +91,7 @@ public class StatControl {
 					Calendar calendar = Calendar.getInstance();
 					int currentHour = 0;
 					Map<Key, Value> map = new HashMap<Key, Value>();
+
 					private void save() {
 						Map<Key, Value> sortedMap = new TreeMap<Key, Value>(map);
 						for (Map.Entry<Key, Value> entry : sortedMap.entrySet())

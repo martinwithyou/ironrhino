@@ -20,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Searchable(alias = "page")
 @AutoConfig(searchable = true)
-public class Page extends BaseEntity implements Recordable, Ordered {
+public class Page extends BaseEntity implements Recordable<UserDetails>, Ordered {
 
 	private static final long serialVersionUID = 4688382703803043164L;
 

@@ -19,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 
 @Singleton
 @Named
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class SessionCompressorManager {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
@@ -38,7 +39,6 @@ public class SessionCompressorManager {
 		compressors = ctx.getBeansOfType(SessionCompressor.class).values();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String compress(WrappedHttpSession session) {
 		Map<String, Object> map = session.getAttrMap();
 		Map<String, String> compressedMap = new HashMap<String, String>();

@@ -16,7 +16,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class RedisCacheManager implements CacheManager {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
@@ -98,7 +98,7 @@ public class RedisCacheManager implements CacheManager {
 								generateKey(entry.getKey(), namespace)),
 						redisTemplate.getValueSerializer().serialize(
 								entry.getValue()));
-			redisTemplate.execute(new RedisCallback() {
+			redisTemplate.execute(new RedisCallback<Object>() {
 				@Override
 				public Object doInRedis(RedisConnection conn)
 						throws DataAccessException {

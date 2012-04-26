@@ -20,7 +20,7 @@ public class AnnotationUtils {
 	private static Map<String, Object> cache = new ConcurrentHashMap<String, Object>(
 			250);
 
-	public static Method getAnnotatedMethod(Class clazz,
+	public static Method getAnnotatedMethod(Class<?> clazz,
 			Class<? extends Annotation> annotaionClass) {
 		Iterator<Method> it = getAnnotatedMethods(clazz, annotaionClass)
 				.iterator();
@@ -29,7 +29,7 @@ public class AnnotationUtils {
 		return null;
 	}
 
-	public static Set<Method> getAnnotatedMethods(Class clazz,
+	public static Set<Method> getAnnotatedMethods(Class<?> clazz,
 			Class<? extends Annotation> annotaionClass) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("getAnnotatedMethods:");
@@ -52,7 +52,7 @@ public class AnnotationUtils {
 		return (Set<Method>) cache.get(key);
 	}
 
-	public static Set<String> getAnnotatedPropertyNames(Class clazz,
+	public static Set<String> getAnnotatedPropertyNames(Class<?> clazz,
 			Class<? extends Annotation> annotaionClass) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("getAnnotatedPropertyNames:");
@@ -98,7 +98,7 @@ public class AnnotationUtils {
 	}
 
 	public static Map<String, Annotation> getAnnotatedPropertyNameAndAnnotations(
-			Class clazz, Class<? extends Annotation> annotaionClass) {
+			Class<?> clazz, Class<? extends Annotation> annotaionClass) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("getAnnotatedPropertyNameAndAnnotations:");
 		sb.append(clazz.getName());
@@ -128,8 +128,8 @@ public class AnnotationUtils {
 		return (Map<String, Annotation>) cache.get(key);
 	}
 
-	public static <T extends Annotation> T getAnnotation(Class clazz,
-			Class<T> annotationClass, String methodName, Class... paramTypes) {
+	public static <T extends Annotation> T getAnnotation(Class<?> clazz,
+			Class<T> annotationClass, String methodName, Class<?>... paramTypes) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("getAnnotation:");
 		sb.append(clazz.getName());
@@ -161,7 +161,7 @@ public class AnnotationUtils {
 	public static <T extends Annotation> T getAnnotation(Class<?> clazz,
 			Class<T> annotationClass) {
 		T annotation = null;
-		Class c = clazz;
+		Class<?> c = clazz;
 		while (annotation == null && c != null) {
 			annotation = clazz.getAnnotation(annotationClass);
 			c = clazz.getSuperclass();

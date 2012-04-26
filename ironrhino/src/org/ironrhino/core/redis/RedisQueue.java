@@ -29,7 +29,7 @@ public abstract class RedisQueue<T extends Serializable> implements
 	protected BlockingDeque<T> queue;
 
 	public RedisQueue() {
-		Class clazz = ReflectionUtils.getGenericClass(getClass());
+		Class<?> clazz = ReflectionUtils.getGenericClass(getClass());
 		queueName = clazz.getName();
 	}
 

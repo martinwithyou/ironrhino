@@ -14,6 +14,7 @@ import org.ironrhino.common.util.RegionParser;
 import org.ironrhino.core.service.EntityManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class InitRegion {
 
 	static EntityManager entityManager;
@@ -38,7 +39,6 @@ public class InitRegion {
 		ctx.close();
 	}
 
-	@SuppressWarnings("unchecked")
 	private static void save(Region region) {
 		region.setAreacode(regionAreacodeMap.get(region.getName()));
 		entityManager.save(region);
@@ -50,7 +50,6 @@ public class InitRegion {
 			save(child);
 	}
 
-	@SuppressWarnings("unchecked")
 	private static Map<String, String> regionAreacodeMap() {
 		List<String> lines = Collections.EMPTY_LIST;
 		try {

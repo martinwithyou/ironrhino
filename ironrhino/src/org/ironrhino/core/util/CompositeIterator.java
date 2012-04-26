@@ -10,6 +10,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 
 	List<Iterator<T>> iterators = new ArrayList<Iterator<T>>();
 
+	@SafeVarargs
 	public CompositeIterator(Iterator<T>... iterators) {
 		for (Iterator<T> it : iterators)
 			if (it != null)

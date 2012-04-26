@@ -61,6 +61,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class EntityAction extends BaseAction {
 
 	private static final long serialVersionUID = -8442983706126047413L;
@@ -118,7 +119,6 @@ public class EntityAction extends BaseAction {
 		return getEntityClass().getAnnotation(AutoConfig.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	private BaseManager<Persistable> getEntityManager(
 			Class<Persistable> entityClass) {
 		String entityManagerName = StringUtils.uncapitalize(entityClass
@@ -177,7 +177,6 @@ public class EntityAction extends BaseAction {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public String list() {
 		final BaseManager entityManager = getEntityManager(getEntityClass());
 		Set<String> searchablePropertyNames = new HashSet<String>();
@@ -283,7 +282,6 @@ public class EntityAction extends BaseAction {
 		return makeEntityValid() ? NONE : INPUT;
 	}
 
-	@SuppressWarnings("unchecked")
 	private boolean makeEntityValid() {
 		Map<String, UiConfigImpl> uiConfigs = getUiConfigs();
 		BaseManager<Persistable> entityManager = getEntityManager(getEntityClass());
@@ -759,7 +757,6 @@ public class EntityAction extends BaseAction {
 		private boolean hiddenInList;
 		private String template;
 		private String width;
-		@SuppressWarnings("unchecked")
 		private Map<String, String> dynamicAttributes = Collections.EMPTY_MAP;
 		private boolean excludeIfNotEdited;
 		private String listKey = UiConfig.DEFAULT_LIST_KEY;
@@ -989,7 +986,7 @@ public class EntityAction extends BaseAction {
 					.getActionInvocation().getProxy();
 			String actionName = getEntityName();
 			String namespace = proxy.getNamespace();
-			entityClass = ((AutoConfigPackageProvider) packageProvider)
+			entityClass = (Class<Persistable>)((AutoConfigPackageProvider) packageProvider)
 					.getEntityClass(namespace, actionName);
 		}
 		return entityClass;

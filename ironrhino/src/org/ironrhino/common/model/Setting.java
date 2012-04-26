@@ -18,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @PublishAware
 @AutoConfig(searchable = true, order = "key asc")
 @Searchable(alias = "setting")
-public class Setting extends BaseEntity implements Recordable {
+public class Setting extends BaseEntity implements Recordable<UserDetails> {
 
 	private static final long serialVersionUID = -8352037603261222984L;
 

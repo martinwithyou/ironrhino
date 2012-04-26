@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.struts2.util.StrutsTypeConverter;
 
+@SuppressWarnings("rawtypes")
 public class DateConverter extends StrutsTypeConverter {
 	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 	public DateFormat[] ACCEPT_DATE_FORMATS = {

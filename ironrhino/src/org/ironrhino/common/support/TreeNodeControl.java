@@ -57,7 +57,7 @@ public class TreeNodeControl implements
 			addLevel(t, delta);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private synchronized void create(TreeNode treeNode) {
 		TreeNode parent;
 		String fullId = treeNode.getFullId();
@@ -79,7 +79,7 @@ public class TreeNodeControl implements
 			Collections.sort((List) parent.getChildren());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private synchronized void update(TreeNode treeNode) {
 		TreeNode r = tree.getDescendantOrSelfById(treeNode.getId());
 		boolean needsort = r.compareTo(treeNode) != 0

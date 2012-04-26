@@ -332,9 +332,9 @@ public class RegionAction extends BaseAction {
 				addActionError(getText("validation.invalid"));
 				return SUCCESS;
 			}
-			Set<Class> set = ClassScaner.scanAssignable(
+			Set<Class<?>> set = ClassScaner.scanAssignable(
 					ClassScaner.getAppPackages(), Persistable.class);
-			for (Class clz : set) {
+			for (Class<?> clz : set) {
 				if (clz.equals(Region.class))
 					continue;
 				PropertyDescriptor[] pds = BeanUtils

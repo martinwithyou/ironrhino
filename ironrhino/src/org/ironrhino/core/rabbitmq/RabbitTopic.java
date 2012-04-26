@@ -37,7 +37,7 @@ public abstract class RabbitTopic<T extends Serializable> implements Topic<T>{
 	protected Lock lock = new ReentrantLock();
 
 	public RabbitTopic() {
-		Class clazz = ReflectionUtils.getGenericClass(getClass());
+		Class<?> clazz = ReflectionUtils.getGenericClass(getClass());
 		if (clazz != null)
 			routingKey = clazz.getName();
 	}

@@ -14,7 +14,7 @@ import org.ironrhino.core.stat.Value;
 
 @DataRoute("miscGroup")
 @AutoConfig(readonly = true)
-public class Stat extends KeyValuePair implements Persistable {
+public class Stat extends KeyValuePair implements Persistable<String> {
 
 	private static final long serialVersionUID = -1795832273603877285L;
 

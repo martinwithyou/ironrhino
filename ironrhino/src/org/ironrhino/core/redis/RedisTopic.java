@@ -14,6 +14,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.Topic;
 
+@SuppressWarnings("rawtypes")
 public abstract class RedisTopic<T extends Serializable> implements
 		org.ironrhino.core.message.Topic<T> {
 
@@ -34,7 +35,7 @@ public abstract class RedisTopic<T extends Serializable> implements
 	}
 
 	public RedisTopic() {
-		Class clazz = ReflectionUtils.getGenericClass(getClass());
+		Class<?> clazz = ReflectionUtils.getGenericClass(getClass());
 		channelName = clazz.getName();
 	}
 

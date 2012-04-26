@@ -22,7 +22,7 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 
 	private static ThreadLocal<Object> service = new ThreadLocal<Object>();
 
-	private Map<Class, Object> proxies = new HashMap<Class, Object>();
+	private Map<Class<?>, Object> proxies = new HashMap<Class<?>, Object>();
 
 	private ServiceRegistry serviceRegistry;
 
@@ -48,7 +48,7 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 					return;
 				}
 			}
-			Class clazz = Class.forName(interfaceName);
+			Class<?> clazz = Class.forName(interfaceName);
 			Context.SERVICE.set(clazz);
 			RemoteInvocation invocation = readRemoteInvocation(request);
 			Object proxy = getProxyForService();
@@ -77,7 +77,7 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 			for (Map.Entry<String, Object> entry : serviceRegistry
 					.getExportServices().entrySet()) {
 				try {
-					Class intf = Class.forName(entry.getKey());
+					Class<?> intf = Class.forName(entry.getKey());
 					Context.SERVICE.set(intf);
 					service.set(entry.getValue());
 					proxies.put(intf, super.getProxyForService());
@@ -96,7 +96,7 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 	}
 
 	@Override
-	public Class getServiceInterface() {
+	public Class<?> getServiceInterface() {
 		return Context.SERVICE.get();
 	}
 

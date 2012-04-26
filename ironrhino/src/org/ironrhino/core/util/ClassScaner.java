@@ -63,7 +63,8 @@ public class ClassScaner {
 		this.excludeFilters.clear();
 	}
 
-	public static Set<Class> scanAnnotated(String basePackage,
+	@SafeVarargs
+	public static Set<Class<?>> scanAnnotated(String basePackage,
 			Class<? extends Annotation>... annotations) {
 		ClassScaner cs = new ClassScaner();
 		for (Class<? extends Annotation> anno : annotations)
@@ -71,56 +72,58 @@ public class ClassScaner {
 		return cs.doScan(basePackage);
 	}
 
-	public static Set<Class> scanAnnotated(String[] basePackages,
+	public static Set<Class<?>> scanAnnotated(String[] basePackages,
 			Class<? extends Annotation> annotation) {
 		ClassScaner cs = new ClassScaner();
 			cs.addIncludeFilter(new AnnotationTypeFilter(annotation));
-		Set<Class> classes = new HashSet<Class>();
+		Set<Class<?>> classes = new HashSet<Class<?>>();
 		for (String s : basePackages)
 			classes.addAll(cs.doScan(s));
 		return  classes;
 	}
 	
-	public static Set<Class> scanAnnotated(String[] basePackages,
+	@SafeVarargs
+	public static Set<Class<?>> scanAnnotated(String[] basePackages,
 			Class<? extends Annotation>... annotations) {
 		ClassScaner cs = new ClassScaner();
 		for (Class<? extends Annotation> anno : annotations)
 			cs.addIncludeFilter(new AnnotationTypeFilter(anno));
-		Set<Class> classes = new HashSet<Class>();
+		Set<Class<?>> classes = new HashSet<Class<?>>();
 		for (String s : basePackages)
 			classes.addAll(cs.doScan(s));
 		return classes;
 	}
 
-	public static Set<Class> scanAssignable(String basePackage,
-			Class... classes) {
+	public static Set<Class<?>> scanAssignable(String basePackage,
+			Class<?>... classes) {
 		ClassScaner cs = new ClassScaner();
-		for (Class clz : classes)
+		for (Class<?> clz : classes)
 			cs.addIncludeFilter(new AssignableTypeFilter(clz));
-		Set<Class> set = new HashSet<Class>();
+		Set<Class<?>> set = new HashSet<Class<?>>();
 		set.addAll(cs.doScan(basePackage));
 		return set;
 	}
 
-	public static Set<Class> scanAssignable(String[] basePackages,
-			Class... classes) {
+	public static Set<Class<?>> scanAssignable(String[] basePackages,
+			Class<?>... classes) {
 		ClassScaner cs = new ClassScaner();
-		for (Class clz : classes)
+		for (Class<?> clz : classes)
 			cs.addIncludeFilter(new AssignableTypeFilter(clz));
-		Set<Class> set = new HashSet<Class>();
+		Set<Class<?>> set = new HashSet<Class<?>>();
 		for (String s : basePackages)
 			set.addAll(cs.doScan(s));
 		return set;
 	}
 	
-	public static Set<Class> scanAnnotatedPackage(String basePackage,
+	public static Set<Class<?>> scanAnnotatedPackage(String basePackage,
 			Class<? extends Annotation> annotation) {
 		ClassScaner cs = new ClassScaner();
 			cs.addIncludeFilter(new AnnotationTypeFilter(annotation));
 		return cs.doScan(basePackage, "/**/*/package-info.class");
 	}
 
-	public static Set<Class> scanAnnotatedPackage(String basePackage,
+	@SafeVarargs
+	public static Set<Class<?>> scanAnnotatedPackage(String basePackage,
 			Class<? extends Annotation>... annotations) {
 		ClassScaner cs = new ClassScaner();
 		for (Class<? extends Annotation> anno : annotations)
@@ -128,14 +131,14 @@ public class ClassScaner {
 		return cs.doScan(basePackage, "/**/*/package-info.class");
 	}
 
-	public Set<Class> doScan(String basePackage) {
+	public Set<Class<?>> doScan(String basePackage) {
 		return doScan(basePackage, null);
 	}
 
-	public Set<Class> doScan(String basePackage, String pattern) {
+	public Set<Class<?>> doScan(String basePackage, String pattern) {
 		if (org.apache.commons.lang3.StringUtils.isBlank(pattern))
 			pattern = "/**/*.class";
-		Set<Class> classes = new HashSet<Class>();
+		Set<Class<?>> classes = new HashSet<Class<?>>();
 		Resource resource = null;
 		try {
 			String searchPath = new StringBuilder(

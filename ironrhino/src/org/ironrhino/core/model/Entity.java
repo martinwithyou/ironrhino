@@ -24,6 +24,7 @@ public abstract class Entity<PK extends Serializable> implements
 	}
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public boolean equals(Object object) {
 		if (object == null)
 			return false;

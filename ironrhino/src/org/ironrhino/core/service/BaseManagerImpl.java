@@ -38,8 +38,9 @@ import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
-@SuppressWarnings("unchecked")
-public abstract class BaseManagerImpl<T extends Persistable> implements BaseManager<T> {
+@SuppressWarnings({ "unchecked", "rawtypes" })
+public abstract class BaseManagerImpl<T extends Persistable<?>> implements
+		BaseManager<T> {
 
 	protected Logger log = LoggerFactory.getLogger(BaseManagerImpl.class);
 
@@ -53,7 +54,7 @@ public abstract class BaseManagerImpl<T extends Persistable> implements BaseMana
 	}
 
 	public BaseManagerImpl() {
-		Class clazz = ReflectionUtils.getGenericClass(getClass());
+		Class<T> clazz = (Class<T>)ReflectionUtils.getGenericClass(getClass());
 		if (clazz != null)
 			entityClass = clazz;
 	}
@@ -62,7 +63,7 @@ public abstract class BaseManagerImpl<T extends Persistable> implements BaseMana
 		entityClass = clazz;
 	}
 
-	public Class<? extends Persistable> getEntityClass() {
+	public Class<? extends Persistable<?>> getEntityClass() {
 		return entityClass;
 	}
 
