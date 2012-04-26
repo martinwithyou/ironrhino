@@ -2,12 +2,10 @@ package org.ironrhino.core.struts;
 
 import java.io.BufferedReader;
 import java.lang.annotation.Annotation;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.Authorize;
@@ -246,12 +244,17 @@ public class BaseAction extends ActionSupport {
 			try {
 				BufferedReader reader = ServletActionContext.getRequest()
 						.getReader();
-				List<String> lines = IOUtils.readLines(reader);
-				if (lines != null && lines.size() > 0)
-					requestBody = StringUtils.join(lines, "\n");
+				StringBuilder sb = new StringBuilder();
+				String line;
+				while ((line = reader.readLine()) != null)
+					sb.append(line).append("\n");
+				if (sb.length() > 0) {
+					sb.deleteCharAt(sb.length() - 1);
+					requestBody = sb.toString();
+				}
 				reader.close();
 			} catch (IllegalStateException e) {
-				
+
 			}
 		}
 		return null;
