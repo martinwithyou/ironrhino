@@ -69,7 +69,7 @@ public class EntityAction extends BaseAction {
 	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
 
 	@javax.inject.Inject
-	private transient EntityManager<Persistable> _entityManager;
+	private transient EntityManager<Persistable<?>> _entityManager;
 
 	private ResultPage resultPage;
 
@@ -84,7 +84,7 @@ public class EntityAction extends BaseAction {
 	private boolean searchable;
 
 	@Autowired(required = false)
-	private transient CompassSearchService<Persistable> compassSearchService;
+	private transient CompassSearchService<Persistable<?>> compassSearchService;
 
 	public Map<String, List> getLists() {
 		return lists;
@@ -119,14 +119,14 @@ public class EntityAction extends BaseAction {
 		return getEntityClass().getAnnotation(AutoConfig.class);
 	}
 
-	private BaseManager<Persistable> getEntityManager(
-			Class<Persistable> entityClass) {
+	private BaseManager<Persistable<?>> getEntityManager(
+			Class<Persistable<?>> entityClass) {
 		String entityManagerName = StringUtils.uncapitalize(entityClass
 				.getSimpleName()) + "Manager";
 		try {
 			Object bean = ApplicationContextUtils.getBean(entityManagerName);
 			if (bean != null)
-				return (BaseManager<Persistable>) bean;
+				return (BaseManager<Persistable<?>>) bean;
 			else
 				_entityManager.setEntityClass(entityClass);
 		} catch (NoSuchBeanDefinitionException e) {
@@ -223,7 +223,7 @@ public class EntityAction extends BaseAction {
 				resultPage = new ResultPage();
 			resultPage.setCriteria(criteria);
 			resultPage = compassSearchService.search(resultPage,
-					new Mapper<Persistable>() {
+					new Mapper<Persistable<?>>() {
 						public Persistable map(Persistable source) {
 							return entityManager.get(source.getId());
 						}
@@ -272,7 +272,7 @@ public class EntityAction extends BaseAction {
 			return ACCESSDENIED;
 		if (!makeEntityValid())
 			return INPUT;
-		BaseManager<Persistable> entityManager = getEntityManager(getEntityClass());
+		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		entityManager.save(entity);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
@@ -284,7 +284,7 @@ public class EntityAction extends BaseAction {
 
 	private boolean makeEntityValid() {
 		Map<String, UiConfigImpl> uiConfigs = getUiConfigs();
-		BaseManager<Persistable> entityManager = getEntityManager(getEntityClass());
+		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		entity = constructEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
 		Persistable persisted = null;
@@ -450,7 +450,7 @@ public class EntityAction extends BaseAction {
 			for (PropertyDescriptor pd : pds) {
 				if (!editablePropertyNames.contains(pd.getName()))
 					continue;
-				Class<Persistable> returnType = (Class<Persistable>) pd
+				Class<Persistable<?>> returnType = (Class<Persistable<?>>) pd
 						.getPropertyType();
 				if (!Persistable.class.isAssignableFrom(returnType))
 					continue;
@@ -505,7 +505,7 @@ public class EntityAction extends BaseAction {
 	public String delete() {
 		if (readonly())
 			return ACCESSDENIED;
-		BaseManager<Persistable> entityManager = getEntityManager(getEntityClass());
+		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		String[] arr = getId();
 		Serializable[] id = (arr != null) ? new Serializable[arr.length]
 				: new Serializable[0];
@@ -520,9 +520,9 @@ public class EntityAction extends BaseAction {
 			log.error(e.getMessage(), e);
 		}
 		if (id.length > 0) {
-			List<Persistable> list;
+			List<Persistable<?>> list;
 			if (id.length == 1) {
-				list = new ArrayList<Persistable>(1);
+				list = new ArrayList<Persistable<?>>(1);
 				list.add(entityManager.get(id[0]));
 			} else {
 				DetachedCriteria dc = entityManager.detachedCriteria();
@@ -980,19 +980,19 @@ public class EntityAction extends BaseAction {
 	}
 
 	// need call once before view
-	private Class<Persistable> getEntityClass() {
+	private Class<Persistable<?>> getEntityClass() {
 		if (entityClass == null) {
 			ActionProxy proxy = ActionContext.getContext()
 					.getActionInvocation().getProxy();
 			String actionName = getEntityName();
 			String namespace = proxy.getNamespace();
-			entityClass = (Class<Persistable>)((AutoConfigPackageProvider) packageProvider)
+			entityClass = (Class<Persistable<?>>)((AutoConfigPackageProvider) packageProvider)
 					.getEntityClass(namespace, actionName);
 		}
 		return entityClass;
 	}
 
-	private Class<Persistable> entityClass;
+	private Class<Persistable<?>> entityClass;
 
 	private void setEntity(Persistable entity) {
 		ValueStack vs = ActionContext.getContext().getValueStack();
