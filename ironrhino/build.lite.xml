@@ -13,6 +13,17 @@
 	<property name="test.results.dir" location="${basedir}/test/results" />
 	<property name="jar.name" value="${ant.project.name}-${version}.jar" />
 	<property name="war.name" value="ROOT.war" />
+	<property name="server.home" value="/tomcat" />
+	<property name="server.check.port" value="8005" />
+	<property name="webapp.deploy.dir" value="${server.home}/webapps/ROOT" />
+	<condition property="cmd.suffix" value="bat">
+		<os family="windows" />
+	</condition>
+	<condition property="cmd.suffix" value="sh">
+		<os family="unix" />
+	</condition>
+	<property name="server.startup.cmd" value="${server.home}/bin/startup.${cmd.suffix}" />
+	<property name="server.shutdown.cmd" value="${server.home}/bin/shutdown.${cmd.suffix}" />
 
 	<path id="lib.classpath">
 		<fileset dir="${lib.dir}">
@@ -29,7 +40,107 @@
 		<mkdir dir="${test.classes.dir}" />
 	</target>
 
-	<target name="compile">
+
+	<target name="syncIronrhinoAssets">
+		<copy todir="${basedir}/webapp/assets">
+			<fileset dir="${basedir}/../ironrhino/webapp/assets"
+				includes="**/scripts/ironrhino*.js,**/styles/ironrhino*.css,**/styles/images/*,**/images/*" />
+		</copy>
+	</target>
+
+	<target name="syncComponents">
+		<delete dir="${basedir}/webapp/assets/components" />
+		<copy todir="${basedir}/webapp/assets">
+			<fileset dir="${basedir}/../ironrhino/webapp/assets"
+				includes="**/components/*.zip" />
+		</copy>
+		<unzip dest="${basedir}/webapp/assets/components">
+			<fileset dir="${basedir}/webapp/assets/components" includes="**/*.zip" />
+		</unzip>
+		<delete>
+			<fileset dir="${basedir}/webapp/assets/components" includes="**/*.zip" />
+		</delete>
+	</target>
+
+	<target name="syncAssets">
+		<antcall target="syncIronrhinoAssets" />
+		<antcall target="syncComponents" />
+	</target>
+
+	<target name="syncJars">
+		<script language="javascript">
+			<![CDATA[
+			importPackage(java.io);
+			var classpathfile = new File(project.getProperty('basedir')+'/.classpath');
+			var is = new FileInputStream(classpathfile);
+			var br = new BufferedReader(new InputStreamReader(is,'utf-8'));
+			var lines = [];
+			var line;
+			while(line=br.readLine()){
+				if(line.indexOf('kind="lib"') < 0)
+					continue;
+				lines.push(line);	
+			}
+			br.close();
+			is.close();
+			var replacement = [];
+			for(var n=0;n<lines.length;n++){
+				var arr = lines[n].split('"');
+				var path = arr[arr.length-2];
+				var arr2 = path.split('/');
+				var filename = arr2[arr2.length-1];
+				var jarname = filename.substring(0,filename.lastIndexOf(filename.lastIndexOf('-')>0?'-':'.'));
+				var version = filename.substring(jarname.length()+2);
+				copy = project.createTask("copy");
+        		var file = new File(basedir+'/../ironrhino/' + (filename.startsWith('ironrhino')?'target/'+filename:path));
+				var tofile = new File(basedir,path);
+        		if(!file.exists()){
+        			var parent = file.getParentFile();
+        			var files = parent.listFiles();
+        			for(var i=0;i<files.length;i++){
+        				var f = files[i];
+        				var filename2 = f.getName();
+        				var jarname2 = filename2.substring(0,filename2.lastIndexOf(filename2.lastIndexOf('-')>0?'-':'.'));
+        				var version2 = filename2.substring(jarname2.length()+2);
+        				if(f.isFile() && jarname == jarname2){
+        					if(version.length() >= version2.length() && version >= version2)
+        					continue;
+        					println('upgrade jar from '+filename+' to '+f.getName());
+        					file = f;
+        					if(tofile.exists()){
+	        					var del = project.createTask("delete");
+	        					del.setFile(tofile);
+	        					del.perform();
+        					}
+        					tofile = new File(basedir,path.replaceAll(filename,f.getName()));
+        					replacement.push(filename);
+        					replacement.push(f.getName());
+        					break;
+        				}
+        			}
+        		}
+        		copy.setFile(file);
+        		copy.setTofile(tofile);
+        		if(file.exists())
+        			copy.perform();
+			}
+			for(var i=0;i<replacement.length;i+=2){
+				var replace = project.createTask("replace");
+				replace.setFile(classpathfile);
+				replace.setToken(replacement[i]);
+				replace.setValue(replacement[i+1]);
+				replace.perform();
+			}
+			]]>
+		</script>
+	</target>
+
+	<target name="sync">
+		<antcall target="syncAssets" />
+		<antcall target="syncJars" />
+	</target>
+
+	<target name="compile" depends="sync">
 		<antcall target="clean" />
 		<antcall target="init" />
 		<javac includeantruntime="false" debug="true" debuglevel="vars,lines" srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8">
@@ -42,11 +153,10 @@
 		</copy>
 	</target>
 
-
-
 	<target name="test" depends="compile">
 		<mkdir dir="${test.classes.dir}" />
-		<javac includeantruntime="false" debug="true" debuglevel="vars,lines" srcdir="${test.src.dir}" destdir="${test.classes.dir}">
+		<javac includeantruntime="false" debug="true" debuglevel="vars,lines" srcdir="${test.src.dir}" destdir="${test.classes.dir}"
+			encoding="utf-8">
 			<classpath>
 				<path refid="lib.classpath" />
 				<pathelement location="${classes.dir}" />
@@ -75,26 +185,97 @@
 
 	<target name="compress">
 		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
-			<arg line=" --js=./webapp/assets/scripts/app.js --js_output_file=./webapp/assets/scripts/app-min.js" />
+			<arg
+				line=" --js=./webapp/assets/scripts/app.js --js_output_file=./webapp/assets/scripts/app-min.js" />
 		</java>
-		<java jar="${lib.dir}/yuicompressor-2.4.2.jar" fork="true">
-			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/app-min.css ./webapp/assets/styles/app.css" />
+		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
+			<arg
+				line=" --charset utf-8 --type css -o ./webapp/assets/styles/app-min.css ./webapp/assets/styles/app.css" />
 		</java>
+		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
+			<arg
+				line=" --charset utf-8 --type css -o ./webapp/assets/website/style-min.css ./webapp/assets/website/style.css" />
+		</java>
+	</target>
+
+	<target name="append-svn-revision-for-assets">
+		<script language="javascript">
+			<![CDATA[
+			importPackage(java.io);
+			var dirs = 'scripts,styles,website'.split(',');
+			for(var n=0;n<dirs.length;n++){
+				var dir = new File(project.getProperty('webapp.dir')+'/assets/'+dirs[n]);
+				if(!dir.exists()||!dir.isDirectory())
+					continue;
+				var wcpropsfile = new File(project.getProperty('webapp.dir')+'/assets/'+dirs[n]+'/.svn/all-wcprops');
+				var wcprops = [];
+				if(wcpropsfile.exists()){
+					var is = new FileInputStream(wcpropsfile);
+					var br = new BufferedReader(new InputStreamReader(is,'utf-8'));
+					var line;
+					while(line=br.readLine())
+						wcprops.push(line);
+					br.close();
+					is.close();
+				}
+				var files = new File(project.getProperty('webapp.dir')+'/assets/'+dirs[n]).listFiles();
+				for(var i=0;i<files.length;i++){
+					var file = files[i];
+					if(file.isDirectory())
+						continue;
+					var name = file.getName();
+					var revision = null;
+					for(var j=0;j<wcprops.length;j++){
+						var line = wcprops[j];
+						if(!line.startsWith(name) && line.endsWith(name)){
+							var revision = line.split('/')[4];
+							break;
+						}
+					}
+					revision = revision || file.lastModified();
+					var replaceregexp = project.createTask('replaceregexp');
+					replaceregexp.setEncoding('utf-8');
+					replaceregexp.setPreserveLastModified(true);
+					var fs = project.createDataType("fileset");
+	      			fs.setDir(new File(project.getProperty('webapp.dir')+'/WEB-INF/classes/resources/view/decorator'));
+	      			fs.setIncludes('**/*.ftl');
+	      			replaceregexp.addFileset(fs);
+	      			var namearr = name.split('\\.');
+	      			var match = '/'+dirs[n]+'/'+namearr[0]+'(.*)\\.'+namearr[1];
+	      			var replace = '/'+dirs[n]+'/'+namearr[0]+'\\1\\.'+namearr[1]+'?'+revision;
+	        		replaceregexp.setMatch(match);
+	        		replaceregexp.setReplace(replace);
+	        		replaceregexp.perform();
+				}
+			}
+			]]>
+		</script>
+	</target>
+	<target name="reset-append-svn-revision-for-assets">
+		<copy todir="${webapp.dir}/WEB-INF/classes/resources/view/decorator"
+			overwrite="true">
+			<fileset dir="${src.dir}/resources/view/decorator">
+				<include name="**/*.ftl" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="jar">
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${jar.name}" />
-		<jar jarfile="${target.dir}/${jar.name}" basedir="${classes.dir}" excludes="log4j.xml,struts.xml,resources/struts/**,resources/spring/**" />
+		<antcall target="append-svn-revision-for-assets" />
+		<jar jarfile="${target.dir}/${jar.name}" basedir="${classes.dir}" />
+		<antcall target="reset-append-svn-revision-for-assets" />
 	</target>
 
-	<target name="war" depends="jar">
+	<target name="war" depends="sync,compress,jar">
 		<move file="${target.dir}/${jar.name}" todir="${webapp.dir}/WEB-INF/lib" />
 		<mkdir dir="${target.dir}/classes" />
 		<move todir="${target.dir}/classes">
-			<fileset dir="${webapp.dir}/WEB-INF/classes" excludes="log4j.xml,struts.xml,resources/struts/**,resources/spring/**" />
+			<fileset dir="${webapp.dir}/WEB-INF/classes" />
 		</move>
-		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}" webxml="${webapp.dir}/WEB-INF/web.xml" />
+		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}"
+			webxml="${webapp.dir}/WEB-INF/web.xml" />
 		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}" />
 		<move todir="${webapp.dir}/WEB-INF/classes">
 			<fileset dir="${target.dir}/classes" />
@@ -107,5 +288,81 @@
 		<delete dir="${test.classes.dir}" />
 		<delete dir="${target.dir}" />
 	</target>
+
+
+	<target name="checkwebappdeployed">
+		<available property="webapp.deployed" file="${webapp.deploy.dir}/WEB-INF/web.xml" />
+	</target>
+
+	<target name="checkserverstarted">
+		<condition property="server.started">
+			<socket server="localhost" port="${server.check.port}" />
+		</condition>
+	</target>
+
+	<target name="checksvnupdated">
+		<exec executable="svn" dir="${basedir}" outputproperty="svn.update.output">
+			<arg value="update" />
+		</exec>
+		<echo message="${svn.update.output}" />
+		<condition property="svn.updated">
+			<matches pattern="^.*\n.*$" string="${svn.update.output}"
+				multiline="true" />
+		</condition>
+	</target>
+
+	<target name="backup" if="webapp.deployed" depends="checkwebappdeployed">
+		<war warfile="${target.dir}/${war.name}.bak" basedir="${webapp.deploy.dir}"
+			webxml="${webapp.deploy.dir}/WEB-INF/web.xml" />
+	</target>
+
+	<target name="update" if="svn.updated" depends="checksvnupdated">
+		<antcall target="compile" />
+		<sync todir="${webapp.deploy.dir}">
+			<fileset dir="${webapp.dir}" />
+			<preserveintarget>
+				<include name="**/.*/**" />
+				<include name="**/.class" />
+				<include name="**/.jar" />
+			</preserveintarget>
+		</sync>
+	</target>
+
+	<target name="shutdown" if="server.started" depends="checkserverstarted">
+		<exec executable="${server.shutdown.cmd}" dir="${server.home}" />
+		<waitfor checkevery="2" checkeveryunit="second" maxwait="60"
+			maxwaitunit="second">
+			<not>
+				<socket server="localhost" port="${server.check.port}" />
+			</not>
+		</waitfor>
+		<sleep seconds="3" />
+	</target>
+
+	<target name="startup" depends="shutdown">
+		<exec executable="${server.startup.cmd}" dir="${server.home}"
+			spawn="true" />
+	</target>
+
+	<target name="deploy">
+		<exec executable="svn" dir="${basedir}">
+			<arg value="update" />
+		</exec>
+		<antcall target="compile" />
+		<antcall target="war" />
+		<antcall target="backup" />
+		<antcall target="shutdown" />
+		<delete dir="${webapp.deploy.dir}" />
+		<unzip dest="${webapp.deploy.dir}" src="${target.dir}/${war.name}" />
+		<antcall target="startup" />
+	</target>
+
+	<target name="rollback">
+		<antcall target="shutdown" />
+		<delete dir="${webapp.deploy.dir}" />
+		<unzip dest="${webapp.deploy.dir}" src="${target.dir}/${war.name}.bak" />
+		<antcall target="startup" />
+	</target>
+
 
 </project>
