@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="rabbitConnectionFactory" class="com.rabbitmq.client.ConnectionFactory" p:host="${rabbitmq.host:localhost}"/>
+	<bean id="rabbitConnection" factory-bean="rabbitConnectionFactory" factory-method="newConnection" destroy-method="close"/>
+	<bean id="applicationEventRabbitTopic" class="org.ironrhino.core.event.ApplicationEventRabbitTopic"/>
+	<bean id="simpleMailMessageWrapperRabbitQueue" class="org.ironrhino.core.mail.SimpleMailMessageWrapperRabbitQueue"/>
+</beans>
