@@ -54,7 +54,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	}
 
 	public BaseManagerImpl() {
-		Class<T> clazz = (Class<T>)ReflectionUtils.getGenericClass(getClass());
+		Class<T> clazz = (Class<T>) ReflectionUtils.getGenericClass(getClass());
 		if (clazz != null)
 			entityClass = clazz;
 	}
@@ -414,7 +414,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	}
 
 	@Transactional
-	public Object execute(HibernateCallback callback) {
+	public <K> K execute(HibernateCallback<K> callback) {
 		try {
 			return callback.doInHibernate(sessionFactory.getCurrentSession());
 		} catch (Exception e) {
@@ -424,7 +424,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	}
 
 	@Transactional(readOnly = true)
-	public Object executeFind(HibernateCallback callback) {
+	public <K> K executeFind(HibernateCallback<K> callback) {
 		return execute(callback);
 	}
 
