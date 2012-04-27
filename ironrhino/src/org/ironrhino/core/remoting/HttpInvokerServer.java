@@ -43,8 +43,7 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 					&& request.getServerPort() == 80) {
 				String s = Blowfish.decrypt(Context.get(Context.KEY));
 				if (!interfaceName.equals(s)) {
-					response
-							.sendError(HttpServletResponse.SC_NON_AUTHORITATIVE_INFORMATION);
+					response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 					return;
 				}
 			}
@@ -59,13 +58,12 @@ public class HttpInvokerServer extends HttpInvokerServiceExporter {
 			} else {
 				String msg = "No Service:" + getServiceInterface().getName();
 				log.error("No Service:" + getServiceInterface());
-				response.sendError(
-						HttpServletResponse.SC_NOT_FOUND, msg);
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, msg);
 			}
 		} catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex
-					.getMessage());
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+					ex.getMessage());
 		} finally {
 			Context.reset();
 		}
