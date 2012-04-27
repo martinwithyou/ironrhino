@@ -11,4 +11,5 @@
 	<bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.DefaultServiceRegistry"/>
 	<bean id="userManagerHessian" class="org.ironrhino.core.remoting.HessianClient" p:serviceInterface="org.ironrhino.security.service.UserManager"/>
 	<bean id="userManagerHttpInvoker" class="org.ironrhino.core.remoting.HttpInvokerClient" p:serviceInterface="org.ironrhino.security.service.UserManager"/>
+	<bean id="userManagerJsonCall" class="org.ironrhino.core.remoting.JsonCallClient" p:serviceInterface="org.ironrhino.security.service.UserManager"/>
 </beans>

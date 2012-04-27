@@ -12,21 +12,13 @@ public class Main {
 				.getBean("userManagerHessian");
 		System.out.println(userManagerHessian
 				.suggestUsername("test@google.com"));
-		System.out.println(userManagerHessian
-				.suggestUsername("test@google.com"));
-		System.out.println(userManagerHessian
-				.suggestUsername("test@google.com"));
-		System.out.println(userManagerHessian
-				.suggestUsername("test@google.com"));
 		UserManager userManagerHttpInvoker = (UserManager) ctx
 				.getBean("userManagerHttpInvoker");
 		System.out.println(userManagerHttpInvoker
 				.suggestUsername("test@google.com"));
-		System.out.println(userManagerHttpInvoker
-				.suggestUsername("test@google.com"));
-		System.out.println(userManagerHttpInvoker
-				.suggestUsername("test@google.com"));
-		System.out.println(userManagerHttpInvoker
+		UserManager userManagerJsonCall = (UserManager) ctx
+				.getBean("userManagerJsonCall");
+		System.out.println(userManagerJsonCall
 				.suggestUsername("test@google.com"));
 		ctx.close();
 	}

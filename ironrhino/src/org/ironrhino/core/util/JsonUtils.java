@@ -1,6 +1,7 @@
 package org.ironrhino.core.util;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 
 import org.codehaus.jackson.JsonNode;
@@ -47,7 +48,8 @@ public class JsonUtils {
 						});
 		objectMapper.setSerializationConfig(config);
 		DeserializationConfig dconfig = objectMapper.getDeserializationConfig();
-		dconfig = dconfig.without(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+		dconfig = dconfig
+				.without(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		objectMapper.setDeserializationConfig(dconfig);
 	}
 
@@ -81,6 +83,12 @@ public class JsonUtils {
 
 	public static <T> T fromJson(String json, Class<T> cls) throws Exception {
 		return objectMapper.readValue(json, cls);
+	}
+
+	public static <T> T fromJson(String json, Type type) throws Exception {
+		return objectMapper.readValue(json, objectMapper
+				.getDeserializationConfig().getTypeFactory()
+				.constructType(type));
 	}
 
 }

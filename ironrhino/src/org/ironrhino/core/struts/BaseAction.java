@@ -248,11 +248,11 @@ public class BaseAction extends ActionSupport {
 				String line;
 				while ((line = reader.readLine()) != null)
 					sb.append(line).append("\n");
+				reader.close();
 				if (sb.length() > 0) {
 					sb.deleteCharAt(sb.length() - 1);
 					requestBody = sb.toString();
 				}
-				reader.close();
 			} catch (IllegalStateException e) {
 
 			}
