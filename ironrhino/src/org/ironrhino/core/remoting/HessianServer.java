@@ -42,7 +42,8 @@ public class HessianServer extends HessianServiceExporter {
 		try {
 			String interfaceName = uri.substring(uri.lastIndexOf('/') + 1);
 			if (AppInfo.getStage() == AppInfo.Stage.PRODUCTION
-					&& request.getServerPort() == 80) {
+					&& request.getServerPort() == 80
+					&& request.getAttribute("_OAUTH_REQUEST") == null) {
 				String s = Blowfish.decrypt(Context.get(Context.KEY));
 				if (!interfaceName.equals(s)) {
 					response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

@@ -46,7 +46,8 @@ public class JsonCallServer implements HttpRequestHandler {
 			String methodName = arr[arr.length - 1];
 			String interfaceName = arr[arr.length - 2];
 			if (AppInfo.getStage() == AppInfo.Stage.PRODUCTION
-					&& request.getServerPort() == 80) {
+					&& request.getServerPort() == 80
+					&& request.getAttribute("_OAUTH_REQUEST") == null) {
 				String s = Blowfish.decrypt(Context.get(Context.KEY));
 				if (!interfaceName.equals(s)) {
 					response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
