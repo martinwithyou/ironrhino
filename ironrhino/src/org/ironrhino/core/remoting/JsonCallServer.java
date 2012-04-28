@@ -107,15 +107,31 @@ public class JsonCallServer implements HttpRequestHandler {
 
 					parameters = new Object[parameterTypes.length];
 					for (int i = 0; i < parameterTypes.length; i++) {
+
 						if (requestJsonParameters == null
 								|| requestJsonParameters.get(i) == null)
 							continue;
+						JsonNode node = requestJsonParameters.get(i);
 						try {
-							parameters[i] = JsonUtils.fromJson(
-									requestJsonParameters.get(i).toString(),
+							parameters[i] = JsonUtils.fromJson(node.toString(),
 									parameterTypes[i]);
 						} catch (Exception e) {
-							continue loop;
+							if (node.isContainerNode()) {
+								continue loop;
+							} else {
+								if (node.isBoolean())
+									parameters[i] = node.asBoolean();
+								else if (node.isLong())
+									parameters[i] = node.asLong();
+								else if (node.isIntegralNumber())
+									parameters[i] = node.asLong();
+								else if (node.isFloatingPointNumber())
+									parameters[i] = node.asDouble();
+								else if (node.isTextual())
+									parameters[i] = node.asText();
+								else
+									continue loop;
+							}
 						}
 					}
 					method = m;
@@ -130,7 +146,7 @@ public class JsonCallServer implements HttpRequestHandler {
 			}
 			response.setContentType("application/json;charset=utf-8");
 			Object result = method.invoke(bean, parameters);
-			if (result != null) {
+			if (!method.getReturnType().equals(Void.class)) {
 				response.getWriter().write(JsonUtils.toJson(result));
 			}
 		} catch (Exception ex) {

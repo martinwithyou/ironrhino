@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.type.TypeReference;
@@ -26,6 +27,16 @@ public class JsonUtilsTest {
 		private String password;
 		private int age;
 		private Status status;
+
+		private Date date = DateUtils.beginOfDay(new Date());
+
+		public Date getDate() {
+			return date;
+		}
+
+		public void setDate(Date date) {
+			this.date = date;
+		}
 
 		public String getUsername() {
 			return username;
@@ -74,6 +85,7 @@ public class JsonUtilsTest {
 			assertEquals(u.getUsername(), u2.getUsername());
 			assertEquals(u.getAge(), u2.getAge());
 			assertEquals(u.getStatus(), u2.getStatus());
+			assertEquals(u.getDate().getTime(), u2.getDate().getTime());
 			assertNull(u2.getPassword());
 		} catch (Exception e) {
 			e.printStackTrace();
