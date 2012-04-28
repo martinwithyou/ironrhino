@@ -119,12 +119,4 @@ public class JsonUtils {
 				.constructType(type));
 	}
 
-	public static void main(String[] args) throws Exception {
-		String json = "[1,2,{\"test\":\"test\"}]";
-		JsonNode node = getObjectMapper().readValue(json, JsonNode.class);
-		System.out.println(node.get(0).isContainerNode());
-		System.out.println(node.get(2).isContainerNode());
-		System.out.println(fromJson("\"2\"", Integer.class));
-	}
-
 }
