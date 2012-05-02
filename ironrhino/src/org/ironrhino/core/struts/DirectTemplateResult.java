@@ -6,7 +6,7 @@ import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionInvocation;
 
-public class DirectPageResult extends AutoConfigResult {
+public class DirectTemplateResult extends AutoConfigResult {
 
 	private static final long serialVersionUID = 3152452358832384680L;
 

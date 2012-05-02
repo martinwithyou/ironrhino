@@ -22,8 +22,8 @@
 				class="org.ironrhino.core.struts.AutoConfigResult" />
 			<result-type name="accessDenied"
 				class="org.ironrhino.core.struts.AccessDeniedResult" />
-			<result-type name="directPage"
-				class="org.ironrhino.core.struts.DirectPageResult" />
+			<result-type name="directTemplate"
+				class="org.ironrhino.core.struts.DirectTemplateResult" />
 			<result-type name="json" class="org.ironrhino.core.struts.JsonResult" />
 			<result-type name="referer"
 				class="org.ironrhino.core.struts.RefererResult" />
@@ -58,7 +58,7 @@
 			<result name="referer" type="referer" />
 			<result name="redirect" type="redirect">${targetUrl}</result>
 			<result name="accessDenied" type="accessDenied" />
-			<result name="directPage" type="directPage" />
+			<result name="directTemplate" type="directTemplate" />
 			<result name="dynamicreports" type="dynamicreports" />
 			<result name="error" type="autoconfig" />
 		</global-results>
