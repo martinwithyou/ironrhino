@@ -11,13 +11,14 @@ import java.util.TreeMap;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Named("taobao")
 @Singleton
@@ -89,9 +90,9 @@ public class Taobao extends OAuth2Provider {
 		String uid = data.get("user_id").asText();
 		Profile p = new Profile();
 		p.setUid(generateUid(uid));
-		p.setDisplayName(data.get("nick").getTextValue());
-		p.setName(data.get("nick").getTextValue());
-		p.setGender(data.get("sex").getTextValue());
+		p.setDisplayName(data.get("nick").textValue());
+		p.setName(data.get("nick").textValue());
+		p.setGender(data.get("sex").textValue());
 		return p;
 	}
 

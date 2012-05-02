@@ -10,12 +10,13 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.session.impl.DefaultSessionCompressor;
 import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 @Singleton
 @Named

@@ -6,11 +6,12 @@ import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Named("google")
 @Singleton
@@ -71,14 +72,14 @@ public class Google extends OAuth2Provider {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
 		Profile p = new Profile();
-		p.setUid(generateUid(data.get("id").getTextValue()));
-		p.setDisplayName(data.get("name").getTextValue());
-		p.setName(data.get("name").getTextValue());
-		p.setEmail(data.get("email").getTextValue());
-		p.setGender(data.get("gender").getTextValue());
-		p.setLocale(data.get("locale").getTextValue());
-		p.setLink(data.get("link").getTextValue());
-		p.setPicture(data.get("picture").getTextValue());
+		p.setUid(generateUid(data.get("id").textValue()));
+		p.setDisplayName(data.get("name").textValue());
+		p.setName(data.get("name").textValue());
+		p.setEmail(data.get("email").textValue());
+		p.setGender(data.get("gender").textValue());
+		p.setLocale(data.get("locale").textValue());
+		p.setLink(data.get("link").textValue());
+		p.setPicture(data.get("picture").textValue());
 		return p;
 	}
 

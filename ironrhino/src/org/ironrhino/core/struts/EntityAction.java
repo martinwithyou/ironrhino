@@ -21,7 +21,6 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.codehaus.jackson.type.TypeReference;
 import org.compass.annotations.SearchableId;
 import org.compass.annotations.SearchableProperty;
 import org.hibernate.criterion.Criterion;
@@ -53,6 +52,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.PackageProvider;

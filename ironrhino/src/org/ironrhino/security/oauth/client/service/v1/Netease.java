@@ -3,11 +3,12 @@ package org.ironrhino.security.oauth.client.service.v1;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth1Provider;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Named("netease")
 @Singleton
@@ -53,15 +54,15 @@ public class Netease extends OAuth1Provider {
 	protected Profile getProfileFromContent(String content) throws Exception {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
-		String uid = data.get("id").getTextValue();
-		String name = data.get("name").getTextValue();
-		String displayName = data.get("screen_name").getTextValue();
+		String uid = data.get("id").textValue();
+		String name = data.get("name").textValue();
+		String displayName = data.get("screen_name").textValue();
 		Profile p = new Profile();
 		p.setUid(generateUid(uid));
 		p.setName(name);
 		p.setDisplayName(displayName);
-		p.setLocation(data.get("location").getTextValue());
-		p.setPicture(data.get("profile_image_url").getTextValue());
+		p.setLocation(data.get("location").textValue());
+		p.setPicture(data.get("profile_image_url").textValue());
 		return p;
 	}
 

@@ -2,7 +2,7 @@ package org.ironrhino.core.chart.openflashchart.elements;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Dot implements Serializable {
 

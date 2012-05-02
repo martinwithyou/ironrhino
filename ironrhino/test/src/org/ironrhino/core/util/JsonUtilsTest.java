@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.metadata.NotInJson;
 import org.junit.Test;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class JsonUtilsTest {
 

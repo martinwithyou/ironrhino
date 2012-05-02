@@ -2,7 +2,7 @@ package org.ironrhino.core.chart.openflashchart.axis;
 
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class XAxis extends Axis {
 

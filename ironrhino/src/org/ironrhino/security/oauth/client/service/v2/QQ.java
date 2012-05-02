@@ -1,10 +1,11 @@
 package org.ironrhino.security.oauth.client.service.v2;
 
-import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 //@Named("qq")
 //@Singleton
@@ -71,7 +72,7 @@ public class QQ extends OAuth2Provider {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
 		Profile p = new Profile();
-		p.setUid(data.get("openid").getTextValue());
+		p.setUid(data.get("openid").textValue());
 		return p;
 	}
 
@@ -84,12 +85,12 @@ public class QQ extends OAuth2Provider {
 						+ getClientId() + "&openid=" + uid);
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
-		p.setDisplayName(data.get("nick").getTextValue());
-		p.setName(data.get("name").getTextValue());
-		p.setPicture(data.get("head").getTextValue());
-		p.setLocation(data.get("location").getTextValue());
-		p.setGender(data.get("sex").getTextValue());
-		p.setEmail(data.get("email").getTextValue());
+		p.setDisplayName(data.get("nick").textValue());
+		p.setName(data.get("name").textValue());
+		p.setPicture(data.get("head").textValue());
+		p.setLocation(data.get("location").textValue());
+		p.setGender(data.get("sex").textValue());
+		p.setEmail(data.get("email").textValue());
 	}
 
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -14,6 +13,8 @@ import org.ironrhino.core.model.Attributable;
 import org.ironrhino.core.model.Attribute;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.util.JsonUtils;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 @PublishAware
 @AutoConfig

@@ -3,7 +3,7 @@ package org.ironrhino.core.chart.openflashchart.elements;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ScatterChart extends Element {
 

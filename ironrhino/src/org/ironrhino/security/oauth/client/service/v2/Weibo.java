@@ -3,11 +3,12 @@ package org.ironrhino.security.oauth.client.service.v2;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Named("weibo")
 @Singleton
@@ -72,7 +73,7 @@ public class Weibo extends OAuth2Provider {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
 		Profile p = new Profile();
-		String uid = data.get("uid").getTextValue();
+		String uid = data.get("uid").textValue();
 		p.setUid(uid);
 		return p;
 	}
@@ -85,11 +86,11 @@ public class Weibo extends OAuth2Provider {
 				"https://api.weibo.com/2/users/show.json?uid=" + uid);
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
-		p.setDisplayName(data.get("screen_name").getTextValue());
-		p.setName(data.get("name").getTextValue());
-		p.setLocation(data.get("location").getTextValue());
-		p.setLink(data.get("url").getTextValue());
-		p.setPicture(data.get("profile_image_url").getTextValue());
+		p.setDisplayName(data.get("screen_name").textValue());
+		p.setName(data.get("name").textValue());
+		p.setLocation(data.get("location").textValue());
+		p.setLink(data.get("url").textValue());
+		p.setPicture(data.get("profile_image_url").textValue());
 	}
 
 }

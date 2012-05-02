@@ -29,8 +29,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/inject-api-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/iText-2.1.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/iTextAsian-2.1.7.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-1.9.5.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-mapper-1.9.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javamail-1.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javassist-3.15.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jedis-2.0.0.jar"/>
@@ -86,5 +84,8 @@
 	<classpathentry kind="lib" path="lib/closure-compiler.jar"/>
 	<classpathentry kind="lib" path="lib/yuicompressor.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-annotations-2.0.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-2.0.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-databind-2.0.1.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>

@@ -3,11 +3,12 @@ package org.ironrhino.security.oauth.client.service.v1;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth1Provider;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Named("qq")
 @Singleton
@@ -63,18 +64,18 @@ public class QQ extends OAuth1Provider {
 				.readValue(content, JsonNode.class).get("data");
 		JsonNode node = data.get("uid");
 		String uid = null;
-		String name = data.get("name").getTextValue();
+		String name = data.get("name").textValue();
 		if (node != null)
-			uid = node.getTextValue();
+			uid = node.textValue();
 		else
 			uid = name;
-		String displayName = data.get("nick").getTextValue();
+		String displayName = data.get("nick").textValue();
 		Profile p = new Profile();
 		p.setUid(generateUid(uid));
 		p.setName(displayName);
 		p.setDisplayName(displayName);
-		p.setLocation(data.get("location").getTextValue());
-		p.setPicture(data.get("head").getTextValue());
+		p.setLocation(data.get("location").textValue());
+		p.setPicture(data.get("head").textValue());
 		return p;
 	}
 

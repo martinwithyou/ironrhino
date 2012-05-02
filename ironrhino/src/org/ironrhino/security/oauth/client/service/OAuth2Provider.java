@@ -9,13 +9,14 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.OAuth2Token;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public abstract class OAuth2Provider extends AbstractOAuthProvider {
 

@@ -12,7 +12,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.type.TypeReference;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -27,6 +26,8 @@ import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 @Singleton
 @Named("pageManager")

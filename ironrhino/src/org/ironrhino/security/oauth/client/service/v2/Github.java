@@ -3,11 +3,12 @@ package org.ironrhino.security.oauth.client.service.v2;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.codehaus.jackson.JsonNode;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Named("github")
 @Singleton
@@ -63,11 +64,11 @@ public class Github extends OAuth2Provider {
 	protected Profile getProfileFromContent(String content) throws Exception {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
-		String uid = data.get("login").getTextValue();
+		String uid = data.get("login").textValue();
 		Profile p = new Profile();
 		p.setUid(generateUid(uid));
 		p.setDisplayName(uid);
-		p.setPicture(data.get("avatar_url").getTextValue());
+		p.setPicture(data.get("avatar_url").textValue());
 		return p;
 	}
 

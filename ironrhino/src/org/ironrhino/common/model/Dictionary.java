@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.type.TypeReference;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableComponent;
 import org.compass.annotations.SearchableProperty;
@@ -24,6 +23,8 @@ import org.ironrhino.core.model.Validatable;
 import org.ironrhino.core.struts.ValidationException;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.model.UserRole;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 @PublishAware
 @AutoConfig(searchable = true, order = "name asc")

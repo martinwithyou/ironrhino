@@ -7,17 +7,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.codehaus.jackson.map.introspect.Annotated;
-import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
-import org.codehaus.jackson.type.TypeReference;
 import org.ironrhino.core.metadata.NotInJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.Annotated;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 
 public class JsonUtils {
 
@@ -34,32 +34,25 @@ public class JsonUtils {
 	static {
 		objectMapper = new ObjectMapper();
 		objectMapper.setDateFormat(new SimpleDateFormat(DEFAULT_DATE_FORMAT));
-		SerializationConfig config = objectMapper.getSerializationConfig();
-		config = config.withSerializationInclusion(Inclusion.NON_NULL)
-				.withAnnotationIntrospector(
-						new JacksonAnnotationIntrospector() {
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		objectMapper
+				.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
 
-							@Override
-							public boolean isHandled(Annotation ann) {
-								return super.isHandled(ann)
-										|| ann instanceof NotInJson;
-							}
+					@Override
+					public boolean isHandled(Annotation ann) {
+						return super.isHandled(ann) || ann instanceof NotInJson;
+					}
 
-							protected boolean _isIgnorable(Annotated a) {
-								boolean b = super._isIgnorable(a);
-								if (b)
-									return b;
-								NotInJson ann = a
-										.getAnnotation(NotInJson.class);
-								return ann != null;
-							}
+					protected boolean _isIgnorable(Annotated a) {
+						boolean b = super._isIgnorable(a);
+						if (b)
+							return b;
+						NotInJson ann = a.getAnnotation(NotInJson.class);
+						return ann != null;
+					}
 
-						});
-		objectMapper.setSerializationConfig(config);
-		DeserializationConfig dconfig = objectMapper.getDeserializationConfig();
-		dconfig = dconfig
-				.without(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
-		objectMapper.setDeserializationConfig(dconfig);
+				});
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 	}
 
 	public static ObjectMapper getObjectMapper() {
