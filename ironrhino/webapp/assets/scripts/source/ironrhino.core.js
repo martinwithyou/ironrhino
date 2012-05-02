@@ -304,6 +304,10 @@ Form = {
 								.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
 					Message.showFieldError(target, null, 'email');
 					return false;
+				} else if ($(target).hasClass('phone') && $(target).val()
+						&& !$(target).val().match(/^[\d-]+$/)) {
+					Message.showFieldError(target, null, 'phone');
+					return false;
 				} else if ($(target).hasClass('integer') && $(target).val()) {
 					if ($(target).hasClass('positive')
 							&& !$(target).val().match(/^[+]?\d*$/)) {

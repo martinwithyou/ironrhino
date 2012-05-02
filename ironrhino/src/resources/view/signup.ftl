@@ -8,7 +8,7 @@
 </head>
 <body>
 <div style="margin:auto;width:300px;font-size:1.1em;">
-<@s.form method="post" cssClass="ajax">
+<@s.form method="post" action="signup" cssClass="ajax">
 	<@s.textfield label="%{getText('email')}" name="email" size="24" cssClass="required email" />
 	<@s.textfield label="%{getText('username')}" name="username" size="24" />
 	<@s.password label="%{getText('password')}" name="password" size="24" cssClass="required"/>

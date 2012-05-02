@@ -10,7 +10,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
 public class CodecUtils {
-	
+
 	public static final String DEFAULT_ENCODING = "UTF-8";
 
 	private static ThreadLocal<MessageDigest> MD5 = new ThreadLocal<MessageDigest>() {
@@ -109,7 +109,8 @@ public class CodecUtils {
 
 	public static String fuzzify(String input) {
 		try {
-			byte[] bytes = Base64.encodeBase64(input.getBytes(DEFAULT_ENCODING));
+			byte[] bytes = Base64
+					.encodeBase64(input.getBytes(DEFAULT_ENCODING));
 			swap(bytes);
 			return new String(bytes);
 		} catch (UnsupportedEncodingException e) {
@@ -171,6 +172,13 @@ public class CodecUtils {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < digits; i++)
 			sb.append(string.charAt(random.nextInt(26)));
+		return sb.toString();
+	}
+
+	public static String randomDigitalString(int digits) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < digits; i++)
+			sb.append(random.nextInt(10));
 		return sb.toString();
 	}
 

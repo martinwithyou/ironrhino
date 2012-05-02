@@ -31670,7 +31670,8 @@ MessageBundle = {
 		'ajax.error' : 'network error,please try later',
 		'required' : 'please input value',
 		'selection.required' : 'please select',
-		'email' : 'must be a valid email',
+		'phone' : 'please input valid phone number',
+		'email' : 'please input valid email',
 		'integer' : 'must be a integer',
 		'integer.positive' : 'must be a positive integer',
 		'double' : 'must be a decimal',
@@ -31689,6 +31690,7 @@ MessageBundle = {
 		'required' : '请填写',
 		'selection.required' : '请选择',
 		'email' : 'email不合法',
+		'phone' : '请填写正确的号码',
 		'integer' : '请填写整数',
 		'integer.positive' : '请填写正整数',
 		'double' : '请填写数字',
@@ -32042,6 +32044,10 @@ Form = {
 								.val()
 								.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
 					Message.showFieldError(target, null, 'email');
+					return false;
+				} else if ($(target).hasClass('phone') && $(target).val()
+						&& !$(target).val().match(/^[\d-]+$/)) {
+					Message.showFieldError(target, null, 'phone');
 					return false;
 				} else if ($(target).hasClass('integer') && $(target).val()) {
 					if ($(target).hasClass('positive')
