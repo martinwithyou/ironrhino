@@ -9353,7 +9353,7 @@ jQuery.cookie = function (key, value, options) {
     var result, decode = options.raw ? function (s) { return s; } : decodeURIComponent;
     return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? decode(result[1]) : null;
 };
-/*! jQuery UI - v1.8.19 - 2012-04-16
+/*! jQuery UI - v1.8.20 - 2012-04-30
 * https://github.com/jquery/jquery-ui
 * Includes: jquery.ui.core.js, jquery.ui.widget.js, jquery.ui.mouse.js, jquery.ui.draggable.js, jquery.ui.droppable.js, jquery.ui.resizable.js, jquery.ui.selectable.js, jquery.ui.sortable.js, jquery.effects.core.js, jquery.effects.blind.js, jquery.effects.bounce.js, jquery.effects.clip.js, jquery.effects.drop.js, jquery.effects.explode.js, jquery.effects.fade.js, jquery.effects.fold.js, jquery.effects.highlight.js, jquery.effects.pulsate.js, jquery.effects.scale.js, jquery.effects.shake.js, jquery.effects.slide.js, jquery.effects.transfer.js, jquery.ui.accordion.js, jquery.ui.autocomplete.js, jquery.ui.button.js, jquery.ui.datepicker.js, jquery.ui.dialog.js, jquery.ui.position.js, jquery.ui.progressbar.js, jquery.ui.slider.js, jquery.ui.tabs.js
 * Copyright (c) 2012 AUTHORS.txt; Licensed MIT, GPL */
@@ -9369,7 +9369,7 @@ if ( $.ui.version ) {
 }
 
 $.extend( $.ui, {
-	version: "@VERSION",
+	version: "1.8.20",
 
 	keyCode: {
 		ALT: 18,
@@ -10283,8 +10283,14 @@ $.widget("ui.draggable", $.ui.mouse, {
 			this.dropped = false;
 		}
 		
-		//if the original element is removed, don't bother to continue if helper is set to "original"
-		if((!this.element[0] || !this.element[0].parentNode) && this.options.helper == "original")
+		//if the original element is no longer in the DOM don't bother to continue (see #8269)
+		var element = this.element[0], elementInDom = false;
+		while ( element && (element = element.parentNode) ) {
+			if (element == document ) {
+				elementInDom = true;
+			}
+		}
+		if ( !elementInDom && this.options.helper === "original" )
 			return false;
 
 		if((this.options.revert == "invalid" && !dropped) || (this.options.revert == "valid" && dropped) || this.options.revert === true || ($.isFunction(this.options.revert) && this.options.revert.call(this.element, dropped))) {
@@ -10580,7 +10586,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 });
 
 $.extend($.ui.draggable, {
-	version: "@VERSION"
+	version: "1.8.20"
 });
 
 $.ui.plugin.add("draggable", "connectToSortable", {
@@ -11033,7 +11039,7 @@ $.widget("ui.droppable", {
 });
 
 $.extend($.ui.droppable, {
-	version: "@VERSION"
+	version: "1.8.20"
 });
 
 $.ui.intersect = function(draggable, droppable, toleranceMode) {
@@ -11267,9 +11273,8 @@ $.widget("ui.resizable", $.ui.mouse, {
 				var handle = $.trim(n[i]), hname = 'ui-resizable-'+handle;
 				var axis = $('<div class="ui-resizable-handle ' + hname + '"></div>');
 
-				// increase zIndex of sw, se, ne, nw axis
-				//TODO : this modifies original option
-				if(/sw|se|ne|nw/.test(handle)) axis.css({ zIndex: ++o.zIndex });
+				// Apply zIndex to all handles - see #7960
+				axis.css({ zIndex: o.zIndex });
 
 				//TODO : What's going on here?
 				if ('se' == handle) {
@@ -11710,7 +11715,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 });
 
 $.extend($.ui.resizable, {
-	version: "@VERSION"
+	version: "1.8.20"
 });
 
 /*
@@ -12225,7 +12230,7 @@ $.widget("ui.selectable", $.ui.mouse, {
 });
 
 $.extend($.ui.selectable, {
-	version: "@VERSION"
+	version: "1.8.20"
 });
 
 })(jQuery);
@@ -12686,8 +12691,8 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 	_intersectsWithPointer: function(item) {
 
-		var isOverElementHeight = $.ui.isOverAxis(this.positionAbs.top + this.offset.click.top, item.top, item.height),
-			isOverElementWidth = $.ui.isOverAxis(this.positionAbs.left + this.offset.click.left, item.left, item.width),
+		var isOverElementHeight = (this.options.axis === 'x') || $.ui.isOverAxis(this.positionAbs.top + this.offset.click.top, item.top, item.height),
+			isOverElementWidth = (this.options.axis === 'y') || $.ui.isOverAxis(this.positionAbs.left + this.offset.click.left, item.left, item.width),
 			isOverElement = isOverElementHeight && isOverElementWidth,
 			verticalDirection = this._getDragVerticalDirection(),
 			horizontalDirection = this._getDragHorizontalDirection();
@@ -12879,7 +12884,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 					var el = $(document.createElement(self.currentItem[0].nodeName))
 						.addClass(className || self.currentItem[0].className+" ui-sortable-placeholder")
-						.removeClass("ui-sortable-helper").html("&nbsp;")[0];
+						.removeClass("ui-sortable-helper")[0];
 
 					if(!className)
 						el.style.visibility = "hidden";
@@ -13293,7 +13298,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 });
 
 $.extend($.ui.sortable, {
-	version: "@VERSION"
+	version: "1.8.20"
 });
 
 })(jQuery);
@@ -13597,7 +13602,7 @@ $.fn.extend({
 /******************************************************************************/
 
 $.extend($.effects, {
-	version: "@VERSION",
+	version: "1.8.20",
 
 	// Saves a set of properties in a data storage
 	save: function(element, set) {
@@ -15246,7 +15251,7 @@ $.widget( "ui.accordion", {
 });
 
 $.extend( $.ui.accordion, {
-	version: "@VERSION",
+	version: "1.8.20",
 	animations: {
 		slide: function( options, additions ) {
 			options = $.extend({
@@ -16360,7 +16365,7 @@ $.widget( "ui.buttonset", {
 
 (function( $, undefined ) {
 
-$.extend($.ui, { datepicker: { version: "@VERSION" } });
+$.extend($.ui, { datepicker: { version: "1.8.20" } });
 
 var PROP_NAME = 'datepicker';
 var dpuuid = new Date().getTime();
@@ -18163,7 +18168,7 @@ $.fn.datepicker = function(options){
 $.datepicker = new Datepicker(); // singleton instance
 $.datepicker.initialized = false;
 $.datepicker.uuid = new Date().getTime();
-$.datepicker.version = "@VERSION";
+$.datepicker.version = "1.8.20";
 
 // Workaround for #4055
 // Add another global to avoid noConflict issues with inline event handlers
@@ -18857,7 +18862,7 @@ $.widget("ui.dialog", {
 });
 
 $.extend($.ui.dialog, {
-	version: "@VERSION",
+	version: "1.8.20",
 
 	uuid: 0,
 	maxZ: 0,
@@ -19414,7 +19419,7 @@ $.widget( "ui.progressbar", {
 });
 
 $.extend( $.ui.progressbar, {
-	version: "@VERSION"
+	version: "1.8.20"
 });
 
 })( jQuery );
@@ -20063,7 +20068,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 });
 
 $.extend( $.ui.slider, {
-	version: "@VERSION"
+	version: "1.8.20"
 });
 
 }(jQuery));
@@ -20755,7 +20760,7 @@ $.widget( "ui.tabs", {
 });
 
 $.extend( $.ui.tabs, {
-	version: "@VERSION"
+	version: "1.8.20"
 });
 
 /*
