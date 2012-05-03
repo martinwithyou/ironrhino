@@ -50,7 +50,7 @@
 
 		一、服务端环境搭建
 		1、下载zookeeper
-		   http://labs.renren.com/apache-mirror/zookeeper/stable/zookeeper-3.3.3.tar.gz
+		   http://labs.renren.com/apache-mirror/zookeeper/stable/zookeeper-3.3.5.tar.gz
 		   解开压缩包，假定把zookeeper放在根目录下
 		   进入zookeeper目录，在conf目录下创建一个配置文件zoo.cfg，然后指定其中的内容为
 			  tickTime=2000
@@ -58,17 +58,13 @@
 			  clientPort=2181
 
 		2、在文件applicationContext.properties增加一行,让服务器知道怎么连zookeeper
-			  serviceRegistry.zookeeper.connectString=localhost:2181/remoting
-
-		   如果connectString是根目录,比如localhost:2181/ 省略以下步骤:
-		   启动zkServer.cmd，然后启动zkCli.cmd，输入 create /remoting ""
-		   相当于创建了一个叫remoting的目录，系统会将服务都注册到这个目录下
-		   （后面配置均以服务发布在remoting目录下为基础）
+			  zookeeper.connectString=localhost:2181/
 
 		3、在需要发布成远程服务的接口文件前增加@Remoting标注，然后启动服务器。
-		   系统会自动将服务对外发布两种方式,hessian和httpinvoker发布远程调用接口格式如下,${serviceName}是接口的全名比如test.service.UserService：
+		   系统会自动将服务对外发布三种方式,hessian和httpinvoker和jsoncall发布远程调用接口格式如下,${serviceName}是接口的全名比如test.service.UserService：
 			  http://host:port/remoting/hessian/${serviceName}
 			  http://host:port/remoting/httpinvoker/${serviceName}
+			  http://host:port/remoting/jsoncall/${serviceName}/${methodName}
 		   
 		4、可以到zookeeper/bin目录下，启动zkCli.cmd命令，输入
 		   ls /remoting 可以看到发布了哪些服务
@@ -80,8 +76,21 @@
 		   客户端通过下列简单的配置即可实现调用zookeeper远程接口：
 		<programlisting>
 		<![CDATA[
-		  <bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.ZookeeperServiceRegistry" p:connectString="localhost:2181/remoting"/>
-		  <bean id="userManager" class="org.ironrhino.core.remoting.HttpInvokerClient" p:serviceRegistry-ref="serviceRegistry" p:serviceInterface="org.ironrhino.security.service.UserManager"/>
+		  <?xml version="1.0" encoding="UTF-8"?>
+			<beans default-autowire="byName"
+				xmlns="http://www.springframework.org/schema/beans"
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xmlns:p="http://www.springframework.org/schema/p"
+				xmlns:context="http://www.springframework.org/schema/context"
+				xmlns:aop="http://www.springframework.org/schema/aop"
+				xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+				<bean id="defaultWatcher" class="org.ironrhino.core.zookeeper.DefaultWatcher"/>
+				<bean id="zooKeeper" class="org.ironrhino.core.zookeeper.ZooKeeperFactoryBean" p:connectString="127.0.0.1:2181"/>
+				<bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.DefaultServiceRegistry"/>
+				<bean id="userManagerHessian" class="org.ironrhino.core.remoting.HessianClient" p:serviceInterface="org.ironrhino.security.service.UserManager"/>
+				<bean id="userManagerHttpInvoker" class="org.ironrhino.core.remoting.HttpInvokerClient" p:serviceInterface="org.ironrhino.security.service.UserManager"/>
+				<bean id="userManagerJsonCall" class="org.ironrhino.core.remoting.JsonCallClient" p:serviceInterface="org.ironrhino.security.service.UserManager"/>
+			</beans>
 		]]>
 		</programlisting> 
 	</para>
