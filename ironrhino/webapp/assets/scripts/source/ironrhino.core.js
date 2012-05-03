@@ -602,6 +602,7 @@ if (HISTORY_ENABLED) {
 								url : url,
 								replaceTitle : true,
 								replacement : event.state.replacement,
+								cache : false,
 								success : function() {
 									$('.menu li a').each(function() {
 										if (this.href == url) {
