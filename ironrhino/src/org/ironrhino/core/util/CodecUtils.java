@@ -1,6 +1,7 @@
 package org.ironrhino.core.util;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -13,24 +14,26 @@ public class CodecUtils {
 
 	public static final String DEFAULT_ENCODING = "UTF-8";
 
-	private static ThreadLocal<MessageDigest> MD5 = new ThreadLocal<MessageDigest>() {
+	private static ThreadLocal<SoftReference<MessageDigest>> MD5 = new ThreadLocal<SoftReference<MessageDigest>>() {
 
 		@Override
-		protected MessageDigest initialValue() {
+		protected SoftReference<MessageDigest> initialValue() {
 			try {
-				return MessageDigest.getInstance("MD5");
+				return new SoftReference<MessageDigest>(
+						MessageDigest.getInstance("MD5"));
 			} catch (NoSuchAlgorithmException e) {
 				throw new IllegalStateException("md5 algorythm found");
 			}
 		}
 	};
 
-	private static ThreadLocal<MessageDigest> SHA = new ThreadLocal<MessageDigest>() {
+	private static ThreadLocal<SoftReference<MessageDigest>> SHA = new ThreadLocal<SoftReference<MessageDigest>>() {
 
 		@Override
-		protected MessageDigest initialValue() {
+		protected SoftReference<MessageDigest> initialValue() {
 			try {
-				return MessageDigest.getInstance("SHA");
+				return new SoftReference<MessageDigest>(
+						MessageDigest.getInstance("SHA"));
 			} catch (NoSuchAlgorithmException e) {
 				throw new IllegalStateException("sha algorythm found");
 			}
@@ -38,7 +41,17 @@ public class CodecUtils {
 	};
 
 	public static byte[] md5(byte[] input) {
-		MessageDigest md5 = MD5.get();
+		SoftReference<MessageDigest> instanceRef = MD5.get();
+		if (instanceRef == null) {
+			try {
+				instanceRef = new SoftReference<MessageDigest>(
+						MessageDigest.getInstance("MD5"));
+			} catch (NoSuchAlgorithmException e) {
+				throw new IllegalStateException("md5 algorythm found");
+			}
+			MD5.set(instanceRef);
+		}
+		MessageDigest md5 = instanceRef.get();
 		md5.reset();
 		md5.update(input);
 		return md5.digest();
@@ -73,7 +86,17 @@ public class CodecUtils {
 	}
 
 	public static byte[] sha(byte[] input) {
-		MessageDigest sha = SHA.get();
+		SoftReference<MessageDigest> instanceRef = SHA.get();
+		if (instanceRef == null) {
+			try {
+				instanceRef = new SoftReference<MessageDigest>(
+						MessageDigest.getInstance("SHA"));
+			} catch (NoSuchAlgorithmException e) {
+				throw new IllegalStateException("sha algorythm found");
+			}
+			SHA.set(instanceRef);
+		}
+		MessageDigest sha = instanceRef.get();
 		sha.reset();
 		sha.update(input);
 		return sha.digest();

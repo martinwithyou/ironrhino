@@ -7,6 +7,10 @@ public class AopContext {
 
 	private static ThreadLocal<List<Class<?>>> bypass = new ThreadLocal<List<Class<?>>>();
 
+	public static void reset() {
+		bypass.remove();
+	}
+
 	public static void setBypass(Class<?> clazz) {
 		List<Class<?>> list = bypass.get();
 		if (list == null)
