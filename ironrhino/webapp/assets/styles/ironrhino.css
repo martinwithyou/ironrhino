@@ -844,7 +844,6 @@ select, input, button, textarea {
 table {
 	font-size:inherit;
 	font:100%;
-	line-height:200%;
 }
 a {
 	text-decoration:none;
@@ -1234,7 +1233,7 @@ button.link:hover span,button.link:focus span {
 	zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
 	*display: inline;
 	vertical-align: baseline;
-	min-width: 50px; 
+	min-width: 40px; 
 	padding: 3px 2px;
 	margin: 0 2px;
 	outline: none;

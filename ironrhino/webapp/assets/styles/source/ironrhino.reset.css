@@ -10,7 +10,6 @@ select, input, button, textarea {
 table {
 	font-size:inherit;
 	font:100%;
-	line-height:200%;
 }
 a {
 	text-decoration:none;
