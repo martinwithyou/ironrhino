@@ -131,10 +131,10 @@ Richtable = {
 						}
 						if (create) {
 							$('button[type="submit"]', inputform)
-									.after('<button type="submit" class="btn save_and_create"><span><span>'
+									.after('<button type="submit" class="btn save_and_create">'
 											+ MessageBundle
 													.get('save.and.create')
-											+ '</span></span></button>');
+											+ '</button>');
 							$('.save_and_create', inputform).click(function() {
 										$('form.ajax').addClass('reset');
 									});

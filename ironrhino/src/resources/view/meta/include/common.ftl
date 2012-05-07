@@ -50,9 +50,9 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 	<#local _class=' class="btn"'>
 	</#if>
 <#if type=='link'>
-  <#return '<a'+(_id!)+(_onclick!)+(_class)+' href="'+href+'"><span><span>'+text+'</span></span></a>'>
+  <#return '<a'+(_id!)+(_onclick!)+(_class)+' href="'+href+'">'+text+'</a>'>
 </#if>
-  <#return '<button'+(_id!)+(_type!)+(_onclick!)+(_class)+'><span><span>'+text+'</span></span></button>'>
+  <#return '<button'+(_id!)+(_type!)+(_onclick!)+(_class)+'>'+text+'</button>'>
 </#function>
 
 <#macro button text="" type="" class="" dynamicAttributes...>
@@ -75,7 +75,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <#local _type=' type="'+type+'"'>
 </#if>
 </#if>
-<${tag} <#list dynamicAttributes?keys as attr>${attr}="${dynamicAttributes[attr]?html}" </#list>${_type!} class="${class}"><span><span>${text}</span></span></${tag}><#t>
+<${tag} <#list dynamicAttributes?keys as attr>${attr}="${dynamicAttributes[attr]?html}" </#list>${_type!} class="${class}">${text}</${tag}><#t>
 </#macro>
 
 <#function getUrl value secure=''>

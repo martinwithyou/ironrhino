@@ -43,7 +43,8 @@
 					}
 				});
 
-				//$('.portal-column', this).disableSelection(); //cannot dropdown selection
+				// $('.portal-column', this).disableSelection(); //cannot
+				// dropdown selection
 				if (window.localStorage) {
 					var layout = localStorage[document.location.pathname
 							+ '_portal-layout'];
@@ -53,11 +54,11 @@
 				var t = $(this);
 				if (t.hasClass('savable')) {
 					t
-							.append('<div class="portal-footer"><button class="btn save"><span><span>'
+							.append('<div class="portal-footer"><button class="btn save">'
 									+ MessageBundle.get('save')
-									+ '</span></span></button><button class="btn restore"><span><span>'
+									+ '</button><button class="btn restore">'
 									+ MessageBundle.get('restore')
-									+ '</span></span></button></div>');
+									+ '</button></div>');
 					$('.portal-footer .save', t).click(function() {
 								t.portal('layout', 'save');
 								Message.showMessage('success');
@@ -98,7 +99,8 @@
 								function() {
 									var portlets = layout[i];
 									for (var j = 0; j < portlets.length; j++) {
-										$('#' + portlets[j]).addClass('sorted').appendTo(this).show();
+										$('#' + portlets[j]).addClass('sorted')
+												.appendTo(this).show();
 									}
 								});
 					}

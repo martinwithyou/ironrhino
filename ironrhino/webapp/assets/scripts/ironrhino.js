@@ -23247,7 +23247,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 			
 			switch( type ) {
 				case 'alert':
-					$("#popup_message").after('<div id="popup_panel"><button id="popup_ok" class="btn"><span><span>' + $.alerts.okButton + '</span></span></button></div>');
+					$("#popup_message").after('<div id="popup_panel"><button id="popup_ok" class="btn">' + $.alerts.okButton + '</button></div>');
 					$("#popup_ok").click( function() {
 						$.alerts._hide();
 						callback(true);
@@ -23257,7 +23257,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 					});
 				break;
 				case 'confirm':
-					$("#popup_message").after('<div id="popup_panel"><button id="popup_ok" class="btn"><span><span>' + $.alerts.okButton + '</span></span></button><button id="popup_cancel" class="btn"><span><span>' + $.alerts.cancelButton + '</span></span></button></div>');
+					$("#popup_message").after('<div id="popup_panel"><button id="popup_ok" class="btn">' + $.alerts.okButton + '</button><button id="popup_cancel" class="btn">' + $.alerts.cancelButton + '</button></div>');
 					$("#popup_ok").click( function() {
 						$.alerts._hide();
 						if( callback ) callback(true);
@@ -23273,7 +23273,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 					});
 				break;
 				case 'prompt':
-					$("#popup_message").append('<br /><input type="text" size="30" id="popup_prompt" />').after('<div id="popup_panel"><button id="popup_ok" class="btn"><span><span>' + $.alerts.okButton + '</span></span></button><button id="popup_cancel" class="btn"><span><span>' + $.alerts.cancelButton + '</span></span></button></div>');
+					$("#popup_message").append('<br /><input type="text" size="30" id="popup_prompt" />').after('<div id="popup_panel"><button id="popup_ok" class="btn">' + $.alerts.okButton + '</button><button id="popup_cancel" class="btn">' + $.alerts.cancelButton + '</button></div>');
 					$("#popup_prompt").width( $("#popup_message").width() );
 					$("#popup_ok").click( function() {
 						var val = $("#popup_prompt").val();
@@ -32343,7 +32343,7 @@ if (HISTORY_ENABLED) {
 								url : url,
 								replaceTitle : true,
 								replacement : event.state.replacement,
-								cache:false,
+								cache : false,
 								success : function() {
 									$('.menu li a').each(function() {
 										if (this.href == url) {
@@ -33703,7 +33703,8 @@ Observation.filterselect = function(container) {
 					}
 				});
 
-				//$('.portal-column', this).disableSelection(); //cannot dropdown selection
+				// $('.portal-column', this).disableSelection(); //cannot
+				// dropdown selection
 				if (window.localStorage) {
 					var layout = localStorage[document.location.pathname
 							+ '_portal-layout'];
@@ -33713,11 +33714,11 @@ Observation.filterselect = function(container) {
 				var t = $(this);
 				if (t.hasClass('savable')) {
 					t
-							.append('<div class="portal-footer"><button class="btn save"><span><span>'
+							.append('<div class="portal-footer"><button class="btn save">'
 									+ MessageBundle.get('save')
-									+ '</span></span></button><button class="btn restore"><span><span>'
+									+ '</button><button class="btn restore">'
 									+ MessageBundle.get('restore')
-									+ '</span></span></button></div>');
+									+ '</button></div>');
 					$('.portal-footer .save', t).click(function() {
 								t.portal('layout', 'save');
 								Message.showMessage('success');
@@ -33758,7 +33759,8 @@ Observation.filterselect = function(container) {
 								function() {
 									var portlets = layout[i];
 									for (var j = 0; j < portlets.length; j++) {
-										$('#' + portlets[j]).addClass('sorted').appendTo(this).show();
+										$('#' + portlets[j]).addClass('sorted')
+												.appendTo(this).show();
 									}
 								});
 					}
@@ -34061,10 +34063,10 @@ Richtable = {
 						}
 						if (create) {
 							$('button[type="submit"]', inputform)
-									.after('<button type="submit" class="btn save_and_create"><span><span>'
+									.after('<button type="submit" class="btn save_and_create">'
 											+ MessageBundle
 													.get('save.and.create')
-											+ '</span></span></button>');
+											+ '</button>');
 							$('.save_and_create', inputform).click(function() {
 										$('form.ajax').addClass('reset');
 									});
