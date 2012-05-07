@@ -76,11 +76,13 @@ public class Blowfish {
 
 	public static Blowfish getThreadLocalInstance() {
 		SoftReference<Blowfish> instanceRef = pool.get();
-		if (instanceRef == null) {
-			instanceRef = new SoftReference<Blowfish>(new Blowfish());
+		Blowfish instance;
+		if (instanceRef == null || (instance = instanceRef.get()) == null) {
+			instance = new Blowfish();
+			instanceRef = new SoftReference<Blowfish>(instance);
 			pool.set(instanceRef);
 		}
-		return instanceRef.get();
+		return instance;
 	}
 
 	public static String encrypt(String str) {

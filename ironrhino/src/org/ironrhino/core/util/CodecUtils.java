@@ -42,16 +42,16 @@ public class CodecUtils {
 
 	public static byte[] md5(byte[] input) {
 		SoftReference<MessageDigest> instanceRef = MD5.get();
-		if (instanceRef == null) {
+		MessageDigest md5;
+		if (instanceRef == null || (md5 = instanceRef.get()) == null) {
 			try {
-				instanceRef = new SoftReference<MessageDigest>(
-						MessageDigest.getInstance("MD5"));
+				md5 = MessageDigest.getInstance("MD5");
+				instanceRef = new SoftReference<MessageDigest>(md5);
 			} catch (NoSuchAlgorithmException e) {
 				throw new IllegalStateException("md5 algorythm found");
 			}
 			MD5.set(instanceRef);
 		}
-		MessageDigest md5 = instanceRef.get();
 		md5.reset();
 		md5.update(input);
 		return md5.digest();
@@ -87,16 +87,16 @@ public class CodecUtils {
 
 	public static byte[] sha(byte[] input) {
 		SoftReference<MessageDigest> instanceRef = SHA.get();
-		if (instanceRef == null) {
+		MessageDigest sha;
+		if (instanceRef == null || (sha = instanceRef.get()) == null) {
 			try {
-				instanceRef = new SoftReference<MessageDigest>(
-						MessageDigest.getInstance("SHA"));
+				sha = MessageDigest.getInstance("SHA");
+				instanceRef = new SoftReference<MessageDigest>(sha);
 			} catch (NoSuchAlgorithmException e) {
 				throw new IllegalStateException("sha algorythm found");
 			}
 			SHA.set(instanceRef);
 		}
-		MessageDigest sha = instanceRef.get();
 		sha.reset();
 		sha.update(input);
 		return sha.digest();
