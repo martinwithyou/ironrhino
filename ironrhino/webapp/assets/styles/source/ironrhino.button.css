@@ -43,7 +43,7 @@ button.link:hover span,button.link:focus span {
 	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
 	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
 	box-shadow: 0 1px 2px rgba(0,0,0,.2);
-	color: #e9e9e9;
+	color: #e9e9e9!important;
 	border: solid 1px #555;
 	background: #6e6e6e;
 	background: -webkit-gradient(linear, left top, left bottom, from(#888), to(#575757));
@@ -85,4 +85,10 @@ button.link:hover span,button.link:focus span {
 }
 .btn.small {
 	padding: .2em 1em .275em;
+}
+.btn.add,.btn.remove,.btn.moveup,.btn.movedown{
+	min-width:20px;
+	-webkit-border-radius: 2px; 
+	-moz-border-radius: 2px;
+	border-radius: 2px;
 }

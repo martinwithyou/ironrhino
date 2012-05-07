@@ -831,13 +831,21 @@ Observation.common = function(container) {
 				});
 	}
 	$('.switch', container).each(function() {
-		var t = $(this);
-		t.children().css('cursor', 'pointer').click(function() {
-					t.children().removeClass('selected').css('font-weight',
-							'normal');
-					$(this).addClass('selected').css('font-weight', 'bold');
-				}).filter('.selected').css('font-weight', 'bold');
-	});
+				var t = $(this);
+				t.children().css('cursor', 'pointer').click(function() {
+							t.children().removeClass('selected').css({
+										'font-weight' : 'normal',
+										'font-size' : '1em'
+									});
+							$(this).addClass('selected').css({
+										'font-weight' : 'bold',
+										'font-size' : '1.1em'
+									});
+						}).filter('.selected').css({
+							'font-weight' : 'bold',
+							'font-size' : '1.1em'
+						});
+			});
 	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {
 			var id = this.id;
