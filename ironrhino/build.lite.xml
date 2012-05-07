@@ -44,7 +44,7 @@
 	<target name="syncIronrhinoAssets">
 		<copy todir="${basedir}/webapp/assets">
 			<fileset dir="${basedir}/../ironrhino/webapp/assets"
-				includes="**/scripts/ironrhino*.js,**/styles/ironrhino*.css,**/styles/images/*,**/images/*" />
+				includes="**/scripts/ironrhino*.js,**/styles/ironrhino*.css,**/styles/ie.css,**/styles/images/*,**/images/*" />
 		</copy>
 	</target>
 
