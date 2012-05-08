@@ -34,6 +34,11 @@ public class BaseAspect implements Ordered {
 	}
 
 	protected Object eval(String template, JoinPoint jp, Object retval) {
+		return eval(template, jp, retval, null);
+	}
+
+	protected Object eval(String template, JoinPoint jp, Object retval,
+			Map<String, Object> ctx) {
 		if (template == null)
 			return null;
 		template = template.trim();
@@ -62,6 +67,8 @@ public class BaseAspect implements Ordered {
 			context.put("args", jp.getArgs());
 		if (!context.containsKey("user"))
 			context.put("user", AuthzUtils.getUserDetails(UserDetails.class));
+		if (ctx != null)
+			context.putAll(ctx);
 		return ExpressionUtils.eval(template, context);
 	}
 
