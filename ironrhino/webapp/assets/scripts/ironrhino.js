@@ -31989,7 +31989,7 @@ Message = {
 		if (field && $(field).length) {
 			field = $(field);
 			// field.parent().append(Message.compose(msg, 'field_error'));
-
+			$('.fieldError', field.closest('.field')).remove();
 			var prompt = $('<div class="fieldError removeonclick"><div class="fieldErrorContent">'
 					+ msg + '</div><div>').insertAfter(field);
 			var arrow = $('<div class="fieldErrorArrow"/>')

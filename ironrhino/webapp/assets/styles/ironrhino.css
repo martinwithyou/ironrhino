@@ -1278,6 +1278,15 @@ button.link:hover span,button.link:focus span {
 	background-image: -ms-linear-gradient(top,  #575757,  #888);
 	background-image: linear-gradient(top,  #575757,  #888);
 }
+.btn[disabled]{
+	background: #a9a9a9;
+	cursor:default;
+}
+.btn[disabled]:active{
+	color: #fff;
+	top: 0px;
+	background: #a9a9a9;
+}
 .btn.add,.btn.remove,.btn.moveup,.btn.movedown{
 	min-width:20px;
 }
