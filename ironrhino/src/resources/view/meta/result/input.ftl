@@ -38,18 +38,18 @@
 		<#elseif config.type=='listpick'>
 			<@s.hidden id="${key}Id" name="${entityName}.${key}.id" />
 			<#if !readonly>
-				<div class="field listpick" pickoptions="{'url':'<@url value="${config.pickUrl}"/>','name':'${key}','id':'${key}Id'}">
+				<div class="field clearfix listpick" pickoptions="{'url':'<@url value="${config.pickUrl}"/>','name':'${key}','id':'${key}Id'}">
 					<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
 					<span id="${key}"><#if entity[key]??>${entity[key]!}<a class="close">x</a><#else>...</#if></span>
 				</div>
 			<#else>
-				<div class="field">
+				<div class="field clearfix">
 					<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
 					<span id="${key}">${entity[key]!}</span>
 				</div>
 			</#if>
 		<#elseif config.type=='dictionary' && selectDictionary??>
-			<div class="field">
+			<div class="field clearfix">
 			<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
 			<#if !readonly>
 				<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required class="${config.cssClass}" dynamicAttributes=config.dynamicAttributes/>
