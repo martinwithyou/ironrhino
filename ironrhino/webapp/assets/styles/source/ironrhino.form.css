@@ -10,7 +10,6 @@ input:focus,select:focus,textarea:focus {
 }
 input[type="text"],input[type="password"],select{
 	height:18px;
-	line-height:18px;
 }
 select {
 	height: 20px;
@@ -32,6 +31,7 @@ input.required {
 
 form div.field,form div.submit {
 	margin: 10px 0px 10px 0px;
+	line-height: 180%;
 }
 
 form div.submit{
@@ -41,6 +41,9 @@ text-align:center;
 form.line div.field {
 	margin-right: 2px;
 	float: left;
+}
+form div.field a,form div.field span,form div.field label,form div.field input,form div.field select{
+	vertical-align: middle;
 }
 
 form label.field {

@@ -11,13 +11,3 @@ input.required {
 	position: absolute;
 	top: expression(eval(document.compatMode&&document.compatMode =='CSS1Compat')?documentElement.scrollTop:document.body.scrollTop);
 }
-.btn {
-	padding: 2px 2px;
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#8f8f8f');
-}
-.btn:hover {
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#7f7f7f');
-}
-.btn:active {
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#575757', endColorstr='#888888');
-}

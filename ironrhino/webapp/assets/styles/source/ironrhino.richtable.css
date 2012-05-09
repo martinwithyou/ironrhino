@@ -46,6 +46,9 @@ table.richtable td,th {
 	text-align: center;
 	overflow: visible;
 }
+.richtable .resizeTitle{
+	line-height:200%;
+}
 .richtable .odd a,.even a {
 	color: Black;
 }
@@ -77,29 +80,28 @@ table.richtable td,th {
 .richtable .toolbar{
 	margin:10px 0px;
 }
-.richtable .toolbar .pagination{
+.richtable .toolbar .pagination,.richtable .toolbar .action,.richtable .toolbar .search,.richtable .toolbar .status{
 	float:left;
-	height:1em;
+	line-height:180%;
+}
+.richtable .toolbar .pagination{
 	width:30%;
 	text-align:left;
 	margin:0px;
 }
 .richtable .toolbar .action{
-	float:left;
-	height:1em;
 	width:35%;
 	text-align:center;
 }
 .richtable .toolbar .search{
-	float:left;
-	height:1em;
 	width:20%;
 }
 .richtable .toolbar .status{
-	float:left;
-	height:1em;
 	width:15%;
 	text-align:right;
+}
+.richtable .toolbar span,.richtable .toolbar a,.richtable .toolbar input,.richtable .toolbar select{
+	vertical-align: middle;
 }
 
 .ui-dialog .richtable .toolbar .pagination{

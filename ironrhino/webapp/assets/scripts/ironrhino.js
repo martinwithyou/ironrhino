@@ -32575,12 +32575,10 @@ Observation.common = function(container) {
 				var t = $(this);
 				t.children().css('cursor', 'pointer').click(function() {
 							t.children().removeClass('selected').css({
-										'font-weight' : 'normal',
-										'font-size' : '1em'
+										'font-weight' : 'normal'
 									});
 							$(this).addClass('selected').css({
-										'font-weight' : 'bold',
-										'font-size' : '1.1em'
+										'font-weight' : 'bold'
 									});
 						}).filter('.selected').css({
 							'font-weight' : 'bold',

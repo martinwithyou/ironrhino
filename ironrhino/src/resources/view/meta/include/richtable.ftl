@@ -121,13 +121,13 @@ ${value?xhtml}<#t>
 </#if>
 <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/>/<span class="totalPage">${resultPage.totalPage}</span>${action.getText('page')}
 <#if showPageSize>
-${action.getText('pagesize')}<select name="resultPage.pageSize" class="pageSize">
+<span>${action.getText('pagesize')}</span><select name="resultPage.pageSize" class="pageSize">
 <#local array=[5,10,20,50,100,500]>
 <#list array as ps>
 <option value="${ps}" <#if resultPage.pageSize==ps>selected</#if>>${ps}</option>
 </#list> 
 <option value="${resultPage.totalRecord}">${action.getText('all')}</option>
-</select>${action.getText('row')}
+</select><span>${action.getText('row')}</span>
 </#if>
 </#if>
 </div>
@@ -152,11 +152,13 @@ ${action.getText('pagesize')}<select name="resultPage.pageSize" class="pageSize"
 </#if>
 </div>
 <div class="status">
+<span>
 <#if resultPage??>
 ${action.getText('total')}${resultPage.totalRecord}${action.getText('record')}<#if resultPage.totalRecord!=0>,${action.getText('display')}${resultPage.start+1}-${resultPage.start+resultPage.result?size}</#if>
 <#else>
 ${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!=0>,${action.getText('display')}1-${list?size}</#if>	
 </#if>
+</span>
 </div>
 </div>
 </form>
