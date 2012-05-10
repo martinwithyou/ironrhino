@@ -2,7 +2,7 @@ Richtable = {
 	getBaseUrl : function(form) {
 		form = form || $('form.richtable');
 		var action = form[0].action;
-		var entity = form.attr('entity');
+		var entity = form.data('entity');
 		var url;
 		if (action.indexOf('/') == 0 || action.indexOf('://') > 0)
 			url = entity ? action.substring(0, action.lastIndexOf('/') + 1)
@@ -124,7 +124,7 @@ Richtable = {
 								create = false;
 							if ($(
 									'input[type="hidden"][name="'
-											+ (form.attr('entity') || form
+											+ (form.data('entity') || form
 													.attr('action')) + '.id"]',
 									inputform).val())
 								create = false;
@@ -238,7 +238,7 @@ Richtable = {
 			return;
 		var url = Richtable.getBaseUrl(form) + Richtable.getPathParams();
 		var tr = $(btn).closest('tr');
-		var id = tr.attr('rowid')
+		var id = tr.data('rowid')
 				|| $('input[type="checkbox"]:eq(0)', tr).val();
 		url += (url.indexOf('?') > 0 ? '&' : '?') + 'parentId=' + id;
 		document.location.href = url;
@@ -252,7 +252,7 @@ Richtable = {
 			return;
 		var idparams;
 		var tr = $(btn).closest('tr');
-		var id = tr.attr('rowid')
+		var id = tr.data('rowid')
 				|| $('input[type="checkbox"]:eq(0)', tr).val();
 		if (id) {
 			idparams = 'id=' + id;
@@ -266,8 +266,8 @@ Richtable = {
 			});
 			idparams = arr.join('&');
 		}
-		var action = $(btn).attr('action');
-		var view = $(btn).attr('view');
+		var action = $(btn).data('action');
+		var view = $(btn).data('view');
 		if (action == 'reload')
 			Richtable.reload(form);
 		else if (action == 'enter')
@@ -312,7 +312,7 @@ Richtable = {
 			}
 		} else {
 			var options = (new Function("return "
-					+ ($(btn).attr('windowoptions') || '{}')))();
+					+ ($(btn).data('windowoptions') || '{}')))();
 			var url = $(btn).attr('href');
 			if (view) {
 				url = Richtable.getUrl(view, id, !id, form);
@@ -353,15 +353,15 @@ Richtable = {
 				var params = {};
 				var entity = Richtable.getBaseUrl(form);
 				entity = entity.substring(entity.lastIndexOf('/') + 1);
-				params[entity + '.id'] = $(this).attr('rowid')
+				params[entity + '.id'] = $(this).data('rowid')
 						|| $('input[type="checkbox"]:eq(0)', this).val();;
 				$.each(row.cells, function(i) {
 							var theadCell = $(theadCells[i]);
-							var name = theadCell.attr('cellName');
+							var name = theadCell.attr('data-cellName');
 							if (!name || !$(this).hasClass('edited')
 									&& theadCell.hasClass('excludeIfNotEdited'))
 								return;
-							var value = $(this).attr('cellValue')
+							var value = $(this).attr('data-cellValue')
 									|| $(this).text();
 							params[name] = value;
 						});
@@ -392,9 +392,9 @@ Richtable = {
 		if (ce.hasClass('editing'))
 			return;
 		ce.addClass('editing');
-		var value = ce.attr('cellValue');
+		var value = ce.attr('data-cellValue');
 		value = $.trim(value || ce.text());
-		ce.attr('oldValue', value);
+		ce.attr('data-oldValue', value);
 		var template = '';
 		if (templateId) {
 			template = $('#' + templateId).text();
@@ -439,7 +439,7 @@ Richtable = {
 		var ce = $(cellEdit);
 		var cell = ce.parent();
 		cell.removeClass('editing');
-		cell.attr('cellValue', ce.val());
+		cell.attr('data-cellValue', ce.val());
 		var editType = ce.prop('tagName');
 		if (editType == 'SELECT')
 			cell.text($('option:selected', ce).text());
@@ -447,7 +447,7 @@ Richtable = {
 			cell.text(ce.next().text());
 		else
 			cell.text(ce.val());
-		if (cell.attr('oldValue') != cell.attr('cellValue')) {
+		if (cell.attr('data-oldValue') != cell.attr('data-cellValue')) {
 			cell.addClass('edited');
 			cell.parent().addClass('edited');
 		}
@@ -457,14 +457,14 @@ Richtable = {
 		var ce = $(cellEdit);
 		var cell = ce.parent();
 		cell.text('********');
-		cell.attr('cellValue', ce.val());
+		cell.attr('data-cellValue', ce.val());
 		cell.addClass('edited').removeClass('editing');
 		cell.parent().addClass('edited');
 
 	}
 };
 Observation.richtable = function(container) {
-	if ($('.richtable', container).length) {
+	if ('table.richtable'.length) {
 		$('.action button.btn,a[rel="richtable"]', container)
 				.click(Richtable.click);
 		var theadCells = $('table.richtable thead:eq(0) td', container);
@@ -472,7 +472,7 @@ Observation.richtable = function(container) {
 				function() {
 					var cells = this.cells;
 					theadCells.each(function(i) {
-								var cellEdit = $(this).attr('cellEdit');
+								var cellEdit = $(this).attr('data-cellEdit');
 								if (!cellEdit)
 									return;
 								var ar = cellEdit.split(',');

@@ -17,7 +17,7 @@
 												$(this).appendTo(marquee)
 														.fadeIn('slow');
 											});
-							}, marquee.attr('delay') || 3000);
+							}, marquee.data('delay') || 3000);
 				});
 		return this;
 	};

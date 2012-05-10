@@ -5,42 +5,44 @@
 </head>
 <body>
 <#assign columns={"name":{"cellEdit":"click"},"areacode":{"cellEdit":"click"},"postcode":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"}}>
-<#assign actionColumnButtons=r"
-<@button text='${action.getText(\'enter\')}' action='enter'/>
-">
-<#assign bottomButtons=r"
-<@button text='${action.getText(\'create\')}' view='input'/>
-<@button text='${action.getText(\'save\')}' action='save'/>
-<@button text='${action.getText(\'delete\')}' action='delete'/>
-<@button text='${action.getText(\'reload\')}' action='reload'/>
+<#assign actionColumnButtons='
+<button type="button" class="btn" data-action="enter">${action.getText("enter")}</button><#t>
+'>
+<#assign bottomButtons='
+<button type="button" class="btn" data-view="input">${action.getText("create")}</button><#t>
+<button type="button" class="btn" data-action="save">${action.getText("save")}</button><#t>
+<button type="button" class="btn" data-action="delete">${action.getText("delete")}</button><#t>
+<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button><#t>
+'+r'
 <#if region?? && parentId??>
 <#if region.parent??>
-<@button text='${action.getText(\'upward\')}' type='link' href='${getUrl(\'/common/region?parentId=\'+region.parent.id)}'/>
+<a class="btn" href="${getUrl("/common/region?parentId="+region.parent.id)}">${action.getText("upward")}</a><#t>
 <#else>
-<@button text='${action.getText(\'upward\')}' type='link' href='${getUrl(\'/common/region\')}'/>
+<a class="btn" href="${getUrl("/common/region")}"/>${action.getText("upward")}</a><#t>
 </#if>
 </#if>
-<@button text='${action.getText(\'move\')}' onclick='$(\'#move\').toggle()'/>
-<@button text='${action.getText(\'merge\')}' onclick='$(\'#merge\').toggle()'/>
-">
+'+'
+<button type="button" class="btn" onclick="$(\'#move\').toggle()">${action.getText("move")}</button><#t>
+<button type="button" class="btn" onclick="$(\'#merge\').toggle()">${action.getText("merge")}</button><#t>
+'>
 <@richtable entityName="region" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons/>
 <form id="move" action="region/move" method="post" class="ajax reset" style="display:none;" onprepare="return confirm('${action.getText('confirm')}?');" onsuccess="Richtable.reload($('#region_form'))">
 	<div style="padding-top:10px;text-align:center;">
 	<input id="regionId1" type="hidden" name="id"/>
-	<span id="region1" class="treeselect" treeoptions="{'url':'<@url value="/region/children"/>','name':'region1','id':'regionId1','cache':false}">${action.getText('select')}</span>
+	<span id="region1" class="treeselect" data-treeoptions="{'url':'<@url value="/region/children"/>','name':'region1','id':'regionId1','cache':false}">${action.getText('select')}</span>
 	--&gt;
 	<input id="regionId2" type="hidden" name="id"/>
-	<span id="region2" class="treeselect"  treeoptions="{'url':'<@url value="/region/children"/>','name':'region2','id':'regionId2','cache':false}">${action.getText('select')}</span>
+	<span id="region2" class="treeselect" data-treeoptions="{'url':'<@url value="/region/children"/>','name':'region2','id':'regionId2','cache':false}">${action.getText('select')}</span>
 	<@s.submit theme="simple" value="%{getText('confirm')}" />
 	</div>
 </form>
 <form id="merge" action="region/merge" method="post" class="ajax reset" style="display:none;" onprepare="return confirm('${action.getText('confirm')}?');" onsuccess="Richtable.reload($('#region_form'))">
 	<div style="padding-top:10px;text-align:center;">
 	<input id="regionId3" type="hidden" name="id"/>
-	<span id="region3" class="treeselect" treeoptions="{'url':'<@url value="/region/children"/>','name':'region3','id':'regionId3','cache':false}">${action.getText('select')}</span>
+	<span id="region3" class="treeselect" data-treeoptions="{'url':'<@url value="/region/children"/>','name':'region3','id':'regionId3','cache':false}">${action.getText('select')}</span>
 	--&gt;
 	<input id="regionId4" type="hidden" name="id"/>
-	<span id="region4" class="treeselect"  treeoptions="{'url':'<@url value="/region/children"/>','name':'region4','id':'regionId4','cache':false}">${action.getText('select')}</span>
+	<span id="region4" class="treeselect" data-treeoptions="{'url':'<@url value="/region/children"/>','name':'region4','id':'regionId4','cache':false}">${action.getText('select')}</span>
 	<@s.submit theme="simple" value="%{getText('confirm')}" />
 	</div>
 </form>

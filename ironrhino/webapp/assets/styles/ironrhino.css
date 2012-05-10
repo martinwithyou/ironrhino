@@ -1085,7 +1085,7 @@ ul.attributes li.group ul{
 	margin:0px;
 	padding:0px;
 }
-.editme[edited="true"] {
+.editme.edited {
 	outline:1px solid red;
 }
 .editme:hover {
@@ -1386,7 +1386,7 @@ form div.field,form div.submit {
 }
 
 form div.submit{
-text-align:center;
+	text-align:center;
 }
 
 form.line div.field {
@@ -1688,6 +1688,7 @@ table.richtable {
 table.richtable td,th {
 	padding: 0.5em;
 	border: 1px solid #CCC;
+	line-height: 180%;
 }
 .richtable table {
 	table-layout:fixed;

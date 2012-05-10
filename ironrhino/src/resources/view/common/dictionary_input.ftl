@@ -29,7 +29,7 @@
 				<td>${action.getText('label')}</td>
 				<td>${action.getText('value')}</td>
 				<td>${action.getText('type')}</td>
-				<td class="manipulate"><@button text="+" class="add"/></td>
+				<td class="manipulate"><button type="button" class="btn add">+</button></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -45,7 +45,7 @@
 						<option value="option">${action.getText('option')}</option>
 						<option value="group"<#if dictionary.items[index]?? && dictionary.items[index].value?? && !dictionary.items[index].value?has_content>selected="selected"</#if>>${action.getText('group')}</option>
 					</select></td>
-				<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+				<td class="manipulate"><button type="button" class="btn add">+</button><button type="button" class="btn remove">-</button><button type="button" class="btn moveup">↑</button><button type="button" class="btn movedown">↓</button></td>
 			</tr>
 			</#list>
 		</tbody>

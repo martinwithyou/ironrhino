@@ -34,7 +34,7 @@
 <div id="wrapper">
 <div id="header">
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
-<ul class="menu rounded" corner="top 8px">
+<ul class="menu rounded" data-corner="top 8px">
 	<li><a href="<@url value="/index"/>">${action.getText('index')}</a></li>
 	<@authorize ifAnyGranted="ROLE_ADMINISTRATOR">
 		<li><a href="<@url value="/user"/>">${action.getText('user')}</a></li>
@@ -45,13 +45,13 @@
 </ul>
 </@authorize>
 <@authorize ifNotGranted="ROLE_BUILTIN_USER">
-<div class="menu rounded" corner="top 8px" style="text-align:center;font-size:1.2em;font-weight:bold;">
+<div class="menu rounded" data-corner="top 8px" style="text-align:center;font-size:1.2em;font-weight:bold;">
 ${title}
 </div>
 </@authorize>
 </div>
 
-<div id="content" class="rounded" corner="bottom 8px">
+<div id="content" class="rounded" data-corner="bottom 8px">
 <div id="message">
 <@s.actionerror cssClass="action_error" />
 <@s.actionmessage cssClass="action_message" />

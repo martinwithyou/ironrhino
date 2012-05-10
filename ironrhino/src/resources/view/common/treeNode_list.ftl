@@ -5,23 +5,23 @@
 </head>
 <body>
 <#assign columns={"name":{"cellEdit":"click"},"description":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"}}>
-<#assign actionColumnButtons=r"
-<@button text='${action.getText(\'edit\')}' view='input'/>
-<@button text='${action.getText(\'enter\')}' action='enter'/>
-">
-<#assign bottomButtons=r"
-<@button text='${action.getText(\'create\')}' view='input'/>
-<@button text='${action.getText(\'save\')}' action='save'/>
-<@button text='${action.getText(\'delete\')}' action='delete'/>
-<@button text='${action.getText(\'reload\')}' action='reload'/>
+<#assign actionColumnButtons='
+<button type="button" class="btn" data-view="input">${action.getText("edit")}</button><#t>
+<button type="button" class="btn" data-action="enter">${action.getText("enter")}</button><#t>
+'>
+<#assign bottomButtons=r'
+<button type="button" class="btn" data-view="input">${action.getText("create")}</button><#t>
+<button type="button" class="btn" data-action="save">${action.getText("save")}</button><#t>
+<button type="button" class="btn" data-action="delete">${action.getText("delete")}</button><#t>
+<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button><#t>
 <#if treeNode?? && parentId??>
 <#if treeNode.parent??>
-<@button text='${action.getText(\'upward\')}' type='link' href='${getUrl(\'/common/treeNode?parentId=\'+treeNode.parent.id)}'/>
+<a class="btn" href="${getUrl("/common/treeNode?parentId="+treeNode.parent.id)}">${action.getText("upward")}</a><#t>
 <#else>
-<@button text='${action.getText(\'upward\')}' type='link' href='${getUrl(\'/common/treeNode\')}'/>
+<a class="btn" href="${getUrl("/common/treeNode")}"/>${action.getText("upward")}</a><#t>
 </#if>
 </#if>
-">
+'>
 <@richtable entityName="treeNode" columns=columns actionColumnButtons=actionColumnButtons  actionColumnWidth="100px" bottomButtons=bottomButtons/>
 </body>
 </html></#escape>

@@ -45,9 +45,9 @@
 <#if !multiple>
 <#assign bottomButtons="<span></span>">
 <#else>
-<#assign bottomButtons=r"
-<@button text='${action.getText(\'confirm\')}' class='confirm'/>
-">
+<#assign bottomButtons=r'
+<button type="button" class="btn confirm">${action.getText("confirm")}</button>
+'>
 </#if>
 <@richtable entityName=entityName formid=entityName+"_pick_form" action=requestURI columns=columns bottomButtons=bottomButtons searchable=true readonly=true showCheckColumn=true multipleCheck=multiple columnfilterable=false resizable=false sortable=false showPageSize=false/>
 </body>

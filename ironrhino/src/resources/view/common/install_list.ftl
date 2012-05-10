@@ -5,20 +5,18 @@
 </head>
 <body>
 <#assign columns={"id":{"width":"250px"},"vendor":{"width":"150px"},"version":{"width":"100px"},"dependence":{}}>
-<#assign actionColumnButtons=r"
-<@button text='${action.getText(\'uninstall\')}' action='uninstall'/>
+<#assign actionColumnButtons=r'
+<button type="button" class="btn" data-action="uninstall">${action.getText("uninstall")}</button><#t>
 <#if entity.rollbackable>
-<@button text='${action.getText(\'rollback\')}' action='rollback'/>
+<button type="button" class="btn" data-action="rollback">${action.getText("rollback")}</button><#t>
 </#if>
-">
-<#assign bottomButtons=r"
-<@button text='${action.getText(\'install\')}' onclick='$(\'#install\').toggle()'/>
-">
+'>
+<#assign bottomButtons='
+<button type="button" class="btn" onclick="$(\'#install\').toggle()">${action.getText("install")}</button><#t>
+'>
 <@richtable entityName="install" columns=columns actionColumnButtons=actionColumnButtons actionColumnWidth="180px" bottomButtons=bottomButtons showCheckColumn=false/>
 <form id="install" action="install/install" method="post" enctype="multipart/form-data" style="display:none;text-align:center;padding-top:20px;" class="line">
 <input type="file" name="file" style="width:194px;"/><@s.submit theme="simple" value="${action.getText('upload')}"/>
 </form>
 </body>
 </html></#escape>
-
-

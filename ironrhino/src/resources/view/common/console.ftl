@@ -10,8 +10,8 @@
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 </@s.form>
 <div id="dashboard" style="margin:10px;">
-	<@button text="compassGps.index()" onclick="$('#expression').val($(this).text());$('#global').attr('checked',false);$('#form').submit()"/>
-	<@button text="freemarkerConfiguration.clearTemplateCache()" onclick="$('#expression').val($(this).text());$('#global').attr('checked',true);$('#form').submit()"/>
+	<button type="button" class="btn" onclick="$('#expression').val($(this).text());$('#global').attr('checked',false);$('#form').submit()">compassGps.index()</button>
+	<button type="button" class="btn" onclick="$('#expression').val($(this).text());$('#global').attr('checked',true);$('#form').submit()">freemarkerConfiguration.clearTemplateCache()</button>
 </div>
 </body>
 </html></#escape>

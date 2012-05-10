@@ -6,13 +6,13 @@
 			var t = $(this);
 			var source = options.source;
 			if (!source)
-				source = t.attr('source');
+				source = t.data('source');
 			if (source.indexOf('[') > 0)
 				source = $.parseJSON(source);
 			var local = source.constructor == Array;
 			var delimiter = options.delimiter;
 			if (!delimiter)
-				delimiter = t.attr('delimiter') || ',';
+				delimiter = t.data('delimiter') || ',';
 			t.autocomplete({
 						source : local ? source : function(request, response) {
 							$.ajax({

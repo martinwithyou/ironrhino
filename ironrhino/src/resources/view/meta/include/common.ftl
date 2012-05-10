@@ -29,55 +29,6 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#if>
 </#macro>
 
-<#function btn text="" onclick="" class="" type="" id="" href="">
-	<#if id!=''>
-	<#local _id=' id="'+id+'"'>
-	<#if text==''>
-		<#local text=id?replace('_', ' ')>
-	</#if>
-	</#if>
-	<#if type!=''>
-	<#local _type=' type="'+type+'"'>
-	<#else>
-	<#local _type=' type="button"'>
-	</#if>
-	<#if onclick!=''>
-	<#local _onclick=' onclick="'+onclick+'"'>
-	</#if>
-	<#if class!=''>
-	<#local _class=' class="btn '+class+'"'>
-	<#else>
-	<#local _class=' class="btn"'>
-	</#if>
-<#if type=='link'>
-  <#return '<a'+(_id!)+(_onclick!)+(_class)+' href="'+href+'">'+text+'</a>'>
-</#if>
-  <#return '<button'+(_id!)+(_type!)+(_onclick!)+(_class)+'>'+text+'</button>'>
-</#function>
-
-<#macro button text="" type="" class="" dynamicAttributes...>
-<#if !dynamicAttributes?is_hash_ex><#local dynamicAttributes={}></#if>
-<#if text==''>
-	<#local text=(dynamicAttributes['id']!'')?replace('_', ' ')>
-</#if>
-<#if class!=''>
-	<#local class='btn '+class>
-<#else>
-	<#local class='btn'>
-</#if>
-<#local tag='button'>
-<#if type=='link'>
-<#local tag='a'>
-<#else>
-<#if type==''>
-<#local _type=' type="button"'>
-<#else>
-<#local _type=' type="'+type+'"'>
-</#if>
-</#if>
-<${tag} <#list dynamicAttributes?keys as attr>${attr}="${dynamicAttributes[attr]?html}" </#list>${_type!} class="${class}">${text}</${tag}><#t>
-</#macro>
-
 <#function getUrl value secure=''>
 <#if value?starts_with('/assets/')>
 	<#if assetsBase??>

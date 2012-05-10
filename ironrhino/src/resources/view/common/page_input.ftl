@@ -134,7 +134,7 @@ $(function() {
 	<#else>
 		<@s.textarea id="page_head" name="page.head" cols="100" rows="3" cssStyle="display:none;"/>
 		<div class="field">
-			<@button id="display_page_head" text="${action.getText('edit')}${action.getText('head')}"/>
+			<button type="button" class="btn" id="display_page_head">${action.getText('edit')}${action.getText('head')}</button>
 		</div>
 	</#if>
 	<div class="field">
@@ -142,9 +142,9 @@ $(function() {
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
 	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>
 	<#if page.id??>
-	<@button id="preview" type="link" text="${action.getText('preview')}" href="${getUrl(cmsPath+page.path)}?preview=true" target="_blank"/>
+	<a class="btn" id="preview" href="${getUrl(cmsPath+page.path)}?preview=true" target="_blank">${action.getText('preview')}</a>
 	<#else>
-	<@button id="preview" type="link" text="${action.getText('preview')}" target="_blank"/>
+	<a class="btn" id="preview" target="_blank">${action.getText('preview')}</a>
 	</#if>
 	<@s.submit id="drop" value="%{getText('drop')}" theme="simple"/>
 	</span>
@@ -152,9 +152,9 @@ $(function() {
 	<div class="field">
 	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
 	<#if page.id??>
-	<@button id="view" type="link" text="${action.getText('view')}" href="${getUrl(cmsPath+page.path)}" target="_blank"/>
+	<a class="btn" id="view" href="${getUrl(cmsPath+page.path)}" target="_blank">${action.getText('view')}</a>
 	<#else>
-	<@button id="view" type="link" text="${action.getText('view')}" target="_blank"/>
+	<a class="btn" id="view" target="_blank">${action.getText('view')}</a>
 	</#if>
 	</div>
 </@s.form>

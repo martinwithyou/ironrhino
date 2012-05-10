@@ -1,16 +1,16 @@
 (function($) {
 	$.fn.editme = function() {
 		return $(this).attr('contenteditable', 'true').keyup(function() {
-					$(this).attr('edited', 'true')
+					$(this).addClass('edited')
 				}).blur(blur);
 	};
 	function blur() {
 		var t = $(this);
-		var url = t.attr('url') || document.location.href;
-		var name = t.attr('name') || 'content';
+		var url = t.data('url') || document.location.href;
+		var name = t.data('name') || 'content';
 		var data = {};
 		data[name] = t.html();
-		if (t.attr('edited'))
+		if (t.hasClass('edited'))
 			$.alerts.confirm(MessageBundle.get('confirm.save'), MessageBundle
 							.get('select'), function(b) {
 						if (b) {
@@ -20,7 +20,7 @@
 										data : data,
 										global : false,
 										success : function() {
-											t.removeAttr('edited');
+											t.removeClass('edited');
 										}
 									});
 						}

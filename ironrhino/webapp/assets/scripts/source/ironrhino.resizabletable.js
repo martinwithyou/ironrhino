@@ -15,7 +15,7 @@ $(function() {
 					document.body.style.cursor = 'col-resize';
 					var newwidth = startWidth + (e.pageX - startX);
 					var minColWidth = $(e.target).closest('table')
-							.attr('minColWidth');
+							.data('minColWidth');
 					if (minColWidth && parseInt(minColWidth) > newwidth)
 						start.width(parseInt(minColWidth));
 					else

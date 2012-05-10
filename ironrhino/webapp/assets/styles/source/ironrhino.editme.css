@@ -2,7 +2,7 @@
 	margin:0px;
 	padding:0px;
 }
-.editme[edited="true"] {
+.editme.edited {
 	outline:1px solid red;
 }
 .editme:hover {

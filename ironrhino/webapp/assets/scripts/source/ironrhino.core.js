@@ -762,13 +762,13 @@ Observation.common = function(container) {
 								select : function(event, ui) {
 									$(ui.panel).trigger('load');
 								}
-							}).tabs('select', $(this).attr('tab'));
+							}).tabs('select', $(this).data('tab'));
 
 				});
 	if (typeof $.fn.corner != 'undefined' && $.browser.msie
 			&& $.browser.version <= 8)
 		$('.rounded', container).each(function() {
-					$(this).corner($(this).attr('corner'));
+					$(this).corner($(this).data('corner'));
 				});
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({
@@ -776,11 +776,11 @@ Observation.common = function(container) {
 					zIndex : 2000
 				});
 	$('input.captcha', container).focus(function() {
-				if ($(this).attr('_captcha_'))
+				if ($(this).data('_captcha_'))
 					return;
 				$(this).after('<img class="captcha" src="' + this.id + '"/>');
 				$('img.captcha', container).click(Captcha.refresh);
-				$(this).attr('_captcha_', true);
+				$(this).data('_captcha_', true);
 			});
 	if (typeof $.fn.treeTable != 'undefined')
 		$('.treeTable', container).each(function() {
@@ -793,7 +793,7 @@ Observation.common = function(container) {
 	if (typeof $.fn.truncatable != 'undefined')
 		$('.truncatable', container).each(function() {
 					$(this).truncatable({
-								limit : $(this).attr('limit') || 100
+								limit : $(this).data('limit') || 100
 							});
 				});
 	if (typeof $.fn.tipsy != 'undefined') {
@@ -805,14 +805,14 @@ Observation.common = function(container) {
 					var options = {
 						html : true,
 						fade : true,
-						gravity : t.attr('gravity') || 'w'
+						gravity : t.data('gravity') || 'w'
 					};
-					if (!t.attr('title') && t.attr('tipurl'))
+					if (!t.attr('title') && t.data('tipurl'))
 						t.attr('title', MessageBundle.get('ajax.loading'));
 					t.hover(function() {
-								if (t.attr('tipurl'))
+								if (t.data('tipurl'))
 									$.ajax({
-												url : t.attr('tipurl'),
+												url : t.data('tipurl'),
 												global : false,
 												dataType : 'html',
 												success : function(data) {
@@ -888,7 +888,7 @@ Observation.common = function(container) {
 				pause : 1
 			};
 			$.extend(options, (new Function("return "
-							+ ($(this).attr('options') || '{}')))());
+							+ ($(this).data('cycleoptions') || '{}')))());
 			$(this).cycle(options);
 		});
 	$('a.ajax,form.ajax', container).each(function() {
@@ -914,7 +914,7 @@ Observation.common = function(container) {
 					$('.action_message,.action_error').remove();
 					if (!Form.validate(target))
 						return false;
-					Indicator.text = $(target).attr('indicator');
+					Indicator.text = $(target).data('indicator');
 					$('button[type="submit"]', target).prop('disabled', true);
 					Ajax.fire(target, 'onloading');
 				},
@@ -994,7 +994,7 @@ Observation.common = function(container) {
 					cache : $(this).hasClass('cache'),
 					beforeSend : function() {
 						$('.action_message,.action_error').remove();
-						Indicator.text = $(target).attr('indicator');
+						Indicator.text = $(target).data('indicator');
 						Ajax.fire(target, 'onloading');
 					},
 					error : function() {
@@ -1042,10 +1042,10 @@ var Dialog = {
 			} else if (iframe.contentWindow) {
 				doc = iframe.contentWindow.document;
 			}
-			var height = $(doc).height()
-					+ ($.browser.webkit ? -3 : ($.browser.mozilla ? 10 : 0));
 			$(d).dialog('option', 'title', doc.title);
 			$(d).dialog('option', 'minHeight', height);
+			var height = $(doc).height()
+					+ 20;
 			$(iframe).height(height);
 		}
 		d.dialog('option', 'position', 'center');

@@ -9,7 +9,7 @@
 				multiple : false
 			}
 			$.extend(pickoptions, (new Function("return "
-							+ (current.attr('pickoptions') || '{}')))());
+							+ (current.data('pickoptions') || '{}')))());
 			var nametarget = null;
 			if (pickoptions.name) {
 				nametarget = $('#' + pickoptions.name);

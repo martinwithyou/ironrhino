@@ -5,14 +5,14 @@
 					t.bind('load', function() {
 								ajaxpanel(t)
 							});
-					if (t.attr('timeout')) {
+					if (t.data('timeout')) {
 						setTimeout(function() {
 									ajaxpanel(t);
-								}, parseInt(t.attr('timeout')));
-					} else if (t.attr('interval')) {
+								}, parseInt(t.data('timeout')));
+					} else if (t.data('interval')) {
 						setInterval(function() {
 									ajaxpanel(t);
-								}, parseInt(t.attr('interval')));
+								}, parseInt(t.data('interval')));
 					} else if (!t.hasClass('manual'))
 						ajaxpanel(t);
 				});
@@ -20,7 +20,7 @@
 	};
 	function ajaxpanel(ele) {
 		var options = {
-			url : ele.attr('url') || document.location.href,
+			url : ele.data('url') || document.location.href,
 			global : false,
 			quiet : true,
 			beforeSend : function() {

@@ -32503,13 +32503,13 @@ Observation.common = function(container) {
 								select : function(event, ui) {
 									$(ui.panel).trigger('load');
 								}
-							}).tabs('select', $(this).attr('tab'));
+							}).tabs('select', $(this).data('tab'));
 
 				});
 	if (typeof $.fn.corner != 'undefined' && $.browser.msie
 			&& $.browser.version <= 8)
 		$('.rounded', container).each(function() {
-					$(this).corner($(this).attr('corner'));
+					$(this).corner($(this).data('corner'));
 				});
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({
@@ -32517,11 +32517,11 @@ Observation.common = function(container) {
 					zIndex : 2000
 				});
 	$('input.captcha', container).focus(function() {
-				if ($(this).attr('_captcha_'))
+				if ($(this).data('_captcha_'))
 					return;
 				$(this).after('<img class="captcha" src="' + this.id + '"/>');
 				$('img.captcha', container).click(Captcha.refresh);
-				$(this).attr('_captcha_', true);
+				$(this).data('_captcha_', true);
 			});
 	if (typeof $.fn.treeTable != 'undefined')
 		$('.treeTable', container).each(function() {
@@ -32534,7 +32534,7 @@ Observation.common = function(container) {
 	if (typeof $.fn.truncatable != 'undefined')
 		$('.truncatable', container).each(function() {
 					$(this).truncatable({
-								limit : $(this).attr('limit') || 100
+								limit : $(this).data('limit') || 100
 							});
 				});
 	if (typeof $.fn.tipsy != 'undefined') {
@@ -32546,14 +32546,14 @@ Observation.common = function(container) {
 					var options = {
 						html : true,
 						fade : true,
-						gravity : t.attr('gravity') || 'w'
+						gravity : t.data('gravity') || 'w'
 					};
-					if (!t.attr('title') && t.attr('tipurl'))
+					if (!t.attr('title') && t.data('tipurl'))
 						t.attr('title', MessageBundle.get('ajax.loading'));
 					t.hover(function() {
-								if (t.attr('tipurl'))
+								if (t.data('tipurl'))
 									$.ajax({
-												url : t.attr('tipurl'),
+												url : t.data('tipurl'),
 												global : false,
 												dataType : 'html',
 												success : function(data) {
@@ -32629,7 +32629,7 @@ Observation.common = function(container) {
 				pause : 1
 			};
 			$.extend(options, (new Function("return "
-							+ ($(this).attr('options') || '{}')))());
+							+ ($(this).data('cycleoptions') || '{}')))());
 			$(this).cycle(options);
 		});
 	$('a.ajax,form.ajax', container).each(function() {
@@ -32655,7 +32655,7 @@ Observation.common = function(container) {
 					$('.action_message,.action_error').remove();
 					if (!Form.validate(target))
 						return false;
-					Indicator.text = $(target).attr('indicator');
+					Indicator.text = $(target).data('indicator');
 					$('button[type="submit"]', target).prop('disabled', true);
 					Ajax.fire(target, 'onloading');
 				},
@@ -32735,7 +32735,7 @@ Observation.common = function(container) {
 					cache : $(this).hasClass('cache'),
 					beforeSend : function() {
 						$('.action_message,.action_error').remove();
-						Indicator.text = $(target).attr('indicator');
+						Indicator.text = $(target).data('indicator');
 						Ajax.fire(target, 'onloading');
 					},
 					error : function() {
@@ -32783,10 +32783,10 @@ var Dialog = {
 			} else if (iframe.contentWindow) {
 				doc = iframe.contentWindow.document;
 			}
-			var height = $(doc).height()
-					+ ($.browser.webkit ? -3 : ($.browser.mozilla ? 10 : 0));
 			$(d).dialog('option', 'title', doc.title);
 			$(d).dialog('option', 'minHeight', height);
+			var height = $(doc).height()
+					+ 20;
 			$(iframe).height(height);
 		}
 		d.dialog('option', 'position', 'center');
@@ -33022,14 +33022,14 @@ Observation.checkavailable = function(container) {
 					t.bind('load', function() {
 								ajaxpanel(t)
 							});
-					if (t.attr('timeout')) {
+					if (t.data('timeout')) {
 						setTimeout(function() {
 									ajaxpanel(t);
-								}, parseInt(t.attr('timeout')));
-					} else if (t.attr('interval')) {
+								}, parseInt(t.data('timeout')));
+					} else if (t.data('interval')) {
 						setInterval(function() {
 									ajaxpanel(t);
-								}, parseInt(t.attr('interval')));
+								}, parseInt(t.data('interval')));
 					} else if (!t.hasClass('manual'))
 						ajaxpanel(t);
 				});
@@ -33037,7 +33037,7 @@ Observation.checkavailable = function(container) {
 	};
 	function ajaxpanel(ele) {
 		var options = {
-			url : ele.attr('url') || document.location.href,
+			url : ele.data('url') || document.location.href,
 			global : false,
 			quiet : true,
 			beforeSend : function() {
@@ -33192,7 +33192,7 @@ Observation.checkbox = function(container) {
 												$(this).appendTo(marquee)
 														.fadeIn('slow');
 											});
-							}, marquee.attr('delay') || 3000);
+							}, marquee.data('delay') || 3000);
 				});
 		return this;
 	};
@@ -33921,7 +33921,7 @@ $(function() {
 					document.body.style.cursor = 'col-resize';
 					var newwidth = startWidth + (e.pageX - startX);
 					var minColWidth = $(e.target).closest('table')
-							.attr('minColWidth');
+							.data('minColWidth');
 					if (minColWidth && parseInt(minColWidth) > newwidth)
 						start.width(parseInt(minColWidth));
 					else
@@ -33940,7 +33940,7 @@ Richtable = {
 	getBaseUrl : function(form) {
 		form = form || $('form.richtable');
 		var action = form[0].action;
-		var entity = form.attr('entity');
+		var entity = form.data('entity');
 		var url;
 		if (action.indexOf('/') == 0 || action.indexOf('://') > 0)
 			url = entity ? action.substring(0, action.lastIndexOf('/') + 1)
@@ -34062,7 +34062,7 @@ Richtable = {
 								create = false;
 							if ($(
 									'input[type="hidden"][name="'
-											+ (form.attr('entity') || form
+											+ (form.data('entity') || form
 													.attr('action')) + '.id"]',
 									inputform).val())
 								create = false;
@@ -34176,7 +34176,7 @@ Richtable = {
 			return;
 		var url = Richtable.getBaseUrl(form) + Richtable.getPathParams();
 		var tr = $(btn).closest('tr');
-		var id = tr.attr('rowid')
+		var id = tr.data('rowid')
 				|| $('input[type="checkbox"]:eq(0)', tr).val();
 		url += (url.indexOf('?') > 0 ? '&' : '?') + 'parentId=' + id;
 		document.location.href = url;
@@ -34190,7 +34190,7 @@ Richtable = {
 			return;
 		var idparams;
 		var tr = $(btn).closest('tr');
-		var id = tr.attr('rowid')
+		var id = tr.data('rowid')
 				|| $('input[type="checkbox"]:eq(0)', tr).val();
 		if (id) {
 			idparams = 'id=' + id;
@@ -34204,8 +34204,8 @@ Richtable = {
 			});
 			idparams = arr.join('&');
 		}
-		var action = $(btn).attr('action');
-		var view = $(btn).attr('view');
+		var action = $(btn).data('action');
+		var view = $(btn).data('view');
 		if (action == 'reload')
 			Richtable.reload(form);
 		else if (action == 'enter')
@@ -34250,7 +34250,7 @@ Richtable = {
 			}
 		} else {
 			var options = (new Function("return "
-					+ ($(btn).attr('windowoptions') || '{}')))();
+					+ ($(btn).data('windowoptions') || '{}')))();
 			var url = $(btn).attr('href');
 			if (view) {
 				url = Richtable.getUrl(view, id, !id, form);
@@ -34291,15 +34291,15 @@ Richtable = {
 				var params = {};
 				var entity = Richtable.getBaseUrl(form);
 				entity = entity.substring(entity.lastIndexOf('/') + 1);
-				params[entity + '.id'] = $(this).attr('rowid')
+				params[entity + '.id'] = $(this).data('rowid')
 						|| $('input[type="checkbox"]:eq(0)', this).val();;
 				$.each(row.cells, function(i) {
 							var theadCell = $(theadCells[i]);
-							var name = theadCell.attr('cellName');
+							var name = theadCell.attr('data-cellName');
 							if (!name || !$(this).hasClass('edited')
 									&& theadCell.hasClass('excludeIfNotEdited'))
 								return;
-							var value = $(this).attr('cellValue')
+							var value = $(this).attr('data-cellValue')
 									|| $(this).text();
 							params[name] = value;
 						});
@@ -34330,9 +34330,9 @@ Richtable = {
 		if (ce.hasClass('editing'))
 			return;
 		ce.addClass('editing');
-		var value = ce.attr('cellValue');
+		var value = ce.attr('data-cellValue');
 		value = $.trim(value || ce.text());
-		ce.attr('oldValue', value);
+		ce.attr('data-oldValue', value);
 		var template = '';
 		if (templateId) {
 			template = $('#' + templateId).text();
@@ -34377,7 +34377,7 @@ Richtable = {
 		var ce = $(cellEdit);
 		var cell = ce.parent();
 		cell.removeClass('editing');
-		cell.attr('cellValue', ce.val());
+		cell.attr('data-cellValue', ce.val());
 		var editType = ce.prop('tagName');
 		if (editType == 'SELECT')
 			cell.text($('option:selected', ce).text());
@@ -34385,7 +34385,7 @@ Richtable = {
 			cell.text(ce.next().text());
 		else
 			cell.text(ce.val());
-		if (cell.attr('oldValue') != cell.attr('cellValue')) {
+		if (cell.attr('data-oldValue') != cell.attr('data-cellValue')) {
 			cell.addClass('edited');
 			cell.parent().addClass('edited');
 		}
@@ -34395,14 +34395,14 @@ Richtable = {
 		var ce = $(cellEdit);
 		var cell = ce.parent();
 		cell.text('********');
-		cell.attr('cellValue', ce.val());
+		cell.attr('data-cellValue', ce.val());
 		cell.addClass('edited').removeClass('editing');
 		cell.parent().addClass('edited');
 
 	}
 };
 Observation.richtable = function(container) {
-	if ($('.richtable', container).length) {
+	if ('table.richtable'.length) {
 		$('.action button.btn,a[rel="richtable"]', container)
 				.click(Richtable.click);
 		var theadCells = $('table.richtable thead:eq(0) td', container);
@@ -34410,7 +34410,7 @@ Observation.richtable = function(container) {
 				function() {
 					var cells = this.cells;
 					theadCells.each(function(i) {
-								var cellEdit = $(this).attr('cellEdit');
+								var cellEdit = $(this).attr('data-cellEdit');
 								if (!cellEdit)
 									return;
 								var ar = cellEdit.split(',');
@@ -34479,7 +34479,7 @@ Observation.richtable = function(container) {
 		treeoptions = treeoptions || {};
 		this.addClass('treearea').each(function() {
 			_treeoptions = $.extend(treeoptions, (new Function("return "
-							+ ($(this).attr('treeoptions') || '{}')))());
+							+ ($(this).data('treeoptions') || '{}')))());
 			var treearea = $(this);
 			var fullname = _treeoptions.value;
 			var i = 0;
@@ -34599,7 +34599,7 @@ Observation.richtable = function(container) {
 				cache : true
 			}
 			$.extend(treeoptions, (new Function("return "
-							+ (current.attr('treeoptions') || '{}')))());
+							+ (current.data('treeoptions') || '{}')))());
 			var nametarget = null;
 			if (treeoptions.name) {
 				nametarget = $('#' + treeoptions.name);
@@ -34726,7 +34726,7 @@ Observation.treeselect = function(container) {
 				multiple : false
 			}
 			$.extend(pickoptions, (new Function("return "
-							+ (current.attr('pickoptions') || '{}')))());
+							+ (current.data('pickoptions') || '{}')))());
 			var nametarget = null;
 			if (pickoptions.name) {
 				nametarget = $('#' + pickoptions.name);
@@ -34975,16 +34975,16 @@ highlight : function(node, word) {
 (function($) {
 	$.fn.editme = function() {
 		return $(this).attr('contenteditable', 'true').keyup(function() {
-					$(this).attr('edited', 'true')
+					$(this).addClass('edited')
 				}).blur(blur);
 	};
 	function blur() {
 		var t = $(this);
-		var url = t.attr('url') || document.location.href;
-		var name = t.attr('name') || 'content';
+		var url = t.data('url') || document.location.href;
+		var name = t.data('name') || 'content';
 		var data = {};
 		data[name] = t.html();
-		if (t.attr('edited'))
+		if (t.hasClass('edited'))
 			$.alerts.confirm(MessageBundle.get('confirm.save'), MessageBundle
 							.get('select'), function(b) {
 						if (b) {
@@ -34994,7 +34994,7 @@ highlight : function(node, word) {
 										data : data,
 										global : false,
 										success : function() {
-											t.removeAttr('edited');
+											t.removeClass('edited');
 										}
 									});
 						}

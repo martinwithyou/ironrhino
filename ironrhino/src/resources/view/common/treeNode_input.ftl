@@ -17,7 +17,7 @@
 			<tr>
 				<td>${action.getText('name')}</td>
 				<td>${action.getText('value')}</td>
-				<td class="manipulate"><@button text="+" class="add"/></td>
+				<td class="manipulate"><button type="button" class="btn add">+</button></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -29,7 +29,7 @@
 			<tr>
 				<td><@s.textfield theme="simple" name="treeNode.attributes[${index}].name"/></td>
 				<td><@s.textfield theme="simple" name="treeNode.attributes[${index}].value"/></td>
-				<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+				<td class="manipulate"><button type="button" class="btn add">+</button><button type="button" class="btn remove">-</button><button type="button" class="btn moveup">↑</button><button type="button" class="btn movedown">↓</button></td>
 			</tr>
 			</#list>
 		</tbody>

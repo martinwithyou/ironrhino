@@ -41,7 +41,15 @@
 	</script>
 </head>
 <body>
-<input id="filename" type="text" size="50"/><input id="tail" type="text" size="5" value="4096"/><@button id="view" text="${action.getText('view')}"/><@button id="clear" text="${action.getText('clear')}"/><@button id="download" text="${action.getText('download')}"/>
+<form class="line clearfix">
+	<div class="field">
+		<input id="filename" type="text" size="50"/>
+		<input id="tail" type="text" size="5" value="4096"/>
+		<button type="button" class="btn" id="view">${action.getText('view')}</button>
+		<button type="button" class="btn" id="clear">${action.getText('clear')}</button>
+		<button type="button" class="btn" id="download">${action.getText('download')}</button>
+	</div>
+</form>
 <div id="result">
 </div>
 </body>

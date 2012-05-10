@@ -21,7 +21,7 @@
 				<td>${action.getText('name')}</td>
 				<td>${action.getText('value')}</td>
 				<#if !schema.strict?? || !schema.strict>
-				<td class="manipulate"><@button text="+" class="add"/></td>
+				<td class="manipulate"><button type="button" class="btn add">+</button></td>
 				</#if>
 			</tr>
 		</thead>
@@ -38,7 +38,7 @@
 				<tr class="nontemplate" style="background-color:#F0F0F0;height:1em;">
 					<td colspan="2">${field.name}<@s.hidden theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name}"/></td>
 					<#if !schema.strict>
-					<td><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+					<td><button type="button" class="btn add">+</button><button type="button" class="btn remove">-</button><button type="button" class="btn moveup">↑</button><button type="button" class="btn movedown">↓</button></td>
 					</#if>
 				</tr>
 				<#else>
@@ -77,7 +77,7 @@
 						</#if>
 					</td>
 					<#if !schema.strict>
-					<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+					<td class="manipulate"><button type="button" class="btn add">+</button><button type="button" class="btn remove">-</button><button type="button" class="btn moveup">↑</button><button type="button" class="btn movedown">↓</button></td>
 					</#if>
 				</tr>
 				</#if>
@@ -96,7 +96,7 @@
 					<tr>
 						<td><input type="text" name="${parameterNamePrefix}attributes[${index}].name" value="${attr.name!}"/></td>
 						<td><input type="text" name="${parameterNamePrefix}attributes[${index}].value" value="${attr.value!}"/></td>
-						<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+						<td class="manipulate"><button type="button" class="btn add">+</button><button type="button" class="btn remove">-</button><button type="button" class="btn moveup">↑</button><button type="button" class="btn movedown">↓</button></td>
 					</tr>
 					<#local index = index+1>
 					</#if>
@@ -115,7 +115,7 @@
 							<tr>
 								<td><input type="text" name="${parameterNamePrefix}attributes[${index}].name"<#if !isnew> value="${attributes[var].name!}</#if>"/></td>
 								<td><input type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if !isnew> value="${attributes[var].value!}</#if>"/></td>
-								<td class="manipulate"><@button text="+" class="add"/><@button text="-" class="remove"/><@button text="↑" class="moveup"/><@button text="↓" class="movedown"/></td>
+								<td class="manipulate"><button type="button" class="btn add">+</button><button type="button" class="btn remove">-</button><button type="button" class="btn moveup">↑</button><button type="button" class="btn movedown">↓</button></td>
 							</tr>
 							<#local index = index+1>
 						</#if>

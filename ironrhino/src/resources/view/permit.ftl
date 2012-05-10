@@ -4,12 +4,14 @@
 <title>${action.getText('permit')}</title>
 </head>
 <body>
-<div style="margin-bottom:20px;" class="switch">
-<#list roles?keys as role>
-<@button type="link" href="permit/input?role=${role}" class="ajax view" replacement="save" style="margin:0 5px;" text="${roles[role]}"/>
-</#list>
-<form action="${getUrl(actionBaseUrl+'/input')}" method="get" class="line ajax view" replacement="save" style="margin-right:5px;float:right;"><span>${action.getText('username')}:</span><input type="text" name="username"/><@button type="submit" text="${action.getText('confirm')}"/></form>
-</div>
+<form action="${getUrl(actionBaseUrl+'/input')}" method="get" class="line ajax view clearfix" replacement="save" style="margin-bottom:20px;">
+	<div class="field switch">
+	<#list roles?keys as role>
+		<a class="btn ajax view" href="permit/input?role=${role}" replacement="save" style="margin:0 5px;">${roles[role]}</a>
+	</#list>
+	<label for="username">${action.getText('username')}:</span><input type="text" id="username" name="username"/><button type="submit" class="btn">${action.getText('confirm')}</button>
+	</div>
+</form>
 <div id="save">
 </div>
 </body>

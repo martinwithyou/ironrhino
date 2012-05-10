@@ -5,14 +5,14 @@
 </head>
 <body>
 <#assign columns={"path":{"width":"150px","template":"<a href=\"${getUrl(cmsPath)}$"+"{value}\" target=\"_blank\">$"+"{value}</a>"},"title":{},"displayOrder":{"width":"90px"},"tag":{"template":r"<#list entity.tags as tag><a href='<@url value='/common/page?keyword=tags:${tag}'/>'>${tag}</a>&nbsp;&nbsp;</#list>"},"createDate":{"width":"150px","template":r"<#if entity.createDate??>${value?string('yyyy-MM-dd HH:mm:ss')}</#if>"},"modifyDate":{"width":"150px","template":r"<#if entity.modifyDate??>${value?string('yyyy-MM-dd HH:mm:ss')}</#if>"}}>
-<#assign actionColumnButtons=r"
-<@button text='${action.getText(\'edit\')}' view='input' windowoptions='{\'iframe\':true,\'width\':\'900px\'}'/>
-">
-<#assign bottomButtons=r"
-<@button text='${action.getText(\'create\')}' view='input' windowoptions='{\'iframe\':true,\'width\':\'900px\'}'/>
-<@button text='${action.getText(\'delete\')}' action='delete'/>
-<@button text='${action.getText(\'reload\')}' action='reload'/>
-">
+<#assign actionColumnButtons='
+<button type="button" class="btn" data-view="input" data-windowoptions="{\'iframe\':true,\'width\':\'900px\'}">${action.getText("edit")}</button><#t>
+'>
+<#assign bottomButtons='
+<button type="button" class="btn" data-view="input" data-windowoptions="{\'iframe\':true,\'width\':\'900px\'}">${action.getText("create")}</button><#t>
+<button type="button" class="btn" data-action="delete">${action.getText("delete")}</button><#t>
+<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button><#t>
+'>
 <@richtable entityName="page" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false searchable=true/>
 </body>
 </html></#escape>

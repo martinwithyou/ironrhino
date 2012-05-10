@@ -140,9 +140,9 @@ td.center {text-align:center;}
 	<tfoot>
 	<tr>
 		<td colspan="4" style="text-align:center;padding:5px 0px;">
-		<@button onclick="del()" text="${action.getText('delete')}"/>
-		<@button onclick="mkdir()" text="${action.getText('create.subfolder')}"/>
-		<@button onclick="reload()" text="${action.getText('reload')}"/>
+		<button type="button" class="btn" onclick="del()">${action.getText('delete')}</button><#t>
+		<button type="button" class="btn" onclick="mkdir()">${action.getText('create.subfolder')}</button><#t>
+		<button type="button" class="btn" onclick="reload()">${action.getText('reload')}</button><#t>
 		</td>
 	</tr>
 	</tfoot>

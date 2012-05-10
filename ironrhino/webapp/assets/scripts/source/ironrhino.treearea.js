@@ -3,7 +3,7 @@
 		treeoptions = treeoptions || {};
 		this.addClass('treearea').each(function() {
 			_treeoptions = $.extend(treeoptions, (new Function("return "
-							+ ($(this).attr('treeoptions') || '{}')))());
+							+ ($(this).data('treeoptions') || '{}')))());
 			var treearea = $(this);
 			var fullname = _treeoptions.value;
 			var i = 0;

@@ -9,7 +9,7 @@
 <div class="page content">
 	<#assign designMode=(Parameters.designMode!)=='true'&&statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
 	<#if designMode>
-	<div class="editme" url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
+	<div class="editme" data-url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
 	</#if>
 	<#if page.content??><#assign content=page.content?interpret><@content/></#if>
 	<#if designMode>

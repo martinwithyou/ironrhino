@@ -1,4 +1,4 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='60px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
 <@rtstart formid=formid action=action?has_content?string(action,request.requestURI?substring(request.contextPath?length)) entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable/>
 <#list columns?keys as name>
 <#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
@@ -24,7 +24,7 @@
 </#macro>
 
 <#macro rtstart formid='',action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true>
-<form id="<#if formid!=''>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view" <#if entityName!=action&&entityName!=''> entity="${entityName}"</#if>>
+<form id="<#if formid!=''>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view" <#if entityName!=action&&entityName!=''> data-entity="${entityName}"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
 <#if name!='_'&&name!='pn'&&name!='ps'&&!name?starts_with('resultPage.')&&name!='keyword'&&name!='check'>
@@ -32,7 +32,7 @@
 </#if>
 </#list>
 </#if>
-<table class="richtable<#if sortable> sortable</#if><#if columnfilterable> filtercolumn</#if> highlightrow<#if resizable> resizable</#if>"<#if resizable> minColWidth="40"</#if>>
+<table class="richtable<#if sortable> sortable</#if><#if columnfilterable> filtercolumn</#if> highlightrow<#if resizable> resizable</#if>"<#if resizable> data-minColWidth="40"</#if>>
 <thead>
 <tr>
 <#if showCheckColumn>
@@ -41,7 +41,7 @@
 </#macro>
 
 <#macro rttheadtd name,cellName='',cellEdit='',class='',width='',readonly=false,resizable=true,excludeIfNotEdited=false>
-<td class="tableHeader<#if excludeIfNotEdited> excludeIfNotEdited</#if><#if class!=''> ${class}</#if>"<#if width!=''> width="${width}"</#if><#if !readonly> cellName="${cellName}"</#if><#if cellEdit!=''> cellEdit="${cellEdit}"</#if>>
+<td class="tableHeader<#if excludeIfNotEdited> excludeIfNotEdited</#if><#if class!=''> ${class}</#if>"<#if width!=''> width="${width}"</#if><#if !readonly> data-cellName="${cellName}"</#if><#if cellEdit!=''> data-cellEdit="${cellEdit}"</#if>>
 <#if resizable>
 <span class="resizeTitle">${action.getText(name)}</span>
 <span class="resizeBar"></span>
@@ -50,7 +50,7 @@ ${action.getText(name)}
 </#if>
 </td>
 </#macro>
-<#macro rtmiddle width='60px' readonly=false>
+<#macro rtmiddle width='50px' readonly=false>
 <#if !readonly>
 <td class="nosort" width="${width}"></td>
 </#if>
@@ -60,12 +60,12 @@ ${action.getText(name)}
 </#macro>
 
 <#macro rttbodytrstart entity odd readonly=false showCheckColumn=true multipleCheck=true>
-<tr class="${odd?string('odd','even')}"<#if !showCheckColumn&&entity.id??> rowid="${entity.id?string}"</#if>>
+<tr class="${odd?string('odd','even')}"<#if !showCheckColumn&&entity.id??> data-rowid="${entity.id?string}"</#if>>
 <#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if entity.id??> value="${entity.id?string}"</#if>/></td></#if>
 </#macro>
 
 <#macro rttbodytd value,entity,celleditable=true,template=''>
-<td<#if celleditable><#if value??><#if value?is_boolean> cellValue="${value?string}"</#if><#if value?is_hash&&value.displayName??> cellValue="${value.name()}"</#if></#if></#if>><#rt>
+<td<#if celleditable><#if value??><#if value?is_boolean> data-cellValue="${value?string}"</#if><#if value?is_hash&&value.displayName??> data-cellValue="${value.name()}"</#if></#if></#if>><#rt>
 <#if template==''>
 <#if value??>
 <#if value?is_boolean>
@@ -92,7 +92,7 @@ ${value?xhtml}<#t>
 <#local temp=buttons?interpret>
 <@temp/>
 <#else>
-<@button text=action.getText('edit') view='input'/>
+<button type="button" class="btn" data-view="input">${action.getText("edit")}</button><#t>
 </#if>
 </td>
 </#if>
@@ -129,6 +129,8 @@ ${value?xhtml}<#t>
 <option value="${resultPage.totalRecord}">${action.getText('all')}</option>
 </select><span>${action.getText('row')}</span>
 </#if>
+<#else>
+&nbsp;
 </#if>
 </div>
 <div class="action">
@@ -137,10 +139,10 @@ ${value?xhtml}<#t>
 <@temp/>
 <#else>
 <#if !readonly>
-<#if createable><@button text=action.getText('create') view='input'/></#if>
-<#if celleditable><@button text=action.getText('save') action='save'/></#if>
-<#if deleteable><@button text=action.getText('delete') action='delete'/></#if>
-</#if><@button text=action.getText('reload') action='reload'/></#if>
+<#if createable><button type="button" class="btn" data-view="input">${action.getText("create")}</button><#t></#if>
+<#if celleditable><button type="button" class="btn" data-action="save">${action.getText("save")}</button><#t></#if>
+<#if deleteable><button type="button" class="btn" data-action="delete">${action.getText("delete")}</button><#t></#if>
+</#if><button type="button" class="btn" data-action="reload">${action.getText("reload")}</button><#t></#if>
 </div>
 <div class="search">
 <#if searchable>
@@ -149,6 +151,8 @@ ${value?xhtml}<#t>
 <#if searchButtons!=''>
 <#local temp=searchButtons?interpret>
 <@temp/>
+<#else>
+&nbsp;
 </#if>
 </div>
 <div class="status">
