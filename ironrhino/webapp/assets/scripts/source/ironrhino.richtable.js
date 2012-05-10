@@ -357,11 +357,11 @@ Richtable = {
 						|| $('input[type="checkbox"]:eq(0)', this).val();;
 				$.each(row.cells, function(i) {
 							var theadCell = $(theadCells[i]);
-							var name = theadCell.attr('data-cellName');
+							var name = theadCell.data('cellname');
 							if (!name || !$(this).hasClass('edited')
 									&& theadCell.hasClass('excludeIfNotEdited'))
 								return;
-							var value = $(this).attr('data-cellValue')
+							var value = $(this).data('cellvalue')
 									|| $(this).text();
 							params[name] = value;
 						});
@@ -392,9 +392,9 @@ Richtable = {
 		if (ce.hasClass('editing'))
 			return;
 		ce.addClass('editing');
-		var value = ce.attr('data-cellValue');
+		var value = ce.data('cellvalue');
 		value = $.trim(value || ce.text());
-		ce.attr('data-oldValue', value);
+		ce.data('oldvalue', value);
 		var template = '';
 		if (templateId) {
 			template = $('#' + templateId).text();
@@ -439,7 +439,7 @@ Richtable = {
 		var ce = $(cellEdit);
 		var cell = ce.parent();
 		cell.removeClass('editing');
-		cell.attr('data-cellValue', ce.val());
+		cell.data('cellvalue', ce.val());
 		var editType = ce.prop('tagName');
 		if (editType == 'SELECT')
 			cell.text($('option:selected', ce).text());
@@ -447,17 +447,17 @@ Richtable = {
 			cell.text(ce.next().text());
 		else
 			cell.text(ce.val());
-		if (cell.attr('data-oldValue') != cell.attr('data-cellValue')) {
+		if (cell.data('oldvalue') != cell.data('cellvalue')) {
 			cell.addClass('edited');
 			cell.parent().addClass('edited');
 		}
-		cell.removeAttr('oldValue');
+		cell.data('oldvalue',null);
 	},
 	updatePasswordCell : function(cellEdit) {
 		var ce = $(cellEdit);
 		var cell = ce.parent();
 		cell.text('********');
-		cell.attr('data-cellValue', ce.val());
+		cell.data('cellvalue', ce.val());
 		cell.addClass('edited').removeClass('editing');
 		cell.parent().addClass('edited');
 
@@ -472,7 +472,7 @@ Observation.richtable = function(container) {
 				function() {
 					var cells = this.cells;
 					theadCells.each(function(i) {
-								var cellEdit = $(this).attr('data-cellEdit');
+								var cellEdit = $(this).data('celledit');
 								if (!cellEdit)
 									return;
 								var ar = cellEdit.split(',');
