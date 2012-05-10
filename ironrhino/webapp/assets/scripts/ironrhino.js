@@ -34046,9 +34046,9 @@ Richtable = {
 				$('#_window_ form.ajax').each(function() {
 					var inputform = $(this);
 					$(':input:visible', inputform).filter(function(i) {
-								return !($(this).val() || $(this)
-										.hasClass('date'));
-							}).eq(0).focus();
+						return !($(this).val() || $(this).hasClass('date') || $(this)
+								.prop('tagName') == 'BUTTON');
+					}).eq(0).focus();
 					if (!inputform.hasClass('keepopen')) {
 						$(':input', inputform).change(function(e) {
 									if (!inputform.hasClass('nodirty'))
@@ -34610,6 +34610,7 @@ Observation.richtable = function(container) {
 								$('#' + treeoptions.id).val('');
 								$(this).remove();
 								event.stopPropagation();
+								return false;
 							});
 			}
 			var func = function() {
@@ -34682,13 +34683,15 @@ Observation.richtable = function(container) {
 					form.addClass('dirty');
 			} else {
 				nametarget.text(name);
-				$('<a class="close">x</a>').appendTo(nametarget).click(
-						function(event) {
-							nametarget.text(MessageBundle.get('select'));
-							$('#' + treeoptions.id).val('');
-							$(this).remove();
-							event.stopPropagation();
-						});
+				$('<a class="close" href="#">&times;</a>').appendTo(nametarget)
+						.click(function(event) {
+									nametarget
+											.text(MessageBundle.get('select'));
+									$('#' + treeoptions.id).val('');
+									$(this).remove();
+									event.stopPropagation();
+									return false;
+								});
 			}
 		}
 		if (treeoptions.id) {
@@ -34734,6 +34737,7 @@ Observation.treeselect = function(container) {
 								$('#' + pickoptions.id).val('');
 								$(this).remove();
 								event.stopPropagation();
+								return false;
 							});
 			}
 			var func = function() {
@@ -34772,7 +34776,7 @@ Observation.treeselect = function(container) {
 												form.addClass('dirty');
 										} else {
 											nametarget.text(name);
-											$('<a class="close">x</a>')
+											$('<a class="close" href="#">&times;</a>')
 													.appendTo(nametarget)
 													.click(function(event) {
 														nametarget
@@ -34782,6 +34786,7 @@ Observation.treeselect = function(container) {
 																.val('');
 														$(this).remove();
 														event.stopPropagation();
+														return false;
 													});
 										}
 									}
@@ -34834,7 +34839,7 @@ Observation.treeselect = function(container) {
 											.join(separator);
 									nametarget.data('picked', picked)
 											.text(picked);
-									$('<a class="close">x</a>')
+									$('<a class="close" href="#">&times;</a>')
 											.appendTo(nametarget).click(
 													function(event) {
 														nametarget
@@ -34846,6 +34851,7 @@ Observation.treeselect = function(container) {
 																.val('');
 														$(this).remove();
 														event.stopPropagation();
+														return false;
 													});
 								}
 							}

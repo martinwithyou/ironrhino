@@ -20,6 +20,7 @@
 								$('#' + treeoptions.id).val('');
 								$(this).remove();
 								event.stopPropagation();
+								return false;
 							});
 			}
 			var func = function() {
@@ -92,13 +93,15 @@
 					form.addClass('dirty');
 			} else {
 				nametarget.text(name);
-				$('<a class="close">x</a>').appendTo(nametarget).click(
-						function(event) {
-							nametarget.text(MessageBundle.get('select'));
-							$('#' + treeoptions.id).val('');
-							$(this).remove();
-							event.stopPropagation();
-						});
+				$('<a class="close" href="#">&times;</a>').appendTo(nametarget)
+						.click(function(event) {
+									nametarget
+											.text(MessageBundle.get('select'));
+									$('#' + treeoptions.id).val('');
+									$(this).remove();
+									event.stopPropagation();
+									return false;
+								});
 			}
 		}
 		if (treeoptions.id) {

@@ -20,6 +20,7 @@
 								$('#' + pickoptions.id).val('');
 								$(this).remove();
 								event.stopPropagation();
+								return false;
 							});
 			}
 			var func = function() {
@@ -58,7 +59,7 @@
 												form.addClass('dirty');
 										} else {
 											nametarget.text(name);
-											$('<a class="close">x</a>')
+											$('<a class="close" href="#">&times;</a>')
 													.appendTo(nametarget)
 													.click(function(event) {
 														nametarget
@@ -68,6 +69,7 @@
 																.val('');
 														$(this).remove();
 														event.stopPropagation();
+														return false;
 													});
 										}
 									}
@@ -120,7 +122,7 @@
 											.join(separator);
 									nametarget.data('picked', picked)
 											.text(picked);
-									$('<a class="close">x</a>')
+									$('<a class="close" href="#">&times;</a>')
 											.appendTo(nametarget).click(
 													function(event) {
 														nametarget
@@ -132,6 +134,7 @@
 																.val('');
 														$(this).remove();
 														event.stopPropagation();
+														return false;
 													});
 								}
 							}

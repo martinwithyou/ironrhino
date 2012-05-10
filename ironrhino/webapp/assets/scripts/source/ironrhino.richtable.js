@@ -108,9 +108,9 @@ Richtable = {
 				$('#_window_ form.ajax').each(function() {
 					var inputform = $(this);
 					$(':input:visible', inputform).filter(function(i) {
-								return !($(this).val() || $(this)
-										.hasClass('date'));
-							}).eq(0).focus();
+						return !($(this).val() || $(this).hasClass('date') || $(this)
+								.prop('tagName') == 'BUTTON');
+					}).eq(0).focus();
 					if (!inputform.hasClass('keepopen')) {
 						$(':input', inputform).change(function(e) {
 									if (!inputform.hasClass('nodirty'))

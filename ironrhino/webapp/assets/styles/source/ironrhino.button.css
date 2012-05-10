@@ -24,6 +24,33 @@ button.link:hover span,button.link:focus span {
 	color: black;
 }
 
+.close {
+  float: right;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000000;
+  text-shadow: 0 1px 0 #ffffff;
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+}
+
+.close:hover {
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+
+button.close {
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  -webkit-appearance: none;
+}
+
 .btn {
   display: inline-block;
   *display: inline;
@@ -66,7 +93,7 @@ button.link:hover span,button.link:focus span {
 }
 
 a.btn{
-	padding: 2px 0px;
+	min-width:30px;
 }
 
 .btn:hover,
