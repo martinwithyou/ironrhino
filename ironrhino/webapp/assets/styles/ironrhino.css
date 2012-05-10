@@ -1220,7 +1220,7 @@ button.link:hover span,button.link:focus span {
 	color: black;
 }
 
-.close {
+a.close {
   float: right;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 20px;
@@ -1231,20 +1231,12 @@ button.link:hover span,button.link:focus span {
   filter: alpha(opacity=20);
 }
 
-.close:hover {
+a.close:hover {
   color: #000000;
   text-decoration: none;
   cursor: pointer;
   opacity: 0.4;
   filter: alpha(opacity=40);
-}
-
-button.close {
-  padding: 0;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-  -webkit-appearance: none;
 }
 
 .btn {
