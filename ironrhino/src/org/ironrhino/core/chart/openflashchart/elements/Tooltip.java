@@ -2,6 +2,8 @@ package org.ironrhino.core.chart.openflashchart.elements;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public class Tooltip implements Serializable {
 
 	private static final long serialVersionUID = 3867120511555479609L;
@@ -99,6 +101,7 @@ public class Tooltip implements Serializable {
 		}
 
 		@Override
+		@JsonValue
 		public String toString() {
 			return String.valueOf(value);
 		}

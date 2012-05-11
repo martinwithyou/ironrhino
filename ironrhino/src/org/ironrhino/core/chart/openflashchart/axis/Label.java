@@ -2,6 +2,8 @@ package org.ironrhino.core.chart.openflashchart.axis;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public class Label implements Serializable {
 
 	private static final long serialVersionUID = -6976582830606939527L;
@@ -22,6 +24,7 @@ public class Label implements Serializable {
 		}
 
 		@Override
+		 @JsonValue
 		public String toString() {
 			return String.valueOf(degrees);
 		}

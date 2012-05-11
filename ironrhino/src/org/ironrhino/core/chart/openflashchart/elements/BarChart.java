@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public class BarChart extends Element {
 
 	private static final long serialVersionUID = 6695611795831460343L;
@@ -63,6 +65,12 @@ public class BarChart extends Element {
 		}
 
 		public String getStyle() {
+			return style;
+		}
+		
+		@Override
+		 @JsonValue
+		public String toString() {
 			return style;
 		}
 	}

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public class LineChart extends Element {
 
@@ -121,6 +122,12 @@ public class LineChart extends Element {
 		}
 
 		public String getStyle() {
+			return style;
+		}
+		
+		@Override
+		 @JsonValue
+		public String toString() {
 			return style;
 		}
 	}
