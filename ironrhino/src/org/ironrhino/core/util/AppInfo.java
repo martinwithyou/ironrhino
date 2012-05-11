@@ -34,7 +34,7 @@ public class AppInfo {
 	private static final String NODEPATH;
 
 	static {
-		_instanceId = CodecUtils.nextId();
+		_instanceId = CodecUtils.nextId().substring(0, 10);
 		String stage = getEnv(KEY_STAGE);
 		Stage s = null;
 		if (stage != null)
@@ -104,7 +104,10 @@ public class AppInfo {
 	}
 
 	public static String getInstanceId() {
-		return getAppName() + "-" + _instanceId;
+		StringBuilder sb = new StringBuilder();
+		sb.append(getAppName()).append("-").append(_instanceId).append("@")
+				.append(getHostAddress());
+		return sb.toString();
 	}
 
 	public static String getAppVersion() {
