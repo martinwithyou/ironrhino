@@ -100,7 +100,7 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 	public void afterPropertiesSet() {
 		String serviceUrl = getServiceUrl();
 		if (serviceUrl == null) {
-			setServiceUrl("http://fakeurl/");
+			setServiceUrl("http://fakehost/");
 			discovered = false;
 			urlFromDiscovery = true;
 		}
@@ -201,11 +201,11 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 					sb.append(ho);
 					log.info("discovered " + serviceName + "@" + ho);
 				} else {
-					sb.append("localhost");
+					sb.append("fakehost");
 					log.error("couldn't discover service:" + serviceName);
 				}
 			} else {
-				sb.append("localhost");
+				sb.append("fakehost");
 			}
 		} else {
 			sb.append(host);
