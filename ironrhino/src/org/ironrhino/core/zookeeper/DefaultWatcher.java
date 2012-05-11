@@ -31,6 +31,8 @@ public class DefaultWatcher implements Watcher, ChildrenCallback, DataCallback,
 			switch (event.getState()) {
 			case SyncConnected:
 				return;
+			case Disconnected:
+				return;
 			case Expired:
 				return;
 			}

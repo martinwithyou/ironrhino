@@ -39,10 +39,15 @@ public class StandaloneMembership implements Membership {
 	}
 
 	public boolean isLeader(String group) {
+		return AppInfo.getInstanceId().equals(getLeader(group));
+	}
+
+	public String getLeader(String group) {
 		List<String> members = getMembers(group);
 		if (members == null || members.isEmpty())
-			return false;
-		return members.get(0).equals(AppInfo.getInstanceId());
+			return null;
+		else
+			return members.get(0);
 	}
 
 	public List<String> getMembers(String group) {
