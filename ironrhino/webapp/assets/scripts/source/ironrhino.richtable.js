@@ -451,7 +451,7 @@ Richtable = {
 			cell.addClass('edited');
 			cell.parent().addClass('edited');
 		}
-		cell.data('oldvalue',null);
+		cell.removeData('oldvalue');
 	},
 	updatePasswordCell : function(cellEdit) {
 		var ce = $(cellEdit);
