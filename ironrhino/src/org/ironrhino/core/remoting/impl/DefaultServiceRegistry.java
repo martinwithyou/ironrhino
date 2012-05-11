@@ -138,7 +138,7 @@ public class DefaultServiceRegistry extends AbstractServiceRegistry implements
 				zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
 						CreateMode.EPHEMERAL);
 			} else {
-				zooKeeper.setData(node, data, 0);
+				zooKeeper.setData(node, data, stat.getVersion());
 			}
 		} catch (Exception e1) {
 			if (retryTimes < 0) {
