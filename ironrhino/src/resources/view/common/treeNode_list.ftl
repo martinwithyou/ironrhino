@@ -22,6 +22,6 @@
 </#if>
 </#if>
 '>
-<@richtable entityName="treeNode" columns=columns actionColumnButtons=actionColumnButtons  actionColumnWidth="100px" bottomButtons=bottomButtons/>
+<@richtable entityName="treeNode" columns=columns actionColumnButtons=actionColumnButtons  bottomButtons=bottomButtons/>
 </body>
 </html></#escape>

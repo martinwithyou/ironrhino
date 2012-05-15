@@ -12,11 +12,7 @@ table.richtable td,th {
 	border: 1px solid #CCC;
 	line-height: 180%;
 }
-.richtable table {
-	table-layout:fixed;
-	width:100%;
-}
-.richtable table td{
+.richtable table td.action{
 	white-space:nowrap;
 	overflow:hidden;
 }
