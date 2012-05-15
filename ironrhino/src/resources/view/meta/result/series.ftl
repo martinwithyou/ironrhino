@@ -17,8 +17,8 @@
 <div class="clearfix series ${name}">
 	<ul class="catalog">
 		<#list pages as var>
-		<#assign selected=page?? && page.path==var.path/>
-		<li<#if selected> class="selected"</#if>><#if selected><span><#else><a href="<@url value="/${name}/p${var.path}"/>" class="ajax view history"></#if>${var.title}<#if selected></span><#else></a></#if></li>
+		<#assign active=page?? && page.path==var.path/>
+		<li<#if active> class="active"</#if>><#if active><span><#else><a href="<@url value="/${name}/p${var.path}"/>" class="ajax view history"></#if>${var.title}<#if active></span><#else></a></#if></li>
 		</#list>
 	</ul>
 	<#if page??>

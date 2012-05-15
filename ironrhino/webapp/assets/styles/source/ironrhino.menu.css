@@ -33,7 +33,7 @@
 	margin:0 5px;
 	padding: 0 5px;
 }
-.menu li a.selected,.menu li a:hover {
+.menu li.active a,.menu li a:hover {
 	color:#fff;
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;

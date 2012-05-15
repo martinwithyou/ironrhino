@@ -17,8 +17,8 @@ ${action.getText('current.location')}:
 <div class="clearfix column ${name}">
 <ul class="catalog">
 <#list columns as var>
-<#assign selected=column?? && column==var/>
-<li<#if selected> class="selected"</#if>><#if selected><span><#else><a href="<@url value="/${name}/list/${var}"/>" class="ajax view history"></#if>${var}<#if selected></span><#else></a></#if></li>
+<#assign active=column?? && column==var/>
+<li<#if active> class="active"</#if>><#if active><span><#else><a href="<@url value="/${name}/list/${var}"/>" class="ajax view history"></#if>${var}<#if active></span><#else></a></#if></li>
 </#list>
 </ul>
 <div class="list">

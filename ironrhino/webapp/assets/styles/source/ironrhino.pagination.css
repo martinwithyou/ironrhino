@@ -25,7 +25,7 @@
 	border:1px solid #BBDDFF;
 }
 
-.pagination .selected {
+.pagination .active {
 	background-color: #069;
 	color: white;
 }

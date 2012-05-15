@@ -11,12 +11,12 @@
 </#if>
 <#if resultPage.totalPage lt 11>
 <#list 1..resultPage.totalPage as index>
-<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${(dynamicAttributes['class']?html)!}"</#if><#list dynamicAttributes?keys as attr><#if attr!=class> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${index}</a>
+<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>active </#if>${(dynamicAttributes['class']?html)!}"</#if><#list dynamicAttributes?keys as attr><#if attr!=class> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${index}</a>
 </#list>
 <#else>
 <#if resultPage.pageNo lt 6>
 <#list 1..(resultPage.pageNo+2) as index>
-<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${(dynamicAttributes['class']?html)!}"</#if><#list dynamicAttributes?keys as attr><#if attr!=class> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${index}</a>
+<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>active </#if>${(dynamicAttributes['class']?html)!}"</#if><#list dynamicAttributes?keys as attr><#if attr!=class> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${index}</a>
 </#list>
 ...
 <#list (resultPage.totalPage-1)..resultPage.totalPage as index>
@@ -28,7 +28,7 @@
 </#list>
 ...
 <#list (resultPage.pageNo-2)..resultPage.totalPage as index>
-<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${(dynamicAttributes['class']?html)!}"</#if><#list dynamicAttributes?keys as attr><#if attr!=class> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${index}</a>
+<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>active </#if>${(dynamicAttributes['class']?html)!}"</#if><#list dynamicAttributes?keys as attr><#if attr!=class> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${index}</a>
 </#list>        
 <#else>
 <#list 1..2 as index>
@@ -36,7 +36,7 @@
 </#list>
 ...
 <#list (resultPage.pageNo-2)..(resultPage.pageNo+2) as index>
-<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>selected </#if>${(dynamicAttributes['class']?html)!}"</#if><#list dynamicAttributes?keys as attr><#if attr!=class> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${index}</a>
+<a href="${resultPage.renderUrl(index)}"<#if index==resultPage.pageNo||class!=''> class="<#if index==resultPage.pageNo>active </#if>${(dynamicAttributes['class']?html)!}"</#if><#list dynamicAttributes?keys as attr><#if attr!=class> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${index}</a>
 </#list>
 ...
 <#list (resultPage.totalPage-1)..resultPage.totalPage as index>

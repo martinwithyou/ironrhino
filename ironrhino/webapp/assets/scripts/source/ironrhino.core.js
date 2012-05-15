@@ -573,11 +573,11 @@ Initialization.common = function() {
 	$.alerts.cancelButton = MessageBundle.get('cancel');
 	$('.menu li a').each(function() {
 				if ($(this).attr('href') == document.location.pathname)
-					$(this).addClass('selected');
+					$(this).closest('li').addClass('active');
 			});
 	$('.menu li a').click(function() {
-				$('li a', $(this).closest('.menu')).removeClass('selected');
-				$(this).addClass('selected');
+				$('li', $(this).closest('.menu')).removeClass('active');
+				$(this).closest('li').addClass('active');
 			});
 };
 
@@ -606,9 +606,9 @@ if (HISTORY_ENABLED) {
 								success : function() {
 									$('.menu li a').each(function() {
 										if (this.href == url) {
-											$('li a', $(this).closest('.menu'))
-													.removeClass('selected');
-											$(this).addClass('selected');
+											$('li', $(this).closest('.menu'))
+													.removeClass('active');
+											$(this).closest('li').addClass('active');
 										}
 									});
 								},
@@ -643,9 +643,9 @@ if (HISTORY_ENABLED) {
 								success : function() {
 									$('.menu li a').each(function() {
 										if ($(this).attr('href') == url) {
-											$('li a', $(this).closest('.menu'))
-													.removeClass('selected');
-											$(this).addClass('selected');
+											$('li', $(this).closest('.menu'))
+													.removeClass('active');
+											$(this).closest('li').addClass('active');
 										}
 									});
 								},

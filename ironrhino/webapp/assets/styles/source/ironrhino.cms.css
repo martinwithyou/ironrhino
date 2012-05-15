@@ -6,7 +6,7 @@
 .series .catalog li{
 	margin: 10px 0px;
 }
-.series .catalog .selected{
+.series .catalog .active{
 	font-weight:bold;
 }
 .series .chapter{
@@ -34,7 +34,7 @@
 .column .catalog li{
 	margin: 10px 0px;
 }
-.column .catalog .selected{
+.column .catalog .active{
 	font-weight:bold;
 }
 .column .list,.column .chapter{
