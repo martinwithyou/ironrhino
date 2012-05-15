@@ -152,7 +152,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		Authorization auth = authorizationRedisTemplate.opsForValue().get(key);
 		authorizationRedisTemplate.expire(key, expireTime, TimeUnit.SECONDS);
 		if (auth != null)
-			if (auth.getLifetime() < 0)
+			if (auth.getExpiresIn() < 0)
 				return null;
 		return auth;
 	}

@@ -35,7 +35,7 @@ public class Authorization extends BaseEntity {
 	private String code;
 
 	@UiConfig(displayOrder = 6)
-	private int expiresIn = 3600;
+	private int lifetime = 3600;
 
 	@UiConfig(displayOrder = 7)
 	private String refreshToken;
@@ -99,16 +99,16 @@ public class Authorization extends BaseEntity {
 		this.modifyDate = modifyDate;
 	}
 
-	public int getExpiresIn() {
-		return expiresIn;
-	}
-
-	public void setExpiresIn(int expiresIn) {
-		this.expiresIn = expiresIn;
-	}
-
 	public int getLifetime() {
-		return expiresIn > 0 ? expiresIn
+		return lifetime;
+	}
+
+	public void setLifetime(int lifetime) {
+		this.lifetime = lifetime;
+	}
+
+	public int getExpiresIn() {
+		return lifetime > 0 ? lifetime
 				- (int) (System.currentTimeMillis() - modifyDate.getTime() / 1000)
 				: Integer.MAX_VALUE;
 	}

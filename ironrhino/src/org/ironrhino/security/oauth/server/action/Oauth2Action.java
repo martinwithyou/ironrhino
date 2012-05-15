@@ -54,6 +54,7 @@ public class Oauth2Action extends BaseAction {
 	private String grant_type;
 	private String state;
 	private String access_token;
+	private String refresh_token;
 	private String approval_prompt;
 	private Authorization authorization;
 	private Client client;
@@ -105,6 +106,14 @@ public class Oauth2Action extends BaseAction {
 
 	public void setAccess_token(String access_token) {
 		this.access_token = access_token;
+	}
+
+	public String getRefresh_token() {
+		return refresh_token;
+	}
+
+	public void setRefresh_token(String refresh_token) {
+		this.refresh_token = refresh_token;
 	}
 
 	public String getCode() {
@@ -370,16 +379,29 @@ public class Oauth2Action extends BaseAction {
 		} else {
 			tojson.put("client_id", authorization.getClient().getId());
 			tojson.put("username", authorization.getGrantor().getUsername());
-			tojson.put("expires_in", authorization.getLifetime());
+			tojson.put("expires_in", authorization.getExpiresIn());
 			tojson.put("scope", authorization.getScope());
 		}
 		return JSON;
 	}
 
-	@JsonConfig(root = "tojson")
 	public String revoketoken() {
 		oauthManager.revoke(access_token);
 		return NONE;
+	}
+
+	@JsonConfig(root = "tojson")
+	public String refresh() {
+		authorization = oauthManager.refresh(refresh_token);
+		tojson = new HashMap<String, Object>();
+		if (authorization == null) {
+			tojson.put("error", "invalid_token");
+		} else {
+			tojson.put("access_token", authorization.getAccessToken());
+			tojson.put("expires_in", authorization.getExpiresIn());
+			tojson.put("refresh_token", authorization.getRefreshToken());
+		}
+		return JSON;
 	}
 
 }
