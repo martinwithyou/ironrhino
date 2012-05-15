@@ -119,20 +119,20 @@ public class EntityAction extends BaseAction {
 		return getEntityClass().getAnnotation(AutoConfig.class);
 	}
 
-	private BaseManager<Persistable<?>> getEntityManager(
-			Class<Persistable<?>> entityClass) {
+	protected <T extends Persistable<?>> BaseManager<T> getEntityManager(
+			Class<T> entityClass) {
 		String entityManagerName = StringUtils.uncapitalize(entityClass
 				.getSimpleName()) + "Manager";
 		try {
 			Object bean = ApplicationContextUtils.getBean(entityManagerName);
 			if (bean != null)
-				return (BaseManager<Persistable<?>>) bean;
+				return (BaseManager<T>) bean;
 			else
-				_entityManager.setEntityClass(entityClass);
+				((EntityManager<T>) _entityManager).setEntityClass(entityClass);
 		} catch (NoSuchBeanDefinitionException e) {
-			_entityManager.setEntityClass(entityClass);
+			((EntityManager<T>) _entityManager).setEntityClass(entityClass);
 		}
-		return _entityManager;
+		return ((EntityManager<T>) _entityManager);
 	}
 
 	private void tryFindEntity() {
@@ -262,7 +262,7 @@ public class EntityAction extends BaseAction {
 				bw.setPropertyValue(propertyName, ServletActionContext
 						.getRequest().getParameter(parameterName));
 		}
-		setEntity(entity);
+		putEntityToValueStack(entity);
 		return INPUT;
 	}
 
@@ -497,7 +497,7 @@ public class EntityAction extends BaseAction {
 	@Override
 	public String view() {
 		tryFindEntity();
-		setEntity(entity);
+		putEntityToValueStack(entity);
 		return VIEW;
 	}
 
@@ -986,7 +986,7 @@ public class EntityAction extends BaseAction {
 					.getActionInvocation().getProxy();
 			String actionName = getEntityName();
 			String namespace = proxy.getNamespace();
-			entityClass = (Class<Persistable<?>>)((AutoConfigPackageProvider) packageProvider)
+			entityClass = (Class<Persistable<?>>) ((AutoConfigPackageProvider) packageProvider)
 					.getEntityClass(namespace, actionName);
 		}
 		return entityClass;
@@ -994,9 +994,10 @@ public class EntityAction extends BaseAction {
 
 	private Class<Persistable<?>> entityClass;
 
-	private void setEntity(Persistable entity) {
+	private void putEntityToValueStack(Persistable entity) {
 		ValueStack vs = ActionContext.getContext().getValueStack();
-		vs.set(getEntityName(), entity);
+		if (entity != null)
+			vs.set(getEntityName(), entity);
 	}
 
 	private Persistable constructEntity() {
