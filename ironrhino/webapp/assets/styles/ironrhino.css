@@ -1033,7 +1033,7 @@ a.close:hover {
 .series .catalog li{
 	margin: 10px 0px;
 }
-.series .catalog .selected{
+.series .catalog .active{
 	font-weight:bold;
 }
 .series .chapter{
@@ -1061,7 +1061,7 @@ a.close:hover {
 .column .catalog li{
 	margin: 10px 0px;
 }
-.column .catalog .selected{
+.column .catalog .active{
 	font-weight:bold;
 }
 .column .list,.column .chapter{
@@ -1126,7 +1126,7 @@ a.close:hover {
 	border:1px solid #BBDDFF;
 }
 
-.pagination .selected {
+.pagination .active {
 	background-color: #069;
 	color: white;
 }
