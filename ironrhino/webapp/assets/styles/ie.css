@@ -1,7 +1,7 @@
 input[type="text"],input[type="password"]{
-	height:15px;
+	height:18px;
 }
-div.field_error,div.action_error,ul.field_error li,div.action_message,ul.action_message li,.field_error .close,.action_error .close,.action_message .close {
+div.field-error,div.action-error,ul.field-error li,div.action-message,ul.action-message li,.field-error .close,.action-error .close,.action-message .close {
 	background-image: url(../images/msg.gif);
 }
 input.required {

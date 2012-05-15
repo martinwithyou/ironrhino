@@ -38,25 +38,31 @@
 		<#elseif config.type=='listpick'>
 			<@s.hidden id="${key}Id" name="${entityName}.${key}.id" />
 			<#if !readonly>
-				<div class="field clearfix listpick" data-pickoptions="{'url':'<@url value="${config.pickUrl}"/>','name':'${key}','id':'${key}Id'}">
-					<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+				<div class="control-group listpick" data-pickoptions="{'url':'<@url value="${config.pickUrl}"/>','name':'${key}','id':'${key}Id'}">
+					<label class="control-label" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+					<div class="controls">
 					<span id="${key}"><#if entity[key]??>${entity[key]!}<a class="close">x</a><#else>...</#if></span>
+					</div>
 				</div>
 			<#else>
-				<div class="field clearfix">
-					<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+				<div class="control-group">
+					<label class="control-label" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+					<div class="controls">
 					<span id="${key}">${entity[key]!}</span>
+					</div>
 				</div>
 			</#if>
 		<#elseif config.type=='dictionary' && selectDictionary??>
-			<div class="field clearfix">
-			<label class="field" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+			<div class="control-group">
+			<label class="control-label" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+			<div class="controls">
 			<#if !readonly>
 				<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required class="${config.cssClass}" dynamicAttributes=config.dynamicAttributes/>
 			<#else>
 				<@s.hidden name="${entityName}.${key}"/>
 				<span id="${key}"><@displayDictionaryLabel dictionaryName=evalTemplate(config.templateName) value="${entity[key]!}"/></span>
 			</#if>
+			</div>
 			</div>
 		<#elseif config.type=='schema'>
 			<#if editAttributes??>

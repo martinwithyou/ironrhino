@@ -31919,7 +31919,7 @@ Message = {
 		}
 		var html = '';
 		for (var i = 0; i < messages.length; i++)
-			html += Message.compose(messages[i], 'action_message');
+			html += Message.compose(messages[i], 'action-message');
 		if (target && target.tagName == 'FORM') {
 			if ($('#' + target.id + '_message').length == 0)
 				$(target).before('<div id="' + target.id + '_message"></div>');
@@ -31970,7 +31970,7 @@ Message = {
 		}
 		var html = '';
 		for (var i = 0; i < messages.length; i++)
-			html += Message.compose(messages[i], 'action_error');
+			html += Message.compose(messages[i], 'action-error');
 		if (html)
 			if (target && target.tagName == 'FORM') {
 				if ($('#' + target.id + '_message').length == 0)
@@ -31988,7 +31988,7 @@ Message = {
 		var msg = msg || MessageBundle.get(msgKey);
 		if (field && $(field).length) {
 			field = $(field);
-			// field.parent().append(Message.compose(msg, 'field_error'));
+			// field.parent().append(Message.compose(msg, 'field-error'));
 			$('.fieldError', field.closest('.field')).remove();
 			var prompt = $('<div class="fieldError removeonclick"><div class="fieldErrorContent">'
 					+ msg + '</div><div>').insertAfter(field);
@@ -32019,7 +32019,7 @@ Form = {
 	focus : function(form) {
 		var arr = $(':input:visible', form).get();
 		for (var i = 0; i < arr.length; i++) {
-			if ($('.fieldError,.field_error', $(arr[i]).parent()).length) {
+			if ($('.fieldError,.field-error', $(arr[i]).parent()).length) {
 				setTimeout(function() {
 							$(arr[i]).focus();
 						}, 50);
@@ -32029,7 +32029,7 @@ Form = {
 	},
 	validate : function(target) {
 		if ($(target).prop('tagName') != 'FORM') {
-			$('.fieldError,.field_error', $(target).parent()).fadeIn().remove();
+			$('.fieldError,.field-error', $(target).parent()).fadeIn().remove();
 			if ($(target).is(':visible') && !$(target).prop('disabled')) {
 				if ($(target).hasClass('required') && !$(target).val()) {
 					if ($(target).prop('tagName') == 'SELECT')
@@ -32402,7 +32402,7 @@ if (HISTORY_ENABLED) {
 
 Observation.common = function(container) {
 	$(
-			'div.action_error,div.action_message,ul.action_error li,ul.action_message li',
+			'div.action-error,div.action-message,ul.action-error li,ul.action-message li',
 			container).each(function() {
 		var t = $(this);
 		if (!$('div.close', t).length)
@@ -32410,7 +32410,7 @@ Observation.common = function(container) {
 					.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
 	});
 
-	$('div.field_error', container).each(function() {
+	$('div.field-error', container).each(function() {
 				var text = $(this).text();
 				var field = $(':input', $(this).parent());
 				$(this).remove();
@@ -32432,7 +32432,7 @@ Observation.common = function(container) {
 	$('form', container).each(function() {
 				if (!$(this).hasClass('ajax'))
 					$(this).submit(function() {
-								$('.action_message,.action_error').remove();
+								$('.action-message,.action-error').remove();
 								return Form.validate(this)
 							});
 			});
@@ -32652,7 +32652,7 @@ Observation.common = function(container) {
 				beforeSubmit : function() {
 					if (!Ajax.fire(target, 'onprepare'))
 						return false;
-					$('.action_message,.action_error').remove();
+					$('.action-message,.action-error').remove();
 					if (!Form.validate(target))
 						return false;
 					Indicator.text = $(target).data('indicator');
@@ -32734,7 +32734,7 @@ Observation.common = function(container) {
 					type : $(this).attr('method') || 'GET',
 					cache : $(this).hasClass('cache'),
 					beforeSend : function() {
-						$('.action_message,.action_error').remove();
+						$('.action-message,.action-error').remove();
 						Indicator.text = $(target).data('indicator');
 						Ajax.fire(target, 'onloading');
 					},
@@ -34389,7 +34389,7 @@ Richtable = {
 			cell.addClass('edited');
 			cell.parent().addClass('edited');
 		}
-		cell.data('oldvalue',null);
+		cell.removeData('oldvalue');
 	},
 	updatePasswordCell : function(cellEdit) {
 		var ce = $(cellEdit);

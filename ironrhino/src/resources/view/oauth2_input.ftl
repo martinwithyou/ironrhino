@@ -35,7 +35,7 @@
 				<div>login as ${authentication('principal.username')},or <a href="<@url value="${ssoServerBase!}/logout?referer=1"/>">${action.getText('logout')}</a></div>
 			</@authorize>
 			</#if>
-			<div class="field">
+			<div class="form-actions">
 			<#if Parameters.login??>
 				<@s.submit value="%{getText('login')}" theme="simple"/>
 			<#else>

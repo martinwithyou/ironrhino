@@ -41,8 +41,8 @@
 	</script>
 </head>
 <body>
-<form class="line clearfix">
-	<div class="field">
+<form class="inline clearfix">
+	<div class="control-group">
 		<input id="filename" type="text" size="50"/>
 		<input id="tail" type="text" size="5" value="4096"/>
 		<button type="button" class="btn" id="view">${action.getText('view')}</button>

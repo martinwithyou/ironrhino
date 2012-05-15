@@ -880,66 +880,6 @@ pre {
 * html .clearfix, *:first-child+html .clearfix {
 	zoom:1;
 }
-/*http://kissy.googlecode.com/svn/trunk/src/cssgrids*/
-
-#header, #content, #footer {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.w950 #header, .w950 #content, .w950 #footer, .w950 #content {
-    width: 950px;
-}
-
-.col-main {
-    float: left;
-    width: 100%;
-    min-height: 1px;
-}
-.col-sub, .col-extra {
-    float: left;
-}
-
-.layout:after, .main-wrap:after, .col-sub:after, .col-extra:after {
-	content: '\0020';
-	display: block;
-	height: 0;
-	clear: both;
-}
-.layout, .main-wrap, .col-sub, .col-extra {
-    zoom: 1;
-}
-
-
-/*
-950                  .grid-m
-190    750           .grid-s5m0
-750    190           .grid-m0s5
-190    510    230    .grid-s5m0e6
-230    510    190    .grid-e6m0s5
-510    230    190    .grid-m0e6s5
-*/
-
-/** 两栏布局 **/
-.grid-s5m0 .main-wrap { margin-left: 200px; }
-.grid-s5m0 .col-sub { width: 190px; margin-left: -100%; }
-
-.grid-m0s5 .main-wrap { margin-right: 200px; }
-.grid-m0s5 .col-sub { width: 190px; margin-left: -190px; }
-
-/** 三栏布局 **/
-.grid-s5m0e6 .main-wrap { margin: 0 240px 0 200px; }
-.grid-s5m0e6 .col-sub { width: 190px; margin-left: -100%; }
-.grid-s5m0e6 .col-extra { width: 230px; margin-left: -230px; }
-
-.grid-e6m0s5 .main-wrap { margin: 0 200px 0 240px; }
-.grid-e6m0s5 .col-sub { width: 190px; margin-left: -190px; }
-.grid-e6m0s5 .col-extra { width: 230px; margin-left: -100%; }
-
-.grid-m0e6s5 .main-wrap { margin-right: 440px; }
-.grid-m0e6s5 .col-sub { width: 190px; margin-left: -190px; }
-.grid-m0e6s5 .col-extra { width: 230px; margin-left: -430px; }
-
 #indicator {
 	position: fixed;
 	z-index: 10000;
@@ -962,7 +902,7 @@ pre {
 	background: #F00 url(../images/indicator.gif) 0px 0px no-repeat;
 }
 
-div.field_error,div.action_error,ul.field_error li {
+div.field-error,div.action-error,ul.field-error li {
 	height: 1.5em;
 	line-height: 1.5em;
 	margin: 5px;
@@ -976,7 +916,7 @@ div.field_error,div.action_error,ul.field_error li {
 	-moz-border-radius: 3px;
 }
 
-div.action_message,ul.action_message li {
+div.action-message,ul.action-message li {
 	height: 1.5em;
 	line-height: 1.5em;
 	margin: 5px;
@@ -990,7 +930,7 @@ div.action_message,ul.action_message li {
 	-moz-border-radius: 3px;
 }
 
-.field_error .close,.action_error .close {
+.field-error .close,.action-error .close {
 	width: 15px;
 	height: 15px;
 	float: right;
@@ -998,7 +938,7 @@ div.action_message,ul.action_message li {
 	background: url(../images/msg.png) 0px -66px no-repeat;
 }
 
-.action_message .close {
+.action-message .close {
 	width: 15px;
 	height: 15px;
 	float: right;
@@ -1013,6 +953,10 @@ img.captcha {
 	vertical-align: middle;
 }
 
+#treeview li.highlight {
+	font-weight:bold;
+}
+
 .highlight {
 	background: #FF6;
 }
@@ -1021,44 +965,11 @@ tr.highlight td{
 	background: #ddeeff !important;
 }
 
-#treeview li.highlight {
-	font-weight:bold;
-}
-
-.bold {
-	font-weight: bold;
-}
-
-.link {
-	color: #00C;
-	cursor: pointer;
-	text-decoration: underline;
-	white-space: nowrap;
-}
-
-.draggable {
-	cursor: move;
-}
-
-
-.ondrop {
-	border: 1px dashed #b00;
-}
-
 thead,tfoot {
 	background-color: #E5ECF9;
 }
-
 tr.selected {
 	background: #EBC79E;
-}
-
-.crumbs{
-	margin: 10px;
-}
-.crumbs a {
-	color: #36C;
-	text-decoration: none;
 }
 
 ul.attributes li{
@@ -1080,6 +991,25 @@ ul.attributes span.group{
 }
 ul.attributes li.group ul{
 	padding-left:10px;
+}
+
+a.close {
+  float: right;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000000;
+  text-shadow: 0 1px 0 #ffffff;
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+}
+
+a.close:hover {
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
 }
 .editme{
 	margin:0px;
@@ -1161,7 +1091,13 @@ ul.attributes li.group ul{
 	float: right;
 	padding-right: 20px;
 }
-
+.crumbs{
+	margin: 10px;
+}
+.crumbs a {
+	color: #36C;
+	text-decoration: none;
+}
 
 .pagination{
 	margin-top: 10px;
@@ -1169,7 +1105,7 @@ ul.attributes li.group ul{
 }
 
 .pagination a{
-	padding:1px 7px;
+	padding:3px 7px;
 	border:1px solid #8397ee;
 	text-decoration:none;
 	background-color:#F5F5F5;
@@ -1178,7 +1114,7 @@ ul.attributes li.group ul{
 }
 
 .pagination .disabled {
-	padding:1px 7px;
+	padding:3px 7px;
 	border:1px solid #EBEBEB;
 	background-color:#F5F5F5;
 	color:#545454;
@@ -1194,51 +1130,6 @@ ul.attributes li.group ul{
 	background-color: #069;
 	color: white;
 }
-button {
-	overflow: visible;
-	width: auto;
-}
-
-button.link {
-	font-size: 1em;
-	text-align: left;
-	color: blue;
-	background: none;
-	margin: 0;
-	padding: 0;
-	border: none;
-	cursor: pointer;
-	-moz-user-select: text;
-	/* override all your button styles here if there are any others */
-}
-
-button.link span {
-	text-decoration: underline;
-}
-
-button.link:hover span,button.link:focus span {
-	color: black;
-}
-
-a.close {
-  float: right;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 20px;
-  font-weight: bold;
-  color: #000000;
-  text-shadow: 0 1px 0 #ffffff;
-  opacity: 0.2;
-  filter: alpha(opacity=20);
-}
-
-a.close:hover {
-  color: #000000;
-  text-decoration: none;
-  cursor: pointer;
-  opacity: 0.4;
-  filter: alpha(opacity=40);
-}
-
 .btn {
   display: inline-block;
   *display: inline;
@@ -1360,10 +1251,9 @@ input:focus,select:focus,textarea:focus {
 	border-color: #fdc12f;
 }
 input[type="text"],input[type="password"],select{
-	height:18px;
+	height:20px;
 }
 select {
-	height: 20px;
 	width: 150px;
 }
 
@@ -1379,35 +1269,38 @@ input.integer,input.double,input.date {
 input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }
+form fieldset{
+	border:none;
+}
 
-form div.field,form div.submit {
+form div.control-group,form div.form-actions {
 	margin: 10px 0px 10px 0px;
 	line-height: 180%;
 }
 
-form div.submit{
+form div.form-actions{
 	text-align:center;
 }
 
-form.line div.field {
+form.inline div.control-group {
 	margin-right: 2px;
 	float: left;
 }
-form div.field a,form div.field span,form div.field label,form div.field input,form div.field select{
+form div.control-group a,form div.control-group span,form div.control-group label,form div.control-group input,form div.control-group select{
 	vertical-align: middle;
 }
 
-form label.field {
+form label.control-label {
 	display: block;
 	float: left;
 	width: 80px;
 }
 
-div.top label {
+div.top control-label {
 	float: none;
 }
 
-.field_error {
+.field-error {
 	color: red;
 }
 

@@ -4,7 +4,7 @@
 }
 
 .pagination a{
-	padding:1px 7px;
+	padding:3px 7px;
 	border:1px solid #8397ee;
 	text-decoration:none;
 	background-color:#F5F5F5;
@@ -13,7 +13,7 @@
 }
 
 .pagination .disabled {
-	padding:1px 7px;
+	padding:3px 7px;
 	border:1px solid #EBEBEB;
 	background-color:#F5F5F5;
 	color:#545454;

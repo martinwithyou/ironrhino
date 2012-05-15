@@ -32,8 +32,8 @@
 <body>
 <div id="content" class="simple">
 <div id="message">
-<@s.actionerror cssClass="action_error" />
-<@s.actionmessage cssClass="action_message" />
+<@s.actionerror />
+<@s.actionmessage />
 </div>
 <#noescape>${body}</#noescape>
 </div>

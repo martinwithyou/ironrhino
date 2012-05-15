@@ -64,4 +64,10 @@
 	float: right;
 	padding-right: 20px;
 }
-
+.crumbs{
+	margin: 10px;
+}
+.crumbs a {
+	color: #36C;
+	text-decoration: none;
+}

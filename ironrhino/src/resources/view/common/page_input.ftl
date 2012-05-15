@@ -133,11 +133,11 @@ $(function() {
 		<@s.hidden name="page.head"/>
 	<#else>
 		<@s.textarea id="page_head" name="page.head" cols="100" rows="3" cssStyle="display:none;"/>
-		<div class="field">
+		<div class="control-group">
 			<button type="button" class="btn" id="display_page_head">${action.getText('edit')}${action.getText('head')}</button>
 		</div>
 	</#if>
-	<div class="field">
+	<div class="control-group">
 	<@s.submit id="draft" value="%{getText('draft')}" theme="simple"/>
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
 	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>
@@ -149,7 +149,7 @@ $(function() {
 	<@s.submit id="drop" value="%{getText('drop')}" theme="simple"/>
 	</span>
 	</div>
-	<div class="field">
+	<div class="control-group">
 	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
 	<#if page.id??>
 	<a class="btn" id="view" href="${getUrl(cmsPath+page.path)}" target="_blank">${action.getText('view')}</a>

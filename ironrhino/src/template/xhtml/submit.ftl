@@ -1,3 +1,2 @@
-<div class="submit">
+<div class="form-actions">
 <#include "/${parameters.templateDir}/simple/submit.ftl" />
-${parameters.after!}

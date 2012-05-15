@@ -1,4 +1,5 @@
-<div class="field clearfix<#if (parameters.labelposition!)=='top'> top</#if>">
+<div class="control-group<#if (parameters.labelposition!)=='top'> top</#if>">
 <#if parameters.label??>
-<label class="field"<#if parameters.id??> for="${parameters.id?html}"</#if>>${parameters.label?html}</label>
+<label class="control-label"<#if parameters.id??> for="${parameters.id?html}"</#if>>${parameters.label?html}</label>
 </#if>
+<div class="controls">

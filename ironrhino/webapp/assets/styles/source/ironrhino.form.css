@@ -9,10 +9,9 @@ input:focus,select:focus,textarea:focus {
 	border-color: #fdc12f;
 }
 input[type="text"],input[type="password"],select{
-	height:18px;
+	height:20px;
 }
 select {
-	height: 20px;
 	width: 150px;
 }
 
@@ -28,35 +27,38 @@ input.integer,input.double,input.date {
 input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }
+form fieldset{
+	border:none;
+}
 
-form div.field,form div.submit {
+form div.control-group,form div.form-actions {
 	margin: 10px 0px 10px 0px;
 	line-height: 180%;
 }
 
-form div.submit{
+form div.form-actions{
 	text-align:center;
 }
 
-form.line div.field {
+form.inline div.control-group {
 	margin-right: 2px;
 	float: left;
 }
-form div.field a,form div.field span,form div.field label,form div.field input,form div.field select{
+form div.control-group a,form div.control-group span,form div.control-group label,form div.control-group input,form div.control-group select{
 	vertical-align: middle;
 }
 
-form label.field {
+form label.control-label {
 	display: block;
 	float: left;
 	width: 80px;
 }
 
-div.top label {
+div.top control-label {
 	float: none;
 }
 
-.field_error {
+.field-error {
 	color: red;
 }
 

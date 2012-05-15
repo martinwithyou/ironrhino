@@ -20,7 +20,7 @@
 	background: #F00 url(../images/indicator.gif) 0px 0px no-repeat;
 }
 
-div.field_error,div.action_error,ul.field_error li {
+div.field-error,div.action-error,ul.field-error li {
 	height: 1.5em;
 	line-height: 1.5em;
 	margin: 5px;
@@ -34,7 +34,7 @@ div.field_error,div.action_error,ul.field_error li {
 	-moz-border-radius: 3px;
 }
 
-div.action_message,ul.action_message li {
+div.action-message,ul.action-message li {
 	height: 1.5em;
 	line-height: 1.5em;
 	margin: 5px;
@@ -48,7 +48,7 @@ div.action_message,ul.action_message li {
 	-moz-border-radius: 3px;
 }
 
-.field_error .close,.action_error .close {
+.field-error .close,.action-error .close {
 	width: 15px;
 	height: 15px;
 	float: right;
@@ -56,7 +56,7 @@ div.action_message,ul.action_message li {
 	background: url(../images/msg.png) 0px -66px no-repeat;
 }
 
-.action_message .close {
+.action-message .close {
 	width: 15px;
 	height: 15px;
 	float: right;
@@ -71,6 +71,10 @@ img.captcha {
 	vertical-align: middle;
 }
 
+#treeview li.highlight {
+	font-weight:bold;
+}
+
 .highlight {
 	background: #FF6;
 }
@@ -79,44 +83,11 @@ tr.highlight td{
 	background: #ddeeff !important;
 }
 
-#treeview li.highlight {
-	font-weight:bold;
-}
-
-.bold {
-	font-weight: bold;
-}
-
-.link {
-	color: #00C;
-	cursor: pointer;
-	text-decoration: underline;
-	white-space: nowrap;
-}
-
-.draggable {
-	cursor: move;
-}
-
-
-.ondrop {
-	border: 1px dashed #b00;
-}
-
 thead,tfoot {
 	background-color: #E5ECF9;
 }
-
 tr.selected {
 	background: #EBC79E;
-}
-
-.crumbs{
-	margin: 10px;
-}
-.crumbs a {
-	color: #36C;
-	text-decoration: none;
 }
 
 ul.attributes li{
@@ -138,4 +109,23 @@ ul.attributes span.group{
 }
 ul.attributes li.group ul{
 	padding-left:10px;
+}
+
+a.close {
+  float: right;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000000;
+  text-shadow: 0 1px 0 #ffffff;
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+}
+
+a.close:hover {
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
 }

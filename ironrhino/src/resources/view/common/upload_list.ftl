@@ -117,7 +117,7 @@ td.center {text-align:center;}
 </script>
 </head>
 <body>
-<@s.form id="upload_form" action="upload" method="post" enctype="multipart/form-data" cssClass="line">
+<@s.form id="upload_form" action="upload" method="post" enctype="multipart/form-data" cssClass="inline">
 	<#list 1..Parameters.size?default('6')?number as index>
 		<@s.file name="file" cssStyle="width:194px;" multiple="true"/>
 	</#list>
