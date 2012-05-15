@@ -71,7 +71,7 @@ public class EntityAction extends BaseAction {
 	@javax.inject.Inject
 	private transient EntityManager<Persistable<?>> _entityManager;
 
-	private ResultPage resultPage;
+	protected ResultPage resultPage;
 
 	private Persistable entity;
 
