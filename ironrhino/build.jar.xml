@@ -51,15 +51,15 @@
 		value="org/ironrhino/security/model/LoginRecord.class,resources/hibernate/security/LoginRecord.hbm.xml,org/ironrhino/security/component/**" />
 	<property name="security-acl-jar.name" value="ironrhino-security-acl-${version}.jar" />
 	<property name="security-acl-jar.includes"
-		value="org/ironrhino/security/acl/**,resources/hibernate/security/acl/**,resources/view/permit*" />
+		value="org/ironrhino/security/acl/**,resources/hibernate/security/acl/**,resources/view/acl/**" />
 	<property name="security-oauth-client-jar.name"
 		value="ironrhino-security-oauth-client-${version}.jar" />
 	<property name="security-oauth-client-jar.includes"
-		value="org/ironrhino/security/oauth/client/**,resources/view/oauth.ftl" />
+		value="org/ironrhino/security/oauth/package-info.class,org/ironrhino/security/oauth/client/**,resources/view/oauth/connect.ftl" />
 	<property name="security-oauth-server-jar.name"
 		value="ironrhino-security-oauth-server-${version}.jar" />
 	<property name="security-oauth-server-jar.includes"
-		value="org/ironrhino/security/oauth/server/**,resources/hibernate/security/oauth/**,resources/view/oauth2*" />
+		value="org/ironrhino/security/oauth/package-info.class,org/ironrhino/security/oauth/server/**,resources/i18n/security/oauth/**,resources/hibernate/security/oauth/**,resources/view/oauth/oauth2**,resources/view/oauth/client**" />
 
 	<target name="jar">
 		<script language="javascript">
