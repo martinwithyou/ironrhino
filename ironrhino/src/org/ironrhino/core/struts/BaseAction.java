@@ -322,7 +322,7 @@ public class BaseAction extends ActionSupport {
 					.setResultCode(JSON);
 	}
 
-	private <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+	protected <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
 		return AnnotationUtils.getAnnotation(getClass(), annotationClass,
 				ActionContext.getContext().getActionInvocation().getProxy()
 						.getMethod());

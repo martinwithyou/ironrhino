@@ -554,8 +554,12 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	protected Authorize findAuthorize() {
-		Class<?> c = getEntityClass();
-		return c.getAnnotation(Authorize.class);
+		Authorize authorize = getAnnotation(Authorize.class);
+		if (authorize == null) {
+			Class<?> c = getEntityClass();
+			return c.getAnnotation(Authorize.class);
+		}
+		return authorize;
 	}
 
 	public boolean isNew() {

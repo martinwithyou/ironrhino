@@ -74,8 +74,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		for (Class<?> packageInfo : packageInfos) {
 			String name = packageInfo.getName();
 			String packageName = name.substring(0, name.lastIndexOf('.'));
-			AutoConfig ac = packageInfo
-					.getAnnotation(AutoConfig.class);
+			AutoConfig ac = packageInfo.getAnnotation(AutoConfig.class);
 			if (ac != null) {
 				log.info("Loading autoconfig from " + name);
 				String defaultNamespace = ac.namespace();
@@ -168,14 +167,43 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		Map<String, Set<String>> packages = configPackages();
 		if (packages.size() == 0)
 			return;
-		for (String defaultNamespace : packages.keySet()) {
+		for (Map.Entry<String, Set<String>> entry : packages.entrySet()) {
+			String defaultNamespace = entry.getKey();
+			Set<String> currentPackages = entry.getValue();
 			Set<Class<?>> classes = ClassScaner.scanAnnotated(
-					packages.get(defaultNamespace).toArray(new String[0]),
-					AutoConfig.class);
+					currentPackages.toArray(new String[0]), AutoConfig.class);
 			if (classes.size() == 0)
 				continue;
 			packageLoader = new PackageLoader();
 			for (Class<?> clazz : classes) {
+				if (clazz.getSimpleName().equals("package-info"))
+					continue;
+				boolean inAnotherPackage = false;
+				String thisPackage = clazz.getPackage().getName();
+				String currentPackage = null;
+				for (String s : currentPackages) {
+					if (thisPackage.startsWith(s + ".")
+							&& (currentPackage == null || s.length() > currentPackage
+									.length()))
+						currentPackage = s;
+				}
+				String anotherPackage = null;
+				for (String ns : packages.keySet()) {
+					if (ns.equals(defaultNamespace))
+						continue;
+					Set<String> set = packages.get(ns);
+					for (String s : set) {
+						if (thisPackage.startsWith(s + ".")
+								&& (anotherPackage == null || s.length() > anotherPackage
+										.length()))
+							anotherPackage = s;
+					}
+				}
+				if (anotherPackage != null
+						&& anotherPackage.length() > currentPackage.length())
+					inAnotherPackage = true;
+				if (inAnotherPackage)
+					continue;
 				processAutoConfigClass(clazz, defaultNamespace);
 			}
 			for (PackageConfig packageConfig : packageLoader
@@ -236,8 +264,6 @@ public class AutoConfigPackageProvider implements PackageProvider {
 	}
 
 	protected void processAutoConfigClass(Class<?> cls, String defaultNamespace) {
-		if (cls.getSimpleName().equals("package-info"))
-			return;
 		AutoConfig ac = cls.getAnnotation(AutoConfig.class);
 		String[] arr = getNamespaceAndActionName(cls, defaultNamespace);
 		String namespace = arr[0];
@@ -353,7 +379,8 @@ public class AutoConfigPackageProvider implements PackageProvider {
 
 	private Map<String, Class<?>> entityClassURLMapping = new ConcurrentHashMap<String, Class<?>>();
 
-	public String[] getNamespaceAndActionName(Class<?> cls, String defaultNamespace) {
+	public String[] getNamespaceAndActionName(Class<?> cls,
+			String defaultNamespace) {
 		String actionName = null;
 		String namespace = null;
 		String actionClass = null;
@@ -388,10 +415,11 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		return entityClassURLMapping.get(namespace
 				+ (namespace.endsWith("/") ? "" : "/") + actionName);
 	}
-	
-	public String getEntityUrl(Class<?> entityClass){
-		for(Map.Entry<String, Class<?>> entry : entityClassURLMapping.entrySet())
-			if(entry.getValue().equals(entityClass))
+
+	public String getEntityUrl(Class<?> entityClass) {
+		for (Map.Entry<String, Class<?>> entry : entityClassURLMapping
+				.entrySet())
+			if (entry.getValue().equals(entityClass))
 				return entry.getKey();
 		return null;
 	}
