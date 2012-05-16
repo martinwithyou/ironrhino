@@ -22,8 +22,8 @@ import org.ironrhino.security.oauth.client.service.OAuthProviderManager;
 import org.ironrhino.security.service.UserManager;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-@AutoConfig(namespace = "/")
-public class OauthAction extends BaseAction {
+@AutoConfig
+public class ConnectAction extends BaseAction {
 
 	private static final long serialVersionUID = 8175406892708878896L;
 
@@ -58,7 +58,7 @@ public class OauthAction extends BaseAction {
 					return ACCESSDENIED;
 				StringBuilder sb = new StringBuilder(
 						RequestUtils.getBaseUrl(request));
-				sb.append("/oauth/auth/").append(provider.getName());
+				sb.append("/oauth/connect/auth/").append(provider.getName());
 				if (StringUtils.isNotBlank(targetUrl))
 					sb.append("?targetUrl=").append(
 							URLEncoder.encode(targetUrl, "UTF-8"));
@@ -71,6 +71,8 @@ public class OauthAction extends BaseAction {
 	}
 
 	public String auth() {
+		if (!isEnabled())
+			return ACCESSDENIED;
 		HttpServletRequest request = ServletActionContext.getRequest();
 		try {
 			OAuthProvider provider = (OAuthProvider) oauthProviderManager
@@ -78,8 +80,8 @@ public class OauthAction extends BaseAction {
 			if (provider == null)
 				return ACCESSDENIED;
 			Profile p = provider.getProfile(request);
-			if (p == null){
-				targetUrl = "/oauth";
+			if (p == null) {
+				targetUrl = "/oauth/connect";
 				return REDIRECT;
 			}
 			String id = p.getUid();
@@ -110,6 +112,8 @@ public class OauthAction extends BaseAction {
 		String state = request.getParameter("state");
 		if (StringUtils.isNotBlank(state))
 			targetUrl = state;
+		if (StringUtils.isBlank(targetUrl))
+			targetUrl = "/";
 		return REDIRECT;
 	}
 

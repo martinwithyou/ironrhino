@@ -13,7 +13,7 @@ import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 
-@AutoConfig(namespace = "/oauth", order = "name asc")
+@AutoConfig(order = "name asc")
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 public class Client extends BaseEntity {
 

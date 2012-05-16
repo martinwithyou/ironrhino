@@ -16,10 +16,10 @@ public class Ironrhino extends OAuth2Provider {
 	@Value("${ironrhino.logo:http://localhost/assets/images/logo.gif}")
 	private String logo;
 
-	@Value("${ironrhino.authorizeUrl:http://localhost/oauth2/auth}")
+	@Value("${ironrhino.authorizeUrl:http://localhost/oauth/oauth2/auth}")
 	private String authorizeUrl;
 
-	@Value("${ironrhino.accessTokenEndpoint:http://localhost/oauth2/token}")
+	@Value("${ironrhino.accessTokenEndpoint:http://localhost/oauth/oauth2/token}")
 	private String accessTokenEndpoint;
 
 	@Value("${ironrhino.scope:http://localhost/}")

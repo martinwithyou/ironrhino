@@ -12,7 +12,7 @@ import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 
-@AutoConfig(namespace = "/oauth", readonly = true, order = "createDate asc")
+@AutoConfig(readonly = true, order = "createDate asc")
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 public class Authorization extends BaseEntity {
 
@@ -109,7 +109,7 @@ public class Authorization extends BaseEntity {
 
 	public int getExpiresIn() {
 		return lifetime > 0 ? lifetime
-				- (int) (System.currentTimeMillis() - modifyDate.getTime() / 1000)
+				- (int) ((System.currentTimeMillis() - modifyDate.getTime()) / 1000)
 				: Integer.MAX_VALUE;
 	}
 

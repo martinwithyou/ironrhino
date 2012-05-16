@@ -32,7 +32,7 @@ import org.springframework.security.core.AuthenticationException;
 
 import com.google.common.base.Objects;
 
-@AutoConfig(namespace = "/")
+@AutoConfig
 public class Oauth2Action extends BaseAction {
 
 	private static final long serialVersionUID = 8175470892708878896L;
@@ -202,8 +202,6 @@ public class Oauth2Action extends BaseAction {
 			if (client == null)
 				throw new IllegalArgumentException("CLIENT_ID_INVALID");
 			User grantor = AuthzUtils.getUserDetails(User.class);
-			if (grantor == null)
-				throw new IllegalArgumentException("GRANTOR_INVALID");
 			if (!"force".equals(approval_prompt) && grantor != null) {
 				List<Authorization> auths = oauthManager
 						.findAuthorizationsByGrantor(grantor);
