@@ -212,8 +212,14 @@ public class UserAction extends BaseAction {
 			user.setLegiblePassword(password);
 		} else {
 			User temp = user;
-			user = userManager.get(temp.getId());
-			userManager.evict(user);
+			if (temp.getId() != null) {
+				user = userManager.get(temp.getId());
+				userManager.evict(user);
+			}
+			if (temp.getUsername() != null) {
+				user = userManager.findByNaturalId(temp.getUsername());
+				userManager.evict(user);
+			}
 			if (StringUtils.isNotBlank(temp.getEmail())
 					&& !temp.getEmail().equals(user.getEmail())
 					&& userManager.findByNaturalId("email", temp.getEmail()) != null) {
