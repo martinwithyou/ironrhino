@@ -1,5 +1,7 @@
 package org.ironrhino.core.dataroute;
 
+import java.util.Map;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -10,6 +12,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.aop.BaseAspect;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.util.ExpressionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -39,7 +42,9 @@ public class DataRouteAspect extends BaseAspect {
 	@Around("execution(public * *(..)) and @annotation(dataRoute))")
 	public Object determineGroup(ProceedingJoinPoint jp, DataRoute dataRoute)
 			throws Throwable {
-		String groupName = evalString(dataRoute.value(), jp, null);
+		Map<String, Object> context = buildContext(jp);
+		String groupName = ExpressionUtils.evalString(dataRoute.value(),
+				context);
 		if (StringUtils.isNotBlank(groupName))
 			DataRouteContext.setName(groupName);
 		return jp.proceed();
@@ -54,13 +59,14 @@ public class DataRouteAspect extends BaseAspect {
 		if (target != null)
 			dataRoute = target.getClass().getAnnotation(DataRoute.class);
 		if (dataRoute == null) {
-			Class<Persistable<?>> entityClass = baseManager
-					.getEntityClass();
+			Class<Persistable<?>> entityClass = baseManager.getEntityClass();
 			if (entityClass != null)
 				dataRoute = entityClass.getAnnotation(DataRoute.class);
 		}
 		if (dataRoute != null) {
-			String groupName = evalString(dataRoute.value(), jp, null);
+			Map<String, Object> context = buildContext(jp);
+			String groupName = ExpressionUtils.evalString(dataRoute.value(),
+					context);
 			if (StringUtils.isNotBlank(groupName))
 				DataRouteContext.setName(groupName);
 		}

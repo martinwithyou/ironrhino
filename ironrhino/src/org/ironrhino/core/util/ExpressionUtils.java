@@ -1,5 +1,7 @@
 package org.ironrhino.core.util;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,6 +41,56 @@ public class ExpressionUtils {
 			templateCache.put(template, ct);
 		}
 		return TemplateRuntime.execute(ct, context);
+	}
+
+	public static String evalString(String template, Map<String, ?> context) {
+		Object obj = eval(template, context);
+		if (obj == null)
+			return null;
+		return obj.toString();
+	}
+
+	public static boolean evalBoolean(String template, Map<String, ?> context) {
+		if (StringUtils.isBlank(template))
+			return false;
+		return Boolean.parseBoolean(evalString(template, context));
+	}
+
+	public static int evalInt(String template, Map<String, ?> context) {
+		Object obj = eval(template, context);
+		if (obj == null)
+			return 0;
+		if (obj instanceof Integer)
+			return (Integer) obj;
+		return Integer.parseInt(obj.toString());
+	}
+
+	public static long evalLong(String template, Map<String, ?> context) {
+		Object obj = eval(template, context);
+		if (obj == null)
+			return 0;
+		if (obj instanceof Long)
+			return (Long) obj;
+		return Long.parseLong(obj.toString());
+	}
+
+	public static double evalDouble(String template, Map<String, ?> context) {
+		Object obj = eval(template, context);
+		if (obj == null)
+			return 0;
+		if (obj instanceof Double)
+			return (Double) obj;
+		return Double.parseDouble(obj.toString());
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static List evalList(String template, Map<String, ?> context) {
+		Object obj = eval(template, context);
+		if (obj == null)
+			return null;
+		if (obj instanceof List)
+			return (List) obj;
+		return Arrays.asList(obj.toString().split(","));
 	}
 
 }

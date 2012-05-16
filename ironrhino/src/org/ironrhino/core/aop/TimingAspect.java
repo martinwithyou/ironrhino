@@ -1,6 +1,5 @@
 package org.ironrhino.core.aop;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Named;
@@ -10,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.ironrhino.core.util.ExpressionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +33,10 @@ public class TimingAspect extends BaseAspect {
 		String method = jp.getStaticPart().getSignature().toLongString();
 		logger.info("{} takes {} ms", method, time);
 		if (StringUtils.isNotBlank(timing.value())) {
-			Map<String, Object> ctx = new HashMap<String, Object>();
-			ctx.put("method", method);
-			ctx.put("time", time);
-			eval(timing.value(), jp, result, ctx);
+			Map<String, Object> context = buildContext(jp);
+			context.put("method", method);
+			context.put("time", time);
+			ExpressionUtils.eval(timing.value(), context);
 		}
 		return result;
 	}
