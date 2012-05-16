@@ -9,6 +9,8 @@ Richtable = {
 					+ entity : action;
 		else
 			url = entity ? entity : form[0].action;
+		if (form.data('actionbaseurl'))
+			url = CONTEXT_PATH + form.data('actionbaseurl');
 		var p = url.indexOf('?');
 		if (p > 0)
 			url = url.substring(0, p);

@@ -251,7 +251,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 				e.printStackTrace();
 			}
 	}
-
+	
 	@Override
 	public String toString() {
 		return StringUtils.isNotBlank(this.name) ? this.name : this.username;

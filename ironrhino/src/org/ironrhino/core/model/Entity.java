@@ -30,7 +30,8 @@ public abstract class Entity<PK extends Serializable> implements
 			return false;
 		if (object == this)
 			return true;
-		if (!(this.getClass().equals(object.getClass())))
+		if (!this.getClass().isAssignableFrom(object.getClass())
+				&& !object.getClass().isAssignableFrom(this.getClass()))
 			return false;
 		Entity that = (Entity) object;
 		return this.toIdentifiedString().equals(that.toIdentifiedString());

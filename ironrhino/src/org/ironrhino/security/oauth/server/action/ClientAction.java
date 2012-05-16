@@ -1,6 +1,12 @@
 package org.ironrhino.security.oauth.server.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.Authorize;
+import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.struts.EntityAction;
 import org.ironrhino.core.util.AuthzUtils;
@@ -38,6 +44,54 @@ public class ClientAction extends EntityAction {
 		entityManager.save(client);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
+	}
+
+	@Authorize(ifAllGranted = UserRole.ROLE_BUILTIN_USER)
+	@SuppressWarnings("unchecked")
+	public String mine() {
+		BaseManager<Client> entityManager = getEntityManager(Client.class);
+		DetachedCriteria dc = entityManager.detachedCriteria();
+		dc.add(Restrictions.eq("owner", AuthzUtils.getUserDetails(User.class)));
+		if (resultPage == null)
+			resultPage = new ResultPage<Client>();
+		resultPage.setCriteria(dc);
+		resultPage = entityManager.findByResultPage(resultPage);
+		return "mine";
+	}
+
+	@Authorize(ifAllGranted = UserRole.ROLE_BUILTIN_USER)
+	public String show() {
+		BaseManager<Client> entityManager = getEntityManager(Client.class);
+		client = entityManager.get(getUid());
+		return "show";
+	}
+
+	@Authorize(ifAllGranted = UserRole.ROLE_BUILTIN_USER)
+	public String disable() {
+		BaseManager<Client> entityManager = getEntityManager(Client.class);
+		String[] id = getId();
+		if (id != null) {
+			List<Client> list;
+			if (id.length == 1) {
+				list = new ArrayList<Client>(1);
+				list.add(entityManager.get(id[0]));
+			} else {
+				DetachedCriteria dc = entityManager.detachedCriteria();
+				dc.add(Restrictions.in("id", id));
+				list = entityManager.findListByCriteria(dc);
+			}
+			if (list.size() > 0) {
+				for (Client temp : list) {
+					if (AuthzUtils.getUsername().equals(
+							temp.getOwner().getUsername())) {
+						temp.setEnabled(false);
+						entityManager.save(temp);
+					}
+				}
+				addActionMessage(getText("operate.success"));
+			}
+		}
+		return REFERER;
 	}
 
 }

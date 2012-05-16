@@ -24,7 +24,7 @@
 </#macro>
 
 <#macro rtstart formid='',action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true>
-<form id="<#if formid!=''>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view" <#if entityName!=action&&entityName!=''> data-entity="${entityName}"</#if>>
+<form id="<#if formid!=''>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view" data-actionBaseUrl="${actionBaseUrl}"<#if entityName!=action&&entityName!=''> data-entity="${entityName}"</#if>>
 <#if includeParameters>
 <#list Parameters?keys as name>
 <#if name!='_'&&name!='pn'&&name!='ps'&&!name?starts_with('resultPage.')&&name!='keyword'&&name!='check'>
