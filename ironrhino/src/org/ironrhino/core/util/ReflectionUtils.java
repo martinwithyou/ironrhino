@@ -47,10 +47,34 @@ public class ReflectionUtils {
 		try {
 			method = clz.getDeclaredMethod(sig.getName(),
 					sig.getParameterTypes());
-			return parameterNameDiscoverer.getParameterNames(method);
+			String[] array = parameterNameDiscoverer.getParameterNames(method);
+			if (array == null) {
+				method = narrow(clz, method);
+				if (method != null)
+					array = parameterNameDiscoverer.getParameterNames(method);
+			}
+			return array;
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public static Method narrow(Class<?> clz, Method method) {
+		Method[] methods = clz.getMethods();
+		loop: for (Method m : methods) {
+			if (!m.getName().equals(method.getName()) || m.equals(method))
+				continue;
+			Class<?>[] p1 = method.getParameterTypes();
+			Class<?>[] p2 = m.getParameterTypes();
+			if (p1.length != p2.length)
+				continue loop;
+			for (int i = 0; i < p1.length; i++) {
+				if (!p1[i].isAssignableFrom(p2[i]))
+					continue loop;
+			}
+			return m;
+		}
+		return null;
 	}
 
 }
