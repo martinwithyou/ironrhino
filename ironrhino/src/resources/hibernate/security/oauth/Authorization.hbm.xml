@@ -13,7 +13,7 @@
 		</natural-id>
 		<property name="code" unique="true" />
 		<property name="scope" />
-		<property name="expiresIn" />
+		<property name="lifetime" />
 		<property name="refreshToken" unique="true" />
 		<property name="responseType" not-null="true" />
 		<property name="modifyDate" not-null="true"/>
