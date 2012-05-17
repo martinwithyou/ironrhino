@@ -1,14 +1,14 @@
 Richtable = {
 	getBaseUrl : function(form) {
 		form = form || $('form.richtable');
-		var action = form[0].action;
+		var action = form.attr('action');
 		var entity = form.data('entity');
 		var url;
 		if (action.indexOf('/') == 0 || action.indexOf('://') > 0)
 			url = entity ? action.substring(0, action.lastIndexOf('/') + 1)
 					+ entity : action;
 		else
-			url = entity ? entity : form[0].action;
+			url = entity ? entity : form.attr('action');
 		if (form.data('actionbaseurl'))
 			url = CONTEXT_PATH + form.data('actionbaseurl');
 		var p = url.indexOf('?');
@@ -353,8 +353,7 @@ Richtable = {
 			if ($(row).hasClass('edited')) {
 				modified = true;
 				var params = {};
-				var entity = Richtable.getBaseUrl(form);
-				entity = entity.substring(entity.lastIndexOf('/') + 1);
+				var entity = form.data('entity') || form.attr('action');
 				params[entity + '.id'] = $(this).data('rowid')
 						|| $('input[type="checkbox"]:eq(0)', this).val();;
 				$.each(row.cells, function(i) {

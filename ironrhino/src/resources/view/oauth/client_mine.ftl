@@ -7,6 +7,6 @@
 <#assign columns={"name":{},"id":{},"secret":{},"enabled":{}}>
 <#assign actionColumnButtons='<button type="button" class="btn" data-view="show">${action.getText("show")}</button><button type="button" class="btn" data-action="disable">${action.getText("disable")}</button>'>
 <#assign bottomButtons='<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button>'>
-<@richtable action="mine" entityName="client" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false/>
+<@richtable entityName="client" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false/>
 </body>
 </html></#escape>
