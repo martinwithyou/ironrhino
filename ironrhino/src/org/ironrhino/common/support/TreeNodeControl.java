@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -21,7 +20,7 @@ import org.springframework.context.ApplicationListener;
 public class TreeNodeControl implements
 		ApplicationListener<EntityOperationEvent> {
 
-	private TreeNode tree;
+	private volatile TreeNode tree;
 
 	@Inject
 	private EntityManager<TreeNode> entityManager;
@@ -31,12 +30,12 @@ public class TreeNodeControl implements
 		tree = entityManager.loadTree();
 	}
 
-	@PostConstruct
-	public void afterPropertiesSet() throws Exception {
-		buildTreeNodeTree();
-	}
-
 	public TreeNode getTree() {
+		if (tree == null)
+			synchronized (this) {
+				if (tree == null)
+					buildTreeNodeTree();
+			}
 		return tree;
 	}
 

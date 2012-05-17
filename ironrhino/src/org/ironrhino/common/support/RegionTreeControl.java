@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -23,7 +22,7 @@ import org.springframework.context.ApplicationListener;
 public class RegionTreeControl implements
 		ApplicationListener<EntityOperationEvent> {
 
-	private Region regionTree;
+	private volatile Region regionTree;
 
 	@Inject
 	private EntityManager<Region> entityManager;
@@ -33,12 +32,12 @@ public class RegionTreeControl implements
 		regionTree = entityManager.loadTree();
 	}
 
-	@PostConstruct
-	public void afterPropertiesSet() throws Exception {
-		buildRegionTree();
-	}
-
 	public Region getRegionTree() {
+		if (regionTree == null)
+			synchronized (this) {
+				if (regionTree == null)
+					buildRegionTree();
+			}
 		return regionTree;
 	}
 

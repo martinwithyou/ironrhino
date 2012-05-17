@@ -22,10 +22,8 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 public class JsonUtils {
 
 	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-	public static DateFormat[] ACCEPT_DATE_FORMATS = {
-			new SimpleDateFormat(DEFAULT_DATE_FORMAT),
-			new SimpleDateFormat("yyyy/MM/dd"),
-			new SimpleDateFormat("yyyy-MM-dd") };
+	public static String[] ACCEPT_DATE_FORMATS = { DEFAULT_DATE_FORMAT,
+			"yyyy/MM/dd", "yyyy-MM-dd" };
 
 	private static Logger log = LoggerFactory.getLogger(JsonUtils.class);
 
@@ -92,7 +90,8 @@ public class JsonUtils {
 				return (T) cal.getTime();
 			} else if (json.startsWith("\"") && json.endsWith("\"")) {
 				String value = json.substring(1, json.length() - 2);
-				for (DateFormat format : ACCEPT_DATE_FORMATS) {
+				for (String pattern : ACCEPT_DATE_FORMATS) {
+					DateFormat format = new SimpleDateFormat(pattern);
 					try {
 						return (T) format.parse(value);
 					} catch (Exception e) {
