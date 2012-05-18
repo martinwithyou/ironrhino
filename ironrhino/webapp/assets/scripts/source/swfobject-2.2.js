@@ -198,6 +198,7 @@ var swfobject = function() {
 		if (t) {
 			var counter = 0;
 			(function(){
+				try{
 				if (typeof t.GetVariable != UNDEF) {
 					var d = t.GetVariable("$version");
 					if (d) {
@@ -210,6 +211,7 @@ var swfobject = function() {
 					setTimeout(arguments.callee, 10);
 					return;
 				}
+				}catch(e){}
 				b.removeChild(o);
 				t = null;
 				matchVersions();

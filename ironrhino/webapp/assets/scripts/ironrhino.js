@@ -31086,6 +31086,7 @@ var swfobject = function() {
 		if (t) {
 			var counter = 0;
 			(function(){
+				try{
 				if (typeof t.GetVariable != UNDEF) {
 					var d = t.GetVariable("$version");
 					if (d) {
@@ -31098,6 +31099,7 @@ var swfobject = function() {
 					setTimeout(arguments.callee, 10);
 					return;
 				}
+				}catch(e){}
 				b.removeChild(o);
 				t = null;
 				matchVersions();
@@ -32303,7 +32305,16 @@ Initialization.common = function() {
 				Indicator.hide();
 				var url = xhr.getResponseHeader('X-Redirect-To');
 				if (url) {
-					top.location.href = UrlUtils.absolutize(url);
+					var url = UrlUtils.absolutize(url);
+					try {
+						var href = top.location.href;
+						if (href && UrlUtils.isSameDomain(href, url))
+							top.location.href = url;
+						else
+							document.location.href = url;
+					} catch (e) {
+						document.location.href = url;
+					}
 					return;
 				}
 			});
@@ -32349,7 +32360,8 @@ if (HISTORY_ENABLED) {
 										if (this.href == url) {
 											$('li', $(this).closest('.menu'))
 													.removeClass('active');
-											$(this).closest('li').addClass('active');
+											$(this).closest('li')
+													.addClass('active');
 										}
 									});
 								},
@@ -32386,7 +32398,8 @@ if (HISTORY_ENABLED) {
 										if ($(this).attr('href') == url) {
 											$('li', $(this).closest('.menu'))
 													.removeClass('active');
-											$(this).closest('li').addClass('active');
+											$(this).closest('li')
+													.addClass('active');
 										}
 									});
 								},
@@ -32785,8 +32798,7 @@ var Dialog = {
 			}
 			$(d).dialog('option', 'title', doc.title);
 			$(d).dialog('option', 'minHeight', height);
-			var height = $(doc).height()
-					+ 20;
+			var height = $(doc).height() + 20;
 			$(iframe).height(height);
 		}
 		d.dialog('option', 'position', 'center');
