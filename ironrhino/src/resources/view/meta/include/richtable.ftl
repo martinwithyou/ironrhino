@@ -37,7 +37,7 @@
 <thead>
 <tr>
 <#if showCheckColumn>
-<td class="nosort" width="30px"><#if multipleCheck><input type="checkbox" class="checkbox"/></#if></td>
+<td class="nosort <#if multipleCheck>checkbox<#else>radio</#if>" width="30px"><#if multipleCheck><input type="checkbox" class="checkbox"/></#if></td>
 </#if>
 </#macro>
 
@@ -93,7 +93,7 @@ ${value?xhtml}<#t>
 <#local temp=buttons?interpret>
 <@temp/>
 <#else>
-<button type="button" class="btn" data-view="input">${action.getText("edit")}</button><#t>
+<button type="button" class="btn" data-view="input">${action.getText("edit")}</button>
 </#if>
 </td>
 </#if>
@@ -103,24 +103,26 @@ ${value?xhtml}<#t>
 <#macro rtend buttons='' readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' showPageSize=true>
 </tbody>
 </table>
-<div class="toolbar clearfix">
-<div class="pagination">
+<div class="toolbar row">
+<div class="pagination span4">
 <#if resultPage??>
+<ul>
 <#if resultPage.first>
-<span class="disabled" title="${action.getText('firstpage')}">&lt;&lt;</span>
-<span class="disabled" title="${action.getText('previouspage')}">&lt;</span>
+<li class="disabled"><a title="${action.getText('firstpage')}">&lt;&lt;</a></li>
+<li class="disabled"><a title="${action.getText('previouspage')}">&lt;</a></li>
 <#else>
-<a class="firstPage" title="${action.getText('firstpage')}" href="${resultPage.renderUrl(1)}">&lt;&lt;</a>
-<a class="prevPage" title="${action.getText('previouspage')}" href="${resultPage.renderUrl(resultPage.previousPage)}">&lt;</a>
+<li><a class="firstPage" title="${action.getText('firstpage')}" href="${resultPage.renderUrl(1)}">&lt;&lt;</a></li>
+<li><a class="prevPage" title="${action.getText('previouspage')}" href="${resultPage.renderUrl(resultPage.previousPage)}">&lt;</a></li>
 </#if>
 <#if resultPage.last>
-<span class="disabled" title="${action.getText('nextpage')}">&gt;</span>
-<span class="disabled" title="${action.getText('lastpage')}">&gt;&gt;</span>
+<li class="disabled"><a title="${action.getText('nextpage')}">&gt;</a></li>
+<li class="disabled"><a title="${action.getText('lastpage')}">&gt;&gt;</a></li>
 <#else>
-<a class="nextPage" title="${action.getText('nextpage')}" href="${resultPage.renderUrl(resultPage.nextPage)}">&gt;</a>
-<a class="lastPage" title="${action.getText('lastpage')}" href="${resultPage.renderUrl(resultPage.totalPage)}">&gt;&gt;</a>
+<li><a class="nextPage" title="${action.getText('nextpage')}" href="${resultPage.renderUrl(resultPage.nextPage)}">&gt;</a></li>
+<li><a class="lastPage" title="${action.getText('lastpage')}" href="${resultPage.renderUrl(resultPage.totalPage)}">&gt;&gt;</a></li>
 </#if>
-<input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/>/<span class="totalPage">${resultPage.totalPage}</span>${action.getText('page')}
+<li>
+<input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/><span>/</span><strong class="totalPage">${resultPage.totalPage}</strong><span>${action.getText('page')}</span>
 <#if showPageSize>
 <span>${action.getText('pagesize')}</span><select name="resultPage.pageSize" class="pageSize">
 <#local array=[5,10,20,50,100,500]>
@@ -131,32 +133,38 @@ ${value?xhtml}<#t>
 </select><span>${action.getText('row')}</span>
 </#if>
 <#else>
-&nbsp;
 </#if>
+</li>
+</ul>
 </div>
-<div class="action">
+<div class="action span4">
 <#if buttons!=''>
 <#local temp=buttons?interpret>
 <@temp/>
 <#else>
 <#if !readonly>
-<#if createable><button type="button" class="btn" data-view="input">${action.getText("create")}</button><#t></#if>
-<#if celleditable><button type="button" class="btn" data-action="save">${action.getText("save")}</button><#t></#if>
-<#if deleteable><button type="button" class="btn" data-action="delete">${action.getText("delete")}</button><#t></#if>
-</#if><button type="button" class="btn" data-action="reload">${action.getText("reload")}</button><#t></#if>
+<#if createable><button type="button" class="btn" data-view="input">${action.getText("create")}</button></#if>
+<#if celleditable><button type="button" class="btn" data-action="save">${action.getText("save")}</button></#if>
+<#if deleteable><button type="button" class="btn" data-action="delete">${action.getText("delete")}</button></#if>
+</#if><button type="button" class="btn" data-action="reload">${action.getText("reload")}</button></#if>
 </div>
-<div class="search">
+<div class="search span2">
 <#if searchable>
-<@s.textfield theme="simple" name="keyword" cssClass="focus" size="15"/><@s.submit theme="simple" value="%{getText('search')}" />
+<div class="control-group">
+    <div class="controls">
+        <div class="input-append">
+            <@s.textfield theme="simple" name="keyword" cssClass="focus" placeholder="%{getText('search')}"/><span class="add-on"><i class="icon-search"></i></span>
+        </div>
+    </div>
+</div>
 </#if>
 <#if searchButtons!=''>
 <#local temp=searchButtons?interpret>
 <@temp/>
 <#else>
-&nbsp;
 </#if>
 </div>
-<div class="status">
+<div class="status span2">
 <span>
 <#if resultPage??>
 ${action.getText('total')}${resultPage.totalRecord}${action.getText('record')}<#if resultPage.totalRecord!=0>,${action.getText('display')}${resultPage.start+1}-${resultPage.start+resultPage.result?size}</#if>

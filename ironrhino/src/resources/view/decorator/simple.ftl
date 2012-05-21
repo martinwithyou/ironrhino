@@ -20,6 +20,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 </#if>
 <#if request.contextPath!=''>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="context_path" content="${request.contextPath}" />
 </#if>
 <link rel="shortcut icon" href="<@url value="/assets/images/favicon.ico"/>" />
@@ -31,10 +32,12 @@
 </head>
 <body>
 <div id="content" class="simple">
+<#if action.hasActionMessages() || action.hasActionErrors()>
 <div id="message">
 <@s.actionerror />
 <@s.actionmessage />
 </div>
+</#if>
 <#noescape>${body}</#noescape>
 </div>
 </body>

@@ -106,7 +106,7 @@ Richtable = {
 				var hash = document.location.hash;
 				if (hash.indexOf('!') == 1)
 					pathname = CONTEXT_PATH + hash.substring(2);
-				$('#_window_ form').css('padding-top', '25px');
+				$('#_window_ form').css('padding-top', '40px');
 				$('#_window_ form.ajax').each(function() {
 					var inputform = $(this);
 					$(':input:visible', inputform).filter(function(i) {
@@ -132,8 +132,8 @@ Richtable = {
 								create = false;
 						}
 						if (create) {
-							$('button[type="submit"]', inputform)
-									.after('<button type="submit" class="btn save_and_create">'
+							$('button[type="submit"]', inputform).addClass('btn-primary')
+									.after(' <button type="submit" class="btn save_and_create">'
 											+ MessageBundle
 													.get('save.and.create')
 											+ '</button>');
@@ -208,6 +208,7 @@ Richtable = {
 				win.html('<div style="text-align:center;">'
 						+ MessageBundle.get('ajax.loading') + '</div>');
 		var opt = {
+			zIndex : 2000,
 			minHeight : 600,
 			width : 700,
 			// modal : true,

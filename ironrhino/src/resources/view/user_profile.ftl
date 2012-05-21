@@ -4,7 +4,7 @@
 <title>${action.getText('profile')}</title>
 </head>
 <body>
-<@s.form action="profile" method="post" cssClass="ajax">
+<@s.form action="profile" method="post" cssClass="form-horizontal ajax">
 	<@s.hidden name="user.username"/>
 	<@s.textfield label="%{getText('name')}" name="user.name" cssClass="required"/>
 	<@s.textfield label="%{getText('email')}" name="user.email" cssClass="email checkavailable"/>

@@ -580,12 +580,12 @@ Initialization.common = function() {
 			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
-	$('.menu li a').each(function() {
+	$('.nav li a').each(function() {
 				if ($(this).attr('href') == document.location.pathname)
 					$(this).closest('li').addClass('active');
 			});
-	$('.menu li a').click(function() {
-				$('li', $(this).closest('.menu')).removeClass('active');
+	$('.nav li a').click(function() {
+				$('li', $(this).closest('.nav')).removeClass('active');
 				$(this).closest('li').addClass('active');
 			});
 };
@@ -613,9 +613,9 @@ if (HISTORY_ENABLED) {
 								replacement : event.state.replacement,
 								cache : false,
 								success : function() {
-									$('.menu li a').each(function() {
+									$('.nav li a').each(function() {
 										if (this.href == url) {
-											$('li', $(this).closest('.menu'))
+											$('li', $(this).closest('.nav'))
 													.removeClass('active');
 											$(this).closest('li')
 													.addClass('active');
@@ -651,9 +651,9 @@ if (HISTORY_ENABLED) {
 								cache : true,
 								replaceTitle : true,
 								success : function() {
-									$('.menu li a').each(function() {
+									$('.nav li a').each(function() {
 										if ($(this).attr('href') == url) {
-											$('li', $(this).closest('.menu'))
+											$('li', $(this).closest('.nav'))
 													.removeClass('active');
 											$(this).closest('li')
 													.addClass('active');

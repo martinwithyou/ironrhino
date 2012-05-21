@@ -34,7 +34,7 @@ $(function() {
 			language : MessageBundle.lang(),
 			script_url : '<@url value="/assets/components/tiny_mce/tiny_mce.js"/>',
 			theme : "advanced",
-			plugins : "safari,pagebreak,layer,table,advimage,advlink,emotions,inlinepopups,preview,media,searchreplace,print,contextmenu,paste,fullscreen,noneditable,visualchars,xhtmlxtras,autosave",
+			plugins : "safari,pagebreak,layer,table,advimage,advlink,emotions,form-inlinepopups,preview,media,searchreplace,print,contextmenu,paste,fullscreen,noneditable,visualchars,xhtmlxtras,autosave",
 			theme_advanced_buttons1 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect,|,fullscreen,preview,code",
 			theme_advanced_buttons2 : "blockquote,|,undo,redo,|,link,unlink,anchor,image,media,cleanup,|,forecolor,backcolor,tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,|,print",
 			theme_advanced_buttons3 : "",
@@ -123,16 +123,16 @@ $(function() {
 		<@s.hidden name="page.displayOrder"/>
 		<@s.hidden name="page.tagsAsString"/>
 	<#else>
-		<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50"/>
+		<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50" cssStyle="width:400px;"/>
 		<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" cssClass="integer"/>
-		<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tags" source="${getUrl('/common/page/suggest')}"/>
+		<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tags" source="${getUrl('/common/page/suggest')}" cssStyle="width:400px;"/>
 	</#if>
-	<@s.textfield label="%{getText('title')}" name="page.title" size="50"/>
-	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cols="50" rows="16"/>
+	<@s.textfield label="%{getText('title')}" name="page.title" size="50" cssStyle="width:400px;"/>
+	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cssStyle="width:800px;height:200px;"/>
 	<#if Parameters.brief??>
 		<@s.hidden name="page.head"/>
 	<#else>
-		<@s.textarea id="page_head" name="page.head" cols="100" rows="3" cssStyle="display:none;"/>
+		<@s.textarea id="page_head" name="page.head" cssStyle="display:none;width:800px;height:100px;"/>
 		<div class="control-group">
 			<button type="button" class="btn" id="display_page_head">${action.getText('edit')}${action.getText('head')}</button>
 		</div>

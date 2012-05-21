@@ -1,3 +1,22 @@
+/*override bootstrap start*/
+.controls label{
+	display: inline;
+}
+.navbar-fixed-top, .navbar-fixed-bottom{
+	z-index: 1000;
+}
+#_window_ input[type="text"]{
+	width: 150px;
+}
+td input,td textarea,td select,td .uneditable-input{
+	margin-bottom: 0px;
+}
+/*override bootstrap end*/
+/*override jqueryui start*/
+.ui-widget{
+	font-size: 1em;
+}
+/*override bootstrap end*/
 #indicator {
 	position: fixed;
 	z-index: 10000;
@@ -113,7 +132,6 @@ ul.attributes li.group ul{
 
 a.close {
   float: right;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 20px;
   font-weight: bold;
   color: #000000;

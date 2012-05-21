@@ -117,7 +117,7 @@ td.center {text-align:center;}
 </script>
 </head>
 <body>
-<@s.form id="upload_form" action="upload" method="post" enctype="multipart/form-data" cssClass="inline">
+<@s.form id="upload_form" action="upload" method="post" enctype="multipart/form-data" cssClass="form-inline">
 	<#list 1..Parameters.size?default('6')?number as index>
 		<@s.file name="file" cssStyle="width:194px;" multiple="true"/>
 	</#list>
@@ -140,9 +140,9 @@ td.center {text-align:center;}
 	<tfoot>
 	<tr>
 		<td colspan="4" style="text-align:center;padding:5px 0px;">
-		<button type="button" class="btn" onclick="del()">${action.getText('delete')}</button><#t>
-		<button type="button" class="btn" onclick="mkdir()">${action.getText('create.subfolder')}</button><#t>
-		<button type="button" class="btn" onclick="reload()">${action.getText('reload')}</button><#t>
+		<button type="button" class="btn" onclick="del()">${action.getText('delete')}</button>
+		<button type="button" class="btn" onclick="mkdir()">${action.getText('create.subfolder')}</button>
+		<button type="button" class="btn" onclick="reload()">${action.getText('reload')}</button>
 		</td>
 	</tr>
 	</tfoot>

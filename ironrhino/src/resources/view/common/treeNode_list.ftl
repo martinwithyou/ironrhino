@@ -6,14 +6,14 @@
 <body>
 <#assign columns={"name":{"cellEdit":"click"},"description":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"}}>
 <#assign actionColumnButtons='
-<button type="button" class="btn" data-view="input">${action.getText("edit")}</button><#t>
-<button type="button" class="btn" data-action="enter">${action.getText("enter")}</button><#t>
+<button type="button" class="btn" data-view="input">${action.getText("edit")}</button>
+<button type="button" class="btn" data-action="enter">${action.getText("enter")}</button>
 '>
 <#assign bottomButtons=r'
-<button type="button" class="btn" data-view="input">${action.getText("create")}</button><#t>
-<button type="button" class="btn" data-action="save">${action.getText("save")}</button><#t>
-<button type="button" class="btn" data-action="delete">${action.getText("delete")}</button><#t>
-<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button><#t>
+<button type="button" class="btn" data-view="input">${action.getText("create")}</button>
+<button type="button" class="btn" data-action="save">${action.getText("save")}</button>
+<button type="button" class="btn" data-action="delete">${action.getText("delete")}</button>
+<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button>
 <#if treeNode?? && parentId??>
 <#if treeNode.parent??>
 <a class="btn" href="${getUrl("/common/treeNode?parentId="+treeNode.parent.id)}">${action.getText("upward")}</a><#t>

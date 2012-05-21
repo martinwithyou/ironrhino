@@ -7,8 +7,9 @@
 </@authorize>
 </head>
 <body>
-<div style="margin:auto;width:300px;font-size:1.1em;">
-	<@s.form id="login" action="login" method="post" cssClass="ajax focus">
+<div class="row">
+	<div class="span4 offset4">
+	<@s.form id="login" action="login" method="post" cssClass="ajax focus form-horizontal">
 		<@s.hidden id="targetUrl" name="targetUrl" />
 		<@s.textfield label="%{getText('username')}" name="username" cssClass="required"/>
 		<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
@@ -16,6 +17,7 @@
 		<@captcha/>
 		<@s.submit value="%{getText('login')}" />
 	</@s.form>
+	</div>
 </div>
 </body>
 </html></#escape>

@@ -9,7 +9,7 @@
 				cache : true
 			}
 			$.extend(treeoptions, (new Function("return "
-							+ (current.data('treeoptions') || '{}')))());
+							+ (current.data('options') || '{}')))());
 			var nametarget = null;
 			if (treeoptions.name) {
 				nametarget = $('#' + treeoptions.name);

@@ -6,13 +6,13 @@
 <body>
 <#assign columns={"name":{"cellEdit":"click"},"areacode":{"cellEdit":"click"},"postcode":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"}}>
 <#assign actionColumnButtons='
-<button type="button" class="btn" data-action="enter">${action.getText("enter")}</button><#t>
+<button type="button" class="btn" data-action="enter">${action.getText("enter")}</button>
 '>
 <#assign bottomButtons='
-<button type="button" class="btn" data-view="input">${action.getText("create")}</button><#t>
-<button type="button" class="btn" data-action="save">${action.getText("save")}</button><#t>
-<button type="button" class="btn" data-action="delete">${action.getText("delete")}</button><#t>
-<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button><#t>
+<button type="button" class="btn" data-view="input">${action.getText("create")}</button>
+<button type="button" class="btn" data-action="save">${action.getText("save")}</button>
+<button type="button" class="btn" data-action="delete">${action.getText("delete")}</button>
+<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button>
 '+r'
 <#if region?? && parentId??>
 <#if region.parent??>
@@ -22,27 +22,27 @@
 </#if>
 </#if>
 '+'
-<button type="button" class="btn" onclick="$(\'#move\').toggle()">${action.getText("move")}</button><#t>
-<button type="button" class="btn" onclick="$(\'#merge\').toggle()">${action.getText("merge")}</button><#t>
+<button type="button" class="btn" onclick="$(\'#move\').toggle()">${action.getText("move")}</button>
+<button type="button" class="btn" onclick="$(\'#merge\').toggle()">${action.getText("merge")}</button>
 '>
 <@richtable entityName="region" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons/>
 <form id="move" action="region/move" method="post" class="ajax reset" style="display:none;" onprepare="return confirm('${action.getText('confirm')}?');" onsuccess="Richtable.reload($('#region_form'))">
 	<div style="padding-top:10px;text-align:center;">
 	<input id="regionId1" type="hidden" name="id"/>
-	<span id="region1" class="treeselect" data-treeoptions="{'url':'<@url value="/region/children"/>','name':'region1','id':'regionId1','cache':false}">${action.getText('select')}</span>
+	<span id="region1" class="treeselect" data-options="{'url':'<@url value="/region/children"/>','name':'region1','id':'regionId1','cache':false}">${action.getText('select')}</span>
 	--&gt;
 	<input id="regionId2" type="hidden" name="id"/>
-	<span id="region2" class="treeselect" data-treeoptions="{'url':'<@url value="/region/children"/>','name':'region2','id':'regionId2','cache':false}">${action.getText('select')}</span>
+	<span id="region2" class="treeselect" data-options="{'url':'<@url value="/region/children"/>','name':'region2','id':'regionId2','cache':false}">${action.getText('select')}</span>
 	<@s.submit theme="simple" value="%{getText('confirm')}" />
 	</div>
 </form>
 <form id="merge" action="region/merge" method="post" class="ajax reset" style="display:none;" onprepare="return confirm('${action.getText('confirm')}?');" onsuccess="Richtable.reload($('#region_form'))">
 	<div style="padding-top:10px;text-align:center;">
 	<input id="regionId3" type="hidden" name="id"/>
-	<span id="region3" class="treeselect" data-treeoptions="{'url':'<@url value="/region/children"/>','name':'region3','id':'regionId3','cache':false}">${action.getText('select')}</span>
+	<span id="region3" class="treeselect" data-options="{'url':'<@url value="/region/children"/>','name':'region3','id':'regionId3','cache':false}">${action.getText('select')}</span>
 	--&gt;
 	<input id="regionId4" type="hidden" name="id"/>
-	<span id="region4" class="treeselect" data-treeoptions="{'url':'<@url value="/region/children"/>','name':'region4','id':'regionId4','cache':false}">${action.getText('select')}</span>
+	<span id="region4" class="treeselect" data-options="{'url':'<@url value="/region/children"/>','name':'region4','id':'regionId4','cache':false}">${action.getText('select')}</span>
 	<@s.submit theme="simple" value="%{getText('confirm')}" />
 	</div>
 </form>

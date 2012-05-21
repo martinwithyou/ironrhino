@@ -41,7 +41,7 @@
 	</script>
 </head>
 <body>
-<form class="inline clearfix">
+<form class="form-inline clearfix">
 	<div class="control-group">
 		<input id="filename" type="text" size="50"/>
 		<input id="tail" type="text" size="5" value="4096"/>

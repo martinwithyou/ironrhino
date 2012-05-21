@@ -4,7 +4,7 @@
 <title><#if treeNode.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('treeNode')}</title>
 </head>
 <body>
-<@s.form action="${getUrl(actionBaseUrl+'/save')}" method="post" cssClass="ajax">
+<@s.form action="${getUrl(actionBaseUrl+'/save')}" method="post" cssClass="ajax form-horizontal">
 	<#if !treeNode.new>
 		<@s.hidden name="treeNode.id" />
 	</#if>
@@ -17,7 +17,7 @@
 			<tr>
 				<td>${action.getText('name')}</td>
 				<td>${action.getText('value')}</td>
-				<td class="manipulate"><button type="button" class="btn add">+</button></td>
+				<td class="manipulate"></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -29,7 +29,7 @@
 			<tr>
 				<td><@s.textfield theme="simple" name="treeNode.attributes[${index}].name"/></td>
 				<td><@s.textfield theme="simple" name="treeNode.attributes[${index}].value"/></td>
-				<td class="manipulate"><button type="button" class="btn add">+</button><button type="button" class="btn remove">-</button><button type="button" class="btn moveup">↑</button><button type="button" class="btn movedown">↓</button></td>
+				<td class="manipulate"></td>
 			</tr>
 			</#list>
 		</tbody>

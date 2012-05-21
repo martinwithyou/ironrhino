@@ -19,7 +19,7 @@
 <title>Monitor</title>
 <style>
 form{
-	display:inline;
+	display:form-inline;
 }
 .number{
 	float: left;
@@ -34,17 +34,24 @@ form{
 </style>
 </head>
 <body>
-<form class="ajax view" replacement="result">
+<div class="row">
+<div class="span6">
+<form class="ajax view form-inline" replacement="result">
 <span>${action.getText('date')}</span>
 <@s.textfield label="%{getText('date')}" theme="simple" name="date" cssClass="date" size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
-<form class="ajax view" replacement="result">
+</div>
+<div class="span6">
+<form class="ajax view form-inline" replacement="result">
 <span>${action.getText('date.range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" name="from" cssClass="date"  size="10" maxlength="10"/>
+<i class="icon-arrow-right"></i>
 <@s.textfield label="%{getText('to')}" theme="simple" name="to" cssClass="date"  size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
+</div>
+</div>
 <div id="result">
 <#list result.entrySet() as entry>
 <table class="treeTable expanded highlightrow" width="100%">

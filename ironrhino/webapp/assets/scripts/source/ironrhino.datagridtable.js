@@ -5,10 +5,20 @@
 			if ($(this).hasClass('datagrided'))
 				return;
 			$(this).addClass('datagrided');
-			$('td.manipulate').css({
-						'width' : '100px',
+			$('td.manipulate', this).css({
+						'width' : '80px',
 						'text-align' : 'left'
-					});
+					}).each(function() {
+				var t = $(this);
+				if (!t.html()) {
+					if (t.parent().parent().prop('tagName') == 'THEAD') {
+						t.html('<i class="icon-plus add"></i>');
+					} else {
+						t
+								.html('<i class="icon-plus add"></i><i class="icon-minus remove"></i><i class="icon-arrow-up moveup"></i><i class="icon-arrow-down movedown"></i>');
+					}
+				}
+			});
 			if ($(this).parents('.datagrided').length)
 				return;
 			$('tbody input:last', this).keydown(function(event) {
@@ -22,6 +32,12 @@
 							event.preventDefault();
 							removeRow(event, options);
 						}
+					});
+			$('[class*=icon-]', this).hover(function() {
+						$(this).addClass('icon-white').css('cursor', 'pointer');
+					}, function() {
+						$(this).removeClass('icon-white').css('cursor',
+								'default');
 					});
 			$('thead .add', this).click(function(event) {
 				var row = $(event.target).closest('table.datagrided')

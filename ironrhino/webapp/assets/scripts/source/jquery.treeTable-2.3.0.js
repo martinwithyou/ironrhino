@@ -44,12 +44,12 @@
   };
   
   // Recursively hide all node's children in a tree
-  $.fn.collapse = function() {
+  $.fn.collapseBranch = function() {
     $(this).addClass("collapsed");
     
     childrenOf($(this)).each(function() {
       if(!$(this).hasClass("collapsed")) {
-        $(this).collapse();
+        $(this).collapseBranch();
       }
       
       this.style.display = "none"; // Performance! $(this).hide() is slow...
@@ -123,7 +123,7 @@
     if($(this).hasClass("collapsed")) {
       $(this).expand();
     } else {
-      $(this).removeClass("expanded").collapse();
+      $(this).removeClass("expanded").collapseBranch();
     }
     
     return this;

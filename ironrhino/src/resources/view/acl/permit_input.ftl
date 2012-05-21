@@ -5,7 +5,7 @@
 </head>
 <body>
 <div id="save">
-<@s.form id="save_form" action="${getUrl(actionBaseUrl+'/save')}" method="post" cssClass="ajax" cssStyle="background-color: #F5F5F5;padding:0 0 10px 20px;border-radius: 10px;">
+<@s.form id="save_form" action="${getUrl(actionBaseUrl+'/save')}" method="post" cssClass="ajax">
 	<@s.hidden name="role" />
 	<#list resources?keys as group>
 	<div class="checkboxgroup">

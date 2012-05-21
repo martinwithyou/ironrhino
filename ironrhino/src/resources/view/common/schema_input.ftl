@@ -13,9 +13,11 @@
 		<@s.hidden name="schema.description" />
 	<@s.hidden name="schema.strict" />
 		<#else>
+		<div class="clearfix" style="margin-bottom:10px;">
 		<div style="float:left;width:30%;"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable"/></div>
 		<div style="float:left;width:40%;"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description" /></div>
 		<div style="float:left;width:30%;"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" /></div>
+		</div>
 	</#if>
 	<table border="0" class="datagrid highlightrow highlightrow" style="width:100%;padding-top:10px;">
 		<style scoped>
@@ -33,7 +35,7 @@
 				<td>${action.getText('type')}</td>
 				<td>${action.getText('required')}</td>
 				<td>${action.getText('strict')}</td>
-				<td class="manipulate"><button type="button" class="btn add">+</button></td>
+				<td class="manipulate"></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -47,7 +49,7 @@
 			<tr class="linkage">
 				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssStyle="width:120px;"/></td>
 				<td>
-					<table border="0" class="datagrid showonadd linkage_component SELECT CHECKBOX">
+					<table border="0" class="datagrid showonadd linkage_component SELECT CHECKBOX" style="width:100%;">
 						<tbody>
 							<#assign size = 0>
 							<#if schema.fields[index]?? && schema.fields[index].values?? && schema.fields[index].values?size gt 0>
@@ -55,8 +57,8 @@
 							</#if>
 							<#list 0..size as index2>
 							<tr>
-								<td><@s.textfield theme="simple" name="schema.fields[${index}].values[${index2}]" cssClass="required" cssStyle="width:150px;"/></td>
-								<td class="manipulate"><button type="button" class="btn add">+</button><button type="button" class="btn remove">-</button><button type="button" class="btn moveup">↑</button><button type="button" class="btn movedown">↓</button></td>
+								<td><@s.textfield theme="simple" name="schema.fields[${index}].values[${index2}]" cssClass="required" cssStyle="width:90%;"/></td>
+								<td class="manipulate"></td>
 							</tr>
 							</#list>
 						</tbody>
@@ -65,7 +67,7 @@
 				<td><@s.select theme="simple" name="schema.fields[${index}].type" cssClass="linkage_switch" cssStyle="width:60px;" list="@org.ironrhino.common.model.SchemaFieldType@values()" listKey="name" listValue="displayName"/></td>
 				<td><span class="showonadd linkage_component SELECT INPUT"><@s.checkbox theme="simple" name="schema.fields[${index}].required"/></span></td>
 				<td><span class="showonadd linkage_component SELECT"><@s.checkbox theme="simple" name="schema.fields[${index}].strict"/></span></td>
-				<td class="manipulate"><button type="button" class="btn add">+</button><button type="button" class="btn remove">-</button><button type="button" class="btn moveup">↑</button><button type="button" class="btn movedown">↓</button></td>
+				<td class="manipulate"></td>
 			</tr>
 			</#list>
 		</tbody>
