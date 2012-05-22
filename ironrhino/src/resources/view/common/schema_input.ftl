@@ -19,7 +19,7 @@
 		<div style="float:left;width:30%;"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" /></div>
 		</div>
 	</#if>
-	<table border="0" class="datagrid highlightrow highlightrow" style="width:100%;padding-top:10px;">
+	<table class="datagrid table">
 		<style scoped>
 		tr.linkage{
 			background-color:#F5F5F5;
@@ -49,7 +49,7 @@
 			<tr class="linkage">
 				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssStyle="width:120px;"/></td>
 				<td>
-					<table border="0" class="datagrid showonadd linkage_component SELECT CHECKBOX" style="width:100%;">
+					<table class="datagrid showonadd linkage_component SELECT CHECKBOX" style="width:100%;">
 						<tbody>
 							<#assign size = 0>
 							<#if schema.fields[index]?? && schema.fields[index].values?? && schema.fields[index].values?size gt 0>

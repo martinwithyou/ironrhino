@@ -34,12 +34,6 @@
 							removeRow(event, options);
 						}
 					});
-			$('[class*=icon-]', this).hover(function() {
-						$(this).addClass('icon-white').css('cursor', 'pointer');
-					}, function() {
-						$(this).removeClass('icon-white').css('cursor',
-								'default');
-					});
 			$('thead .add', this).click(function(event) {
 				var row = $(event.target).closest('table.datagrided')
 						.children('tbody').children(':not(.nontemplate):eq(0)');

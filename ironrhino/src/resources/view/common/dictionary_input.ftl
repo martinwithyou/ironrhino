@@ -17,7 +17,7 @@
 		<div style="float:left;width:40%;"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="dictionary.description" /></div>
 	</div>
 	</#if>
-	<table border="0" class="datagrid highlightrow" style="width:100%;padding-top:10px;">
+	<table class="datagrid table">
 		<style scoped>
 		tr.option{
 			background-color:#F5F5F5;

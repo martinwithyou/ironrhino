@@ -153,3 +153,12 @@ a.remove:hover {
   opacity: 0.4;
   filter: alpha(opacity=40);
 }
+
+.datagrided [class*="icon-"]{
+	cursor:pointer;
+	margin: 3px;
+}
+.datagrided [class*="icon-"]:hover{
+	opacity: 0.4;
+  	filter: alpha(opacity=40);
+}
