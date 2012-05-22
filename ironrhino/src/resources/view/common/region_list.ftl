@@ -16,9 +16,9 @@
 '+r'
 <#if region?? && parentId??>
 <#if region.parent??>
-<a class="btn" href="${getUrl("/common/region?parentId="+region.parent.id)}">${action.getText("upward")}</a><#t>
+<a class="btn" href="${getUrl("/common/region?parentId="+region.parent.id)}">${action.getText("upward")}</a>
 <#else>
-<a class="btn" href="${getUrl("/common/region")}">${action.getText("upward")}</a><#t>
+<a class="btn" href="${getUrl("/common/region")}">${action.getText("upward")}</a>
 </#if>
 </#if>
 '+'

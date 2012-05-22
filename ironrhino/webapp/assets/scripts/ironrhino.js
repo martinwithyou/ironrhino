@@ -34181,7 +34181,8 @@ if (HISTORY_ENABLED) {
 								cache : false,
 								success : function() {
 									$('.nav li a').each(function() {
-										if (this.href == url) {
+										if (this.href == url
+												|| url.indexOf(this.href + '?') == 0) {
 											$('li', $(this).closest('.nav'))
 													.removeClass('active');
 											$(this).closest('li')
@@ -35320,6 +35321,7 @@ Observation.sortableTable = function(container) {
 			$(this).addClass('datagrided');
 			$('td.manipulate', this).css({
 						'width' : '80px',
+						'padding-left' : '10px',
 						'text-align' : 'left'
 					}).each(function() {
 				var t = $(this);
@@ -35574,7 +35576,7 @@ Observation.filterselect = function(container) {
 					t
 							.append('<div class="portal-footer"><button class="btn save">'
 									+ MessageBundle.get('save')
-									+ '</button><button class="btn restore">'
+									+ '</button> <button class="btn restore">'
 									+ MessageBundle.get('restore')
 									+ '</button></div>');
 					$('.portal-footer .save', t).click(function() {

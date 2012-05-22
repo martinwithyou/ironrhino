@@ -30,7 +30,7 @@
 <#noescape>${head}</#noescape>
 </head>
 
-<body style="padding-top: 60px;padding-bottom: 40px;">
+<body style="padding-top: 60px;padding-bottom: 30px;">
 
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 <div class="navbar navbar-fixed-top">
@@ -39,8 +39,7 @@
       <a class="brand" href="<@url value="/"/>">ironrhino</a>
       <div class="btn-group pull-right">
         <a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
-          <i class="icon-user"></i>${authentication("principal")?string}
-          <span class="caret"></span>
+          <i class="icon-user"></i>${authentication("principal")?string} <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
           <li><a href="<@url value="${ssoServerBase!}/user/profile"/>">${action.getText('profile')}</a></li>

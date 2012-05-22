@@ -56,7 +56,7 @@
 					t
 							.append('<div class="portal-footer"><button class="btn save">'
 									+ MessageBundle.get('save')
-									+ '</button><button class="btn restore">'
+									+ '</button> <button class="btn restore">'
 									+ MessageBundle.get('restore')
 									+ '</button></div>');
 					$('.portal-footer .save', t).click(function() {

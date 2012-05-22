@@ -16,9 +16,9 @@
 <button type="button" class="btn" data-action="reload">${action.getText("reload")}</button>
 <#if treeNode?? && parentId??>
 <#if treeNode.parent??>
-<a class="btn" href="${getUrl("/common/treeNode?parentId="+treeNode.parent.id)}">${action.getText("upward")}</a><#t>
+<a class="btn" href="${getUrl("/common/treeNode?parentId="+treeNode.parent.id)}">${action.getText("upward")}</a>
 <#else>
-<a class="btn" href="${getUrl("/common/treeNode")}">${action.getText("upward")}</a><#t>
+<a class="btn" href="${getUrl("/common/treeNode")}">${action.getText("upward")}</a>
 </#if>
 </#if>
 '>

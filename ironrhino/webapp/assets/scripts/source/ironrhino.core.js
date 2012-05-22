@@ -614,7 +614,8 @@ if (HISTORY_ENABLED) {
 								cache : false,
 								success : function() {
 									$('.nav li a').each(function() {
-										if (this.href == url) {
+										if (this.href == url
+												|| url.indexOf(this.href + '?') == 0) {
 											$('li', $(this).closest('.nav'))
 													.removeClass('active');
 											$(this).closest('li')
