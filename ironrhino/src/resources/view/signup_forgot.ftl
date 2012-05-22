@@ -7,10 +7,14 @@
 </@authorize>
 </head>
 <body>
-<@s.form method="post" action="forgot" cssClass="ajax reset">
-	<@s.textfield label="%{getText('email')}" name="email" cssClass="required email"/>
-	<@captcha/>
-	<@s.submit value="%{getText('confirm')}" />
-</@s.form>
+<div class="row">
+	<div class="span4 offset4">
+	<@s.form method="post" action="forgot" cssClass="ajax reset form-horizontal">
+		<@s.textfield label="%{getText('email')}" name="email" cssClass="required email"/>
+		<@captcha/>
+		<@s.submit value="%{getText('confirm')}" />
+	</@s.form>
+	</div>
+</div>
 </body>
 </html></#escape>

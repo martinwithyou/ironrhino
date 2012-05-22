@@ -18,7 +18,7 @@
 <#if treeNode.parent??>
 <a class="btn" href="${getUrl("/common/treeNode?parentId="+treeNode.parent.id)}">${action.getText("upward")}</a><#t>
 <#else>
-<a class="btn" href="${getUrl("/common/treeNode")}"/>${action.getText("upward")}</a><#t>
+<a class="btn" href="${getUrl("/common/treeNode")}">${action.getText("upward")}</a><#t>
 </#if>
 </#if>
 '>
