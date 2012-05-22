@@ -13,9 +13,9 @@
 			var nametarget = null;
 			if (treeoptions.name) {
 				nametarget = $('#' + treeoptions.name);
-				var close = nametarget.children('a.close');
-				if (close.length)
-					close.click(function(event) {
+				var remove = nametarget.children('a.remove');
+				if (remove.length)
+					remove.click(function(event) {
 								nametarget.text(MessageBundle.get('select'));
 								$('#' + treeoptions.id).val('');
 								$(this).remove();
@@ -39,7 +39,9 @@
 					if (nametarget)
 						treeoptions.value = nametarget.is(':input')
 								? nametarget.val()
-								: nametarget.text();
+								: nametarget.contents().filter(function() {
+											return this.nodeType == Node.TEXT_NODE;
+										}).text();
 					if (treeoptions.type != 'treeview') {
 						treeoptions.click = function(treenode) {
 							doclick(treenode, treeoptions);
@@ -93,8 +95,8 @@
 					form.addClass('dirty');
 			} else {
 				nametarget.text(name);
-				$('<a class="close" href="#">&times;</a>').appendTo(nametarget)
-						.click(function(event) {
+				$('<a class="remove" href="#">&times;</a>')
+						.appendTo(nametarget).click(function(event) {
 									nametarget
 											.text(MessageBundle.get('select'));
 									$('#' + treeoptions.id).val('');

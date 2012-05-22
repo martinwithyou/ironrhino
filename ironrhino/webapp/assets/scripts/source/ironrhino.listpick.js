@@ -13,9 +13,9 @@
 			var nametarget = null;
 			if (pickoptions.name) {
 				nametarget = $('#' + pickoptions.name);
-				var close = nametarget.children('a.close');
-				if (close.length)
-					close.click(function(event) {
+				var remove = nametarget.children('a.remove');
+				if (remove.length)
+					remove.click(function(event) {
 								nametarget.text(MessageBundle.get('select'));
 								$('#' + pickoptions.id).val('');
 								$(this).remove();
@@ -59,7 +59,7 @@
 												form.addClass('dirty');
 										} else {
 											nametarget.text(name);
-											$('<a class="close" href="#">&times;</a>')
+											$('<a class="remove" href="#">&times;</a>')
 													.appendTo(nametarget)
 													.click(function(event) {
 														nametarget
@@ -122,7 +122,7 @@
 											.join(separator);
 									nametarget.data('picked', picked)
 											.text(picked);
-									$('<a class="close" href="#">&times;</a>')
+									$('<a class="remove" href="#">&times;</a>')
 											.appendTo(nametarget).click(
 													function(event) {
 														nametarget

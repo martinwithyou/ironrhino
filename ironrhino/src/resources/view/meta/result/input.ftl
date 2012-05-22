@@ -41,7 +41,7 @@
 				<div class="control-group listpick" data-options="{'url':'<@url value="${config.pickUrl}"/>','name':'${key}','id':'${key}Id'}">
 					<label class="control-label" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
 					<div class="controls">
-					<span id="${key}"><#if entity[key]??>${entity[key]!}<a class="close">x</a><#else>...</#if></span>
+					<span id="${key}"><#if entity[key]??>${entity[key]!}<a class="remove" href="#">&times;</a><#else>...</#if></span>
 					</div>
 				</div>
 			<#else>

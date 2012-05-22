@@ -38,7 +38,7 @@
     <div class="container">
       <a class="brand" href="<@url value="/"/>">ironrhino</a>
       <div class="btn-group pull-right">
-        <a class="btn dropdown-toggle" data-toggle="dropdown">
+        <a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
           <i class="icon-user"></i>${authentication("principal")?string}
           <span class="caret"></span>
         </a>

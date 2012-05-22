@@ -130,8 +130,7 @@ ul.attributes li.group ul{
 	padding-left:10px;
 }
 
-a.close {
-  float: right;
+a.remove {
   font-size: 20px;
   font-weight: bold;
   color: #000000;
@@ -140,7 +139,7 @@ a.close {
   filter: alpha(opacity=20);
 }
 
-a.close:hover {
+a.remove:hover {
   color: #000000;
   text-decoration: none;
   cursor: pointer;

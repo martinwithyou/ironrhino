@@ -36457,9 +36457,9 @@ Observation.richtable = function(container) {
 			var nametarget = null;
 			if (treeoptions.name) {
 				nametarget = $('#' + treeoptions.name);
-				var close = nametarget.children('a.close');
-				if (close.length)
-					close.click(function(event) {
+				var remove = nametarget.children('a.remove');
+				if (remove.length)
+					remove.click(function(event) {
 								nametarget.text(MessageBundle.get('select'));
 								$('#' + treeoptions.id).val('');
 								$(this).remove();
@@ -36483,7 +36483,9 @@ Observation.richtable = function(container) {
 					if (nametarget)
 						treeoptions.value = nametarget.is(':input')
 								? nametarget.val()
-								: nametarget.text();
+								: nametarget.contents().filter(function() {
+											return this.nodeType == Node.TEXT_NODE;
+										}).text();
 					if (treeoptions.type != 'treeview') {
 						treeoptions.click = function(treenode) {
 							doclick(treenode, treeoptions);
@@ -36537,8 +36539,8 @@ Observation.richtable = function(container) {
 					form.addClass('dirty');
 			} else {
 				nametarget.text(name);
-				$('<a class="close" href="#">&times;</a>').appendTo(nametarget)
-						.click(function(event) {
+				$('<a class="remove" href="#">&times;</a>')
+						.appendTo(nametarget).click(function(event) {
 									nametarget
 											.text(MessageBundle.get('select'));
 									$('#' + treeoptions.id).val('');
@@ -36584,9 +36586,9 @@ Observation.treeselect = function(container) {
 			var nametarget = null;
 			if (pickoptions.name) {
 				nametarget = $('#' + pickoptions.name);
-				var close = nametarget.children('a.close');
-				if (close.length)
-					close.click(function(event) {
+				var remove = nametarget.children('a.remove');
+				if (remove.length)
+					remove.click(function(event) {
 								nametarget.text(MessageBundle.get('select'));
 								$('#' + pickoptions.id).val('');
 								$(this).remove();
@@ -36630,7 +36632,7 @@ Observation.treeselect = function(container) {
 												form.addClass('dirty');
 										} else {
 											nametarget.text(name);
-											$('<a class="close" href="#">&times;</a>')
+											$('<a class="remove" href="#">&times;</a>')
 													.appendTo(nametarget)
 													.click(function(event) {
 														nametarget
@@ -36693,7 +36695,7 @@ Observation.treeselect = function(container) {
 											.join(separator);
 									nametarget.data('picked', picked)
 											.text(picked);
-									$('<a class="close" href="#">&times;</a>')
+									$('<a class="remove" href="#">&times;</a>')
 											.appendTo(nametarget).click(
 													function(event) {
 														nametarget
