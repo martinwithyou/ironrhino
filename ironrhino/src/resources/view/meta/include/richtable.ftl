@@ -153,7 +153,7 @@ ${value?xhtml}<#t>
 <div class="control-group">
     <div class="controls">
         <div class="input-append">
-            <@s.textfield theme="simple" name="keyword" cssClass="focus" placeholder="%{getText('search')}"/><span class="add-on"><i class="icon-search"></i></span>
+            <input type="text" name="keyword" value="${keyword!}" class="focus" placeholder="${action.getText('search')}"/><span class="add-on"><i class="icon-search"></i></span>
         </div>
     </div>
 </div>
