@@ -29,7 +29,7 @@ td input,td textarea,td select,td .uneditable-input{
 	z-index: 10000;
 	left: 50%;
 	top: 0px;
-	height: 20px;
+	height: 24px;
 	width: 100px;
 	float: right;
 	color: #FFF;
