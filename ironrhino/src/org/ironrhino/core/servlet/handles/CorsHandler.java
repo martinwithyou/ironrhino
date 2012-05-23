@@ -13,7 +13,7 @@ import org.springframework.core.annotation.Order;
 
 @Singleton
 @Named
-@Order(Integer.MIN_VALUE)
+@Order(Integer.MIN_VALUE + 1)
 public class CorsHandler implements AccessHandler {
 
 	@Value("${cors.open:true}")

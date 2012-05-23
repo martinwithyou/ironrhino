@@ -5,7 +5,7 @@
 </head>
 <body>
 <@s.form id="form" action="console" method="post" cssClass="ajax focus">
-	<span>${action.getText('expression')}:</span><@s.textfield theme="simple" id="expression" name="expression" size="50"/>
+	<span>${action.getText('expression')}:</span><@s.textfield theme="simple" id="expression" name="expression" cssStyle="width:400px;"/>
 	<span>${action.getText('global')}:</span><@s.checkbox theme="simple" id="global" name="global"/>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 </@s.form>

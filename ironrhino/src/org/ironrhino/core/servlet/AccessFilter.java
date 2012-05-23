@@ -41,7 +41,7 @@ public class AccessFilter implements Filter {
 
 	public static final boolean DEFAULT_PRINT = true;
 
-	public static final String DEFAULT_EXCLUDEPATTERNS = "/remoting/*,/assets/*";
+	public static final String DEFAULT_EXCLUDEPATTERNS = "/assets/*";
 
 	@Value("${accessFilter.responseTimeThreshold:"
 			+ DEFAULT_RESPONSETIMETHRESHOLD + "}")
