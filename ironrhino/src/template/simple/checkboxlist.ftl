@@ -35,6 +35,7 @@
             <#assign itemValue = stack.findString('top')/>
     </#if>
     <#assign itemKeyStr=itemKey.toString() />
+    <label for="${parameters.name?html}-${itemCount}" class="checkbox inline">
 <input type="checkbox" name="${parameters.name?html}" value="${itemKeyStr?html}"
        id="${parameters.name?html}-${itemCount}"<#rt/>
     <#if tag.contains(parameters.nameValue, itemKey) || tag.contains(parameters.nameValue, itemValue)>
@@ -50,7 +51,7 @@
     <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
     <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
         />
-<label for="${parameters.name?html}-${itemCount}" class="checkboxLabel">${itemValue?html}</label>
+${itemValue?html}</label>
 </@s.iterator>
     <#else>
     &nbsp;

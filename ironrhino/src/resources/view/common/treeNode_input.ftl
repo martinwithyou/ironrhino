@@ -9,10 +9,12 @@
 		<@s.hidden name="treeNode.id" />
 	</#if>
 	<@s.hidden name="parentId" />
-	<@s.textfield label="%{getText('name')}" name="treeNode.name" />
-	<@s.textfield label="%{getText('description')}" name="treeNode.description" />
-	<@s.textfield label="%{getText('displayOrder')}" name="treeNode.displayOrder" cssClass="integer"/>
-	<table class="datagrid table nullable">
+	<div class="row-fluid">
+		<div class="span4"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="treeNode.name" cssClass="required" /></div>
+		<div class="span4"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="treeNode.description" /></div>
+		<div class="span4"><span>${action.getText('displayOrder')}: </span><@s.textfield theme="simple" name="treeNode.displayOrder" cssClass="integer"/></div>
+	</div>
+	<table class="datagrid table table-condensed nullable" style="margin-top:10px;">
 		<thead>
 			<tr>
 				<td>${action.getText('name')}</td>

@@ -12,12 +12,12 @@
 		<@s.hidden name="dictionary.name"/>
 		<@s.hidden name="dictionary.description" />
 	<#else>
-	<div class="clearfix" style="margin-bottom:10px;"> 
-		<div style="float:left;width:40%;"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="dictionary.name" cssClass="required checkavailable"/></div>
-		<div style="float:left;width:40%;"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="dictionary.description" /></div>
+	<div class="row-fluid">
+		<div class="span5"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="dictionary.name" cssClass="required checkavailable"/></div>
+		<div class="span5"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="dictionary.description" /></div>
 	</div>
 	</#if>
-	<table class="datagrid table">
+	<table class="datagrid table table-condensed">
 		<style scoped>
 		tr.option{
 			background-color:#F5F5F5;

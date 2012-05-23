@@ -8,15 +8,15 @@
 </head>
 <body>
 <#if providers??>
-<ul class="clearfix">
+<div class="row">
 <#list providers as var>
-<li style="float:left;width:200px;list-style:none;">
+<div class="span2" style="height:100px;">
 <a href="${request.requestURL}?id=${var.name}<#if targetUrl??>&targetUrl=${targetUrl?url}</#if>">
-	<img src="${var.logo}" alt="${var.name}" style="padding:5px 0 0 5px;max-width:195px;"/>
+	<img src="${var.logo}" alt="${var.name}"/>
 </a>
-</li>
+</div>
 </#list>
-</ul>
+</div>
 </#if>
 </body>
 </html></#escape>

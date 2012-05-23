@@ -13,13 +13,13 @@
 		<@s.hidden name="schema.description" />
 	<@s.hidden name="schema.strict" />
 		<#else>
-		<div class="clearfix" style="margin-bottom:10px;">
-		<div style="float:left;width:30%;"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable"/></div>
-		<div style="float:left;width:40%;"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description" /></div>
-		<div style="float:left;width:30%;"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" /></div>
+		<div class="row-fluid">
+			<div class="span4"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable"/></div>
+			<div class="span5"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description" /></div>
+			<div class="span3"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" /></div>
 		</div>
 	</#if>
-	<table class="datagrid table">
+	<table class="datagrid table table-condensed">
 		<style scoped>
 		tr.linkage{
 			background-color:#F5F5F5;
@@ -31,7 +31,7 @@
 		<thead>
 			<tr>
 				<td>${action.getText('name')}</td>
-				<td>${action.getText('value')}</td>
+				<td style="width:40%;">${action.getText('value')}</td>
 				<td>${action.getText('type')}</td>
 				<td>${action.getText('required')}</td>
 				<td>${action.getText('strict')}</td>
@@ -47,9 +47,9 @@
 			<#if schema.fields[index]?? && schema.fields[index].type??>
 			</#if>
 			<tr class="linkage">
-				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssStyle="width:120px;"/></td>
+				<td><@s.textfield theme="simple" name="schema.fields[${index}].name" cssStyle="width:100px;"/></td>
 				<td>
-					<table class="datagrid showonadd linkage_component SELECT CHECKBOX" style="width:100%;">
+					<table class="datagrid showonadd linkage_component SELECT CHECKBOX">
 						<tbody>
 							<#assign size = 0>
 							<#if schema.fields[index]?? && schema.fields[index].values?? && schema.fields[index].values?size gt 0>
@@ -57,7 +57,7 @@
 							</#if>
 							<#list 0..size as index2>
 							<tr>
-								<td><@s.textfield theme="simple" name="schema.fields[${index}].values[${index2}]" cssClass="required" cssStyle="width:90%;"/></td>
+								<td><@s.textfield theme="simple" name="schema.fields[${index}].values[${index2}]" cssClass="required" cssStyle="width:95%;"/></td>
 								<td class="manipulate"></td>
 							</tr>
 							</#list>

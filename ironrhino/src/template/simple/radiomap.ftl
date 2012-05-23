@@ -32,6 +32,7 @@
     <#else>
         <#assign itemValue = stack.findString('top')/>
     </#if>
+<label for="${parameters.id?html}${itemKeyStr?html}" class="radio inline"><#rt/>    
 <input type="radio"<#rt/>
 <#if parameters.name??>
  name="${parameters.name?html}"<#rt/>
@@ -63,7 +64,6 @@
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
 /><#rt/>
-<label for="${parameters.id?html}${itemKeyStr?html}"><#rt/>
     ${itemValue}<#t/>
 </label>
 </@s.iterator>
