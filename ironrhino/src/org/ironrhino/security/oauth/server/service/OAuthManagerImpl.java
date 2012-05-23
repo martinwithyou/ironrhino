@@ -56,6 +56,7 @@ public class OAuthManagerImpl implements OAuthManager {
 	public Authorization reuse(Authorization auth) {
 		auth.setCode(CodecUtils.nextId());
 		auth.setModifyDate(new Date());
+		auth.setLifetime(Authorization.DEFAULT_LIFETIME);
 		entityManager.save(auth);
 		return auth;
 	}
@@ -170,7 +171,8 @@ public class OAuthManagerImpl implements OAuthManager {
 
 	public Client findClientById(String clientId) {
 		entityManager.setEntityClass(Client.class);
-		return (Client) entityManager.get(clientId);
+		Client c = (Client) entityManager.get(clientId);
+		return c != null && c.isEnabled() ? c : null;
 	}
 
 	public List<Client> findClientByOwner(User owner) {

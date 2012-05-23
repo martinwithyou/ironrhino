@@ -16,6 +16,8 @@ import org.ironrhino.security.model.UserRole;
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 public class Authorization extends BaseEntity {
 
+	public static final int DEFAULT_LIFETIME = 3600;
+
 	private static final long serialVersionUID = -559379341059695550L;
 
 	@NaturalId
@@ -35,7 +37,7 @@ public class Authorization extends BaseEntity {
 	private String code;
 
 	@UiConfig(displayOrder = 6)
-	private int lifetime = 3600;
+	private int lifetime = DEFAULT_LIFETIME;
 
 	@UiConfig(displayOrder = 7)
 	private String refreshToken;

@@ -4,17 +4,20 @@
 <title>${action.getText(name)}</title>
 </head>
 <body>
-<div class="crumbs"> 
-${action.getText('current.location')}:
-<a href="<@url value="/"/>">${action.getText('index')}</a><span>&gt;</span>
+<ul class="breadcrumb">
+	<li>
+    	<a href="<@url value="/"/>">${action.getText('index')}</a> <span class="divider">/</span>
+	</li>
 <#if !column??>
-	${action.getText(name)}
+	<li class="active">${action.getText(name)}</li>
 <#else>
-	<a href="<@url value="/${name}"/>">${action.getText(name)}</a><span>&gt;</span>
-	${column!}
+	<li>
+    	<a href="<@url value="/${name}"/>">${action.getText(name)}</a> <span class="divider">/</span>
+	</li>
+	<li class="active">${column!}</li>
 </#if>
-</div>
-<div class="clearfix column ${name}">
+</ul>
+<div class="column ${name}">
 <ul class="catalog">
 <#list columns as var>
 <#assign active=column?? && column==var/>

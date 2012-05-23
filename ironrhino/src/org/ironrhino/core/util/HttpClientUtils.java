@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
@@ -24,8 +25,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.conn.BasicClientConnectionManager;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -65,14 +66,14 @@ public class HttpClientUtils {
 				.getSocketFactory()));
 		ClientConnectionManager clientConnectionManager;
 		if (single)
-			clientConnectionManager = new SingleClientConnManager(
+			clientConnectionManager = new BasicClientConnectionManager(
 					schemeRegistry);
 		else {
-			ThreadSafeClientConnManager tsccm = new ThreadSafeClientConnManager(
-					schemeRegistry);
-			tsccm.setDefaultMaxPerRoute(5);
-			tsccm.setMaxTotal(100);
-			clientConnectionManager = tsccm;
+			PoolingClientConnectionManager cm = new PoolingClientConnectionManager(
+					schemeRegistry, 60, TimeUnit.SECONDS);
+			cm.setDefaultMaxPerRoute(5);
+			cm.setMaxTotal(100);
+			clientConnectionManager = cm;
 		}
 		DefaultHttpClient httpclient = new DefaultHttpClient(
 				clientConnectionManager, params);

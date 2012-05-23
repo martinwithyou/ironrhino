@@ -75,6 +75,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 	public Authorization reuse(Authorization auth) {
 		auth.setCode(CodecUtils.nextId());
 		auth.setModifyDate(new Date());
+		auth.setLifetime(Authorization.DEFAULT_LIFETIME);
 		authorizationRedisTemplate.opsForValue().set(
 				NAMESPACE_AUTHORIZATION + auth.getId(), auth, expireTime,
 				TimeUnit.SECONDS);
@@ -226,7 +227,8 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 
 	public Client findClientById(String clientId) {
 		String key = NAMESPACE_CLIENT + clientId;
-		return clientRedisTemplate.opsForValue().get(key);
+		Client c = clientRedisTemplate.opsForValue().get(key);
+		return c != null && c.isEnabled() ? c : null;
 	}
 
 	@SuppressWarnings("unchecked")

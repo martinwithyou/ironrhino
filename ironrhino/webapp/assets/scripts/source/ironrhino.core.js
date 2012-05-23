@@ -900,7 +900,7 @@ Observation.common = function(container) {
 				pause : 1
 			};
 			$.extend(options, (new Function("return "
-							+ ($(this).data('cycleoptions') || '{}')))());
+							+ ($(this).data('options') || '{}')))());
 			$(this).cycle(options);
 		});
 	$('a.ajax,form.ajax', container).each(function() {

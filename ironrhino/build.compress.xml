@@ -81,7 +81,7 @@
 					name="${webapp.dir}/assets/scripts/source/ironrhino.filtercolumn.js" />
 			</filelist>
 		</concat>
-		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-lite-njq.js"
+		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-lite.js"
 			encoding="utf-8" fixlastline="yes">
 			<filelist>
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
@@ -96,7 +96,6 @@
 					name="${webapp.dir}/assets/scripts/source/jquery.cycle.lite-2.88.js" />
 				<file
 					name="${webapp.dir}/assets/scripts/source/jquery.throttle-debounce-1.1.js" />
-				<file name="${webapp.dir}/assets/scripts/source/bootstrap-2.0.3.js" />
 				<file
 					name="${webapp.dir}/assets/scripts/source/ironrhino.messagebundle.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.core.js" />
@@ -106,9 +105,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxupload.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.marquee.js" />
-				<file
-					name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
-				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
 			</filelist>
 		</concat>
 		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
@@ -117,9 +113,9 @@
 		</java>
 		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
 			<arg
-				line=" --js=./webapp/assets/scripts/ironrhino-lite-njq.js --js_output_file=./webapp/assets/scripts/ironrhino-lite-njq-min.js" />
+				line=" --js=./webapp/assets/scripts/ironrhino-lite.js --js_output_file=./webapp/assets/scripts/ironrhino-lite-min.js" />
 		</java>
-		<delete file="${basedir}/webapp/assets/scripts/ironrhino-lite-njq.js" />
+		<delete file="${basedir}/webapp/assets/scripts/ironrhino-lite.js" />
 	</target>
 
 	<target name="compressStyles">
@@ -134,8 +130,6 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.jnotify.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.clickmenu.css" />
-				<file name="${webapp.dir}/assets/styles/source/bootstrap.css" />
-				<file name="${webapp.dir}/assets/styles/source/bootstrap-responsive.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.cms.css" />
@@ -160,7 +154,6 @@
 				<file name="${webapp.dir}/assets/styles/source/bootstrap.css" />
 				<file name="${webapp.dir}/assets/styles/source/bootstrap-responsive.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
-				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.cms.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
 			</filelist>
@@ -174,10 +167,6 @@
 				line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-lite-min.css ./webapp/assets/styles/ironrhino-lite.css" />
 		</java>
 		<delete file="${basedir}/webapp/assets/styles/ironrhino-lite.css" />
-		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
-			<arg
-				line=" --charset utf-8 --type css -o ./webapp/assets/styles/app-min.css ./webapp/assets/styles/app.css" />
-		</java>
 	</target>
 
 </project>

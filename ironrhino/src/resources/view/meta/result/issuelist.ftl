@@ -4,12 +4,13 @@
 <title>${action.getText(name)}</title>
 </head>
 <body>
-<div class="crumbs"> 
-${action.getText('current.location')}:
-<a href="<@url value="/"/>">${action.getText('index')}</a><span>&gt;</span>
-	${action.getText(name)}
-</div>
-<div class="clearfix issue ${name}">
+<ul class="breadcrumb">
+	<li>
+    	<a href="<@url value="/"/>">${action.getText('index')}</a> <span class="divider">/</span>
+	</li>
+	<li class="active">${action.getText(name)}</li>
+</ul>
+<div class="issue ${name}">
 <div class="list">
 <dl>
 <#list resultPage.result as page>
