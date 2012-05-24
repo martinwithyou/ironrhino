@@ -376,6 +376,12 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		List<TE> children = new ArrayList<TE>();
 		for (TE r : list) {
 			boolean isChild = false;
+			if (te.getId() == null && StringUtils.isNotBlank(te.getFullId())) {
+				// workaround for javassist-3.16.x
+				String fullId = te.getFullId();
+				String id = fullId.substring(fullId.lastIndexOf('.') + 1);
+				te.setId(Long.valueOf(id));
+			}
 			if (te.getId() == 0) {
 				if (r.getFullId().indexOf('.') < 0)
 					isChild = true;
