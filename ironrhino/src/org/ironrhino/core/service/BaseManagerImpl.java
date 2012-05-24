@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -363,7 +364,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			TE root = (TE) getEntityClass().newInstance();
 			root.setId(0L);
 			root.setName("");
-			assemble(root, (List<TE>) findAll());
+			assemble(root, (List<TE>) findAll(Order.asc("level")));
 			return root;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -374,7 +375,14 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	private <TE extends BaseTreeableEntity<TE>> void assemble(TE te,
 			List<TE> list) throws Exception {
 		List<TE> children = new ArrayList<TE>();
-		for (TE r : list) {
+		Iterator<TE> it = list.iterator();
+		while (it.hasNext()) {
+			TE r = it.next();
+			// already order by level asc
+			if (r.getLevel() <= te.getLevel())
+				continue;
+			if (r.getLevel() - te.getLevel() > 1)
+				break;
 			boolean isChild = false;
 			if (te.getId() == null && StringUtils.isNotBlank(te.getFullId())) {
 				// workaround for javassist-3.16.x
@@ -393,6 +401,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 					isChild = true;
 			}
 			if (isChild) {
+				it.remove();
 				TE rr = (TE) te.getClass().newInstance();
 				BeanUtils.copyProperties(r, rr);
 				children.add(rr);
