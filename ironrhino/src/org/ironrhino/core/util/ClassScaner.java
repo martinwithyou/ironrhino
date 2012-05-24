@@ -75,13 +75,13 @@ public class ClassScaner {
 	public static Set<Class<?>> scanAnnotated(String[] basePackages,
 			Class<? extends Annotation> annotation) {
 		ClassScaner cs = new ClassScaner();
-			cs.addIncludeFilter(new AnnotationTypeFilter(annotation));
+		cs.addIncludeFilter(new AnnotationTypeFilter(annotation));
 		Set<Class<?>> classes = new HashSet<Class<?>>();
 		for (String s : basePackages)
 			classes.addAll(cs.doScan(s));
-		return  classes;
+		return classes;
 	}
-	
+
 	@SafeVarargs
 	public static Set<Class<?>> scanAnnotated(String[] basePackages,
 			Class<? extends Annotation>... annotations) {
@@ -114,11 +114,11 @@ public class ClassScaner {
 			set.addAll(cs.doScan(s));
 		return set;
 	}
-	
+
 	public static Set<Class<?>> scanAnnotatedPackage(String basePackage,
 			Class<? extends Annotation> annotation) {
 		ClassScaner cs = new ClassScaner();
-			cs.addIncludeFilter(new AnnotationTypeFilter(annotation));
+		cs.addIncludeFilter(new AnnotationTypeFilter(annotation));
 		return cs.doScan(basePackage, "/**/*/package-info.class");
 	}
 
@@ -229,12 +229,13 @@ public class ClassScaner {
 
 	private static String[] excludePackages = new String[] { "java", "javax",
 			"com.sun", "sun", "org.w3c", "org.xml", "antlr", "com.bea",
-			"com.caucho", "com.chenlb", "com.google", "com.ibm", "com.jolbox",
-			"com.mysql", "com.opensymphony", "com.oracle", "freemarker",
-			"javassist", "jsr166y", "net.sf", "net.sourceforge", "ognl",
-			"org.antlr", "org.aopalliance", "org.apache", "org.aspectj",
+			"com.caucho", "com.chenlb", "com.fasterxml", "com.google",
+			"com.ibm", "com.jolbox", "com.mongodb", "com.mysql",
+			"com.opensymphony", "com.oracle", "freemarker", "javassist",
+			"jsr166y", "net.sf", "net.sourceforge", "ognl", "org.antlr",
+			"org.aopalliance", "org.apache", "org.aspectj", "org.bson",
 			"org.codehaus", "org.compass", "org.dom4j", "org.eclipse",
-			"org.hibernate", "org.ietf", "org.mvel2", "org.slf4j",
+			"org.hibernate", "org.ietf", "org.jcp", "org.mvel2", "org.slf4j",
 			"org.springframework", "org.ironrhino.core", "weblogic" };
 
 }
