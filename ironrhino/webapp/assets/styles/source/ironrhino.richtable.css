@@ -63,9 +63,9 @@ table.richtable td,th {
 	color: black;
 }
 .richtable .selected td {
-	background-color: #ffeedd;
+	background-color: #FFC;
 }
-.richtable .odd .edited,.richtable .even .edited,.richtable .highlight .edited,.richtable .edited{
+.richtable td.edited{
 	background-color: #fff3f0;
 }
 .richtable .inputPage {

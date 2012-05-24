@@ -722,11 +722,6 @@ Observation.common = function(container) {
 						$(this).attr('maxlength', '255');
 				}
 			});
-	$('.highlightrow tbody tr', container).hover(function() {
-				$(this).addClass('highlight');
-			}, function() {
-				$(this).removeClass('highlight');
-			});
 	$('.linkage', container).each(function() {
 		var c = $(this);
 		c.data('originalclass', c.attr('class'));

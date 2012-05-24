@@ -34289,11 +34289,6 @@ Observation.common = function(container) {
 						$(this).attr('maxlength', '255');
 				}
 			});
-	$('.highlightrow tbody tr', container).hover(function() {
-				$(this).addClass('highlight');
-			}, function() {
-				$(this).removeClass('highlight');
-			});
 	$('.linkage', container).each(function() {
 		var c = $(this);
 		c.data('originalclass', c.attr('class'));
@@ -35918,7 +35913,8 @@ Richtable = {
 								create = false;
 						}
 						if (create) {
-							$('button[type="submit"]', inputform).addClass('btn-primary')
+							$('button[type="submit"]', inputform)
+									.addClass('btn-primary')
 									.after(' <button type="submit" class="btn save_and_create">'
 											+ MessageBundle
 													.get('save.and.create')
@@ -36137,7 +36133,7 @@ Richtable = {
 		var theadCells = $('.richtable thead:eq(0) td');
 		$.each($('.richtable tbody')[0].rows, function() {
 			var row = this;
-			if ($(row).hasClass('edited')) {
+			if ($('td.edited',row).length) {
 				modified = true;
 				var params = {};
 				var entity = form.data('entity') || form.attr('action');
@@ -36164,8 +36160,8 @@ Richtable = {
 								'X-Edit' : 'cell'
 							},
 							onsuccess : function() {
-								$(row).removeClass('edited');
 								$('td', row).removeClass('edited')
+										.removeData('oldvalue');
 							}
 						});
 			}
@@ -36182,7 +36178,8 @@ Richtable = {
 		ce.addClass('editing');
 		var value = ce.data('cellvalue');
 		value = $.trim(value || ce.text());
-		ce.data('oldvalue', value);
+		if (!ce.hasClass('edited'))
+			ce.data('oldvalue', value);
 		var template = '';
 		if (templateId) {
 			template = $('#' + templateId).text();
@@ -36237,9 +36234,9 @@ Richtable = {
 			cell.text(ce.val());
 		if (cell.data('oldvalue') != cell.data('cellvalue')) {
 			cell.addClass('edited');
-			cell.parent().addClass('edited');
+		}else{
+			cell.removeClass('edited');
 		}
-		cell.removeData('oldvalue');
 	},
 	updatePasswordCell : function(cellEdit) {
 		var ce = $(cellEdit);
@@ -36247,7 +36244,6 @@ Richtable = {
 		cell.text('********');
 		cell.data('cellvalue', ce.val());
 		cell.addClass('edited').removeClass('editing');
-		cell.parent().addClass('edited');
 
 	}
 };

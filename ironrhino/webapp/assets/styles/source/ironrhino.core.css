@@ -244,15 +244,12 @@ img.captcha {
 	background: #FF6;
 }
 
-tr.highlight td{
-	background: #ddeeff !important;
+.highlightrow tr:hover td{
+	background: #EEE;
 }
 
 thead,tfoot {
-	background-color: #E5ECF9;
-}
-tr.selected {
-	background: #EBC79E;
+	background-color: #DDD;
 }
 
 ul.attributes li{
