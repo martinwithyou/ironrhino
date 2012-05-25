@@ -20,7 +20,7 @@
 			<#assign readonly=config.readonly>
 		</#if>
 		<#if config.type=='textarea'>
-			<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cols="50" rows="5" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes/>
+			<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cssStyle="width:400px;height:150px;" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes/>
 		<#elseif config.type=='checkbox'>
 			<#if !readonly>
 				<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" dynamicAttributes=config.dynamicAttributes />

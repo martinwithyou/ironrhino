@@ -103,7 +103,7 @@ ${value?xhtml}<#t>
 <#macro rtend buttons='' readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' showPageSize=true>
 </tbody>
 </table>
-<div class="toolbar row">
+<div class="toolbar row-fluid">
 <div class="pagination span4">
 <#if resultPage??>
 <ul>
