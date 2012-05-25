@@ -122,15 +122,15 @@ ${value?xhtml}<#t>
 <li><a class="lastPage" title="${action.getText('lastpage')}" href="${resultPage.renderUrl(resultPage.totalPage)}">&gt;&gt;</a></li>
 </#if>
 <li>
-<input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/><span>/</span><strong class="totalPage">${resultPage.totalPage}</strong><span>${action.getText('page')}</span>
+<input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/><span>/</span><strong class="totalPage">${resultPage.totalPage}</strong>
 <#if showPageSize>
-<span>${action.getText('pagesize')}</span><select name="resultPage.pageSize" class="pageSize">
+<select name="resultPage.pageSize" class="pageSize">
 <#local array=[5,10,20,50,100,500]>
 <#list array as ps>
 <option value="${ps}" <#if resultPage.pageSize==ps>selected</#if>>${ps}</option>
 </#list> 
 <option value="${resultPage.totalRecord}">${action.getText('all')}</option>
-</select><span>${action.getText('row')}</span>
+</select>
 </#if>
 <#else>
 </#if>
