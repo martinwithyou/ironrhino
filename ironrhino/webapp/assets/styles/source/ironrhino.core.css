@@ -252,7 +252,7 @@ img.captcha {
 	background: #FF6;
 }
 
-.highlightrow tr:hover td{
+.highlightrow tbody tr:hover td{
 	background: #EEE;
 }
 

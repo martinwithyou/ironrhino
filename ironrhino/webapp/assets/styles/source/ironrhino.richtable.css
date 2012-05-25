@@ -46,19 +46,12 @@ table.richtable td,th {
 .richtable .resizeTitle{
 	line-height:200%;
 }
-.richtable .odd a,.even a {
-	color: Black;
+.richtable tbody tr:nth-child(even) td {
+  background-color: #f3f4f3;
 }
 .richtable td.checkbox {
 	text-align: center;
 }
-.richtable .odd td {
-	background-color: #FFFFFF;
-}
-.richtable .even td {
-	background-color: #f3f4f3;
-}
-
 .richtable .selected a,.highlight a {
 	color: black;
 }

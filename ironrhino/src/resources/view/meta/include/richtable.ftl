@@ -9,7 +9,7 @@
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
 <#local index=index+1>
-<@rttbodytrstart entity=entity odd=(index%2==1) readonly=readonly showCheckColumn=showCheckColumn multipleCheck=multipleCheck/>
+<@rttbodytrstart entity=entity readonly=readonly showCheckColumn=showCheckColumn multipleCheck=multipleCheck/>
 <#list columns?keys as name>
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>
@@ -60,8 +60,8 @@ ${action.getText(name)}
 <tbody>
 </#macro>
 
-<#macro rttbodytrstart entity odd readonly=false showCheckColumn=true multipleCheck=true>
-<tr class="${odd?string('odd','even')}"<#if !showCheckColumn&&entity.id??> data-rowid="${entity.id?string}"</#if>>
+<#macro rttbodytrstart entity readonly=false showCheckColumn=true multipleCheck=true>
+<tr<#if !showCheckColumn&&entity.id??> data-rowid="${entity.id?string}"</#if>>
 <#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if entity.id??> value="${entity.id?string}"</#if>/></td></#if>
 </#macro>
 

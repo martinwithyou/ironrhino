@@ -43,7 +43,7 @@
 <#assign index=0>
 <#list resultPage.result as entity>
 <#assign index=index+1>
-<@rttbodytrstart entity=entity odd=(index%2==1) readonly=readonly/>
+<@rttbodytrstart entity=entity readonly=readonly/>
 	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
 		<#if !config.hiddenInList>

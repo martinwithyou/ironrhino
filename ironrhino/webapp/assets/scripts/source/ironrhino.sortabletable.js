@@ -195,11 +195,6 @@
 			}
 		},
 		addRowClass : function(r, i) {
-			$(r).removeClass(SortableTable.options.rowEvenClass);
-			$(r).removeClass(SortableTable.options.rowOddClass);
-			$(r).addClass(((i + 1) % 2 == 0
-					? SortableTable.options.rowEvenClass
-					: SortableTable.options.rowOddClass));
 		},
 		getHeaderCells : function(table, cell) {
 			if (!table)
@@ -259,9 +254,7 @@
 			columnClass : 'sortcol',
 			descendingClass : 'sortdesc',
 			ascendingClass : 'sortasc',
-			nosortClass : 'nosort',
-			rowEvenClass : 'even',
-			rowOddClass : 'odd'
+			nosortClass : 'nosort'
 		},
 		_count : 0
 	};
