@@ -10,15 +10,13 @@
 	</li>
 	<li class="active">${action.getText(name)}</li>
 </ul>
-<div class="issue ${name}">
-<div class="list">
-<dl>
+<div class="container-fluid issue ${name}">
+<div id="list">
+<ul class="unstyled">
 <#list resultPage.result as page>
-	<dd>
-		<a href="<@url value="/${name}/p${page.path}"/>"><#if page.title??><#assign title=page.title?interpret><@title/></#if></a><span class="date">${page.createDate?date}</span>
-	</dd>
+	<li><a href="<@url value="/${name}/p${page.path}"/>"><#if page.title??><#assign title=page.title?interpret><@title/></#if></a><span class="pull-right">${page.createDate?date}</span></li>
 </#list>
-</dl>
+</ul>
 <@pagination class="ajax view history" replacement="list" cache="true"/>
 </div>
 </div>

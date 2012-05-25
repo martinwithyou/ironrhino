@@ -76,7 +76,7 @@ public class SeriesPageAction extends BaseAction {
 				Page p = pages.get(i);
 				if (p.getPath().equals(path)) {
 					page = p;
-					if (isShowBar()) {
+					if (isShowPager()) {
 						if (i > 0)
 							previousPage = pages.get(i - 1);
 						if (i < pages.size() - 1)
@@ -91,7 +91,7 @@ public class SeriesPageAction extends BaseAction {
 		return "series";
 	}
 
-	public boolean isShowBar() {
+	public boolean isShowPager() {
 		return false;
 	}
 

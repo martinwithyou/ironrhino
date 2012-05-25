@@ -10,11 +10,11 @@
 	</li>
 	<li class="active">${action.getText(name)}</li>
 </ul>
-<div class="issue ${name}">
+<div class="container-fluid issue ${name}">
 <#if page??>
-<div class="chapter">
-	<h3 class="title">${page.title!}</h3>
-	<div class="date">${page.createDate?date}</div>
+<div>
+	<h3 class="title" style="text-align:center;">${page.title!}</h3>
+	<div class="date" style="text-align:center;">${page.createDate?date}</div>
 	<div class="content">
 		<@includePage path="${page.path}"/>
 	</div>

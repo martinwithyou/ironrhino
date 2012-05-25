@@ -17,20 +17,24 @@
 	<li class="active">${column!}</li>
 </#if>
 </ul>
-<div class="column ${name}">
-<ul class="catalog">
-<#list columns as var>
-<#assign active=column?? && column==var/>
-<li<#if active> class="active"</#if>><a href="<@url value="/${name}/list/${var}"/>" class="ajax view history">${var}</a></li>
-</#list>
-</ul>
-<#if page??>
-<div class="chapter">
-	<div class="content">
-		<@includePage path="${page.path}"/>
-	</div>
-</div>
-</#if>
+<div class="container-fluid column ${name}">
+  <div class="row-fluid">
+    <div class="span2">
+		<ul class="nav nav-list">
+			<li class="nav-header">${name}</li>
+			<#list columns as var>
+			<#assign active=column?? && column==var/>
+			<li<#if active> class="active"</#if>><a href="<@url value="/${name}/list/${var}"/>" class="ajax view history">${var}</a></li>
+			</#list>
+		</ul>
+    </div>
+    <div class="span10">
+    <#if page??>
+    	<h3 class="title" style="text-align:center;">${page.title!}</h3>
+    	<div class="content"><@includePage path="${page.path}"/></div>
+	</#if>
+    </div>
+  </div>
 </div>
 </body>
 </html></#escape>

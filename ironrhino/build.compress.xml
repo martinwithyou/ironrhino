@@ -134,7 +134,6 @@
 				<file name="${webapp.dir}/assets/styles/source/bootstrap-responsive.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
-				<file name="${webapp.dir}/assets/styles/source/ironrhino.cms.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.portal.css" />
 				<file
 					name="${webapp.dir}/assets/styles/source/ironrhino.sortabletable.css" />
@@ -153,7 +152,6 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.tipsy.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
-				<file name="${webapp.dir}/assets/styles/source/ironrhino.cms.css" />
 			</filelist>
 		</concat>
 		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
