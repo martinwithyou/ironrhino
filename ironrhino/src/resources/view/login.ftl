@@ -9,7 +9,7 @@
 <body>
 <div class="row">
 	<div class="span4 offset4">
-	<@s.form id="login" action="login" method="post" cssClass="ajax focus form-horizontal">
+	<@s.form id="login" action="login" method="post" cssClass="ajax focus form-horizontal well">
 		<@s.hidden id="targetUrl" name="targetUrl" />
 		<@s.textfield label="%{getText('username')}" name="username" cssClass="required"/>
 		<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
