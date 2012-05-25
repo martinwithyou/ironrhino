@@ -30,7 +30,7 @@
 <#noescape>${head}</#noescape>
 </head>
 
-<body style="padding-top: 60px;padding-bottom: 30px;">
+<body>
 
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 <div class="navbar navbar-fixed-top">

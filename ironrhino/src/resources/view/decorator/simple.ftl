@@ -29,7 +29,7 @@
 <script src="<@url value="/assets/scripts/ironrhino${modernBrowser?string('-min','')}.js"/>" type="text/javascript"></script>
 <#noescape>${head}</#noescape>
 </head>
-<body>
+<body class="simple">
 <div id="content" class="simple">
 <#if action.hasActionMessages() || action.hasActionErrors()>
 <div id="message">

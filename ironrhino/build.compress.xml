@@ -131,7 +131,6 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.clickmenu.css" />
 				<file name="${webapp.dir}/assets/styles/source/bootstrap.css" />
-				<file name="${webapp.dir}/assets/styles/source/bootstrap-responsive.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.portal.css" />
@@ -143,6 +142,7 @@
 				<file
 					name="${webapp.dir}/assets/styles/source/ironrhino.filtercolumn.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.treearea.css" />
+				<file name="${webapp.dir}/assets/styles/source/bootstrap-responsive.css" />
 			</filelist>
 		</concat>
 		<concat destfile="${webapp.dir}/assets/styles/ironrhino-lite.css"
