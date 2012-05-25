@@ -34,7 +34,7 @@ $(function() {
 			language : MessageBundle.lang(),
 			script_url : '<@url value="/assets/components/tiny_mce/tiny_mce.js"/>',
 			theme : "advanced",
-			plugins : "safari,pagebreak,layer,table,advimage,advlink,emotions,form-inlinepopups,preview,media,searchreplace,print,contextmenu,paste,fullscreen,noneditable,visualchars,xhtmlxtras,autosave",
+			plugins : "safari,pagebreak,layer,table,advimage,advlink,emotions,inlinepopups,preview,media,searchreplace,print,contextmenu,paste,fullscreen,noneditable,visualchars,xhtmlxtras,autosave",
 			theme_advanced_buttons1 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect,|,fullscreen,preview,code",
 			theme_advanced_buttons2 : "blockquote,|,undo,redo,|,link,unlink,anchor,image,media,cleanup,|,forecolor,backcolor,tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,|,print",
 			theme_advanced_buttons3 : "",
