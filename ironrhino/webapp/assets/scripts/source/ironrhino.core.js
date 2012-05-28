@@ -533,6 +533,9 @@ Initialization.common = function() {
 				Form.validate(this);
 				return true;
 			});
+	$('.tooltip').live('mouseout', function() {
+				$(this).remove()
+			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
 	$('.nav li a').each(function() {
@@ -754,8 +757,8 @@ Observation.common = function(container) {
 				if (!t.attr('title') && t.data('tipurl'))
 					t.attr('title', MessageBundle.get('ajax.loading'));
 				t.bind(options.trigger, function() {
-							if (t.data('tipurl')) {
-								t.removeData('tipurl');
+							if (!t.hasClass('_tiped')) {
+								t.addClass('_tiped');
 								$.ajax({
 											url : t.data('tipurl'),
 											global : false,
