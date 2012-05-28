@@ -79,8 +79,6 @@ public class EntityAction extends BaseAction {
 
 	private Map<String, List> lists;
 
-	private boolean readonly;
-
 	@Autowired(required = false)
 	private transient CompassSearchService<Persistable<?>> compassSearchService;
 
@@ -102,7 +100,8 @@ public class EntityAction extends BaseAction {
 	}
 
 	public boolean isReadonly() {
-		return readonly;
+		AutoConfig ac = getAutoConfig();
+		return (ac != null) && ac.readonly();
 	}
 
 	public Persistable getEntity() {
@@ -115,11 +114,6 @@ public class EntityAction extends BaseAction {
 
 	public void setResultPage(ResultPage resultPage) {
 		this.resultPage = resultPage;
-	}
-
-	private boolean readonly() {
-		AutoConfig ac = getAutoConfig();
-		return (ac != null) && ac.readonly();
 	}
 
 	private AutoConfig getAutoConfig() {
@@ -235,13 +229,12 @@ public class EntityAction extends BaseAction {
 						}
 					});
 		}
-		readonly = readonly();
 		return LIST;
 	}
 
 	@Override
 	public String input() {
-		if (readonly())
+		if (isReadonly())
 			return ACCESSDENIED;
 		tryFindEntity();
 		if (entity == null)
@@ -274,7 +267,7 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String save() {
-		if (readonly())
+		if (isReadonly())
 			return ACCESSDENIED;
 		if (!makeEntityValid())
 			return INPUT;
@@ -509,7 +502,7 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String delete() {
-		if (readonly())
+		if (isReadonly())
 			return ACCESSDENIED;
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		String[] arr = getId();
