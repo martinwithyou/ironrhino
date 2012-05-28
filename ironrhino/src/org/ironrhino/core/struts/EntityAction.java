@@ -81,8 +81,6 @@ public class EntityAction extends BaseAction {
 
 	private boolean readonly;
 
-	private boolean searchable;
-
 	@Autowired(required = false)
 	private transient CompassSearchService<Persistable<?>> compassSearchService;
 
@@ -91,7 +89,16 @@ public class EntityAction extends BaseAction {
 	}
 
 	public boolean isSearchable() {
-		return searchable;
+		AutoConfig ac = getAutoConfig();
+		boolean searchable = (ac != null) && ac.searchable();
+		if (searchable)
+			return true;
+		else
+			for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs()
+					.entrySet())
+				if (entry.getValue().isSearchable())
+					return true;
+		return false;
 	}
 
 	public boolean isReadonly() {
@@ -185,8 +192,7 @@ public class EntityAction extends BaseAction {
 				searchablePropertyNames.add(entry.getKey());
 		}
 		AutoConfig ac = getAutoConfig();
-		searchable = (ac != null) && ac.searchable()
-				|| searchablePropertyNames.size() > 0;
+		boolean searchable = isSearchable();
 		if (!searchable || StringUtils.isBlank(keyword)
 				|| (searchable && compassSearchService == null)) {
 			DetachedCriteria dc = entityManager.detachedCriteria();
