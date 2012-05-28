@@ -79,11 +79,8 @@ input.integer,input.double,input.date {
 input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }
-.field-error {
-	color: red;
-}
 
-.fieldError {
+.field-error.removeonclick {
 	position: absolute;
 	top: 300px;
 	left: 300px;
@@ -92,7 +89,7 @@ input.required {
 	cursor: pointer;
 }
 
-.fieldError .fieldErrorContent {
+.field-error .field-error-content {
 	width: 100%;
 	background: #ee0101;
 	position:relative;
@@ -110,20 +107,20 @@ input.required {
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
 }
-.fieldError .fieldErrorArrow {
+.field-error .field-error-arrow {
 	width: 15px;
 	margin: -2px 0 0 13px;
 	position:relative;
 	z-index: 5006;
 }
-.fieldError .fieldErrorArrowBottom {
+.field-error .field-error-arrow-bottom {
 	box-shadow: none;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
 	margin: 0px 0 0 12px;
 	top:2px;
 }
-.fieldError .fieldErrorArrow div {
+.field-error .field-error-arrow div {
 	border-left: 2px solid #ddd;
 	border-right: 2px solid #ddd;
 	box-shadow: 0 2px 3px #444;
@@ -138,104 +135,61 @@ input.required {
 	display: block;
 }
 
-.fieldError .fieldErrorArrowBottom div {
+.field-error .field-error-arrow-bottom div {
 	box-shadow: none;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
 }
 
-.fieldError .fieldErrorArrow .line10 {
+.field-error .field-error-arrow .line10 {
 	width: 15px;
 	border: none;
 }
 
-.fieldError .fieldErrorArrow .line9 {
+.field-error .field-error-arrow .line9 {
 	width: 13px;
 	border: none;
 }
 
-.fieldError .fieldErrorArrow .line8 {
+.field-error .field-error-arrow .line8 {
 	width: 11px;
 }
 
-.fieldError .fieldErrorArrow .line7 {
+.field-error .field-error-arrow .line7 {
 	width: 9px;
 }
 
-.fieldError .fieldErrorArrow .line6 {
+.field-error .field-error-arrow .line6 {
 	width: 7px;
 }
 
-.fieldError .fieldErrorArrow .line5 {
+.field-error .field-error-arrow .line5 {
 	width: 5px;
 }
 
-.fieldError .fieldErrorArrow .line4 {
+.field-error .field-error-arrow .line4 {
 	width: 3px;
 }
 
-.fieldError .fieldErrorArrow .line3 {
+.field-error .field-error-arrow .line3 {
 	width: 1px;
 	border-left: 2px solid #ddd;
 	border-right: 2px solid #ddd;
 	border-bottom: 0 solid #ddd;
 }
 
-.fieldError .fieldErrorArrow .line2 {
+.field-error .field-error-arrow .line2 {
 	width: 3px;
 	border: none;
 	background: #ddd;
 }
 
-.fieldError .fieldErrorArrow .line1 {
+.field-error .field-error-arrow .line1 {
 	width: 1px;
 	border: none;
 	background: #ddd;
 }
 
-div.field-error,div.action-error,ul.field-error li {
-	height: 1.5em;
-	line-height: 1.5em;
-	margin: 5px;
-	padding: 2px 2px 1px 20px;
-	border: 1px solid #F60;
-	vertical-align: middle;
-	background: #FFF2E9 url(../images/msg.png) 2px -42px no-repeat;
-	color: #000;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-}
-
-div.action-message,ul.action-message li {
-	height: 1.5em;
-	line-height: 1.5em;
-	margin: 5px;
-	padding: 2px 2px 1px 20px;
-	border: 1px solid #669eff;
-	vertical-align: middle;
-	background: #e8eef7 url(../images/msg.png) 2px 2px no-repeat;
-	color: #000;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-}
-
-.field-error .close,.action-error .close {
-	width: 15px;
-	height: 15px;
-	float: right;
-	cursor: pointer;
-	background: url(../images/msg.png) 0px -66px no-repeat;
-}
-
-.action-message .close {
-	width: 15px;
-	height: 15px;
-	float: right;
-	cursor: pointer;
-	background: url(../images/msg.png) 0px -22px no-repeat;
-}
 
 img.captcha {
 	height: 25px;

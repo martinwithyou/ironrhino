@@ -23,7 +23,7 @@
 <#if (actionErrors?? && actionErrors?size > 0)>
 	<#list actionErrors as error>
 		<#if error?if_exists != "">
-            <div<#if parameters.cssClass??> class="${parameters.cssClass?html}"<#else> class="action-error"</#if><#if parameters.cssStyle??> style="${parameters.cssStyle?html}"</#if>><#if parameters.escape>${error!?html}<#else>${error!}</#if></div>
+            <div<#if parameters.cssClass??> class="${parameters.cssClass?html}"<#else> class="action-error alert alert-error"</#if><#if parameters.cssStyle??> style="${parameters.cssStyle?html}"</#if>><a class="close" data-dismiss="alert">&times;</a><#if parameters.escape>${error!?html}<#else>${error!}</#if></div>
         </#if>
 	</#list>
 </#if>

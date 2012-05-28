@@ -23,7 +23,7 @@
 <#if (actionMessages?? && actionMessages?size > 0 && !parameters.isEmptyList)>
 	<#list actionMessages as message>
         <#if message?if_exists != "">
-            <div<#if parameters.cssClass??> class="${parameters.cssClass?html}"<#else> class="action-message"</#if><#if parameters.cssStyle??> style="${parameters.cssStyle?html}"</#if>><#if parameters.escape>${message!?html}<#else>${message!}</#if></div>
+            <div<#if parameters.cssClass??> class="${parameters.cssClass?html}"<#else> class="action-message alert alert-info"</#if><#if parameters.cssStyle??> style="${parameters.cssStyle?html}"</#if>><a class="close" data-dismiss="alert">&times;</a><#if parameters.escape>${message!?html}<#else>${message!}</#if></div>
         </#if>
 	</#list>
 </#if>

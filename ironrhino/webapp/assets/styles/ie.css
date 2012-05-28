@@ -1,12 +1,3 @@
-input[type="text"],input[type="password"]{
-	height:18px;
-}
-div.field-error,div.action-error,ul.field-error li,div.action-message,ul.action-message li,.field-error .close,.action-error .close,.action-message .close {
-	background-image: url(../images/msg.gif);
-}
-input.required {
-	background-image: url(../images/required.gif);
-}
 #indicator {
 	position: absolute;
 	top: expression(eval(document.compatMode&&document.compatMode =='CSS1Compat')?documentElement.scrollTop:document.body.scrollTop);

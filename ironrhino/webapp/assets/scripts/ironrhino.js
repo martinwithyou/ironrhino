@@ -33814,11 +33814,11 @@ Message = {
 		var msg = msg || MessageBundle.get(msgKey);
 		if (field && $(field).length) {
 			field = $(field);
-			// field.parent().append(Message.compose(msg, 'field-error'));
-			$('.fieldError', field.closest('.field')).remove();
-			var prompt = $('<div class="fieldError removeonclick"><div class="fieldErrorContent">'
+			field.closest('.control-group').addClass('error');
+			$('.field-error', field.closest('.controls')).remove();
+			var prompt = $('<div class="field-error removeonclick"><div class="field-error-content">'
 					+ msg + '</div><div>').insertAfter(field);
-			var arrow = $('<div class="fieldErrorArrow"/>')
+			var arrow = $('<div class="field-error-arrow"/>')
 					.html('<div class="line10"><!-- --></div><div class="line9"><!-- --></div><div class="line8"><!-- --></div><div class="line7"><!-- --></div><div class="line6"><!-- --></div><div class="line5"><!-- --></div><div class="line4"><!-- --></div><div class="line3"><!-- --></div><div class="line2"><!-- --></div><div class="line1"><!-- --></div>')
 					.appendTo(prompt);
 			var promptTopPosition, promptleftPosition, marginTopSize;
@@ -33845,7 +33845,7 @@ Form = {
 	focus : function(form) {
 		var arr = $(':input:visible', form).get();
 		for (var i = 0; i < arr.length; i++) {
-			if ($('.fieldError,.field-error', $(arr[i]).parent()).length) {
+			if ($('.field-error', $(arr[i]).parent()).length) {
 				setTimeout(function() {
 							$(arr[i]).focus();
 						}, 50);
@@ -33855,7 +33855,8 @@ Form = {
 	},
 	validate : function(target) {
 		if ($(target).prop('tagName') != 'FORM') {
-			$('.fieldError,.field-error', $(target).parent()).fadeIn().remove();
+			$(target).closest('.control-group').removeClass('error');
+			$('.field-error', $(target).closest('.controls')).fadeIn().remove();
 			if ($(target).is(':visible') && !$(target).prop('disabled')) {
 				if ($(target).hasClass('required') && !$(target).val()) {
 					if ($(target).prop('tagName') == 'SELECT')
@@ -34145,6 +34146,19 @@ Initialization.common = function() {
 	$('.removeonclick').live('click', function() {
 				$(this).remove()
 			});
+	$('input').live('keyup', $.debounce(500, function(ev) {
+						if (!$(this).hasClass('email') && ev.keyCode != 13)
+							Form.validate(this);
+						return true;
+					})).live('blur', function(ev) {
+				if (this.value != this.defaultValue)
+					Form.validate(this);
+				return true;
+			});
+	$('select').live('change', function() {
+				Form.validate(this);
+				return true;
+			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
 	$('.nav li a').each(function() {
@@ -34239,18 +34253,9 @@ if (HISTORY_ENABLED) {
 }
 
 Observation.common = function(container) {
-	$(
-			'div.action-error,div.action-message,ul.action-error li,ul.action-message li',
-			container).each(function() {
-		var t = $(this);
-		if (!$('div.close', t).length)
-			t
-					.prepend('<div class="close" onclick="$(this.parentNode).remove()"></div>');
-	});
-
-	$('div.field-error', container).each(function() {
+	$('.controls .field-error', container).each(function() {
 				var text = $(this).text();
-				var field = $(':input', $(this).parent());
+				var field = $(':input', $(this).closest('.controls'));
 				$(this).remove();
 				Message.showFieldError(field, text);
 			});
@@ -34519,19 +34524,6 @@ Observation.common = function(container) {
 			$(this).bind('submit', function() {
 						$(this).ajaxSubmit(options);
 						return false;
-					});
-			$('input', this).keyup($.debounce(500, function(ev) {
-						if (!$(this).hasClass('email') && ev.keyCode != 13)
-							Form.validate(this);
-						return true;
-					})).blur(function(ev) {
-						if (this.value != this.defaultValue)
-							Form.validate(this);
-						return true;
-					});
-			$('select', this).change(function() {
-						Form.validate(this);
-						return true;
 					});
 			return;
 		} else {
