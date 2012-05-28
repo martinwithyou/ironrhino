@@ -161,9 +161,9 @@ Richtable = {
 								$(this).removeClass('dontreload');
 								if (!$(e.target).closest('button')
 										.hasClass('save_and_create'))
-									setTimeout(function() {
+									//setTimeout(function() {
 												$('#_window_').dialog('close');
-											}, 1000);
+									//		}, 1000);
 
 							};
 						});

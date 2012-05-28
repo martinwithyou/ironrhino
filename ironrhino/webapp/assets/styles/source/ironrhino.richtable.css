@@ -52,11 +52,9 @@ table.richtable td,th {
 .richtable td.checkbox {
 	text-align: center;
 }
-.richtable .selected a,.highlight a {
-	color: black;
-}
+
 .richtable .selected td {
-	background-color: #FFC;
+	background-color: #FFC !important;
 }
 .richtable td.edited{
 	background-color: #fff3f0;

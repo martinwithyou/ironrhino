@@ -22059,253 +22059,6 @@ function log() {
 };
 
 })(jQuery);
-/*!
- * jQuery corner plugin: simple corner rounding
- * Examples and documentation at: http://jquery.malsup.com/corner/
- * version 2.11 (15-JUN-2010)
- * Requires jQuery v1.3.2 or later
- * Dual licensed under the MIT and GPL licenses:
- * http://www.opensource.org/licenses/mit-license.php
- * http://www.gnu.org/licenses/gpl.html
- * Authors: Dave Methvin and Mike Alsup
- */
-
-/**
- *  corner() takes a single string argument:  $('#myDiv').corner("effect corners width")
- *
- *  effect:  name of the effect to apply, such as round, bevel, notch, bite, etc (default is round). 
- *  corners: one or more of: top, bottom, tr, tl, br, or bl.  (default is all corners)
- *  width:   width of the effect; in the case of rounded corners this is the radius. 
- *           specify this value using the px suffix such as 10px (yes, it must be pixels).
- */
-;(function($) { 
-
-var style = document.createElement('div').style,
-    moz = style['MozBorderRadius'] !== undefined,
-    webkit = style['WebkitBorderRadius'] !== undefined,
-    radius = style['borderRadius'] !== undefined || style['BorderRadius'] !== undefined,
-    mode = document.documentMode || 0,
-    noBottomFold = $.browser.msie && (($.browser.version < 8 && !mode) || mode < 8),
-
-    expr = $.browser.msie && (function() {
-        var div = document.createElement('div');
-        try { div.style.setExpression('width','0+0'); div.style.removeExpression('width'); }
-        catch(e) { return false; }
-        return true;
-    })();
-
-$.support = $.support || {};
-$.support.borderRadius = moz || webkit || radius; // so you can do:  if (!$.support.borderRadius) $('#myDiv').corner();
-
-function sz(el, p) { 
-    return parseInt($.css(el,p))||0; 
-};
-function hex2(s) {
-    var s = parseInt(s).toString(16);
-    return ( s.length < 2 ) ? '0'+s : s;
-};
-function gpc(node) {
-    while(node) {
-        var v = $.css(node,'backgroundColor'), rgb;
-        if (v && v != 'transparent' && v != 'rgba(0, 0, 0, 0)') {
-            if (v.indexOf('rgb') >= 0) { 
-                rgb = v.match(/\d+/g); 
-                return '#'+ hex2(rgb[0]) + hex2(rgb[1]) + hex2(rgb[2]);
-            }
-            return v;
-        }
-        if (node.nodeName.toLowerCase() == 'html')
-            break;
-        node = node.parentNode; // keep walking if transparent
-    }
-    return '#ffffff';
-};
-
-function getWidth(fx, i, width) {
-    switch(fx) {
-    case 'round':  return Math.round(width*(1-Math.cos(Math.asin(i/width))));
-    case 'cool':   return Math.round(width*(1+Math.cos(Math.asin(i/width))));
-    case 'sharp':  return Math.round(width*(1-Math.cos(Math.acos(i/width))));
-    case 'bite':   return Math.round(width*(Math.cos(Math.asin((width-i-1)/width))));
-    case 'slide':  return Math.round(width*(Math.atan2(i,width/i)));
-    case 'jut':    return Math.round(width*(Math.atan2(width,(width-i-1))));
-    case 'curl':   return Math.round(width*(Math.atan(i)));
-    case 'tear':   return Math.round(width*(Math.cos(i)));
-    case 'wicked': return Math.round(width*(Math.tan(i)));
-    case 'long':   return Math.round(width*(Math.sqrt(i)));
-    case 'sculpt': return Math.round(width*(Math.log((width-i-1),width)));
-    case 'dogfold':
-    case 'dog':    return (i&1) ? (i+1) : width;
-    case 'dog2':   return (i&2) ? (i+1) : width;
-    case 'dog3':   return (i&3) ? (i+1) : width;
-    case 'fray':   return (i%2)*width;
-    case 'notch':  return width; 
-    case 'bevelfold':
-    case 'bevel':  return i+1;
-    }
-};
-
-$.fn.corner = function(options) {
-    // in 1.3+ we can fix mistakes with the ready state
-    if (this.length == 0) {
-        if (!$.isReady && this.selector) {
-            var s = this.selector, c = this.context;
-            $(function() {
-                $(s,c).corner(options);
-            });
-        }
-        return this;
-    }
-
-    return this.each(function(index){
-        var $this = $(this),
-            // meta values override options
-            o = [$this.attr($.fn.corner.defaults.metaAttr) || '', options || ''].join(' ').toLowerCase(),
-            keep = /keep/.test(o),                       // keep borders?
-            cc = ((o.match(/cc:(#[0-9a-f]+)/)||[])[1]),  // corner color
-            sc = ((o.match(/sc:(#[0-9a-f]+)/)||[])[1]),  // strip color
-            width = parseInt((o.match(/(\d+)px/)||[])[1]) || 10, // corner width
-            re = /round|bevelfold|bevel|notch|bite|cool|sharp|slide|jut|curl|tear|fray|wicked|sculpt|long|dog3|dog2|dogfold|dog/,
-            fx = ((o.match(re)||['round'])[0]),
-            fold = /dogfold|bevelfold/.test(o),
-            edges = { T:0, B:1 },
-            opts = {
-                TL:  /top|tl|left/.test(o),       TR:  /top|tr|right/.test(o),
-                BL:  /bottom|bl|left/.test(o),    BR:  /bottom|br|right/.test(o)
-            },
-            // vars used in func later
-            strip, pad, cssHeight, j, bot, d, ds, bw, i, w, e, c, common, $horz;
-        
-        if ( !opts.TL && !opts.TR && !opts.BL && !opts.BR )
-            opts = { TL:1, TR:1, BL:1, BR:1 };
-            
-        // support native rounding
-        if ($.fn.corner.defaults.useNative && fx == 'round' && (radius || moz || webkit) && !cc && !sc) {
-            if (opts.TL)
-                $this.css(radius ? 'border-top-left-radius' : moz ? '-moz-border-radius-topleft' : '-webkit-border-top-left-radius', width + 'px');
-            if (opts.TR)
-                $this.css(radius ? 'border-top-right-radius' : moz ? '-moz-border-radius-topright' : '-webkit-border-top-right-radius', width + 'px');
-            if (opts.BL)
-                $this.css(radius ? 'border-bottom-left-radius' : moz ? '-moz-border-radius-bottomleft' : '-webkit-border-bottom-left-radius', width + 'px');
-            if (opts.BR)
-                $this.css(radius ? 'border-bottom-right-radius' : moz ? '-moz-border-radius-bottomright' : '-webkit-border-bottom-right-radius', width + 'px');
-            return;
-        }
-            
-        strip = document.createElement('div');
-        $(strip).css({
-            overflow: 'hidden',
-            height: '1px',
-            minHeight: '1px',
-            fontSize: '1px',
-            backgroundColor: sc || 'transparent',
-            borderStyle: 'solid'
-        });
-    
-        pad = {
-            T: parseInt($.css(this,'paddingTop'))||0,     R: parseInt($.css(this,'paddingRight'))||0,
-            B: parseInt($.css(this,'paddingBottom'))||0,  L: parseInt($.css(this,'paddingLeft'))||0
-        };
-
-        if (typeof this.style.zoom != undefined) this.style.zoom = 1; // force 'hasLayout' in IE
-        if (!keep) this.style.border = 'none';
-        strip.style.borderColor = cc || gpc(this.parentNode);
-        cssHeight = $(this).outerHeight();
-
-        for (j in edges) {
-            bot = edges[j];
-            // only add stips if needed
-            if ((bot && (opts.BL || opts.BR)) || (!bot && (opts.TL || opts.TR))) {
-                strip.style.borderStyle = 'none '+(opts[j+'R']?'solid':'none')+' none '+(opts[j+'L']?'solid':'none');
-                d = document.createElement('div');
-                $(d).addClass('jquery-corner');
-                ds = d.style;
-
-                bot ? this.appendChild(d) : this.insertBefore(d, this.firstChild);
-
-                if (bot && cssHeight != 'auto') {
-                    if ($.css(this,'position') == 'static')
-                        this.style.position = 'relative';
-                    ds.position = 'absolute';
-                    ds.bottom = ds.left = ds.padding = ds.margin = '0';
-                    if (expr)
-                        ds.setExpression('width', 'this.parentNode.offsetWidth');
-                    else
-                        ds.width = '100%';
-                }
-                else if (!bot && $.browser.msie) {
-                    if ($.css(this,'position') == 'static')
-                        this.style.position = 'relative';
-                    ds.position = 'absolute';
-                    ds.top = ds.left = ds.right = ds.padding = ds.margin = '0';
-                    
-                    // fix ie6 problem when blocked element has a border width
-                    if (expr) {
-                        bw = sz(this,'borderLeftWidth') + sz(this,'borderRightWidth');
-                        ds.setExpression('width', 'this.parentNode.offsetWidth - '+bw+'+ "px"');
-                    }
-                    else
-                        ds.width = '100%';
-                }
-                else {
-                    ds.position = 'relative';
-                    ds.margin = !bot ? '-'+pad.T+'px -'+pad.R+'px '+(pad.T-width)+'px -'+pad.L+'px' : 
-                                        (pad.B-width)+'px -'+pad.R+'px -'+pad.B+'px -'+pad.L+'px';                
-                }
-
-                for (i=0; i < width; i++) {
-                    w = Math.max(0,getWidth(fx,i, width));
-                    e = strip.cloneNode(false);
-                    e.style.borderWidth = '0 '+(opts[j+'R']?w:0)+'px 0 '+(opts[j+'L']?w:0)+'px';
-                    bot ? d.appendChild(e) : d.insertBefore(e, d.firstChild);
-                }
-                
-                if (fold && $.support.boxModel) {
-                    if (bot && noBottomFold) continue;
-                    for (c in opts) {
-                        if (!opts[c]) continue;
-                        if (bot && (c == 'TL' || c == 'TR')) continue;
-                        if (!bot && (c == 'BL' || c == 'BR')) continue;
-                        
-                        common = { position: 'absolute', border: 'none', margin: 0, padding: 0, overflow: 'hidden', backgroundColor: strip.style.borderColor };
-                        $horz = $('<div/>').css(common).css({ width: width + 'px', height: '1px' });
-                        switch(c) {
-                        case 'TL': $horz.css({ bottom: 0, left: 0 }); break;
-                        case 'TR': $horz.css({ bottom: 0, right: 0 }); break;
-                        case 'BL': $horz.css({ top: 0, left: 0 }); break;
-                        case 'BR': $horz.css({ top: 0, right: 0 }); break;
-                        }
-                        d.appendChild($horz[0]);
-                        
-                        var $vert = $('<div/>').css(common).css({ top: 0, bottom: 0, width: '1px', height: width + 'px' });
-                        switch(c) {
-                        case 'TL': $vert.css({ left: width }); break;
-                        case 'TR': $vert.css({ right: width }); break;
-                        case 'BL': $vert.css({ left: width }); break;
-                        case 'BR': $vert.css({ right: width }); break;
-                        }
-                        d.appendChild($vert[0]);
-                    }
-                }
-            }
-        }
-    });
-};
-
-$.fn.uncorner = function() { 
-    if (radius || moz || webkit)
-        this.css(radius ? 'border-radius' : moz ? '-moz-border-radius' : '-webkit-border-radius', 0);
-    $('div.jquery-corner', this).remove();
-    return this;
-};
-
-// expose options
-$.fn.corner.defaults = {
-    useNative: true, // true if plugin should attempt to use native browser support for border radius rounding
-    metaAttr:  'data-corner' // name of meta attribute to use for options
-};
-    
-})(jQuery);
 /**
  * Copyright (c) 2009 Sergiy Kovalchuk (serg472@gmail.com)
  * 
@@ -23000,152 +22753,6 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 		jQuery( coll ).remove();
 	}
 })( jQuery );
-/**
-*	jQuery.jNotify
-*	jQuery Notification Engine
-*		
-*   Copyright (c) 2010 Fabio Franzini
-*
-*	Permission is hereby granted, free of charge, to any person obtaining a copy
-*	of this software and associated documentation files (the "Software"), to deal
-*	in the Software without restriction, including without limitation the rights
-*	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-*	copies of the Software, and to permit persons to whom the Software is
-*	furnished to do so, subject to the following conditions:
-*
-*	The above copyright notify and this permission notify shall be included in
-*	all copies or substantial portions of the Software.
-*
-*	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-*	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-*	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-*	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-*	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-*	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-*	THE SOFTWARE.
-*	
-*	@author 	Fabio Franzini
-* 	@copyright  2010 www.fabiofranzini.com
-*	@version    1
-**/
-
-(function(jQuery) {
-    jQuery.fn.jnotifyInizialize = function(options) {
-        var element = this;
-
-        var defaults = {
-            oneAtTime: false,
-            appendType: 'append'
-        };
-
-        var options = jQuery.extend({}, defaults, options);
-
-        this.addClass('notify-wrapper');
-
-        if (options.oneAtTime)
-            this.addClass('notify-wrapper-oneattime');
-
-        if (options.appendType == 'prepend' && options.oneAtTime == false)
-            this.addClass('notify-wrapper-prepend');
-
-        return this;
-    };
-    jQuery.fn.jnotifyAddMessage = function(options) {
-
-        var notifyWrapper = this;
-
-        if (notifyWrapper.hasClass('notify-wrapper')) {
-
-            var defaults = {
-                text: '',
-                type: 'message',
-                showIcon: true,
-                permanent: false,
-                disappearTime: 3000
-            }
-
-            var options = jQuery.extend({}, defaults, options);
-            var styleClass;
-            var iconClass;
-
-            switch (options.type) {
-                case 'message':
-                    {
-                        styleClass = 'ui-state-highlight';
-                        iconClass = 'ui-icon-info';
-                    }
-                    break;
-                case 'error':
-                    {
-                        styleClass = 'ui-state-error';
-                        iconClass = 'ui-icon-alert';
-                    }
-                    break;
-                default:
-                    {
-                        styleClass = 'ui-state-highlight';
-                        iconClass = 'ui-icon-info';
-                    }
-                    break;
-            }
-
-            if (notifyWrapper.hasClass('notify-wrapper-oneattime')) {
-                this.children().remove();
-            }
-
-            var notifyItemWrapper = jQuery('<div class="jnotify-item-wrapper"></div>');
-            var notifyItem = jQuery('<div class="ui-corner-all jnotify-item"></div>')
-                                    .addClass(styleClass);
-
-            if (notifyWrapper.hasClass('notify-wrapper-prepend'))
-                notifyItem.prependTo(notifyWrapper);
-            else
-                notifyItem.appendTo(notifyWrapper);
-
-            notifyItem.wrap(notifyItemWrapper);
-
-            if (options.showIcon)
-                jQuery('<span class="ui-icon" style="float:left; margin-right: .3em;" />')
-                                    .addClass(iconClass)
-                                    .appendTo(notifyItem);
-
-            jQuery('<span></span>').html(options.text).appendTo(notifyItem);
-            jQuery('<div class="jnotify-item-close"><span class="ui-icon ui-icon-circle-close"/></div>')
-                                    .prependTo(notifyItem)
-                                    .click(function() { remove(notifyItem) });
-
-            // IEsucks
-            if (navigator.userAgent.match(/MSIE (\d+\.\d+);/)) {
-                notifyWrapper.css({ top: document.documentElement.scrollTop });
-                //http://groups.google.com/group/jquery-dev/browse_thread/thread/ba38e6474e3e9a41
-                notifyWrapper.removeClass('IEsucks');
-            }
-            // ------
-
-            if (!options.permanent) {
-                setTimeout(function() { remove(notifyItem); }, options.disappearTime);
-            }
-        }
-
-        function remove(obj) {
-            obj.animate({ opacity: '0' }, 600, function() {
-                obj.parent().animate({ height: '0px' }, 300,
-                      function() {
-                      	  var wrapper = obj.closest('.notify-wrapper');
-                          obj.parent().remove();
-                          // IEsucks
-                          if (navigator.userAgent.match(/MSIE (\d+\.\d+);/)) {
-                              //http://groups.google.com/group/jquery-dev/browse_thread/thread/ba38e6474e3e9a41
-                              obj.parent().parent().removeClass('IEsucks');
-                          }
-                          // -------
-            			  if(!$('.jnotify-item-wrapper', wrapper).length)
-            				  wrapper.remove();
-                      });
-            });
-        }
-    };
-})(jQuery);
 // jQuery Alert Dialogs Plugin
 //
 // Version 1.1
@@ -23257,7 +22864,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 					});
 				break;
 				case 'confirm':
-					$("#popup_message").after('<div id="popup_panel"><button id="popup_ok" class="btn">' + $.alerts.okButton + '</button><button id="popup_cancel" class="btn">' + $.alerts.cancelButton + '</button></div>');
+					$("#popup_message").after('<div id="popup_panel"><button id="popup_ok" class="btn">' + $.alerts.okButton + '</button> <button id="popup_cancel" class="btn">' + $.alerts.cancelButton + '</button></div>');
 					$("#popup_ok").click( function() {
 						$.alerts._hide();
 						if( callback ) callback(true);
@@ -23273,7 +22880,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 					});
 				break;
 				case 'prompt':
-					$("#popup_message").append('<br /><input type="text" size="30" id="popup_prompt" />').after('<div id="popup_panel"><button id="popup_ok" class="btn">' + $.alerts.okButton + '</button><button id="popup_cancel" class="btn">' + $.alerts.cancelButton + '</button></div>');
+					$("#popup_message").append('<br /><input type="text" size="30" id="popup_prompt" />').after('<div id="popup_panel"><button id="popup_ok" class="btn">' + $.alerts.okButton + '</button> <button id="popup_cancel" class="btn">' + $.alerts.cancelButton + '</button></div>');
 					$("#popup_prompt").width( $("#popup_message").width() );
 					$("#popup_ok").click( function() {
 						var val = $("#popup_prompt").val();
@@ -23374,247 +22981,6 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 		$.alerts.prompt(message, value, title, callback);
 	};
 	
-})(jQuery);
-// tipsy, facebook style tooltips for jquery
-// version 1.0.0a
-// (c) 2008-2010 jason frame [jason@onehackoranother.com]
-// released under the MIT license
-
-(function($) {
-    
-    function maybeCall(thing, ctx) {
-        return (typeof thing == 'function') ? (thing.call(ctx)) : thing;
-    };
-    
-    function Tipsy(element, options) {
-        this.$element = $(element);
-        this.options = options;
-        this.enabled = true;
-        this.fixTitle();
-    };
-    
-    Tipsy.prototype = {
-        show: function() {
-            var title = this.getTitle();
-            if (title && this.enabled) {
-                var $tip = this.tip();
-                
-                $tip.find('.tipsy-inner')[this.options.html ? 'html' : 'text'](title);
-                $tip[0].className = 'tipsy'; // reset classname in case of dynamic gravity
-                $tip.remove().css({top: 0, left: 0, visibility: 'hidden', display: 'block'}).prependTo(document.body);
-                
-                var pos = $.extend({}, this.$element.offset(), {
-                    width: this.$element[0].offsetWidth,
-                    height: this.$element[0].offsetHeight
-                });
-                
-                var actualWidth = $tip[0].offsetWidth,
-                    actualHeight = $tip[0].offsetHeight,
-                    gravity = maybeCall(this.options.gravity, this.$element[0]);
-                
-                var tp;
-                switch (gravity.charAt(0)) {
-                    case 'n':
-                        tp = {top: pos.top + pos.height + this.options.offset, left: pos.left + pos.width / 2 - actualWidth / 2};
-                        break;
-                    case 's':
-                        tp = {top: pos.top - actualHeight - this.options.offset, left: pos.left + pos.width / 2 - actualWidth / 2};
-                        break;
-                    case 'e':
-                        tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth - this.options.offset};
-                        break;
-                    case 'w':
-                        tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width + this.options.offset};
-                        break;
-                }
-                
-                if (gravity.length == 2) {
-                    if (gravity.charAt(1) == 'w') {
-                        tp.left = pos.left + pos.width / 2 - 15;
-                    } else {
-                        tp.left = pos.left + pos.width / 2 - actualWidth + 15;
-                    }
-                }
-                
-                $tip.css(tp).addClass('tipsy-' + gravity);
-                $tip.find('.tipsy-arrow')[0].className = 'tipsy-arrow tipsy-arrow-' + gravity.charAt(0);
-                if (this.options.className) {
-                    $tip.addClass(maybeCall(this.options.className, this.$element[0]));
-                }
-                
-                if (this.options.fade) {
-                    $tip.stop().css({opacity: 0, display: 'block', visibility: 'visible'}).animate({opacity: this.options.opacity});
-                } else {
-                    $tip.css({visibility: 'visible', opacity: this.options.opacity});
-                }
-            }
-        },
-        
-        hide: function() {
-            if (this.options.fade) {
-                this.tip().stop().fadeOut(function() { $(this).remove(); });
-            } else {
-                this.tip().remove();
-            }
-        },
-        
-        fixTitle: function() {
-            var $e = this.$element;
-            if ($e.attr('title') || typeof($e.attr('original-title')) != 'string') {
-                $e.attr('original-title', $e.attr('title') || '').removeAttr('title');
-            }
-        },
-        
-        getTitle: function() {
-            var title, $e = this.$element, o = this.options;
-            this.fixTitle();
-            var title, o = this.options;
-            if (typeof o.title == 'string') {
-                title = $e.attr(o.title == 'title' ? 'original-title' : o.title);
-            } else if (typeof o.title == 'function') {
-                title = o.title.call($e[0]);
-            }
-            title = ('' + title).replace(/(^\s*|\s*$)/, "");
-            return title || o.fallback;
-        },
-        
-        tip: function() {
-            if (!this.$tip) {
-                this.$tip = $('<div class="tipsy"></div>').html('<div class="tipsy-arrow"></div><div class="tipsy-inner"></div>');
-            }
-            return this.$tip;
-        },
-        
-        validate: function() {
-            if (!this.$element[0].parentNode) {
-                this.hide();
-                this.$element = null;
-                this.options = null;
-            }
-        },
-        
-        enable: function() { this.enabled = true; },
-        disable: function() { this.enabled = false; },
-        toggleEnabled: function() { this.enabled = !this.enabled; }
-    };
-    
-    $.fn.tipsy = function(options) {
-        
-        if (options === true) {
-            return this.data('tipsy');
-        } else if (typeof options == 'string') {
-            var tipsy = this.data('tipsy');
-            if (tipsy) tipsy[options]();
-            return this;
-        }
-        
-        options = $.extend({}, $.fn.tipsy.defaults, options);
-        
-        function get(ele) {
-            var tipsy = $.data(ele, 'tipsy');
-            if (!tipsy) {
-                tipsy = new Tipsy(ele, $.fn.tipsy.elementOptions(ele, options));
-                $.data(ele, 'tipsy', tipsy);
-            }
-            return tipsy;
-        }
-        
-        function enter() {
-            var tipsy = get(this);
-            tipsy.hoverState = 'in';
-            if (options.delayIn == 0) {
-                tipsy.show();
-            } else {
-                tipsy.fixTitle();
-                setTimeout(function() { if (tipsy.hoverState == 'in') tipsy.show(); }, options.delayIn);
-            }
-        };
-        
-        function leave() {
-            var tipsy = get(this);
-            tipsy.hoverState = 'out';
-            if (options.delayOut == 0) {
-                tipsy.hide();
-            } else {
-                setTimeout(function() { if (tipsy.hoverState == 'out') tipsy.hide(); }, options.delayOut);
-            }
-        };
-        
-        if (!options.live) this.each(function() { get(this); });
-        
-        if (options.trigger != 'manual') {
-            var binder   = options.live ? 'live' : 'bind',
-                eventIn  = options.trigger == 'hover' ? 'mouseenter' : 'focus',
-                eventOut = options.trigger == 'hover' ? 'mouseleave' : 'blur';
-            this[binder](eventIn, enter)[binder](eventOut, leave);
-        }
-        
-        return this;
-        
-    };
-    
-    $.fn.tipsy.defaults = {
-        className: null,
-        delayIn: 0,
-        delayOut: 0,
-        fade: false,
-        fallback: '',
-        gravity: 'n',
-        html: false,
-        live: false,
-        offset: 0,
-        opacity: 0.8,
-        title: 'title',
-        trigger: 'hover'
-    };
-    
-    // Overwrite this method to provide options on a per-element basis.
-    // For example, you could store the gravity in a 'tipsy-gravity' attribute:
-    // return $.extend({}, options, {gravity: $(ele).attr('tipsy-gravity') || 'n' });
-    // (remember - do not modify 'options' in place!)
-    $.fn.tipsy.elementOptions = function(ele, options) {
-        return $.metadata ? $.extend({}, options, $(ele).metadata()) : options;
-    };
-    
-    $.fn.tipsy.autoNS = function() {
-        return $(this).offset().top > ($(document).scrollTop() + $(window).height() / 2) ? 's' : 'n';
-    };
-    
-    $.fn.tipsy.autoWE = function() {
-        return $(this).offset().left > ($(document).scrollLeft() + $(window).width() / 2) ? 'e' : 'w';
-    };
-    
-    /**
-     * yields a closure of the supplied parameters, producing a function that takes
-     * no arguments and is suitable for use as an autogravity function like so:
-     *
-     * @param margin (int) - distance from the viewable region edge that an
-     *        element should be before setting its tooltip's gravity to be away
-     *        from that edge.
-     * @param prefer (string, e.g. 'n', 'sw', 'w') - the direction to prefer
-     *        if there are no viewable region edges effecting the tooltip's
-     *        gravity. It will try to vary from this minimally, for example,
-     *        if 'sw' is preferred and an element is near the right viewable 
-     *        region edge, but not the top edge, it will set the gravity for
-     *        that element's tooltip to be 'se', preserving the southern
-     *        component.
-     */
-     $.fn.tipsy.autoBounds = function(margin, prefer) {
-		return function() {
-			var dir = {ns: prefer[0], ew: (prefer.length > 1 ? prefer[1] : false)},
-			    boundTop = $(document).scrollTop() + margin,
-			    boundLeft = $(document).scrollLeft() + margin,
-			    $this = $(this);
-
-			if ($this.offset().top < boundTop) dir.ns = 'n';
-			if ($this.offset().left < boundLeft) dir.ew = 'w';
-			if ($(window).width() + $(document).scrollLeft() - $this.offset().left < margin) dir.ew = 'e';
-			if ($(window).height() + $(document).scrollTop() - $this.offset().top < margin) dir.ns = 's';
-
-			return dir.ns + (dir.ew ? dir.ew : '');
-		}
-	};
-    
 })(jQuery);
 ;/**
  * jQuery TextExt Plugin
@@ -30536,41 +29902,6 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
   };
   
 })(this);
-// extend the plugin
-(function($) {
-
-	// define the new for the plugin ans how to call it
-	$.fn.truncatable = function(options) {
-		// set default options
-		var defaults = {
-			limit : 100
-		};
-
-		// call in the default otions
-		var options = $.extend(defaults, options);
-
-		// act upon the element that is passed into the design
-		return this.each(function(i) {
-					// check length of text to what out maximum is
-					if ($(this).text().length > defaults.limit) {
-						var splitText = $(this).html().substr(defaults.limit);
-						var hiddenText = '<span class="hiddenText_' + i
-								+ '" style="display:none">' + splitText
-								+ '</span>'
-						$(this).html($(this).text().substr(0, defaults.limit))
-								.append('<a class="more_' + i
-										+ '" href="#">...<a/>' + hiddenText)
-								.bind('click', function() {
-											$('.hiddenText_' + i).show();
-											$('.more_' + i).hide();
-											return false;
-										});
-					}
-				});
-	};
-	// end the plugin call
-})(jQuery);
-
 /**
 *	@name							Elastic
 *	@descripton						Elastic is Jquery plugin that grow and shrink your textareas automaticliy
@@ -30688,204 +30019,6 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
         } 
     }); 
 })(jQuery);
-/*
- * jQuery Cycle Lite Plugin
- * http://malsup.com/jquery/cycle/lite/
- * Copyright (c) 2008 M. Alsup
- * Version: 1.0 (06/08/2008)
- * Dual licensed under the MIT and GPL licenses:
- * http://www.opensource.org/licenses/mit-license.php
- * http://www.gnu.org/licenses/gpl.html
- * Requires: jQuery v1.2.3 or later
- */
-;(function($) {
-
-var ver = 'Lite-1.0';
-
-$.fn.cycle = function(options) {
-    return this.each(function() {
-        options = options || {};
-        
-        if (this.cycleTimeout) clearTimeout(this.cycleTimeout);
-        this.cycleTimeout = 0;
-        this.cyclePause = 0;
-        
-        var $cont = $(this);
-        var $slides = options.slideExpr ? $(options.slideExpr, this) : $cont.children();
-        var els = $slides.get();
-        if (els.length < 2) {
-            if (window.console && window.console.log)
-                window.console.log('terminating; too few slides: ' + els.length);
-            return; // don't bother
-        }
-
-        // support metadata plugin (v1.0 and v2.0)
-        var opts = $.extend({}, $.fn.cycle.defaults, options || {}, $.metadata ? $cont.metadata() : $.meta ? $cont.data() : {});
-            
-        opts.before = opts.before ? [opts.before] : [];
-        opts.after = opts.after ? [opts.after] : [];
-        opts.after.unshift(function(){ opts.busy=0; });
-            
-        // allow shorthand overrides of width, height and timeout
-        var cls = this.className;
-        opts.width = parseInt((cls.match(/w:(\d+)/)||[])[1]) || opts.width;
-        opts.height = parseInt((cls.match(/h:(\d+)/)||[])[1]) || opts.height;
-        opts.timeout = parseInt((cls.match(/t:(\d+)/)||[])[1]) || opts.timeout;
-
-        if ($cont.css('position') == 'static') 
-            $cont.css('position', 'relative');
-        if (opts.width) 
-            $cont.width(opts.width);
-        if (opts.height && opts.height != 'auto') 
-            $cont.height(opts.height);
-
-        var first = 0;
-        $slides.css({position: 'absolute', top:0, left:0}).hide().each(function(i) { 
-            $(this).css('z-index', els.length-i) 
-        });
-        
-        $(els[first]).css('opacity',1).show(); // opacity bit needed to handle reinit case
-        if ($.browser.msie) els[first].style.removeAttribute('filter');
-
-        if (opts.fit && opts.width) 
-            $slides.width(opts.width);
-        if (opts.fit && opts.height && opts.height != 'auto') 
-            $slides.height(opts.height);
-        if (opts.pause) 
-            $cont.hover(function(){this.cyclePause=1;}, function(){this.cyclePause=0;});
-
-        $.fn.cycle.transitions.fade($cont, $slides, opts);
-        
-        $slides.each(function() {
-            var $el = $(this);
-            this.cycleH = (opts.fit && opts.height) ? opts.height : $el.height();
-            this.cycleW = (opts.fit && opts.width) ? opts.width : $el.width();
-        });
-
-        $slides.not(':eq('+first+')').css({opacity:0});
-        if (opts.cssFirst)
-            $($slides[first]).css(opts.cssFirst);
-
-        if (opts.timeout) {
-            // ensure that timeout and speed settings are sane
-            if (opts.speed.constructor == String)
-                opts.speed = {slow: 600, fast: 200}[opts.speed] || 400;
-            if (!opts.sync)
-                opts.speed = opts.speed / 2;
-            while((opts.timeout - opts.speed) < 250)
-                opts.timeout += opts.speed;
-        }
-        opts.speedIn = opts.speed;
-        opts.speedOut = opts.speed;
-
- 		opts.slideCount = els.length;
-        opts.currSlide = first;
-        opts.nextSlide = 1;
-
-        // fire artificial events
-        var e0 = $slides[first];
-        if (opts.before.length)
-            opts.before[0].apply(e0, [e0, e0, opts, true]);
-        if (opts.after.length > 1)
-            opts.after[1].apply(e0, [e0, e0, opts, true]);
-        
-        if (opts.click && !opts.next)
-            opts.next = opts.click;
-        if (opts.next)
-            $(opts.next).bind('click', function(){return advance(els,opts,opts.rev?-1:1)});
-        if (opts.prev)
-            $(opts.prev).bind('click', function(){return advance(els,opts,opts.rev?1:-1)});
-
-        if (opts.timeout)
-            this.cycleTimeout = setTimeout(function() {
-                go(els,opts,0,!opts.rev)
-            }, opts.timeout + (opts.delay||0));
-    });
-};
-
-function go(els, opts, manual, fwd) {
-    if (opts.busy) return;
-    var p = els[0].parentNode, curr = els[opts.currSlide], next = els[opts.nextSlide];
-    if (p.cycleTimeout === 0 && !manual) 
-        return;
-
-    if (manual || !p.cyclePause) {
-        if (opts.before.length)
-            $.each(opts.before, function(i,o) { o.apply(next, [curr, next, opts, fwd]); });
-        var after = function() {
-            if ($.browser.msie)
-                this.style.removeAttribute('filter');
-            $.each(opts.after, function(i,o) { o.apply(next, [curr, next, opts, fwd]); });
-        };
-
-        if (opts.nextSlide != opts.currSlide) {
-            opts.busy = 1;
-            $.fn.cycle.custom(curr, next, opts, after);
-        }
-        var roll = (opts.nextSlide + 1) == els.length;
-        opts.nextSlide = roll ? 0 : opts.nextSlide+1;
-        opts.currSlide = roll ? els.length-1 : opts.nextSlide-1;
-    }
-    if (opts.timeout)
-        p.cycleTimeout = setTimeout(function() { go(els,opts,0,!opts.rev) }, opts.timeout);
-};
-
-// advance slide forward or back
-function advance(els, opts, val) {
-    var p = els[0].parentNode, timeout = p.cycleTimeout;
-    if (timeout) {
-        clearTimeout(timeout);
-        p.cycleTimeout = 0;
-    }
-    opts.nextSlide = opts.currSlide + val;
-    if (opts.nextSlide < 0) {
-        opts.nextSlide = els.length - 1;
-    }
-    else if (opts.nextSlide >= els.length) {
-        opts.nextSlide = 0;
-    }
-    go(els, opts, 1, val>=0);
-    return false;
-};
-
-$.fn.cycle.custom = function(curr, next, opts, cb) {
-    var $l = $(curr), $n = $(next);
-    $n.css({opacity:0});
-    var fn = function() {$n.animate({opacity:1}, opts.speedIn, opts.easeIn, cb)};
-    $l.animate({opacity:0}, opts.speedOut, opts.easeOut, function() {
-        $l.css({display:'none'});
-        if (!opts.sync) fn();
-    });
-    if (opts.sync) fn();
-};
-
-$.fn.cycle.transitions = {
-    fade: function($cont, $slides, opts) {
-        $slides.not(':eq(0)').css('opacity',0);
-        opts.before.push(function() { $(this).show() });
-    }
-};
-
-$.fn.cycle.ver = function() { return ver; };
-
-// @see: http://malsup.com/jquery/cycle/lite/
-$.fn.cycle.defaults = {
-    timeout:       4000, 
-    speed:         1000, 
-    next:          null, 
-    prev:          null, 
-    before:        null, 
-    after:         null, 
-    height:       'auto',
-    sync:          1,    
-    fit:           0,    
-    pause:         0,    
-    delay:         0,    
-    slideExpr:     null  
-};
-
-})(jQuery);
-
 /*	SWFObject v2.2 <http://code.google.com/p/swfobject/> 
 	is released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
 */
@@ -33703,63 +32836,20 @@ UrlUtils = {
 
 Message = {
 	compose : function(message, className) {
-		return '<div class="'
-				+ className
-				+ '"><span class="close" onclick="$(this.parentNode).remove()"></span>'
+		return '<div class="' + className
+				+ '"><a class="close" data-dismiss="alert">&times;</a>'
 				+ message + '</div>';
 	},
 	showMessage : function() {
 		Message.showActionMessage(MessageBundle.get.apply(this, arguments));
 	},
-	showActionMessage : function(messages, target) {
-		if (!messages)
-			return;
-		if (typeof messages == 'string') {
-			var a = [];
-			a.push(messages);
-			messages = a;
-		}
-		if (!$('#message').length)
-			$('<div id="message"></div>').prependTo($('#content'));
-		if (typeof $.fn.jnotifyInizialize != 'undefined') {
-			if (!$('#notification').length)
-				$('<div id="notification"><div>').prependTo(document.body)
-						.jnotifyInizialize({
-									oneAtTime : false,
-									appendType : 'append'
-								}).css({
-									'position' : 'fixed',
-									'top' : '40px',
-									'right' : '40px',
-									'width' : '250px',
-									'min-height' : '50px',
-									'z-index' : '9999'
-								});
-			for (var i = 0; i < messages.length; i++) {
-				$('#notification').jnotifyAddMessage({
-							text : messages[i],
-							permanent : false
-						});
-			}
-			return;
-		}
-		var html = '';
-		for (var i = 0; i < messages.length; i++)
-			html += Message.compose(messages[i], 'action-message');
-		if (target && target.tagName == 'FORM') {
-			if ($('#' + target.id + '_message').length == 0)
-				$(target).before('<div id="' + target.id + '_message"></div>');
-			$('#' + target.id + '_message').html(html);
-		} else {
-			if (!$('#message').length)
-				$('<div id="message"></div>').prependTo($('#content'));
-			$('#message').html(html);
-		}
-	},
 	showError : function() {
 		Message.showActionError(MessageBundle.get.apply(this, arguments));
 	},
 	showActionError : function(messages, target) {
+		Message.showActionMessage(messages, target, true);
+	},
+	showActionMessage : function(messages, target, error) {
 		if (!messages)
 			return;
 		if (typeof messages == 'string') {
@@ -33767,58 +32857,42 @@ Message = {
 			a.push(messages);
 			messages = a;
 		}
-		var parent = $('#content');
-		var msg;
-		if ($('#_window_').parents('.ui-dialog').length)
-			parent = $('#_window_');
-		if (!$('#message', parent).length)
-			$('<div id="message"></div>').prependTo(parent);
-		msg = $('#message', parent);
-		if (typeof $.fn.jnotifyInizialize != 'undefined') {
-			msg.jnotifyInizialize({
-						oneAtTime : false
-					});
-			for (var i = 0; i < messages.length; i++)
-				msg.jnotifyAddMessage({
-							text : messages[i],
-							disappearTime : 60000,
-							permanent : false,
-							type : 'error'
-						});
-			$('html,body').animate({
-						scrollTop : $('#message').offset().top - 20
-					}, 100);
-			return;
-		}
-		if ($.alerts) {
-			$.alerts.alert(messages.join('\n'), MessageBundle.get('error'));
-			return;
-		}
+		// if ($.alerts) {
+		// $.alerts.alert(messages.join('\n'), MessageBundle.get('error'));
+		// return;
+		// }
 		var html = '';
 		for (var i = 0; i < messages.length; i++)
-			html += Message.compose(messages[i], 'action-error');
-		if (html)
-			if (target && target.tagName == 'FORM') {
+			html += Message.compose(messages[i], error
+							? 'action-error alert alert-error'
+							: 'action-message alert alert-info');
+		if (html) {
+			var parent = $('#content');
+			if (error && target && $(target).parents('#_window_').length)
+				parent = $('#_window_');
+			if (!$('#message', parent).length)
+				$('<div id="message"></div>').prependTo(parent);
+			var msg = $('#message', parent);
+			if (error && target && $(target).prop('tagName') == 'FORM') {
 				if ($('#' + target.id + '_message').length == 0)
-					$(target).before('<div id="' + target.id
+					msg = $(target).before('<div id="' + target.id
 							+ '_message"></div>');
-				$('#' + target.id + '_message').html(html);
-			} else {
-				if (!$('#message').length)
-					$('<div id="message"></div>').prependTo($('#content'));
-
-				$('#message').html(html);
 			}
+			msg.html(html);
+			$('html,body').animate({
+						scrollTop : msg.offset().top - 20
+					}, 100);
+		}
 	},
 	showFieldError : function(field, msg, msgKey) {
 		var msg = msg || MessageBundle.get(msgKey);
 		if (field && $(field).length) {
 			field = $(field);
 			field.closest('.control-group').addClass('error');
-			$('.field-error', field.closest('.controls')).remove();
+			$('.field-error', field.parent()).remove();
 			var prompt = $('<div class="field-error removeonclick"><div class="field-error-content">'
 					+ msg + '</div><div>').insertAfter(field);
-			var arrow = $('<div class="field-error-arrow"/>')
+			$('<div class="field-error-arrow"/>')
 					.html('<div class="line10"><!-- --></div><div class="line9"><!-- --></div><div class="line8"><!-- --></div><div class="line7"><!-- --></div><div class="line6"><!-- --></div><div class="line5"><!-- --></div><div class="line4"><!-- --></div><div class="line3"><!-- --></div><div class="line2"><!-- --></div><div class="line1"><!-- --></div>')
 					.appendTo(prompt);
 			var promptTopPosition, promptleftPosition, marginTopSize;
@@ -33856,7 +32930,7 @@ Form = {
 	validate : function(target) {
 		if ($(target).prop('tagName') != 'FORM') {
 			$(target).closest('.control-group').removeClass('error');
-			$('.field-error', $(target).closest('.controls')).fadeIn().remove();
+			$('.field-error', $(target).parent()).fadeIn().remove();
 			if ($(target).is(':visible') && !$(target).prop('disabled')) {
 				if ($(target).hasClass('required') && !$(target).val()) {
 					if ($(target).prop('tagName') == 'SELECT')
@@ -34255,7 +33329,7 @@ if (HISTORY_ENABLED) {
 Observation.common = function(container) {
 	$('.controls .field-error', container).each(function() {
 				var text = $(this).text();
-				var field = $(':input', $(this).closest('.controls'));
+				var field = $(':input', $(this).parent());
 				$(this).remove();
 				Message.showFieldError(field, text);
 			});
@@ -34275,7 +33349,7 @@ Observation.common = function(container) {
 	$('form', container).each(function() {
 				if (!$(this).hasClass('ajax'))
 					$(this).submit(function() {
-								$('.action-message,.action-error').remove();
+								$('.action-error').remove();
 								return Form.validate(this)
 							});
 			});
@@ -34344,11 +33418,6 @@ Observation.common = function(container) {
 							}).tabs('select', $(this).data('tab'));
 
 				});
-	if (typeof $.fn.corner != 'undefined' && $.browser.msie
-			&& $.browser.version <= 8)
-		$('.rounded', container).each(function() {
-					$(this).corner($(this).data('corner'));
-				});
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({
 					dateFormat : 'yy-mm-dd',
@@ -34369,46 +33438,44 @@ Observation.common = function(container) {
 						: 'collapsed'
 			});
 		});
-	if (typeof $.fn.truncatable != 'undefined')
-		$('.truncatable', container).each(function() {
-					$(this).truncatable({
-								limit : $(this).data('limit') || 100
-							});
-				});
-	if (typeof $.fn.tipsy != 'undefined') {
-		$('div.tipsy').live('mouseout', function() {
-					$(this).remove();
-				});
-		$('.tiped,:input[title]', container).each(function() {
-					var t = $(this);
-					var options = {
-						html : true,
-						fade : true,
-						gravity : t.data('gravity') || 'w'
-					};
-					if (!t.attr('title') && t.data('tipurl'))
-						t.attr('title', MessageBundle.get('ajax.loading'));
-					t.hover(function() {
-								if (t.data('tipurl'))
-									$.ajax({
-												url : t.data('tipurl'),
-												global : false,
-												dataType : 'html',
-												success : function(data) {
-													t.attr('title', data);
-													t.tipsy(true).show();
-												}
-											});
-							}, function() {
-								t.removeAttr('tipurl');
-							});
-					if (t.is(':input')) {
-						options.trigger = 'focus';
-						options.gravity = 'w';
-					}
-					t.tipsy(options);
-				});
-	}
+	// bootstrap start
+	$('.carousel', container).each(function() {
+				var t = $(this);
+				t.carousel((new Function("return "
+						+ (t.data('options') || '{}')))());
+			});
+
+	$('.tiped,:input[title]', container).each(function() {
+				var t = $(this);
+				var options = {
+					trigger : t.data('trigger') || 'hover',
+					placement : t.data('placement') || 'top'
+				};
+				if (!t.attr('title') && t.data('tipurl'))
+					t.attr('title', MessageBundle.get('ajax.loading'));
+				t.bind(options.trigger, function() {
+							if (t.data('tipurl')) {
+								t.removeData('tipurl');
+								$.ajax({
+											url : t.data('tipurl'),
+											global : false,
+											dataType : 'html',
+											success : function(data) {
+												t.attr('data-original-title',
+														data);
+												t.tooltip(options)
+														.tooltip('show');
+											}
+										});
+							}
+						});
+				if (t.is(':input')) {
+					options.trigger = 'focus';
+					options.placement = 'right';
+				}
+				t.tooltip(options);
+			});
+	// bootstrap end
 	$('.switch', container).each(function() {
 				var t = $(this);
 				t.children().css('cursor', 'pointer').click(function() {
@@ -34460,16 +33527,6 @@ Observation.common = function(container) {
 			}
 		}
 	}
-	if (typeof $.fn.cycle != 'undefined')
-		$('.cycle').each(function() {
-			var options = {
-				fx : 'fade',
-				pause : 1
-			};
-			$.extend(options, (new Function("return "
-							+ ($(this).data('options') || '{}')))());
-			$(this).cycle(options);
-		});
 	$('a.ajax,form.ajax', container).each(function() {
 		var target = this;
 		var ids = [];
@@ -34490,7 +33547,7 @@ Observation.common = function(container) {
 				beforeSubmit : function() {
 					if (!Ajax.fire(target, 'onprepare'))
 						return false;
-					$('.action-message,.action-error').remove();
+					$('.action-error').remove();
 					if (!Form.validate(target))
 						return false;
 					Indicator.text = $(target).data('indicator');
@@ -34559,7 +33616,7 @@ Observation.common = function(container) {
 					type : $(this).attr('method') || 'GET',
 					cache : $(this).hasClass('cache'),
 					beforeSend : function() {
-						$('.action-message,.action-error').remove();
+						$('.action-error').remove();
 						Indicator.text = $(target).data('indicator');
 						Ajax.fire(target, 'onloading');
 					},
@@ -34996,34 +34053,6 @@ Observation.ajaxpanel = function(container) {
 
 Observation.checkbox = function(container) {
 	$(container).checkbox();
-};
-(function($) {
-	$.fn.marquee = function() {
-		this.each(function() {
-					var marquee = $(this);
-					marquee.mouseenter(function() {
-								$(this).addClass('stop');
-							}).mouseleave(function() {
-								$(this).removeClass('stop');
-							});
-					setInterval(function() {
-								if (!marquee.hasClass('stop'))
-									$(
-											$(':first-child', marquee)
-													.prop('tagName')
-													+ ':eq(0)', marquee)
-											.fadeOut('slow', function() {
-												$(this).appendTo(marquee)
-														.fadeIn('slow');
-											});
-							}, marquee.data('delay') || 3000);
-				});
-		return this;
-	};
-})(jQuery);
-
-Observation.marquee = function(container) {
-	$('.marquee', container).marquee();
 };
 (function($) {
 
@@ -35927,9 +34956,9 @@ Richtable = {
 								$(this).removeClass('dontreload');
 								if (!$(e.target).closest('button')
 										.hasClass('save_and_create'))
-									setTimeout(function() {
+									//setTimeout(function() {
 												$('#_window_').dialog('close');
-											}, 1000);
+									//		}, 1000);
 
 							};
 						});

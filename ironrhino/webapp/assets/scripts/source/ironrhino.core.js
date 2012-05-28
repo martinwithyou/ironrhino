@@ -136,63 +136,20 @@ UrlUtils = {
 
 Message = {
 	compose : function(message, className) {
-		return '<div class="'
-				+ className
-				+ '"><span class="close" onclick="$(this.parentNode).remove()"></span>'
+		return '<div class="' + className
+				+ '"><a class="close" data-dismiss="alert">&times;</a>'
 				+ message + '</div>';
 	},
 	showMessage : function() {
 		Message.showActionMessage(MessageBundle.get.apply(this, arguments));
 	},
-	showActionMessage : function(messages, target) {
-		if (!messages)
-			return;
-		if (typeof messages == 'string') {
-			var a = [];
-			a.push(messages);
-			messages = a;
-		}
-		if (!$('#message').length)
-			$('<div id="message"></div>').prependTo($('#content'));
-		if (typeof $.fn.jnotifyInizialize != 'undefined') {
-			if (!$('#notification').length)
-				$('<div id="notification"><div>').prependTo(document.body)
-						.jnotifyInizialize({
-									oneAtTime : false,
-									appendType : 'append'
-								}).css({
-									'position' : 'fixed',
-									'top' : '40px',
-									'right' : '40px',
-									'width' : '250px',
-									'min-height' : '50px',
-									'z-index' : '9999'
-								});
-			for (var i = 0; i < messages.length; i++) {
-				$('#notification').jnotifyAddMessage({
-							text : messages[i],
-							permanent : false
-						});
-			}
-			return;
-		}
-		var html = '';
-		for (var i = 0; i < messages.length; i++)
-			html += Message.compose(messages[i], 'action-message');
-		if (target && target.tagName == 'FORM') {
-			if ($('#' + target.id + '_message').length == 0)
-				$(target).before('<div id="' + target.id + '_message"></div>');
-			$('#' + target.id + '_message').html(html);
-		} else {
-			if (!$('#message').length)
-				$('<div id="message"></div>').prependTo($('#content'));
-			$('#message').html(html);
-		}
-	},
 	showError : function() {
 		Message.showActionError(MessageBundle.get.apply(this, arguments));
 	},
 	showActionError : function(messages, target) {
+		Message.showActionMessage(messages, target, true);
+	},
+	showActionMessage : function(messages, target, error) {
 		if (!messages)
 			return;
 		if (typeof messages == 'string') {
@@ -200,58 +157,42 @@ Message = {
 			a.push(messages);
 			messages = a;
 		}
-		var parent = $('#content');
-		var msg;
-		if ($('#_window_').parents('.ui-dialog').length)
-			parent = $('#_window_');
-		if (!$('#message', parent).length)
-			$('<div id="message"></div>').prependTo(parent);
-		msg = $('#message', parent);
-		if (typeof $.fn.jnotifyInizialize != 'undefined') {
-			msg.jnotifyInizialize({
-						oneAtTime : false
-					});
-			for (var i = 0; i < messages.length; i++)
-				msg.jnotifyAddMessage({
-							text : messages[i],
-							disappearTime : 60000,
-							permanent : false,
-							type : 'error'
-						});
-			$('html,body').animate({
-						scrollTop : $('#message').offset().top - 20
-					}, 100);
-			return;
-		}
-		if ($.alerts) {
-			$.alerts.alert(messages.join('\n'), MessageBundle.get('error'));
-			return;
-		}
+		// if ($.alerts) {
+		// $.alerts.alert(messages.join('\n'), MessageBundle.get('error'));
+		// return;
+		// }
 		var html = '';
 		for (var i = 0; i < messages.length; i++)
-			html += Message.compose(messages[i], 'action-error');
-		if (html)
-			if (target && target.tagName == 'FORM') {
+			html += Message.compose(messages[i], error
+							? 'action-error alert alert-error'
+							: 'action-message alert alert-info');
+		if (html) {
+			var parent = $('#content');
+			if (error && target && $(target).parents('#_window_').length)
+				parent = $('#_window_');
+			if (!$('#message', parent).length)
+				$('<div id="message"></div>').prependTo(parent);
+			var msg = $('#message', parent);
+			if (error && target && $(target).prop('tagName') == 'FORM') {
 				if ($('#' + target.id + '_message').length == 0)
-					$(target).before('<div id="' + target.id
+					msg = $(target).before('<div id="' + target.id
 							+ '_message"></div>');
-				$('#' + target.id + '_message').html(html);
-			} else {
-				if (!$('#message').length)
-					$('<div id="message"></div>').prependTo($('#content'));
-
-				$('#message').html(html);
 			}
+			msg.html(html);
+			$('html,body').animate({
+						scrollTop : msg.offset().top - 20
+					}, 100);
+		}
 	},
 	showFieldError : function(field, msg, msgKey) {
 		var msg = msg || MessageBundle.get(msgKey);
 		if (field && $(field).length) {
 			field = $(field);
 			field.closest('.control-group').addClass('error');
-			$('.field-error', field.closest('.controls')).remove();
+			$('.field-error', field.parent()).remove();
 			var prompt = $('<div class="field-error removeonclick"><div class="field-error-content">'
 					+ msg + '</div><div>').insertAfter(field);
-			var arrow = $('<div class="field-error-arrow"/>')
+			$('<div class="field-error-arrow"/>')
 					.html('<div class="line10"><!-- --></div><div class="line9"><!-- --></div><div class="line8"><!-- --></div><div class="line7"><!-- --></div><div class="line6"><!-- --></div><div class="line5"><!-- --></div><div class="line4"><!-- --></div><div class="line3"><!-- --></div><div class="line2"><!-- --></div><div class="line1"><!-- --></div>')
 					.appendTo(prompt);
 			var promptTopPosition, promptleftPosition, marginTopSize;
@@ -289,7 +230,7 @@ Form = {
 	validate : function(target) {
 		if ($(target).prop('tagName') != 'FORM') {
 			$(target).closest('.control-group').removeClass('error');
-			$('.field-error', $(target).closest('.controls')).fadeIn().remove();
+			$('.field-error', $(target).parent()).fadeIn().remove();
 			if ($(target).is(':visible') && !$(target).prop('disabled')) {
 				if ($(target).hasClass('required') && !$(target).val()) {
 					if ($(target).prop('tagName') == 'SELECT')
@@ -688,7 +629,7 @@ if (HISTORY_ENABLED) {
 Observation.common = function(container) {
 	$('.controls .field-error', container).each(function() {
 				var text = $(this).text();
-				var field = $(':input', $(this).closest('.controls'));
+				var field = $(':input', $(this).parent());
 				$(this).remove();
 				Message.showFieldError(field, text);
 			});
@@ -708,7 +649,7 @@ Observation.common = function(container) {
 	$('form', container).each(function() {
 				if (!$(this).hasClass('ajax'))
 					$(this).submit(function() {
-								$('.action-message,.action-error').remove();
+								$('.action-error').remove();
 								return Form.validate(this)
 							});
 			});
@@ -777,11 +718,6 @@ Observation.common = function(container) {
 							}).tabs('select', $(this).data('tab'));
 
 				});
-	if (typeof $.fn.corner != 'undefined' && $.browser.msie
-			&& $.browser.version <= 8)
-		$('.rounded', container).each(function() {
-					$(this).corner($(this).data('corner'));
-				});
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({
 					dateFormat : 'yy-mm-dd',
@@ -802,46 +738,44 @@ Observation.common = function(container) {
 						: 'collapsed'
 			});
 		});
-	if (typeof $.fn.truncatable != 'undefined')
-		$('.truncatable', container).each(function() {
-					$(this).truncatable({
-								limit : $(this).data('limit') || 100
-							});
-				});
-	if (typeof $.fn.tipsy != 'undefined') {
-		$('div.tipsy').live('mouseout', function() {
-					$(this).remove();
-				});
-		$('.tiped,:input[title]', container).each(function() {
-					var t = $(this);
-					var options = {
-						html : true,
-						fade : true,
-						gravity : t.data('gravity') || 'w'
-					};
-					if (!t.attr('title') && t.data('tipurl'))
-						t.attr('title', MessageBundle.get('ajax.loading'));
-					t.hover(function() {
-								if (t.data('tipurl'))
-									$.ajax({
-												url : t.data('tipurl'),
-												global : false,
-												dataType : 'html',
-												success : function(data) {
-													t.attr('title', data);
-													t.tipsy(true).show();
-												}
-											});
-							}, function() {
-								t.removeAttr('tipurl');
-							});
-					if (t.is(':input')) {
-						options.trigger = 'focus';
-						options.gravity = 'w';
-					}
-					t.tipsy(options);
-				});
-	}
+	// bootstrap start
+	$('.carousel', container).each(function() {
+				var t = $(this);
+				t.carousel((new Function("return "
+						+ (t.data('options') || '{}')))());
+			});
+
+	$('.tiped,:input[title]', container).each(function() {
+				var t = $(this);
+				var options = {
+					trigger : t.data('trigger') || 'hover',
+					placement : t.data('placement') || 'top'
+				};
+				if (!t.attr('title') && t.data('tipurl'))
+					t.attr('title', MessageBundle.get('ajax.loading'));
+				t.bind(options.trigger, function() {
+							if (t.data('tipurl')) {
+								t.removeData('tipurl');
+								$.ajax({
+											url : t.data('tipurl'),
+											global : false,
+											dataType : 'html',
+											success : function(data) {
+												t.attr('data-original-title',
+														data);
+												t.tooltip(options)
+														.tooltip('show');
+											}
+										});
+							}
+						});
+				if (t.is(':input')) {
+					options.trigger = 'focus';
+					options.placement = 'right';
+				}
+				t.tooltip(options);
+			});
+	// bootstrap end
 	$('.switch', container).each(function() {
 				var t = $(this);
 				t.children().css('cursor', 'pointer').click(function() {
@@ -893,16 +827,6 @@ Observation.common = function(container) {
 			}
 		}
 	}
-	if (typeof $.fn.cycle != 'undefined')
-		$('.cycle').each(function() {
-			var options = {
-				fx : 'fade',
-				pause : 1
-			};
-			$.extend(options, (new Function("return "
-							+ ($(this).data('options') || '{}')))());
-			$(this).cycle(options);
-		});
 	$('a.ajax,form.ajax', container).each(function() {
 		var target = this;
 		var ids = [];
@@ -923,7 +847,7 @@ Observation.common = function(container) {
 				beforeSubmit : function() {
 					if (!Ajax.fire(target, 'onprepare'))
 						return false;
-					$('.action-message,.action-error').remove();
+					$('.action-error').remove();
 					if (!Form.validate(target))
 						return false;
 					Indicator.text = $(target).data('indicator');
@@ -992,7 +916,7 @@ Observation.common = function(container) {
 					type : $(this).attr('method') || 'GET',
 					cache : $(this).hasClass('cache'),
 					beforeSend : function() {
-						$('.action-message,.action-error').remove();
+						$('.action-error').remove();
 						Indicator.text = $(target).data('indicator');
 						Ajax.fire(target, 'onloading');
 					},
