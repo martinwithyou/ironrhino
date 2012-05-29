@@ -127,9 +127,9 @@ ${value?xhtml}<#t>
 <select name="resultPage.pageSize" class="pageSize">
 <#local array=[5,10,20,50,100,500]>
 <#list array as ps>
-<option value="${ps}" <#if resultPage.pageSize==ps>selected</#if>>${ps}</option>
+<option value="${ps}"<#if resultPage.pageSize==ps> selected</#if>>${ps}</option>
 </#list> 
-<option value="${resultPage.totalRecord}">${action.getText('all')}</option>
+<option value="${resultPage.totalRecord}"<#if resultPage.pageSize==resultPage.totalRecord> selected</#if>>${action.getText('all')}</option>
 </select>
 </#if>
 <#else>

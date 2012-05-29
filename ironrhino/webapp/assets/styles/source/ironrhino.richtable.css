@@ -65,7 +65,7 @@ table.richtable td,th {
 	text-align:right;
 }
 .richtable .pageSize {
-	width: 50px;
+	width: 60px;
 }
 
 .richtable .toolbar .pagination,.richtable .toolbar .action,.richtable .toolbar .search,.richtable .toolbar .status{
