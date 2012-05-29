@@ -1,3 +1,6 @@
+input.required {
+	background-image: url(../images/required.gif);
+}
 #indicator {
 	position: absolute;
 	top: expression(eval(document.compatMode&&document.compatMode =='CSS1Compat')?documentElement.scrollTop:document.body.scrollTop);
