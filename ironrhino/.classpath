@@ -33,7 +33,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jedis-2.1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jericho-html-3.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jpa-2.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jsoup-1.6.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jsoup-1.6.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jta-1.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-2.4.1.jar"/>
