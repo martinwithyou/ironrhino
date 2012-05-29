@@ -35655,7 +35655,7 @@ Observation.treeselect = function(container) {
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
 						.appendTo(document.body).dialog({
-									width : 650,
+									width : 800,
 									minHeight : 500
 								});
 				if (win.html() && typeof $.fn.mask != 'undefined')

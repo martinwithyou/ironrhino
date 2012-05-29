@@ -98,17 +98,17 @@ form.richtable .pagination a{
 /*override bootstrap end*/
 
 .ui-dialog .richtable .toolbar .pagination{
-	width:35%;
+	width:37%;
 }
 .ui-dialog .richtable .toolbar .action{
 	margin-left: 0;
-	width:13%;
+	width:20%;
 }
 .ui-dialog .richtable .toolbar .search{
 	margin-left: 0;
-	width:25%;
+	width:23%;
 }
 .ui-dialog .richtable .toolbar .status{
 	margin-left: 0;
-	width:22%;
+	width:20%;
 }
