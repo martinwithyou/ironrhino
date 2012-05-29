@@ -122,8 +122,11 @@ ${value?xhtml}<#t>
 <li><a class="lastPage" title="${action.getText('lastpage')}" href="${resultPage.renderUrl(resultPage.totalPage)}">&gt;&gt;</a></li>
 </#if>
 <li>
-<input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/><span>/</span><strong class="totalPage">${resultPage.totalPage}</strong>
+<span class="input-append">
+    <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/><span class="add-on totalPage"><strong>${resultPage.totalPage}</strong></span>
+</span>
 <#if showPageSize>
+<li>
 <select name="resultPage.pageSize" class="pageSize">
 <#local array=[5,10,20,50,100,500]>
 <#list array as ps>
@@ -131,6 +134,7 @@ ${value?xhtml}<#t>
 </#list> 
 <option value="${resultPage.totalRecord}"<#if resultPage.pageSize==resultPage.totalRecord> selected</#if>>${action.getText('all')}</option>
 </select>
+</li>
 </#if>
 <#else>
 </#if>
@@ -150,13 +154,9 @@ ${value?xhtml}<#t>
 </div>
 <div class="search span2">
 <#if searchable>
-<div class="control-group">
-    <div class="controls">
-        <div class="input-append">
-            <input type="text" name="keyword" value="${keyword!}" class="focus" placeholder="${action.getText('search')}"/><span class="add-on"><i class="icon-search"></i></span>
-        </div>
-    </div>
-</div>
+<span class="input-append">
+    <input type="text" name="keyword" value="${keyword!}" class="focus" placeholder="${action.getText('search')}"/><span class="add-on"><i class="icon-search"></i></span>
+</span>
 </#if>
 <#if searchButtons!=''>
 <#local temp=searchButtons?interpret>

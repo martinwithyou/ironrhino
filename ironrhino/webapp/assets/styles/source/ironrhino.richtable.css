@@ -71,11 +71,11 @@ table.richtable td,th {
 .richtable .toolbar .pagination,.richtable .toolbar .action,.richtable .toolbar .search,.richtable .toolbar .status{
 	margin-top:18px;
 }
-
+.richtable .toolbar .inputPage,.richtable .toolbar .totalPage{
+	margin-bottom:9px;
+}
 .richtable .toolbar .action{
 	text-align:center;
-}
-.richtable .toolbar .search{
 }
 .richtable .toolbar .status{
 	line-height: 26px;
