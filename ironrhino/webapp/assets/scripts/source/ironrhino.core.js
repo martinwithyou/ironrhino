@@ -186,7 +186,7 @@ Message = {
 	},
 	showFieldError : function(field, msg, msgKey) {
 		var msg = msg || MessageBundle.get(msgKey);
-		if (field && $(field).length) {
+		if (field && $(field).length && $(field).is(':visible')) {
 			field = $(field);
 			field.closest('.control-group').addClass('error');
 			$('.field-error', field.parent()).remove();
