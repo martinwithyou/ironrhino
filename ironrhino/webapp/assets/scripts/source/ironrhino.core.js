@@ -778,6 +778,50 @@ Observation.common = function(container) {
 				}
 				t.tooltip(options);
 			});
+	$('.poped', container).each(function() {
+		var t = $(this);
+		var options = {
+			trigger : t.data('trigger') || 'hover',
+			placement : t.data('placement') || 'right',
+			title : t.data('title'),
+			content : t.data('content')
+		};
+		if (!options.content && t.data('popurl'))
+			options.title = MessageBundle.get('ajax.loading');
+		t.bind(options.trigger, function() {
+			if (!t.hasClass('_poped')) {
+				t.addClass('_poped');
+				$.ajax({
+							url : t.data('popurl'),
+							global : false,
+							dataType : 'html',
+							success : function(data) {
+								if (data.indexOf('<title>') >= 0
+										&& data.indexOf('</title>') > 0)
+									t.attr('data-original-title',
+											data.substring(data
+															.indexOf('<title>')
+															+ 7,
+													data.indexOf('</title>')));
+								if (data.indexOf('<body>') >= 0
+										&& data.indexOf('</body>') > 0)
+									t
+											.attr(
+													'data-content',
+													data
+															.substring(
+																	data
+																			.indexOf('<body>')
+																			+ 6,
+																	data
+																			.indexOf('</body>')));
+								t.popover(options).popover('show');
+							}
+						});
+			}
+		});
+		t.popover(options);
+	});
 	// bootstrap end
 	$('.switch', container).each(function() {
 				var t = $(this);
