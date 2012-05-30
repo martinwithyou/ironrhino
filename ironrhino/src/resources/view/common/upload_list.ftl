@@ -118,9 +118,11 @@ td.center {text-align:center;}
 </head>
 <body>
 <@s.form id="upload_form" action="upload" method="post" enctype="multipart/form-data" cssClass="form-inline">
-	<#list 1..Parameters.size?default('6')?number as index>
-		<@s.file theme="simple" name="file" cssStyle="width:194px;" multiple="true"/>
+	<div class="row">
+	<#list 1..Parameters.size?default('4')?number as index>
+		<div class="span3"><@s.file theme="simple" name="file" multiple="true"/></div>
 	</#list>
+	</div>
 	<div style="text-align:center;padding-top:30px;">
 	<@s.submit theme="simple" value="${action.getText('upload')}"/>
 	<span style="margin-left:10px;margin-right:10px;">${action.getText('autorename')}:</span><@s.checkbox theme="simple" name="autorename"/>
