@@ -26,6 +26,8 @@ public class MonitorAction extends BaseAction {
 
 	private Date to;
 
+	private boolean localhost;
+
 	private String vtype = "l"; // value type l for longValue or d for
 	// doubleValue
 
@@ -37,6 +39,14 @@ public class MonitorAction extends BaseAction {
 
 	@Inject
 	private transient StatControl statControl;
+
+	public boolean isLocalhost() {
+		return localhost;
+	}
+
+	public void setLocalhost(boolean localhost) {
+		this.localhost = localhost;
+	}
 
 	public String getVtype() {
 		return vtype;
@@ -90,12 +100,12 @@ public class MonitorAction extends BaseAction {
 	public String execute() {
 		try {
 			if (from != null && to != null) {
-				result = statControl.getResult(from, to);
+				result = statControl.getResult(from, to, localhost);
 			} else {
 				Date today = new Date();
 				if (date == null || date.after(today))
 					date = today;
-				result = statControl.getResult(date);
+				result = statControl.getResult(date, localhost);
 			}
 		} catch (Exception e) {
 			result = new HashMap<String, List<TreeNode>>();
@@ -113,7 +123,7 @@ public class MonitorAction extends BaseAction {
 	@JsonConfig(root = "chart")
 	public String data() {
 		chart = statControl.getChart(Key.fromString(getUid()), date, vtype,
-				ctype);
+				ctype, localhost);
 		return JSON;
 	}
 }

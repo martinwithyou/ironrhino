@@ -32,6 +32,7 @@ import org.ironrhino.core.stat.analysis.Analyzer;
 import org.ironrhino.core.stat.analysis.CumulativeAnalyzer;
 import org.ironrhino.core.stat.analysis.PeriodAnalyzer;
 import org.ironrhino.core.stat.analysis.TreeNode;
+import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.CompositeIterator;
 import org.ironrhino.core.util.DateUtils;
 import org.slf4j.Logger;
@@ -63,7 +64,7 @@ public class StatControl {
 	public void archive(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		Map<String, File> map = AbstractAnalyzer.getLogFile(date);
+		Map<String, File> map = AbstractAnalyzer.getLogFile(date, true);
 		for (Map.Entry<String, File> entry : map.entrySet()) {
 			final String host = entry.getKey();
 			final File file = entry.getValue();
@@ -166,8 +167,17 @@ public class StatControl {
 		return getResult(date, date);
 	}
 
-	@SuppressWarnings("unchecked")
+	public Map<String, List<TreeNode>> getResult(Date date, boolean localhost) {
+		return getResult(date, date, localhost);
+	}
+
 	public Map<String, List<TreeNode>> getResult(Date from, Date to) {
+		return getResult(from, to, false);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, List<TreeNode>> getResult(Date from, Date to,
+			boolean localhost) {
 		Date today = new Date();
 		if (from == null)
 			throw new IllegalArgumentException("from is null");
@@ -175,12 +185,12 @@ public class StatControl {
 			to = today;
 		if (to.before(from))
 			throw new IllegalArgumentException("to is before of from");
-		Date criticalDate = getCriticalDate(from, to);
+		Date criticalDate = getCriticalDate(from, to, localhost);
 		boolean allInFile = DateUtils.isSameDay(criticalDate, from);
 		CumulativeAnalyzer analyzer = null;
 		if (allInFile) {
 			try {
-				analyzer = new CumulativeAnalyzer(from, to);
+				analyzer = new CumulativeAnalyzer(from, to, localhost);
 			} catch (Exception e) {
 				e.printStackTrace();
 				log.error(e.getMessage(), e);
@@ -205,13 +215,15 @@ public class StatControl {
 			entityManager.setEntityClass(Stat.class);
 			DetachedCriteria dc = entityManager.detachedCriteria();
 			dc.add(Restrictions.between("date", start, end));
+			if (localhost)
+				dc.add(Restrictions.eq("host", AppInfo.getHostName()));
 			List<Stat> list = entityManager.findListByCriteria(dc);
 			try {
 				if (list.size() > 0) {
 					Iterator<? extends KeyValuePair> it1 = list.iterator();
 					if (criticalDate != null) {
 						Iterator<? extends KeyValuePair> it2 = new CumulativeAnalyzer(
-								criticalDate, to).iterate();
+								criticalDate, to, localhost).iterate();
 						analyzer = new CumulativeAnalyzer(
 								new CompositeIterator(it1, it2));
 					} else {
@@ -220,7 +232,8 @@ public class StatControl {
 
 				} else {
 					if (criticalDate != null) {
-						analyzer = new CumulativeAnalyzer(criticalDate, to);
+						analyzer = new CumulativeAnalyzer(criticalDate, to,
+								localhost);
 					}
 				}
 			} catch (FileNotFoundException e) {
@@ -236,11 +249,11 @@ public class StatControl {
 		}
 	}
 
-	private Date getCriticalDate(Date from, Date to) {
+	private Date getCriticalDate(Date from, Date to, boolean localhost) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(to);
 		Date criticalDate = null;
-		while (AbstractAnalyzer.hasLogFile(cal.getTime())
+		while (AbstractAnalyzer.hasLogFile(cal.getTime(), localhost)
 				&& !DateUtils.isSameDay(criticalDate, from)) {
 			criticalDate = cal.getTime();
 			cal.add(Calendar.DAY_OF_YEAR, -1);
@@ -249,8 +262,8 @@ public class StatControl {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Value> getPeriodResult(Key key, Date date, boolean cumulative) {
-		return (List<Value>) getPeriodResult(key, date, cumulative, false);
+	public List<Value> getPeriodResult(Key key, Date date, boolean cumulative,boolean localhost) {
+		return (List<Value>) getPeriodResult(key, date, cumulative, false,localhost);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -261,10 +274,10 @@ public class StatControl {
 	}
 
 	private Object getPeriodResult(Key key, Date date, boolean cumulative,
-			boolean perHost) {
+			boolean perHost, boolean localhost) {
 		PeriodAnalyzer analyzer;
 		try {
-			analyzer = new PeriodAnalyzer(key, date);
+			analyzer = new PeriodAnalyzer(key, date, localhost);
 			analyzer.setCumulative(cumulative);
 		} catch (FileNotFoundException e) {
 			Calendar cal = Calendar.getInstance();
@@ -281,6 +294,8 @@ public class StatControl {
 			DetachedCriteria dc = entityManager.detachedCriteria();
 			dc.add(Restrictions.eq("keyAsString", key.toString()));
 			dc.add(Restrictions.between("date", start, end));
+			if (localhost)
+				dc.add(Restrictions.eq("host", AppInfo.getHostName()));
 			List<Stat> list = entityManager.findListByCriteria(dc);
 			analyzer = new PeriodAnalyzer(key, list.iterator());
 			analyzer.setCumulative(cumulative);
@@ -293,13 +308,14 @@ public class StatControl {
 		return analyzer.getResult();
 	}
 
-	public Chart getChart(Key key, Date date, String vtype, String ctype) {
+	public Chart getChart(Key key, Date date, String vtype, String ctype,
+			boolean localhost) {
 		boolean isdouble = "d".equalsIgnoreCase(vtype);
 		boolean isline = "line".equalsIgnoreCase(ctype);
 		Chart chart = new Chart();
 		if (date == null)
 			date = new Date();
-		List<Value> list = getPeriodResult(key, date, isline);
+		List<Value> list = getPeriodResult(key, date, isline, localhost);
 		if (list != null && list.size() > 0) {
 			String[] labels = new String[list.size()];
 			Long[] longValues = new Long[list.size()];

@@ -20,21 +20,23 @@ public class CumulativeAnalyzer extends
 
 	private Map<String, List<TreeNode>> result = new TreeMap<String, List<TreeNode>>();
 
-	public CumulativeAnalyzer() throws FileNotFoundException {
-		super();
+	public CumulativeAnalyzer(boolean localhost) throws FileNotFoundException {
+		super(localhost);
 	}
 
-	public CumulativeAnalyzer(Date start, Date end)
+	public CumulativeAnalyzer(Date start, Date end, boolean localhost)
 			throws FileNotFoundException {
-		super(start, end);
+		super(start, end, localhost);
 	}
 
-	public CumulativeAnalyzer(Date date) throws FileNotFoundException {
-		super(date);
+	public CumulativeAnalyzer(Date date, boolean localhost)
+			throws FileNotFoundException {
+		super(date, localhost);
 	}
 
-	public CumulativeAnalyzer(Date[] dates) throws FileNotFoundException {
-		super(dates);
+	public CumulativeAnalyzer(Date[] dates, boolean localhost)
+			throws FileNotFoundException {
+		super(dates, localhost);
 	}
 
 	public CumulativeAnalyzer(Iterator<? extends KeyValuePair> iterator) {
@@ -120,12 +122,10 @@ public class CumulativeAnalyzer extends
 					for (TreeNode n : node.getChildren()) {
 						n.setParent(node);
 						if (n.getValue().getLongValue() > 0)
-							n
-									.setLongPercent(NumberUtils.formatPercent(
-											((double) n.getValue()
-													.getLongValue())
-													/ node.getValue()
-															.getLongValue(), 2));
+							n.setLongPercent(NumberUtils
+									.formatPercent(((double) n.getValue()
+											.getLongValue())
+											/ node.getValue().getLongValue(), 2));
 						if (n.getValue().getDoubleValue() > 0)
 							n.setDoublePercent(NumberUtils.formatPercent(n
 									.getValue().getDoubleValue()

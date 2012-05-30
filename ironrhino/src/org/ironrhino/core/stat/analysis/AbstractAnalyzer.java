@@ -13,14 +13,15 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ironrhino.core.stat.Key;
 import org.ironrhino.core.stat.KeyValuePair;
 import org.ironrhino.core.stat.StatLogSettings;
 import org.ironrhino.core.stat.Value;
+import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.TextFileIterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
@@ -28,27 +29,30 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
 	protected Iterator<? extends KeyValuePair> iterator;
 
-	public AbstractAnalyzer() throws FileNotFoundException {
-		this(new Date());
+	public AbstractAnalyzer(boolean localhost) throws FileNotFoundException {
+		this(new Date(), localhost);
 	}
 
-	public AbstractAnalyzer(Date date) throws FileNotFoundException {
-		this.iterator = newIterator(getLogFile(date).values().toArray(
-				new File[0]));
+	public AbstractAnalyzer(Date date, boolean localhost)
+			throws FileNotFoundException {
+		this.iterator = newIterator(getLogFile(date, localhost).values()
+				.toArray(new File[0]));
 	}
 
 	public AbstractAnalyzer(File file) throws FileNotFoundException {
 		this.iterator = newIterator(new File[] { file });
 	}
 
-	public AbstractAnalyzer(Date[] dates) throws FileNotFoundException {
+	public AbstractAnalyzer(Date[] dates, boolean localhost)
+			throws FileNotFoundException {
 		List<File> list = new ArrayList<File>();
 		for (int i = 0; i < dates.length; i++)
-			list.addAll(getLogFile(dates[i]).values());
+			list.addAll(getLogFile(dates[i], localhost).values());
 		this.iterator = newIterator(list.toArray(new File[0]));
 	}
 
-	public AbstractAnalyzer(Date start, Date end) throws FileNotFoundException {
+	public AbstractAnalyzer(Date start, Date end, boolean localhost)
+			throws FileNotFoundException {
 		List<File> list = new ArrayList<File>();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(end);
@@ -57,7 +61,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		int startDay = cal.get(Calendar.DAY_OF_YEAR);
 		for (int i = 0; i < (endDay - startDay + 1); i++) {
 			cal.add(Calendar.DAY_OF_YEAR, i);
-			list.addAll(getLogFile(cal.getTime()).values());
+			list.addAll(getLogFile(cal.getTime(), localhost).values());
 		}
 		this.iterator = newIterator(list.toArray(new File[0]));
 	}
@@ -123,10 +127,13 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 	protected abstract void process(KeyValuePair pair);
 
 	// host,file pair
-	public static Map<String, File> getLogFile(Date date) {
+	public static Map<String, File> getLogFile(Date date,
+			final boolean localhost) {
 		final Map<String, File> map = new TreeMap<String, File>();
 		boolean today = DateUtils.isToday(date);
 		StringBuilder sb = new StringBuilder();
+		if (localhost)
+			sb.append(AppInfo.getHostName());
 		sb.append(StatLogSettings.SEPARATOR);
 		sb.append(StatLogSettings.STAT_LOG_FILE_NAME);
 		if (!today)
@@ -137,7 +144,11 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		dir.listFiles(new FileFilter() {
 			public boolean accept(File f) {
 				String name = f.getName();
-				if (name.endsWith(suffix)) {
+				if (localhost && name.equals(suffix)) {
+					map.put(name.substring(0,
+							name.lastIndexOf(StatLogSettings.SEPARATOR)), f);
+					return true;
+				} else if (name.endsWith(suffix)) {
 					map.put(name.substring(0, name.lastIndexOf(suffix)), f);
 					return true;
 				}
@@ -147,8 +158,8 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		return map;
 	}
 
-	public static boolean hasLogFile(Date date) {
-		return getLogFile(date).size() > 0;
+	public static boolean hasLogFile(Date date, boolean localhost) {
+		return getLogFile(date, localhost).size() > 0;
 	}
 
 	public static String getHost(File file) {
