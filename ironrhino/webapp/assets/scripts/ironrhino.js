@@ -33233,9 +33233,10 @@ Initialization.common = function() {
 				Form.validate(this);
 				return true;
 			});
-	$('.tooltip').live('mouseout', function() {
-				$(this).remove()
-			});
+	$('.ui-dialog-titlebar').live('dblclick', function() {
+		Dialog.toggleMaximization($('.ui-dialog-content', $(this)
+						.closest('.ui-dialog')));
+	});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
 	$('.nav li a').each(function() {
@@ -33721,7 +33722,34 @@ var Dialog = {
 		var height = d.height();
 		if (height > 600)
 			d.dialog('option', 'position', 'top');
-
+		d.dialog('moveToTop');
+	},
+	toggleMaximization : function(d) {
+		var orginalWidth = $(d).data('orginal-width');
+		if (orginalWidth) {
+			var options = {
+				minWidth : 'auto',
+				minHeight : 'auto',
+				width : orginalWidth,
+				height : $(d).data('orginal-height')
+			};
+			$(d).removeData('orginal-width').removeData('orginal-height')
+					.dialog('option', options);
+			Dialog.adapt($(d));
+		} else {
+			$(d).data('orginal-width', $(d).width()).data('orginal-height',
+					$(d).height());
+			var viewportWidth = $(window).width() - 10;
+			var viewportHeight = $(window).height() - 10;
+			var options = {
+				minWidth : 'auto',
+				width : viewportWidth
+			};
+			if ($(d).dialog('option', 'minHeight') < viewportHeight)
+				options.minHeight = viewportHeight;
+			$(d).dialog('option', options);
+			d.dialog('option', 'position', 'top');
+		}
 	}
 }
 
