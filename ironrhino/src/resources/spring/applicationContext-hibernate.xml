@@ -17,25 +17,25 @@
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">
-					${hibernate.dialect}
+					${hibernate.dialect:org.hibernate.dialect.MySQL5Dialect}
 				</prop>
 				<prop key="hibernate.jdbc.fetch_size">
-					${hibernate.jdbc.fetch_size}
+					${hibernate.jdbc.fetch_size:20}
 				</prop>
 				<prop key="hibernate.jdbc.batch_size">
-					${hibernate.jdbc.batch_size}
+					${hibernate.jdbc.batch_size:50}
 				</prop>
 				<prop key="hibernate.show_sql">
-					${hibernate.show_sql}
+					${hibernate.show_sql:false}
 				</prop>
 				<prop key="hibernate.hbm2ddl.auto">
-					${hibernate.hbm2ddl.auto}
+					${hibernate.hbm2ddl.auto:update}
 				</prop>
 			</props>
 		</property>
 	</bean>
 	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager" />
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager" p:defaultTimeout="${hibernate.transaction.defaultTimeount:-1}"/>
 	<bean
 		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 	<tx:annotation-driven order="0"/>

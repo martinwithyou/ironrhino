@@ -10,7 +10,7 @@
 		<property name="compassSettings">
 			<props>
 				<prop key="compass.engine.connection">
-					${compass.engine.connection}
+				#{'${compass.engine.connection:}'?:'file://'+systemProperties['ironrhino.home']+'/search'}
 				</prop>
 				<prop key="compass.transaction.factory">
 					org.compass.spring.transaction.SpringSyncTransactionFactory

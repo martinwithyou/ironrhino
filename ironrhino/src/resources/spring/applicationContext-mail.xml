@@ -7,9 +7,9 @@
 	<!-- 
 		<bean id="javaMailSender"
 		class="org.springframework.mail.javamail.JavaMailSenderImpl"
-		p:host="${mail.smtp.host}" p:port="${mail.smtp.port}"
-		p:username="${mail.smtp.username}"
-		p:password="${mail.smtp.password}">
+		p:host="${mail.smtp.host:smtp.gmail.com}" p:port="${mail.smtp.port:465}"
+		p:username="${mail.smtp.username:ironrhinotest@gmail.com}"
+		p:password="${mail.smtp.password:testironrhino}">
 		<property name="javaMailProperties">
 		<props>
 		<prop key="mail.smtp.auth">true</prop>
@@ -19,7 +19,7 @@
 	-->
 	<bean id="smtpAuthenticator"
 		class="org.ironrhino.core.mail.SmtpAuthenticator"
-		p:username="${mail.smtp.username}" p:password="${mail.smtp.password}" />
+		p:username="${mail.smtp.username:ironrhinotest@gmail.com}" p:password="${mail.smtp.password:testironrhino}" />
 
 	<bean id="mailSession" class="javax.mail.Session"
 		factory-method="getInstance">
@@ -27,7 +27,7 @@
 			<props>
 				<prop key="mail.smtp.auth">true</prop>
 				<prop key="mail.smtp.socketFactory.port">
-					${mail.smtp.port}
+					${mail.smtp.port:465}
 				</prop>
 				<prop key="mail.smtp.socketFactory.class">
 					javax.net.ssl.SSLSocketFactory
@@ -42,9 +42,9 @@
 
 	<bean id="javaMailSender"
 		class="org.springframework.mail.javamail.JavaMailSenderImpl"
-		p:host="${mail.smtp.host}" p:port="${mail.smtp.port}"
+		p:host="${mail.smtp.host:smtp.gmail.com}" p:port="${mail.smtp.port:465}"
 		p:defaultEncoding="UTF-8" p:session-ref="mailSession" />
 	<bean id="mailSender" class="org.ironrhino.core.mail.MailSender"
-		p:defaultFrom="${mail.default.from}" p:defaultTo="${mail.default.to}" />
+		p:defaultFrom="${mail.default.from:ironrhinotest@gmail.com}" p:defaultTo="${mail.default.to:ironrhinotest@gmail.com}" />
 	<bean id="mailService" class="org.ironrhino.core.mail.MailService" />
 </beans>
