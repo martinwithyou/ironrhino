@@ -1025,29 +1025,21 @@ var Dialog = {
 		d.dialog('moveToTop');
 	},
 	toggleMaximization : function(d) {
-		var orginalWidth = $(d).data('orginal-width');
+		var dialog = $(d).closest('.ui-dialog');
+		var orginalWidth = dialog.data('orginal-width');
 		if (orginalWidth) {
-			var options = {
-				minWidth : 'auto',
-				minHeight : 'auto',
-				width : orginalWidth,
-				height : $(d).data('orginal-height')
-			};
-			$(d).removeData('orginal-width').removeData('orginal-height')
-					.dialog('option', options);
+			dialog.width(orginalWidth);
+			dialog.height(dialog.data('orginal-height'));
+			dialog.removeData('orginal-width').removeData('orginal-height');
 			Dialog.adapt($(d));
 		} else {
-			$(d).data('orginal-width', $(d).width()).data('orginal-height',
-					$(d).height());
+			dialog.data('orginal-width', dialog.width()+0.2).data('orginal-height',
+					dialog.height()+0.2);
 			var viewportWidth = $(window).width() - 10;
 			var viewportHeight = $(window).height() - 10;
-			var options = {
-				minWidth : 'auto',
-				width : viewportWidth
-			};
+			dialog.width(viewportWidth);
 			if ($(d).dialog('option', 'minHeight') < viewportHeight)
-				options.minHeight = viewportHeight;
-			$(d).dialog('option', options);
+				dialog.height(viewportHeight);	
 			d.dialog('option', 'position', 'top');
 		}
 	}
