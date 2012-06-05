@@ -22,15 +22,9 @@ form{
 	display:form-inline;
 }
 .number{
-	float: left;
-	display: block;
-	width: 80px;
+	margin-right:50px;
 }
-.percent{
-	float: left;
-	display: block;
-	width: 20px;
-}
+
 </style>
 </head>
 <body>
