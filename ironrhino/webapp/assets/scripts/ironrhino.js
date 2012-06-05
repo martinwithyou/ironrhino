@@ -33990,14 +33990,15 @@ Observation.checkavailable = function(container) {
 			global : false,
 			quiet : true,
 			beforeSend : function() {
-				if (typeof $.fn.mask != 'undefined')
-					ele.mask(MessageBundle.get('ajax.loading'));
-				else
-					ele.html('<div style="text-align:center;">'
-							+ MessageBundle.get('ajax.loading') + '</div>');
+				if (!ele.data('quiet'))
+					if (typeof $.fn.mask != 'undefined')
+						ele.mask(MessageBundle.get('ajax.loading'));
+					else
+						ele.html('<div style="text-align:center;">'
+								+ MessageBundle.get('ajax.loading') + '</div>');
 			},
 			complete : function() {
-				if (typeof $.fn.unmask != 'undefined')
+				if (!ele.data('quiet') && typeof $.fn.unmask != 'undefined')
 					ele.unmask();
 			},
 			success : function(data) {

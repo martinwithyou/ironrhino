@@ -1,8 +1,8 @@
 <#macro renderTR node>
 <tr id="node-${node.id}"<#if node.parent??&&node.parent.id gt 0> class="child-of-node-${node.parent.id}"</#if>>
         <td>${node.name}</td>
-        <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.longValue gt 0><a href="monitor/chart/${node.key?string}?vtype=l<#if request.queryString??>&${request.queryString}</#if>" class="number">${node.value.longValue}</a><span class="perccent">${node.longPercent!}</span></#if></td>
-        <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.doubleValue gt 0><a href="monitor/chart/${node.key?string}?vtype=d<#if request.queryString??>&${request.queryString}</#if>" class="number">${node.value.doubleValue}</a><span  class="perccent">${node.doublePercent!}</span></#if></td>
+        <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.longValue gt 0><a href="monitor/chart/${node.key?string}?vtype=l<#if request.queryString??>&${request.queryString}</#if>">${node.value.longValue}</a><span class="pull-right">${node.longPercent!}</span></#if></td>
+        <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.doubleValue gt 0><a href="monitor/chart/${node.key?string}?vtype=d<#if request.queryString??>&${request.queryString}</#if>">${node.value.doubleValue}</a><span class="pull-right">${node.doublePercent!}</span></#if></td>
         <td></td>
 </tr>
 <#if node.leaf>
@@ -17,15 +17,6 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('monitor')}</title>
-<style>
-form{
-	display:form-inline;
-}
-.number{
-	margin-right:50px;
-}
-
-</style>
 </head>
 <body>
 <div class="row">
@@ -46,7 +37,7 @@ form{
 </form>
 </div>
 </div>
-<div id="result">
+<div id="result"<#if !Parameters.date?? && !Parameters.from??> class="ajaxpanel" data-interval="${Parameters.interval?default('60000')}" data-quiet="true"</#if>>
 <#list result.entrySet() as entry>
 <table class="treeTable expanded highlightrow" width="100%">
   <#if entry.key??>
