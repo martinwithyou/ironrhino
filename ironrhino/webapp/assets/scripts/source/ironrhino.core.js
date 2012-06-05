@@ -841,23 +841,27 @@ Observation.common = function(container) {
 	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {
 			var id = this.id;
-			var width = $(this).width();
-			var height = $(this).height();
-			var data = $(this).attr('data');
+			var t = $(this);
+			var width = t.width();
+			var height = t.height();
+			var data = t.attr('data');
 			if (data.indexOf('/') == 0)
 				data = document.location.protocol + '//'
 						+ document.location.host + data;
-			data = encodeURIComponent(data);
 			if (!id || !width || !height || !data)
 				alert('id,width,height,data all required');
 			swfobject.embedSWF(CONTEXT_PATH
 							+ '/assets/images/open-flash-chart.swf', id, width,
 					height, '9.0.0', CONTEXT_PATH
 							+ '/assets/images/expressInstall.swf', {
-						'data-file' : data
+						'data-file' : encodeURIComponent(data)
 					}, {
 						wmode : 'transparent'
 					});
+			if (t.data('interval'))
+				setInterval(function() {
+							document.getElementById(id).reload(data);
+						}, parseInt(t.data('interval')));
 		});
 		window.save_image = function() {
 			var content = [];

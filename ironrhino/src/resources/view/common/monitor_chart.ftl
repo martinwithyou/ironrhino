@@ -26,7 +26,7 @@
 </form>
 </div>
 </div>
-<div id="c"<#if !Parameters.date?? && !Parameters.from??> class="ajaxpanel" data-interval="${Parameters.interval?default('60000')}" data-quiet="true"</#if>>
+<div id="c">
 <#assign dataurl='/common/monitor/data'/>
 <#if uid??>
 <#assign dataurl=dataurl+'/'+uid>
@@ -34,7 +34,7 @@
 <#if request.queryString??>
 <#assign dataurl=dataurl+'?'+request.queryString>
 </#if>
-<div id="chart" class="chart" data="<@url value="${dataurl}"/>" style="width:1024px; height:300px;">
+<div id="chart" class="chart" data="<@url value="${dataurl}"/>" style="width:1024px; height:300px;"<#if !Parameters.date?? && !Parameters.from??> data-interval="${Parameters.interval?default('60000')}"</#if>>
 </div>
 </div>
 </body>
