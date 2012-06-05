@@ -33238,6 +33238,9 @@ Initialization.common = function() {
 		Dialog.toggleMaximization($('.ui-dialog-content', $(this)
 						.closest('.ui-dialog')));
 	});
+	$('.popover,.tooltip').live('mouseenter', function() {
+				$(this).remove()
+			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
 	$('.nav li a').each(function() {
@@ -33528,15 +33531,12 @@ Observation.common = function(container) {
 	$('.switch', container).each(function() {
 				var t = $(this);
 				t.children().css('cursor', 'pointer').click(function() {
-							t.children().removeClass('selected').css({
+							t.children().removeClass('active').css({
 										'font-weight' : 'normal'
 									});
-							$(this).addClass('selected').css({
+							$(this).addClass('active').css({
 										'font-weight' : 'bold'
 									});
-						}).filter('.selected').css({
-							'font-weight' : 'bold',
-							'font-size' : '1.1em'
 						});
 			});
 	if (typeof swfobject != 'undefined') {
@@ -33734,13 +33734,13 @@ var Dialog = {
 			dialog.removeData('orginal-width').removeData('orginal-height');
 			Dialog.adapt($(d));
 		} else {
-			dialog.data('orginal-width', dialog.width()+0.2).data('orginal-height',
-					dialog.height()+0.2);
+			dialog.data('orginal-width', dialog.width() + 0.2).data(
+					'orginal-height', dialog.height() + 0.2);
 			var viewportWidth = $(window).width() - 10;
 			var viewportHeight = $(window).height() - 10;
 			dialog.width(viewportWidth);
 			if ($(d).dialog('option', 'minHeight') < viewportHeight)
-				dialog.height(viewportHeight);	
+				dialog.height(viewportHeight);
 			d.dialog('option', 'position', 'top');
 		}
 	}

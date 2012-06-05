@@ -85,7 +85,7 @@ $(function(){
 		url: '<@url value="/region/children"/>'+ '?r=' + Math.random(),
 		click:function(){
 			var region = $(this).closest('li').data('treenode');
-			if($('.moveTo').hasClass('selected')){
+			if($('.moveTo').hasClass('active')){
 				moveTo(region);
 			}else{
 				mark(region);
@@ -101,9 +101,9 @@ $(function(){
 <body>
 <div class="clearfix">
   <div style="float: left; width: 20%;height: 600px;overflow:scroll;">
-	<div class="switch" style="margin:10px;text-align:center;">
-		<button type="button" class="btn moveTo selected">${action.getText("move")}</button>
-		<button type="button" class="btn mark">${action.getText("mark")}</button>
+	<div class="btn-group switch" style="margin-bottom:10px;">
+	  <button class="btn active moveTo">${action.getText("move")}</button>
+	  <button class="btn mark">${action.getText("mark")}</button>
 	</div>
 	<div id="regionTree"></div>
 	</div>
