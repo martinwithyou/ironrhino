@@ -1,7 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<#escape x as x?html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<!DOCTYPE html>
+<#escape x as x?html><html>
 <head>
-<title>Region Map</title>
+<title>${action.getText('region')}${action.getText('map')}</title>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&region=CN"></script> 
 <script type="text/javascript"> 
 
