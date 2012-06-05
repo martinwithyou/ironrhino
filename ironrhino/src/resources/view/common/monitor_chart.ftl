@@ -34,7 +34,7 @@
 <#if request.queryString??>
 <#assign dataurl=dataurl+'?'+request.queryString>
 </#if>
-<div id="chart" class="chart" data="<@url value="${dataurl}"/>" style="width:1024px; height:300px;"<#if !Parameters.date?? && !Parameters.from??> data-interval="${Parameters.interval?default('60000')}"</#if>>
+<div id="chart" class="chart" data="<@url value="${dataurl}"/>" style="width:1024px; height:300px;"<#if !Parameters.date?? && !Parameters.from??> data-interval="${Parameters.interval?default('60000')}" data-quiet="true"</#if>>
 </div>
 </div>
 </body>

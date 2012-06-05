@@ -860,7 +860,19 @@ Observation.common = function(container) {
 					});
 			if (t.data('interval'))
 				setInterval(function() {
-							document.getElementById(id).reload(data);
+							if (t.data('quiet')) {
+								$.ajax({
+											global : false,
+											url : data,
+											dataType : 'text',
+											success : function(json) {
+												document.getElementById(id)
+														.load(json);
+											}
+										});
+							} else {
+								document.getElementById(id).reload(data);
+							}
 						}, parseInt(t.data('interval')));
 		});
 		window.save_image = function() {
