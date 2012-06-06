@@ -122,7 +122,7 @@ public class UserAction extends BaseAction {
 				dc.add(filtering);
 			if (StringUtils.isNotBlank(keyword))
 				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
-						"username", "name"));
+						"username", "name", "email"));
 			dc.addOrder(Order.asc("username"));
 			if (resultPage == null)
 				resultPage = new ResultPage<User>();
