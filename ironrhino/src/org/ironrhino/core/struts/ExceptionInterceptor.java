@@ -55,8 +55,8 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 	private static String findText(String text) {
 		if (text == null)
 			return null;
-		text = text.replaceAll("{", "[");
-		text = text.replaceAll("}", "]");
+		text = text.replaceAll("\\{", "[");
+		text = text.replaceAll("\\}", "]");
 		return LocalizedTextUtil.findText(ExceptionInterceptor.class, text,
 				ActionContext.getContext().getLocale(), text, null);
 	}
