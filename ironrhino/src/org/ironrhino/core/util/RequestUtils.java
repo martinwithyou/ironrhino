@@ -71,9 +71,13 @@ public class RequestUtils {
 	}
 
 	public static String getBaseUrl(HttpServletRequest request) {
-		String url = trimPathParameter(request.getRequestURL().toString());
-		return url.substring(0, url.length()
-				- request.getServletPath().length());
+		String url = request.getRequestURL().toString();
+		String ctxPath = request.getContextPath();
+		return url.substring(
+				0,
+				url.indexOf(StringUtils.isBlank(ctxPath) ? "/" : ctxPath,
+						url.indexOf("://") + 3)
+						+ ctxPath.length());
 	}
 
 	public static String getBaseUrl(HttpServletRequest request, boolean secured) {
