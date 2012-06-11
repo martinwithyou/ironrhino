@@ -47,8 +47,8 @@ public class LocaleAction extends BaseAction {
 
 	@Override
 	public String execute() {
+		HttpServletRequest request = ServletActionContext.getRequest();
 		if (lang != null) {
-			HttpServletRequest request = ServletActionContext.getRequest();
 			HttpServletResponse response = ServletActionContext.getResponse();
 			Locale loc = null;
 			if (StringUtils.isBlank(lang)) {
@@ -62,14 +62,19 @@ public class LocaleAction extends BaseAction {
 				}
 			}
 			if (loc != null) {
-				RequestUtils.saveCookie(request, response, httpSessionManager
-						.getLocaleCookieName(), loc.toString(), true);
+				RequestUtils.saveCookie(request, response,
+						httpSessionManager.getLocaleCookieName(),
+						loc.toString(), true);
 			} else {
-				RequestUtils.deleteCookie(request, response, httpSessionManager
-						.getLocaleCookieName(), true);
+				RequestUtils.deleteCookie(request, response,
+						httpSessionManager.getLocaleCookieName(), true);
 			}
 			targetUrl = "/";
 			return REDIRECT;
+		} else {
+			Locale locale = request.getLocale();
+			if (locale != null)
+				lang = locale.toString();
 		}
 		availableLocales = Locale.getAvailableLocales();
 		String[] locales = settingControl
