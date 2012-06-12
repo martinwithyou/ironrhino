@@ -31,7 +31,7 @@ table.richtable td,th {
 	width: auto;
 }
 .richtable select {
-	border: solid 1px #EEEEEE;
+	border: 1px solid #EEEEEE;
 	width: 75px;
 }
 .richtable thead td {
@@ -69,6 +69,10 @@ table.richtable td,th {
 	text-align:left;
 }
 .richtable .pageSize {
+	border: 1px solid #DDD;
+	-webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 	width: 60px;
 }
 
