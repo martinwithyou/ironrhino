@@ -6218,6 +6218,14 @@ td.radio input[type="radio"], td.checkbox input[type="checkbox"]{
 .richtable input[name="keyword"]{
 	width:100px;
 }
+.richtable .pagination ul{
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
 .richtable .pagination a{
 	padding: 0 12px;
 	line-height: 26px;
