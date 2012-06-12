@@ -83,8 +83,8 @@
 	<classpathentry kind="lib" path="lib/closure-compiler.jar"/>
 	<classpathentry kind="lib" path="lib/yuicompressor.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-annotations-2.0.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-2.0.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-databind-2.0.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-annotations-2.0.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-2.0.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-databind-2.0.2.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
