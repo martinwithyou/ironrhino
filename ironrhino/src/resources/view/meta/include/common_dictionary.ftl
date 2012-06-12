@@ -39,15 +39,6 @@
 	</select>
 </#macro>
 
-<#macro displayDictionaryLabel dictionaryName value="">
-	<#local dictionary=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getDictionary(dictionaryName)!>
-	<#if dictionary?? && dictionary.items??>
-		<#list dictionary.items as lv>
-		<#if value==lv.value>${lv.label}<#break></#if>
-		</#list>
-	</#if>
-</#macro>
-
 <#function getDictionaryLabel dictionaryName value="">
 	<#local dictionary=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getDictionary(dictionaryName)!>
 	<#if dictionary?? && dictionary.items??>
@@ -55,5 +46,10 @@
 		<#if value==lv.value><#return lv.label></#if>
 		</#list>
 	</#if>
-  	<#return "">
+  	<#return value>
 </#function>
+
+<#macro displayDictionaryLabel dictionaryName value="">
+${getDictionaryLabel(dictionaryName,value)}<#t>
+</#macro>
+
