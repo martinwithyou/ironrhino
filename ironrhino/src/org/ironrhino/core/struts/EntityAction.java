@@ -202,13 +202,16 @@ public class EntityAction extends BaseAction {
 				resultPage = new ResultPage();
 			resultPage.setCriteria(dc);
 			if (ac != null && StringUtils.isNotBlank(ac.order())) {
-				String[] arr = ac.order().split("\\s");
-				if (arr[arr.length - 1].equalsIgnoreCase("asc"))
-					dc.addOrder(Order.asc(arr[arr.length - 2]));
-				else if (arr[arr.length - 1].equalsIgnoreCase("desc"))
-					dc.addOrder(Order.desc(arr[arr.length - 2]));
-				else
-					dc.addOrder(Order.asc(arr[arr.length - 1]));
+				String[] ar = ac.order().split(",");
+				for (String s : ar) {
+					String[] arr = s.split("\\s");
+					if (arr[arr.length - 1].equalsIgnoreCase("asc"))
+						dc.addOrder(Order.asc(arr[arr.length - 2]));
+					else if (arr[arr.length - 1].equalsIgnoreCase("desc"))
+						dc.addOrder(Order.desc(arr[arr.length - 2]));
+					else
+						dc.addOrder(Order.asc(arr[arr.length - 1]));
+				}
 			} else if (Ordered.class.isAssignableFrom(getEntityClass()))
 				dc.addOrder(Order.asc("displayOrder"));
 			resultPage = entityManager.findByResultPage(resultPage);
