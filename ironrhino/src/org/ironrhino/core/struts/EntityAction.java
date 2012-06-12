@@ -986,7 +986,7 @@ public class EntityAction extends BaseAction {
 	}
 
 	// need call once before view
-	private Class<Persistable<?>> getEntityClass() {
+	protected Class<Persistable<?>> getEntityClass() {
 		if (entityClass == null) {
 			ActionProxy proxy = ActionContext.getContext()
 					.getActionInvocation().getProxy();

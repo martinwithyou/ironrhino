@@ -2,11 +2,12 @@
 	<#local dictionary=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getDictionary(dictionaryName)!>
 	<select class="<#if required> required</#if><#if !strict> combox</#if> ${dynamicAttributes['class']!}"<#list dynamicAttributes?keys as attr><#if attr!='class' && attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>>
 		<option value="${headerKey}">${headerValue}</option>
+		<#local exists=false>
 		<#if dictionary?? && dictionary.items?? && dictionary.items?size gt 0>
 			<#local items = dictionary.items/>
 			<#if !dictionary.groupable>
 				<#list items as lv>
-				<option value="${lv.value}"<#if value=lv.value> selected="selected"</#if>>${lv.label}</option>
+				<option value="${lv.value}"<#if value=lv.value><#local exists=true> selected="selected"</#if>>${lv.label}</option>
 				</#list>
 			<#else>
 				<#local group = ""/>
@@ -27,7 +28,7 @@
 							</#if>
 						</#if>
 					<#else>
-						<option value="${lv.value}"<#if value=lv.value> selected="selected"</#if>>${lv.label}</option>
+						<option value="${lv.value}"<#if value=lv.value><#local exists=true> selected="selected"</#if>>${lv.label}</option>
 						<#if group?has_content && index==items?size-1>
 						</optgroup>
 						</#if>
@@ -36,17 +37,14 @@
 				</#list>
 			</#if>
 		</#if>
+		<#if !exists && value?has_content>
+			<option value="${value}"selected="selected">${value}</option>
+		</#if>
 	</select>
 </#macro>
 
 <#function getDictionaryLabel dictionaryName value="">
-	<#local dictionary=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getDictionary(dictionaryName)!>
-	<#if dictionary?? && dictionary.items??>
-		<#list dictionary.items as lv>
-		<#if value==lv.value><#return lv.label></#if>
-		</#list>
-	</#if>
-  	<#return value>
+	<#return dictionary=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getDictionaryLabel(dictionaryName,value)>
 </#function>
 
 <#macro displayDictionaryLabel dictionaryName value="">

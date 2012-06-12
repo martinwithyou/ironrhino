@@ -67,6 +67,16 @@ public class DictionaryControl implements
 		return dict.getItemsAsGroup();
 	}
 
+	public String getDictionaryLabel(String name, String value) {
+		if (value == null)
+			return null;
+		for (Map.Entry<String, String> entry : getItemsAsMap(name).entrySet()) {
+			if (value.equals(entry.getKey()))
+				return entry.getValue();
+		}
+		return value;
+	}
+
 	public void onApplicationEvent(EntityOperationEvent event) {
 		if (event.getEntity() instanceof Dictionary) {
 			Dictionary dictInEvent = (Dictionary) event.getEntity();
