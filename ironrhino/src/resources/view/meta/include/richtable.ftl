@@ -108,25 +108,25 @@ ${value?xhtml}<#t>
 <#if resultPage??>
 <ul>
 <#if resultPage.first>
-<li class="disabled"><a title="${action.getText('firstpage')}">&lt;&lt;</a></li>
+<li class="disabled firstPage"><a title="${action.getText('firstpage')}">&lt;&lt;</a></li>
 <li class="disabled"><a title="${action.getText('previouspage')}">&lt;</a></li>
 <#else>
-<li><a class="firstPage" title="${action.getText('firstpage')}" href="${resultPage.renderUrl(1)}">&lt;&lt;</a></li>
-<li><a class="prevPage" title="${action.getText('previouspage')}" href="${resultPage.renderUrl(resultPage.previousPage)}">&lt;</a></li>
+<li class="firstPage"><a title="${action.getText('firstpage')}" href="${resultPage.renderUrl(1)}">&lt;&lt;</a></li>
+<li class="prevPage"><a title="${action.getText('previouspage')}" href="${resultPage.renderUrl(resultPage.previousPage)}">&lt;</a></li>
 </#if>
 <#if resultPage.last>
 <li class="disabled"><a title="${action.getText('nextpage')}">&gt;</a></li>
-<li class="disabled"><a title="${action.getText('lastpage')}">&gt;&gt;</a></li>
+<li class="disabled lastPage"><a title="${action.getText('lastpage')}">&gt;&gt;</a></li>
 <#else>
-<li><a class="nextPage" title="${action.getText('nextpage')}" href="${resultPage.renderUrl(resultPage.nextPage)}">&gt;</a></li>
-<li><a class="lastPage" title="${action.getText('lastpage')}" href="${resultPage.renderUrl(resultPage.totalPage)}">&gt;&gt;</a></li>
+<li class="nextPage"><a title="${action.getText('nextpage')}" href="${resultPage.renderUrl(resultPage.nextPage)}">&gt;</a></li>
+<li class="lastPage"><a title="${action.getText('lastpage')}" href="${resultPage.renderUrl(resultPage.totalPage)}">&gt;&gt;</a></li>
 </#if>
 <li>
 <span class="input-append">
-    <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/><span class="add-on totalPage"><strong>${resultPage.totalPage}</strong></span>
+    <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/><span class="add-on totalPage"><span class="divider">/</span><strong>${resultPage.totalPage}</strong></span>
 </span>
 <#if showPageSize>
-<li>
+<li class="hidden-tablet">
 <select name="resultPage.pageSize" class="pageSize">
 <#local array=[5,10,20,50,100,500]>
 <#list array as ps>
@@ -155,7 +155,7 @@ ${value?xhtml}<#t>
 <div class="search span2">
 <#if searchable>
 <span class="input-append">
-    <input type="text" name="keyword" value="${keyword!}" class="focus" placeholder="${action.getText('search')}"/><span class="add-on"><i class="icon-search"></i></span>
+    <input type="text" name="keyword" value="${keyword!}" class="focus" placeholder="${action.getText('search')}"/><span class="add-on hidden-tablet"><i class="icon-search"></i></span>
 </span>
 </#if>
 <#if searchButtons!=''>
@@ -167,9 +167,9 @@ ${value?xhtml}<#t>
 <div class="status span2">
 <span>
 <#if resultPage??>
-${action.getText('total')}${resultPage.totalRecord}${action.getText('record')}<#if resultPage.totalRecord!=0>,${action.getText('display')}${resultPage.start+1}-${resultPage.start+resultPage.result?size}</#if>
+${action.getText('total')}${resultPage.totalRecord}${action.getText('record')}
 <#else>
-${action.getText('total')}${list?size}${action.getText('record')}<#if list?size!=0>,${action.getText('display')}1-${list?size}</#if>	
+${action.getText('total')}${list?size}${action.getText('record')}
 </#if>
 </span>
 </div>

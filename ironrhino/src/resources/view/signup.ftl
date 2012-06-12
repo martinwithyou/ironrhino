@@ -9,11 +9,11 @@
 <body>
 <div class="row">
 	<div class="span4 offset4">
-	<@s.form method="post" action="signup" cssClass="ajax form-horizontal">
-		<@s.textfield label="%{getText('email')}" name="email" size="24" cssClass="required email" />
-		<@s.textfield label="%{getText('username')}" name="username" size="24" />
-		<@s.password label="%{getText('password')}" name="password" size="24" cssClass="required"/>
-		<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" size="24" cssClass="required"/>
+	<@s.form method="post" action="signup" cssClass="ajax focus form-horizontal well">
+		<@s.textfield label="%{getText('email')}" name="email" cssClass="required email span2" />
+		<@s.textfield label="%{getText('username')}" name="username" cssClass="span2" />
+		<@s.password label="%{getText('password')}" name="password" cssClass="required span2"/>
+		<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" cssClass="required span2"/>
 		<@s.submit value="%{getText('signup')}"/>
 	</@s.form>
 	</div>

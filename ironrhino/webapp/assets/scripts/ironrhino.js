@@ -35384,13 +35384,13 @@ Observation.richtable = function(container) {
 										});
 							});
 				});
-		$('.firstPage', container).click(function(event) {
+		$('.firstPage a', container).click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(1);
 					Richtable.reload(form, true);
 					return false;
 				});
-		$('.prevPage', container).click(function(event) {
+		$('.prevPage a', container).click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) - 1
@@ -35398,7 +35398,7 @@ Observation.richtable = function(container) {
 					Richtable.reload(form, true);
 					return false;
 				});
-		$('.nextPage', container).click(function(event) {
+		$('.nextPage a', container).click(function(event) {
 					var form = $(event.target).closest('form');
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) + 1
@@ -35406,9 +35406,9 @@ Observation.richtable = function(container) {
 					Richtable.reload(form, true);
 					return false;
 				});
-		$('.lastPage', container).click(function(event) {
+		$('.lastPage a', container).click(function(event) {
 					var form = $(event.target).closest('form');
-					$('.inputPage', form).val($('.totalPage', form).text());
+					$('.inputPage', form).val($('.totalPage strong', form).text());
 					Richtable.reload(form, true);
 					return false;
 				});

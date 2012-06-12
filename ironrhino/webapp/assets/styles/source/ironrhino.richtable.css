@@ -64,6 +64,10 @@ table.richtable td,th {
 	width: 25px;
 	text-align:right;
 }
+.richtable .totalPage {
+	min-width: 25px;
+	text-align:left;
+}
 .richtable .pageSize {
 	width: 60px;
 }
@@ -88,12 +92,15 @@ td.radio input[type="radio"], td.checkbox input[type="checkbox"]{
 	float: none;
 	margin-left: 0;
 }
-form.richtable input[name="keyword"]{
+.richtable input[name="keyword"]{
 	width:100px;
 }
-form.richtable .pagination a{
+.richtable .pagination a{
 	padding: 0 12px;
 	line-height: 26px;
+}
+.richtable .pagination li.firstPage a,.richtable .pagination li.lastPage a{
+	padding:0 7.5px;
 }
 /*override bootstrap end*/
 
