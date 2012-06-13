@@ -18,7 +18,7 @@
 <#if request.queryString??>
 <#assign dataurl=dataurl+'?'+request.queryString>
 </#if>
-<div id="chart" class="chart" data="<@url value="${dataurl}"/>" style="width:1150px; height:400px;" data-interval="${Parameters.interval?default('60000')}" data-quiet="true">
+<div id="chart" class="chart" data="<@url value="${dataurl}"/>" style="width:100%; height:600px;" data-interval="${Parameters.interval?default('60000')}" data-quiet="true">
 <span style="color:red;">请先安装flash插件</span>
 </div>
 </#if>
