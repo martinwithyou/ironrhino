@@ -33578,8 +33578,10 @@ Observation.common = function(container) {
 					}, {
 						wmode : 'transparent'
 					});
-			if (t.data('interval'))
-				setInterval(function() {
+			if (t.data('_interval'))
+				clearInterval(parseInt(t.data('_interval')));
+			if (t.data('interval')) {
+				var _interval = setInterval(function() {
 							if (t.data('quiet')) {
 								$.ajax({
 											global : false,
@@ -33594,7 +33596,10 @@ Observation.common = function(container) {
 								document.getElementById(id).reload(data);
 							}
 						}, parseInt(t.data('interval')));
+				t.data('_interval', _interval);
+			}
 		});
+
 		window.save_image = function() {
 			var content = [];
 			content

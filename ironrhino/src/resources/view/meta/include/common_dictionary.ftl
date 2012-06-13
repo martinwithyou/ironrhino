@@ -51,3 +51,53 @@
 ${getDictionaryLabel(dictionaryName,value)}<#t>
 </#macro>
 
+<#macro checkDictionary dictionaryName value=[] dynamicAttributes...>
+	<#local dictionary=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getDictionary(dictionaryName)!>
+		<#local index = 0/>
+		<#if dictionary?? && dictionary.items?? && dictionary.items?size gt 0>
+			<#local items = dictionary.items/>
+			<#if !dictionary.groupable>
+				<#list items as lv>
+				<label for="${dictionaryName}-${index}" class="checkbox inline"><#t>
+				<input id="${dictionaryName}-${index}" type="checkbox" value="${lv.value}"<#if value?seq_contains(lv.value)> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>/>${lv.label}<#t>
+				</label><#t>
+				<#local index=index+1>
+				</#list>
+			<#else>
+				<#local group = ""/>
+				<#list items as lv>
+					<#if !lv.value?? || !lv.value?has_content>
+						<#local label = lv.label/>
+						<#if (!label?has_content) && group?has_content>
+							<#local group = ""/>
+							</span><#lt>
+						<#else>
+							<#if group?has_content>
+								</span><#lt>
+							</#if>
+							<#local group = label/>
+							<#if group?has_content>
+								<span class="checkboxgroup"><label for="${dictionaryName}-${group}" class="group"><input id="${dictionaryName}-${group}" type="checkbox"/>${group}</label><#t>
+							</#if>
+						</#if>
+					<#else>
+						<label for="${dictionaryName}-${index}" class="checkbox inline"><#t>
+						<input id="${dictionaryName}-${index}" type="checkbox" value="${lv.value}"<#if value?seq_contains(lv.value)> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>/>${lv.label}<#t>
+						</label><#t>
+						<#if group?has_content && index==items?size-1>
+						</span><#lt>
+						</#if>
+					</#if>
+					<#local index = index+1/>
+				</#list>
+			</#if>
+		</#if>
+		<#list value as v>
+		<#if !dictionary?? || !(dictionary.itemsAsMap!)?keys?seq_contains(v)>
+		<label for="${dictionaryName}-${index}" class="checkbox inline"><#t>
+		<input id="${dictionaryName}-${index}" type="checkbox" value="${v}"checked="checked"<#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>/>${v}<#t>
+		</label><#t>
+		<#local index = index+1/>
+		</#if>
+		</#list>
+</#macro>

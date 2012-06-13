@@ -90,7 +90,20 @@ input.integer,input.double,input.date {
 input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }
-
+span.checkboxgroup{
+	display: inline-block;
+	margin:0 20px;
+}
+.checkboxgroup label.group{
+	display: inline;
+	font-weight:bold;
+	font-size:1.1em;
+	margin:0 10px 10px 0;
+}
+.checkboxgroup label.group input[type="checkbox"]{
+	margin-right:5px;
+	height:10px;
+}
 .field-error.removeonclick {
 	position: absolute;
 	top: 300px;
