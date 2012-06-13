@@ -1,5 +1,6 @@
 package org.ironrhino.core.chart;
 
+import java.util.Date;
 
 public class ChartUtils {
 	public static int caculateSteps(Number max) {
@@ -46,10 +47,21 @@ public class ChartUtils {
 		int steps = stepColors.length;
 		double single = max.doubleValue() / steps;
 		for (int i = 0; i < steps; i++) {
-			if (value.doubleValue() >= single * i && value.doubleValue() < single * (i + 1))
+			if (value.doubleValue() >= single * i
+					&& value.doubleValue() < single * (i + 1))
 				return stepColors[i];
 		}
 		return stepColors[stepColors.length - 1];
+	}
+
+	public static int caculateXAxisLabelsSteps(Date from, Date to) {
+		long range = (to.getTime() - from.getTime()) / 1000;
+		return (int) (range / 24);
+	}
+
+	public static int caculateXAxisSteps(Date from, Date to) {
+		long range = (to.getTime() - from.getTime()) / 1000;
+		return (int) (range / 144);
 	}
 
 }
