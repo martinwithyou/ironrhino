@@ -85,7 +85,8 @@ public class BaseAction extends ActionSupport {
 		if (csrfRequired && csrf == null) {
 			csrf = CodecUtils.nextId();
 			RequestUtils.saveCookie(ServletActionContext.getRequest(),
-					ServletActionContext.getResponse(), COOKIE_NAME_CSRF, csrf);
+					ServletActionContext.getResponse(), COOKIE_NAME_CSRF, csrf,
+					false, true);
 		}
 		return csrf;
 	}
