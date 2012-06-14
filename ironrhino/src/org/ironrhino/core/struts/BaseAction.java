@@ -272,6 +272,8 @@ public class BaseAction extends ActionSupport {
 		if (csrfRequired) {
 			String value = RequestUtils.getCookieValue(
 					ServletActionContext.getRequest(), COOKIE_NAME_CSRF);
+			RequestUtils.deleteCookie(ServletActionContext.getRequest(),
+					ServletActionContext.getResponse(), COOKIE_NAME_CSRF);
 			if (csrf == null || !csrf.equals(value))
 				addActionError(getText("csrf.error"));
 		}
