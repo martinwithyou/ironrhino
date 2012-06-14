@@ -177,8 +177,7 @@ public class AcquisitionAction extends EntityAction {
 				getDictionaryNameAcquisitionType(), type);
 		chart = new Chart(title + "(" + getDateRange() + ")",
 				"font-size: 15px;");
-		chart.setY_legend(new Text(getText("value"),
-				"{font-size: 12px; color: #778877}"));
+		chart.setY_legend(new Text("value", "{font-size: 12px; color: #778877}"));
 		chart.setX_legend(new Text(getText("time"),
 				"{font-size: 12px; color: #778877}"));
 		XAxis x = new XAxis();

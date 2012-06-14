@@ -33574,7 +33574,8 @@ Observation.common = function(container) {
 							+ '/assets/images/open-flash-chart.swf', id, width,
 					height, '9.0.0', CONTEXT_PATH
 							+ '/assets/images/expressInstall.swf', {
-						'data-file' : encodeURIComponent(data)
+						'data-file' : encodeURIComponent(data),
+						'loading':MessageBundle.get('ajax.loading')
 					}, {
 						wmode : 'transparent'
 					});
