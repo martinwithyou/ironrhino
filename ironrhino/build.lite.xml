@@ -131,6 +131,39 @@
 				replace.setValue(replacement[i+1]);
 				replace.perform();
 			}
+			// clean unused jar
+			is = new FileInputStream(new File(project.getProperty('basedir')+'/.classpath'));
+			br = new BufferedReader(new InputStreamReader(is,'utf-8'));
+			var jarnames = [];
+			while(line=br.readLine()){
+				if(line.indexOf('kind="lib"') < 0)
+					continue;
+				var arr = line.split('"');
+				var path = arr[arr.length-2];
+				var arr2 = path.split('/');
+				if(arr2[0]=='webapp')
+					jarnames.push(arr2[arr2.length-1]);	
+			}
+			br.close();
+			is.close();
+			var lib = new File(basedir,'webapp/WEB-INF/lib');
+			var files = lib.listFiles();
+			for(var i=0;i<files.length;i++){
+				var f = files[i];
+				var jarname = f.getName();
+				var contains = false;
+				for(var j=0;j<jarnames.length;j++){
+					if(jarnames[j]==jarname){
+						contains = true;
+						break;
+					}
+				}
+				if(jarname.endsWith('.jar')&& !contains){
+					var del = project.createTask("delete");
+					del.setFile(f);
+					del.perform();
+			}
+			}
 			]]>
 		</script>
 	</target>
