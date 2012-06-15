@@ -6196,7 +6196,7 @@ table.richtable td,th {
 	background-color: #fff3f0;
 }
 .richtable .inputPage {
-	margin-left:3px;
+	margin-left:4px;
 	width: 25px;
 	text-align:right;
 }
@@ -6247,7 +6247,16 @@ td.radio input[type="radio"], td.checkbox input[type="checkbox"]{
 	padding: 0 12px;
 	line-height: 26px;
 }
-.richtable .pagination li.firstPage a,.richtable .pagination li.lastPage a{
+.richtable .pagination li.firstPage a{
+  -webkit-border-radius: 3px 0 0 3px;
+     -moz-border-radius: 3px 0 0 3px;
+          border-radius: 3px 0 0 3px;
+	padding:0 7.5px;
+}
+.richtable .pagination li.lastPage a{
+  -webkit-border-radius: 0 3px 3px 0;
+     -moz-border-radius: 0 3px 3px 0;
+          border-radius: 0 3px 3px 0;
 	padding:0 7.5px;
 }
 /*override bootstrap end*/
