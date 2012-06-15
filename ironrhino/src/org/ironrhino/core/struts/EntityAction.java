@@ -190,6 +190,43 @@ public class EntityAction extends BaseAction {
 		if (!searchable || StringUtils.isBlank(keyword)
 				|| (searchable && compassSearchService == null)) {
 			DetachedCriteria dc = entityManager.detachedCriteria();
+			try {
+				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
+						.newInstance());
+				Set<String> propertyNames = getUiConfigs().keySet();
+				for (String parameterName : ServletActionContext.getRequest()
+						.getParameterMap().keySet()) {
+					String propertyName = parameterName;
+					if (propertyName.startsWith(getEntityName() + "."))
+						propertyName = propertyName.substring(propertyName
+								.indexOf('.') + 1);
+					if (propertyNames.contains(propertyName)
+							&& !searchablePropertyNames.contains(propertyName)) {
+						String parameterValue = ServletActionContext
+								.getRequest().getParameter(parameterName);
+						Class type = bw.getPropertyType(propertyName);
+						Object value = null;
+						if (Persistable.class.isAssignableFrom(type)) {
+							BaseManager em = getEntityManager(type);
+							value = em.get(parameterValue);
+							if (value == null) {
+								try {
+									value = em.findByNaturalId(parameterValue);
+								} catch (Exception e) {
+
+								}
+							}
+						} else {
+							bw.setPropertyValue(propertyName, parameterValue);
+							value = bw.getPropertyValue(propertyName);
+						}
+						if (value != null)
+							dc.add(Restrictions.eq(propertyName, value));
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			Criterion filtering = CriterionUtils.filter(constructEntity(),
 					searchablePropertyNames.toArray(new String[0]));
 			if (filtering != null)
