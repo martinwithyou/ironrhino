@@ -33575,7 +33575,7 @@ Observation.common = function(container) {
 					height, '9.0.0', CONTEXT_PATH
 							+ '/assets/images/expressInstall.swf', {
 						'data-file' : encodeURIComponent(data),
-						'loading':MessageBundle.get('ajax.loading')
+						'loading' : MessageBundle.get('ajax.loading')
 					}, {
 						wmode : 'transparent'
 					});
@@ -35066,9 +35066,9 @@ Richtable = {
 								$(this).removeClass('dontreload');
 								if (!$(e.target).closest('button')
 										.hasClass('save_and_create'))
-									//setTimeout(function() {
-												$('#_window_').dialog('close');
-									//		}, 1000);
+									// setTimeout(function() {
+									$('#_window_').dialog('close');
+								// }, 1000);
 
 							};
 						});
@@ -35257,7 +35257,7 @@ Richtable = {
 		var theadCells = $('.richtable thead:eq(0) td');
 		$.each($('.richtable tbody')[0].rows, function() {
 			var row = this;
-			if ($('td.edited',row).length) {
+			if ($('td.edited', row).length) {
 				modified = true;
 				var params = {};
 				var entity = form.data('entity') || form.attr('action');
@@ -35358,7 +35358,7 @@ Richtable = {
 			cell.text(ce.val());
 		if (cell.data('oldvalue') != cell.data('cellvalue')) {
 			cell.addClass('edited');
-		}else{
+		} else {
 			cell.removeClass('edited');
 		}
 	},
@@ -35413,8 +35413,12 @@ Observation.richtable = function(container) {
 					return false;
 				});
 		$('.lastPage a', container).click(function(event) {
-					var form = $(event.target).closest('form');
-					$('.inputPage', form).val($('.totalPage strong', form).text());
+					var t = $(this);
+					if (t.parent().hasClass('disabled'))
+						return false;
+					var form = t.closest('form');
+					$('.inputPage', form).val($('.totalPage strong', form)
+							.text());
 					Richtable.reload(form, true);
 					return false;
 				});
