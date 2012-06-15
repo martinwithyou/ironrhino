@@ -111,6 +111,7 @@
 			var id = treenode.id;
 			if (idtarget.is(':input')) {
 				idtarget.val(id);
+				Form.validate(idtarget);
 				var form = idtarget.closest('form');
 				if (!form.hasClass('nodirty'))
 					form.addClass('dirty');

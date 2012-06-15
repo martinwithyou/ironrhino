@@ -8,11 +8,14 @@ import org.ironrhino.security.oauth.server.model.Client;
 import org.ironrhino.security.oauth.server.service.OAuthManager;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
+import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
+import com.opensymphony.xwork2.validator.annotations.Validations;
+import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 public class AuthorizationAction extends EntityAction {
 
 	private static final long serialVersionUID = 2920367147774798742L;
-	
+
 	@Inject
 	private OAuthManager oauthManager;
 
@@ -27,11 +30,15 @@ public class AuthorizationAction extends EntityAction {
 	}
 
 	@InputConfig(methodName = "inputcreate")
+	@Validations(requiredStrings = {
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "authorization.client.id", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "authorization.grantor.id", trim = true, key = "validation.required") })
 	public String create() {
 		if (authorization == null)
 			return ACCESSDENIED;
 		oauthManager.create(authorization);
-		addActionMessage(getText("operate.success")+",token:  "+authorization.getAccessToken());
+		addActionMessage(getText("operate.success") + ",token:  "
+				+ authorization.getAccessToken());
 		return SUCCESS;
 	}
 

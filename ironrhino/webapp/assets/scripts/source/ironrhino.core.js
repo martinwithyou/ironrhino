@@ -186,30 +186,38 @@ Message = {
 	},
 	showFieldError : function(field, msg, msgKey) {
 		var msg = msg || MessageBundle.get(msgKey);
-		if (field && $(field).length && $(field).is(':visible')) {
+		if (field && $(field).length) {
 			field = $(field);
-			field.closest('.control-group').addClass('error');
+			var cgroup = field.closest('.control-group');
+			cgroup.addClass('error');
 			$('.field-error', field.parent()).remove();
-			var prompt = $('<div class="field-error removeonclick"><div class="field-error-content">'
-					+ msg + '</div><div>').insertAfter(field);
-			$('<div class="field-error-arrow"/>')
-					.html('<div class="line10"><!-- --></div><div class="line9"><!-- --></div><div class="line8"><!-- --></div><div class="line7"><!-- --></div><div class="line6"><!-- --></div><div class="line5"><!-- --></div><div class="line4"><!-- --></div><div class="line3"><!-- --></div><div class="line2"><!-- --></div><div class="line1"><!-- --></div>')
-					.appendTo(prompt);
-			var promptTopPosition, promptleftPosition, marginTopSize;
-			var fieldWidth = field.width();
-			var promptHeight = prompt.height();
-			promptTopPosition = field.position().top;
-			promptleftPosition = field.position().left + fieldWidth - 30;
-			marginTopSize = -promptHeight;
-			prompt.css({
-						"top" : promptTopPosition + "px",
-						"left" : promptleftPosition + "px",
-						"marginTop" : marginTopSize + "px",
-						"opacity" : 0
-					});
-			prompt.animate({
-						"opacity" : 0.8
-					});
+			if ($(field).is(':visible')) {
+				var prompt = $('<div class="field-error removeonclick"><div class="field-error-content">'
+						+ msg + '</div><div>').insertAfter(field);
+				$('<div class="field-error-arrow"/>')
+						.html('<div class="line10"><!-- --></div><div class="line9"><!-- --></div><div class="line8"><!-- --></div><div class="line7"><!-- --></div><div class="line6"><!-- --></div><div class="line5"><!-- --></div><div class="line4"><!-- --></div><div class="line3"><!-- --></div><div class="line2"><!-- --></div><div class="line1"><!-- --></div>')
+						.appendTo(prompt);
+				var promptTopPosition, promptleftPosition, marginTopSize;
+				var fieldWidth = field.width();
+				var promptHeight = prompt.height();
+				promptTopPosition = field.position().top;
+				promptleftPosition = field.position().left + fieldWidth - 30;
+				marginTopSize = -promptHeight;
+				prompt.css({
+							"top" : promptTopPosition + "px",
+							"left" : promptleftPosition + "px",
+							"marginTop" : marginTopSize + "px",
+							"opacity" : 0
+						});
+				prompt.animate({
+							"opacity" : 0.8
+						});
+			} else if (cgroup.length && $(field).is('[type="hidden"]')) {
+				$('.controls span', cgroup).text('');
+				$('<span class="field-error help-inline">' + msg + '</span>')
+						.appendTo($('.controls', cgroup));
+			} else
+				Message.showActionError(msg);
 		} else
 			Message.showActionError(msg);
 	}
@@ -231,7 +239,8 @@ Form = {
 		if ($(target).prop('tagName') != 'FORM') {
 			$(target).closest('.control-group').removeClass('error');
 			$('.field-error', $(target).parent()).fadeIn().remove();
-			if ($(target).is(':visible') && !$(target).prop('disabled')) {
+			if ($(target).is(':visible') || $(target).is('[type="hidden"]')
+					&& !$(target).prop('disabled')) {
 				if ($(target).hasClass('required') && !$(target).val()) {
 					if ($(target).prop('tagName') == 'SELECT')
 						Message.showFieldError(target, null,

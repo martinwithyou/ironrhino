@@ -77,6 +77,7 @@
 										var idtarget = $('#' + pickoptions.id);
 										if (idtarget.is(':input')) {
 											idtarget.val(id);
+											Form.validate(idtarget);
 											var form = idtarget.closest('form');
 											if (!form.hasClass('nodirty'))
 												form.addClass('dirty');
@@ -149,6 +150,7 @@
 															: '') + id)
 													.split(separator))
 											.join(separator));
+									Form.validate(idtarget);
 									var form = idtarget.closest('form');
 									if (!form.hasClass('nodirty'))
 										form.addClass('dirty');
