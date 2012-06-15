@@ -75,7 +75,7 @@
 </@authorize>
 <@authorize ifNotGranted="ROLE_BUILTIN_USER">
 <div class="container">
-<h1 style="text-align:center;margin:10px 0;text-shadow: 1px 1px 3px #686767;">
+<h1 style="text-align:center;margin:10px 0;">
 ${title}
 </h1>
 </div>
