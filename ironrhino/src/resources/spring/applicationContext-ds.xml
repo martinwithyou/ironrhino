@@ -12,8 +12,8 @@
 		<property name="maxConnectionsPerPartition" value="${dataSource.maxActive:50}" />
 		<property name="minConnectionsPerPartition" value="${dataSource.initialSize:5}" />
 		<property name="statementsCacheSize" value="${dataSource.statementsCacheSize:50}" />
-		<property name="releaseHelperThreads" value="${dataSource.releaseHelperThreads:2}" />
-		<property name="statementReleaseHelperThreads" value="${dataSource.statementReleaseHelperThreads:2}" />
+		<property name="releaseHelperThreads" value="${dataSource.releaseHelperThreads:1}" />
+		<property name="statementReleaseHelperThreads" value="${dataSource.statementReleaseHelperThreads:1}" />
 		<property name="idleConnectionTestPeriodInMinutes" value="${dataSource.idleConnectionTestPeriodInMinutes:120}" />
 		<property name="idleMaxAgeInMinutes" value="${dataSource.idleMaxAgeInMinutes:60}" />
 		<property name="connectionTestStatement" value="${jdbc.connectionTestStatement:/* ping *\\/ select 1}" />
