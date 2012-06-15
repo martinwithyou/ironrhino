@@ -12,7 +12,7 @@ import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 
-@AutoConfig(readonly = true, order = "createDate asc")
+@AutoConfig(readonly = true, order = "createDate desc")
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 public class Authorization extends BaseEntity {
 

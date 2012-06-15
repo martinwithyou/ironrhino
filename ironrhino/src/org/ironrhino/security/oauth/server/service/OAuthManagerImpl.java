@@ -144,6 +144,10 @@ public class OAuthManagerImpl implements OAuthManager {
 			entityManager.delete(auth);
 	}
 
+	public void create(Authorization authorization) {
+		entityManager.save(authorization);
+	}
+
 	public List<Authorization> findAuthorizationsByGrantor(User grantor) {
 		entityManager.setEntityClass(Authorization.class);
 		DetachedCriteria dc = entityManager.detachedCriteria();

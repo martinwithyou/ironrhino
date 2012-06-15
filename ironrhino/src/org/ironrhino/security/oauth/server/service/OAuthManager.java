@@ -14,7 +14,7 @@ public interface OAuthManager {
 			String scope, String responseType) throws Exception;
 	
 	public Authorization reuse(Authorization authorization);
-
+	
 	public Authorization grant(String authorizationId, User grantor)
 			throws Exception;
 
@@ -28,9 +28,11 @@ public interface OAuthManager {
 	public Authorization refresh(String refreshToken);
 
 	public void revoke(String accessToken);
+	
+	public void create(Authorization authorization);
 
 	public List<Authorization> findAuthorizationsByGrantor(User grantor);
-
+	
 	public long getExpireTime();
 	
 	public void removeExpired();
