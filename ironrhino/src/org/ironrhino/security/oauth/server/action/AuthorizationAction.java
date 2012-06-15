@@ -31,7 +31,7 @@ public class AuthorizationAction extends EntityAction {
 		if (authorization == null)
 			return ACCESSDENIED;
 		oauthManager.create(authorization);
-		addActionMessage(getText("operate.success"));
+		addActionMessage(getText("operate.success")+",token:  "+authorization.getAccessToken());
 		return SUCCESS;
 	}
 
