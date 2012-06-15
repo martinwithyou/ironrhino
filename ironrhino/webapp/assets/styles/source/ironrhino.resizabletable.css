@@ -1,6 +1,6 @@
 table .resizeTitle {
 	float: left;
-	width: 90%;
+	width: 95%;
 	text-align: center;
 }
 table .resizeBar {
@@ -8,7 +8,7 @@ table .resizeBar {
 	margin: 0px;
 	float: right;
 	cursor: col-resize;
-	width: 3px;
+	width: 1px;
 	height: 24px;
 	font-size: 1px;
 	background-color: #cccccc;

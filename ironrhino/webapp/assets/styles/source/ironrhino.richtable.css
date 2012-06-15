@@ -12,6 +12,9 @@ table.richtable td,th {
 	border: 1px solid #CCC;
 	line-height: 180%;
 }
+table.richtable thead td {
+	padding: 0.5em 0;
+}
 .richtable table td.action{
 	white-space:nowrap;
 	overflow:hidden;
