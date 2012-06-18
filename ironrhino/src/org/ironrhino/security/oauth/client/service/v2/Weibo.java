@@ -73,7 +73,7 @@ public class Weibo extends OAuth2Provider {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
 		Profile p = new Profile();
-		String uid = data.get("uid").textValue();
+		String uid = data.get("uid").asText();
 		p.setUid(uid);
 		return p;
 	}
