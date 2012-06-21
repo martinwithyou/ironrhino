@@ -6027,12 +6027,14 @@ a.remove:hover {
 }
 
 .datagrided [class*="icon-"]{
+	opacity: 0.6;
+  	filter: alpha(opacity=60);
 	cursor:pointer;
 	margin: 3px;
 }
 .datagrided [class*="icon-"]:hover{
-	opacity: 0.4;
-  	filter: alpha(opacity=40);
+	opacity: 1;
+  	filter: alpha(opacity=1);
 }
 /*textext*/
 div.text-core{
