@@ -6036,6 +6036,12 @@ a.remove:hover {
 	opacity: 1;
   	filter: alpha(opacity=1);
 }
+td.center {
+	text-align:center;
+}
+td.middle {
+	vertical-align:middle;
+}
 /*textext*/
 div.text-core{
 	display:inline-block;

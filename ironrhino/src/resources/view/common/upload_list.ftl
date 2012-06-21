@@ -3,8 +3,8 @@
 <head>
 <title>${action.getText('upload')}</title>
 <style>
-td.center {text-align:center;}
 .hover { border: 2px dashed #333; }
+#files td{vertical-align:middle;}
 </style>
 <script>
 	Observation.uploaditem = function(container){
@@ -131,15 +131,15 @@ td.center {text-align:center;}
 		<caption style="font-size:120%;font-weight:bold;"><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder" style="margin-left:10px;">${folder}<#if !folder?ends_with('/')>/</#if></span></caption>
 		<thead>
 		<tr style="font-weight:bold;">
-			<td width="30px" class="center"><input type="checkbox" class="checkbox"/></td>
-			<td>${action.getText('name')}</td>
-			<td width="100px" class="center">${action.getText('preview')}</td>
-			<td>${action.getText('path')}</td>
+			<td width="30px" class="center"><input type="checkbox" class="checkbox" style="margin:5px;"/></td>
+			<td width="300px">${action.getText('name')}</td>
+			<td width="150px" class="center">${action.getText('preview')}</td>
+			<td >${action.getText('path')}</td>
 		</tr>
 		</thead>
 		<tfoot>
 		<tr>
-			<td colspan="4" style="text-align:center;padding:5px 0px;">
+			<td colspan="4" class="center">
 			<button type="button" class="btn" onclick="del()">${action.getText('delete')}</button>
 			<button type="button" class="btn" onclick="mkdir()">${action.getText('create.subfolder')}</button>
 			<button type="button" class="btn" onclick="reload()">${action.getText('reload')}</button>
@@ -148,7 +148,7 @@ td.center {text-align:center;}
 		</tfoot>
 		<tbody>
 		<#list files.entrySet() as entry>
-		<tr>
+		<tr style="height:50px;">
 			<td class="center"><#if entry.key!='..'><input type="checkbox" name="id" value="${entry.key}"/></#if></td>
 			<td><#if entry.value><a class="uploaditem" style="color:#1c5a50;" href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank">${entry.key}</a><#else><a style="color:blue;" class="ajax view history" replacement="files" href="<@url value="/common/upload/list${folderEncoded}/${entry.key?replace('..','__')?url}"/>">${entry.key}</a></#if></td>
 			<td class="center"><#if entry.value && ['jpg','gif','png','bmp']?seq_contains(entry.key?lower_case?split('.')?last)><a href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank"><img class="uploaditem" src="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" style="width:50px;height:50px;"/></a></#if></td>
