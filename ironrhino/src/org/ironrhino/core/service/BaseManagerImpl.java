@@ -43,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		BaseManager<T> {
 
-	protected Logger log = LoggerFactory.getLogger(BaseManagerImpl.class);
+	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	private Class<T> entityClass;
 
