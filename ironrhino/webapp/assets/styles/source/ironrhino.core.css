@@ -64,21 +64,20 @@ td input,td textarea,td select,td .uneditable-input{
 	left: 50%;
 	top: 0px;
 	height: 24px;
-	width: 100px;
+	min-width: 80px;
 	float: right;
-	color: #FFF;
+	font-weight:bold;
 	padding: 0px 2px;
-	background: #F00;
+	background: #FFEF7A;
 	margin-left: -60px;
 	border-radius: 0px 0px 5px 5px;
 	-webkit-border-radius: 0px 0px 5px 5px;
 	-moz-border-radius: 0px 0px 5px 5px;
 }
-
-#indicator.loading {
-	padding: 0px 2px 0px 25px;
-	background: #F00 url(../images/indicator.gif) 0px 0px no-repeat;
+#indicator.error {
+	background: #F00;
 }
+
 select.combox{
 	cursor: text;
 }
