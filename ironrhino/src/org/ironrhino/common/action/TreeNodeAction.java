@@ -137,8 +137,7 @@ public class TreeNodeAction extends BaseAction {
 			treeNode.setName(temp.getName());
 			treeNode.setDescription(temp.getDescription());
 			treeNode.setDisplayOrder(temp.getDisplayOrder());
-			if (temp.getAttributes() != null && temp.getAttributes().size() > 0)
-				treeNode.setAttributes(temp.getAttributes());
+			treeNode.setAttributes(temp.getAttributes());
 		}
 		entityManager.save(treeNode);
 		addActionMessage(getText("save.success"));

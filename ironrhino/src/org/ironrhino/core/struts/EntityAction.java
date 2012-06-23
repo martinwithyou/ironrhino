@@ -448,6 +448,8 @@ public class EntityAction extends BaseAction {
 						.getParameterMap().keySet()) {
 					if (parameterName.startsWith(getEntityName() + '.')
 							|| parameterName.startsWith("__checkbox_"
+									+ getEntityName() + '.')
+							|| parameterName.startsWith("__datagrid_"
 									+ getEntityName() + '.')) {
 						propertyName = parameterName.substring(parameterName
 								.indexOf('.') + 1);

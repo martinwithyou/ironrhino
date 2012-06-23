@@ -1,4 +1,5 @@
 <#macro editAttributes schemaName attributes=[] parameterNamePrefix=""  headerKey="" headerValue="">
+	<input type="hidden" name="__datagrid_${parameterNamePrefix}attributes"/>
 	<#if schemaName?index_of(",") gt 0>
 		<#local schemaNames = schemaName?split(",")>
 		<#list schemaNames as name>
