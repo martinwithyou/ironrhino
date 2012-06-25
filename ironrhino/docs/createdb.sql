@@ -1,7 +1,6 @@
 DROP DATABASE IF EXISTS ironrhino;
 CREATE DATABASE ironrhino DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 use ironrhino;
-set names gbk;
 CREATE TABLE  user(
   id varchar(32) NOT NULL,
   username varchar(255) NOT NULL,
@@ -22,4 +21,4 @@ CREATE TABLE  user(
   KEY FK36EBCB48643179 (createUser),
   KEY FK36EBCB3EFBFA37 (modifyUser)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-insert into user(id,username,password,name,enabled,createDate,roles) values ('3PrH25a6pGxAqhPNX8x1EM','admin','fb6603c6be5733bef5d208a1d6721b84','管理员',1,'2010-01-01 00:00:00','ROLE_ADMINISTRATOR');
+insert into user(id,username,password,name,enabled,createDate,roles) values ('3PrH25a6pGxAqhPNX8x1EM','admin','fb6603c6be5733bef5d208a1d6721b84','Admin',1,'2010-01-01 00:00:00','ROLE_ADMINISTRATOR');

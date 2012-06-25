@@ -1,0 +1,3 @@
+1.install mysql and execute createdb.sql,check src/resources/spring/applicationContext-ds.xml for jdbc.username and jdbc.password,if not default value assign it in applicationContext.properties
+2.deploy /webapp to a server(tomcat,jetty,resin,glassfish ...)
+3.open http://localhost/ in a browser(chrome,firefox,opera,IE7+ ...),input admin/password then login
