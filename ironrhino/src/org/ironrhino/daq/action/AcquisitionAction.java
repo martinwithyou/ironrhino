@@ -8,6 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.support.DictionaryControl;
 import org.ironrhino.core.chart.ChartUtils;
@@ -231,6 +232,26 @@ public class AcquisitionAction extends EntityAction {
 		y.setMax(max);
 		chart.setY_axis(y);
 
+		return JSON;
+	}
+
+	
+	private Acquisition acq;
+
+	public Acquisition getAcq() {
+		return acq;
+	}
+
+	@JsonConfig(root = "acq")
+	public String latest() {
+		if (type == null || place == null)
+			return NONE;
+		BaseManager<Acquisition> entityManager = getEntityManager(Acquisition.class);
+		DetachedCriteria dc = entityManager.detachedCriteria();
+		dc.add(Restrictions.eq("type", type));
+		dc.add(Restrictions.eq("place", place[0]));
+		dc.addOrder(Order.desc("time"));
+		acq = entityManager.findByCriteria(dc);
 		return JSON;
 	}
 
