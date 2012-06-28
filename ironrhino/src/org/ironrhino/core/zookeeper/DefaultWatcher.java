@@ -35,6 +35,8 @@ public class DefaultWatcher implements Watcher, ChildrenCallback, DataCallback,
 				return;
 			case Expired:
 				return;
+			default:
+				return;
 			}
 		}
 		for (WatchedEventListener listener : eventListeners) {
