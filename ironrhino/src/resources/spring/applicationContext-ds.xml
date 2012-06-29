@@ -16,6 +16,6 @@
 		<property name="statementReleaseHelperThreads" value="${dataSource.statementReleaseHelperThreads:1}" />
 		<property name="idleConnectionTestPeriodInMinutes" value="${dataSource.idleConnectionTestPeriodInMinutes:120}" />
 		<property name="idleMaxAgeInMinutes" value="${dataSource.idleMaxAgeInMinutes:60}" />
-		<property name="connectionTestStatement" value="${jdbc.connectionTestStatement:/* ping *\\/ select 1}" />
+		<property name="connectionTestStatement" value="${jdbc.connectionTestStatement:/* ping *\/ select 1}" />
 	</bean>
 </beans>

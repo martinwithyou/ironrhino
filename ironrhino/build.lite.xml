@@ -293,7 +293,7 @@
 		</copy>
 	</target>
 
-	<target name="jar">
+	<target name="jar" depends="compile">
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${jar.name}" />
 		<antcall target="append-svn-revision-for-assets" />
