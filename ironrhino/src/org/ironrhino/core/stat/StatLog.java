@@ -25,11 +25,9 @@ public class StatLog {
 
 	private static final Lock timerLock = new ReentrantLock();
 
-	private static final Lock mapLock = new ReentrantLock();
-
 	private static final Condition condition = timerLock.newCondition();
 
-	private static final Map<Key, Value> data = new ConcurrentHashMap<Key, Value>(
+	private static final ConcurrentHashMap<Key, Value> data = new ConcurrentHashMap<Key, Value>(
 			50);
 
 	private static Thread writeThread;
@@ -40,7 +38,8 @@ public class StatLog {
 		PatternLayout layout = new PatternLayout(StatLogSettings.LAYOUT);
 		try {
 			DailyRollingFileAppender statAppender = new DailyRollingFileAppender(
-					layout, StatLogSettings
+					layout,
+					StatLogSettings
 							.getLogFile(StatLogSettings.STAT_LOG_FILE_NAME),
 					StatLogSettings.DATE_STYLE);
 			statAppender.setAppend(true);
@@ -110,12 +109,12 @@ public class StatLog {
 			Value value = entry.getValue();
 			if (((!checkInterval || (current - key.getLastWriteTime())
 					/ StatLogSettings.getIntervalUnit() > key
-					.getIntervalMultiple()))
+						.getIntervalMultiple()))
 					&& (value.getLongValue() > 0 || value.getDoubleValue() > 0)) {
 				key.setLastWriteTime(current);
 				output(statLogger, key, value);
-				temp.put(key, new Value(value.getLongValue(), value
-						.getDoubleValue()));
+				temp.put(key,
+						new Value(value.getLongValue(), value.getDoubleValue()));
 			}
 		}
 		for (Map.Entry<Key, Value> entry : temp.entrySet()) {
@@ -143,16 +142,8 @@ public class StatLog {
 	private static Value getValue(Key key) {
 		Value value = data.get(key);
 		if (value == null) {
-			mapLock.lock();
-			try {
-				value = data.get(key);
-				if (value == null) {
-					value = new Value(0);
-					data.put(key, value);
-				}
-			} finally {
-				mapLock.unlock();
-			}
+			data.putIfAbsent(key, new Value(0));
+			value = data.get(key);
 		}
 		return value;
 	}
