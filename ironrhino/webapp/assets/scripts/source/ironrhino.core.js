@@ -175,8 +175,8 @@ Message = {
 			var msg = $('#message', parent);
 			if (error && target && $(target).prop('tagName') == 'FORM') {
 				if ($('#' + target.id + '_message').length == 0)
-					msg = $(target).before('<div id="' + target.id
-							+ '_message"></div>');
+					msg = $('<div id="' + target.id + '_message"></div>')
+							.insertBefore(target);
 			}
 			msg.html(html);
 			$('html,body').animate({
