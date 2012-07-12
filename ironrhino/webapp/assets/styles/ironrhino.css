@@ -5815,9 +5815,6 @@ body.simple {
 #_window_ input[type="text"],#_window_ input[type="password"]{
 	width: 150px;
 }
-#_window_ input.integer,#_window_ input.double,#_window_ input.date {
-	width: 90px;
-}
 td input,td textarea,td select,td .uneditable-input{
 	margin-bottom: 0px;
 }
@@ -5854,8 +5851,8 @@ td input,td textarea,td select,td .uneditable-input{
 select.combox{
 	cursor: text;
 }
-input.integer,input.double,input.date {
-	width: 90px;
+input.integer,input.double,input.date,#_window_ input.integer,#_window_ input.double,#_window_ input.date {
+	width: 75px;
 	font-family: Arial;
 }
 
