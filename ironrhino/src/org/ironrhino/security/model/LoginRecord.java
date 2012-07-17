@@ -25,7 +25,7 @@ public class LoginRecord extends BaseEntity {
 	@UiConfig(displayOrder = 4)
 	private String cause;
 
-	@UiConfig(displayOrder = 5)
+	@UiConfig(displayOrder = 5, width = "150px")
 	private Date date = new Date();
 
 	public String getUsername() {
