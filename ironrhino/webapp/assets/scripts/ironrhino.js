@@ -33032,9 +33032,13 @@ Message = {
 				$('<div id="message"></div>').prependTo(parent);
 			var msg = $('#message', parent);
 			if (error && target && $(target).prop('tagName') == 'FORM') {
-				if ($('#' + target.id + '_message').length == 0)
-					msg = $('<div id="' + target.id + '_message"></div>')
+				if (!$(target).attr('id'))
+					$(target).attr('id', 'form' + new Date().getTime());
+				var fid = $(target).attr('id');
+				if ($('#' + fid + '_message').length == 0)
+					$('<div id="' + fid + '_message"></div>')
 							.insertBefore(target);
+				msg = $('#' + fid + '_message');
 			}
 			msg.html(html);
 			$('html,body').animate({
