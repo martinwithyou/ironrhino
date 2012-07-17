@@ -76,8 +76,8 @@
 				$('.portal-column', this.eq(0)).each(function() {
 							var portlets = [];
 							$('.portlet:visible', this).each(function() {
-										if (this.id)
-											portlets.push('"' + this.id + '"');
+										if ($(this).attr('id'))
+											portlets.push('"' + $(this).attr('id') + '"');
 									});
 							layout.push('[' + portlets.join(',') + ']');
 						});

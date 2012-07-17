@@ -33349,9 +33349,11 @@ function _observe(container) {
 	if (!container)
 		container = document;
 	$('.chart,form.ajax,.ajaxpanel', container).each(function(i) {
-		if (!this.id)
-			this.id = ('a' + (i + Math.random())).replace('.', '').substring(0,
-					5);
+		if (!$(this).attr('id'))
+			$(this).attr(
+					'id',
+					('a' + (i + Math.random())).replace('.', '')
+							.substring(0, 5));
 	});
 	var array = [];
 	for (var key in Observation) {
@@ -33711,8 +33713,8 @@ Observation.common = function(container) {
 			});
 	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {
-			var id = this.id;
 			var t = $(this);
+			var id = t.attr('id');
 			var width = t.width();
 			var height = t.height();
 			var data = t.attr('data');
@@ -34860,8 +34862,8 @@ Observation.filterselect = function(container) {
 				$('.portal-column', this.eq(0)).each(function() {
 							var portlets = [];
 							$('.portlet:visible', this).each(function() {
-										if (this.id)
-											portlets.push('"' + this.id + '"');
+										if ($(this).attr('id'))
+											portlets.push('"' + $(this).attr('id') + '"');
 									});
 							layout.push('[' + portlets.join(',') + ']');
 						});
