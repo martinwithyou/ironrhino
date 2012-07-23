@@ -53,7 +53,7 @@ public class CacheAspect extends BaseAspect {
 			cacheManager.delete(key, namespace);
 		} else {
 			int timeToIdle = ExpressionUtils.evalInt(checkCache.timeToIdle(),
-					context);
+					context, 0);
 			Object value = (timeToIdle > 0 && !cacheManager
 					.supportsTimeToIdle()) ? cacheManager.get(key, namespace,
 					timeToIdle) : cacheManager.get(key, namespace);
@@ -79,14 +79,15 @@ public class CacheAspect extends BaseAspect {
 		Object result = jp.proceed();
 		putReturnValueIntoContext(context, result);
 		if (result != null
-				&& ExpressionUtils.evalBoolean(checkCache.when(), context)) {
+				&& ExpressionUtils
+						.evalBoolean(checkCache.when(), context, true)) {
 			if (checkCache.eternal()) {
 				cacheManager.put(key, result, 0, namespace);
 			} else {
 				int timeToLive = ExpressionUtils.evalInt(
-						checkCache.timeToLive(), context);
+						checkCache.timeToLive(), context, 0);
 				int timeToIdle = ExpressionUtils.evalInt(
-						checkCache.timeToIdle(), context);
+						checkCache.timeToIdle(), context, 0);
 				cacheManager
 						.put(key, result, timeToIdle, timeToLive, namespace);
 			}

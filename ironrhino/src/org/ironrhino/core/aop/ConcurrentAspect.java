@@ -32,8 +32,9 @@ public class ConcurrentAspect extends BaseAspect {
 		Semaphore semaphore = map.putIfAbsent(
 				key,
 				new Semaphore(ExpressionUtils.evalInt(
-						concurrencyControl.permits(), context), ExpressionUtils
-						.evalBoolean(concurrencyControl.fair(), context)));
+						concurrencyControl.permits(), context, 0),
+						ExpressionUtils.evalBoolean(concurrencyControl.fair(),
+								context, false)));
 		if (!concurrencyControl.block()) {
 			if (semaphore.tryAcquire(concurrencyControl.timeout(),
 					TimeUnit.MILLISECONDS)) {

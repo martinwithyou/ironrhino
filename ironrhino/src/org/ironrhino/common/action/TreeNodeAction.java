@@ -79,7 +79,8 @@ public class TreeNodeAction extends BaseAction {
 			dc.addOrder(Order.asc("name"));
 			treeNode.setChildren(entityManager.findListByCriteria(dc));
 		}
-		list = treeNode.getChildren();
+		list = treeNode != null ? treeNode.getChildren()
+				: new ArrayList<TreeNode>(0);
 		return LIST;
 	}
 
@@ -99,7 +100,8 @@ public class TreeNodeAction extends BaseAction {
 			if (parentId != null) {
 				TreeNode parent = entityManager.get(parentId);
 				treeNode.setParent(parent);
-				siblings = parent.getChildren();
+				siblings = parent != null ? parent.getChildren()
+						: new ArrayList<TreeNode>(0);
 			} else {
 				DetachedCriteria dc = entityManager.detachedCriteria();
 				dc.add(Restrictions.isNull("parent"));

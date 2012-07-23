@@ -50,34 +50,41 @@ public class ExpressionUtils {
 		return obj.toString();
 	}
 
-	public static boolean evalBoolean(String template, Map<String, ?> context) {
-		if (StringUtils.isBlank(template))
-			return false;
-		return Boolean.parseBoolean(evalString(template, context));
-	}
-
-	public static int evalInt(String template, Map<String, ?> context) {
+	public static boolean evalBoolean(String template, Map<String, ?> context,
+			boolean defaultValue) {
 		Object obj = eval(template, context);
 		if (obj == null)
-			return 0;
+			return defaultValue;
+		if (obj instanceof Boolean)
+			return (Boolean) obj;
+		return Boolean.parseBoolean(obj.toString());
+	}
+
+	public static int evalInt(String template, Map<String, ?> context,
+			int defaultValue) {
+		Object obj = eval(template, context);
+		if (obj == null)
+			return defaultValue;
 		if (obj instanceof Integer)
 			return (Integer) obj;
 		return Integer.parseInt(obj.toString());
 	}
 
-	public static long evalLong(String template, Map<String, ?> context) {
+	public static long evalLong(String template, Map<String, ?> context,
+			long defaultValue) {
 		Object obj = eval(template, context);
 		if (obj == null)
-			return 0;
+			return defaultValue;
 		if (obj instanceof Long)
 			return (Long) obj;
 		return Long.parseLong(obj.toString());
 	}
 
-	public static double evalDouble(String template, Map<String, ?> context) {
+	public static double evalDouble(String template, Map<String, ?> context,
+			double defaultValue) {
 		Object obj = eval(template, context);
 		if (obj == null)
-			return 0;
+			return defaultValue;
 		if (obj instanceof Double)
 			return (Double) obj;
 		return Double.parseDouble(obj.toString());
