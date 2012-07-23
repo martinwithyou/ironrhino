@@ -20,6 +20,8 @@ import org.hibernate.criterion.NaturalIdentifier;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.impl.CriteriaImpl;
+import org.hibernate.impl.CriteriaImpl.OrderEntry;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Ordered;
@@ -152,12 +154,30 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 
 	@Transactional(readOnly = true)
 	public long countByCriteria(DetachedCriteria dc) {
+		CriteriaImpl impl = ReflectionUtils.getFieldValue(dc, "impl",
+				CriteriaImpl.class);
+		Iterator<OrderEntry> it = impl.iterateOrderings();
+		List<OrderEntry> orderEntries = null;
+		boolean notEmpty = it.hasNext();
+		if (notEmpty) {
+			// remove order
+			orderEntries = new ArrayList<OrderEntry>();
+			while (it.hasNext()) {
+				orderEntries.add(it.next());
+				it.remove();
+			}
+		}
 		Criteria c = dc.getExecutableCriteria(sessionFactory
 				.getCurrentSession());
 		c.setProjection(Projections.projectionList()
 				.add(Projections.rowCount()));
-		return (Long) c.uniqueResult();
-
+		long count = (Long) c.uniqueResult();
+		if (notEmpty) {
+			// restore order
+			for (OrderEntry oe : orderEntries)
+				impl.addOrder(oe.getOrder());
+		}
+		return count;
 	}
 
 	@Transactional(readOnly = true)

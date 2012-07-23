@@ -4,7 +4,7 @@
 
 <hibernate-mapping package="org.ironrhino.security.model"
 	default-lazy="true">
-	<class name="User" table="user">
+	<class name="User" table="`user`">
 		<id name="id" type="java.lang.String" length="32" unsaved-value="null">
 			<generator class="uuid" />
 		</id>

@@ -1,6 +1,7 @@
 package org.ironrhino.core.util;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -75,6 +76,17 @@ public class ReflectionUtils {
 			return m;
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getFieldValue(Object o, String name, Class<T> c) {
+		try {
+			Field f = o.getClass().getDeclaredField(name);
+			f.setAccessible(true);
+			return (T) f.get(o);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
 	}
 
 }
