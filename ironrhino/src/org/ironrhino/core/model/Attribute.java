@@ -2,6 +2,7 @@ package org.ironrhino.core.model;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.compass.annotations.Searchable;
 import org.compass.annotations.SearchableProperty;
 
@@ -42,6 +43,18 @@ public class Attribute implements Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public boolean isNull() {
+		return name == null && value == null;
+	}
+
+	public boolean isEmpty() {
+		return StringUtils.isEmpty(name) && StringUtils.isEmpty(value);
+	}
+
+	public boolean isBlank() {
+		return StringUtils.isBlank(name) && StringUtils.isBlank(value);
 	}
 
 }

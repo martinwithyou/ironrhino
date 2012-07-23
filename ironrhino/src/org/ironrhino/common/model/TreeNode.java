@@ -18,7 +18,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 @PublishAware
 @AutoConfig
-public class TreeNode extends BaseTreeableEntity<TreeNode> implements Attributable{
+public class TreeNode extends BaseTreeableEntity<TreeNode> implements
+		Attributable {
 
 	private static final long serialVersionUID = 8878337541387688086L;
 
@@ -58,7 +59,8 @@ public class TreeNode extends BaseTreeableEntity<TreeNode> implements Attributab
 
 	@NotInCopy
 	public String getAttributesAsString() {
-		if (attributes == null || attributes.isEmpty())
+		if (attributes == null || attributes.isEmpty()
+				|| attributes.size() == 1 && attributes.get(0).isBlank())
 			return null;
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		for (Attribute attr : attributes)

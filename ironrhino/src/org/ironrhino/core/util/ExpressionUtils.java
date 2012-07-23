@@ -52,6 +52,8 @@ public class ExpressionUtils {
 
 	public static boolean evalBoolean(String template, Map<String, ?> context,
 			boolean defaultValue) {
+		if (StringUtils.isBlank(template))
+			return defaultValue;
 		Object obj = eval(template, context);
 		if (obj == null)
 			return defaultValue;
@@ -62,6 +64,8 @@ public class ExpressionUtils {
 
 	public static int evalInt(String template, Map<String, ?> context,
 			int defaultValue) {
+		if (StringUtils.isBlank(template))
+			return defaultValue;
 		Object obj = eval(template, context);
 		if (obj == null)
 			return defaultValue;
@@ -72,6 +76,8 @@ public class ExpressionUtils {
 
 	public static long evalLong(String template, Map<String, ?> context,
 			long defaultValue) {
+		if (StringUtils.isBlank(template))
+			return defaultValue;
 		Object obj = eval(template, context);
 		if (obj == null)
 			return defaultValue;
@@ -82,6 +88,8 @@ public class ExpressionUtils {
 
 	public static double evalDouble(String template, Map<String, ?> context,
 			double defaultValue) {
+		if (StringUtils.isBlank(template))
+			return defaultValue;
 		Object obj = eval(template, context);
 		if (obj == null)
 			return defaultValue;

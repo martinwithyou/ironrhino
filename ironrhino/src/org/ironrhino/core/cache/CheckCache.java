@@ -17,7 +17,7 @@ public @interface CheckCache {
 	String namespace() default CacheManager.DEFAULT_NAMESPACE;
 
 	// mvel expression
-	String when() default "";
+	String when() default "true";
 
 	// mvel expression
 	String timeToLive() default CacheManager.DEFAULT_TIME_TO_LIVE;
