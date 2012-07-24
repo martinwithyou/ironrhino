@@ -1,4 +1,4 @@
-package org.ironrhino.core.spring;
+package org.ironrhino.core.sequence;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -17,19 +17,16 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.incrementer.AbstractColumnMaxValueIncrementer;
 
-public class CyclicMySQLMaxValueIncrementer extends
-		AbstractColumnMaxValueIncrementer {
-
-	private static final String VALUE_SQL = "select last_insert_id()";
+public class MySQLCyclicSequence extends AbstractColumnMaxValueIncrementer
+		implements CyclicSequence {
 
 	private long nextId = 0;
 
 	private long maxId = 0;
 
-	private Date lastInsertTimestamp;
-
 	private CycleType cycleType = CycleType.day;
 
+	@Override
 	public CycleType getCycleType() {
 		return cycleType;
 	}
@@ -45,7 +42,6 @@ public class CyclicMySQLMaxValueIncrementer extends
 	}
 
 	protected void checkTable() {
-		Long timestamp = null;
 		Connection con = DataSourceUtils.getConnection(getDataSource());
 		Statement stmt = null;
 		try {
@@ -73,24 +69,19 @@ public class CyclicMySQLMaxValueIncrementer extends
 					}
 				}
 				if (columnExists) {
-					try {
-						rs.next();
-						timestamp = rs.getLong(columnName + "_TIMESTAMP");
-					} finally {
-						JdbcUtils.closeResultSet(rs);
-					}
+					JdbcUtils.closeResultSet(rs);
 				} else {
 					stmt.execute("ALTER TABLE `" + getIncrementerName()
 							+ "` ADD " + columnName
 							+ " INT NOT NULL DEFAULT 0,ADD " + columnName
-							+ "_TIMESTAMP BIGINT");
+							+ "_TIMESTAMP BIGINT DEFAULT UNIX_TIMESTAMP()");
 				}
 			} else {
 				stmt.execute("CREATE TABLE `" + getIncrementerName() + "` ("
 						+ columnName + " INT NOT NULL DEFAULT 0," + columnName
 						+ "_TIMESTAMP BIGINT) ");
 				stmt.execute("INSERT INTO `" + getIncrementerName()
-						+ "` VALUES(0,null)");
+						+ "` VALUES(0,UNIX_TIMESTAMP())");
 			}
 		} catch (SQLException ex) {
 			throw new DataAccessResourceFailureException(ex.getMessage(), ex);
@@ -98,37 +89,47 @@ public class CyclicMySQLMaxValueIncrementer extends
 			JdbcUtils.closeStatement(stmt);
 			DataSourceUtils.releaseConnection(con, getDataSource());
 		}
-		if (timestamp != null)
-			lastInsertTimestamp = new Date(timestamp);
 	}
 
 	@Override
 	protected synchronized long getNextKey() throws DataAccessException {
+		Date lastInsertTimestamp = null;
+		Date thisTimestamp = null;
 		if (this.maxId == this.nextId) {
-
 			Connection con = DataSourceUtils.getConnection(getDataSource());
 			Statement stmt = null;
+			ResultSet rs = null;
 			try {
 				stmt = con.createStatement();
 				DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 				// Increment the sequence column...
 				String columnName = getColumnName();
-				boolean same = inSameCycle(cycleType, lastInsertTimestamp);
-				lastInsertTimestamp = new Date();
+				rs = stmt.executeQuery("select  " + columnName
+						+ "_TIMESTAMP,UNIX_TIMESTAMP() from "
+						+ getIncrementerName());
+				try {
+					rs.next();
+					Long last = rs.getLong(1);
+					if (last < 10000000000L) // no mills
+						last *= 1000;
+					lastInsertTimestamp = new Date(last);
+					thisTimestamp = new Date(rs.getLong(2) * 1000);
+				} finally {
+					JdbcUtils.closeResultSet(rs);
+				}
+				boolean same = inSameCycle(cycleType, lastInsertTimestamp,
+						thisTimestamp);
 				if (same)
 					stmt.executeUpdate("update " + getIncrementerName()
 							+ " set " + columnName + " = last_insert_id("
 							+ columnName + " + " + getCacheSize() + "),"
-							+ columnName + "_TIMESTAMP = "
-							+ lastInsertTimestamp.getTime());
+							+ columnName + "_TIMESTAMP = UNIX_TIMESTAMP()");
 				else
 					stmt.executeUpdate("update " + getIncrementerName()
 							+ " set " + columnName + " = last_insert_id("
 							+ getCacheSize() + ")," + columnName
-							+ "_TIMESTAMP = " + lastInsertTimestamp.getTime());
-
-				// Retrieve the new max of the sequence column...
-				ResultSet rs = stmt.executeQuery(VALUE_SQL);
+							+ "_TIMESTAMP = UNIX_TIMESTAMP()");
+				rs = stmt.executeQuery("select last_insert_id()");
 				try {
 					if (!rs.next()) {
 						throw new DataAccessResourceFailureException(
@@ -149,30 +150,52 @@ public class CyclicMySQLMaxValueIncrementer extends
 		} else {
 			this.nextId++;
 		}
-		return this.nextId;
+		return getLongValue(thisTimestamp, getCycleType(), getPaddingLength(),
+				(int) nextId);
 	}
 
-	private static boolean inSameCycle(CycleType cycleType, Date date) {
-		if (date == null)
+	@Override
+	public long nextLongValue() throws DataAccessException {
+		return getNextKey();
+	}
+
+	@Override
+	public int nextIntValue() throws DataAccessException {
+		String s = nextStringValue();
+		return Integer.valueOf(s.substring(s.length() - getPaddingLength(),
+				s.length()));
+	}
+
+	@Override
+	public String nextStringValue() throws DataAccessException {
+		return String.valueOf(nextLongValue());
+	}
+
+	private static boolean inSameCycle(CycleType cycleType,
+			Date lastInsertTimestamp, Date thisTimestamp) {
+		if (lastInsertTimestamp == null)
 			return true;
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		cal.setTime(lastInsertTimestamp);
 		Calendar now = Calendar.getInstance();
+		now.setTime(thisTimestamp);
 		switch (cycleType) {
 		case minute:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
 					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
 					&& now.get(Calendar.HOUR_OF_DAY) == cal
 							.get(Calendar.HOUR_OF_DAY) && now
-					.get(Calendar.MINUTE) == cal.get(Calendar.MINUTE));
+						.get(Calendar.MINUTE) == cal.get(Calendar.MINUTE));
 		case hour:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
 					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && now
-					.get(Calendar.HOUR_OF_DAY) == cal.get(Calendar.HOUR_OF_DAY));
+						.get(Calendar.HOUR_OF_DAY) == cal
+					.get(Calendar.HOUR_OF_DAY));
 		case day:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
 					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && now
-					.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR));
+						.get(Calendar.DAY_OF_YEAR) == cal
+					.get(Calendar.DAY_OF_YEAR));
 		case month:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && now
 					.get(Calendar.MONTH) == cal.get(Calendar.MONTH));
@@ -183,12 +206,8 @@ public class CyclicMySQLMaxValueIncrementer extends
 		}
 	}
 
-	static enum CycleType {
-		minute, hour, day, month, year
-	}
-
-	@Override
-	public String nextStringValue() throws DataAccessException {
+	private static long getLongValue(Date date, CycleType cycleType,
+			int paddingLength, int nextId) {
 		String pattern = "";
 		switch (cycleType) {
 		case minute:
@@ -209,13 +228,11 @@ public class CyclicMySQLMaxValueIncrementer extends
 		default:
 			break;
 		}
-		return new SimpleDateFormat(pattern).format(new Date())
-				+ NumberUtils.format(nextIntValue(), getPaddingLength());
-	}
-
-	@Override
-	public long nextLongValue() throws DataAccessException {
-		return Long.valueOf(nextStringValue());
+		if (date == null)
+			date = new Date();
+		String s = new SimpleDateFormat(pattern).format(date)
+				+ NumberUtils.format(nextId, paddingLength);
+		return Long.valueOf(s);
 	}
 
 }
