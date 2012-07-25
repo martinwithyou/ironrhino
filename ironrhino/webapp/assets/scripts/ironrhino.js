@@ -9491,7 +9491,7 @@ jQuery.cookie = function (key, value, options) {
     var result, decode = options.raw ? function (s) { return s; } : decodeURIComponent;
     return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? decode(result[1]) : null;
 };
-/*! jQuery UI - v1.8.21 - 2012-06-05
+/*! jQuery UI - v1.8.22 - 2012-07-24
 * https://github.com/jquery/jquery-ui
 * Includes: jquery.ui.core.js, jquery.ui.widget.js, jquery.ui.mouse.js, jquery.ui.draggable.js, jquery.ui.droppable.js, jquery.ui.resizable.js, jquery.ui.selectable.js, jquery.ui.sortable.js, jquery.effects.core.js, jquery.effects.blind.js, jquery.effects.bounce.js, jquery.effects.clip.js, jquery.effects.drop.js, jquery.effects.explode.js, jquery.effects.fade.js, jquery.effects.fold.js, jquery.effects.highlight.js, jquery.effects.pulsate.js, jquery.effects.scale.js, jquery.effects.shake.js, jquery.effects.slide.js, jquery.effects.transfer.js, jquery.ui.accordion.js, jquery.ui.autocomplete.js, jquery.ui.button.js, jquery.ui.datepicker.js, jquery.ui.dialog.js, jquery.ui.position.js, jquery.ui.progressbar.js, jquery.ui.slider.js, jquery.ui.tabs.js
 * Copyright (c) 2012 AUTHORS.txt; Licensed MIT, GPL */
@@ -9507,7 +9507,7 @@ if ( $.ui.version ) {
 }
 
 $.extend( $.ui, {
-	version: "1.8.21",
+	version: "1.8.22",
 
 	keyCode: {
 		ALT: 18,
@@ -9620,49 +9620,52 @@ $.fn.extend({
 	}
 });
 
-$.each( [ "Width", "Height" ], function( i, name ) {
-	var side = name === "Width" ? [ "Left", "Right" ] : [ "Top", "Bottom" ],
-		type = name.toLowerCase(),
-		orig = {
-			innerWidth: $.fn.innerWidth,
-			innerHeight: $.fn.innerHeight,
-			outerWidth: $.fn.outerWidth,
-			outerHeight: $.fn.outerHeight
+// support: jQuery <1.8
+if ( !$( "<a>" ).outerWidth( 1 ).jquery ) {
+	$.each( [ "Width", "Height" ], function( i, name ) {
+		var side = name === "Width" ? [ "Left", "Right" ] : [ "Top", "Bottom" ],
+			type = name.toLowerCase(),
+			orig = {
+				innerWidth: $.fn.innerWidth,
+				innerHeight: $.fn.innerHeight,
+				outerWidth: $.fn.outerWidth,
+				outerHeight: $.fn.outerHeight
+			};
+
+		function reduce( elem, size, border, margin ) {
+			$.each( side, function() {
+				size -= parseFloat( $.curCSS( elem, "padding" + this, true) ) || 0;
+				if ( border ) {
+					size -= parseFloat( $.curCSS( elem, "border" + this + "Width", true) ) || 0;
+				}
+				if ( margin ) {
+					size -= parseFloat( $.curCSS( elem, "margin" + this, true) ) || 0;
+				}
+			});
+			return size;
+		}
+
+		$.fn[ "inner" + name ] = function( size ) {
+			if ( size === undefined ) {
+				return orig[ "inner" + name ].call( this );
+			}
+
+			return this.each(function() {
+				$( this ).css( type, reduce( this, size ) + "px" );
+			});
 		};
 
-	function reduce( elem, size, border, margin ) {
-		$.each( side, function() {
-			size -= parseFloat( $.curCSS( elem, "padding" + this, true) ) || 0;
-			if ( border ) {
-				size -= parseFloat( $.curCSS( elem, "border" + this + "Width", true) ) || 0;
+		$.fn[ "outer" + name] = function( size, margin ) {
+			if ( typeof size !== "number" ) {
+				return orig[ "outer" + name ].call( this, size );
 			}
-			if ( margin ) {
-				size -= parseFloat( $.curCSS( elem, "margin" + this, true) ) || 0;
-			}
-		});
-		return size;
-	}
 
-	$.fn[ "inner" + name ] = function( size ) {
-		if ( size === undefined ) {
-			return orig[ "inner" + name ].call( this );
-		}
-
-		return this.each(function() {
-			$( this ).css( type, reduce( this, size ) + "px" );
-		});
-	};
-
-	$.fn[ "outer" + name] = function( size, margin ) {
-		if ( typeof size !== "number" ) {
-			return orig[ "outer" + name ].call( this, size );
-		}
-
-		return this.each(function() {
-			$( this).css( type, reduce( this, size, true, margin ) + "px" );
-		});
-	};
-});
+			return this.each(function() {
+				$( this).css( type, reduce( this, size, true, margin ) + "px" );
+			});
+		};
+	});
+}
 
 // selectors
 function focusable( element, isTabIndexNotNaN ) {
@@ -9694,9 +9697,16 @@ function visible( element ) {
 }
 
 $.extend( $.expr[ ":" ], {
-	data: function( elem, i, match ) {
-		return !!$.data( elem, match[ 3 ] );
-	},
+	data: $.expr.createPseudo ?
+		$.expr.createPseudo(function( dataName ) {
+			return function( elem ) {
+				return !!$.data( elem, dataName );
+			};
+		}) :
+		// support: jQuery <1.8
+		function( elem, i, match ) {
+			return !!$.data( elem, match[ 3 ] );
+		},
 
 	focusable: function( element ) {
 		return focusable( element, !isNaN( $.attr( element, "tabindex" ) ) );
@@ -9733,6 +9743,11 @@ $(function() {
 	// http://dev.jquery.com/ticket/4014
 	body.removeChild( div ).style.display = "none";
 });
+
+// jQuery <1.4.3 uses curCSS, in 1.4.3 - 1.7.2 curCSS = css, 1.8+ only has css
+if ( !$.curCSS ) {
+	$.curCSS = $.css;
+}
 
 
 
@@ -10726,7 +10741,7 @@ $.widget("ui.draggable", $.ui.mouse, {
 });
 
 $.extend($.ui.draggable, {
-	version: "1.8.21"
+	version: "1.8.22"
 });
 
 $.ui.plugin.add("draggable", "connectToSortable", {
@@ -11179,7 +11194,7 @@ $.widget("ui.droppable", {
 });
 
 $.extend($.ui.droppable, {
-	version: "1.8.21"
+	version: "1.8.22"
 });
 
 $.ui.intersect = function(draggable, droppable, toleranceMode) {
@@ -11855,7 +11870,7 @@ $.widget("ui.resizable", $.ui.mouse, {
 });
 
 $.extend($.ui.resizable, {
-	version: "1.8.21"
+	version: "1.8.22"
 });
 
 /*
@@ -12370,7 +12385,7 @@ $.widget("ui.selectable", $.ui.mouse, {
 });
 
 $.extend($.ui.selectable, {
-	version: "1.8.21"
+	version: "1.8.22"
 });
 
 })(jQuery);
@@ -13397,6 +13412,8 @@ $.widget("ui.sortable", $.ui.mouse, {
 				for (var i=0; i < delayedTriggers.length; i++) { delayedTriggers[i].call(this, event); }; //Trigger all delayed events
 				this._trigger("stop", event, this._uiHash());
 			}
+
+			this.fromOutside = false;
 			return false;
 		}
 
@@ -13439,7 +13456,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 });
 
 $.extend($.ui.sortable, {
-	version: "1.8.21"
+	version: "1.8.22"
 });
 
 })(jQuery);
@@ -13512,7 +13529,8 @@ function getColor(elem, attr) {
 		var color;
 
 		do {
-				color = $.curCSS(elem, attr);
+				// jQuery <1.4.3 uses curCSS, in 1.4.3 - 1.7.2 curCSS = css, 1.8+ only has css
+				color = ($.curCSS || $.css)(elem, attr);
 
 				// Keep going until we find an element that has color, or we hit the body
 				if ( color != '' && color != 'transparent' || $.nodeName(elem, "body") )
@@ -13743,7 +13761,7 @@ $.fn.extend({
 /******************************************************************************/
 
 $.extend($.effects, {
-	version: "1.8.21",
+	version: "1.8.22",
 
 	// Saves a set of properties in a data storage
 	save: function(element, set) {
@@ -14268,7 +14286,7 @@ $.effects.bounce = function(o) {
 		$.effects.createWrapper(el); // Create Wrapper
 		var ref = (direction == 'up' || direction == 'down') ? 'top' : 'left';
 		var motion = (direction == 'up' || direction == 'left') ? 'pos' : 'neg';
-		var distance = o.options.distance || (ref == 'top' ? el.outerHeight({margin:true}) / 3 : el.outerWidth({margin:true}) / 3);
+		var distance = o.options.distance || (ref == 'top' ? el.outerHeight(true) / 3 : el.outerWidth(true) / 3);
 		if (mode == 'show') el.css('opacity', 0).css(ref, motion == 'pos' ? -distance : distance); // Shift
 		if (mode == 'hide') distance = distance / (times * 2);
 		if (mode != 'hide') times--;
@@ -14374,7 +14392,7 @@ $.effects.drop = function(o) {
 		$.effects.createWrapper(el); // Create Wrapper
 		var ref = (direction == 'up' || direction == 'down') ? 'top' : 'left';
 		var motion = (direction == 'up' || direction == 'left') ? 'pos' : 'neg';
-		var distance = o.options.distance || (ref == 'top' ? el.outerHeight({margin:true}) / 2 : el.outerWidth({margin:true}) / 2);
+		var distance = o.options.distance || (ref == 'top' ? el.outerHeight( true ) / 2 : el.outerWidth( true ) / 2);
 		if (mode == 'show') el.css('opacity', 0).css(ref, motion == 'pos' ? -distance : distance); // Shift
 
 		// Animation
@@ -14839,7 +14857,7 @@ $.effects.slide = function(o) {
 		$.effects.createWrapper(el).css({overflow:'hidden'}); // Create Wrapper
 		var ref = (direction == 'up' || direction == 'down') ? 'top' : 'left';
 		var motion = (direction == 'up' || direction == 'left') ? 'pos' : 'neg';
-		var distance = o.options.distance || (ref == 'top' ? el.outerHeight({margin:true}) : el.outerWidth({margin:true}));
+		var distance = o.options.distance || (ref == 'top' ? el.outerHeight( true ) : el.outerWidth( true ));
 		if (mode == 'show') el.css(ref, motion == 'pos' ? (isNaN(distance) ? "-" + distance : -distance) : distance); // Shift
 
 		// Animation
@@ -15401,7 +15419,7 @@ $.widget( "ui.accordion", {
 });
 
 $.extend( $.ui.accordion, {
-	version: "1.8.21",
+	version: "1.8.22",
 	animations: {
 		slide: function( options, additions ) {
 			options = $.extend({
@@ -16515,7 +16533,7 @@ $.widget( "ui.buttonset", {
 
 (function( $, undefined ) {
 
-$.extend($.ui, { datepicker: { version: "1.8.21" } });
+$.extend($.ui, { datepicker: { version: "1.8.22" } });
 
 var PROP_NAME = 'datepicker';
 var dpuuid = new Date().getTime();
@@ -16811,7 +16829,7 @@ $.extend(Datepicker.prototype, {
 			this.uuid += 1;
 			var id = 'dp' + this.uuid;
 			this._dialogInput = $('<input type="text" id="' + id +
-				'" style="position: absolute; top: -100px; width: 0px; z-index: -10;"/>');
+				'" style="position: absolute; top: -100px; width: 0px;"/>');
 			this._dialogInput.keydown(this._doKeyDown);
 			$('body').append(this._dialogInput);
 			inst = this._dialogInst = this._newInst(this._dialogInput, false);
@@ -17217,6 +17235,7 @@ $.extend(Datepicker.prototype, {
 		var borders = $.datepicker._getBorders(inst.dpDiv);
 		instActive = inst; // for delegate hover events
 		inst.dpDiv.empty().append(this._generateHTML(inst));
+		this._attachHandlers(inst);
 		var cover = inst.dpDiv.find('iframe.ui-datepicker-cover'); // IE6- only
 		if( !!cover.length ){ //avoid call to outerXXXX() when not in IE6
 			cover.css({left: -borders[0], top: -borders[1], width: inst.dpDiv.outerWidth(), height: inst.dpDiv.outerHeight()})
@@ -17267,8 +17286,8 @@ $.extend(Datepicker.prototype, {
 		var dpHeight = inst.dpDiv.outerHeight();
 		var inputWidth = inst.input ? inst.input.outerWidth() : 0;
 		var inputHeight = inst.input ? inst.input.outerHeight() : 0;
-		var viewWidth = document.documentElement.clientWidth + $(document).scrollLeft();
-		var viewHeight = document.documentElement.clientHeight + $(document).scrollTop();
+		var viewWidth = document.documentElement.clientWidth + (isFixed ? 0 : $(document).scrollLeft());
+		var viewHeight = document.documentElement.clientHeight + (isFixed ? 0 : $(document).scrollTop());
 
 		offset.left -= (this._get(inst, 'isRTL') ? (dpWidth - inputWidth) : 0);
 		offset.left -= (isFixed && offset.left == inst.input.offset().left) ? $(document).scrollLeft() : 0;
@@ -17905,6 +17924,43 @@ $.extend(Datepicker.prototype, {
 			return startDate;
 	},
 
+	/* Attach the onxxx handlers.  These are declared statically so
+	 * they work with static code transformers like Caja.
+	 */
+	_attachHandlers: function(inst) {
+		var stepMonths = this._get(inst, 'stepMonths');
+		var id = '#' + inst.id;
+		inst.dpDiv.find('[data-handler]').map(function () {
+			var handler = {
+				prev: function () {
+					window['DP_jQuery_' + dpuuid].datepicker._adjustDate(id, -stepMonths, 'M');
+				},
+				next: function () {
+					window['DP_jQuery_' + dpuuid].datepicker._adjustDate(id, +stepMonths, 'M');
+				},
+				hide: function () {
+					window['DP_jQuery_' + dpuuid].datepicker._hideDatepicker();
+				},
+				today: function () {
+					window['DP_jQuery_' + dpuuid].datepicker._gotoToday(id);
+				},
+				selectDay: function () {
+					window['DP_jQuery_' + dpuuid].datepicker._selectDay(id, +this.getAttribute('data-month'), +this.getAttribute('data-year'), this);
+					return false;
+				},
+				selectMonth: function () {
+					window['DP_jQuery_' + dpuuid].datepicker._selectMonthYear(id, this, 'M');
+					return false;
+				},
+				selectYear: function () {
+					window['DP_jQuery_' + dpuuid].datepicker._selectMonthYear(id, this, 'Y');
+					return false;
+				}
+			};
+			$(this).bind(this.getAttribute('data-event'), handler[this.getAttribute('data-handler')]);
+		});
+	},
+	
 	/* Generate the HTML for the current state of the date picker. */
 	_generateHTML: function(inst) {
 		var today = new Date();
@@ -17947,8 +18003,7 @@ $.extend(Datepicker.prototype, {
 			this._daylightSavingAdjust(new Date(drawYear, drawMonth - stepMonths, 1)),
 			this._getFormatConfig(inst)));
 		var prev = (this._canAdjustMonth(inst, -1, drawYear, drawMonth) ?
-			'<a class="ui-datepicker-prev ui-corner-all" onclick="DP_jQuery_' + dpuuid +
-			'.datepicker._adjustDate(\'#' + inst.id + '\', -' + stepMonths + ', \'M\');"' +
+			'<a class="ui-datepicker-prev ui-corner-all" data-handler="prev" data-event="click"' +
 			' title="' + prevText + '"><span class="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'e' : 'w') + '">' + prevText + '</span></a>' :
 			(hideIfNoPrevNext ? '' : '<a class="ui-datepicker-prev ui-corner-all ui-state-disabled" title="'+ prevText +'"><span class="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'e' : 'w') + '">' + prevText + '</span></a>'));
 		var nextText = this._get(inst, 'nextText');
@@ -17956,19 +18011,17 @@ $.extend(Datepicker.prototype, {
 			this._daylightSavingAdjust(new Date(drawYear, drawMonth + stepMonths, 1)),
 			this._getFormatConfig(inst)));
 		var next = (this._canAdjustMonth(inst, +1, drawYear, drawMonth) ?
-			'<a class="ui-datepicker-next ui-corner-all" onclick="DP_jQuery_' + dpuuid +
-			'.datepicker._adjustDate(\'#' + inst.id + '\', +' + stepMonths + ', \'M\');"' +
+			'<a class="ui-datepicker-next ui-corner-all" data-handler="next" data-event="click"' +
 			' title="' + nextText + '"><span class="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'w' : 'e') + '">' + nextText + '</span></a>' :
 			(hideIfNoPrevNext ? '' : '<a class="ui-datepicker-next ui-corner-all ui-state-disabled" title="'+ nextText + '"><span class="ui-icon ui-icon-circle-triangle-' + ( isRTL ? 'w' : 'e') + '">' + nextText + '</span></a>'));
 		var currentText = this._get(inst, 'currentText');
 		var gotoDate = (this._get(inst, 'gotoCurrent') && inst.currentDay ? currentDate : today);
 		currentText = (!navigationAsDateFormat ? currentText :
 			this.formatDate(currentText, gotoDate, this._getFormatConfig(inst)));
-		var controls = (!inst.inline ? '<button type="button" class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" onclick="DP_jQuery_' + dpuuid +
-			'.datepicker._hideDatepicker();">' + this._get(inst, 'closeText') + '</button>' : '');
+		var controls = (!inst.inline ? '<button type="button" class="ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all" data-handler="hide" data-event="click">' +
+			this._get(inst, 'closeText') + '</button>' : '');
 		var buttonPanel = (showButtonPanel) ? '<div class="ui-datepicker-buttonpane ui-widget-content">' + (isRTL ? controls : '') +
-			(this._isInRange(inst, gotoDate) ? '<button type="button" class="ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all" onclick="DP_jQuery_' + dpuuid +
-			'.datepicker._gotoToday(\'#' + inst.id + '\');"' +
+			(this._isInRange(inst, gotoDate) ? '<button type="button" class="ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all" data-handler="today" data-event="click"' +
 			'>' + currentText + '</button>' : '') + (isRTL ? '' : controls) + '</div>' : '';
 		var firstDay = parseInt(this._get(inst, 'firstDay'),10);
 		firstDay = (isNaN(firstDay) ? 0 : firstDay);
@@ -18047,8 +18100,7 @@ $.extend(Datepicker.prototype, {
 							(printDate.getTime() == currentDate.getTime() ? ' ' + this._currentClass : '') + // highlight selected day
 							(printDate.getTime() == today.getTime() ? ' ui-datepicker-today' : '')) + '"' + // highlight today (if different)
 							((!otherMonth || showOtherMonths) && daySettings[2] ? ' title="' + daySettings[2] + '"' : '') + // cell title
-							(unselectable ? '' : ' onclick="DP_jQuery_' + dpuuid + '.datepicker._selectDay(\'#' +
-							inst.id + '\',' + printDate.getMonth() + ',' + printDate.getFullYear() + ', this);return false;"') + '>' + // actions
+							(unselectable ? '' : ' data-handler="selectDay" data-event="click" data-month="' + printDate.getMonth() + '" data-year="' + printDate.getFullYear() + '"') + '>' + // actions
 							(otherMonth && !showOtherMonths ? '&#xa0;' : // display for other months
 							(unselectable ? '<span class="ui-state-default">' + printDate.getDate() + '</span>' : '<a class="ui-state-default' +
 							(printDate.getTime() == today.getTime() ? ' ui-state-highlight' : '') +
@@ -18091,9 +18143,7 @@ $.extend(Datepicker.prototype, {
 		else {
 			var inMinYear = (minDate && minDate.getFullYear() == drawYear);
 			var inMaxYear = (maxDate && maxDate.getFullYear() == drawYear);
-			monthHtml += '<select class="ui-datepicker-month" ' +
-				'onchange="DP_jQuery_' + dpuuid + '.datepicker._selectMonthYear(\'#' + inst.id + '\', this, \'M\');" ' +
-			 	'>';
+			monthHtml += '<select class="ui-datepicker-month" data-handler="selectMonth" data-event="change">';
 			for (var month = 0; month < 12; month++) {
 				if ((!inMinYear || month >= minDate.getMonth()) &&
 						(!inMaxYear || month <= maxDate.getMonth()))
@@ -18124,9 +18174,7 @@ $.extend(Datepicker.prototype, {
 				var endYear = Math.max(year, determineYear(years[1] || ''));
 				year = (minDate ? Math.max(year, minDate.getFullYear()) : year);
 				endYear = (maxDate ? Math.min(endYear, maxDate.getFullYear()) : endYear);
-				inst.yearshtml += '<select class="ui-datepicker-year" ' +
-					'onchange="DP_jQuery_' + dpuuid + '.datepicker._selectMonthYear(\'#' + inst.id + '\', this, \'Y\');" ' +
-					'>';
+				inst.yearshtml += '<select class="ui-datepicker-year" data-handler="selectYear" data-event="change">';
 				for (; year <= endYear; year++) {
 					inst.yearshtml += '<option value="' + year + '"' +
 						(year == drawYear ? ' selected="selected"' : '') +
@@ -18318,7 +18366,7 @@ $.fn.datepicker = function(options){
 $.datepicker = new Datepicker(); // singleton instance
 $.datepicker.initialized = false;
 $.datepicker.uuid = new Date().getTime();
-$.datepicker.version = "1.8.21";
+$.datepicker.version = "1.8.22";
 
 // Workaround for #4055
 // Add another global to avoid noConflict issues with inline event handlers
@@ -19012,7 +19060,7 @@ $.widget("ui.dialog", {
 });
 
 $.extend($.ui.dialog, {
-	version: "1.8.21",
+	version: "1.8.22",
 
 	uuid: 0,
 	maxZ: 0,
@@ -19574,7 +19622,7 @@ $.widget( "ui.progressbar", {
 });
 
 $.extend( $.ui.progressbar, {
-	version: "1.8.21"
+	version: "1.8.22"
 });
 
 })( jQuery );
@@ -20223,7 +20271,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 });
 
 $.extend( $.ui.slider, {
-	version: "1.8.21"
+	version: "1.8.22"
 });
 
 }(jQuery));
@@ -20915,7 +20963,7 @@ $.widget( "ui.tabs", {
 });
 
 $.extend( $.ui.tabs, {
-	version: "1.8.21"
+	version: "1.8.22"
 });
 
 /*
@@ -20995,8 +21043,7 @@ jQuery(function($){
 		showMonthAfterYear: true,
 		yearSuffix: '年'};
 	$.datepicker.setDefaults($.datepicker.regional['zh-CN']);
-});
-
+	});
 /*
  * jQuery history plugin
  * 
