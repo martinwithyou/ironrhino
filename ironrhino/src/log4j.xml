@@ -12,7 +12,7 @@
 		<param name="encoding" value="utf-8"/>
 		<param name="threshold" value="INFO"/>
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d %c %p %X{url} %m%n"/>
+			<param name="ConversionPattern" value="%d %c %p%X{thread}%X{session}%X{url} %m%n"/>
 		</layout>
 	</appender>
 	<appender name="ERROR" class="org.apache.log4j.DailyRollingFileAppender">

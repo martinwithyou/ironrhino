@@ -10,21 +10,18 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.MDC;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.core.util.RequestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 @Singleton
 @Named("httpSessionManager")
 public class DefaultHttpSessionManager implements HttpSessionManager {
-
-	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private static final String SALT = "awpeqaidasdfaioiaoduifayzuxyaaokadoaifaodiaoi";
 
@@ -152,7 +149,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			session.setNew(true);
 			sessionId = CodecUtils.nextId(SALT);
 		}
-
+		MDC.put("session", " session:" + sessionId);
 		session.setId(sessionId);
 		session.setCreationTime(creationTime);
 		session.setLastAccessedTime(lastAccessedTime);
@@ -161,7 +158,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		if (session.getSessionTracker() == null)
 			session.setSessionTracker(getSessionTracker(session));
 		doInitialize(session);
-
 	}
 
 	public void save(WrappedHttpSession session) {
