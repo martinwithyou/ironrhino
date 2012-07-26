@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.MDC;
+import org.slf4j.MDC;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.WrappedHttpSession;

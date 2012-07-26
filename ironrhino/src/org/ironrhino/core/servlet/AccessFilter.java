@@ -106,7 +106,6 @@ public class AccessFilter implements Filter {
 		request.setAttribute("userAgent",
 				new UserAgent(request.getHeader("User-Agent")));
 		MDC.put("remoteAddr", RequestUtils.getRemoteAddr(request));
-		MDC.put("thread", " thread:" + Thread.currentThread().getId());
 		MDC.put("method", request.getMethod());
 		StringBuffer url = request.getRequestURL();
 		if (StringUtils.isNotBlank(request.getQueryString()))
