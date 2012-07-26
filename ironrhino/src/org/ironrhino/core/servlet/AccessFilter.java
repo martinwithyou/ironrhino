@@ -105,23 +105,22 @@ public class AccessFilter implements Filter {
 
 		request.setAttribute("userAgent",
 				new UserAgent(request.getHeader("User-Agent")));
-		MDC.put("thread", " thread:" + Thread.currentThread().getId());
 		MDC.put("remoteAddr", RequestUtils.getRemoteAddr(request));
+		MDC.put("thread", " thread:" + Thread.currentThread().getId());
 		MDC.put("method", request.getMethod());
 		StringBuffer url = request.getRequestURL();
 		if (StringUtils.isNotBlank(request.getQueryString()))
 			url.append('?').append(request.getQueryString());
-		MDC.put("url", " "+url.toString());
+		MDC.put("url", " " + url.toString());
 		String s = request.getHeader("User-Agent");
 		if (s != null)
-			MDC.put("userAgent", s);
+			MDC.put("userAgent", " UserAgent:" + s);
 		s = request.getHeader("Referer");
 		if (s != null)
-			MDC.put("referer", s);
+			MDC.put("referer", " Referer:" + s);
 		s = RequestUtils.getCookieValue(request,
 				DefaultAuthenticationSuccessHandler.COOKIE_NAME_LOGIN_USER);
-		if (s != null)
-			MDC.put("username", s);
+		MDC.put("username", s != null ? " " + s : " ");
 		if (print && request.getHeader("Last-Event-Id") == null)
 			accessLog.info("");
 
