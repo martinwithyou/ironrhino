@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.servlet.AccessHandler;
 import org.ironrhino.core.session.HttpSessionManager;
+import org.ironrhino.core.util.UserAgent;
 import org.ironrhino.security.oauth.server.model.Authorization;
+import org.ironrhino.security.oauth.server.model.Client;
 import org.ironrhino.security.oauth.server.service.OAuthManager;
 import org.ironrhino.security.service.UserManager;
 import org.springframework.beans.factory.annotation.Value;
@@ -107,6 +109,12 @@ public class OAuthHandler implements AccessHandler {
 							sessionMap);
 					request.setAttribute(REQUEST_ATTRIBUTE_KEY_OAUTH_REQUEST,
 							true);
+					Client client = authorization.getClient();
+					UserAgent ua = new UserAgent(
+							request.getHeader("User-Agent"));
+					ua.setAppId(client.getId());
+					ua.setAppName(client.getName());
+					request.setAttribute("userAgent", ua);
 					return false;
 				} else {
 					errorMessage = "unauthorized_scope";
