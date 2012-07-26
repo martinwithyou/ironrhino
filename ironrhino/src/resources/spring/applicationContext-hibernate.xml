@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans default-autowire="byName"
-	xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
@@ -25,6 +23,9 @@
 				<prop key="hibernate.jdbc.batch_size">
 					${hibernate.jdbc.batch_size:50}
 				</prop>
+				<prop key="hibernate.cache.use_second_level_cache">
+					${hibernate.cache.use_second_level_cache:false}
+				</prop>
 				<prop key="hibernate.show_sql">
 					${hibernate.show_sql:false}
 				</prop>
@@ -35,8 +36,9 @@
 		</property>
 	</bean>
 	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager" p:defaultTimeout="${hibernate.transaction.defaultTimeount:-1}"/>
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+		p:defaultTimeout="${hibernate.transaction.defaultTimeount:-1}" />
 	<bean
 		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
-	<tx:annotation-driven order="0"/>
+	<tx:annotation-driven order="0" />
 </beans>
