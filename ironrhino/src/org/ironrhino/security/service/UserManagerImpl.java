@@ -81,7 +81,8 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		if (user == null && fallbackUserDetailsService != null)
 			return fallbackUserDetailsService.loadUserByUsername(username);
 		if (user == null)
-			throw new UsernameNotFoundException("No such Username");
+			throw new UsernameNotFoundException("No such Username : "
+					+ username);
 		populateAuthorities(user);
 		return user;
 	}
