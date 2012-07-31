@@ -23,7 +23,7 @@
 				var arr2 = path.split('/');
 				var filename = arr2[arr2.length-1];
 				var jarname = filename.substring(0,filename.lastIndexOf(filename.lastIndexOf('-')>0?'-':'.'));
-				var version = filename.substring(jarname.length()+2);
+				var version = filename.substring(jarname.length()+1);
 				var file = new File(basedir+'/' + path);
         		var parent = file.getParentFile();
         		var files = parent.listFiles();
@@ -31,7 +31,7 @@
         			var f = files[i];
         			var filename2 = f.getName();
         			var jarname2 = filename2.substring(0,filename2.lastIndexOf(filename2.lastIndexOf('-')>0?'-':'.'));
-        			var version2 = filename2.substring(jarname2.length()+2);
+        			var version2 = filename2.substring(jarname2.length()+1);
         			if(f.isFile() && jarname == jarname2){
         				if(version.length() >= version2.length() && version >= version2)
         					continue;
