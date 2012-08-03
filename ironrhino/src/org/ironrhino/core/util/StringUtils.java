@@ -375,7 +375,7 @@ public class StringUtils {
 		}
 		int sz = cs.length();
 		for (int i = 0; i < sz; i++) {
-			if (Character.isDigit(cs.charAt(i)) == false) {
+			if (!Character.isDigit(cs.charAt(i))) {
 				return false;
 			}
 		}
