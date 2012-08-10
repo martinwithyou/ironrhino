@@ -978,7 +978,7 @@
 
 		height = input.outerHeight();
 
-		input.width(width);
+		input.outerWidth(width);
 		wrap.width(width).height(height);
 		container.height(height);
 
@@ -4782,13 +4782,6 @@
   position: absolute;\
 }\
 .text-core .text-wrap textarea, .text-core .text-wrap input {\
-  -webkit-box-sizing: border-box;\
-  -moz-box-sizing: border-box;\
-  box-sizing: border-box;\
-  -webkit-border-radius: 0px;\
-  -moz-border-radius: 0px;\
-  border-radius: 0px;\
-  border: 1px solid #9daccc;\
   outline: none;\
   resize: none;\
   position: absolute;\
@@ -4796,11 +4789,6 @@
   background: none;\
   overflow: hidden;\
   margin: 0;\
-  padding: 3px 5px 4px 5px;\
-  white-space: nowrap;\
-  font: 11px "lucida grande", tahoma, verdana, arial, sans-serif;\
-  line-height: 13px;\
-  height: auto;\
 }\
 \n.text-core .text-wrap .text-arrow {\
   -webkit-box-sizing: border-box;\
@@ -4870,7 +4858,6 @@
   width: 100%;\
   height: 100%;\
   margin: 1px 0 0 2px;\
-  font: 11px "lucida grande", tahoma, verdana, arial, sans-serif;\
   color: #c0c0c0;\
   overflow: hidden;\
   white-space: pre;\
@@ -4905,12 +4892,10 @@
   float: left;\
   border: 1px solid #9daccc;\
   background: #e2e6f0;\
-  color: #000;\
   padding: 0px 17px 0px 3px;\
   margin: 0 2px 2px 0;\
   cursor: pointer;\
-  height: 16px;\
-  font: 11px "lucida grande", tahoma, verdana, arial, sans-serif;\
+  height: 20px;\
 }\
 .text-core .text-wrap .text-tags .text-tag .text-button a.text-remove {\
   position: absolute;\
