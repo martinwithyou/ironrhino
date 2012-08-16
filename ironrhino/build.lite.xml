@@ -153,7 +153,7 @@
 				var jarname = f.getName();
 				var contains = false;
 				for(var j=0;j<jarnames.length;j++){
-					if(jarnames[j]==jarname){
+					if(jarnames[j].equals(jarname)){
 						contains = true;
 						break;
 					}
