@@ -79,7 +79,7 @@ select.combox{
 	cursor: text;
 }
 input.integer,input.double,input.date,#_window_ input.integer,#_window_ input.double,#_window_ input.date {
-	width: 75px;
+	width: 80px;
 	font-family: Arial;
 }
 

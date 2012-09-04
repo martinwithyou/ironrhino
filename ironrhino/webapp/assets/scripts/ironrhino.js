@@ -35100,7 +35100,7 @@ Richtable = {
 								v.value = '';
 							}
 						});
-				var param = $.param(params).replace(/(&=)|(=&)/g, '');
+				var param = $.param(params).replace(/(&=)/g, '');
 				if (param)
 					url += (url.indexOf('?') > 0 ? '&' : '?') + param;
 			}
