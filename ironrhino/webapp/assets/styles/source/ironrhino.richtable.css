@@ -63,12 +63,13 @@ table.richtable thead td {
 	background-color: #fff3f0;
 }
 .richtable .inputPage {
-	margin-left:4px;
 	width: 25px;
+	height: 18px;
 	text-align:right;
 }
 .richtable .totalPage {
 	min-width: 25px;
+	height: 18px;
 	text-align:left;
 }
 .richtable .pageSize {
@@ -77,14 +78,13 @@ table.richtable thead td {
     -moz-border-radius: 3px;
     border-radius: 3px;
 	width: 60px;
+	height: 28px;
 }
 
 .richtable .toolbar .pagination,.richtable .toolbar .action,.richtable .toolbar .search,.richtable .toolbar .status{
 	margin-top:18px;
 }
-.richtable .toolbar .inputPage,.richtable .toolbar .totalPage{
-	margin-bottom:9px;
-}
+
 .richtable .toolbar .action{
 	text-align:center;
 }
@@ -127,6 +127,23 @@ td.radio input[type="radio"], td.checkbox input[type="checkbox"]{
   -webkit-border-radius: 0 3px 3px 0;
      -moz-border-radius: 0 3px 3px 0;
           border-radius: 0 3px 3px 0;
+}
+.richtable .pagination span.input-append {
+  padding: 0 4px;
+  line-height: 20px;
+  background-color: transparent;
+  border: 0;
+  margin-bottom: 4px;
+}
+.richtable .pagination span.add-on {
+  float: none;
+}
+.richtable .pagination span.divider {
+  float: none;
+  padding: 0;
+  line-height: 20px;
+  background-color: transparent;
+  border: 0;
 }
 /*override bootstrap end*/
 
