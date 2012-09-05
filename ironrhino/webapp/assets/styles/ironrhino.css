@@ -6805,6 +6805,7 @@ div.text-core{
 .sortcol div.sort{
 	cursor: pointer;
 	position: relative;
+	margin-left:2px;
 }
 .sortcol span.sort{
 	position:absolute;
@@ -6829,10 +6830,11 @@ table .resizeTitle {
 	float: left;
 	width: 95%;
 	text-align: center;
+	line-height:200%;
 }
 table .resizeBar {
 	padding: 0px;
-	margin: 0px;
+	margin-right: 2px;
 	float: right;
 	cursor: col-resize;
 	width: 1px;
@@ -6842,9 +6844,9 @@ table .resizeBar {
 	display: inline;
 }
 table.richtable thead {
-	background: #d5d5d5;
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d5d5d5), to(#d5d5d5), color-stop(.5,#b0b0b0));
-	background: -moz-linear-gradient(center top , #d5d5d5, #b0b0b0, #d5d5d5);
+	background: #DEDEDE;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#EFEFEF), color-stop(.5,#DEDEDE));
+	background: -moz-linear-gradient(center top , #EFEFEF, #DEDEDE, #EFEFEF);
 }
 table.richtable {
 	width: 100%;
@@ -6888,9 +6890,6 @@ table.richtable thead td {
 	height: 24px;
 	text-align: center;
 	overflow: visible;
-}
-.richtable .resizeTitle{
-	line-height:200%;
 }
 .richtable tbody tr:nth-child(even) td {
   background-color: #f3f4f3;

@@ -1,6 +1,7 @@
 .sortcol div.sort{
 	cursor: pointer;
 	position: relative;
+	margin-left:2px;
 }
 .sortcol span.sort{
 	position:absolute;
