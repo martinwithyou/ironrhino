@@ -114,6 +114,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeview.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.treeTable.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.textext.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.clickmenu.css" />
 				<file name="${webapp.dir}/assets/styles/source/bootstrap.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
@@ -134,6 +135,7 @@
 			encoding="utf-8" fixlastline="yes">
 			<filelist>
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.textext.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 			</filelist>
 		</concat>
