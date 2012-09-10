@@ -38,7 +38,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/log4j-1.2.17.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-2.4.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mmseg4j-all-1.8.2.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.0.19.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mvel2-2.1.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mysql-connector-java-5.1.21.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ognl-3.0.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/pinyin4j-2.5.0.jar"/>
@@ -84,8 +84,8 @@
 	<classpathentry kind="lib" path="lib/yuicompressor.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/postgresql-9.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-annotations-2.0.5.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-2.0.5.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-databind-2.0.5.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-annotations-2.0.6.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-2.0.6.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-databind-2.0.6.jar"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>
