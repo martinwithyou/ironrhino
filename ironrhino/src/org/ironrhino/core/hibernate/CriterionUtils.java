@@ -2,8 +2,8 @@ package org.ironrhino.core.hibernate;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.compass.core.util.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
