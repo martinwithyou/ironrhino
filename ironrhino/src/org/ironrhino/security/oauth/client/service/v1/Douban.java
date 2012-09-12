@@ -1,9 +1,10 @@
 package org.ironrhino.security.oauth.client.service.v1;
 
+import java.io.StringReader;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.compass.core.util.reader.StringReader;
 import org.ironrhino.core.util.XmlUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth1Provider;
