@@ -1,9 +1,9 @@
 package org.ironrhino.core.model;
 
 import org.apache.commons.lang3.StringUtils;
-import org.compass.annotations.Index;
-import org.compass.annotations.SearchableId;
 import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.search.elasticsearch.annotations.Index;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 
 public class BaseEntity extends Entity<String> {
 

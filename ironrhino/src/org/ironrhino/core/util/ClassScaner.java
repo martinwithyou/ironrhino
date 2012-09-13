@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -24,6 +26,8 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.SystemPropertyUtils;
 
 public class ClassScaner {
+
+	private static Logger logger = LoggerFactory.getLogger(ClassScaner.class);
 
 	private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
@@ -210,6 +214,7 @@ public class ClassScaner {
 					packages.add(name.substring(0, index));
 			}
 		}
+		logger.info("appPackages: {}", packages);
 		return packages.toArray(new String[0]);
 	}
 
@@ -229,14 +234,14 @@ public class ClassScaner {
 
 	private static String[] excludePackages = new String[] { "java", "javax",
 			"com.sun", "sun", "org.w3c", "org.xml", "antlr", "com.bea",
-			"com.caucho", "com.chenlb", "com.fasterxml", "com.google",
-			"com.ibm", "com.jolbox","com.microsoft", "com.mongodb", "com.mysql",
+			"com.caucho", "com.fasterxml", "com.google", "com.ibm",
+			"com.jolbox", "com.microsoft", "com.mongodb", "com.mysql",
 			"com.opensymphony", "com.oracle", "freemarker", "javassist",
-			"jsr166y", "net.sf", "net.sourceforge", "ognl","oracle", "org.antlr",
-			"org.aopalliance", "org.apache", "org.aspectj", "org.bson",
-			"org.codehaus", "org.compass", "org.dom4j", "org.eclipse",
-			"org.hibernate", "org.ietf", "org.jcp", "org.mvel2",
-			"org.postgresql", "org.slf4j", "org.springframework",
-			"org.ironrhino.core", "weblogic" };
+			"jsr166y", "net.sf", "net.sourceforge", "ognl", "oracle",
+			"org.antlr", "org.aopalliance", "org.apache", "org.aspectj",
+			"org.bson", "org.codehaus", "org.elasticsearch", "org.dom4j",
+			"org.eclipse", "org.hibernate", "org.ietf", "org.jboss", "org.jcp",
+			"org.mvel2", "org.postgresql", "org.slf4j", "org.springframework",
+			"org.tartarus", "org.ironrhino.core", "weblogic" };
 
 }

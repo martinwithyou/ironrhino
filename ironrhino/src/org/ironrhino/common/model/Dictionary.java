@@ -8,9 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.compass.annotations.Searchable;
-import org.compass.annotations.SearchableComponent;
-import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -20,6 +17,9 @@ import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.model.Validatable;
+import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableComponent;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.struts.ValidationException;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.model.UserRole;
@@ -28,7 +28,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 @PublishAware
 @AutoConfig(searchable = true, order = "name asc")
-@Searchable(alias = "dictionary")
+@Searchable(type = "dictionary")
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 public class Dictionary extends BaseEntity implements Validatable {
 

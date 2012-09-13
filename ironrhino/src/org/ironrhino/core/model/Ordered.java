@@ -1,7 +1,7 @@
 package org.ironrhino.core.model;
 
-import org.compass.annotations.Index;
-import org.compass.annotations.SearchableProperty;
+import org.ironrhino.core.search.elasticsearch.annotations.Index;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 
 @SuppressWarnings("rawtypes")
 public interface Ordered extends Comparable {

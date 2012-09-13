@@ -21,8 +21,6 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.compass.annotations.SearchableId;
-import org.compass.annotations.SearchableProperty;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -38,8 +36,10 @@ import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.SearchService.Mapper;
-import org.ironrhino.core.search.compass.CompassSearchCriteria;
-import org.ironrhino.core.search.compass.CompassSearchService;
+import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
+import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.AnnotationUtils;
@@ -80,7 +80,7 @@ public class EntityAction extends BaseAction {
 	private Map<String, List> lists;
 
 	@Autowired(required = false)
-	private transient CompassSearchService<Persistable<?>> compassSearchService;
+	private transient ElasticSearchService<Persistable<?>> elasticSearchService;
 
 	public Map<String, List> getLists() {
 		return lists;
@@ -188,7 +188,7 @@ public class EntityAction extends BaseAction {
 		AutoConfig ac = getAutoConfig();
 		boolean searchable = isSearchable();
 		if (!searchable || StringUtils.isBlank(keyword)
-				|| (searchable && compassSearchService == null)) {
+				|| (searchable && elasticSearchService == null)) {
 			DetachedCriteria dc = entityManager.detachedCriteria();
 			try {
 				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
@@ -254,15 +254,15 @@ public class EntityAction extends BaseAction {
 			resultPage = entityManager.findByResultPage(resultPage);
 		} else {
 			String query = keyword.trim();
-			CompassSearchCriteria criteria = new CompassSearchCriteria();
+			ElasticSearchCriteria criteria = new ElasticSearchCriteria();
 			criteria.setQuery(query);
-			criteria.setAliases(new String[] { getEntityName() });
+			criteria.setTypes(new String[] { getEntityName() });
 			if (Ordered.class.isAssignableFrom(getEntityClass()))
 				criteria.addSort("displayOrder", false);
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(criteria);
-			resultPage = compassSearchService.search(resultPage,
+			resultPage = elasticSearchService.search(resultPage,
 					new Mapper<Persistable<?>>() {
 						public Persistable map(Persistable source) {
 							return entityManager.get(source.getId());

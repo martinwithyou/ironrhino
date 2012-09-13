@@ -22,8 +22,8 @@ import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.search.compass.CompassSearchCriteria;
-import org.ironrhino.core.search.compass.CompassSearchService;
+import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
+import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.struts.TemplateProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class PageAction extends BaseAction {
 	private String cmsPath = "/p/";
 
 	@Autowired(required = false)
-	private transient CompassSearchService<Page> compassSearchService;
+	private transient ElasticSearchService<Page> elasticSearchService;
 
 	@Autowired
 	private transient TemplateProvider templateProvider;
@@ -86,7 +86,7 @@ public class PageAction extends BaseAction {
 
 	@Override
 	public String list() {
-		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
+		if (StringUtils.isBlank(keyword) || elasticSearchService == null) {
 			DetachedCriteria dc = pageManager.detachedCriteria();
 			Criterion filtering = CriterionUtils.filter(page, "id", "path",
 					"title");
@@ -103,15 +103,15 @@ public class PageAction extends BaseAction {
 			resultPage = pageManager.findByResultPage(resultPage);
 		} else {
 			String query = keyword.trim();
-			CompassSearchCriteria criteria = new CompassSearchCriteria();
+			ElasticSearchCriteria criteria = new ElasticSearchCriteria();
 			criteria.setQuery(query);
-			criteria.setAliases(new String[] { "page" });
+			criteria.setTypes(new String[] { "page" });
 			criteria.addSort("displayOrder", false);
 			criteria.addSort("path", false);
 			if (resultPage == null)
 				resultPage = new ResultPage<Page>();
 			resultPage.setCriteria(criteria);
-			resultPage = compassSearchService.search(resultPage);
+			resultPage = elasticSearchService.search(resultPage);
 		}
 		return LIST;
 	}

@@ -9,15 +9,15 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.compass.annotations.Index;
-import org.compass.annotations.Searchable;
-import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
+import org.ironrhino.core.search.elasticsearch.annotations.Index;
+import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,7 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 @AutoConfig
-@Searchable(alias = "user")
+@Searchable(type = "user")
 public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	private static final long serialVersionUID = -6135434863820342822L;

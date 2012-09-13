@@ -16,8 +16,8 @@ import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.search.SearchService.Mapper;
-import org.ironrhino.core.search.compass.CompassSearchCriteria;
-import org.ironrhino.core.search.compass.CompassSearchService;
+import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
+import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.ClassScaner;
@@ -51,7 +51,7 @@ public class RegionAction extends BaseAction {
 	private boolean async;
 
 	@Autowired(required = false)
-	private transient CompassSearchService<Region> compassSearchService;
+	private transient ElasticSearchService<Region> elasticSearchService;
 
 	public boolean isAsync() {
 		return async;
@@ -104,7 +104,7 @@ public class RegionAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		if (StringUtils.isBlank(keyword) || compassSearchService == null) {
+		if (StringUtils.isBlank(keyword) || elasticSearchService == null) {
 			if (parentId != null && parentId > 0) {
 				region = entityManager.get(parentId);
 			} else {
@@ -121,11 +121,11 @@ public class RegionAction extends BaseAction {
 			list = region.getChildren();
 		} else {
 			String query = keyword.trim();
-			CompassSearchCriteria criteria = new CompassSearchCriteria();
+			ElasticSearchCriteria criteria = new ElasticSearchCriteria();
 			criteria.setQuery(query);
-			criteria.setAliases(new String[] { "region" });
+			criteria.setTypes(new String[] { "region" });
 			criteria.addSort("displayOrder", false);
-			list = compassSearchService.search(criteria, new Mapper<Region>() {
+			list = elasticSearchService.search(criteria, new Mapper<Region>() {
 				@Override
 				public Region map(Region source) {
 					return entityManager.get(source.getId());

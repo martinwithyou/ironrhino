@@ -1,44 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="compass" class="org.ironrhino.core.search.compass.LocalCompassBean">
-		<property name="compassConfiguration">
-			<bean
-				class="org.compass.annotations.config.CompassAnnotationsConfiguration" />
-		</property>
-		<property name="compassSettings">
-			<props>
-				<prop key="compass.engine.connection">
-				#{'${compass.engine.connection:}'?:'file://'+systemProperties['ironrhino.home']+'/search'}
-				</prop>
-				<prop key="compass.transaction.factory">
-					org.compass.spring.transaction.SpringSyncTransactionFactory
-				</prop>
-				<prop key="compass.engine.analyzer.default.type">
-					com.chenlb.mmseg4j.analysis.MaxWordAnalyzer
-				</prop>
-			</props>
-		</property>
-		<property name="transactionManager" ref="transactionManager" />
-	</bean>
-	<bean id="hibernateGpsDevice" class="org.compass.gps.device.hibernate.HibernateGpsDevice">
-		<property name="name" value="hibernateDevice" />
-		<property name="sessionFactory" ref="sessionFactory" />
-		<property name="nativeExtractor">
-			<bean
-				class="org.compass.spring.device.hibernate.SpringNativeHibernateExtractor" />
-		</property>
-	</bean>
-	<bean id="compassGps" class="org.compass.gps.impl.SingleCompassGps"
-		init-method="start" destroy-method="stop">
-		<property name="compass" ref="compass" />
-		<property name="gpsDevices">
-			<list>
-				<ref bean="hibernateGpsDevice" />
-			</list>
-		</property>
-	</bean>
-	<bean id="compassSearchService" class="org.ironrhino.core.search.compass.CompassSearchService"/>
-	<bean id="searchStat" class="org.ironrhino.core.search.SearchStat"/>
+	<bean id="elasticSearchClient"
+		class="org.ironrhino.core.search.elasticsearch.ElasticSearchClientFactoryBean"
+		p:connectString="${elasticSearchClient.connectString:}" />
+	<bean id="elasticSearchService"
+		class="org.ironrhino.core.search.elasticsearch.ElasticSearchService" />
+	<bean id="indexManager"
+		class="org.ironrhino.core.search.elasticsearch.IndexManagerImpl" />
+	<bean id="indexAspect" class="org.ironrhino.core.search.elasticsearch.IndexAspect" />
 </beans>

@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.compass.annotations.SearchableId;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class BaseTreeableEntity<T extends BaseTreeableEntity> extends

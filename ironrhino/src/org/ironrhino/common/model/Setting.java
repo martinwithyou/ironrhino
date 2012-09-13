@@ -2,8 +2,6 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
-import org.compass.annotations.Searchable;
-import org.compass.annotations.SearchableProperty;
 import org.ironrhino.common.record.RecordAware;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -12,12 +10,14 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
+import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @RecordAware
 @PublishAware
 @AutoConfig(searchable = true, order = "key asc")
-@Searchable(alias = "setting")
+@Searchable(type = "setting")
 public class Setting extends BaseEntity implements Recordable<UserDetails> {
 
 	private static final long serialVersionUID = -8352037603261222984L;

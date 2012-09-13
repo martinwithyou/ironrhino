@@ -6,9 +6,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.compass.annotations.Index;
-import org.compass.annotations.Searchable;
-import org.compass.annotations.SearchableProperty;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -16,16 +13,19 @@ import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Recordable;
+import org.ironrhino.core.search.elasticsearch.annotations.Index;
+import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Searchable(alias = "page")
+@Searchable(type = "page")
 @AutoConfig(searchable = true)
 public class Page extends BaseEntity implements Recordable<UserDetails>, Ordered {
 
 	private static final long serialVersionUID = 4688382703803043164L;
 
 	@NaturalId(mutable = true, caseInsensitive = true)
-	@SearchableProperty(index = Index.UN_TOKENIZED)
+	@SearchableProperty(index = Index.NOT_ANALYZED)
 	private String path;
 
 	@SearchableProperty
@@ -38,6 +38,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>, Ordered
 	@SearchableProperty
 	private String content;
 
+	@SearchableProperty
 	private int displayOrder;
 
 	@NotInJson
@@ -46,11 +47,11 @@ public class Page extends BaseEntity implements Recordable<UserDetails>, Ordered
 	private Date draftDate;
 
 	@NotInCopy
-	@SearchableProperty
+	@SearchableProperty(converter = "date", format = "yyyy-MM-dd HH:mm:ss")
 	private Date createDate;
 
 	@NotInCopy
-	@SearchableProperty
+	@SearchableProperty(converter = "date", format = "yyyy-MM-dd HH:mm:ss")
 	private Date modifyDate;
 
 	@NotInCopy

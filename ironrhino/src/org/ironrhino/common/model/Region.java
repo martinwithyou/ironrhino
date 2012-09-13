@@ -1,17 +1,17 @@
 package org.ironrhino.common.model;
 
-import org.compass.annotations.Searchable;
-import org.compass.annotations.SearchableProperty;
 import org.ironrhino.common.util.RegionUtils;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseTreeableEntity;
+import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.util.StringUtils;
 
 @PublishAware
 @AutoConfig
-@Searchable(alias = "region")
+@Searchable(type = "region")
 public class Region extends BaseTreeableEntity<Region> {
 
 	private static final long serialVersionUID = 8878381261391688086L;

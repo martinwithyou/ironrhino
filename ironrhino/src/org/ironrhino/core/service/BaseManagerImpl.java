@@ -11,17 +11,16 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
+import org.hibernate.NaturalIdLoadAccess;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.NaturalIdentifier;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.impl.CriteriaImpl;
-import org.hibernate.impl.CriteriaImpl.OrderEntry;
+import org.hibernate.internal.CriteriaImpl;
+import org.hibernate.internal.CriteriaImpl.OrderEntry;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Ordered;
@@ -37,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -303,30 +301,24 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			objects = arr;
 		}
 		if (objects.length == 1) {
-			Criteria c = sessionFactory.getCurrentSession().createCriteria(
-					getEntityClass());
-			NaturalIdentifier ni = Restrictions.naturalId();
 			Set<String> naturalIds = AnnotationUtils.getAnnotatedPropertyNames(
 					getEntityClass(), NaturalId.class);
 			if (naturalIds.size() != 1)
 				throw new IllegalArgumentException(
 						"@NaturalId must and only be one");
-			ni.set(naturalIds.iterator().next(), objects[0]);
-			c.add(ni);
-			c.setMaxResults(1);
-			return (T) c.uniqueResult();
+			return (T) sessionFactory.getCurrentSession()
+					.byNaturalId(getEntityClass())
+					.using(naturalIds.iterator().next(), objects[0]).load();
 		}
 		if (objects.length == 0 || objects.length % 2 != 0)
 			throw new IllegalArgumentException("parameter size must be even");
-		Criteria c = sessionFactory.getCurrentSession().createCriteria(
-				getEntityClass());
-		NaturalIdentifier ni = Restrictions.naturalId();
+		NaturalIdLoadAccess naturalIdLoadAccess = sessionFactory
+				.getCurrentSession().byNaturalId(getEntityClass());
 		int doubles = objects.length / 2;
 		for (int i = 0; i < doubles; i++)
-			ni.set(String.valueOf(objects[2 * i]), objects[2 * i + 1]);
-		c.add(ni);
-		c.setMaxResults(1);
-		return (T) c.uniqueResult();
+			naturalIdLoadAccess.using(String.valueOf(objects[2 * i]),
+					objects[2 * i + 1]);
+		return (T) naturalIdLoadAccess.load();
 	}
 
 	@Transactional(readOnly = true)
@@ -342,25 +334,25 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				throw new IllegalArgumentException(
 						"@NaturalId must and only be one");
 			hql += "lower(entity." + naturalIds.iterator().next()
-					+ ")=lower(?)";
+					+ ")=lower(?1)";
 			Query query = sessionFactory.getCurrentSession().createQuery(hql);
-			query.setParameter(0, objects[0]);
+			query.setParameter("1", objects[0]);
 			query.setMaxResults(1);
 			return (T) query.uniqueResult();
 		}
 		int doubles = objects.length / 2;
 		if (doubles == 1) {
-			hql += "lower(entity." + String.valueOf(objects[0]) + ")=lower(?)";
+			hql += "lower(entity." + String.valueOf(objects[0]) + ")=lower(?1)";
 		} else {
 			List<String> list = new ArrayList<String>(doubles);
 			for (int i = 0; i < doubles; i++)
 				list.add("lower(entity." + String.valueOf(objects[2 * i])
-						+ ")=lower(?)");
+						+ ")=lower(?+" + (i + 1) + "+)");
 			hql += StringUtils.join(list, " and ");
 		}
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		for (int i = 0; i < doubles; i++)
-			query.setParameter(i, objects[2 * i + 1]);
+			query.setParameter(String.valueOf(i + 1), objects[2 * i + 1]);
 		query.setMaxResults(1);
 		return (T) query.uniqueResult();
 	}
@@ -439,8 +431,6 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	public int executeUpdate(String queryString, Object... values) {
 		Query queryObject = sessionFactory.getCurrentSession().createQuery(
 				queryString);
-		SessionFactoryUtils
-				.applyTransactionTimeout(queryObject, sessionFactory);
 		if (values != null) {
 			for (int i = 0; i < values.length; i++) {
 				queryObject.setParameter(i, values[i]);

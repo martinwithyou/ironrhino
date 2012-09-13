@@ -3,8 +3,8 @@ package org.ironrhino.core.model;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
-import org.compass.annotations.Searchable;
-import org.compass.annotations.SearchableProperty;
+import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 
 @Searchable(root = false)
 public class Attribute implements Serializable {

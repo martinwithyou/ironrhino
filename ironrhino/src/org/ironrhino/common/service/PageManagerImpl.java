@@ -20,8 +20,8 @@ import org.ironrhino.common.model.Page;
 import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.cache.FlushCache;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.search.compass.CompassSearchCriteria;
-import org.ironrhino.core.search.compass.CompassSearchService;
+import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
+import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		PageManager {
 
 	@Autowired(required = false)
-	private transient CompassSearchService<Page> compassSearchService;
+	private transient ElasticSearchService<Page> elasticSearchService;
 
 	@Override
 	@Transactional
@@ -124,7 +124,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		if (tag.length == 0 || StringUtils.isBlank(tag[0]))
 			return Collections.EMPTY_LIST;
 		List<Page> list;
-		if (compassSearchService != null) {
+		if (elasticSearchService != null) {
 			String query = null;
 			if (tag.length == 1) {
 				query = "tags:" + tag[0];
@@ -135,10 +135,10 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 					sb.append(" AND ").append("tags:").append(tag[i]);
 				query = sb.toString();
 			}
-			CompassSearchCriteria criteria = new CompassSearchCriteria();
+			ElasticSearchCriteria criteria = new ElasticSearchCriteria();
 			criteria.setQuery(query);
-			criteria.setAliases(new String[] { "page" });
-			list = compassSearchService.search(criteria);
+			criteria.setTypes(new String[] { "page" });
+			list = elasticSearchService.search(criteria);
 		} else {
 			DetachedCriteria dc = detachedCriteria();
 			for (int i = 0; i < tag.length; i++) {
@@ -179,19 +179,19 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 				sb.append(" AND ").append("tags:").append(tag[i]);
 			query = sb.toString();
 		}
-		CompassSearchCriteria criteria = (CompassSearchCriteria) resultPage
+		ElasticSearchCriteria criteria = (ElasticSearchCriteria) resultPage
 				.getCriteria();
 		if (criteria == null) {
-			criteria = new CompassSearchCriteria();
+			criteria = new ElasticSearchCriteria();
 			resultPage.setCriteria(criteria);
 		}
 		criteria.setQuery(query);
-		criteria.setAliases(new String[] { "page" });
+		criteria.setTypes(new String[] { "page" });
 		if (criteria.getSorts().size() == 0)
 			criteria.addSort("displayOrder", false);
 
-		if (compassSearchService != null) {
-			resultPage = compassSearchService.search(resultPage);
+		if (elasticSearchService != null) {
+			resultPage = elasticSearchService.search(resultPage);
 		} else {
 			DetachedCriteria dc = detachedCriteria();
 			for (int i = 0; i < tag.length; i++) {
@@ -217,12 +217,12 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 
 	public Map<String, Integer> findMatchedTags(String keyword) {
 		final Map<String, Integer> map = new HashMap<String, Integer>();
-		if (compassSearchService != null) {
-			CompassSearchCriteria cc = new CompassSearchCriteria();
+		if (elasticSearchService != null) {
+			ElasticSearchCriteria cc = new ElasticSearchCriteria();
 			cc.setQuery(new StringBuilder("tags:").append("*").append(keyword)
 					.append("*").toString());
-			cc.setAliases(new String[] { "page" });
-			List<Page> list = compassSearchService.search(cc);
+			cc.setTypes(new String[] { "page" });
+			List<Page> list = elasticSearchService.search(cc);
 			for (Page p : list) {
 				for (String tag : p.getTags()) {
 					if (!tag.contains(keyword))

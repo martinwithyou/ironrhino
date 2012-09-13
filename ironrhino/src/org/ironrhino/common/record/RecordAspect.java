@@ -2,28 +2,32 @@ package org.ironrhino.common.record;
 
 import java.util.Date;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.hibernate.SessionFactory;
 import org.ironrhino.core.aop.AopContext;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.util.AuthzUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Aspect
 @Singleton
 @Named
-public class RecordAspect extends HibernateDaoSupport implements Ordered {
+public class RecordAspect implements Ordered {
 	private Logger log = LoggerFactory.getLogger(getClass());
+
+	@Inject
+	private SessionFactory sessionFactory;
 
 	public RecordAspect() {
 		order = 1;
@@ -61,12 +65,11 @@ public class RecordAspect extends HibernateDaoSupport implements Ordered {
 			}
 
 			record.setEntityId(String.valueOf(entity.getId()));
-
 			record.setEntityClass(entity.getClass().getName());
 			record.setEntityToString(entity.toString());
 			record.setAction(action.name());
 			record.setRecordDate(new Date());
-			getHibernateTemplate().save(record);
+			sessionFactory.getCurrentSession().save(record);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
