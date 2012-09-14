@@ -24,14 +24,18 @@ public class JsonUtils {
 
 	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static String[] ACCEPT_DATE_FORMATS = { DEFAULT_DATE_FORMAT,
-			"yyyy/MM/dd", "yyyy-MM-dd" };
+			"yyyy-MM-dd'T'HH:mm:ss", "yyyy/MM/dd", "yyyy-MM-dd" };
 
 	private static Logger log = LoggerFactory.getLogger(JsonUtils.class);
 
-	private static ObjectMapper objectMapper;
+	private static ObjectMapper objectMapper = createNewObjectMapper();
 
-	static {
-		objectMapper = new ObjectMapper();
+	public static ObjectMapper getObjectMapper() {
+		return objectMapper;
+	}
+
+	public static ObjectMapper createNewObjectMapper() {
+		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setDateFormat(new SimpleDateFormat(DEFAULT_DATE_FORMAT));
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		objectMapper
@@ -53,9 +57,6 @@ public class JsonUtils {
 				});
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-	}
-
-	public static ObjectMapper getObjectMapper() {
 		return objectMapper;
 	}
 
@@ -70,7 +71,8 @@ public class JsonUtils {
 
 	public static boolean isValidJson(String content) {
 		try {
-			JsonUtils.getObjectMapper().readValue(content, JsonNode.class);
+			JsonUtils.createNewObjectMapper()
+					.readValue(content, JsonNode.class);
 			return true;
 		} catch (Exception e) {
 			return false;

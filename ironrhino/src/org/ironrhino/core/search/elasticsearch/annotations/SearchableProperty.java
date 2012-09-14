@@ -9,15 +9,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SearchableProperty {
 
-	Class<?> type() default Object.class;
+	String type() default "";
 
-	boolean override() default true;
-
-	String propertyConverter() default "";
-
-	String accessor() default "";
-
-	String name() default "";
+	String index_name() default "";
 
 	float boost() default 1.0f;
 
@@ -27,12 +21,22 @@ public @interface SearchableProperty {
 
 	String analyzer() default "";
 
-	ExcludeFromAll excludeFromAll() default ExcludeFromAll.NO;
+	String index_analyzer() default "";
 
-	String converter() default "";
+	String search_analyzer() default "";
 
 	String format() default "";
 
-	String nullValue() default "";
+	boolean include_in_all() default true;
+
+	String null_value() default "";
+
+	TermVector term_vector() default TermVector.NA;
+
+	boolean omit_norms() default false;
+
+	boolean omit_term_freq_and_positions() default false;
+
+	boolean ignore_malformed() default false;
 
 }

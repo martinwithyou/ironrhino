@@ -6,7 +6,6 @@ public enum Store {
 
 	NO,
 
-	YES,
+	YES
 
-	COMPRESS
 }

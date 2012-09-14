@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,13 +28,11 @@ import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.search.SearchHit;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.metadata.ClassMetadata;
 import org.ironrhino.core.model.Persistable;
-import org.ironrhino.core.search.elasticsearch.annotations.ExcludeFromAll;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableComponent;
@@ -46,6 +45,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
 public class IndexManagerImpl implements IndexManager {
@@ -65,12 +66,16 @@ public class IndexManagerImpl implements IndexManager {
 	@Inject
 	private SessionFactory sessionFactory;
 
+	private ObjectMapper objectMapper;
+
 	public String getIndexName() {
 		return indexName;
 	}
 
 	@PostConstruct
 	public void init() {
+		objectMapper = JsonUtils.createNewObjectMapper();
+		objectMapper.setDateFormat(new SimpleDateFormat(DEFAULT_DATE_FORMAT));
 		Set<Class<?>> set = ClassScaner.scanAnnotated(
 				ClassScaner.getAppPackages(), Searchable.class);
 		typeClassMapping = new HashMap<String, Class>(set.size());
@@ -144,7 +149,8 @@ public class IndexManagerImpl implements IndexManager {
 			} catch (Exception e) {
 			}
 			if (searchableId != null) {
-				properties.put(name, new PropertyMapping(searchableId));
+				properties.put(name, new PropertyMapping(componentType,
+						searchableId));
 			} else if (searchableProperty != null) {
 				properties.put(name, new PropertyMapping(componentType,
 						searchableProperty));
@@ -157,55 +163,39 @@ public class IndexManagerImpl implements IndexManager {
 
 	public static class PropertyMapping {
 		private String type = "string";
+		private String index_name;
 		private String format;
 		private Float boost;
 		private String index;
 		private String store;
 		private String analyzer;
+		private String index_analyzer;
+		private String search_analyzer;
 		private Boolean include_in_all;
+		private String null_value;
+		private String term_vector;
+		private Boolean omit_norms;
+		private Boolean omit_term_freq_and_positions;
+		private Boolean ignore_malformed;
 
 		public PropertyMapping() {
 
 		}
 
-		public PropertyMapping(SearchableId searchableId) {
-			if (StringUtils.isNotBlank(searchableId.converter()))
-				this.type = searchableId.converter();
-			if (StringUtils.isNotBlank(searchableId.format()))
-				this.format = searchableId.format();
-			if (StringUtils.isBlank(this.type))
-				this.type = "string";
-			type = translateType(type);
-			if (searchableId.boost() != 1.0f)
-				this.boost = searchableId.boost();
-			Index index = searchableId.index();
-			if (index == Index.NO || index == Index.ANALYZED
-					|| index == Index.NOT_ANALYZED)
-				this.index = index.name().toLowerCase();
-			Store store = searchableId.store();
-			if (store != Store.NA)
-				this.store = store.name().toLowerCase();
-			if (StringUtils.isNotBlank(searchableId.analyzer()))
-				this.analyzer = searchableId.analyzer();
-			ExcludeFromAll excludeFromAll = searchableId.excludeFromAll();
-			if (excludeFromAll != ExcludeFromAll.NO)
-				include_in_all = excludeFromAll == ExcludeFromAll.NO;
-		}
-
 		public PropertyMapping(Class propertyClass,
-				SearchableProperty searchableProperty) {
-			Class ctype = searchableProperty.type();
-			if (ctype == Object.class)
-				ctype = propertyClass;
-			if (ctype.isPrimitive())
-				this.type = ctype.toString();
-			else if (ctype.isEnum())
-				this.type = "string";
-			else
-				this.type = ctype.getSimpleName().toLowerCase();
-			if (StringUtils.isNotBlank(searchableProperty.converter()))
-				this.type = searchableProperty.converter();
-			type = translateType(type);
+				SearchableId searchableProperty) {
+			this.type = searchableProperty.type();
+			if (StringUtils.isBlank(type)) {
+				if (propertyClass.isPrimitive())
+					this.type = propertyClass.toString();
+				else if (propertyClass.isEnum())
+					this.type = "string";
+				else
+					this.type = propertyClass.getSimpleName().toLowerCase();
+			}
+			this.type = translateType(this.type);
+			if (StringUtils.isNotBlank(searchableProperty.index_name()))
+				this.index_name = searchableProperty.index_name();
 			if (StringUtils.isNotBlank(searchableProperty.format()))
 				this.format = searchableProperty.format();
 			if (searchableProperty.boost() != 1.0f)
@@ -219,9 +209,65 @@ public class IndexManagerImpl implements IndexManager {
 				this.store = store.name().toLowerCase();
 			if (StringUtils.isNotBlank(searchableProperty.analyzer()))
 				this.analyzer = searchableProperty.analyzer();
-			ExcludeFromAll excludeFromAll = searchableProperty.excludeFromAll();
-			if (excludeFromAll != ExcludeFromAll.NO)
-				include_in_all = excludeFromAll == ExcludeFromAll.NO;
+			if (StringUtils.isNotBlank(searchableProperty.index_analyzer()))
+				this.index_analyzer = searchableProperty.index_analyzer();
+			if (StringUtils.isNotBlank(searchableProperty.search_analyzer()))
+				this.search_analyzer = searchableProperty.search_analyzer();
+			if (!searchableProperty.include_in_all())
+				this.include_in_all = false;
+			if (StringUtils.isNotBlank(searchableProperty.null_value()))
+				this.null_value = searchableProperty.null_value();
+			if (searchableProperty.omit_norms())
+				this.omit_norms = searchableProperty.omit_norms();
+			if (searchableProperty.omit_term_freq_and_positions())
+				this.omit_term_freq_and_positions = searchableProperty
+						.omit_term_freq_and_positions();
+			if ("date".equals(this.type) || StringUtils.isNotBlank(this.format))
+				this.ignore_malformed = searchableProperty.ignore_malformed();
+		}
+
+		public PropertyMapping(Class propertyClass,
+				SearchableProperty searchableProperty) {
+			this.type = searchableProperty.type();
+			if (StringUtils.isBlank(type)) {
+				if (propertyClass.isPrimitive())
+					this.type = propertyClass.toString();
+				else if (propertyClass.isEnum())
+					this.type = "string";
+				else
+					this.type = propertyClass.getSimpleName().toLowerCase();
+			}
+			this.type = translateType(this.type);
+			if (StringUtils.isNotBlank(searchableProperty.index_name()))
+				this.index_name = searchableProperty.index_name();
+			if (StringUtils.isNotBlank(searchableProperty.format()))
+				this.format = searchableProperty.format();
+			if (searchableProperty.boost() != 1.0f)
+				this.boost = searchableProperty.boost();
+			Index index = searchableProperty.index();
+			if (index == Index.NO || index == Index.ANALYZED
+					|| index == Index.NOT_ANALYZED)
+				this.index = index.name().toLowerCase();
+			Store store = searchableProperty.store();
+			if (store != Store.NA)
+				this.store = store.name().toLowerCase();
+			if (StringUtils.isNotBlank(searchableProperty.analyzer()))
+				this.analyzer = searchableProperty.analyzer();
+			if (StringUtils.isNotBlank(searchableProperty.index_analyzer()))
+				this.index_analyzer = searchableProperty.index_analyzer();
+			if (StringUtils.isNotBlank(searchableProperty.search_analyzer()))
+				this.search_analyzer = searchableProperty.search_analyzer();
+			if (!searchableProperty.include_in_all())
+				this.include_in_all = false;
+			if (StringUtils.isNotBlank(searchableProperty.null_value()))
+				this.null_value = searchableProperty.null_value();
+			if (searchableProperty.omit_norms())
+				this.omit_norms = searchableProperty.omit_norms();
+			if (searchableProperty.omit_term_freq_and_positions())
+				this.omit_term_freq_and_positions = searchableProperty
+						.omit_term_freq_and_positions();
+			if ("date".equals(this.type) || StringUtils.isNotBlank(this.format))
+				this.ignore_malformed = searchableProperty.ignore_malformed();
 		}
 
 		private static String translateType(String input) {
@@ -288,6 +334,71 @@ public class IndexManagerImpl implements IndexManager {
 			this.include_in_all = include_in_all;
 		}
 
+		public String getIndex_name() {
+			return index_name;
+		}
+
+		public void setIndex_name(String index_name) {
+			this.index_name = index_name;
+		}
+
+		public String getIndex_analyzer() {
+			return index_analyzer;
+		}
+
+		public void setIndex_analyzer(String index_analyzer) {
+			this.index_analyzer = index_analyzer;
+		}
+
+		public String getSearch_analyzer() {
+			return search_analyzer;
+		}
+
+		public void setSearch_analyzer(String search_analyzer) {
+			this.search_analyzer = search_analyzer;
+		}
+
+		public String getNull_value() {
+			return null_value;
+		}
+
+		public void setNull_value(String null_value) {
+			this.null_value = null_value;
+		}
+
+		public String getTerm_vector() {
+			return term_vector;
+		}
+
+		public void setTerm_vector(String term_vector) {
+			this.term_vector = term_vector;
+		}
+
+		public Boolean getOmit_norms() {
+			return omit_norms;
+		}
+
+		public void setOmit_norms(Boolean omit_norms) {
+			this.omit_norms = omit_norms;
+		}
+
+		public Boolean getOmit_term_freq_and_positions() {
+			return omit_term_freq_and_positions;
+		}
+
+		public void setOmit_term_freq_and_positions(
+				Boolean omit_term_freq_and_positions) {
+			this.omit_term_freq_and_positions = omit_term_freq_and_positions;
+		}
+
+		public Boolean getIgnore_malformed() {
+			return ignore_malformed;
+		}
+
+		public void setIgnore_malformed(Boolean ignore_malformed) {
+			this.ignore_malformed = ignore_malformed;
+		}
+
 	}
 
 	private String entityToDocument(Persistable entity) {
@@ -322,7 +433,12 @@ public class IndexManagerImpl implements IndexManager {
 					map.put(name, value);
 			}
 		}
-		return JsonUtils.toJson(map);
+		try {
+			return objectMapper.writeValueAsString(map);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return null;
+		}
 	}
 
 	private static String classToType(Class clazz) {
@@ -338,7 +454,7 @@ public class IndexManagerImpl implements IndexManager {
 	}
 
 	public Object searchHitToEntity(SearchHit sh) throws Exception {
-		return JsonUtils.fromJson(sh.sourceAsString(),
+		return objectMapper.readValue(sh.sourceAsString(),
 				typeToClass(sh.getType()));
 	}
 
@@ -397,10 +513,8 @@ public class IndexManagerImpl implements IndexManager {
 		Set<String> lazySet = new HashSet<String>();
 		for (int i = 0; i < md.getPropertyTypes().length; i++) {
 			org.hibernate.type.Type t = md.getPropertyTypes()[i];
-			if (t.isEntityType()) {
-				lazySet.add(t.getName());
-			} else if (t.isCollectionType()) {
-				lazySet.add(t.getName());
+			if (t.isEntityType() || t.isCollectionType()) {
+				lazySet.add(md.getPropertyNames()[i]);
 			}
 		}
 
@@ -421,7 +535,7 @@ public class IndexManagerImpl implements IndexManager {
 			List<Persistable> list = c.list();
 			BulkRequestBuilder bulkRequest = client.prepareBulk();
 			for (Persistable p : list) {
-				Hibernate.initialize(p);
+				// org.hibernate.Hibernate.initialize(p);
 				bulkRequest.add(client.prepareIndex(getIndexName(),
 						classToType(p.getClass()), String.valueOf(p.getId()))
 						.setSource(entityToDocument(p)));

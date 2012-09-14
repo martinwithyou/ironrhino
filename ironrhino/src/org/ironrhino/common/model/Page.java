@@ -20,7 +20,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Searchable(type = "page")
 @AutoConfig(searchable = true)
-public class Page extends BaseEntity implements Recordable<UserDetails>, Ordered {
+public class Page extends BaseEntity implements Recordable<UserDetails>,
+		Ordered {
 
 	private static final long serialVersionUID = 4688382703803043164L;
 
@@ -47,11 +48,11 @@ public class Page extends BaseEntity implements Recordable<UserDetails>, Ordered
 	private Date draftDate;
 
 	@NotInCopy
-	@SearchableProperty(converter = "date", format = "yyyy-MM-dd HH:mm:ss")
+	@SearchableProperty
 	private Date createDate;
 
 	@NotInCopy
-	@SearchableProperty(converter = "date", format = "yyyy-MM-dd HH:mm:ss")
+	@SearchableProperty
 	private Date modifyDate;
 
 	@NotInCopy

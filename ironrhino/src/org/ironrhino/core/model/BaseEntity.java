@@ -10,7 +10,7 @@ public class BaseEntity extends Entity<String> {
 	private static final long serialVersionUID = 5290168777920037800L;
 	protected String id;
 
-	@SearchableId(converter = "string", index = Index.NOT_ANALYZED)
+	@SearchableId(type = "string", index = Index.NOT_ANALYZED)
 	public String getId() {
 		return id;
 	}

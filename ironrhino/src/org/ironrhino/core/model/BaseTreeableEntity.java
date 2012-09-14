@@ -39,7 +39,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		this.fullId = fullId;
 	}
 
-	@SearchableId(converter = "long")
+	@SearchableId
 	public Long getId() {
 		return id;
 	}

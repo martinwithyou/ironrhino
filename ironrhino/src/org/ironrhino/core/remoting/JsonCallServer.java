@@ -78,7 +78,7 @@ public class JsonCallServer implements HttpRequestHandler {
 							"Invalid JSON");
 					return;
 				}
-				requestJsonParameters = JsonUtils.getObjectMapper().readValue(
+				requestJsonParameters = JsonUtils.createNewObjectMapper().readValue(
 						requestBody, JsonNode.class);
 				if (!requestJsonParameters.isArray()) {
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST,

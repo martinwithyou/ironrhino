@@ -9,6 +9,8 @@ import org.ironrhino.core.model.Persistable;
 @SuppressWarnings("rawtypes")
 public interface IndexManager {
 
+	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
 	public String getIndexName();
 
 	public Object searchHitToEntity(SearchHit sh) throws Exception;
