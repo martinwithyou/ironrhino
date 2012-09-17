@@ -4,7 +4,13 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="elasticSearchClient"
 		class="org.ironrhino.core.search.elasticsearch.ElasticSearchClientFactoryBean"
-		p:connectString="${elasticSearchClient.connectString:}" />
+		p:connectString="${elasticSearchClient.connectString:}">
+		<property name="settings">
+			<map>
+				<entry key="index.analysis.analyzer.default.type" value="mmseg" />
+			</map>
+		</property>
+	</bean>
 	<bean id="elasticSearchService"
 		class="org.ironrhino.core.search.elasticsearch.ElasticSearchService" />
 	<bean id="indexManager"

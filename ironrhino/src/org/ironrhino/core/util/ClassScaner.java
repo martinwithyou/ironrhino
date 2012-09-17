@@ -234,7 +234,7 @@ public class ClassScaner {
 
 	private static String[] excludePackages = new String[] { "java", "javax",
 			"com.sun", "sun", "org.w3c", "org.xml", "antlr", "com.bea",
-			"com.caucho", "com.fasterxml", "com.google", "com.ibm",
+			"com.caucho","com.chenlb", "com.fasterxml", "com.google", "com.ibm",
 			"com.jolbox", "com.microsoft", "com.mongodb", "com.mysql",
 			"com.opensymphony", "com.oracle", "freemarker", "javassist",
 			"jsr166y", "net.sf", "net.sourceforge", "ognl", "oracle",

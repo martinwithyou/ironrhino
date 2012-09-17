@@ -2,6 +2,9 @@ package org.ironrhino.core.search.elasticsearch;
 
 import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -21,6 +24,12 @@ public class ElasticSearchClientFactoryBean implements FactoryBean<Client>,
 
 	private String connectString = "";
 
+	private Map<String, String> settings;
+
+	public void setSettings(Map<String, String> settings) {
+		this.settings = settings;
+	}
+
 	public String getConnectString() {
 		return connectString;
 	}
@@ -31,8 +40,12 @@ public class ElasticSearchClientFactoryBean implements FactoryBean<Client>,
 
 	public void afterPropertiesSet() throws Exception {
 		if (StringUtils.isBlank(connectString)) {
-			Settings settings = ImmutableSettings.settingsBuilder()
-					.put("path.home", AppInfo.getAppHome() + "/search").build();
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("path.home", AppInfo.getAppHome() + "/search");
+			if (settings != null)
+				map.putAll(settings);
+			Settings settings = ImmutableSettings.settingsBuilder().put(map)
+					.build();
 			Node node = nodeBuilder().settings(settings).node();
 			client = node.client();
 		} else {

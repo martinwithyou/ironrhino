@@ -485,7 +485,8 @@ public class IndexManagerImpl implements IndexManager {
 				HashMap<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
 				map.put(classToType(entry.getKey()), entry.getValue());
 				String mapping = JsonUtils.toJson(map);
-				logger.info("Mapping {} : {}", entry.getKey(), mapping);
+				if (logger.isDebugEnabled())
+					logger.debug("Mapping {} : {}", entry.getKey(), mapping);
 				adminClient.preparePutMapping(getIndexName())
 						.setType(classToType(entry.getKey()))
 						.setSource(mapping).execute().get();
