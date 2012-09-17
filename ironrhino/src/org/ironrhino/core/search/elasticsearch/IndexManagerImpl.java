@@ -6,10 +6,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,12 +25,15 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.search.SearchHit;
+import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
+import org.hibernate.ObjectNotFoundException;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
-import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
@@ -433,6 +435,8 @@ public class IndexManagerImpl implements IndexManager {
 					map.put(name, value);
 			}
 		}
+		if (map.isEmpty())
+			logger.warn("{} is empty", entity);
 		try {
 			return objectMapper.writeValueAsString(map);
 		} catch (Exception e) {
@@ -506,44 +510,109 @@ public class IndexManagerImpl implements IndexManager {
 		initialize();
 		for (Class c : schemaMapping.keySet())
 			indexAll(classToType(c));
+		logger.info("rebuild completed");
 	}
 
 	public void indexAll(String type) {
 		Class clz = typeToClass(type);
-		ClassMetadata md = sessionFactory.getClassMetadata(clz);
-		Set<String> lazySet = new HashSet<String>();
-		for (int i = 0; i < md.getPropertyTypes().length; i++) {
-			org.hibernate.type.Type t = md.getPropertyTypes()[i];
-			if (t.isEntityType() || t.isCollectionType()) {
-				lazySet.add(md.getPropertyNames()[i]);
+		int fetchSize = 20;
+		int indexed = 0;
+		ScrollableResults cursor = null;
+		Session hibernateSession = sessionFactory.openSession();
+		hibernateSession.setCacheMode(CacheMode.IGNORE);
+		Transaction hibernateTransaction = null;
+		try {
+			hibernateTransaction = hibernateSession.beginTransaction();
+			Criteria c = hibernateSession.createCriteria(clz);
+			c.setFetchSize(fetchSize);
+			c.addOrder(Order.asc("id"));
+			cursor = c.scroll(ScrollMode.FORWARD_ONLY);
+			RowBuffer buffer = new RowBuffer(hibernateSession, fetchSize);
+			Object prev = null;
+			while (true) {
+				try {
+					if (!cursor.next()) {
+						break;
+					}
+				} catch (ObjectNotFoundException e) {
+					continue;
+				}
+				Object item = cursor.get(0);
+				if (prev != null && item != prev) {
+					buffer.put(prev);
+				}
+				prev = item;
+				if (buffer.shouldFlush()) {
+					// put also the item/prev since we are clearing the
+					// session
+					// in the flush process
+					buffer.put(prev);
+					indexed += buffer.flush();
+					prev = null;
+				}
 			}
+			if (prev != null) {
+				buffer.put(prev);
+			}
+			indexed += buffer.close();
+			cursor.close();
+			hibernateTransaction.commit();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			if (hibernateTransaction != null) {
+				try {
+					hibernateTransaction.rollback();
+				} catch (Exception e1) {
+					logger.warn("Failed to rollback Hibernate", e1);
+				}
+			}
+		} finally {
+			hibernateSession.close();
+		}
+		logger.info("indexed {} for {}", indexed, type);
+	}
+
+	private class RowBuffer {
+		private Object[] buffer;
+		private int fetchCount;
+		private int index = 0;
+		private Session hibernateSession;
+
+		RowBuffer(Session hibernateSession, int fetchCount) {
+			this.hibernateSession = hibernateSession;
+			this.fetchCount = fetchCount;
+			this.buffer = new Object[fetchCount + 1];
 		}
 
-		Session session = sessionFactory.getCurrentSession();
-		Criteria c = session.createCriteria(clz);
-		c.setProjection(Projections.projectionList()
-				.add(Projections.rowCount()));
-		long count = (Long) c.uniqueResult();
-		c = session.createCriteria(clz);
-		for (String s : lazySet)
-			c.setFetchMode(s, FetchMode.JOIN);
-		int maxResults = 50;
-		int firstResult = 0;
-		while (firstResult < count) {
-			c.setFirstResult(firstResult);
-			if (maxResults > 0)
-				c.setMaxResults(maxResults);
-			List<Persistable> list = c.list();
+		public void put(Object row) {
+			buffer[index] = row;
+			index++;
+		}
+
+		public boolean shouldFlush() {
+			return index >= fetchCount;
+		}
+
+		public int close() {
+			int i = flush();
+			buffer = null;
+			return i;
+		}
+
+		private int flush() {
 			BulkRequestBuilder bulkRequest = client.prepareBulk();
-			for (Persistable p : list) {
-				// org.hibernate.Hibernate.initialize(p);
+			for (int i = 0; i < index; i++) {
+				Persistable p = (Persistable) buffer[i];
 				bulkRequest.add(client.prepareIndex(getIndexName(),
 						classToType(p.getClass()), String.valueOf(p.getId()))
 						.setSource(entityToDocument(p)));
 			}
 			bulkRequest.execute();
-			firstResult += maxResults;
+			Arrays.fill(buffer, null);
+			hibernateSession.clear();
+			int indexed = index;
+			index = 0;
+			return indexed;
 		}
 	}
-
 }
