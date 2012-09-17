@@ -10,7 +10,7 @@ public class ElasticSearchCriteria extends SearchCriteria {
 
 	private String[] types;
 
-	private Float boost;
+	private float minScore;
 
 	public String[] getIndices() {
 		return indices;
@@ -28,12 +28,12 @@ public class ElasticSearchCriteria extends SearchCriteria {
 		this.types = types;
 	}
 
-	public Float getBoost() {
-		return boost;
+	public float getMinScore() {
+		return minScore;
 	}
 
-	public void setBoost(Float boost) {
-		this.boost = boost;
+	public void setMinScore(float minScore) {
+		this.minScore = minScore;
 	}
 
 }

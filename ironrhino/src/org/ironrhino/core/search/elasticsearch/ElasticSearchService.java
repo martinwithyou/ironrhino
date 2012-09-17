@@ -45,9 +45,13 @@ public class ElasticSearchService<T> implements SearchService<T> {
 		SearchRequestBuilder srb = client.prepareSearch(indices);
 		String[] types = criteria.getTypes();
 		srb.setTypes(types);
-		srb.setQuery(new QueryStringQueryBuilder(criteria.getQuery()));
+		QueryStringQueryBuilder qb = new QueryStringQueryBuilder(
+				criteria.getQuery());
+		srb.setQuery(qb);
 		srb.setFrom(resultPage.getStart());
 		srb.setSize(resultPage.getPageSize());
+		if (criteria.getMinScore() > 0)
+			srb.setMinScore(criteria.getMinScore());
 		Map<String, Boolean> sorts = criteria.getSorts();
 		for (Map.Entry<String, Boolean> entry : sorts.entrySet())
 			srb.addSort(entry.getKey(), entry.getValue() ? SortOrder.DESC
