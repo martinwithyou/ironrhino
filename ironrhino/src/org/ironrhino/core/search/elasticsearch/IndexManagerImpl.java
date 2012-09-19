@@ -42,6 +42,7 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.search.elasticsearch.annotations.Store;
 import org.ironrhino.core.util.ClassScaner;
+import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +78,8 @@ public class IndexManagerImpl implements IndexManager {
 	@PostConstruct
 	public void init() {
 		objectMapper = JsonUtils.createNewObjectMapper();
-		objectMapper.setDateFormat(new SimpleDateFormat(DEFAULT_DATE_FORMAT));
+		objectMapper
+				.setDateFormat(new SimpleDateFormat(DateUtils.DATETIME_ISO));
 		Set<Class<?>> set = ClassScaner.scanAnnotated(
 				ClassScaner.getAppPackages(), Searchable.class);
 		typeClassMapping = new HashMap<String, Class>(set.size());

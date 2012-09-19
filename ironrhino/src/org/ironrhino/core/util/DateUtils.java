@@ -28,6 +28,11 @@ public class DateUtils {
 	private static final FastDateFormat DATETIME_DF = FastDateFormat
 			.getInstance(DATETIME);
 
+	public static final String DATETIME_ISO = "yyyy-MM-dd'T'HH:mm:ss";
+
+	private static final FastDateFormat DATETIME_ISO_DF = FastDateFormat
+			.getInstance(DATETIME_ISO);
+
 	public static final String TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSSS";
 
 	private static final FastDateFormat TIMESTAMP_DF = FastDateFormat
@@ -47,6 +52,10 @@ public class DateUtils {
 
 	public static String formatDatetime(Date date) {
 		return DATETIME_DF.format(date);
+	}
+
+	public static String formatDatetimeISO(Date date) {
+		return DATETIME_ISO_DF.format(date);
 	}
 
 	public static String formatYearMonth(Date date) {
@@ -75,6 +84,14 @@ public class DateUtils {
 	public static Date parseDatetime(String string) {
 		try {
 			return new SimpleDateFormat(DATETIME).parse(string);
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+
+	public static Date parseDatetimeISO(String string) {
+		try {
+			return new SimpleDateFormat(DATETIME_ISO).parse(string);
 		} catch (ParseException e) {
 			return null;
 		}
