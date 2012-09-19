@@ -5,6 +5,7 @@ import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseTreeableEntity;
+import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.util.StringUtils;
@@ -65,12 +66,12 @@ public class Region extends BaseTreeableEntity<Region> {
 		return super.getFullname();
 	}
 
-	@SearchableProperty(boost = 3)
+	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
 	public String getNameAsPinyin() {
 		return StringUtils.pinyin(name);
 	}
 
-	@SearchableProperty(boost = 3)
+	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
 	public String getNameAsPinyinAbbr() {
 		return StringUtils.pinyinAbbr(name);
 	}

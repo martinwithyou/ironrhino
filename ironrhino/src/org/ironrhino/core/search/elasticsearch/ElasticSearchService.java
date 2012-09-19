@@ -10,6 +10,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.index.query.QueryStringQueryBuilder.Operator;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.SortOrder;
@@ -47,6 +48,7 @@ public class ElasticSearchService<T> implements SearchService<T> {
 		srb.setTypes(types);
 		QueryStringQueryBuilder qb = new QueryStringQueryBuilder(
 				criteria.getQuery());
+		qb.defaultOperator(Operator.AND);
 		srb.setQuery(qb);
 		srb.setFrom(resultPage.getStart());
 		srb.setSize(resultPage.getPageSize());
