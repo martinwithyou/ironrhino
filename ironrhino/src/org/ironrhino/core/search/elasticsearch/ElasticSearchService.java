@@ -6,9 +6,11 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.index.query.QueryStringQueryBuilder.Operator;
 import org.elasticsearch.search.SearchHit;
@@ -99,9 +101,16 @@ public class ElasticSearchService<T> implements SearchService<T> {
 			srb.setTypes(types);
 		if (criteria.getMinScore() > 0)
 			srb.setMinScore(criteria.getMinScore());
-		QueryStringQueryBuilder qb = new QueryStringQueryBuilder(
-				criteria.getQuery());
-		qb.defaultOperator(Operator.AND);
+		QueryBuilder qb = criteria.getQueryBuilder();
+		if (qb == null && StringUtils.isNotBlank(criteria.getQuery())) {
+			QueryStringQueryBuilder qsqb = new QueryStringQueryBuilder(
+					criteria.getQuery());
+			qsqb.defaultOperator(Operator.AND);
+			qb = qsqb;
+		}
+		if (qb == null)
+			throw new NullPointerException(
+					"queryBuilder is null and queryString is blank");
 		srb.setQuery(qb);
 		Map<String, Boolean> sorts = criteria.getSorts();
 		for (Map.Entry<String, Boolean> entry : sorts.entrySet())
