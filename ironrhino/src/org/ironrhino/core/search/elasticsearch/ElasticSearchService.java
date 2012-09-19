@@ -40,24 +40,9 @@ public class ElasticSearchService<T> implements SearchService<T> {
 				.getCriteria();
 		if (criteria == null)
 			return resultPage;
-		String[] indices = criteria.getIndices();
-		if (indices == null || indices.length == 0)
-			indices = new String[] { indexManager.getIndexName() };
-		SearchRequestBuilder srb = client.prepareSearch(indices);
-		String[] types = criteria.getTypes();
-		srb.setTypes(types);
-		QueryStringQueryBuilder qb = new QueryStringQueryBuilder(
-				criteria.getQuery());
-		qb.defaultOperator(Operator.AND);
-		srb.setQuery(qb);
+		SearchRequestBuilder srb = criteria2builder(criteria);
 		srb.setFrom(resultPage.getStart());
 		srb.setSize(resultPage.getPageSize());
-		if (criteria.getMinScore() > 0)
-			srb.setMinScore(criteria.getMinScore());
-		Map<String, Boolean> sorts = criteria.getSorts();
-		for (Map.Entry<String, Boolean> entry : sorts.entrySet())
-			srb.addSort(entry.getKey(), entry.getValue() ? SortOrder.DESC
-					: SortOrder.ASC);
 		try {
 			SearchResponse response = srb.execute().get();
 			SearchHits shs = response.getHits();
@@ -86,18 +71,7 @@ public class ElasticSearchService<T> implements SearchService<T> {
 		ElasticSearchCriteria criteria = (ElasticSearchCriteria) searchCriteria;
 		if (criteria == null)
 			return null;
-		String[] indices = criteria.getIndices();
-		if (indices == null || indices.length == 0)
-			indices = new String[] { indexManager.getIndexName() };
-		SearchRequestBuilder srb = client.prepareSearch(indices);
-		String[] types = criteria.getTypes();
-		if (types != null && types.length > 0)
-			srb.setTypes(types);
-		srb.setQuery(new QueryStringQueryBuilder(criteria.getQuery()));
-		Map<String, Boolean> sorts = criteria.getSorts();
-		for (Map.Entry<String, Boolean> entry : sorts.entrySet())
-			srb.addSort(entry.getKey(), entry.getValue() ? SortOrder.DESC
-					: SortOrder.ASC);
+		SearchRequestBuilder srb = criteria2builder(criteria);
 		List list = null;
 		try {
 			SearchResponse response = srb.execute().get();
@@ -113,5 +87,26 @@ public class ElasticSearchService<T> implements SearchService<T> {
 			log.error(e.getMessage(), e);
 		}
 		return list;
+	}
+
+	private SearchRequestBuilder criteria2builder(ElasticSearchCriteria criteria) {
+		String[] indices = criteria.getIndices();
+		if (indices == null || indices.length == 0)
+			indices = new String[] { indexManager.getIndexName() };
+		SearchRequestBuilder srb = client.prepareSearch(indices);
+		String[] types = criteria.getTypes();
+		if (types != null && types.length > 0)
+			srb.setTypes(types);
+		if (criteria.getMinScore() > 0)
+			srb.setMinScore(criteria.getMinScore());
+		QueryStringQueryBuilder qb = new QueryStringQueryBuilder(
+				criteria.getQuery());
+		qb.defaultOperator(Operator.AND);
+		srb.setQuery(qb);
+		Map<String, Boolean> sorts = criteria.getSorts();
+		for (Map.Entry<String, Boolean> entry : sorts.entrySet())
+			srb.addSort(entry.getKey(), entry.getValue() ? SortOrder.DESC
+					: SortOrder.ASC);
+		return srb;
 	}
 }
