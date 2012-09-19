@@ -11,6 +11,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.index.query.QueryStringQueryBuilder.Operator;
 import org.elasticsearch.search.SearchHit;
@@ -32,6 +33,11 @@ public class ElasticSearchService<T> implements SearchService<T> {
 
 	@Inject
 	private IndexManager indexManager;
+
+	public SearchRequestBuilder prepareSearch() {
+		return client
+				.prepareSearch(new String[] { indexManager.getIndexName() });
+	}
 
 	public ResultPage<T> search(ResultPage resultPage) {
 		return search(resultPage, null);
@@ -102,11 +108,17 @@ public class ElasticSearchService<T> implements SearchService<T> {
 		if (criteria.getMinScore() > 0)
 			srb.setMinScore(criteria.getMinScore());
 		QueryBuilder qb = criteria.getQueryBuilder();
-		if (qb == null && StringUtils.isNotBlank(criteria.getQuery())) {
-			QueryStringQueryBuilder qsqb = new QueryStringQueryBuilder(
-					criteria.getQuery());
-			qsqb.defaultOperator(Operator.AND);
-			qb = qsqb;
+		String query = criteria.getQuery();
+		if (qb == null && StringUtils.isNotBlank(query)) {
+			if (query.contains("*")) {
+				String[] arr = query.split(":", 2);
+				qb = QueryBuilders.wildcardQuery(arr[0], arr[1]);
+			} else {
+				QueryStringQueryBuilder qsqb = new QueryStringQueryBuilder(
+						query);
+				qsqb.defaultOperator(Operator.AND);
+				qb = qsqb;
+			}
 		}
 		if (qb == null)
 			throw new NullPointerException(
