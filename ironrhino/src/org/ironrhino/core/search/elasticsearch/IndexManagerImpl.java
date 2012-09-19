@@ -50,6 +50,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
 public class IndexManagerImpl implements IndexManager {
@@ -80,6 +81,8 @@ public class IndexManagerImpl implements IndexManager {
 		objectMapper = JsonUtils.createNewObjectMapper();
 		objectMapper
 				.setDateFormat(new SimpleDateFormat(DateUtils.DATETIME_ISO));
+		objectMapper
+		.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
 		Set<Class<?>> set = ClassScaner.scanAnnotated(
 				ClassScaner.getAppPackages(), Searchable.class);
 		typeClassMapping = new HashMap<String, Class>(set.size());

@@ -12,6 +12,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.WildcardQueryBuilder;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -219,8 +221,8 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		final Map<String, Integer> map = new HashMap<String, Integer>();
 		if (elasticSearchService != null) {
 			ElasticSearchCriteria cc = new ElasticSearchCriteria();
-			cc.setQuery(new StringBuilder("tags:").append("*").append(keyword)
-					.append("*").toString());
+			WildcardQueryBuilder qb = QueryBuilders.wildcardQuery("tags", keyword + "*");
+			cc.setQueryBuilder(qb);
 			cc.setTypes(new String[] { "page" });
 			List<Page> list = elasticSearchService.search(cc);
 			for (Page p : list) {
