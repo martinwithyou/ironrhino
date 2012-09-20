@@ -484,19 +484,16 @@ public class IndexManagerImpl implements IndexManager {
 		IndicesAdminClient adminClient = client.admin().indices();
 		adminClient.create(new CreateIndexRequest(getIndexName())).actionGet();
 		for (Map.Entry<Class, Map<String, Object>> entry : schemaMapping
-				.entrySet())
-			try {
-				HashMap<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
-				map.put(classToType(entry.getKey()), entry.getValue());
-				String mapping = JsonUtils.toJson(map);
-				if (logger.isDebugEnabled())
-					logger.debug("Mapping {} : {}", entry.getKey(), mapping);
-				adminClient.preparePutMapping(getIndexName())
-						.setType(classToType(entry.getKey()))
-						.setSource(mapping).execute().get();
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
+				.entrySet()) {
+			HashMap<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
+			map.put(classToType(entry.getKey()), entry.getValue());
+			String mapping = JsonUtils.toJson(map);
+			if (logger.isDebugEnabled())
+				logger.debug("Mapping {} : {}", entry.getKey(), mapping);
+			adminClient.preparePutMapping(getIndexName())
+					.setType(classToType(entry.getKey())).setSource(mapping)
+					.execute().actionGet();
+		}
 	}
 
 	public void rebuild() {
