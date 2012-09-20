@@ -19,6 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.ListenableActionFuture;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.exists.IndicesExistsRequest;
+import org.elasticsearch.action.admin.indices.exists.IndicesExistsResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
@@ -482,7 +484,11 @@ public class IndexManagerImpl implements IndexManager {
 
 	private void initialize() {
 		IndicesAdminClient adminClient = client.admin().indices();
-		adminClient.create(new CreateIndexRequest(getIndexName())).actionGet();
+		IndicesExistsResponse ies = adminClient.exists(
+				new IndicesExistsRequest(getIndexName())).actionGet();
+		if (!ies.exists())
+			adminClient.create(new CreateIndexRequest(getIndexName()))
+					.actionGet();
 		for (Map.Entry<Class, Map<String, Object>> entry : schemaMapping
 				.entrySet()) {
 			HashMap<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
