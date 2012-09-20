@@ -82,7 +82,7 @@ public class IndexManagerImpl implements IndexManager {
 		objectMapper
 				.setDateFormat(new SimpleDateFormat(DateUtils.DATETIME_ISO));
 		objectMapper
-		.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
+				.setAnnotationIntrospector(new JacksonAnnotationIntrospector());
 		Set<Class<?>> set = ClassScaner.scanAnnotated(
 				ClassScaner.getAppPackages(), Searchable.class);
 		typeClassMapping = new HashMap<String, Class>(set.size());
@@ -482,12 +482,7 @@ public class IndexManagerImpl implements IndexManager {
 
 	private void initialize() {
 		IndicesAdminClient adminClient = client.admin().indices();
-		adminClient.create(new CreateIndexRequest(getIndexName()));
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+		adminClient.create(new CreateIndexRequest(getIndexName())).actionGet();
 		for (Map.Entry<Class, Map<String, Object>> entry : schemaMapping
 				.entrySet())
 			try {
@@ -506,12 +501,7 @@ public class IndexManagerImpl implements IndexManager {
 
 	public void rebuild() {
 		IndicesAdminClient adminClient = client.admin().indices();
-		adminClient.delete(new DeleteIndexRequest(getIndexName()));
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+		adminClient.delete(new DeleteIndexRequest(getIndexName())).actionGet();
 		initialize();
 		for (Class c : schemaMapping.keySet())
 			indexAll(classToType(c));
