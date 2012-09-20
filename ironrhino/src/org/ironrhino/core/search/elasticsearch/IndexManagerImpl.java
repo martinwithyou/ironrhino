@@ -481,11 +481,15 @@ public class IndexManagerImpl implements IndexManager {
 
 	private void initialize() {
 		IndicesAdminClient adminClient = client.admin().indices();
-		IndicesExistsResponse ies = adminClient.exists(
-				new IndicesExistsRequest(getIndexName())).actionGet();
-		if (!ies.exists())
-			adminClient.create(new CreateIndexRequest(getIndexName()))
-					.actionGet();
+		try {
+			IndicesExistsResponse ies = adminClient.exists(
+					new IndicesExistsRequest(getIndexName())).get();
+			if (!ies.exists())
+				adminClient.create(new CreateIndexRequest(getIndexName()))
+						.get();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
 		for (Map.Entry<Class, Map<String, Object>> entry : schemaMapping
 				.entrySet()) {
 			HashMap<String, Map<String, Object>> map = new HashMap<String, Map<String, Object>>();
@@ -493,15 +497,23 @@ public class IndexManagerImpl implements IndexManager {
 			String mapping = JsonUtils.toJson(map);
 			if (logger.isDebugEnabled())
 				logger.debug("Mapping {} : {}", entry.getKey(), mapping);
-			adminClient.preparePutMapping(getIndexName())
-					.setType(classToType(entry.getKey())).setSource(mapping)
-					.execute().actionGet();
+			try {
+				adminClient.preparePutMapping(getIndexName())
+						.setType(classToType(entry.getKey()))
+						.setSource(mapping).execute().get();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 	}
 
 	public void rebuild() {
 		IndicesAdminClient adminClient = client.admin().indices();
-		adminClient.delete(new DeleteIndexRequest(getIndexName())).actionGet();
+		try {
+			adminClient.delete(new DeleteIndexRequest(getIndexName())).get();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
 		initialize();
 		for (Class c : schemaMapping.keySet())
 			indexAll(classToType(c));
