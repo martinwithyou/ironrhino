@@ -64,8 +64,7 @@
 	<#if !config.hiddenInList>
 		<#if config.type=='select'>
 		<textarea id="rt_select_template_${key}">
-		<select onblur="Richtable.updateCell(this)"
-				style="width: 100%;" name="${entityName}.${key}">
+		<select name="${entityName}.${key}">
 				<#if !config.required>
 				<option value=""></option>
 				</#if>

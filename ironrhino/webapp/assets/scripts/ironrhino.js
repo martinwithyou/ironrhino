@@ -35292,7 +35292,10 @@ Richtable = {
 			return;
 		ce.addClass('editing');
 		var value = ce.data('cellvalue');
-		value = $.trim(value || ce.text());
+		if (value === undefined)
+			value = $.trim(ce.text());
+		else
+			value = '' + value;
 		if (!ce.hasClass('edited'))
 			ce.data('oldvalue', value);
 		var template = '';
@@ -35300,23 +35303,23 @@ Richtable = {
 			template = $('#' + templateId).text();
 		} else {
 			if (type == 'textarea') {
-				template = '<textarea type="text" class="text" value="" style="width: 100%;"/>';
+				template = '<textarea type="text" class="text"/>';
 			} else if (type == 'date')
-				template = '<input type="text" class="text date" value="" style="width: 100%;"/>';
+				template = '<input type="text" class="text date"/>';
 			else if (type == 'boolean')
-				template = '<select style="width: 100%;"><option value="true">'
+				template = '<select><option value="true">'
 						+ MessageBundle.get('true')
 						+ '</option><option value="false">'
 						+ MessageBundle.get('false') + '</option></select>';
 			else
-				template = '<input type="text" class="text" value="" style="width: 100%;"/>';
+				template = '<input type="text" class="text"/>';
 		}
 		ce.html(template);
 		$(':input', ce).blur(function() {
 					Richtable.updateCell(this)
 				});
 		var select = $('select', ce);
-		if (value && select.length) {
+		if (value != undefined && select.length) {
 			var arr = $('option', select).toArray();
 			for (var i = 0; i < arr.length; i++) {
 				if (arr[i].value == value || $(arr[i]).text() == value) {

@@ -23,11 +23,11 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 	private static final long serialVersionUID = -8352037603261222984L;
 
 	@NaturalId(caseInsensitive = true, mutable = true)
-	@UiConfig(displayOrder = 1, size = 50)
+	@UiConfig(displayOrder = 1, size = 50, width = "300px")
 	@SearchableProperty(boost = 3)
 	private String key = "";
 
-	@UiConfig(displayOrder = 2, type = "textarea")
+	@UiConfig(displayOrder = 2, type = "textarea", width = "400px")
 	@SearchableProperty
 	private String value = "";
 

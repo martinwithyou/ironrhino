@@ -11,10 +11,9 @@ table.richtable td,th {
 	padding: 0.5em;
 	border: 1px solid #CCC;
 	line-height: 180%;
+	height: 30px;
 }
-table.richtable thead td {
-	padding: 0.5em 0;
-}
+
 .richtable table td.action{
 	white-space:nowrap;
 	overflow:hidden;
@@ -22,20 +21,18 @@ table.richtable thead td {
 .richtable table td a:hover{
 	color: #1E50A2;
 }
-.richtable input.text {
-	border: 1px solid #cc9966;
-	font-size: 12px;
-	padding: 0px;
-	margin: 0px;
-	width: 100%;
+.richtable input.text,.richtable textarea.text {
+	width: 90%;
+	margin: 0;
 }
 .richtable input.radio {
-	font-size: 12px;
 	width: auto;
+	margin: 0;
 }
 .richtable select {
-	border: 1px solid #EEEEEE;
-	width: 75px;
+	width: 95%;
+	margin: 0;
+	padding-left: 0;
 }
 .richtable thead td {
 	white-space: nowrap;
@@ -57,7 +54,7 @@ table.richtable thead td {
 	background-color: #FFC !important;
 }
 .richtable td.edited{
-	background-color: #fff3f0;
+	background-color: #fff3f0 !important;
 }
 .richtable .inputPage {
 	width: 25px;

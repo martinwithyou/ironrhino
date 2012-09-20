@@ -66,7 +66,7 @@ ${action.getText(name)}
 </#macro>
 
 <#macro rttbodytd value,entity,celleditable=true,template=''>
-<td<#if celleditable><#if value??><#if value?is_boolean> data-cellValue="${value?string}"</#if><#if value?is_hash&&value.displayName??> data-cellValue="${value.name()}"</#if></#if></#if>><#rt>
+<td<#if celleditable><#if value??><#if value?is_boolean> data-cellvalue="${value?string}"</#if><#if value?is_hash&&value.displayName??> data-cellvalue="${value.name()}"</#if></#if></#if>><#rt>
 <#if template==''>
 <#if value??>
 <#if value?is_boolean>
