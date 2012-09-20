@@ -62,7 +62,6 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	private String modifyUserAsString;
 
 	@NotInCopy
-	@NotInJson
 	@SearchableProperty(index = Index.NOT_ANALYZED)
 	private Set<String> tags = new LinkedHashSet<String>(0);
 

@@ -8,7 +8,9 @@ import java.util.List;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
@@ -62,6 +64,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	}
 
 	@NaturalId
+	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
 	public String getName() {
 		return name;
 	}
@@ -71,6 +74,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	}
 
 	@NotInJson
+	@SearchableProperty(boost = 2)
 	public String getFullname() {
 		String fullname = name;
 		BaseTreeableEntity e = this;
