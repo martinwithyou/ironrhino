@@ -33,11 +33,11 @@
 </#if>
 </#list>
 </#if>
-<table class="richtable<#if sortable> sortable</#if><#if columnfilterable> filtercolumn</#if> highlightrow<#if resizable> resizable</#if>"<#if resizable> data-minColWidth="40"</#if>>
+<table class="table table-hover table-striped table-bordered richtable<#if sortable> sortable</#if><#if columnfilterable> filtercolumn</#if><#if resizable> resizable</#if>"<#if resizable> data-minColWidth="60"</#if>>
 <thead>
 <tr>
 <#if showCheckColumn>
-<th class="nosort <#if multipleCheck>checkbox<#else>radio</#if>" width="30px"><#if multipleCheck><input type="checkbox" class="checkbox"/></#if></th>
+<th class="nosort <#if multipleCheck>checkbox<#else>radio</#if>" width="40px"><#if multipleCheck><input type="checkbox" class="checkbox"/></#if></th>
 </#if>
 </#macro>
 
@@ -123,11 +123,11 @@ ${value?xhtml}<#t>
 </#if>
 <li>
 <span class="input-append">
-    <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage"/><span class="add-on totalPage"><span class="divider">/</span><strong>${resultPage.totalPage}</strong></span>
+    <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage" title="${action.getText('currentpage')}"/><span class="add-on totalPage"><span class="divider">/</span><strong title="${action.getText('totalpage')}">${resultPage.totalPage}</strong></span>
 </span>
 <#if showPageSize>
 <li class="hidden-tablet">
-<select name="resultPage.pageSize" class="pageSize">
+<select name="resultPage.pageSize" class="pageSize" title="${action.getText('pagesize')}">
 <#local array=[5,10,20,50,100,500]>
 <#list array as ps>
 <option value="${ps}"<#if resultPage.pageSize==ps> selected</#if>>${ps}</option>
@@ -167,9 +167,9 @@ ${value?xhtml}<#t>
 <div class="status span2">
 <span>
 <#if resultPage??>
-${action.getText('total')}${resultPage.totalRecord}${action.getText('record')}
+${resultPage.totalRecord}${action.getText('record')}
 <#else>
-${action.getText('total')}${list?size}${action.getText('record')}
+${list?size}${action.getText('record')}
 </#if>
 </span>
 </div>

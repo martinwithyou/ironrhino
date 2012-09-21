@@ -33463,7 +33463,7 @@ Observation.common = function(container) {
 						+ (t.data('options') || '{}')))());
 			});
 
-	$('.tiped,:input[title]', container).each(function() {
+	$('.tiped', container).each(function() {
 				var t = $(this);
 				var options = {
 					trigger : t.data('trigger') || 'hover',

@@ -1,7 +1,3 @@
-table.richtable {
-	width: 100%;
-	border-collapse: collapse;
-}
 table.richtable thead {
 	background: #DEDEDE;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#EFEFEF), color-stop(.5,#DEDEDE));
@@ -9,17 +5,18 @@ table.richtable thead {
 }
 table.richtable td,table.richtable th {
 	padding: 0.5em;
-	border: 1px solid #CCC;
-	line-height: 180%;
 	height: 30px;
+	vertical-align: middle;
 }
-
+table.richtable th {
+	padding: 0.5em 0;
+}
+.richtable th,.richtable .toolbar .action {
+	text-align: center;
+}
 .richtable table td.action{
 	white-space:nowrap;
 	overflow:hidden;
-}
-.richtable table td a:hover{
-	color: #1E50A2;
 }
 .richtable input.text,.richtable textarea.text {
 	width: 90%;
@@ -34,22 +31,6 @@ table.richtable td,table.richtable th {
 	margin: 0;
 	padding-left: 0;
 }
-.richtable th {
-	white-space: nowrap;
-	word-break: keep-all;
-	word-wrap: normal;
-	font-weight: bolder;
-	height: 24px;
-	text-align: center;
-	overflow: visible;
-}
-.richtable tbody tr:nth-child(even) td {
-  background-color: #f3f4f3;
-}
-.richtable th.checkbox,.richtable td.checkbox {
-	text-align: center;
-}
-
 .richtable .selected td {
 	background-color: #FFC !important;
 }
@@ -67,7 +48,7 @@ table.richtable td,table.richtable th {
 	text-align:left;
 }
 .richtable .pageSize {
-	border: 1px solid #DDD;
+	border: 1px solid #ddd;
 	-webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
@@ -79,9 +60,6 @@ table.richtable td,table.richtable th {
 	margin-top:18px;
 }
 
-.richtable .toolbar .action{
-	text-align:center;
-}
 .richtable .toolbar .status{
 	line-height: 26px;
 	vertical-align: middle;
@@ -89,12 +67,8 @@ table.richtable td,table.richtable th {
 }
 
 /*override bootstrap start*/
-th.radio,th.checkbox,td.radio,td.checkbox{
-	padding-left: 0;
-}
-.radio input[type="radio"], .checkbox input[type="checkbox"]{
-	float: none;
-	margin-left: 0;
+table.richtable {
+	margin-bottom: 0;
 }
 .richtable input[name="keyword"]{
 	width:100px;

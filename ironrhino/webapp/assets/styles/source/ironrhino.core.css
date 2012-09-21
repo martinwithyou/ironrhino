@@ -10,6 +10,12 @@ body.simple {
 .table.middle th, .table.middle td{
 	vertical-align: middle;
 }
+td.center {
+	text-align:center;
+}
+td.middle {
+	vertical-align:middle;
+}
 .form-horizontal .control-label{
 	width: 100px;
 }
@@ -44,6 +50,15 @@ body.simple {
 }
 td input,td textarea,td select,td .uneditable-input{
 	margin-bottom: 0px;
+}
+th.radio,th.checkbox,td.radio,td.checkbox{
+	padding: 0;
+	text-align: center;
+	vertical-align: middle;
+}
+th.radio input[type="radio"],th.checkbox input[type="checkbox"],td.radio input[type="radio"],td.checkbox input[type="checkbox"]{
+	float: none !important;
+	margin: 0;
 }
 .ui-icon.close{
 	opacity: 1;
@@ -203,12 +218,8 @@ img.captcha {
 	background: #FF6;
 }
 
-.highlightrow tbody tr:hover td{
-	background: #EEE;
-}
-
 thead,tfoot {
-	background-color: #DDD;
+	background-color: #EEE;
 }
 
 ul.attributes li{
@@ -258,12 +269,6 @@ a.remove:hover {
 .datagrided [class*="icon-"]:hover{
 	opacity: 1;
   	filter: alpha(opacity=1);
-}
-td.center {
-	text-align:center;
-}
-td.middle {
-	vertical-align:middle;
 }
 /*textext*/
 div.text-core{
