@@ -37,23 +37,23 @@
 <thead>
 <tr>
 <#if showCheckColumn>
-<td class="nosort <#if multipleCheck>checkbox<#else>radio</#if>" width="30px"><#if multipleCheck><input type="checkbox" class="checkbox"/></#if></td>
+<th class="nosort <#if multipleCheck>checkbox<#else>radio</#if>" width="30px"><#if multipleCheck><input type="checkbox" class="checkbox"/></#if></th>
 </#if>
 </#macro>
 
 <#macro rttheadtd name,cellName='',cellEdit='',class='',width='',readonly=false,resizable=true,excludeIfNotEdited=false>
-<td class="tableHeader<#if excludeIfNotEdited> excludeIfNotEdited</#if><#if class!=''> ${class}</#if>"<#if width!=''> width="${width}"</#if><#if !readonly> data-cellName="${cellName}"</#if><#if cellEdit!=''> data-cellEdit="${cellEdit}"</#if>>
+<th class="<#if excludeIfNotEdited> excludeIfNotEdited</#if><#if class!=''> ${class}</#if>"<#if width!=''> width="${width}"</#if><#if !readonly> data-cellName="${cellName}"</#if><#if cellEdit!=''> data-cellEdit="${cellEdit}"</#if>>
 <#if resizable>
 <span class="resizeTitle">${action.getText(name)}</span>
 <span class="resizeBar"></span>
 <#else>
 ${action.getText(name)}
 </#if>
-</td>
+</th>
 </#macro>
 <#macro rtmiddle width='50px' readonly=false>
 <#if !readonly>
-<td class="nosort" width="${width}"></td>
+<th class="nosort" width="${width}"></th>
 </#if>
 </tr>
 </thead>

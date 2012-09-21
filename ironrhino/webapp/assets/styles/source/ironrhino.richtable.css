@@ -1,13 +1,13 @@
+table.richtable {
+	width: 100%;
+	border-collapse: collapse;
+}
 table.richtable thead {
 	background: #DEDEDE;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#EFEFEF), color-stop(.5,#DEDEDE));
 	background: -moz-linear-gradient(center top , #EFEFEF, #DEDEDE, #EFEFEF);
 }
-table.richtable {
-	width: 100%;
-	border-collapse: collapse;
-}
-table.richtable td,th {
+table.richtable td,table.richtable th {
 	padding: 0.5em;
 	border: 1px solid #CCC;
 	line-height: 180%;
@@ -34,7 +34,7 @@ table.richtable td,th {
 	margin: 0;
 	padding-left: 0;
 }
-.richtable thead td {
+.richtable th {
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
@@ -46,7 +46,7 @@ table.richtable td,th {
 .richtable tbody tr:nth-child(even) td {
   background-color: #f3f4f3;
 }
-.richtable td.checkbox {
+.richtable th.checkbox,.richtable td.checkbox {
 	text-align: center;
 }
 
@@ -89,7 +89,10 @@ table.richtable td,th {
 }
 
 /*override bootstrap start*/
-td.radio input[type="radio"], td.checkbox input[type="checkbox"]{
+th.radio,th.checkbox,td.radio,td.checkbox{
+	padding-left: 0;
+}
+.radio input[type="radio"], .checkbox input[type="checkbox"]{
 	float: none;
 	margin-left: 0;
 }

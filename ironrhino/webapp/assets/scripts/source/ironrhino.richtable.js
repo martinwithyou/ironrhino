@@ -349,7 +349,7 @@ Richtable = {
 	save : function(event) {
 		var form = $(event.target).closest('form');
 		var modified = false;
-		var theadCells = $('.richtable thead:eq(0) td');
+		var theadCells = $('.richtable thead:eq(0) th');
 		$.each($('.richtable tbody')[0].rows, function() {
 			var row = this;
 			if ($('td.edited', row).length) {
@@ -473,7 +473,7 @@ Observation.richtable = function(container) {
 	if ('table.richtable'.length) {
 		$('.action button.btn,a[rel="richtable"]', container)
 				.click(Richtable.click);
-		var theadCells = $('table.richtable thead:eq(0) td', container);
+		var theadCells = $('table.richtable thead:eq(0) th', container);
 		var rows = $('table.richtable tbody:eq(0) tr', container).each(
 				function() {
 					var cells = this.cells;

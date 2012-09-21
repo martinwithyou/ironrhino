@@ -6173,16 +6173,16 @@ table .resizeBar {
 	background-color: #cccccc;
 	display: inline;
 }
+table.richtable {
+	width: 100%;
+	border-collapse: collapse;
+}
 table.richtable thead {
 	background: #DEDEDE;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#EFEFEF), color-stop(.5,#DEDEDE));
 	background: -moz-linear-gradient(center top , #EFEFEF, #DEDEDE, #EFEFEF);
 }
-table.richtable {
-	width: 100%;
-	border-collapse: collapse;
-}
-table.richtable td,th {
+table.richtable td,table.richtable th {
 	padding: 0.5em;
 	border: 1px solid #CCC;
 	line-height: 180%;
@@ -6209,7 +6209,7 @@ table.richtable td,th {
 	margin: 0;
 	padding-left: 0;
 }
-.richtable thead td {
+.richtable th {
 	white-space: nowrap;
 	word-break: keep-all;
 	word-wrap: normal;
@@ -6221,7 +6221,7 @@ table.richtable td,th {
 .richtable tbody tr:nth-child(even) td {
   background-color: #f3f4f3;
 }
-.richtable td.checkbox {
+.richtable th.checkbox,.richtable td.checkbox {
 	text-align: center;
 }
 
@@ -6264,7 +6264,10 @@ table.richtable td,th {
 }
 
 /*override bootstrap start*/
-td.radio input[type="radio"], td.checkbox input[type="checkbox"]{
+th.radio,th.checkbox,td.radio,td.checkbox{
+	padding-left: 0;
+}
+.radio input[type="radio"], .checkbox input[type="checkbox"]{
 	float: none;
 	margin-left: 0;
 }
@@ -6331,17 +6334,17 @@ td.radio input[type="radio"], td.checkbox input[type="checkbox"]{
 	margin-left: 0;
 	width:20%;
 }
-td.filtercolumn li.selecton
+th.filtercolumn li.selecton
 {
 	color: green;
 	font-weight: bold;
 }
-td.filtercolumn li.selectoff
+th.filtercolumn li.selectoff
 {
 	color: red;
 	font-weight: bold;
 }
-td.filtercolumn div.cmDiv
+th.filtercolumn div.cmDiv
 {
 	display: inline;
 	background: none;
@@ -6349,7 +6352,7 @@ td.filtercolumn div.cmDiv
 	float: left;
 	padding-left: 8px;
 }
-td.filtercolumn li.main
+th.filtercolumn li.main
 {
 	padding: 0;
 	background: none;
@@ -6357,7 +6360,7 @@ td.filtercolumn li.main
 	text-align: left;
 	cursor: pointer;
 }
-td.filtercolumn li.main li
+th.filtercolumn li.main li
 {
 	text-align: left;
 	padding-right: 2px;

@@ -1,14 +1,14 @@
-td.filtercolumn li.selecton
+th.filtercolumn li.selecton
 {
 	color: green;
 	font-weight: bold;
 }
-td.filtercolumn li.selectoff
+th.filtercolumn li.selectoff
 {
 	color: red;
 	font-weight: bold;
 }
-td.filtercolumn div.cmDiv
+th.filtercolumn div.cmDiv
 {
 	display: inline;
 	background: none;
@@ -16,7 +16,7 @@ td.filtercolumn div.cmDiv
 	float: left;
 	padding-left: 8px;
 }
-td.filtercolumn li.main
+th.filtercolumn li.main
 {
 	padding: 0;
 	background: none;
@@ -24,7 +24,7 @@ td.filtercolumn li.main
 	text-align: left;
 	cursor: pointer;
 }
-td.filtercolumn li.main li
+th.filtercolumn li.main li
 {
 	text-align: left;
 	padding-right: 2px;
