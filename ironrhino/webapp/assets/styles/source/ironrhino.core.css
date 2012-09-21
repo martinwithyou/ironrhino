@@ -221,7 +221,12 @@ img.captcha {
 thead,tfoot {
 	background-color: #EEE;
 }
-
+td.fieldlabel{
+	width:80px;
+	text-align:right;
+	font-weight:bold;
+	background-color: #eee;
+}
 ul.attributes li{
 	display: block;
     float: left;
