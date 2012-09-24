@@ -24,7 +24,7 @@
 <meta name="context_path" content="${request.contextPath}" />
 </#if>
 <link rel="shortcut icon" href="<@url value="/assets/images/favicon.ico"/>" />
-<link href="<@url value="/assets/styles/ironrhino${modernBrowser?string('-min','')}.css"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="<@url value="/assets/styles/ironrhino${modernBrowser?string('-min','')}.css"/>" media="all" rel="stylesheet" type="text/css" />
 <#if !modernBrowser><link href="<@url value="/assets/styles/ie.css"/>" media="all" rel="stylesheet" type="text/css" /></#if>
 <script src="<@url value="/assets/scripts/ironrhino${modernBrowser?string('-min','')}.js"/>" type="text/javascript"></script>
 <#noescape>${head}</#noescape>

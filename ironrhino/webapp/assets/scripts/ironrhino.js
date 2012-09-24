@@ -33261,6 +33261,10 @@ Initialization.common = function() {
 				$('li', $(this).closest('.nav')).removeClass('active');
 				$(this).closest('li').addClass('active');
 			});
+	if (document.location.search.indexOf('printpage=true') != -1) {
+		window.print();
+		window.close();
+	}
 };
 
 var HISTORY_ENABLED = MODERN_BROWSER
