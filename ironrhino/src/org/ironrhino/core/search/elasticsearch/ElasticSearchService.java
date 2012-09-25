@@ -3,6 +3,8 @@ package org.ironrhino.core.search.elasticsearch;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -10,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
@@ -97,20 +100,22 @@ public class ElasticSearchService<T> implements SearchService<T> {
 		return list;
 	}
 
+	private static Pattern wildcardQueryPattern = Pattern
+			.compile("\\w+:.*[\\?\\*].*");
+
 	private SearchRequestBuilder criteria2builder(ElasticSearchCriteria criteria) {
 		String[] indices = criteria.getIndices();
 		if (indices == null || indices.length == 0)
 			indices = new String[] { indexManager.getIndexName() };
 		SearchRequestBuilder srb = client.prepareSearch(indices);
+		srb.setTimeout(new TimeValue(10, TimeUnit.SECONDS));
 		String[] types = criteria.getTypes();
 		if (types != null && types.length > 0)
 			srb.setTypes(types);
-		if (criteria.getMinScore() > 0)
-			srb.setMinScore(criteria.getMinScore());
 		QueryBuilder qb = criteria.getQueryBuilder();
 		String query = criteria.getQuery();
 		if (qb == null && StringUtils.isNotBlank(query)) {
-			if (query.contains("*")) {
+			if (wildcardQueryPattern.matcher(query).matches()) {
 				String[] arr = query.split(":", 2);
 				qb = QueryBuilders.wildcardQuery(arr[0], arr[1]);
 			} else {
@@ -130,4 +135,5 @@ public class ElasticSearchService<T> implements SearchService<T> {
 					: SortOrder.ASC);
 		return srb;
 	}
+
 }

@@ -11,8 +11,6 @@ public class ElasticSearchCriteria extends SearchCriteria {
 
 	private String[] types;
 
-	private float minScore;
-
 	private QueryBuilder queryBuilder;
 
 	public QueryBuilder getQueryBuilder() {
@@ -37,14 +35,6 @@ public class ElasticSearchCriteria extends SearchCriteria {
 
 	public void setTypes(String[] types) {
 		this.types = types;
-	}
-
-	public float getMinScore() {
-		return minScore;
-	}
-
-	public void setMinScore(float minScore) {
-		this.minScore = minScore;
 	}
 
 }
