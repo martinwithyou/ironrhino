@@ -1,6 +1,7 @@
 package org.ironrhino.core.search.elasticsearch;
 
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -36,6 +37,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
+import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
@@ -52,6 +54,8 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.Annotated;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
 public class IndexManagerImpl implements IndexManager {
@@ -82,6 +86,30 @@ public class IndexManagerImpl implements IndexManager {
 		objectMapper = JsonUtils.createNewObjectMapper();
 		objectMapper
 				.setDateFormat(new SimpleDateFormat(DateUtils.DATETIME_ISO));
+		objectMapper
+				.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+
+					@Override
+					public boolean isHandled(Annotation ann) {
+						return super.isHandled(ann) || ann instanceof NotInJson
+								|| ann instanceof SearchableId
+								|| ann instanceof SearchableProperty
+								|| ann instanceof SearchableComponent;
+					}
+
+					protected boolean _isIgnorable(Annotated a) {
+						if (a instanceof SearchableId
+								|| a instanceof SearchableProperty
+								|| a instanceof SearchableComponent)
+							return false;
+						boolean b = super._isIgnorable(a);
+						if (b)
+							return b;
+						NotInJson ann = a.getAnnotation(NotInJson.class);
+						return ann != null;
+					}
+
+				});
 		Set<Class<?>> set = ClassScaner.scanAnnotated(
 				ClassScaner.getAppPackages(), Searchable.class);
 		typeClassMapping = new HashMap<String, Class>(set.size());
@@ -434,8 +462,7 @@ public class IndexManagerImpl implements IndexManager {
 			}
 			if (searchable) {
 				Object value = bw.getPropertyValue(name);
-				if (value != null
-						&& !value.getClass().getSimpleName().contains("$"))
+				if (value != null && !"".equals(value))
 					map.put(name, value);
 			}
 		}
@@ -510,7 +537,11 @@ public class IndexManagerImpl implements IndexManager {
 	public void rebuild() {
 		IndicesAdminClient adminClient = client.admin().indices();
 		try {
-			adminClient.delete(new DeleteIndexRequest(getIndexName())).get();
+			IndicesExistsResponse ies = adminClient.exists(
+					new IndicesExistsRequest(getIndexName())).get();
+			if (ies.exists())
+				adminClient.delete(new DeleteIndexRequest(getIndexName()))
+						.get();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

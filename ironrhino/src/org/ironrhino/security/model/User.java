@@ -36,7 +36,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	public static final String USERNAME_REGEX_FOR_SIGNUP = "^[\\w\\]{3,20}$";
 
 	@NaturalId(caseInsensitive = true)
-	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
+	@SearchableProperty(boost = 5, index = Index.NOT_ANALYZED)
 	@NotInCopy
 	private String username;
 
@@ -44,7 +44,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	@NotInJson
 	private String password;
 
-	@SearchableProperty(boost = 2)
+	@SearchableProperty(boost = 3)
 	private String name;
 
 	@SearchableProperty(boost = 3)
@@ -170,7 +170,8 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	}
 
 	public void setCreateUser(User createUser) {
-		this.createUser = createUser;
+		if (!this.equals(createUser))
+			this.createUser = createUser;
 	}
 
 	public void setEmail(String email) {
@@ -190,7 +191,8 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	}
 
 	public void setModifyUser(User modifyUser) {
-		this.modifyUser = modifyUser;
+		if (!this.equals(modifyUser))
+			this.modifyUser = modifyUser;
 	}
 
 	public void setName(String name) {
@@ -251,7 +253,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 				e.printStackTrace();
 			}
 	}
-	
+
 	@Override
 	public String toString() {
 		return StringUtils.isNotBlank(this.name) ? this.name : this.username;

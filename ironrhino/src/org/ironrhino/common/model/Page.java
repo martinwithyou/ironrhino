@@ -56,9 +56,11 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	private Date modifyDate;
 
 	@NotInCopy
+	@SearchableProperty
 	private String createUserAsString;
 
 	@NotInCopy
+	@SearchableProperty
 	private String modifyUserAsString;
 
 	@NotInCopy
@@ -146,6 +148,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	}
 
 	@NotInCopy
+	@NotInJson
 	public String getTagsAsString() {
 		if (tags.size() > 0)
 			return StringUtils.join(tags.iterator(), ',');
