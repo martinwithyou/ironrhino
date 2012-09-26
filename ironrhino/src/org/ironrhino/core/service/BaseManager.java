@@ -41,10 +41,12 @@ public interface BaseManager<T extends Persistable<?>> {
 	public ResultPage<T> findByResultPage(ResultPage<T> resultPage);
 
 	public long countAll();
+	
+	public T findByNaturalId(Serializable... objects) ;
 
-	public T findByNaturalId(Serializable... objects);
+	public T findOne(Serializable... objects);
 
-	public T findByNaturalId(boolean caseInsensitive, Object... objects);
+	public T findOne(boolean caseInsensitive, Serializable... objects);
 
 	public List<T> findAll(Order... orders);
 

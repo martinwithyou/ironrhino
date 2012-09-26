@@ -109,7 +109,7 @@ public class SignupAction extends BaseAction {
 			return ACCESSDENIED;
 		if (StringUtils.isBlank(username))
 			username = userManager.suggestUsername(email);
-		if (userManager.findByNaturalId("email", email) != null)
+		if (userManager.findOne("email", email) != null)
 			addFieldError("email", getText("validation.already.exists"));
 		else if (userManager.findByNaturalId(username) != null)
 			addFieldError("username", getText("validation.already.exists"));
@@ -163,7 +163,7 @@ public class SignupAction extends BaseAction {
 	@Captcha(always = true)
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "email", trim = true, key = "validation.required") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "email", key = "validation.invalid") })
 	public String forgot() {
-		User user = userManager.findByNaturalId("email", email);
+		User user = userManager.findOne("email", email);
 		if (user == null) {
 			addActionError(getText("validation.not.exists"));
 		} else {

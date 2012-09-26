@@ -304,6 +304,7 @@ public class Oauth2Action extends BaseAction {
 				targetUrl = sb.toString();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			try {
 				ServletActionContext.getResponse().sendError(
 						HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
@@ -357,6 +358,7 @@ public class Oauth2Action extends BaseAction {
 			tojson.put("expires_in", authorization.getExpiresIn());
 			tojson.put("refresh_token", authorization.getRefreshToken());
 		} catch (Exception e) {
+			e.printStackTrace();
 			try {
 				ServletActionContext.getResponse().sendError(
 						HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

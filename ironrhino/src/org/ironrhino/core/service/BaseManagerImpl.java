@@ -19,6 +19,7 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.internal.CriteriaImpl.OrderEntry;
 import org.ironrhino.core.metadata.NaturalId;
@@ -323,9 +324,45 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	}
 
 	@Transactional(readOnly = true)
-	public T findByNaturalId(boolean caseInsensitive, Object... objects) {
+	public T findOne(Serializable... objects) {
+		if (objects == null || objects.length == 0 || objects.length == 1
+				&& objects[0] == null)
+			return null;
+		if (objects.length == 1 && objects[0].getClass().isArray()) {
+			Object[] objs = (Object[]) objects[0];
+			Serializable[] arr = new Serializable[objs.length];
+			for (int i = 0; i < objs.length; i++)
+				arr[i] = (Serializable) objs[i];
+			objects = arr;
+		}
+		if (objects.length == 1) {
+			Criteria c = sessionFactory.getCurrentSession().createCriteria(
+					getEntityClass());
+			Set<String> naturalIds = AnnotationUtils.getAnnotatedPropertyNames(
+					getEntityClass(), NaturalId.class);
+			if (naturalIds.size() != 1)
+				throw new IllegalArgumentException(
+						"@NaturalId must and only be one");
+			c.add(Restrictions.eq(naturalIds.iterator().next(), objects[0]));
+			c.setMaxResults(1);
+			return (T) c.uniqueResult();
+		}
+		if (objects.length == 0 || objects.length % 2 != 0)
+			throw new IllegalArgumentException("parameter size must be even");
+		Criteria c = sessionFactory.getCurrentSession().createCriteria(
+				getEntityClass());
+		int doubles = objects.length / 2;
+		for (int i = 0; i < doubles; i++)
+			c.add(Restrictions.eq(String.valueOf(objects[2 * i]),
+					objects[2 * i + 1]));
+		c.setMaxResults(1);
+		return (T) c.uniqueResult();
+	}
+
+	@Transactional(readOnly = true)
+	public T findOne(boolean caseInsensitive, Serializable... objects) {
 		if (!caseInsensitive)
-			return findByNaturalId(objects);
+			return findOne(objects);
 		String hql = "select entity from " + getEntityClass().getName()
 				+ " entity where ";
 		if (objects.length == 1) {

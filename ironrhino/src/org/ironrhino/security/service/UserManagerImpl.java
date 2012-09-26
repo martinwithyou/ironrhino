@@ -75,7 +75,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		username = username.toLowerCase();
 		User user;
 		if (username.indexOf('@') > 0)
-			user = findByNaturalId("email", username);
+			user = findOne("email", username);
 		else
 			user = findByNaturalId(username);
 		if (user == null && fallbackUserDetailsService != null)

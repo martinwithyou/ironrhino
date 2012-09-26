@@ -83,7 +83,7 @@ public class OAuthManagerImpl implements OAuthManager {
 
 	public Authorization authenticate(String code, Client client) {
 		entityManager.setEntityClass(Authorization.class);
-		Authorization auth = (Authorization) entityManager.findByNaturalId(
+		Authorization auth = (Authorization) entityManager.findOne(
 				"code", code);
 		if (auth == null)
 			throw new IllegalArgumentException("CODE_INVALID");
@@ -122,7 +122,7 @@ public class OAuthManagerImpl implements OAuthManager {
 
 	public Authorization refresh(String refreshToken) {
 		entityManager.setEntityClass(Authorization.class);
-		Authorization auth = (Authorization) entityManager.findByNaturalId(
+		Authorization auth = (Authorization) entityManager.findOne(
 				"refreshToken", refreshToken);
 		if (auth != null) {
 			if (!auth.getClient().isEnabled()) {

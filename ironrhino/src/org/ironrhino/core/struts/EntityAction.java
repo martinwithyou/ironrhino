@@ -334,7 +334,7 @@ public class EntityAction extends BaseAction {
 						.caseInsensitive();
 		if (entity.isNew()) {
 			if (naturalIds.size() > 0) {
-				Object[] args = new Object[naturalIds.size() * 2];
+				Serializable[] args = new Serializable[naturalIds.size() * 2];
 				Iterator<String> it = naturalIds.keySet().iterator();
 				int i = 0;
 				try {
@@ -342,14 +342,14 @@ public class EntityAction extends BaseAction {
 						String name = it.next();
 						args[i] = name;
 						i++;
-						args[i] = bw.getPropertyValue(name);
+						args[i] = (Serializable)bw.getPropertyValue(name);
 						i++;
 					}
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
 				persisted = entityManager
-						.findByNaturalId(caseInsensitive, args);
+						.findOne(caseInsensitive, args);
 				if (persisted != null) {
 					it = naturalIds.keySet().iterator();
 					while (it.hasNext()) {
@@ -365,7 +365,7 @@ public class EntityAction extends BaseAction {
 									.getRequest().getParameter(
 											getEntityName() + '.'
 													+ entry.getKey()))) {
-						persisted = entityManager.findByNaturalId(entry
+						persisted = entityManager.findOne(entry
 								.getKey(), (Serializable) bw
 								.getPropertyValue(entry.getKey()));
 						if (persisted != null) {
@@ -385,7 +385,7 @@ public class EntityAction extends BaseAction {
 			}
 		} else {
 			if (naturalIdMutable && naturalIds.size() > 0) {
-				Object[] args = new Object[naturalIds.size() * 2];
+				Serializable[] args = new Serializable[naturalIds.size() * 2];
 				Iterator<String> it = naturalIds.keySet().iterator();
 				int i = 0;
 				try {
@@ -393,14 +393,14 @@ public class EntityAction extends BaseAction {
 						String name = it.next();
 						args[i] = name;
 						i++;
-						args[i] = bw.getPropertyValue(name);
+						args[i] = (Serializable)bw.getPropertyValue(name);
 						i++;
 					}
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
 				persisted = entityManager
-						.findByNaturalId(caseInsensitive, args);
+						.findOne(caseInsensitive, args);
 				entityManager.evict(persisted);
 				if (persisted != null
 						&& !persisted.getId().equals(entity.getId())) {
@@ -419,7 +419,7 @@ public class EntityAction extends BaseAction {
 									.getRequest().getParameter(
 											getEntityName() + '.'
 													+ entry.getKey()))) {
-						persisted = entityManager.findByNaturalId(entry
+						persisted = entityManager.findOne(entry
 								.getKey(), (Serializable) bw
 								.getPropertyValue(entry.getKey()));
 						entityManager.evict(persisted);
@@ -523,7 +523,7 @@ public class EntityAction extends BaseAction {
 						obj = em.get((Serializable) temp
 								.getPropertyValue(listKey));
 					else
-						obj = em.findByNaturalId(listKey,
+						obj = em.findOne(listKey,
 								(Serializable) temp.getPropertyValue(listKey));
 					pd.getWriteMethod().invoke(entity, new Object[] { obj });
 					em = getEntityManager(getEntityClass());

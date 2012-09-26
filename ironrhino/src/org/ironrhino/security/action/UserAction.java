@@ -204,7 +204,7 @@ public class UserAction extends BaseAction {
 				}
 			}
 			if (StringUtils.isNotBlank(user.getEmail())
-					&& userManager.findByNaturalId("email", user.getEmail()) != null) {
+					&& userManager.findOne("email", user.getEmail()) != null) {
 				addFieldError("user.email",
 						getText("validation.already.exists"));
 				return false;
@@ -222,7 +222,7 @@ public class UserAction extends BaseAction {
 			}
 			if (StringUtils.isNotBlank(temp.getEmail())
 					&& !temp.getEmail().equals(user.getEmail())
-					&& userManager.findByNaturalId("email", temp.getEmail()) != null) {
+					&& userManager.findOne("email", temp.getEmail()) != null) {
 				addFieldError("user.email",
 						getText("validation.already.exists"));
 				return false;
