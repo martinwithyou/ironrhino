@@ -20,7 +20,7 @@ function initialize() {
     navigator.geolocation.getCurrentPosition(function(position) {
       map.setCenter(new google.maps.LatLng(position.coords.latitude,position.coords.longitude));
     }, function() {
-       map.setCenter(new google.maps.LatLng(22.5162, 114.050128));
+       map.setCenter(new google.maps.LatLng(39.8954, 116.4087));
     });
   }
 </#if>
@@ -74,8 +74,12 @@ function mark(region){
 		latitude:map.getCenter().lat(),
 		longitude:map.getCenter().lng()
 	};
-	var url='<@url value="/common/region/save?region.id="/>'+region.id+'&region.coordinate.latitude='+region.coordinate.latitude+'&region.coordinate.longitude='+region.coordinate.longitude;
-	$.ajax({url:url,global:false,success:function(){addMarker(region)}});
+	var data = {
+		'region.id':region.id,
+		'region.coordinate.latitude':region.coordinate.latitude,
+		'region.coordinate.longitude':region.coordinate.longitude,
+	}	
+	$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
 }
 
 

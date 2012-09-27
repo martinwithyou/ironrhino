@@ -25,6 +25,7 @@ import org.ironrhino.core.util.HtmlUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
@@ -247,6 +248,19 @@ public class RegionAction extends BaseAction {
 
 	public String map() {
 		return "map";
+	}
+
+	@Validations(requiredFields = {
+			@RequiredFieldValidator(type = ValidatorType.FIELD, fieldName = "region.id", key = "validation.required"),
+			@RequiredFieldValidator(type = ValidatorType.FIELD, fieldName = "region.coordinate.latitude", key = "validation.required"),
+			@RequiredFieldValidator(type = ValidatorType.FIELD, fieldName = "region.coordinate.longitude", key = "validation.required") })
+	public String mark() {
+		Region temp = region;
+		region = entityManager.get(region.getId());
+		region.setCoordinate(temp.getCoordinate());
+		entityManager.save(region);
+		addActionMessage(getText("save.success"));
+		return JSON;
 	}
 
 	@JsonConfig(root = "list")
