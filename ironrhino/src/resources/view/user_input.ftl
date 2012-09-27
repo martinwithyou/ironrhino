@@ -16,7 +16,7 @@
 		<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" cssClass="required"/>
 	</#if>
 	<@s.textfield label="%{getText('name')}" name="user.name" cssClass="required"/>
-	<@s.textfield label="%{getText('email')}" name="user.email" cssClass="email checkavailable" checkurl="${getUrl('/user/checkavailable')}"/>
+	<@s.textfield label="%{getText('email')}" name="user.email" type="email" cssClass="email checkavailable" checkurl="${getUrl('/user/checkavailable')}"/>
 	<@s.textfield label="%{getText('phone')}" name="user.phone"/>
 	<@s.checkbox label="%{getText('enabled')}" name="user.enabled" />
 	<@s.checkboxlist label="%{getText('role')}" name="roleId" list="roles" listKey="key" listValue="value"/>

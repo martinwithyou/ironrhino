@@ -12,6 +12,8 @@ import java.lang.annotation.Target;
 public @interface UiConfig {
 
 	public static final String DEFAULT_TYPE = "input";
+	
+	public static final String DEFAULT_INPUT_TYPE = "text";
 
 	public static final String DEFAULT_LIST_KEY = "id";
 
@@ -20,6 +22,8 @@ public @interface UiConfig {
 	String displayName() default "";
 
 	String type() default DEFAULT_TYPE; // input,textarea,select,checkbox,listpick,dictionary,schema...
+	
+	String inputType() default DEFAULT_INPUT_TYPE; // text,password,email,number,color ...
 
 	int size() default 0;
 

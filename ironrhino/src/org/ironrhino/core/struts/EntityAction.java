@@ -342,14 +342,13 @@ public class EntityAction extends BaseAction {
 						String name = it.next();
 						args[i] = name;
 						i++;
-						args[i] = (Serializable)bw.getPropertyValue(name);
+						args[i] = (Serializable) bw.getPropertyValue(name);
 						i++;
 					}
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
-				persisted = entityManager
-						.findOne(caseInsensitive, args);
+				persisted = entityManager.findOne(caseInsensitive, args);
 				if (persisted != null) {
 					it = naturalIds.keySet().iterator();
 					while (it.hasNext()) {
@@ -365,9 +364,9 @@ public class EntityAction extends BaseAction {
 									.getRequest().getParameter(
 											getEntityName() + '.'
 													+ entry.getKey()))) {
-						persisted = entityManager.findOne(entry
-								.getKey(), (Serializable) bw
-								.getPropertyValue(entry.getKey()));
+						persisted = entityManager.findOne(entry.getKey(),
+								(Serializable) bw.getPropertyValue(entry
+										.getKey()));
 						if (persisted != null) {
 							addFieldError(
 									getEntityName() + "." + entry.getKey(),
@@ -393,14 +392,13 @@ public class EntityAction extends BaseAction {
 						String name = it.next();
 						args[i] = name;
 						i++;
-						args[i] = (Serializable)bw.getPropertyValue(name);
+						args[i] = (Serializable) bw.getPropertyValue(name);
 						i++;
 					}
 				} catch (Exception e) {
 					log.error(e.getMessage(), e);
 				}
-				persisted = entityManager
-						.findOne(caseInsensitive, args);
+				persisted = entityManager.findOne(caseInsensitive, args);
 				entityManager.evict(persisted);
 				if (persisted != null
 						&& !persisted.getId().equals(entity.getId())) {
@@ -419,9 +417,9 @@ public class EntityAction extends BaseAction {
 									.getRequest().getParameter(
 											getEntityName() + '.'
 													+ entry.getKey()))) {
-						persisted = entityManager.findOne(entry
-								.getKey(), (Serializable) bw
-								.getPropertyValue(entry.getKey()));
+						persisted = entityManager.findOne(entry.getKey(),
+								(Serializable) bw.getPropertyValue(entry
+										.getKey()));
 						entityManager.evict(persisted);
 						if (persisted != null
 								&& !persisted.getId().equals(entity.getId())) {
@@ -738,12 +736,14 @@ public class EntityAction extends BaseAction {
 						|| returnType == Short.TYPE
 						|| returnType == Short.class || returnType == Long.TYPE
 						|| returnType == Long.class) {
+					uci.setInputType("number");
 					uci.addCssClass("integer");
 				} else if (returnType == Double.TYPE
 						|| returnType == Double.class
 						|| returnType == Float.TYPE
 						|| returnType == Float.class
 						|| returnType == BigDecimal.class) {
+					uci.setInputType("number");
 					uci.addCssClass("double");
 				} else if (Date.class.isAssignableFrom(returnType)) {
 					uci.addCssClass("date");
@@ -751,6 +751,7 @@ public class EntityAction extends BaseAction {
 						uci.setCellEdit("click,date");
 				} else if (String.class == returnType
 						&& pd.getName().toLowerCase().contains("email")) {
+					uci.setInputType("email");
 					uci.addCssClass("email");
 				} else if (returnType == Boolean.TYPE
 						|| returnType == Boolean.class) {
@@ -791,6 +792,7 @@ public class EntityAction extends BaseAction {
 	public static class UiConfigImpl implements Serializable {
 		private static final long serialVersionUID = -5963246979386241924L;
 		private String type = UiConfig.DEFAULT_TYPE;
+		private String inputType = UiConfig.DEFAULT_INPUT_TYPE;
 		private boolean required;
 		private boolean unique;
 		private int size;
@@ -818,6 +820,7 @@ public class EntityAction extends BaseAction {
 			if (config == null)
 				return;
 			this.type = config.type();
+			this.inputType = config.inputType();
 			this.listKey = config.listKey();
 			this.listValue = config.listValue();
 			this.required = config.required();
@@ -920,6 +923,14 @@ public class EntityAction extends BaseAction {
 
 		public void setType(String type) {
 			this.type = type;
+		}
+
+		public String getInputType() {
+			return inputType;
+		}
+
+		public void setInputType(String inputType) {
+			this.inputType = inputType;
 		}
 
 		public int getSize() {

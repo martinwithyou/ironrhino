@@ -124,7 +124,7 @@ $(function() {
 		<@s.hidden name="page.tagsAsString"/>
 	<#else>
 		<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50" cssStyle="width:400px;"/>
-		<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" cssClass="integer"/>
+		<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" type="number" cssClass="integer"/>
 		<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tags" source="${getUrl('/common/page/suggest')}" cssStyle="width:400px;"/>
 	</#if>
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50" cssStyle="width:400px;"/>

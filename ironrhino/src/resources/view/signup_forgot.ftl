@@ -10,7 +10,7 @@
 <div class="row">
 	<div class="span4 offset4">
 	<@s.form method="post" action="forgot" cssClass="ajax reset form-horizontal">
-		<@s.textfield label="%{getText('email')}" name="email" cssClass="required email"/>
+		<@s.textfield label="%{getText('email')}" name="email" type="email" cssClass="required email"/>
 		<@captcha/>
 		<@s.submit value="%{getText('confirm')}" />
 	</@s.form>

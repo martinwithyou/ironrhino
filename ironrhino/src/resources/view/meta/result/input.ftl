@@ -72,9 +72,9 @@
 			</#if>
 		<#else>
 			<#if config.maxlength gt 0>
-				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" maxlength="${(config.maxlength)}" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes />
+				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" type="${(config.inputType!)}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" maxlength="${(config.maxlength)}" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes />
 			<#else>
-				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes />
+				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" type="${(config.inputType!)}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes />
 			</#if>
 		</#if>
 	</#list>

@@ -245,7 +245,8 @@ Form = {
 			$('.field-error', $(target).parent()).fadeIn().remove();
 			if ($(target).is(':visible') || $(target).is('[type="hidden"]')
 					&& !$(target).prop('disabled')) {
-				if ($(target).hasClass('required') && !$(target).val()) {
+				var value = $(target).val();
+				if ($(target).hasClass('required') && !value) {
 					if ($(target).prop('tagName') == 'SELECT')
 						Message.showFieldError(target, null,
 								'selection.required');
@@ -253,38 +254,37 @@ Form = {
 						Message.showFieldError(target, null, 'required');
 					return false;
 				} else if ($(target).hasClass('email')
-						&& $(target).val()
-						&& !$(target)
-								.val()
+						&& value
+						&& !value
 								.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
 					Message.showFieldError(target, null, 'email');
 					return false;
-				} else if ($(target).hasClass('phone') && $(target).val()
-						&& !$(target).val().match(/^[\d-]+$/)) {
+				} else if ($(target).hasClass('phone') && value
+						&& !value.match(/^[\d-]+$/)) {
 					Message.showFieldError(target, null, 'phone');
 					return false;
-				} else if ($(target).hasClass('integer') && $(target).val()) {
+				} else if ($(target).hasClass('integer') && value) {
 					if ($(target).hasClass('positive')
-							&& !$(target).val().match(/^[+]?\d*$/)) {
+							&& !value.match(/^[+]?\d*$/)) {
 						Message
 								.showFieldError(target, null,
 										'integer.positive');
 						return false;
 					}
 					if (!$(target).hasClass('positive')
-							&& !$(target).val().match(/^[-+]?\d*$/)) {
+							&& !value.match(/^[-+]?\d*$/)) {
 						Message.showFieldError(target, null, 'integer');
 						return false;
 					}
 					return true;
-				} else if ($(target).hasClass('double') && $(target).val()) {
+				} else if ($(target).hasClass('double') && value) {
 					if ($(target).hasClass('positive')
-							&& !$(target).val().match(/^[+]?\d+(\.\d+)?$/)) {
+							&& !value.match(/^[+]?\d+(\.\d+)?$/)) {
 						Message.showFieldError(target, null, 'double.positive');
 						return false;
 					}
 					if (!$(target).hasClass('positive')
-							&& !$(target).val().match(/^[-+]?\d+(\.\d+)?$/)) {
+							&& !value.match(/^[-+]?\d+(\.\d+)?$/)) {
 						Message.showFieldError(target, null, 'double');
 						return false;
 					}
@@ -540,8 +540,8 @@ Initialization.common = function() {
 							Form.validate(this);
 						return true;
 					})).live('blur', function(ev) {
-				if (this.value != this.defaultValue)
-					Form.validate(this);
+				// if (this.value != this.defaultValue)
+				Form.validate(this);
 				return true;
 			});
 	$('select').live('change', function() {
@@ -1095,7 +1095,7 @@ Captcha = {
 						src = src.substring(0, i);
 					this.src = src + '&' + Math.random();
 				});
-		$('input.captcha').val('');
+		$('input.captcha').val('').focus();
 	}
 };
 ArrayUtils = {

@@ -45,9 +45,6 @@ td.middle {
 .navbar-fixed-top, .navbar-fixed-bottom{
 	z-index: 1000;
 }
-#_window_ input[type="text"],#_window_ input[type="password"]{
-	width: 150px;
-}
 td input,td textarea,td select,td .uneditable-input{
 	margin-bottom: 0px;
 }
@@ -97,7 +94,9 @@ input.integer,input.double,input.date,#_window_ input.integer,#_window_ input.do
 	width: 75px;
 	font-family: Arial;
 }
-
+input.filterselect{
+	width: 75px;
+}
 input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }

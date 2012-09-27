@@ -14,8 +14,8 @@
 	<@s.hidden name="schema.strict" />
 		<#else>
 		<div class="row-fluid">
-			<div class="span4"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable"/></div>
-			<div class="span5"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description" /></div>
+			<div class="span4"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable input-medium"/></div>
+			<div class="span5"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description"/></div>
 			<div class="span3"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" /></div>
 		</div>
 	</#if>
@@ -31,7 +31,7 @@
 		<thead>
 			<tr>
 				<td>${action.getText('name')}</td>
-				<td style="width:40%;">${action.getText('value')}</td>
+				<td style="width:38%;">${action.getText('value')}</td>
 				<td>${action.getText('type')}</td>
 				<td>${action.getText('required')}</td>
 				<td>${action.getText('strict')}</td>

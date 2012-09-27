@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: text.ftl 1157009 2011-08-12 08:38:39Z mcucchiara $
+ * $Id: text.ftl 1389534 2012-09-24 19:43:44Z jogep $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,7 +20,8 @@
  * under the License.
  */
 -->
-<input type="text"<#rt/>
+<input<#rt/>
+ type="${parameters.type?default("text")?html}"<#rt/>
  name="${parameters.name?default("")?html}"<#rt/>
 <#if parameters.get("size")??>
  size="${parameters.get("size")?html}"<#rt/>

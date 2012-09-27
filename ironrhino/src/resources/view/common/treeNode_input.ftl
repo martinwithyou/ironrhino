@@ -10,9 +10,9 @@
 	</#if>
 	<@s.hidden name="parentId" />
 	<div class="row-fluid">
-		<div class="span4"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="treeNode.name" cssClass="required" /></div>
-		<div class="span4"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="treeNode.description" /></div>
-		<div class="span4"><span>${action.getText('displayOrder')}: </span><@s.textfield theme="simple" name="treeNode.displayOrder" cssClass="integer"/></div>
+		<div class="span4"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="treeNode.name" cssClass="required input-medium"/></div>
+		<div class="span4"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="treeNode.description"  cssClass="input-medium"/></div>
+		<div class="span4"><span>${action.getText('displayOrder')}: </span><@s.textfield theme="simple" name="treeNode.displayOrder" type="number" cssClass="integer"/></div>
 	</div>
 	<table class="datagrid table table-condensed nullable" style="margin-top:10px;">
 		<thead>
