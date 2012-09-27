@@ -59,12 +59,14 @@ function addMarker(region){
 		marker.region = region;
 		markers.push(marker);
 		regions[region.id+''] = region;
+		/*
     	google.maps.event.addListener(marker, "click", function() {
 	    	  var infowindow = new google.maps.InfoWindow();
 		      infowindow.setContent(region.name);
 		      infowindow.setPosition(marker.getPosition());
 		      infowindow.open(map);
   		});
+  		*/
   		google.maps.event.addListener(marker, "dragstart", function(event) {
 		      marker.oldPosition = marker.getPosition();
   		});
@@ -111,7 +113,7 @@ function closeSuccessInfoWindow(){
 }
 function moveTo(region){
 	var r = regions[region.id+''];
-	if(r)
+	if(r && r.coordinate)
 		region.coordinate = r.coordinate;
 	if(region.coordinate && region.coordinate.latitude){
 		map.panTo(new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude));
