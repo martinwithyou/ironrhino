@@ -7,6 +7,7 @@
 
 var map;
 var markers = [];
+var regions = {};
 var successInfoWindow;
 function initialize() {
   map = new google.maps.Map(document.getElementById("map_container"), {
@@ -38,12 +39,12 @@ function getMarkers(){
 		url:url, 
 		global:false,
 		dataType:'json',
-		success:function(regions) {
+		success:function(resp) {
 			for( i=0;i<markers.length; i++ ) 
 		        	removeMarker(markers[i]);
 		    markers = [];
-			for (var i = 0; i < regions.length; i++) 
-				addMarker(regions[i]);
+			for (var i = 0; i < resp.length; i++) 
+				addMarker(resp[i]);
 			}
 	});
 }
@@ -57,6 +58,7 @@ function addMarker(region){
 		});
 		marker.region = region;
 		markers.push(marker);
+		regions[region.id+''] = region;
     	google.maps.event.addListener(marker, "click", function() {
 	    	  var infowindow = new google.maps.InfoWindow();
 		      infowindow.setContent(region.name);
@@ -85,6 +87,7 @@ function moveMarker(marker){
 				latitude:marker.getPosition().lat(),
 				longitude:marker.getPosition().lng()
 			};
+			regions[region.id+''] = region;
 			var data = {
 				'region.id':region.id,
 				'region.coordinate.latitude':region.coordinate.latitude,
@@ -107,6 +110,9 @@ function closeSuccessInfoWindow(){
 		}
 }
 function moveTo(region){
+	var r = regions[region.id+''];
+	if(r)
+		region.coordinate = r.coordinate;
 	if(region.coordinate && region.coordinate.latitude){
 		map.panTo(new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude));
 		addMarker(region);
