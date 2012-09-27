@@ -6,7 +6,8 @@
 <script type="text/javascript"> 
 
 var map;
-  
+var markers = [];
+var successInfoWindow;
 function initialize() {
   map = new google.maps.Map(document.getElementById("map_container"), {
     zoom: ${Parameters.zoom!8},
@@ -24,10 +25,10 @@ function initialize() {
     });
   }
 </#if>
+	google.maps.event.addListener(map, 'bounds_changed', closeSuccessInfoWindow);
 	google.maps.event.addListener(map, 'idle', getMarkers);
 	setTimeout(getMarkers,1000);
 }
-
 function getMarkers(){
 	var bounds = map.getBounds();
 	var southWest = bounds.getSouthWest();
@@ -38,6 +39,9 @@ function getMarkers(){
 		global:false,
 		dataType:'json',
 		success:function(regions) {
+			for( i=0;i<markers.length; i++ ) 
+		        	removeMarker(markers[i]);
+		    markers = [];
 			for (var i = 0; i < regions.length; i++) 
 				addMarker(regions[i]);
 			}
@@ -47,17 +51,61 @@ function getMarkers(){
 function addMarker(region){
 		var marker = new google.maps.Marker({
 		      position: new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude), 
+		      draggable:true,
 		      map: map, 
 		      title:region.name
-		}); 
+		});
+		marker.region = region;
+		markers.push(marker);
     	google.maps.event.addListener(marker, "click", function() {
 	    	  var infowindow = new google.maps.InfoWindow();
 		      infowindow.setContent(region.name);
 		      infowindow.setPosition(marker.getPosition());
 		      infowindow.open(map);
   		});
+  		google.maps.event.addListener(marker, "dragstart", function(event) {
+		      marker.oldPosition = marker.getPosition();
+  		});
+  		google.maps.event.addListener(marker, "dragend", function(event) {
+		      moveMarker(marker);
+  		});
 }
-
+function removeMarker(marker){
+		marker.setMap(null);
+		marker = null;
+}
+function moveMarker(marker){
+		var region = marker.region;
+		if(!confirm('change position for '+region.name+'?')){
+				if(marker.oldPosition)
+					marker.setPosition(marker.oldPosition);
+				return;
+			}
+			region.coordinate = {
+				latitude:marker.getPosition().lat(),
+				longitude:marker.getPosition().lng()
+			};
+			var data = {
+				'region.id':region.id,
+				'region.coordinate.latitude':region.coordinate.latitude,
+				'region.coordinate.longitude':region.coordinate.longitude,
+			}	
+			$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){
+				if(resp.actionMessages){
+					  closeSuccessInfoWindow();	
+					  successInfoWindow = new google.maps.InfoWindow();
+				      successInfoWindow.setContent(resp.actionMessages[0]);
+				      successInfoWindow.setPosition(marker.getPosition());
+				      successInfoWindow.open(map);
+				      }
+				}});
+}
+function closeSuccessInfoWindow(){
+		if(successInfoWindow){
+			successInfoWindow.close();
+			successInfoWindow = null;
+		}
+}
 function moveTo(region){
 	if(region.coordinate && region.coordinate.latitude){
 		map.panTo(new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude));

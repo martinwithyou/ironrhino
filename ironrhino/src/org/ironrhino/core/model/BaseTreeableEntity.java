@@ -202,4 +202,9 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		}
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		return this.name;
+	}
 }
