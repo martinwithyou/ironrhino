@@ -97,6 +97,9 @@ input.integer,input.double,input.date,#_window_ input.integer,#_window_ input.do
 input.filterselect{
 	width: 75px;
 }
+input.latlng{
+	width: 280px;
+}
 input.required {
 	background: #FFF url(../images/required.png) no-repeat right;
 }

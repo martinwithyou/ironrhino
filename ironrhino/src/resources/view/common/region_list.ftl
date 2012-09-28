@@ -6,6 +6,7 @@
 <body>
 <#assign columns={"name":{"cellEdit":"click"},"areacode":{"cellEdit":"click"},"postcode":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"}}>
 <#assign actionColumnButtons='
+<button type="button" class="btn" data-view="input">${action.getText("edit")}</button>
 <button type="button" class="btn" data-action="enter">${action.getText("enter")}</button>
 '>
 <#assign bottomButtons='

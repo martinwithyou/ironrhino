@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.ironrhino.core.metadata.NotInJson;
 
 public class Coordinate implements Serializable {
 
@@ -22,15 +23,13 @@ public class Coordinate implements Serializable {
 		this.longitude = longitude;
 	}
 
-	public Coordinate(String latlong) {
-		String[] arr = latlong.split(",");
-		this.latitude = parseLatLong(arr[0]);
-		this.longitude = parseLatLong(arr[1]);
+	public Coordinate(String latLng) {
+		setLatLngAsString(latLng);
 	}
 
 	public Coordinate(String latitude, String longitude) {
-		this.latitude = parseLatLong(latitude);
-		this.longitude = parseLatLong(longitude);
+		this.latitude = parseLatOrLong(latitude);
+		this.longitude = parseLatOrLong(longitude);
 	}
 
 	public Double getLatitude() {
@@ -41,14 +40,6 @@ public class Coordinate implements Serializable {
 		this.latitude = latitude;
 	}
 
-	public String getLatitudeAsString() {
-		return String.valueOf(latitude);
-	}
-
-	public void setLatitudeAsString(String latitude) {
-		this.latitude = parseLatLong(latitude);
-	}
-
 	public Double getLongitude() {
 		return longitude;
 	}
@@ -57,12 +48,18 @@ public class Coordinate implements Serializable {
 		this.longitude = longitude;
 	}
 
-	public String getLongitudeAsString() {
-		return String.valueOf(longitude);
+	@NotInJson
+	public void setLatLngAsString(String latLng) {
+		String[] arr = latLng.split(",");
+		this.latitude = parseLatOrLong(arr[0]);
+		this.longitude = parseLatOrLong(arr[1]);
 	}
 
-	public void setLongitudeAsString(String longitude) {
-		this.longitude = parseLatLong(longitude);
+	public String getLatLngAsString() {
+		if (latitude != null && longitude != null)
+			return latitude + "," + longitude;
+		else
+			return null;
 	}
 
 	@Override
@@ -77,10 +74,10 @@ public class Coordinate implements Serializable {
 
 	@Override
 	public String toString() {
-		return latitude + "," + longitude;
+		return getLatLngAsString();
 	}
 
-	public static Double parseLatLong(String input) {
+	public static Double parseLatOrLong(String input) {
 		try {
 			return Double.valueOf(input);
 		} catch (Exception e) {
@@ -100,7 +97,6 @@ public class Coordinate implements Serializable {
 				}
 			}
 			return d;
-
 		}
 	}
 

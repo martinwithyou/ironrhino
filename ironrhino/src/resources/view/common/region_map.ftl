@@ -2,7 +2,7 @@
 <#escape x as x?html><html>
 <head>
 <title>地图</title>
-<script type="text/javascript"> 
+<script type="text/javascript">
 var map;
 var markers = [];
 var regions = {};
@@ -10,14 +10,18 @@ var newMarker;
 var successInfoWindow;
 
 function init(){
-	var script = document.createElement('script');
-	script.src = 'https://www.google.com/jsapi?callback=loadMaps';
-	script.type = 'text/javascript';
-	document.getElementsByTagName("head")[0].appendChild(script);
+	if(typeof google == 'undefined'){
+		var script = document.createElement('script');
+		script.src = 'https://www.google.com/jsapi?callback=loadMaps';
+		script.type = 'text/javascript';
+		document.getElementsByTagName("head")[0].appendChild(script);
+	}
 }
 
 function loadMaps(){
-	google.load("maps", "3", {other_params:'sensor=true&region=CN','callback' : initMaps});
+	if(typeof google != 'undefined' && typeof google.maps == 'undefined'){
+		google.load("maps", "3", {other_params:'sensor=true&region=CN','callback' : initMaps});
+	}
 }
 
 function initMaps() {

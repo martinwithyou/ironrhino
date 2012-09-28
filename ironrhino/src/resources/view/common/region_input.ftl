@@ -10,8 +10,9 @@
 	</#if>
 	<@s.hidden name="parentId" />
 	<@s.textfield label="%{getText('name')}" name="region.name" />
-	<@s.textfield label="%{getText('areacode')}" name="region.areacode" maxlength="6" size="6"/>
-	<@s.textfield label="%{getText('postcode')}" name="region.postcode" maxlength="6" size="6"/>
+	<@s.textfield label="%{getText('coordinate')}" name="region.coordinate.latLngAsString" cssClass="latlng"/>
+	<@s.textfield label="%{getText('areacode')}" name="region.areacode" maxlength="6"/>
+	<@s.textfield label="%{getText('postcode')}" name="region.postcode" maxlength="6"/>
 	<@s.textfield label="%{getText('displayOrder')}" name="region.displayOrder" type="number" cssClass="integer"/>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
