@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <#escape x as x?html><html>
 <head>
-<title>${action.getText('region')}${action.getText('map')}</title>
+<title>地图</title>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&region=CN"></script> 
 <script type="text/javascript"> 
 
 var map;
 var markers = [];
 var regions = {};
+var newMarker;
 var successInfoWindow;
 function initialize() {
   map = new google.maps.Map(document.getElementById("map_container"), {
@@ -26,6 +27,7 @@ function initialize() {
     });
   }
 </#if>
+	google.maps.event.addListener(map, 'click', placeNewMarker);
 	google.maps.event.addListener(map, 'bounds_changed', closeSuccessInfoWindow);
 	google.maps.event.addListener(map, 'idle', getMarkers);
 	setTimeout(getMarkers,1000);
@@ -50,6 +52,10 @@ function getMarkers(){
 }
 
 function addMarker(region){
+		if(newMarker){
+			newMarker.setMap(null);
+			newMarker = null;
+		}
 		var marker = new google.maps.Marker({
 		      position: new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude), 
 		      draggable:true,
@@ -80,7 +86,7 @@ function removeMarker(marker){
 }
 function moveMarker(marker){
 		var region = marker.region;
-		if(!confirm('change position for '+region.name+'?')){
+		if(!confirm('重新标注'+region.name+'?')){
 				if(marker.oldPosition)
 					marker.setPosition(marker.oldPosition);
 				return;
@@ -105,6 +111,17 @@ function moveMarker(marker){
 				      }
 				}});
 }
+function placeNewMarker(event){
+	if(!newMarker){
+		newMarker = new google.maps.Marker({
+		      position: event.latLng, 
+		      map: map,
+		      title: '空白'
+		});
+	}else{
+		newMarker.setPosition(event.latLng);
+	}
+}
 function closeSuccessInfoWindow(){
 		if(successInfoWindow){
 			successInfoWindow.close();
@@ -117,25 +134,31 @@ function moveTo(region){
 		region.coordinate = r.coordinate;
 	if(region.coordinate && region.coordinate.latitude){
 		map.panTo(new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude));
-		addMarker(region);
+		map.setZoom(10);
 	}else{
-		alert('mot mark yet');
+		alert('还没有在地图上标注!');
 	}
 }
 
 function mark(region){
-	if(!confirm('map center to '+region.name+'?'))
-		return;
-	region.coordinate = {
-		latitude:map.getCenter().lat(),
-		longitude:map.getCenter().lng()
-	};
-	var data = {
-		'region.id':region.id,
-		'region.coordinate.latitude':region.coordinate.latitude,
-		'region.coordinate.longitude':region.coordinate.longitude,
-	}	
-	$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
+	if(newMarker){
+		if(!confirm('确认空白标注所在地是'+region.name+'?'))
+			return;
+		region.coordinate = {
+			latitude:newMarker.getPosition().lat(),
+			longitude:newMarker.getPosition().lng()
+		};
+		var data = {
+			'region.id':region.id,
+			'region.coordinate.latitude':region.coordinate.latitude,
+			'region.coordinate.longitude':region.coordinate.longitude,
+		}	
+		$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
+		
+	}else{
+		alert('请先点击此地点在地图上的位置再标注');
+		}
+	
 }
 
 
@@ -162,8 +185,8 @@ $(function(){
 <div class="clearfix">
   <div style="float: left; width: 20%;height: 600px;overflow:scroll;">
 	<div class="btn-group switch" style="margin-bottom:10px;">
-	  <button class="btn active moveTo">${action.getText("move")}</button>
-	  <button class="btn mark">${action.getText("mark")}</button>
+	  <button class="btn active moveTo">移动</button>
+	  <button class="btn mark">标注</button>
 	</div>
 	<div id="regionTree"></div>
 	</div>

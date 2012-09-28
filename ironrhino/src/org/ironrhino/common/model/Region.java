@@ -98,9 +98,4 @@ public class Region extends BaseTreeableEntity<Region> {
 		return null;
 	}
 
-	@Override
-	public String toString() {
-		return getFullname();
-	}
-
 }
