@@ -86,6 +86,8 @@ function latlng_createOrMoveMarker(latLng) {
 	} else {
 		latlng_marker.setPosition(latLng);
 	}
+	if (latlng_map.getZoom() < 8)
+		latlng_map.setZoom(8);
 	latlng_map.setCenter(latLng);
 }
 function latlng_setLatLng(latLng) {
