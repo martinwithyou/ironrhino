@@ -8,7 +8,7 @@ var markers = [];
 var regions = {};
 var newMarker;
 var successInfoWindow;
-
+var geocoder;
 function init(){
 	if(typeof google == 'undefined'){
 		var script = document.createElement('script');
@@ -25,6 +25,7 @@ function loadMaps(){
 }
 
 function initMaps() {
+  geocoder = new google.maps.Geocoder();
   map = new google.maps.Map(document.getElementById("map_container"), {
     zoom: ${Parameters.zoom!8},
 <#if Parameters.lat??>
@@ -148,9 +149,28 @@ function moveTo(region){
 		region.coordinate = r.coordinate;
 	if(region.coordinate && region.coordinate.latitude){
 		map.panTo(new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude));
-		map.setZoom(10);
+		map.setZoom(8);
 	}else{
-		alert('还没有在地图上标注!');
+		geocoder.geocode( { 'address': region.name}, function(results, status) {
+	      if (status == google.maps.GeocoderStatus.OK) {
+	        var pos = results[0].geometry.location;
+	        map.setCenter(pos);
+	        map.setZoom(8);
+	        region.coordinate = {
+				latitude:pos.lat(),
+				longitude:pos.lng()
+			};
+			var data = {
+			'region.id':region.id,
+			'region.coordinate.latitude':region.coordinate.latitude,
+			'region.coordinate.longitude':region.coordinate.longitude,
+			}	
+			$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
+	      } else {
+	      	alert('还没有在地图上标注!');
+	      }
+	    });
+		
 	}
 }
 
