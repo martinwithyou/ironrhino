@@ -36088,6 +36088,10 @@ function latlng_initMaps() {
 				latlng_createOrMoveMarker(event.latLng);
 				latlng_setLatLng(event.latLng);
 			});
+	google.maps.event.addListener(latlng_map, 'rightclick', function(event) {
+				latlng_setLatLng(event.latLng);
+				$('#_maps_window').dialog('close');
+			});
 }
 function latlng_createOrMoveMarker(latLng) {
 	if (!latLng)
