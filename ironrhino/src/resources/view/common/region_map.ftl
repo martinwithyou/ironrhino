@@ -149,13 +149,13 @@ function moveTo(region){
 		region.coordinate = r.coordinate;
 	if(region.coordinate && region.coordinate.latitude){
 		map.panTo(new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude));
-		map.setZoom(8);
+		map.setZoom(9);
 	}else{
 		geocoder.geocode( { 'address': region.name}, function(results, status) {
 	      if (status == google.maps.GeocoderStatus.OK) {
 	        var pos = results[0].geometry.location;
 	        map.setCenter(pos);
-	        map.setZoom(8);
+	        map.setZoom(9);
 	        region.coordinate = {
 				latitude:pos.lat(),
 				longitude:pos.lng()
