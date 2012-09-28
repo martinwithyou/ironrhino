@@ -2,15 +2,25 @@
 <#escape x as x?html><html>
 <head>
 <title>地图</title>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&region=CN"></script> 
 <script type="text/javascript"> 
-
 var map;
 var markers = [];
 var regions = {};
 var newMarker;
 var successInfoWindow;
-function initialize() {
+
+function init(){
+	var script = document.createElement('script');
+	script.src = 'https://www.google.com/jsapi?callback=loadMaps';
+	script.type = 'text/javascript';
+	document.getElementsByTagName("head")[0].appendChild(script);
+}
+
+function loadMaps(){
+	google.load("maps", "3", {other_params:'sensor=true&region=CN','callback' : initMaps});
+}
+
+function initMaps() {
   map = new google.maps.Map(document.getElementById("map_container"), {
     zoom: ${Parameters.zoom!8},
 <#if Parameters.lat??>
@@ -177,7 +187,7 @@ $(function(){
 		collapsed: true,
 		unique: true
 	});
-	initialize();
+	init();
 });
 </script> 
 </head> 
