@@ -36033,10 +36033,10 @@ Observation.listpick = function(container) {
 			if (!$('#_maps_window').length) {
 				var win = $('<div id="_maps_window" title="'
 						+ MessageBundle.get('select')
-						+ '"><div id="_maps_container" style="width:800px;height:600px;"></div></div>')
+						+ '"><div id="_maps_container" style="width:500px;height:400px;"></div></div>')
 						.appendTo(document.body).dialog({
-									minWidth : 820,
-									minHeight : 620
+									minWidth : 520,
+									minHeight : 400
 								});
 				if (typeof google == 'undefined') {
 					var script = document.createElement('script');
@@ -36053,7 +36053,7 @@ Observation.listpick = function(container) {
 				else {
 					latlng_marker.setMap(null);
 					latlng_marker = null;
-					latlng_map.setZoom(4);
+					latlng_map.setZoom(3);
 					latlng_map.setCenter(new google.maps.LatLng(35.6622,
 							104.0967));
 				}
@@ -36077,7 +36077,7 @@ function latlng_loadMaps() {
 function latlng_initMaps() {
 	latlng_map = new google.maps.Map(
 			document.getElementById('_maps_container'), {
-				zoom : 4,
+				zoom : 3,
 				mapTypeId : google.maps.MapTypeId.ROADMAP
 			});
 	if (latlng_input && $(latlng_input).val())
