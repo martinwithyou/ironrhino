@@ -127,6 +127,8 @@ function moveMarker(marker){
 				}});
 }
 function placeNewMarker(event){
+	if($('.moveTo').hasClass('active'))
+		return;
 	if(!newMarker){
 		newMarker = new google.maps.Marker({
 		      position: event.latLng, 
