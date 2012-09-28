@@ -283,7 +283,7 @@ public class RegionAction extends BaseAction {
 	}
 
 	private Integer[] zoom2level(int z) {
-		if (z <= 7) {
+		if (z < 7) {
 			return new Integer[] { 1 };
 		} else if (z <= 7) {
 			return new Integer[] { 1, 2 };
