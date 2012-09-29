@@ -30,13 +30,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
+
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class InitRegion {
 
 	static EntityManager entityManager;
 
 	static Map<String, String> regionAreacodeMap = regionAreacodeMap();
-	static Map<String, String> regionCoordinateMap = regionCoordinateMap();
+	static ListMultimap<String, String> regionCoordinateMap = regionCoordinateMap();
 
 	public static void main(String... strings) throws Exception {
 		System.setProperty("app.name", "ironrhino");
@@ -66,16 +69,36 @@ public class InitRegion {
 	private static void save(Region region) {
 		String shortName = RegionUtils.shortenName(region.getName());
 		region.setAreacode(regionAreacodeMap.get(region.getName()));
-		String coordinate = regionCoordinateMap.get(region.getName());
-		if (coordinate == null) {
-			coordinate = regionCoordinateMap.get(shortName);
-		}
-		if (coordinate != null) {
-			String[] arr = coordinate.split(",");
-			Coordinate c = new Coordinate();
-			c.setLatitude(Double.valueOf(arr[1]));
-			c.setLongitude(Double.valueOf(arr[0]));
-			region.setCoordinate(c);
+		if (regionCoordinateMap != null) {
+			List<String> coordinateAndParentName = regionCoordinateMap
+					.get(region.getName());
+			if (coordinateAndParentName.isEmpty())
+				coordinateAndParentName = regionCoordinateMap.get(shortName);
+			for (String s : coordinateAndParentName) {
+				String[] arr = s.split("\\s");
+				String coordinate = arr[0];
+				String parentName = arr[1];
+				if (region.getParent() != null) {
+					if (parentName.length() >= 2
+							&& region.getParent().getName().length() > 2
+							&& parentName.contains(region.getParent().getName()
+									.substring(0, 2))) {
+						String[] arr2 = coordinate.split(",");
+						Coordinate c = new Coordinate();
+						c.setLatitude(Double.valueOf(arr2[1]));
+						c.setLongitude(Double.valueOf(arr2[0]));
+						region.setCoordinate(c);
+						break;
+					}
+				} else {
+					String[] arr2 = coordinate.split(",");
+					Coordinate c = new Coordinate();
+					c.setLatitude(Double.valueOf(arr2[1]));
+					c.setLongitude(Double.valueOf(arr2[0]));
+					region.setCoordinate(c);
+				}
+			}
+
 		}
 		if (rank1cities.contains(shortName)) {
 			region.setRank(1);
@@ -117,7 +140,7 @@ public class InitRegion {
 		return map;
 	}
 
-	private static Map<String, String> regionCoordinateMap() {
+	private static ListMultimap<String, String> regionCoordinateMap() {
 		// http://www.williamlong.info/google/archives/27.html
 		NodeList nodeList = null;
 		NamespaceContext nsContext = new NamespaceContext() {
@@ -159,15 +182,23 @@ public class InitRegion {
 							.getResourceAsStream("resources/data/region.kml"),
 							"utf-8"), nsContext);
 		} catch (UnsupportedEncodingException e) {
-			return Collections.EMPTY_MAP;
+			return null;
 		}
-		Map<String, String> map = new HashMap<String, String>(
-				nodeList.getLength());
+		ListMultimap<String, String> map = LinkedListMultimap.create();
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Element element = (Element) nodeList.item(i);
-			NodeList nl = element.getChildNodes();
+
 			String name = null;
 			String coordinate = null;
+			String parentName = "";
+			Element folder = (Element) element.getParentNode();
+			int level = 3;
+			while(level > 0){
+				parentName=getName(folder)+parentName;
+				folder = (Element) folder.getParentNode();
+				level --;
+			}
+			NodeList nl = element.getChildNodes();
 			for (int j = 0; j < nl.getLength(); j++) {
 				Node node = nl.item(j);
 				if (node.getNodeType() == Document.ELEMENT_NODE) {
@@ -188,15 +219,31 @@ public class InitRegion {
 					}
 				}
 			}
-			if (name != null)
-				map.put(name, coordinate);
+			if (name != null) {
+				System.out.println(parentName);
+				map.put(name, coordinate + " " + parentName);
+			}
 		}
 		return map;
 	}
 
+	private static String getName(Element element) {
+		NodeList children = element.getChildNodes();
+		for (int j = 0; j < children.getLength(); j++) {
+			Node node = children.item(j);
+			if (node.getNodeType() == Document.ELEMENT_NODE) {
+				Element ele = (Element) node;
+				if (ele.getTagName().equals("name")) {
+					return ele.getTextContent();
+				}
+			}
+		}
+		return "";
+	}
+
 	private static List<String> rank1cities = Arrays
-			.asList("北京 上海 广州 深圳 香港 澳门 台北".split("\\s"));
+			.asList("北京,上海,广州,深圳,香港,澳门,台北".split(","));
 	private static List<String> rank2cities = Arrays
-			.asList("天津 重庆 杭州 南京 成都 武汉 西安 沈阳 大连 青岛 厦门".split("\\s"));
+			.asList("天津,重庆,杭州,南京,成都,武汉,西安,沈阳,大连,青岛,厦门".split(","));
 
 }
