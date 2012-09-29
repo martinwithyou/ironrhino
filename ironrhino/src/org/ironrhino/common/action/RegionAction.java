@@ -196,6 +196,7 @@ public class RegionAction extends BaseAction {
 				region.setName(temp.getName());
 				region.setAreacode(temp.getAreacode());
 				region.setPostcode(temp.getPostcode());
+				region.setRank(temp.getRank());
 				region.setDisplayOrder(temp.getDisplayOrder());
 			}
 		}
@@ -272,9 +273,15 @@ public class RegionAction extends BaseAction {
 		Double top = new Double(array[0]);
 		Double right = new Double(array[1]);
 		Integer[] levels = zoom2level(zoom);
+		Integer[] ranks = zoom2rank(zoom);
 		DetachedCriteria dc = entityManager.detachedCriteria();
-		if (levels != null)
+		if (levels != null && ranks != null)
+			dc.add(Restrictions.or(Restrictions.in("level", levels),
+					Restrictions.in("rank", ranks)));
+		else if (levels != null)
 			dc.add(Restrictions.in("level", levels));
+		else if (ranks != null)
+			dc.add(Restrictions.in("rank", ranks));
 		dc.add(Restrictions.and(
 				Restrictions.between("coordinate.latitude", bottom, top),
 				Restrictions.between("coordinate.longitude", left, right)));
@@ -283,12 +290,20 @@ public class RegionAction extends BaseAction {
 	}
 
 	private Integer[] zoom2level(int z) {
-		if (z < 7) {
+		if (z <= 5) {
 			return new Integer[] { 1 };
-		} else if (z <= 7) {
+		} else if (z <= 8) {
 			return new Integer[] { 1, 2 };
 		} else if (z <= 9) {
 			return new Integer[] { 1, 2, 3 };
+		} else {
+			return null;
+		}
+	}
+
+	private Integer[] zoom2rank(int z) {
+		if (z <= 5) {
+			return new Integer[] { 1, 2 };
 		} else {
 			return null;
 		}

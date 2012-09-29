@@ -21,6 +21,8 @@ public class Region extends BaseTreeableEntity<Region> {
 
 	private String postcode;
 
+	private Integer rank;
+
 	private Coordinate coordinate;
 
 	public Region() {
@@ -41,6 +43,14 @@ public class Region extends BaseTreeableEntity<Region> {
 
 	public void setPostcode(String postcode) {
 		this.postcode = postcode;
+	}
+
+	public Integer getRank() {
+		return rank;
+	}
+
+	public void setRank(Integer rank) {
+		this.rank = rank;
 	}
 
 	public Coordinate getCoordinate() {

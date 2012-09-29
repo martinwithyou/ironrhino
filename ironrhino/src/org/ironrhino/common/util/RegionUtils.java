@@ -11,7 +11,7 @@ import org.ironrhino.common.model.Region;
 
 public class RegionUtils {
 
-	public static final String[] nations = "满族,蒙古族,回族,朝鲜族,达斡尔族,畲族,土家族,苗族,侗族,瑶族,壮族,各族,仫佬族,毛南族,黎族,羌族,彝族,藏族,仡佬族,布依族,水族,傣族,哈尼族,纳西族,傈僳族,拉祜族,佤族,白族,景颇族,独龙族,普米族,布朗族,哈萨克族,东乡族,裕固族,土族,撒拉族"
+	public static final String[] nations = "满族,蒙古族,回族,朝鲜族,达斡尔族,畲族,土家族,苗族,侗族,瑶族,壮族,各族,仫佬族,毛南族,黎族,羌族,彝族,藏族,仡佬族,布依族,水族,傣族,哈尼族,纳西族,傈僳族,拉祜族,佤族,白族,景颇族,独龙族,怒族,普米族,布朗族,哈萨克族,东乡族,裕固族,土族,保安族,撒拉族"
 			.split(",");
 
 	public static final Map<String, String> mapping = new HashMap<String, String>() {
@@ -32,15 +32,19 @@ public class RegionUtils {
 			.asList("邯郸县,邢台县,承德县,大同县,长治县,抚顺县,辽阳县,铁岭县,朝阳县,吉林市,通化县,伊春区,绍兴县,芜湖县,铜陵县,黄山区,南昌县,九江县,上饶县,吉安县,东营区,开封县,安阳县,新乡县,濮阳县,许昌县,荆州区,长沙县,株洲县,湘潭县,衡阳县,岳阳县,邵阳县,宜宾县,广安区,遵义县,白银区,乌鲁木齐县,克拉玛依区"
 					.split(","));
 
-	public static final String[] suffix = "县,市,州,省,矿区,新区,地区,区".split(",");
+	public static final String[] suffix = "县,市,州,省,特别行政区,矿区,新区,地区,区".split(",");
 
 	public static String shortenAddress(String address) {
 		for (Map.Entry<String, String> entry : mapping.entrySet())
 			address = address.replace(entry.getKey(), entry.getValue());
-		while (address.indexOf('族') > 0)
+		int loop = 0;
+		while (address.indexOf('族') > 0 && loop < 5) {
 			for (String nation : nations)
 				address = address.replace(nation, "");
+			loop++;
+		}
 		address = address.replaceAll("自治", "");
+		address = address.replaceAll("特别行政区", "");
 		return address;
 	}
 
@@ -49,9 +53,12 @@ public class RegionUtils {
 			return name;
 		for (Map.Entry<String, String> entry : mapping.entrySet())
 			name = name.replace(entry.getKey(), entry.getValue());
-		while (name.indexOf('族') > 0)
+		int loop = 0;
+		while (name.indexOf('族') > 0 && loop < 5) {
 			for (String nation : nations)
 				name = name.replace(nation, "");
+			loop++;
+		}
 		name = name.replaceAll("自治", "");
 		for (String s : suffix) {
 			if (name.endsWith(s)) {

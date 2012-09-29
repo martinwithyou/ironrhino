@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,11 +54,11 @@ public class InitRegion {
 	}
 
 	private static void save(Region region) {
+		String shortName = RegionUtils.shortenName(region.getName());
 		region.setAreacode(regionAreacodeMap.get(region.getName()));
 		String coordinate = regionCoordinateMap.get(region.getName());
 		if (coordinate == null) {
-			coordinate = regionCoordinateMap.get(RegionUtils.shortenName(region
-					.getName()));
+			coordinate = regionCoordinateMap.get(shortName);
 		}
 		if (coordinate != null) {
 			String[] arr = coordinate.split(",");
@@ -65,6 +66,16 @@ public class InitRegion {
 			c.setLatitude(Double.valueOf(arr[1]));
 			c.setLongitude(Double.valueOf(arr[0]));
 			region.setCoordinate(c);
+		}
+		if (rank1cities.contains(shortName)) {
+			region.setRank(1);
+		} else if (rank2cities.contains(shortName)) {
+			region.setRank(2);
+		} else if (!region.isRoot() && !region.isLeaf()) {
+			if (region.getDisplayOrder() == 0)
+				region.setRank(3);
+			else
+				region.setRank(4);
 		}
 		entityManager.save(region);
 		List<Region> list = new ArrayList<Region>();
@@ -172,5 +183,10 @@ public class InitRegion {
 		}
 		return map;
 	}
+
+	private static List<String> rank1cities = Arrays
+			.asList("北京 上海 广州 深圳 香港 澳门 台北".split("\\s"));
+	private static List<String> rank2cities = Arrays
+			.asList("天津 重庆 杭州 南京 成都 武汉 西安 沈阳 大连 青岛 厦门".split("\\s"));
 
 }

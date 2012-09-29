@@ -12,8 +12,9 @@
 			<property name="fullId" />
 		</natural-id>
 		<property name="name" not-null="true" />
-		<property name="areacode"  length="6"/>
-		<property name="postcode"  length="6"/>
+		<property name="areacode" length="6" />
+		<property name="postcode" length="6" />
+		<property name="rank" not-null="false" />
 		<property name="level" />
 		<property name="displayOrder" />
 		<component name="coordinate">
