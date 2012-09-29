@@ -3,6 +3,8 @@ package initdata;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
 import javax.xml.namespace.NamespaceContext;
 
 import org.apache.commons.io.IOUtils;
@@ -45,7 +48,14 @@ public class InitRegion {
 				new String[] { "initdata/applicationContext-initdata.xml",
 						"resources/spring/applicationContext-ds.xml",
 						"resources/spring/applicationContext-hibernate.xml" });
-		entityManager = (EntityManager) ctx.getBean("entityManager");
+		DataSource ds = ctx.getBean(DataSource.class);
+		Connection c = ds.getConnection();
+		Statement stmt = c.createStatement();
+		stmt.executeUpdate("truncate table common_region");
+		stmt.close();
+		c.close();
+		entityManager = ctx.getBean(EntityManager.class);
+
 		List<Region> regions = RegionParser.parse();
 		for (Region region : regions) {
 			save(region);
