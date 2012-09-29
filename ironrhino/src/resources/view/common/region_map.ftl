@@ -203,6 +203,9 @@ $(function(){
 	$("#regionTree").treeview({
 		url: '<@url value="/region/children"/>'+ '?r=' + Math.random(),
 		click:function(){
+			if(typeof google == 'undefined' || typeof google.maps == 'undefined'){
+				alert("请耐心等待地图加载完全");
+			}
 			var region = $(this).closest('li').data('treenode');
 			if($('.moveTo').hasClass('active')){
 				moveTo(region);
