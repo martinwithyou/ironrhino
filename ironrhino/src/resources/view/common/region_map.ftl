@@ -153,7 +153,7 @@ function moveTo(region){
 		map.panTo(new google.maps.LatLng(region.coordinate.latitude,region.coordinate.longitude));
 		map.setZoom(9);
 	}else{
-		geocoder.geocode( { 'address': region.name}, function(results, status) {
+		geocoder.geocode( { 'address': region.fullname||region.name}, function(results, status) {
 	      if (status == google.maps.GeocoderStatus.OK) {
 	        var pos = results[0].geometry.location;
 	        map.setCenter(pos);

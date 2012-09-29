@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -172,33 +173,32 @@ public class RegionAction extends BaseAction {
 		} else {
 			Region temp = region;
 			region = entityManager.get(temp.getId());
-			if (temp.getCoordinate() != null
-					&& temp.getCoordinate().getLatitude() != null) {
+			if (ServletActionContext.getRequest().getParameter(
+					"region.coordinate.latLngAsString") != null) {
 				region.setCoordinate(temp.getCoordinate());
-			} else {
-				if (!region.getName().equals(temp.getName())) {
-					if (region.getParent() == null) {
-						DetachedCriteria dc = entityManager.detachedCriteria();
-						dc.add(Restrictions.isNull("parent"));
-						dc.addOrder(Order.asc("displayOrder"));
-						dc.addOrder(Order.asc("name"));
-						siblings = entityManager.findListByCriteria(dc);
-					} else {
-						siblings = region.getParent().getChildren();
-					}
-					for (Region sibling : siblings)
-						if (sibling.getName().equals(temp.getName())) {
-							addFieldError("region.name",
-									getText("validation.already.exists"));
-							return INPUT;
-						}
-				}
-				region.setName(temp.getName());
-				region.setAreacode(temp.getAreacode());
-				region.setPostcode(temp.getPostcode());
-				region.setRank(temp.getRank());
-				region.setDisplayOrder(temp.getDisplayOrder());
 			}
+			if (!region.getName().equals(temp.getName())) {
+				if (region.getParent() == null) {
+					DetachedCriteria dc = entityManager.detachedCriteria();
+					dc.add(Restrictions.isNull("parent"));
+					dc.addOrder(Order.asc("displayOrder"));
+					dc.addOrder(Order.asc("name"));
+					siblings = entityManager.findListByCriteria(dc);
+				} else {
+					siblings = region.getParent().getChildren();
+				}
+				for (Region sibling : siblings)
+					if (sibling.getName().equals(temp.getName())) {
+						addFieldError("region.name",
+								getText("validation.already.exists"));
+						return INPUT;
+					}
+			}
+			region.setName(temp.getName());
+			region.setAreacode(temp.getAreacode());
+			region.setPostcode(temp.getPostcode());
+			region.setRank(temp.getRank());
+			region.setDisplayOrder(temp.getDisplayOrder());
 		}
 
 		entityManager.save(region);

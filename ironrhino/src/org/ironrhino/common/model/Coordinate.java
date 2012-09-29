@@ -50,9 +50,14 @@ public class Coordinate implements Serializable {
 
 	@NotInJson
 	public void setLatLngAsString(String latLng) {
-		String[] arr = latLng.split(",");
-		this.latitude = parseLatOrLong(arr[0]);
-		this.longitude = parseLatOrLong(arr[1]);
+		if (latLng == null || latLng.trim().length() == 0) {
+			this.latitude = null;
+			this.longitude = null;
+		} else {
+			String[] arr = latLng.split(",");
+			this.latitude = parseLatOrLong(arr[0]);
+			this.longitude = parseLatOrLong(arr[1]);
+		}
 	}
 
 	public String getLatLngAsString() {
