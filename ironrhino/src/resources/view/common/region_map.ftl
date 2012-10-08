@@ -166,10 +166,10 @@ function moveTo(region){
 			'region.id':region.id,
 			'region.coordinate.latitude':region.coordinate.latitude,
 			'region.coordinate.longitude':region.coordinate.longitude,
-			}	
+			}
 			$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
 	      } else {
-	      	alert('还没有在地图上标注!');
+	      	alert(status);
 	      }
 	    });
 		
@@ -197,14 +197,49 @@ function mark(region){
 	
 }
 
+function markall(){
+	var url = '<@url value="/common/region/unmarked"/>';
+	$.getJSON(url,function(data){
+		unmarked = data;
+		nextRequestInQueue();
+	});
+}	
+
+var unmarked = [];
+var delayTime = 620;
+function nextRequestInQueue(){	
+	if (unmarked.length) {
+        var item = unmarked.shift();
+        geocoder.geocode( { 'address': item.label}, function (results, status) {
+                  if (status == google.maps.GeocoderStatus.OK) {
+                  		var pos = results[0].geometry.location;
+                        var data = {
+						'region.id':item.value,
+						'region.coordinate.latitude':pos.lat(),
+						'region.coordinate.longitude':pos.lng(),
+						}
+						$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){}});
+
+                  } else {
+                        if (status == "OVER_QUERY_LIMIT") {
+                                delayTime *= 1.08;
+                                unmarked.push(item);
+                        }
+                  }
+                setTimeout(nextRequestInQueue, delayTime);
+        });
+            
+    }
+}
+
 
 
 $(function(){
-	$("#regionTree").treeview({
+	$('#regionTree').treeview({
 		url: '<@url value="/region/children"/>'+ '?r=' + Math.random(),
 		click:function(){
 			if(typeof google == 'undefined' || typeof google.maps == 'undefined'){
-				alert("请耐心等待地图加载完全");
+				alert('请耐心等待地图加载完全');
 			}
 			var region = $(this).closest('li').data('treenode');
 			if($('.moveTo').hasClass('active')){
@@ -216,6 +251,11 @@ $(function(){
 		collapsed: true,
 		unique: true
 	});
+	$('.markall').click(function(){
+		if(!geocoder)
+			alert('请耐心等待地图加载完全');
+		markall()
+		});
 	init();
 });
 </script> 
@@ -223,9 +263,14 @@ $(function(){
 <body>
 <div class="clearfix">
   <div style="float: left; width: 20%;height: 600px;overflow:scroll;">
-	<div class="btn-group switch" style="margin-bottom:10px;">
-	  <button class="btn active moveTo">移动</button>
-	  <button class="btn mark">标注</button>
+  	<div class="btn-toolbar" style="margin-bottom:10px;">
+		<div class="btn-group switch">
+		  <button class="btn active moveTo">移动</button>
+		  <button class="btn mark">标注</button>
+		</div>
+		<div class="btn-group">
+		  <button class="btn markall" title="标注所有未标注的">一键标注</button>
+		</div>
 	</div>
 	<div id="regionTree"></div>
 	</div>

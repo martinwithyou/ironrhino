@@ -15,6 +15,7 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.search.SearchService.Mapper;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
@@ -32,6 +33,7 @@ import com.opensymphony.xwork2.validator.annotations.StringLengthFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
+@SuppressWarnings(value = { "rawtypes", "unchecked" })
 public class RegionAction extends BaseAction {
 
 	private static final long serialVersionUID = -4643055307938016102L;
@@ -42,7 +44,7 @@ public class RegionAction extends BaseAction {
 
 	private transient EntityManager<Region> entityManager;
 
-	private Collection<Region> list;
+	private Collection list;
 
 	private String southWest;
 
@@ -79,7 +81,7 @@ public class RegionAction extends BaseAction {
 		this.northEast = northEast;
 	}
 
-	public Collection<Region> getList() {
+	public Collection getList() {
 		return list;
 	}
 
@@ -387,5 +389,21 @@ public class RegionAction extends BaseAction {
 			addActionMessage(getText("operate.success"));
 		}
 		return SUCCESS;
+	}
+
+	@JsonConfig(root = "list")
+	public String unmarked() {
+		DetachedCriteria dc = entityManager.detachedCriteria();
+		dc.add(Restrictions.isNull("coordinate.latitude"));
+		String uid = getUid();
+		if (StringUtils.isNotBlank(uid)) {
+			dc.add(Restrictions.lt("id", Long.valueOf(uid)));
+		}
+		dc.addOrder(Order.asc("id"));
+		List<Region> result = entityManager.findListByCriteria(dc);
+		list = new ArrayList(result.size());
+		for (Region r : result)
+			list.add(new LabelValue(r.getId().toString(), r.getFullname()));
+		return JSON;
 	}
 }
