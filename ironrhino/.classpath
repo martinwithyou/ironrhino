@@ -60,7 +60,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/antlr-runtime-3.4.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-net-3.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-pool-1.6.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jasperreports-4.7.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jasperreports-4.7.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zookeeper-recipes-lock-3.3.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-aop-3.1.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-asm-3.1.2.jar"/>
@@ -79,7 +79,7 @@
 	<classpathentry kind="lib" path="lib/closure-compiler.jar"/>
 	<classpathentry kind="lib" path="lib/yuicompressor.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/postgresql-9.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/elasticsearch-0.19.9.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/elasticsearch-0.19.10.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-analyzers-3.6.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-3.6.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-highlighter-3.6.1.jar"/>

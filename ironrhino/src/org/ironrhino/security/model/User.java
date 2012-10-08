@@ -44,7 +44,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 	@NotInJson
 	private String password;
 
-	@SearchableProperty(boost = 3)
+	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
 	private String name;
 
 	@SearchableProperty(boost = 3)

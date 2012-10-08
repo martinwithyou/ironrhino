@@ -10,8 +10,8 @@ import org.elasticsearch.index.Index;
 import org.elasticsearch.index.analysis.AbstractIndexAnalyzerProvider;
 import org.elasticsearch.index.settings.IndexSettings;
 
-import com.chenlb.mmseg4j.analysis.ComplexAnalyzer;
 import com.chenlb.mmseg4j.analysis.MMSegAnalyzer;
+import com.chenlb.mmseg4j.analysis.MaxWordAnalyzer;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class MMsegAnalyzerProvider extends
 			@Assisted String name, @Assisted Settings settings) {
 		super(index, indexSettings, name, settings);
 		String path = new File(env.configFile(), "mmseg").getPath();
-		analyzer = new ComplexAnalyzer(path);
+		analyzer = new MaxWordAnalyzer(path);
 	}
 
 	@Override

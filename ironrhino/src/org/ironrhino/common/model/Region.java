@@ -56,7 +56,8 @@ public class Region extends BaseTreeableEntity<Region> {
 	@Override
 	public void setParent(Region parent) {
 		super.setParent(parent);
-		this.fullname = super.getFullname();
+		if (this.fullname != null)
+			this.fullname = super.getFullname();
 	}
 
 	public String getPostcode() {
