@@ -73,15 +73,12 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		this.name = name;
 	}
 
-	@NotInJson
-	@SearchableProperty(boost = 2)
 	public String getFullname() {
-		String fullname = name;
+		StringBuilder fullname = new StringBuilder(name);
 		BaseTreeableEntity e = this;
-		while ((e = e.getParent()) != null) {
-			fullname = e.getName() + fullname;
-		}
-		return fullname;
+		while ((e = e.getParent()) != null)
+			fullname.insert(0, e.getName());
+		return fullname.toString();
 	}
 
 	@NotInJson

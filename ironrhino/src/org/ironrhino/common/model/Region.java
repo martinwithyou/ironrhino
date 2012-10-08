@@ -3,6 +3,7 @@ package org.ironrhino.common.model;
 import org.ironrhino.common.util.RegionUtils;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
@@ -16,6 +17,8 @@ import org.ironrhino.core.util.StringUtils;
 public class Region extends BaseTreeableEntity<Region> {
 
 	private static final long serialVersionUID = 8878381261391688086L;
+
+	private String fullname;
 
 	private String areacode;
 
@@ -35,6 +38,25 @@ public class Region extends BaseTreeableEntity<Region> {
 
 	public void setAreacode(String areacode) {
 		this.areacode = areacode;
+	}
+
+	@Override
+	@NotInCopy
+	@SearchableProperty(boost = 2)
+	public String getFullname() {
+		if (fullname == null)
+			fullname = super.getFullname();
+		return fullname;
+	}
+
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
+	}
+
+	@Override
+	public void setParent(Region parent) {
+		super.setParent(parent);
+		this.fullname = super.getFullname();
 	}
 
 	public String getPostcode() {
@@ -68,12 +90,6 @@ public class Region extends BaseTreeableEntity<Region> {
 	public Region(String name, int displayOrder) {
 		this.name = name;
 		this.displayOrder = displayOrder;
-	}
-
-	@Override
-	@SearchableProperty(boost = 2)
-	public String getFullname() {
-		return super.getFullname();
 	}
 
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)

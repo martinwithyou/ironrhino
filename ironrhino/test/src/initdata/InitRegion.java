@@ -220,7 +220,6 @@ public class InitRegion {
 				}
 			}
 			if (name != null) {
-				System.out.println(parentName);
 				map.put(name, coordinate + " " + parentName);
 			}
 		}
