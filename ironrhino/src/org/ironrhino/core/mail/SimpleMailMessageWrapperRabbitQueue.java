@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.ironrhino.core.rabbitmq.RabbitQueue;
-import org.springframework.util.SerializationUtils;
+import org.ironrhino.core.util.SerializationUtils;
 
 import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
