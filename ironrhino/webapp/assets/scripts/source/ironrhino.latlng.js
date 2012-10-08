@@ -45,8 +45,12 @@ var latlng_map;
 var latlng_marker;
 function latlng_loadMaps() {
 	if (typeof google != 'undefined' && typeof google.maps == 'undefined') {
+		var other_params = 'sensor=true&region=CN';
+		var key = $('meta[name="google-maps-key"]').attr('content');
+		if (key)
+			other_params += '&key=' + key;
 		google.load("maps", "3", {
-					other_params : 'sensor=true&region=CN',
+					other_params : other_params,
 					'callback' : latlng_initMaps
 				});
 	}

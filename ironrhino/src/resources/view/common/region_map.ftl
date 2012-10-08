@@ -19,8 +19,12 @@ function init(){
 }
 
 function loadMaps(){
+	var other_params = 'sensor=true&region=CN';
+	var key = $('meta[name="google-maps-key"]').attr('content');
+	if(key)
+		other_params+='&key='+key;
 	if(typeof google != 'undefined' && typeof google.maps == 'undefined'){
-		google.load("maps", "3", {other_params:'sensor=true&region=CN','callback' : initMaps});
+		google.load("maps", "3", {other_params:other_params,'callback' : initMaps});
 	}
 }
 
