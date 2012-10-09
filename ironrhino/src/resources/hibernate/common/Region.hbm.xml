@@ -22,7 +22,8 @@
 			<property name="latitude" />
 			<property name="longitude" />
 		</component>
-		<many-to-one name="parent" class="Region" column="parentId" />
+		<many-to-one name="parent" class="Region" column="parentId"
+			lazy="proxy" />
 		<set name="children" inverse="true" cascade="delete" lazy="true"
 			order-by="displayOrder,name">
 			<key column="parentId" />
