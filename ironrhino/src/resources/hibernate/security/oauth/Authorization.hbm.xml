@@ -16,9 +16,11 @@
 		<property name="lifetime" />
 		<property name="refreshToken" unique="true" />
 		<property name="responseType" not-null="true" />
-		<property name="modifyDate" not-null="true"/>
-		<property name="createDate" not-null="true"/>
-		<many-to-one name="grantor" class="org.ironrhino.security.model.User" not-null="false" fetch="join" />
-		<many-to-one name="client" class="Client" not-null="true"  fetch="join" />
+		<property name="modifyDate" not-null="true" />
+		<property name="createDate" not-null="true" />
+		<many-to-one name="grantor" class="org.ironrhino.security.model.User"
+			not-null="false" fetch="select" />
+		<many-to-one name="client" class="Client" not-null="true"
+			fetch="select" />
 	</class>
 </hibernate-mapping>

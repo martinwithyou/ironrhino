@@ -222,7 +222,7 @@ Richtable = {
 				$('#_window_ ').html('');
 				win.dialog('destroy');
 			},
-			beforeclose : function(event, ui) {
+			beforeClose : function(event, ui) {
 				if ($('form', win).hasClass('dirty')) {
 					return confirm(MessageBundle.get('confirm.exit'));
 				}

@@ -43,8 +43,6 @@
 					}
 				});
 
-				// $('.portal-column', this).disableSelection(); //cannot
-				// dropdown selection
 				if (window.localStorage) {
 					var layout = localStorage[document.location.pathname
 							+ '_portal-layout'];
@@ -74,13 +72,14 @@
 			if (!arguments[1]) {
 				var layout = [];
 				$('.portal-column', this.eq(0)).each(function() {
-							var portlets = [];
-							$('.portlet:visible', this).each(function() {
-										if ($(this).attr('id'))
-											portlets.push('"' + $(this).attr('id') + '"');
-									});
-							layout.push('[' + portlets.join(',') + ']');
-						});
+					var portlets = [];
+					$('.portlet:visible', this).each(function() {
+								if ($(this).attr('id'))
+									portlets.push('"' + $(this).attr('id')
+											+ '"');
+							});
+					layout.push('[' + portlets.join(',') + ']');
+				});
 				return '[' + layout.join(',') + ']';
 			} else {
 				if (arguments[1] == 'save') {
