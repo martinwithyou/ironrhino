@@ -32,21 +32,11 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	private Random random = new Random();
 
-	private boolean converted;
-
 	public Map<String, List<String>> getImportServices() {
 		return importServices;
 	}
 
 	public Map<String, Object> getExportServices() {
-		if (!converted) {
-			converted = true;
-			Map<String, Object> map = new HashMap<String, Object>();
-			for (Map.Entry<String, Object> entry : exportServices.entrySet())
-				map.put(entry.getKey(),
-						beanFactory.getBean((String) entry.getValue()));
-			exportServices = map;
-		}
 		return exportServices;
 	}
 
@@ -72,7 +62,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 						.getPropertyValue("serviceInterface").getValue();
 				importServices.put(serviceName, Collections.EMPTY_LIST);
 			} else {
-				export(clazz, beanName);
+				export(clazz, beanName, bd.getBeanClassName());
 			}
 		}
 		for (String serviceName : exportServices.keySet())
@@ -82,7 +72,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		onReady();
 	}
 
-	private void export(Class<?> clazz, String beanName) {
+	private void export(Class<?> clazz, String beanName, String beanClassName) {
 		if (!clazz.isInterface()) {
 			Remoting remoting = clazz.getAnnotation(Remoting.class);
 			if (remoting != null) {
@@ -102,9 +92,11 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 									" class [{}] must implements interface [{}] in @Remoting",
 									clazz.getName(), inte.getName());
 						} else {
-							exportServices.put(inte.getName(), beanName);
-							log.info(" exported service [{}] for bean [{}]",
-									inte.getName(), beanName);
+							exportServices.put(inte.getName(),
+									beanFactory.getBean(beanName));
+							log.info(" exported service [{}] for bean [{}#{}]",
+									new String[] { inte.getName(), beanName,
+											beanClassName });
 						}
 					}
 				}
@@ -112,18 +104,20 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 			Class<?>[] interfaces = clazz.getInterfaces();
 			if (interfaces != null) {
 				for (Class<?> inte : interfaces) {
-					export(inte, beanName);
+					export(inte, beanName, beanClassName);
 				}
 			}
 		} else {
 			Remoting remoting = clazz.getAnnotation(Remoting.class);
 			if (remoting != null) {
-				exportServices.put(clazz.getName(), beanName);
-				log.info(" exported service [{}] for bean [{}]",
-						clazz.getName(), beanName);
+				exportServices.put(clazz.getName(),
+						beanFactory.getBean(beanName));
+				log.info(
+						" exported service [{}] for bean [{}#{}]",
+						new String[] { clazz.getName(), beanName, beanClassName });
 			}
 			for (Class<?> c : clazz.getInterfaces())
-				export(c, beanName);
+				export(c, beanName, beanClassName);
 		}
 	}
 
