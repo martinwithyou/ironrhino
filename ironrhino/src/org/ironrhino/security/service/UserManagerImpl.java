@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.cache.FlushCache;
+import org.ironrhino.core.remoting.Remoting;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.spring.security.FallbackUserDetailsService;
 import org.ironrhino.core.util.CodecUtils;
@@ -25,12 +26,14 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Singleton
 @Named("userManager")
 @Primary
+@Remoting(UserDetailsService.class)
 public class UserManagerImpl extends BaseManagerImpl<User> implements
 		UserManager {
 

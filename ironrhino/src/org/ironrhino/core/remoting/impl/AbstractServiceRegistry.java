@@ -7,12 +7,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.remoting.HessianClient;
 import org.ironrhino.core.remoting.HttpInvokerClient;
+import org.ironrhino.core.remoting.JsonCallClient;
 import org.ironrhino.core.remoting.Remoting;
 import org.ironrhino.core.remoting.ServiceRegistry;
-import org.ironrhino.core.util.AnnotationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -63,37 +62,69 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 			try {
 				clazz = Class.forName(bd.getBeanClassName());
 			} catch (Exception e) {
-				clazz = Object.class;
+				log.error(e.getMessage(), e);
+				continue;
 			}
 			if (clazz.equals(HessianClient.class)
-					|| clazz.equals(HttpInvokerClient.class)) {// remoting_client
+					|| clazz.equals(HttpInvokerClient.class)
+					|| clazz.equals(JsonCallClient.class)) {// remoting_client
 				String serviceName = (String) bd.getPropertyValues()
 						.getPropertyValue("serviceInterface").getValue();
 				importServices.put(serviceName, Collections.EMPTY_LIST);
 			} else {
-				Class<?>[] interfaces = clazz.getInterfaces();
-				if (interfaces != null) {
-					for (Class<?> inte : interfaces) {
-						Remoting remoting = AnnotationUtils.getAnnotation(inte,
-								Remoting.class);
-						if (remoting != null) {
-							if (StringUtils.isBlank(remoting.name())
-									|| remoting.name().equals(beanName)) {
-								String serviceName = inte.getName();
-								exportServices.put(serviceName, beanName);
-								break;
-							}
-						}
-					}
-				}
+				export(clazz, beanName);
 			}
 		}
-
 		for (String serviceName : exportServices.keySet())
 			register(serviceName);
 		for (String serviceName : importServices.keySet())
 			lookup(serviceName);
 		onReady();
+	}
+
+	private void export(Class<?> clazz, String beanName) {
+		if (!clazz.isInterface()) {
+			Remoting remoting = clazz.getAnnotation(Remoting.class);
+			if (remoting != null) {
+				Class<?>[] classes = remoting.value();
+				if (classes == null || classes.length == 0) {
+					log.warn(
+							"@Remoting on concrete class [{}] must assign interfaces to export services",
+							clazz.getName());
+				} else {
+					for (Class<?> inte : classes) {
+						if (!inte.isInterface()) {
+							log.warn(
+									"class [{}] in @Remoting on class [{}] must be interface",
+									inte.getName(), clazz.getName());
+						} else if (!inte.isAssignableFrom(clazz)) {
+							log.warn(
+									" class [{}] must implements interface [{}] in @Remoting",
+									clazz.getName(), inte.getName());
+						} else {
+							exportServices.put(inte.getName(), beanName);
+							log.info(" exported service [{}] for bean [{}]",
+									inte.getName(), beanName);
+						}
+					}
+				}
+			}
+			Class<?>[] interfaces = clazz.getInterfaces();
+			if (interfaces != null) {
+				for (Class<?> inte : interfaces) {
+					export(inte, beanName);
+				}
+			}
+		} else {
+			Remoting remoting = clazz.getAnnotation(Remoting.class);
+			if (remoting != null) {
+				exportServices.put(clazz.getName(), beanName);
+				log.info(" exported service [{}] for bean [{}]",
+						clazz.getName(), beanName);
+			}
+			for (Class<?> c : clazz.getInterfaces())
+				export(c, beanName);
+		}
 	}
 
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory arg)
