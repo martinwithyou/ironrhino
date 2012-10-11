@@ -34945,21 +34945,14 @@ Observation.listpick = function(container) {
 
 			} else {
 				$('#_maps_window').dialog('open');
-				if (latlng_input.val())
-					latlng_createOrMoveMarker(latlng_input.val());
-				else {
-					latlng_marker.setMap(null);
-					latlng_marker = null;
-					latlng_map.setZoom(3);
-					latlng_map.setCenter(new google.maps.LatLng(35.6622,
-							104.0967));
-				}
+				latlng_getLatLng();
 			}
 		});
 	};
 
 })(jQuery);
 
+var geocoder;
 var latlng_input;
 var latlng_map;
 var latlng_marker;
@@ -34976,15 +34969,12 @@ function latlng_loadMaps() {
 	}
 }
 function latlng_initMaps() {
+	geocoder = new google.maps.Geocoder();
 	latlng_map = new google.maps.Map(
 			document.getElementById('_maps_container'), {
 				zoom : 3,
 				mapTypeId : google.maps.MapTypeId.ROADMAP
 			});
-	if (latlng_input && $(latlng_input).val())
-		latlng_createOrMoveMarker(latlng_input.val());
-	else
-		latlng_map.setCenter(new google.maps.LatLng(35.6622, 104.0967));
 	google.maps.event.addListener(latlng_map, 'click', function(event) {
 				latlng_createOrMoveMarker(event.latLng);
 				latlng_setLatLng(event.latLng);
@@ -34993,6 +34983,15 @@ function latlng_initMaps() {
 				latlng_setLatLng(event.latLng);
 				$('#_maps_window').dialog('close');
 			});
+	latlng_getLatLng();
+}
+function latlng_resetMaps() {
+	if (latlng_marker != null) {
+		latlng_marker.setMap(null);
+		latlng_marker = null;
+	}
+	latlng_map.setZoom(3);
+	latlng_map.setCenter(new google.maps.LatLng(35.6622, 104.0967));
 }
 function latlng_createOrMoveMarker(latLng) {
 	if (!latLng)
@@ -35020,6 +35019,25 @@ function latlng_createOrMoveMarker(latLng) {
 }
 function latlng_setLatLng(latLng) {
 	$(latlng_input).val(latLng.lat() + ',' + latLng.lng());
+}
+function latlng_getLatLng() {
+	if (latlng_input)
+		if (latlng_input.val())
+			latlng_createOrMoveMarker(latlng_input.val());
+		else if (latlng_input.attr('address'))
+			geocoder.geocode({
+						'address' : latlng_input.attr('address')
+					}, function(results, status) {
+						if (status == google.maps.GeocoderStatus.OK) {
+							var pos = results[0].geometry.location;
+							latlng_setLatLng(pos);
+							latlng_createOrMoveMarker(pos);
+						} else
+							latlng_resetMaps();
+
+					});
+		else
+			latlng_resetMaps();
 }
 Observation.latlng = function(container) {
 	$('input.latlng', container).latlng();

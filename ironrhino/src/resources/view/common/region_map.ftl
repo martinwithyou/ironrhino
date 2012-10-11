@@ -118,7 +118,7 @@ function moveMarker(marker){
 			var data = {
 				'region.id':region.id,
 				'region.coordinate.latitude':region.coordinate.latitude,
-				'region.coordinate.longitude':region.coordinate.longitude,
+				'region.coordinate.longitude':region.coordinate.longitude
 			}	
 			$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){
 				if(resp.actionMessages){
@@ -169,7 +169,7 @@ function moveTo(region){
 			var data = {
 			'region.id':region.id,
 			'region.coordinate.latitude':region.coordinate.latitude,
-			'region.coordinate.longitude':region.coordinate.longitude,
+			'region.coordinate.longitude':region.coordinate.longitude
 			}
 			$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
 	      } else {
@@ -191,7 +191,7 @@ function mark(region){
 		var data = {
 			'region.id':region.id,
 			'region.coordinate.latitude':region.coordinate.latitude,
-			'region.coordinate.longitude':region.coordinate.longitude,
+			'region.coordinate.longitude':region.coordinate.longitude
 		}	
 		$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
 		
@@ -220,7 +220,7 @@ function nextRequestInQueue(){
                         var data = {
 						'region.id':item.value,
 						'region.coordinate.latitude':pos.lat(),
-						'region.coordinate.longitude':pos.lng(),
+						'region.coordinate.longitude':pos.lng()
 						}
 						$.ajax({url:'<@url value="/common/region/mark"/>',data:data,global:false,success:function(resp){}});
 
