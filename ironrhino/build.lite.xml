@@ -14,7 +14,8 @@
 	<property name="jar.name" value="${ant.project.name}-${version}.jar" />
 	<property name="war.name" value="ROOT.war" />
 	<property name="server.home" value="/tomcat" />
-	<property name="server.check.port" value="8005" />
+	<property name="server.startup.port" value="8080" />
+	<property name="server.shutdown.port" value="8005" />
 	<property name="webapp.deploy.dir" value="${server.home}/webapps/ROOT" />
 	<condition property="cmd.suffix" value="bat">
 		<os family="windows" />
@@ -176,7 +177,8 @@
 	<target name="compile" depends="sync">
 		<antcall target="clean" />
 		<antcall target="init" />
-		<javac includeantruntime="false" debug="true" debuglevel="vars,lines" srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8">
+		<javac includeantruntime="false" debug="true" debuglevel="vars,lines"
+			srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8">
 			<classpath refid="lib.classpath" />
 		</javac>
 		<copy todir="${classes.dir}">
@@ -188,8 +190,8 @@
 
 	<target name="test" depends="compile">
 		<mkdir dir="${test.classes.dir}" />
-		<javac includeantruntime="false" debug="true" debuglevel="vars,lines" srcdir="${test.src.dir}" destdir="${test.classes.dir}"
-			encoding="utf-8">
+		<javac includeantruntime="false" debug="true" debuglevel="vars,lines"
+			srcdir="${test.src.dir}" destdir="${test.classes.dir}" encoding="utf-8">
 			<classpath>
 				<path refid="lib.classpath" />
 				<pathelement location="${classes.dir}" />
@@ -301,7 +303,7 @@
 		<antcall target="reset-append-svn-revision-for-assets" />
 	</target>
 
-	<target name="war" depends="sync,compress,jar">
+	<target name="war" depends="sync,jar">
 		<move file="${target.dir}/${jar.name}" todir="${webapp.dir}/WEB-INF/lib" />
 		<mkdir dir="${target.dir}/classes" />
 		<move todir="${target.dir}/classes">
@@ -329,7 +331,7 @@
 
 	<target name="checkserverstarted">
 		<condition property="server.started">
-			<socket server="localhost" port="${server.check.port}" />
+			<socket server="localhost" port="${server.shutdown.port}" />
 		</condition>
 	</target>
 
@@ -362,30 +364,35 @@
 	</target>
 
 	<target name="shutdown" if="server.started" depends="checkserverstarted">
+		<waitfor checkevery="1" checkeveryunit="second" maxwait="2"
+			maxwaitunit="second">
+			<http
+				url="http://localhost:${server.startup.port}/?firewallHandler.allowedAddrPattern=127.0.0.1" />
+		</waitfor>
+		<sleep seconds="3" />
 		<exec executable="${server.shutdown.cmd}" dir="${server.home}" />
 		<waitfor checkevery="2" checkeveryunit="second" maxwait="60"
 			maxwaitunit="second">
 			<not>
-				<socket server="localhost" port="${server.check.port}" />
+				<socket server="localhost" port="${server.shutdown.port}" />
 			</not>
 		</waitfor>
-		<sleep seconds="3" />
 	</target>
 
 	<target name="startup" depends="shutdown">
-		<exec executable="${server.startup.cmd}" dir="${server.home}"
-			spawn="true" />
+		<exec executable="${server.startup.cmd}" dir="${server.home}" />
+		<waitfor checkevery="2" checkeveryunit="second" maxwait="180"
+			maxwaitunit="second">
+			<http url="http://localhost:${server.startup.port}/" />
+		</waitfor>
 	</target>
 
 	<target name="deploy">
-		<exec executable="svn" dir="${basedir}">
-			<arg value="update" />
-		</exec>
 		<antcall target="compile" />
 		<antcall target="war" />
 		<antcall target="backup" />
 		<antcall target="shutdown" />
-		<delete dir="${webapp.deploy.dir}" />
+		<!-- <delete> <fileset dir="${webapp.deploy.dir}" /> </delete> -->
 		<unzip dest="${webapp.deploy.dir}" src="${target.dir}/${war.name}" />
 		<antcall target="startup" />
 	</target>
