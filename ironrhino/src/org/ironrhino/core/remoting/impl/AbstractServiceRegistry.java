@@ -32,11 +32,21 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	private Random random = new Random();
 
+	private boolean converted;
+
 	public Map<String, List<String>> getImportServices() {
 		return importServices;
 	}
 
 	public Map<String, Object> getExportServices() {
+		if (!converted) {
+			converted = true;
+			Map<String, Object> map = new HashMap<String, Object>();
+			for (Map.Entry<String, Object> entry : exportServices.entrySet())
+				map.put(entry.getKey(),
+						beanFactory.getBean((String) entry.getValue()));
+			exportServices = map;
+		}
 		return exportServices;
 	}
 
@@ -92,8 +102,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 									" class [{}] must implements interface [{}] in @Remoting",
 									clazz.getName(), inte.getName());
 						} else {
-							exportServices.put(inte.getName(),
-									beanFactory.getBean(beanName));
+							exportServices.put(inte.getName(), beanName);
 							log.info(" exported service [{}] for bean [{}#{}]",
 									new String[] { inte.getName(), beanName,
 											beanClassName });
@@ -110,8 +119,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		} else {
 			Remoting remoting = clazz.getAnnotation(Remoting.class);
 			if (remoting != null) {
-				exportServices.put(clazz.getName(),
-						beanFactory.getBean(beanName));
+				exportServices.put(clazz.getName(), beanName);
 				log.info(
 						" exported service [{}] for bean [{}#{}]",
 						new String[] { clazz.getName(), beanName, beanClassName });
