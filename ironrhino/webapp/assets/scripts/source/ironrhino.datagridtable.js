@@ -70,9 +70,6 @@
 		$(':input[type!=checkbox][type!=radio]', r).val('');
 		$('input[type=checkbox],input[type=radio]', r).prop('checked', false);
 		$(':input').prop('readonly', false).removeAttr('keyupValidate');
-		$('input.filterselect', this).next('select').html(function() {
-					return $(this).data('innerHTML')
-				});
 		$('.datagrided tr', r).each(function(i) {
 					if (i > 0)
 						$(this).remove();
@@ -82,6 +79,13 @@
 		else
 			current.after(r);
 		rename(row.closest('tbody'));
+		$('.chzn-container', r).remove();
+		$('.chzn-done', r).removeClass('chzn-done').show();
+		if (typeof $.fn.chosen != 'undefined')
+			$('.chosen', r).chosen({
+						placeholder_text : MessageBundle.get('select'),
+						no_results_text : ' '
+					});
 		$('select.textonadd', r).each(function() {
 			$(this).replaceWith('<input type="text" name="'
 					+ $(this).attr('name') + '">');

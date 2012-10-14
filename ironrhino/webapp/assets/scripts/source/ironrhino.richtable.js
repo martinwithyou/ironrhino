@@ -58,7 +58,7 @@ Richtable = {
 	},
 	reload : function(form, pushstate) {
 		form = form || $('form.richtable');
-		if (form.parents('div.ui-dialog').length)
+		if (form.parents('.ui-dialog,.tab-content').length)
 			pushstate = false;
 		if (pushstate && typeof history.pushState != 'undefined') {
 			var url = form.attr('action');

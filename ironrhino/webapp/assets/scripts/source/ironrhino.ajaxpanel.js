@@ -38,7 +38,7 @@
 			success : function(data) {
 				if (typeof data != 'string') {
 					ele.empty();
-					$.tmpl($('#' + ele.attr('tmpl')), data).appendTo(ele);
+					$.tmpl($('#' + ele.data('tmpl')), data).appendTo(ele);
 					_observe(ele);
 				}
 			}

@@ -9529,7 +9529,7 @@ jQuery.cookie = function (key, value, options) {
 };
 /*! jQuery UI - v1.9.0 - 2012-10-08
 * http://jqueryui.com
-* Includes: jquery.ui.core.js, jquery.ui.widget.js, jquery.ui.mouse.js, jquery.ui.position.js, jquery.ui.draggable.js, jquery.ui.droppable.js, jquery.ui.resizable.js, jquery.ui.selectable.js, jquery.ui.sortable.js, jquery.ui.autocomplete.js, jquery.ui.button.js, jquery.ui.datepicker.js, jquery.ui.dialog.js, jquery.ui.menu.js, jquery.ui.tabs.js
+* Includes: jquery.ui.core.js, jquery.ui.widget.js, jquery.ui.mouse.js, jquery.ui.position.js, jquery.ui.draggable.js, jquery.ui.droppable.js, jquery.ui.resizable.js, jquery.ui.selectable.js, jquery.ui.sortable.js, jquery.ui.autocomplete.js, jquery.ui.button.js, jquery.ui.datepicker.js, jquery.ui.dialog.js, jquery.ui.menu.js
 * Copyright (c) 2012 jQuery Foundation and other contributors Licensed MIT */
 
 (function( $, undefined ) {
@@ -18443,1351 +18443,6 @@ $.widget( "ui.menu", {
 });
 
 }( jQuery ));
-(function( $, undefined ) {
-
-var tabId = 0,
-	rhash = /#.*$/;
-
-function getNextTabId() {
-	return ++tabId;
-}
-
-function isLocal( anchor ) {
-	// clone the node to work around IE 6 not normalizing the href property
-	// if it's manually set, i.e., a.href = "#foo" kills the normalization
-	anchor = anchor.cloneNode( false );
-	return anchor.hash.length > 1 &&
-		anchor.href.replace( rhash, "" ) === location.href.replace( rhash, "" );
-}
-
-$.widget( "ui.tabs", {
-	version: "1.9.0",
-	delay: 300,
-	options: {
-		active: null,
-		collapsible: false,
-		event: "click",
-		heightStyle: "content",
-		hide: null,
-		show: null,
-
-		// callbacks
-		activate: null,
-		beforeActivate: null,
-		beforeLoad: null,
-		load: null
-	},
-
-	_create: function() {
-		var panel,
-			that = this,
-			options = this.options,
-			active = options.active;
-
-		this.running = false;
-
-		this.element
-			.addClass( "ui-tabs ui-widget ui-widget-content ui-corner-all" )
-			.toggleClass( "ui-tabs-collapsible", options.collapsible )
-			// Prevent users from focusing disabled tabs via click
-			.delegate( ".ui-tabs-nav > li", "mousedown" + this.eventNamespace, function( event ) {
-				if ( $( this ).is( ".ui-state-disabled" ) ) {
-					event.preventDefault();
-				}
-			})
-			// support: IE <9
-			// Preventing the default action in mousedown doesn't prevent IE
-			// from focusing the element, so if the anchor gets focused, blur.
-			// We don't have to worry about focusing the previously focused
-			// element since clicking on a non-focusable element should focus
-			// the body anyway.
-			.delegate( ".ui-tabs-anchor", "focus" + this.eventNamespace, function() {
-				if ( $( this ).closest( "li" ).is( ".ui-state-disabled" ) ) {
-					this.blur();
-				}
-			});
-
-		this._processTabs();
-
-		if ( active === null ) {
-			// check the fragment identifier in the URL
-			if ( location.hash ) {
-				this.anchors.each(function( i, anchor ) {
-					if ( anchor.hash === location.hash ) {
-						active = i;
-						return false;
-					}
-				});
-			}
-
-			// check for a tab marked active via a class
-			if ( active === null ) {
-				active = this.tabs.filter( ".ui-tabs-active" ).index();
-			}
-
-			// no active tab, set to false
-			if ( active === null || active === -1 ) {
-				active = this.tabs.length ? 0 : false;
-			}
-		}
-
-		// handle numbers: negative, out of range
-		if ( active !== false ) {
-			active = this.tabs.index( this.tabs.eq( active ) );
-			if ( active === -1 ) {
-				active = options.collapsible ? false : 0;
-			}
-		}
-		options.active = active;
-
-		// don't allow collapsible: false and active: false
-		if ( !options.collapsible && options.active === false && this.anchors.length ) {
-			options.active = 0;
-		}
-
-		// Take disabling tabs via class attribute from HTML
-		// into account and update option properly.
-		if ( $.isArray( options.disabled ) ) {
-			options.disabled = $.unique( options.disabled.concat(
-				$.map( this.tabs.filter( ".ui-state-disabled" ), function( li ) {
-					return that.tabs.index( li );
-				})
-			) ).sort();
-		}
-
-		// check for length avoids error when initializing empty list
-		if ( this.options.active !== false && this.anchors.length ) {
-			this.active = this._findActive( this.options.active );
-		} else {
-			this.active = $();
-		}
-
-		this._refresh();
-
-		if ( this.active.length ) {
-			this.load( options.active );
-		}
-	},
-
-	_getCreateEventData: function() {
-		return {
-			tab: this.active,
-			panel: !this.active.length ? $() : this._getPanelForTab( this.active )
-		};
-	},
-
-	_tabKeydown: function( event ) {
-		var focusedTab = $( this.document[0].activeElement ).closest( "li" ),
-			selectedIndex = this.tabs.index( focusedTab ),
-			goingForward = true;
-
-		if ( this._handlePageNav( event ) ) {
-			return;
-		}
-
-		switch ( event.keyCode ) {
-			case $.ui.keyCode.RIGHT:
-			case $.ui.keyCode.DOWN:
-				selectedIndex++;
-				break;
-			case $.ui.keyCode.UP:
-			case $.ui.keyCode.LEFT:
-				goingForward = false;
-				selectedIndex--;
-				break;
-			case $.ui.keyCode.END:
-				selectedIndex = this.anchors.length - 1;
-				break;
-			case $.ui.keyCode.HOME:
-				selectedIndex = 0;
-				break;
-			case $.ui.keyCode.SPACE:
-				// Activate only, no collapsing
-				event.preventDefault();
-				clearTimeout( this.activating );
-				this._activate( selectedIndex );
-				return;
-			case $.ui.keyCode.ENTER:
-				// Toggle (cancel delayed activation, allow collapsing)
-				event.preventDefault();
-				clearTimeout( this.activating );
-				// Determine if we should collapse or activate
-				this._activate( selectedIndex === this.options.active ? false : selectedIndex );
-				return;
-			default:
-				return;
-		}
-
-		// Focus the appropriate tab, based on which key was pressed
-		event.preventDefault();
-		clearTimeout( this.activating );
-		selectedIndex = this._focusNextTab( selectedIndex, goingForward );
-
-		// Navigating with control key will prevent automatic activation
-		if ( !event.ctrlKey ) {
-			// Update aria-selected immediately so that AT think the tab is already selected.
-			// Otherwise AT may confuse the user by stating that they need to activate the tab,
-			// but the tab will already be activated by the time the announcement finishes.
-			focusedTab.attr( "aria-selected", "false" );
-			this.tabs.eq( selectedIndex ).attr( "aria-selected", "true" );
-
-			this.activating = this._delay(function() {
-				this.option( "active", selectedIndex );
-			}, this.delay );
-		}
-	},
-
-	_panelKeydown: function( event ) {
-		if ( this._handlePageNav( event ) ) {
-			return;
-		}
-
-		// Ctrl+up moves focus to the current tab
-		if ( event.ctrlKey && event.keyCode === $.ui.keyCode.UP ) {
-			event.preventDefault();
-			this.active.focus();
-		}
-	},
-
-	// Alt+page up/down moves focus to the previous/next tab (and activates)
-	_handlePageNav: function( event ) {
-		if ( event.altKey && event.keyCode === $.ui.keyCode.PAGE_UP ) {
-			this._activate( this._focusNextTab( this.options.active - 1, false ) );
-			return true;
-		}
-		if ( event.altKey && event.keyCode === $.ui.keyCode.PAGE_DOWN ) {
-			this._activate( this._focusNextTab( this.options.active + 1, true ) );
-			return true;
-		}
-	},
-
-	_findNextTab: function( index, goingForward ) {
-		var lastTabIndex = this.tabs.length - 1;
-
-		function constrain() {
-			if ( index > lastTabIndex ) {
-				index = 0;
-			}
-			if ( index < 0 ) {
-				index = lastTabIndex;
-			}
-			return index;
-		}
-
-		while ( $.inArray( constrain(), this.options.disabled ) !== -1 ) {
-			index = goingForward ? index + 1 : index - 1;
-		}
-
-		return index;
-	},
-
-	_focusNextTab: function( index, goingForward ) {
-		index = this._findNextTab( index, goingForward );
-		this.tabs.eq( index ).focus();
-		return index;
-	},
-
-	_setOption: function( key, value ) {
-		if ( key === "active" ) {
-			// _activate() will handle invalid values and update this.options
-			this._activate( value );
-			return;
-		}
-
-		if ( key === "disabled" ) {
-			// don't use the widget factory's disabled handling
-			this._setupDisabled( value );
-			return;
-		}
-
-		this._super( key, value);
-
-		if ( key === "collapsible" ) {
-			this.element.toggleClass( "ui-tabs-collapsible", value );
-			// Setting collapsible: false while collapsed; open first panel
-			if ( !value && this.options.active === false ) {
-				this._activate( 0 );
-			}
-		}
-
-		if ( key === "event" ) {
-			this._setupEvents( value );
-		}
-
-		if ( key === "heightStyle" ) {
-			this._setupHeightStyle( value );
-		}
-	},
-
-	_tabId: function( tab ) {
-		return tab.attr( "aria-controls" ) || "ui-tabs-" + getNextTabId();
-	},
-
-	_sanitizeSelector: function( hash ) {
-		return hash ? hash.replace( /[!"$%&'()*+,.\/:;<=>?@\[\]\^`{|}~]/g, "\\$&" ) : "";
-	},
-
-	refresh: function() {
-		var next,
-			options = this.options,
-			lis = this.tablist.children( ":has(a[href])" );
-
-		// get disabled tabs from class attribute from HTML
-		// this will get converted to a boolean if needed in _refresh()
-		options.disabled = $.map( lis.filter( ".ui-state-disabled" ), function( tab ) {
-			return lis.index( tab );
-		});
-
-		this._processTabs();
-
-		// was collapsed or no tabs
-		if ( options.active === false || !this.anchors.length ) {
-			options.active = false;
-			this.active = $();
-		// was active, but active tab is gone
-		} else if ( this.active.length && !$.contains( this.tablist[ 0 ], this.active[ 0 ] ) ) {
-			// all remaining tabs are disabled
-			if ( this.tabs.length === options.disabled.length ) {
-				options.active = false;
-				this.active = $();
-			// activate previous tab
-			} else {
-				this._activate( this._findNextTab( Math.max( 0, options.active - 1 ), false ) );
-			}
-		// was active, active tab still exists
-		} else {
-			// make sure active index is correct
-			options.active = this.tabs.index( this.active );
-		}
-
-		this._refresh();
-	},
-
-	_refresh: function() {
-		this._setupDisabled( this.options.disabled );
-		this._setupEvents( this.options.event );
-		this._setupHeightStyle( this.options.heightStyle );
-
-		this.tabs.not( this.active ).attr({
-			"aria-selected": "false",
-			tabIndex: -1
-		});
-		this.panels.not( this._getPanelForTab( this.active ) )
-			.hide()
-			.attr({
-				"aria-expanded": "false",
-				"aria-hidden": "true"
-			});
-
-		// Make sure one tab is in the tab order
-		if ( !this.active.length ) {
-			this.tabs.eq( 0 ).attr( "tabIndex", 0 );
-		} else {
-			this.active
-				.addClass( "ui-tabs-active ui-state-active" )
-				.attr({
-					"aria-selected": "true",
-					tabIndex: 0
-				});
-			this._getPanelForTab( this.active )
-				.show()
-				.attr({
-					"aria-expanded": "true",
-					"aria-hidden": "false"
-				});
-		}
-	},
-
-	_processTabs: function() {
-		var that = this;
-
-		this.tablist = this._getList()
-			.addClass( "ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" )
-			.attr( "role", "tablist" );
-
-		this.tabs = this.tablist.find( "> li:has(a[href])" )
-			.addClass( "ui-state-default ui-corner-top" )
-			.attr({
-				role: "tab",
-				tabIndex: -1
-			});
-
-		this.anchors = this.tabs.map(function() {
-				return $( "a", this )[ 0 ];
-			})
-			.addClass( "ui-tabs-anchor" )
-			.attr({
-				role: "presentation",
-				tabIndex: -1
-			});
-
-		this.panels = $();
-
-		this.anchors.each(function( i, anchor ) {
-			var selector, panel, panelId,
-				anchorId = $( anchor ).uniqueId().attr( "id" ),
-				tab = $( anchor ).closest( "li" ),
-				originalAriaControls = tab.attr( "aria-controls" );
-
-			// inline tab
-			if ( isLocal( anchor ) ) {
-				selector = anchor.hash;
-				panel = that.element.find( that._sanitizeSelector( selector ) );
-			// remote tab
-			} else {
-				panelId = that._tabId( tab );
-				selector = "#" + panelId;
-				panel = that.element.find( selector );
-				if ( !panel.length ) {
-					panel = that._createPanel( panelId );
-					panel.insertAfter( that.panels[ i - 1 ] || that.tablist );
-				}
-				panel.attr( "aria-live", "polite" );
-			}
-
-			if ( panel.length) {
-				that.panels = that.panels.add( panel );
-			}
-			if ( originalAriaControls ) {
-				tab.data( "ui-tabs-aria-controls", originalAriaControls );
-			}
-			tab.attr({
-				"aria-controls": selector.substring( 1 ),
-				"aria-labelledby": anchorId
-			});
-			panel.attr( "aria-labelledby", anchorId );
-		});
-
-		this.panels
-			.addClass( "ui-tabs-panel ui-widget-content ui-corner-bottom" )
-			.attr( "role", "tabpanel" );
-	},
-
-	// allow overriding how to find the list for rare usage scenarios (#7715)
-	_getList: function() {
-		return this.element.find( "ol,ul" ).eq( 0 );
-	},
-
-	_createPanel: function( id ) {
-		return $( "<div>" )
-			.attr( "id", id )
-			.addClass( "ui-tabs-panel ui-widget-content ui-corner-bottom" )
-			.data( "ui-tabs-destroy", true );
-	},
-
-	_setupDisabled: function( disabled ) {
-		if ( $.isArray( disabled ) ) {
-			if ( !disabled.length ) {
-				disabled = false;
-			} else if ( disabled.length === this.anchors.length ) {
-				disabled = true;
-			}
-		}
-
-		// disable tabs
-		for ( var i = 0, li; ( li = this.tabs[ i ] ); i++ ) {
-			if ( disabled === true || $.inArray( i, disabled ) !== -1 ) {
-				$( li )
-					.addClass( "ui-state-disabled" )
-					.attr( "aria-disabled", "true" );
-			} else {
-				$( li )
-					.removeClass( "ui-state-disabled" )
-					.removeAttr( "aria-disabled" );
-			}
-		}
-
-		this.options.disabled = disabled;
-	},
-
-	_setupEvents: function( event ) {
-		var events = {
-			click: function( event ) {
-				event.preventDefault();
-			}
-		};
-		if ( event ) {
-			$.each( event.split(" "), function( index, eventName ) {
-				events[ eventName ] = "_eventHandler";
-			});
-		}
-
-		this._off( this.anchors.add( this.tabs ).add( this.panels ) );
-		this._on( this.anchors, events );
-		this._on( this.tabs, { keydown: "_tabKeydown" } );
-		this._on( this.panels, { keydown: "_panelKeydown" } );
-
-		this._focusable( this.tabs );
-		this._hoverable( this.tabs );
-	},
-
-	_setupHeightStyle: function( heightStyle ) {
-		var maxHeight, overflow,
-			parent = this.element.parent();
-
-		if ( heightStyle === "fill" ) {
-			// IE 6 treats height like minHeight, so we need to turn off overflow
-			// in order to get a reliable height
-			// we use the minHeight support test because we assume that only
-			// browsers that don't support minHeight will treat height as minHeight
-			if ( !$.support.minHeight ) {
-				overflow = parent.css( "overflow" );
-				parent.css( "overflow", "hidden");
-			}
-			maxHeight = parent.height();
-			this.element.siblings( ":visible" ).each(function() {
-				var elem = $( this ),
-					position = elem.css( "position" );
-
-				if ( position === "absolute" || position === "fixed" ) {
-					return;
-				}
-				maxHeight -= elem.outerHeight( true );
-			});
-			if ( overflow ) {
-				parent.css( "overflow", overflow );
-			}
-
-			this.element.children().not( this.panels ).each(function() {
-				maxHeight -= $( this ).outerHeight( true );
-			});
-
-			this.panels.each(function() {
-				$( this ).height( Math.max( 0, maxHeight -
-					$( this ).innerHeight() + $( this ).height() ) );
-			})
-			.css( "overflow", "auto" );
-		} else if ( heightStyle === "auto" ) {
-			maxHeight = 0;
-			this.panels.each(function() {
-				maxHeight = Math.max( maxHeight, $( this ).height( "" ).height() );
-			}).height( maxHeight );
-		}
-	},
-
-	_eventHandler: function( event ) {
-		var options = this.options,
-			active = this.active,
-			anchor = $( event.currentTarget ),
-			tab = anchor.closest( "li" ),
-			clickedIsActive = tab[ 0 ] === active[ 0 ],
-			collapsing = clickedIsActive && options.collapsible,
-			toShow = collapsing ? $() : this._getPanelForTab( tab ),
-			toHide = !active.length ? $() : this._getPanelForTab( active ),
-			eventData = {
-				oldTab: active,
-				oldPanel: toHide,
-				newTab: collapsing ? $() : tab,
-				newPanel: toShow
-			};
-
-		event.preventDefault();
-
-		if ( tab.hasClass( "ui-state-disabled" ) ||
-				// tab is already loading
-				tab.hasClass( "ui-tabs-loading" ) ||
-				// can't switch durning an animation
-				this.running ||
-				// click on active header, but not collapsible
-				( clickedIsActive && !options.collapsible ) ||
-				// allow canceling activation
-				( this._trigger( "beforeActivate", event, eventData ) === false ) ) {
-			return;
-		}
-
-		options.active = collapsing ? false : this.tabs.index( tab );
-
-		this.active = clickedIsActive ? $() : tab;
-		if ( this.xhr ) {
-			this.xhr.abort();
-		}
-
-		if ( !toHide.length && !toShow.length ) {
-			$.error( "jQuery UI Tabs: Mismatching fragment identifier." );
-		}
-
-		if ( toShow.length ) {
-			this.load( this.tabs.index( tab ), event );
-		}
-		this._toggle( event, eventData );
-	},
-
-	// handles show/hide for selecting tabs
-	_toggle: function( event, eventData ) {
-		var that = this,
-			toShow = eventData.newPanel,
-			toHide = eventData.oldPanel;
-
-		this.running = true;
-
-		function complete() {
-			that.running = false;
-			that._trigger( "activate", event, eventData );
-		}
-
-		function show() {
-			eventData.newTab.closest( "li" ).addClass( "ui-tabs-active ui-state-active" );
-
-			if ( toShow.length && that.options.show ) {
-				that._show( toShow, that.options.show, complete );
-			} else {
-				toShow.show();
-				complete();
-			}
-		}
-
-		// start out by hiding, then showing, then completing
-		if ( toHide.length && this.options.hide ) {
-			this._hide( toHide, this.options.hide, function() {
-				eventData.oldTab.closest( "li" ).removeClass( "ui-tabs-active ui-state-active" );
-				show();
-			});
-		} else {
-			eventData.oldTab.closest( "li" ).removeClass( "ui-tabs-active ui-state-active" );
-			toHide.hide();
-			show();
-		}
-
-		toHide.attr({
-			"aria-expanded": "false",
-			"aria-hidden": "true"
-		});
-		eventData.oldTab.attr( "aria-selected", "false" );
-		// If we're switching tabs, remove the old tab from the tab order.
-		// If we're opening from collapsed state, remove the previous tab from the tab order.
-		// If we're collapsing, then keep the collapsing tab in the tab order.
-		if ( toShow.length && toHide.length ) {
-			eventData.oldTab.attr( "tabIndex", -1 );
-		} else if ( toShow.length ) {
-			this.tabs.filter(function() {
-				return $( this ).attr( "tabIndex" ) === 0;
-			})
-			.attr( "tabIndex", -1 );
-		}
-
-		toShow.attr({
-			"aria-expanded": "true",
-			"aria-hidden": "false"
-		});
-		eventData.newTab.attr({
-			"aria-selected": "true",
-			tabIndex: 0
-		});
-	},
-
-	_activate: function( index ) {
-		var anchor,
-			active = this._findActive( index );
-
-		// trying to activate the already active panel
-		if ( active[ 0 ] === this.active[ 0 ] ) {
-			return;
-		}
-
-		// trying to collapse, simulate a click on the current active header
-		if ( !active.length ) {
-			active = this.active;
-		}
-
-		anchor = active.find( ".ui-tabs-anchor" )[ 0 ];
-		this._eventHandler({
-			target: anchor,
-			currentTarget: anchor,
-			preventDefault: $.noop
-		});
-	},
-
-	_findActive: function( index ) {
-		return index === false ? $() : this.tabs.eq( index );
-	},
-
-	_getIndex: function( index ) {
-		// meta-function to give users option to provide a href string instead of a numerical index.
-		if ( typeof index === "string" ) {
-			index = this.anchors.index( this.anchors.filter( "[href$='" + index + "']" ) );
-		}
-
-		return index;
-	},
-
-	_destroy: function() {
-		if ( this.xhr ) {
-			this.xhr.abort();
-		}
-
-		this.element.removeClass( "ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-collapsible" );
-
-		this.tablist
-			.removeClass( "ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" )
-			.removeAttr( "role" );
-
-		this.anchors
-			.removeClass( "ui-tabs-anchor" )
-			.removeAttr( "role" )
-			.removeAttr( "tabIndex" )
-			.removeData( "href.tabs" )
-			.removeData( "load.tabs" )
-			.removeUniqueId();
-
-		this.tabs.add( this.panels ).each(function() {
-			if ( $.data( this, "ui-tabs-destroy" ) ) {
-				$( this ).remove();
-			} else {
-				$( this )
-					.removeClass( "ui-state-default ui-state-active ui-state-disabled " +
-						"ui-corner-top ui-corner-bottom ui-widget-content ui-tabs-active ui-tabs-panel" )
-					.removeAttr( "tabIndex" )
-					.removeAttr( "aria-live" )
-					.removeAttr( "aria-busy" )
-					.removeAttr( "aria-selected" )
-					.removeAttr( "aria-labelledby" )
-					.removeAttr( "aria-hidden" )
-					.removeAttr( "aria-expanded" )
-					.removeAttr( "role" );
-			}
-		});
-
-		this.tabs.each(function() {
-			var li = $( this ),
-				prev = li.data( "ui-tabs-aria-controls" );
-			if ( prev ) {
-				li.attr( "aria-controls", prev );
-			} else {
-				li.removeAttr( "aria-controls" );
-			}
-		});
-
-		if ( this.options.heightStyle !== "content" ) {
-			this.panels.css( "height", "" );
-		}
-	},
-
-	enable: function( index ) {
-		var disabled = this.options.disabled;
-		if ( disabled === false ) {
-			return;
-		}
-
-		if ( index === undefined ) {
-			disabled = false;
-		} else {
-			index = this._getIndex( index );
-			if ( $.isArray( disabled ) ) {
-				disabled = $.map( disabled, function( num ) {
-					return num !== index ? num : null;
-				});
-			} else {
-				disabled = $.map( this.tabs, function( li, num ) {
-					return num !== index ? num : null;
-				});
-			}
-		}
-		this._setupDisabled( disabled );
-	},
-
-	disable: function( index ) {
-		var disabled = this.options.disabled;
-		if ( disabled === true ) {
-			return;
-		}
-
-		if ( index === undefined ) {
-			disabled = true;
-		} else {
-			index = this._getIndex( index );
-			if ( $.inArray( index, disabled ) !== -1 ) {
-				return;
-			}
-			if ( $.isArray( disabled ) ) {
-				disabled = $.merge( [ index ], disabled ).sort();
-			} else {
-				disabled = [ index ];
-			}
-		}
-		this._setupDisabled( disabled );
-	},
-
-	load: function( index, event ) {
-		index = this._getIndex( index );
-		var that = this,
-			tab = this.tabs.eq( index ),
-			anchor = tab.find( ".ui-tabs-anchor" ),
-			panel = this._getPanelForTab( tab ),
-			eventData = {
-				tab: tab,
-				panel: panel
-			};
-
-		// not remote
-		if ( isLocal( anchor[ 0 ] ) ) {
-			return;
-		}
-
-		this.xhr = $.ajax( this._ajaxSettings( anchor, event, eventData ) );
-
-		// support: jQuery <1.8
-		// jQuery <1.8 returns false if the request is canceled in beforeSend,
-		// but as of 1.8, $.ajax() always returns a jqXHR object.
-		if ( this.xhr && this.xhr.statusText !== "canceled" ) {
-			tab.addClass( "ui-tabs-loading" );
-			panel.attr( "aria-busy", "true" );
-
-			this.xhr
-				.success(function( response ) {
-					// support: jQuery <1.8
-					// http://bugs.jquery.com/ticket/11778
-					setTimeout(function() {
-						panel.html( response );
-						that._trigger( "load", event, eventData );
-					}, 1 );
-				})
-				.complete(function( jqXHR, status ) {
-					// support: jQuery <1.8
-					// http://bugs.jquery.com/ticket/11778
-					setTimeout(function() {
-						if ( status === "abort" ) {
-							that.panels.stop( false, true );
-						}
-
-						tab.removeClass( "ui-tabs-loading" );
-						panel.removeAttr( "aria-busy" );
-
-						if ( jqXHR === that.xhr ) {
-							delete that.xhr;
-						}
-					}, 1 );
-				});
-		}
-	},
-
-	// TODO: Remove this function in 1.10 when ajaxOptions is removed
-	_ajaxSettings: function( anchor, event, eventData ) {
-		var that = this;
-		return {
-			url: anchor.attr( "href" ),
-			beforeSend: function( jqXHR, settings ) {
-				return that._trigger( "beforeLoad", event,
-					$.extend( { jqXHR : jqXHR, ajaxSettings: settings }, eventData ) );
-			}
-		};
-	},
-
-	_getPanelForTab: function( tab ) {
-		var id = $( tab ).attr( "aria-controls" );
-		return this.element.find( this._sanitizeSelector( "#" + id ) );
-	}
-});
-
-// DEPRECATED
-if ( $.uiBackCompat !== false ) {
-
-	// helper method for a lot of the back compat extensions
-	$.ui.tabs.prototype._ui = function( tab, panel ) {
-		return {
-			tab: tab,
-			panel: panel,
-			index: this.anchors.index( tab )
-		};
-	};
-
-	// url method
-	$.widget( "ui.tabs", $.ui.tabs, {
-		url: function( index, url ) {
-			this.anchors.eq( index ).attr( "href", url );
-		}
-	});
-
-	// TODO: Remove _ajaxSettings() method when removing this extension
-	// ajaxOptions and cache options
-	$.widget( "ui.tabs", $.ui.tabs, {
-		options: {
-			ajaxOptions: null,
-			cache: false
-		},
-
-		_create: function() {
-			this._super();
-
-			var that = this;
-
-			this._on({ tabsbeforeload: function( event, ui ) {
-				// tab is already cached
-				if ( $.data( ui.tab[ 0 ], "cache.tabs" ) ) {
-					event.preventDefault();
-					return;
-				}
-
-				ui.jqXHR.success(function() {
-					if ( that.options.cache ) {
-						$.data( ui.tab[ 0 ], "cache.tabs", true );
-					}
-				});
-			}});
-		},
-
-		_ajaxSettings: function( anchor, event, ui ) {
-			var ajaxOptions = this.options.ajaxOptions;
-			return $.extend( {}, ajaxOptions, {
-				error: function( xhr, s, e ) {
-					try {
-						// Passing index avoid a race condition when this method is
-						// called after the user has selected another tab.
-						// Pass the anchor that initiated this request allows
-						// loadError to manipulate the tab content panel via $(a.hash)
-						ajaxOptions.error(
-							xhr, s, ui.tab.closest( "li" ).index(), ui.tab[ 0 ] );
-					}
-					catch ( e ) {}
-				}
-			}, this._superApply( arguments ) );
-		},
-
-		_setOption: function( key, value ) {
-			// reset cache if switching from cached to not cached
-			if ( key === "cache" && value === false ) {
-				this.anchors.removeData( "cache.tabs" );
-			}
-			this._super( key, value );
-		},
-
-		_destroy: function() {
-			this.anchors.removeData( "cache.tabs" );
-			this._super();
-		},
-
-		url: function( index, url ){
-			this.anchors.eq( index ).removeData( "cache.tabs" );
-			this._superApply( arguments );
-		}
-	});
-
-	// abort method
-	$.widget( "ui.tabs", $.ui.tabs, {
-		abort: function() {
-			if ( this.xhr ) {
-				this.xhr.abort();
-			}
-		}
-	});
-
-	// spinner
-	$.widget( "ui.tabs", $.ui.tabs, {
-		options: {
-			spinner: "<em>Loading&#8230;</em>"
-		},
-		_create: function() {
-			this._super();
-			this._on({
-				tabsbeforeload: function( event, ui ) {
-					// Don't react to nested tabs or tabs that don't use a spinner
-					if ( event.target !== this.element[ 0 ] ||
-							!this.options.spinner ) {
-						return;
-					}
-
-					var span = ui.tab.find( "span" ),
-						html = span.html();
-					span.html( this.options.spinner );
-					ui.jqXHR.complete(function() {
-						span.html( html );
-					});
-				}
-			});
-		}
-	});
-
-	// enable/disable events
-	$.widget( "ui.tabs", $.ui.tabs, {
-		options: {
-			enable: null,
-			disable: null
-		},
-
-		enable: function( index ) {
-			var options = this.options,
-				trigger;
-
-			if ( index && options.disabled === true ||
-					( $.isArray( options.disabled ) && $.inArray( index, options.disabled ) !== -1 ) ) {
-				trigger = true;
-			}
-
-			this._superApply( arguments );
-
-			if ( trigger ) {
-				this._trigger( "enable", null, this._ui( this.anchors[ index ], this.panels[ index ] ) );
-			}
-		},
-
-		disable: function( index ) {
-			var options = this.options,
-				trigger;
-
-			if ( index && options.disabled === false ||
-					( $.isArray( options.disabled ) && $.inArray( index, options.disabled ) === -1 ) ) {
-				trigger = true;
-			}
-
-			this._superApply( arguments );
-
-			if ( trigger ) {
-				this._trigger( "disable", null, this._ui( this.anchors[ index ], this.panels[ index ] ) );
-			}
-		}
-	});
-
-	// add/remove methods and events
-	$.widget( "ui.tabs", $.ui.tabs, {
-		options: {
-			add: null,
-			remove: null,
-			tabTemplate: "<li><a href='#{href}'><span>#{label}</span></a></li>"
-		},
-
-		add: function( url, label, index ) {
-			if ( index === undefined ) {
-				index = this.anchors.length;
-			}
-
-			var doInsertAfter, panel,
-				options = this.options,
-				li = $( options.tabTemplate
-					.replace( /#\{href\}/g, url )
-					.replace( /#\{label\}/g, label ) ),
-				id = !url.indexOf( "#" ) ?
-					url.replace( "#", "" ) :
-					this._tabId( li );
-
-			li.addClass( "ui-state-default ui-corner-top" ).data( "ui-tabs-destroy", true );
-			li.attr( "aria-controls", id );
-
-			doInsertAfter = index >= this.tabs.length;
-
-			// try to find an existing element before creating a new one
-			panel = this.element.find( "#" + id );
-			if ( !panel.length ) {
-				panel = this._createPanel( id );
-				if ( doInsertAfter ) {
-					if ( index > 0 ) {
-						panel.insertAfter( this.panels.eq( -1 ) );
-					} else {
-						panel.appendTo( this.element );
-					}
-				} else {
-					panel.insertBefore( this.panels[ index ] );
-				}
-			}
-			panel.addClass( "ui-tabs-panel ui-widget-content ui-corner-bottom" ).hide();
-
-			if ( doInsertAfter ) {
-				li.appendTo( this.tablist );
-			} else {
-				li.insertBefore( this.tabs[ index ] );
-			}
-
-			options.disabled = $.map( options.disabled, function( n ) {
-				return n >= index ? ++n : n;
-			});
-
-			this.refresh();
-			if ( this.tabs.length === 1 && options.active === false ) {
-				this.option( "active", 0 );
-			}
-
-			this._trigger( "add", null, this._ui( this.anchors[ index ], this.panels[ index ] ) );
-			return this;
-		},
-
-		remove: function( index ) {
-			index = this._getIndex( index );
-			var options = this.options,
-				tab = this.tabs.eq( index ).remove(),
-				panel = this._getPanelForTab( tab ).remove();
-
-			// If selected tab was removed focus tab to the right or
-			// in case the last tab was removed the tab to the left.
-			// We check for more than 2 tabs, because if there are only 2,
-			// then when we remove this tab, there will only be one tab left
-			// so we don't need to detect which tab to activate.
-			if ( tab.hasClass( "ui-tabs-active" ) && this.anchors.length > 2 ) {
-				this._activate( index + ( index + 1 < this.anchors.length ? 1 : -1 ) );
-			}
-
-			options.disabled = $.map(
-				$.grep( options.disabled, function( n ) {
-					return n !== index;
-				}),
-				function( n ) {
-					return n >= index ? --n : n;
-				});
-
-			this.refresh();
-
-			this._trigger( "remove", null, this._ui( tab.find( "a" )[ 0 ], panel[ 0 ] ) );
-			return this;
-		}
-	});
-
-	// length method
-	$.widget( "ui.tabs", $.ui.tabs, {
-		length: function() {
-			return this.anchors.length;
-		}
-	});
-
-	// panel ids (idPrefix option + title attribute)
-	$.widget( "ui.tabs", $.ui.tabs, {
-		options: {
-			idPrefix: "ui-tabs-"
-		},
-
-		_tabId: function( tab ) {
-			var a = tab.is( "li" ) ? tab.find( "a[href]" ) : tab;
-			a = a[0];
-			return $( a ).closest( "li" ).attr( "aria-controls" ) ||
-				a.title && a.title.replace( /\s/g, "_" ).replace( /[^\w\u00c0-\uFFFF\-]/g, "" ) ||
-				this.options.idPrefix + getNextTabId();
-		}
-	});
-
-	// _createPanel method
-	$.widget( "ui.tabs", $.ui.tabs, {
-		options: {
-			panelTemplate: "<div></div>"
-		},
-
-		_createPanel: function( id ) {
-			return $( this.options.panelTemplate )
-				.attr( "id", id )
-				.addClass( "ui-tabs-panel ui-widget-content ui-corner-bottom" )
-				.data( "ui-tabs-destroy", true );
-		}
-	});
-
-	// selected option
-	$.widget( "ui.tabs", $.ui.tabs, {
-		_create: function() {
-			var options = this.options;
-			if ( options.active === null && options.selected !== undefined ) {
-				options.active = options.selected === -1 ? false : options.selected;
-			}
-			this._super();
-			options.selected = options.active;
-			if ( options.selected === false ) {
-				options.selected = -1;
-			}
-		},
-
-		_setOption: function( key, value ) {
-			if ( key !== "selected" ) {
-				return this._super( key, value );
-			}
-
-			var options = this.options;
-			this._super( "active", value === -1 ? false : value );
-			options.selected = options.active;
-			if ( options.selected === false ) {
-				options.selected = -1;
-			}
-		},
-
-		_eventHandler: function( event ) {
-			this._superApply( arguments );
-			this.options.selected = this.options.active;
-			if ( this.options.selected === false ) {
-				this.options.selected = -1;
-			}
-		}
-	});
-
-	// show and select event
-	$.widget( "ui.tabs", $.ui.tabs, {
-		options: {
-			show: null,
-			select: null
-		},
-		_create: function() {
-			this._super();
-			if ( this.options.active !== false ) {
-				this._trigger( "show", null, this._ui(
-					this.active.find( ".ui-tabs-anchor" )[ 0 ],
-					this._getPanelForTab( this.active )[ 0 ] ) );
-			}
-		},
-		_trigger: function( type, event, data ) {
-			var ret = this._superApply( arguments );
-			if ( !ret ) {
-				return false;
-			}
-			if ( type === "beforeActivate" && data.newTab.length ) {
-				ret = this._super( "select", event, {
-					tab: data.newTab.find( ".ui-tabs-anchor" )[ 0],
-					panel: data.newPanel[ 0 ],
-					index: data.newTab.closest( "li" ).index()
-				});
-			} else if ( type === "activate" && data.newTab.length ) {
-				ret = this._super( "show", event, {
-					tab: data.newTab.find( ".ui-tabs-anchor" )[ 0 ],
-					panel: data.newPanel[ 0 ],
-					index: data.newTab.closest( "li" ).index()
-				});
-			}
-			return ret;
-		}
-	});
-
-	// select method
-	$.widget( "ui.tabs", $.ui.tabs, {
-		select: function( index ) {
-			index = this._getIndex( index );
-			if ( index === -1 ) {
-				if ( this.options.collapsible && this.options.selected !== -1 ) {
-					index = this.options.selected;
-				} else {
-					return;
-				}
-			}
-			this.anchors.eq( index ).trigger( this.options.event + this.eventNamespace );
-		}
-	});
-
-	// cookie option
-	(function() {
-
-	var listId = 0;
-
-	$.widget( "ui.tabs", $.ui.tabs, {
-		options: {
-			cookie: null // e.g. { expires: 7, path: '/', domain: 'jquery.com', secure: true }
-		},
-		_create: function() {
-			var options = this.options,
-				active;
-			if ( options.active == null && options.cookie ) {
-				active = parseInt( this._cookie(), 10 );
-				if ( active === -1 ) {
-					active = false;
-				}
-				options.active = active;
-			}
-			this._super();
-		},
-		_cookie: function( active ) {
-			var cookie = [ this.cookie ||
-				( this.cookie = this.options.cookie.name || "ui-tabs-" + (++listId) ) ];
-			if ( arguments.length ) {
-				cookie.push( active === false ? -1 : active );
-				cookie.push( this.options.cookie );
-			}
-			return $.cookie.apply( null, cookie );
-		},
-		_refresh: function() {
-			this._super();
-			if ( this.options.cookie ) {
-				this._cookie( this.options.active, this.options.cookie );
-			}
-		},
-		_eventHandler: function( event ) {
-			this._superApply( arguments );
-			if ( this.options.cookie ) {
-				this._cookie( this.options.active, this.options.cookie );
-			}
-		},
-		_destroy: function() {
-			this._super();
-			if ( this.options.cookie ) {
-				this._cookie( null, this.options.cookie );
-			}
-		}
-	});
-
-	})();
-
-	// load event
-	$.widget( "ui.tabs", $.ui.tabs, {
-		_trigger: function( type, event, data ) {
-			var _data = $.extend( {}, data );
-			if ( type === "load" ) {
-				_data.panel = _data.panel[ 0 ];
-				_data.tab = _data.tab.find( ".ui-tabs-anchor" )[ 0 ];
-			}
-			return this._super( type, event, _data );
-		}
-	});
-
-	// fx option
-	// The new animation options (show, hide) conflict with the old show callback.
-	// The old fx option wins over show/hide anyway (always favor back-compat).
-	// If a user wants to use the new animation API, they must give up the old API.
-	$.widget( "ui.tabs", $.ui.tabs, {
-		options: {
-			fx: null // e.g. { height: "toggle", opacity: "toggle", duration: 200 }
-		},
-
-		_getFx: function() {
-			var hide, show,
-				fx = this.options.fx;
-
-			if ( fx ) {
-				if ( $.isArray( fx ) ) {
-					hide = fx[ 0 ];
-					show = fx[ 1 ];
-				} else {
-					hide = show = fx;
-				}
-			}
-
-			return fx ? { show: show, hide: hide } : null;
-		},
-
-		_toggle: function( event, eventData ) {
-			var that = this,
-				toShow = eventData.newPanel,
-				toHide = eventData.oldPanel,
-				fx = this._getFx();
-
-			if ( !fx ) {
-				return this._super( event, eventData );
-			}
-
-			that.running = true;
-
-			function complete() {
-				that.running = false;
-				that._trigger( "activate", event, eventData );
-			}
-
-			function show() {
-				eventData.newTab.closest( "li" ).addClass( "ui-tabs-active ui-state-active" );
-
-				if ( toShow.length && fx.show ) {
-					toShow
-						.animate( fx.show, fx.show.duration, function() {
-							complete();
-						});
-				} else {
-					toShow.show();
-					complete();
-				}
-			}
-
-			// start out by hiding, then showing, then completing
-			if ( toHide.length && fx.hide ) {
-				toHide.animate( fx.hide, fx.hide.duration, function() {
-					eventData.oldTab.closest( "li" ).removeClass( "ui-tabs-active ui-state-active" );
-					show();
-				});
-			} else {
-				eventData.oldTab.closest( "li" ).removeClass( "ui-tabs-active ui-state-active" );
-				toHide.hide();
-				show();
-			}
-		}
-	});
-}
-
-})( jQuery );
-
 /* Chinese initialisation for the jQuery UI date picker plugin. */
 /* Written by Cloudream (cloudream@gmail.com). */
 jQuery(function($){
@@ -28837,6 +27492,1025 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
         } 
     }); 
 })(jQuery);
+// Chosen, a Select Box Enhancer for jQuery and Protoype
+// by Patrick Filler for Harvest, http://getharvest.com
+// 
+// Version 0.9.8
+// Full source at https://github.com/harvesthq/chosen
+// Copyright (c) 2011 Harvest http://getharvest.com
+
+// MIT License, https://github.com/harvesthq/chosen/blob/master/LICENSE.md
+// This file is generated by `cake build`, do not edit it by hand.
+(function() {
+  var SelectParser;
+
+  SelectParser = (function() {
+
+    function SelectParser() {
+      this.options_index = 0;
+      this.parsed = [];
+    }
+
+    SelectParser.prototype.add_node = function(child) {
+      if (child.nodeName.toUpperCase() === "OPTGROUP") {
+        return this.add_group(child);
+      } else {
+        return this.add_option(child);
+      }
+    };
+
+    SelectParser.prototype.add_group = function(group) {
+      var group_position, option, _i, _len, _ref, _results;
+      group_position = this.parsed.length;
+      this.parsed.push({
+        array_index: group_position,
+        group: true,
+        label: group.label,
+        children: 0,
+        disabled: group.disabled
+      });
+      _ref = group.childNodes;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        option = _ref[_i];
+        _results.push(this.add_option(option, group_position, group.disabled));
+      }
+      return _results;
+    };
+
+    SelectParser.prototype.add_option = function(option, group_position, group_disabled) {
+      if (option.nodeName.toUpperCase() === "OPTION") {
+        if (option.text !== "") {
+          if (group_position != null) this.parsed[group_position].children += 1;
+          this.parsed.push({
+            array_index: this.parsed.length,
+            options_index: this.options_index,
+            value: option.value,
+            text: option.text,
+            html: option.innerHTML,
+            selected: option.selected,
+            disabled: group_disabled === true ? group_disabled : option.disabled,
+            group_array_index: group_position,
+            classes: option.className,
+            style: option.style.cssText
+          });
+        } else {
+          this.parsed.push({
+            array_index: this.parsed.length,
+            options_index: this.options_index,
+            empty: true
+          });
+        }
+        return this.options_index += 1;
+      }
+    };
+
+    return SelectParser;
+
+  })();
+
+  SelectParser.select_to_array = function(select) {
+    var child, parser, _i, _len, _ref;
+    parser = new SelectParser();
+    _ref = select.childNodes;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      child = _ref[_i];
+      parser.add_node(child);
+    }
+    return parser.parsed;
+  };
+
+  this.SelectParser = SelectParser;
+
+}).call(this);
+
+/*
+Chosen source: generate output using 'cake build'
+Copyright (c) 2011 by Harvest
+*/
+
+(function() {
+  var AbstractChosen, root;
+
+  root = this;
+
+  AbstractChosen = (function() {
+
+    function AbstractChosen(form_field, options) {
+      this.form_field = form_field;
+      this.options = options != null ? options : {};
+      this.set_default_values();
+      this.is_multiple = this.form_field.multiple;
+      this.set_default_text();
+      this.setup();
+      this.set_up_html();
+      this.register_observers();
+      this.finish_setup();
+    }
+
+    AbstractChosen.prototype.set_default_values = function() {
+      var _this = this;
+      this.click_test_action = function(evt) {
+        return _this.test_active_click(evt);
+      };
+      this.activate_action = function(evt) {
+        return _this.activate_field(evt);
+      };
+      this.active_field = false;
+      this.mouse_on_container = false;
+      this.results_showing = false;
+      this.result_highlighted = null;
+      this.result_single_selected = null;
+      this.allow_single_deselect = (this.options.allow_single_deselect != null) && (this.form_field.options[0] != null) && this.form_field.options[0].text === "" ? this.options.allow_single_deselect : false;
+      this.disable_search_threshold = this.options.disable_search_threshold || 0;
+      this.disable_search = this.options.disable_search || false;
+      this.search_contains = this.options.search_contains || false;
+      this.choices = 0;
+      this.single_backstroke_delete = this.options.single_backstroke_delete || false;
+      return this.max_selected_options = this.options.max_selected_options || Infinity;
+    };
+
+    AbstractChosen.prototype.set_default_text = function() {
+      if (this.form_field.getAttribute("data-placeholder")) {
+        this.default_text = this.form_field.getAttribute("data-placeholder");
+      } else if (this.is_multiple) {
+        this.default_text = this.options.placeholder_text_multiple || this.options.placeholder_text || "Select Some Options";
+      } else {
+        this.default_text = this.options.placeholder_text_single || this.options.placeholder_text || "Select an Option";
+      }
+      return this.results_none_found = this.form_field.getAttribute("data-no_results_text") || this.options.no_results_text || "No results match";
+    };
+
+    AbstractChosen.prototype.mouse_enter = function() {
+      return this.mouse_on_container = true;
+    };
+
+    AbstractChosen.prototype.mouse_leave = function() {
+      return this.mouse_on_container = false;
+    };
+
+    AbstractChosen.prototype.input_focus = function(evt) {
+      var _this = this;
+      if (this.is_multiple) {
+        if (!this.active_field) {
+          return setTimeout((function() {
+            return _this.container_mousedown();
+          }), 50);
+        }
+      } else {
+        if (!this.active_field) return this.activate_field();
+      }
+    };
+
+    AbstractChosen.prototype.input_blur = function(evt) {
+      var _this = this;
+      if (!this.mouse_on_container) {
+        this.active_field = false;
+        return setTimeout((function() {
+          return _this.blur_test();
+        }), 100);
+      }
+    };
+
+    AbstractChosen.prototype.result_add_option = function(option) {
+      var classes, style;
+      if (!option.disabled) {
+        option.dom_id = this.container_id + "_o_" + option.array_index;
+        classes = option.selected && this.is_multiple ? [] : ["active-result"];
+        if (option.selected) classes.push("result-selected");
+        if (option.group_array_index != null) classes.push("group-option");
+        if (option.classes !== "") classes.push(option.classes);
+        style = option.style.cssText !== "" ? " style=\"" + option.style + "\"" : "";
+        return '<li id="' + option.dom_id + '" class="' + classes.join(' ') + '"' + style + '>' + option.html + '</li>';
+      } else {
+        return "";
+      }
+    };
+
+    AbstractChosen.prototype.results_update_field = function() {
+      if (!this.is_multiple) this.results_reset_cleanup();
+      this.result_clear_highlight();
+      this.result_single_selected = null;
+      return this.results_build();
+    };
+
+    AbstractChosen.prototype.results_toggle = function() {
+      if (this.results_showing) {
+        return this.results_hide();
+      } else {
+        return this.results_show();
+      }
+    };
+
+    AbstractChosen.prototype.results_search = function(evt) {
+      if (this.results_showing) {
+        return this.winnow_results();
+      } else {
+        return this.results_show();
+      }
+    };
+
+    AbstractChosen.prototype.keyup_checker = function(evt) {
+      var stroke, _ref;
+      stroke = (_ref = evt.which) != null ? _ref : evt.keyCode;
+      this.search_field_scale();
+      switch (stroke) {
+        case 8:
+          if (this.is_multiple && this.backstroke_length < 1 && this.choices > 0) {
+            return this.keydown_backstroke();
+          } else if (!this.pending_backstroke) {
+            this.result_clear_highlight();
+            return this.results_search();
+          }
+          break;
+        case 13:
+          evt.preventDefault();
+          if (this.results_showing) return this.result_select(evt);
+          break;
+        case 27:
+          if (this.results_showing) this.results_hide();
+          return true;
+        case 9:
+        case 38:
+        case 40:
+        case 16:
+        case 91:
+        case 17:
+          break;
+        default:
+          return this.results_search();
+      }
+    };
+
+    AbstractChosen.prototype.generate_field_id = function() {
+      var new_id;
+      new_id = this.generate_random_id();
+      this.form_field.id = new_id;
+      return new_id;
+    };
+
+    AbstractChosen.prototype.generate_random_char = function() {
+      var chars, newchar, rand;
+      chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      rand = Math.floor(Math.random() * chars.length);
+      return newchar = chars.substring(rand, rand + 1);
+    };
+
+    return AbstractChosen;
+
+  })();
+
+  root.AbstractChosen = AbstractChosen;
+
+}).call(this);
+
+/*
+Chosen source: generate output using 'cake build'
+Copyright (c) 2011 by Harvest
+*/
+
+(function() {
+  var $, Chosen, get_side_border_padding, root,
+    __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
+  root = this;
+
+  $ = jQuery;
+
+  $.fn.extend({
+    chosen: function(options) {
+      if ($.browser.msie && ($.browser.version === "6.0" || ($.browser.version === "7.0" && document.documentMode === 7))) {
+        return this;
+      }
+      return this.each(function(input_field) {
+        var $this;
+        $this = $(this);
+        if (!$this.hasClass("chzn-done")) {
+          return $this.data('chosen', new Chosen(this, options));
+        }
+      });
+    }
+  });
+
+  Chosen = (function(_super) {
+
+    __extends(Chosen, _super);
+
+    function Chosen() {
+      Chosen.__super__.constructor.apply(this, arguments);
+    }
+
+    Chosen.prototype.setup = function() {
+      this.form_field_jq = $(this.form_field);
+      this.current_value = this.form_field_jq.val();
+      return this.is_rtl = this.form_field_jq.hasClass("chzn-rtl");
+    };
+
+    Chosen.prototype.finish_setup = function() {
+      return this.form_field_jq.addClass("chzn-done");
+    };
+
+    Chosen.prototype.set_up_html = function() {
+      var container_div, dd_top, dd_width, sf_width;
+      this.container_id = this.form_field.id.length ? this.form_field.id.replace(/[^\w]/g, '_') : this.generate_field_id();
+      this.container_id += "_chzn";
+      this.f_width = this.form_field_jq.outerWidth();
+      container_div = $("<div />", {
+        id: this.container_id,
+        "class": "chzn-container" + (this.is_rtl ? ' chzn-rtl' : ''),
+        style: 'width: ' + this.f_width + 'px;'
+      });
+      if (this.is_multiple) {
+        container_div.html('<ul class="chzn-choices"><li class="search-field"><input type="text" value="' + this.default_text + '" class="default" autocomplete="off" style="width:25px;" /></li></ul><div class="chzn-drop" style="left:-9000px;"><ul class="chzn-results"></ul></div>');
+      } else {
+        container_div.html('<a href="javascript:void(0)" class="chzn-single chzn-default" tabindex="-1"><span>' + this.default_text + '</span><div><b></b></div></a><div class="chzn-drop" style="left:-9000px;"><div class="chzn-search"><input type="text" autocomplete="off" /></div><ul class="chzn-results"></ul></div>');
+      }
+      this.form_field_jq.hide().after(container_div);
+      this.container = $('#' + this.container_id);
+      this.container.addClass("chzn-container-" + (this.is_multiple ? "multi" : "single"));
+      this.dropdown = this.container.find('div.chzn-drop').first();
+      dd_top = this.container.height();
+      dd_width = this.f_width - get_side_border_padding(this.dropdown);
+      this.dropdown.css({
+        "width": dd_width + "px",
+        "top": dd_top + "px"
+      });
+      this.search_field = this.container.find('input').first();
+      this.search_results = this.container.find('ul.chzn-results').first();
+      this.search_field_scale();
+      this.search_no_results = this.container.find('li.no-results').first();
+      if (this.is_multiple) {
+        this.search_choices = this.container.find('ul.chzn-choices').first();
+        this.search_container = this.container.find('li.search-field').first();
+      } else {
+        this.search_container = this.container.find('div.chzn-search').first();
+        this.selected_item = this.container.find('.chzn-single').first();
+        sf_width = dd_width - get_side_border_padding(this.search_container) - get_side_border_padding(this.search_field);
+        this.search_field.css({
+          "width": sf_width + "px"
+        });
+      }
+      this.results_build();
+      this.set_tab_index();
+      return this.form_field_jq.trigger("liszt:ready", {
+        chosen: this
+      });
+    };
+
+    Chosen.prototype.register_observers = function() {
+      var _this = this;
+      this.container.mousedown(function(evt) {
+        return _this.container_mousedown(evt);
+      });
+      this.container.mouseup(function(evt) {
+        return _this.container_mouseup(evt);
+      });
+      this.container.mouseenter(function(evt) {
+        return _this.mouse_enter(evt);
+      });
+      this.container.mouseleave(function(evt) {
+        return _this.mouse_leave(evt);
+      });
+      this.search_results.mouseup(function(evt) {
+        return _this.search_results_mouseup(evt);
+      });
+      this.search_results.mouseover(function(evt) {
+        return _this.search_results_mouseover(evt);
+      });
+      this.search_results.mouseout(function(evt) {
+        return _this.search_results_mouseout(evt);
+      });
+      this.form_field_jq.bind("liszt:updated", function(evt) {
+        return _this.results_update_field(evt);
+      });
+      this.form_field_jq.bind("liszt:activate", function(evt) {
+        return _this.activate_field(evt);
+      });
+      this.form_field_jq.bind("liszt:open", function(evt) {
+        return _this.container_mousedown(evt);
+      });
+      this.search_field.blur(function(evt) {
+        return _this.input_blur(evt);
+      });
+      this.search_field.keyup(function(evt) {
+        return _this.keyup_checker(evt);
+      });
+      this.search_field.keydown(function(evt) {
+        return _this.keydown_checker(evt);
+      });
+      this.search_field.focus(function(evt) {
+        return _this.input_focus(evt);
+      });
+      if (this.is_multiple) {
+        return this.search_choices.click(function(evt) {
+          return _this.choices_click(evt);
+        });
+      } else {
+        return this.container.click(function(evt) {
+          return evt.preventDefault();
+        });
+      }
+    };
+
+    Chosen.prototype.search_field_disabled = function() {
+      this.is_disabled = this.form_field_jq[0].disabled;
+      if (this.is_disabled) {
+        this.container.addClass('chzn-disabled');
+        this.search_field[0].disabled = true;
+        if (!this.is_multiple) {
+          this.selected_item.unbind("focus", this.activate_action);
+        }
+        return this.close_field();
+      } else {
+        this.container.removeClass('chzn-disabled');
+        this.search_field[0].disabled = false;
+        if (!this.is_multiple) {
+          return this.selected_item.bind("focus", this.activate_action);
+        }
+      }
+    };
+
+    Chosen.prototype.container_mousedown = function(evt) {
+      var target_closelink;
+      if (!this.is_disabled) {
+        target_closelink = evt != null ? ($(evt.target)).hasClass("search-choice-close") : false;
+        if (evt && evt.type === "mousedown" && !this.results_showing) {
+          evt.stopPropagation();
+        }
+        if (!this.pending_destroy_click && !target_closelink) {
+          if (!this.active_field) {
+            if (this.is_multiple) this.search_field.val("");
+            $(document).click(this.click_test_action);
+            this.results_show();
+          } else if (!this.is_multiple && evt && (($(evt.target)[0] === this.selected_item[0]) || $(evt.target).parents("a.chzn-single").length)) {
+            evt.preventDefault();
+            this.results_toggle();
+          }
+          return this.activate_field();
+        } else {
+          return this.pending_destroy_click = false;
+        }
+      }
+    };
+
+    Chosen.prototype.container_mouseup = function(evt) {
+      if (evt.target.nodeName === "ABBR" && !this.is_disabled) {
+        return this.results_reset(evt);
+      }
+    };
+
+    Chosen.prototype.blur_test = function(evt) {
+      if (!this.active_field && this.container.hasClass("chzn-container-active")) {
+        return this.close_field();
+      }
+    };
+
+    Chosen.prototype.close_field = function() {
+      $(document).unbind("click", this.click_test_action);
+      this.active_field = false;
+      this.results_hide();
+      this.container.removeClass("chzn-container-active");
+      this.winnow_results_clear();
+      this.clear_backstroke();
+      this.show_search_field_default();
+      return this.search_field_scale();
+    };
+
+    Chosen.prototype.activate_field = function() {
+      this.container.addClass("chzn-container-active");
+      this.active_field = true;
+      this.search_field.val(this.search_field.val());
+      return this.search_field.focus();
+    };
+
+    Chosen.prototype.test_active_click = function(evt) {
+      if ($(evt.target).parents('#' + this.container_id).length) {
+        return this.active_field = true;
+      } else {
+        return this.close_field();
+      }
+    };
+
+    Chosen.prototype.results_build = function() {
+      var content, data, _i, _len, _ref;
+      this.parsing = true;
+      this.results_data = root.SelectParser.select_to_array(this.form_field);
+      if (this.is_multiple && this.choices > 0) {
+        this.search_choices.find("li.search-choice").remove();
+        this.choices = 0;
+      } else if (!this.is_multiple) {
+        this.selected_item.addClass("chzn-default").find("span").text(this.default_text);
+        if (this.disable_search || this.form_field.options.length <= this.disable_search_threshold) {
+          this.container.addClass("chzn-container-single-nosearch");
+        } else {
+          this.container.removeClass("chzn-container-single-nosearch");
+        }
+      }
+      content = '';
+      _ref = this.results_data;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        data = _ref[_i];
+        if (data.group) {
+          content += this.result_add_group(data);
+        } else if (!data.empty) {
+          content += this.result_add_option(data);
+          if (data.selected && this.is_multiple) {
+            this.choice_build(data);
+          } else if (data.selected && !this.is_multiple) {
+            this.selected_item.removeClass("chzn-default").find("span").text(data.text);
+            if (this.allow_single_deselect) this.single_deselect_control_build();
+          }
+        }
+      }
+      this.search_field_disabled();
+      this.show_search_field_default();
+      this.search_field_scale();
+      this.search_results.html(content);
+      return this.parsing = false;
+    };
+
+    Chosen.prototype.result_add_group = function(group) {
+      if (!group.disabled) {
+        group.dom_id = this.container_id + "_g_" + group.array_index;
+        return '<li id="' + group.dom_id + '" class="group-result">' + $("<div />").text(group.label).html() + '</li>';
+      } else {
+        return "";
+      }
+    };
+
+    Chosen.prototype.result_do_highlight = function(el) {
+      var high_bottom, high_top, maxHeight, visible_bottom, visible_top;
+      if (el.length) {
+        this.result_clear_highlight();
+        this.result_highlight = el;
+        this.result_highlight.addClass("highlighted");
+        maxHeight = parseInt(this.search_results.css("maxHeight"), 10);
+        visible_top = this.search_results.scrollTop();
+        visible_bottom = maxHeight + visible_top;
+        high_top = this.result_highlight.position().top + this.search_results.scrollTop();
+        high_bottom = high_top + this.result_highlight.outerHeight();
+        if (high_bottom >= visible_bottom) {
+          return this.search_results.scrollTop((high_bottom - maxHeight) > 0 ? high_bottom - maxHeight : 0);
+        } else if (high_top < visible_top) {
+          return this.search_results.scrollTop(high_top);
+        }
+      }
+    };
+
+    Chosen.prototype.result_clear_highlight = function() {
+      if (this.result_highlight) this.result_highlight.removeClass("highlighted");
+      return this.result_highlight = null;
+    };
+
+    Chosen.prototype.results_show = function() {
+      var dd_top;
+      if (!this.is_multiple) {
+        this.selected_item.addClass("chzn-single-with-drop");
+        if (this.result_single_selected) {
+          this.result_do_highlight(this.result_single_selected);
+        }
+      } else if (this.max_selected_options <= this.choices) {
+        this.form_field_jq.trigger("liszt:maxselected", {
+          chosen: this
+        });
+        return false;
+      }
+      dd_top = this.is_multiple ? this.container.height() : this.container.height() - 1;
+      this.form_field_jq.trigger("liszt:showing_dropdown", {
+        chosen: this
+      });
+      this.dropdown.css({
+        "top": dd_top + "px",
+        "left": 0
+      });
+      this.results_showing = true;
+      this.search_field.focus();
+      this.search_field.val(this.search_field.val());
+      return this.winnow_results();
+    };
+
+    Chosen.prototype.results_hide = function() {
+      if (!this.is_multiple) {
+        this.selected_item.removeClass("chzn-single-with-drop");
+      }
+      this.result_clear_highlight();
+      this.form_field_jq.trigger("liszt:hiding_dropdown", {
+        chosen: this
+      });
+      this.dropdown.css({
+        "left": "-9000px"
+      });
+      return this.results_showing = false;
+    };
+
+    Chosen.prototype.set_tab_index = function(el) {
+      var ti;
+      if (this.form_field_jq.attr("tabindex")) {
+        ti = this.form_field_jq.attr("tabindex");
+        this.form_field_jq.attr("tabindex", -1);
+        return this.search_field.attr("tabindex", ti);
+      }
+    };
+
+    Chosen.prototype.show_search_field_default = function() {
+      if (this.is_multiple && this.choices < 1 && !this.active_field) {
+        this.search_field.val(this.default_text);
+        return this.search_field.addClass("default");
+      } else {
+        this.search_field.val("");
+        return this.search_field.removeClass("default");
+      }
+    };
+
+    Chosen.prototype.search_results_mouseup = function(evt) {
+      var target;
+      target = $(evt.target).hasClass("active-result") ? $(evt.target) : $(evt.target).parents(".active-result").first();
+      if (target.length) {
+        this.result_highlight = target;
+        this.result_select(evt);
+        return this.search_field.focus();
+      }
+    };
+
+    Chosen.prototype.search_results_mouseover = function(evt) {
+      var target;
+      target = $(evt.target).hasClass("active-result") ? $(evt.target) : $(evt.target).parents(".active-result").first();
+      if (target) return this.result_do_highlight(target);
+    };
+
+    Chosen.prototype.search_results_mouseout = function(evt) {
+      if ($(evt.target).hasClass("active-result" || $(evt.target).parents('.active-result').first())) {
+        return this.result_clear_highlight();
+      }
+    };
+
+    Chosen.prototype.choices_click = function(evt) {
+      evt.preventDefault();
+      if (this.active_field && !($(evt.target).hasClass("search-choice" || $(evt.target).parents('.search-choice').first)) && !this.results_showing) {
+        return this.results_show();
+      }
+    };
+
+    Chosen.prototype.choice_build = function(item) {
+      var choice_id, html, link,
+        _this = this;
+      if (this.is_multiple && this.max_selected_options <= this.choices) {
+        this.form_field_jq.trigger("liszt:maxselected", {
+          chosen: this
+        });
+        return false;
+      }
+      choice_id = this.container_id + "_c_" + item.array_index;
+      this.choices += 1;
+      if (item.disabled) {
+        html = '<li class="search-choice search-choice-disabled" id="' + choice_id + '"><span>' + item.html + '</span></li>';
+      } else {
+        html = '<li class="search-choice" id="' + choice_id + '"><span>' + item.html + '</span><a href="javascript:void(0)" class="search-choice-close" rel="' + item.array_index + '"></a></li>';
+      }
+      this.search_container.before(html);
+      link = $('#' + choice_id).find("a").first();
+      return link.click(function(evt) {
+        return _this.choice_destroy_link_click(evt);
+      });
+    };
+
+    Chosen.prototype.choice_destroy_link_click = function(evt) {
+      evt.preventDefault();
+      if (!this.is_disabled) {
+        this.pending_destroy_click = true;
+        return this.choice_destroy($(evt.target));
+      } else {
+        return evt.stopPropagation;
+      }
+    };
+
+    Chosen.prototype.choice_destroy = function(link) {
+      if (this.result_deselect(link.attr("rel"))) {
+        this.choices -= 1;
+        this.show_search_field_default();
+        if (this.is_multiple && this.choices > 0 && this.search_field.val().length < 1) {
+          this.results_hide();
+        }
+        return link.parents('li').first().remove();
+      }
+    };
+
+    Chosen.prototype.results_reset = function() {
+      this.form_field.options[0].selected = true;
+      this.selected_item.find("span").text(this.default_text);
+      if (!this.is_multiple) this.selected_item.addClass("chzn-default");
+      this.show_search_field_default();
+      this.results_reset_cleanup();
+      this.form_field_jq.trigger("change");
+      if (this.active_field) return this.results_hide();
+    };
+
+    Chosen.prototype.results_reset_cleanup = function() {
+      this.current_value = this.form_field_jq.val();
+      return this.selected_item.find("abbr").remove();
+    };
+
+    Chosen.prototype.result_select = function(evt) {
+      var high, high_id, item, position;
+      if (this.result_highlight) {
+        high = this.result_highlight;
+        high_id = high.attr("id");
+        this.result_clear_highlight();
+        if (this.is_multiple) {
+          this.result_deactivate(high);
+        } else {
+          this.search_results.find(".result-selected").removeClass("result-selected");
+          this.result_single_selected = high;
+          this.selected_item.removeClass("chzn-default");
+        }
+        high.addClass("result-selected");
+        position = high_id.substr(high_id.lastIndexOf("_") + 1);
+        item = this.results_data[position];
+        item.selected = true;
+        this.form_field.options[item.options_index].selected = true;
+        if (this.is_multiple) {
+          this.choice_build(item);
+        } else {
+          this.selected_item.find("span").first().text(item.text);
+          if (this.allow_single_deselect) this.single_deselect_control_build();
+        }
+        if (!(evt.metaKey && this.is_multiple)) this.results_hide();
+        this.search_field.val("");
+        if (this.is_multiple || this.form_field_jq.val() !== this.current_value) {
+          this.form_field_jq.trigger("change", {
+            'selected': this.form_field.options[item.options_index].value
+          });
+        }
+        this.current_value = this.form_field_jq.val();
+        return this.search_field_scale();
+      }
+    };
+
+    Chosen.prototype.result_activate = function(el) {
+      return el.addClass("active-result");
+    };
+
+    Chosen.prototype.result_deactivate = function(el) {
+      return el.removeClass("active-result");
+    };
+
+    Chosen.prototype.result_deselect = function(pos) {
+      var result, result_data;
+      result_data = this.results_data[pos];
+      if (!this.form_field.options[result_data.options_index].disabled) {
+        result_data.selected = false;
+        this.form_field.options[result_data.options_index].selected = false;
+        result = $("#" + this.container_id + "_o_" + pos);
+        result.removeClass("result-selected").addClass("active-result").show();
+        this.result_clear_highlight();
+        this.winnow_results();
+        this.form_field_jq.trigger("change", {
+          deselected: this.form_field.options[result_data.options_index].value
+        });
+        this.search_field_scale();
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    Chosen.prototype.single_deselect_control_build = function() {
+      if (this.allow_single_deselect && this.selected_item.find("abbr").length < 1) {
+        return this.selected_item.find("span").first().after("<abbr class=\"search-choice-close\"></abbr>");
+      }
+    };
+
+    Chosen.prototype.winnow_results = function() {
+      var found, option, part, parts, regex, regexAnchor, result, result_id, results, searchText, startpos, text, zregex, _i, _j, _len, _len2, _ref;
+      this.no_results_clear();
+      results = 0;
+      searchText = this.search_field.val() === this.default_text ? "" : $('<div/>').text($.trim(this.search_field.val())).html();
+      regexAnchor = this.search_contains ? "" : "^";
+      regex = new RegExp(regexAnchor + searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'i');
+      zregex = new RegExp(searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'i');
+      _ref = this.results_data;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        option = _ref[_i];
+        if (!option.disabled && !option.empty) {
+          if (option.group) {
+            $('#' + option.dom_id).css('display', 'none');
+          } else if (!(this.is_multiple && option.selected)) {
+            found = false;
+            result_id = option.dom_id;
+            result = $("#" + result_id);
+            if (regex.test(option.html)) {
+              found = true;
+              results += 1;
+            } else if (option.html.indexOf(" ") >= 0 || option.html.indexOf("[") === 0) {
+              parts = option.html.replace(/\[|\]/g, "").split(" ");
+              if (parts.length) {
+                for (_j = 0, _len2 = parts.length; _j < _len2; _j++) {
+                  part = parts[_j];
+                  if (regex.test(part)) {
+                    found = true;
+                    results += 1;
+                  }
+                }
+              }
+            }
+            if (found) {
+              if (searchText.length) {
+                startpos = option.html.search(zregex);
+                text = option.html.substr(0, startpos + searchText.length) + '</em>' + option.html.substr(startpos + searchText.length);
+                text = text.substr(0, startpos) + '<em>' + text.substr(startpos);
+              } else {
+                text = option.html;
+              }
+              result.html(text);
+              this.result_activate(result);
+              if (option.group_array_index != null) {
+                $("#" + this.results_data[option.group_array_index].dom_id).css('display', 'list-item');
+              }
+            } else {
+              if (this.result_highlight && result_id === this.result_highlight.attr('id')) {
+                this.result_clear_highlight();
+              }
+              this.result_deactivate(result);
+            }
+          }
+        }
+      }
+      if (results < 1 && searchText.length) {
+        return this.no_results(searchText);
+      } else {
+        return this.winnow_results_set_highlight();
+      }
+    };
+
+    Chosen.prototype.winnow_results_clear = function() {
+      var li, lis, _i, _len, _results;
+      this.search_field.val("");
+      lis = this.search_results.find("li");
+      _results = [];
+      for (_i = 0, _len = lis.length; _i < _len; _i++) {
+        li = lis[_i];
+        li = $(li);
+        if (li.hasClass("group-result")) {
+          _results.push(li.css('display', 'auto'));
+        } else if (!this.is_multiple || !li.hasClass("result-selected")) {
+          _results.push(this.result_activate(li));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    Chosen.prototype.winnow_results_set_highlight = function() {
+      var do_high, selected_results;
+      if (!this.result_highlight) {
+        selected_results = !this.is_multiple ? this.search_results.find(".result-selected.active-result") : [];
+        do_high = selected_results.length ? selected_results.first() : this.search_results.find(".active-result").first();
+        if (do_high != null) return this.result_do_highlight(do_high);
+      }
+    };
+
+    Chosen.prototype.no_results = function(terms) {
+      var no_results_html;
+      no_results_html = $('<li class="no-results">' + this.results_none_found + ' "<span></span>"</li>');
+      no_results_html.find("span").first().html(terms);
+      return this.search_results.append(no_results_html);
+    };
+
+    Chosen.prototype.no_results_clear = function() {
+      return this.search_results.find(".no-results").remove();
+    };
+
+    Chosen.prototype.keydown_arrow = function() {
+      var first_active, next_sib;
+      if (!this.result_highlight) {
+        first_active = this.search_results.find("li.active-result").first();
+        if (first_active) this.result_do_highlight($(first_active));
+      } else if (this.results_showing) {
+        next_sib = this.result_highlight.nextAll("li.active-result").first();
+        if (next_sib) this.result_do_highlight(next_sib);
+      }
+      if (!this.results_showing) return this.results_show();
+    };
+
+    Chosen.prototype.keyup_arrow = function() {
+      var prev_sibs;
+      if (!this.results_showing && !this.is_multiple) {
+        return this.results_show();
+      } else if (this.result_highlight) {
+        prev_sibs = this.result_highlight.prevAll("li.active-result");
+        if (prev_sibs.length) {
+          return this.result_do_highlight(prev_sibs.first());
+        } else {
+          if (this.choices > 0) this.results_hide();
+          return this.result_clear_highlight();
+        }
+      }
+    };
+
+    Chosen.prototype.keydown_backstroke = function() {
+      var next_available_destroy;
+      if (this.pending_backstroke) {
+        this.choice_destroy(this.pending_backstroke.find("a").first());
+        return this.clear_backstroke();
+      } else {
+        next_available_destroy = this.search_container.siblings("li.search-choice").last();
+        if (next_available_destroy.length && !next_available_destroy.hasClass("search-choice-disabled")) {
+          this.pending_backstroke = next_available_destroy;
+          if (this.single_backstroke_delete) {
+            return this.keydown_backstroke();
+          } else {
+            return this.pending_backstroke.addClass("search-choice-focus");
+          }
+        }
+      }
+    };
+
+    Chosen.prototype.clear_backstroke = function() {
+      if (this.pending_backstroke) {
+        this.pending_backstroke.removeClass("search-choice-focus");
+      }
+      return this.pending_backstroke = null;
+    };
+
+    Chosen.prototype.keydown_checker = function(evt) {
+      var stroke, _ref;
+      stroke = (_ref = evt.which) != null ? _ref : evt.keyCode;
+      this.search_field_scale();
+      if (stroke !== 8 && this.pending_backstroke) this.clear_backstroke();
+      switch (stroke) {
+        case 8:
+          this.backstroke_length = this.search_field.val().length;
+          break;
+        case 9:
+          if (this.results_showing && !this.is_multiple) this.result_select(evt);
+          this.mouse_on_container = false;
+          break;
+        case 13:
+          evt.preventDefault();
+          break;
+        case 38:
+          evt.preventDefault();
+          this.keyup_arrow();
+          break;
+        case 40:
+          this.keydown_arrow();
+          break;
+      }
+    };
+
+    Chosen.prototype.search_field_scale = function() {
+      var dd_top, div, h, style, style_block, styles, w, _i, _len;
+      if (this.is_multiple) {
+        h = 0;
+        w = 0;
+        style_block = "position:absolute; left: -1000px; top: -1000px; display:none;";
+        styles = ['font-size', 'font-style', 'font-weight', 'font-family', 'line-height', 'text-transform', 'letter-spacing'];
+        for (_i = 0, _len = styles.length; _i < _len; _i++) {
+          style = styles[_i];
+          style_block += style + ":" + this.search_field.css(style) + ";";
+        }
+        div = $('<div />', {
+          'style': style_block
+        });
+        div.text(this.search_field.val());
+        $('body').append(div);
+        w = div.width() + 25;
+        div.remove();
+        if (w > this.f_width - 10) w = this.f_width - 10;
+        this.search_field.css({
+          'width': w + 'px'
+        });
+        dd_top = this.container.height();
+        return this.dropdown.css({
+          "top": dd_top + "px"
+        });
+      }
+    };
+
+    Chosen.prototype.generate_random_id = function() {
+      var string;
+      string = "sel" + this.generate_random_char() + this.generate_random_char() + this.generate_random_char();
+      while ($("#" + string).length > 0) {
+        string += this.generate_random_char();
+      }
+      return string;
+    };
+
+    return Chosen;
+
+  })(AbstractChosen);
+
+  get_side_border_padding = function(elmt) {
+    var side_border_padding;
+    return side_border_padding = elmt.outerWidth() - elmt.width();
+  };
+
+  root.get_side_border_padding = get_side_border_padding;
+
+}).call(this);
+
 /*	SWFObject v2.2 <http://code.google.com/p/swfobject/> 
 	is released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
 */
@@ -32290,14 +31964,8 @@ Initialization.common = function() {
 			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
-	$('.nav li a').each(function() {
-				if ($(this).attr('href') == document.location.pathname)
-					$(this).closest('li').addClass('active');
-			});
-	$('.nav li a').click(function() {
-				$('li', $(this).closest('.nav')).removeClass('active');
-				$(this).closest('li').addClass('active');
-			});
+	Nav.init();
+	Nav.activate(document.location.pathname);
 	if (document.location.search.indexOf('printpage=true') != -1) {
 		window.print();
 		window.close();
@@ -32327,15 +31995,7 @@ if (HISTORY_ENABLED) {
 								replacement : event.state.replacement,
 								cache : false,
 								success : function() {
-									$('.nav li a').each(function() {
-										if (this.href == url
-												|| url.indexOf(this.href + '?') == 0) {
-											$('li', $(this).closest('.nav'))
-													.removeClass('active');
-											$(this).closest('li')
-													.addClass('active');
-										}
-									});
+									Nav.activate(url);
 								},
 								headers : {
 									'X-Fragment' : '_'
@@ -32366,14 +32026,7 @@ if (HISTORY_ENABLED) {
 								cache : true,
 								replaceTitle : true,
 								success : function() {
-									$('.nav li a').each(function() {
-										if ($(this).attr('href') == url) {
-											$('li', $(this).closest('.nav'))
-													.removeClass('active');
-											$(this).closest('li')
-													.addClass('active');
-										}
-									});
+									Nav.activate(url);
 								},
 								headers : {
 									'X-Fragment' : '_'
@@ -32468,15 +32121,6 @@ Observation.common = function(container) {
 			});
 	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
 		$('textarea.elastic', container).elastic();
-	if (typeof $.fn.tabs != 'undefined')
-		$('div.tabs', container).each(function() {
-					$(this).tabs({
-								select : function(event, ui) {
-									$(ui.panel).trigger('load');
-								}
-							}).tabs('select', $(this).data('tab'));
-
-				});
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({
 					dateFormat : 'yy-mm-dd',
@@ -32497,7 +32141,24 @@ Observation.common = function(container) {
 						: 'collapsed'
 			});
 		});
+	if (typeof $.fn.chosen != 'undefined')
+		$('.chosen', container).chosen({
+					placeholder_text : MessageBundle.get('select'),
+					no_results_text : ' '
+				});
 	// bootstrap start
+	$('a[data-toggle="tab"]', container).on('shown', function(e) {
+				$this = $(e.target);
+				var selector = $this.attr('data-target');
+				if (!selector) {
+					selector = $this.attr('href');
+					selector = selector
+							&& selector.replace(/.*(?=#[^\s]*$)/, '');
+				}
+				$target = $(selector);
+				if ($target.hasClass('ajaxpanel'))
+					$target.trigger('load');
+			});
 	$('.carousel', container).each(function() {
 				var t = $(this);
 				t.carousel((new Function("return "
@@ -32766,6 +32427,7 @@ Observation.common = function(container) {
 				}
 
 				options.success = function(data) {
+					Nav.activate(options.url);
 					Ajax.handleResponse(data, _opt);
 				};
 				$.ajax(options);
@@ -32774,6 +32436,24 @@ Observation.common = function(container) {
 		}
 	});
 };
+
+var Nav = {
+	init : function() {
+		$('.nav:not(.nav-tabs) li a').live('click', function() {
+					$('li', $(this).closest('.nav')).removeClass('active');
+					$(this).closest('li').addClass('active');
+				});
+	},
+	activate : function(url) {
+		url = UrlUtils.absolutize(url);
+		$('.nav:not(.nav-tabs) li a').each(function() {
+					if (this.href == url || url.indexOf(this.href + '?') == 0) {
+						$('li', $(this).closest('.nav')).removeClass('active');
+						$(this).closest('li').addClass('active');
+					}
+				});
+	}
+}
 
 var Dialog = {
 	adapt : function(d, iframe) {
@@ -33077,7 +32757,7 @@ Observation.checkavailable = function(container) {
 			success : function(data) {
 				if (typeof data != 'string') {
 					ele.empty();
-					$.tmpl($('#' + ele.attr('tmpl')), data).appendTo(ele);
+					$.tmpl($('#' + ele.data('tmpl')), data).appendTo(ele);
 					_observe(ele);
 				}
 			}
@@ -33535,9 +33215,6 @@ Observation.sortableTable = function(container) {
 		$(':input[type!=checkbox][type!=radio]', r).val('');
 		$('input[type=checkbox],input[type=radio]', r).prop('checked', false);
 		$(':input').prop('readonly', false).removeAttr('keyupValidate');
-		$('input.filterselect', this).next('select').html(function() {
-					return $(this).data('innerHTML')
-				});
 		$('.datagrided tr', r).each(function(i) {
 					if (i > 0)
 						$(this).remove();
@@ -33547,6 +33224,13 @@ Observation.sortableTable = function(container) {
 		else
 			current.after(r);
 		rename(row.closest('tbody'));
+		$('.chzn-container', r).remove();
+		$('.chzn-done', r).removeClass('chzn-done').show();
+		if (typeof $.fn.chosen != 'undefined')
+			$('.chosen', r).chosen({
+						placeholder_text : MessageBundle.get('select'),
+						no_results_text : ' '
+					});
 		$('select.textonadd', r).each(function() {
 			$(this).replaceWith('<input type="text" name="'
 					+ $(this).attr('name') + '">');
@@ -33632,36 +33316,6 @@ Observation.sortableTable = function(container) {
 
 Observation.datagridTable = function(container) {
 	$('table.datagrid', container).datagridTable();
-};
-(function($) {
-	$.fn.filterselect = function() {
-		this.each(function() {
-					var select = $(this).nextAll('select:eq(0)');
-					select.data('innerHTML', select.html());
-					$(this).keyup($.debounce(500, filterselect));
-				});
-		return this;
-	};
-	function filterselect(event) {
-		var input = $(event.target);
-		var select = input.nextAll('select:eq(0)');
-		var key = input.val();
-		if ($.browser.webkit || event.keyCode == 8) {
-			select.html(select.data('innerHTML'));
-			if (!key)
-				return;
-		}
-		var keys = key.split(/\s+/);
-		for (var i = 0; i < keys.length; i++)
-			$('option', select).each(function() {
-						if (!$(this).text().match(keys[i]))
-							$(this).remove();
-					});
-	}
-})(jQuery);
-
-Observation.filterselect = function(container) {
-	$('input.filterselect', container).filterselect();
 };
 (function($) {
 	$.fn.portal = function() {
@@ -33991,7 +33645,7 @@ Richtable = {
 	},
 	reload : function(form, pushstate) {
 		form = form || $('form.richtable');
-		if (form.parents('div.ui-dialog').length)
+		if (form.parents('.ui-dialog,.tab-content').length)
 			pushstate = false;
 		if (pushstate && typeof history.pushState != 'undefined') {
 			var url = form.attr('action');

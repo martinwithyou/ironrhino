@@ -42,6 +42,7 @@
 				<file
 					name="${webapp.dir}/assets/scripts/source/jquery.throttle-debounce-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.elastic-1.6.3.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.chosen-0.9.8.js" />
 				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/bootstrap-2.1.1.js" />
 				<file
@@ -56,8 +57,6 @@
 					name="${webapp.dir}/assets/scripts/source/ironrhino.sortabletable.js" />
 				<file
 					name="${webapp.dir}/assets/scripts/source/ironrhino.datagridtable.js" />
-				<file
-					name="${webapp.dir}/assets/scripts/source/ironrhino.filterselect.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.portal.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.combox.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.tags.js" />
@@ -119,6 +118,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.textext.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.clickmenu.css" />
+				<file name="${webapp.dir}/assets/styles/source/jquery.chosen.css" />
 				<file name="${webapp.dir}/assets/styles/source/bootstrap.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
