@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ public class ConsoleAction extends BaseAction {
 		try {
 			Object o = applicationContextConsole.execute(expression, global);
 			addActionMessage(getText("operate.success") + ":"
-					+ String.valueOf(o));
+					+ JsonUtils.toJson(o));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			addActionError(getText("error") + ":" + e.getMessage());

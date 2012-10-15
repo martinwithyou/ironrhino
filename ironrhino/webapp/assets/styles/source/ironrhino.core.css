@@ -44,6 +44,7 @@ td.middle {
 }
 .navbar-fixed-top, .navbar-fixed-bottom{
 	z-index: 1000;
+	font-size:1.1em;
 }
 td input,td textarea,td select,td .uneditable-input{
 	margin-bottom: 0px;

@@ -49,6 +49,15 @@ public class SettingControl implements
 		settings = temp;
 	}
 
+	public void setValue(String key, String value) {
+		Setting s = settings.get(key);
+		if (s != null)
+			s.setValue(value);
+		else
+			s = new Setting(key, value);
+		entityManager.save(s);
+	}
+
 	public int getIntValue(String key) {
 		return getIntValue(key, 0);
 	}
