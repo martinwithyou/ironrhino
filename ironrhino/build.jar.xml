@@ -59,7 +59,7 @@
 	<property name="security-oauth-server-jar.name"
 		value="ironrhino-security-oauth-server-${version}.jar" />
 	<property name="security-oauth-server-jar.includes"
-		value="org/ironrhino/security/oauth/package-info.class,org/ironrhino/security/oauth/server/**,resources/i18n/security/oauth/**,resources/hibernate/security/oauth/**,resources/view/oauth/oauth2**,resources/view/oauth/client**" />
+		value="org/ironrhino/security/oauth/package-info.class,org/ironrhino/security/oauth/server/**,resources/i18n/security/oauth/**,resources/hibernate/security/oauth/**,resources/view/oauth/oauth2**,resources/view/oauth/client**,resources/view/oauth/authorization**" />
 	<property name="daq-jar.name" value="ironrhino-daq-${version}.jar" />
 	<property name="daq-jar.includes" value="org/ironrhino/daq/**,resources/**/daq/**" />
 	<target name="jar">

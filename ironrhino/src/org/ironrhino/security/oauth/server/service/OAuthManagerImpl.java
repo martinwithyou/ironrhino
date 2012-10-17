@@ -83,8 +83,8 @@ public class OAuthManagerImpl implements OAuthManager {
 
 	public Authorization authenticate(String code, Client client) {
 		entityManager.setEntityClass(Authorization.class);
-		Authorization auth = (Authorization) entityManager.findOne(
-				"code", code);
+		Authorization auth = (Authorization) entityManager
+				.findOne("code", code);
 		if (auth == null)
 			throw new IllegalArgumentException("CODE_INVALID");
 		if (auth.isClientSide())
@@ -110,7 +110,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		Authorization auth = (Authorization) entityManager
 				.findByNaturalId(accessToken);
 		if (auth != null) {
-			if (!auth.getClient().isEnabled()) {
+			if (auth.getClient() != null && !auth.getClient().isEnabled()) {
 				entityManager.delete(auth);
 				return null;
 			}
@@ -125,7 +125,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		Authorization auth = (Authorization) entityManager.findOne(
 				"refreshToken", refreshToken);
 		if (auth != null) {
-			if (!auth.getClient().isEnabled()) {
+			if (auth.getClient() != null && !auth.getClient().isEnabled()) {
 				entityManager.delete(auth);
 				return null;
 			}

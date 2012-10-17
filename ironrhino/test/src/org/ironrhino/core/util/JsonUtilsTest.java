@@ -93,6 +93,19 @@ public class JsonUtilsTest {
 			fail(e.getMessage());
 		}
 	}
+	
+	@Test
+	public void testDate() {
+		Date d = new Date();
+		String json = "{\"date\":"+d.getTime()+"}";
+		try {
+			User u = JsonUtils.fromJson(json, User.class);
+			assertEquals(d, u.getDate());
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+	}
 
 	@Test
 	public void testFromJsonUsingTypeReference() {

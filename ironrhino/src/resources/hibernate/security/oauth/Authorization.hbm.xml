@@ -18,9 +18,7 @@
 		<property name="responseType" not-null="true" />
 		<property name="modifyDate" not-null="true" />
 		<property name="createDate" not-null="true" />
-		<many-to-one name="grantor" class="org.ironrhino.security.model.User"
-			not-null="false" fetch="select" />
-		<many-to-one name="client" class="Client" not-null="true"
-			fetch="select" />
+		<many-to-one name="grantor" lazy="false" fetch="select" />
+		<many-to-one name="client" lazy="false" fetch="select" />
 	</class>
 </hibernate-mapping>

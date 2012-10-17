@@ -2,6 +2,7 @@ package org.ironrhino.security.oauth.server.action;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.struts.EntityAction;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
@@ -31,11 +32,15 @@ public class AuthorizationAction extends EntityAction {
 
 	@InputConfig(methodName = "inputcreate")
 	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "authorization.client.id", trim = true, key = "validation.required"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "authorization.grantor.id", trim = true, key = "validation.required") })
+	// @RequiredStringValidator(type = ValidatorType.FIELD, fieldName =
+	// "authorization.client.id", trim = true, key = "validation.required"),
+	@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "authorization.grantor.id", trim = true, key = "validation.required") })
 	public String create() {
 		if (authorization == null)
 			return ACCESSDENIED;
+		if (authorization.getClient() != null
+				&& StringUtils.isBlank(authorization.getClient().getId()))
+			authorization.setClient(null);
 		oauthManager.create(authorization);
 		addActionMessage(getText("operate.success") + ",token:  "
 				+ authorization.getAccessToken());

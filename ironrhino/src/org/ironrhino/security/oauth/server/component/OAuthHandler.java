@@ -110,11 +110,13 @@ public class OAuthHandler implements AccessHandler {
 					request.setAttribute(REQUEST_ATTRIBUTE_KEY_OAUTH_REQUEST,
 							true);
 					Client client = authorization.getClient();
-					UserAgent ua = new UserAgent(
-							request.getHeader("User-Agent"));
-					ua.setAppId(client.getId());
-					ua.setAppName(client.getName());
-					request.setAttribute("userAgent", ua);
+					if (client != null) {
+						UserAgent ua = new UserAgent(
+								request.getHeader("User-Agent"));
+						ua.setAppId(client.getId());
+						ua.setAppName(client.getName());
+						request.setAttribute("userAgent", ua);
+					}
 					return false;
 				} else {
 					errorMessage = "unauthorized_scope";
