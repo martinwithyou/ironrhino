@@ -182,7 +182,8 @@ public class AutoConfigPackageProvider implements PackageProvider {
 				String thisPackage = clazz.getPackage().getName();
 				String currentPackage = null;
 				for (String s : currentPackages) {
-					if (thisPackage.startsWith(s + ".")
+					if ((thisPackage.startsWith(s + ".") || thisPackage
+							.equals(s))
 							&& (currentPackage == null || s.length() > currentPackage
 									.length()))
 						currentPackage = s;
@@ -193,7 +194,8 @@ public class AutoConfigPackageProvider implements PackageProvider {
 						continue;
 					Set<String> set = packages.get(ns);
 					for (String s : set) {
-						if (thisPackage.startsWith(s + ".")
+						if ((thisPackage.startsWith(s + ".") || thisPackage
+								.equals(s))
 								&& (anotherPackage == null || s.length() > anotherPackage
 										.length()))
 							anotherPackage = s;
