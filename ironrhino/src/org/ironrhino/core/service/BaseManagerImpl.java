@@ -235,6 +235,8 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	public ResultPage<T> findByResultPage(ResultPage<T> resultPage) {
 		DetachedCriteria detachedCriteria = (DetachedCriteria) resultPage
 				.getCriteria();
+		if(detachedCriteria == null)
+			detachedCriteria = detachedCriteria();
 		long totalRecord = -1;
 		if (resultPage.isCounting()) {
 			totalRecord = countByCriteria(detachedCriteria);
