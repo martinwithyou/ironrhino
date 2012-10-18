@@ -228,6 +228,7 @@ public class UserAction extends BaseAction {
 			BeanUtils.copyProperties(temp, user);
 			if (StringUtils.isNotBlank(password))
 				user.setLegiblePassword(password);
+			userManager.evict(user);
 		}
 		return true;
 	}
