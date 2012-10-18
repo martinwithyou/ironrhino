@@ -34,6 +34,7 @@ drop table common_region_mapping;
 drop table common_region;
 
 rename table common_region_new to common_region;
+alter table common_region modify column id bigint(20) not null primary key auto_increment;
 
 --rebuild search index;
 
