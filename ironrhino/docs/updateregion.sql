@@ -31,10 +31,11 @@ drop table common_region_mapping_missing;
 
 drop table common_region_mapping;
 
-drop table common_region;
+truncate table common_region;
 
-rename table common_region_new to common_region;
-alter table common_region modify column id bigint(20) not null primary key auto_increment;
+insert into common_region select * from common_region_new;
+
+drop table common_region_new;
 
 --rebuild search index;
 
