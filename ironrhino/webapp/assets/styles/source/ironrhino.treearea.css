@@ -11,6 +11,6 @@
 	margin: 5px;
 	cursor: pointer;
 }
-.treearea span.selected,.treeselect span:hover{
+.treearea span.selected{
 	color: #ffc000;
 }

@@ -1,4 +1,8 @@
 /*
+ui-widget-content remove overflow:auto; change font-size to 1.1em;
+ui-dialog-title remove padding;
+*/
+/*
  * jQuery UI Bootstrap (0.22)
  * http://addyosmani.github.com/jquery-ui-bootstrap
  *
@@ -681,12 +685,10 @@ span.ui-spinner { background: none; }
 .ui-dialog .ui-dialog-titlebar { /*padding: .4em 1em;*/
 
   position: relative;
-  padding:5px 15px;
-
   border:0px 0px 0px 1px solid;
   border-color: white;
   padding: 5px 15px;
-  font-size: 18px;
+  font-size: 1.1em;
   text-decoration:none;
   background:none;
   -moz-border-radius-bottomright: 0px;
@@ -707,7 +709,6 @@ span.ui-spinner { background: none; }
   font-weight:bold;
   margin-top:5px;
   margin-bottom:5px;
-  padding:5px;
 
 }
 .ui-dialog .ui-dialog-titlebar-close {
@@ -739,7 +740,16 @@ span.ui-spinner { background: none; }
   -moz-opacity: 0.90;
   opacity: 0.90;   }
 
-.ui-dialog .ui-dialog-content { position: relative; border: 0; padding: .5em 1em; background: none; overflow: auto; zoom: 1; }
+.ui-dialog .ui-dialog-content { 
+	position: relative; 
+	border: 0; 
+	padding: .5em 1em; 
+	background: none; 
+	/*
+	overflow: auto; 
+	*/
+	zoom: 1; 
+}
 
 .ui-dialog .ui-dialog-buttonpane {
   text-align: left;
@@ -6960,9 +6970,15 @@ ul.attributes span.group{
 ul.attributes li.group ul{
 	padding-left:10px;
 }
-
+.treeselect .control-label,.listpick .control-label{
+	cursor:pointer;
+}
+.treeselect .controls span,.listpick .controls span{
+	display:inline-block;
+	margin:5px 0;
+}
 a.remove {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
   color: #000000;
   text-shadow: 0 1px 0 #ffffff;
@@ -7304,7 +7320,7 @@ th.filtercolumn li.main li
 	margin: 5px;
 	cursor: pointer;
 }
-.treearea span.selected,.treeselect span:hover{
+.treearea span.selected{
 	color: #ffc000;
 }
 /*

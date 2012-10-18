@@ -39,14 +39,14 @@
 			<@s.hidden id="${key}Id" name="${entityName}.${key}.id" />
 			<#if !readonly>
 				<div class="control-group listpick" data-options="{'url':'<@url value="${config.pickUrl}"/>','name':'${key}','id':'${key}Id'}">
-					<label class="control-label" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+					<label class="control-label" for="${key}">${action.getText(key)}</label>
 					<div class="controls">
 					<span id="${key}"><#if entity[key]??>${entity[key]!}<a class="remove" href="#">&times;</a><#else>...</#if></span>
 					</div>
 				</div>
 			<#else>
 				<div class="control-group">
-					<label class="control-label" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+					<label class="control-label" for="${key}">${action.getText(key)}</label>
 					<div class="controls">
 					<span id="${key}">${entity[key]!}</span>
 					</div>
@@ -54,7 +54,7 @@
 			</#if>
 		<#elseif config.type=='dictionary' && selectDictionary??>
 			<div class="control-group">
-			<label class="control-label" for="${key}"><span style="cursor:pointer;">${action.getText(key)}</span></label>
+			<label class="control-label" for="${key}">${action.getText(key)}</label>
 			<div class="controls">
 			<#if !readonly>
 				<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required class="${config.cssClass}" dynamicAttributes=config.dynamicAttributes/>

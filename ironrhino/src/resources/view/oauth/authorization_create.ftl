@@ -7,14 +7,14 @@
 <@s.form action="create" method="post" cssClass="ajax reset form-horizontal">
 	<div class="control-group listpick" data-options="{'url':'<@url value="/oauth/client/pick?columns=name"/>','name':'client','id':'clientId'}">
 	<@s.hidden id="clientId" name="authorization.client.id"/>
-	<label class="control-label" for="client"><span style="cursor:pointer;">${action.getText('client')}</span></label>
+	<label class="control-label" for="client">${action.getText('client')}</label>
 	<div class="controls">
 	<span id="client"><#if authorization.client??>${authorization.client.name}<a class="remove" href="#">&times;</a></span><#else>...</#if></span>
 	</div>
 	</div>
 	<div class="control-group listpick" data-options="{'url':'<@url value="/user/pick?columns=username,name"/>','name':'grantor','id':'grantorId'}">
 	<@s.hidden id="grantorId" name="authorization.grantor.id" cssClass="required"/>
-	<label class="control-label" for="grantor"><span style="cursor:pointer;">${action.getText('grantor')}</span></label>
+	<label class="control-label" for="grantor">${action.getText('grantor')}</label>
 	<div class="controls">
 	<span id="grantor"><#if authorization.grantor??>${authorization.grantor.username}<a class="remove" href="#">&times;</a></span><#else>...</#if></span>
 	</div>
