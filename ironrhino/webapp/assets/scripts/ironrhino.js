@@ -20615,7 +20615,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
  *
  * @version 1.3.0
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
- * @license MIT License
+ * license MIT License
  */
 (function($, undefined)
 {
@@ -22230,7 +22230,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
  *
  * @version 1.3.0
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
- * @license MIT License
+ * license MIT License
  */
 (function($)
 {
@@ -22584,7 +22584,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
  *
  * @version 1.3.0
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
- * @license MIT License
+ * license MIT License
  */
 (function($)
 {
@@ -22690,7 +22690,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
  *
  * @version 1.3.0
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
- * @license MIT License
+ * license MIT License
  */
 (function($)
 {
@@ -23800,7 +23800,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
  *
  * @version 1.3.0
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
- * @license MIT License
+ * license MIT License
  */
 (function($)
 {
@@ -24042,7 +24042,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
  *
  * @version 1.3.0
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
- * @license MIT License
+ * license MIT License
  */
 (function($)
 {
@@ -24216,7 +24216,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
  *
  * @version 1.3.0
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
- * @license MIT License
+ * license MIT License
  */
 (function($)
 {
@@ -24525,7 +24525,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
  *
  * @version 1.3.0
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
- * @license MIT License
+ * license MIT License
  */
 (function($)
 {
@@ -24700,7 +24700,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
  *
  * @version 1.3.0
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
- * @license MIT License
+ * license MIT License
  */
 (function($)
 {

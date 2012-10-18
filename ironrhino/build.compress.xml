@@ -96,10 +96,14 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
 			</filelist>
 		</concat>
+		<replace file="${webapp.dir}/assets/scripts/ironrhino.js"
+			token="@license" value="license" encoding="utf-8" />
 		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
 			<arg
 				line=" --js=./webapp/assets/scripts/ironrhino.js --js_output_file=./webapp/assets/scripts/ironrhino-min.js" />
 		</java>
+		<replace file="${webapp.dir}/assets/scripts/ironrhino-lite.js"
+			token="@license" value="license" encoding="utf-8" />
 		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
 			<arg
 				line=" --js=./webapp/assets/scripts/ironrhino-lite.js --js_output_file=./webapp/assets/scripts/ironrhino-lite-min.js" />
@@ -142,10 +146,14 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 			</filelist>
 		</concat>
+		<replaceregexp file="${webapp.dir}/assets/styles/ironrhino.css"
+			match="^\/\*!" replace="/*" byline="true" encoding="utf-8" />
 		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
 			<arg
 				line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-min.css ./webapp/assets/styles/ironrhino.css" />
 		</java>
+		<replaceregexp file="${webapp.dir}/assets/styles/ironrhino-lite.css"
+			match="^\/\*!" replace="/*" byline="true" encoding="utf-8" />
 		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
 			<arg
 				line=" --charset utf-8 --type css -o ./webapp/assets/styles/ironrhino-lite-min.css ./webapp/assets/styles/ironrhino-lite.css" />

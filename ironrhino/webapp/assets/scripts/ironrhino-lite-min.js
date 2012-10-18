@@ -1,14 +1,3 @@
-/*
- MIT License
- MIT License
- MIT License
- MIT License
- MIT License
- MIT License
- MIT License
- MIT License
- MIT License
-*/
 jQuery.cookie=function(a,c,b){if(1<arguments.length&&(null===c||"object"!==typeof c)){b=jQuery.extend({},b);null===c&&(b.expires=-1);if("number"===typeof b.expires){var d=b.expires,e=b.expires=new Date;e.setDate(e.getDate()+d)}return document.cookie=[encodeURIComponent(a),"=",b.raw?""+c:encodeURIComponent(""+c),b.expires?"; expires="+b.expires.toUTCString():"",b.path?"; path="+b.path:"",b.domain?"; domain="+b.domain:"",b.secure?"; secure":""].join("")}b=c||{};e=b.raw?function(a){return a}:decodeURIComponent;
 return(d=RegExp("(?:^|; )"+encodeURIComponent(a)+"=([^;]*)").exec(document.cookie))?e(d[1]):null};
 (function(a){a.fn.rc4=function(b){var d=a.extend({key:null,method:"encrypt",callback:null},b);null==a.fn.rc4.ctrlrInst&&(a.fn.rc4.ctrlrInst=new a.fn.rc4.ctrlr(d));return this.each(function(){a.fn.rc4.ctrlrInst.settings=d;a.fn.rc4.ctrlrInst.container=this;a.fn.rc4.ctrlrInst.initialise(this)})};a.extend({hexEncode:function(a){for(var d=[],e=0;256>e;e++)d[e]="0123456789abcdef".charAt(e>>4)+"0123456789abcdef".charAt(e&15);for(var f=[],e=0;e<a.length;e++)f[e]=d[a.charCodeAt(e)];return f.join("")},hexDecode:function(a){for(var d=

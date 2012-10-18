@@ -1,14 +1,3 @@
-/*
- MIT License
- MIT License
- MIT License
- MIT License
- MIT License
- MIT License
- MIT License
- MIT License
- MIT License
-*/
 (function(a,d){function b(a){var b=Ga[a]={};k.each(a.split(ca),function(a,c){b[c]=!0});return b}function c(a,b,c){if(c===d&&1===a.nodeType)if(c="data-"+b.replace(jb,"-$1").toLowerCase(),c=a.getAttribute(c),"string"===typeof c){try{c="true"===c?!0:"false"===c?!1:"null"===c?null:+c+""===c?+c:kb.test(c)?k.parseJSON(c):c}catch(f){}k.data(a,b,c)}else c=d;return c}function e(a){for(var b in a)if(!("data"===b&&k.isEmptyObject(a[b]))&&"toJSON"!==b)return!1;return!0}function g(){return!1}function j(){return!0}
 function f(a){return!a||!a.parentNode||11===a.parentNode.nodeType}function h(a,b){do a=a[b];while(a&&1!==a.nodeType);return a}function l(a,b,c){b=b||0;if(k.isFunction(b))return k.grep(a,function(a,f){return!!b.call(a,f,a)===c});if(b.nodeType)return k.grep(a,function(a){return a===b===c});if("string"===typeof b){var f=k.grep(a,function(a){return 1===a.nodeType});if(lb.test(b))return k.filter(b,f,!c);b=k.filter(b,f)}return k.grep(a,function(a){return 0<=k.inArray(a,b)===c})}function m(a){var b=Ia.split("|"),
 a=a.createDocumentFragment();if(a.createElement)for(;b.length;)a.createElement(b.pop());return a}function n(a,b){if(1===b.nodeType&&k.hasData(a)){var c,f,e;f=k._data(a);var d=k._data(b,f),g=f.events;if(g)for(c in delete d.handle,d.events={},g){f=0;for(e=g[c].length;f<e;f++)k.event.add(b,c,g[c][f])}d.data&&(d.data=k.extend({},d.data))}}function r(a,b){var c;if(1===b.nodeType){b.clearAttributes&&b.clearAttributes();b.mergeAttributes&&b.mergeAttributes(a);c=b.nodeName.toLowerCase();if("object"===c){if(b.parentNode&&
