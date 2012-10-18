@@ -214,11 +214,9 @@ public class UserAction extends BaseAction {
 			User temp = user;
 			if (temp.getId() != null) {
 				user = userManager.get(temp.getId());
-				userManager.evict(user);
 			}
 			if (temp.getUsername() != null) {
 				user = userManager.findByNaturalId(temp.getUsername());
-				userManager.evict(user);
 			}
 			if (StringUtils.isNotBlank(temp.getEmail())
 					&& !temp.getEmail().equals(user.getEmail())
