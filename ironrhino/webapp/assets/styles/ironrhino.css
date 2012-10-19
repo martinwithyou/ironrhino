@@ -6852,17 +6852,12 @@ span.checkboxgroup{
 
 .field-error .field-error-content {
 	width: 100%;
-	background: #ee0101;
+	background: #fcf8e3;
 	position:relative;
 	z-index:5001;
-	color: #fff;
+	color: #b94a48;
 	width: 150px;
-	font-family: tahoma;
-	font-size: 11px;
-	border: 2px solid #ddd;
-	box-shadow: 0 0 6px #000;
-	-moz-box-shadow: 0 0 6px #000;
-	-webkit-box-shadow: 0 0 6px #000;
+	border: 1px solid #b94a48;
 	padding: 4px 10px 4px 10px;
 	border-radius: 6px;
 	-moz-border-radius: 6px;
@@ -6875,14 +6870,11 @@ span.checkboxgroup{
 	z-index: 5006;
 }
 .field-error .field-error-arrow div {
-	border-left: 2px solid #ddd;
-	border-right: 2px solid #ddd;
-	box-shadow: 0 2px 3px #444;
-	-moz-box-shadow: 0 2px 3px #444;
-	-webkit-box-shadow: 0 2px 3px #444;
+	border-left: 1px solid #b94a48;
+	border-right: 1px solid #b94a48;
 	font-size: 0px;
 	height: 1px;
-	background: #ee0101;
+	background: #fcf8e3;
 	margin: 0 auto;
 	line-height: 0;
 	font-size: 0;
@@ -6913,19 +6905,19 @@ span.checkboxgroup{
 }
 .field-error .field-error-arrow .line3 {
 	width: 1px;
-	border-left: 2px solid #ddd;
-	border-right: 2px solid #ddd;
-	border-bottom: 0 solid #ddd;
+	border-left: 1px solid #b94a48;
+	border-right: 1px solid #b94a48;
+	border-bottom: 0 solid #b94a48;
 }
 .field-error .field-error-arrow .line2 {
 	width: 3px;
 	border: none;
-	background: #ddd;
+	background: #b94a48;
 }
 .field-error .field-error-arrow .line1 {
 	width: 1px;
 	border: none;
-	background: #ddd;
+	background: #b94a48;
 }
 
 
