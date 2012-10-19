@@ -91,7 +91,10 @@ th.radio input[type="radio"],th.checkbox input[type="checkbox"],td.radio input[t
 select.combox{
 	cursor: text;
 }
-input.integer,input.double,input.date,#_window_ input.integer,#_window_ input.double,#_window_ input.date {
+#_window_ form{
+	padding-top : 20px;
+}
+input.integer,input.double,input.date {
 	width: 75px;
 	font-family: Arial;
 }

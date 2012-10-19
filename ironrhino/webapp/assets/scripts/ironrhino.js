@@ -33693,7 +33693,6 @@ Richtable = {
 				var hash = document.location.hash;
 				if (hash.indexOf('!') == 1)
 					pathname = CONTEXT_PATH + hash.substring(2);
-				$('#_window_ form').css('padding-top', '40px');
 				$('#_window_ form.ajax').each(function() {
 					var inputform = $(this);
 					$(':input:visible', inputform).filter(function(i) {
