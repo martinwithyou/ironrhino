@@ -3,6 +3,7 @@ package org.ironrhino.common.action;
 import javax.inject.Inject;
 
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.JsonUtils;
@@ -25,6 +26,8 @@ public class ConsoleAction extends BaseAction {
 
 	private boolean global = true;
 
+	private Object result;
+
 	@Inject
 	private transient ApplicationContextConsole applicationContextConsole;
 
@@ -44,19 +47,36 @@ public class ConsoleAction extends BaseAction {
 		this.global = global;
 	}
 
+	public Object getResult() {
+		return result;
+	}
+
 	@Override
 	@InputConfig(resultName = "success")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "expression", trim = true, key = "validation.required") })
 	public String execute() {
 		try {
-			Object o = applicationContextConsole.execute(expression, global);
+			result = applicationContextConsole.execute(expression, global);
 			addActionMessage(getText("operate.success") + ":"
-					+ JsonUtils.toJson(o));
+					+ JsonUtils.toJson(result));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			addActionError(getText("error") + ":" + e.getMessage());
 		}
 		return SUCCESS;
+	}
+
+	@InputConfig(resultName = "success")
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "expression", trim = true, key = "validation.required") })
+	@JsonConfig(root = "result")
+	public String executeJson() {
+		try {
+			result = applicationContextConsole.execute(expression, global);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			addActionError(getText("error") + ":" + e.getMessage());
+		}
+		return JSON;
 	}
 
 }

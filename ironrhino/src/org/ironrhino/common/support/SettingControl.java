@@ -1,5 +1,6 @@
 package org.ironrhino.common.support;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -77,11 +78,19 @@ public class SettingControl implements
 		Setting s = settings.get(key);
 		if (s != null && StringUtils.isNotBlank(s.getValue())) {
 			String value = s.getValue().trim();
-			return value.equalsIgnoreCase("true")
-					|| value.equalsIgnoreCase("yes")
-					|| value.equalsIgnoreCase("1");
+			return value.equals("true");
 		}
 		return defaultValue;
+	}
+
+	public List<Setting> getAllBooleanSettings() {
+		List<Setting> list = new ArrayList<Setting>();
+		for (Setting s : settings.values()) {
+			String value = s.getValue();
+			if ("true".equals(value) || "false".equals(value))
+				list.add(s);
+		}
+		return list;
 	}
 
 	public String getStringValue(String key) {
