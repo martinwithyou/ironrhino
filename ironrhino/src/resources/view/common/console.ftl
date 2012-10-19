@@ -11,7 +11,9 @@ $(function(){
 	}
 	,function(data){
 		var count = data.length;
-		var html = '';
+		if(!count)
+			return;
+		var html = '<div id="switch" class="well">';
 		$.each(data,function(i,setting){
 			if(i%3 == 0)
 				html += '<div class="row-fluid" style="margin-top:10px;">';
@@ -20,8 +22,8 @@ $(function(){
 			if((i+1)%3 == 0 || count%3!=0 && i==count-1)
 				html += '</div>';
 		});
-		if(html)
-		$(html).appendTo($('#switch'));
+		html += '</div>';
+		$(html).insertAfter($('#dashboard'));
 		$('.switch',$('#switch')).each(function() {
 				var t = $(this);
 				$('.active',t).css({
@@ -65,9 +67,5 @@ $(function(){
 	<button type="button" class="btn span4" onclick="$('#expression').val($(this).text());$('#global').attr('checked',true);$('#form').submit()">freemarkerConfiguration.clearTemplateCache()</button>
 	</div>
 </div>
-<#if printSetting??>
-<div id="switch" class="well">
-</div>	
-</#if>
 </body>
 </html></#escape>

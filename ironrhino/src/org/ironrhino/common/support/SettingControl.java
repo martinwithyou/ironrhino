@@ -1,6 +1,8 @@
 package org.ironrhino.common.support;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -90,6 +92,12 @@ public class SettingControl implements
 			if ("true".equals(value) || "false".equals(value))
 				list.add(s);
 		}
+		Collections.sort(list, new Comparator<Setting>() {
+			@Override
+			public int compare(Setting o1, Setting o2) {
+				return o1.getKey().compareTo(o2.getKey());
+			}
+		});
 		return list;
 	}
 
