@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.NaturalIdLoadAccess;
-import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -124,11 +123,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			}
 			return;
 		}
-		try {
-			session.saveOrUpdate(obj);
-		} catch (NonUniqueObjectException e) {
-			log.error(e.getMessage(), e);
-		}
+		session.saveOrUpdate(obj);
 	}
 
 	@Transactional
