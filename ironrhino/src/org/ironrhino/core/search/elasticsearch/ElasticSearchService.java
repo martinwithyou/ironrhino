@@ -83,6 +83,8 @@ public class ElasticSearchService<T> implements SearchService<T> {
 		if (criteria == null)
 			return null;
 		SearchRequestBuilder srb = criteria2builder(criteria);
+		srb.setFrom(0);
+		srb.setSize(1024);
 		List list = null;
 		try {
 			SearchResponse response = srb.execute().get();
