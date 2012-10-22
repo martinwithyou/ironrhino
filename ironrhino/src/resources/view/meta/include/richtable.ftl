@@ -1,8 +1,11 @@
 <#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
 <@rtstart formid=formid action=action entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable/>
+<#local index = 0>
+<#local size = columns?keys?size>
 <#list columns?keys as name>
+<#local index = index+1>
 <#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
-<@rttheadtd name=name alias=columns[name]['alias']! title=columns[name]['title']! class=columns[name]['class']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
+<@rttheadtd name=name alias=columns[name]['alias']! title=columns[name]['title']! class=columns[name]['class']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=(readonly&&index!=size||!readonly)&&resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
 </#list>
 <@rtmiddle width=actionColumnWidth readonly=readonly/>
 <#local index=0>
