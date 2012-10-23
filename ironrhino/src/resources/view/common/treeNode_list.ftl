@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <#escape x as x?html><html>
 <head>
-<title>${action.getText('treeNode')}${action.getText('list')}</title>
+<title><#if treeNode.name??>${treeNode.name}-</#if>${action.getText('treeNode')}${action.getText('list')}</title>
 </head>
 <body>
 <#assign columns={"name":{"cellEdit":"click"},"description":{"cellEdit":"click"},"displayOrder":{"cellEdit":"click"}}>

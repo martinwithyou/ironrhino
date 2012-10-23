@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
@@ -73,11 +74,18 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		this.name = name;
 	}
 
+	public String getFullnameSeperator() {
+		return "";
+	}
+
 	public String getFullname() {
+		String seperator = getFullnameSeperator();
 		StringBuilder fullname = new StringBuilder(name);
 		BaseTreeableEntity e = this;
-		while ((e = e.getParent()) != null)
-			fullname.insert(0, e.getName());
+		while ((e = e.getParent()) != null) {
+			if (!(e.isRoot() && StringUtils.isBlank(e.getName())))
+				fullname.insert(0, e.getName() + seperator);
+		}
 		return fullname.toString();
 	}
 
