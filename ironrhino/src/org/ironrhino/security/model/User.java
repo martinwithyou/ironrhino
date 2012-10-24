@@ -33,7 +33,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	public static final String USERNAME_REGEX = "^[\\w\\(\\)]{3,20}$";
 
-	public static final String USERNAME_REGEX_FOR_SIGNUP = "^[\\w\\]{3,20}$";
+	public static final String USERNAME_REGEX_FOR_SIGNUP = "^[\\w]{3,20}$";
 
 	@NaturalId(caseInsensitive = true)
 	@SearchableProperty(boost = 5, index = Index.NOT_ANALYZED)
