@@ -36,7 +36,7 @@ public class Taobao extends OAuth2Provider {
 	@Value("${taobao.scope:}")
 	private String scope;
 
-	@Value("${taobao.profileUrl:http://gw.api.taobao.com/router/rest?method=taobao.user.get&fields=user_id,nick,sex}")
+	@Value("${taobao.profileUrl:http://gw.api.taobao.com/router/rest?method=taobao.user.buyer.get&fields=user_id,nick,sex}")
 	private String profileUrl;
 
 	@Override
@@ -85,7 +85,7 @@ public class Taobao extends OAuth2Provider {
 	protected Profile getProfileFromContent(String content) throws Exception {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
-		data = data.get("user_get_response");
+		data = data.get("user_buyer_get_response");
 		data = data.get("user");
 		String uid = data.get("user_id").asText();
 		Profile p = new Profile();
