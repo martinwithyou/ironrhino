@@ -1,6 +1,5 @@
 package org.ironrhino.core.util;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -41,10 +40,7 @@ public class JsonUtils {
 		objectMapper
 				.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
 
-					@Override
-					public boolean isHandled(Annotation ann) {
-						return super.isHandled(ann) || ann instanceof NotInJson;
-					}
+					private static final long serialVersionUID = 8855888602140931060L;
 
 					protected boolean _isIgnorable(Annotated a) {
 						boolean b = super._isIgnorable(a);

@@ -1,7 +1,6 @@
 package org.ironrhino.core.search.elasticsearch;
 
 import java.beans.PropertyDescriptor;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -89,13 +88,7 @@ public class IndexManagerImpl implements IndexManager {
 		objectMapper
 				.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
 
-					@Override
-					public boolean isHandled(Annotation ann) {
-						return super.isHandled(ann) || ann instanceof NotInJson
-								|| ann instanceof SearchableId
-								|| ann instanceof SearchableProperty
-								|| ann instanceof SearchableComponent;
-					}
+					private static final long serialVersionUID = -2795053276465297328L;
 
 					protected boolean _isIgnorable(Annotated a) {
 						if (a instanceof SearchableId
