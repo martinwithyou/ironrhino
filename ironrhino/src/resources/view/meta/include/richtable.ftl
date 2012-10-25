@@ -17,7 +17,11 @@
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>
 	<#else>
-	<#local value=entity[name]!>
+	<#if !name?contains('.')>
+		<#local value=entity[name]!>
+	<#else>
+		<#local value=('entity.'+name)?eval!>
+	</#if>
 	</#if>
 	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']!/>
 </#list>
