@@ -3,6 +3,7 @@ package org.ironrhino.core.struts;
 import java.util.List;
 import java.util.Map;
 
+import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,8 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 					if (msg == null)
 						msg = e.toString();
 					validationAwareAction.addActionError(msg);
-					log.error(e.getMessage(), e);
+					if (!(e instanceof ErrorMessage))
+						log.error(e.getMessage(), e);
 				}
 			}
 			result = BaseAction.ERROR;

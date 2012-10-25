@@ -18,6 +18,7 @@ import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.util.ErrorMessage;
 import org.ironrhino.core.util.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -140,7 +141,7 @@ public class InstallationManager {
 				for (Component c : getInstalledComponents()) {
 					if (c.getId().equals(entry.getKey())) {
 						if (c.getVersion().compareTo(entry.getValue()) < 0)
-							throw new RuntimeException(entry.getKey()
+							throw new ErrorMessage(entry.getKey()
 									+ " required version(" + entry.getValue()
 									+ "),but version(" + c.getVersion()
 									+ ") found!");
@@ -150,7 +151,7 @@ public class InstallationManager {
 					}
 				}
 				if (!satisfied)
-					throw new RuntimeException(entry.getKey() + " not found!");
+					throw new ErrorMessage(entry.getKey() + " not found!");
 			}
 		}
 	}
@@ -158,7 +159,7 @@ public class InstallationManager {
 	public void install(File f) {
 		Map<String, String> manifest = FileUtils.parseManifestFile(f);
 		if (manifest == null || !manifest.containsKey(IRONRHINO_COMPONENT_ID)) {
-			throw new RuntimeException("invalid component");
+			throw new ErrorMessage("invalid component");
 		}
 		Component newcomp = new Component(manifest);
 		Component oldcomp = null;
@@ -170,14 +171,14 @@ public class InstallationManager {
 		checkDependence(newcomp.getDependence());
 		if (oldcomp != null) {
 			if (oldcomp.getVersion().compareTo(newcomp.getVersion()) >= 0)
-				throw new RuntimeException("component has installed");
+				throw new ErrorMessage("component has installed");
 			try {
 				new File(oldcomp.getRealPath() + ".bak").delete();
 				org.apache.commons.io.FileUtils.moveFile(
 						new File(oldcomp.getRealPath()),
 						new File(oldcomp.getRealPath() + ".bak"));
 			} catch (IOException e) {
-				throw new RuntimeException(e.getMessage());
+				throw new ErrorMessage(e.getMessage());
 			}
 			oldcomp.setRealPath(oldcomp.getRealPath() + ".bak");
 			getBackupedComponents().add(oldcomp);
@@ -188,7 +189,7 @@ public class InstallationManager {
 		try {
 			org.apache.commons.io.FileUtils.copyFile(f, new File(newfilename));
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new ErrorMessage(e.getMessage());
 		}
 		newcomp.setRealPath(newfilename);
 		addInstalledComponent(newcomp);
@@ -204,12 +205,12 @@ public class InstallationManager {
 			if (c.getDependence() == null)
 				continue;
 			if (c.getDependence().keySet().contains(id))
-				throw new RuntimeException("installed component(" + c.getId()
+				throw new ErrorMessage("installed component(" + c.getId()
 						+ ") requires component(" + id
 						+ ") and cannot be uninstalled");
 		}
 		if (comp == null)
-			throw new RuntimeException("component(" + id
+			throw new ErrorMessage("component(" + id
 					+ ") doesn't installed yet");
 		try {
 			new File(comp.getRealPath() + ".uninstall").delete();
@@ -217,7 +218,7 @@ public class InstallationManager {
 					new File(comp.getRealPath()), new File(comp.getRealPath()
 							+ ".uninstall"));
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new ErrorMessage(e.getMessage());
 		}
 		getInstalledComponents().remove(comp);
 		comp.setRealPath(comp.getRealPath() + ".bak");
@@ -233,7 +234,7 @@ public class InstallationManager {
 			}
 		}
 		if (backcomp == null)
-			throw new RuntimeException("component(" + id + ") doesn't backuped");
+			throw new ErrorMessage("component(" + id + ") doesn't backuped");
 
 		Component instcomp = null;
 		for (Component c : getInstalledComponents()) {
@@ -246,7 +247,7 @@ public class InstallationManager {
 			if (c.getDependence().keySet().contains(id)) {
 				String requiredVersion = c.getDependence().get(id);
 				if (requiredVersion.compareTo(backcomp.getVersion()) > 0)
-					throw new RuntimeException("installed component("
+					throw new ErrorMessage("installed component("
 							+ c.getId() + ") require version("
 							+ requiredVersion + ") ,and rollback is version("
 							+ backcomp.getVersion() + "),cannot rollback it");
@@ -266,7 +267,7 @@ public class InstallationManager {
 			org.apache.commons.io.FileUtils.moveFile(
 					new File(backcomp.getRealPath()), new File(newfilename));
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new ErrorMessage(e.getMessage());
 		}
 		backcomp.setRealPath(newfilename);
 		getBackupedComponents().remove(backcomp);
