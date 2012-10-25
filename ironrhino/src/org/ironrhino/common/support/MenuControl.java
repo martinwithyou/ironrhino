@@ -243,8 +243,9 @@ public class MenuControl {
 							return -1;
 						if (p2 == null)
 							return 1;
-						return p1.getA().parents().length
+						int i = p1.getA().parents().length
 								- p2.getA().parents().length;
+						return i != 0 ? i : o1.compareTo(o2);
 					}
 				});
 		sortedMap.putAll(mapping);

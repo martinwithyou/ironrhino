@@ -260,7 +260,10 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 							return 1;
 						if (i2 == null)
 							return -1;
-						return i2.compareTo(i1);
+						int i = i2.compareTo(i1);
+						if (i == 0)
+							i = o1.compareTo(o2);
+						return i;
 					}
 				});
 		sortedMap.putAll(map);
