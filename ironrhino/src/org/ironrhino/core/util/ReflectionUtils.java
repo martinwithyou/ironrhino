@@ -89,4 +89,14 @@ public class ReflectionUtils {
 		}
 	}
 
+	public static void setFieldValue(Object o, String name, Object value) {
+		try {
+			Field f = o.getClass().getDeclaredField(name);
+			f.setAccessible(true);
+			f.set(o, value);
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
+	}
+
 }
