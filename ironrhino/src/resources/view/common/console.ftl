@@ -5,52 +5,33 @@
 <#if printSetting??>
 <script>
 $(function(){
-	$.post('<@url value="/common/console/executeJson"/>',
-	{
-	expression : 'settingControl.getAllBooleanSettings()'
-	}
-	,function(data){
-		var count = data.length;
-		if(!count)
-			return;
-		var html = '<div id="switch" class="well">';
-		$.each(data,function(i,setting){
-			if(i%3 == 0)
-				html += '<div class="row-fluid" style="margin-top:10px;">';
-			html += '<div class="span2" style="text-align:right;" title="'+(setting.description||'')+'">'+setting.key+'</div>';
-			html += '<div class="span2"><span class="btn-group switch"><button class="btn'+(setting.value=='true'?' active':'')+'" data-value="true">'+MessageBundle.get('true')+'</button><button class="btn'+(setting.value=='false'?' active':'')+'" data-value="false">'+MessageBundle.get('false')+'</button></span></div>';
-			if((i+1)%3 == 0 || count%3!=0 && i==count-1)
-				html += '</div>';
+		$('#switch .btn-group').each(function() {
+			var t = $(this);
+			$('.active',t).css({
+									'font-weight' : 'bold'
+								});
+			t.children().css('cursor', 'pointer').click(function() {
+						var button = $(this);
+						if(button.hasClass('active'))
+							return;
+						var key = button.closest('div').prev().text();
+						var value = button.data('value');
+						$.post('<@url value="/common/console/executeJson"/>',
+								{
+								expression : 'settingControl.setValue("'+key+'","'+value+'")'
+								}
+								,function(data){
+									t.children().removeClass('active').css({
+												'font-weight' : 'normal'
+											});
+									button.addClass('active').css({
+												'font-weight' : 'bold'
+											});
+								});
+						
+					});
 		});
-		html += '</div>';
-		$(html).insertAfter($('#dashboard'));
-		$('.switch',$('#switch')).each(function() {
-				var t = $(this);
-				$('.active',t).css({
-										'font-weight' : 'bold'
-									});
-				t.children().css('cursor', 'pointer').click(function() {
-							var button = $(this);
-							if(button.hasClass('active'))
-								return;
-							var key = button.closest('div').prev().text();
-							var value = button.data('value');
-							$.post('<@url value="/common/console/executeJson"/>',
-									{
-									expression : 'settingControl.setValue("'+key+'","'+value+'")'
-									}
-									,function(data){
-										t.children().removeClass('active').css({
-													'font-weight' : 'normal'
-												});
-										button.addClass('active').css({
-													'font-weight' : 'bold'
-												});
-									});
 							
-						});
-			});
-	});
 });
 </script>
 </#if>
@@ -67,5 +48,23 @@ $(function(){
 	<button type="button" class="btn span4" onclick="$('#expression').val($(this).text());$('#global').attr('checked',true);$('#form').submit()">freemarkerConfiguration.clearTemplateCache()</button>
 	</div>
 </div>
+<#if printSetting??>
+<div id="switch" class="well">
+<#assign settings = statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getAllBooleanSettings()>
+<#assign index=0>
+<#assign count=settings?size>
+<#list settings as setting>
+<#if index%3 == 0>
+<div class="row-fluid" style="margin-top:10px;">
+</#if>
+<div class="span2" style="text-align:right;" title="${setting.description!}" data-key="${setting.key}">${action.getText(setting.key)}</div>
+<div class="span2"><span class="btn-group"><button class="btn<#if setting.value=='true'> active</#if>" data-value="true">${action.getText("true")}</button><button class="btn<#if setting.value=='false'> active</#if>" data-value="false">${action.getText("false")}</button></span></div>
+<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
+</div>
+</#if>
+<#assign index=index+1>
+</#list>
+</div>
+</#if>
 </body>
 </html></#escape>
