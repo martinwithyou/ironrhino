@@ -1,7 +1,9 @@
 package org.ironrhino.security.oauth.client.action;
 
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -13,14 +15,18 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
+import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.security.Constants;
 import org.ironrhino.security.model.User;
+import org.ironrhino.security.oauth.client.model.OAuthToken;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuthProvider;
 import org.ironrhino.security.oauth.client.service.OAuthProviderManager;
 import org.ironrhino.security.service.UserManager;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 @AutoConfig
 public class ConnectAction extends BaseAction {
@@ -79,32 +85,56 @@ public class ConnectAction extends BaseAction {
 					.lookup(getUid());
 			if (provider == null)
 				return ACCESSDENIED;
-			Profile p = provider.getProfile(request);
-			if (p == null) {
-				targetUrl = "/oauth/connect";
-				return REDIRECT;
-			}
-			String id = p.getUid();
-			User user = null;
-			try {
-				user = (User) userManager.loadUserByUsername(id);
-			} catch (UsernameNotFoundException e) {
-				user = new User();
-				user.setUsername(userManager.suggestUsername(id));
-				user.setLegiblePassword(CodecUtils.randomString(10));
-				if (StringUtils.isNotBlank(p.getEmail()))
-					try {
-						if (userManager.loadUserByUsername(p.getEmail()) == null)
+			User loginUser = AuthzUtils.getUserDetails(User.class);
+			if (loginUser == null) {
+				Profile p = provider.getProfile(request);
+				if (p == null) {
+					targetUrl = "/oauth/connect";
+					return REDIRECT;
+				}
+				String id = p.getUid();
+				User user = null;
+				try {
+					user = (User) userManager.loadUserByUsername(id);
+				} catch (UsernameNotFoundException e) {
+					user = new User();
+					user.setUsername(userManager.suggestUsername(id));
+					user.setLegiblePassword(CodecUtils.randomString(10));
+					if (StringUtils.isNotBlank(p.getEmail()))
+						try {
+							if (userManager.loadUserByUsername(p.getEmail()) == null)
+								user.setEmail(p.getEmail());
+						} catch (UsernameNotFoundException e1) {
 							user.setEmail(p.getEmail());
-					} catch (UsernameNotFoundException e1) {
-						user.setEmail(p.getEmail());
-					}
-				user.setName(StringUtils.isNotBlank(p.getName()) ? p.getName()
-						: p.getDisplayName());
-				userManager.save(user);
+						}
+					user.setName(StringUtils.isNotBlank(p.getName()) ? p
+							.getName() : p.getDisplayName());
+					user.setAttribute("oauth_provider", provider.getName());
+					Map<String, String> tokens = new HashMap<String, String>();
+					tokens.put(provider.getName(),
+							JsonUtils.toJson(provider.getToken(request)));
+					user.setAttribute("oauth_tokens", JsonUtils.toJson(tokens));
+					userManager.save(user);
+				}
+				if (user != null)
+					AuthzUtils.autoLogin(user);
+			} else {
+				OAuthToken token = provider.getToken(request);
+				if (token != null) {
+					String str = loginUser.getAttribute("oauth_tokens");
+					Map<String, String> tokens;
+					if (StringUtils.isNotBlank(str)) {
+						tokens = JsonUtils.fromJson(str,
+								new TypeReference<Map<String, String>>() {
+								});
+					} else
+						tokens = new HashMap<String, String>();
+					tokens.put(provider.getName(), JsonUtils.toJson(token));
+					loginUser.setAttribute("oauth_tokens",
+							JsonUtils.toJson(tokens));
+					userManager.save(loginUser);
+				}
 			}
-			if (user != null)
-				AuthzUtils.autoLogin(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

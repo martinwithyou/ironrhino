@@ -2,9 +2,6 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('login')}</title>
-<@authorize ifAnyGranted="ROLE_BUILTIN_USER">
-<meta http-equiv="refresh" content="0; url=<@url value="/"/>" />
-</@authorize>
 </head>
 <body>
 <#if providers??>

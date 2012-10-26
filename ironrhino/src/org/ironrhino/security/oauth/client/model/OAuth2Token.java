@@ -2,7 +2,7 @@ package org.ironrhino.security.oauth.client.model;
 
 import org.ironrhino.core.metadata.NotInJson;
 
-public class OAuth2Token implements java.io.Serializable {
+public class OAuth2Token extends OAuthToken {
 
 	private static final long serialVersionUID = 3664222731669918663L;
 	private String access_token;

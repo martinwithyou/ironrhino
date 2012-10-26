@@ -18,9 +18,13 @@
 		<property name="enabled" />
 		<property name="createDate" />
 		<property name="modifyDate" />
-		<many-to-one name="createUser" class="User" column="createUser" not-null="false" lazy="proxy" not-found="ignore"/>
-		<many-to-one name="modifyUser" class="User" column="modifyUser" not-null="false" lazy="proxy" not-found="ignore"/>
-		<property name="rolesAsString" type="java.lang.String" column="roles" length="500"/>
-		<property name="attributes" type="java.lang.String" column="attributes" length="500"/>
+		<many-to-one name="createUser" class="User" column="createUser"
+			not-null="false" lazy="proxy" not-found="ignore" />
+		<many-to-one name="modifyUser" class="User" column="modifyUser"
+			not-null="false" lazy="proxy" not-found="ignore" />
+		<property name="rolesAsString" type="java.lang.String"
+			column="roles" length="500" />
+		<property name="attributesAsString" column="attributes"
+			length="5000" />
 	</class>
 </hibernate-mapping>

@@ -17,7 +17,7 @@
 		<security:intercept-url pattern="/signup*/**"
 			access="ROLE_BUILTIN_ANONYMOUS" />
 		<security:intercept-url pattern="/oauth*/**"
-			access="ROLE_BUILTIN_ANONYMOUS" />
+			access="ROLE_BUILTIN_ANONYMOUS,ROLE_BUILTIN_USER" />
 		<security:intercept-url pattern="/setup"
 			access="ROLE_BUILTIN_ANONYMOUS" />
 		<security:intercept-url pattern="/**"

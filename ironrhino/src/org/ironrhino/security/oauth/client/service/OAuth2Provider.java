@@ -11,10 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
+import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.client.model.OAuth2Token;
+import org.ironrhino.security.oauth.client.model.OAuthToken;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -26,6 +31,10 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 	public abstract String getAuthorizeUrl();
 
 	public abstract String getAccessTokenEndpoint();
+
+	public String getVersion() {
+		return "v2";
+	}
 
 	public String getScope() {
 		return null;
@@ -106,8 +115,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		return sb.toString();
 	}
 
-	public Profile getProfile(HttpServletRequest request) throws Exception {
-
+	public OAuthToken getToken(HttpServletRequest request) throws Exception {
 		OAuth2Token accessToken = restoreToken(request);
 		if (accessToken != null) {
 			if (accessToken.isExpired()) {
@@ -154,6 +162,11 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 			}
 			saveToken(request, accessToken);
 		}
+		return accessToken;
+	}
+
+	public Profile getProfile(HttpServletRequest request) throws Exception {
+		OAuth2Token accessToken = (OAuth2Token) getToken(request);
 		String content = invoke(accessToken.getAccess_token(), getProfileUrl());
 		Profile p = getProfileFromContent(content);
 		postProcessProfile(p, accessToken.getAccess_token());
@@ -217,6 +230,33 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 
 	protected OAuth2Token restoreToken(HttpServletRequest request)
 			throws Exception {
+		SecurityContext sc = (SecurityContext) request
+				.getSession()
+				.getAttribute(
+						HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+		if (sc != null) {
+			Authentication auth = sc.getAuthentication();
+			if (auth != null) {
+				User user = (User) auth.getPrincipal();
+				String str = user.getAttribute("oauth_tokens");
+				if (StringUtils.isNotBlank(str)) {
+					Map<String, String> map = JsonUtils.fromJson(str,
+							new TypeReference<Map<String, String>>() {
+							});
+					if (map != null && !map.isEmpty()) {
+						String tokenString = map.get(getName());
+						if (StringUtils.isNotBlank(tokenString)) {
+							try {
+								return JsonUtils.fromJson(tokenString,
+										OAuth2Token.class);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		}
 		String key = getName() + "_token";
 		String json = (String) request.getSession().getAttribute(key);
 		if (StringUtils.isBlank(json))

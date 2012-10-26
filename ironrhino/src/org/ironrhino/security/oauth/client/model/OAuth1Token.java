@@ -1,6 +1,6 @@
 package org.ironrhino.security.oauth.client.model;
 
-public class OAuth1Token implements java.io.Serializable {
+public class OAuth1Token extends OAuthToken {
 
 	private static final long serialVersionUID = 1320442804849307877L;
 

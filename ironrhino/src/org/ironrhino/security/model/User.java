@@ -237,13 +237,21 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 			attributes.put(key, value);
 	}
 
-	public String getAttributes() {
+	public Map<String, String> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Map<String, String> attributes) {
+		this.attributes = attributes;
+	}
+
+	public String getAttributesAsString() {
 		if (attributes == null || attributes.isEmpty())
 			return null;
 		return JsonUtils.toJson(attributes);
 	}
 
-	public void setAttributes(String str) {
+	public void setAttributesAsString(String str) {
 		if (StringUtils.isNotBlank(str))
 			try {
 				attributes = JsonUtils.fromJson(str,
