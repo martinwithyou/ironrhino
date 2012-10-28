@@ -37,6 +37,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
@@ -527,6 +528,7 @@ public class IndexManagerImpl implements IndexManager {
 		}
 	}
 
+	@Trigger
 	public void rebuild() {
 		IndicesAdminClient adminClient = client.admin().indices();
 		try {

@@ -95,7 +95,12 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 			responseBody = HttpClientUtils.getResponseText(
 					getRequestTokenUrl(), params, Collections.EMPTY_MAP);
 		}
-		OAuth1Token requestToken = Utils.extractToken(responseBody);
+		OAuth1Token requestToken = null;
+		try {
+			requestToken = Utils.extractToken(responseBody);
+		} catch (Exception e) {
+			logger.error("content is {}", responseBody);
+		}
 		saveToken(request, requestToken, "request");
 		StringBuilder sb = new StringBuilder(getAuthorizeUrl());
 		sb.append(sb.indexOf("?") > 0 ? '&' : '?').append("oauth_token")
@@ -140,9 +145,15 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 	public Profile getProfile(HttpServletRequest request) throws Exception {
 		OAuth1Token accessToken = (OAuth1Token) getToken(request);
 		String content = invoke(accessToken, getProfileUrl());
-		Profile p = getProfileFromContent(content);
-		postProcessProfile(p, accessToken);
-		return p;
+		try {
+			Profile p = getProfileFromContent(content);
+			postProcessProfile(p, accessToken);
+			return p;
+		} catch (Exception e) {
+			logger.error("content is {}", content);
+			logger.error(e.getMessage(), e);
+			return null;
+		}
 	}
 
 	protected void postProcessProfile(Profile p, OAuth1Token accessToken)
@@ -330,6 +341,8 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 			Map<String, String> data = parseFormData(formdata);
 			token.setToken(data.get("oauth_token"));
 			token.setSecret(data.get("oauth_token_secret"));
+			if (token.getToken() == null || token.getSecret() == null)
+				throw new IllegalArgumentException("token or secret is null");
 			return token;
 		}
 

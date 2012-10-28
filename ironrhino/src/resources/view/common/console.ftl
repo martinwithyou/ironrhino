@@ -5,6 +5,11 @@
 <#if printSetting??>
 <script>
 $(function(){
+		$('#trigger .btn').click(function(){
+			$('#expression').val($(this).data('expression')||$(this).text());
+			$('#global').attr('checked',$(this).data('global'));
+			$('#form').submit();
+		});
 		$('#switch .btn-group').each(function() {
 			var t = $(this);
 			$('.active',t).css({
@@ -42,28 +47,37 @@ $(function(){
 	<span style="margin: 0 10px;">${action.getText('global')}:<@s.checkbox theme="simple" id="global" name="global"/></span>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 </@s.form>
-<div id="dashboard" class="well">
-	<div class="row-fluid">
-	<button type="button" class="btn span4" onclick="$('#expression').val($(this).text());$('#global').attr('checked',false);$('#form').submit()">indexManager.rebuild()</button>
-	<button type="button" class="btn span4" onclick="$('#expression').val($(this).text());$('#global').attr('checked',true);$('#form').submit()">freemarkerConfiguration.clearTemplateCache()</button>
+<div id="trigger" class="well">
+	<#assign triggers = statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('applicationContextConsole').getTriggers()>
+	<#assign index=0>
+	<#assign count=triggers.keySet()?size>
+	<#list triggers.keySet() as expression>
+	<#if index%3 == 0>
+	<div class="row-fluid" style="margin-top:10px;">
+	</#if>
+	<button type="button" class="btn span4" data-global="${triggers[expression]?string}"  data-expression="${expression}">${action.getText(expression)}</button>
+	<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
 	</div>
+	</#if>
+	<#assign index=index+1>
+	</#list>
 </div>
 <#if printSetting??>
 <div id="switch" class="well">
-<#assign settings = statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getAllBooleanSettings()>
-<#assign index=0>
-<#assign count=settings?size>
-<#list settings as setting>
-<#if index%3 == 0>
-<div class="row-fluid" style="margin-top:10px;">
-</#if>
-<div class="span2" style="text-align:right;" title="${setting.description!}" data-key="${setting.key}">${action.getText(setting.key)}</div>
-<div class="span2"><span class="btn-group"><button class="btn<#if setting.value=='true'> active</#if>" data-value="true">${action.getText("true")}</button><button class="btn<#if setting.value=='false'> active</#if>" data-value="false">${action.getText("false")}</button></span></div>
-<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
-</div>
-</#if>
-<#assign index=index+1>
-</#list>
+	<#assign settings = statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getAllBooleanSettings()>
+	<#assign index=0>
+	<#assign count=settings?size>
+	<#list settings as setting>
+	<#if index%3 == 0>
+	<div class="row-fluid" style="margin-top:10px;">
+	</#if>
+	<div class="span2" style="text-align:right;" title="${setting.description!}" data-key="${setting.key}">${action.getText(setting.key)}</div>
+	<div class="span2"><span class="btn-group"><button class="btn<#if setting.value=='true'> active</#if>" data-value="true">${action.getText("true")}</button><button class="btn<#if setting.value=='false'> active</#if>" data-value="false">${action.getText("false")}</button></span></div>
+	<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
+	</div>
+	</#if>
+	<#assign index=index+1>
+	</#list>
 </div>
 </#if>
 </body>

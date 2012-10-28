@@ -1,8 +1,11 @@
 package org.ironrhino.core.spring;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,13 +19,15 @@ import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.event.ExpressionEvent;
 import org.ironrhino.core.metadata.PostPropertiesReset;
+import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.ExpressionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationListener;
 
 @Singleton
@@ -36,7 +41,7 @@ public class ApplicationContextConsole implements
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
 	@Inject
-	private ApplicationContext ctx;
+	private ConfigurableListableBeanFactory ctx;
 
 	@Autowired(required = false)
 	private ServletContext servletContext;
@@ -45,6 +50,8 @@ public class ApplicationContextConsole implements
 	private EventPublisher eventPublisher;
 
 	private Map<String, Object> beans = new HashMap<String, Object>();
+
+	private Map<String, Boolean> triggers;
 
 	public Map<String, Object> getBeans() {
 		if (beans.isEmpty()) {
@@ -61,6 +68,42 @@ public class ApplicationContextConsole implements
 			}
 		}
 		return beans;
+	}
+
+	public Map<String, Boolean> getTriggers() {
+		if (triggers == null) {
+			triggers = new TreeMap<String, Boolean>();
+			triggers.put("freemarkerConfiguration.clearTemplateCache()", true);
+			String[] beanNames = ctx.getBeanDefinitionNames();
+			for (String beanName : beanNames) {
+				if (StringUtils.isAlphanumeric(beanName)
+						&& ctx.isSingleton(beanName)) {
+					try {
+						Class<?> clz = Class.forName(ctx.getBeanDefinition(
+								beanName).getBeanClassName());
+						Set<Method> methods = AnnotationUtils
+								.getAnnotatedMethods(clz, Trigger.class);
+						for (Method m : methods) {
+							int modifiers = m.getModifiers();
+							if (Modifier.isPublic(modifiers)
+									&& m.getParameterTypes().length == 0) {
+								StringBuilder expression = new StringBuilder(
+										beanName);
+								expression.append(".").append(m.getName())
+										.append("()");
+								triggers.put(expression.toString(), m
+										.getAnnotation(Trigger.class).global());
+							}
+						}
+					} catch (NoSuchBeanDefinitionException e) {
+						e.printStackTrace();
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return triggers;
 	}
 
 	public Object execute(String expression, boolean global) throws Exception {

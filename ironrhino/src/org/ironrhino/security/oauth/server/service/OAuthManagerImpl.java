@@ -13,6 +13,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.DefaultProfile;
+import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
@@ -156,6 +157,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		return entityManager.findListByCriteria(dc);
 	}
 
+	@Trigger
 	@Scheduled(cron = "0 30 23 * * ?")
 	public void removeExpired() {
 		Calendar cal = Calendar.getInstance();

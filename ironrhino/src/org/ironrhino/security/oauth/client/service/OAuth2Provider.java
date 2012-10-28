@@ -160,6 +160,8 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 						accessToken.setToken_type(arr2[1]);
 				}
 			}
+			if (accessToken.getAccess_token() == null)
+				logger.error("access_token is null,and content is {}" + content);
 			saveToken(request, accessToken);
 		}
 		return accessToken;
@@ -168,9 +170,15 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 	public Profile getProfile(HttpServletRequest request) throws Exception {
 		OAuth2Token accessToken = (OAuth2Token) getToken(request);
 		String content = invoke(accessToken.getAccess_token(), getProfileUrl());
-		Profile p = getProfileFromContent(content);
-		postProcessProfile(p, accessToken.getAccess_token());
-		return p;
+		try {
+			Profile p = getProfileFromContent(content);
+			postProcessProfile(p, accessToken.getAccess_token());
+			return p;
+		} catch (Exception e) {
+			logger.error("content is {}", content);
+			logger.error(e.getMessage(), e);
+			return null;
+		}
 	}
 
 	protected void postProcessProfile(Profile p, String accessToken)
