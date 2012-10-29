@@ -136,8 +136,14 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 			params.put("client_secret", getClientSecret());
 			params.put("redirect_uri", request.getRequestURL().toString());
 			params.put("grant_type", "authorization_code");
-			String content = HttpClientUtils.postResponseText(
-					getAccessTokenEndpoint(), params);
+			String content = null;
+			try {
+				content = HttpClientUtils.postResponseText(
+						getAccessTokenEndpoint(), params);
+			} catch (Exception e) {
+				logger.error(
+						getAccessTokenEndpoint() + "," + params.toString(), e);
+			}
 			if (JsonUtils.isValidJson(content)) {
 				Map<String, String> map = JsonUtils.fromJson(content,
 						new TypeReference<Map<String, String>>() {
