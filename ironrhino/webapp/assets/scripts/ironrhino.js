@@ -32102,13 +32102,14 @@ Observation.common = function(container) {
 			});
 	var ele = ($(container).prop('tagName') == 'FORM' && $(container)
 			.hasClass('focus')) ? container : $('.focus:eq(0)', container);
-	if (ele.prop('tagName') != 'FORM') {
+	if (ele.prop('tagName') != 'FORM' && ele.attr('name')) {
 		ele.focus();
 	} else {
 		var arr = $(':input:visible', ele).toArray();
 		for (var i = 0; i < arr.length; i++) {
-			if (!$(arr[i]).val()) {
-				$(arr[i]).focus();
+			var e = $(arr[i]);
+			if (e.attr('name') && !e.val()) {
+				e.focus();
 				break;
 			}
 		}
@@ -33751,8 +33752,9 @@ Richtable = {
 				$('#_window_ form.ajax').each(function() {
 					var inputform = $(this);
 					$(':input:visible', inputform).filter(function(i) {
-						return !($(this).val() || $(this).hasClass('date') || $(this)
-								.prop('tagName') == 'BUTTON');
+						return $(this).attr('name')
+								&& !($(this).val() || $(this).hasClass('date') || $(this)
+										.prop('tagName') == 'BUTTON');
 					}).eq(0).focus();
 					if (!inputform.hasClass('keepopen')) {
 						$(':input', inputform).change(function(e) {
