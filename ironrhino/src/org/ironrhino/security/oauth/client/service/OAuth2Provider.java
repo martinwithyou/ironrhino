@@ -130,8 +130,15 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		}
 		if (accessToken == null) {
 			String error = request.getParameter("error");
-			if (StringUtils.isNotBlank(error))
-				return null;
+			if (StringUtils.isNotBlank(error)) {
+				String errormsg = "error: "
+						+ error
+						+ ",url: "
+						+ request.getRequestURL().append("?")
+								.append(request.getQueryString()).toString();
+				logger.error(errormsg);
+				throw new RuntimeException(errormsg);
+			}
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("code", request.getParameter("code"));
 			params.put("client_id", getClientId());
