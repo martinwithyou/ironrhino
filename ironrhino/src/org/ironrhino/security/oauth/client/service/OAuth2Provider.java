@@ -119,6 +119,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		OAuth2Token accessToken = restoreToken(request);
 		if (accessToken != null) {
 			if (accessToken.isExpired()) {
+				logger.warn("accessToken {} is expired", accessToken);
 				try {
 					accessToken = refreshToken(accessToken);
 					saveToken(request, accessToken);
@@ -126,7 +127,8 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 					logger.error(e.getMessage(), e);
 				}
 			}
-		} else {
+		}
+		if (accessToken == null) {
 			String error = request.getParameter("error");
 			if (StringUtils.isNotBlank(error))
 				return null;
@@ -233,7 +235,12 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		params.put("grant_type", "refresh_token");
 		String content = HttpClientUtils.postResponseText(
 				getAccessTokenEndpoint(), params);
-		return JsonUtils.fromJson(content, OAuth2Token.class);
+		try {
+			return JsonUtils.fromJson(content, OAuth2Token.class);
+		} catch (Exception e) {
+			logger.error("refreshToken failed,content is {}" + content);
+			return null;
+		}
 	}
 
 	protected void saveToken(HttpServletRequest request, OAuth2Token token) {

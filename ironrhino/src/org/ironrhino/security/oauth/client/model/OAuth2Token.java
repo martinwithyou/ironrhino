@@ -63,4 +63,11 @@ public class OAuth2Token extends OAuthToken {
 		return (System.currentTimeMillis() - create_time) / 1000 > (expires_in - offset);
 	}
 
+	@Override
+	public String toString() {
+		return "OAuth2Token [access_token=" + access_token + ", token_type="
+				+ token_type + ", expires_in=" + expires_in + ", create_time="
+				+ create_time + ", refresh_token=" + refresh_token + "]";
+	}
+
 }
