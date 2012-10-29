@@ -43,6 +43,7 @@ public class AppInfoListener implements ServletContextListener {
 		if (context == null)
 			context = "";
 		System.setProperty(AppInfo.getAppName() + ".context", context);
+		System.setProperty(AppInfo.getAppName() + ".instanceid", AppInfo.getInstanceId());
 		logger = LoggerFactory.getLogger(getClass());
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={}",
