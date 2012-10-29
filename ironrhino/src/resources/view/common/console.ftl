@@ -6,9 +6,25 @@
 <script>
 $(function(){
 		$('#trigger .btn').click(function(){
-			$('#expression').val($(this).data('expression')||$(this).text());
-			$('#global').attr('checked',$(this).data('global'));
-			$('#form').submit();
+			var t = $(this);
+			$.ajax({
+				url:'<@url value="/common/console/executeJson"/>',
+				data:{
+					expression : $(this).data('expression')||$(this).text(),
+					global: $(this).data('global')||'false'
+				},
+				beforeSend:function(){
+					t.prop('disabled',true);
+				},
+				success:function(data){
+					alert(MessageBundle.get('success'));
+					t.prop('disabled',false);
+				},
+				error:function(data){
+					alert(MessageBundle.get('error'));
+					t.prop('disabled',false);
+				}
+			});
 		});
 		$('#switch .btn-group').each(function() {
 			var t = $(this);
