@@ -252,7 +252,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 
 	protected void saveToken(HttpServletRequest request, OAuth2Token token) {
 		token.setCreate_time(System.currentTimeMillis());
-		request.setAttribute(getName() + "_token",
+		request.getSession().setAttribute(getName() + "_token",
 				JsonUtils.toJson(token));
 	}
 
@@ -286,7 +286,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 			}
 		}
 		String key = getName() + "_token";
-		String json = (String) request.getAttribute(key);
+		String json = (String) request.getSession().getAttribute(key);
 		if (StringUtils.isBlank(json))
 			return null;
 		return JsonUtils.fromJson(json, OAuth2Token.class);
