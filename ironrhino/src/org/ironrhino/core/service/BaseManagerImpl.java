@@ -402,7 +402,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		Query query = sessionFactory.getCurrentSession().createQuery(
 				queryString);
 		for (int i = 0; i < args.length; i++)
-			query.setParameter(i, args[i]);
+			query.setParameter(String.valueOf(i+1), args[i]);
 		return query.list();
 	}
 
@@ -473,7 +473,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				queryString);
 		if (values != null) {
 			for (int i = 0; i < values.length; i++) {
-				queryObject.setParameter(i, values[i]);
+				queryObject.setParameter(String.valueOf(i+1), values[i]);
 			}
 		}
 		return queryObject.executeUpdate();

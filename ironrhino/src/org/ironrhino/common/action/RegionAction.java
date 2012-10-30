@@ -378,8 +378,8 @@ public class RegionAction extends BaseAction {
 						String name = pd.getName();
 						String hql = new StringBuilder("update ")
 								.append(clz.getName()).append(" t set t.")
-								.append(name).append(".id=? where t.")
-								.append(name).append(".id=?").toString();
+								.append(name).append(".id=?1 where t.")
+								.append(name).append(".id=?2").toString();
 						entityManager.executeUpdate(hql, target.getId(),
 								source.getId());
 					}
