@@ -792,6 +792,7 @@ Observation.common = function(container) {
 	$('.poped', container).each(function() {
 		var t = $(this);
 		var options = {
+			html : true,
 			trigger : t.data('trigger') || 'hover',
 			placement : t.data('placement') || 'right',
 			title : t.data('title'),
@@ -807,6 +808,7 @@ Observation.common = function(container) {
 							global : false,
 							dataType : 'html',
 							success : function(data) {
+								$('div.popover').remove();
 								if (data.indexOf('<title>') >= 0
 										&& data.indexOf('</title>') > 0)
 									t.attr('data-original-title',
