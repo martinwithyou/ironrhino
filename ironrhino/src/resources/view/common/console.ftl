@@ -8,6 +8,7 @@ $(function(){
 		$('#trigger .btn').click(function(){
 			var t = $(this);
 			$.ajax({
+				type:'POST',
 				url:'<@url value="/common/console/executeJson"/>',
 				data:{
 					expression : $(this).data('expression')||$(this).text(),
