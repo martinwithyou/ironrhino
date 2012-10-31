@@ -32221,6 +32221,7 @@ Observation.common = function(container) {
 	$('.tiped', container).each(function() {
 				var t = $(this);
 				var options = {
+					html : true,
 					trigger : t.data('trigger') || 'hover',
 					placement : t.data('placement') || 'top'
 				};
