@@ -41,7 +41,7 @@ public class ChartUtils {
 	}
 
 	private static final String[] stepColors = new String[] { "#ffeeee",
-			"#ffaaaa", "#ff8888", "#ff55555", "#ff0000" };
+			"#ffaaaa", "#ff8888", "#ff5555", "#ff0000" };
 
 	public static String caculateStepColor(Number max, Number value) {
 		int steps = stepColors.length;
