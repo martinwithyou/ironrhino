@@ -32794,6 +32794,10 @@ Observation.checkavailable = function(container) {
 		return this;
 	};
 	function ajaxpanel(ele) {
+		ele.css('min-height', '100px');
+		if (ele.hasClass('tab-pane') && ele.hasClass('cache')
+				&& ele.hasClass('loaded'))
+			return;
 		var options = {
 			url : ele.data('url') || document.location.href,
 			global : false,
@@ -32811,6 +32815,7 @@ Observation.checkavailable = function(container) {
 					ele.unmask();
 			},
 			success : function(data) {
+				ele.addClass('loaded');
 				if (typeof data != 'string') {
 					ele.empty();
 					$.tmpl($('#' + ele.data('tmpl')), data).appendTo(ele);
