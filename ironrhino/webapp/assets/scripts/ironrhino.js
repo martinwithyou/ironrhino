@@ -32018,6 +32018,31 @@ Initialization.common = function() {
 	$.alerts.cancelButton = MessageBundle.get('cancel');
 	Nav.init();
 	Nav.activate(document.location.pathname);
+	var hash = document.location.hash;
+	if (hash) {
+		$('.nav-tabs').each(function() {
+			var found = false;
+			$('a[data-toggle="tab"]', this).each(function() {
+				var t = $(this);
+				if (!found) {
+					var selector = t.attr('data-target');
+					if (!selector) {
+						selector = t.attr('href');
+						selector = selector
+								&& selector.replace(/.*(?=#[^\s]*$)/, '');
+					}
+					if (selector == hash) {
+						found = true;
+						t.tab('show');
+						$target = $(selector);
+						if ($target.hasClass('ajaxpanel'))
+							$target.removeClass('manual');
+
+					}
+				}
+			});
+		});
+	}
 	if (document.location.search.indexOf('printpage=true') != -1) {
 		window.print();
 		window.close();
