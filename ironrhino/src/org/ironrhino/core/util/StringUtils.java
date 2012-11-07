@@ -526,4 +526,11 @@ public class StringUtils {
 		return s;
 	}
 
+	public static String compressRepeatSpaces(String input) {
+		if (input == null)
+			return null;
+		input = input.trim();
+		return input.replaceAll("\\s+", " ");
+	}
+
 }
