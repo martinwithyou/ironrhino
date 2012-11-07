@@ -8144,7 +8144,7 @@ div.text-core{
 	}
 .portlet-header { 
 	border:none;
-	padding:5px;
+	padding:10px;
 	border-bottom: 1px solid #DEDEDE;
 	border-radius:3px 3px 0 0;
 	-webkit-border-radius:3px 3px 0 0;
@@ -8167,9 +8167,8 @@ div.text-core{
 .portlet-icon a{
 	clear:none;
 	float:left;
-	margin:0 2px;
+	margin:5px 2px 0 2px;
 	width:4px;
-	margin-top: -1px;
 	border-radius: 40px;
 	-webkit-border-radius: 40px;
 	-moz-border-radius: 40px;
