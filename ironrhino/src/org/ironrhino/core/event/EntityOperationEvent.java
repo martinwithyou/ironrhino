@@ -10,6 +10,10 @@ public class EntityOperationEvent extends BaseEvent {
 
 	private EntityOperationType type;
 
+	public EntityOperationEvent() {
+		super();
+	}
+
 	public EntityOperationEvent(Persistable<?> entity, EntityOperationType type) {
 		super(entity);
 		this.entity = entity;
