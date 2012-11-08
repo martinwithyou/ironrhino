@@ -18,7 +18,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ehcache-core-2.6.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/freemarker-2.3.19.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/guava-13.0.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hadoop-core-1.0.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hessian-4.0.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-commons-annotations-4.0.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-core-4.1.8.jar"/>
