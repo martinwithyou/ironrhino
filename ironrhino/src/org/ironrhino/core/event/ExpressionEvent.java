@@ -6,10 +6,6 @@ public class ExpressionEvent extends BaseEvent {
 
 	private String expression;
 
-	public ExpressionEvent() {
-		super();
-	}
-
 	public ExpressionEvent(String expression) {
 		super(expression);
 		this.expression = expression;

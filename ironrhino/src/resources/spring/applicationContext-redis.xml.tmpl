@@ -13,10 +13,6 @@
 			<bean
 				class="org.springframework.data.redis.serializer.StringRedisSerializer" />
 		</property>
-		<property name="valueSerializer">
-			<bean
-				class="org.ironrhino.core.redis.ObjectRedisSerializer" />
-		</property>
 	</bean>
 	<bean id="stringRedisTemplate"
 		class="org.springframework.data.redis.core.StringRedisTemplate"

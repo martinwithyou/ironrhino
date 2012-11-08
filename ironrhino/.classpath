@@ -87,7 +87,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-queries-3.6.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jboss-logging-3.1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mmseg4j-1.8.5.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/kryo-all-2.20.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-annotations-2.1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-2.1.0.jar"/>

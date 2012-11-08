@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.ironrhino.core.rabbitmq.RabbitTopic;
-import org.ironrhino.core.util.SerializationUtils;
 import org.springframework.context.ApplicationEvent;
 
 import com.rabbitmq.client.ConsumerCancelledException;
