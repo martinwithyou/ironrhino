@@ -10,7 +10,7 @@ public class BaseEvent extends ApplicationEvent {
 	private String instanceId = AppInfo.getInstanceId();
 
 	public BaseEvent() {
-		super(null);
+		super("");
 	}
 
 	public BaseEvent(Object source) {

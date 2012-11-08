@@ -3,10 +3,12 @@ package org.ironrhino.core.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.io.Serializable;
 import java.util.Date;
 
+import org.ironrhino.core.event.EntityOperationEvent;
+import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.model.Persistable;
 import org.junit.Test;
 
 public class SerializationUtilsTest {
@@ -18,9 +20,10 @@ public class SerializationUtilsTest {
 		}
 	}
 
-	static class User implements Serializable {
+	static class User implements Persistable<String> {
 
 		private static final long serialVersionUID = 3491371316959760638L;
+		private String id;
 		private String username;
 		@NotInJson
 		private transient String password;
@@ -30,6 +33,18 @@ public class SerializationUtilsTest {
 		private transient User modifyUser;
 
 		private Date date = DateUtils.beginOfDay(new Date());
+
+		public boolean isNew() {
+			return id == null;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
 
 		public Date getDate() {
 			return date;
@@ -87,6 +102,58 @@ public class SerializationUtilsTest {
 			this.modifyUser = modifyUser;
 		}
 
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + age;
+			result = prime * result
+					+ ((createUser == null) ? 0 : createUser.hashCode());
+			result = prime * result + ((date == null) ? 0 : date.hashCode());
+			result = prime * result + ((id == null) ? 0 : id.hashCode());
+			result = prime * result
+					+ ((status == null) ? 0 : status.hashCode());
+			result = prime * result
+					+ ((username == null) ? 0 : username.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			User other = (User) obj;
+			if (age != other.age)
+				return false;
+			if (createUser == null) {
+				if (other.createUser != null)
+					return false;
+			} else if (!createUser.equals(other.createUser))
+				return false;
+			if (date == null) {
+				if (other.date != null)
+					return false;
+			} else if (!date.equals(other.date))
+				return false;
+			if (id == null) {
+				if (other.id != null)
+					return false;
+			} else if (!id.equals(other.id))
+				return false;
+			if (status != other.status)
+				return false;
+			if (username == null) {
+				if (other.username != null)
+					return false;
+			} else if (!username.equals(other.username))
+				return false;
+			return true;
+		}
+
 	}
 
 	@Test
@@ -103,7 +170,7 @@ public class SerializationUtilsTest {
 		u.setCreateUser(createUser);
 		u.setModifyUser(createUser);
 		byte[] bytes = SerializationUtils.serialize(u);
-		User user = (User)SerializationUtils.deserialize(bytes);
+		User user = (User) SerializationUtils.deserialize(bytes);
 		assertNull(user.getPassword());
 		assertEquals(u.getUsername(), user.getUsername());
 		assertEquals(u.getStatus(), user.getStatus());
@@ -113,6 +180,16 @@ public class SerializationUtilsTest {
 				.getUsername());
 		assertEquals(createUser.getStatus(), user.getCreateUser().getStatus());
 		assertNull(user.getModifyUser());
+
+		EntityOperationEvent event = new EntityOperationEvent(u,
+				EntityOperationType.CREATE);
+		bytes = SerializationUtils.serialize(event);
+		EntityOperationEvent event2 = (EntityOperationEvent) SerializationUtils
+				.deserialize(bytes);
+		assertEquals(event.getTimestamp(), event2.getTimestamp());
+		assertEquals(event.getInstanceId(), event2.getInstanceId());
+		assertEquals(event.getType(), event2.getType());
+		assertEquals(event.getEntity(), event2.getEntity());
 	}
 
 	@Test
