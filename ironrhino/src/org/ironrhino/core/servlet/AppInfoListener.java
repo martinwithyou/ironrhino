@@ -13,17 +13,6 @@ public class AppInfoListener implements ServletContextListener {
 
 	private Logger logger;
 
-	public void contextDestroyed(ServletContextEvent event) {
-		System.clearProperty(AppInfo.getAppName() + ".home");
-		System.clearProperty(AppInfo.getAppName() + ".context");
-		logger.info(
-				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={} is shutdown",
-				new String[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
-						AppInfo.getInstanceId(), AppInfo.getStage().toString(),
-						AppInfo.getAppHome(), AppInfo.getHostName(),
-						AppInfo.getHostAddress() });
-	}
-
 	public void contextInitialized(ServletContextEvent event) {
 		ServletContext ctx = event.getServletContext();
 		String name = ctx.getInitParameter(AppInfo.KEY_APP_NAME);
@@ -43,10 +32,22 @@ public class AppInfoListener implements ServletContextListener {
 		if (context == null)
 			context = "";
 		System.setProperty(AppInfo.getAppName() + ".context", context);
-		System.setProperty(AppInfo.getAppName() + ".instanceid", AppInfo.getInstanceId());
+		System.setProperty(AppInfo.getAppName() + ".instanceid",
+				AppInfo.getInstanceId());
 		logger = LoggerFactory.getLogger(getClass());
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={}",
+				new String[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
+						AppInfo.getInstanceId(), AppInfo.getStage().toString(),
+						AppInfo.getAppHome(), AppInfo.getHostName(),
+						AppInfo.getHostAddress() });
+	}
+
+	public void contextDestroyed(ServletContextEvent event) {
+		System.clearProperty(AppInfo.getAppName() + ".home");
+		System.clearProperty(AppInfo.getAppName() + ".context");
+		logger.info(
+				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={} is shutdown",
 				new String[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
 						AppInfo.getInstanceId(), AppInfo.getStage().toString(),
 						AppInfo.getAppHome(), AppInfo.getHostName(),

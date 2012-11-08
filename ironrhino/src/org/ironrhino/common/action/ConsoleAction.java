@@ -1,5 +1,6 @@
 package org.ironrhino.common.action;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,10 +77,14 @@ public class ConsoleAction extends BaseAction {
 		try {
 			result = applicationContextConsole.execute(expression, global);
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			addActionError(getText("error") + ":" + e.getMessage());
-			Map<String,String[]> map = new HashMap<String,String[]>();
-			map.put("actionErrors",new String[]{e.getMessage()});
+			Throwable throwable = e;
+			if (e instanceof InvocationTargetException)
+				throwable = ((InvocationTargetException) e)
+						.getTargetException();
+			log.error(throwable.getMessage(), throwable);
+			addActionError(getText("error") + ":" + throwable.getMessage());
+			Map<String, String[]> map = new HashMap<String, String[]>();
+			map.put("actionErrors", new String[] { throwable.getMessage() });
 			result = map;
 		}
 		return JSON;

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.ironrhino.core.metadata.DefaultProfile;
+import org.ironrhino.core.metadata.DefaultAndDualProfile;
 import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.CodecUtils;
@@ -23,7 +23,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 @Singleton
 @Named("oauthManager")
-@DefaultProfile
+@DefaultAndDualProfile
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class OAuthManagerImpl implements OAuthManager {
 

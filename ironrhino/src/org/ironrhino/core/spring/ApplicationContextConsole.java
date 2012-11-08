@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,8 +33,9 @@ import org.springframework.context.ApplicationListener;
 public class ApplicationContextConsole implements
 		ApplicationListener<ExpressionEvent> {
 
-	private static final Pattern SET_PROPERTY_EXPRESSION_PATTERN = Pattern
-			.compile("(^[a-zA-Z][a-zA-Z0-9_\\-]*\\.[a-zA-Z][a-zA-Z0-9_\\-]*\\s*=\\s*.+$)");
+	private static final String SET_PROPERTY_EXPRESSION_PATTERN = "^\\s*[a-zA-Z][a-zA-Z0-9_\\-]*\\.[a-zA-Z][a-zA-Z0-9_]*\\s*=\\s*.+\\s*$";
+
+	private static final String SIMPLE_METHOD_INVOCATION_EXPRESSION_PATTERN = "^\\s*[a-zA-Z][a-zA-Z0-9_\\-]*\\.[a-zA-Z][a-zA-Z0-9_]*\\(\\s*\\)\\s*$";
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
@@ -109,7 +108,7 @@ public class ApplicationContextConsole implements
 	public Object execute(String expression, boolean global) throws Exception {
 		Object value = null;
 		try {
-			if (isSetProperyExpression(expression)) {
+			if (expression.matches(SET_PROPERTY_EXPRESSION_PATTERN)) {
 				executeSetProperty(expression);
 			} else {
 				value = executeMethodInvocation(expression);
@@ -123,10 +122,24 @@ public class ApplicationContextConsole implements
 	}
 
 	private Object executeMethodInvocation(String expression) throws Exception {
-		try {
+		if (expression.matches(SIMPLE_METHOD_INVOCATION_EXPRESSION_PATTERN)) {
+			String[] arr = expression.split("\\.");
+			String beanName = arr[0].trim();
+			String methodName = arr[1].trim();
+			methodName = methodName.substring(0, methodName.indexOf('('));
+			Object bean = getBeans().get(beanName);
+			if (bean == null)
+				throw new IllegalArgumentException("bean[" + beanName
+						+ "] doesn't exists");
+			try {
+				Method m = bean.getClass().getMethod(methodName, new Class[0]);
+				return m.invoke(bean, new Object[0]);
+			} catch (NoSuchMethodException e) {
+				throw new IllegalArgumentException("bean[" + beanName
+						+ "] has no such method: " + arr[1]);
+			}
+		} else {
 			return ExpressionUtils.evalExpression(expression, getBeans());
-		} catch (Exception e) {
-			throw e;
 		}
 	}
 
@@ -147,11 +160,6 @@ public class ApplicationContextConsole implements
 		} catch (Exception e) {
 			throw e;
 		}
-	}
-
-	private static boolean isSetProperyExpression(String expression) {
-		Matcher matcher = SET_PROPERTY_EXPRESSION_PATTERN.matcher(expression);
-		return matcher.matches();
 	}
 
 	public void onApplicationEvent(ExpressionEvent event) {
