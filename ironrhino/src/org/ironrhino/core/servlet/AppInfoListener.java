@@ -8,12 +8,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.AppInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.AbstractEnvironment;
 
 public class AppInfoListener implements ServletContextListener {
 
 	private Logger logger;
 
 	public void contextInitialized(ServletContextEvent event) {
+		String defaultProfiles = System
+				.getenv(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME);
+		if (StringUtils.isNotBlank(defaultProfiles))
+			System.setProperty(
+					AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME,
+					defaultProfiles);
 		ServletContext ctx = event.getServletContext();
 		String name = ctx.getInitParameter(AppInfo.KEY_APP_NAME);
 		if (name == null)
