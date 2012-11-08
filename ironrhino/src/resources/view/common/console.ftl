@@ -18,7 +18,11 @@ $(function(){
 					t.prop('disabled',true);
 				},
 				success:function(data){
-					alert(MessageBundle.get('success'));
+					if(data && data.actionErrors){
+						alert(data.actionErrors[0]);
+					}else{
+						alert(MessageBundle.get('success'));
+					}
 					t.prop('disabled',false);
 				},
 				error:function(data){
@@ -44,6 +48,10 @@ $(function(){
 								global: false
 								}
 								,function(data){
+									if(data && data.actionErrors){
+										alert(data.actionErrors[0]);
+										return;
+									}
 									t.children().removeClass('active').css({
 												'font-weight' : 'normal'
 											});

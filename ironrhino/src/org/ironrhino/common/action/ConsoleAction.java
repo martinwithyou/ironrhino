@@ -1,5 +1,8 @@
 package org.ironrhino.common.action;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.ironrhino.core.metadata.AutoConfig;
@@ -75,8 +78,10 @@ public class ConsoleAction extends BaseAction {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			addActionError(getText("error") + ":" + e.getMessage());
+			Map<String,String[]> map = new HashMap<String,String[]>();
+			map.put("actionErrors",new String[]{e.getMessage()});
+			result = map;
 		}
 		return JSON;
 	}
-
 }
