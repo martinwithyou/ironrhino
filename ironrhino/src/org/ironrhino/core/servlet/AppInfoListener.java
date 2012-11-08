@@ -16,7 +16,8 @@ public class AppInfoListener implements ServletContextListener {
 
 	public void contextInitialized(ServletContextEvent event) {
 		String defaultProfiles = System
-				.getenv(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME);
+				.getenv(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME
+						.replaceAll("\\.", "_").toUpperCase());
 		if (StringUtils.isNotBlank(defaultProfiles))
 			System.setProperty(
 					AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME,
