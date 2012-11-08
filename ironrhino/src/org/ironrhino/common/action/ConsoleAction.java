@@ -24,7 +24,7 @@ public class ConsoleAction extends BaseAction {
 
 	private String expression;
 
-	private boolean global = true;
+	private boolean global = false;
 
 	private Object result;
 

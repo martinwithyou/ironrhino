@@ -40,7 +40,8 @@ $(function(){
 						var value = button.data('value');
 						$.post('<@url value="/common/console/executeJson"/>',
 								{
-								expression : 'settingControl.setValue("'+key+'","'+value+'")'
+								expression : 'settingControl.setValue("'+key+'","'+value+'")',
+								global: false
 								}
 								,function(data){
 									t.children().removeClass('active').css({
