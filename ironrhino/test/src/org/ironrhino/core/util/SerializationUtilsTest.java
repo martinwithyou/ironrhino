@@ -3,13 +3,17 @@ package org.ironrhino.core.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.Persistable;
+import org.ironrhino.core.spring.security.DefaultGrantedAuthority;
 import org.junit.Test;
+import org.springframework.security.core.GrantedAuthority;
 
 public class SerializationUtilsTest {
 
@@ -31,6 +35,7 @@ public class SerializationUtilsTest {
 		private Status status;
 		private User createUser;
 		private transient User modifyUser;
+		private List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
 		private Date date = DateUtils.beginOfDay(new Date());
 
@@ -100,6 +105,14 @@ public class SerializationUtilsTest {
 
 		public void setModifyUser(User modifyUser) {
 			this.modifyUser = modifyUser;
+		}
+
+		public List<GrantedAuthority> getAuthorities() {
+			return authorities;
+		}
+
+		public void setAuthorities(List<GrantedAuthority> authorities) {
+			this.authorities = authorities;
 		}
 
 		@Override
@@ -181,6 +194,7 @@ public class SerializationUtilsTest {
 		assertEquals(createUser.getStatus(), user.getCreateUser().getStatus());
 		assertNull(user.getModifyUser());
 
+		u.getAuthorities().add(new DefaultGrantedAuthority("test"));
 		EntityOperationEvent event = new EntityOperationEvent(u,
 				EntityOperationType.CREATE);
 		bytes = SerializationUtils.serialize(event);
@@ -190,6 +204,9 @@ public class SerializationUtilsTest {
 		assertEquals(event.getInstanceId(), event2.getInstanceId());
 		assertEquals(event.getType(), event2.getType());
 		assertEquals(event.getEntity(), event2.getEntity());
+		assertEquals(u.getAuthorities().get(0).getAuthority(),
+				((User) event2.getEntity()).getAuthorities().get(0)
+						.getAuthority());
 	}
 
 	@Test

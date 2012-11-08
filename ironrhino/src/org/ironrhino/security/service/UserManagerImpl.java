@@ -17,6 +17,7 @@ import org.ironrhino.core.cache.FlushCache;
 import org.ironrhino.core.remoting.Remoting;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.spring.security.FallbackUserDetailsService;
+import org.ironrhino.core.spring.security.DefaultGrantedAuthority;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
@@ -24,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -92,16 +92,16 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	private void populateAuthorities(User user) {
 		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
-		auths.add(new SimpleGrantedAuthority(UserRole.ROLE_BUILTIN_ANONYMOUS));
-		auths.add(new SimpleGrantedAuthority(UserRole.ROLE_BUILTIN_USER));
+		auths.add(new DefaultGrantedAuthority(UserRole.ROLE_BUILTIN_ANONYMOUS));
+		auths.add(new DefaultGrantedAuthority(UserRole.ROLE_BUILTIN_USER));
 		for (String role : user.getRoles())
-			auths.add(new SimpleGrantedAuthority(role));
+			auths.add(new DefaultGrantedAuthority(role));
 		if (mappers != null)
 			for (UserRoleMapper mapper : mappers) {
 				String[] roles = mapper.map(user);
 				if (roles != null)
 					for (String role : roles)
-						auths.add(new SimpleGrantedAuthority(role));
+						auths.add(new DefaultGrantedAuthority(role));
 			}
 		user.setAuthorities(auths);
 	}
