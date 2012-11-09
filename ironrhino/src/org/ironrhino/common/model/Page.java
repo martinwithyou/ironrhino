@@ -162,7 +162,6 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 					.trimTail(tagsAsString, ",").split(",")));
 	}
 
-	@Override
 	@NotInCopy
 	public UserDetails getCreateUser() {
 		return null;
@@ -170,10 +169,10 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@Override
 	public void setCreateUser(UserDetails user) {
-		createUserAsString = user.getUsername();
+		if (user != null)
+			createUserAsString = user.getUsername();
 	}
 
-	@Override
 	@NotInCopy
 	public UserDetails getModifyUser() {
 		return null;
@@ -181,7 +180,8 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@Override
 	public void setModifyUser(UserDetails user) {
-		modifyUserAsString = user.getUsername();
+		if (user != null)
+			modifyUserAsString = user.getUsername();
 	}
 
 	public String getCreateUserAsString() {

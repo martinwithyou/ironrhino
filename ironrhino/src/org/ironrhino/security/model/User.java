@@ -80,11 +80,11 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	@NotInCopy
 	@NotInJson
-	private transient User createUser;
+	private String createUserAsString;
 
 	@NotInCopy
 	@NotInJson
-	private transient User modifyUser;
+	private String modifyUserAsString;
 
 	public Collection<GrantedAuthority> getAuthorities() {
 		return authorities;
@@ -94,8 +94,8 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 		return createDate;
 	}
 
-	public User getCreateUser() {
-		return createUser;
+	public String getCreateUserAsString() {
+		return createUserAsString;
 	}
 
 	public String getEmail() {
@@ -106,8 +106,8 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 		return modifyDate;
 	}
 
-	public User getModifyUser() {
-		return modifyUser;
+	public String getModifyUserAsString() {
+		return modifyUserAsString;
 	}
 
 	public String getName() {
@@ -169,9 +169,13 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 		this.createDate = createDate;
 	}
 
+	public void setCreateUserAsString(String createUserAsString) {
+		this.createUserAsString = createUserAsString;
+	}
+
 	public void setCreateUser(User createUser) {
-		if (!this.equals(createUser))
-			this.createUser = createUser;
+		if (createUser != null)
+			this.createUserAsString = createUser.getUsername();
 	}
 
 	public void setEmail(String email) {
@@ -190,9 +194,13 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 		this.modifyDate = modifyDate;
 	}
 
+	public void setModifyUserAsString(String modifyUserAsString) {
+		this.modifyUserAsString = modifyUserAsString;
+	}
+
 	public void setModifyUser(User modifyUser) {
-		if (!this.equals(modifyUser))
-			this.modifyUser = modifyUser;
+		if (modifyUser != null)
+			this.modifyUserAsString = modifyUser.getUsername();
 	}
 
 	public void setName(String name) {

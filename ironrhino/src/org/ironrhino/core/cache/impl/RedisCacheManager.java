@@ -7,8 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
+import org.ironrhino.core.metadata.DualProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -17,6 +21,9 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
+@Singleton
+@Named("cacheManager")
+@DualProfile
 public class RedisCacheManager implements CacheManager {
 
 	private Logger log = LoggerFactory.getLogger(getClass());

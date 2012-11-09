@@ -4,18 +4,33 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
+import org.ironrhino.core.metadata.DefaultProfile;
 
+@Singleton
+@Named("cacheManager")
+@DefaultProfile
 public class EhCacheManager implements CacheManager {
 
 	private net.sf.ehcache.CacheManager ehCacheManager;
 
-	public EhCacheManager(net.sf.ehcache.CacheManager ehCacheManager) {
-		this.ehCacheManager = ehCacheManager;
+	@PostConstruct
+	public void init() throws Exception {
+		this.ehCacheManager = new net.sf.ehcache.CacheManager();
+	}
+
+	@PreDestroy
+	public void destroy() {
+		ehCacheManager.shutdown();
 	}
 
 	public void put(String key, Object value, int timeToLive, String namespace) {
@@ -156,7 +171,7 @@ public class EhCacheManager implements CacheManager {
 		return true;
 	}
 
-	public boolean supportsUpdateTimeToLive(){
+	public boolean supportsUpdateTimeToLive() {
 		return true;
 	}
 }

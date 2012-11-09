@@ -15,9 +15,7 @@
 		<property name="description" />
 		<property name="createDate" />
 		<property name="modifyDate" />
-		<many-to-one name="createUser" class="org.ironrhino.security.model.User"
-			column="createUser" not-null="false" lazy="proxy" not-found="ignore" />
-		<many-to-one name="modifyUser" class="org.ironrhino.security.model.User"
-			column="modifyUser" not-null="false" lazy="proxy" not-found="ignore" />
+		<property name="createUserAsString" column="createUser" />
+		<property name="modifyUserAsString" column="modifyUser" />
 	</class>
 </hibernate-mapping>

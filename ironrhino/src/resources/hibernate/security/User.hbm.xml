@@ -18,10 +18,8 @@
 		<property name="enabled" />
 		<property name="createDate" />
 		<property name="modifyDate" />
-		<many-to-one name="createUser" class="User" column="createUser"
-			not-null="false" lazy="proxy" not-found="ignore" />
-		<many-to-one name="modifyUser" class="User" column="modifyUser"
-			not-null="false" lazy="proxy" not-found="ignore" />
+		<property name="createUserAsString" column="createUser" />
+		<property name="modifyUserAsString" column="modifyUser" />
 		<property name="rolesAsString" type="java.lang.String"
 			column="roles" length="500" />
 		<property name="attributesAsString" column="attributes"

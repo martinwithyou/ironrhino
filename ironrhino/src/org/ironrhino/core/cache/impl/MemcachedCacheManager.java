@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.MemcachedClientBuilder;
@@ -18,15 +20,21 @@ import net.rubyeye.xmemcached.utils.AddrUtil;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
+import org.ironrhino.core.metadata.ClusterProfile;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
+@Singleton
+@Named("cacheManager")
+@ClusterProfile
 public class MemcachedCacheManager implements CacheManager {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 
+	@Value("${memcached.serverAddress:localhost:11211}")
 	private String serverAddress;
 
 	private MemcachedClient memcached;
@@ -40,7 +48,7 @@ public class MemcachedCacheManager implements CacheManager {
 	}
 
 	@PostConstruct
-	public void afterPropertiesSet() throws IOException {
+	public void init() throws IOException {
 		memcached = build(serverAddress);
 	}
 
