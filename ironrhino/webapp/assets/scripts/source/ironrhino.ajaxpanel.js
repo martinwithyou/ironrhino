@@ -24,6 +24,7 @@
 				&& ele.hasClass('loaded'))
 			return;
 		var options = {
+			target : ele[0],
 			url : ele.data('url') || document.location.href,
 			global : false,
 			quiet : true,
