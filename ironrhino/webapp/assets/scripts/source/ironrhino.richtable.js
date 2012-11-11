@@ -251,7 +251,7 @@ Richtable = {
 		var btn = event.target;
 		var form = $(btn).closest('form');
 		if ($(btn).prop('tagName') != 'BUTTON' || $(btn).prop('tagName') != 'A')
-			btn = $(btn).closest('.btn');
+			btn = $(btn).closest('button,a');
 		if (btn.attr('onclick'))
 			return;
 		var idparams;
