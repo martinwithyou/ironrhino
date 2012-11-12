@@ -14,7 +14,7 @@ public class ResultPage<T> implements Serializable {
 
 	private static final long serialVersionUID = -3653886488085413894L;
 
-	public static final int MAX_RECORDS_PER_PAGE = 1000;
+	public static final int MAX_PAGESIZE = 1000;
 
 	public static final int DEFAULT_PAGE_SIZE = 10;
 
@@ -127,6 +127,14 @@ public class ResultPage<T> implements Serializable {
 
 	public boolean isDefaultPageSize() {
 		return this.pageSize == DEFAULT_PAGE_SIZE;
+	}
+
+	public boolean isPageSizeOverflow() {
+		return this.pageSize > MAX_PAGESIZE;
+	}
+
+	public boolean isCanListAll() {
+		return this.totalRecord <= MAX_PAGESIZE;
 	}
 
 	public String renderUrl(int pn) {

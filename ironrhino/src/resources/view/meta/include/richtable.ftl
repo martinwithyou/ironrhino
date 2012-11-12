@@ -1,5 +1,7 @@
 <#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
-<@rtstart formid=formid action=action entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable/>
+<@rtstart formid=formid action=action entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable>
+<#nested/>
+</@rtstart>
 <#local index = 0>
 <#local size = columns?keys?size>
 <#list columns?keys as name>
@@ -33,6 +35,7 @@
 <#macro rtstart formid='',action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true>
 <#local action=action?has_content?string(action,request.requestURI?substring(request.contextPath?length))>
 <form id="<#if formid!=''>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view"<#if actionBaseUrl!=action> data-actionBaseUrl="${actionBaseUrl}"</#if><#if entityName!=action&&entityName!=''> data-entity="${entityName}"</#if>>
+<#nested/>
 <#if includeParameters>
 <#list Parameters?keys as name>
 <#if name!='_'&&name!='pn'&&name!='ps'&&!name?starts_with('resultPage.')&&name!='keyword'&&name!='check'>
@@ -136,10 +139,13 @@ ${value?xhtml}<#t>
 <li class="hidden-tablet">
 <select name="resultPage.pageSize" class="pageSize" title="${action.getText('pagesize')}">
 <#local array=[5,10,20,50,100,500]>
+<#local selected=false>
 <#list array as ps>
-<option value="${ps}"<#if resultPage.pageSize==ps> selected</#if>>${ps}</option>
-</#list> 
-<option value="${resultPage.totalRecord}"<#if resultPage.pageSize==resultPage.totalRecord> selected</#if>>${action.getText('all')}</option>
+<option value="${ps}"<#if resultPage.pageSize==ps><#local selected=true> selected</#if>>${ps}</option>
+</#list>
+<#if resultPage.canListAll>
+<option value="${resultPage.totalRecord}"<#if !selected && resultPage.pageSize==resultPage.totalRecord> selected</#if>>${action.getText('all')}</option>
+</#if>
 </select>
 </li>
 </#if>

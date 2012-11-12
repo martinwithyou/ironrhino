@@ -244,8 +244,8 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			if (resultPage.getPageSize() < 1)
 				resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
 			else if (resultPage.getPageSize() < Integer.MAX_VALUE
-					&& resultPage.getPageSize() > ResultPage.MAX_RECORDS_PER_PAGE)
-				resultPage.setPageSize(ResultPage.MAX_RECORDS_PER_PAGE);
+					&& resultPage.isPageSizeOverflow())
+				resultPage.setPageSize(ResultPage.MAX_PAGESIZE);
 			if (resultPage.getPageNo() < 1)
 				resultPage.setPageNo(1);
 			else if (resultPage.getPageNo() > resultPage.getTotalPage())
@@ -402,7 +402,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		Query query = sessionFactory.getCurrentSession().createQuery(
 				queryString);
 		for (int i = 0; i < args.length; i++)
-			query.setParameter(String.valueOf(i+1), args[i]);
+			query.setParameter(String.valueOf(i + 1), args[i]);
 		return query.list();
 	}
 
@@ -473,7 +473,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				queryString);
 		if (values != null) {
 			for (int i = 0; i < values.length; i++) {
-				queryObject.setParameter(String.valueOf(i+1), values[i]);
+				queryObject.setParameter(String.valueOf(i + 1), values[i]);
 			}
 		}
 		return queryObject.executeUpdate();

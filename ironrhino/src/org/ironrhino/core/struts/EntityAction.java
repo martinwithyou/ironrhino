@@ -642,7 +642,7 @@ public class EntityAction extends BaseAction {
 					.getPropertyDescriptors(clazz);
 			for (PropertyDescriptor pd : pds) {
 				String propertyName = pd.getName();
-				if (pd.getWriteMethod() == null)
+				if (pd.getWriteMethod() == null || pd.getReadMethod() == null)
 					continue;
 				SearchableProperty searchableProperty = pd.getReadMethod()
 						.getAnnotation(SearchableProperty.class);
