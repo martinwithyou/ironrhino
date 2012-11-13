@@ -1,7 +1,7 @@
-<#macro pagination dynamicAttributes...>
+<#macro pagination align="center" dynamicAttributes...>
 <#if !dynamicAttributes?is_hash_ex><#local dynamicAttributes={}></#if>
 <#if resultPage.totalPage gt 1>
-<div class="pagination">
+<div class="pagination<#if align="right"> pull-right</#if>"<#if align="center"> style="text-align:center;"</#if>>
 <ul>
 <#if resultPage.first>
 <li class="disabled"><a title="${action.getText('firstpage')}">&lt;&lt;</a></li>
