@@ -7,7 +7,7 @@
 	<class name="Record" table="common_record">
 		<id name="id" type="java.lang.String" 
 			length="32" unsaved-value="null">
-			<generator class="uuid" />
+			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
 		<property name="operatorId" index="operatorId" />
 		<property name="operatorClass" />

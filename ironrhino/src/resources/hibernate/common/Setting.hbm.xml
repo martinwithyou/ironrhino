@@ -15,7 +15,7 @@
 		<property name="description" />
 		<property name="createDate" />
 		<property name="modifyDate" />
-		<property name="createUserAsString" column="createUser" />
-		<property name="modifyUserAsString" column="modifyUser" />
+		<property name="createUser" />
+		<property name="modifyUser" />
 	</class>
 </hibernate-mapping>

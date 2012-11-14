@@ -80,11 +80,11 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 
 	@NotInCopy
 	@NotInJson
-	private String createUserAsString;
+	private String createUser;
 
 	@NotInCopy
 	@NotInJson
-	private String modifyUserAsString;
+	private String modifyUser;
 
 	public Collection<GrantedAuthority> getAuthorities() {
 		return authorities;
@@ -94,8 +94,8 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 		return createDate;
 	}
 
-	public String getCreateUserAsString() {
-		return createUserAsString;
+	public String getCreateUser() {
+		return createUser;
 	}
 
 	public String getEmail() {
@@ -106,8 +106,8 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 		return modifyDate;
 	}
 
-	public String getModifyUserAsString() {
-		return modifyUserAsString;
+	public String getModifyUser() {
+		return modifyUser;
 	}
 
 	public String getName() {
@@ -169,13 +169,13 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 		this.createDate = createDate;
 	}
 
-	public void setCreateUserAsString(String createUserAsString) {
-		this.createUserAsString = createUserAsString;
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
 	}
 
-	public void setCreateUser(User createUser) {
+	public void setCreateUserDetails(User createUser) {
 		if (createUser != null)
-			this.createUserAsString = createUser.getUsername();
+			this.createUser = createUser.getUsername();
 	}
 
 	public void setEmail(String email) {
@@ -194,13 +194,13 @@ public class User extends BaseEntity implements UserDetails, Recordable<User> {
 		this.modifyDate = modifyDate;
 	}
 
-	public void setModifyUserAsString(String modifyUserAsString) {
-		this.modifyUserAsString = modifyUserAsString;
+	public void setModifyUser(String modifyUser) {
+		this.modifyUser = modifyUser;
 	}
 
-	public void setModifyUser(User modifyUser) {
+	public void setModifyUserDetails(User modifyUser) {
 		if (modifyUser != null)
-			this.modifyUserAsString = modifyUser.getUsername();
+			this.modifyUser = modifyUser.getUsername();
 	}
 
 	public void setName(String name) {

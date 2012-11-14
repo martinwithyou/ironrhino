@@ -14,8 +14,8 @@ public interface Recordable<T extends UserDetails> {
 
 	public void setCreateDate(Date date);
 
-	public void setCreateUser(T user);
+	public void setCreateUserDetails(T userDetails);
 
-	public void setModifyUser(T user);
+	public void setModifyUserDetails(T userDetails);
 
 }

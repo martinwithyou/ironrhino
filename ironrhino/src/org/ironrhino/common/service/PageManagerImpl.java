@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -39,7 +40,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 
 	@Override
 	@Transactional
-	@FlushCache(key = "${page.path}", namespace = "page", renew = "${page}")
+	@FlushCache(key = "${page.pagepath}", namespace = "page", renew = "${page}")
 	public void save(Page page) {
 		page.setDraft(null);
 		page.setDraftDate(null);
@@ -48,15 +49,15 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 
 	@Override
 	@Transactional
-	@FlushCache(key = "${page.path}", namespace = "page")
+	@FlushCache(key = "${page.pagepath}", namespace = "page")
 	public void delete(Page page) {
 		super.delete(page);
 	}
 
 	@Transactional(readOnly = true)
-	@CheckCache(key = "${path}", namespace = "page", eternal = true)
-	public Page getByPath(String path) {
-		Page page = findByNaturalId(path);
+	@CheckCache(key = "${pagepath}", namespace = "page", eternal = true)
+	public Page getByPath(String pagepath) {
+		Page page = findByNaturalId(pagepath);
 		if (page != null)
 			page.setDraft(null);
 		return page;
@@ -72,7 +73,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		}
 		p.setDraftDate(new Date());
 		Map<String, String> draft = new HashMap<String, String>();
-		draft.put("path", page.getPath());
+		draft.put("pagepath", page.getPagepath());
 		draft.put("title", page.getTitle());
 		draft.put("content", page.getContent());
 		p.setDraft(JsonUtils.toJson(draft));
@@ -107,7 +108,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			Map<String, String> map = JsonUtils.fromJson(page.getDraft(),
 					new TypeReference<Map<String, String>>() {
 					});
-			page.setPath(map.get("path"));
+			page.setPagepath(map.get("pagepath"));
 			page.setTitle(map.get("title"));
 			page.setContent(map.get("content"));
 		} catch (Exception e) {
@@ -215,28 +216,26 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return resultPage;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Integer> findMatchedTags(String keyword) {
-		final Map<String, Integer> map = new HashMap<String, Integer>();
 		if (keyword == null || keyword.length() < 2)
-			return map;
+			return Collections.EMPTY_MAP;
 		if (elasticSearchService != null) {
 			ElasticSearchCriteria cc = new ElasticSearchCriteria();
 			cc.setQuery(new StringBuilder("tags:").append(keyword).append("*")
 					.toString());
 			cc.setTypes(new String[] { "page" });
-			List<Page> list = elasticSearchService.search(cc);
-			for (Page p : list) {
-				for (String tag : p.getTags()) {
-					if (!tag.contains(keyword))
-						continue;
-					Integer count = map.get(tag);
-					if (count != null)
-						map.put(tag, map.get(tag) + 1);
-					else
-						map.put(tag, 1);
-				}
+			Map<String, Integer> map = elasticSearchService.countTermsByField(
+					cc, "tags");
+			Iterator<Map.Entry<String, Integer>> it = map.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<String, Integer> entry = it.next();
+				if (!entry.getKey().startsWith(keyword))
+					it.remove();
 			}
+			return map;
 		} else {
+			final Map<String, Integer> map = new HashMap<String, Integer>();
 			List<Page> list = findAll();
 			for (Page p : list) {
 				for (String tag : p.getTags()) {
@@ -249,25 +248,26 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 						map.put(tag, 1);
 				}
 			}
+			Map<String, Integer> sortedMap = new TreeMap<String, Integer>(
+					new Comparator<String>() {
+						@Override
+						public int compare(String o1, String o2) {
+							Integer i1 = map.get(o1);
+							Integer i2 = map.get(o2);
+							if (i1 == null)
+								return 1;
+							if (i2 == null)
+								return -1;
+							int i = i2.compareTo(i1);
+							if (i == 0)
+								i = o1.compareTo(o2);
+							return i;
+						}
+					});
+			sortedMap.putAll(map);
+			return sortedMap;
 		}
-		Map<String, Integer> sortedMap = new TreeMap<String, Integer>(
-				new Comparator<String>() {
-					@Override
-					public int compare(String o1, String o2) {
-						Integer i1 = map.get(o1);
-						Integer i2 = map.get(o2);
-						if (i1 == null)
-							return 1;
-						if (i2 == null)
-							return -1;
-						int i = i2.compareTo(i1);
-						if (i == 0)
-							i = o1.compareTo(o2);
-						return i;
-					}
-				});
-		sortedMap.putAll(map);
-		return sortedMap;
+
 	}
 
 }

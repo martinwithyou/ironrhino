@@ -14,7 +14,7 @@
 <div id="list">
 <ul class="unstyled">
 <#list resultPage.result as page>
-	<li><a href="<@url value="/${name}/p${page.path}"/>"><#if page.title??><#assign title=page.title?interpret><@title/></#if></a><span class="pull-right">${page.createDate?date}</span></li>
+	<li><a href="<@url value="/${name}/p${page.pagepath}"/>"><#if page.title??><#assign title=page.title?interpret><@title/></#if></a><span class="pull-right">${page.createDate?date}</span></li>
 </#list>
 </ul>
 <@pagination class="ajax view history" replacement="list" cache="true"/>

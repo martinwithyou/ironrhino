@@ -308,10 +308,6 @@ public class UserAction extends BaseAction {
 	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
 	public String self() {
 		user = AuthzUtils.getUserDetails(User.class);
-		if (user != null) {
-			user.setCreateUser(null);
-			user.setModifyUser(null);
-		}
 		return JSON;
 	}
 

@@ -130,8 +130,8 @@ public class IndexManagerImpl implements IndexManager {
 		PropertyDescriptor[] pds = bw.getPropertyDescriptors();
 		for (PropertyDescriptor pd : pds) {
 			String name = pd.getName();
-			if (name.equals("path"))
-				continue;
+			// if (name.equals("path"))
+			// continue;
 			Method m = pd.getReadMethod();
 			Class propertyType = pd.getPropertyType();
 			if (propertyType == null)

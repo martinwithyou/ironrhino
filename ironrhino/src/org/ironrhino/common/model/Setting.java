@@ -45,11 +45,11 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 
 	@NotInCopy
 	@UiConfig(hidden = true)
-	private String createUserAsString;
+	private String createUser;
 
 	@NotInCopy
 	@UiConfig(hidden = true)
-	private String modifyUserAsString;
+	private String modifyUser;
 
 	public Setting() {
 
@@ -100,30 +100,30 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 		this.modifyDate = modifyDate;
 	}
 
-	public String getCreateUserAsString() {
-		return createUserAsString;
+	public String getCreateUser() {
+		return createUser;
 	}
 
-	public void setCreateUserAsString(String createUserAsString) {
-		this.createUserAsString = createUserAsString;
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
 	}
 
-	public String getModifyUserAsString() {
-		return modifyUserAsString;
+	public String getModifyUser() {
+		return modifyUser;
 	}
 
-	public void setModifyUserAsString(String modifyUserAsString) {
-		this.modifyUserAsString = modifyUserAsString;
+	public void setModifyUser(String modifyUser) {
+		this.modifyUser = modifyUser;
 	}
 
-	public void setCreateUser(UserDetails user) {
+	public void setCreateUserDetails(UserDetails user) {
 		if (user != null)
-			createUserAsString = user.getUsername();
+			createUser = user.getUsername();
 	}
 
-	public void setModifyUser(UserDetails user) {
+	public void setModifyUserDetails(UserDetails user) {
 		if (user != null)
-			modifyUserAsString = user.getUsername();
+			modifyUser = user.getUsername();
 	}
 
 }

@@ -71,7 +71,7 @@ $(function() {
 		var page = Ajax.jsonResult.page;
 		if(page){
 			var date = page.draftDate;
-			var path = page.path;
+			var path = page.pagepath;
 			$('#page_id').val(page.id);
 			$('#page_path').val(path);
 			path = CONTEXT_PATH+cmsPath+path;
@@ -98,7 +98,7 @@ $(function() {
 				}
 		},60000);
 		},1500);
-		$('input[name="page.path"],input[name="page.title"]').keyup(function(){
+		$('input[name="page.pagepath"],input[name="page.title"]').keyup(function(){
 			$('#form').attr('dirty',true);
 		});
 		$('#drop').click(function(){
@@ -119,11 +119,11 @@ $(function() {
 <@s.form id="form" action="${getUrl(actionBaseUrl+'/draft')}" method="post" cssClass="ajax" cssStyle="padding-top:13px;">
 	<@s.hidden id="page_id" name="page.id" />
 	<#if Parameters.brief??>
-		<@s.hidden name="page.path"/>
+		<@s.hidden name="page.pagepath"/>
 		<@s.hidden name="page.displayOrder"/>
 		<@s.hidden name="page.tagsAsString"/>
 	<#else>
-		<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required" size="50" cssStyle="width:400px;"/>
+		<@s.textfield id="page_path" label="%{getText('path')}" name="page.pagepath" cssClass="required" size="50" cssStyle="width:400px;"/>
 		<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" type="number" cssClass="integer"/>
 		<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tags" source="${getUrl('/common/page/suggest')}" cssStyle="width:400px;"/>
 	</#if>
@@ -142,7 +142,7 @@ $(function() {
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
 	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>
 	<#if page.id??>
-	<a class="btn" id="preview" href="${getUrl(cmsPath+page.path)}?preview=true" target="_blank">${action.getText('preview')}</a>
+	<a class="btn" id="preview" href="${getUrl(cmsPath+page.pagepath)}?preview=true" target="_blank">${action.getText('preview')}</a>
 	<#else>
 	<a class="btn" id="preview" target="_blank">${action.getText('preview')}</a>
 	</#if>
@@ -152,7 +152,7 @@ $(function() {
 	<div class="control-group">
 	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
 	<#if page.id??>
-	<a class="btn" id="view" href="${getUrl(cmsPath+page.path)}" target="_blank">${action.getText('view')}</a>
+	<a class="btn" id="view" href="${getUrl(cmsPath+page.pagepath)}" target="_blank">${action.getText('view')}</a>
 	<#else>
 	<a class="btn" id="view" target="_blank">${action.getText('view')}</a>
 	</#if>

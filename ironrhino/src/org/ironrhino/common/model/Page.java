@@ -27,7 +27,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@NaturalId(mutable = true, caseInsensitive = true)
 	@SearchableProperty(index = Index.NOT_ANALYZED)
-	private String path;
+	private String pagepath;
 
 	@SearchableProperty
 	private String title;
@@ -56,12 +56,12 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	private Date modifyDate;
 
 	@NotInCopy
-	@SearchableProperty
-	private String createUserAsString;
+	@SearchableProperty(include_in_all = false)
+	private String createUser;
 
 	@NotInCopy
-	@SearchableProperty
-	private String modifyUserAsString;
+	@SearchableProperty(include_in_all = false)
+	private String modifyUser;
 
 	@NotInCopy
 	@SearchableProperty(index = Index.NOT_ANALYZED)
@@ -83,12 +83,12 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 		this.displayOrder = displayOrder;
 	}
 
-	public String getPath() {
-		return path;
+	public String getPagepath() {
+		return pagepath;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setPagepath(String pagepath) {
+		this.pagepath = pagepath;
 	}
 
 	public String getTitle() {
@@ -162,42 +162,32 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 					.trimTail(tagsAsString, ",").split(",")));
 	}
 
-	@NotInCopy
-	public UserDetails getCreateUser() {
-		return null;
+	@Override
+	public void setCreateUserDetails(UserDetails user) {
+		if (user != null)
+			createUser = user.getUsername();
 	}
 
 	@Override
-	public void setCreateUser(UserDetails user) {
+	public void setModifyUserDetails(UserDetails user) {
 		if (user != null)
-			createUserAsString = user.getUsername();
+			modifyUser = user.getUsername();
 	}
 
-	@NotInCopy
-	public UserDetails getModifyUser() {
-		return null;
+	public String getCreateUser() {
+		return createUser;
 	}
 
-	@Override
-	public void setModifyUser(UserDetails user) {
-		if (user != null)
-			modifyUserAsString = user.getUsername();
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
 	}
 
-	public String getCreateUserAsString() {
-		return createUserAsString;
+	public String getModifyUser() {
+		return modifyUser;
 	}
 
-	public void setCreateUserAsString(String createUserAsString) {
-		this.createUserAsString = createUserAsString;
-	}
-
-	public String getModifyUserAsString() {
-		return modifyUserAsString;
-	}
-
-	public void setModifyUserAsString(String modifyUserAsString) {
-		this.modifyUserAsString = modifyUserAsString;
+	public void setModifyUser(String modifyUser) {
+		this.modifyUser = modifyUser;
 	}
 
 	public int compareTo(Object object) {
@@ -210,6 +200,6 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	}
 
 	public String toString() {
-		return this.path;
+		return this.pagepath;
 	}
 }

@@ -82,10 +82,10 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			UserDetails user = AuthzUtils.getUserDetails(UserDetails.class);
 			if (obj.isNew()) {
 				r.setCreateDate(date);
-				r.setCreateUser(user);
+				r.setCreateUserDetails(user);
 			} else {
 				r.setModifyDate(date);
-				r.setModifyUser(user);
+				r.setModifyUserDetails(user);
 			}
 		}
 		if (obj instanceof BaseTreeableEntity) {

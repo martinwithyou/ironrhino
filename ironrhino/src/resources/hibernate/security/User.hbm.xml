@@ -6,7 +6,7 @@
 	default-lazy="true">
 	<class name="User" table="`user`">
 		<id name="id" type="java.lang.String" length="32" unsaved-value="null">
-			<generator class="uuid" />
+			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
 		<natural-id>
 			<property name="username" not-null="true" />
@@ -18,8 +18,8 @@
 		<property name="enabled" />
 		<property name="createDate" />
 		<property name="modifyDate" />
-		<property name="createUserAsString" column="createUser" />
-		<property name="modifyUserAsString" column="modifyUser" />
+		<property name="createUser" />
+		<property name="modifyUser" />
 		<property name="rolesAsString" type="java.lang.String"
 			column="roles" length="500" />
 		<property name="attributesAsString" column="attributes"

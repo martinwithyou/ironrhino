@@ -1,6 +1,8 @@
 package org.ironrhino.core.search.elasticsearch;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +21,9 @@ import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.index.query.QueryStringQueryBuilder.Operator;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.facet.FacetBuilders;
+import org.elasticsearch.search.facet.terms.TermsFacet;
+import org.elasticsearch.search.facet.terms.TermsFacetBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.SearchCriteria;
@@ -100,6 +105,31 @@ public class ElasticSearchService<T> implements SearchService<T> {
 			log.error(e.getMessage(), e);
 		}
 		return list;
+	}
+
+	public Map<String, Integer> countTermsByField(
+			SearchCriteria searchCriteria, String field) {
+		ElasticSearchCriteria criteria = (ElasticSearchCriteria) searchCriteria;
+		if (criteria == null)
+			return null;
+		SearchRequestBuilder srb = criteria2builder(criteria);
+		srb.setFrom(0);
+		srb.setSize(0);
+		TermsFacetBuilder tfb = FacetBuilders.termsFacet(field);
+		tfb.field(field);
+		srb.addFacet(tfb);
+		try {
+			SearchResponse response = srb.execute().get();
+			TermsFacet facet = response.getFacets().facet(TermsFacet.class,
+					field);
+			Map<String, Integer> result = new LinkedHashMap<String, Integer>();
+			for (TermsFacet.Entry entry : facet.entries())
+				result.put(entry.getTerm(), entry.getCount());
+			return result;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return Collections.EMPTY_MAP;
 	}
 
 	private static Pattern wildcardQueryPattern = Pattern

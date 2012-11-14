@@ -6,7 +6,7 @@
 	default-lazy="true">
 	<class name="Client" table="oauth_client">
 		<id name="id" type="java.lang.String" length="32" unsaved-value="null">
-			<generator class="uuid" />
+			<generator class="org.ironrhino.core.hibernate.StringIdGenerator" />
 		</id>
 		<natural-id mutable="true">
 			<property name="name" not-null="true" />

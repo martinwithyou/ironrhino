@@ -74,7 +74,7 @@ public class SeriesPageAction extends BaseAction {
 			path = "/" + path;
 			for (int i = 0; i < pages.size(); i++) {
 				Page p = pages.get(i);
-				if (p.getPath().equals(path)) {
+				if (p.getPagepath().equals(path)) {
 					page = p;
 					if (isShowPager()) {
 						if (i > 0)

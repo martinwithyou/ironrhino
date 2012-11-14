@@ -88,15 +88,15 @@ public class PageAction extends BaseAction {
 	public String list() {
 		if (StringUtils.isBlank(keyword) || elasticSearchService == null) {
 			DetachedCriteria dc = pageManager.detachedCriteria();
-			Criterion filtering = CriterionUtils.filter(page, "id", "path",
+			Criterion filtering = CriterionUtils.filter(page, "id", "pagepath",
 					"title");
 			if (filtering != null)
 				dc.add(filtering);
 			if (StringUtils.isNotBlank(keyword))
-				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE, "path",
+				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE, "pagepath",
 						"title"));
 			dc.addOrder(Order.asc("displayOrder"));
-			dc.addOrder(Order.asc("path"));
+			dc.addOrder(Order.asc("pagepath"));
 			if (resultPage == null)
 				resultPage = new ResultPage<Page>();
 			resultPage.setCriteria(dc);
@@ -107,7 +107,7 @@ public class PageAction extends BaseAction {
 			criteria.setQuery(query);
 			criteria.setTypes(new String[] { "page" });
 			criteria.addSort("displayOrder", false);
-			criteria.addSort("path", false);
+			criteria.addSort("pagepath", false);
 			if (resultPage == null)
 				resultPage = new ResultPage<Page>();
 			resultPage.setCriteria(criteria);
@@ -128,8 +128,8 @@ public class PageAction extends BaseAction {
 		} else if (page != null) {
 			if (page.getId() != null)
 				page = pageManager.get(page.getId());
-			else if (page.getPath() != null)
-				page = pageManager.findByNaturalId(page.getPath());
+			else if (page.getPagepath() != null)
+				page = pageManager.findByNaturalId(page.getPagepath());
 		}
 		if (page == null) {
 			page = new Page();
@@ -144,7 +144,7 @@ public class PageAction extends BaseAction {
 					if (pageManager.getByPath(path) == null)
 						break;
 				}
-				page.setPath(path);
+				page.setPagepath(path);
 				page.setTagsAsString(tags);
 			}
 		} else {
@@ -159,27 +159,27 @@ public class PageAction extends BaseAction {
 	@Override
 	@JsonConfig(propertyName = "page")
 	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.path", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.pagepath", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
 	public String save() {
-		String path = page.getPath().trim().toLowerCase();
+		String path = page.getPagepath().trim().toLowerCase();
 		if (!path.startsWith("/"))
 			path = "/" + path;
-		page.setPath(path);
+		page.setPagepath(path);
 		if (page.isNew()) {
-			if (pageManager.findByNaturalId(page.getPath()) != null) {
-				addFieldError("page.path", getText("validation.already.exists"));
+			if (pageManager.findByNaturalId(page.getPagepath()) != null) {
+				addFieldError("page.pagepath", getText("validation.already.exists"));
 				return INPUT;
 			}
 		} else {
 			Page temp = page;
 			page = pageManager.get(page.getId());
-			if (!page.getPath().equals(temp.getPath())
-					&& pageManager.findByNaturalId(temp.getPath()) != null) {
-				addFieldError("page.path", getText("validation.already.exists"));
+			if (!page.getPagepath().equals(temp.getPagepath())
+					&& pageManager.findByNaturalId(temp.getPagepath()) != null) {
+				addFieldError("page.pagepath", getText("validation.already.exists"));
 				return INPUT;
 			}
-			page.setPath(temp.getPath());
+			page.setPagepath(temp.getPagepath());
 			page.setTags(temp.getTags());
 			page.setDisplayOrder(temp.getDisplayOrder());
 			page.setTitle(temp.getTitle());
@@ -193,23 +193,23 @@ public class PageAction extends BaseAction {
 
 	@JsonConfig(propertyName = "page")
 	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.path", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.pagepath", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
 	public String draft() {
-		String path = page.getPath().trim().toLowerCase();
+		String path = page.getPagepath().trim().toLowerCase();
 		if (!path.startsWith("/"))
 			path = "/" + path;
-		page.setPath(path);
+		page.setPagepath(path);
 		if (page.isNew()) {
-			if (pageManager.findByNaturalId(page.getPath()) != null) {
-				addFieldError("page.path", getText("validation.already.exists"));
+			if (pageManager.findByNaturalId(page.getPagepath()) != null) {
+				addFieldError("page.pagepath", getText("validation.already.exists"));
 				return INPUT;
 			}
 		} else {
 			Page p = pageManager.get(page.getId());
-			if (!page.getPath().equals(p.getPath())
-					&& pageManager.findByNaturalId(page.getPath()) != null) {
-				addFieldError("page.path", getText("validation.already.exists"));
+			if (!page.getPagepath().equals(p.getPagepath())
+					&& pageManager.findByNaturalId(page.getPagepath()) != null) {
+				addFieldError("page.pagepath", getText("validation.already.exists"));
 				return INPUT;
 			}
 		}
@@ -242,7 +242,7 @@ public class PageAction extends BaseAction {
 				for (Page temp : list) {
 					if (!pageManager.canDelete(temp)) {
 						addActionError(getText("delete.forbidden",
-								new String[] { temp.getPath() }));
+								new String[] { temp.getPagepath() }));
 						deletable = false;
 						break;
 					}

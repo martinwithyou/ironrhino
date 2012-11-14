@@ -9,7 +9,6 @@ import org.ironrhino.core.model.Persistable;
 @SuppressWarnings("rawtypes")
 public interface IndexManager {
 
-
 	public String getIndexName();
 
 	public Object searchHitToEntity(SearchHit sh) throws Exception;
@@ -21,4 +20,5 @@ public interface IndexManager {
 	public void rebuild();
 
 	public void indexAll(String type);
+
 }
