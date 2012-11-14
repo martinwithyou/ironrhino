@@ -16,7 +16,7 @@
 		<concat destfile="${webapp.dir}/assets/scripts/ironrhino.js"
 			encoding="utf-8" fixlastline="yes">
 			<filelist>
-				<file name="${webapp.dir}/assets/scripts/source/jquery-1.8.2.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery-1.8.3.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.9.1.js" />
 				<file
