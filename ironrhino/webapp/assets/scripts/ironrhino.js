@@ -33703,7 +33703,8 @@ Observation.combox = function(container) {
 	$('select.combox', container).combox();
 };
 Observation.tags = function(container) {
-	if (typeof $.fn.textext != 'undefined' && (!$.browser.msie ||$.browser.version > '8' )) {
+	if (typeof $.fn.textext != 'undefined'
+			&& (!$.browser.msie || $.browser.version > '8')) {
 		$('input.tags', container).each(function() {
 			var t = $(this);
 			var options = {
@@ -33734,6 +33735,34 @@ Observation.tags = function(container) {
 									? item
 									: item.value;
 							return str;
+						}
+					},
+					autocomplete : {
+						renderSuggestions : function(suggestions) {
+							var self = this;
+							self.clearItems();
+							var inputed = [];
+							$('.text-tags .text-label', self.container).each(
+									function() {
+										inputed.push($(this).text())
+									});
+							var empty = true;
+							$.each(suggestions || [], function(index, item) {
+										var value = self.itemManager()
+												.itemToString(item);
+										var exists = false;
+										for (var j = 0; j < inputed.length; j++)
+											if (inputed[j] == value) {
+												exists = true;
+												break;
+											}
+										if (!exists) {
+											self.addSuggestion(item);
+											empty = false;
+										}
+									});
+							if (empty)
+								self.hideDropdown();
 						}
 					}
 				}
