@@ -33738,6 +33738,10 @@ Observation.tags = function(container) {
 						}
 					},
 					autocomplete : {
+						showDropdown : function() {
+							if ($('.text-suggestion', this.containerElement()).length)
+								this.containerElement().show();
+						},
 						renderSuggestions : function(suggestions) {
 							var self = this;
 							self.clearItems();
@@ -33761,8 +33765,6 @@ Observation.tags = function(container) {
 											empty = false;
 										}
 									});
-							if (empty)
-								self.hideDropdown();
 						}
 					}
 				}
@@ -33789,7 +33791,18 @@ Observation.tags = function(container) {
 			} else {
 				options.plugins = 'tags prompt focus';
 			}
-			t.val('').textext(options);
+			t.val('').textext(options).bind('isTagAllowed', function(e, data) {
+						var inputed = [];
+						$('.text-tags .text-label', this.container).each(
+								function() {
+									inputed.push($(this).text())
+								});
+						for (var i = 0; i < inputed.length; i++)
+							if (inputed[i] == data.tag) {
+								data.result = false;
+								break;
+							}
+					});
 		});
 	}
 };
