@@ -25,7 +25,8 @@
 		<#local value=('entity.'+name)?eval!>
 	</#if>
 	</#if>
-	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']!/>
+	<#assign dynamicAttributes=columns[name]['dynamicAttributes']!>
+	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']! dynamicAttributes=dynamicAttributes/>
 </#list>
 <@rttbodytrend entity=entity buttons=actionColumnButtons readonly=readonly/>
 </#list>
