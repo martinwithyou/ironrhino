@@ -31,6 +31,7 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
@@ -655,6 +656,11 @@ public class EntityAction extends BaseAction {
 						.mutable();
 	}
 
+	public RichtableConfigImpl getRichtableConfig() {
+		return new RichtableConfigImpl(getEntityClass().getAnnotation(
+				RichtableConfig.class));
+	}
+
 	public Map<String, UiConfigImpl> getUiConfigs() {
 		if (_uiConfigs == null) {
 			Class clazz = getEntityClass();
@@ -1055,6 +1061,50 @@ public class EntityAction extends BaseAction {
 
 		public void setSearchable(boolean searchable) {
 			this.searchable = searchable;
+		}
+
+	}
+
+	public static class RichtableConfigImpl implements Serializable {
+
+		private static final long serialVersionUID = 7346213812241502993L;
+		private boolean showPageSize = true;
+		private String actionColumnButtons = "";
+		private String bottomButtons = "";
+
+		public RichtableConfigImpl() {
+		}
+
+		public RichtableConfigImpl(RichtableConfig config) {
+			if (config == null)
+				return;
+			this.showPageSize = config.showPageSize();
+			this.actionColumnButtons = config.actionColumnButtons();
+			this.bottomButtons = config.bottomButtons();
+		}
+
+		public boolean isShowPageSize() {
+			return showPageSize;
+		}
+
+		public void setShowPageSize(boolean showPageSize) {
+			this.showPageSize = showPageSize;
+		}
+
+		public String getActionColumnButtons() {
+			return actionColumnButtons;
+		}
+
+		public void setActionColumnButtons(String actionColumnButtons) {
+			this.actionColumnButtons = actionColumnButtons;
+		}
+
+		public String getBottomButtons() {
+			return bottomButtons;
+		}
+
+		public void setBottomButtons(String bottomButtons) {
+			this.bottomButtons = bottomButtons;
 		}
 
 	}

@@ -4,6 +4,7 @@
 <title>${action.getText(entityName)}${action.getText('list')}</title>
 </head>
 <body>
+<#assign rtconfig = richtableConfig!>
 <@rtstart entityName=entityName readonly=readonly/>
 	<#assign index=0>
 	<#list uiConfigs?keys as key>
@@ -51,9 +52,9 @@
 			<@rttbodytd entity=entity value=value template=uiConfigs[key].template/>
 		</#if>
 	</#list>	
-<@rttbodytrend entity=entity readonly=readonly/>
+<@rttbodytrend entity=entity readonly=readonly buttons=rtconfig.actionColumnButtons!/>
 </#list>
-<@rtend readonly=readonly searchable=searchable/>
+<@rtend readonly=readonly searchable=searchable showPageSize=rtconfig.showPageSize! buttons=rtconfig.bottomButtons!/>
 <#if !readonly>
 <div style="display: none">
 <#list uiConfigs?keys as key>
