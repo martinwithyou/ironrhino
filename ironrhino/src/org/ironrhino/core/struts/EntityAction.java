@@ -202,29 +202,6 @@ public class EntityAction extends BaseAction {
 					if (propertyName.startsWith(getEntityName() + "."))
 						propertyName = propertyName.substring(propertyName
 								.indexOf('.') + 1);
-					if (propertyNames.contains(propertyName)
-							&& !searchablePropertyNames.contains(propertyName)) {
-						String parameterValue = ServletActionContext
-								.getRequest().getParameter(parameterName);
-						Class type = bw.getPropertyType(propertyName);
-						Object value = null;
-						if (Persistable.class.isAssignableFrom(type)) {
-							BaseManager em = getEntityManager(type);
-							value = em.get(parameterValue);
-							if (value == null) {
-								try {
-									value = em.findByNaturalId(parameterValue);
-								} catch (Exception e) {
-
-								}
-							}
-						} else {
-							bw.setPropertyValue(propertyName, parameterValue);
-							value = bw.getPropertyValue(propertyName);
-						}
-						// if (value != null)
-						dc.add(Restrictions.eq(propertyName, value));
-					}
 					if (propertyName.indexOf('.') > 0) {
 						String subPropertyName = propertyName
 								.substring(propertyName.indexOf('.') + 1);
@@ -247,7 +224,30 @@ public class EntityAction extends BaseAction {
 												bw2.getPropertyValue(subPropertyName)));
 							}
 						}
+					} else if (propertyNames.contains(propertyName)
+							&& !searchablePropertyNames.contains(propertyName)) {
+						String parameterValue = ServletActionContext
+								.getRequest().getParameter(parameterName);
+						Class type = bw.getPropertyType(propertyName);
+						Object value = null;
+						if (Persistable.class.isAssignableFrom(type)) {
+							BaseManager em = getEntityManager(type);
+							value = em.get(parameterValue);
+							if (value == null) {
+								try {
+									value = em.findOne(parameterValue);
+								} catch (Exception e) {
+
+								}
+							}
+						} else {
+							bw.setPropertyValue(propertyName, parameterValue);
+							value = bw.getPropertyValue(propertyName);
+						}
+						// if (value != null)
+						dc.add(Restrictions.eq(propertyName, value));
 					}
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -322,9 +322,51 @@ public class EntityAction extends BaseAction {
 			if (propertyName.startsWith(getEntityName() + "."))
 				propertyName = propertyName
 						.substring(propertyName.indexOf('.') + 1);
-			if (editablePropertyNames.contains(propertyName))
-				bw.setPropertyValue(propertyName, ServletActionContext
-						.getRequest().getParameter(parameterName));
+			if (propertyName.indexOf('.') > 0) {
+				String subPropertyName = propertyName.substring(propertyName
+						.indexOf('.') + 1);
+				propertyName = propertyName.substring(0,
+						propertyName.indexOf('.'));
+				if (editablePropertyNames.contains(propertyName)) {
+					Class type = bw.getPropertyType(propertyName);
+					if (Persistable.class.isAssignableFrom(type)) {
+						String parameterValue = ServletActionContext
+								.getRequest().getParameter(parameterName);
+						BaseManager em = getEntityManager(type);
+						Persistable value = null;
+						if (subPropertyName.equals("id"))
+							value = em.get(parameterValue);
+						else
+							try {
+								value = em.findOne(subPropertyName,
+										parameterValue);
+							} catch (Exception e) {
+
+							}
+						bw.setPropertyValue(propertyName, value);
+					}
+				}
+			} else if (editablePropertyNames.contains(propertyName)) {
+				String parameterValue = ServletActionContext.getRequest()
+						.getParameter(parameterName);
+				Class type = bw.getPropertyType(propertyName);
+				Object value = null;
+				if (Persistable.class.isAssignableFrom(type)) {
+					BaseManager em = getEntityManager(type);
+					value = em.get(parameterValue);
+					if (value == null) {
+						try {
+							value = em.findOne(parameterValue);
+						} catch (Exception e) {
+
+						}
+					}
+					bw.setPropertyValue(propertyName, value);
+				} else {
+					bw.setPropertyValue(propertyName, parameterValue);
+				}
+			}
+
 		}
 		putEntityToValueStack(entity);
 		return INPUT;
