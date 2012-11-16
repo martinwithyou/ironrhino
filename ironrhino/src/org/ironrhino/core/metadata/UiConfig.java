@@ -19,7 +19,7 @@ public @interface UiConfig {
 
 	public static final String DEFAULT_LIST_VALUE = "name";
 
-	String displayName() default "";
+	String alias() default "";
 
 	String type() default DEFAULT_TYPE; // input,textarea,select,checkbox,listpick,dictionary,schema...
 	

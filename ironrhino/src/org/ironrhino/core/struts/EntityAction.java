@@ -800,7 +800,7 @@ public class EntityAction extends BaseAction {
 		private String cssClass = "";
 		private boolean readonly;
 		private int displayOrder = Integer.MAX_VALUE;
-		private String displayName;
+		private String alias;
 		private boolean hiddenInList;
 		private String template;
 		private String width;
@@ -829,8 +829,8 @@ public class EntityAction extends BaseAction {
 			this.maxlength = config.maxlength();
 			this.readonly = config.readonly();
 			this.displayOrder = config.displayOrder();
-			if (StringUtils.isNotBlank(config.displayName()))
-				this.displayName = config.displayName();
+			if (StringUtils.isNotBlank(config.alias()))
+				this.alias = config.alias();
 			this.hiddenInList = config.hiddenInList();
 			this.template = config.template();
 			this.width = config.width();
@@ -901,12 +901,12 @@ public class EntityAction extends BaseAction {
 			this.unique = unique;
 		}
 
-		public String getDisplayName() {
-			return displayName;
+		public String getAlias() {
+			return alias;
 		}
 
-		public void setDisplayName(String displayName) {
-			this.displayName = displayName;
+		public void setAlias(String alias) {
+			this.alias = alias;
 		}
 
 		public int getDisplayOrder() {

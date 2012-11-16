@@ -10,9 +10,6 @@
 			<#assign config=uiConfigs[key]>
 			<#if !config.hiddenInList>
 				<#assign label=key>
-				<#if config.displayName??>
-					<#assign label=config.displayName>
-				</#if>
 				<#if !(readonly||config.readonly) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
 					<#assign cellEdit=config.cellEdit!/>
 					<#if cellEdit==''>
@@ -36,7 +33,7 @@
 					<#assign cellEdit=''/>
 				</#if>
 				<#assign index=index+1>
-				<@rttheadtd name=label width=config['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==uiConfigs?size)/>
+				<@rttheadtd name=label alias=config['alias']! width=config['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==uiConfigs?size)/>
 			</#if>
 	</#list>
 <@rtmiddle readonly=readonly/>

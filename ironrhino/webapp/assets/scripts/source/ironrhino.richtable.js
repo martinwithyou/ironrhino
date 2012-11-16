@@ -459,14 +459,6 @@ Richtable = {
 		} else {
 			cell.removeClass('edited');
 		}
-	},
-	updatePasswordCell : function(cellEdit) {
-		var ce = $(cellEdit);
-		var cell = ce.parent();
-		cell.text('********');
-		cell.data('cellvalue', ce.val());
-		cell.addClass('edited').removeClass('editing');
-
 	}
 };
 Observation.richtable = function(container) {

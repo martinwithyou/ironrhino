@@ -62,7 +62,7 @@ public class Stat extends KeyValuePair implements Persistable<String> {
 		return value;
 	}
 
-	@UiConfig(displayOrder = 0, displayName = "key")
+	@UiConfig(displayOrder = 0, alias = "key")
 	public String getKeyAsString() {
 		if (keyAsString != null)
 			return keyAsString;
@@ -77,7 +77,7 @@ public class Stat extends KeyValuePair implements Persistable<String> {
 			key = Key.fromString(keyAsString);
 	}
 
-	@UiConfig(displayOrder = 1, displayName = "value")
+	@UiConfig(displayOrder = 1, alias = "value")
 	public String getValueAsString() {
 		if (valueAsString != null)
 			return valueAsString;
