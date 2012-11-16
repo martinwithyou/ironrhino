@@ -31452,6 +31452,7 @@ MessageBundle = {
 		'remove' : '删除',
 		'browse' : '浏览文件',
 		'select' : '请选择',
+		'pick' : '请挑选',
 		'save' : '保存',
 		'restore' : '还原',
 		'cancel' : '取消',
@@ -34494,6 +34495,52 @@ Observation.richtable = function(container) {
 })(jQuery);
 (function($) {
 	var current;
+	function find(expr) {
+		var i = expr.indexOf('@');
+		if (i == 0)
+			return current;
+		else if (i > 0)
+			expr = expr.substring(0, i);
+		return (expr == 'this') ? current : $(expr);
+	}
+	function val(expr, val) {// expr #id #id@attr .class@attr @attr
+		if (!expr)
+			return;
+		if (arguments.length > 1) {
+			var i = expr.indexOf('@');
+			if (i < 0) {
+				var ele = expr == 'this' ? current : $(expr);
+				if (ele.is(':input')) {
+					ele.val(val);
+					Form.validate(ele);
+				} else
+					ele.text(val);
+			} else if (i == 0) {
+				current.attr(expr.substring(i + 1), val);
+			} else {
+				var selector = expr.substring(0, i);
+				var ele = selector == 'this' ? current : $(selector);
+				ele.attr(expr.substring(i + 1), val);
+			}
+		} else {
+			var i = expr.indexOf('@');
+			if (i < 0) {
+				var ele = expr == 'this' ? current : $(expr);
+				if (ele.is(':input'))
+					return ele.val();
+				else
+					return ele.contents().filter(function() {
+								return this.nodeType == Node.TEXT_NODE;
+							}).text();
+			} else if (i == 0) {
+				return current.attr(expr.substring(i + 1));
+			} else {
+				var selector = expr.substring(0, i);
+				var ele = selector == 'this' ? current : $(selector);
+				return ele.attr(expr.substring(i + 1));
+			}
+		}
+	}
 	$.fn.treeselect = function() {
 		$(this).each(function() {
 			current = $(this);
@@ -34506,19 +34553,21 @@ Observation.richtable = function(container) {
 							+ (current.data('options') || '{}')))());
 			var nametarget = null;
 			if (treeoptions.name) {
-				nametarget = $('#' + treeoptions.name);
+				nametarget = find(treeoptions.name);
 				var remove = nametarget.children('a.remove');
 				if (remove.length)
 					remove.click(function(event) {
-								nametarget.text(MessageBundle.get('select'));
-								$('#' + treeoptions.id).val('');
+								val(treeoptions.name, nametarget.is(':input')
+												? ''
+												: MessageBundle.get('select'));
+								val(treeoptions.id, '');
 								$(this).remove();
 								event.stopPropagation();
 								return false;
 							});
 			}
-			var func = function() {
-
+			var func = function(event) {
+				current = $(event.target).closest('.treeselect');
 				if (!treeoptions.cache)
 					$('#_tree_window').remove();
 				if (!$('#_tree_window').length) {
@@ -34530,12 +34579,8 @@ Observation.richtable = function(container) {
 								width : 500,
 								minHeight : 500
 							});
-					if (nametarget)
-						treeoptions.value = nametarget.is(':input')
-								? nametarget.val()
-								: nametarget.contents().filter(function() {
-											return this.nodeType == Node.TEXT_NODE;
-										}).text();
+					if (nametarget && nametarget.length)
+						treeoptions.value = val(treeoptions.name) || '';
 					if (treeoptions.type != 'treeview') {
 						treeoptions.click = function(treenode) {
 							doclick(treenode, treeoptions);
@@ -34568,7 +34613,7 @@ Observation.richtable = function(container) {
 			current.css('cursor', 'pointer').click(func).keydown(
 					function(event) {
 						if (event.keyCode == 13) {
-							func();
+							func(event);
 							return false;
 						}
 					});
@@ -34578,39 +34623,37 @@ Observation.richtable = function(container) {
 
 	function doclick(treenode, treeoptions) {
 		if (treeoptions.name) {
-			var nametarget = $('#' + treeoptions.name);
+			var nametarget = find(treeoptions.name);
 			var name = treeoptions.full || false
 					? treenode.fullname
 					: treenode.name;
+			val(treeoptions.name, name);
 			if (nametarget.is(':input')) {
-				nametarget.val(name);
 				var form = nametarget.closest('form');
 				if (!form.hasClass('nodirty'))
 					form.addClass('dirty');
 			} else {
-				nametarget.text(name);
 				$('<a class="remove" href="#">&times;</a>')
 						.appendTo(nametarget).click(function(event) {
-									nametarget
-											.text(MessageBundle.get('select'));
-									$('#' + treeoptions.id).val('');
-									$(this).remove();
-									event.stopPropagation();
-									return false;
-								});
+							val(treeoptions.name, nametarget.is(':input')
+											? ''
+											: MessageBundle.get('select'));
+							val(treeoptions.id, '');
+							$(this).remove();
+							event.stopPropagation();
+							return false;
+						});
 			}
 		}
 		if (treeoptions.id) {
-			var idtarget = $('#' + treeoptions.id);
+			var idtarget = find(treeoptions.id);
 			var id = treenode.id;
+			val(treeoptions.id, id);
 			if (idtarget.is(':input')) {
-				idtarget.val(id);
-				Form.validate(idtarget);
 				var form = idtarget.closest('form');
 				if (!form.hasClass('nodirty'))
 					form.addClass('dirty');
-			} else
-				idtarget.text(id);
+			}
 		}
 		$('#_tree_window').dialog('close');
 		if (treeoptions.select)
@@ -34620,10 +34663,56 @@ Observation.richtable = function(container) {
 })(jQuery);
 
 Observation.treeselect = function(container) {
-	$('.treeselect', container).attr('tabindex', '0').treeselect();
+	$('.treeselect', container).treeselect();
 };
 (function($) {
 	var current;
+	function find(expr) {
+		var i = expr.indexOf('@');
+		if (i == 0)
+			return current;
+		else if (i > 0)
+			expr = expr.substring(0, i);
+		return (expr == 'this') ? current : $(expr);
+	}
+	function val(expr, val) {// expr #id #id@attr .class@attr @attr
+		if (!expr)
+			return;
+		if (arguments.length > 1) {
+			var i = expr.indexOf('@');
+			if (i < 0) {
+				var ele = expr == 'this' ? current : $(expr);
+				if (ele.is(':input')) {
+					ele.val(val);
+					Form.validate(ele);
+				} else
+					ele.text(val);
+			} else if (i == 0) {
+				current.attr(expr.substring(i + 1), val);
+			} else {
+				var selector = expr.substring(0, i);
+				var ele = selector == 'this' ? current : $(selector);
+				ele.attr(expr.substring(i + 1), val);
+			}
+		} else {
+			var i = expr.indexOf('@');
+			if (i < 0) {
+				var ele = expr == 'this' ? current : $(expr);
+				if (ele.is(':input'))
+					return ele.val();
+				else
+					return ele.contents().filter(function() {
+								return this.nodeType == Node.TEXT_NODE;
+							}).text();
+			} else if (i == 0) {
+				return current.attr(expr.substring(i + 1));
+			} else {
+				var selector = expr.substring(0, i);
+				var ele = selector == 'this' ? current : $(selector);
+				return ele.attr(expr.substring(i + 1));
+			}
+		}
+	}
 	$.fn.listpick = function() {
 		$(this).each(function() {
 			current = $(this);
@@ -34636,19 +34725,21 @@ Observation.treeselect = function(container) {
 							+ (current.data('options') || '{}')))());
 			var nametarget = null;
 			if (pickoptions.name) {
-				nametarget = $('#' + pickoptions.name);
+				nametarget = find(pickoptions.name);
 				var remove = nametarget.children('a.remove');
 				if (remove.length)
 					remove.click(function(event) {
-								nametarget.text(MessageBundle.get('select'));
-								$('#' + pickoptions.id).val('');
+								val(pickoptions.name, nametarget.is(':input')
+												? ''
+												: MessageBundle.get('select'));
+								val(pickoptions.id, '');
 								$(this).remove();
 								event.stopPropagation();
 								return false;
 							});
 			}
-			var func = function() {
-
+			var func = function(event) {
+				current = $(event.target).closest('.listpick');;
 				$('#_pick_window').remove();
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
@@ -34673,24 +34764,25 @@ Observation.treeselect = function(container) {
 									var name = $($(this).closest('tr')[0].cells[pickoptions.nameindex])
 											.text();
 									if (pickoptions.name) {
-										var nametarget = $('#'
-												+ pickoptions.name);
+										val(pickoptions.name, name);
+										var nametarget = find(pickoptions.name);
 										if (nametarget.is(':input')) {
-											nametarget.val(name);
 											var form = nametarget
 													.closest('form');
 											if (!form.hasClass('nodirty'))
 												form.addClass('dirty');
 										} else {
-											nametarget.text(name);
 											$('<a class="remove" href="#">&times;</a>')
 													.appendTo(nametarget)
 													.click(function(event) {
-														nametarget
-																.text(MessageBundle
-																		.get('select'));
-														$('#' + pickoptions.id)
-																.val('');
+														val(
+																pickoptions.name,
+																nametarget
+																		.is(':input')
+																		? ''
+																		: MessageBundle
+																				.get('select'));
+														val(pickoptions.id, '');
 														$(this).remove();
 														event.stopPropagation();
 														return false;
@@ -34698,15 +34790,13 @@ Observation.treeselect = function(container) {
 										}
 									}
 									if (pickoptions.id) {
-										var idtarget = $('#' + pickoptions.id);
+										val(pickoptions.id, id);
+										var idtarget = find(pickoptions.id);
 										if (idtarget.is(':input')) {
-											idtarget.val(id);
-											Form.validate(idtarget);
 											var form = idtarget.closest('form');
 											if (!form.hasClass('nodirty'))
 												form.addClass('dirty');
-										} else
-											idtarget.text(id);
+										}
 									}
 									win.dialog('destroy');
 									return false;
@@ -34724,16 +34814,18 @@ Observation.treeselect = function(container) {
 							});
 							var separator = pickoptions.separator;
 							if (pickoptions.name) {
-								var nametarget = $('#' + pickoptions.name);
+								var nametarget = find(pickoptions.name);
 								var name = names.join(separator);
 								if (nametarget.is(':input')) {
-									nametarget
-											.val((nametarget.val() + ArrayUtils
-													.unique((nametarget.val()
-															? separator
-															: '')
-															+ name)
-													.split(separator))
+									var _names = val(pickoptions.name) || '';
+									val(
+											pickoptions.name,
+											ArrayUtils
+													.unique((_names
+															+ (_names
+																	? separator
+																	: '') + name)
+															.split(separator))
 													.join(separator));
 									var form = nametarget.closest('form');
 									if (!form.hasClass('nodirty'))
@@ -34745,18 +34837,21 @@ Observation.treeselect = function(container) {
 											? picked + separator
 											: '') + name).split(separator))
 											.join(separator);
-									nametarget.data('picked', picked)
-											.text(picked);
+									nametarget.data('picked', picked);
+									val(pickoptions.name, picked);
 									$('<a class="remove" href="#">&times;</a>')
 											.appendTo(nametarget).click(
 													function(event) {
-														nametarget
-																.text(MessageBundle
-																		.get('select'))
-																.data('picked',
-																		'');
-														$('#' + pickoptions.id)
-																.val('');
+														val(
+																pickoptions.name,
+																nametarget
+																		.is(':input')
+																		? ''
+																		: MessageBundle
+																				.get('pick'));
+														val(pickoptions.id, '');
+														nametarget.data(
+																'picked', null);
 														$(this).remove();
 														event.stopPropagation();
 														return false;
@@ -34764,22 +34859,18 @@ Observation.treeselect = function(container) {
 								}
 							}
 							if (pickoptions.id) {
-								var idtarget = $('#' + pickoptions.id);
+								var idtarget = find(pickoptions.id);
 								var id = ids.join(separator);
+								var _ids = val(pickoptions.id) || '';
+								val(pickoptions.id, ArrayUtils.unique((_ids
+												+ (_ids ? separator : '') + id)
+												.split(separator))
+												.join(separator));
 								if (idtarget.is(':input')) {
-									idtarget.val(ArrayUtils
-											.unique((idtarget.val()
-													+ (idtarget.val()
-															? separator
-															: '') + id)
-													.split(separator))
-											.join(separator));
-									Form.validate(idtarget);
 									var form = idtarget.closest('form');
 									if (!form.hasClass('nodirty'))
 										form.addClass('dirty');
-								} else
-									idtarget.text(id);
+								}
 							}
 							win.dialog('destroy');
 							return false;
@@ -34801,7 +34892,7 @@ Observation.treeselect = function(container) {
 			current.css('cursor', 'pointer').click(func).keydown(
 					function(event) {
 						if (event.keyCode == 13) {
-							func();
+							func(event);
 							return false;
 						}
 					});
@@ -34812,7 +34903,7 @@ Observation.treeselect = function(container) {
 })(jQuery);
 
 Observation.listpick = function(container) {
-	$('.listpick', container).attr('tabindex', '0').listpick();
+	$('.listpick', container).listpick();
 };
 (function($) {
 	$.fn.latlng = function() {

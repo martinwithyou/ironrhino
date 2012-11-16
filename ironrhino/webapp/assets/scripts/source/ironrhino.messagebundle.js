@@ -36,6 +36,7 @@ MessageBundle = {
 		'remove' : '删除',
 		'browse' : '浏览文件',
 		'select' : '请选择',
+		'pick' : '请挑选',
 		'save' : '保存',
 		'restore' : '还原',
 		'cancel' : '取消',

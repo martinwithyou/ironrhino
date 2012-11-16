@@ -1,5 +1,51 @@
 (function($) {
 	var current;
+	function find(expr) {
+		var i = expr.indexOf('@');
+		if (i == 0)
+			return current;
+		else if (i > 0)
+			expr = expr.substring(0, i);
+		return (expr == 'this') ? current : $(expr);
+	}
+	function val(expr, val) {// expr #id #id@attr .class@attr @attr
+		if (!expr)
+			return;
+		if (arguments.length > 1) {
+			var i = expr.indexOf('@');
+			if (i < 0) {
+				var ele = expr == 'this' ? current : $(expr);
+				if (ele.is(':input')) {
+					ele.val(val);
+					Form.validate(ele);
+				} else
+					ele.text(val);
+			} else if (i == 0) {
+				current.attr(expr.substring(i + 1), val);
+			} else {
+				var selector = expr.substring(0, i);
+				var ele = selector == 'this' ? current : $(selector);
+				ele.attr(expr.substring(i + 1), val);
+			}
+		} else {
+			var i = expr.indexOf('@');
+			if (i < 0) {
+				var ele = expr == 'this' ? current : $(expr);
+				if (ele.is(':input'))
+					return ele.val();
+				else
+					return ele.contents().filter(function() {
+								return this.nodeType == Node.TEXT_NODE;
+							}).text();
+			} else if (i == 0) {
+				return current.attr(expr.substring(i + 1));
+			} else {
+				var selector = expr.substring(0, i);
+				var ele = selector == 'this' ? current : $(selector);
+				return ele.attr(expr.substring(i + 1));
+			}
+		}
+	}
 	$.fn.listpick = function() {
 		$(this).each(function() {
 			current = $(this);
@@ -12,19 +58,21 @@
 							+ (current.data('options') || '{}')))());
 			var nametarget = null;
 			if (pickoptions.name) {
-				nametarget = $('#' + pickoptions.name);
+				nametarget = find(pickoptions.name);
 				var remove = nametarget.children('a.remove');
 				if (remove.length)
 					remove.click(function(event) {
-								nametarget.text(MessageBundle.get('select'));
-								$('#' + pickoptions.id).val('');
+								val(pickoptions.name, nametarget.is(':input')
+												? ''
+												: MessageBundle.get('select'));
+								val(pickoptions.id, '');
 								$(this).remove();
 								event.stopPropagation();
 								return false;
 							});
 			}
-			var func = function() {
-
+			var func = function(event) {
+				current = $(event.target).closest('.listpick');;
 				$('#_pick_window').remove();
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
@@ -49,24 +97,25 @@
 									var name = $($(this).closest('tr')[0].cells[pickoptions.nameindex])
 											.text();
 									if (pickoptions.name) {
-										var nametarget = $('#'
-												+ pickoptions.name);
+										val(pickoptions.name, name);
+										var nametarget = find(pickoptions.name);
 										if (nametarget.is(':input')) {
-											nametarget.val(name);
 											var form = nametarget
 													.closest('form');
 											if (!form.hasClass('nodirty'))
 												form.addClass('dirty');
 										} else {
-											nametarget.text(name);
 											$('<a class="remove" href="#">&times;</a>')
 													.appendTo(nametarget)
 													.click(function(event) {
-														nametarget
-																.text(MessageBundle
-																		.get('select'));
-														$('#' + pickoptions.id)
-																.val('');
+														val(
+																pickoptions.name,
+																nametarget
+																		.is(':input')
+																		? ''
+																		: MessageBundle
+																				.get('select'));
+														val(pickoptions.id, '');
 														$(this).remove();
 														event.stopPropagation();
 														return false;
@@ -74,15 +123,13 @@
 										}
 									}
 									if (pickoptions.id) {
-										var idtarget = $('#' + pickoptions.id);
+										val(pickoptions.id, id);
+										var idtarget = find(pickoptions.id);
 										if (idtarget.is(':input')) {
-											idtarget.val(id);
-											Form.validate(idtarget);
 											var form = idtarget.closest('form');
 											if (!form.hasClass('nodirty'))
 												form.addClass('dirty');
-										} else
-											idtarget.text(id);
+										}
 									}
 									win.dialog('destroy');
 									return false;
@@ -100,16 +147,18 @@
 							});
 							var separator = pickoptions.separator;
 							if (pickoptions.name) {
-								var nametarget = $('#' + pickoptions.name);
+								var nametarget = find(pickoptions.name);
 								var name = names.join(separator);
 								if (nametarget.is(':input')) {
-									nametarget
-											.val((nametarget.val() + ArrayUtils
-													.unique((nametarget.val()
-															? separator
-															: '')
-															+ name)
-													.split(separator))
+									var _names = val(pickoptions.name) || '';
+									val(
+											pickoptions.name,
+											ArrayUtils
+													.unique((_names
+															+ (_names
+																	? separator
+																	: '') + name)
+															.split(separator))
 													.join(separator));
 									var form = nametarget.closest('form');
 									if (!form.hasClass('nodirty'))
@@ -121,18 +170,21 @@
 											? picked + separator
 											: '') + name).split(separator))
 											.join(separator);
-									nametarget.data('picked', picked)
-											.text(picked);
+									nametarget.data('picked', picked);
+									val(pickoptions.name, picked);
 									$('<a class="remove" href="#">&times;</a>')
 											.appendTo(nametarget).click(
 													function(event) {
-														nametarget
-																.text(MessageBundle
-																		.get('select'))
-																.data('picked',
-																		'');
-														$('#' + pickoptions.id)
-																.val('');
+														val(
+																pickoptions.name,
+																nametarget
+																		.is(':input')
+																		? ''
+																		: MessageBundle
+																				.get('pick'));
+														val(pickoptions.id, '');
+														nametarget.data(
+																'picked', null);
 														$(this).remove();
 														event.stopPropagation();
 														return false;
@@ -140,22 +192,18 @@
 								}
 							}
 							if (pickoptions.id) {
-								var idtarget = $('#' + pickoptions.id);
+								var idtarget = find(pickoptions.id);
 								var id = ids.join(separator);
+								var _ids = val(pickoptions.id) || '';
+								val(pickoptions.id, ArrayUtils.unique((_ids
+												+ (_ids ? separator : '') + id)
+												.split(separator))
+												.join(separator));
 								if (idtarget.is(':input')) {
-									idtarget.val(ArrayUtils
-											.unique((idtarget.val()
-													+ (idtarget.val()
-															? separator
-															: '') + id)
-													.split(separator))
-											.join(separator));
-									Form.validate(idtarget);
 									var form = idtarget.closest('form');
 									if (!form.hasClass('nodirty'))
 										form.addClass('dirty');
-								} else
-									idtarget.text(id);
+								}
 							}
 							win.dialog('destroy');
 							return false;
@@ -177,7 +225,7 @@
 			current.css('cursor', 'pointer').click(func).keydown(
 					function(event) {
 						if (event.keyCode == 13) {
-							func();
+							func(event);
 							return false;
 						}
 					});
@@ -188,5 +236,5 @@
 })(jQuery);
 
 Observation.listpick = function(container) {
-	$('.listpick', container).attr('tabindex', '0').listpick();
+	$('.listpick', container).listpick();
 };
