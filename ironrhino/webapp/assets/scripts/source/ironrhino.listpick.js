@@ -18,8 +18,12 @@
 				if (ele.is(':input')) {
 					ele.val(val);
 					Form.validate(ele);
-				} else
+				} else {
 					ele.text(val);
+					if (ele.parents('.richtable').length
+							&& ele.prop('tagName') == 'TD')
+						ele.addClass('edited');
+				}
 			} else if (i == 0) {
 				current.attr(expr.substring(i + 1), val);
 			} else {
@@ -60,9 +64,10 @@
 			if (pickoptions.name) {
 				nametarget = find(pickoptions.name);
 				var remove = nametarget.children('a.remove');
-				if (remove.length)
+				if (remove.length) {
 					remove.click(function(event) {
-								val(pickoptions.name, nametarget.is(':input')
+								val(pickoptions.name, nametarget
+												.is(':input,td')
 												? ''
 												: MessageBundle.get('select'));
 								val(pickoptions.id, '');
@@ -70,9 +75,23 @@
 								event.stopPropagation();
 								return false;
 							});
+				} else if (val(pickoptions.name)) {
+					$('<a class="remove" href="#">&times;</a>')
+							.appendTo(nametarget).click(function(event) {
+								current = $(event.target).closest('.listpick');
+								val(pickoptions.name, nametarget
+												.is(':input,td')
+												? ''
+												: MessageBundle.get('pick'));
+								val(pickoptions.id, '');
+								$(this).remove();
+								event.stopPropagation();
+								return false;
+							});
+				}
 			}
 			var func = function(event) {
-				current = $(event.target).closest('.listpick');;
+				current = $(event.target).closest('.listpick');
 				$('#_pick_window').remove();
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
@@ -111,7 +130,7 @@
 														val(
 																pickoptions.name,
 																nametarget
-																		.is(':input')
+																		.is(':input,td')
 																		? ''
 																		: MessageBundle
 																				.get('select'));
@@ -178,7 +197,7 @@
 														val(
 																pickoptions.name,
 																nametarget
-																		.is(':input')
+																		.is(':input,td')
 																		? ''
 																		: MessageBundle
 																				.get('pick'));

@@ -49,7 +49,11 @@
 			<#if config.type=='dictionary' && selectDictionary??>
 							<#assign value=getDictionaryLabel(evalTemplate(config.templateName),value)/>	
 			</#if>
-			<@rttbodytd entity=entity value=value template=uiConfigs[key].template/>
+			<#assign dynamicAttributes={}>
+			<#if config.type=='listpick'>
+				<#assign dynamicAttributes={"class":"listpick","data-options":"{'url':'"+uiConfigs[key].pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
+			</#if>
+			<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
 		</#if>
 	</#list>	
 <@rttbodytrend entity=entity readonly=readonly buttons=rtconfig.actionColumnButtons!/>

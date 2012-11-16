@@ -34513,8 +34513,12 @@ Observation.richtable = function(container) {
 				if (ele.is(':input')) {
 					ele.val(val);
 					Form.validate(ele);
-				} else
+				} else {
 					ele.text(val);
+					if (ele.parents('.richtable').length
+							&& ele.prop('tagName') == 'TD')
+						ele.addClass('edited');
+				}
 			} else if (i == 0) {
 				current.attr(expr.substring(i + 1), val);
 			} else {
@@ -34555,9 +34559,10 @@ Observation.richtable = function(container) {
 			if (treeoptions.name) {
 				nametarget = find(treeoptions.name);
 				var remove = nametarget.children('a.remove');
-				if (remove.length)
+				if (remove.length) {
 					remove.click(function(event) {
-								val(treeoptions.name, nametarget.is(':input')
+								val(treeoptions.name, nametarget
+												.is(':input,td')
 												? ''
 												: MessageBundle.get('select'));
 								val(treeoptions.id, '');
@@ -34565,6 +34570,20 @@ Observation.richtable = function(container) {
 								event.stopPropagation();
 								return false;
 							});
+				} else if (val(treeoptions.name)) {
+					$('<a class="remove" href="#">&times;</a>')
+							.appendTo(nametarget).click(function(event) {
+								current = $(event.target).closest('.listpick');
+								val(pickoptions.name, nametarget
+												.is(':input,td')
+												? ''
+												: MessageBundle.get('pick'));
+								val(pickoptions.id, '');
+								$(this).remove();
+								event.stopPropagation();
+								return false;
+							});
+				}
 			}
 			var func = function(event) {
 				current = $(event.target).closest('.treeselect');
@@ -34635,7 +34654,7 @@ Observation.richtable = function(container) {
 			} else {
 				$('<a class="remove" href="#">&times;</a>')
 						.appendTo(nametarget).click(function(event) {
-							val(treeoptions.name, nametarget.is(':input')
+							val(treeoptions.name, nametarget.is(':input,td')
 											? ''
 											: MessageBundle.get('select'));
 							val(treeoptions.id, '');
@@ -34685,8 +34704,12 @@ Observation.treeselect = function(container) {
 				if (ele.is(':input')) {
 					ele.val(val);
 					Form.validate(ele);
-				} else
+				} else {
 					ele.text(val);
+					if (ele.parents('.richtable').length
+							&& ele.prop('tagName') == 'TD')
+						ele.addClass('edited');
+				}
 			} else if (i == 0) {
 				current.attr(expr.substring(i + 1), val);
 			} else {
@@ -34727,9 +34750,10 @@ Observation.treeselect = function(container) {
 			if (pickoptions.name) {
 				nametarget = find(pickoptions.name);
 				var remove = nametarget.children('a.remove');
-				if (remove.length)
+				if (remove.length) {
 					remove.click(function(event) {
-								val(pickoptions.name, nametarget.is(':input')
+								val(pickoptions.name, nametarget
+												.is(':input,td')
 												? ''
 												: MessageBundle.get('select'));
 								val(pickoptions.id, '');
@@ -34737,9 +34761,23 @@ Observation.treeselect = function(container) {
 								event.stopPropagation();
 								return false;
 							});
+				} else if (val(pickoptions.name)) {
+					$('<a class="remove" href="#">&times;</a>')
+							.appendTo(nametarget).click(function(event) {
+								current = $(event.target).closest('.listpick');
+								val(pickoptions.name, nametarget
+												.is(':input,td')
+												? ''
+												: MessageBundle.get('pick'));
+								val(pickoptions.id, '');
+								$(this).remove();
+								event.stopPropagation();
+								return false;
+							});
+				}
 			}
 			var func = function(event) {
-				current = $(event.target).closest('.listpick');;
+				current = $(event.target).closest('.listpick');
 				$('#_pick_window').remove();
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
@@ -34778,7 +34816,7 @@ Observation.treeselect = function(container) {
 														val(
 																pickoptions.name,
 																nametarget
-																		.is(':input')
+																		.is(':input,td')
 																		? ''
 																		: MessageBundle
 																				.get('select'));
@@ -34845,7 +34883,7 @@ Observation.treeselect = function(container) {
 														val(
 																pickoptions.name,
 																nametarget
-																		.is(':input')
+																		.is(':input,td')
 																		? ''
 																		: MessageBundle
 																				.get('pick'));
