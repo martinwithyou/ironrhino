@@ -45,6 +45,7 @@ import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.BeanUtils;
+import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -220,8 +221,31 @@ public class EntityAction extends BaseAction {
 							bw.setPropertyValue(propertyName, parameterValue);
 							value = bw.getPropertyValue(propertyName);
 						}
-						if (value != null)
-							dc.add(Restrictions.eq(propertyName, value));
+						// if (value != null)
+						dc.add(Restrictions.eq(propertyName, value));
+					}
+					if (propertyName.indexOf('.') > 0) {
+						String subPropertyName = propertyName
+								.substring(propertyName.indexOf('.') + 1);
+						propertyName = propertyName.substring(0,
+								propertyName.indexOf('.'));
+						if (propertyNames.contains(propertyName)
+								&& !searchablePropertyNames
+										.contains(propertyName)) {
+							Class type = bw.getPropertyType(propertyName);
+							if (Persistable.class.isAssignableFrom(type)) {
+								BeanWrapperImpl bw2 = new BeanWrapperImpl(
+										type.newInstance());
+								bw2.setPropertyValue(subPropertyName,
+										ServletActionContext.getRequest()
+												.getParameter(parameterName));
+								String alias = CodecUtils.randomString(2);
+								dc.createAlias(propertyName, alias)
+										.add(Restrictions.eq(
+												alias + "." + subPropertyName,
+												bw2.getPropertyValue(subPropertyName)));
+							}
+						}
 					}
 				}
 			} catch (Exception e) {
