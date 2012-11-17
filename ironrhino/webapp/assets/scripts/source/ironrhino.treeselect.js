@@ -54,6 +54,7 @@
 		$(this).each(function() {
 			current = $(this);
 			var treeoptions = {
+				idproperty : 'id',
 				separator : '',
 				full : true,
 				cache : true
@@ -171,7 +172,7 @@
 		}
 		if (treeoptions.id) {
 			var idtarget = find(treeoptions.id);
-			var id = treenode.id;
+			var id = treenode[treeoptions.idproperty];
 			val(treeoptions.id, id);
 			if (idtarget.is(':input')) {
 				var form = idtarget.closest('form');
