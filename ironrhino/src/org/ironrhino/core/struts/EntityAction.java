@@ -626,34 +626,8 @@ public class EntityAction extends BaseAction {
 			log.error(e.getMessage(), e);
 		}
 		if (id.length > 0) {
-			List<Persistable<?>> list;
-			if (id.length == 1) {
-				list = new ArrayList<Persistable<?>>(1);
-				list.add(entityManager.get(id[0]));
-			} else {
-				DetachedCriteria dc = entityManager.detachedCriteria();
-				dc.add(Restrictions.in("id", id));
-				list = entityManager.findListByCriteria(dc);
-			}
-
-			if (list.size() > 0) {
-				boolean deletable = true;
-				for (Object obj : list) {
-					Persistable entity = (Persistable) obj;
-					if (!entityManager.canDelete(entity)) {
-						deletable = false;
-						addActionError(getText("delete.forbidden",
-								new String[] { entity.toString() }));
-						break;
-					}
-				}
-				if (deletable) {
-					for (Object obj : list)
-						entityManager.delete((Persistable) obj);
-					addActionMessage(getText("delete.success"));
-				}
-			}
-
+			entityManager.delete(id);
+			addActionMessage(getText("delete.success"));
 		}
 		return SUCCESS;
 	}

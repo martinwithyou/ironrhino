@@ -22,7 +22,9 @@ public interface BaseManager<T extends Persistable<?>> {
 
 	public void delete(T obj);
 
-	public boolean canDelete(T obj);
+	public void checkDelete(T obj);
+
+	public void delete(Serializable... id);
 
 	public DetachedCriteria detachedCriteria();
 
@@ -41,8 +43,8 @@ public interface BaseManager<T extends Persistable<?>> {
 	public ResultPage<T> findByResultPage(ResultPage<T> resultPage);
 
 	public long countAll();
-	
-	public T findByNaturalId(Serializable... objects) ;
+
+	public T findByNaturalId(Serializable... objects);
 
 	public T findOne(Serializable... objects);
 

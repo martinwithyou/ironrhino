@@ -15,6 +15,7 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
+import org.ironrhino.core.model.Switchable;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
@@ -27,7 +28,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 @AutoConfig
 @Searchable(type = "user")
-public class User extends BaseEntity implements UserDetails, Recordable<User> {
+public class User extends BaseEntity implements UserDetails, Recordable<User>,Switchable {
 
 	private static final long serialVersionUID = -6135434863820342822L;
 

@@ -1,5 +1,6 @@
 package org.ironrhino.common.action;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,7 +13,6 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.Constants;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
@@ -93,8 +93,8 @@ public class PageAction extends BaseAction {
 			if (filtering != null)
 				dc.add(filtering);
 			if (StringUtils.isNotBlank(keyword))
-				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE, "pagepath",
-						"title"));
+				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
+						"pagepath", "title"));
 			dc.addOrder(Order.asc("displayOrder"));
 			dc.addOrder(Order.asc("pagepath"));
 			if (resultPage == null)
@@ -168,7 +168,8 @@ public class PageAction extends BaseAction {
 		page.setPagepath(path);
 		if (page.isNew()) {
 			if (pageManager.findByNaturalId(page.getPagepath()) != null) {
-				addFieldError("page.pagepath", getText("validation.already.exists"));
+				addFieldError("page.pagepath",
+						getText("validation.already.exists"));
 				return INPUT;
 			}
 		} else {
@@ -176,7 +177,8 @@ public class PageAction extends BaseAction {
 			page = pageManager.get(page.getId());
 			if (!page.getPagepath().equals(temp.getPagepath())
 					&& pageManager.findByNaturalId(temp.getPagepath()) != null) {
-				addFieldError("page.pagepath", getText("validation.already.exists"));
+				addFieldError("page.pagepath",
+						getText("validation.already.exists"));
 				return INPUT;
 			}
 			page.setPagepath(temp.getPagepath());
@@ -202,14 +204,16 @@ public class PageAction extends BaseAction {
 		page.setPagepath(path);
 		if (page.isNew()) {
 			if (pageManager.findByNaturalId(page.getPagepath()) != null) {
-				addFieldError("page.pagepath", getText("validation.already.exists"));
+				addFieldError("page.pagepath",
+						getText("validation.already.exists"));
 				return INPUT;
 			}
 		} else {
 			Page p = pageManager.get(page.getId());
 			if (!page.getPagepath().equals(p.getPagepath())
 					&& pageManager.findByNaturalId(page.getPagepath()) != null) {
-				addFieldError("page.pagepath", getText("validation.already.exists"));
+				addFieldError("page.pagepath",
+						getText("validation.already.exists"));
 				return INPUT;
 			}
 		}
@@ -228,31 +232,8 @@ public class PageAction extends BaseAction {
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {
-			List<Page> list;
-			if (id.length == 1) {
-				list = new ArrayList<Page>(1);
-				list.add(pageManager.get(id[0]));
-			} else {
-				DetachedCriteria dc = pageManager.detachedCriteria();
-				dc.add(Restrictions.in("id", id));
-				list = pageManager.findListByCriteria(dc);
-			}
-			if (list.size() > 0) {
-				boolean deletable = true;
-				for (Page temp : list) {
-					if (!pageManager.canDelete(temp)) {
-						addActionError(getText("delete.forbidden",
-								new String[] { temp.getPagepath() }));
-						deletable = false;
-						break;
-					}
-				}
-				if (deletable) {
-					for (Page temp : list)
-						pageManager.delete(temp);
-					addActionMessage(getText("delete.success"));
-				}
-			}
+			pageManager.delete((Serializable[]) id);
+			addActionMessage(getText("delete.success"));
 		}
 		return SUCCESS;
 	}

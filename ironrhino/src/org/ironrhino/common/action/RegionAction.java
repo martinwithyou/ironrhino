@@ -1,6 +1,7 @@
 package org.ironrhino.common.action;
 
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -210,37 +211,10 @@ public class RegionAction extends BaseAction {
 
 	@Override
 	public String delete() {
-		String[] arr = getId();
-		Long[] id = (arr != null) ? new Long[arr.length] : new Long[0];
-		for (int i = 0; i < id.length; i++)
-			id[i] = Long.valueOf(arr[i]);
-		if (id.length > 0) {
-			List<Region> list;
-			if (id.length == 1) {
-				list = new ArrayList<Region>(1);
-				list.add(entityManager.get(id[0]));
-			} else {
-				DetachedCriteria dc = entityManager.detachedCriteria();
-				dc.add(Restrictions.in("id", id));
-				list = entityManager.findListByCriteria(dc);
-			}
-			if (list.size() > 0) {
-				boolean deletable = true;
-				for (Region temp : list) {
-					if (!entityManager.canDelete(temp)) {
-						addActionError(temp.getName()
-								+ getText("delete.forbidden",
-										new String[] { temp.getName() }));
-						deletable = false;
-						break;
-					}
-				}
-				if (deletable) {
-					for (Region temp : list)
-						entityManager.delete(temp);
-					addActionMessage(getText("delete.success"));
-				}
-			}
+		String[] id = getId();
+		if (id != null) {
+			entityManager.delete((Serializable[]) id);
+			addActionMessage(getText("delete.success"));
 		}
 		return SUCCESS;
 	}

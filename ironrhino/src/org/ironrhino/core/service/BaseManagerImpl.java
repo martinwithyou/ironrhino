@@ -28,13 +28,16 @@ import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.model.Switchable;
 import org.ironrhino.core.model.Validatable;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
+import org.ironrhino.core.util.ErrorMessage;
 import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -128,12 +131,66 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 
 	@Transactional
 	public void delete(T obj) {
+		checkDelete(obj);
 		sessionFactory.getCurrentSession().delete(obj);
 	}
 
 	@Transactional(readOnly = true)
-	public boolean canDelete(T obj) {
-		return true;
+	public void checkDelete(T obj) {
+		if (obj instanceof Switchable) {
+			Switchable switchable = (Switchable) obj;
+			if (switchable.isEnabled())
+				throw new ErrorMessage("delete.forbidden",
+						new Object[] { switchable },
+						"delete.forbidden.notdisabled");
+		}
+	}
+
+	@Transactional
+	public void delete(Serializable... id) {
+		if (id == null || id.length == 0 || id.length == 1 && id[0] == null)
+			return;
+		if (id.length == 1 && id[0].getClass().isArray()) {
+			Object[] objs = (Object[]) id[0];
+			Serializable[] arr = new Serializable[objs.length];
+			for (int i = 0; i < objs.length; i++)
+				arr[i] = (Serializable) objs[i];
+			id = arr;
+		}
+		Class idtype = String.class;
+		BeanWrapperImpl bw = null;
+		try {
+			bw = new BeanWrapperImpl(getEntityClass().newInstance());
+			idtype = getEntityClass().getMethod("getId", new Class[0])
+					.getReturnType();
+		} catch (Exception e) {
+		}
+		Serializable[] arr = new Serializable[id.length];
+		for (int i = 0; i < id.length; i++) {
+			Serializable s = id[i];
+			if (!s.getClass().equals(idtype)) {
+				bw.setPropertyValue("id", s);
+				arr[i] = (Serializable) bw.getPropertyValue("id");
+			} else {
+				arr[i] = s;
+			}
+		}
+		id = arr;
+		List<T> list;
+		if (id.length == 1) {
+			list = new ArrayList<T>(1);
+			list.add(get(id[0]));
+		} else {
+			DetachedCriteria dc = detachedCriteria();
+			dc.add(Restrictions.in("id", id));
+			list = findListByCriteria(dc);
+		}
+		if (list.size() > 0) {
+			for (final T obj : list)
+				checkDelete(obj);
+			for (T obj : list)
+				delete(obj);
+		}
 	}
 
 	@Transactional(readOnly = true)

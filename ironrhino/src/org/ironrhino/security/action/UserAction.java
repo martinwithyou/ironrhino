@@ -1,8 +1,7 @@
 package org.ironrhino.security.action;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -12,7 +11,6 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CurrentPassword;
@@ -237,31 +235,8 @@ public class UserAction extends BaseAction {
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {
-			List<User> list;
-			if (id.length == 1) {
-				list = new ArrayList<User>(1);
-				list.add(userManager.get(id[0]));
-			} else {
-				DetachedCriteria dc = userManager.detachedCriteria();
-				dc.add(Restrictions.in("id", id));
-				list = userManager.findListByCriteria(dc);
-			}
-			if (list.size() > 0) {
-				boolean deletable = true;
-				for (final User user : list) {
-					if (!userManager.canDelete(user)) {
-						deletable = false;
-						addActionError(getText("delete.forbidden",
-								new String[] { user.getUsername() }));
-						break;
-					}
-				}
-				if (deletable) {
-					for (User user : list)
-						userManager.delete(user);
-					addActionMessage(getText("delete.success"));
-				}
-			}
+			userManager.delete((Serializable[]) id);
+			addActionMessage(getText("delete.success"));
 		}
 		return SUCCESS;
 	}

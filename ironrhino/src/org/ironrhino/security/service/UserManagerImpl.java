@@ -51,12 +51,6 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public boolean canDelete(User obj) {
-		return !obj.isEnabled();
-	}
-
-	@Override
 	@Transactional
 	@FlushCache(namespace = "user", key = "${[user.username,user.email]}")
 	public void delete(User user) {
