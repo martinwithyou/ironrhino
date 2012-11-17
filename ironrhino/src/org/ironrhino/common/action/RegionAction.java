@@ -213,6 +213,7 @@ public class RegionAction extends BaseAction {
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {
+			entityManager.setEntityClass(Region.class);
 			entityManager.delete((Serializable[]) id);
 			addActionMessage(getText("delete.success"));
 		}

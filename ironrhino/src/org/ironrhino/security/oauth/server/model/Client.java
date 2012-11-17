@@ -9,13 +9,14 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.model.Switchable;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 
 @AutoConfig(order = "name asc")
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
-public class Client extends BaseEntity {
+public class Client extends BaseEntity implements Switchable {
 
 	private static final long serialVersionUID = -7297737795748467475L;
 

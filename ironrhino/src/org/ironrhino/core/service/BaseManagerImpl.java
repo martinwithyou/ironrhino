@@ -135,8 +135,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		sessionFactory.getCurrentSession().delete(obj);
 	}
 
-	@Transactional(readOnly = true)
-	public void checkDelete(T obj) {
+	protected void checkDelete(T obj) {
 		if (obj instanceof Switchable) {
 			Switchable switchable = (Switchable) obj;
 			if (switchable.isEnabled())

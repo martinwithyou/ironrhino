@@ -150,6 +150,7 @@ public class TreeNodeAction extends BaseAction {
 	public String delete() {
 		String[] id = getId();
 		if (id != null) {
+			entityManager.setEntityClass(TreeNode.class);
 			entityManager.delete((Serializable[]) id);
 			addActionMessage(getText("delete.success"));
 		}
