@@ -26,7 +26,7 @@ public class ResultPage<T> implements Serializable {
 
 	private int pageSize = DEFAULT_PAGE_SIZE;
 
-	private long totalRecord = -1;
+	private long totalResults = -1;
 
 	private Collection<T> result = new ArrayList<T>();
 
@@ -89,16 +89,16 @@ public class ResultPage<T> implements Serializable {
 	}
 
 	public int getTotalPage() {
-		return (int) (totalRecord % pageSize == 0 ? totalRecord / pageSize
-				: totalRecord / pageSize + 1);
+		return (int) (totalResults % pageSize == 0 ? totalResults / pageSize
+				: totalResults / pageSize + 1);
 	}
 
-	public long getTotalRecord() {
-		return totalRecord;
+	public long getTotalResults() {
+		return totalResults;
 	}
 
-	public void setTotalRecord(long totalRecord) {
-		this.totalRecord = totalRecord;
+	public void setTotalResults(long totalResults) {
+		this.totalResults = totalResults;
 	}
 
 	public Object getCriteria() {
@@ -134,7 +134,7 @@ public class ResultPage<T> implements Serializable {
 	}
 
 	public boolean isCanListAll() {
-		return this.totalRecord <= MAX_PAGESIZE;
+		return this.totalResults <= MAX_PAGESIZE;
 	}
 
 	public String renderUrl(int pn) {

@@ -145,7 +145,7 @@ ${value?xhtml}<#t>
 <option value="${ps}"<#if resultPage.pageSize==ps><#local selected=true> selected</#if>>${ps}</option>
 </#list>
 <#if resultPage.canListAll>
-<option value="${resultPage.totalRecord}"<#if !selected && resultPage.pageSize==resultPage.totalRecord> selected</#if>>${action.getText('all')}</option>
+<option value="${resultPage.totalResults}"<#if !selected && resultPage.pageSize==resultPage.totalResults> selected</#if>>${action.getText('all')}</option>
 </#if>
 </select>
 </li>
@@ -181,7 +181,7 @@ ${value?xhtml}<#t>
 <div class="status span2">
 <span>
 <#if resultPage??>
-${resultPage.totalRecord}${action.getText('record')}
+${resultPage.totalResults}${action.getText('record')}
 <#else>
 ${list?size}${action.getText('record')}
 </#if>

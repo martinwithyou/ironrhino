@@ -293,10 +293,10 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				.getCriteria();
 		if (detachedCriteria == null)
 			detachedCriteria = detachedCriteria();
-		long totalRecord = -1;
+		long totalResults = -1;
 		if (resultPage.isCounting()) {
-			totalRecord = countByCriteria(detachedCriteria);
-			resultPage.setTotalRecord(totalRecord);
+			totalResults = countByCriteria(detachedCriteria);
+			resultPage.setTotalResults(totalResults);
 			if (resultPage.getPageSize() < 1)
 				resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
 			else if (resultPage.getPageSize() < Integer.MAX_VALUE
@@ -315,12 +315,12 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			start = (resultPage.getPageNo() - 1) * resultPage.getPageSize();
 			end = resultPage.getPageNo() * resultPage.getPageSize();
 		} else {
-			start = (int) (resultPage.getTotalRecord() - resultPage.getPageNo()
+			start = (int) (resultPage.getTotalResults() - resultPage.getPageNo()
 					* resultPage.getPageSize());
-			end = (int) (resultPage.getTotalRecord() - (resultPage.getPageNo() - 1)
+			end = (int) (resultPage.getTotalResults() - (resultPage.getPageNo() - 1)
 					* resultPage.getPageSize());
 		}
-		if (!(resultPage.isCounting() && totalRecord == 0))
+		if (!(resultPage.isCounting() && totalResults == 0))
 			resultPage.setResult(findBetweenListByCriteria(detachedCriteria,
 					start, end));
 		else
