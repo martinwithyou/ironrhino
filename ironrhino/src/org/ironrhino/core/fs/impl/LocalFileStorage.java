@@ -20,12 +20,12 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.io.FileUtils;
-import org.ironrhino.core.metadata.DefaultProfile;
+import org.ironrhino.core.metadata.DefaultAndDualProfile;
 import org.springframework.util.Assert;
 
 @Singleton
 @Named("fileStorage")
-@DefaultProfile
+@DefaultAndDualProfile
 public class LocalFileStorage extends AbstractFileStorage {
 
 	private File directory;
