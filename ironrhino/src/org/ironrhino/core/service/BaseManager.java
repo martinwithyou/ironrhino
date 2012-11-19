@@ -22,7 +22,7 @@ public interface BaseManager<T extends Persistable<?>> {
 
 	public void delete(T obj);
 
-	public void delete(Serializable... id);
+	public List<T> delete(Serializable... id);
 
 	public DetachedCriteria detachedCriteria();
 

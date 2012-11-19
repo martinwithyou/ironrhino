@@ -1,6 +1,7 @@
 package org.ironrhino.common.record;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,23 +36,36 @@ public class RecordAspect implements Ordered {
 
 	private int order;
 
-	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(recordAware)")
+	@Around("execution(* org.ironrhino.core.service.BaseManager.save(*)) and args(entity) and @args(recordAware)")
 	public Object save(ProceedingJoinPoint call, Persistable<?> entity,
 			RecordAware recordAware) throws Throwable {
-		if (AopContext.isBypass(this.getClass()))
-			return call.proceed();
 		boolean isNew = entity.isNew();
 		Object result = call.proceed();
-		record(entity, isNew ? EntityOperationType.CREATE
-				: EntityOperationType.UPDATE);
+		if (!AopContext.isBypass(this.getClass()))
+			record(entity, isNew ? EntityOperationType.CREATE
+					: EntityOperationType.UPDATE);
 		return result;
 	}
 
-	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(recordAware)")
+	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.delete(*)) and args(entity) and @args(recordAware)")
 	public void delete(Persistable<?> entity, RecordAware recordAware) {
-		if (AopContext.isBypass(this.getClass()))
-			return;
-		record(entity, EntityOperationType.DELETE);
+		if (!AopContext.isBypass(this.getClass()))
+			record(entity, EntityOperationType.DELETE);
+	}
+
+	@Around("execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*))")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Object delete(ProceedingJoinPoint call) throws Throwable {
+		List<Persistable> list = (List<Persistable>) call.proceed();
+		if (!AopContext.isBypass(this.getClass()))
+			if (list != null)
+				for (Persistable entity : list) {
+					RecordAware recordAware = entity.getClass().getAnnotation(
+							RecordAware.class);
+					if (recordAware != null)
+						record(entity, EntityOperationType.DELETE);
+				}
+		return list;
 	}
 
 	// record to database,may change to use logger system

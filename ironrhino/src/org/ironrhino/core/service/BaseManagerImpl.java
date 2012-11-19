@@ -146,9 +146,9 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	}
 
 	@Transactional
-	public void delete(Serializable... id) {
+	public List<T> delete(Serializable... id) {
 		if (id == null || id.length == 0 || id.length == 1 && id[0] == null)
-			return;
+			return null;
 		if (id.length == 1 && id[0].getClass().isArray()) {
 			Object[] objs = (Object[]) id[0];
 			Serializable[] arr = new Serializable[objs.length];
@@ -190,6 +190,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			for (T obj : list)
 				delete(obj);
 		}
+		return list;
 	}
 
 	@Transactional(readOnly = true)

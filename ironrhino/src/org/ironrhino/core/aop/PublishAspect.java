@@ -1,5 +1,7 @@
 package org.ironrhino.core.aop;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -25,28 +27,45 @@ public class PublishAspect extends BaseAspect {
 	@Inject
 	private EventPublisher eventPublisher;
 
-	@Around("execution(* org.ironrhino..service.*Manager.save*(*)) and args(entity) and @args(publishAware)")
+	@Around("execution(* org.ironrhino.core.service.BaseManager.save(*)) and args(entity) and @args(publishAware)")
 	public Object save(ProceedingJoinPoint call, Persistable<?> entity,
 			PublishAware publishAware) throws Throwable {
-		if (isBypass())
-			return call.proceed();
 		boolean isNew = entity.isNew();
 		Object result = call.proceed();
-		if (eventPublisher != null)
-			eventPublisher.publish(new EntityOperationEvent(entity,
-					isNew ? EntityOperationType.CREATE
-							: EntityOperationType.UPDATE), publishAware
-					.global());
+		if (!isBypass()) {
+			if (eventPublisher != null)
+				eventPublisher.publish(new EntityOperationEvent(entity,
+						isNew ? EntityOperationType.CREATE
+								: EntityOperationType.UPDATE), publishAware
+						.global());
+		}
 		return result;
 	}
 
-	@AfterReturning("execution(* org.ironrhino..service.*Manager.delete*(*)) and args(entity) and @args(publishAware)")
+	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.delete(*)) and args(entity) and @args(publishAware)")
 	public void delete(Persistable<?> entity, PublishAware publishAware) {
 		if (isBypass())
 			return;
 		if (eventPublisher != null)
 			eventPublisher.publish(new EntityOperationEvent(entity,
 					EntityOperationType.DELETE), publishAware.global());
+	}
+
+	@Around("execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*))")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Object delete(ProceedingJoinPoint call) throws Throwable {
+		List<Persistable> list = (List<Persistable>) call.proceed();
+		if (!isBypass())
+			if (eventPublisher != null && list != null)
+				for (Persistable entity : list) {
+					PublishAware publishAware = entity.getClass()
+							.getAnnotation(PublishAware.class);
+					if (publishAware != null)
+						eventPublisher.publish(new EntityOperationEvent(entity,
+								EntityOperationType.DELETE), publishAware
+								.global());
+				}
+		return list;
 	}
 
 }
