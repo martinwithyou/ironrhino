@@ -2,6 +2,12 @@ package org.ironrhino.daq.model;
 
 import java.util.Date;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NotInJson;
@@ -11,14 +17,20 @@ import org.ironrhino.security.model.UserRole;
 
 @AutoConfig(order = "time desc,type")
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
+@Entity
+@Table(name="acquisition")
 public class Acquisition extends BaseEntity {
 
 	private static final long serialVersionUID = -8040786622424934566L;
 
 	@UiConfig(displayOrder = 1)
+	@Column(length=50)
+	@Access(AccessType.FIELD)
 	private String type;
 
 	@UiConfig(displayOrder = 2)
+	@Column(length=50)
+	@Access(AccessType.FIELD)
 	private String place;
 
 	@UiConfig(displayOrder = 3)

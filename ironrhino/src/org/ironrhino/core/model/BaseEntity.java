@@ -1,16 +1,29 @@
 package org.ironrhino.core.model;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.GenericGenerator;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 
+@MappedSuperclass
 public class BaseEntity extends Entity<String> {
 
 	private static final long serialVersionUID = 5290168777920037800L;
 	protected String id;
 
 	@SearchableId(type = "string", index = Index.NOT_ANALYZED)
+	@Id
+	@GeneratedValue(generator = "stringId")
+	@GenericGenerator(name = "stringId", strategy = "org.ironrhino.core.hibernate.StringIdGenerator")
+	@Access(AccessType.PROPERTY)
 	public String getId() {
 		return id;
 	}
@@ -21,6 +34,7 @@ public class BaseEntity extends Entity<String> {
 	}
 
 	@NotInJson
+	@Transient
 	public boolean isNew() {
 		return id == null || StringUtils.isBlank(id);
 	}

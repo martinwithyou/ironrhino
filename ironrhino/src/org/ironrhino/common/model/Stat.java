@@ -2,8 +2,17 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.GenericGenerator;
 import org.ironrhino.core.dataroute.DataRoute;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.UiConfig;
@@ -14,16 +23,24 @@ import org.ironrhino.core.stat.Value;
 
 @DataRoute("miscGroup")
 @AutoConfig(readonly = true)
+@Entity
+@Table(name = "common_stat")
 public class Stat extends KeyValuePair implements Persistable<String> {
 
 	private static final long serialVersionUID = -1795832273603877285L;
-
+	
+	@Id
+	@GeneratedValue(generator = "stringId")
+	@GenericGenerator(name = "stringId", strategy = "org.ironrhino.core.hibernate.StringIdGenerator")
+	@Access(AccessType.FIELD)
 	private String id;
 
 	@UiConfig(hidden = true)
+	@Column(nullable=false)
 	private String keyAsString;
 
 	@UiConfig(hidden = true)
+	@Column(nullable=false)
 	private String valueAsString;
 
 	public Stat() {

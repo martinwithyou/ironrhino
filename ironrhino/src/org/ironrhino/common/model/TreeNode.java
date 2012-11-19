@@ -5,6 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -18,6 +25,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 @PublishAware
 @AutoConfig
+@Entity
+@Table(name = "common_treenode")
 public class TreeNode extends BaseTreeableEntity<TreeNode> implements
 		Attributable {
 
@@ -26,6 +35,7 @@ public class TreeNode extends BaseTreeableEntity<TreeNode> implements
 	private String description;
 
 	@NotInCopy
+	@Transient
 	private List<Attribute> attributes = new ArrayList<Attribute>();
 
 	public TreeNode() {
@@ -58,6 +68,8 @@ public class TreeNode extends BaseTreeableEntity<TreeNode> implements
 	}
 
 	@NotInCopy
+	@Column(name = "attributes", length = 1024)
+	@Access(AccessType.PROPERTY)
 	public String getAttributesAsString() {
 		if (attributes == null || attributes.isEmpty()
 				|| attributes.size() == 1 && attributes.get(0).isBlank())

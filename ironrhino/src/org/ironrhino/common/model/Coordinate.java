@@ -2,10 +2,13 @@ package org.ironrhino.common.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Embeddable;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.ironrhino.core.metadata.NotInJson;
 
+@Embeddable
 public class Coordinate implements Serializable {
 
 	private static final long serialVersionUID = 5828814302557010566L;

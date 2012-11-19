@@ -2,6 +2,12 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import org.ironrhino.common.record.RecordAware;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -18,6 +24,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @PublishAware
 @AutoConfig(searchable = true, order = "key asc")
 @Searchable(type = "setting")
+@Entity
+@Table(name = "common_setting")
 public class Setting extends BaseEntity implements Recordable<UserDetails> {
 
 	private static final long serialVersionUID = -8352037603261222984L;
@@ -25,6 +33,9 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 	@NaturalId(caseInsensitive = true, mutable = true)
 	@UiConfig(displayOrder = 1, size = 50, width = "300px")
 	@SearchableProperty(boost = 3)
+	@org.hibernate.annotations.NaturalId(mutable = true)
+	@Column(name = "skey", unique = true, nullable = false)
+	@Access(AccessType.FIELD)
 	private String key = "";
 
 	@UiConfig(displayOrder = 2, type = "textarea", width = "400px")

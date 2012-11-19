@@ -5,6 +5,18 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -14,24 +26,33 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
+@MappedSuperclass
 public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		Entity<Long> implements Treeable<T>, Ordered {
 
 	private static final long serialVersionUID = 2462271646391940930L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
 
+	@org.hibernate.annotations.NaturalId(mutable = true)
 	protected String fullId;
 
+	@Column(nullable = false)
 	protected String name;
 
 	protected int level;
 
 	protected int displayOrder;
 
-	protected transient T parent;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parentId")
+	protected  T parent;
 
-	protected transient Collection<T> children = new HashSet<T>(0);
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "parent")
+	@OrderBy("displayOrder,name")
+	protected  Collection<T> children = new HashSet<T>(0);
 
 	@NotInJson
 	public String getFullId() {
@@ -79,6 +100,8 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	}
 
 	public String getFullname() {
+		if(name == null)
+			return null;
 		String seperator = getFullnameSeperator();
 		StringBuilder fullname = new StringBuilder(name);
 		BaseTreeableEntity e = this;

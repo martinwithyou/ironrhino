@@ -58,6 +58,7 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 						if (msg == null)
 							msg = e.toString();
 						validationAwareAction.addActionError(msg);
+						log.error(e.getMessage(),e);
 					}
 				}
 			}

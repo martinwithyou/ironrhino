@@ -339,13 +339,25 @@ public class Oauth2Action extends BaseAction {
 	@JsonConfig(root = "tojson")
 	public String token() {
 		if (!"authorization_code".equals(grant_type))
-			try {
-				ServletActionContext.getResponse().sendError(
-						HttpServletResponse.SC_BAD_REQUEST,
-						"grant_type must be authorization_code");
-				return NONE;
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			if ("refresh_token".equals(grant_type)) {
+				authorization = oauthManager.refresh(refresh_token);
+				tojson = new HashMap<String, Object>();
+				if (authorization == null) {
+					tojson.put("error", "invalid_token");
+				} else {
+					tojson.put("access_token", authorization.getAccessToken());
+					tojson.put("expires_in", authorization.getExpiresIn());
+					tojson.put("refresh_token", authorization.getRefreshToken());
+				}
+			} else {
+				try {
+					ServletActionContext.getResponse().sendError(
+							HttpServletResponse.SC_BAD_REQUEST,
+							"grant_type must be authorization_code");
+					return NONE;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		client = new Client();
 		client.setId(client_id);
@@ -388,20 +400,6 @@ public class Oauth2Action extends BaseAction {
 	public String revoketoken() {
 		oauthManager.revoke(access_token);
 		return NONE;
-	}
-
-	@JsonConfig(root = "tojson")
-	public String refresh() {
-		authorization = oauthManager.refresh(refresh_token);
-		tojson = new HashMap<String, Object>();
-		if (authorization == null) {
-			tojson.put("error", "invalid_token");
-		} else {
-			tojson.put("access_token", authorization.getAccessToken());
-			tojson.put("expires_in", authorization.getExpiresIn());
-			tojson.put("refresh_token", authorization.getRefreshToken());
-		}
-		return JSON;
 	}
 
 }

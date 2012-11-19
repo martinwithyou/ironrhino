@@ -1,5 +1,11 @@
 package org.ironrhino.security.acl.model;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
@@ -9,16 +15,24 @@ import org.ironrhino.security.model.UserRole;
 
 @AutoConfig(order = "role asc")
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
+@Entity
+@Table(name = "acl")
 public class Acl extends BaseEntity {
 
 	private static final long serialVersionUID = 7186455276739721437L;
 
 	@NaturalId(mutable = true)
 	@UiConfig(displayOrder = 1)
+	@org.hibernate.annotations.NaturalId(mutable = true)
+	@Column(length = 50, nullable = false)
+	@Access(AccessType.FIELD)
 	private String role;
 
 	@NaturalId(mutable = true)
 	@UiConfig(displayOrder = 2)
+	@org.hibernate.annotations.NaturalId(mutable = true)
+	@Column(length = 150, nullable = false)
+	@Access(AccessType.FIELD)
 	private String resource;
 
 	@UiConfig(displayOrder = 3)

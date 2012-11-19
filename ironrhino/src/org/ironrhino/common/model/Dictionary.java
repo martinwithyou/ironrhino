@@ -7,6 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.Authorize;
@@ -30,6 +37,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 @AutoConfig(searchable = true, order = "name asc")
 @Searchable(type = "dictionary")
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
+@Entity
+@Table(name = "common_dictionary")
 public class Dictionary extends BaseEntity implements Validatable {
 
 	private static final long serialVersionUID = -8352037604261222984L;
@@ -37,6 +46,9 @@ public class Dictionary extends BaseEntity implements Validatable {
 	@NaturalId(caseInsensitive = true, mutable = true)
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 1)
+	@org.hibernate.annotations.NaturalId(mutable = true)
+	@Column(unique = true, nullable = false)
+	@Access(AccessType.FIELD)
 	private String name;
 
 	@SearchableProperty(boost = 3)
@@ -44,8 +56,6 @@ public class Dictionary extends BaseEntity implements Validatable {
 	private String description;
 
 	@SearchableComponent
-	// @UiConfig(displayOrder = 3, cellEdit = "none", excludeIfNotEdited = true,
-	// template = "${entity.getItemsAsString()!}")
 	@UiConfig(displayOrder = 3, hiddenInList = true)
 	private List<LabelValue> items = new ArrayList<LabelValue>();
 
@@ -69,6 +79,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 		this.description = description;
 	}
 
+	@Transient
 	public List<LabelValue> getItems() {
 		return items;
 	}
@@ -78,6 +89,8 @@ public class Dictionary extends BaseEntity implements Validatable {
 	}
 
 	@NotInCopy
+	@Column(name = "items", length = 1024)
+	@Access(AccessType.PROPERTY)
 	public String getItemsAsString() {
 		if (items == null || items.isEmpty())
 			return null;
@@ -97,6 +110,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 
 	@UiConfig(hidden = true)
 	@NotInCopy
+	@Transient
 	public Map<String, String> getItemsAsMap() {
 		Map<String, String> map = new LinkedHashMap<String, String>(
 				items.size(), 1);
@@ -109,6 +123,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 
 	@UiConfig(hidden = true)
 	@NotInCopy
+	@Transient
 	public Map<String, Map<String, String>> getItemsAsGroup() {
 		Map<String, Map<String, String>> map = new LinkedHashMap<String, Map<String, String>>(
 				items.size(), 1);
@@ -136,6 +151,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 
 	@UiConfig(hidden = true)
 	@NotInCopy
+	@Transient
 	public boolean isGroupable() {
 		boolean groupable = false;
 		for (LabelValue item : items) {

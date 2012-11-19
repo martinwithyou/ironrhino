@@ -2,6 +2,15 @@ package org.ironrhino.security.oauth.server.model;
 
 import java.util.Date;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
@@ -14,6 +23,8 @@ import org.ironrhino.security.model.UserRole;
 
 @AutoConfig(readonly = true, order = "createDate desc")
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
+@Entity
+@Table(name = "oauth_authorization")
 public class Authorization extends BaseEntity {
 
 	public static final int DEFAULT_LIFETIME = 3600;
@@ -22,35 +33,51 @@ public class Authorization extends BaseEntity {
 
 	@NaturalId
 	@UiConfig(displayOrder = 1)
+	@org.hibernate.annotations.NaturalId(mutable = true)
+	@Access(AccessType.FIELD)
 	private String accessToken = CodecUtils.nextId();
 
 	@UiConfig(displayOrder = 2)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Access(AccessType.FIELD)
 	private Client client;
 
 	@UiConfig(displayOrder = 3)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@Access(AccessType.FIELD)
 	private User grantor;
 
 	@UiConfig(displayOrder = 4)
 	private String scope;
 
 	@UiConfig(displayOrder = 5)
+	@Column(unique = true)
+	@Access(AccessType.FIELD)
 	private String code;
 
 	@UiConfig(displayOrder = 6)
 	private int lifetime = DEFAULT_LIFETIME;
 
 	@UiConfig(displayOrder = 7)
+	@Column(unique = true)
+	@Access(AccessType.FIELD)
 	private String refreshToken;
 
 	@UiConfig(displayOrder = 8)
+	@Column(nullable = false)
+	@Access(AccessType.FIELD)
 	private String responseType = "code";
 
 	@NotInCopy
 	@UiConfig(hidden = true)
+	@Column(nullable = false)
+	@Access(AccessType.FIELD)
 	private Date modifyDate = new Date();
 
 	@NotInCopy
 	@UiConfig(hidden = true)
+	@Column(nullable = false)
+	@Access(AccessType.FIELD)
 	private Date createDate = new Date();
 
 	public String getAccessToken() {
@@ -109,6 +136,7 @@ public class Authorization extends BaseEntity {
 		this.lifetime = lifetime;
 	}
 
+	@Transient
 	public int getExpiresIn() {
 		return lifetime > 0 ? lifetime
 				- (int) ((System.currentTimeMillis() - modifyDate.getTime()) / 1000)
@@ -139,6 +167,7 @@ public class Authorization extends BaseEntity {
 		this.responseType = responseType;
 	}
 
+	@Transient
 	public boolean isClientSide() {
 		return "token".equals(responseType);
 	}

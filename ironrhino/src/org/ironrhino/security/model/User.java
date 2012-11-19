@@ -8,6 +8,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
@@ -28,7 +35,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 @AutoConfig
 @Searchable(type = "user")
-public class User extends BaseEntity implements UserDetails, Recordable<User>,Switchable {
+@Entity
+@Table(name = "`user`")
+public class User extends BaseEntity implements UserDetails, Recordable<User>,
+		Switchable {
 
 	private static final long serialVersionUID = -6135434863820342822L;
 
@@ -39,16 +49,23 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,Sw
 	@NaturalId(caseInsensitive = true)
 	@SearchableProperty(boost = 5, index = Index.NOT_ANALYZED)
 	@NotInCopy
+	@org.hibernate.annotations.NaturalId
+	@Column(unique = true, nullable = false)
+	@Access(AccessType.FIELD)
 	private String username;
 
 	@NotInCopy
 	@NotInJson
+	@Column(nullable = false)
+	@Access(AccessType.FIELD)
 	private String password;
 
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
 	private String name;
 
 	@SearchableProperty(boost = 3)
+	@Column(unique = true)
+	@Access(AccessType.FIELD)
 	private String email;
 
 	@SearchableProperty
@@ -69,10 +86,12 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,Sw
 	@NotInCopy
 	@NotInJson
 	@SearchableProperty
+	@Transient
 	private Set<String> roles = new HashSet<String>(0);
 
 	@NotInCopy
 	@NotInJson
+	@Transient
 	private Map<String, String> attributes;
 
 	@NotInCopy
@@ -87,6 +106,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,Sw
 	@NotInJson
 	private String modifyUser;
 
+	@Transient
 	public Collection<GrantedAuthority> getAuthorities() {
 		return authorities;
 	}
@@ -123,12 +143,15 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,Sw
 		return phone;
 	}
 
+	@Transient
 	public Set<String> getRoles() {
 		return roles;
 	}
 
 	@NotInCopy
 	@NotInJson
+	@Column(name = "roles")
+	@Access(AccessType.PROPERTY)
 	public String getRolesAsString() {
 		if (roles.size() > 0)
 			return StringUtils.join(roles.iterator(), ',');
@@ -140,16 +163,19 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,Sw
 	}
 
 	@NotInJson
+	@Transient
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
 	@NotInJson
+	@Transient
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
 	@NotInJson
+	@Transient
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
@@ -246,6 +272,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,Sw
 			attributes.put(key, value);
 	}
 
+	@Transient
 	public Map<String, String> getAttributes() {
 		return attributes;
 	}
@@ -254,6 +281,8 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,Sw
 		this.attributes = attributes;
 	}
 
+	@Column(name = "attributes", length = 5000)
+	@Access(AccessType.PROPERTY)
 	public String getAttributesAsString() {
 		if (attributes == null || attributes.isEmpty())
 			return null;

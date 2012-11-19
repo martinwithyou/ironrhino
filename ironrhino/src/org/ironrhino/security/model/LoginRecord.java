@@ -2,6 +2,12 @@ package org.ironrhino.security.model;
 
 import java.util.Date;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.UiConfig;
@@ -9,11 +15,15 @@ import org.ironrhino.core.model.BaseEntity;
 
 @AutoConfig(readonly = true, order = "date desc")
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
+@Entity
+@Table(name = "loginrecord")
 public class LoginRecord extends BaseEntity {
 
 	private static final long serialVersionUID = -7691080078972338500L;
 
 	@UiConfig(displayOrder = 1)
+	@Column(nullable = false)
+	@Access(AccessType.FIELD)
 	private String username;
 
 	@UiConfig(displayOrder = 2)

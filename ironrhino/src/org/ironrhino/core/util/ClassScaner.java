@@ -204,7 +204,7 @@ public class ClassScaner {
 			int index = name.indexOf('.');
 			if (index < 0) {
 				packages.add(name);
-			} else if (name.startsWith("org.ironrhino.")) {
+			} else if (name.startsWith("org.ironrhino")) {
 				packages.add(name);
 			} else {
 				int index2 = name.indexOf('.', index + 1);
@@ -214,6 +214,15 @@ public class ClassScaner {
 					packages.add(name.substring(0, index));
 			}
 		}
+		Set<String> temp = new TreeSet<String>();
+		for (String p : packages) {
+			int deep = p.split("\\.").length;
+			if (deep > 2)
+				temp.add(p.substring(0, p.indexOf(".", p.indexOf(".") + 1)));
+			else
+				temp.add(p);
+		}
+		packages = temp;
 		logger.info("appPackages: {}", packages);
 		return packages.toArray(new String[0]);
 	}
@@ -237,12 +246,12 @@ public class ClassScaner {
 			"com.caucho", "com.chenlb", "com.fasterxml", "com.google",
 			"com.ibm", "com.jolbox", "com.microsoft", "com.mongodb",
 			"com.mysql", "com.opensymphony", "com.oracle", "com.taobao",
-			"freemarker", "javassist", "jsr166y", "net.sf", "net.sourceforge",
-			"ognl", "oracle", "org.antlr", "org.aopalliance", "org.apache",
-			"org.aspectj", "org.bson", "org.codehaus", "org.elasticsearch",
-			"org.dom4j", "org.eclipse", "org.hibernate", "org.ietf",
-			"org.jboss", "org.jcp", "org.mvel2", "org.postgresql", "org.slf4j",
-			"org.springframework", "org.tartarus", "org.ironrhino.core",
-			"weblogic" };
+			"freemarker", "javassist", "jsr166y", "net.htmlparser", "net.sf",
+			"net.sourceforge", "ognl", "oracle", "org.antlr",
+			"org.aopalliance", "org.apache", "org.aspectj", "org.bson",
+			"org.codehaus", "org.elasticsearch", "org.dom4j", "org.eclipse",
+			"org.hibernate", "org.ietf", "org.jboss", "org.jcp", "org.mvel2",
+			"org.postgresql", "org.slf4j", "org.springframework",
+			"org.tartarus", "org.ironrhino.core", "weblogic" };
 
 }

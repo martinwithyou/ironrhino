@@ -5,6 +5,13 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
@@ -20,6 +27,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Searchable(type = "page")
 @AutoConfig(searchable = true)
+@Entity
+@Table(name = "common_page")
 public class Page extends BaseEntity implements Recordable<UserDetails>,
 		Ordered {
 
@@ -27,22 +36,31 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@NaturalId(mutable = true, caseInsensitive = true)
 	@SearchableProperty(index = Index.NOT_ANALYZED)
+	@Column(unique = true, nullable = false)
+	@org.hibernate.annotations.NaturalId(mutable = true)
+	@Access(AccessType.FIELD)
 	private String pagepath;
 
 	@SearchableProperty
 	private String title;
 
 	@NotInJson
+	@Column(length = 500)
+	@Access(AccessType.FIELD)
 	private String head;
 
 	@NotInJson
 	@SearchableProperty
+	@Column(length = 5000, nullable = false)
+	@Access(AccessType.FIELD)
 	private String content;
 
 	@SearchableProperty
 	private int displayOrder;
 
 	@NotInJson
+	@Column(length = 5000)
+	@Access(AccessType.FIELD)
 	private String draft;
 
 	private Date draftDate;
@@ -65,6 +83,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@NotInCopy
 	@SearchableProperty(index = Index.NOT_ANALYZED)
+	@Transient
 	private Set<String> tags = new LinkedHashSet<String>(0);
 
 	public String getHead() {
@@ -139,6 +158,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 		this.modifyDate = modifyDate;
 	}
 
+	@Transient
 	public Set<String> getTags() {
 		return tags;
 	}
@@ -149,6 +169,8 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@NotInCopy
 	@NotInJson
+	@Column(name = "tags", length = 1024)
+	@Access(AccessType.PROPERTY)
 	public String getTagsAsString() {
 		if (tags.size() > 0)
 			return StringUtils.join(tags.iterator(), ',');

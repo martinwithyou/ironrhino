@@ -3,16 +3,25 @@ package org.ironrhino.core.stat;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
+
+@MappedSuperclass
 public class KeyValuePair implements Serializable {
 
 	private static final long serialVersionUID = 1939944128282158865L;
 
+	@Transient
 	protected Key key;
 
+	@Transient
 	protected Value value;
 
+	@Column(nullable = false)
 	protected Date date;
 
+	@Column(nullable = false)
 	protected String host;
 
 	public KeyValuePair() {

@@ -6,6 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -26,6 +33,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 @AutoConfig(searchable = true, order = "name asc")
 @Searchable(type = "schema")
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
+@Entity
+@Table(name = "common_schema")
 public class Schema extends BaseEntity implements Validatable {
 
 	private static final long serialVersionUID = -8352037604269012984L;
@@ -33,6 +42,9 @@ public class Schema extends BaseEntity implements Validatable {
 	@NaturalId(caseInsensitive = true, mutable = true)
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 1)
+	@Column(unique = true, nullable = false)
+	@org.hibernate.annotations.NaturalId(mutable = true)
+	@Access(AccessType.FIELD)
 	private String name;
 
 	@SearchableProperty(boost = 3)
@@ -46,6 +58,7 @@ public class Schema extends BaseEntity implements Validatable {
 	// @UiConfig(displayOrder = 4, cellEdit = "none", excludeIfNotEdited = true,
 	// template = "${entity.getFieldsAsString()!}")
 	@UiConfig(displayOrder = 4, hiddenInList = true)
+	@Transient
 	private List<SchemaField> fields = new ArrayList<SchemaField>();
 
 	public Schema() {
@@ -76,6 +89,7 @@ public class Schema extends BaseEntity implements Validatable {
 		this.strict = strict;
 	}
 
+	@Transient
 	public List<SchemaField> getFields() {
 		return fields;
 	}
@@ -85,6 +99,8 @@ public class Schema extends BaseEntity implements Validatable {
 	}
 
 	@NotInCopy
+	@Column(name = "fields", length = 1024)
+	@Access(AccessType.PROPERTY)
 	public String getFieldsAsString() {
 		return JsonUtils.toJson(fields);
 	}

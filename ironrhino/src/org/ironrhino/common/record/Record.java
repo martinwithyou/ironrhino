@@ -2,6 +2,9 @@ package org.ironrhino.common.record;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import org.ironrhino.core.dataroute.DataRoute;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.UiConfig;
@@ -9,6 +12,8 @@ import org.ironrhino.core.model.BaseEntity;
 
 @DataRoute("miscGroup")
 @AutoConfig(readonly = true,order = "recordDate desc")
+@Entity
+@Table(name="common_record")
 public class Record extends BaseEntity {
 
 	private static final long serialVersionUID = -8287907984213799302L;

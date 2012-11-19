@@ -2,6 +2,16 @@ package org.ironrhino.security.oauth.server.model;
 
 import java.util.Date;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -16,6 +26,8 @@ import org.ironrhino.security.model.UserRole;
 
 @AutoConfig(order = "name asc")
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
+@Entity
+@Table(name = "oauth_client")
 public class Client extends BaseEntity implements Switchable {
 
 	private static final long serialVersionUID = -7297737795748467475L;
@@ -24,9 +36,12 @@ public class Client extends BaseEntity implements Switchable {
 
 	@NaturalId(caseInsensitive = true, mutable = true)
 	@UiConfig(displayOrder = 1, size = 50)
+	@org.hibernate.annotations.NaturalId(mutable = true)
+	@Column(nullable = false)
 	private String name;
 
 	@UiConfig(displayOrder = 2, size = 50)
+	@Column(nullable = false)
 	private String secret = CodecUtils.nextId();
 
 	@UiConfig(displayOrder = 3, size = 50)
@@ -37,6 +52,9 @@ public class Client extends BaseEntity implements Switchable {
 
 	@NotInCopy
 	@UiConfig(hidden = true)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false)
+	@Access(AccessType.FIELD)
 	private User owner;
 
 	@UiConfig(displayOrder = 5)
@@ -124,6 +142,7 @@ public class Client extends BaseEntity implements Switchable {
 	}
 
 	@UiConfig(hidden = true)
+	@Transient
 	public boolean isNative() {
 		return OAUTH_OOB.equals(redirectUri);
 	}

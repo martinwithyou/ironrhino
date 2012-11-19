@@ -1,5 +1,13 @@
 package org.ironrhino.common.model;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.ironrhino.common.util.RegionUtils;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -14,22 +22,38 @@ import org.ironrhino.core.util.StringUtils;
 @PublishAware
 @AutoConfig
 @Searchable(type = "region")
+@Entity
+@Table(name = "common_region")
 public class Region extends BaseTreeableEntity<Region> {
 
 	private static final long serialVersionUID = 8878381261391688086L;
 
 	private String fullname;
 
+	@Column(length = 6)
+	@Access(AccessType.FIELD)
 	private String areacode;
 
+	@Column(length = 6)
+	@Access(AccessType.FIELD)
 	private String postcode;
 
 	private Integer rank;
 
+	@Embedded
 	private Coordinate coordinate;
 
 	public Region() {
 
+	}
+
+	public Region(String name) {
+		this.name = name;
+	}
+
+	public Region(String name, int displayOrder) {
+		this.name = name;
+		this.displayOrder = displayOrder;
 	}
 
 	public String getAreacode() {
@@ -84,26 +108,20 @@ public class Region extends BaseTreeableEntity<Region> {
 		this.coordinate = coordinate;
 	}
 
-	public Region(String name) {
-		this.name = name;
-	}
-
-	public Region(String name, int displayOrder) {
-		this.name = name;
-		this.displayOrder = displayOrder;
-	}
-
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
+	@Transient
 	public String getNameAsPinyin() {
 		return StringUtils.pinyin(name);
 	}
 
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
+	@Transient
 	public String getNameAsPinyinAbbr() {
 		return StringUtils.pinyinAbbr(name);
 	}
 
 	@NotInJson
+	@Transient
 	public String getShortFullname() {
 		return RegionUtils.shortenAddress(getFullname());
 	}
