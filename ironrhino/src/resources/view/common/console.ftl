@@ -9,7 +9,7 @@ $(function(){
 			var t = $(this);
 			$.ajax({
 				type:'POST',
-				url:'<@url value="/common/console/executeJson"/>',
+				url:'<@url value="${actionBaseUrl}/executeJson"/>',
 				data:{
 					expression : $(this).data('expression')||$(this).text(),
 					global: $(this).data('global')||'false'
@@ -42,7 +42,7 @@ $(function(){
 							return;
 						var key = button.closest('div').prev().text();
 						var value = button.data('value');
-						$.post('<@url value="/common/console/executeJson"/>',
+						$.post('<@url value="${actionBaseUrl}/executeJson"/>',
 								{
 								expression : 'settingControl.setValue("'+key+'","'+value+'")',
 								global: false

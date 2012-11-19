@@ -6,7 +6,7 @@
 <body>
 <div class="row">
 <div class="span6">
-<form action="<@url value="/common/monitor/chart/${uid}"/>" class="ajax view form-inline" replacement="c">
+<form action="<@url value="${actionBaseUrl}/chart/${uid}"/>" class="ajax view form-inline" replacement="c">
 <@s.hidden name="vtype"/>
 <@s.hidden name="ctype"/>
 <span>${action.getText('date')}</span>
@@ -15,7 +15,7 @@
 </form>
 </div>
 <div class="span6">
-<form action="<@url value="/common/monitor/chart/${uid}"/>" class="ajax view form-inline" replacement="c">
+<form action="<@url value="${actionBaseUrl}/chart/${uid}"/>" class="ajax view form-inline" replacement="c">
 <@s.hidden name="vtype"/>
 <@s.hidden name="ctype"/>
 <span>${action.getText('date.range')}</span>
@@ -27,7 +27,7 @@
 </div>
 </div>
 <div id="c">
-<#assign dataurl='/common/monitor/data'/>
+<#assign dataurl='${actionBaseUrl}/data'/>
 <#if uid??>
 <#assign dataurl=dataurl+'/'+uid>
 </#if>

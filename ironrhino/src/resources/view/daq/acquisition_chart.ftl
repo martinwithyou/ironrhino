@@ -5,7 +5,7 @@
 </head>
 <body>
 <#if !type?? && !place?? && !recent??>
-<form id="daterange" action="<@url value="/daq/acquisition/chart"/>" method="get" class="ajax view form-inline nodirty" replacement="c"  style="margin-left:10px;">
+<form id="daterange" action="<@url value="${actionBaseUrl}/chart"/>" method="get" class="ajax view form-inline nodirty" replacement="c"  style="margin-left:10px;">
 	<span style="margin-right:10px;"><@selectDictionary dictionaryName=dictionaryNameAcquisitionType name="type" value=type! class="span2"/></span>
 	<span style="margin-right:10px;"><@checkDictionary dictionaryName=dictionaryNameAcquisitionPlace name="place" value=place!/></span>
 	<@s.textfield theme="simple" name="date" cssClass="date required"/>

@@ -48,7 +48,7 @@
 <thead>
 <tr>
 <#if showCheckColumn>
-<th class="nosort <#if multipleCheck>checkbox<#else>radio</#if>" width="40px"><#if multipleCheck><input type="checkbox" class="checkbox"/></#if></th>
+<th class="nosort <#if multipleCheck>checkbox<#else>radio</#if>" style="width:40px;"><#if multipleCheck><input type="checkbox" class="checkbox"/></#if></th>
 </#if>
 </#macro>
 
@@ -64,7 +64,7 @@
 </#macro>
 <#macro rtmiddle width='50px' readonly=false>
 <#if !readonly>
-<th class="nosort" width="${width}"></th>
+<th class="nosort" style="width:${width};"></th>
 </#if>
 </tr>
 </thead>
@@ -150,9 +150,7 @@ ${value?xhtml}<#t>
 </select>
 </li>
 </#if>
-<#else>
 </#if>
-</li>
 </ul>
 </div>
 <div class="action span4">
