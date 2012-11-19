@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.persistence.Column;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.Criterion;
@@ -718,6 +720,7 @@ public class EntityAction extends BaseAction {
 							uiConfig = f.getAnnotation(UiConfig.class);
 					} catch (Exception e) {
 					}
+
 				if (uiConfig != null && uiConfig.hidden())
 					continue;
 				if ("new".equals(propertyName) || "id".equals(propertyName)
@@ -725,9 +728,22 @@ public class EntityAction extends BaseAction {
 						|| pd.getReadMethod() == null
 						|| hides.contains(propertyName))
 					continue;
+				Column columnannotation = pd.getReadMethod().getAnnotation(
+						Column.class);
+				if (columnannotation == null)
+					try {
+						Field f = clazz.getDeclaredField(propertyName);
+						if (f != null)
+							columnannotation = f.getAnnotation(Column.class);
+					} catch (Exception e) {
+					}
+
 				Class<?> returnType = pd.getPropertyType();
 				if (returnType.isEnum()) {
 					UiConfigImpl uci = new UiConfigImpl(uiConfig);
+					if (columnannotation != null
+							&& !columnannotation.nullable())
+						uci.setRequired(true);
 					uci.setType("select");
 					uci.setListKey("name");
 					uci.setListValue("displayName");
@@ -745,6 +761,9 @@ public class EntityAction extends BaseAction {
 					continue;
 				} else if (Persistable.class.isAssignableFrom(returnType)) {
 					UiConfigImpl uci = new UiConfigImpl(uiConfig);
+					if (columnannotation != null
+							&& !columnannotation.nullable())
+						uci.setRequired(true);
 					uci.setType("listpick");
 					uci.setExcludeIfNotEdited(true);
 					if (StringUtils.isBlank(uci.getPickUrl())) {
@@ -803,7 +822,12 @@ public class EntityAction extends BaseAction {
 						|| returnType == Boolean.class) {
 					uci.setType("checkbox");
 				}
-
+				if (columnannotation != null) {
+					if (!columnannotation.nullable())
+						uci.setRequired(true);
+					if (columnannotation.unique())
+						uci.setUnique(true);
+				}
 				if (String.class == returnType
 						&& (searchableProperty != null || searchableId != null))
 					uci.setSearchable(true);
