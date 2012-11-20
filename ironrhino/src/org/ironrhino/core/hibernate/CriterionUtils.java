@@ -15,12 +15,36 @@ public class CriterionUtils {
 
 	public static Criterion like(String value, MatchMode mode, String... names) {
 		Criterion c = null;
-		for (String name : names) {
-			if (c == null) {
-				c = Restrictions.like(name, value, MatchMode.ANYWHERE);
-			} else {
-				c = Restrictions.or(c,
-						Restrictions.like(name, value, MatchMode.ANYWHERE));
+		int index = value.indexOf(':');
+		String field = null;
+		if (index > 0) {
+			field = value.substring(0, index);
+			value = value.substring(index + 1);
+			for (String name : names) {
+				if (name.equals(field) || name.equals(field + "AsString")) {
+					if (field.equals("tags")) {
+						c = Restrictions.or(Restrictions.eq(name, value),
+								Restrictions.or(Restrictions.like(name, value
+										+ ",", MatchMode.START), Restrictions
+										.or(Restrictions.like(name,
+												"," + value, MatchMode.END),
+												Restrictions.like(name, ","
+														+ value + ",",
+														MatchMode.ANYWHERE))));
+					} else {
+						c = Restrictions.like(name, value, MatchMode.ANYWHERE);
+					}
+					break;
+				}
+			}
+		} else {
+			for (String name : names) {
+				if (c == null) {
+					c = Restrictions.like(name, value, MatchMode.ANYWHERE);
+				} else {
+					c = Restrictions.or(c,
+							Restrictions.like(name, value, MatchMode.ANYWHERE));
+				}
 			}
 		}
 		return c;
