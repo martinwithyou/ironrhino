@@ -47,12 +47,6 @@ public class RecordAspect implements Ordered {
 		return result;
 	}
 
-	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.delete(*)) and args(entity) and @args(recordAware)")
-	public void delete(Persistable<?> entity, RecordAware recordAware) {
-		if (!AopContext.isBypass(this.getClass()))
-			record(entity, EntityOperationType.DELETE);
-	}
-
 	@Around("execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*))")
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object delete(ProceedingJoinPoint call) throws Throwable {
@@ -66,6 +60,12 @@ public class RecordAspect implements Ordered {
 						record(entity, EntityOperationType.DELETE);
 				}
 		return list;
+	}
+
+	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.delete(*)) and args(entity) and @args(recordAware)")
+	public void delete(Persistable<?> entity, RecordAware recordAware) {
+		if (!AopContext.isBypass(this.getClass()))
+			record(entity, EntityOperationType.DELETE);
 	}
 
 	// record to database,may change to use logger system

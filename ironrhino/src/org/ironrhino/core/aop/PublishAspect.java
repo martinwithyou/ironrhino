@@ -42,15 +42,6 @@ public class PublishAspect extends BaseAspect {
 		return result;
 	}
 
-	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.delete(*)) and args(entity) and @args(publishAware)")
-	public void delete(Persistable<?> entity, PublishAware publishAware) {
-		if (isBypass())
-			return;
-		if (eventPublisher != null)
-			eventPublisher.publish(new EntityOperationEvent(entity,
-					EntityOperationType.DELETE), publishAware.global());
-	}
-
 	@Around("execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*))")
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object delete(ProceedingJoinPoint call) throws Throwable {
@@ -66,6 +57,15 @@ public class PublishAspect extends BaseAspect {
 								.global());
 				}
 		return list;
+	}
+
+	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.delete(*)) and args(entity) and @args(publishAware)")
+	public void delete(Persistable<?> entity, PublishAware publishAware) {
+		if (isBypass())
+			return;
+		if (eventPublisher != null)
+			eventPublisher.publish(new EntityOperationEvent(entity,
+					EntityOperationType.DELETE), publishAware.global());
 	}
 
 }
