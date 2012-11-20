@@ -18,7 +18,7 @@ public @interface EvictCache {
 	String namespace() default CacheManager.DEFAULT_NAMESPACE;
 
 	// mvel expression
-	String onFlush() default "";
+	String onEvict() default "";
 	
 	String renew() default "";
 

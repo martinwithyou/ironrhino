@@ -1,6 +1,5 @@
 package org.ironrhino.core.cache.impl;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -67,7 +66,7 @@ public class EhCacheManager implements CacheManager {
 		if (cache == null)
 			return null;
 		Element element = cache.get(key);
-		return element != null ? element.getObjectValue(): null;
+		return element != null ? element.getObjectValue() : null;
 	}
 
 	public Object get(String key, String namespace, int timeToLive) {
@@ -140,7 +139,7 @@ public class EhCacheManager implements CacheManager {
 			namespace = DEFAULT_NAMESPACE;
 		Cache cache = ehCacheManager.getCache(namespace);
 		if (cache != null)
-			for (Serializable key : keys)
+			for (String key : keys)
 				cache.remove(key);
 	}
 

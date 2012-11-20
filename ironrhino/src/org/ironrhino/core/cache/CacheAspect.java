@@ -98,23 +98,25 @@ public class CacheAspect extends BaseAspect {
 		return result;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@AfterReturning("@annotation(flushCache)")
-	public void remove(JoinPoint jp, EvictCache flushCache) {
+	@SuppressWarnings("unchecked")
+	@AfterReturning(pointcut = "@annotation(evictCache)", returning = "retval")
+	public void remove(JoinPoint jp, EvictCache evictCache, Object retval) {
 		Map<String, Object> context = buildContext(jp);
-		String namespace = ExpressionUtils.evalString(flushCache.namespace(),
+		putReturnValueIntoContext(context, retval);
+		String namespace = ExpressionUtils.evalString(evictCache.namespace(),
 				context);
-		List keys = ExpressionUtils.evalList(flushCache.key(), context);
+		List<String> keys = ExpressionUtils.evalList(evictCache.key(), context);
 		if (isBypass() || keys == null || keys.size() == 0)
 			return;
-		if (StringUtils.isNotBlank(flushCache.renew())) {
-			Object value = ExpressionUtils.eval(flushCache.renew(), context);
+		if (StringUtils.isNotBlank(evictCache.renew())) {
+			Object value = ExpressionUtils.eval(evictCache.renew(), context);
 			for (Object key : keys)
-				cacheManager.put(key.toString(), value, 0, namespace);
+				if (key != null)
+					cacheManager.put(key.toString(), value, 0, namespace);
 		} else {
 			cacheManager.mdelete(keys, namespace);
 		}
-		ExpressionUtils.eval(flushCache.onFlush(), context);
+		ExpressionUtils.eval(evictCache.onEvict(), context);
 	}
 
 }

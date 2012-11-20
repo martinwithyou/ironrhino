@@ -176,8 +176,9 @@ public class RedisCacheManager implements CacheManager {
 						throws DataAccessException {
 					conn.multi();
 					for (String key : keys)
-						conn.del(redisTemplate.getKeySerializer().serialize(
-								generateKey(key, ns)));
+						if (key != null)
+							conn.del(redisTemplate.getKeySerializer()
+									.serialize(generateKey(key, ns)));
 					conn.exec();
 					return null;
 				}

@@ -36,6 +36,18 @@ public class RecordAspect implements Ordered {
 
 	private int order;
 
+	@AfterReturning(pointcut = "execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*)) ", returning = "list")
+	@SuppressWarnings("rawtypes")
+	public void deleteBatch(List list) throws Throwable {
+		if (!AopContext.isBypass(this.getClass()) && list != null)
+			for (Object entity : list) {
+				RecordAware recordAware = entity.getClass().getAnnotation(
+						RecordAware.class);
+				if (recordAware != null)
+					record((Persistable) entity, EntityOperationType.DELETE);
+			}
+	}
+
 	@Around("execution(* org.ironrhino.core.service.BaseManager.save(*)) and args(entity) and @args(recordAware)")
 	public Object save(ProceedingJoinPoint call, Persistable<?> entity,
 			RecordAware recordAware) throws Throwable {
@@ -45,21 +57,6 @@ public class RecordAspect implements Ordered {
 			record(entity, isNew ? EntityOperationType.CREATE
 					: EntityOperationType.UPDATE);
 		return result;
-	}
-
-	@Around("execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*))")
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Object delete(ProceedingJoinPoint call) throws Throwable {
-		List<Persistable> list = (List<Persistable>) call.proceed();
-		if (!AopContext.isBypass(this.getClass()))
-			if (list != null)
-				for (Persistable entity : list) {
-					RecordAware recordAware = entity.getClass().getAnnotation(
-							RecordAware.class);
-					if (recordAware != null)
-						record(entity, EntityOperationType.DELETE);
-				}
-		return list;
 	}
 
 	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.delete(*)) and args(entity) and @args(recordAware)")

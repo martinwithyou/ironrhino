@@ -1,5 +1,6 @@
 package org.ironrhino.common.service;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -52,6 +53,12 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	@EvictCache(key = "${page.pagepath}", namespace = "page")
 	public void delete(Page page) {
 		super.delete(page);
+	}
+
+	@Transactional
+	@EvictCache(key = "${key = [];foreach (page : retval) { key.add(page.pagepath); } return key;}", namespace = "page")
+	public List<Page> delete(Serializable... id) {
+		return super.delete(id);
 	}
 
 	@Transactional(readOnly = true)

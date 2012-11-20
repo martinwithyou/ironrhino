@@ -4,9 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.aop.AopContext;
 import org.ironrhino.core.model.Persistable;
@@ -26,19 +24,21 @@ public class IndexAspect implements Ordered {
 		order = 1;
 	}
 
-	@Around("execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*))")
-	@SuppressWarnings({ "unchecked" })
-	public Object delete(ProceedingJoinPoint call) throws Throwable {
-		List<Persistable> list = (List<Persistable>) call.proceed();
+	@AfterReturning(pointcut = "execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*)) ", returning = "list")
+	public void deleteBatch(List list) throws Throwable {
+		if (!AopContext.isBypass(this.getClass()) && list != null)
+			for (Object entity : list) {
+				Searchable searchable = entity.getClass().getAnnotation(
+						Searchable.class);
+				if (searchable != null)
+					indexManager.delete((Persistable) entity);
+			}
+	}
+
+	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.delete(*)) and args(entity) and @args(searchable)")
+	public void delete(Persistable entity, Searchable searchable) {
 		if (!AopContext.isBypass(this.getClass()))
-			if (list != null)
-				for (Persistable entity : list) {
-					Searchable searchable = entity.getClass().getAnnotation(
-							Searchable.class);
-					if (searchable != null)
-						indexManager.delete(entity);
-				}
-		return list;
+			indexManager.delete(entity);
 	}
 
 	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.save(*)) and args(entity) and @args(searchable)")
@@ -46,12 +46,6 @@ public class IndexAspect implements Ordered {
 			throws Throwable {
 		if (!AopContext.isBypass(this.getClass()))
 			indexManager.index(entity);
-	}
-
-	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.delete(*)) and args(entity) and @args(searchable)")
-	public void delete(Persistable entity, Searchable searchable) {
-		if (!AopContext.isBypass(this.getClass()))
-			indexManager.delete(entity);
 	}
 
 	public int getOrder() {

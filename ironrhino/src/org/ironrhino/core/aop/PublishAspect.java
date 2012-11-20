@@ -27,6 +27,19 @@ public class PublishAspect extends BaseAspect {
 	@Inject
 	private EventPublisher eventPublisher;
 
+	@AfterReturning(pointcut = "execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*)) ", returning = "list")
+	@SuppressWarnings("rawtypes")
+	public void deleteBatch(List list) throws Throwable {
+		if (!isBypass() && eventPublisher != null && list != null)
+			for (Object entity : list) {
+				PublishAware publishAware = entity.getClass().getAnnotation(
+						PublishAware.class);
+				if (publishAware != null)
+					eventPublisher.publish(new EntityOperationEvent((Persistable)entity,
+							EntityOperationType.DELETE), publishAware.global());
+			}
+	}
+
 	@Around("execution(* org.ironrhino.core.service.BaseManager.save(*)) and args(entity) and @args(publishAware)")
 	public Object save(ProceedingJoinPoint call, Persistable<?> entity,
 			PublishAware publishAware) throws Throwable {
@@ -40,23 +53,6 @@ public class PublishAspect extends BaseAspect {
 						.global());
 		}
 		return result;
-	}
-
-	@Around("execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*))")
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Object delete(ProceedingJoinPoint call) throws Throwable {
-		List<Persistable> list = (List<Persistable>) call.proceed();
-		if (!isBypass())
-			if (eventPublisher != null && list != null)
-				for (Persistable entity : list) {
-					PublishAware publishAware = entity.getClass()
-							.getAnnotation(PublishAware.class);
-					if (publishAware != null)
-						eventPublisher.publish(new EntityOperationEvent(entity,
-								EntityOperationType.DELETE), publishAware
-								.global());
-				}
-		return list;
 	}
 
 	@AfterReturning("execution(* org.ironrhino.core.service.BaseManager.delete(*)) and args(entity) and @args(publishAware)")

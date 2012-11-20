@@ -1,5 +1,6 @@
 package org.ironrhino.security.service;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -62,6 +63,13 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	@EvictCache(namespace = "user", key = "${[user.username,user.email]}")
 	public void save(User user) {
 		super.save(user);
+	}
+
+	// TODO evict cache
+	@Transactional
+	@EvictCache(namespace = "user", key = "${key = [];foreach (user : retval) { key.add(user.username); key.add(user.email);} return key;}")
+	public List<User> delete(Serializable... id) {
+		return super.delete(id);
 	}
 
 	@Transactional(readOnly = true)
