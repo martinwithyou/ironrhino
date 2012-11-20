@@ -201,37 +201,19 @@ public class ClassScaner {
 			String name = p.getName();
 			if (isExcludePackage(name))
 				continue;
-			int index = name.indexOf('.');
-			if (index < 0) {
+			int deep = name.split("\\.").length;
+			if (deep < 2)
 				packages.add(name);
-			} else if (name.startsWith("org.ironrhino")) {
-				packages.add(name);
-			} else {
-				int index2 = name.indexOf('.', index + 1);
-				if (index2 > 0)
-					packages.add(name.substring(0, index2));
-				else
-					packages.add(name.substring(0, index));
-			}
-		}
-		Set<String> temp = new TreeSet<String>();
-		for (String p : packages) {
-			int deep = p.split("\\.").length;
-			if (deep > 2)
-				temp.add(p.substring(0, p.indexOf(".", p.indexOf(".") + 1)));
 			else
-				temp.add(p);
+				packages.add(name.substring(0,
+						name.indexOf(".", name.indexOf(".") + 1)));
 		}
-		packages = temp;
 		logger.info("appPackages: {}", packages);
 		return packages.toArray(new String[0]);
 	}
 
 	private static boolean isExcludePackage(String name) {
-		if (name.equals("org.ironrhino.core.model"))
-			return false;
-		if (name.equals("net") || name.equals("com") || name.equals("org")
-				|| name.equals("org.ironrhino")) {
+		if (name.equals("net") || name.equals("com") || name.equals("org")) {
 			return true;
 		}
 		for (String s : excludePackages) {

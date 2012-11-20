@@ -19,7 +19,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.core.cache.CheckCache;
-import org.ironrhino.core.cache.FlushCache;
+import org.ironrhino.core.cache.EvictCache;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
@@ -40,7 +40,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 
 	@Override
 	@Transactional
-	@FlushCache(key = "${page.pagepath}", namespace = "page", renew = "${page}")
+	@EvictCache(key = "${page.pagepath}", namespace = "page", renew = "${page}")
 	public void save(Page page) {
 		page.setDraft(null);
 		page.setDraftDate(null);
@@ -49,7 +49,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 
 	@Override
 	@Transactional
-	@FlushCache(key = "${page.pagepath}", namespace = "page")
+	@EvictCache(key = "${page.pagepath}", namespace = "page")
 	public void delete(Page page) {
 		super.delete(page);
 	}

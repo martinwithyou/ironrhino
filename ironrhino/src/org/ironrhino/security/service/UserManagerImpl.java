@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CheckCache;
-import org.ironrhino.core.cache.FlushCache;
+import org.ironrhino.core.cache.EvictCache;
 import org.ironrhino.core.remoting.Remoting;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.spring.security.FallbackUserDetailsService;
@@ -52,14 +52,14 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "user", key = "${[user.username,user.email]}")
+	@EvictCache(namespace = "user", key = "${[user.username,user.email]}")
 	public void delete(User user) {
 		super.delete(user);
 	}
 
 	@Override
 	@Transactional
-	@FlushCache(namespace = "user", key = "${[user.username,user.email]}")
+	@EvictCache(namespace = "user", key = "${[user.username,user.email]}")
 	public void save(User user) {
 		super.save(user);
 	}

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Target(METHOD)
 @Retention(RUNTIME)
-public @interface FlushCache {
+public @interface EvictCache {
 
 	// mvel expression
 	String key();

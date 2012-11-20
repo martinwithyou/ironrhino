@@ -100,7 +100,7 @@ public class CacheAspect extends BaseAspect {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@AfterReturning("@annotation(flushCache)")
-	public void remove(JoinPoint jp, FlushCache flushCache) {
+	public void remove(JoinPoint jp, EvictCache flushCache) {
 		Map<String, Object> context = buildContext(jp);
 		String namespace = ExpressionUtils.evalString(flushCache.namespace(),
 				context);

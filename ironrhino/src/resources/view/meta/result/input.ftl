@@ -36,7 +36,11 @@
 				<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue="" disabled="true" dynamicAttributes=config.dynamicAttributes />
 			</#if>
 		<#elseif config.type=='listpick'>
-			<@s.hidden id="${key}Id" name="${entityName}.${key}.id" />
+			<#if config.required>
+				<@s.hidden id="${key}Id" name="${entityName}.${key}.id" cssClass="required"/>
+			<#else>
+				<@s.hidden id="${key}Id" name="${entityName}.${key}.id"/>
+			</#if>
 			<#if !readonly>
 				<div class="control-group listpick" data-options="{'url':'<@url value="${config.pickUrl}"/>','name':'#${key}','id':'#${key}Id'}">
 					<label class="control-label" for="${key}">${action.getText(key)}</label>

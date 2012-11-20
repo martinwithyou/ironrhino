@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -738,12 +739,11 @@ public class EntityAction extends BaseAction {
 					} catch (Exception e) {
 					}
 
+				UiConfigImpl uci = new UiConfigImpl(uiConfig);
+				if (columnannotation != null && !columnannotation.nullable())
+					uci.setRequired(true);
 				Class<?> returnType = pd.getPropertyType();
 				if (returnType.isEnum()) {
-					UiConfigImpl uci = new UiConfigImpl(uiConfig);
-					if (columnannotation != null
-							&& !columnannotation.nullable())
-						uci.setRequired(true);
 					uci.setType("select");
 					uci.setListKey("name");
 					uci.setListValue("displayName");
@@ -760,9 +760,18 @@ public class EntityAction extends BaseAction {
 					map.put(propertyName, uci);
 					continue;
 				} else if (Persistable.class.isAssignableFrom(returnType)) {
-					UiConfigImpl uci = new UiConfigImpl(uiConfig);
-					if (columnannotation != null
-							&& !columnannotation.nullable())
+					JoinColumn joincolumnannotation = pd.getReadMethod()
+							.getAnnotation(JoinColumn.class);
+					if (joincolumnannotation == null)
+						try {
+							Field f = clazz.getDeclaredField(propertyName);
+							if (f != null)
+								joincolumnannotation = f
+										.getAnnotation(JoinColumn.class);
+						} catch (Exception e) {
+						}
+					if (joincolumnannotation != null
+							&& !joincolumnannotation.nullable())
 						uci.setRequired(true);
 					uci.setType("listpick");
 					uci.setExcludeIfNotEdited(true);
@@ -796,7 +805,7 @@ public class EntityAction extends BaseAction {
 					map.put(propertyName, uci);
 					continue;
 				}
-				UiConfigImpl uci = new UiConfigImpl(uiConfig);
+
 				if (returnType == Integer.TYPE || returnType == Integer.class
 						|| returnType == Short.TYPE
 						|| returnType == Short.class || returnType == Long.TYPE
@@ -822,12 +831,8 @@ public class EntityAction extends BaseAction {
 						|| returnType == Boolean.class) {
 					uci.setType("checkbox");
 				}
-				if (columnannotation != null) {
-					if (!columnannotation.nullable())
-						uci.setRequired(true);
-					if (columnannotation.unique())
-						uci.setUnique(true);
-				}
+				if (columnannotation != null && columnannotation.unique())
+					uci.setUnique(true);
 				if (String.class == returnType
 						&& (searchableProperty != null || searchableId != null))
 					uci.setSearchable(true);
