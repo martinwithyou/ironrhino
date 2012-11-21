@@ -7,6 +7,7 @@ import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -39,11 +40,13 @@ public class Authorization extends BaseEntity {
 
 	@UiConfig(displayOrder = 2)
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="client")
 	@Access(AccessType.FIELD)
 	private Client client;
 
 	@UiConfig(displayOrder = 3)
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="grantor",nullable=false)
 	@Access(AccessType.FIELD)
 	private User grantor;
 

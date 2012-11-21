@@ -53,7 +53,7 @@ public class Client extends BaseEntity implements Switchable {
 	@NotInCopy
 	@UiConfig(hidden = true)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false)
+	@JoinColumn(name = "owner", nullable = false)
 	@Access(AccessType.FIELD)
 	private User owner;
 
