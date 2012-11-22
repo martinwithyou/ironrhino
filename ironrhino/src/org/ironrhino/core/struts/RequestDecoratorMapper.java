@@ -35,9 +35,9 @@ public class RequestDecoratorMapper extends AbstractDecoratorMapper {
 
 	public Decorator getDecorator(HttpServletRequest request, Page page) {
 		Decorator result = null;
-		String decorator = (String) request.getAttribute(decoratorParameter);
-
-		if (decorator != null) {
+		Object attr = request.getAttribute(decoratorParameter);
+		if (attr instanceof String) {
+			String decorator = (String) attr;
 			result = getNamedDecorator(request, decorator);
 			if (result == null) {
 				String location = "/WEB-INF/view/ftl/decorator/" + decorator
