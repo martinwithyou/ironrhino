@@ -16,11 +16,11 @@ import org.apache.struts2.views.freemarker.FreemarkerResult;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.AppInfo.Stage;
 
-import com.opensymphony.module.sitemesh.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 
 public class AutoConfigResult extends FreemarkerResult {
 
