@@ -9,10 +9,6 @@ import org.ironrhino.core.service.BaseManager;
 
 public interface PageManager extends BaseManager<Page> {
 
-	public void save(Page page);
-	
-	public void delete(Page page);
-
 	public Page getByPath(String path);
 
 	public Page saveDraft(Page page);
@@ -22,15 +18,17 @@ public interface PageManager extends BaseManager<Page> {
 	public Page dropDraft(String id);
 
 	public void pullDraft(Page page);
-	
+
 	public List<Page> findListByTag(String tag);
-	
+
 	public List<Page> findListByTag(String... tag);
-	
-	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,String tag);
-	
-	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,String... tag);
-	
-	public Map<String,Integer> findMatchedTags(String keyword);
+
+	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,
+			String tag);
+
+	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,
+			String... tag);
+
+	public Map<String, Integer> findMatchedTags(String keyword);
 
 }
