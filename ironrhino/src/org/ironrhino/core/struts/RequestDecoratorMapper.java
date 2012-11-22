@@ -14,9 +14,7 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.DecoratorMapper;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.mapper.AbstractDecoratorMapper;
-import com.opensymphony.module.sitemesh.mapper.ConfigLoader;
 import com.opensymphony.module.sitemesh.mapper.DefaultDecorator;
-import com.opensymphony.module.sitemesh.util.ClassLoaderUtil;
 
 public class RequestDecoratorMapper extends AbstractDecoratorMapper {
 
@@ -51,11 +49,8 @@ public class RequestDecoratorMapper extends AbstractDecoratorMapper {
 				if (url == null) {
 					location = "/resources/view/decorator/" + decorator
 							+ ".ftl";
-					url = ClassLoaderUtil.getResource(location.substring(1),
-							ConfigLoader.class);
 				}
-				if (url != null)
-					result = new DefaultDecorator(decorator, location, null);
+				result = new DefaultDecorator(decorator, location, null);
 			}
 		}
 		return result == null ? super.getDecorator(request, page) : result;
