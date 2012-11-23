@@ -10,7 +10,7 @@ import org.ironrhino.core.util.ClassScaner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LocalSessionFactoryBean extends
+public class SessionFactoryBean extends
 		org.springframework.orm.hibernate4.LocalSessionFactoryBean {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());

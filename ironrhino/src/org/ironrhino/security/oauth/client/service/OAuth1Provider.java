@@ -101,6 +101,8 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 		} catch (Exception e) {
 			logger.error("content is {}", responseBody);
 		}
+		if(requestToken == null)
+			throw new IllegalArgumentException("requestToken is null,responseBody : "+responseBody);
 		saveToken(request, requestToken, "request");
 		StringBuilder sb = new StringBuilder(getAuthorizeUrl());
 		sb.append(sb.indexOf("?") > 0 ? '&' : '?').append("oauth_token")
