@@ -15,7 +15,6 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -46,9 +45,6 @@ public class TemplateProvider {
 
 	@Value("${ssoServerBase:}")
 	private String ssoServerBase;
-
-	@Autowired(required = false)
-	private FallbackTemplateProvider fallbackTemplateProvider;
 
 	private Configuration configuration;
 
@@ -111,52 +107,45 @@ public class TemplateProvider {
 		return configuration;
 	}
 
-	public Template getTemplate(String templateName) throws IOException {
+	public Template getTemplate(String name) throws IOException {
 		Locale loc = getConfiguration().getLocale();
-		return getTemplate(templateName, loc,
-				getConfiguration().getEncoding(loc), true);
+		return getTemplate(name, loc, getConfiguration().getEncoding(loc), true);
 	}
 
-	public Template getTemplate(String templateName, Locale locale,
-			String encoding) throws IOException {
-		return getTemplate(templateName, locale, encoding, true);
-	}
-
-	public Template getTemplate(String templateName, Locale locale)
+	public Template getTemplate(String name, Locale locale, String encoding)
 			throws IOException {
-		return getTemplate(templateName, locale, getConfiguration()
-				.getEncoding(locale), true);
+		return getTemplate(name, locale, encoding, true);
 	}
 
-	public Template getTemplate(String templateName, String encoding)
+	public Template getTemplate(String name, Locale locale) throws IOException {
+		return getTemplate(name, locale,
+				getConfiguration().getEncoding(locale), true);
+	}
+
+	public Template getTemplate(String name, String encoding)
 			throws IOException {
-		return getTemplate(templateName, getConfiguration().getLocale(),
-				encoding, true);
+		return getTemplate(name, getConfiguration().getLocale(), encoding, true);
 	}
 
-	public Template getTemplate(String templateName, Locale locale,
-			String encoding, boolean parse) throws IOException {
-		if (templateName.startsWith(ftlLocation)
-				|| templateName.startsWith(ftlClasspath))
-			return getConfiguration().getTemplate(templateName, locale,
-					encoding, parse);
-		String name = ftlLocation + (templateName.indexOf('/') != 0 ? "/" : "")
-				+ templateName;
+	public Template getTemplate(String name, Locale locale, String encoding,
+			boolean parse) throws IOException {
+		if (name.startsWith(ftlLocation) || name.startsWith(ftlClasspath))
+			return getConfiguration()
+					.getTemplate(name, locale, encoding, parse);
+		String templateName = ftlLocation + (name.indexOf('/') != 0 ? "/" : "")
+				+ name;
 		Template t = null;
 		try {
-			t = getConfiguration().getTemplate(name, locale, encoding, parse);
+			t = getConfiguration().getTemplate(templateName, locale, encoding,
+					parse);
 		} catch (FileNotFoundException e) {
 			if (t == null) {
-				name = ftlClasspath
-						+ (templateName.indexOf('/') != 0 ? "/" : "")
-						+ templateName;
-				t = getConfiguration().getTemplate(name, locale, encoding,
-						parse);
+				templateName = ftlClasspath
+						+ (name.indexOf('/') != 0 ? "/" : "") + name;
+				t = getConfiguration().getTemplate(templateName, locale,
+						encoding, parse);
 			}
 		}
-		if (t == null && fallbackTemplateProvider != null)
-			t = fallbackTemplateProvider.getTemplate(templateName, locale,
-					encoding, parse);
 		return t;
 	}
 

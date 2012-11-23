@@ -14,6 +14,7 @@ import org.apache.struts2.views.freemarker.ScopesHashModel;
 import org.ironrhino.core.util.AppInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -40,10 +41,35 @@ public class MyFreemarkerManager extends FreemarkerManager {
 	@Override
 	protected freemarker.template.Configuration createConfiguration(
 			ServletContext servletContext) throws TemplateException {
+		// Configuration configuration =
+		// super.createConfiguration(servletContext);
+		/** super.createConfiguration(servletContext) start **/
+		OverridableConfiguration configuration = new OverridableConfiguration();
+		configuration
+				.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
+		if (mruMaxStrongSize > 0) {
+			configuration.setSetting(Configuration.CACHE_STORAGE_KEY, "strong:"
+					+ mruMaxStrongSize);
+		}
+		if (templateUpdateDelay != null) {
+			configuration.setSetting(Configuration.TEMPLATE_UPDATE_DELAY_KEY,
+					templateUpdateDelay);
+		}
+		if (encoding != null) {
+			configuration.setDefaultEncoding(encoding);
+		}
+		configuration.setWhitespaceStripping(true);
+		/** super.createConfiguration(servletContext) end **/
+		try {
+			configuration
+					.setOverridableTemplateProvider(WebApplicationContextUtils
+							.getWebApplicationContext(servletContext).getBean(
+									OverridableTemplateProvider.class));
+		} catch (NoSuchBeanDefinitionException e) {
+		}
 		TemplateProvider templateProvider = WebApplicationContextUtils
 				.getWebApplicationContext(servletContext).getBean(
 						"templateProvider", TemplateProvider.class);
-		Configuration configuration = super.createConfiguration(servletContext);
 		Map<String, Object> globalVariables = new HashMap<String, Object>();
 		globalVariables.putAll(templateProvider.getAllSharedVariables());
 		globalVariables.put("statics", BeansWrapper.getDefaultInstance()
