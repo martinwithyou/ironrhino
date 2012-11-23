@@ -31422,6 +31422,7 @@ MessageBundle = {
 		'selection.required' : 'please select',
 		'phone' : 'please input valid phone number',
 		'email' : 'please input valid email',
+		'regex' : 'please input valid value',
 		'integer' : 'must be a integer',
 		'integer.positive' : 'must be a positive integer',
 		'double' : 'must be a decimal',
@@ -31440,6 +31441,7 @@ MessageBundle = {
 		'required' : '请填写',
 		'selection.required' : '请选择',
 		'email' : 'email不合法',
+		'regex' : '请输入正确的格式',
 		'phone' : '请填写正确的号码',
 		'integer' : '请填写整数',
 		'integer.positive' : '请填写正整数',
@@ -31751,6 +31753,10 @@ Form = {
 								.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
 					Message.showFieldError(target, null, 'email');
 					return false;
+				} else if ($(target).hasClass('regex') && value
+						&& !value.match(new RegExp($(target).data('regex')))) {
+					Message.showFieldError(target, null, 'regex');
+					return false;
 				} else if ($(target).hasClass('phone') && value
 						&& !value.match(/^[\d-]+$/)) {
 					Message.showFieldError(target, null, 'phone');
@@ -32028,10 +32034,11 @@ Initialization.common = function() {
 				$(this).remove()
 			});
 	$('input').live('keyup', $.debounce(500, function(ev) {
-						if (!$(this).hasClass('email') && ev.keyCode != 13)
-							Form.validate(this);
-						return true;
-					})).live('blur', function(ev) {
+				if (!$(this).hasClass('email') && !$(this).hasClass('regex')
+						&& ev.keyCode != 13)
+					Form.validate(this);
+				return true;
+			})).live('blur', function(ev) {
 				// if (this.value != this.defaultValue)
 				Form.validate(this);
 				return true;

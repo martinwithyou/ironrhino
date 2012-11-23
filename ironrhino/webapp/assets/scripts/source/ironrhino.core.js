@@ -259,6 +259,10 @@ Form = {
 								.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
 					Message.showFieldError(target, null, 'email');
 					return false;
+				} else if ($(target).hasClass('regex') && value
+						&& !value.match(new RegExp($(target).data('regex')))) {
+					Message.showFieldError(target, null, 'regex');
+					return false;
 				} else if ($(target).hasClass('phone') && value
 						&& !value.match(/^[\d-]+$/)) {
 					Message.showFieldError(target, null, 'phone');
@@ -536,10 +540,11 @@ Initialization.common = function() {
 				$(this).remove()
 			});
 	$('input').live('keyup', $.debounce(500, function(ev) {
-						if (!$(this).hasClass('email') && ev.keyCode != 13)
-							Form.validate(this);
-						return true;
-					})).live('blur', function(ev) {
+				if (!$(this).hasClass('email') && !$(this).hasClass('regex')
+						&& ev.keyCode != 13)
+					Form.validate(this);
+				return true;
+			})).live('blur', function(ev) {
 				// if (this.value != this.defaultValue)
 				Form.validate(this);
 				return true;

@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -900,7 +899,8 @@ public class EntityAction extends BaseAction {
 		private boolean hiddenInList;
 		private String template;
 		private String width;
-		private Map<String, String> dynamicAttributes = Collections.EMPTY_MAP;
+		private Map<String, String> dynamicAttributes = new HashMap<String, String>(
+				0);
 		private boolean excludeIfNotEdited;
 		private String listKey = UiConfig.DEFAULT_LIST_KEY;
 		private String listValue = UiConfig.DEFAULT_LIST_VALUE;
@@ -948,6 +948,10 @@ public class EntityAction extends BaseAction {
 			this.searchable = config.searchable();
 			this.pickUrl = config.pickUrl();
 			this.templateName = config.templateName();
+			if (StringUtils.isNotBlank(this.regex)) {
+				cssClass += " regex";
+				dynamicAttributes.put("data-regex", this.regex);
+			}
 		}
 
 		public boolean isHiddenInList() {
