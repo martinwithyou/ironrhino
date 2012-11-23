@@ -381,6 +381,26 @@ public class EntityAction extends BaseAction {
 			return ACCESSDENIED;
 		if (!makeEntityValid())
 			return INPUT;
+		BeanWrapperImpl bwp = new BeanWrapperImpl(entity);
+		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
+			String name = entry.getKey();
+			UiConfigImpl uiconfig = entry.getValue();
+			Object value = bwp.getPropertyValue(name);
+			if (uiconfig.isRequired()
+					&& (value == null || value instanceof String
+							&& StringUtils.isBlank(value.toString()))) {
+				addFieldError(getEntityName() + "." + name,
+						getText("validation.required"));
+				return INPUT;
+			}
+			if (StringUtils.isNotBlank(uiconfig.getRegex())
+					&& (value instanceof String && !value.toString().matches(
+							uiconfig.getRegex()))) {
+				addFieldError(getEntityName() + "." + name,
+						getText("validation.invalid"));
+				return INPUT;
+			}
+		}
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		entityManager.save(entity);
 		addActionMessage(getText("save.success"));
@@ -872,6 +892,7 @@ public class EntityAction extends BaseAction {
 		private boolean unique;
 		private int size;
 		private int maxlength;
+		private String regex;
 		private String cssClass = "";
 		private boolean readonly;
 		private int displayOrder = Integer.MAX_VALUE;
@@ -902,6 +923,7 @@ public class EntityAction extends BaseAction {
 			this.unique = config.unique();
 			this.size = config.size();
 			this.maxlength = config.maxlength();
+			this.regex = config.regex();
 			this.readonly = config.readonly();
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.alias()))
@@ -1022,6 +1044,14 @@ public class EntityAction extends BaseAction {
 
 		public void setMaxlength(int maxlength) {
 			this.maxlength = maxlength;
+		}
+
+		public String getRegex() {
+			return regex;
+		}
+
+		public void setRegex(String regex) {
+			this.regex = regex;
 		}
 
 		public String getListKey() {

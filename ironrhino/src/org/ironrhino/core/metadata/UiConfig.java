@@ -28,6 +28,8 @@ public @interface UiConfig {
 	int size() default 0;
 
 	int maxlength() default 0;
+	
+	String regex() default "";
 
 	String cssClass() default "";
 
