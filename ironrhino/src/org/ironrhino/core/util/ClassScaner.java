@@ -202,7 +202,7 @@ public class ClassScaner {
 			if (isExcludePackage(name))
 				continue;
 			int deep = name.split("\\.").length;
-			if (deep < 2)
+			if (deep <= 2)
 				packages.add(name);
 			else
 				packages.add(name.substring(0,
