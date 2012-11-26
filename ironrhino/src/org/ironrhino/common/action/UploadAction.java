@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.Constants;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.fs.FileStorage;
@@ -152,7 +153,8 @@ public class UploadAction extends BaseAction {
 		if (StringUtils.isNotBlank(folder))
 			files.put("..", Boolean.FALSE);
 		files.putAll(fileStorage.listFilesAndDirectory(UPLOAD_DIR + folder));
-		return LIST;
+		return ServletActionContext.getRequest().getParameter("pick") != null ? "pick"
+				: LIST;
 	}
 
 	public String pick() {

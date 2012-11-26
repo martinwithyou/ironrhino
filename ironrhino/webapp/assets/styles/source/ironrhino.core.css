@@ -268,7 +268,9 @@ a.remove:hover {
   opacity: 0.4;
   filter: alpha(opacity=40);
 }
-
+.drophover { 
+	border: 2px dashed #333; 
+}
 .datagrided [class*="icon-"]{
 	opacity: 0.6;
   	filter: alpha(opacity=60);

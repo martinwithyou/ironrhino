@@ -49,6 +49,7 @@
 			for (var i = 0; i < files.length; i++)
 				formData.append(options.name, files[i]);
 			xhr.send(formData);
+			return true;
 		} else {
 			var boundary = 'xxxxxxxxx';
 			xhr.setRequestHeader('Content-Type',
@@ -107,6 +108,7 @@
 			} else {
 				xhr.abort();
 			}
+			return true;
 		}
 		return false;
 	}
