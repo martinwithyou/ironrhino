@@ -18,12 +18,12 @@
 <title>region table</title>
 </head>
 <body>
-<table class="treeTable checkboxgroup" width="100%">
+<table class="treeTable checkboxgroup" style="width:100%;">
   <thead>
     <tr>
-      <th width="10%"><input type="checkbox"/></th>
-      <th width="20%">name</th>
-      <th width="70%">fullname</th>
+      <th style="width:10%"><input type="checkbox;"/></th>
+      <th style="width:20%;">name</th>
+      <th style="width:70%;">fullname</th>
     </tr>
   </thead>
   <tbody>

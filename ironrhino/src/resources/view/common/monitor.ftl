@@ -39,16 +39,16 @@
 </div>
 <div id="result"<#if !Parameters.date?? && !Parameters.from??> class="ajaxpanel" data-interval="${Parameters.interval?default('60000')}" data-quiet="true"</#if>>
 <#list result.entrySet() as entry>
-<table class="treeTable expanded table table-hover table-bordered" width="100%">
+<table class="treeTable expanded table table-hover table-bordered" style="width:100%;">
   <#if entry.key??>
   <caption><h3>${entry.key}</h3></caption>
   </#if>
   <thead>
     <tr>
       <th>name</th>
-      <th width="20%">longValue</th>
-      <th width="20%">doubleValue</th>
-      <th width="10%"></th>
+      <th style="width:20%;">longValue</th>
+      <th style="width:20%;">doubleValue</th>
+      <th style="width:10%;"></th>
     </tr>
   </thead>
   <tbody>

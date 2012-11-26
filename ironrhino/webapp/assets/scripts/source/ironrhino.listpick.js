@@ -60,6 +60,7 @@
 			}
 			$.extend(pickoptions, (new Function("return "
 							+ (current.data('options') || '{}')))());
+			current.data('pickoptions', pickoptions);
 			var nametarget = null;
 			if (pickoptions.name) {
 				nametarget = find(pickoptions.name);
@@ -96,9 +97,10 @@
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
 						.appendTo(document.body).dialog({
-									width : 800,
-									minHeight : 500
-								});
+							width : current.data('pickoptions').width || 800,
+							minHeight : current.data('pickoptions').minHeight
+									|| 500
+						});
 				if (win.html() && typeof $.fn.mask != 'undefined')
 					win.mask(MessageBundle.get('ajax.loading'));
 				else

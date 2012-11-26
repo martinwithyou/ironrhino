@@ -33027,11 +33027,8 @@ Observation.upload = function(container) {
 				e.stopPropagation();
 			$.alerts.confirm(MessageBundle.get('confirm.delete'), MessageBundle
 							.get('select'), function(b) {
-						if (b) {
-							$('#files input[value="' + id + '"]').prop(
-									'checked', true);
-							deleteFiles();
-						}
+						if (b)
+							deleteFiles(id);
 					});
 		}
 	}
@@ -33059,15 +33056,31 @@ function addMore(n) {
 		f = r;
 	}
 }
-function deleteFiles() {
-	ajax({
-				url : CONTEXT_PATH + '/common/upload/delete',
-				data : $('#upload_form').serialize(),
-				dataType : 'json',
-				complete : function() {
-					$('#files button.reload').click();
-				}
-			});
+function deleteFiles(file) {
+	var options = {
+		url : CONTEXT_PATH + '/common/upload/delete',
+		dataType : 'json',
+		complete : function() {
+			$('#files button.reload').click();
+		}
+	};
+	if (file) {
+		var data = $('#upload_form').serialize();
+		var params = [];
+		params.push('id=' + file);
+		if (data) {
+			var arr = data.split('&');
+			for (var i = 0; i < arr.length; i++) {
+				var arr2 = arr[i].split('=', 2);
+				if (arr2[0] != 'id')
+					params.push(arr[i]);
+			}
+		}
+		options.data = params.join('&');
+	} else {
+		options.data = $('#upload_form').serialize();
+	}
+	ajax(options);
 }
 function uploadFiles(files) {
 	if (files && files.length)
@@ -34720,6 +34733,7 @@ Observation.richtable = function(container) {
 			}
 			$.extend(treeoptions, (new Function("return "
 							+ (current.data('options') || '{}')))());
+			current.data('treeoptions', treeoptions);
 			var nametarget = null;
 			if (treeoptions.name) {
 				nametarget = find(treeoptions.name);
@@ -34760,9 +34774,10 @@ Observation.richtable = function(container) {
 							+ '"><div id="_tree_"></div></div>')
 							.appendTo(document.body);
 					$('#_tree_window').dialog({
-								width : 500,
-								minHeight : 500
-							});
+						width : current.data('treeoptions').width || 500,
+						minHeight : current.data('treeoptions').minHeight
+								|| 500
+					});
 					if (nametarget && nametarget.length)
 						treeoptions.value = val(treeoptions.name) || '';
 					if (treeoptions.type != 'treeview') {
@@ -34911,6 +34926,7 @@ Observation.treeselect = function(container) {
 			}
 			$.extend(pickoptions, (new Function("return "
 							+ (current.data('options') || '{}')))());
+			current.data('pickoptions', pickoptions);
 			var nametarget = null;
 			if (pickoptions.name) {
 				nametarget = find(pickoptions.name);
@@ -34947,9 +34963,10 @@ Observation.treeselect = function(container) {
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
 						.appendTo(document.body).dialog({
-									width : 800,
-									minHeight : 500
-								});
+							width : current.data('pickoptions').width || 800,
+							minHeight : current.data('pickoptions').minHeight
+									|| 500
+						});
 				if (win.html() && typeof $.fn.mask != 'undefined')
 					win.mask(MessageBundle.get('ajax.loading'));
 				else

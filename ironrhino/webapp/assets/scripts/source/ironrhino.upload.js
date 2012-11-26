@@ -64,11 +64,8 @@ Observation.upload = function(container) {
 				e.stopPropagation();
 			$.alerts.confirm(MessageBundle.get('confirm.delete'), MessageBundle
 							.get('select'), function(b) {
-						if (b) {
-							$('#files input[value="' + id + '"]').prop(
-									'checked', true);
-							deleteFiles();
-						}
+						if (b)
+							deleteFiles(id);
 					});
 		}
 	}
@@ -96,15 +93,31 @@ function addMore(n) {
 		f = r;
 	}
 }
-function deleteFiles() {
-	ajax({
-				url : CONTEXT_PATH + '/common/upload/delete',
-				data : $('#upload_form').serialize(),
-				dataType : 'json',
-				complete : function() {
-					$('#files button.reload').click();
-				}
-			});
+function deleteFiles(file) {
+	var options = {
+		url : CONTEXT_PATH + '/common/upload/delete',
+		dataType : 'json',
+		complete : function() {
+			$('#files button.reload').click();
+		}
+	};
+	if (file) {
+		var data = $('#upload_form').serialize();
+		var params = [];
+		params.push('id=' + file);
+		if (data) {
+			var arr = data.split('&');
+			for (var i = 0; i < arr.length; i++) {
+				var arr2 = arr[i].split('=', 2);
+				if (arr2[0] != 'id')
+					params.push(arr[i]);
+			}
+		}
+		options.data = params.join('&');
+	} else {
+		options.data = $('#upload_form').serialize();
+	}
+	ajax(options);
 }
 function uploadFiles(files) {
 	if (files && files.length)

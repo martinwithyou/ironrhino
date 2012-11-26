@@ -61,6 +61,7 @@
 			}
 			$.extend(treeoptions, (new Function("return "
 							+ (current.data('options') || '{}')))());
+			current.data('treeoptions', treeoptions);
 			var nametarget = null;
 			if (treeoptions.name) {
 				nametarget = find(treeoptions.name);
@@ -101,9 +102,10 @@
 							+ '"><div id="_tree_"></div></div>')
 							.appendTo(document.body);
 					$('#_tree_window').dialog({
-								width : 500,
-								minHeight : 500
-							});
+						width : current.data('treeoptions').width || 500,
+						minHeight : current.data('treeoptions').minHeight
+								|| 500
+					});
 					if (nametarget && nametarget.length)
 						treeoptions.value = val(treeoptions.name) || '';
 					if (treeoptions.type != 'treeview') {
