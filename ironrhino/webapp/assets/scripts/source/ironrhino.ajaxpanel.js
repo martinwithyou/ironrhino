@@ -23,9 +23,10 @@
 		if (ele.hasClass('tab-pane') && ele.hasClass('cache')
 				&& ele.hasClass('loaded'))
 			return;
+		var url = ele.data('url');
 		var options = {
 			target : ele[0],
-			url : ele.data('url') || document.location.href,
+			url : url || document.location.href,
 			global : false,
 			quiet : true,
 			beforeSend : function() {
@@ -49,7 +50,7 @@
 				}
 			}
 		};
-		if (ele.attr('url'))
+		if (url)
 			options.replacement = ele.attr('id') + ':'
 					+ (ele.attr('replacement') || 'content');
 		else
