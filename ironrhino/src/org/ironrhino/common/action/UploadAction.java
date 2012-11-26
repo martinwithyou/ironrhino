@@ -155,6 +155,11 @@ public class UploadAction extends BaseAction {
 		return LIST;
 	}
 
+	public String pick() {
+		list();
+		return "pick";
+	}
+
 	public String delete() {
 		String[] paths = getId();
 		if (paths != null) {

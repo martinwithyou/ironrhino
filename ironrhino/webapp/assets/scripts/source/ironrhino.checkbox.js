@@ -1,13 +1,14 @@
 (function($) {
 
 	function check(group) {
-		var allchecked = true;
 		var boxes = $('input[type=checkbox][name]', group);
-		for (var i = 0; i < boxes.length; i++)
-			if (!boxes[i].checked) {
-				allchecked = false;
-				break;
-			}
+		var allchecked = boxes.length > 0;
+		if (allchecked)
+			for (var i = 0; i < boxes.length; i++)
+				if (!boxes[i].checked) {
+					allchecked = false;
+					break;
+				}
 		$('input[type=checkbox]:not(.normal):not([name])', group).prop(
 				'checked', allchecked);
 	}
