@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,43 +27,49 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 		try {
 			result = invocation.invoke();
 		} catch (Exception e) {
-			Object action = invocation.getAction();
-			if (action instanceof ValidationAware) {
-				ValidationAware validationAwareAction = (ValidationAware) action;
-				if (e instanceof ValidationException) {
-					ValidationException ve = (ValidationException) e;
-					for (String s : ve.getActionMessages())
-						validationAwareAction
-								.addActionMessage(findText(s, null));
-					for (String s : ve.getActionErrors())
-						validationAwareAction.addActionError(findText(s, null));
-					for (Map.Entry<String, List<String>> entry : ve
-							.getFieldErrors().entrySet()) {
-						for (String s : entry.getValue())
-							validationAwareAction.addFieldError(entry.getKey(),
-									findText(s, null));
-					}
-				} else {
-					if (e instanceof ErrorMessage) {
-						ErrorMessage err = (ErrorMessage) e;
-						StringBuilder sb = new StringBuilder();
-						sb.append(findText(err.getMessage(), err.getArgs()));
-						String submessage = err.getSubmessage();
-						if (StringUtils.isNotBlank(submessage)) {
-							sb.append(" : ");
-							sb.append(findText(submessage, null));
+			if (e instanceof NoSuchMethodException) {
+				ServletActionContext.getRequest().setAttribute("decorator", "none");
+				result = BaseAction.NOTFOUND;
+			} else {
+				Object action = invocation.getAction();
+				if (action instanceof ValidationAware) {
+					ValidationAware validationAwareAction = (ValidationAware) action;
+					if (e instanceof ValidationException) {
+						ValidationException ve = (ValidationException) e;
+						for (String s : ve.getActionMessages())
+							validationAwareAction.addActionMessage(findText(s,
+									null));
+						for (String s : ve.getActionErrors())
+							validationAwareAction.addActionError(findText(s,
+									null));
+						for (Map.Entry<String, List<String>> entry : ve
+								.getFieldErrors().entrySet()) {
+							for (String s : entry.getValue())
+								validationAwareAction.addFieldError(
+										entry.getKey(), findText(s, null));
 						}
-						validationAwareAction.addActionError(sb.toString());
 					} else {
-						String msg = findText(e.getMessage(), null);
-						if (msg == null)
-							msg = e.toString();
-						validationAwareAction.addActionError(msg);
-						log.error(e.getMessage(),e);
+						if (e instanceof ErrorMessage) {
+							ErrorMessage err = (ErrorMessage) e;
+							StringBuilder sb = new StringBuilder();
+							sb.append(findText(err.getMessage(), err.getArgs()));
+							String submessage = err.getSubmessage();
+							if (StringUtils.isNotBlank(submessage)) {
+								sb.append(" : ");
+								sb.append(findText(submessage, null));
+							}
+							validationAwareAction.addActionError(sb.toString());
+						} else {
+							String msg = findText(e.getMessage(), null);
+							if (msg == null)
+								msg = e.toString();
+							validationAwareAction.addActionError(msg);
+							log.error(e.getMessage(), e);
+						}
 					}
 				}
+				result = BaseAction.ERROR;
 			}
-			result = BaseAction.ERROR;
 		}
 		return result;
 	}

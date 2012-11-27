@@ -104,6 +104,7 @@
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>ERROR</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>sitemesh</filter-name>
@@ -115,6 +116,7 @@
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>ERROR</dispatcher>
 	</filter-mapping>
 	<listener>
 		<listener-class>org.ironrhino.core.servlet.AppInfoListener</listener-class>
@@ -142,14 +144,14 @@
 	</servlet-mapping>
 	<error-page>
 		<error-code>500</error-code>
-		<location>/WEB-INF/view/jsp/error/500.jsp</location>
+		<location>/error/handle/500</location>
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/WEB-INF/view/jsp/error/404.jsp</location>
+		<location>/error/handle/404</location>
 	</error-page>
 	<error-page>
 		<error-code>403</error-code>
-		<location>/WEB-INF/view/jsp/error/403.jsp</location>
+		<location>/error/handle/403</location>
 	</error-page>
 </web-app>

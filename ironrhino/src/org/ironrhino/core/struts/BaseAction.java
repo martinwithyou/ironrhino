@@ -44,6 +44,7 @@ public class BaseAction extends ActionSupport {
 	public static final String REDIRECT = "redirect";
 	public static final String SUGGEST = "suggest";
 	public static final String ACCESSDENIED = "accessDenied";
+	public static final String NOTFOUND = "notFound";
 	public static final String ERROR = "error";
 
 	private boolean returnInput;
