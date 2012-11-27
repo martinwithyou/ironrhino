@@ -76,19 +76,23 @@
 								event.stopPropagation();
 								return false;
 							});
-				} else if (val(pickoptions.name)) {
-					$('<a class="remove" href="#">&times;</a>')
-							.appendTo(nametarget).click(function(event) {
-								current = $(event.target).closest('.listpick');
-								val(pickoptions.name, nametarget
-												.is(':input,td')
-												? ''
-												: MessageBundle.get('pick'));
-								val(pickoptions.id, '');
-								$(this).remove();
-								event.stopPropagation();
-								return false;
-							});
+				} else {
+					var text = val(treeoptions.name);
+					if (text && text != '...') {
+						$('<a class="remove" href="#">&times;</a>')
+								.appendTo(nametarget).click(function(event) {
+									current = $(event.target)
+											.closest('.listpick');
+									val(pickoptions.name, nametarget
+													.is(':input,td')
+													? ''
+													: MessageBundle.get('pick'));
+									val(pickoptions.id, '');
+									$(this).remove();
+									event.stopPropagation();
+									return false;
+								});
+					}
 				}
 			}
 			var func = function(event) {
