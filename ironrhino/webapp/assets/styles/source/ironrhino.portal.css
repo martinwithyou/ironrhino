@@ -13,9 +13,9 @@
 	}
 .portlet { 
 	border: 1px solid #DEDEDE;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
 	margin: 10px 4px;
 	box-shadow: 0 0 10px rgba(189, 189, 189, 0.4);
 	-webkit-box-shadow: 0 0 10px rgba(189, 189, 189, 0.4);
