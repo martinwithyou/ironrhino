@@ -53,41 +53,41 @@
 	$.fn.listpick = function() {
 		$(this).each(function() {
 			current = $(this);
-			var pickoptions = {
+			var options = {
 				separator : ',',
 				nameindex : 1,
 				multiple : false
 			}
-			$.extend(pickoptions, (new Function("return "
+			$.extend(options, (new Function("return "
 							+ (current.data('options') || '{}')))());
-			current.data('pickoptions', pickoptions);
+			current.data('_options', options);
 			var nametarget = null;
-			if (pickoptions.name) {
-				nametarget = find(pickoptions.name);
+			if (options.name) {
+				nametarget = find(options.name);
 				var remove = nametarget.children('a.remove');
 				if (remove.length) {
 					remove.click(function(event) {
-								val(pickoptions.name, nametarget
+								val(options.name, nametarget
 												.is(':input,td')
 												? ''
 												: MessageBundle.get('select'));
-								val(pickoptions.id, '');
+								val(options.id, '');
 								$(this).remove();
 								event.stopPropagation();
 								return false;
 							});
 				} else {
-					var text = val(treeoptions.name);
+					var text = val(options.name);
 					if (text && text != '...') {
 						$('<a class="remove" href="#">&times;</a>')
 								.appendTo(nametarget).click(function(event) {
 									current = $(event.target)
 											.closest('.listpick');
-									val(pickoptions.name, nametarget
+									val(options.name, nametarget
 													.is(':input,td')
 													? ''
 													: MessageBundle.get('pick'));
-									val(pickoptions.id, '');
+									val(options.id, '');
 									$(this).remove();
 									event.stopPropagation();
 									return false;
@@ -101,8 +101,8 @@
 				var win = $('<div id="_pick_window" title="'
 						+ MessageBundle.get('select') + '"></div>')
 						.appendTo(document.body).dialog({
-							width : current.data('pickoptions').width || 800,
-							minHeight : current.data('pickoptions').minHeight
+							width : current.data('_options').width || 800,
+							minHeight : current.data('_options').minHeight
 									|| 500
 						});
 				if (win.html() && typeof $.fn.mask != 'undefined')
@@ -115,15 +115,15 @@
 					if (typeof $.fn.mask != 'undefined')
 						win.unmask();
 					Dialog.adapt(win);
-					if (!pickoptions.multiple) {
+					if (!options.multiple) {
 						$('tbody input[type=radio]', target).live('click',
 								function() {
 									var id = $(this).val();
-									var name = $($(this).closest('tr')[0].cells[pickoptions.nameindex])
+									var name = $($(this).closest('tr')[0].cells[options.nameindex])
 											.text();
-									if (pickoptions.name) {
-										val(pickoptions.name, name);
-										var nametarget = find(pickoptions.name);
+									if (options.name) {
+										val(options.name, name);
+										var nametarget = find(options.name);
 										if (nametarget.is(':input')) {
 											var form = nametarget
 													.closest('form');
@@ -134,22 +134,22 @@
 													.appendTo(nametarget)
 													.click(function(event) {
 														val(
-																pickoptions.name,
+																options.name,
 																nametarget
 																		.is(':input,td')
 																		? ''
 																		: MessageBundle
 																				.get('select'));
-														val(pickoptions.id, '');
+														val(options.id, '');
 														$(this).remove();
 														event.stopPropagation();
 														return false;
 													});
 										}
 									}
-									if (pickoptions.id) {
-										val(pickoptions.id, id);
-										var idtarget = find(pickoptions.id);
+									if (options.id) {
+										val(options.id, id);
+										var idtarget = find(options.id);
 										if (idtarget.is(':input')) {
 											var form = idtarget.closest('form');
 											if (!form.hasClass('nodirty'))
@@ -167,17 +167,17 @@
 							checkbox.each(function() {
 								ids.push($(this).val());
 								names
-										.push($($(this).closest('tr')[0].cells[pickoptions.nameindex])
+										.push($($(this).closest('tr')[0].cells[options.nameindex])
 												.text());
 							});
-							var separator = pickoptions.separator;
-							if (pickoptions.name) {
-								var nametarget = find(pickoptions.name);
+							var separator = options.separator;
+							if (options.name) {
+								var nametarget = find(options.name);
 								var name = names.join(separator);
 								if (nametarget.is(':input')) {
-									var _names = val(pickoptions.name) || '';
+									var _names = val(options.name) || '';
 									val(
-											pickoptions.name,
+											options.name,
 											ArrayUtils
 													.unique((_names
 															+ (_names
@@ -196,18 +196,18 @@
 											: '') + name).split(separator))
 											.join(separator);
 									nametarget.data('picked', picked);
-									val(pickoptions.name, picked);
+									val(options.name, picked);
 									$('<a class="remove" href="#">&times;</a>')
 											.appendTo(nametarget).click(
 													function(event) {
 														val(
-																pickoptions.name,
+																options.name,
 																nametarget
 																		.is(':input,td')
 																		? ''
 																		: MessageBundle
 																				.get('pick'));
-														val(pickoptions.id, '');
+														val(options.id, '');
 														nametarget.data(
 																'picked', null);
 														$(this).remove();
@@ -216,11 +216,11 @@
 													});
 								}
 							}
-							if (pickoptions.id) {
-								var idtarget = find(pickoptions.id);
+							if (options.id) {
+								var idtarget = find(options.id);
 								var id = ids.join(separator);
-								var _ids = val(pickoptions.id) || '';
-								val(pickoptions.id, ArrayUtils.unique((_ids
+								var _ids = val(options.id) || '';
+								val(options.id, ArrayUtils.unique((_ids
 												+ (_ids ? separator : '') + id)
 												.split(separator))
 												.join(separator));
@@ -235,8 +235,8 @@
 						});
 					}
 				};
-				var url = pickoptions.url;
-				if (url.indexOf('multiple') < 0 && pickoptions.multiple)
+				var url = options.url;
+				if (url.indexOf('multiple') < 0 && options.multiple)
 					url += (url.indexOf('?') > 0 ? '&' : '?') + 'multiple=true'
 				ajax({
 							url : url,

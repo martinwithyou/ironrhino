@@ -53,43 +53,43 @@
 	$.fn.treeselect = function() {
 		$(this).each(function() {
 			current = $(this);
-			var treeoptions = {
+			var options = {
 				idproperty : 'id',
 				separator : '',
 				full : true,
 				cache : true
 			}
-			$.extend(treeoptions, (new Function("return "
+			$.extend(options, (new Function("return "
 							+ (current.data('options') || '{}')))());
-			current.data('treeoptions', treeoptions);
+			current.data('_options', options);
 			var nametarget = null;
-			if (treeoptions.name) {
-				nametarget = find(treeoptions.name);
+			if (options.name) {
+				nametarget = find(options.name);
 				var remove = nametarget.children('a.remove');
 				if (remove.length) {
 					remove.click(function(event) {
-								val(treeoptions.name, nametarget
+								val(options.name, nametarget
 												.is(':input,td')
 												? ''
 												: MessageBundle.get('select'));
-								val(treeoptions.id, '');
+								val(options.id, '');
 								$(this).remove();
 								event.stopPropagation();
 								return false;
 							});
 				} else {
-					var text = val(treeoptions.name);
+					var text = val(options.name);
 					if (text && text != '...') {
 						$('<a class="remove" href="#">&times;</a>')
 								.appendTo(nametarget).click(function(event) {
 									current = $(event.target)
 											.closest('.treeselect');
-									val(treeoptions.name, nametarget
+									val(options.name, nametarget
 													.is(':input,td')
 													? ''
 													: MessageBundle
 															.get('select'));
-									val(treeoptions.id, '');
+									val(options.id, '');
 									$(this).remove();
 									event.stopPropagation();
 									return false;
@@ -99,7 +99,7 @@
 			}
 			var func = function(event) {
 				current = $(event.target).closest('.treeselect');
-				if (!treeoptions.cache)
+				if (!options.cache)
 					$('#_tree_window').remove();
 				if (!$('#_tree_window').length) {
 					$('<div id="_tree_window" title="'
@@ -107,35 +107,35 @@
 							+ '"><div id="_tree_"></div></div>')
 							.appendTo(document.body);
 					$('#_tree_window').dialog({
-						width : current.data('treeoptions').width || 500,
-						minHeight : current.data('treeoptions').minHeight
+						width : current.data('_options').width || 500,
+						minHeight : current.data('_options').minHeight
 								|| 500
 					});
 					if (nametarget && nametarget.length)
-						treeoptions.value = val(treeoptions.name) || '';
-					if (treeoptions.type != 'treeview') {
-						treeoptions.click = function(treenode) {
-							doclick(treenode, treeoptions);
+						options.value = val(options.name) || '';
+					if (options.type != 'treeview') {
+						options.click = function(treenode) {
+							doclick(treenode, options);
 						};
-						$('#_tree_').treearea(treeoptions);
+						$('#_tree_').treearea(options);
 					} else {
-						var options = {
-							url : treeoptions.url,
+						var treeviewoptions = {
+							url : options.url,
 							click : function() {
 								var treenode = $(this).closest('li')
 										.data('treenode');
-								doclick(treenode, treeoptions);
+								doclick(treenode, options);
 							},
 							collapsed : true,
 							placeholder : MessageBundle.get('ajax.loading'),
 							unique : true,
-							separator : treeoptions.separator,
-							value : treeoptions.value,
-							root : treeoptions.root
+							separator : options.separator,
+							value : options.value,
+							root : options.root
 						};
-						if (!treeoptions.cache)
-							options.url = options.url + '?r=' + Math.random();
-						$('#_tree_').treeview(options);
+						if (!options.cache)
+							treeviewoptions.url = treeviewoptions.url + '?r=' + Math.random();
+						$('#_tree_').treeview(treeviewoptions);
 					}
 				} else {
 					$('#_tree_window').dialog('open');
@@ -153,13 +153,13 @@
 		return this;
 	};
 
-	function doclick(treenode, treeoptions) {
-		if (treeoptions.name) {
-			var nametarget = find(treeoptions.name);
-			var name = treeoptions.full || false
+	function doclick(treenode, options) {
+		if (options.name) {
+			var nametarget = find(options.name);
+			var name = options.full || false
 					? treenode.fullname
 					: treenode.name;
-			val(treeoptions.name, name);
+			val(options.name, name);
 			if (nametarget.is(':input')) {
 				var form = nametarget.closest('form');
 				if (!form.hasClass('nodirty'))
@@ -167,20 +167,20 @@
 			} else {
 				$('<a class="remove" href="#">&times;</a>')
 						.appendTo(nametarget).click(function(event) {
-							val(treeoptions.name, nametarget.is(':input,td')
+							val(options.name, nametarget.is(':input,td')
 											? ''
 											: MessageBundle.get('select'));
-							val(treeoptions.id, '');
+							val(options.id, '');
 							$(this).remove();
 							event.stopPropagation();
 							return false;
 						});
 			}
 		}
-		if (treeoptions.id) {
-			var idtarget = find(treeoptions.id);
-			var id = treenode[treeoptions.idproperty];
-			val(treeoptions.id, id);
+		if (options.id) {
+			var idtarget = find(options.id);
+			var id = treenode[options.idproperty];
+			val(options.id, id);
 			if (idtarget.is(':input')) {
 				var form = idtarget.closest('form');
 				if (!form.hasClass('nodirty'))
@@ -188,8 +188,8 @@
 			}
 		}
 		$('#_tree_window').dialog('close');
-		if (treeoptions.select)
-			treeoptions.select(treenode);
+		if (options.select)
+			options.select(treenode);
 	}
 
 })(jQuery);
