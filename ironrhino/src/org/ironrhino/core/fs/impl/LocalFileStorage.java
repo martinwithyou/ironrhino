@@ -40,7 +40,7 @@ public class LocalFileStorage extends AbstractFileStorage {
 			throw new RuntimeException(directory + " is not directory");
 		if (!this.directory.exists())
 			if (!this.directory.mkdirs())
-				log.error("mkdir error:" + directory.getAbsolutePath());
+				log.warn("mkdirs error:" + directory.getAbsolutePath());
 	}
 
 	public boolean mkdir(String path) {

@@ -18,7 +18,7 @@ public abstract class AbstractFileStorage implements FileStorage {
 
 	protected int bufferSize = 512 * 1024;
 
-	@Value("${fileStorage.uri:file:///temp}")
+	@Value("${fileStorage.uri:file:///tmp}")
 	protected String uri;
 
 	public void setBufferSize(int bufferSize) {
