@@ -3,7 +3,10 @@
 	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean id="zooKeeper" class="org.ironrhino.core.zookeeper.ZooKeeperFactoryBean"
-		p:connectString="${zooKeeper.connectString:127.0.0.1:2181}" />
+	<bean id="zooKeeper" class="org.apache.zookeeper.ZooKeeper" destroy-method="close" >
+		<constructor-arg index="0" value="${zooKeeper.connectString:127.0.0.1:2181}"/>
+		<constructor-arg index="1" value="${zooKeeper.sessionTimeout:10000}"/>
+		<constructor-arg index="2" ref="defaultWatcher"/>
+	</bean>
 	<bean id="defaultWatcher" class="org.ironrhino.core.zookeeper.DefaultWatcher" />
 </beans>
