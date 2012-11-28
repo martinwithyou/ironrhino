@@ -1,4 +1,4 @@
-package org.ironrhino.core.struts;
+package org.ironrhino.core.struts.mapper;
 
 import javax.servlet.http.HttpServletRequest;
 

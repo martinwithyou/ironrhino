@@ -9,7 +9,7 @@
 		class="org.ironrhino.core.struts.MyFreemarkerManager" />
 	<constant name="struts.devMode" value="false" />
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
-	<constant name="struts.mapper.class" value="org.ironrhino.core.struts.DefaultActionMapper" />
+	<constant name="struts.mapper.class" value="org.ironrhino.core.struts.mapper.DefaultActionMapper" />
 	<constant name="struts.url.includeParams" value="none" />
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	<constant name="struts.multipart.maxSize" value="5242880" />
@@ -19,18 +19,18 @@
 	<package name="ironrhino-default" extends="struts-default">
 		<result-types>
 			<result-type name="autoconfig"
-				class="org.ironrhino.core.struts.AutoConfigResult" />
+				class="org.ironrhino.core.struts.result.AutoConfigResult" />
 			<result-type name="accessDenied"
-				class="org.ironrhino.core.struts.AccessDeniedResult" />
+				class="org.ironrhino.core.struts.result.AccessDeniedResult" />
 			<result-type name="directTemplate"
-				class="org.ironrhino.core.struts.DirectTemplateResult" />
-			<result-type name="json" class="org.ironrhino.core.struts.JsonResult" />
+				class="org.ironrhino.core.struts.result.DirectTemplateResult" />
+			<result-type name="json" class="org.ironrhino.core.struts.result.JsonResult" />
 			<result-type name="referer"
-				class="org.ironrhino.core.struts.RefererResult" />
+				class="org.ironrhino.core.struts.result.RefererResult" />
 			<result-type name="jasperreports"
 				class="org.apache.struts2.views.jasperreports.JasperReportsResult" />
 			<result-type name="dynamicreports"
-				class="org.ironrhino.core.struts.DynamicReportsResult" />
+				class="org.ironrhino.core.struts.result.DynamicReportsResult" />
 		</result-types>
 		<interceptors>
 			<interceptor name="exception"

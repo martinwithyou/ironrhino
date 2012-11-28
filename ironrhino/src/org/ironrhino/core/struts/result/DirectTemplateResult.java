@@ -1,8 +1,9 @@
-package org.ironrhino.core.struts;
+package org.ironrhino.core.struts.result;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
+import org.ironrhino.core.struts.mapper.AbstractActionMapper;
 
 import com.opensymphony.xwork2.ActionInvocation;
 

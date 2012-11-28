@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.Persistable;
+import org.ironrhino.core.struts.result.AutoConfigResult;
 import org.ironrhino.core.util.ClassScaner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

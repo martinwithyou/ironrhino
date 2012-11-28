@@ -1,4 +1,4 @@
-package org.ironrhino.core.struts;
+package org.ironrhino.core.struts.result;
 
 import java.net.MalformedURLException;
 import java.net.URL;

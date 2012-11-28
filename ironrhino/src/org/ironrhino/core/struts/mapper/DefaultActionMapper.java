@@ -1,4 +1,4 @@
-package org.ironrhino.core.struts;
+package org.ironrhino.core.struts.mapper;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -15,6 +15,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.ironrhino.common.action.DirectTemplateAction;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.struts.result.DirectTemplateResult;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.opensymphony.xwork2.config.Configuration;

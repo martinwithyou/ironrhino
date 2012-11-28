@@ -1,4 +1,4 @@
-package org.ironrhino.core.struts;
+package org.ironrhino.core.struts.result;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
