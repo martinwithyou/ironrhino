@@ -1,5 +1,7 @@
 package org.ironrhino.core.util;
 
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,7 +42,7 @@ public class BarcodeUtils {
 	public static byte[] encodeQRCode(String content, String encoding,
 			String format, int width, int height) throws WriterException,
 			IOException {
-		ByteArrayOutputStream stream = new ByteArrayOutputStream(256);
+		ByteArrayOutputStream stream = new ByteArrayOutputStream(1024);
 		encodeQRCode(content, encoding, format, width, height, stream);
 		byte[] bytes = stream.toByteArray();
 		return bytes;
@@ -54,19 +56,51 @@ public class BarcodeUtils {
 	public static void encodeQRCode(String content, String encoding,
 			String format, int width, int height, OutputStream stream)
 			throws WriterException, IOException {
+		encodeQRCode(content, encoding, format, width, height, stream, null);
+	}
+
+	public static void encodeQRCode(String content, String encoding,
+			String format, int width, int height, OutputStream stream,
+			InputStream watermark) throws WriterException, IOException {
 		if (encoding == null)
 			encoding = "UTF-8";
 		if (format == null)
 			format = "png";
 		if (width <= 0)
-			width = 200;
+			width = 400;
 		if (height <= 0)
-			height = 200;
+			height = 400;
 		BitMatrix matrix = new QRCodeWriter().encode(
 				new String(content.getBytes(encoding), "ISO-8859-1"),
 				BarcodeFormat.QR_CODE, width, height);
-		MatrixToImageWriter.writeToStream(matrix, format, stream);
-		stream.close();
+		if (watermark == null) {
+			MatrixToImageWriter.writeToStream(matrix, format, stream);
+			stream.close();
+		} else {
+			ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
+			MatrixToImageWriter.writeToStream(matrix, format, os);
+			BufferedImage image2 = ImageIO.read(new ByteArrayInputStream(os
+					.toByteArray()));
+			BufferedImage image = new BufferedImage(width, height,
+					BufferedImage.TYPE_INT_RGB);
+			BufferedImage watermarkImage = ImageIO.read(watermark);
+			Graphics2D g2d = image.createGraphics();
+			g2d.drawImage(image2, 0, 0, width, height, null);
+			int widthWaterMark = Math.min(watermarkImage.getWidth(null),
+					width / 6);
+			int heightWaterMark = Math.min(watermarkImage.getHeight(null),
+					height / 6);
+			float alpha = 0.8f;
+			g2d.setComposite(AlphaComposite.getInstance(
+					AlphaComposite.SRC_ATOP, alpha));
+			g2d.drawImage(watermarkImage, (width - widthWaterMark) / 2,
+					(height - heightWaterMark) / 2, widthWaterMark,
+					heightWaterMark, null);
+			g2d.setComposite(AlphaComposite
+					.getInstance(AlphaComposite.SRC_OVER));
+			g2d.dispose();
+			ImageIO.write(image, format, stream);
+		}
 	}
 
 	public static byte[] encodeEAN13(String content) throws WriterException,

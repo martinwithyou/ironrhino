@@ -21,10 +21,10 @@ public class QRCodeResult implements Result {
 	private String format = "png";
 
 	@Inject(value = "qrcode.width", required = false)
-	private int width = 200;
+	private int width = -1;
 
 	@Inject(value = "qrcode.height", required = false)
-	private int height = 200;
+	private int height = -1;
 
 	public void execute(ActionInvocation invocation) throws Exception {
 		String content = invocation.getStack().findValue("responseBody")
