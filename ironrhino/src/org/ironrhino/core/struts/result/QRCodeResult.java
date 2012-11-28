@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.ironrhino.core.util.QRCodeUtils;
+import org.ironrhino.core.util.BarcodeUtils;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
@@ -36,7 +36,7 @@ public class QRCodeResult implements Result {
 			response.setHeader("Pragma", "no-cache");
 			response.setDateHeader("Expires", 0);
 		}
-		QRCodeUtils.encode(content, encoding, format, width, height,
+		BarcodeUtils.encodeQRCode(content, encoding, format, width, height,
 				response.getOutputStream());
 	}
 }
