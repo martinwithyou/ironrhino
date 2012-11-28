@@ -31,6 +31,8 @@
 				class="org.apache.struts2.views.jasperreports.JasperReportsResult" />
 			<result-type name="dynamicreports"
 				class="org.ironrhino.core.struts.result.DynamicReportsResult" />
+			<result-type name="qrcode"
+				class="org.ironrhino.core.struts.result.QRCodeResult" />
 		</result-types>
 		<interceptors>
 			<interceptor name="exception"
@@ -60,6 +62,7 @@
 			<result name="accessDenied" type="accessDenied" />
 			<result name="directTemplate" type="directTemplate" />
 			<result name="dynamicreports" type="dynamicreports" />
+			<result name="qrcode" type="qrcode" />
 			<result name="error" type="autoconfig" />
 		</global-results>
 	</package>

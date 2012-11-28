@@ -41,6 +41,8 @@ public class BaseAction extends ActionSupport {
 	public static final String VIEW = "view";
 	public static final String REFERER = "referer";
 	public static final String JSON = "json";
+	public static final String DYNAMICREPORTS = "dynamicreports";
+	public static final String QRCODE = "qrcode";
 	public static final String REDIRECT = "redirect";
 	public static final String SUGGEST = "suggest";
 	public static final String ACCESSDENIED = "accessDenied";
@@ -63,6 +65,8 @@ public class BaseAction extends ActionSupport {
 	protected String originalMethod;
 
 	protected String targetUrl;
+
+	protected String responseBody;
 
 	protected boolean captchaRequired;
 
@@ -106,6 +110,10 @@ public class BaseAction extends ActionSupport {
 
 	public void setTargetUrl(String targetUrl) {
 		this.targetUrl = targetUrl;
+	}
+
+	public String getResponseBody() {
+		return responseBody;
 	}
 
 	public String getActionBaseUrl() {
