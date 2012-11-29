@@ -23,7 +23,9 @@ Initialization.upload = function() {
 					}
 				});
 	});
-	$('#files button.delete').live('click', deleteFiles);
+	$('#files button.delete').live('click', function() {
+				deleteFiles()
+			});
 }
 Observation.upload = function(container) {
 	var upload_form = $('#upload_form', container);
