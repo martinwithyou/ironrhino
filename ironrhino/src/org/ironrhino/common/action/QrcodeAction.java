@@ -21,7 +21,7 @@ public class QrcodeAction extends BaseAction {
 
 	private String content;
 
-	private String encoding;
+	private String encoding = "UTF-8";
 
 	private String url;
 
