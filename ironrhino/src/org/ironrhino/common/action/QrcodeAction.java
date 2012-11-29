@@ -3,6 +3,7 @@ package org.ironrhino.common.action;
 import java.io.File;
 import java.io.FileInputStream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
@@ -10,22 +11,33 @@ import org.ironrhino.core.util.BarcodeUtils;
 import org.ironrhino.core.util.ErrorMessage;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
-import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
-import com.opensymphony.xwork2.validator.annotations.Validations;
-import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 @AutoConfig(fileupload = "image/*")
 public class QrcodeAction extends BaseAction {
 
 	private static final long serialVersionUID = 8180265410790553918L;
 
+	private boolean decode = false;
+
 	private String content;
 
-	private File watermark;
+	private String encoding;
+
+	private String url;
+
+	private File file;
 
 	private int width = 400;
 
 	private int height = 400;
+
+	public boolean isDecode() {
+		return decode;
+	}
+
+	public void setDecode(boolean decode) {
+		this.decode = decode;
+	}
 
 	public int getWidth() {
 		return width;
@@ -51,22 +63,59 @@ public class QrcodeAction extends BaseAction {
 		this.content = content;
 	}
 
-	public File getWatermark() {
-		return watermark;
+	public String getEncoding() {
+		return encoding;
 	}
 
-	public void setWatermark(File watermark) {
-		this.watermark = watermark;
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 
 	@Override
 	@InputConfig(resultName = "success")
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "content", trim = true, key = "validation.required") })
 	public String execute() {
 		try {
-			BarcodeUtils.encodeQRCode(content, null, null, width, height,
-					ServletActionContext.getResponse().getOutputStream(),
-					watermark != null ? new FileInputStream(watermark) : null);
+			if (decode) {
+				if (file == null && StringUtils.isBlank(url)) {
+					if (file == null) {
+						addFieldError("file", getText("validation.required"));
+						return SUCCESS;
+					}
+					if (url == null) {
+						addFieldError("url", getText("validation.required"));
+						return SUCCESS;
+					}
+				}
+				if (file != null)
+					content = BarcodeUtils.decode(new FileInputStream(file));
+				else if (url != null)
+					content = BarcodeUtils.decode(url);
+				return SUCCESS;
+			} else {
+				if (content == null) {
+					addFieldError("content", getText("validation.required"));
+					return SUCCESS;
+				}
+				BarcodeUtils.encodeQRCode(content, null, null, width, height,
+						ServletActionContext.getResponse().getOutputStream(),
+						file != null ? new FileInputStream(file) : null);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ErrorMessage(e.getMessage());

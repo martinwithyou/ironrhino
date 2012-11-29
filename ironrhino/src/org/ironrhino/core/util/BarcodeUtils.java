@@ -15,6 +15,8 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
@@ -62,7 +64,7 @@ public class BarcodeUtils {
 	public static void encodeQRCode(String content, String encoding,
 			String format, int width, int height, OutputStream stream,
 			InputStream watermark) throws WriterException, IOException {
-		if (encoding == null)
+		if (StringUtils.isBlank(encoding))
 			encoding = "UTF-8";
 		if (format == null)
 			format = "png";
@@ -173,7 +175,7 @@ public class BarcodeUtils {
 	public static String decode(InputStream stream, String encoding)
 			throws IOException, NotFoundException, ChecksumException,
 			FormatException {
-		if (encoding == null)
+		if (StringUtils.isBlank(encoding))
 			encoding = "UTF-8";
 		BufferedImage image = ImageIO.read(stream);
 		LuminanceSource source = new BufferedImageLuminanceSource(image);
