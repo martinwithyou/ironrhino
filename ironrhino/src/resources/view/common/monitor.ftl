@@ -3,7 +3,6 @@
         <td>${node.name}</td>
         <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.longValue gt 0><a href="monitor/chart/${node.key?string}?vtype=l<#if request.queryString??>&${request.queryString}</#if>">${node.value.longValue}</a><span class="pull-right">${node.longPercent!}</span></#if></td>
         <td <#if node.level gt 1>style="padding-left:${(node.level-1)*19}px"</#if>><#if node.value.doubleValue gt 0><a href="monitor/chart/${node.key?string}?vtype=d<#if request.queryString??>&${request.queryString}</#if>">${node.value.doubleValue}</a><span class="pull-right">${node.doublePercent!}</span></#if></td>
-        <td></td>
 </tr>
 <#if node.leaf>
 	<#return>
@@ -29,7 +28,7 @@
 </div>
 <div class="span6">
 <form class="ajax view form-inline" replacement="result">
-<span>${action.getText('date.range')}</span>
+<span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" name="from" cssClass="date"  size="10" maxlength="10"/>
 <i class="icon-arrow-right"></i>
 <@s.textfield label="%{getText('to')}" theme="simple" name="to" cssClass="date"  size="10" maxlength="10"/>
@@ -45,10 +44,9 @@
   </#if>
   <thead>
     <tr>
-      <th>name</th>
-      <th style="width:20%;">longValue</th>
-      <th style="width:20%;">doubleValue</th>
-      <th style="width:10%;"></th>
+      <th>${action.getText('key')}</th>
+      <th style="width:20%;"></th>
+      <th style="width:20%;"></th>
     </tr>
   </thead>
   <tbody>
