@@ -199,7 +199,9 @@ span.checkboxgroup{
 	border: none;
 	background: #b94a48;
 }
-
+.input-append .field-error-content{
+	font-size: 13px;
+}
 
 img.captcha {
 	height: 25px;

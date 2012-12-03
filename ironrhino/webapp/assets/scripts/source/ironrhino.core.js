@@ -829,41 +829,48 @@ Observation.common = function(container) {
 			title : t.data('title'),
 			content : t.data('content')
 		};
-		if (!options.content && t.data('popurl'))
-			options.title = MessageBundle.get('ajax.loading');
-		t.bind(options.trigger, function() {
-			if (!t.hasClass('_poped')) {
-				t.addClass('_poped');
-				$.ajax({
-							url : t.data('popurl'),
-							global : false,
-							dataType : 'html',
-							success : function(data) {
-								$('div.popover').remove();
-								if (data.indexOf('<title>') >= 0
-										&& data.indexOf('</title>') > 0)
-									t.attr('data-original-title',
-											data.substring(data
-															.indexOf('<title>')
-															+ 7,
-													data.indexOf('</title>')));
-								if (data.indexOf('<body>') >= 0
-										&& data.indexOf('</body>') > 0)
-									t
-											.attr(
-													'data-content',
-													data
-															.substring(
-																	data
-																			.indexOf('<body>')
-																			+ 6,
-																	data
-																			.indexOf('</body>')));
-								t.popover(options).popover('show');
-							}
-						});
-			}
-		});
+		if (t.data('popurl')) {
+			if (!options.content && t.data('popurl'))
+				options.title = MessageBundle.get('ajax.loading');
+			t.bind(options.trigger, function() {
+				if (!t.hasClass('_poped')) {
+					t.addClass('_poped');
+					$.ajax({
+								url : t.data('popurl'),
+								global : false,
+								dataType : 'html',
+								success : function(data) {
+									$('div.popover').remove();
+									if (data.indexOf('<title>') >= 0
+											&& data.indexOf('</title>') > 0)
+										t
+												.attr(
+														'data-original-title',
+														data
+																.substring(
+																		data
+																				.indexOf('<title>')
+																				+ 7,
+																		data
+																				.indexOf('</title>')));
+									if (data.indexOf('<body>') >= 0
+											&& data.indexOf('</body>') > 0)
+										t
+												.attr(
+														'data-content',
+														data
+																.substring(
+																		data
+																				.indexOf('<body>')
+																				+ 6,
+																		data
+																				.indexOf('</body>')));
+									t.popover(options).popover('show');
+								}
+							});
+				}
+			});
+		}
 		t.popover(options);
 	});
 	// bootstrap end
