@@ -480,33 +480,30 @@ Observation.richtable = function(container) {
 										});
 							});
 				});
-		$('.firstPage a', container).click(function(event) {
-					var form = $(event.target).closest('form');
+		$('.firstPage:not(.disabled) a', container).click(function(event) {
+					var form = $(this).closest('form');
 					$('.inputPage', form).val(1);
 					Richtable.reload(form, true);
 					return false;
 				});
-		$('.prevPage a', container).click(function(event) {
-					var form = $(event.target).closest('form');
+		$('.prevPage:not(.disabled) a', container).click(function(event) {
+					var form = $(this).closest('form');
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) - 1
 							});
 					Richtable.reload(form, true);
 					return false;
 				});
-		$('.nextPage a', container).click(function(event) {
-					var form = $(event.target).closest('form');
+		$('.nextPage:not(.disabled) a', container).click(function(event) {
+					var form = $(this).closest('form');
 					$('.inputPage', form).val(function(i, v) {
 								return parseInt(v) + 1
 							});
 					Richtable.reload(form, true);
 					return false;
 				});
-		$('.lastPage a', container).click(function(event) {
-					var t = $(this);
-					if (t.parent().hasClass('disabled'))
-						return false;
-					var form = t.closest('form');
+		$('.lastPage:not(.disabled) a', container).click(function(event) {
+					var form = $(this).closest('form');
 					$('.inputPage', form).val($('.totalPage strong', form)
 							.text());
 					Richtable.reload(form, true);
