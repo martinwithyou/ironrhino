@@ -36,6 +36,12 @@ public class AutoConfigResult extends FreemarkerResult {
 	@Inject(value = "ironrhino.view.ftl.classpath", required = false)
 	private static String ftlClasspath = DEFAULT_FTL_CLASSPATH;
 
+	private static ThreadLocal<String> styleHolder = new ThreadLocal<String>();
+
+	public static void setStyle(String style) {
+		styleHolder.set(style);
+	}
+
 	@Override
 	public void execute(ActionInvocation invocation) throws Exception {
 		if (invocation.getResultCode().equals(Action.NONE))
@@ -68,28 +74,38 @@ public class AutoConfigResult extends FreemarkerResult {
 		String actionName = invocation.getInvocationContext().getName();
 		if (namespace.equals("/"))
 			namespace = "";
-		String templateName = getTemplateName(namespace, actionName, result);
-		String location = cache.get(templateName);
-		if (location == null || AppInfo.getStage() == AppInfo.Stage.DEVELOPMENT) {
-			ServletContext context = ServletActionContext.getServletContext();
-			URL url = null;
+		String templateName = null;
+		String location = null;
+		if (StringUtils.isNotBlank(styleHolder.get())) {
+			templateName = getTemplateName(namespace, actionName, result, true);
 			location = getTemplateLocation(templateName);
-			if (location == null) {
-				location = new StringBuilder().append(ftlLocation)
-						.append("/meta/result/").append(result).append(".ftl")
-						.toString();
-				try {
-					url = context.getResource(location);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-				if (url == null)
-					location = new StringBuilder().append(ftlClasspath)
+		}
+		if (location == null) {
+			templateName = getTemplateName(namespace, actionName, result, false);
+			location = cache.get(templateName);
+			if (location == null
+					|| AppInfo.getStage() == AppInfo.Stage.DEVELOPMENT) {
+				ServletContext context = ServletActionContext
+						.getServletContext();
+				URL url = null;
+				location = getTemplateLocation(templateName);
+				if (location == null) {
+					location = new StringBuilder().append(ftlLocation)
 							.append("/meta/result/").append(result)
 							.append(".ftl").toString();
+					try {
+						url = context.getResource(location);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
+					if (url == null)
+						location = new StringBuilder().append(ftlClasspath)
+								.append("/meta/result/").append(result)
+								.append(".ftl").toString();
+				}
+				if (AppInfo.getStage() == Stage.PRODUCTION)
+					cache.put(templateName, location);
 			}
-			if (AppInfo.getStage() == Stage.PRODUCTION)
-				cache.put(templateName, location);
 		}
 		return location;
 	}
@@ -121,11 +137,13 @@ public class AutoConfigResult extends FreemarkerResult {
 	}
 
 	private String getTemplateName(String namespace, String actionName,
-			String result) {
+			String result, boolean withStyle) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(namespace).append('/').append(actionName);
 		if (!result.equals(Action.SUCCESS))
 			sb.append('_').append(result);
+		if (withStyle && StringUtils.isNotBlank(styleHolder.get()))
+			sb.append(".").append(styleHolder.get());
 		return sb.toString();
 	}
 }
