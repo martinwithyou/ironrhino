@@ -1,6 +1,6 @@
 <#macro includePage path abbr=0>
 <#local pageManager=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('pageManager')>
-<#if (Parameters.preview!)=='true' && statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
+<#if (Parameters.preview!)=='true' && statics['org.ironrhino.core.util.AuthzUtils'].authorize("ROLE_ADMINISTRATOR","","")>
 <#local page=pageManager.getDraftByPath(path)!>
 <#if !page.content?has_content>
 <#local page=pageManager.getByPath(path)!>
@@ -15,7 +15,7 @@
 <#local _content=page.content>
 </#if>
 <#local content=_content?interpret>
-<#local designMode=(Parameters.designMode!)=='true'&&abbr==0&&statics['org.ironrhino.core.util.AuthzUtils'].authorize("","ROLE_ADMINISTRATOR","","")>
+<#local designMode=(Parameters.designMode!)=='true'&&abbr==0&&statics['org.ironrhino.core.util.AuthzUtils'].authorize("ROLE_ADMINISTRATOR","","")>
 <#if designMode>
 <div class="editme" data-url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
 </#if>
