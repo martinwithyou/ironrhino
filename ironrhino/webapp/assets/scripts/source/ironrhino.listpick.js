@@ -67,8 +67,7 @@
 				var remove = nametarget.children('a.remove');
 				if (remove.length) {
 					remove.click(function(event) {
-								val(options.name, nametarget
-												.is(':input,td')
+								val(options.name, nametarget.is(':input,td')
 												? ''
 												: MessageBundle.get('select'));
 								val(options.id, '');
@@ -125,6 +124,7 @@
 										val(options.name, name);
 										var nametarget = find(options.name);
 										if (nametarget.is(':input')) {
+											nametarget.trigger('change');
 											var form = nametarget
 													.closest('form');
 											if (!form.hasClass('nodirty'))
@@ -151,6 +151,7 @@
 										val(options.id, id);
 										var idtarget = find(options.id);
 										if (idtarget.is(':input')) {
+											idtarget.trigger('change');
 											var form = idtarget.closest('form');
 											if (!form.hasClass('nodirty'))
 												form.addClass('dirty');
@@ -175,6 +176,7 @@
 								var nametarget = find(options.name);
 								var name = names.join(separator);
 								if (nametarget.is(':input')) {
+									nametarget.trigger('change');
 									var _names = val(options.name) || '';
 									val(
 											options.name,
@@ -225,6 +227,7 @@
 												.split(separator))
 												.join(separator));
 								if (idtarget.is(':input')) {
+									idtarget.trigger('change');
 									var form = idtarget.closest('form');
 									if (!form.hasClass('nodirty'))
 										form.addClass('dirty');

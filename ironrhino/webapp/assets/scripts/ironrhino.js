@@ -34746,8 +34746,7 @@ Observation.richtable = function(container) {
 				var remove = nametarget.children('a.remove');
 				if (remove.length) {
 					remove.click(function(event) {
-								val(options.name, nametarget
-												.is(':input,td')
+								val(options.name, nametarget.is(':input,td')
 												? ''
 												: MessageBundle.get('select'));
 								val(options.id, '');
@@ -34785,10 +34784,10 @@ Observation.richtable = function(container) {
 							+ '"><div id="_tree_"></div></div>')
 							.appendTo(document.body);
 					$('#_tree_window').dialog({
-						width : current.data('_options').width || 500,
-						minHeight : current.data('_options').minHeight
-								|| 500
-					});
+								width : current.data('_options').width || 500,
+								minHeight : current.data('_options').minHeight
+										|| 500
+							});
 					if (nametarget && nametarget.length)
 						options.value = val(options.name) || '';
 					if (options.type != 'treeview') {
@@ -34812,7 +34811,8 @@ Observation.richtable = function(container) {
 							root : options.root
 						};
 						if (!options.cache)
-							treeviewoptions.url = treeviewoptions.url + '?r=' + Math.random();
+							treeviewoptions.url = treeviewoptions.url + '?r='
+									+ Math.random();
 						$('#_tree_').treeview(treeviewoptions);
 					}
 				} else {
@@ -34839,6 +34839,7 @@ Observation.richtable = function(container) {
 					: treenode.name;
 			val(options.name, name);
 			if (nametarget.is(':input')) {
+				nametarget.trigger('change');
 				var form = nametarget.closest('form');
 				if (!form.hasClass('nodirty'))
 					form.addClass('dirty');
@@ -34860,6 +34861,7 @@ Observation.richtable = function(container) {
 			var id = treenode[options.idproperty];
 			val(options.id, id);
 			if (idtarget.is(':input')) {
+				idtarget.trigger('change');
 				var form = idtarget.closest('form');
 				if (!form.hasClass('nodirty'))
 					form.addClass('dirty');
@@ -34944,8 +34946,7 @@ Observation.treeselect = function(container) {
 				var remove = nametarget.children('a.remove');
 				if (remove.length) {
 					remove.click(function(event) {
-								val(options.name, nametarget
-												.is(':input,td')
+								val(options.name, nametarget.is(':input,td')
 												? ''
 												: MessageBundle.get('select'));
 								val(options.id, '');
@@ -35002,6 +35003,7 @@ Observation.treeselect = function(container) {
 										val(options.name, name);
 										var nametarget = find(options.name);
 										if (nametarget.is(':input')) {
+											nametarget.trigger('change');
 											var form = nametarget
 													.closest('form');
 											if (!form.hasClass('nodirty'))
@@ -35028,6 +35030,7 @@ Observation.treeselect = function(container) {
 										val(options.id, id);
 										var idtarget = find(options.id);
 										if (idtarget.is(':input')) {
+											idtarget.trigger('change');
 											var form = idtarget.closest('form');
 											if (!form.hasClass('nodirty'))
 												form.addClass('dirty');
@@ -35052,6 +35055,7 @@ Observation.treeselect = function(container) {
 								var nametarget = find(options.name);
 								var name = names.join(separator);
 								if (nametarget.is(':input')) {
+									nametarget.trigger('change');
 									var _names = val(options.name) || '';
 									val(
 											options.name,
@@ -35102,6 +35106,7 @@ Observation.treeselect = function(container) {
 												.split(separator))
 												.join(separator));
 								if (idtarget.is(':input')) {
+									idtarget.trigger('change');
 									var form = idtarget.closest('form');
 									if (!form.hasClass('nodirty'))
 										form.addClass('dirty');
@@ -35140,6 +35145,31 @@ Observation.treeselect = function(container) {
 Observation.listpick = function(container) {
 	$('.listpick', container).listpick();
 };
+(function($) {
+	$.fn.imagepick = function() {
+		this
+				.addClass('poped')
+				.wrap('<div class="input-append"/>')
+				.parent()
+				.append('<span class="add-on listpick" style="cursor:pointer;" data-options="{\'url\':\''
+						+ CONTEXT_PATH
+						+ '/common/upload/pick\',\'id\':\'#'
+						+ this.attr('id')
+						+ '\',\'width\':400}"><i class="icon-th-list"></i></span>');
+		if (this.val())
+			$(this).attr('data-content', '<img src="' + this.val() + '"/>');
+		this.change(function() {
+			if (this.value)
+				$(this).attr('data-content', '<img src="' + this.value + '"/>');
+		});
+		return this;
+	}
+})(jQuery);
+
+Observation.imagepick = function(container) {
+	$('input.imagepick', container).imagepick();
+};
+
 (function($) {
 	$.fn.latlng = function() {
 		var t = $(this);
