@@ -163,7 +163,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.SECOND, (int) (-expireTime));
 		entityManager.executeUpdate(
-				"delete from Authorization a where a.modifyDate < ?1",
+				"delete from Authorization a where lifetime >0 and a.modifyDate < ?1",
 				cal.getTime());
 	}
 
