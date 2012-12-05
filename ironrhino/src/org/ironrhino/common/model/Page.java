@@ -45,13 +45,13 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	private String title;
 
 	@NotInJson
-	@Column(length = 500)
+	@Column(columnDefinition = "text")
 	@Access(AccessType.FIELD)
 	private String head;
 
 	@NotInJson
 	@SearchableProperty
-	@Column(length = 5000, nullable = false)
+	@Column(columnDefinition = "text", nullable = false)
 	@Access(AccessType.FIELD)
 	private String content;
 
@@ -59,7 +59,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	private int displayOrder;
 
 	@NotInJson
-	@Column(length = 5000)
+	@Column(columnDefinition = "text")
 	@Access(AccessType.FIELD)
 	private String draft;
 

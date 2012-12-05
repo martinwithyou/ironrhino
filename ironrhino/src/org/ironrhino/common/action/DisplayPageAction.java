@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
+import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
@@ -28,6 +29,9 @@ public class DisplayPageAction extends BaseAction {
 	@Inject
 	private transient PageManager pageManager;
 
+	@Inject
+	private transient SettingControl settingControl;
+
 	public boolean isPreview() {
 		return preview;
 	}
@@ -43,7 +47,9 @@ public class DisplayPageAction extends BaseAction {
 	@Override
 	public String execute() {
 		if (preview) {
-			if (AuthzUtils.getRoleNames().contains(UserRole.ROLE_ADMINISTRATOR)) {
+			if (settingControl.getBooleanValue("cms.preview.open", false)
+					|| AuthzUtils.getRoleNames().contains(
+							UserRole.ROLE_ADMINISTRATOR)) {
 				page = pageManager.getDraftByPath(getUid());
 				if (StringUtils.isBlank(page.getContent())) {
 					preview = false;
