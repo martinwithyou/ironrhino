@@ -33034,11 +33034,7 @@ Observation.upload = function(container) {
 				e.preventDefault();
 			if (e.stopPropagation)
 				e.stopPropagation();
-			$.alerts.confirm(MessageBundle.get('confirm.delete'), MessageBundle
-							.get('select'), function(b) {
-						if (b)
-							deleteFiles(id);
-					});
+			deleteFiles(id);
 		}
 	}
 
@@ -33066,30 +33062,36 @@ function addMore(n) {
 	}
 }
 function deleteFiles(file) {
-	var options = {
-		url : CONTEXT_PATH + '/common/upload/delete',
-		dataType : 'json',
-		complete : function() {
-			$('#files button.reload').click();
-		}
-	};
-	if (file) {
-		var data = $('#upload_form').serialize();
-		var params = [];
-		params.push('id=' + file);
-		if (data) {
-			var arr = data.split('&');
-			for (var i = 0; i < arr.length; i++) {
-				var arr2 = arr[i].split('=', 2);
-				if (arr2[0] != 'id')
-					params.push(arr[i]);
-			}
-		}
-		options.data = params.join('&');
-	} else {
-		options.data = $('#upload_form').serialize();
-	}
-	ajax(options);
+	$.alerts.confirm(MessageBundle.get('confirm.delete'), MessageBundle
+					.get('select'), function(b) {
+				if (b) {
+					var options = {
+						url : CONTEXT_PATH + '/common/upload/delete',
+						dataType : 'json',
+						complete : function() {
+							$('#files button.reload').click();
+						}
+					};
+					if (file) {
+						var data = $('#upload_form').serialize();
+						var params = [];
+						params.push('id=' + file);
+						if (data) {
+							var arr = data.split('&');
+							for (var i = 0; i < arr.length; i++) {
+								var arr2 = arr[i].split('=', 2);
+								if (arr2[0] != 'id')
+									params.push(arr[i]);
+							}
+						}
+						options.data = params.join('&');
+					} else {
+						options.data = $('#upload_form').serialize();
+					}
+					ajax(options);
+				}
+			});
+
 }
 function uploadFiles(files) {
 	if (files && files.length)
