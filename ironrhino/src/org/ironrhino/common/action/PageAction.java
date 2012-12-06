@@ -190,7 +190,7 @@ public class PageAction extends BaseAction {
 		}
 		pageManager.save(page);
 		addActionMessage(getText("save.success"));
-		return INPUT;
+		return JSON;
 	}
 
 	@JsonConfig(propertyName = "page")
