@@ -8395,6 +8395,10 @@ table.richtable {
 	margin-left: 0;
 	width:20%;
 }
+.ui-dialog .combobox .dropdown-menu {
+	max-height: 400px;
+	overflow: auto;
+}
 th.filtercolumn li.selecton
 {
 	color: green;
