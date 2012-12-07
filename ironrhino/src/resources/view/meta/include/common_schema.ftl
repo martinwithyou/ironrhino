@@ -55,7 +55,7 @@
 					<td><@s.textfield theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name?html}" readonly=field.strict?string/></td>
 					<td>
 						<#if type=='SELECT'>
-							<select name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combox</#if>">
+							<select name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combobox</#if>">
 								<option value="${headerKey?html}">${headerValue?html}</option>
 								<#list field.values as value>
 								<option value="${value}"<#if persistValueExists && persistValue=value> selected="selected"</#if>>${value?html}</option>

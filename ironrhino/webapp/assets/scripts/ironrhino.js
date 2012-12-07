@@ -33837,59 +33837,93 @@ Observation.portal = function(container) {
 	$('.portal', container).portal();
 };
 (function($) {
-	$.fn.combox = function() {
-		this.keydown(function(event) {
-					combox(this)
-				});
-		this.dblclick(function(event) {
-					combox(this)
-				});
-		return this;
-	};
-	function combox(ele) {
-		var name = $(ele).attr('name');
-		var value = $(ele).val();
-		if ($(ele).prop('tagName') == 'SELECT') {
-			var input = $(ele.nextSibling);
-			if (name == input.attr('name')) {
-				input.prop('disabled', false);
-				input.val(value);
-				input.show();
-			} else {
-				var width = $(ele).width();
-				var input = $('<input name="' + name + '"/>');
-				input.width(width);
-				input.blur(function() {
-							combox(this)
-						});
-				$(ele).after(input);
-			}
-			input.focus();
-		} else {
-			var select = $(ele.previousSibling);
-			var options = $('option', select);
-			var has = false;
-			for (var i = 0; i < options.length; i++) {
-				$(options[i]).prop('selected', false);
-				if ($(options[i]).val() == value) {
-					has = true;
-					$(options[i]).prop('selected', true);
-				}
-			}
-			if (!has)
-				select.append('<option value="' + value
-						+ '" selected="selected">' + value + '</option>');
-			select.show();
-			select.prop('disabled', false);
-			select.focus();
+	$('.combobox .add-on').live('click', function(e) {
+		var input = $('input', $(e.target).closest('.combobox'));
+		var menu = $('.dropdown-menu', $(e.target).closest('.combobox'));
+		var val = input.val();
+		if (val) {
+			var exists = false;
+			$('li', menu).each(function() {
+						if ($(this).text() == val) {
+							$(this).addClass('active');
+							exists = true;
+						} else
+							$(this).removeClass('active');
+					});
+			if (!exists)
+				$('<li class="active"><a href="#">' + val + '</a></li>')
+						.appendTo(menu);
 		}
-		$(ele).hide();
-		$(ele).prop('disabled', true);
+		menu.width(input.outerWidth()).toggle();
+	});
+	$('.combobox .dropdown-menu a').live('click', function(e) {
+				e.preventDefault();
+				if (!$(this).parent('li.group').length) {
+					var input = $('input', $(e.target).closest('.combobox'));
+					var menu = $('.dropdown-menu', $(e.target)
+									.closest('.combobox'));
+					input.val($(this).text());
+					menu.hide();
+				}
+				return false;
+			});
+	$('.combobox .dropdown-menu').live('hover', function(e) {
+				e.preventDefault();
+				$('li', this).removeClass('active');
+				return false;
+			});
+	$.fn.combobox = function() {
+		var t = $(this);
+		if (t.prop('tagName') == 'SELECT') {
+			var div = $('<div class="input-append combobox"><ul class="dropdown-menu" role="menu"></ul><input type="text" name="'
+					+ t.attr('name')
+					+ '" value="'
+					+ t.val()
+					+ '"/><span class="add-on"><i class="icon-chevron-down"></i></span></div>')
+					.insertBefore(t);
+			$('input', div).width(t.width());
+			if (t.hasClass('required'))
+				$('input', div).addClass('required');
+			var _menu = $('.dropdown-menu', div);
+			t.children().each(function(i, v) {
+				if ($(v).prop('tagName') == 'OPTION' && $(v).attr('value')) {
+					$('<li><a href="#">' + $(v).attr('value') + '</a></li>')
+							.appendTo(_menu);
+				} else if ($(v).prop('tagName') == 'OPTGROUP') {
+					var label = $(v).attr('label');
+					var group = $('<li class="group"><a href="#">' + label
+							+ '</a><ul></ul></li>').appendTo(_menu);
+					group = $('ul', group);
+					$(v).children('option').each(function(i, v) {
+						$('<li><a href="#">' + $(v).attr('value') + '</a></li>')
+								.appendTo(group);
+					});
+				}
+			});
+			t.remove();
+			t = div;
+		}
+		var menu = $('.dropdown-menu', t);
+		$('li.group ul', menu).addClass('unstyled');
+		$('li.group > a ', menu).css({
+					'font-weight' : 'bold'
+				});
+		$('li.group li a', menu).css({
+					'padding-left' : '25px'
+				});
+		t.css({
+					'display' : 'inline-block',
+					'position' : 'relative'
+				});
+		$('.add-on', t).css('cursor', 'pointer');
+		return t;
 	}
 })(jQuery);
 
-Observation.combox = function(container) {
-	$('select.combox', container).combox();
+Observation.combobox = function(container) {
+	$('.combobox', container).each(function() {
+				$(this).combobox()
+			});
 };
 Observation.tags = function(container) {
 	if (typeof $.fn.textext != 'undefined'

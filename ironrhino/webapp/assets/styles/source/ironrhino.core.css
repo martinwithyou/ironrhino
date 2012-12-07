@@ -283,6 +283,12 @@ a.remove:hover {
 	opacity: 1;
   	filter: alpha(opacity=1);
 }
+.combobox .dropdown-menu li.group > a:hover {
+	cursor:default;
+	color: #333333;
+	background-color:transparent;
+	background-image: none;
+}
 /*textext*/
 div.text-core{
 	display:inline-block;
