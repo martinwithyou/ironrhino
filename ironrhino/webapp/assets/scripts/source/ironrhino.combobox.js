@@ -16,7 +16,7 @@
 				$('<li class="active"><a href="#">' + val + '</a></li>')
 						.appendTo(menu);
 		}
-		menu.width(input.outerWidth()).toggle();
+		menu.width(input.closest('.combobox').width()).toggle();
 	});
 	$('.combobox .dropdown-menu a').live('click', function(e) {
 				e.preventDefault();
@@ -25,6 +25,7 @@
 					var menu = $('.dropdown-menu', $(e.target)
 									.closest('.combobox'));
 					input.val($(this).text());
+					input.trigger('blur');
 					menu.hide();
 				}
 				return false;
@@ -43,7 +44,7 @@
 					+ t.val()
 					+ '"/><span class="add-on"><i class="icon-chevron-down"></i></span></div>')
 					.insertBefore(t);
-			$('input', div).width(t.width());
+			$('input', div).width(t.width() - 27);
 			if (t.hasClass('required'))
 				$('input', div).addClass('required');
 			var _menu = $('.dropdown-menu', div);
