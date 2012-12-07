@@ -25,7 +25,7 @@
 					var menu = $('.dropdown-menu', $(e.target)
 									.closest('.combobox'));
 					input.val($(this).text());
-					input.trigger('blur');
+					input.trigger('change').trigger('blur');
 					menu.hide();
 				}
 				return false;
