@@ -11,8 +11,8 @@
 	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
 		<#assign label=key>
-		<#if config.displayName??>
-			<#assign label=config.displayName>
+		<#if config.alias??>
+			<#assign label=config.alias>
 		</#if>
 		<#if naturalIds?keys?seq_contains(key)>
 			<#assign readonly=!naturalIdMutable&&!action.isNew()>
@@ -43,14 +43,14 @@
 				<#else>
 					<@s.hidden id="${key}Id" name="${entityName}.${key}.id"/>
 				</#if>
-					<label class="control-label" for="${key}">${action.getText(key)}</label>
+					<label class="control-label" for="${key}">${action.getText(label)}</label>
 					<div class="controls">
 					<span id="${key}"><#if entity[key]??>${entity[key]!}<a class="remove" href="#">&times;</a><#else>...</#if></span>
 					</div>
 				</div>
 			<#else>
 				<div class="control-group">
-					<label class="control-label" for="${key}">${action.getText(key)}</label>
+					<label class="control-label" for="${key}">${action.getText(label)}</label>
 					<div class="controls">
 					<span id="${key}">${entity[key]!}</span>
 					</div>
@@ -58,7 +58,7 @@
 			</#if>
 		<#elseif config.type=='dictionary' && selectDictionary??>
 			<div class="control-group">
-			<label class="control-label" for="${key}">${action.getText(key)}</label>
+			<label class="control-label" for="${key}">${action.getText(label)}</label>
 			<div class="controls">
 			<#if !readonly>
 				<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required class="${config.cssClass}" dynamicAttributes=config.dynamicAttributes/>
