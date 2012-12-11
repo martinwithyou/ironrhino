@@ -47,6 +47,7 @@ public class InitRegion {
 				+ "/" + System.getProperty("app.name"));
 		System.setProperty("ironrhino.context", System.getProperty("user.home")
 				+ "/" + System.getProperty("app.name"));
+		System.out.println("initialize:" + Region.class);
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				new String[] { "initdata/applicationContext-initdata.xml",
 						"resources/spring/applicationContext-ds.xml",
@@ -193,10 +194,10 @@ public class InitRegion {
 			String parentName = "";
 			Element folder = (Element) element.getParentNode();
 			int level = 3;
-			while(level > 0){
-				parentName=getName(folder)+parentName;
+			while (level > 0) {
+				parentName = getName(folder) + parentName;
 				folder = (Element) folder.getParentNode();
-				level --;
+				level--;
 			}
 			NodeList nl = element.getChildNodes();
 			for (int j = 0; j < nl.getLength(); j++) {

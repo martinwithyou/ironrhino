@@ -19,11 +19,13 @@ public class InitUser {
 				+ "/" + System.getProperty("app.name"));
 		System.setProperty("ironrhino.context", System.getProperty("user.home")
 				+ "/" + System.getProperty("app.name"));
+		System.out.println("initialize:" + User.class);
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
 				new String[] { "initdata/applicationContext-initdata.xml",
 						"resources/spring/applicationContext-ds.xml",
 						"resources/spring/applicationContext-hibernate.xml" });
-		EntityManager<Persistable> entityManager = (EntityManager<Persistable>) ctx.getBean("entityManager");
+		EntityManager<Persistable> entityManager = (EntityManager<Persistable>) ctx
+				.getBean("entityManager");
 		User admin = new User();
 		admin.setUsername("admin");
 		admin.setPassword(CodecUtils.digest("password"));
