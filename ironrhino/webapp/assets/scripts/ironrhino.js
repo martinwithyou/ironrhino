@@ -34038,6 +34038,12 @@ Observation.portal = function(container) {
 			t.remove();
 			t = div;
 		}
+		var arr = [];
+		$('.dropdown-menu li:not(.group)', t).each(function() {
+					arr.push($(this).text());
+				});
+		$('input', t).attr('data-provide', 'typeahead').attr('data-source',
+				JSON.stringify(arr));
 		var menu = $('.dropdown-menu', t);
 		$('li.group ul', menu).addClass('unstyled');
 		$('li.group > a ', menu).css({
