@@ -45,7 +45,7 @@
 				</#if>
 					<label class="control-label" for="${key}">${action.getText(label)}</label>
 					<div class="controls">
-					<span id="${key}"><#if entity[key]??>${entity[key]!}<a class="remove" href="#">&times;</a><#else>...</#if></span>
+					<span id="${key}"><#if entity[key]??><#if entity[key].fullname??>${entity[key].fullname!}<#else>${entity[key]!}</#if><a class="remove" href="#">&times;</a><#else>...</#if></span>
 					</div>
 				</div>
 			<#else>
