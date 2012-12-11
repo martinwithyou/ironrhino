@@ -1,7 +1,7 @@
 (function($) {
 	$('.combobox .add-on').live('click', function(e) {
 		var input = $('input', $(e.target).closest('.combobox'));
-		var menu = $('.dropdown-menu', $(e.target).closest('.combobox'));
+		var menu = $('.combobox-menu', $(e.target).closest('.combobox'));
 		var val = input.val();
 		if (val) {
 			var exists = false;
@@ -16,13 +16,13 @@
 				$('<li class="active"><a href="#">' + val + '</a></li>')
 						.appendTo(menu);
 		}
-		menu.width(input.closest('.combobox').width()).toggle();
+		menu.width(input.closest('.combobox').width() - 2).toggle();
 	});
-	$('.combobox .dropdown-menu a').live('click', function(e) {
+	$('.combobox .combobox-menu a').live('click', function(e) {
 				e.preventDefault();
 				if (!$(this).parent('li.group').length) {
 					var input = $('input', $(e.target).closest('.combobox'));
-					var menu = $('.dropdown-menu', $(e.target)
+					var menu = $('.combobox-menu', $(e.target)
 									.closest('.combobox'));
 					input.val($(this).text());
 					input.trigger('change').trigger('blur');
@@ -30,7 +30,7 @@
 				}
 				return false;
 			});
-	$('.combobox .dropdown-menu').live('hover', function(e) {
+	$('.combobox .combobox-menu').live('hover', function(e) {
 				e.preventDefault();
 				$('li', this).removeClass('active');
 				return false;
@@ -38,7 +38,7 @@
 	$.fn.combobox = function() {
 		var t = $(this);
 		if (t.prop('tagName') == 'SELECT') {
-			var div = $('<div class="input-append combobox"><ul class="dropdown-menu" role="menu"></ul><input type="text" name="'
+			var div = $('<div class="input-append combobox"><ul class="dropdown-menu combobox-menu" role="menu"></ul><input type="text" name="'
 					+ t.attr('name')
 					+ '" value="'
 					+ t.val()
@@ -47,7 +47,7 @@
 			$('input', div).width(t.width() - 27);
 			if (t.hasClass('required'))
 				$('input', div).addClass('required');
-			var _menu = $('.dropdown-menu', div);
+			var _menu = $('.combobox-menu', div);
 			t.children().each(function(i, v) {
 				if ($(v).prop('tagName') == 'OPTION' && $(v).attr('value')) {
 					$('<li><a href="#">' + $(v).attr('value') + '</a></li>')
@@ -67,12 +67,12 @@
 			t = div;
 		}
 		var arr = [];
-		$('.dropdown-menu li:not(.group)', t).each(function() {
+		$('.combobox-menu li:not(.group)', t).each(function() {
 					arr.push($(this).text());
 				});
 		$('input', t).attr('data-provide', 'typeahead').attr('data-source',
 				JSON.stringify(arr));
-		var menu = $('.dropdown-menu', t);
+		var menu = $('.combobox-menu', t);
 		$('li.group ul', menu).addClass('unstyled');
 		$('li.group > a ', menu).css({
 					'font-weight' : 'bold'
