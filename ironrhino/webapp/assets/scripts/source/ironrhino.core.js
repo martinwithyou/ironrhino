@@ -770,6 +770,8 @@ Observation.common = function(container) {
 					placeholder_text : MessageBundle.get('select'),
 					no_results_text : ' '
 				});
+	if (typeof $.fn.htmlarea != 'undefined')
+		$('textarea.htmlarea', container).htmlarea();
 	// bootstrap start
 	$('a[data-toggle="tab"]', container).on('shown', function(e) {
 				$this = $(e.target);

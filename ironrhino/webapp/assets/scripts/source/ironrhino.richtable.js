@@ -172,7 +172,8 @@ Richtable = {
 				$('#_window_ a').each(function() {
 					var href = $(this).attr('href');
 					if (href && href.indexOf('http') != 0
-							&& href.indexOf('/') != 0) {
+							&& href.indexOf('/') != 0
+							&& href.indexOf('javascript:') != 0) {
 						href = pathname
 								+ (pathname.indexOf('/') == (pathname.length - 1)
 										? ''
