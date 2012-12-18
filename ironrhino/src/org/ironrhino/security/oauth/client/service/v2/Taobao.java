@@ -85,14 +85,16 @@ public class Taobao extends OAuth2Provider {
 	protected Profile getProfileFromContent(String content) throws Exception {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
-		data = data.get("user_buyer_get_response");
-		data = data.get("user");
-		String uid = data.get("user_id").asText();
+		JsonNode response = data.get("user_buyer_get_response");
+		if (response == null)
+			response = data.get("user_seller_get_response");
+		JsonNode user = response.get("user");
+		String uid = user.get("user_id").asText();
 		Profile p = new Profile();
 		p.setUid(generateUid(uid));
-		p.setDisplayName(data.get("nick").textValue());
-		p.setName(data.get("nick").textValue());
-		p.setGender(data.get("sex").textValue());
+		p.setDisplayName(user.get("nick").textValue());
+		p.setName(user.get("nick").textValue());
+		p.setGender(user.get("sex").textValue());
 		return p;
 	}
 
