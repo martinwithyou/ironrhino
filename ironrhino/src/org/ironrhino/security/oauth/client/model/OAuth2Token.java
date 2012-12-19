@@ -1,6 +1,12 @@
 package org.ironrhino.security.oauth.client.model;
 
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.util.JsonUtils;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class OAuth2Token extends OAuthToken {
 
@@ -12,7 +18,43 @@ public class OAuth2Token extends OAuthToken {
 	private String refresh_token;
 
 	public OAuth2Token() {
+		super();
 		create_time = System.currentTimeMillis();
+	}
+
+	public OAuth2Token(String source) {
+		super(source);
+		create_time = System.currentTimeMillis();
+	}
+
+	public void setSource(String source) {
+		super.setSource(source);
+		if (StringUtils.isBlank(source))
+			return;
+		if (JsonUtils.isValidJson(source)) {
+			Map<String, String> map;
+			try {
+				map = JsonUtils.fromJson(source,
+						new TypeReference<Map<String, String>>() {
+						});
+				access_token = map.get("access_token");
+				token_type = map.get("token_type");
+				refresh_token = map.get("refresh_token");
+				if (map.get("expires_in") != null)
+					expires_in = Integer.valueOf(map.get("expires_in"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			String[] arr1 = source.split("&");
+			for (String s : arr1) {
+				String[] arr2 = s.split("=", 2);
+				if (arr2.length > 1 && arr2[0].equals("access_token"))
+					access_token = arr2[1];
+				else if (arr2.length > 1 && arr2[0].equals("token_type"))
+					token_type = arr2[1];
+			}
+		}
 	}
 
 	public String getAccess_token() {

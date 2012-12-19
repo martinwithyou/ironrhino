@@ -97,12 +97,13 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 		}
 		OAuth1Token requestToken = null;
 		try {
-			requestToken = Utils.extractToken(responseBody);
+			requestToken = new OAuth1Token(responseBody);
 		} catch (Exception e) {
 			logger.error("content is {}", responseBody);
 		}
-		if(requestToken == null)
-			throw new IllegalArgumentException("requestToken is null,responseBody : "+responseBody);
+		if (requestToken == null)
+			throw new IllegalArgumentException(
+					"requestToken is null,responseBody : " + responseBody);
 		saveToken(request, requestToken, "request");
 		StringBuilder sb = new StringBuilder(getAuthorizeUrl());
 		sb.append(sb.indexOf("?") > 0 ? '&' : '?').append("oauth_token")
@@ -138,7 +139,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 				responseBody = HttpClientUtils.getResponseText(
 						getAccessTokenUrl(), params, Collections.EMPTY_MAP);
 			}
-			accessToken = Utils.extractToken(responseBody);
+			accessToken = new OAuth1Token(responseBody);
 			saveToken(request, accessToken, "access");
 		}
 		return accessToken;
@@ -193,12 +194,11 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 
 	protected void saveToken(HttpServletRequest request, OAuth1Token token,
 			String type) {
-		request.getSession().setAttribute(tokenSessionKey(type),
-				JsonUtils.toJson(token));
+		request.setAttribute(tokenSessionKey(type), token.getSource());
 	}
 
 	protected void removeToken(HttpServletRequest request, String type) {
-		request.getSession().removeAttribute(tokenSessionKey(type));
+		request.removeAttribute(tokenSessionKey(type));
 	}
 
 	protected OAuth1Token restoreToken(HttpServletRequest request, String type)
@@ -221,8 +221,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 							String tokenString = map.get(getName());
 							if (StringUtils.isNotBlank(tokenString)) {
 								try {
-									return JsonUtils.fromJson(tokenString,
-											OAuth1Token.class);
+									return new OAuth1Token(tokenString);
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -232,11 +231,10 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 				}
 			}
 		}
-		String json = (String) request.getSession().getAttribute(
-				tokenSessionKey(type));
-		if (StringUtils.isBlank(json))
+		String source = (String) request.getAttribute(tokenSessionKey(type));
+		if (StringUtils.isBlank(source))
 			return null;
-		return JsonUtils.fromJson(json, OAuth1Token.class);
+		return new OAuth1Token(source);
 	}
 
 	private String tokenSessionKey(String type) {
@@ -336,30 +334,6 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 				e.printStackTrace();
 				return string;
 			}
-		}
-
-		public static OAuth1Token extractToken(String formdata) {
-			OAuth1Token token = new OAuth1Token();
-			Map<String, String> data = parseFormData(formdata);
-			token.setToken(data.get("oauth_token"));
-			token.setSecret(data.get("oauth_token_secret"));
-			if (token.getToken() == null || token.getSecret() == null)
-				throw new IllegalArgumentException("token or secret is null");
-			return token;
-		}
-
-		public static Map<String, String> parseFormData(String formdata) {
-			Map<String, String> data = new HashMap<String, String>();
-			String[] arr = formdata.split("&");
-			for (String s : arr) {
-				int i = s.indexOf('=');
-				if (i > 0) {
-					data.put(s.substring(0, i), s.substring(i + 1));
-				} else {
-					data.put(s, "");
-				}
-			}
-			return data;
 		}
 
 		public static String getSignature(String baseString,

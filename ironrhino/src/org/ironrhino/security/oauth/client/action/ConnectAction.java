@@ -96,6 +96,8 @@ public class ConnectAction extends BaseAction {
 				User user = null;
 				try {
 					user = (User) userManager.loadUserByUsername(id);
+					if (user != null)
+						loginUser = user;
 				} catch (UsernameNotFoundException e) {
 					user = new User();
 					user.setUsername(userManager.suggestUsername(id));
@@ -111,14 +113,15 @@ public class ConnectAction extends BaseAction {
 							.getName() : p.getDisplayName());
 					user.setAttribute("oauth_provider", provider.getName());
 					Map<String, String> tokens = new HashMap<String, String>();
-					tokens.put(provider.getName(),
-							JsonUtils.toJson(provider.getToken(request)));
+					tokens.put(provider.getName(), provider.getToken(request)
+							.getSource());
 					user.setAttribute("oauth_tokens", JsonUtils.toJson(tokens));
 					userManager.save(user);
 				}
 				if (user != null)
 					AuthzUtils.autoLogin(user);
-			} else {
+			}
+			if (loginUser != null) {
 				OAuthToken token = provider.getToken(request);
 				if (token != null) {
 					String str = loginUser.getAttribute("oauth_tokens");
@@ -129,7 +132,7 @@ public class ConnectAction extends BaseAction {
 								});
 					} else
 						tokens = new HashMap<String, String>();
-					tokens.put(provider.getName(), JsonUtils.toJson(token));
+					tokens.put(provider.getName(), token.getSource());
 					loginUser.setAttribute("oauth_tokens",
 							JsonUtils.toJson(tokens));
 					userManager.save(loginUser);

@@ -153,28 +153,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 				logger.error(
 						getAccessTokenEndpoint() + "," + params.toString(), e);
 			}
-			if (JsonUtils.isValidJson(content)) {
-				Map<String, String> map = JsonUtils.fromJson(content,
-						new TypeReference<Map<String, String>>() {
-						});
-				accessToken = new OAuth2Token();
-				accessToken.setAccess_token(map.get("access_token"));
-				accessToken.setToken_type(map.get("token_type"));
-				accessToken.setRefresh_token(map.get("refresh_token"));
-				if (map.get("expires_in") != null)
-					accessToken.setExpires_in(Integer.valueOf(map
-							.get("expires_in")));
-			} else {
-				accessToken = new OAuth2Token();
-				String[] arr1 = content.split("&");
-				for (String s : arr1) {
-					String[] arr2 = s.split("=", 2);
-					if (arr2.length > 1 && arr2[0].equals("access_token"))
-						accessToken.setAccess_token(arr2[1]);
-					else if (arr2.length > 1 && arr2[0].equals("token_type"))
-						accessToken.setToken_type(arr2[1]);
-				}
-			}
+			accessToken = new OAuth2Token(content);
 			if (accessToken.getAccess_token() == null)
 				logger.error("access_token is null,and content is {}" + content);
 			saveToken(request, accessToken);
@@ -252,8 +231,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 
 	protected void saveToken(HttpServletRequest request, OAuth2Token token) {
 		token.setCreate_time(System.currentTimeMillis());
-		request.getSession().setAttribute(getName() + "_token",
-				JsonUtils.toJson(token));
+		request.setAttribute(getName() + "_token", token.getSource());
 	}
 
 	protected OAuth2Token restoreToken(HttpServletRequest request)
@@ -274,22 +252,17 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 					if (map != null && !map.isEmpty()) {
 						String tokenString = map.get(getName());
 						if (StringUtils.isNotBlank(tokenString)) {
-							try {
-								return JsonUtils.fromJson(tokenString,
-										OAuth2Token.class);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+							return new OAuth2Token(tokenString);
 						}
 					}
 				}
 			}
 		}
 		String key = getName() + "_token";
-		String json = (String) request.getSession().getAttribute(key);
-		if (StringUtils.isBlank(json))
+		String source = (String) request.getAttribute(key);
+		if (StringUtils.isBlank(source))
 			return null;
-		return JsonUtils.fromJson(json, OAuth2Token.class);
+		return new OAuth2Token(source);
 	}
 
 }
