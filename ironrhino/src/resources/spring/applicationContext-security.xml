@@ -74,7 +74,7 @@
 		p:key="${rememberMe.key:youcannotguessme}" />
 
 	<bean id="logoutSuccessHandler"
-		class="org.ironrhino.core.spring.security.DefaultLogoutSuccessHandler"
+		class="org.ironrhino.security.component.LogoutSuccessHandler"
 		p:defaultTargetUrl="/" />
 
 	<bean id="rememberMeServices"

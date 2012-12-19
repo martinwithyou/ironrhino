@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.ironrhino.common.support.SettingControl;
+import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.mail.MailService;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
@@ -17,6 +18,7 @@ import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.Constants;
+import org.ironrhino.security.event.SigninEvent;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.service.UserManager;
 import org.slf4j.Logger;
@@ -53,6 +55,9 @@ public class SignupAction extends BaseAction {
 
 	@Inject
 	private transient SettingControl settingControl;
+
+	@Inject
+	private transient EventPublisher eventPublisher;
 
 	@Autowired(required = false)
 	private transient MailService mailService;
@@ -125,6 +130,7 @@ public class SignupAction extends BaseAction {
 		user.setLegiblePassword(password);
 		user.setEnabled(!activationRequired);
 		userManager.save(user);
+		eventPublisher.publish(new SigninEvent(user), false);
 		if (activationRequired) {
 			user.setPassword(password);// for send mail
 			addActionMessage(getText("signup.success"));
@@ -186,8 +192,10 @@ public class SignupAction extends BaseAction {
 	private void sendActivationMail(User user) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("user", user);
-		model.put("url", "/signup/activate/"
-				+ Blowfish.encrypt(user.getId() + "," + user.getEmail()));
+		model.put(
+				"url",
+				"/signup/activate/"
+						+ Blowfish.encrypt(user.getId() + "," + user.getEmail()));
 		SimpleMailMessage smm = new SimpleMailMessage();
 		smm.setTo(user + "<" + user.getEmail() + ">");
 		smm.setSubject(getText("mail.subject.user_activate"));

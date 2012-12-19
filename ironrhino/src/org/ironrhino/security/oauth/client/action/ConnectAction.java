@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.support.SettingControl;
+import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
@@ -18,6 +19,8 @@ import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.security.Constants;
+import org.ironrhino.security.event.LoginEvent;
+import org.ironrhino.security.event.SigninEvent;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.client.model.OAuthToken;
 import org.ironrhino.security.oauth.client.model.Profile;
@@ -37,6 +40,9 @@ public class ConnectAction extends BaseAction {
 
 	@Inject
 	private transient UserManager userManager;
+
+	@Inject
+	private transient EventPublisher eventPublisher;
 
 	@Inject
 	private transient SettingControl settingControl;
@@ -120,9 +126,14 @@ public class ConnectAction extends BaseAction {
 					user.setAttribute(OAuthProvider.USER_ATTRIBUTE_NAME_TOKENS,
 							JsonUtils.toJson(tokens));
 					userManager.save(user);
+					eventPublisher.publish(new SigninEvent(user, "oauth",
+							provider.getName()), false);
 				}
-				if (user != null)
+				if (user != null) {
 					AuthzUtils.autoLogin(user);
+					eventPublisher.publish(new LoginEvent(user, "oauth",
+							provider.getName()), false);
+				}
 			}
 			if (loginUser != null) {
 				OAuthToken token = provider.getToken(request);

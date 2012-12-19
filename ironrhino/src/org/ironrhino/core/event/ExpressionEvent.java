@@ -1,23 +1,15 @@
 package org.ironrhino.core.event;
 
-public class ExpressionEvent extends BaseEvent {
+public class ExpressionEvent extends BaseEvent<String> {
 
 	private static final long serialVersionUID = 6493345801143748086L;
 
-	private String expression;
-
 	public ExpressionEvent(String expression) {
 		super(expression);
-		this.expression = expression;
 	}
 
 	public String getExpression() {
-		return this.expression;
-	}
-
-	@Override
-	public Object getSource() {
-		return getExpression();
+		return getSource();
 	}
 
 	@Override

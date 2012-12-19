@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.metadata.Redirect;
@@ -13,6 +14,8 @@ import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.spring.security.DefaultUsernamePasswordAuthenticationFilter;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.RequestUtils;
+import org.ironrhino.security.event.LoginEvent;
+import org.ironrhino.security.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -40,6 +43,9 @@ public class LoginAction extends BaseAction {
 
 	@Inject
 	private transient DefaultUsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
+
+	@Inject
+	private transient EventPublisher eventPublisher;
 
 	public String getUsername() {
 		return username;
@@ -91,6 +97,10 @@ public class LoginAction extends BaseAction {
 			try {
 				usernamePasswordAuthenticationFilter.success(request, response,
 						authResult);
+				Object principal = authResult.getPrincipal();
+				if (principal instanceof User)
+					eventPublisher.publish(new LoginEvent((User) principal),
+							false);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
