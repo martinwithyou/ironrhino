@@ -26,4 +26,8 @@ public class OAuthToken implements java.io.Serializable {
 		this.source = source;
 	}
 
+	@Override
+	public String toString() {
+		return source;
+	}
 }
