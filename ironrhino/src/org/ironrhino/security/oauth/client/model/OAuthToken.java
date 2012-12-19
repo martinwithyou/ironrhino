@@ -21,6 +21,8 @@ public class OAuthToken implements java.io.Serializable {
 	}
 
 	public void setSource(String source) {
+		if (source != null)
+			source = source.trim();
 		this.source = source;
 	}
 

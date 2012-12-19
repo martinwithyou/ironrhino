@@ -111,11 +111,14 @@ public class ConnectAction extends BaseAction {
 						}
 					user.setName(StringUtils.isNotBlank(p.getName()) ? p
 							.getName() : p.getDisplayName());
-					user.setAttribute("oauth_provider", provider.getName());
+					user.setAttribute(
+							OAuthProvider.USER_ATTRIBUTE_NAME_PROVIDER,
+							provider.getName());
 					Map<String, String> tokens = new HashMap<String, String>();
 					tokens.put(provider.getName(), provider.getToken(request)
 							.getSource());
-					user.setAttribute("oauth_tokens", JsonUtils.toJson(tokens));
+					user.setAttribute(OAuthProvider.USER_ATTRIBUTE_NAME_TOKENS,
+							JsonUtils.toJson(tokens));
 					userManager.save(user);
 				}
 				if (user != null)
@@ -124,7 +127,8 @@ public class ConnectAction extends BaseAction {
 			if (loginUser != null) {
 				OAuthToken token = provider.getToken(request);
 				if (token != null) {
-					String str = loginUser.getAttribute("oauth_tokens");
+					String str = loginUser
+							.getAttribute(OAuthProvider.USER_ATTRIBUTE_NAME_TOKENS);
 					Map<String, String> tokens;
 					if (StringUtils.isNotBlank(str)) {
 						tokens = JsonUtils.fromJson(str,
@@ -133,7 +137,8 @@ public class ConnectAction extends BaseAction {
 					} else
 						tokens = new HashMap<String, String>();
 					tokens.put(provider.getName(), token.getSource());
-					loginUser.setAttribute("oauth_tokens",
+					loginUser.setAttribute(
+							OAuthProvider.USER_ATTRIBUTE_NAME_TOKENS,
 							JsonUtils.toJson(tokens));
 					userManager.save(loginUser);
 				}

@@ -212,7 +212,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 				Authentication auth = sc.getAuthentication();
 				if (auth != null) {
 					User user = (User) auth.getPrincipal();
-					String str = user.getAttribute("oauth_tokens");
+					String str = user.getAttribute(USER_ATTRIBUTE_NAME_TOKENS);
 					if (StringUtils.isNotBlank(str)) {
 						Map<String, String> map = JsonUtils.fromJson(str,
 								new TypeReference<Map<String, String>>() {
