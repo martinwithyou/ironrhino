@@ -31,7 +31,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.ref.SoftReference;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,7 +48,6 @@ import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRRuntimeException;
 import net.sf.jasperreports.engine.JasperReportsContext;
-import net.sf.jasperreports.repo.RepositoryUtil;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -158,21 +159,13 @@ public final class SimpleFontExtensionHelper implements ErrorHandler
 	 */
 	public List<FontFamily> loadFontFamilies(JasperReportsContext jasperReportsContext, String file)
 	{
-		InputStream is = null; 
-		
+		List<FontFamily> fontFamilies = new ArrayList<FontFamily>();
 		try
 		{
-			is = RepositoryUtil.getInstance(jasperReportsContext).getInputStreamFromLocation(file);
-			return loadFontFamilies(jasperReportsContext, is);
-		}
-		catch (JRException e)
-		{
-			throw new JRRuntimeException(e);
-		}
-		finally
-		{
-			if (is != null)
-			{
+			Enumeration<URL> urls = getClass().getClassLoader().getResources(file);
+			while (urls.hasMoreElements()) {
+				InputStream is = urls.nextElement().openStream();
+				fontFamilies.addAll(loadFontFamilies(jasperReportsContext, is));
 				try
 				{
 					is.close();
@@ -182,6 +175,11 @@ public final class SimpleFontExtensionHelper implements ErrorHandler
 				}
 			}
 		}
+		catch (IOException e)
+		{
+			throw new JRRuntimeException(e);
+		}
+		return fontFamilies;
 	}
 	
 	/**
