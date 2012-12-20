@@ -65,7 +65,6 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		super.save(user);
 	}
 
-	// TODO evict cache
 	@Transactional
 	@EvictCache(namespace = "user", key = "${key = [];foreach (user : retval) { key.add(user.username); key.add(user.email);} return key;}")
 	public List<User> delete(Serializable... id) {
