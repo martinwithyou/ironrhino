@@ -15,13 +15,12 @@ import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.client.model.OAuth2Token;
 import org.ironrhino.security.oauth.client.model.OAuthToken;
 import org.ironrhino.security.oauth.client.model.Profile;
+import org.ironrhino.security.oauth.client.util.OAuthTokenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 public abstract class OAuth2Provider extends AbstractOAuthProvider {
 
@@ -243,19 +242,10 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		if (sc != null) {
 			Authentication auth = sc.getAuthentication();
 			if (auth != null) {
-				User user = (User) auth.getPrincipal();
-				String str = user.getAttribute(USER_ATTRIBUTE_NAME_TOKENS);
-				if (StringUtils.isNotBlank(str)) {
-					Map<String, String> map = JsonUtils.fromJson(str,
-							new TypeReference<Map<String, String>>() {
-							});
-					if (map != null && !map.isEmpty()) {
-						String tokenString = map.get(getName());
-						if (StringUtils.isNotBlank(tokenString)) {
-							return new OAuth2Token(tokenString);
-						}
-					}
-				}
+				OAuth2Token token = (OAuth2Token) OAuthTokenUtils.getTokenFromUserAttribute(this,
+						(User) auth.getPrincipal());
+				if (token != null)
+					return token;
 			}
 		}
 		String key = getName() + "_token";

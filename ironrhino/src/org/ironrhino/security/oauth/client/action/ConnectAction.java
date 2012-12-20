@@ -1,9 +1,7 @@
 package org.ironrhino.security.oauth.client.action;
 
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +14,6 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
-import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.security.Constants;
 import org.ironrhino.security.event.LoginEvent;
@@ -26,10 +23,9 @@ import org.ironrhino.security.oauth.client.model.OAuthToken;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuthProvider;
 import org.ironrhino.security.oauth.client.service.OAuthProviderManager;
+import org.ironrhino.security.oauth.client.util.OAuthTokenUtils;
 import org.ironrhino.security.service.UserManager;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 @AutoConfig
 public class ConnectAction extends BaseAction {
@@ -91,19 +87,20 @@ public class ConnectAction extends BaseAction {
 					.lookup(getUid());
 			if (provider == null)
 				return ACCESSDENIED;
-			User loginUser = AuthzUtils.getUserDetails(User.class);
-			if (loginUser == null) {
-				Profile p = provider.getProfile(request);
-				if (p == null) {
-					targetUrl = "/oauth/connect";
-					return REDIRECT;
-				}
+			OAuthToken token = provider.getToken(request);
+			Profile p = provider.getProfile(request);
+			if (p == null) {
+				targetUrl = "/oauth/connect";
+				return REDIRECT;
+			}
+			User user = AuthzUtils.getUserDetails(User.class);
+			if (user == null) {
 				String id = p.getUid();
-				User user = null;
 				try {
 					user = (User) userManager.loadUserByUsername(id);
-					if (user != null)
-						loginUser = user;
+					OAuthTokenUtils.putTokenIntoUserAttribute(provider, user,
+							token);
+					userManager.save(user);
 				} catch (UsernameNotFoundException e) {
 					user = new User();
 					user.setUsername(userManager.suggestUsername(id));
@@ -117,42 +114,20 @@ public class ConnectAction extends BaseAction {
 						}
 					user.setName(StringUtils.isNotBlank(p.getName()) ? p
 							.getName() : p.getDisplayName());
-					user.setAttribute(
-							OAuthProvider.USER_ATTRIBUTE_NAME_PROVIDER,
-							provider.getName());
-					Map<String, String> tokens = new HashMap<String, String>();
-					tokens.put(provider.getName(), provider.getToken(request)
-							.getSource());
-					user.setAttribute(OAuthProvider.USER_ATTRIBUTE_NAME_TOKENS,
-							JsonUtils.toJson(tokens));
+					OAuthTokenUtils.putTokenIntoUserAttribute(provider, user,
+							token);
 					userManager.save(user);
 					eventPublisher.publish(new SignupEvent(user, "oauth",
 							provider.getName()), false);
 				}
-				if (user != null) {
-					AuthzUtils.autoLogin(user);
-					eventPublisher.publish(new LoginEvent(user, "oauth",
-							provider.getName()), false);
-				}
-			}
-			if (loginUser != null) {
-				OAuthToken token = provider.getToken(request);
-				if (token != null) {
-					String str = loginUser
-							.getAttribute(OAuthProvider.USER_ATTRIBUTE_NAME_TOKENS);
-					Map<String, String> tokens;
-					if (StringUtils.isNotBlank(str)) {
-						tokens = JsonUtils.fromJson(str,
-								new TypeReference<Map<String, String>>() {
-								});
-					} else
-						tokens = new HashMap<String, String>();
-					tokens.put(provider.getName(), token.getSource());
-					loginUser.setAttribute(
-							OAuthProvider.USER_ATTRIBUTE_NAME_TOKENS,
-							JsonUtils.toJson(tokens));
-					userManager.save(loginUser);
-				}
+				AuthzUtils.autoLogin(user);
+				eventPublisher.publish(
+						new LoginEvent(user, "oauth", provider.getName()),
+						false);
+			} else {
+				OAuthTokenUtils
+						.putTokenIntoUserAttribute(provider, user, token);
+				userManager.save(user);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
