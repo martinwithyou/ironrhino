@@ -12,9 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
@@ -67,8 +69,7 @@ public class JsonUtils {
 
 	public static boolean isValidJson(String content) {
 		try {
-			JsonUtils.createNewObjectMapper()
-					.readValue(content, JsonNode.class);
+			getObjectMapper().readValue(content, JsonNode.class);
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -109,6 +110,28 @@ public class JsonUtils {
 		return objectMapper.readValue(json, objectMapper
 				.getDeserializationConfig().getTypeFactory()
 				.constructType(type));
+	}
+
+	public static String unprettify(String json) {
+		ObjectMapper objectMapper = getObjectMapper();
+		try {
+			JsonNode node = objectMapper.readValue(json, JsonNode.class);
+			return objectMapper.writeValueAsString(node);
+		} catch (Exception e) {
+			return json;
+		}
+	}
+
+	public static String prettify(String json) {
+		ObjectMapper objectMapper = getObjectMapper();
+		try {
+			JsonNode node = objectMapper.readValue(json, JsonNode.class);
+			ObjectWriter writer = objectMapper
+					.writer(new DefaultPrettyPrinter());
+			return writer.writeValueAsString(node);
+		} catch (Exception e) {
+			return json;
+		}
 	}
 
 }

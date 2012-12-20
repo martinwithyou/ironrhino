@@ -28,10 +28,10 @@ public class OAuth2Token extends OAuthToken {
 	}
 
 	public void setSource(String source) {
-		super.setSource(source);
 		if (StringUtils.isBlank(source))
 			return;
 		if (JsonUtils.isValidJson(source)) {
+			source = JsonUtils.unprettify(source);
 			Map<String, String> map;
 			try {
 				map = JsonUtils.fromJson(source,
@@ -55,6 +55,7 @@ public class OAuth2Token extends OAuthToken {
 					token_type = arr2[1];
 			}
 		}
+		super.setSource(source);
 	}
 
 	public String getAccess_token() {
