@@ -3,22 +3,22 @@ package org.ironrhino.security.component;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.ironrhino.security.event.SigninEvent;
+import org.ironrhino.security.event.SignupEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 @Singleton
 @Named
-public class SimpleSigninEventListener implements
-		ApplicationListener<SigninEvent> {
+public class SimpleSignupEventListener implements
+		ApplicationListener<SignupEvent> {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Override
-	public void onApplicationEvent(SigninEvent event) {
+	public void onApplicationEvent(SignupEvent event) {
 		logger.info(event.getUser().getUsername()
-				+ " signin"
+				+ " signup"
 				+ (event.getProvider() == null ? "" : ",via "
 						+ event.getProvider()));
 	}

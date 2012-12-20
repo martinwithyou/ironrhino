@@ -20,7 +20,7 @@ import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.security.Constants;
 import org.ironrhino.security.event.LoginEvent;
-import org.ironrhino.security.event.SigninEvent;
+import org.ironrhino.security.event.SignupEvent;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.client.model.OAuthToken;
 import org.ironrhino.security.oauth.client.model.Profile;
@@ -126,7 +126,7 @@ public class ConnectAction extends BaseAction {
 					user.setAttribute(OAuthProvider.USER_ATTRIBUTE_NAME_TOKENS,
 							JsonUtils.toJson(tokens));
 					userManager.save(user);
-					eventPublisher.publish(new SigninEvent(user, "oauth",
+					eventPublisher.publish(new SignupEvent(user, "oauth",
 							provider.getName()), false);
 				}
 				if (user != null) {

@@ -18,7 +18,7 @@ import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.Constants;
-import org.ironrhino.security.event.SigninEvent;
+import org.ironrhino.security.event.SignupEvent;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.service.UserManager;
 import org.slf4j.Logger;
@@ -130,7 +130,7 @@ public class SignupAction extends BaseAction {
 		user.setLegiblePassword(password);
 		user.setEnabled(!activationRequired);
 		userManager.save(user);
-		eventPublisher.publish(new SigninEvent(user), false);
+		eventPublisher.publish(new SignupEvent(user), false);
 		if (activationRequired) {
 			user.setPassword(password);// for send mail
 			addActionMessage(getText("signup.success"));
