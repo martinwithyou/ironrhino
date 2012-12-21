@@ -96,11 +96,14 @@ public class ConnectAction extends BaseAction {
 			User user = AuthzUtils.getUserDetails(User.class);
 			if (user == null) {
 				String id = p.getUid();
+				LoginEvent loginEvent;
 				try {
 					user = (User) userManager.loadUserByUsername(id);
 					OAuthTokenUtils.putTokenIntoUserAttribute(provider, user,
 							token);
 					userManager.save(user);
+					loginEvent = new LoginEvent(user, "oauth",
+							provider.getName());
 				} catch (UsernameNotFoundException e) {
 					user = new User();
 					user.setUsername(userManager.suggestUsername(id));
@@ -119,11 +122,12 @@ public class ConnectAction extends BaseAction {
 					userManager.save(user);
 					eventPublisher.publish(new SignupEvent(user, "oauth",
 							provider.getName()), false);
+					loginEvent = new LoginEvent(user, "oauth",
+							provider.getName());
+					loginEvent.setFirst(true);
 				}
 				AuthzUtils.autoLogin(user);
-				eventPublisher.publish(
-						new LoginEvent(user, "oauth", provider.getName()),
-						false);
+				eventPublisher.publish(loginEvent, false);
 			} else {
 				OAuthTokenUtils
 						.putTokenIntoUserAttribute(provider, user, token);

@@ -18,6 +18,7 @@ import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.Constants;
+import org.ironrhino.security.event.LoginEvent;
 import org.ironrhino.security.event.SignupEvent;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.service.UserManager;
@@ -25,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
@@ -150,11 +150,13 @@ public class SignupAction extends BaseAction {
 					&& user.getEmail().equals(array[1])) {
 				user.setEnabled(true);
 				userManager.save(user);
-				// auto login
 				try {
-					UserDetails ud = userManager.loadUserByUsername(user
+					User ud = (User) userManager.loadUserByUsername(user
 							.getUsername());
 					AuthzUtils.autoLogin(ud);
+					LoginEvent loginEvent = new LoginEvent(ud);
+					loginEvent.setFirst(true);
+					eventPublisher.publish(loginEvent, false);
 				} catch (RuntimeException e) {
 					log.warn(e.getMessage(), e);
 				}
