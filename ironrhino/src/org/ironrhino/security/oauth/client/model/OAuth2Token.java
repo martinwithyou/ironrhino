@@ -1,12 +1,10 @@
 package org.ironrhino.security.oauth.client.model;
 
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.util.JsonUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class OAuth2Token extends OAuthToken {
 
@@ -19,12 +17,10 @@ public class OAuth2Token extends OAuthToken {
 
 	public OAuth2Token() {
 		super();
-		create_time = System.currentTimeMillis();
 	}
 
 	public OAuth2Token(String source) {
 		super(source);
-		create_time = System.currentTimeMillis();
 	}
 
 	public void setSource(String source) {
@@ -32,16 +28,32 @@ public class OAuth2Token extends OAuthToken {
 			return;
 		if (JsonUtils.isValidJson(source)) {
 			source = JsonUtils.unprettify(source);
-			Map<String, String> map;
 			try {
-				map = JsonUtils.fromJson(source,
-						new TypeReference<Map<String, String>>() {
-						});
-				access_token = map.get("access_token");
-				token_type = map.get("token_type");
-				refresh_token = map.get("refresh_token");
-				if (map.get("expires_in") != null)
-					expires_in = Integer.valueOf(map.get("expires_in"));
+				JsonNode map = JsonUtils.fromJson(source, JsonNode.class);
+				JsonNode node = map.get("access_token");
+				if (node != null)
+					access_token = node.asText();
+				node = map.get("token_type");
+				if (node != null)
+					token_type = node.asText();
+				node = map.get("refresh_token");
+				if (node != null)
+					refresh_token = node.asText();
+				node = map.get("expires_in");
+				if (node != null)
+					expires_in = node.asInt();
+				node = map.get("create_time");
+				if (node != null) {
+					create_time = node.asLong();
+				} else {
+					create_time = System.currentTimeMillis();
+					StringBuilder sb = new StringBuilder(source.substring(0,
+							source.length() - 1));
+					sb.append(",\"create_time\":");
+					sb.append(create_time);
+					sb.append("}");
+					source = sb.toString();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -53,6 +65,16 @@ public class OAuth2Token extends OAuthToken {
 					access_token = arr2[1];
 				else if (arr2.length > 1 && arr2[0].equals("token_type"))
 					token_type = arr2[1];
+				else if (arr2.length > 1 && arr2[0].equals("refresh_token"))
+					refresh_token = arr2[1];
+				else if (arr2.length > 1 && arr2[0].equals("expires_in"))
+					expires_in = Integer.valueOf(arr2[1]);
+				else if (arr2.length > 1 && arr2[0].equals("create_time"))
+					create_time = Long.valueOf(arr2[1]);
+			}
+			if (expires_in > 0 && create_time == 0) {
+				create_time = System.currentTimeMillis();
+				source += "&create_time=" + create_time;
 			}
 		}
 		super.setSource(source);
@@ -96,6 +118,19 @@ public class OAuth2Token extends OAuthToken {
 
 	public void setCreate_time(long create_time) {
 		this.create_time = create_time;
+		if (expires_in > 0) {
+			if (JsonUtils.isValidJson(source)) {
+				StringBuilder sb = new StringBuilder(source.substring(0,
+						source.length() - 1));
+				sb.append(",\"create_time\":");
+				sb.append(create_time);
+				sb.append("}");
+				source = sb.toString();
+			} else {
+				create_time = System.currentTimeMillis();
+				source += "&create_time=" + create_time;
+			}
+		}
 	}
 
 	@NotInJson
@@ -103,6 +138,14 @@ public class OAuth2Token extends OAuthToken {
 		if (expires_in <= 0 || create_time <= 0)
 			return false;
 		int offset = 60;
+		return (System.currentTimeMillis() - create_time) / 1000 > (expires_in - offset);
+	}
+
+	@NotInJson
+	public boolean isGoingToExpired() {
+		if (expires_in <= 0 || create_time <= 0)
+			return false;
+		int offset = 5 * 60;
 		return (System.currentTimeMillis() - create_time) / 1000 > (expires_in - offset);
 	}
 
