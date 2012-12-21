@@ -1,7 +1,25 @@
-<#macro pagination align="center" dynamicAttributes...>
-<#if !dynamicAttributes?is_hash_ex><#local dynamicAttributes={}></#if>
+<#macro pagination align="center" theme="" dynamicAttributes...>
 <#if resultPage.totalPage gt 1>
-<div class="pagination<#if align="right"> pull-right</#if>"<#if align="center"> style="text-align:center;"</#if>>
+<#if !dynamicAttributes?is_hash_ex><#local dynamicAttributes={}></#if>
+<#if theme=="simple">
+<ul class="pager">
+  <li class="previous<#if resultPage.first> disabled</#if>">
+  	<#if resultPage.first>
+    <span>&larr; ${action.getText('previouspage')}</span>
+    <#else>
+    <a href="${resultPage.renderUrl(resultPage.previousPage)}"<#list dynamicAttributes?keys as attr> ${attr}="${dynamicAttributes[attr]?html}"</#list>>&larr; ${action.getText('previouspage')}</a>
+    </#if>
+  </li>
+  <li class="next<#if resultPage.last> disabled</#if>">
+  	<#if resultPage.last>
+    <span>${action.getText('nextpage')} &rarr;</span>
+    <#else>
+    <a href="${resultPage.renderUrl(resultPage.nextPage)}"<#list dynamicAttributes?keys as attr> ${attr}="${dynamicAttributes[attr]?html}"</#list>>${action.getText('nextpage')} &rarr;</a>
+    </#if>
+  </li>
+</ul>
+<#else>
+<div class="pagination<#if align="center"> pagination-centered<#elseif align="right"> pagination-right</#if>">
 <ul>
 <#if resultPage.first>
 <li class="disabled"><a title="${action.getText('firstpage')}">&lt;&lt;</a></li>
@@ -54,5 +72,6 @@
 </#if>
 </ul>
 </div>
+</#if>
 </#if>
 </#macro>
