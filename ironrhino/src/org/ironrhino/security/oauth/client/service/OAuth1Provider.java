@@ -208,9 +208,10 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 							HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
 			if (sc != null) {
 				Authentication auth = sc.getAuthentication();
-				if (auth != null) {
-					OAuth1Token token = (OAuth1Token) OAuthTokenUtils.getTokenFromUserAttribute(
-							this, (User) auth.getPrincipal());
+				if (auth != null && auth.getPrincipal() instanceof User) {
+					OAuth1Token token = (OAuth1Token) OAuthTokenUtils
+							.getTokenFromUserAttribute(this,
+									(User) auth.getPrincipal());
 					if (token != null)
 						return token;
 				}
