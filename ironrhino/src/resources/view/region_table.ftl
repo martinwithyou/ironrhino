@@ -21,7 +21,7 @@
 <table class="treeTable checkboxgroup" style="width:100%;">
   <thead>
     <tr>
-      <th style="width:10%"><input type="checkbox;"/></th>
+      <th style="width:10%"><input type="checkbox"/></th>
       <th style="width:20%;">name</th>
       <th style="width:70%;">fullname</th>
     </tr>

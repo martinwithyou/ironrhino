@@ -59,7 +59,7 @@ ${getDictionaryLabel(dictionaryName,value)}<#t>
 			<#if !dictionary.groupable>
 				<#list items as lv>
 				<label for="${dictionaryName}-${index}" class="checkbox inline"><#t>
-				<input id="${dictionaryName}-${index}" type="checkbox" value="${lv.value}"<#if value?seq_contains(lv.value)> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>/>${lv.label}<#t>
+				<input id="${dictionaryName}-${index}" type="checkbox" value="${lv.value}" class="custom"<#if value?seq_contains(lv.value)> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>/>${lv.label}<#t>
 				</label><#t>
 				<#local index=index+1>
 				</#list>
@@ -77,12 +77,12 @@ ${getDictionaryLabel(dictionaryName,value)}<#t>
 							</#if>
 							<#local group = label/>
 							<#if group?has_content>
-								<span class="checkboxgroup"><label for="${dictionaryName}-${group}" class="group"><input id="${dictionaryName}-${group}" type="checkbox"/>${group}</label><#t>
+								<span class="checkboxgroup"><label for="${dictionaryName}-${group}" class="group"><input id="${dictionaryName}-${group}" type="checkbox" class="custom"/>${group}</label><#t>
 							</#if>
 						</#if>
 					<#else>
 						<label for="${dictionaryName}-${index}" class="checkbox inline"><#t>
-						<input id="${dictionaryName}-${index}" type="checkbox" value="${lv.value}"<#if value?seq_contains(lv.value)> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>/>${lv.label}<#t>
+						<input id="${dictionaryName}-${index}" type="checkbox" class="custom" value="${lv.value}"<#if value?seq_contains(lv.value)> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>/>${lv.label}<#t>
 						</label><#t>
 						<#if group?has_content && index==items?size-1>
 						</span><#lt>
@@ -95,7 +95,7 @@ ${getDictionaryLabel(dictionaryName,value)}<#t>
 		<#list value as v>
 		<#if !dictionary?? || !(dictionary.itemsAsMap!)?keys?seq_contains(v)>
 		<label for="${dictionaryName}-${index}" class="checkbox inline"><#t>
-		<input id="${dictionaryName}-${index}" type="checkbox" value="${v}"checked="checked"<#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>/>${v}<#t>
+		<input id="${dictionaryName}-${index}" type="checkbox" class="custom" value="${v}"checked="checked"<#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>/>${v}<#t>
 		</label><#t>
 		<#local index = index+1/>
 		</#if>

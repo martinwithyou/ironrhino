@@ -129,6 +129,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.htmlarea.css" />
 				<file name="${webapp.dir}/assets/styles/source/bootstrap.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.portal.css" />
 				<file
@@ -148,6 +149,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.alerts.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/jquery.textext.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
 			</filelist>
 		</concat>
 		<replaceregexp file="${webapp.dir}/assets/styles/ironrhino.css"

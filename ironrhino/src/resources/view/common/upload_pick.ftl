@@ -26,7 +26,7 @@
 		<tbody>
 		<#list files.entrySet() as entry>
 		<tr>
-			<td class="checkbox"><#if entry.value><input type="radio" name="id" value="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>"/></#if></td>
+			<td class="radio"><#if entry.value><input type="radio" name="id" value="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" class="custom"/></#if></td>
 			<td><#if entry.value><a class="uploaditem" style="color:#1c5a50;" href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank">${entry.key}</a><#else><a style="color:blue;" class="ajax view" replacement="files" href="<@url value="${actionBaseUrl}/pick${folderEncoded}/${entry.key?replace('..','__')?url}"/>">${entry.key}</a></#if></td>
 			<td class="center"><#if entry.value && ['jpg','gif','png','bmp']?seq_contains(entry.key?lower_case?split('.')?last)><a href="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" target="_blank"><img class="uploaditem" src="<@url value="${fileStoragePath}/upload${folderEncoded}/${entry.key?url}"/>" style="width:50px;height:50px;"/></a></#if></td>
 		</tr>

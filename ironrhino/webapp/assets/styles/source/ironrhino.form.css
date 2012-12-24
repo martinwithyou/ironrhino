@@ -1,0 +1,240 @@
+.form-horizontal .control-label{
+	width: 100px;
+}
+.form-horizontal .controls {
+	margin-left: 120px;
+}
+.form-horizontal .form-actions {
+	padding-left: 120px;
+}
+.form-horizontal .control-group {
+	margin-bottom: 10px;
+}
+.form-actions {
+	padding: 10px 20px 10px;
+}
+@media (max-width: 960px) {
+  .form-horizontal .control-label{
+	width: 60px;
+	}
+	.form-horizontal .controls {
+		margin-left: 80px;
+	}
+	.form-horizontal .form-actions {
+		padding-left: 80px;
+	}
+}
+td input,td textarea,td select,td .uneditable-input{
+	margin-bottom: 0px;
+}
+th.radio,th.checkbox,td.radio,td.checkbox{
+	padding: 0;
+	text-align: center;
+	vertical-align: middle;
+}
+th.radio input[type="radio"],th.checkbox input[type="checkbox"],td.radio input[type="radio"],td.checkbox input[type="checkbox"]{
+	float: none !important;
+	margin: 0;
+}
+input.integer,input.double,input.date {
+	width: 75px;
+	font-family: Arial;
+}
+input.filterselect{
+	width: 75px;
+}
+input.latlng{
+	width: 300px;
+}
+input.required {
+	background: #FFF url(../images/required.png) no-repeat right;
+}
+span.checkboxgroup{
+	display: inline-block;
+	margin:0 20px;
+}
+.checkboxgroup label.group{
+	display: inline;
+	font-weight:bold;
+	font-size:1.1em;
+	margin:0 10px 10px 0;
+}
+.checkboxgroup label.group input[type="checkbox"]{
+	margin-right:5px;
+	height:10px;
+}
+.field-error.removeonclick {
+	position: absolute;
+	top: 300px;
+	left: 300px;
+	display: block;
+	z-index: 5000;
+	cursor: pointer;
+}
+
+.field-error .field-error-content {
+	width: 100%;
+	background: #fcf8e3;
+	position:relative;
+	z-index:5001;
+	color: #b94a48;
+	width: 150px;
+	border: 1px solid #b94a48;
+	padding: 4px 10px 4px 10px;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+.field-error .field-error-arrow {
+	width: 15px;
+	margin: -2px 0 0 13px;
+	position:relative;
+	z-index: 5006;
+}
+.field-error .field-error-arrow div {
+	border-left: 1px solid #b94a48;
+	border-right: 1px solid #b94a48;
+	font-size: 0px;
+	height: 1px;
+	background: #fcf8e3;
+	margin: 0 auto;
+	line-height: 0;
+	font-size: 0;
+	display: block;
+}
+.field-error .field-error-arrow .line10 {
+	width: 15px;
+	border: none;
+}
+.field-error .field-error-arrow .line9 {
+	width: 13px;
+	border: none;
+}
+.field-error .field-error-arrow .line8 {
+	width: 11px;
+}
+.field-error .field-error-arrow .line7 {
+	width: 9px;
+}
+.field-error .field-error-arrow .line6 {
+	width: 7px;
+}
+.field-error .field-error-arrow .line5 {
+	width: 5px;
+}
+.field-error .field-error-arrow .line4 {
+	width: 3px;
+}
+.field-error .field-error-arrow .line3 {
+	width: 1px;
+	border-left: 1px solid #b94a48;
+	border-right: 1px solid #b94a48;
+	border-bottom: 0 solid #b94a48;
+}
+.field-error .field-error-arrow .line2 {
+	width: 3px;
+	border: none;
+	background: #b94a48;
+}
+.field-error .field-error-arrow .line1 {
+	width: 1px;
+	border: none;
+	background: #b94a48;
+}
+.input-append .field-error-content{
+	font-size: 13px;
+}
+img.captcha {
+	height: 25px;
+	width: 100px;
+	cursor: pointer;
+	vertical-align: middle;
+}
+.combobox .dropdown-menu li.group > a:hover {
+	cursor:default;
+	color: #333333;
+	background-color:transparent;
+	background-image: none;
+}
+
+
+input[type="checkbox"].custom + label.custom {
+	background-color: #fafafa;
+	border: 1px solid #cacece;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+	padding: 9px;
+	border-radius: 3px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-bottom: 0;
+	position: relative;
+}
+
+input[type="checkbox"].custom + label.custom:active, input[type="checkbox"].custom:checked + label.custom:active {
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+input[type="checkbox"].custom:checked + label.custom {
+	background-color: #e9ecee;
+	border: 1px solid #adb8c0;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+	color: #99a1a7;
+}
+
+input[type="checkbox"].custom:checked + label.custom:after {
+	content: '\2714';
+	font-size: 14px;
+	position: absolute;
+	top: 0px;
+	left: 3px;
+	color: #99a1a7;
+}
+
+input[type="radio"].custom + label.custom {
+	-webkit-appearance: none;
+	background-color: #fafafa;
+	border: 1px solid #cacece;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+	padding: 9px;
+	border-radius: 50px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-bottom: 0;
+	position: relative;
+}
+
+input[type="radio"].custom:checked + label.custom:after {
+	content: ' ';
+	width: 12px;
+	height: 12px;
+	border-radius: 50px;
+	position: absolute;
+	top: 3px;
+	background: #99a1a7;
+	box-shadow: inset 0px 0px 10px rgba(0,0,0,0.3);
+	text-shadow: 0px;
+	left: 3px;
+	font-size: 32px;
+}
+
+input[type="radio"].custom:checked + label.custom {
+	background-color: #e9ecee;
+	color: #99a1a7;
+	border: 1px solid #adb8c0;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1), inset 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+input[type="radio"].custom + label.custom:active, input[type="radio"].custom:checked + label.custom:active {
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+.controls > label.custom {
+	margin: 5px 0;
+}
+label.custom{
+	margin-right: 5px;
+}
+.controls label.checkbox label.custom,.controls label.radio label.custom{
+	margin-left: -20px;
+}
+

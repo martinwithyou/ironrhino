@@ -21,6 +21,7 @@ import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.ExpressionUtils;
+import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -78,8 +79,12 @@ public class ApplicationContextConsole implements
 				if (StringUtils.isAlphanumeric(beanName)
 						&& ctx.isSingleton(beanName)) {
 					try {
-						Class<?> clz = Class.forName(ctx.getBeanDefinition(
-								beanName).getBeanClassName());
+						String beanClassName = ctx.getBeanDefinition(beanName)
+								.getBeanClassName();
+						Class<?> clz = beanClassName != null ? Class
+								.forName(beanClassName) : ReflectionUtils
+								.getTargetObject(ctx.getBean(beanName))
+								.getClass();
 						Set<Method> methods = AnnotationUtils
 								.getAnnotatedMethods(clz, Trigger.class);
 						for (Method m : methods) {

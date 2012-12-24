@@ -48,7 +48,7 @@
 <thead>
 <tr>
 <#if showCheckColumn>
-<th class="nosort <#if multipleCheck>checkbox<#else>radio</#if>" style="width:40px;"><#if multipleCheck><input type="checkbox" class="checkbox"/></#if></th>
+<th class="nosort <#if multipleCheck>checkbox<#else>radio</#if>" style="width:40px;"><#if multipleCheck><input type="checkbox" class="checkbox custom"/></#if></th>
 </#if>
 </#macro>
 
@@ -73,7 +73,7 @@
 
 <#macro rttbodytrstart entity readonly=false showCheckColumn=true multipleCheck=true>
 <tr<#if !showCheckColumn&&entity.id??> data-rowid="${entity.id?string}"</#if>>
-<#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if entity.id??> value="${entity.id?string}"</#if>/></td></#if>
+<#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if entity.id??> value="${entity.id?string}"</#if> class="custom"/></td></#if>
 </#macro>
 
 <#macro rttbodytd value,entity,celleditable=true,template='',dynamicAttributes...>

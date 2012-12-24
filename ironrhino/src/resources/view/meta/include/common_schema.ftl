@@ -72,7 +72,7 @@
 							</#if>
 							<#local i=0>
 							<#list field.values as value>
-								<label for="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${i}" class="checkbox inline removeonadd"><input id="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${i}" type="checkbox" name="${parameterNamePrefix}attributes[${index}].value" value="${value!?html}" class="textonadd"<#list persistValueArray as tempValue><#if tempValue=value> checked="checked"<#break/></#if></#list>>${value!?html}</label>
+								<label for="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${i}" class="checkbox inline removeonadd"><input id="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${i}" type="checkbox" class="custom" name="${parameterNamePrefix}attributes[${index}].value" value="${value!?html}" class="textonadd"<#list persistValueArray as tempValue><#if tempValue=value> checked="checked"<#break/></#if></#list>>${value!?html}</label>
 								<#local i=i+1>
 							</#list>
 						<#elseif type=='INPUT'>

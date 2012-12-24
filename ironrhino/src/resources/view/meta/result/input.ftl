@@ -23,7 +23,7 @@
 			<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cssStyle="width:400px;height:150px;" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes/>
 		<#elseif config.type=='checkbox'>
 			<#if !readonly>
-				<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" dynamicAttributes=config.dynamicAttributes />
+				<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass+config.cssClass?has_content?string(' ','')}custom" dynamicAttributes=config.dynamicAttributes />
 			<#else>
 				<@s.hidden name="${entityName}.${key}" />
 				<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" disabled="true" dynamicAttributes=config.dynamicAttributes />

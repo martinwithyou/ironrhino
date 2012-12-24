@@ -6,9 +6,6 @@
 #expression{
 	width:400px;
 }
-.checkbox-global{
-	margin: 0 10px;
-}
 .row-fluid{
 	margin-top 10px;
 }
@@ -85,7 +82,7 @@ $(function(){
 <body>
 <@s.form id="form" action="console" method="post" cssClass="ajax focus form-inline well">
 	<span>${action.getText('expression')}:<@s.textfield theme="simple" id="expression" name="expression"/></span>
-	<span class="checkbox-global">${action.getText('global')}:<@s.checkbox theme="simple" id="global" name="global"/></span>
+	<label class="checkbox inline"><@s.checkbox theme="simple" id="global" name="global" cssClass="custom"/>${action.getText('global')}</label>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 </@s.form>
 <div id="trigger" class="well">

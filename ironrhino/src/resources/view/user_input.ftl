@@ -18,8 +18,8 @@
 	<@s.textfield label="%{getText('name')}" name="user.name" cssClass="required"/>
 	<@s.textfield label="%{getText('email')}" name="user.email" type="email" cssClass="email checkavailable" checkurl="${getUrl(actionBaseUrl+'/checkavailable')}"/>
 	<@s.textfield label="%{getText('phone')}" name="user.phone"/>
-	<@s.checkbox label="%{getText('enabled')}" name="user.enabled" />
-	<@s.checkboxlist label="%{getText('role')}" name="roleId" list="roles" listKey="key" listValue="value"/>
+	<@s.checkbox label="%{getText('enabled')}" name="user.enabled" cssClass="custom" />
+	<@s.checkboxlist label="%{getText('role')}" name="roleId" list="roles" listKey="key" listValue="value" cssClass="custom" />
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>

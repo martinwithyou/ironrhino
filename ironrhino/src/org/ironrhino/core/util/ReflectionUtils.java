@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.aop.framework.Advised;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 
@@ -97,6 +98,19 @@ public class ReflectionUtils {
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
+	}
+
+	public static Object getTargetObject(Object proxy) {
+		while (proxy instanceof Advised) {
+			try {
+				return getTargetObject(((Advised) proxy).getTargetSource()
+						.getTarget());
+			} catch (Exception e) {
+				e.printStackTrace();
+				return proxy;
+			}
+		}
+		return proxy;
 	}
 
 }

@@ -16,7 +16,7 @@
 		<div class="row-fluid">
 			<div class="span4"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable input-medium"/></div>
 			<div class="span5"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description"/></div>
-			<div class="span3"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" /></div>
+			<div class="span3"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" cssClass="custom"/></div>
 		</div>
 	</#if>
 	<table class="datagrid table table-condensed">
@@ -65,8 +65,8 @@
 					</table>
 				</td>
 				<td><@s.select theme="simple" name="schema.fields[${index}].type" cssClass="linkage_switch" cssStyle="width:65px;" list="@org.ironrhino.common.model.SchemaFieldType@values()" listKey="name" listValue="displayName"/></td>
-				<td><span class="showonadd linkage_component SELECT INPUT"><@s.checkbox theme="simple" name="schema.fields[${index}].required"/></span></td>
-				<td><span class="showonadd linkage_component SELECT"><@s.checkbox theme="simple" name="schema.fields[${index}].strict"/></span></td>
+				<td><span class="showonadd linkage_component SELECT INPUT"><@s.checkbox theme="simple" name="schema.fields[${index}].required" cssClass="custom"/></span></td>
+				<td><span class="showonadd linkage_component SELECT"><@s.checkbox theme="simple" name="schema.fields[${index}].strict" cssClass="custom"/></span></td>
 				<td class="manipulate"></td>
 			</tr>
 			</#list>

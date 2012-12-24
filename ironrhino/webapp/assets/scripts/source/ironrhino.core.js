@@ -704,6 +704,16 @@ Observation.common = function(container) {
 						$(this).attr('maxlength', '255');
 				}
 			});
+	$('input[type="checkbox"].custom,input[type="radio"].custom').each(
+			function(i) {
+				$(this).hide();
+				if (!this.id)
+					this.id = ('a' + (i + Math.random())).replace('.', '')
+							.substring(0, 5);
+				if (!$(this).next('lable.custom').length)
+					$(this).after($('<label class="custom" for="' + this.id
+							+ '"></label>'));
+			});
 	$('.linkage', container).each(function() {
 		var c = $(this);
 		c.data('originalclass', c.attr('class'));
