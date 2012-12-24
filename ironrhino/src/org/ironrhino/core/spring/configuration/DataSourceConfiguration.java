@@ -15,7 +15,7 @@ public class DataSourceConfiguration {
 	@Value("${jdbc.driverClassName:com.mysql.jdbc.Driver}")
 	private String driverClass;
 
-	@Value("${jdbc.url:jdbc:mysql:///ironrhino?autoReconnectForPools=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;useServerPrepStmts=true}")
+	@Value("${jdbc.url:jdbc:mysql:///ironrhino?autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=true}")
 	private String jdbcUrl;
 
 	@Value("${jdbc.username:root}")
