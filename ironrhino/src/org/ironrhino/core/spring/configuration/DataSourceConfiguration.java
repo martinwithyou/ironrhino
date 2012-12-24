@@ -42,7 +42,7 @@ public class DataSourceConfiguration {
 	@Value("${dataSource.maxConnectionAgeInSeconds:14400}")
 	private int maxConnectionAgeInSeconds;
 
-	@Value("${jdbc.connectionTestStatement:/* ping *\\/ select 1}")
+	@Value("${jdbc.connectionTestStatement:/* ping */ select 1}")
 	private String connectionTestStatement;
 
 	public @Bean(destroyMethod = "close")
