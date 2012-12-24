@@ -2,6 +2,21 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('console')}</title>
+<style>
+#expression{
+	width:400px;
+}
+.checkbox-global{
+	margin: 0 10px;
+}
+.row-fluid{
+	margin-top 10px;
+}
+.key{
+	text-align:right;
+	line-height:30px;
+}
+</style>
 <#if printSetting??>
 <script>
 $(function(){
@@ -69,8 +84,8 @@ $(function(){
 </head>
 <body>
 <@s.form id="form" action="console" method="post" cssClass="ajax focus form-inline well">
-	<span>${action.getText('expression')}:<@s.textfield theme="simple" id="expression" name="expression" cssStyle="width:400px;"/></span>
-	<span style="margin: 0 10px;">${action.getText('global')}:<@s.checkbox theme="simple" id="global" name="global"/></span>
+	<span>${action.getText('expression')}:<@s.textfield theme="simple" id="expression" name="expression"/></span>
+	<span class="checkbox-global">${action.getText('global')}:<@s.checkbox theme="simple" id="global" name="global"/></span>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 </@s.form>
 <div id="trigger" class="well">
@@ -79,7 +94,7 @@ $(function(){
 	<#assign count=triggers.keySet()?size>
 	<#list triggers.keySet() as expression>
 	<#if index%3 == 0>
-	<div class="row-fluid" style="margin-top:10px;">
+	<div class="row-fluid">
 	</#if>
 	<button type="button" class="btn span4" data-global="${triggers[expression]?string}"  data-expression="${expression}">${action.getText(expression)}</button>
 	<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
@@ -95,9 +110,9 @@ $(function(){
 	<#assign count=settings?size>
 	<#list settings as setting>
 	<#if index%3 == 0>
-	<div class="row-fluid" style="margin-top:10px;">
+	<div class="row-fluid">
 	</#if>
-	<div class="span2" style="text-align:right;" title="${setting.description!}" data-key="${setting.key}">${action.getText(setting.key)}</div>
+	<div class="span2 key"<#if setting.description?has_content> title="${setting.description}"</#if> data-key="${setting.key}">${action.getText(setting.key)}</div>
 	<div class="span2"><span class="btn-group"><button class="btn<#if setting.value=='true'> active</#if>" data-value="true">${action.getText("true")}</button><button class="btn<#if setting.value=='false'> active</#if>" data-value="false">${action.getText("false")}</button></span></div>
 	<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
 	</div>
