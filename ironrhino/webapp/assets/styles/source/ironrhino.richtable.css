@@ -1,3 +1,6 @@
+#_window_ form{
+	padding-top : 20px;
+}
 table.richtable thead {
 	background: #DEDEDE;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#EFEFEF), color-stop(.5,#DEDEDE));

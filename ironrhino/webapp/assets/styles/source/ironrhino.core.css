@@ -87,12 +87,8 @@ th.radio input[type="radio"],th.checkbox input[type="checkbox"],td.radio input[t
 #indicator.error {
 	background: #F00;
 }
-
-select.combox{
-	cursor: text;
-}
-#_window_ form{
-	padding-top : 20px;
+.btn-group .active{
+	cursor:default;
 }
 input.integer,input.double,input.date {
 	width: 75px;

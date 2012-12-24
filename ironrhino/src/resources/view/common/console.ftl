@@ -51,7 +51,7 @@ $(function(){
 			$('.active',t).css({
 									'font-weight' : 'bold'
 								});
-			t.children().css('cursor', 'pointer').click(function() {
+			t.children().click(function() {
 						var button = $(this);
 						if(button.hasClass('active'))
 							return;
