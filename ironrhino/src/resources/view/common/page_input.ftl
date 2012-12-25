@@ -125,7 +125,7 @@ $(function() {
 	<#else>
 		<@s.textfield id="page_path" label="%{getText('path')}" name="page.pagepath" cssClass="required" size="50" cssStyle="width:400px;"/>
 		<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" type="number" cssClass="integer"/>
-		<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tags" source="${getUrl(actionBaseUrl+'/suggest')}" cssStyle="width:400px;"/>
+		<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tags" dynamicAttributes={"data-source":"${getUrl(actionBaseUrl+'/suggest')}"} cssStyle="width:400px;"/>
 	</#if>
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50" cssStyle="width:400px;"/>
 	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cssStyle="width:800px;height:200px;"/>

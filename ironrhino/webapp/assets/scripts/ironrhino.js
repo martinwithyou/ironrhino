@@ -32407,7 +32407,7 @@ Ajax = {
 			}
 			var replacement = {};
 			var entries = (options.replacement
-					|| $(target).attr('replacement')
+					|| $(target).data('replacement')
 					|| ($(target).prop('tagName') == 'FORM' ? $(target)
 							.attr('id') : null) || Ajax.defaultRepacement)
 					.split(',');
@@ -32795,7 +32795,7 @@ Observation.common = function(container) {
 							method : 'GET',
 							url : url,
 							data : data,
-							replacement : t.attr('replacement')
+							replacement : t.data('replacement')
 						});
 			});
 	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
@@ -32948,7 +32948,7 @@ Observation.common = function(container) {
 			var id = t.attr('id');
 			var width = t.width();
 			var height = t.height();
-			var data = t.attr('data');
+			var data = t.data('url');
 			if (data.indexOf('/') == 0)
 				data = document.location.protocol + '//'
 						+ document.location.host + data;
@@ -33007,7 +33007,7 @@ Observation.common = function(container) {
 		var targetId = $(target).attr('id');
 		if (typeof targetId != 'string')
 			targetId = '';
-		var entries = ($(target).attr('replacement') || ($(target)
+		var entries = ($(target).data('replacement') || ($(target)
 				.prop('tagName') == 'FORM' ? targetId : '')).split(',');
 		for (var i = 0; i < entries.length; i++) {
 			var entry = entries[i];
@@ -33063,8 +33063,8 @@ Observation.common = function(container) {
 					return false;
 				if (HISTORY_ENABLED
 						&& $(this).hasClass('view')
-						&& ($(this).hasClass('history') || !$(this)
-								.attr('replacement'))) {
+						&& ($(this).hasClass('history') || !($(this)
+								.data('replacement')))) {
 					var hash = this.href;
 					if (UrlUtils.isSameDomain(hash)) {
 						hash = hash.substring(hash.indexOf('//') + 2);
@@ -33072,7 +33072,7 @@ Observation.common = function(container) {
 						if (SESSION_HISTORY_SUPPORT) {
 							history.pushState({
 										replacement : $(this)
-												.attr('replacement'),
+												.data('replacement'),
 										url : hash
 									}, '', hash);
 						} else {
@@ -33087,7 +33087,7 @@ Observation.common = function(container) {
 				}
 				var options = {
 					url : this.href,
-					type : $(this).attr('method') || 'GET',
+					type : $(this).data('method') || 'GET',
 					cache : $(this).hasClass('cache'),
 					beforeSend : function() {
 						$('.action-error').remove();
@@ -33318,7 +33318,7 @@ Date.prototype.format = function(fmt, monthNames, dayNames) {
 							return;
 						var inputs = $('input[type=hidden]', t.closest('form'))
 								.not('[name^="__"]').add(t);
-						var url = t.attr('checkurl');
+						var url = t.data('checkurl');
 						if (!url) {
 							url = t.closest('form').prop('action');
 							url = url.substring(0, url.lastIndexOf('/'))
@@ -33697,7 +33697,7 @@ function uploadFiles(files) {
 		};
 		if (url)
 			options.replacement = ele.attr('id') + ':'
-					+ (ele.attr('replacement') || 'content');
+					+ (ele.data('replacement') || 'content');
 		else
 			options.replacement = ele.attr('id');
 		ajax(options);
@@ -34509,11 +34509,11 @@ Observation.tags = function(container) {
 				else
 					options.tagsItems = value.split(',');
 			}
-			if (t.attr('source')) {
+			if (t.data('source')) {
 				options.plugins = 'tags prompt focus autocomplete ajax arrow';
 				options.ajax = {
 					global : false,
-					url : t.attr('source'),
+					url : t.data('source'),
 					cacheResults : false,
 					dataCallback : function(q) {
 						return {
@@ -34725,8 +34725,8 @@ Richtable = {
 						inputform.attr('action', action);
 					}
 					if (inputform.hasClass('view')
-							&& !inputform.attr('replacement'))
-						inputform.attr('replacement', '_window_:content');
+							&& !(inputform.data('replacement')))
+						inputform.data('replacement', '_window_:content');
 					if (!inputform.hasClass('view')) {
 						$('button[type=submit]', inputform).click(function(e) {
 							inputform[0].onsuccess = function() {
@@ -34838,7 +34838,7 @@ Richtable = {
 			var arr = [];
 			$('form.richtable tbody input[type="checkbox"]').each(function() {
 				if (this.checked) {
-					var _id = $(this).closest('tr').attr('rowid') || this.value;
+					var _id = $(this).closest('tr').data('rowid') || this.value;
 					arr.push('id=' + _id);
 				}
 			});
@@ -35823,9 +35823,9 @@ function latlng_getLatLng() {
 	if (latlng_input)
 		if (latlng_input.val())
 			latlng_createOrMoveMarker(latlng_input.val());
-		else if (latlng_input.attr('address'))
+		else if (latlng_input.data('address'))
 			geocoder.geocode({
-						'address' : latlng_input.attr('address')
+						'address' : latlng_input.data('address')
 					}, function(results, status) {
 						if (status == google.maps.GeocoderStatus.OK) {
 							var pos = results[0].geometry.location;

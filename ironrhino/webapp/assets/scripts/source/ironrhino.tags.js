@@ -72,11 +72,11 @@ Observation.tags = function(container) {
 				else
 					options.tagsItems = value.split(',');
 			}
-			if (t.attr('source')) {
+			if (t.data('source')) {
 				options.plugins = 'tags prompt focus autocomplete ajax arrow';
 				options.ajax = {
 					global : false,
-					url : t.attr('source'),
+					url : t.data('source'),
 					cacheResults : false,
 					dataCallback : function(q) {
 						return {

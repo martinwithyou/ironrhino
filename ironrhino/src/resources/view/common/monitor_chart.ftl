@@ -6,7 +6,7 @@
 <body>
 <div class="row">
 <div class="span6">
-<form action="<@url value="${actionBaseUrl}/chart/${uid}"/>" class="ajax view form-inline" replacement="c">
+<form action="<@url value="${actionBaseUrl}/chart/${uid}"/>" class="ajax view form-inline" data-replacement="c">
 <@s.hidden name="vtype"/>
 <@s.hidden name="ctype"/>
 <span>${action.getText('date')}</span>
@@ -15,7 +15,7 @@
 </form>
 </div>
 <div class="span6">
-<form action="<@url value="${actionBaseUrl}/chart/${uid}"/>" class="ajax view form-inline" replacement="c">
+<form action="<@url value="${actionBaseUrl}/chart/${uid}"/>" class="ajax view form-inline" data-replacement="c">
 <@s.hidden name="vtype"/>
 <@s.hidden name="ctype"/>
 <span>${action.getText('date.range')}</span>
@@ -34,7 +34,7 @@
 <#if request.queryString??>
 <#assign dataurl=dataurl+'?'+request.queryString>
 </#if>
-<div id="chart" class="chart" data="<@url value="${dataurl}"/>" style="width:1024px; height:300px;"<#if !Parameters.date?? && !Parameters.from??> data-interval="${Parameters.interval?default('60000')}" data-quiet="true"</#if>>
+<div id="chart" class="chart" data-url="<@url value="${dataurl}"/>" style="width:1024px; height:300px;"<#if !Parameters.date?? && !Parameters.from??> data-interval="${Parameters.interval?default('60000')}" data-quiet="true"</#if>>
 </div>
 </div>
 </body>

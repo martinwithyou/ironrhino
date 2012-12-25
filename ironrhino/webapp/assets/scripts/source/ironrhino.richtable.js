@@ -152,8 +152,8 @@ Richtable = {
 						inputform.attr('action', action);
 					}
 					if (inputform.hasClass('view')
-							&& !inputform.attr('replacement'))
-						inputform.attr('replacement', '_window_:content');
+							&& !(inputform.data('replacement')))
+						inputform.data('replacement', '_window_:content');
 					if (!inputform.hasClass('view')) {
 						$('button[type=submit]', inputform).click(function(e) {
 							inputform[0].onsuccess = function() {
@@ -265,7 +265,7 @@ Richtable = {
 			var arr = [];
 			$('form.richtable tbody input[type="checkbox"]').each(function() {
 				if (this.checked) {
-					var _id = $(this).closest('tr').attr('rowid') || this.value;
+					var _id = $(this).closest('tr').data('rowid') || this.value;
 					arr.push('id=' + _id);
 				}
 			});

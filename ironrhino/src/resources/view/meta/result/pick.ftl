@@ -35,7 +35,7 @@
 				<#assign index=index+1>
 				</#if>
 				</#list>
-				<#assign columns=columns+{column:{'template':r'<#if !entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parentId="+entity.id}" class="ajax view" replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
+				<#assign columns=columns+{column:{'template':r'<#if !entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parentId="+entity.id}" class="ajax view" data-replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
 			<#else>
 				<#assign columns=columns+{column:{}}/>
 			</#if>

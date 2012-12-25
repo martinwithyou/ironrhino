@@ -104,9 +104,9 @@ function latlng_getLatLng() {
 	if (latlng_input)
 		if (latlng_input.val())
 			latlng_createOrMoveMarker(latlng_input.val());
-		else if (latlng_input.attr('address'))
+		else if (latlng_input.data('address'))
 			geocoder.geocode({
-						'address' : latlng_input.attr('address')
+						'address' : latlng_input.data('address')
 					}, function(results, status) {
 						if (status == google.maps.GeocoderStatus.OK) {
 							var pos = results[0].geometry.location;

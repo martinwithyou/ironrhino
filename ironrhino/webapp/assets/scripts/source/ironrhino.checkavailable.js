@@ -7,7 +7,7 @@
 							return;
 						var inputs = $('input[type=hidden]', t.closest('form'))
 								.not('[name^="__"]').add(t);
-						var url = t.attr('checkurl');
+						var url = t.data('checkurl');
 						if (!url) {
 							url = t.closest('form').prop('action');
 							url = url.substring(0, url.lastIndexOf('/'))

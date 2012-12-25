@@ -34,7 +34,7 @@
 			<li><a href="<@url value="/${name}/p${page.pagepath}"/><#if column??>?column=${column}</#if>"><#if page.title??><#assign title=page.title?interpret><@title/></#if></a></li>
 		</#list>
 		</ul>
-		<@pagination class="ajax view history" replacement="list" cache="true"/>
+		<@pagination class="ajax view history cache" dynamicAttributes={"data-replacement":"list"}/>
     </div>
   </div>
 </div>

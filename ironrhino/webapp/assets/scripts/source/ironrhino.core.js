@@ -362,7 +362,7 @@ Ajax = {
 			}
 			var replacement = {};
 			var entries = (options.replacement
-					|| $(target).attr('replacement')
+					|| $(target).data('replacement')
 					|| ($(target).prop('tagName') == 'FORM' ? $(target)
 							.attr('id') : null) || Ajax.defaultRepacement)
 					.split(',');
@@ -750,7 +750,7 @@ Observation.common = function(container) {
 							method : 'GET',
 							url : url,
 							data : data,
-							replacement : t.attr('replacement')
+							replacement : t.data('replacement')
 						});
 			});
 	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
@@ -903,7 +903,7 @@ Observation.common = function(container) {
 			var id = t.attr('id');
 			var width = t.width();
 			var height = t.height();
-			var data = t.attr('data');
+			var data = t.data('url');
 			if (data.indexOf('/') == 0)
 				data = document.location.protocol + '//'
 						+ document.location.host + data;
@@ -962,7 +962,7 @@ Observation.common = function(container) {
 		var targetId = $(target).attr('id');
 		if (typeof targetId != 'string')
 			targetId = '';
-		var entries = ($(target).attr('replacement') || ($(target)
+		var entries = ($(target).data('replacement') || ($(target)
 				.prop('tagName') == 'FORM' ? targetId : '')).split(',');
 		for (var i = 0; i < entries.length; i++) {
 			var entry = entries[i];
@@ -1018,8 +1018,8 @@ Observation.common = function(container) {
 					return false;
 				if (HISTORY_ENABLED
 						&& $(this).hasClass('view')
-						&& ($(this).hasClass('history') || !$(this)
-								.attr('replacement'))) {
+						&& ($(this).hasClass('history') || !($(this)
+								.data('replacement')))) {
 					var hash = this.href;
 					if (UrlUtils.isSameDomain(hash)) {
 						hash = hash.substring(hash.indexOf('//') + 2);
@@ -1027,7 +1027,7 @@ Observation.common = function(container) {
 						if (SESSION_HISTORY_SUPPORT) {
 							history.pushState({
 										replacement : $(this)
-												.attr('replacement'),
+												.data('replacement'),
 										url : hash
 									}, '', hash);
 						} else {
@@ -1042,7 +1042,7 @@ Observation.common = function(container) {
 				}
 				var options = {
 					url : this.href,
-					type : $(this).attr('method') || 'GET',
+					type : $(this).data('method') || 'GET',
 					cache : $(this).hasClass('cache'),
 					beforeSend : function() {
 						$('.action-error').remove();

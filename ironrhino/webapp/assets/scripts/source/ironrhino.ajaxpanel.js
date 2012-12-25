@@ -52,7 +52,7 @@
 		};
 		if (url)
 			options.replacement = ele.attr('id') + ':'
-					+ (ele.attr('replacement') || 'content');
+					+ (ele.data('replacement') || 'content');
 		else
 			options.replacement = ele.attr('id');
 		ajax(options);
