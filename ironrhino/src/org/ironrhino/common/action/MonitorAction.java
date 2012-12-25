@@ -2,11 +2,13 @@ package org.ironrhino.common.action;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.support.StatControl;
 import org.ironrhino.core.chart.openflashchart.Chart;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -32,6 +34,10 @@ public class MonitorAction extends BaseAction {
 	// doubleValue
 
 	private String ctype = "bar";// chart type, bar,line ...
+
+	private String namespace;
+
+	private String filter;
 
 	private Map<String, List<TreeNode>> result;
 
@@ -62,6 +68,22 @@ public class MonitorAction extends BaseAction {
 
 	public void setCtype(String ctype) {
 		this.ctype = ctype;
+	}
+
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
+	}
+
+	public String getFilter() {
+		return filter;
+	}
+
+	public void setFilter(String filter) {
+		this.filter = filter;
 	}
 
 	public Date getFrom() {
@@ -106,6 +128,27 @@ public class MonitorAction extends BaseAction {
 				if (date == null || date.after(today))
 					date = today;
 				result = statControl.getResult(date, localhost);
+			}
+			if (namespace != null) {
+				Map<String, List<TreeNode>> temp = new HashMap<String, List<TreeNode>>();
+				temp.put(namespace, result.get(namespace));
+				result = temp;
+			}
+			if (StringUtils.isNotBlank(filter)) {
+				for (Map.Entry<String, List<TreeNode>> entry : result
+						.entrySet()) {
+					Iterator<TreeNode> it = entry.getValue().iterator();
+					while (it.hasNext()) {
+						TreeNode node = it.next();
+						String path = node.getName();
+						if (filter.equals(path)
+								|| filter.startsWith(path + ">")) {
+							node.filter(filter);
+							node.calculate();
+						} else
+							it.remove();
+					}
+				}
 			}
 		} catch (Exception e) {
 			result = new HashMap<String, List<TreeNode>>();

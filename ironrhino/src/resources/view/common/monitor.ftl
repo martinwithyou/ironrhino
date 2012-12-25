@@ -36,7 +36,7 @@
 </form>
 </div>
 </div>
-<div id="result"<#if !Parameters.date?? && !Parameters.from??> class="ajaxpanel" data-interval="${Parameters.interval?default('60000')}" data-quiet="true"</#if>>
+<div id="result"<#if Parameters.live??> class="ajaxpanel" data-interval="${Parameters.interval?default('60000')}" data-quiet="true"</#if>>
 <#list result.entrySet() as entry>
 <table class="treeTable expanded table table-hover table-bordered" style="width:100%;">
   <#if entry.key??>
