@@ -25,7 +25,7 @@
 <li class="disabled"><a title="${action.getText('firstpage')}">&lt;&lt;</a></li>
 <li class="disabled"><a title="${action.getText('previouspage')}">&lt;</a></li>
 <#else>
-<li><a href="${resultPage.renderUrl(1)}" title="${action.getText('firstpage')}"<#list dynamicAttributes?keys as attr> ${attr}="${dynamicAttributes[attr]?html}"</#list>>&lt;&lt;</a></li>
+<li><a href="${resultPage.renderUrl(1)}" title="${action.getText('firstpage')}"<#list dynamicAttributes?keys as attr><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list><#else> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>&lt;&lt;</a></li>
 <li><a href="${resultPage.renderUrl(resultPage.previousPage)}" title="${action.getText('previouspage')}"<#list dynamicAttributes?keys as attr><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list><#else> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>&lt;</a></li>
 </#if>
 <#if resultPage.totalPage lt 11>
