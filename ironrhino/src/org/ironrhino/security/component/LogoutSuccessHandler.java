@@ -23,9 +23,12 @@ public class LogoutSuccessHandler extends DefaultLogoutSuccessHandler {
 			HttpServletResponse response, Authentication authentication)
 			throws IOException, ServletException {
 		super.onLogoutSuccess(request, response, authentication);
-		Object principal = authentication.getPrincipal();
-		if (principal instanceof User)
-			eventPublisher.publish(new LogoutEvent((User) principal), false);
+		if (authentication != null) {
+			Object principal = authentication.getPrincipal();
+			if (principal instanceof User)
+				eventPublisher
+						.publish(new LogoutEvent((User) principal), false);
+		}
 	}
 
 }
