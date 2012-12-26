@@ -94,7 +94,8 @@ public class Taobao extends OAuth2Provider {
 		p.setUid(generateUid(uid));
 		p.setDisplayName(user.get("nick").textValue());
 		p.setName(user.get("nick").textValue());
-		p.setGender(user.get("sex").textValue());
+		if (user.get("sex") != null)
+			p.setGender(user.get("sex").textValue());
 		return p;
 	}
 
