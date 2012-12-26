@@ -32781,18 +32781,20 @@ Observation.common = function(container) {
 				var f = $(this).closest('form');
 				var hid = $(':input[type=hidden][name$=".id"]', f);
 				var url = f.attr('action');
-				if (url.indexOf('/') > -1)
-					url = url.substring(0, url.lastIndexOf('/')) + '/input';
-				else
-					url = 'input';
 				var data = {};
-				if (hid.val())
-					data['id'] = hid.val();
+				if (hid.length) {
+					if (url.indexOf('/') > -1)
+						url = url.substring(0, url.lastIndexOf('/')) + '/input';
+					else
+						url = 'input';
+					if (hid.val())
+						data['id'] = hid.val();
+				}
 				data[t.attr('name')] = t.val();
 				ajax({
 							global : false,
 							quiet : true,
-							method : 'GET',
+							type : f.attr('method'),
 							url : url,
 							data : data,
 							replacement : t.data('replacement')
