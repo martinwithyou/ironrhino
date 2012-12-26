@@ -41,6 +41,9 @@
 				text-align:center;
 				line-height: 30px;
 			}
+			pre{
+				text-align:left;
+			}
 			input[type=text]{
 				border: hsl(247, 89%, 72%) solid 1px;
 				outline: none;
@@ -64,9 +67,9 @@
 <p class="not-found">${action.getText('error.occur')}</p>
 <div class="clear"></div>
 <div class="content">
-	<#if request.getAttribute("javax.servlet.error.exception")??>
+	<#if exception??>
 	<pre>
-		${statics['org.ironrhino.core.util.ExceptionUtils'].getStackTraceAsString(request.getAttribute("javax.servlet.error.exception"))!}
+		${statics['org.ironrhino.core.util.ExceptionUtils'].getStackTraceAsString(exception)!}
 	</pre>
 	</br>
 	</#if>
