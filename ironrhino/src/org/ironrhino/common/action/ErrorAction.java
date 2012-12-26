@@ -17,6 +17,10 @@ public class ErrorAction extends BaseAction {
 
 	private Exception exception;
 
+	public Exception getException() {
+		return exception;
+	}
+
 	public String handle() {
 		int errorcode = 404;
 		try {

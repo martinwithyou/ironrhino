@@ -9,13 +9,15 @@ public class BaseEvent<T> extends ApplicationEvent {
 
 	private String instanceId = AppInfo.getInstanceId();
 
+	protected T source;
+
 	public BaseEvent(T source) {
 		super(source);
+		this.source = source;
 	}
 
-	@SuppressWarnings("unchecked")
 	public T getSource() {
-		return (T) super.getSource();
+		return source;
 	}
 
 	public String getInstanceId() {

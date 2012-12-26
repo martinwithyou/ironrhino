@@ -24,7 +24,7 @@
 				text-shadow: 5px 5px hsl(0, 0%, 25%);
 				float: left;
 			}
-			.not-found{
+			.error-occur{
 				width: 47%;
 				float: right;
 				margin-top: 5%;
@@ -64,7 +64,7 @@
 <body>
 
 <p class="error-code">500</p>
-<p class="not-found">${action.getText('error.occur')}</p>
+<p class="error-occur">${action.getText('error.occur')}</p>
 <div class="clear"></div>
 <div class="content">
 	<#if exception??>
