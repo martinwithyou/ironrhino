@@ -6,6 +6,12 @@
 <body>
 <#assign rtconfig = richtableConfig!>
 <@rtstart entityName=entityName readonly=readonly/>
+	<#assign size=0>
+	<#list uiConfigs?keys as key>
+		<#if !uiConfigs[key].hiddenInList>
+			<#assign size=size+1>
+		</#if>
+	</#list>
 	<#assign index=0>
 	<#list uiConfigs?keys as key>
 			<#assign config=uiConfigs[key]>
@@ -34,7 +40,7 @@
 					<#assign cellEdit=''/>
 				</#if>
 				<#assign index=index+1>
-				<@rttheadtd name=label alias=config['alias']! width=config['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==uiConfigs?size)/>
+				<@rttheadtd name=label alias=config['alias']! width=config['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==size)/>
 			</#if>
 	</#list>
 <@rtmiddle readonly=readonly/>
