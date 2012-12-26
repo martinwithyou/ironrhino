@@ -50,7 +50,7 @@
 							<#assign value=getDictionaryLabel(evalTemplate(config.templateName),value)/>	
 			</#if>
 			<#assign dynamicAttributes={}>
-			<#if config.type=='listpick'>
+			<#if config.type=='listpick' && !readonly>
 				<#assign dynamicAttributes={"class":"listpick","data-options":"{'url':'"+uiConfigs[key].pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
 			</#if>
 			<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>

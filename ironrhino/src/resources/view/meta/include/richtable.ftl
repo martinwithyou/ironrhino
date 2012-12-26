@@ -167,7 +167,7 @@ ${value?xhtml}<#t>
 <div class="search span2">
 <#if searchable>
 <span class="input-append">
-    <input type="search" name="keyword" value="${keyword!?html}" class="focus" placeholder="${action.getText('search')}"/><span class="add-on hidden-tablet"><i class="icon-search"></i></span>
+    <input type="text" name="keyword" value="${keyword!?html}" class="focus" placeholder="${action.getText('search')}"/><span class="add-on hidden-tablet"><i class="icon-search"></i></span>
 </span>
 </#if>
 <#if searchButtons!=''>
