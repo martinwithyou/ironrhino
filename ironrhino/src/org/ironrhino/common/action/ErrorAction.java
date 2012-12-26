@@ -41,7 +41,7 @@ public class ErrorAction extends BaseAction {
 					.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 			if (exception != null)
 				logger.error(exception.getMessage(), exception);
-			result = ERROR;
+			result = "internalServerError";
 			break;
 		default:
 			result = NOTFOUND;
