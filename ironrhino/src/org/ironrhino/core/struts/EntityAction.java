@@ -1150,6 +1150,8 @@ public class EntityAction extends BaseAction {
 		private boolean showPageSize = true;
 		private String actionColumnButtons = "";
 		private String bottomButtons = "";
+		private String listHeader = "";
+		private String listFooter = "";
 
 		public RichtableConfigImpl() {
 		}
@@ -1160,6 +1162,8 @@ public class EntityAction extends BaseAction {
 			this.showPageSize = config.showPageSize();
 			this.actionColumnButtons = config.actionColumnButtons();
 			this.bottomButtons = config.bottomButtons();
+			this.listHeader = config.listHeader();
+			this.listFooter = config.listFooter();
 		}
 
 		public boolean isShowPageSize() {
@@ -1184,6 +1188,22 @@ public class EntityAction extends BaseAction {
 
 		public void setBottomButtons(String bottomButtons) {
 			this.bottomButtons = bottomButtons;
+		}
+
+		public String getListHeader() {
+			return listHeader;
+		}
+
+		public void setListHeader(String listHeader) {
+			this.listHeader = listHeader;
+		}
+
+		public String getListFooter() {
+			return listFooter;
+		}
+
+		public void setListFooter(String listFooter) {
+			this.listFooter = listFooter;
 		}
 
 	}

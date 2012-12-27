@@ -5,6 +5,10 @@
 </head>
 <body>
 <#assign rtconfig = richtableConfig!>
+<#if rtconfig.listHeader?has_content>
+<#assign listHeader=rtconfig.listHeader?interpret>
+<@listHeader/>
+</#if>
 <@rtstart entityName=entityName readonly=readonly/>
 	<#assign size=0>
 	<#list uiConfigs?keys as key>
@@ -88,6 +92,10 @@
 		</#if>
 	</#if>
 </#list></div>
+</#if>
+<#if rtconfig.listFooter?has_content>
+<#assign listFooter=rtconfig.listFooter?interpret>
+<@listFooter/>
 </#if>
 </body>
 </html></#escape>

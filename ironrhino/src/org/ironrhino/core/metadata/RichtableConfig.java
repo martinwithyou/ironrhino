@@ -16,4 +16,8 @@ public @interface RichtableConfig {
 
 	String bottomButtons() default "";
 
+	String listHeader() default "";
+
+	String listFooter() default "";
+
 }

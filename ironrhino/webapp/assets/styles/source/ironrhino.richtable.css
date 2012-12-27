@@ -61,6 +61,7 @@ table.richtable th {
 
 .richtable .toolbar .pagination,.richtable .toolbar .action,.richtable .toolbar .search,.richtable .toolbar .status{
 	margin-top:18px;
+	margin-bottom:0;
 }
 
 .richtable .toolbar .status{
