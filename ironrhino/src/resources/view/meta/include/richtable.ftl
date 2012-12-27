@@ -76,20 +76,18 @@
 <#macro rttbodytd value,entity,celleditable=true,template='',dynamicAttributes...>
 <td<#if celleditable><#if value??><#if value?is_boolean> data-cellvalue="${value?string}"</#if><#if value?is_hash&&value.displayName??> data-cellvalue="${value.name()}"</#if></#if></#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>><#rt>
 <#if template==''>
-<#if value??>
-<#if value?is_boolean>
-${action.getText(value?string)}<#t>
+	<#if value??>
+		<#if value?is_boolean>
+		${action.getText(value?string)}<#t>
+		<#elseif value?is_hash&&value.displayName??>
+		${value.displayName}<#t>
+		<#else>
+		${value?xhtml}<#t>
+		</#if>
+	</#if>
 <#else>
-<#if value?is_hash&&value.displayName??>
-${value.displayName}<#t>
-<#else>
-${value?xhtml}<#t>
-</#if>
-</#if>
-</#if>
-<#else>
-<#local temp=template?interpret>
-<@temp/><#t>
+	<#local temp=template?interpret>
+	<@temp/><#t>
 </#if>
 </td>
 </#macro>
