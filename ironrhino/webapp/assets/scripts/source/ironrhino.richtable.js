@@ -463,7 +463,7 @@ Richtable = {
 	}
 };
 Observation.richtable = function(container) {
-	if ('table.richtable'.length) {
+	if ($('table.richtable', container).length) {
 		$('.action button.btn,a[rel="richtable"]', container)
 				.click(Richtable.click);
 		var theadCells = $('table.richtable thead:eq(0) th', container);
@@ -533,6 +533,35 @@ Observation.richtable = function(container) {
 					Richtable.reload(form, true);
 					return false;
 				});
-
+		$('table.richtable', container).each(function() {
+					var t = $(this);
+					var need = false;
+					var classes = {};
+					$('th', t).each(function(i) {
+								var arr = [];
+								var tt = $(this);
+								var cls = tt.attr('class');
+								if (cls)
+									$.each(cls.split(/\s+/), function(i, v) {
+												if (v.indexOf('hidden-') == 0)
+													arr.push(v);
+											});
+								if (arr.length) {
+									need = true;
+									classes['' + i] = arr;
+								}
+							});
+					$('tbody tr', t).each(function() {
+								$('td', $(this)).each(function(i) {
+											var arr = classes['' + i];
+											var tt = $(this);
+											if (arr) {
+												$.each(arr, function(i, v) {
+															tt.addClass(v);
+														});
+											}
+										});
+							});
+				});
 	}
 };

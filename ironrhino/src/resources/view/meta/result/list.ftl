@@ -44,7 +44,7 @@
 					<#assign cellEdit=''/>
 				</#if>
 				<#assign index=index+1>
-				<@rttheadtd name=label alias=config['alias']! width=config['width']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==size)/>
+				<@rttheadtd name=label alias=config['alias']! width=config['width']! title=config['title']! class=config['cssClass']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==size)/>
 			</#if>
 	</#list>
 <@rtmiddle readonly=readonly/>

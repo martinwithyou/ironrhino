@@ -43,7 +43,7 @@
 					name="${webapp.dir}/assets/scripts/source/jquery.throttle-debounce-1.1.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.elastic-1.6.3.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.htmlarea-0.7.5.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.chosen-0.9.8.js" />
+				<file name="${webapp.dir}/assets/scripts/source/jquery.chosen-0.9.11.js" />
 				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/bootstrap-2.2.2.js" />
 				<file

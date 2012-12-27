@@ -7,7 +7,7 @@
 <#list columns?keys as name>
 <#local index = index+1>
 <#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
-<@rttheadtd name=name alias=columns[name]['alias']! title=columns[name]['title']! class=columns[name]['class']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=(readonly&&index!=size||!readonly)&&resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
+<@rttheadtd name=name alias=columns[name]['alias']! title=columns[name]['title']! class=columns[name]['cssClass']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=(readonly&&index!=size||!readonly)&&resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
 </#list>
 <@rtmiddle width=actionColumnWidth readonly=readonly/>
 <#local index=0>
@@ -56,7 +56,7 @@
 <th<#if title!=''> title="${action.getText(title)}"</#if><#if excludeIfNotEdited||class!=''> class="<#if excludeIfNotEdited> excludeIfNotEdited</#if><#if class!=''> ${class}</#if>"</#if><#if width!=''> style="width:${width};"</#if><#if !readonly> data-cellName="${cellName}"</#if><#if cellEdit!=''> data-cellEdit="${cellEdit}"</#if>>
 <#if resizable><span class="resizeTitle"></#if>
 <#if alias!=''>${action.getText(alias)}<#else>${action.getText(name)}</#if>
-<#if resizable></span><span class="resizeBar"></span></#if>
+<#if resizable></span><span class="resizeBar visible-desktop"></span></#if>
 </th>
 </#macro>
 <#macro rtmiddle width='50px' readonly=false>
@@ -132,7 +132,7 @@
     <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage" title="${action.getText('currentpage')}"/><span class="add-on totalPage"><span class="divider">/</span><strong title="${action.getText('totalpage')}">${resultPage.totalPage}</strong></span>
 </span>
 <#if showPageSize>
-<li class="hidden-tablet">
+<li class="visible-desktop">
 <select name="resultPage.pageSize" class="pageSize" title="${action.getText('pagesize')}">
 <#local array=[5,10,20,50,100,500]>
 <#local selected=false>
@@ -162,7 +162,7 @@
 <div class="search span2">
 <#if searchable>
 <span class="input-append">
-    <input type="text" name="keyword" value="${keyword!?html}" class="focus" placeholder="${action.getText('search')}"/><span class="add-on hidden-tablet"><i class="icon-search"></i></span>
+    <input type="text" name="keyword" value="${keyword!?html}" class="focus" placeholder="${action.getText('search')}"/><span class="add-on hidden-tablet hidden-phone"><i class="icon-search"></i></span>
 </span>
 </#if>
 <#if searchButtons!=''>
