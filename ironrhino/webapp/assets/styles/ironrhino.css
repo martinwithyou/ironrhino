@@ -7146,6 +7146,12 @@ div.text-core{
 .form-horizontal .controls {
 	margin-left: 120px;
 }
+.form-horizontal [class*="span"] .control-label{
+	width: 60px;
+}
+.form-horizontal [class*="span"] .controls {
+	margin-left: 80px;
+}
 .form-horizontal .form-actions {
 	padding-left: 120px;
 }
