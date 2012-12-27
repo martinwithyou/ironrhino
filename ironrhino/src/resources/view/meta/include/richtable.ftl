@@ -9,7 +9,7 @@
 <#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
 <@rttheadtd name=name alias=columns[name]['alias']! title=columns[name]['title']! class=columns[name]['cssClass']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=(readonly&&index!=size||!readonly)&&resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
 </#list>
-<@rtmiddle width=actionColumnWidth readonly=readonly/>
+<@rtmiddle width=actionColumnWidth showActionColumn=actionColumnButtons?has_content||!readonly/>
 <#local index=0>
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
@@ -28,7 +28,7 @@
 	<#assign dynamicAttributes=columns[name]['dynamicAttributes']!>
 	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']! dynamicAttributes=dynamicAttributes/>
 </#list>
-<@rttbodytrend entity=entity buttons=actionColumnButtons readonly=readonly/>
+<@rttbodytrend entity=entity buttons=actionColumnButtons showActionColumn=actionColumnButtons?has_content||!readonly/>
 </#list>
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable searchable=searchable searchButtons=searchButtons showPageSize=showPageSize/>
 </#macro>
@@ -59,8 +59,8 @@
 <#if resizable></span><span class="resizeBar visible-desktop"></span></#if>
 </th>
 </#macro>
-<#macro rtmiddle width='50px' readonly=false>
-<#if !readonly>
+<#macro rtmiddle width='50px' showActionColumn=true>
+<#if showActionColumn>
 <th class="nosort" style="width:${width};"></th>
 </#if>
 </tr>
@@ -92,8 +92,8 @@
 </td>
 </#macro>
 
-<#macro rttbodytrend entity buttons='' readonly=false>
-<#if !readonly>
+<#macro rttbodytrend entity buttons='' showActionColumn=true>
+<#if showActionColumn>
 <td class="action">
 <#if buttons!=''>
 <#local temp=buttons?interpret>

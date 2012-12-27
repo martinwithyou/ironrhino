@@ -47,7 +47,7 @@
 				<@rttheadtd name=label alias=config['alias']! width=config['width']! title=config['title']! class=config['cssClass']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==size)/>
 			</#if>
 	</#list>
-<@rtmiddle readonly=readonly/>
+<@rtmiddle showActionColumn=rtconfig.actionColumnButtons?has_content||!readonly/>
 <#assign index=0>
 <#list resultPage.result as entity>
 <#assign index=index+1>
@@ -66,7 +66,7 @@
 			<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
 		</#if>
 	</#list>	
-<@rttbodytrend entity=entity readonly=readonly buttons=rtconfig.actionColumnButtons!/>
+<@rttbodytrend entity=entity showActionColumn=rtconfig.actionColumnButtons?has_content||!readonly buttons=rtconfig.actionColumnButtons!/>
 </#list>
 <@rtend readonly=readonly searchable=searchable showPageSize=rtconfig.showPageSize! buttons=rtconfig.bottomButtons!/>
 <#if !readonly>

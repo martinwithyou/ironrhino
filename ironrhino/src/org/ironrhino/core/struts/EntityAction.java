@@ -301,8 +301,10 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String input() {
-		if (isReadonly())
+		if (isReadonly()) {
+			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
+		}
 		tryFindEntity();
 		if (entity == null)
 			try {
@@ -376,8 +378,10 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String save() {
-		if (isReadonly())
+		if (isReadonly()) {
+			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
+		}
 		if (!makeEntityValid())
 			return INPUT;
 		BeanWrapperImpl bwp = new BeanWrapperImpl(entity);
@@ -631,8 +635,10 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String delete() {
-		if (isReadonly())
+		if (isReadonly()) {
+			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
+		}
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		String[] arr = getId();
 		Serializable[] id = (arr != null) ? new Serializable[arr.length]
