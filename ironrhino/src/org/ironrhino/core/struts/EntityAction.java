@@ -150,8 +150,12 @@ public class EntityAction extends BaseAction {
 				bw.setPropertyValue("id", getUid());
 				Serializable id = (Serializable) bw.getPropertyValue("id");
 				entity = entityManager.get(id);
-				if (entity == null && naturalIds.size() == 1)
+				if (entity == null && naturalIds.size() == 1) {
+					String naturalIdName = naturalIds.iterator().next();
+					bw.setPropertyValue(naturalIdName, getUid());
+					id = (Serializable) bw.getPropertyValue(naturalIdName);
 					entity = entityManager.findByNaturalId(id);
+				}
 			}
 			if (entity == null && naturalIds.size() > 0) {
 				Serializable[] paramters = new Serializable[naturalIds.size() * 2];
@@ -629,6 +633,8 @@ public class EntityAction extends BaseAction {
 	@Override
 	public String view() {
 		tryFindEntity();
+		if (entity == null)
+			return NOTFOUND;
 		putEntityToValueStack(entity);
 		return VIEW;
 	}
