@@ -232,6 +232,12 @@ public class IndexManagerImpl implements IndexManager {
 			if (index == Index.NO || index == Index.ANALYZED
 					|| index == Index.NOT_ANALYZED)
 				this.index = index.name().toLowerCase();
+			if ("string".equals(this.type)
+					&& searchableProperty.index() != Index.NOT_ANALYZED
+					&& searchableProperty.index() != Index.NO
+					&& !searchableProperty.omit_norms()
+					&& searchableProperty.boost() != 1.0f)
+				this.boost = searchableProperty.boost();
 			Store store = searchableProperty.store();
 			if (store != Store.NA)
 				this.store = store.name().toLowerCase();
@@ -252,10 +258,7 @@ public class IndexManagerImpl implements IndexManager {
 						.omit_term_freq_and_positions();
 			if ("date".equals(this.type) || StringUtils.isNotBlank(this.format))
 				this.ignore_malformed = searchableProperty.ignore_malformed();
-			if ("string".equals(this.type)
-					&& searchableProperty.index() != Index.NOT_ANALYZED
-					&& !this.omit_norms && searchableProperty.boost() != 1.0f)
-				this.boost = searchableProperty.boost();
+
 		}
 
 		public PropertyMapping(Class propertyClass,
@@ -278,6 +281,12 @@ public class IndexManagerImpl implements IndexManager {
 			if (index == Index.NO || index == Index.ANALYZED
 					|| index == Index.NOT_ANALYZED)
 				this.index = index.name().toLowerCase();
+			if ("string".equals(this.type)
+					&& searchableProperty.index() != Index.NOT_ANALYZED
+					&& searchableProperty.index() != Index.NO
+					&& !searchableProperty.omit_norms()
+					&& searchableProperty.boost() != 1.0f)
+				this.boost = searchableProperty.boost();
 			Store store = searchableProperty.store();
 			if (store != Store.NA)
 				this.store = store.name().toLowerCase();
@@ -298,10 +307,6 @@ public class IndexManagerImpl implements IndexManager {
 						.omit_term_freq_and_positions();
 			if ("date".equals(this.type) || StringUtils.isNotBlank(this.format))
 				this.ignore_malformed = searchableProperty.ignore_malformed();
-			if ("string".equals(this.type)
-					&& searchableProperty.index() != Index.NOT_ANALYZED
-					&& !this.omit_norms && searchableProperty.boost() != 1.0f)
-				this.boost = searchableProperty.boost();
 		}
 
 		private static String translateType(String input) {
