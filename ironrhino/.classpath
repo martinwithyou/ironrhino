@@ -77,12 +77,12 @@
 	<classpathentry kind="lib" path="lib/closure-compiler.jar"/>
 	<classpathentry kind="lib" path="lib/yuicompressor.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/postgresql-9.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/elasticsearch-0.19.12.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-analyzers-3.6.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-3.6.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-highlighter-3.6.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-memory-3.6.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-queries-3.6.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/elasticsearch-0.20.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-analyzers-3.6.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-3.6.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-highlighter-3.6.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-memory-3.6.2.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-queries-3.6.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jboss-logging-3.1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mmseg4j-1.8.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zxing-core-2.1.jar"/>

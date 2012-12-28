@@ -16,12 +16,14 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.ListenableActionFuture;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.exists.IndicesExistsRequest;
-import org.elasticsearch.action.admin.indices.exists.IndicesExistsResponse;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
@@ -226,7 +228,9 @@ public class IndexManagerImpl implements IndexManager {
 				this.index_name = searchableProperty.index_name();
 			if (StringUtils.isNotBlank(searchableProperty.format()))
 				this.format = searchableProperty.format();
-			if (searchableProperty.boost() != 1.0f)
+			if ("string".equals(this.type)
+					&& searchableProperty.index() != Index.NOT_ANALYZED
+					&& searchableProperty.boost() != 1.0f)
 				this.boost = searchableProperty.boost();
 			Index index = searchableProperty.index();
 			if (index == Index.NO || index == Index.ANALYZED
@@ -270,7 +274,9 @@ public class IndexManagerImpl implements IndexManager {
 				this.index_name = searchableProperty.index_name();
 			if (StringUtils.isNotBlank(searchableProperty.format()))
 				this.format = searchableProperty.format();
-			if (searchableProperty.boost() != 1.0f)
+			if ("string".equals(this.type)
+					&& searchableProperty.index() != Index.NOT_ANALYZED
+					&& searchableProperty.boost() != 1.0f)
 				this.boost = searchableProperty.boost();
 			Index index = searchableProperty.index();
 			if (index == Index.NO || index == Index.ANALYZED
@@ -605,6 +611,19 @@ public class IndexManagerImpl implements IndexManager {
 		logger.info("indexed {} for {}", indexed, type);
 	}
 
+	private ActionListener<BulkResponse> bulkResponseActionListener = new ActionListener<BulkResponse>() {
+		@Override
+		public void onResponse(BulkResponse br) {
+			if (br.hasFailures())
+				logger.error(br.buildFailureMessage());
+		}
+
+		@Override
+		public void onFailure(Throwable e) {
+			logger.error(e.getMessage(), e);
+		}
+	};
+
 	private class RowBuffer {
 		private Object[] buffer;
 		private int fetchCount;
@@ -640,7 +659,15 @@ public class IndexManagerImpl implements IndexManager {
 						classToType(p.getClass()), String.valueOf(p.getId()))
 						.setSource(entityToDocument(p)));
 			}
-			bulkRequest.execute();
+			try {
+				if (bulkRequest.numberOfActions() > 0) {
+					ListenableActionFuture<BulkResponse> br = bulkRequest
+							.execute();
+					br.addListener(bulkResponseActionListener);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			Arrays.fill(buffer, null);
 			hibernateSession.clear();
 			int indexed = index;
