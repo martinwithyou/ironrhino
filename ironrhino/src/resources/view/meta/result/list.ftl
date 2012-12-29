@@ -10,44 +10,47 @@
 <@listHeader/>
 </#if>
 <@rtstart entityName=entityName readonly=readonly/>
-	<#assign size=0>
-	<#list uiConfigs?keys as key>
-		<#if !uiConfigs[key].hiddenInList>
-			<#assign size=size+1>
-		</#if>
-	</#list>
-	<#assign index=0>
-	<#list uiConfigs?keys as key>
-			<#assign config=uiConfigs[key]>
-			<#if !config.hiddenInList>
-				<#assign label=key>
-				<#if !(readonly||config.readonly) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
-					<#assign cellEdit=config.cellEdit!/>
-					<#if cellEdit==''>
-						<#if config.type=='input'>
-							<#assign cellEdit='click'/>
-						<#elseif config.type=='textarea'>
-							<#assign cellEdit='click,textarea'/>
-						<#elseif config.type=='checkbox'>
-							<#assign cellEdit='click,boolean'/>
-						<#elseif config.type=='select'>
+<#assign size=0>
+<#list uiConfigs?keys as key>
+	<#if !uiConfigs[key].hiddenInList>
+		<#assign size=size+1>
+	</#if>
+</#list>
+<#assign index=0>
+<#assign viewable=false>
+<#list uiConfigs?keys as key>
+		<#assign config=uiConfigs[key]>
+		<#if !config.hiddenInList>
+			<#assign label=key>
+			<#if !(readonly||config.readonly) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
+				<#assign cellEdit=config.cellEdit!/>
+				<#if cellEdit==''>
+					<#if config.type=='input'>
+						<#assign cellEdit='click'/>
+					<#elseif config.type=='textarea'>
+						<#assign cellEdit='click,textarea'/>
+					<#elseif config.type=='checkbox'>
+						<#assign cellEdit='click,boolean'/>
+					<#elseif config.type=='select'>
+						<#assign cellEdit='click,select,rt_select_template_'+key/>
+					<#elseif config.type=='dictionary'>
+						<#if selectDictionary??>
 							<#assign cellEdit='click,select,rt_select_template_'+key/>
-						<#elseif config.type=='dictionary'>
-							<#if selectDictionary??>
-								<#assign cellEdit='click,select,rt_select_template_'+key/>
-							<#else>
-								<#assign cellEdit='click'/>
-							</#if>	
-						</#if>
+						<#else>
+							<#assign cellEdit='click'/>
+						</#if>	
 					</#if>
-				<#else>
-					<#assign cellEdit=''/>
 				</#if>
-				<#assign index=index+1>
-				<@rttheadtd name=label alias=config['alias']! width=config['width']! title=config['title']! class=config['cssClass']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=!(readonly&&index==size)/>
+			<#else>
+				<#assign cellEdit=''/>
 			</#if>
-	</#list>
-<@rtmiddle showActionColumn=rtconfig.actionColumnButtons?has_content||!readonly/>
+			<#assign index=index+1>
+			<@rttheadtd name=label alias=config['alias']! width=config['width']! title=config['title']! class=config['cssClass']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=viewable||!(readonly&&index==size)/>
+		<#else>
+			<#assign viewable=true>
+		</#if>
+</#list>
+<@rtmiddle showActionColumn=rtconfig.actionColumnButtons?has_content||!readonly||viewable/>
 <#assign index=0>
 <#list resultPage.result as entity>
 <#assign index=index+1>
@@ -66,7 +69,7 @@
 			<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
 		</#if>
 	</#list>	
-<@rttbodytrend entity=entity showActionColumn=rtconfig.actionColumnButtons?has_content||!readonly buttons=rtconfig.actionColumnButtons!/>
+<@rttbodytrend entity=entity buttons=rtconfig.actionColumnButtons! editable=!readonly viewable=viewable/>
 </#list>
 <@rtend readonly=readonly searchable=searchable showPageSize=rtconfig.showPageSize! buttons=rtconfig.bottomButtons!/>
 <#if !readonly>

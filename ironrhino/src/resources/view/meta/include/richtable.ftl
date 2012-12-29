@@ -1,4 +1,4 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true viewable=false celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
 <@rtstart formid=formid action=action entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable>
 <#nested/>
 </@rtstart>
@@ -9,7 +9,7 @@
 <#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
 <@rttheadtd name=name alias=columns[name]['alias']! title=columns[name]['title']! class=columns[name]['cssClass']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=(readonly&&index!=size||!readonly)&&resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
 </#list>
-<@rtmiddle width=actionColumnWidth showActionColumn=actionColumnButtons?has_content||!readonly/>
+<@rtmiddle width=actionColumnWidth showActionColumn=actionColumnButtons?has_content||!readonly||viewable/>
 <#local index=0>
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
@@ -28,7 +28,7 @@
 	<#assign dynamicAttributes=columns[name]['dynamicAttributes']!>
 	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']! dynamicAttributes=dynamicAttributes/>
 </#list>
-<@rttbodytrend entity=entity buttons=actionColumnButtons showActionColumn=actionColumnButtons?has_content||!readonly/>
+<@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable/>
 </#list>
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable searchable=searchable searchButtons=searchButtons showPageSize=showPageSize/>
 </#macro>
@@ -92,14 +92,19 @@
 </td>
 </#macro>
 
-<#macro rttbodytrend entity buttons='' showActionColumn=true>
-<#if showActionColumn>
+<#macro rttbodytrend entity buttons='' editable=true viewable=false>
+<#if buttons?has_content || editable || viewable>
 <td class="action">
 <#if buttons!=''>
 <#local temp=buttons?interpret>
 <@temp/>
 <#else>
+<#if viewable>
+<button type="button" class="btn" data-view="view">${action.getText("view")}</button>
+</#if>
+<#if editable>
 <button type="button" class="btn" data-view="input">${action.getText("edit")}</button>
+</#if>
 </#if>
 </td>
 </#if>
