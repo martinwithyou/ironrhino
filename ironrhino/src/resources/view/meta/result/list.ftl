@@ -18,6 +18,7 @@
 </#list>
 <#assign index=0>
 <#assign viewable=false>
+<#assign hasSelect=false>
 <#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
 		<#if !config.hiddenInList>
@@ -32,9 +33,11 @@
 					<#elseif config.type=='checkbox'>
 						<#assign cellEdit='click,boolean'/>
 					<#elseif config.type=='select'>
+						<#assign hasSelect=true>
 						<#assign cellEdit='click,select,rt_select_template_'+key/>
 					<#elseif config.type=='dictionary'>
 						<#if selectDictionary??>
+							<#assign hasSelect=true>
 							<#assign cellEdit='click,select,rt_select_template_'+key/>
 						<#else>
 							<#assign cellEdit='click'/>
@@ -72,8 +75,8 @@
 <@rttbodytrend entity=entity buttons=rtconfig.actionColumnButtons! editable=!readonly viewable=viewable/>
 </#list>
 <@rtend readonly=readonly searchable=searchable showPageSize=rtconfig.showPageSize! buttons=rtconfig.bottomButtons!/>
-<#if !readonly>
-<div style="display: none">
+<#if !readonly && hasSelect>
+<div style="display: none;">
 <#list uiConfigs?keys as key>
 	<#assign config=uiConfigs[key]>
 	<#if !config.hiddenInList>
