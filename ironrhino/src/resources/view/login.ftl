@@ -15,7 +15,11 @@
 		<@s.password label="%{getText('password')}" name="password" cssClass="required span2"/>
 		<@s.checkbox label="%{getText('rememberme')}" name="rememberme" cssClass="custom"/>
 		<@captcha/>
-		<@s.submit value="%{getText('login')}" />
+		<@s.submit value="%{getText('login')}" cssClass="btn-primary">
+		<#if getSetting??&&'true'==getSetting('signup.enabled')>
+		<@s.param name="after"> <a class="btn" href="${getUrl('/signup')}">${action.getText('signup')}</a></@s.param>
+		</#if>
+		</@s.submit>
 	</@s.form>
 	</div>
 </div>

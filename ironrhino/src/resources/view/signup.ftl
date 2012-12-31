@@ -14,7 +14,9 @@
 		<@s.textfield label="%{getText('username')}" name="username" cssClass="span2" />
 		<@s.password label="%{getText('password')}" name="password" cssClass="required span2"/>
 		<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" cssClass="required span2"/>
-		<@s.submit value="%{getText('signup')}"/>
+		<@s.submit value="%{getText('signup')}" cssClass="btn-primary">
+		<@s.param name="after"> <a class="btn" href="${getUrl('/signup/forgot')}">${action.getText('signup.forgot')}</a> <a class="btn" href="${getUrl('/login')}">${action.getText('login')}</a></@s.param>
+		</@s.submit>
 	</@s.form>
 	</div>
 </div>

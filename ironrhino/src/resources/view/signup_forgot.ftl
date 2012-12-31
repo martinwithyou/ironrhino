@@ -12,7 +12,9 @@
 	<@s.form method="post" action="forgot" cssClass="ajax reset form-horizontal">
 		<@s.textfield label="%{getText('email')}" name="email" type="email" cssClass="required email"/>
 		<@captcha/>
-		<@s.submit value="%{getText('confirm')}" />
+		<@s.submit value="%{getText('confirm')}"  cssClass="btn-primary">
+		<@s.param name="after"> <a class="btn" href="${getUrl('/signup')}">${action.getText('signup')}</a> <a class="btn" href="${getUrl('/login')}">${action.getText('login')}</a></@s.param>
+		</@s.submit>
 	</@s.form>
 	</div>
 </div>
