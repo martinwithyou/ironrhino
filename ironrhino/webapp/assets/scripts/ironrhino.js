@@ -32632,7 +32632,7 @@ Initialization.common = function() {
 		var url = xhr.getResponseHeader('X-Redirect-To');
 		if (url) {
 			$('body')
-					.html('<div class="container progress progress-striped active"><div class="bar" style="width: 50%;"></div></div>');
+					.html('<div class="modal"><div class="modal-body"><div class="progress progress-striped active"><div class="bar" style="width: 50%;"></div></div>');
 			var url = UrlUtils.absolutize(url);
 			try {
 				var href = top.location.href;
