@@ -23,5 +23,9 @@
 	</@s.form>
 	</div>
 </div>
+<#if getSetting??&&'true'==getSetting('signup.enabled')&&'true'==getSetting('oauth.enabled')>
+<div class="ajaxpanel" data-url="<@url value="/oauth/connect"/>">
+</div>
+</#if>
 </body>
 </html></#escape>
