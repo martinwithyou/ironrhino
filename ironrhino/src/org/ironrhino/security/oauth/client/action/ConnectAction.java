@@ -58,7 +58,7 @@ public class ConnectAction extends BaseAction {
 		if (StringUtils.isBlank(id)) {
 			String error = request.getParameter("error");
 			if (StringUtils.isNotBlank(error))
-				addActionError(getText(error));
+				addActionError(getText(error.replaceAll("_", ".")));
 			providers = oauthProviderManager.getProviders();
 			return SUCCESS;
 		} else {
@@ -87,7 +87,7 @@ public class ConnectAction extends BaseAction {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String error = request.getParameter("error");
 		if (StringUtils.isNotBlank(error)) {
-			targetUrl = "/oauth/connect?error=" + error.replaceAll("_", ".");
+			targetUrl = "/oauth/connect?error=" + error;
 			return REDIRECT;
 		}
 		try {
