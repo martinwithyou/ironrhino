@@ -53,12 +53,15 @@ public class ConnectAction extends BaseAction {
 	public String execute() {
 		if (!isEnabled())
 			return ACCESSDENIED;
+		HttpServletRequest request = ServletActionContext.getRequest();
 		String id = getUid();
 		if (StringUtils.isBlank(id)) {
+			String error = request.getParameter("error");
+			if (StringUtils.isNotBlank(error))
+				addActionError(getText(error));
 			providers = oauthProviderManager.getProviders();
 			return SUCCESS;
 		} else {
-			HttpServletRequest request = ServletActionContext.getRequest();
 			try {
 				OAuthProvider provider = (OAuthProvider) oauthProviderManager
 						.lookup(getUid());
@@ -82,6 +85,11 @@ public class ConnectAction extends BaseAction {
 		if (!isEnabled())
 			return ACCESSDENIED;
 		HttpServletRequest request = ServletActionContext.getRequest();
+		String error = request.getParameter("error");
+		if (StringUtils.isNotBlank(error)) {
+			targetUrl = "/oauth/connect?error=" + error.replaceAll("_", ".");
+			return REDIRECT;
+		}
 		try {
 			OAuthProvider provider = (OAuthProvider) oauthProviderManager
 					.lookup(getUid());
