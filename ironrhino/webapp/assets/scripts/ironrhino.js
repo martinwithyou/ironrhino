@@ -32628,22 +32628,24 @@ Initialization.common = function() {
 				Indicator.showError()
 			});
 	$(document).ajaxSuccess(function(ev, xhr) {
-				Indicator.hide();
-				var url = xhr.getResponseHeader('X-Redirect-To');
-				if (url) {
-					var url = UrlUtils.absolutize(url);
-					try {
-						var href = top.location.href;
-						if (href && UrlUtils.isSameDomain(href, url))
-							top.location.href = url;
-						else
-							document.location.href = url;
-					} catch (e) {
-						document.location.href = url;
-					}
-					return;
-				}
-			});
+		Indicator.hide();
+		var url = xhr.getResponseHeader('X-Redirect-To');
+		if (url) {
+			$('body')
+					.html('<div class="container progress progress-striped active"><div class="bar" style="width: 50%;"></div></div>');
+			var url = UrlUtils.absolutize(url);
+			try {
+				var href = top.location.href;
+				if (href && UrlUtils.isSameDomain(href, url))
+					top.location.href = url;
+				else
+					document.location.href = url;
+			} catch (e) {
+				document.location.href = url;
+			}
+			return;
+		}
+	});
 	$('.removeonclick').live('click', function() {
 				$(this).remove()
 			});
