@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Singleton
 public class Ironrhino extends OAuth2Provider {
 
-	@Value("${ironrhino.logo:http://localhost/assets/images/logo.gif}")
+	@Value("${ironrhino.logo:http://localhost/assets/images/ironrhino-logo.jpg}")
 	private String logo;
 
 	@Value("${ironrhino.authorizeUrl:http://localhost/oauth/oauth2/auth}")
