@@ -548,7 +548,8 @@ Initialization.common = function() {
 				return true;
 			})).live('blur', function(ev) {
 				// if (this.value != this.defaultValue)
-				Form.validate(this);
+				if (!$(this).hasClass('required'))
+					Form.validate(this);
 				return true;
 			});
 	$('select').live('change', function() {
