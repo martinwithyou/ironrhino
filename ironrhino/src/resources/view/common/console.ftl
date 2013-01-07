@@ -14,7 +14,6 @@
 	line-height:30px;
 }
 </style>
-<#if printSetting??>
 <script>
 $(function(){
 		$('#trigger .btn').click(function(){
@@ -43,6 +42,7 @@ $(function(){
 				}
 			});
 		});
+		<#if printSetting??>
 		$('#switch .btn-group').each(function() {
 			var t = $(this);
 			$('.active',t).css({
@@ -74,10 +74,10 @@ $(function(){
 						
 					});
 		});
+		</#if>
 							
 });
 </script>
-</#if>
 </head>
 <body>
 <@s.form id="form" action="console" method="post" cssClass="ajax focus form-inline well">
