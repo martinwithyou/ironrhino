@@ -7,6 +7,7 @@
 </@authorize>
 </head>
 <body>
+<@authorize ifNotGranted="ROLE_BUILTIN_USER">
 <div class="row">
 	<div class="span4 offset4">
 	<@s.form method="post" action="signup" cssClass="ajax focus form-horizontal well">
@@ -20,5 +21,6 @@
 	</@s.form>
 	</div>
 </div>
+</@authorize>
 </body>
 </html></#escape>

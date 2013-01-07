@@ -7,6 +7,7 @@
 </@authorize>
 </head>
 <body>
+<@authorize ifNotGranted="ROLE_BUILTIN_USER">
 <div class="row">
 	<div class="span4 offset4">
 	<@s.form id="login" action="login" method="post" cssClass="ajax focus form-horizontal well">
@@ -27,5 +28,6 @@
 <div class="ajaxpanel" data-url="<@url value="/oauth/connect"/>">
 </div>
 </#if>
+</@authorize>
 </body>
 </html></#escape>

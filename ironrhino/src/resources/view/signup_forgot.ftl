@@ -7,6 +7,7 @@
 </@authorize>
 </head>
 <body>
+<@authorize ifNotGranted="ROLE_BUILTIN_USER">
 <div class="row">
 	<div class="span4 offset4">
 	<@s.form method="post" action="forgot" cssClass="ajax reset form-horizontal">
@@ -18,5 +19,6 @@
 	</@s.form>
 	</div>
 </div>
+</@authorize>
 </body>
 </html></#escape>
