@@ -32716,21 +32716,15 @@ if (HISTORY_ENABLED) {
 	Initialization.history = function() {
 
 		if (SESSION_HISTORY_SUPPORT) {
-			var url = document.location.href;
-			history.replaceState({
-						url : url
-					}, '', url);
 			window.onpopstate = function(event) {
 				var url = document.location.href;
+				Nav.activate(url);
 				if (event.state) {
 					ajax({
 								url : url,
 								replaceTitle : true,
 								replacement : event.state.replacement,
 								cache : false,
-								success : function() {
-									Nav.activate(url);
-								},
 								headers : {
 									'X-Fragment' : '_'
 								}
@@ -33138,6 +33132,10 @@ Observation.common = function(container) {
 						hash = hash.substring(hash.indexOf('//') + 2);
 						hash = hash.substring(hash.indexOf('/'));
 						if (SESSION_HISTORY_SUPPORT) {
+							var location = document.location.href;
+							history.replaceState({
+										url : location
+									}, '', location);
 							history.pushState({
 										replacement : $(this)
 												.data('replacement'),
@@ -33205,9 +33203,9 @@ var Nav = {
 	},
 	activate : function(url) {
 		url = UrlUtils.absolutize(url);
+		$('.nav:not(.nav-tabs) li').removeClass('active');
 		$('.nav:not(.nav-tabs) li a').each(function() {
 					if (this.href == url || url.indexOf(this.href + '?') == 0) {
-						$('li', $(this).closest('.nav')).removeClass('active');
 						$(this).closest('li').addClass('active');
 					}
 				});
@@ -34722,6 +34720,10 @@ Richtable = {
 				if (param)
 					url += (url.indexOf('?') > 0 ? '&' : '?') + param;
 			}
+			var location = document.location.href;
+			history.replaceState({
+						url : location
+					}, '', location);
 			history.pushState(url, '', url);
 		}
 		$(form).submit();

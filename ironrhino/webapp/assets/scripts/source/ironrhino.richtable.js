@@ -81,6 +81,10 @@ Richtable = {
 				if (param)
 					url += (url.indexOf('?') > 0 ? '&' : '?') + param;
 			}
+			var location = document.location.href;
+			history.replaceState({
+						url : location
+					}, '', location);
 			history.pushState(url, '', url);
 		}
 		$(form).submit();
