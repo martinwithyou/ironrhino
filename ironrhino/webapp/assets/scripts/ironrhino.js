@@ -33004,6 +33004,39 @@ Observation.common = function(container) {
 									});
 						});
 			});
+	$('a.popmodal', container).each(function() {
+		var t = $(this);
+		var url = t.attr('href');
+		var id = url;
+		if (id.indexOf('/') > -1)
+			id = id.substring(id.lastIndexOf('/') + 1);
+		id += '_modal';
+		while ($('#' + id).length)
+			id += '_';
+		$.get(url, function(data) {
+			var html = data.replace(/<script(.|\s)*?\/script>/g, '');
+			var div = $('<div/>').html(html);
+			var title = $('title', div).html();
+			var body = $('#content', div).html();
+			var modalwidth = t.data('modalwidth');
+			$('<div id="'
+					+ id
+					+ '" class="modal hide fade in"'
+					+ (modalwidth ? ' style="width:' + modalwidth + ';"' : '')
+					+ '><div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3 style="text-align:center;">'
+					+ title
+					+ '</h3></div><div class="modal-body" style="padding-top:40px;">'
+					+ body + '</div></div>').appendTo(document.body);
+			_observe($('#' + id));
+			$('form', $('#' + id)).each(function() {
+						this.onsuccess = function() {
+							$('#' + id).modal('hide');
+						};
+					});
+			t.attr('href', '#' + id).attr('data-toggle', 'modal');
+		});
+
+	});
 	if (typeof swfobject != 'undefined') {
 		$('.chart', container).each(function() {
 			var t = $(this);
