@@ -3,6 +3,7 @@
 <head>
 <title>${action.getText('login')}</title>
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
+<meta name="decorator" content="simple" />
 <meta http-equiv="refresh" content="0; url=<@url value="/"/>" />
 </@authorize>
 </head>
@@ -28,6 +29,15 @@
 <div class="ajaxpanel" data-url="<@url value="/oauth/connect"/>">
 </div>
 </#if>
+</@authorize>
+<@authorize ifAnyGranted="ROLE_BUILTIN_USER">
+<div class="modal">
+	<div class="modal-body">
+		<div class="progress progress-striped active">
+			<div class="bar" style="width: 50%;"></div>
+		</div>
+	</div>
+</div>
 </@authorize>
 </body>
 </html></#escape>

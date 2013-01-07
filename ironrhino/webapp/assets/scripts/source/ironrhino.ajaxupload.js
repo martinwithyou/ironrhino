@@ -110,7 +110,6 @@
 			}
 			return true;
 		}
-		return false;
 	}
 
 	function compose(files, name, boundary) {
