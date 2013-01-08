@@ -112,7 +112,6 @@ public class ApplicationContextConsole implements
 
 	public Object execute(String expression, boolean global) throws Exception {
 		Object value = null;
-		try {
 			if (expression.matches(SET_PROPERTY_EXPRESSION_PATTERN)) {
 				executeSetProperty(expression);
 			} else {
@@ -120,9 +119,6 @@ public class ApplicationContextConsole implements
 			}
 			if (global)
 				eventPublisher.publish(new ExpressionEvent(expression), true);
-		} catch (Exception e) {
-			throw e;
-		}
 		return value;
 	}
 

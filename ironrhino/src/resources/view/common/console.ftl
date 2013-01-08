@@ -4,14 +4,14 @@
 <title>${action.getText('console')}</title>
 <style>
 #expression{
-	width:400px;
+	width: 400px;
 }
 .row-fluid{
-	margin-top 10px;
+	margin-top: 10px;
 }
 .key{
-	text-align:right;
-	line-height:30px;
+	text-align: right;
+	line-height: 30px;
 }
 </style>
 <script>

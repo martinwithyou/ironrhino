@@ -1,10 +1,8 @@
-package initdata;
+package org.ironrhino.common.support;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,7 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.xml.namespace.NamespaceContext;
 
 import org.apache.commons.io.IOUtils;
@@ -22,9 +22,9 @@ import org.ironrhino.common.model.Coordinate;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.util.RegionParser;
 import org.ironrhino.common.util.RegionUtils;
+import org.ironrhino.core.metadata.Setup;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.XmlUtils;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,41 +33,31 @@ import org.w3c.dom.NodeList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
-public class InitRegion {
+@Named
+@Singleton
+public class RegionSetup {
 
-	static EntityManager entityManager;
+	private Map<String, String> regionAreacodeMap;
 
-	static Map<String, String> regionAreacodeMap = regionAreacodeMap();
-	static ListMultimap<String, String> regionCoordinateMap = regionCoordinateMap();
+	private ListMultimap<String, String> regionCoordinateMap;
 
-	public static void main(String... strings) throws Exception {
-		System.setProperty("app.name", "ironrhino");
-		System.setProperty("ironrhino.home", System.getProperty("user.home")
-				+ "/" + System.getProperty("app.name"));
-		System.setProperty("ironrhino.context", System.getProperty("user.home")
-				+ "/" + System.getProperty("app.name"));
-		System.out.println("initialize:" + Region.class);
-		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(
-				new String[] { "initdata/applicationContext-initdata.xml",
-						"resources/spring/applicationContext-ds.xml",
-						"resources/spring/applicationContext-hibernate.xml" });
-		DataSource ds = ctx.getBean(DataSource.class);
-		Connection c = ds.getConnection();
-		Statement stmt = c.createStatement();
-		stmt.executeUpdate("truncate table common_region");
-		stmt.close();
-		c.close();
-		entityManager = ctx.getBean(EntityManager.class);
+	@Inject
+	private EntityManager<Region> entityManager;
 
+	@Setup
+	public void setup() throws Exception {
+		entityManager.setEntityClass(Region.class);
+		if (entityManager.countAll() > 0)
+			return;
+		regionAreacodeMap = regionAreacodeMap();
+		regionCoordinateMap = regionCoordinateMap();
 		List<Region> regions = RegionParser.parse();
-		for (Region region : regions) {
+		for (Region region : regions)
 			save(region);
-		}
-		ctx.close();
 	}
 
-	private static void save(Region region) {
+	@SuppressWarnings("unchecked")
+	private void save(Region region) {
 		String shortName = RegionUtils.shortenName(region.getName());
 		region.setAreacode(regionAreacodeMap.get(region.getName()));
 		if (regionCoordinateMap != null) {
@@ -121,7 +111,7 @@ public class InitRegion {
 	}
 
 	private static Map<String, String> regionAreacodeMap() {
-		List<String> lines = Collections.EMPTY_LIST;
+		List<String> lines = new ArrayList<String>();
 		try {
 			lines = IOUtils.readLines(
 					Thread.currentThread()
@@ -169,8 +159,8 @@ public class InitRegion {
 			}
 
 			@Override
-			public Iterator getPrefixes(String namespaceURI) {
-				List prefix = new ArrayList();
+			public Iterator<String> getPrefixes(String namespaceURI) {
+				List<String> prefix = new ArrayList<String>();
 				prefix.add("kml");
 				return prefix.iterator();
 			}

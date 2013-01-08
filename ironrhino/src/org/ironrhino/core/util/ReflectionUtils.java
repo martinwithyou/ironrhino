@@ -14,7 +14,7 @@ import org.springframework.core.ParameterNameDiscoverer;
 
 public class ReflectionUtils {
 
-	protected static ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+	public static ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 
 	public static Class<?> getGenericClass(Class<?> clazz) {
 		return getGenericClass(clazz, 0);

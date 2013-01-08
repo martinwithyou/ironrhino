@@ -7301,9 +7301,14 @@ span.checkboxgroup{
 	border: none;
 	background: #b94a48;
 }
-.input-append .field-error-content{
+.input-append .field-error-content {
 	font-size: 13px;
 }
+.hero-unit .field-error-content {
+	font-size: 13px;
+	line-height: 20px;
+}
+
 img.captcha {
 	height: 25px;
 	width: 100px;
