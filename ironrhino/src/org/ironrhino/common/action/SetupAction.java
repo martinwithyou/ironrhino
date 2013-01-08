@@ -48,25 +48,26 @@ public class SetupAction extends BaseAction {
 	public String execute() {
 		if (!canSetup())
 			return NOTFOUND;
-		try {
-			setup();
-			if (ctx.containsBean("settingControl")) {
-				ApplicationContextConsole console = ctx
-						.getBean(ApplicationContextConsole.class);
-				String expression = "settingControl.setValue(\""
-						+ SETUP_ENABLED_KEY + "\",\"false\")";
-				console.execute(expression, false);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ErrorMessage(e.getMessage());
-		}
+		executeSetup();
 		targetUrl = "/";
 		return REDIRECT;
 	}
 
 	public String input() {
-		return canSetup() ? SUCCESS : NOTFOUND;
+		if (!canSetup())
+			return NOTFOUND;
+		List<SetupParameterImpl> list;
+		try {
+			list = getSetupParameters();
+			if (list.size() == 0) {
+				executeSetup();
+				targetUrl = "/";
+				return REDIRECT;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return SUCCESS;
 	}
 
 	private boolean canSetup() {
@@ -83,6 +84,22 @@ public class SetupAction extends BaseAction {
 				e.printStackTrace();
 			}
 		return true;
+	}
+
+	private void executeSetup() {
+		try {
+			doSetup();
+			if (ctx.containsBean("settingControl")) {
+				ApplicationContextConsole console = ctx
+						.getBean(ApplicationContextConsole.class);
+				String expression = "settingControl.setValue(\""
+						+ SETUP_ENABLED_KEY + "\",\"false\")";
+				console.execute(expression, false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ErrorMessage(e.getMessage());
+		}
 	}
 
 	private List<SetupParameterImpl> setupParameters;
@@ -140,8 +157,7 @@ public class SetupAction extends BaseAction {
 		return setupParameters;
 	}
 
-	public void setup() throws Exception {
-
+	public void doSetup() throws Exception {
 		String[] beanNames = ctx.getBeanDefinitionNames();
 		for (String beanName : beanNames) {
 			if (StringUtils.isAlphanumeric(beanName)
