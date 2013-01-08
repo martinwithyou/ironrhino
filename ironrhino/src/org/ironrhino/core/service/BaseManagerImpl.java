@@ -305,8 +305,11 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				resultPage.setPageSize(ResultPage.MAX_PAGESIZE);
 			if (resultPage.getPageNo() < 1)
 				resultPage.setPageNo(1);
-			else if (resultPage.getPageNo() > resultPage.getTotalPage())
-				resultPage.setPageNo(resultPage.getTotalPage());
+			else if (resultPage.getPageNo() > resultPage.getTotalPage()) {
+				// resultPage.setPageNo(resultPage.getTotalPage());
+				resultPage.setResult(Collections.EMPTY_LIST);
+				return resultPage;
+			}
 		}
 		detachedCriteria.setProjection(null);
 		detachedCriteria
@@ -316,8 +319,8 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			start = (resultPage.getPageNo() - 1) * resultPage.getPageSize();
 			end = resultPage.getPageNo() * resultPage.getPageSize();
 		} else {
-			start = (int) (resultPage.getTotalResults() - resultPage.getPageNo()
-					* resultPage.getPageSize());
+			start = (int) (resultPage.getTotalResults() - resultPage
+					.getPageNo() * resultPage.getPageSize());
 			end = (int) (resultPage.getTotalResults() - (resultPage.getPageNo() - 1)
 					* resultPage.getPageSize());
 		}
