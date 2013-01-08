@@ -10,7 +10,8 @@
 <body>
 <@authorize ifNotGranted="ROLE_BUILTIN_USER">
 <div class="row">
-	<div class="span4 offset4">
+	<div class="span6 offset3">
+	<div class="hero-unit">
 	<@s.form id="login" action="login" method="post" cssClass="ajax focus form-horizontal well">
 		<@s.hidden id="targetUrl" name="targetUrl" />
 		<@s.textfield label="%{getText('username')}" name="username" cssClass="required span2"/>
@@ -23,6 +24,7 @@
 		</#if>
 		</@s.submit>
 	</@s.form>
+	</div>
 	</div>
 </div>
 <#if getSetting??&&'true'==getSetting('signup.enabled')&&'true'==getSetting('oauth.enabled')>

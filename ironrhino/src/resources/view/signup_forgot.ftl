@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <#escape x as x?html><html>
 <head>
-<title>${action.getText('signup')}</title>
+<title>${action.getText('signup.forgot')}</title>
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 <meta name="decorator" content="simple" />
 <meta http-equiv="refresh" content="0; url=<@url value="/"/>" />
@@ -10,7 +10,8 @@
 <body>
 <@authorize ifNotGranted="ROLE_BUILTIN_USER">
 <div class="row">
-	<div class="span4 offset4">
+	<div class="span6 offset3">
+	<div class="hero-unit">
 	<@s.form method="post" action="forgot" cssClass="ajax reset form-horizontal">
 		<@s.textfield label="%{getText('email')}" name="email" type="email" cssClass="required email"/>
 		<@captcha/>
@@ -18,6 +19,7 @@
 		<@s.param name="after"> <a class="btn" href="${getUrl('/signup')}">${action.getText('signup')}</a> <a class="btn" href="${getUrl('/login')}">${action.getText('login')}</a></@s.param>
 		</@s.submit>
 	</@s.form>
+	</div>
 	</div>
 </div>
 </@authorize>

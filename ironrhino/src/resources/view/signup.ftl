@@ -10,7 +10,8 @@
 <body>
 <@authorize ifNotGranted="ROLE_BUILTIN_USER">
 <div class="row">
-	<div class="span4 offset4">
+	<div class="span6 offset3">
+	<div class="hero-unit">
 	<@s.form method="post" action="signup" cssClass="ajax focus form-horizontal well">
 		<@s.textfield label="%{getText('email')}" name="email" type="email" cssClass="required email span2" />
 		<@s.textfield label="%{getText('username')}" name="username" cssClass="span2" />
@@ -20,6 +21,7 @@
 		<@s.param name="after"> <a class="btn hidden-pad hidden-tablet hidden-phone" href="${getUrl('/signup/forgot')}">${action.getText('signup.forgot')}</a> <a class="btn" href="${getUrl('/login')}">${action.getText('login')}</a></@s.param>
 		</@s.submit>
 	</@s.form>
+	</div>
 	</div>
 </div>
 </@authorize>
