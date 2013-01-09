@@ -7,14 +7,14 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.ironrhino.core.coordination.LockService;
-import org.ironrhino.core.metadata.DualProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Singleton
 @Named("lockService")
-@DualProfile
+@Profile({ "dual","cloud" })
 public class RedisLockService implements LockService {
 
 	private static final String NAMESPACE = "{lock}";

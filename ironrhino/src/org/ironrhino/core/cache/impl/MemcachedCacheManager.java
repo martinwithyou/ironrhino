@@ -20,16 +20,16 @@ import net.rubyeye.xmemcached.utils.AddrUtil;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
-import org.ironrhino.core.metadata.ClusterProfile;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.util.Assert;
 
 @Singleton
 @Named("cacheManager")
-@ClusterProfile
+@Profile("cluster")
 public class MemcachedCacheManager implements CacheManager {
 
 	private Logger log = LoggerFactory.getLogger(getClass());

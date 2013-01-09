@@ -12,18 +12,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.ironrhino.core.metadata.DefaultAndDualProfile;
 import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @Singleton
 @Named("oauthManager")
-@DefaultAndDualProfile
+@Profile({ "default", "dual", "cloud" })
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class OAuthManagerImpl implements OAuthManager {
 
@@ -162,9 +162,10 @@ public class OAuthManagerImpl implements OAuthManager {
 	public void removeExpired() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.SECOND, (int) (-expireTime));
-		entityManager.executeUpdate(
-				"delete from Authorization a where lifetime >0 and a.modifyDate < ?1",
-				cal.getTime());
+		entityManager
+				.executeUpdate(
+						"delete from Authorization a where lifetime >0 and a.modifyDate < ?1",
+						cal.getTime());
 	}
 
 	public void saveClient(Client client) {

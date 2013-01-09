@@ -12,9 +12,9 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
-import org.ironrhino.core.metadata.DualProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -23,7 +23,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Singleton
 @Named("cacheManager")
-@DualProfile
+@Profile({ "dual","cloud" })
 public class RedisCacheManager implements CacheManager {
 
 	private Logger log = LoggerFactory.getLogger(getClass());

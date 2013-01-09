@@ -13,11 +13,11 @@ import net.sf.ehcache.Element;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
-import org.ironrhino.core.metadata.DefaultProfile;
+import org.springframework.context.annotation.Profile;
 
 @Singleton
 @Named("cacheManager")
-@DefaultProfile
+@Profile("default")
 public class EhCacheManager implements CacheManager {
 
 	private net.sf.ehcache.CacheManager ehCacheManager;

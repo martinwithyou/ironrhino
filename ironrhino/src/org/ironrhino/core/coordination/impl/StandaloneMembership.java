@@ -9,12 +9,12 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.ironrhino.core.coordination.Membership;
-import org.ironrhino.core.metadata.DefaultAndDualProfile;
 import org.ironrhino.core.util.AppInfo;
+import org.springframework.context.annotation.Profile;
 
 @Singleton
 @Named("membership")
-@DefaultAndDualProfile
+@Profile({ "default", "dual", "cloud" })
 public class StandaloneMembership implements Membership {
 
 	private Map<String, List<String>> groups = new HashMap<String, List<String>>();

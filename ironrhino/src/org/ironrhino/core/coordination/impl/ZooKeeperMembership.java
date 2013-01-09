@@ -16,15 +16,15 @@ import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.ironrhino.core.coordination.Membership;
-import org.ironrhino.core.metadata.ClusterProfile;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.zookeeper.WatchedEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 
 @Singleton
 @Named("membership")
-@ClusterProfile
+@Profile("cluster")
 public class ZooKeeperMembership implements Membership, WatchedEventListener {
 
 	public static final String DEFAULT_ZOOKEEPER_PATH = "/membership";
