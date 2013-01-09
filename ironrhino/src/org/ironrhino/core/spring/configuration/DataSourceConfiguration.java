@@ -5,7 +5,6 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 
@@ -46,7 +45,7 @@ public class DataSourceConfiguration {
 	private String connectionTestStatement;
 
 	public @Bean(destroyMethod = "close")
-	DataSource targetDataSource() {
+	DataSource dataSource() {
 		BoneCPDataSource ds = new BoneCPDataSource();
 		ds.setDriverClass(driverClass);
 		ds.setJdbcUrl(jdbcUrl);
@@ -62,8 +61,4 @@ public class DataSourceConfiguration {
 		return ds;
 	}
 
-	public @Bean
-	DataSource dataSource() {
-		return new LazyConnectionDataSourceProxy(targetDataSource());
-	}
 }
