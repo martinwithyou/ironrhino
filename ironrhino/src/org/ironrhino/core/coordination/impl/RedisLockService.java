@@ -1,5 +1,8 @@
 package org.ironrhino.core.coordination.impl;
 
+import static org.ironrhino.core.metadata.Profiles.CLOUD;
+import static org.ironrhino.core.metadata.Profiles.DUAL;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -14,7 +17,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 @Singleton
 @Named("lockService")
-@Profile({ "dual","cloud" })
+@Profile({ DUAL, CLOUD })
 public class RedisLockService implements LockService {
 
 	private static final String NAMESPACE = "{lock}";

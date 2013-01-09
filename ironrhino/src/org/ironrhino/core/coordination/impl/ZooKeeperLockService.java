@@ -1,5 +1,7 @@
 package org.ironrhino.core.coordination.impl;
 
+import static org.ironrhino.core.metadata.Profiles.CLUSTER;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -17,7 +19,7 @@ import org.springframework.context.annotation.Profile;
 
 @Singleton
 @Named("lockService")
-@Profile("cluster")
+@Profile(CLUSTER)
 public class ZooKeeperLockService implements LockService {
 
 	public static final String DEFAULT_ZOOKEEPER_PATH = "/lock";

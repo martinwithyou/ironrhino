@@ -1,5 +1,9 @@
 package org.ironrhino.core.fs.impl;
 
+import static org.ironrhino.core.metadata.Profiles.CLOUD;
+import static org.ironrhino.core.metadata.Profiles.DEFAULT;
+import static org.ironrhino.core.metadata.Profiles.DUAL;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -25,7 +29,7 @@ import org.springframework.util.Assert;
 
 @Singleton
 @Named("fileStorage")
-@Profile({ "default", "dual", "cloud" })
+@Profile({ DEFAULT, DUAL, CLOUD })
 public class LocalFileStorage extends AbstractFileStorage {
 
 	private File directory;

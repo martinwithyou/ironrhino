@@ -1,5 +1,7 @@
 package org.ironrhino.security.oauth.server.service;
 
+import static org.ironrhino.core.metadata.Profiles.CLUSTER;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,7 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 @Singleton
 @Named("oauthManager")
-@Profile("cluster")
+@Profile(CLUSTER)
 public class RedisOAuthManagerImpl implements OAuthManager {
 
 	private RedisTemplate<String, Authorization> authorizationRedisTemplate;

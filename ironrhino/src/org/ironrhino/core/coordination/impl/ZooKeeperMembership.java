@@ -1,5 +1,7 @@
 package org.ironrhino.core.coordination.impl;
 
+import static org.ironrhino.core.metadata.Profiles.CLUSTER;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +26,7 @@ import org.springframework.context.annotation.Profile;
 
 @Singleton
 @Named("membership")
-@Profile("cluster")
+@Profile(CLUSTER)
 public class ZooKeeperMembership implements Membership, WatchedEventListener {
 
 	public static final String DEFAULT_ZOOKEEPER_PATH = "/membership";

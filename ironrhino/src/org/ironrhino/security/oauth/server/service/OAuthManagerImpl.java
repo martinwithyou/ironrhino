@@ -1,5 +1,9 @@
 package org.ironrhino.security.oauth.server.service;
 
+import static org.ironrhino.core.metadata.Profiles.CLOUD;
+import static org.ironrhino.core.metadata.Profiles.DEFAULT;
+import static org.ironrhino.core.metadata.Profiles.DUAL;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +27,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 @Singleton
 @Named("oauthManager")
-@Profile({ "default", "dual", "cloud" })
+@Profile({ DEFAULT, DUAL, CLOUD })
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class OAuthManagerImpl implements OAuthManager {
 

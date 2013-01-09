@@ -1,5 +1,7 @@
 package org.ironrhino.core.coordination.impl;
 
+import static org.ironrhino.core.metadata.Profiles.DEFAULT;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -13,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 
 @Singleton
 @Named("lockService")
-@Profile("default")
+@Profile(DEFAULT)
 public class StandaloneLockService implements LockService {
 
 	private ConcurrentHashMap<String, Lock> locks = new ConcurrentHashMap<String, Lock>();

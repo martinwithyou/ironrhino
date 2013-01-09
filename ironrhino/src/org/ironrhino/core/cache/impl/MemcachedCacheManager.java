@@ -1,5 +1,7 @@
 package org.ironrhino.core.cache.impl;
 
+import static org.ironrhino.core.metadata.Profiles.CLUSTER;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +31,7 @@ import org.springframework.util.Assert;
 
 @Singleton
 @Named("cacheManager")
-@Profile("cluster")
+@Profile(CLUSTER)
 public class MemcachedCacheManager implements CacheManager {
 
 	private Logger log = LoggerFactory.getLogger(getClass());

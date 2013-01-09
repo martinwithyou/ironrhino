@@ -1,5 +1,8 @@
 package org.ironrhino.core.cache.impl;
 
+import static org.ironrhino.core.metadata.Profiles.CLOUD;
+import static org.ironrhino.core.metadata.Profiles.DUAL;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,7 +26,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @Singleton
 @Named("cacheManager")
-@Profile({ "dual","cloud" })
+@Profile({ DUAL, CLOUD })
 public class RedisCacheManager implements CacheManager {
 
 	private Logger log = LoggerFactory.getLogger(getClass());

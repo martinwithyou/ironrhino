@@ -1,5 +1,9 @@
 package org.ironrhino.core.coordination.impl;
 
+import static org.ironrhino.core.metadata.Profiles.CLOUD;
+import static org.ironrhino.core.metadata.Profiles.DEFAULT;
+import static org.ironrhino.core.metadata.Profiles.DUAL;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +18,7 @@ import org.springframework.context.annotation.Profile;
 
 @Singleton
 @Named("membership")
-@Profile({ "default", "dual", "cloud" })
+@Profile({ DEFAULT, DUAL, CLOUD })
 public class StandaloneMembership implements Membership {
 
 	private Map<String, List<String>> groups = new HashMap<String, List<String>>();

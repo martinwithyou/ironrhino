@@ -1,5 +1,7 @@
 package org.ironrhino.core.cache.impl;
 
+import static org.ironrhino.core.metadata.Profiles.DEFAULT;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -17,7 +19,7 @@ import org.springframework.context.annotation.Profile;
 
 @Singleton
 @Named("cacheManager")
-@Profile("default")
+@Profile(DEFAULT)
 public class EhCacheManager implements CacheManager {
 
 	private net.sf.ehcache.CacheManager ehCacheManager;
