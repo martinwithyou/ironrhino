@@ -1,5 +1,6 @@
 package org.ironrhino.core.util;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -115,11 +116,14 @@ public class AppInfo {
 	}
 
 	public static String getAppHome() {
-		if (home != null)
-			return home;
-		else
-			return System.getProperty("user.home").replace('\\', '/') + "/"
+		if (home == null) {
+			String userhome = System.getProperty("user.home");
+			if (userhome.indexOf("nonexistent") >= 0) // for cloudfoundry
+				userhome = System.getenv().get("HOME");
+			home = userhome.replace('\\', File.separatorChar) + File.separator
 					+ name;
+		}
+		return home;
 	}
 
 	public static String getHostName() {
