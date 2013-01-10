@@ -23,19 +23,28 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
+import org.ironrhino.core.fs.FileStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.util.Assert;
 
 @Singleton
 @Named("fileStorage")
 @Profile({ DEFAULT, DUAL, CLOUD })
-public class LocalFileStorage extends AbstractFileStorage {
+public class LocalFileStorage implements FileStorage {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
+	@Value("${fileStorage.uri:file:///tmp}")
+	protected String uri;
+
 	private File directory;
+
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
 
 	@PostConstruct
 	public void afterPropertiesSet() throws Exception {
