@@ -1,6 +1,8 @@
 package org.ironrhino.common.action;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -18,6 +20,7 @@ import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.util.ErrorMessage;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
@@ -123,7 +126,13 @@ public class UploadAction extends BaseAction {
 				String fn = fileFileName[i];
 				String suffix = fn.substring(fn.lastIndexOf('.') + 1);
 				if (!excludes.contains(suffix))
-					fileStorage.save(f, createPath(fn, autorename));
+					try {
+						fileStorage.write(new FileInputStream(f),
+								createPath(fn, autorename));
+					} catch (IOException e) {
+						e.printStackTrace();
+						throw new ErrorMessage(e.getMessage());
+					}
 				i++;
 			}
 			addActionMessage(getText("operate.success"));
