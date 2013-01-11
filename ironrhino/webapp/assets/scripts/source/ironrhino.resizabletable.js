@@ -2,15 +2,13 @@ $(function() {
 			var pressed = false;
 			var start = undefined;
 			var startX, startWidth;
-
-			$('table.resizable span.resizeBar').live('mousedown', function(e) {
+			$(document).on('mousedown', 'table.resizable span.resizeBar',
+					function(e) {
 						start = $(this).parent();
 						pressed = true;
 						startX = e.pageX;
 						startWidth = start.width();
-					});
-
-			$(document).mousemove(function(e) {
+					}).mousemove(function(e) {
 				if (pressed) {
 					document.body.style.cursor = 'col-resize';
 					var newwidth = startWidth + (e.pageX - startX);
@@ -21,9 +19,7 @@ $(function() {
 					else
 						start.width(newwidth);
 				}
-			});
-
-			$(document).mouseup(function() {
+			}).mouseup(function() {
 						if (pressed) {
 							pressed = false;
 							document.body.style.cursor = '';

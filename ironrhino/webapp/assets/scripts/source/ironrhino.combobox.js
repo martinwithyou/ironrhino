@@ -1,5 +1,5 @@
 (function($) {
-	$('.combobox .add-on').live('click', function(e) {
+	$(document).on('click', '.combobox .add-on', function(e) {
 		var input = $('input', $(e.target).closest('.combobox'));
 		var menu = $('.combobox-menu', $(e.target).closest('.combobox'));
 		var val = input.val();
@@ -17,8 +17,7 @@
 						.appendTo(menu);
 		}
 		menu.width(input.closest('.combobox').width() - 2).toggle();
-	});
-	$('.combobox .combobox-menu a').live('click', function(e) {
+	}).on('click', '.combobox .combobox-menu a', function(e) {
 				e.preventDefault();
 				if (!$(this).parent('li.group').length) {
 					var input = $('input', $(e.target).closest('.combobox'));
@@ -29,8 +28,7 @@
 					menu.hide();
 				}
 				return false;
-			});
-	$('.combobox .combobox-menu').live('mouseenter', function(e) {
+			}).on('mouseenter', '.combobox .combobox-menu', function(e) {
 				e.preventDefault();
 				$('li', this).removeClass('active');
 				return false;

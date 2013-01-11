@@ -1,12 +1,11 @@
 Initialization.upload = function() {
-	$('#files button.reload').live('click', function() {
+	$(document).on('click', '#files button.reload', function() {
 				ajax({
 							url : $('#upload_form').attr('action'),
 							data : $('#upload_form').serialize(),
 							replacement : 'files'
 						});
-			});
-	$('#files button.mkdir').live('click', function() {
+			}).on('click', '#files button.mkdir', function() {
 		$.alerts.prompt('', 'newfolder', '', function(t) {
 					if (t) {
 						var folder = $('#current_folder').text() + t;
@@ -22,8 +21,7 @@ Initialization.upload = function() {
 								});
 					}
 				});
-	});
-	$('#files button.delete').live('click', function() {
+	}).on('click', '#files button.delete', function() {
 				deleteFiles()
 			});
 }

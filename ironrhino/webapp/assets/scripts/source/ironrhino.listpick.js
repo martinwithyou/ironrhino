@@ -115,7 +115,7 @@
 						win.unmask();
 					Dialog.adapt(win);
 					if (!options.multiple) {
-						$('tbody input[type=radio]', target).live('click',
+						$(target).on('click', 'tbody input[type=radio]',
 								function() {
 									var id = $(this).val();
 									var name = $($(this).closest('tr')[0].cells[options.nameindex])
@@ -162,7 +162,7 @@
 								});
 
 					} else {
-						$('button.confirm', target).live('click', function() {
+						$(target).on('click', 'button.confirm', function() {
 							var checkbox = $('tbody :checked', target);
 							var ids = [], names = [];
 							checkbox.each(function() {
