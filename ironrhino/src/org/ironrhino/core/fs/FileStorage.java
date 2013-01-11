@@ -23,8 +23,6 @@ public interface FileStorage {
 
 	public long getLastModified(String path);
 
-	public boolean setLastModified(String path, long lastModified);
-
 	public List<String> listFiles(String path);
 
 	public Map<String, Boolean> listFilesAndDirectory(String path);

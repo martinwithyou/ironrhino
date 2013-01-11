@@ -84,10 +84,6 @@ public class LocalFileStorage implements FileStorage {
 		return new File(directory, path).lastModified();
 	}
 
-	public boolean setLastModified(String path, long lastModified) {
-		return new File(directory, path).setLastModified(lastModified);
-	}
-
 	public boolean exists(String path) {
 		return new File(directory, path).exists();
 	}
