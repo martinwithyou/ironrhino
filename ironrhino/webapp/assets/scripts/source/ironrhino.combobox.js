@@ -30,7 +30,7 @@
 				}
 				return false;
 			});
-	$('.combobox .combobox-menu').live('hover', function(e) {
+	$('.combobox .combobox-menu').live('mouseenter', function(e) {
 				e.preventDefault();
 				$('li', this).removeClass('active');
 				return false;

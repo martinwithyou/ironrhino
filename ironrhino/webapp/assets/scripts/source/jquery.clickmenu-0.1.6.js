@@ -474,7 +474,7 @@
 				}
 			}
 			//add hover event handling and assign classes
-			$(liElems).hover(mainHoverIn, mainHoverOut).addClass('main').find('>div').addClass('inner');
+			$(liElems).mouseenter(mainHoverIn).mouseout(mainHoverOut).addClass('main').find('>div').addClass('inner');
 			//add the little arrow before each submenu
 			if ( settings.arrowSrc )
 			{

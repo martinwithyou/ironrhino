@@ -25531,9 +25531,9 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 		},
 		hoverClass: function(className) {
 			className = className || "hover";
-			return this.hover(function() {
+			return this.mouseenter(function() {
 				$(this).addClass(className);
-			}, function() {
+			}).mouseout(function() {
 				$(this).removeClass(className);
 			});
 		},
@@ -26561,7 +26561,7 @@ $.fn.bgIframe = $.fn.bgiframe = function(s) {
 				}
 			}
 			//add hover event handling and assign classes
-			$(liElems).hover(mainHoverIn, mainHoverOut).addClass('main').find('>div').addClass('inner');
+			$(liElems).mouseenter(mainHoverIn).mouseout(mainHoverOut).addClass('main').find('>div').addClass('inner');
 			//add the little arrow before each submenu
 			if ( settings.arrowSrc )
 			{
@@ -34578,7 +34578,7 @@ Observation.portal = function(container) {
 				}
 				return false;
 			});
-	$('.combobox .combobox-menu').live('hover', function(e) {
+	$('.combobox .combobox-menu').live('mouseenter', function(e) {
 				e.preventDefault();
 				$('li', this).removeClass('active');
 				return false;

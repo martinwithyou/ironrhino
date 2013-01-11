@@ -28,9 +28,9 @@
 		},
 		hoverClass: function(className) {
 			className = className || "hover";
-			return this.hover(function() {
+			return this.mouseenter(function() {
 				$(this).addClass(className);
-			}, function() {
+			}).mouseout(function() {
 				$(this).removeClass(className);
 			});
 		},
