@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +24,9 @@ public class UploadFilesHandler implements AccessHandler {
 
 	@Inject
 	private FileStorage fileStorage;
+
+	@Inject
+	private ServletContext servletContext;
 
 	private String pattern = "/assets" + UploadAction.UPLOAD_DIR + "/*";
 
@@ -41,8 +45,7 @@ public class UploadFilesHandler implements AccessHandler {
 			if (is == null)
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			String filename = path.substring(path.lastIndexOf("/") + 1);
-			String contentType = request.getServletContext().getMimeType(
-					filename);
+			String contentType = servletContext.getMimeType(filename);
 			if (contentType != null)
 				response.setContentType(contentType);
 			OutputStream os = response.getOutputStream();
