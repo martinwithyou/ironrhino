@@ -201,14 +201,13 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 				auth.getAccessToken());
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Authorization> findAuthorizationsByGrantor(User grantor) {
 		String keyForList = NAMESPACE_AUTHORIZATION_GRANTOR
 				+ grantor.getUsername();
 		List<String> tokens = stringRedisTemplate.opsForList().range(
 				keyForList, 0, -1);
 		if (tokens == null || tokens.isEmpty())
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		List<String> keys = new ArrayList<String>(tokens.size());
 		for (String token : tokens)
 			keys.add(NAMESPACE_AUTHORIZATION + token);
@@ -246,12 +245,11 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return c != null && c.isEnabled() ? c : null;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Client> findClientByOwner(User owner) {
 		String keyForSet = NAMESPACE_CLIENT_OWNER + owner.getUsername();
 		Set<String> ids = stringRedisTemplate.opsForSet().members(keyForSet);
 		if (ids == null || ids.isEmpty())
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		List<String> keys = new ArrayList<String>(ids.size());
 		for (String id : ids)
 			keys.add(NAMESPACE_CLIENT + id);

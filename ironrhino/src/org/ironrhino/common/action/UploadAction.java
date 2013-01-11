@@ -189,7 +189,8 @@ public class UploadAction extends BaseAction {
 			if (!path.startsWith("/"))
 				path = "/" + path;
 			folder = path;
-			fileStorage.mkdir(UPLOAD_DIR + "/" + folder);
+			fileStorage.mkdir(UPLOAD_DIR + (folder.startsWith("/") ? "" : "/")
+					+ folder);
 		}
 		return list();
 	}

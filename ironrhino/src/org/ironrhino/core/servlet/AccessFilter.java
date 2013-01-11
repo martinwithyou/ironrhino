@@ -41,8 +41,6 @@ public class AccessFilter implements Filter {
 
 	public static final boolean DEFAULT_PRINT = true;
 
-	public static final String DEFAULT_EXCLUDEPATTERNS = "/assets/*";
-
 	@Value("${accessFilter.responseTimeThreshold:"
 			+ DEFAULT_RESPONSETIMETHRESHOLD + "}")
 	public long responseTimeThreshold = DEFAULT_RESPONSETIMETHRESHOLD;
@@ -50,11 +48,10 @@ public class AccessFilter implements Filter {
 	@Value("${accessFilter.print:" + DEFAULT_PRINT + "}")
 	private boolean print = DEFAULT_PRINT;
 
-	@Value("${accessFilter.excludePatterns:" + DEFAULT_EXCLUDEPATTERNS + "}")
-	private String excludePatterns = DEFAULT_EXCLUDEPATTERNS;
+	@Value("${accessFilter.excludePatterns:}")
+	private String excludePatterns;
 
-	@SuppressWarnings("unchecked")
-	private List<String> excludePatternsList = Collections.EMPTY_LIST;
+	private List<String> excludePatternsList = Collections.emptyList();
 
 	private Collection<AccessHandler> handlers;
 
@@ -79,7 +76,8 @@ public class AccessFilter implements Filter {
 
 	@PostConstruct
 	public void _init() {
-		excludePatternsList = Arrays.asList(excludePatterns.split(","));
+		if (StringUtils.isNotBlank(excludePatterns))
+			excludePatternsList = Arrays.asList(excludePatterns.split(","));
 		handlers = ctx.getBeansOfType(AccessHandler.class).values();
 	}
 
@@ -121,7 +119,8 @@ public class AccessFilter implements Filter {
 		s = RequestUtils.getCookieValue(request,
 				DefaultAuthenticationSuccessHandler.COOKIE_NAME_LOGIN_USER);
 		MDC.put("username", s != null ? " " + s : " ");
-		if (print && request.getHeader("Last-Event-Id") == null)
+		if (print && !uri.startsWith("/assets/")
+				&& request.getHeader("Last-Event-Id") == null)
 			accessLog.info("");
 
 		for (AccessHandler handler : handlers) {

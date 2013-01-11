@@ -35,7 +35,7 @@ public class JsonResult implements Result {
 		if (jsonConfig != null && StringUtils.isNotBlank(jsonConfig.root())) {
 			Object value = invocation.getStack().findValue(jsonConfig.root());
 			if (value == null)
-				value = Collections.EMPTY_MAP;
+				value = Collections.emptyMap();
 			return JsonUtils.toJson(value);
 		}
 

@@ -129,7 +129,7 @@ public class ElasticSearchService<T> implements SearchService<T> {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-		return Collections.EMPTY_MAP;
+		return Collections.emptyMap();
 	}
 
 	private static Pattern wildcardQueryPattern = Pattern

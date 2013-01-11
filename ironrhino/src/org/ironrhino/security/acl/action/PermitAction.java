@@ -47,7 +47,7 @@ public class PermitAction extends BaseAction {
 
 	protected static Logger log = LoggerFactory.getLogger(PermitAction.class);
 
-	private static volatile  Map<String, Collection<String>> resources;
+	private static volatile Map<String, Collection<String>> resources;
 
 	private String username;
 
@@ -239,7 +239,6 @@ public class PermitAction extends BaseAction {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	@InputConfig(methodName = "input")
 	public String save() {
 		if (StringUtils.isBlank(role))
@@ -247,7 +246,7 @@ public class PermitAction extends BaseAction {
 		String[] ids = getId();
 		List<String> permitted;
 		if (ids == null || ids.length == 0)
-			permitted = Collections.EMPTY_LIST;
+			permitted = Collections.emptyList();
 		else
 			permitted = Arrays.asList(ids);
 		for (Collection<String> resourceList : resources.values()) {

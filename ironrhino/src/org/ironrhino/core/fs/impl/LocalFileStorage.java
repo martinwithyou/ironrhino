@@ -1,6 +1,5 @@
 package org.ironrhino.core.fs.impl;
 
-import static org.ironrhino.core.metadata.Profiles.CLOUD;
 import static org.ironrhino.core.metadata.Profiles.DEFAULT;
 import static org.ironrhino.core.metadata.Profiles.DUAL;
 
@@ -32,7 +31,7 @@ import org.springframework.util.Assert;
 
 @Singleton
 @Named("fileStorage")
-@Profile({ DEFAULT, DUAL, CLOUD })
+@Profile({ DEFAULT, DUAL })
 public class LocalFileStorage implements FileStorage {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -89,6 +88,10 @@ public class LocalFileStorage implements FileStorage {
 	}
 
 	public boolean rename(String fromPath, String toPath) {
+		String s1 = fromPath.substring(0, fromPath.lastIndexOf('/'));
+		String s2 = toPath.substring(0, fromPath.lastIndexOf('/'));
+		if (!s1.equals(s2))
+			return false;
 		return new File(directory, fromPath).renameTo(new File(directory,
 				toPath));
 	}

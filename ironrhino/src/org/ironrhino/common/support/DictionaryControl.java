@@ -51,19 +51,17 @@ public class DictionaryControl implements
 		return map.get(name);
 	}
 
-	@SuppressWarnings("unchecked")
 	public Map<String, String> getItemsAsMap(String name) {
 		Dictionary dict = map.get(name);
 		if (dict == null)
-			return Collections.EMPTY_MAP;
+			return Collections.emptyMap();
 		return dict.getItemsAsMap();
 	}
 
-	@SuppressWarnings("unchecked")
 	public Map<String, Map<String, String>> getItemsAsGroup(String name) {
 		Dictionary dict = map.get(name);
 		if (dict == null)
-			return Collections.EMPTY_MAP;
+			return Collections.emptyMap();
 		return dict.getItemsAsGroup();
 	}
 
