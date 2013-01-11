@@ -38,12 +38,23 @@ public class UploadFilesHandler implements AccessHandler {
 	@Override
 	public boolean handle(HttpServletRequest request,
 			HttpServletResponse response) {
+		long since = request.getDateHeader("If-Modified-Since");
 		String uri = request.getRequestURI();
 		String path = uri.substring(uri.indexOf('/', 1));
 		try {
+			long lastModified = fileStorage.getLastModified(path);
+			lastModified = lastModified / 1000 * 1000;
+			if (since > 0 && since == lastModified) {
+				response.sendError(HttpServletResponse.SC_NOT_MODIFIED);
+				return true;
+			}
 			InputStream is = fileStorage.open(path);
-			if (is == null)
+			if (is == null) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+				return true;
+			}
+			if (lastModified > 0)
+				response.setDateHeader("Last-Modified", lastModified);
 			String filename = path.substring(path.lastIndexOf("/") + 1);
 			String contentType = servletContext.getMimeType(filename);
 			if (contentType != null)
