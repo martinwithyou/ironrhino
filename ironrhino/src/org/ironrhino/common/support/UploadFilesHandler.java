@@ -3,6 +3,7 @@ package org.ironrhino.common.support;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,6 +43,7 @@ public class UploadFilesHandler implements AccessHandler {
 		String uri = request.getRequestURI();
 		String path = uri.substring(uri.indexOf('/', 1));
 		try {
+			path = URLDecoder.decode(path, "UTF-8");
 			long lastModified = fileStorage.getLastModified(path);
 			lastModified = lastModified / 1000 * 1000;
 			if (since > 0 && since == lastModified) {

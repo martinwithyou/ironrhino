@@ -26,6 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.ironrhino.core.fs.FileStorage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -52,8 +53,7 @@ public class MongoFileStorage implements FileStorage {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
 			throw new IOException("cannot direct access path /");
-		File file = mongoTemplate.findOne(new Query(where("id").is(path)),
-				File.class);
+		File file = mongoTemplate.findById(path, File.class);
 		if (file == null) {
 			int lastIndex = path.lastIndexOf('/');
 			if (lastIndex > 0) {
@@ -63,11 +63,11 @@ public class MongoFileStorage implements FileStorage {
 					if (index < 0)
 						break;
 					String parent = path.substring(0, index);
-					File parentFile = mongoTemplate.findOne(
-							new Query(where("id").is(parent)), File.class);
+					File parentFile = mongoTemplate
+							.findById(parent, File.class);
 					if (parentFile == null) {
 						parentFile = new File();
-						parentFile.setId(parent);
+						parentFile.setPath(parent);
 						parentFile.setDirectory(true);
 						parentFile.setLastModified(System.currentTimeMillis());
 						mongoTemplate.save(parentFile);
@@ -78,7 +78,7 @@ public class MongoFileStorage implements FileStorage {
 				}
 			}
 			file = new File();
-			file.setId(path);
+			file.setPath(path);
 		} else if (file.isDirectory())
 			throw new IOException("path " + path
 					+ " is directory,can not be written");
@@ -95,8 +95,7 @@ public class MongoFileStorage implements FileStorage {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
 			throw new IOException("cannot direct access path /");
-		File file = mongoTemplate.findOne(new Query(where("id").is(path)),
-				File.class);
+		File file = mongoTemplate.findById(path, File.class);
 		if (file == null)
 			throw new IOException("path " + path + " doesn't exists");
 		if (file.isDirectory())
@@ -108,8 +107,7 @@ public class MongoFileStorage implements FileStorage {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
 			return true;
-		File file = mongoTemplate.findOne(new Query(where("id").is(path)),
-				File.class);
+		File file = mongoTemplate.findById(path, File.class);
 		if (file != null)
 			return false;
 		int lastIndex = path.lastIndexOf('/');
@@ -120,11 +118,10 @@ public class MongoFileStorage implements FileStorage {
 				if (index < 0)
 					break;
 				String parent = path.substring(0, index);
-				File parentFile = mongoTemplate.findOne(new Query(where("id")
-						.is(parent)), File.class);
+				File parentFile = mongoTemplate.findById(parent, File.class);
 				if (parentFile == null) {
 					parentFile = new File();
-					parentFile.setId(parent);
+					parentFile.setPath(parent);
 					parentFile.setDirectory(true);
 					parentFile.setLastModified(System.currentTimeMillis());
 					mongoTemplate.save(parentFile);
@@ -133,7 +130,7 @@ public class MongoFileStorage implements FileStorage {
 			}
 		}
 		file = new File();
-		file.setId(path);
+		file.setPath(path);
 		file.setDirectory(true);
 		file.setLastModified(System.currentTimeMillis());
 		mongoTemplate.save(file);
@@ -144,13 +141,12 @@ public class MongoFileStorage implements FileStorage {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
 			return false;
-		File file = mongoTemplate.findOne(new Query(where("id").is(path)),
-				File.class);
+		File file = mongoTemplate.findById(path, File.class);
 		if (file == null)
 			return false;
 		if (file.isDirectory())
 			mongoTemplate.remove(
-					new Query(where("id").regex(
+					new Query(where("path").regex(
 							"^" + path.replaceAll("\\.", "\\\\.") + "/.*")),
 					File.class);
 		mongoTemplate.remove(file);
@@ -161,8 +157,7 @@ public class MongoFileStorage implements FileStorage {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
 			return -1;
-		File file = mongoTemplate.findOne(new Query(where("id").is(path)),
-				File.class);
+		File file = mongoTemplate.findById(path, File.class);
 		return file != null ? file.getLastModified() : -1;
 	}
 
@@ -170,8 +165,7 @@ public class MongoFileStorage implements FileStorage {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
 			return true;
-		return mongoTemplate.findOne(new Query(where("id").is(path)),
-				File.class) != null;
+		return mongoTemplate.findById(path, File.class) != null;
 	}
 
 	public boolean rename(String fromPath, String toPath) {
@@ -183,15 +177,13 @@ public class MongoFileStorage implements FileStorage {
 		String s2 = toPath.substring(0, fromPath.lastIndexOf('/'));
 		if (!s1.equals(s2))
 			return false;
-		File fromfile = mongoTemplate.findOne(new Query(where("id")
-				.is(fromPath)), File.class);
+		File fromfile = mongoTemplate.findById(fromPath, File.class);
 		if (fromfile == null)
 			return false;
-		File tofile = mongoTemplate.findOne(new Query(where("id").is(toPath)),
-				File.class);
+		File tofile = mongoTemplate.findById(toPath, File.class);
 		if (tofile == null) {
 			tofile = new File();
-			tofile.setId(toPath);
+			tofile.setPath(toPath);
 		}
 		tofile.setData(fromfile.getData());
 		tofile.setLastModified(fromfile.getLastModified());
@@ -204,26 +196,24 @@ public class MongoFileStorage implements FileStorage {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
 			return true;
-		File file = mongoTemplate.findOne(new Query(where("id").is(path)),
-				File.class);
+		File file = mongoTemplate.findById(path, File.class);
 		return file != null && file.isDirectory();
 	}
 
 	public List<String> listFiles(String path) {
 		path = Files.simplifyPath(path);
-		File file = mongoTemplate.findOne(new Query(where("id").is(path)),
-				File.class);
+		File file = mongoTemplate.findById(path, File.class);
 		if (file == null || !file.isDirectory())
 			return null;
 		List<String> list = new ArrayList<String>();
 		List<File> files = mongoTemplate.find(
-				new Query(where("id").regex(
+				new Query(where("path").regex(
 						"^" + path.replaceAll("\\.", "\\\\.") + "/[^/]*$")),
 				File.class);
 		for (File f : files) {
 			if (f.isDirectory())
 				continue;
-			String name = f.getId();
+			String name = f.getPath();
 			list.add(name.substring(name.lastIndexOf('/') + 1));
 		}
 		Collections.sort(list);
@@ -233,16 +223,15 @@ public class MongoFileStorage implements FileStorage {
 	public Map<String, Boolean> listFilesAndDirectory(String path) {
 		path = Files.simplifyPath(path);
 		final Map<String, Boolean> map = new HashMap<String, Boolean>();
-		File file = mongoTemplate.findOne(new Query(where("id").is(path)),
-				File.class);
+		File file = mongoTemplate.findById(path, File.class);
 		if (file == null || !file.isDirectory())
 			return Collections.emptyMap();
 		List<File> files = mongoTemplate.find(
-				new Query(where("id").regex(
+				new Query(where("path").regex(
 						"^" + path.replaceAll("\\.", "\\\\.") + "/[^/]*$")),
 				File.class);
 		for (File f : files) {
-			String name = f.getId();
+			String name = f.getPath();
 			map.put(name.substring(name.lastIndexOf('/') + 1), !f.isDirectory());
 		}
 		Map<String, Boolean> sortedMap = new TreeMap<String, Boolean>(
@@ -267,7 +256,8 @@ public class MongoFileStorage implements FileStorage {
 
 		private static final long serialVersionUID = -7690537474523537861L;
 
-		private String id;
+		@Id
+		private String path;
 
 		private boolean directory;
 
@@ -275,12 +265,12 @@ public class MongoFileStorage implements FileStorage {
 
 		private byte[] data;
 
-		public String getId() {
-			return id;
+		public String getPath() {
+			return path;
 		}
 
-		public void setId(String id) {
-			this.id = id;
+		public void setPath(String path) {
+			this.path = path;
 		}
 
 		public boolean isDirectory() {
