@@ -1,5 +1,7 @@
 package org.ironrhino.core.remoting.impl;
 
+import static org.ironrhino.core.metadata.Profiles.CLUSTER;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +17,12 @@ import org.apache.zookeeper.data.Stat;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.zookeeper.WatchedEventListener;
+import org.springframework.context.annotation.Profile;
 
 @Singleton
 @Named("serviceRegistry")
-public class DefaultServiceRegistry extends AbstractServiceRegistry implements
+@Profile(CLUSTER)
+public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		WatchedEventListener {
 
 	public static final String DEFAULT_ZOOKEEPER_PATH = "/remoting";
