@@ -64,8 +64,11 @@ public class IndexManagerImpl implements IndexManager {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Value("${indexName:ironrhino}")
+	@Value("${indexManager.indexName:ironrhino}")
 	private String indexName;
+
+	@Value("${indexManager.rebuildWhenInitialize:false}")
+	private boolean rebuildWhenInitialize;
 
 	private Map<String, Class> typeClassMapping;
 
@@ -81,6 +84,18 @@ public class IndexManagerImpl implements IndexManager {
 
 	public String getIndexName() {
 		return indexName;
+	}
+
+	public void setIndexName(String indexName) {
+		this.indexName = indexName;
+	}
+
+	public boolean isRebuildWhenInitialize() {
+		return rebuildWhenInitialize;
+	}
+
+	public void setRebuildWhenInitialize(boolean rebuildWhenInitialize) {
+		this.rebuildWhenInitialize = rebuildWhenInitialize;
 	}
 
 	@PostConstruct
@@ -119,6 +134,14 @@ public class IndexManagerImpl implements IndexManager {
 			schemaMapping.put(c, getSchemaMapping(c, false));
 		}
 		initialize();
+		// use memory
+		if (rebuildWhenInitialize)
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					rebuild();
+				}
+			}).start();
 	}
 
 	private static Map<String, Object> getSchemaMapping(Class c,
