@@ -17,7 +17,9 @@
 
 	<path id="lib.classpath">
 		<fileset dir="${lib.dir}">
-			<include name="*.jar" />
+			<include name="servlet-api*.jar" />
+			<include name="junit*.jar" />
+			<include name="spring-test*.jar" />
 		</fileset>
 		<fileset dir="${webapp.dir}/WEB-INF/lib">
 			<include name="*.jar" />
@@ -38,8 +40,7 @@
 	<target name="compile">
 		<antcall target="clean" />
 		<antcall target="init" />
-		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source"
-			srcdir="${src.dir}" destdir="${classes.dir}" encoding="utf-8">
+		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source" srcdir="${src.dir}" destdir="${classes.dir}" encoding="utf-8">
 			<classpath refid="lib.classpath" />
 			<compilerarg line="-Xlint:unchecked" />
 		</javac>
@@ -52,8 +53,7 @@
 
 	<target name="test" depends="compile">
 		<mkdir dir="${test.classes.dir}" />
-		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source"
-			srcdir="${test.src.dir}" destdir="${test.classes.dir}" encoding="UTF-8">
+		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source" srcdir="${test.src.dir}" destdir="${test.classes.dir}" encoding="UTF-8">
 			<classpath>
 				<path refid="lib.classpath" />
 				<pathelement location="${classes.dir}" />
@@ -100,8 +100,7 @@
 		<copy todir="${basedir}/template/src/resources/view/decorator">
 			<fileset dir="${src.dir}/resources/view/decorator" />
 		</copy>
-		<zip destfile="${target.dir}/${skeleton-zip.name}" basedir="."
-			excludes="build.xml,docs/**,target/**,test/classes/**,test/src/org/ironrhino/core/**,webapp/WEB-INF/classes/**,webapp/assets/*/source/**,src/org/**,src/com/**,src/META-INF/**,src/struts-plugin.xml,src/template/**,src/resources/data/**,src/resources/hibernate/**,src/resources/i18n/**,src/resources/view/**,src/resources/spring/**" />
+		<zip destfile="${target.dir}/${skeleton-zip.name}" basedir="." excludes="build.xml,docs/**,target/**,test/classes/**,test/src/org/ironrhino/core/**,webapp/WEB-INF/classes/**,webapp/assets/*/source/**,src/org/**,src/com/**,src/META-INF/**,src/struts-plugin.xml,src/template/**,src/resources/data/**,src/resources/hibernate/**,src/resources/i18n/**,src/resources/view/**,src/resources/spring/**" />
 		<delete dir="${basedir}/template" />
 		<move todir="${target.dir}">
 			<fileset dir="${webapp.dir}/WEB-INF/lib">
@@ -111,8 +110,7 @@
 	</target>
 
 
-	<target name="doc.clean"
-		description="Delete temporary and distribution directories for docs">
+	<target name="doc.clean" description="Delete temporary and distribution directories for docs">
 		<delete dir="${reference.dir}/pdf" />
 		<delete dir="${reference.dir}/html_single" />
 		<delete dir="${reference.dir}/html" />
@@ -120,8 +118,7 @@
 	</target>
 	<target name="doc.prepare" description="Extra preparation for the documentation">
 		<unzip src="${reference.dir}/docbook-reference-libs.zip" dest="${reference.dir}/" />
-		<fail
-			message="XSLT supporting lib not installed. Please see docs/reference/readme.txt for instructions.">
+		<fail message="XSLT supporting lib not installed. Please see docs/reference/readme.txt for instructions.">
 			<condition>
 				<not>
 					<available file="${reference.dir}/lib" />
@@ -129,8 +126,7 @@
 			</condition>
 		</fail>
 	</target>
-	<target name="doc.pdf" depends="doc.prepare"
-		description="Compile reference documentation to pdf">
+	<target name="doc.pdf" depends="doc.prepare" description="Compile reference documentation to pdf">
 		<mkdir dir="${reference.dir}/pdf/images" />
 		<copy todir="${reference.dir}/pdf/images">
 			<fileset dir="${reference.dir}/src/images">
@@ -140,8 +136,7 @@
 				<include name="*.png" />
 			</fileset>
 		</copy>
-		<java classname="com.icl.saxon.StyleSheet" fork="true"
-			dir="${reference.dir}">
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${reference.dir}">
 			<classpath>
 				<fileset dir="${reference.dir}/lib">
 					<include name="**/*.jar" />
@@ -152,8 +147,7 @@
 			<arg value="${reference.dir}/src/reference.xml" />
 			<arg value="${reference.dir}/styles/fopdf.xsl" />
 		</java>
-		<java classname="org.apache.fop.apps.Fop" fork="true" maxmemory="256m"
-			dir="${reference.dir}">
+		<java classname="org.apache.fop.apps.Fop" fork="true" maxmemory="256m" dir="${reference.dir}">
 			<classpath>
 				<fileset dir="${reference.dir}/lib">
 					<include name="**/*.jar" />
@@ -164,8 +158,7 @@
 		</java>
 		<delete file="${reference.dir}/pdf/docbook_fop.tmp" />
 	</target>
-	<target name="doc.html" depends="doc.prepare"
-		description="Compile reference documentation to chunked html">
+	<target name="doc.html" depends="doc.prepare" description="Compile reference documentation to chunked html">
 		<mkdir dir="${reference.dir}/html/images" />
 		<copy todir="${reference.dir}/html/images">
 			<fileset dir="${reference.dir}/src/images">
@@ -180,8 +173,7 @@
 				<include name="*.css" />
 			</fileset>
 		</copy>
-		<java classname="com.icl.saxon.StyleSheet" fork="true"
-			dir="${reference.dir}/html/">
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${reference.dir}/html/">
 			<classpath>
 				<fileset dir="${reference.dir}/lib">
 					<include name="**/*.jar" />
@@ -191,8 +183,7 @@
 			<arg value="${reference.dir}/styles/html_chunk.xsl" />
 		</java>
 	</target>
-	<target name="doc.htmlsingle" depends="doc.prepare"
-		description="Compile reference documentation to single html">
+	<target name="doc.htmlsingle" depends="doc.prepare" description="Compile reference documentation to single html">
 		<mkdir dir="${reference.dir}/html_single/images" />
 		<copy todir="${reference.dir}/html_single/images">
 			<fileset dir="${reference.dir}/src/images">
@@ -207,8 +198,7 @@
 				<include name="*.css" />
 			</fileset>
 		</copy>
-		<java classname="com.icl.saxon.StyleSheet" fork="true"
-			dir="${reference.dir}">
+		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${reference.dir}">
 			<classpath>
 				<fileset dir="${reference.dir}/lib">
 					<include name="**/*.jar" />
@@ -220,8 +210,7 @@
 			<arg value="${reference.dir}/styles/html.xsl" />
 		</java>
 	</target>
-	<target name="doc.all" depends="doc.html,doc.htmlsingle,doc.pdf"
-		description="Generate and copy reference documentation">
+	<target name="doc.all" depends="doc.html,doc.htmlsingle,doc.pdf" description="Generate and copy reference documentation">
 		<move file="${reference.dir}/pdf" todir="${target.dir}/docs" />
 		<move file="${reference.dir}/html_single" todir="${target.dir}/docs" />
 		<move file="${reference.dir}/html" todir="${target.dir}/docs" />

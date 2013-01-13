@@ -28,7 +28,9 @@
 
 	<path id="lib.classpath">
 		<fileset dir="${lib.dir}">
-			<include name="*.jar" />
+			<include name="servlet-api*.jar" />
+			<include name="junit*.jar" />
+			<include name="spring-test*.jar" />
 		</fileset>
 		<fileset dir="${webapp.dir}/WEB-INF/lib">
 			<include name="*.jar" />
@@ -44,16 +46,14 @@
 
 	<target name="syncIronrhinoAssets">
 		<copy todir="${basedir}/webapp/assets">
-			<fileset dir="${basedir}/../ironrhino/webapp/assets"
-				includes="**/scripts/ironrhino*.js,**/styles/ironrhino*.css,**/styles/ie.css,**/styles/images/*,**/images/*" />
+			<fileset dir="${basedir}/../ironrhino/webapp/assets" includes="**/scripts/ironrhino*.js,**/styles/ironrhino*.css,**/styles/ie.css,**/styles/images/*,**/images/*" />
 		</copy>
 	</target>
 
 	<target name="syncComponents">
 		<delete dir="${basedir}/webapp/assets/components" />
 		<copy todir="${basedir}/webapp/assets">
-			<fileset dir="${basedir}/../ironrhino/webapp/assets"
-				includes="**/components/*.zip" />
+			<fileset dir="${basedir}/../ironrhino/webapp/assets" includes="**/components/*.zip" />
 		</copy>
 		<unzip dest="${basedir}/webapp/assets/components">
 			<fileset dir="${basedir}/webapp/assets/components" includes="**/*.zip" />
@@ -177,8 +177,7 @@
 	<target name="compile" depends="sync">
 		<antcall target="clean" />
 		<antcall target="init" />
-		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source"
-			srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8">
+		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source" srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8">
 			<classpath refid="lib.classpath" />
 		</javac>
 		<copy todir="${classes.dir}">
@@ -190,8 +189,7 @@
 
 	<target name="test" depends="compile">
 		<mkdir dir="${test.classes.dir}" />
-		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source"
-			srcdir="${test.src.dir}" destdir="${test.classes.dir}" encoding="utf-8">
+		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source" srcdir="${test.src.dir}" destdir="${test.classes.dir}" encoding="utf-8">
 			<classpath>
 				<path refid="lib.classpath" />
 				<pathelement location="${classes.dir}" />
@@ -220,16 +218,13 @@
 
 	<target name="compress">
 		<java jar="${lib.dir}/closure-compiler.jar" fork="true">
-			<arg
-				line=" --js=./webapp/assets/scripts/app.js --js_output_file=./webapp/assets/scripts/app-min.js" />
+			<arg line=" --js=./webapp/assets/scripts/app.js --js_output_file=./webapp/assets/scripts/app-min.js" />
 		</java>
 		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
-			<arg
-				line=" --charset utf-8 --type css -o ./webapp/assets/styles/app-min.css ./webapp/assets/styles/app.css" />
+			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/app-min.css ./webapp/assets/styles/app.css" />
 		</java>
 		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
-			<arg
-				line=" --charset utf-8 --type css -o ./webapp/assets/website/style-min.css ./webapp/assets/website/style.css" />
+			<arg line=" --charset utf-8 --type css -o ./webapp/assets/website/style-min.css ./webapp/assets/website/style.css" />
 		</java>
 	</target>
 
@@ -287,8 +282,7 @@
 		</script>
 	</target>
 	<target name="reset-append-svn-revision-for-assets">
-		<copy todir="${webapp.dir}/WEB-INF/classes/resources/view/decorator"
-			overwrite="true">
+		<copy todir="${webapp.dir}/WEB-INF/classes/resources/view/decorator" overwrite="true">
 			<fileset dir="${src.dir}/resources/view/decorator">
 				<include name="**/*.ftl" />
 			</fileset>
@@ -309,8 +303,7 @@
 		<move todir="${target.dir}/classes">
 			<fileset dir="${webapp.dir}/WEB-INF/classes" />
 		</move>
-		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}"
-			webxml="${webapp.dir}/WEB-INF/web.xml" />
+		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}" webxml="${webapp.dir}/WEB-INF/web.xml" />
 		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}" />
 		<move todir="${webapp.dir}/WEB-INF/classes">
 			<fileset dir="${target.dir}/classes" />
@@ -341,14 +334,12 @@
 		</exec>
 		<echo message="${svn.update.output}" />
 		<condition property="svn.updated">
-			<matches pattern="^.*\n.*$" string="${svn.update.output}"
-				multiline="true" />
+			<matches pattern="^.*\n.*$" string="${svn.update.output}" multiline="true" />
 		</condition>
 	</target>
 
 	<target name="backup" if="webapp.deployed" depends="checkwebappdeployed">
-		<war warfile="${target.dir}/${war.name}.bak" basedir="${webapp.deploy.dir}"
-			webxml="${webapp.deploy.dir}/WEB-INF/web.xml" />
+		<war warfile="${target.dir}/${war.name}.bak" basedir="${webapp.deploy.dir}" webxml="${webapp.deploy.dir}/WEB-INF/web.xml" />
 	</target>
 
 	<target name="update" if="svn.updated" depends="checksvnupdated">
@@ -364,15 +355,12 @@
 	</target>
 
 	<target name="shutdown" if="server.started" depends="checkserverstarted">
-		<waitfor checkevery="1" checkeveryunit="second" maxwait="2"
-			maxwaitunit="second">
-			<http
-				url="http://localhost:${server.startup.port}/?firewallHandler.allowedAddrPattern=127.0.0.1" />
+		<waitfor checkevery="1" checkeveryunit="second" maxwait="2" maxwaitunit="second">
+			<http url="http://localhost:${server.startup.port}/?firewallHandler.allowedAddrPattern=127.0.0.1" />
 		</waitfor>
 		<sleep seconds="3" />
 		<exec executable="${server.shutdown.cmd}" dir="${server.home}" />
-		<waitfor checkevery="2" checkeveryunit="second" maxwait="60"
-			maxwaitunit="second">
+		<waitfor checkevery="2" checkeveryunit="second" maxwait="60" maxwaitunit="second">
 			<not>
 				<socket server="localhost" port="${server.shutdown.port}" />
 			</not>
@@ -381,8 +369,7 @@
 
 	<target name="startup" depends="shutdown">
 		<exec executable="${server.startup.cmd}" dir="${server.home}" />
-		<waitfor checkevery="2" checkeveryunit="second" maxwait="180"
-			maxwaitunit="second">
+		<waitfor checkevery="2" checkeveryunit="second" maxwait="180" maxwaitunit="second">
 			<http url="http://localhost:${server.startup.port}/" />
 		</waitfor>
 	</target>
