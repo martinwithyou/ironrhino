@@ -144,11 +144,15 @@ public class MongoFileStorage implements FileStorage {
 		File file = mongoTemplate.findById(path, File.class);
 		if (file == null)
 			return false;
-		if (file.isDirectory())
-			mongoTemplate.remove(
-					new Query(where("path").regex(
-							"^" + path.replaceAll("\\.", "\\\\.") + "/.*")),
-					File.class);
+		if (file.isDirectory()) {
+			int size = mongoTemplate
+					.find(new Query(where("path").regex(
+							"^" + path.replaceAll("\\.", "\\\\.") + "/.*"))
+							.limit(1),
+							File.class).size();
+			if (size > 0)
+				return false;
+		}
 		mongoTemplate.remove(file);
 		return true;
 	}

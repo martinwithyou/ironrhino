@@ -44,10 +44,22 @@
 				}
 			}
 		}
+		if (typeof options.data == 'string') {
+			var arr = options.data.split('&');
+			options.data = {};
+			for (var i = 0; i < arr.length; i++) {
+				var arr2 = arr[i].split('=', 2);
+				options.data[arr2[0]] = arr2.length == 2 ? arr2[1] : '';
+			}
+		}
 		if (!!window.FormData) {
 			var formData = new FormData();
 			for (var i = 0; i < files.length; i++)
 				formData.append(options.name, files[i]);
+			if (options.data)
+				$.each(options.data, function(k, v) {
+							formData.append(k, v);
+						});
 			xhr.send(formData);
 			return true;
 		} else {
@@ -65,6 +77,20 @@
 					var completed = 0;
 					var boundary = 'xxxxxxxxx';
 					var body = new BlobBuilder();
+					if (options.data) {
+						$.each(options.data, function(k, v) {
+							var bb = new BlobBuilder();
+							bb.append('--');
+							bb.append(boundary);
+							bb.append('\r\n');
+							bb.append('Content-Disposition: form-data; name="');
+							bb.append(k);
+							bb.append('" ');
+							bb.append(v);
+							bb.append('\r\n');
+							body.append(bb.getBlob());
+						});
+					}
 					reader.onload = function(evt) {
 						var f = evt.target.sourceFile;
 						var bb = new BlobBuilder();
@@ -96,7 +122,7 @@
 				}
 				return true;
 			}
-			body = compose(files, options.name, boundary);
+			body = compose(files, options, boundary);
 			if (body) {
 				if (typeof options['beforeSend'] != 'undefined')
 					options['beforeSend']();
@@ -112,7 +138,8 @@
 		}
 	}
 
-	function compose(files, name, boundary) {
+	function compose(files, options, boundary) {
+		var name = options.name;
 		if (typeof FileReaderSync != 'undefined') {
 			var bb = new BlobBuilder();
 			var frs = new FileReaderSync();

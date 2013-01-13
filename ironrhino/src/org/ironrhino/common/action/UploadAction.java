@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -22,6 +21,7 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.ErrorMessage;
 
+import com.google.common.io.Files;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
 @AutoConfig(fileupload = "image/*,text/*,application/x-shockwave-flash,application/pdf,application/msword,application/vnd.ms-powerpoint")
@@ -144,12 +144,12 @@ public class UploadAction extends BaseAction {
 		if (folder == null) {
 			folder = getUid();
 			if (folder != null) {
-				folder = folder.replace("__", "..");
 				try {
+					folder = folder.replace("__", "..");
 					folder = new URI(folder).normalize().toString();
 					if (folder.contains(".."))
 						folder = "";
-				} catch (URISyntaxException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			} else {
@@ -161,7 +161,8 @@ public class UploadAction extends BaseAction {
 		files = new LinkedHashMap<String, Boolean>();
 		if (StringUtils.isNotBlank(folder))
 			files.put("..", Boolean.FALSE);
-		files.putAll(fileStorage.listFilesAndDirectory(UPLOAD_DIR + folder));
+		files.putAll(fileStorage.listFilesAndDirectory(Files
+				.simplifyPath(UPLOAD_DIR + folder)));
 		return ServletActionContext.getRequest().getParameter("pick") != null ? "pick"
 				: LIST;
 	}
@@ -175,7 +176,8 @@ public class UploadAction extends BaseAction {
 		String[] paths = getId();
 		if (paths != null) {
 			for (String path : paths) {
-				if (!fileStorage.delete(UPLOAD_DIR + "/" + folder + "/" + path))
+				if (!fileStorage.delete(Files.simplifyPath(UPLOAD_DIR + "/"
+						+ folder + "/" + path)))
 					addActionError(getText("delete.forbidden",
 							new String[] { path }));
 			}
@@ -189,8 +191,8 @@ public class UploadAction extends BaseAction {
 			if (!path.startsWith("/"))
 				path = "/" + path;
 			folder = path;
-			fileStorage.mkdir(UPLOAD_DIR + (folder.startsWith("/") ? "" : "/")
-					+ folder);
+			fileStorage.mkdir(Files.simplifyPath(UPLOAD_DIR
+					+ (folder.startsWith("/") ? "" : "/") + folder));
 		}
 		return list();
 	}
@@ -201,14 +203,14 @@ public class UploadAction extends BaseAction {
 			dir = dir + folder + "/";
 		String path = dir + filename;
 		if (autorename) {
-			boolean exists = fileStorage.exists(path);
+			boolean exists = fileStorage.exists(Files.simplifyPath(path));
 			int i = 2;
 			while (exists) {
 				path = dir + "(" + (i++) + ")" + filename;
-				exists = fileStorage.exists(path);
+				exists = fileStorage.exists(Files.simplifyPath(path));
 			}
 		}
-		path = org.ironrhino.core.util.StringUtils.compressRepeatSlash(path);
+		path = Files.simplifyPath(path);
 		return path;
 	}
 }

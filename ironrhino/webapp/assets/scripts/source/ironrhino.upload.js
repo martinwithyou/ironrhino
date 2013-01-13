@@ -1,6 +1,7 @@
 Initialization.upload = function() {
 	$(document).on('click', '#files button.reload', function() {
 				ajax({
+							type : $('#upload_form').attr('method'),
 							url : $('#upload_form').attr('action'),
 							data : $('#upload_form').serialize(),
 							replacement : 'files'
@@ -10,7 +11,7 @@ Initialization.upload = function() {
 					if (t) {
 						var folder = $('#current_folder').text() + t;
 						var url = CONTEXT_PATH + '/common/upload/mkdir'
-								+ folder;
+								+ encodeURI(folder);
 						ajax({
 									url : url,
 									dataType : 'json',
@@ -22,7 +23,10 @@ Initialization.upload = function() {
 					}
 				});
 	}).on('click', '#files button.delete', function() {
-				deleteFiles()
+				if (!$('#files tbody input:checked').length)
+					Message.showMessage('no.selection');
+				else
+					deleteFiles()
 			});
 }
 Observation.upload = function(container) {
@@ -94,6 +98,7 @@ function deleteFiles(file) {
 					.get('select'), function(b) {
 				if (b) {
 					var options = {
+						type : $('#upload_form').attr('method'),
 						url : CONTEXT_PATH + '/common/upload/delete',
 						dataType : 'json',
 						complete : function() {
@@ -124,9 +129,13 @@ function deleteFiles(file) {
 function uploadFiles(files) {
 	if (files && files.length)
 		return $.ajaxupload(files, {
-					url : $('#upload_form').attr('action') + '?'
-							+ $('#upload_form').serialize(),
+					url : $('#upload_form').attr('action'),
 					name : $('#upload_form input[type="file"]').attr('name'),
+					data : {
+						folder : $('#upload_form [name="folder"]').val(),
+						autorename : $('#upload_form [name="autorename"]')
+								.is(':checked')
+					},
 					beforeSend : Indicator.show,
 					success : function(xhr) {
 						Ajax.handleResponse(xhr.responseText, {

@@ -33493,10 +33493,22 @@ Observation.checkavailable = function(container) {
 				}
 			}
 		}
+		if (typeof options.data == 'string') {
+			var arr = options.data.split('&');
+			options.data = {};
+			for (var i = 0; i < arr.length; i++) {
+				var arr2 = arr[i].split('=', 2);
+				options.data[arr2[0]] = arr2.length == 2 ? arr2[1] : '';
+			}
+		}
 		if (!!window.FormData) {
 			var formData = new FormData();
 			for (var i = 0; i < files.length; i++)
 				formData.append(options.name, files[i]);
+			if (options.data)
+				$.each(options.data, function(k, v) {
+							formData.append(k, v);
+						});
 			xhr.send(formData);
 			return true;
 		} else {
@@ -33514,6 +33526,20 @@ Observation.checkavailable = function(container) {
 					var completed = 0;
 					var boundary = 'xxxxxxxxx';
 					var body = new BlobBuilder();
+					if (options.data) {
+						$.each(options.data, function(k, v) {
+							var bb = new BlobBuilder();
+							bb.append('--');
+							bb.append(boundary);
+							bb.append('\r\n');
+							bb.append('Content-Disposition: form-data; name="');
+							bb.append(k);
+							bb.append('" ');
+							bb.append(v);
+							bb.append('\r\n');
+							body.append(bb.getBlob());
+						});
+					}
 					reader.onload = function(evt) {
 						var f = evt.target.sourceFile;
 						var bb = new BlobBuilder();
@@ -33545,7 +33571,7 @@ Observation.checkavailable = function(container) {
 				}
 				return true;
 			}
-			body = compose(files, options.name, boundary);
+			body = compose(files, options, boundary);
 			if (body) {
 				if (typeof options['beforeSend'] != 'undefined')
 					options['beforeSend']();
@@ -33561,7 +33587,8 @@ Observation.checkavailable = function(container) {
 		}
 	}
 
-	function compose(files, name, boundary) {
+	function compose(files, options, boundary) {
+		var name = options.name;
 		if (typeof FileReaderSync != 'undefined') {
 			var bb = new BlobBuilder();
 			var frs = new FileReaderSync();
@@ -33606,6 +33633,7 @@ Observation.checkavailable = function(container) {
 Initialization.upload = function() {
 	$(document).on('click', '#files button.reload', function() {
 				ajax({
+							type : $('#upload_form').attr('method'),
 							url : $('#upload_form').attr('action'),
 							data : $('#upload_form').serialize(),
 							replacement : 'files'
@@ -33615,7 +33643,7 @@ Initialization.upload = function() {
 					if (t) {
 						var folder = $('#current_folder').text() + t;
 						var url = CONTEXT_PATH + '/common/upload/mkdir'
-								+ folder;
+								+ encodeURI(folder);
 						ajax({
 									url : url,
 									dataType : 'json',
@@ -33627,7 +33655,10 @@ Initialization.upload = function() {
 					}
 				});
 	}).on('click', '#files button.delete', function() {
-				deleteFiles()
+				if (!$('#files tbody input:checked').length)
+					Message.showMessage('no.selection');
+				else
+					deleteFiles()
 			});
 }
 Observation.upload = function(container) {
@@ -33699,6 +33730,7 @@ function deleteFiles(file) {
 					.get('select'), function(b) {
 				if (b) {
 					var options = {
+						type : $('#upload_form').attr('method'),
 						url : CONTEXT_PATH + '/common/upload/delete',
 						dataType : 'json',
 						complete : function() {
@@ -33729,9 +33761,13 @@ function deleteFiles(file) {
 function uploadFiles(files) {
 	if (files && files.length)
 		return $.ajaxupload(files, {
-					url : $('#upload_form').attr('action') + '?'
-							+ $('#upload_form').serialize(),
+					url : $('#upload_form').attr('action'),
 					name : $('#upload_form input[type="file"]').attr('name'),
+					data : {
+						folder : $('#upload_form [name="folder"]').val(),
+						autorename : $('#upload_form [name="autorename"]')
+								.is(':checked')
+					},
 					beforeSend : Indicator.show,
 					success : function(xhr) {
 						Ajax.handleResponse(xhr.responseText, {
