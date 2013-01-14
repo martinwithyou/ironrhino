@@ -17,19 +17,6 @@ public class AppInfoListener implements ServletContextListener {
 	private Logger logger;
 
 	public void contextInitialized(ServletContextEvent event) {
-		String defaultTimezone = "Asia/Shanghai";
-		String s = System.getenv("DEFAULT_TIMEZONE");
-		if (StringUtils.isNotBlank(s))
-			defaultTimezone = s;
-		TimeZone older = TimeZone.getDefault();
-		TimeZone newer = TimeZone.getTimeZone(defaultTimezone);
-		if (!newer.getID().equals(older.getID())) {
-			TimeZone.setDefault(newer);
-			System.out.printf("change default timezone from %s to %s \n",
-					older.getID(), newer.getID());
-		} else {
-			System.out.printf("remain default timezone %s \n", older.getID());
-		}
 		String defaultProfiles = System
 				.getenv(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME
 						.replaceAll("\\.", "_").toUpperCase());
@@ -58,13 +45,25 @@ public class AppInfoListener implements ServletContextListener {
 		System.setProperty(AppInfo.getAppName() + ".instanceid",
 				AppInfo.getInstanceId());
 		logger = LoggerFactory.getLogger(getClass());
+		String defaultTimezone = "Asia/Shanghai";
+		String s = System.getenv("DEFAULT_TIMEZONE");
+		if (StringUtils.isNotBlank(s))
+			defaultTimezone = s;
+		TimeZone older = TimeZone.getDefault();
+		TimeZone newer = TimeZone.getTimeZone(defaultTimezone);
+		if (!newer.getID().equals(older.getID())) {
+			TimeZone.setDefault(newer);
+			logger.info("change default timezone from {} to {}", older.getID(),
+					newer.getID());
+		} else {
+			logger.info("remain default timezone {}", older.getID());
+		}
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={},profiles={}",
 				new String[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
 						AppInfo.getInstanceId(), AppInfo.getStage().toString(),
 						AppInfo.getAppHome(), AppInfo.getHostName(),
 						AppInfo.getHostAddress(), defaultProfiles });
-		logger.info("default timezone is " + TimeZone.getDefault().getID());
 	}
 
 	public void contextDestroyed(ServletContextEvent event) {
