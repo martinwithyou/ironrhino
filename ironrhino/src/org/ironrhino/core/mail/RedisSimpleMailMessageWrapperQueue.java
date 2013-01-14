@@ -9,8 +9,8 @@ import javax.inject.Inject;
 import org.ironrhino.core.redis.RedisQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class SimpleMailMessageWrapperRedisQueue extends
-		RedisQueue<SimpleMailMessageWrapper> {
+public class RedisSimpleMailMessageWrapperQueue extends
+		RedisQueue<SimpleMailMessageWrapper> implements SimpleMailMessageWrapperQueue{
 
 	@Autowired(required = false)
 	private ExecutorService executorService;

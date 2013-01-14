@@ -1,6 +1,5 @@
 package org.ironrhino.core.mail;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -24,10 +23,7 @@ public class MailService {
 	private TemplateProvider templateProvider;
 
 	@Autowired(required = false)
-	private SimpleMailMessageWrapperRedisQueue simpleMailMessageWrapperRedisQueue;
-
-	@Autowired(required = false)
-	private SimpleMailMessageWrapperRabbitQueue simpleMailMessageWrapperRabbitQueue;
+	private SimpleMailMessageWrapperQueue simpleMailMessageWrapperQueue;
 
 	@Inject
 	private MailSender mailSender;
@@ -60,8 +56,7 @@ public class MailService {
 	}
 
 	public void send(final SimpleMailMessage smm, final boolean useHtmlFormat) {
-		if ((simpleMailMessageWrapperRedisQueue == null && simpleMailMessageWrapperRabbitQueue == null)
-				|| forceLocalAsync) {
+		if ((simpleMailMessageWrapperQueue == null) || forceLocalAsync) {
 			// localAsync
 			executorService.execute(new Runnable() {
 				@Override
@@ -72,15 +67,11 @@ public class MailService {
 			return;
 		}
 		try {
-			if (simpleMailMessageWrapperRedisQueue != null)
-				simpleMailMessageWrapperRedisQueue
+			if (simpleMailMessageWrapperQueue != null)
+				simpleMailMessageWrapperQueue
 						.produce(new SimpleMailMessageWrapper(smm,
 								useHtmlFormat));
-			else if (simpleMailMessageWrapperRabbitQueue != null)
-				simpleMailMessageWrapperRabbitQueue
-						.produce(new SimpleMailMessageWrapper(smm,
-								useHtmlFormat));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			_failureCount++;
 			if (_failureCount >= forceLocalAsyncFailureThreshold) {
@@ -91,12 +82,13 @@ public class MailService {
 		}
 	}
 
-	public void send(SimpleMailMessage smm, String templateName, Map<String,Object> model) {
+	public void send(SimpleMailMessage smm, String templateName,
+			Map<String, Object> model) {
 		send(smm, templateName, model, true);
 	}
 
-	public void send(SimpleMailMessage smm, String templateName, Map<String,Object> model,
-			boolean useHtmlFormat) {
+	public void send(SimpleMailMessage smm, String templateName,
+			Map<String, Object> model, boolean useHtmlFormat) {
 		if (templateProvider == null)
 			throw new RuntimeException("No templateProvider setted");
 		model.put("sendmail", true);

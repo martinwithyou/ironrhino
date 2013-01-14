@@ -19,7 +19,7 @@
 	<redis:listener-container connection-factory="redisConnectionFactory"
 		task-executor="executorService">
 	</redis:listener-container>
-	<bean id="applicationEventRedisTopic" class="org.ironrhino.core.event.ApplicationEventRedisTopic" />
-	<bean id="simpleMailMessageWrapperRedisQueue"
-		class="org.ironrhino.core.mail.SimpleMailMessageWrapperRedisQueue" />
+	<bean id="redisApplicationEventTopic" class="org.ironrhino.core.event.RedisApplicationEventTopic" />
+	<bean id="redisSimpleMailMessageWrapperQueue"
+		class="org.ironrhino.core.mail.RedisSimpleMailMessageWrapperQueue" />
 </beans>

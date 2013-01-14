@@ -1,40 +1,43 @@
 package org.ironrhino.core.rabbitmq;
 
 import java.io.Serializable;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.ironrhino.core.message.Topic;
-import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.ReflectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Binding.DestinationType;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.beans.factory.annotation.Value;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-
-public abstract class RabbitTopic<T extends Serializable> implements Topic<T>{
-
-	protected Logger logger = LoggerFactory.getLogger(getClass());
-
-	public static final String EXCHANGE_TYPE = "direct";
+public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
 
 	@Inject
-	protected Connection connection;
+	protected AmqpTemplate amqpTemplate;
 
-	protected Channel channel;
+	@Inject
+	protected RabbitAdmin rabbitAdmin;
 
-	protected String exchangeName = AppInfo.getAppName();
+	@Value("${rabbitmq.exchangeName:ironrhino}")
+	protected String exchangeName;
 
 	protected String routingKey = "";
 
-	protected Thread consumerThread;
-	
-	protected Lock lock = new ReentrantLock();
+	protected String queueName;
+
+	public String getQueueName() {
+		return queueName;
+	}
+
+	public void setQueueName(String queueName) {
+		this.queueName = queueName;
+	}
 
 	public RabbitTopic() {
 		Class<?> clazz = ReflectionUtils.getGenericClass(getClass());
@@ -43,28 +46,25 @@ public abstract class RabbitTopic<T extends Serializable> implements Topic<T>{
 	}
 
 	@PostConstruct
-	public void init() throws Exception {
-		channel = connection.createChannel();
-		channel.exchangeDeclare(exchangeName, EXCHANGE_TYPE, true);
-		postExchangeDeclare();
+	public void init() {
+		rabbitAdmin
+				.declareExchange(new TopicExchange(exchangeName, true, false));
+		Queue q = rabbitAdmin.declareQueue();
+		queueName = q.getName();
+		rabbitAdmin.declareBinding(new Binding(queueName,
+				DestinationType.QUEUE, exchangeName, routingKey, null));
 	}
 
 	@PreDestroy
-	public void destroy() throws Exception {
-		try {
-			if (consumerThread != null)
-				consumerThread.interrupt();
-		} finally {
-			channel.close();
-		}
-	}
-
-	protected void postExchangeDeclare() throws Exception {
-
+	public void destroy() {
+		rabbitAdmin.deleteQueue(queueName);
 	}
 
 	public String getRoutingKey() {
 		return routingKey;
 	}
 
+	public void publish(T message) {
+		amqpTemplate.convertAndSend(exchangeName, getRoutingKey(), message);
+	}
 }

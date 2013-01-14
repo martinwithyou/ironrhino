@@ -1,7 +1,5 @@
 package org.ironrhino.core.event;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -18,23 +16,13 @@ public class EventPublisher {
 	private ApplicationEventPublisher publisher;
 
 	@Autowired(required = false)
-	private ApplicationEventRedisTopic applicationEventRedisTopic;
-
-	@Autowired(required = false)
-	private ApplicationEventRabbitTopic applicationEventRabbitTopic;
+	private ApplicationEventTopic applicationEventTopic;
 
 	public void publish(ApplicationEvent event, boolean global) {
-		if (applicationEventRedisTopic != null && global) {
-			applicationEventRedisTopic.publish(event);
-		} else if (applicationEventRabbitTopic != null && global) {
-			try {
-				applicationEventRabbitTopic.publish(event);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
+		if (applicationEventTopic != null && global)
+			applicationEventTopic.publish(event);
+		else
 			publisher.publishEvent(event);
-		}
 	}
 
 }
