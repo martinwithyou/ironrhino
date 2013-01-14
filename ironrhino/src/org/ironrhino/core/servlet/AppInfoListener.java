@@ -44,20 +44,20 @@ public class AppInfoListener implements ServletContextListener {
 		System.setProperty(AppInfo.getAppName() + ".context", context);
 		System.setProperty(AppInfo.getAppName() + ".instanceid",
 				AppInfo.getInstanceId());
-		logger = LoggerFactory.getLogger(getClass());
 		String defaultTimezone = "Asia/Shanghai";
 		String s = System.getenv("DEFAULT_TIMEZONE");
 		if (StringUtils.isNotBlank(s))
 			defaultTimezone = s;
 		TimeZone older = TimeZone.getDefault();
 		TimeZone newer = TimeZone.getTimeZone(defaultTimezone);
-		if (!newer.getID().equals(older.getID())) {
+		if (!newer.getID().equals(older.getID()))
 			TimeZone.setDefault(newer);
+		logger = LoggerFactory.getLogger(getClass());
+		if (!newer.getID().equals(older.getID()))
 			logger.info("change default timezone from {} to {}", older.getID(),
 					newer.getID());
-		} else {
+		else
 			logger.info("remain default timezone {}", older.getID());
-		}
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={},profiles={}",
 				new String[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
