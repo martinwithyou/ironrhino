@@ -29,11 +29,35 @@
 						<#if entity[key]??>
 							<#assign value=entity[key]>
 							<#if value?is_boolean>
-							${action.getText(value?string)}
-							<#elseif value?is_hash&&value.displayName??>
-							${value.displayName}
+								${action.getText(value?string)}
+							<#elseif value?is_sequence>
+								<ol class="unstyled">
+								<#list value as item>
+									<li>
+									<#if item?is_sequence>
+											<ol class="unstyled" style="padding-bottom:10px;">
+											<#list item as it>
+												<li>${it}</li>
+											</#list>
+											</ol>
+									<#elseif item?is_hash_ex>
+											<ul class="unstyled" style="padding-bottom:10px;">
+											<#list item?keys as k>
+												<#if k!='class' && item[k]?? && !item[k]?is_method>
+												<li>${k}: ${item[k]?string}</li>
+												</#if>
+											</#list>
+											</ul>
+									<#else>
+											${item!}
+									</#if>
+									</li>
+								</#list>
+								</ol>
+							<#elseif value?is_hash_ex && value.displayName??>
+									${value.displayName!}
 							<#else>
-							${value?xhtml}
+							${value?string!}
 							</#if>
 						</#if>
 					<#else>
