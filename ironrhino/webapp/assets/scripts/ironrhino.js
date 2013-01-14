@@ -33650,6 +33650,12 @@ Initialization.upload = function() {
 									success : function() {
 										$('#folder').val(folder);
 										$('#files button.reload').click();
+										if (typeof history.pushState != 'undefined') {
+											var url = CONTEXT_PATH
+													+ '/common/upload/list'
+													+ encodeURI(folder)
+											history.pushState(url, '', url);
+										}
 									}
 								});
 					}
