@@ -8,6 +8,9 @@
 	<rabbit:connection-factory id="rabbitConnectionFactory" 
 		host="${rabbitmq.host:localhost}"
 		port="${rabbitmq.port:5672}"
+		username="${rabbitmq.username:guest}"
+		password="${rabbitmq.password:guest}"
+		virtual-host="${rabbitmq.virtualHost:/}"
 		/>
 	<rabbit:template id="amqpTemplate" connection-factory="rabbitConnectionFactory"/>
 	<rabbit:admin id="rabbitAdmin" connection-factory="rabbitConnectionFactory"/>
