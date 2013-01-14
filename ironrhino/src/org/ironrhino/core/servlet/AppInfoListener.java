@@ -1,5 +1,7 @@
 package org.ironrhino.core.servlet;
 
+import java.util.TimeZone;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -15,6 +17,19 @@ public class AppInfoListener implements ServletContextListener {
 	private Logger logger;
 
 	public void contextInitialized(ServletContextEvent event) {
+		String defaultTimezone = "Asia/Shanghai";
+		String s = System.getenv("DEFAULT_TIMEZONE");
+		if (StringUtils.isNotBlank(s))
+			defaultTimezone = s;
+		TimeZone older = TimeZone.getDefault();
+		TimeZone newer = TimeZone.getTimeZone(defaultTimezone);
+		if (!newer.getID().equals(older.getID())) {
+			TimeZone.setDefault(newer);
+			System.out.printf("change default timezone from %s to %s \n",
+					older.getID(), newer.getID());
+		} else {
+			System.out.printf("remain default timezone %s \n", older.getID());
+		}
 		String defaultProfiles = System
 				.getenv(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME
 						.replaceAll("\\.", "_").toUpperCase());
@@ -48,12 +63,14 @@ public class AppInfoListener implements ServletContextListener {
 				new String[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
 						AppInfo.getInstanceId(), AppInfo.getStage().toString(),
 						AppInfo.getAppHome(), AppInfo.getHostName(),
-						AppInfo.getHostAddress(),defaultProfiles });
+						AppInfo.getHostAddress(), defaultProfiles });
+		logger.info("default timezone is " + TimeZone.getDefault().getID());
 	}
 
 	public void contextDestroyed(ServletContextEvent event) {
 		System.clearProperty(AppInfo.getAppName() + ".home");
 		System.clearProperty(AppInfo.getAppName() + ".context");
+		System.clearProperty(AppInfo.getAppName() + ".instanceid");
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={} is shutdown",
 				new String[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
