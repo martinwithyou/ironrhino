@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ironrhino.core.util.AppInfo;
@@ -20,19 +21,29 @@ public class RC4 {
 	private static String defaultKey = "youcannotguessme";
 
 	static {
-		try {
-			File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY + "rc4");
-			if (file.exists()) {
-				defaultKey = FileUtils.readFileToString(file, "UTF-8");
-			} else {
-				log.warn("[" + file
-						+ "] doesn't exists,use classpath resources "
-						+ DEFAULT_KEY_LOCATION);
-				defaultKey = IOUtils.toString(RC4.class
-						.getResourceAsStream(DEFAULT_KEY_LOCATION), "UTF-8");
+		String s = System.getenv(AppInfo.getAppName() + ".rc4");
+		if (StringUtils.isNotBlank(s)) {
+			defaultKey = s;
+			log.info("using env " + AppInfo.getAppName() + ".rc4");
+		} else {
+			try {
+				File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY
+						+ "rc4");
+				if (file.exists()) {
+					defaultKey = FileUtils.readFileToString(file, "UTF-8");
+					log.info("using file " + file.getAbsolutePath());
+				} else {
+					log.warn("[" + file
+							+ "] doesn't exists,use classpath resources "
+							+ DEFAULT_KEY_LOCATION);
+					defaultKey = IOUtils
+							.toString(RC4.class
+									.getResourceAsStream(DEFAULT_KEY_LOCATION),
+									"UTF-8");
+				}
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
 			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -115,8 +126,9 @@ public class RC4 {
 			return null;
 		RC4 rc4 = new RC4(defaultKey);
 		try {
-			return URLDecoder.decode(new String(rc4.rc4(Hex.decodeHex(input
-					.toCharArray())), "UTF-8"), "UTF-8");
+			return URLDecoder.decode(
+					new String(rc4.rc4(Hex.decodeHex(input.toCharArray())),
+							"UTF-8"), "UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return input;
@@ -141,8 +153,9 @@ public class RC4 {
 			return null;
 		RC4 rc4 = new RC4(key);
 		try {
-			return URLDecoder.decode(new String(rc4.rc4(Hex.decodeHex(input
-					.toCharArray())), "UTF-8"), "UTF-8");
+			return URLDecoder.decode(
+					new String(rc4.rc4(Hex.decodeHex(input.toCharArray())),
+							"UTF-8"), "UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return input;

@@ -13,6 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.AppInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,20 +39,29 @@ public class Blowfish {
 	private Cipher deCipher;
 
 	static {
-		try {
-			File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY
-					+ "blowfish");
-			if (file.exists()) {
-				defaultKey = FileUtils.readFileToString(file, "UTF-8");
-			} else {
-				log.warn("[" + file
-						+ "] doesn't exists,use classpath resources "
-						+ DEFAULT_KEY_LOCATION);
-				defaultKey = IOUtils.toString(Blowfish.class
-						.getResourceAsStream(DEFAULT_KEY_LOCATION), "UTF-8");
+		String s = System.getenv(AppInfo.getAppName() + ".blowfish");
+		if (StringUtils.isNotBlank(s)) {
+			defaultKey = s;
+			log.info("using env " + AppInfo.getAppName() + ".blowfish");
+		} else {
+			try {
+				File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY
+						+ "blowfish");
+				if (file.exists()) {
+					defaultKey = FileUtils.readFileToString(file, "UTF-8");
+					log.info("using file " + file.getAbsolutePath());
+				} else {
+					log.warn("[" + file
+							+ "] doesn't exists,use classpath resources "
+							+ DEFAULT_KEY_LOCATION);
+					defaultKey = IOUtils
+							.toString(Blowfish.class
+									.getResourceAsStream(DEFAULT_KEY_LOCATION),
+									"UTF-8");
+				}
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
 			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 		}
 	}
 
