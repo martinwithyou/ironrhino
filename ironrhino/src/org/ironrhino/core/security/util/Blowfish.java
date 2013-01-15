@@ -39,10 +39,11 @@ public class Blowfish {
 	private Cipher deCipher;
 
 	static {
-		String s = System.getenv(AppInfo.getAppName() + ".blowfish");
+		String s = System.getProperty(AppInfo.getAppName() + ".blowfish");
 		if (StringUtils.isNotBlank(s)) {
 			defaultKey = s;
-			log.info("using env " + AppInfo.getAppName() + ".blowfish");
+			log.info("using system property " + AppInfo.getAppName()
+					+ ".blowfish");
 		} else {
 			try {
 				File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY

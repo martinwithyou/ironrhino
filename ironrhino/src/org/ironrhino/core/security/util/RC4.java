@@ -21,10 +21,10 @@ public class RC4 {
 	private static String defaultKey = "youcannotguessme";
 
 	static {
-		String s = System.getenv(AppInfo.getAppName() + ".rc4");
+		String s = System.getProperty(AppInfo.getAppName() + ".rc4");
 		if (StringUtils.isNotBlank(s)) {
 			defaultKey = s;
-			log.info("using env " + AppInfo.getAppName() + ".rc4");
+			log.info("using system property " + AppInfo.getAppName() + ".rc4");
 		} else {
 			try {
 				File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY
