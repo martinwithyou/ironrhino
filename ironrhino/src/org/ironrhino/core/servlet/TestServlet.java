@@ -26,19 +26,22 @@ public class TestServlet extends HttpServlet {
 						logger.warn("test failed,no response,please check it");
 				} else {
 					String contextPath = getServletContext().getContextPath();
-					String testurl = "http://localhost"
-							+ (contextPath.indexOf('/') == 0 ? "" : "/")
+					String format = "http://localhost%s%s";
+					String port = System.getProperty("http.port");
+					String context = (contextPath.indexOf('/') == 0 ? "" : "/")
 							+ contextPath;
-					if (test(testurl))
-						logger.info("test succussful");
-					else {
-						testurl = "http://localhost:8080"
-								+ (contextPath.indexOf('/') == 0 ? "" : "/")
-								+ contextPath;
-						if (test(testurl))
+					if (StringUtils.isNotBlank(port)) {
+						if (test(String.format(format, ":" + port, context)))
 							logger.info("test succussful");
-						else
-							logger.warn("test failed,no response,please check it");
+					} else {
+						if (test(String.format(format, "", context)))
+							logger.info("test succussful");
+						else {
+							if (test(String.format(format, ":8080", context)))
+								logger.info("test succussful");
+							else
+								logger.warn("test failed,no response,please check it");
+						}
 					}
 				}
 			}

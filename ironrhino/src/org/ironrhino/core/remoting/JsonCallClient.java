@@ -40,7 +40,7 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 
 	private String host;
 
-	private int port = 8080;
+	private int port;
 
 	private String contextPath;
 
@@ -98,6 +98,13 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 
 	@Override
 	public void afterPropertiesSet() {
+		if (port == 0) {
+			String p = System.getProperty("http.port");
+			if (StringUtils.isNotBlank(p) && StringUtils.isNumeric(p))
+				port = Integer.valueOf(p);
+			else
+				port = 8080;
+		}
 		String serviceUrl = getServiceUrl();
 		if (serviceUrl == null) {
 			setServiceUrl("http://fakehost/");
