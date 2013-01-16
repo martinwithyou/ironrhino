@@ -12,7 +12,7 @@
 	</div>
 	<div style="text-align:center;padding-top:30px;">
 	<@s.submit theme="simple" value="${action.getText('upload')}"/>
-	<span style="margin-left:10px;margin-right:10px;">${action.getText('autorename')}:</span><@s.checkbox theme="simple" name="autorename"/>
+	<label for="autorename">${action.getText('autorename')}:</label><@s.checkbox theme="simple" id="autorename" name="autorename" cssClass="custom"/>
 	</div>
 	<table id="files" class="checkboxgroup table table-striped middle" style="margin-top:50px;">
 		<caption style="font-size:120%;font-weight:bold;"><@s.hidden id="folder" name="folder"/>${action.getText('current.location')}:<span id="current_folder" style="margin-left:10px;">${folder}<#if !folder?ends_with('/')>/</#if></span></caption>

@@ -7396,8 +7396,8 @@ input[type="radio"].custom + label.custom:active, input[type="radio"].custom:che
 .controls > label.custom {
 	margin: 5px 0;
 }
-label.custom{
-	margin-right: 5px;
+.hero-unit .controls > label.custom {
+	margin: 0;
 }
 .controls label.checkbox label.custom,.controls label.radio label.custom{
 	margin-left: -20px;

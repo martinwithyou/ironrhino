@@ -82,7 +82,7 @@ $(function(){
 <body>
 <@s.form id="form" action="console" method="post" cssClass="ajax focus form-inline well">
 	<span>${action.getText('expression')}:<@s.textfield theme="simple" id="expression" name="expression"/></span>
-	<label class="checkbox inline"><@s.checkbox theme="simple" id="global" name="global" cssClass="custom"/>${action.getText('global')}</label>
+	<label for="global">${action.getText('global')}:</label><@s.checkbox theme="simple" id="global" name="global" cssClass="custom"/>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 </@s.form>
 <div id="trigger" class="well">
