@@ -170,7 +170,6 @@ public class HessianClient extends HessianProxyFactoryBean {
 				String ho = serviceRegistry.discover(serviceName);
 				if (ho != null) {
 					sb.append(ho);
-					log.info("discovered " + serviceName + "@" + ho);
 				} else {
 					sb.append("fakehost");
 					log.error("couldn't discover service:" + serviceName);

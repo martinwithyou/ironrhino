@@ -58,25 +58,14 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	@Override
 	public void prepare() {
 		try {
-			if (zooKeeper != null) {
-				Stat stat = zooKeeper.exists(zooKeeperPath, false);
-				if (stat == null)
-					zooKeeper.create(zooKeeperPath, null,
-							ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			}
+			Stat stat = zooKeeper.exists(zooKeeperPath, false);
+			if (stat == null)
+				zooKeeper.create(zooKeeperPath, null,
+						ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
 
-	}
-
-	@Override
-	protected void onDiscover(String serviceName, String host) {
-		super.onDiscover(serviceName, host);
-		discoveredServices.put(serviceName, host);
-		if (ready) {
-			writeDiscoveredServices();
-		}
 	}
 
 	@Override
@@ -85,15 +74,21 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		ready = true;
 	}
 
-	public void register(String serviceName) {
-		if (zooKeeper != null)
-			doRegister(serviceName, AppInfo.getHostAddress(), maxRetryTimes);
+	@Override
+	protected void lookup(String serviceName) {
+		doLookup(serviceName, 3);
+	}
+
+	public void doRegister(String serviceName, String host) {
+		doRegister(serviceName, host, maxRetryTimes);
 	}
 
 	@Override
-	protected void lookup(String serviceName) {
-		if (zooKeeper != null) {
-			doLookup(serviceName, 3);
+	protected void onDiscover(String serviceName, String host) {
+		super.onDiscover(serviceName, host);
+		discoveredServices.put(serviceName, host);
+		if (ready) {
+			writeDiscoveredServices();
 		}
 	}
 
@@ -111,6 +106,32 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			executorService.execute(runnable);
 		} else {
 			runnable.run();
+		}
+	}
+
+	private void doRegister(String serviceName, String host, int retryTimes) {
+		retryTimes--;
+		if (retryTimes < -1) {
+			log.error("error register " + serviceName + "@" + host);
+			return;
+		}
+		String node = new StringBuilder().append(zooKeeperPath).append("/")
+				.append(serviceName).toString();
+		try {
+			Stat stat = zooKeeper.exists(node, false);
+			if (stat == null)
+				zooKeeper.create(node, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
+						CreateMode.PERSISTENT);
+			node = new StringBuilder(node).append('/').append(host).toString();
+			zooKeeper.create(node, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
+					CreateMode.EPHEMERAL);
+			onRegister(serviceName, host);
+		} catch (Exception e) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException ie) {
+			}
+			doRegister(serviceName, host, retryTimes);
 		}
 	}
 
@@ -154,32 +175,6 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			} catch (InterruptedException ie) {
 			}
 			doWriteDiscoveredServices(host, services, retryTimes);
-		}
-	}
-
-	private void doRegister(String serviceName, String host, int retryTimes) {
-		retryTimes--;
-		if (retryTimes < -1) {
-			log.error("error register " + serviceName + "@" + host);
-			return;
-		}
-		String node = new StringBuilder().append(zooKeeperPath).append("/")
-				.append(serviceName).toString();
-		try {
-			Stat stat = zooKeeper.exists(node, false);
-			if (stat == null)
-				zooKeeper.create(node, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
-						CreateMode.PERSISTENT);
-			node = new StringBuilder(node).append('/').append(host).toString();
-			zooKeeper.create(node, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
-					CreateMode.EPHEMERAL);
-			onRegister(serviceName, host);
-		} catch (Exception e) {
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException ie) {
-			}
-			doRegister(serviceName, host, retryTimes);
 		}
 	}
 

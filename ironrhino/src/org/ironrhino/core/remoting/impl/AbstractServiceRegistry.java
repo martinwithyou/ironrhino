@@ -12,6 +12,7 @@ import org.ironrhino.core.remoting.HttpInvokerClient;
 import org.ironrhino.core.remoting.JsonCallClient;
 import org.ironrhino.core.remoting.Remoting;
 import org.ironrhino.core.remoting.ServiceRegistry;
+import org.ironrhino.core.util.AppInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -150,18 +151,34 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	}
 
-	protected void onDiscover(String serviceName, String host) {
+	public void register(String serviceName) {
+		String host = AppInfo.getHostAddress();
+		doRegister(serviceName, host);
+		onRegister(serviceName, host);
+	}
 
+	protected void onDiscover(String serviceName, String host) {
+		log.info("discovered " + serviceName + "@" + host);
 	}
 
 	protected void onRegister(String serviceName, String host) {
 		log.info("registered " + serviceName + "@" + host);
 	}
 
-	protected abstract void prepare();
+	protected void prepare() {
 
-	protected abstract void onReady();
+	}
 
-	protected abstract void lookup(String serviceName);
+	protected void onReady() {
+
+	}
+
+	protected void lookup(String serviceName) {
+
+	}
+
+	protected void doRegister(String serviceName, String host) {
+
+	}
 
 }

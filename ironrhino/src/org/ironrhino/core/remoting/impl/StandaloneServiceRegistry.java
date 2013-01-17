@@ -14,28 +14,4 @@ import org.springframework.context.annotation.Profile;
 @Profile({ DEFAULT, DUAL, CLOUD })
 public class StandaloneServiceRegistry extends AbstractServiceRegistry {
 
-	@Override
-	public void prepare() {
-
-	}
-
-	@Override
-	protected void onDiscover(String serviceName, String host) {
-
-	}
-
-	@Override
-	public void onReady() {
-
-	}
-
-	public void register(String serviceName) {
-
-	}
-
-	@Override
-	protected void lookup(String serviceName) {
-
-	}
-
 }
