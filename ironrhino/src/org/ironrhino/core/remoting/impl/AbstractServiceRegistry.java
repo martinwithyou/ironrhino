@@ -154,7 +154,6 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 	public void register(String serviceName) {
 		String host = AppInfo.getHostAddress();
 		doRegister(serviceName, host);
-		onRegister(serviceName, host);
 	}
 
 	protected void onDiscover(String serviceName, String host) {
