@@ -32,9 +32,22 @@
         			var filename2 = f.getName();
         			var jarname2 = filename2.substring(0,filename2.lastIndexOf(filename2.lastIndexOf('-')>0?'-':'.'));
         			var version2 = filename2.substring(jarname2.length()+1);
-        			if(f.isFile() && jarname == jarname2){
-        				if(version.length() >= version2.length() && version >= version2)
-        					continue;
+        			if(f.isFile() && filename != filename2 && jarname == jarname2 && version2.length()>0){
+						if(version.length()>4)
+							version = version.substring(0,version.length()-4);
+						if(version2.length()>4)
+							version2 = version2.substring(0,version2.length()-4);
+						var verarr1 = version.split("\\.");
+						var verarr2 = version2.split("\\.");
+        				var upgrade = false;
+						for(var j=0;j<verarr2.length;j++){
+							if(j==verarr1.length || verarr2[j]>verarr1[j] || verarr2[j].length() > verarr1[j].length()){
+								upgrade = true;
+								break;
+							}
+						}
+						if(!upgrade)
+								continue;
         				println('upgrade jar from '+filename+' to '+filename2);
         				if(file.exists()){
 	        					var del = project.createTask("delete");
@@ -56,6 +69,6 @@
 				replace.perform();
 			}
 			]]>
-		</script>
-	</target>
-</project>
+					</script>
+				</target>
+			</project>
