@@ -26888,123 +26888,6 @@ function log() {
   };
   
 })(this);
-/**
-*	@name							Elastic
-*	@descripton						Elastic is Jquery plugin that grow and shrink your textareas automaticliy
-*	@version						1.6.3
-*	@requires						Jquery 1.2.6+
-*
-*	@author							Jan Jarfalk
-*	@author-email					jan.jarfalk@unwrongest.com
-*	@author-website					http://www.unwrongest.com
-*
-*	@licens							MIT License - http://www.opensource.org/licenses/mit-license.php
-*/
-
-(function(jQuery){ 
-	jQuery.fn.extend({  
-		elastic: function() {
-		
-			//	We will create a div clone of the textarea
-			//	by copying these attributes from the textarea to the div.
-			var mimics = [
-				'paddingTop',
-				'paddingRight',
-				'paddingBottom',
-				'paddingLeft',
-				'fontSize',
-				'lineHeight',
-				'fontFamily',
-				'width',
-				'fontWeight'];
-			
-			return this.each( function() {
-				
-				// Elastic only works on textareas
-				if ( this.type != 'textarea' ) {
-					return false;
-				}
-				
-				var $textarea	=	jQuery(this),
-					$twin		=	jQuery('<div />').css({'position': 'absolute','display':'none','word-wrap':'break-word'}),
-					lineHeight	=	parseInt($textarea.css('line-height'),10) || parseInt($textarea.css('font-size'),'10'),
-					minheight	=	parseInt($textarea.css('height'),10) || lineHeight*3,
-					maxheight	=	parseInt($textarea.css('max-height'),10) || Number.MAX_VALUE,
-					goalheight	=	0,
-					i 			=	0;
-				
-				// Opera returns max-height of -1 if not set
-				if (maxheight < 0) { maxheight = Number.MAX_VALUE; }
-					
-				// Append the twin to the DOM
-				// We are going to meassure the height of this, not the textarea.
-				$twin.appendTo($textarea.parent());
-				
-				// Copy the essential styles (mimics) from the textarea to the twin
-				var i = mimics.length;
-				while(i--){
-					$twin.css(mimics[i].toString(),$textarea.css(mimics[i].toString()));
-				}
-				
-				
-				// Sets a given height and overflow state on the textarea
-				function setHeightAndOverflow(height, overflow){
-					curratedHeight = Math.floor(parseInt(height,10));
-					if($textarea.height() != curratedHeight){
-						$textarea.css({'height': curratedHeight + 'px','overflow':overflow});
-						
-					}
-				}
-				
-				
-				// This function will update the height of the textarea if necessary 
-				function update() {
-					
-					// Get curated content from the textarea.
-					var textareaContent = $textarea.val().replace(/&/g,'&amp;').replace(/  /g, '&nbsp;').replace(/<|>/g, '&gt;').replace(/\n/g, '<br />');
-
-					var twinContent = $twin.html();
-					
-					if(textareaContent+'&nbsp;' != twinContent){
-					
-						// Add an extra white space so new rows are added when you are at the end of a row.
-						$twin.html(textareaContent+'&nbsp;');
-						
-						// Change textarea height if twin plus the height of one line differs more than 3 pixel from textarea height
-						if(Math.abs($twin.height()+lineHeight - $textarea.height()) > 3){
-							
-							var goalheight = $twin.height()+lineHeight;
-							if(goalheight >= maxheight) {
-								setHeightAndOverflow(maxheight,'auto');
-							} else if(goalheight <= minheight) {
-								setHeightAndOverflow(minheight,'hidden');
-							} else {
-								setHeightAndOverflow(goalheight,'hidden');
-							}
-							
-						}
-						
-					}
-					
-				}
-				
-				// Hide scrollbars
-				$textarea.css({'overflow':'hidden'});
-				
-				// Update textarea size on keyup
-				$textarea.keyup(function(){ update(); });
-				
-				// And this line is to catch the browser paste event
-				$textarea.bind('input paste',function(e){ setTimeout( update, 250); });				
-				
-				// Run update once when elastic is initialized
-				update();
-				
-			});
-			
-        } 
-    }); 
-})(jQuery);
 ﻿/*
 * jHtmlArea 0.7.5 - WYSIWYG Html Editor jQuery Plugin
 * Copyright (c) 2012 Chris Pietschmann
@@ -32252,8 +32135,6 @@ Observation.common = function(container) {
 							replacement : t.data('replacement')
 						});
 			});
-	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
-		$('textarea.elastic', container).elastic();
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({
 					dateFormat : 'yy-mm-dd'
@@ -35405,73 +35286,6 @@ function latlng_getLatLng() {
 Observation.latlng = function(container) {
 	$('input.latlng', container).latlng();
 };
-( function($) {
-	SearchHighlighter = {
-		init : function() {
-			rf = document.referrer;
-			if (window.location.href.indexOf('/search') > 0)
-				rf = window.location.href;
-			keywords = null;
-			if (rf && rf.indexOf('?') > 0) {
-				name = 'q';
-				value = '';
-				if (rf.indexOf('yahoo.com') > 0)
-					name = 'p';
-				// else if(rf.indexOf('baidu.com')>0)
-		// param='wd';
-		arr = rf.substring(rf.indexOf('?') + 1).split("&");
-		for (i = 0; i < arr.length; i++) {
-			ar = arr[i].split('=');
-			if (ar[0] == name) {
-				value = ar[1] || '';
-				break;
-			}
-		}
-		keywords = decodeURIComponent(value.replace(/\+/g, ' '));
-		if (keywords) {
-			if ($('q'))
-				$('q').value = keywords;
-			keywords = $.trim(keywords.replace(/<|>|\//g, ' '));
-			keywords = keywords.split(/\s+/);
-			for (i = 0; i < keywords.length; i++)
-				SearchHighlighter.highlight(document.body, keywords[i]);
-		}
-	}
-},
-highlight : function(node, word) {
-	if (node.hasChildNodes) {
-		for ( var i = 0; i < node.childNodes.length; i++)
-			SearchHighlighter.highlight(node.childNodes[i], word);
-	}
-	if (node.nodeType == 3) {
-		text = node.nodeValue.toLowerCase();
-		word = word.toLowerCase();
-		if (text.indexOf(word) != -1) {
-			pn = node.parentNode;
-			if (pn.className != "bold") {
-				nv = node.nodeValue;
-				ni = text.indexOf(word);
-				before = document.createTextNode(nv.substr(0, ni));
-				docWordVal = nv.substr(ni, word.length);
-				after = document.createTextNode(nv.substr(ni + word.length));
-				hiwordtext = document.createTextNode(docWordVal);
-				hiword = document.createElement("span");
-				hiword.className = "bold";
-				hiword.appendChild(hiwordtext);
-				pn.insertBefore(before, node);
-				pn.insertBefore(hiword, node);
-				pn.insertBefore(after, node);
-				pn.removeChild(node);
-			}
-		}
-	}
-}
-	};
-
-	$( function() {
-		SearchHighlighter.init()
-	});
-})(jQuery);
 (function($) {
 	$.fn.editme = function() {
 		return $(this).attr('contenteditable', 'true').keyup(function() {

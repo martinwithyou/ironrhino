@@ -33,7 +33,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.clickmenu-0.1.6.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.columnmanager-0.2.5.my.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.throttle-debounce-1.1.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.elastic-1.6.3.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.htmlarea-0.7.5.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.chosen-0.9.11.js" />
 				<file name="${webapp.dir}/assets/scripts/source/swfobject-2.2.js" />
@@ -57,7 +56,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.listpick.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.imagepick.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.latlng.js" />
-				<file name="${webapp.dir}/assets/scripts/source/ironrhino.searchhighlighter.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.filtercolumn.js" />
 			</filelist>

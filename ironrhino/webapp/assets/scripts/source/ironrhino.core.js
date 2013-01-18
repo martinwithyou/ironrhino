@@ -747,8 +747,6 @@ Observation.common = function(container) {
 							replacement : t.data('replacement')
 						});
 			});
-	if (!$.browser.msie && typeof $.fn.elastic != 'undefined')
-		$('textarea.elastic', container).elastic();
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({
 					dateFormat : 'yy-mm-dd'
