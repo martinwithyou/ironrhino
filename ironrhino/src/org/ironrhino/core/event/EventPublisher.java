@@ -36,10 +36,14 @@ public class EventPublisher implements
 			return;
 		if (event instanceof ContextRefreshedEvent) {
 			if (applicationEventTopic != null)
-				applicationEventTopic.publish(new StartupEvent());
+				applicationEventTopic.publish(new InstanceStartupEvent());
+			else
+				publisher.publishEvent(event);
 		} else if (event instanceof ContextClosedEvent) {
 			if (applicationEventTopic != null)
-				applicationEventTopic.publish(new ShutdownEvent());
+				applicationEventTopic.publish(new InstanceShutdownEvent());
+			else
+				publisher.publishEvent(event);
 		}
 	}
 

@@ -8,7 +8,11 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
+import org.ironrhino.core.event.InstanceLifecycleEvent;
+import org.ironrhino.core.event.InstanceShutdownEvent;
+import org.ironrhino.core.event.InstanceStartupEvent;
 import org.ironrhino.core.remoting.HessianClient;
 import org.ironrhino.core.remoting.HttpInvokerClient;
 import org.ironrhino.core.remoting.JsonCallClient;
@@ -20,13 +24,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.ContextRefreshedEvent;
 
 public abstract class AbstractServiceRegistry implements ServiceRegistry,
-		ApplicationListener<ContextRefreshedEvent> {
+		ApplicationListener<InstanceLifecycleEvent> {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
+	@Inject
 	private ConfigurableApplicationContext ctx;
 
 	protected Map<String, List<String>> importServices = new ConcurrentHashMap<String, List<String>>();
@@ -181,6 +185,14 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	}
 
+	protected void evict(String host) {
+		for (Map.Entry<String, List<String>> entry : importServices.entrySet()) {
+			List<String> list = entry.getValue();
+			if (!list.isEmpty())
+				list.remove(host);
+		}
+	}
+
 	@PreDestroy
 	public void destroy() {
 		for (String serviceName : exportServices.keySet())
@@ -188,13 +200,13 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 	}
 
 	@Override
-	public void onApplicationEvent(ContextRefreshedEvent event) {
-		if (!(event.getApplicationContext() instanceof ConfigurableApplicationContext)) {
-			log.warn("ApplicationContext is not ConfigurableApplicationContext");
-		} else if (event.getApplicationContext().getParent() == null) {
-			ctx = (ConfigurableApplicationContext) event
-					.getApplicationContext();
+	public void onApplicationEvent(InstanceLifecycleEvent event) {
+		if (event instanceof InstanceStartupEvent
+				&& event.getInstanceId().equals(AppInfo.getInstanceId()))
 			init();
+		else if (event instanceof InstanceShutdownEvent
+				&& !event.getInstanceId().equals(AppInfo.getInstanceId())) {
+			evict(event.getHost());
 		}
 	}
 
