@@ -137,7 +137,7 @@ table.richtable {
 	margin-left: 0;
 	width:20%;
 }
-.ui-dialog .combobox .dropdown-menu {
+.ui-dialog .combobox .dropdown-menu ,.ui-dialog .typeahead.dropdown-menu {
 	max-height: 400px;
 	overflow: auto;
 }
