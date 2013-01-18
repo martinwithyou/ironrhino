@@ -38,12 +38,12 @@ public class EventPublisher implements
 			if (applicationEventTopic != null)
 				applicationEventTopic.publish(new InstanceStartupEvent());
 			else
-				publisher.publishEvent(event);
+				publisher.publishEvent(new InstanceStartupEvent());
 		} else if (event instanceof ContextClosedEvent) {
 			if (applicationEventTopic != null)
 				applicationEventTopic.publish(new InstanceShutdownEvent());
 			else
-				publisher.publishEvent(event);
+				publisher.publishEvent(new InstanceShutdownEvent());
 		}
 	}
 
