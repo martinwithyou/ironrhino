@@ -214,11 +214,9 @@ Richtable = {
 				win.html('<div style="text-align:center;">'
 						+ MessageBundle.get('ajax.loading') + '</div>');
 		var opt = {
-			zIndex : 2000,
 			minHeight : 600,
 			width : 700,
 			// modal : true,
-			bgiframe : true,
 			closeOnEscape : false,
 			close : function() {
 				if (reloadonclose
@@ -237,6 +235,8 @@ Richtable = {
 			opt.height = 600;
 		win.dialog(opt);
 		win.dialog('open');
+		win.closest('.ui-dialog').css('z-index', '2000');
+		$('.ui-dialog-titlebar-close', win.closest('.ui-dialog')).blur();
 	},
 	enter : function(event) {
 		var btn = event.target;

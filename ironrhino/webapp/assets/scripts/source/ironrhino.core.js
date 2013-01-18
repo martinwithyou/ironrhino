@@ -751,8 +751,7 @@ Observation.common = function(container) {
 		$('textarea.elastic', container).elastic();
 	if (typeof $.fn.datepicker != 'undefined')
 		$('input.date', container).datepicker({
-					dateFormat : 'yy-mm-dd',
-					zIndex : 2000
+					dateFormat : 'yy-mm-dd'
 				});
 	$('input.captcha', container).focus(function() {
 				if ($(this).data('_captcha_'))
