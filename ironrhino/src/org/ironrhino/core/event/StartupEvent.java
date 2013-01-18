@@ -1,16 +1,7 @@
 package org.ironrhino.core.event;
 
-import org.ironrhino.core.util.AppInfo;
+public class StartupEvent extends InstanceLifecycleEvent {
 
-public class StartupEvent extends BaseEvent<String> {
+	private static final long serialVersionUID = -8157167762604071958L;
 
-	private static final long serialVersionUID = 6870119566152595698L;
-
-	public StartupEvent() {
-		super(AppInfo.getHostAddress());
-	}
-
-	public String getHost() {
-		return getSource();
-	}
 }
