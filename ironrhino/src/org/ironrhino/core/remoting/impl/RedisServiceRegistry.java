@@ -21,6 +21,13 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 	@Named("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
 
+	public String discover(String serviceName) {
+		List<String> hosts = getImportServices().get(serviceName);
+		if (hosts == null || hosts.size() == 0)
+			lookup(serviceName);
+		return super.discover(serviceName);
+	}
+
 	protected void lookup(String serviceName) {
 		List<String> list = stringRedisTemplate.opsForList().range(serviceName,
 				0, -1);
