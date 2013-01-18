@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.PreDestroy;
+
 import org.ironrhino.core.remoting.HessianClient;
 import org.ironrhino.core.remoting.HttpInvokerClient;
 import org.ironrhino.core.remoting.JsonCallClient;
@@ -15,17 +17,17 @@ import org.ironrhino.core.remoting.ServiceRegistry;
 import org.ironrhino.core.util.AppInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.ContextRefreshedEvent;
 
 public abstract class AbstractServiceRegistry implements ServiceRegistry,
-		BeanFactoryPostProcessor {
+		ApplicationListener<ContextRefreshedEvent> {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
-	ConfigurableListableBeanFactory beanFactory;
+	private ConfigurableApplicationContext ctx;
 
 	protected Map<String, List<String>> importServices = new ConcurrentHashMap<String, List<String>>();
 
@@ -33,30 +35,21 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	private Random random = new Random();
 
-	private boolean converted;
-
 	public Map<String, List<String>> getImportServices() {
 		return importServices;
 	}
 
 	public Map<String, Object> getExportServices() {
-		if (!converted) {
-			converted = true;
-			Map<String, Object> map = new HashMap<String, Object>();
-			for (Map.Entry<String, Object> entry : exportServices.entrySet())
-				map.put(entry.getKey(),
-						beanFactory.getBean((String) entry.getValue()));
-			exportServices = map;
-		}
 		return exportServices;
 	}
 
 	@SuppressWarnings("unchecked")
 	public void init() {
 		prepare();
-		String[] beanNames = beanFactory.getBeanDefinitionNames();
+		String[] beanNames = ctx.getBeanDefinitionNames();
 		for (String beanName : beanNames) {
-			BeanDefinition bd = beanFactory.getBeanDefinition(beanName);
+			BeanDefinition bd = ctx.getBeanFactory()
+					.getBeanDefinition(beanName);
 			if (!bd.isSingleton())
 				continue;
 			String beanClassName = bd.getBeanClassName();
@@ -106,7 +99,8 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 									" class [{}] must implements interface [{}] in @Remoting",
 									clazz.getName(), inte.getName());
 						} else {
-							exportServices.put(inte.getName(), beanName);
+							exportServices.put(inte.getName(),
+									ctx.getBean(beanName));
 							log.info(" exported service [{}] for bean [{}#{}]",
 									new String[] { inte.getName(), beanName,
 											beanClassName });
@@ -123,7 +117,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		} else {
 			Remoting remoting = clazz.getAnnotation(Remoting.class);
 			if (remoting != null) {
-				exportServices.put(clazz.getName(), beanName);
+				exportServices.put(clazz.getName(), ctx.getBean(beanName));
 				log.info(
 						" exported service [{}] for bean [{}#{}]",
 						new String[] { clazz.getName(), beanName, beanClassName });
@@ -131,12 +125,6 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 			for (Class<?> c : clazz.getInterfaces())
 				export(c, beanName, beanClassName);
 		}
-	}
-
-	public void postProcessBeanFactory(ConfigurableListableBeanFactory arg)
-			throws BeansException {
-		beanFactory = arg;
-		init();
 	}
 
 	public String discover(String serviceName) {
@@ -156,12 +144,21 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		doRegister(serviceName, host);
 	}
 
+	public void unregister(String serviceName) {
+		String host = AppInfo.getHostAddress();
+		doUnregister(serviceName, host);
+	}
+
 	protected void onDiscover(String serviceName, String host) {
 		log.info("discovered " + serviceName + "@" + host);
 	}
 
 	protected void onRegister(String serviceName, String host) {
 		log.info("registered " + serviceName + "@" + host);
+	}
+
+	protected void onUnregister(String serviceName, String host) {
+		log.info("unregistered " + serviceName + "@" + host);
 	}
 
 	protected void prepare() {
@@ -178,6 +175,27 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	protected void doRegister(String serviceName, String host) {
 
+	}
+
+	protected void doUnregister(String serviceName, String host) {
+
+	}
+
+	@PreDestroy
+	public void destroy() {
+		for (String serviceName : exportServices.keySet())
+			unregister(serviceName);
+	}
+
+	@Override
+	public void onApplicationEvent(ContextRefreshedEvent event) {
+		if (!(event.getApplicationContext() instanceof ConfigurableApplicationContext)) {
+			log.warn("ApplicationContext is not ConfigurableApplicationContext");
+		} else if (event.getApplicationContext().getParent() == null) {
+			ctx = (ConfigurableApplicationContext) event
+					.getApplicationContext();
+			init();
+		}
 	}
 
 }
