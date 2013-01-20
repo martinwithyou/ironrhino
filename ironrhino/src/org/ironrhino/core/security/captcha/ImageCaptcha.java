@@ -60,8 +60,8 @@ public class ImageCaptcha {
 		g.setPaint(null);
 		for (int i = 0; i < use.length; i++) {
 			g.setColor(new Color(random.nextInt(0x00FFFFFFF)));
-			g.drawLine(random.nextInt(200), random.nextInt(50), random
-					.nextInt(200), random.nextInt(50));
+			g.drawLine(random.nextInt(200), random.nextInt(50),
+					random.nextInt(200), random.nextInt(50));
 		}
 		Random random = new Random();
 		for (int i = 0; i < 88; i++) {
@@ -84,8 +84,8 @@ public class ImageCaptcha {
 	}
 
 	private static Paint getPaint(Point p, int size) {
-		GradientPaint gp = new GradientPaint(p.x, p.y, new Color(random
-				.nextInt(256), 0, random.nextInt(256)), p.x, p.y - size,
+		GradientPaint gp = new GradientPaint(p.x, p.y, new Color(
+				random.nextInt(256), 0, random.nextInt(256)), p.x, p.y - size,
 				new Color(random.nextInt(256), random.nextInt(256), random
 						.nextInt(256)));
 		return gp;

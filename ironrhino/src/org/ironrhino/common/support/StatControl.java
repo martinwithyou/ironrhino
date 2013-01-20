@@ -262,8 +262,10 @@ public class StatControl {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Value> getPeriodResult(Key key, Date date, boolean cumulative,boolean localhost) {
-		return (List<Value>) getPeriodResult(key, date, cumulative, false,localhost);
+	public List<Value> getPeriodResult(Key key, Date date, boolean cumulative,
+			boolean localhost) {
+		return (List<Value>) getPeriodResult(key, date, cumulative, false,
+				localhost);
 	}
 
 	@SuppressWarnings("unchecked")

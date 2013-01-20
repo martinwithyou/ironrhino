@@ -7,7 +7,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target({TYPE,PACKAGE})
+@Target({ TYPE, PACKAGE })
 @Retention(RUNTIME)
 public @interface AutoConfig {
 
@@ -20,7 +20,7 @@ public @interface AutoConfig {
 	boolean readonly() default false;
 
 	boolean searchable() default false;
-	
+
 	String order() default "";
 
 }

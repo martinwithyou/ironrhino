@@ -81,7 +81,7 @@ public class JavaSourceExecutor {
 		Class<?> clazz = ByteArrayClassLoader.getInstance().loadClass(
 				source.getClassName());
 		Object instance = clazz.newInstance();
-		Method method = clazz.getMethod("run",new Class[0]);
+		Method method = clazz.getMethod("run", new Class[0]);
 		if (method.getReturnType() == Void.TYPE) {
 			int mod = method.getModifiers();
 			if (!Modifier.isStatic(mod) && Modifier.isPublic(mod))

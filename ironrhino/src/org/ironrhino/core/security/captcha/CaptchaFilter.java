@@ -15,7 +15,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Singleton@Named("captchaFilter")
+@Singleton
+@Named("captchaFilter")
 public class CaptchaFilter implements Filter {
 
 	public static final String DEFAULT_IMAGE_CAPTCHA_URL = "/captcha.jpg";
@@ -43,8 +44,10 @@ public class CaptchaFilter implements Filter {
 			response.setHeader("Pragma", "No-cache");
 			response.setHeader("Cache-Control", "no-cache");
 			response.setDateHeader("Expires", 0);
-			ImageIO.write(new ImageCaptcha(captchaManager.getChallenge(request,
-					token)).getImage(), "JPEG", response.getOutputStream());
+			ImageIO.write(
+					new ImageCaptcha(captchaManager
+							.getChallenge(request, token)).getImage(), "JPEG",
+					response.getOutputStream());
 			response.getOutputStream().close();
 			return;
 		}

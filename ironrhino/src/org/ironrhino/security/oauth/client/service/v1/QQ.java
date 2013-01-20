@@ -25,7 +25,7 @@ public class QQ extends OAuth1Provider {
 
 	@Value("${qq.logo:http://www.qq.com/images/logo.gif}")
 	private String logo;
-	
+
 	@Value("${qq.profileUrl:http://open.t.qq.com/api/user/info?format=json}")
 	private String profileUrl;
 

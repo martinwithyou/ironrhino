@@ -1,6 +1,5 @@
 package org.ironrhino.core.model;
 
-
 public class Tuple<K, V> {
 
 	private K key;

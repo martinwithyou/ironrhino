@@ -49,8 +49,8 @@ public class LocationParser {
 				file = new RandomAccessFile(f, "r");
 			} else {
 				file = new RandomAccessFile(Thread.currentThread()
-						.getContextClassLoader().getResource(
-								"resources/data/wry.dat").getFile(), "r");
+						.getContextClassLoader()
+						.getResource("resources/data/wry.dat").getFile(), "r");
 			}
 			start = readLong4(0);
 			end = readLong4(4);
@@ -79,14 +79,14 @@ public class LocationParser {
 				if (string.startsWith(s)) {
 					location.setFirstArea(s);
 					if (string.indexOf("自治区") > 0)
-						location.setSecondArea(string.substring(string
-								.indexOf("自治区") + 3, string.indexOf("市")));
+						location.setSecondArea(string.substring(
+								string.indexOf("自治区") + 3, string.indexOf("市")));
 					else
 						location.setSecondArea(string.substring(s.length(),
 								string.indexOf("市")));
 					if (string.indexOf("区") > string.indexOf("市"))
-						location.setThirdArea(string.substring(string
-								.indexOf("市") + 1, string.indexOf("区")));
+						location.setThirdArea(string.substring(
+								string.indexOf("市") + 1, string.indexOf("区")));
 					return location;
 				}
 
@@ -107,8 +107,8 @@ public class LocationParser {
 				return location;
 			} else {
 				if (string.indexOf("市") > 0)
-					location.setFirstArea(string.substring(0, string
-							.indexOf("市")));
+					location.setFirstArea(string.substring(0,
+							string.indexOf("市")));
 				if (string.indexOf("区") > string.indexOf("市") + 1)
 					location.setSecondArea(string.substring(
 							string.indexOf("市") + 1, string.indexOf("区")));

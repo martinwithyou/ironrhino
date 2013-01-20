@@ -2,7 +2,7 @@ package org.ironrhino.common.util;
 
 import java.io.Serializable;
 
-public class Location implements Serializable{
+public class Location implements Serializable {
 
 	private static final long serialVersionUID = 3776595451619779358L;
 

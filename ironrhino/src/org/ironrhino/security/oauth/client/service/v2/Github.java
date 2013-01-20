@@ -59,7 +59,6 @@ public class Github extends OAuth2Provider {
 		return true;
 	}
 
-
 	@Override
 	protected Profile getProfileFromContent(String content) throws Exception {
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,

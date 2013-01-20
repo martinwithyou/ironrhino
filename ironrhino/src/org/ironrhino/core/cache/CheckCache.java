@@ -6,7 +6,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface CheckCache {
@@ -24,7 +23,7 @@ public @interface CheckCache {
 
 	// mvel expression
 	String timeToIdle() default CacheManager.DEFAULT_TIME_TO_IDLE;
-	
+
 	boolean eternal() default false;
 
 	// mvel expression

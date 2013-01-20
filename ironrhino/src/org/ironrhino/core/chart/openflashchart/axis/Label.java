@@ -24,7 +24,7 @@ public class Label implements Serializable {
 		}
 
 		@Override
-		 @JsonValue
+		@JsonValue
 		public String toString() {
 			return String.valueOf(degrees);
 		}

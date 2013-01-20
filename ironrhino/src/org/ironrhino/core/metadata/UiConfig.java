@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 public @interface UiConfig {
 
 	public static final String DEFAULT_TYPE = "input";
-	
+
 	public static final String DEFAULT_INPUT_TYPE = "text";
 
 	public static final String DEFAULT_LIST_KEY = "id";
@@ -22,13 +22,14 @@ public @interface UiConfig {
 	String alias() default "";
 
 	String type() default DEFAULT_TYPE; // input,textarea,select,checkbox,listpick,dictionary,schema...
-	
-	String inputType() default DEFAULT_INPUT_TYPE; // text,password,email,number,color ...
+
+	String inputType() default DEFAULT_INPUT_TYPE; // text,password,email,number,color
+													// ...
 
 	int size() default 0;
 
 	int maxlength() default 0;
-	
+
 	String regex() default "";
 
 	String cssClass() default "";
@@ -50,8 +51,8 @@ public @interface UiConfig {
 	String template() default "";
 
 	String width() default "";
-	
-	String dynamicAttributes() default ""; //json map
+
+	String dynamicAttributes() default ""; // json map
 
 	boolean excludeIfNotEdited() default false;
 

@@ -45,7 +45,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		String method = mapping.getMethod();
 		if (method != null)
 			sb.append("/" + method);
-		Map<String,Object> params = mapping.getParams();
+		Map<String, Object> params = mapping.getParams();
 		try {
 			if (method != null && params != null && params.containsKey(ID))
 				sb.append("/"

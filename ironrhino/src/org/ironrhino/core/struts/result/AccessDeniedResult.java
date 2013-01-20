@@ -14,7 +14,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 public class AccessDeniedResult extends AutoConfigResult {
 
 	private static final long serialVersionUID = 5774314746245962433L;
-	
+
 	static DefaultLoginUrlAuthenticationEntryPoint defaultLoginUrlAuthenticationEntryPoint;
 
 	@Override

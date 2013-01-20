@@ -6,7 +6,8 @@ public interface LockService {
 
 	public boolean tryLock(String name);
 
-	public boolean tryLock(String name, long timeout, TimeUnit unit) throws InterruptedException;
+	public boolean tryLock(String name, long timeout, TimeUnit unit)
+			throws InterruptedException;
 
 	public void lock(String name);
 

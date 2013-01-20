@@ -64,9 +64,9 @@ public class ScatterChart extends Element {
 		public String getStyle() {
 			return style;
 		}
-		
+
 		@Override
-		 @JsonValue
+		@JsonValue
 		public String toString() {
 			return style;
 		}

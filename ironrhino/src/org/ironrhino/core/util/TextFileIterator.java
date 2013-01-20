@@ -65,12 +65,14 @@ public class TextFileIterator<T> implements Iterator<T> {
 	}
 
 	public boolean hasNext() {
-		if (this.files.size() == 0) return false;
+		if (this.files.size() == 0)
+			return false;
 		return nextline != null || currentIndex < files.size() - 1;
 	}
 
 	public T next() {
-		if (this.files.size() == 0) return null;
+		if (this.files.size() == 0)
+			return null;
 		try {
 			if (nextline == null && currentIndex < files.size() - 1) {
 				currentIndex++;

@@ -227,13 +227,13 @@ public class ClassScaner {
 			"com.sun", "sun", "org.w3c", "org.xml", "antlr", "com.bea",
 			"com.caucho", "com.chenlb", "com.fasterxml", "com.google",
 			"com.ibm", "com.jolbox", "com.microsoft", "com.mongodb",
-			"com.mysql", "com.opensymphony", "com.oracle","com.rabbitmq", "com.taobao",
-			"freemarker", "javassist", "jsr166y", "net.htmlparser", "net.sf",
-			"net.sourceforge", "ognl", "oracle", "org.antlr",
-			"org.aopalliance", "org.apache", "org.aspectj", "org.bson",
-			"org.codehaus", "org.elasticsearch", "org.dom4j", "org.eclipse",
-			"org.hibernate", "org.ietf", "org.jboss", "org.jcp", "org.mvel2",
-			"org.postgresql", "org.slf4j", "org.springframework",
-			"org.tartarus", "org.ironrhino.core","redis", "weblogic" };
+			"com.mysql", "com.opensymphony", "com.oracle", "com.rabbitmq",
+			"com.taobao", "freemarker", "javassist", "jsr166y",
+			"net.htmlparser", "net.sf", "net.sourceforge", "ognl", "oracle",
+			"org.antlr", "org.aopalliance", "org.apache", "org.aspectj",
+			"org.bson", "org.codehaus", "org.elasticsearch", "org.dom4j",
+			"org.eclipse", "org.hibernate", "org.ietf", "org.jboss", "org.jcp",
+			"org.mvel2", "org.postgresql", "org.slf4j", "org.springframework",
+			"org.tartarus", "org.ironrhino.core", "redis", "weblogic" };
 
 }

@@ -13,9 +13,9 @@ public class Profile {
 	private String name;
 
 	private String displayName;
-	
+
 	private String locale;
-	
+
 	private String link;
 
 	private String dob;

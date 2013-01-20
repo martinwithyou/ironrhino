@@ -34,8 +34,8 @@ public class MyOldDecorator2NewStrutsFreemarkerDecorator extends
 			if ("_".equals(replacement)) {
 				Writer writer = response.getWriter();
 				try {
-					writer.append("<title>").append(content.getTitle()).append(
-							"</title>");
+					writer.append("<title>").append(content.getTitle())
+							.append("</title>");
 					content.getTitle();
 					writer.append("<div id=\"content\">");
 					content.writeBody(writer);
@@ -50,8 +50,8 @@ public class MyOldDecorator2NewStrutsFreemarkerDecorator extends
 					StringWriter writer = new StringWriter();
 					content.writeBody(writer);
 					response.getWriter().write(
-							HtmlUtils.compress(writer.toString(), replacement
-									.split(",")));
+							HtmlUtils.compress(writer.toString(),
+									replacement.split(",")));
 					response.getWriter().flush();
 					return;
 				} catch (Exception e) {

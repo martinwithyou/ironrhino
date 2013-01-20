@@ -78,8 +78,8 @@ public class JsonCallServer implements HttpRequestHandler {
 							"Invalid JSON");
 					return;
 				}
-				requestJsonParameters = JsonUtils.createNewObjectMapper().readValue(
-						requestBody, JsonNode.class);
+				requestJsonParameters = JsonUtils.createNewObjectMapper()
+						.readValue(requestBody, JsonNode.class);
 				if (!requestJsonParameters.isArray()) {
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST,
 							"JSON Must Be Array");

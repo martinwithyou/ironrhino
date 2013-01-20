@@ -24,7 +24,8 @@ public class StatLogSettings {
 
 	public static final String STAT_LOG_FILE_NAME = "stat.log";
 
-	private static final Logger log = LoggerFactory.getLogger(StatLogSettings.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(StatLogSettings.class);
 
 	private static int intervalUnit = 60; // senconds
 

@@ -54,9 +54,9 @@ public class Logistics implements Serializable {
 	public boolean equals(Object obj) {
 		return EqualsBuilder.reflectionEquals(this, obj);
 	}
-	
+
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
 	}
 

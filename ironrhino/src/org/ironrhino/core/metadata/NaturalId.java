@@ -7,7 +7,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target( { METHOD, FIELD })
+@Target({ METHOD, FIELD })
 @Retention(RUNTIME)
 public @interface NaturalId {
 

@@ -56,16 +56,16 @@ public class OptimizeTrafficFilter implements Filter {
 				response.setHeader("ETag", token);
 				String previousToken = request.getHeader("If-None-Match");
 				if (previousToken != null && previousToken.equals(token)) {
-					response.setHeader("Last-Modified", request
-							.getHeader("If-Modified-Since"));
+					response.setHeader("Last-Modified",
+							request.getHeader("If-Modified-Since"));
 					response.sendError(HttpServletResponse.SC_NOT_MODIFIED);
 					notmodified = true;
 				} else {
 					Calendar cal = Calendar.getInstance();
 					cal.set(Calendar.MILLISECOND, 0);
 					Date lastModified = cal.getTime();
-					response.setDateHeader("Last-Modified", lastModified
-							.getTime());
+					response.setDateHeader("Last-Modified",
+							lastModified.getTime());
 				}
 			}
 			if (!notmodified) {
@@ -83,11 +83,10 @@ public class OptimizeTrafficFilter implements Filter {
 							gzos.flush();
 							gzos.close();
 							bytes = boas.toByteArray();
-							response
-									.setHeader(
-											"Content-Encoding",
-											acceptEncoding.indexOf("x-gzip") >= 0 ? "x-gzip"
-													: "gzip");
+							response.setHeader(
+									"Content-Encoding",
+									acceptEncoding.indexOf("x-gzip") >= 0 ? "x-gzip"
+											: "gzip");
 						} else if (acceptEncoding.indexOf("deflate") >= 0) {
 							// has problem with IE6
 							ByteArrayOutputStream boas = new ByteArrayOutputStream(

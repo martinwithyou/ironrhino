@@ -7,7 +7,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target({ METHOD,TYPE })
+@Target({ METHOD, TYPE })
 @Retention(RUNTIME)
 public @interface Menu {
 

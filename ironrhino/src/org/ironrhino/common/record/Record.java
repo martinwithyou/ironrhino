@@ -11,9 +11,9 @@ import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 
 @DataRoute("miscGroup")
-@AutoConfig(readonly = true,order = "recordDate desc")
+@AutoConfig(readonly = true, order = "recordDate desc")
 @Entity
-@Table(name="common_record")
+@Table(name = "common_record")
 public class Record extends BaseEntity {
 
 	private static final long serialVersionUID = -8287907984213799302L;

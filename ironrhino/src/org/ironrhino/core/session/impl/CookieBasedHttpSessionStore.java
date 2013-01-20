@@ -45,7 +45,7 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 			cookie = Blowfish.decrypt(cookie);
 			String creationTime = NumberUtils.decimalToX(62,
 					BigInteger.valueOf(session.getCreationTime()));
-			if(cookie.startsWith("{") || cookie.startsWith(creationTime)) {
+			if (cookie.startsWith("{") || cookie.startsWith(creationTime)) {
 				cookie = cookie.substring(creationTime.length());
 				sessionCompressorManager.uncompress(session, cookie);
 			} else {

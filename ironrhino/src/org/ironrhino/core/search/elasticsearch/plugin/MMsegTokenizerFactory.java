@@ -39,7 +39,7 @@ public class MMsegTokenizerFactory extends AbstractTokenizerFactory {
 		String path = new File(env.configFile(), "mmseg").getPath();
 		logger.info(path);
 		Dictionary dic = Dictionary.getInstance(path);
-		//seg_type = settings.get("seg_type", "max_word");
+		// seg_type = settings.get("seg_type", "max_word");
 		seg_type = settings.get("seg_type", "complex");
 		if (seg_type.equals("max_word")) {
 			seg_method = new MaxWordSeg(dic);

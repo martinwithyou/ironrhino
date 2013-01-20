@@ -12,9 +12,9 @@ public interface OAuthManager {
 
 	public Authorization generate(Client client, String redirectUri,
 			String scope, String responseType) throws Exception;
-	
+
 	public Authorization reuse(Authorization authorization);
-	
+
 	public Authorization grant(String authorizationId, User grantor)
 			throws Exception;
 
@@ -28,13 +28,13 @@ public interface OAuthManager {
 	public Authorization refresh(String refreshToken);
 
 	public void revoke(String accessToken);
-	
+
 	public void create(Authorization authorization);
 
 	public List<Authorization> findAuthorizationsByGrantor(User grantor);
-	
+
 	public long getExpireTime();
-	
+
 	public void removeExpired();
 
 	public void saveClient(Client client);
@@ -42,7 +42,7 @@ public interface OAuthManager {
 	public void deleteClient(Client client);
 
 	public Client findClientById(String clientId);
-	
+
 	public List<Client> findClientByOwner(User user);
 
 }

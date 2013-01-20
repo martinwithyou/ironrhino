@@ -18,7 +18,7 @@ public class MyFreemarkerPageFilter extends SiteMeshFilter {
 	/*
 	 * @see com.opensymphony.module.sitemesh.Factory.SITEMESH_FACTORY
 	 */
-	private static final String SITEMESH_FACTORY = "sitemesh.factory"; 
+	private static final String SITEMESH_FACTORY = "sitemesh.factory";
 
 	@Inject(required = false)
 	public static void setFreemarkerManager(FreemarkerManager mgr) {
@@ -32,9 +32,10 @@ public class MyFreemarkerPageFilter extends SiteMeshFilter {
 		this.filterConfig = filterConfig;
 		super.init(filterConfig);
 		ServletContext sc = filterConfig.getServletContext();
-		Factory instance = (Factory)sc.getAttribute(SITEMESH_FACTORY);
-        if (instance == null) 
-                sc.setAttribute(SITEMESH_FACTORY, new StrutsSiteMeshFactory(new Config(filterConfig)));
+		Factory instance = (Factory) sc.getAttribute(SITEMESH_FACTORY);
+		if (instance == null)
+			sc.setAttribute(SITEMESH_FACTORY, new StrutsSiteMeshFactory(
+					new Config(filterConfig)));
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class MyFreemarkerPageFilter extends SiteMeshFilter {
 			SiteMeshWebAppContext webAppContext) {
 		Factory factory = Factory.getInstance(new Config(filterConfig));
 		factory.refresh();
-		return new MyFreemarkerMapper2DecoratorSelector(factory
-				.getDecoratorMapper());
+		return new MyFreemarkerMapper2DecoratorSelector(
+				factory.getDecoratorMapper());
 	}
 }

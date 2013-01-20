@@ -48,11 +48,11 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parentId")
-	protected  T parent;
+	protected T parent;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "parent")
 	@OrderBy("displayOrder,name")
-	protected  Collection<T> children = new HashSet<T>(0);
+	protected Collection<T> children = new HashSet<T>(0);
 
 	@NotInJson
 	public String getFullId() {
@@ -100,7 +100,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	}
 
 	public String getFullname() {
-		if(name == null)
+		if (name == null)
 			return null;
 		String seperator = getFullnameSeperator();
 		StringBuilder fullname = new StringBuilder(name);

@@ -235,7 +235,6 @@ public class AcquisitionAction extends EntityAction {
 		return JSON;
 	}
 
-	
 	private Acquisition acq;
 
 	public Acquisition getAcq() {

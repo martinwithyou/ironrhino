@@ -131,7 +131,7 @@ public class AuthzUtils {
 	public static boolean isPasswordValid(UserDetails ud, String password) {
 		PasswordEncoder encoder = ApplicationContextUtils
 				.getBean(PasswordEncoder.class);
-		return encoder.matches(password,ud.getPassword());
+		return encoder.matches(password, ud.getPassword());
 	}
 
 	public static boolean isPasswordValid(String password) {

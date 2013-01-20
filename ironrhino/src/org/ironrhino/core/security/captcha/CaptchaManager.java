@@ -8,9 +8,9 @@ public interface CaptchaManager {
 
 	public static final String KEY_CAPTCHA = "captcha";
 
-	public String getChallenge(HttpServletRequest request,String token);
+	public String getChallenge(HttpServletRequest request, String token);
 
-	public boolean validate(HttpServletRequest request,String token);
+	public boolean validate(HttpServletRequest request, String token);
 
 	/**
 	 * array[0] = isCaptchaRequired,array[1] = isFirstReachCaptchaThreshold

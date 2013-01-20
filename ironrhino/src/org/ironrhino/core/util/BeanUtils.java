@@ -25,8 +25,8 @@ public class BeanUtils {
 	public static void copyProperties(Object source, Object target,
 			String... ignoreProperties) {
 		Set<String> ignores = new HashSet<String>();
-		ignores.addAll(AnnotationUtils.getAnnotatedPropertyNames(source
-				.getClass(), NotInCopy.class));
+		ignores.addAll(AnnotationUtils.getAnnotatedPropertyNames(
+				source.getClass(), NotInCopy.class));
 		ignores.addAll(Arrays.asList(ignoreProperties));
 		org.springframework.beans.BeanUtils.copyProperties(source, target,
 				ignores.toArray(ignoreProperties));

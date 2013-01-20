@@ -35,8 +35,9 @@ public class PublishAspect extends BaseAspect {
 				PublishAware publishAware = entity.getClass().getAnnotation(
 						PublishAware.class);
 				if (publishAware != null)
-					eventPublisher.publish(new EntityOperationEvent((Persistable)entity,
-							EntityOperationType.DELETE), publishAware.global());
+					eventPublisher.publish(new EntityOperationEvent(
+							(Persistable) entity, EntityOperationType.DELETE),
+							publishAware.global());
 			}
 	}
 

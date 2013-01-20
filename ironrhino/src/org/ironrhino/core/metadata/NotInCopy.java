@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @author zhouyanming
  * @see org.ironrhino.core.util.BeanUtils
  */
-@Target( { METHOD, FIELD })
+@Target({ METHOD, FIELD })
 @Retention(RUNTIME)
 public @interface NotInCopy {
 }

@@ -28,7 +28,8 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 			result = invocation.invoke();
 		} catch (Exception e) {
 			if (e instanceof NoSuchMethodException) {
-				ServletActionContext.getRequest().setAttribute("decorator", "none");
+				ServletActionContext.getRequest().setAttribute("decorator",
+						"none");
 				result = BaseAction.NOTFOUND;
 			} else {
 				Object action = invocation.getAction();

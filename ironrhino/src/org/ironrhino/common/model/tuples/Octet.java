@@ -19,7 +19,7 @@ public class Octet<A, B, C, D, E, F, G, H> implements Serializable {
 	private F f;
 
 	private G g;
-	
+
 	private H h;
 
 	public Octet() {

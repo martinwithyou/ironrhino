@@ -28,7 +28,7 @@ import org.ironrhino.core.stat.Value;
 public class Stat extends KeyValuePair implements Persistable<String> {
 
 	private static final long serialVersionUID = -1795832273603877285L;
-	
+
 	@Id
 	@GeneratedValue(generator = "stringId")
 	@GenericGenerator(name = "stringId", strategy = "org.ironrhino.core.hibernate.StringIdGenerator")
@@ -36,11 +36,11 @@ public class Stat extends KeyValuePair implements Persistable<String> {
 	private String id;
 
 	@UiConfig(hidden = true)
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String keyAsString;
 
 	@UiConfig(hidden = true)
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private String valueAsString;
 
 	public Stat() {

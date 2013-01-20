@@ -247,9 +247,9 @@ public class InstallationManager {
 			if (c.getDependence().keySet().contains(id)) {
 				String requiredVersion = c.getDependence().get(id);
 				if (requiredVersion.compareTo(backcomp.getVersion()) > 0)
-					throw new ErrorMessage("installed component("
-							+ c.getId() + ") require version("
-							+ requiredVersion + ") ,and rollback is version("
+					throw new ErrorMessage("installed component(" + c.getId()
+							+ ") require version(" + requiredVersion
+							+ ") ,and rollback is version("
 							+ backcomp.getVersion() + "),cannot rollback it");
 			}
 		}
@@ -277,7 +277,7 @@ public class InstallationManager {
 	public static class Component implements Serializable {
 
 		private static final long serialVersionUID = 6347907725689068877L;
-		
+
 		private String id;
 		private String vendor;
 		private String version;

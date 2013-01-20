@@ -34,8 +34,8 @@ public class RoundRobin<T> {
 		if (targets == null || targets.size() == 0)
 			throw new IllegalArgumentException("no target");
 		for (Map.Entry<T, Integer> entry : targets.entrySet()) {
-			TargetWrapper<T> tw = new TargetWrapper<T>(entry.getKey(), entry
-					.getValue());
+			TargetWrapper<T> tw = new TargetWrapper<T>(entry.getKey(),
+					entry.getValue());
 			targetWrappers.add(tw);
 		}
 		this.usableChecker = usableChecker;

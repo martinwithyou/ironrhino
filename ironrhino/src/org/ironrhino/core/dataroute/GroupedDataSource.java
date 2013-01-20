@@ -155,9 +155,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 			Connection conn = username == null ? ds.getConnection() : ds
 					.getConnection(username, password);
 			failureCount.remove(ds);
-			StatLog
-					.add(new Key("dataroute", true, groupName, dbname,
-							"success"));
+			StatLog.add(new Key("dataroute", true, groupName, dbname, "success"));
 			return conn;
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
@@ -178,8 +176,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 			} else {
 				failureCount.put(ds, failureTimes);
 			}
-			StatLog
-					.add(new Key("dataroute", true, groupName, dbname, "failed"));
+			StatLog.add(new Key("dataroute", true, groupName, dbname, "failed"));
 			return getConnection(username, password, retryTimes);
 		}
 	}

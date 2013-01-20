@@ -241,9 +241,9 @@ public final class WebSocket {
 		int i;
 		if ((i = _requestUri.indexOf('?')) > 0) {
 			queryString = _requestUri.substring(i + 1);
-			requestUri = _requestUri.substring(0,i);
-			//TODO cannot use parameters
-		}else{
+			requestUri = _requestUri.substring(0, i);
+			// TODO cannot use parameters
+		} else {
 			requestUri = _requestUri;
 		}
 		boolean upgrade = false, connection = false;

@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @author zhouyanming
  * @see org.ironrhino.core.util.JsonUtils
  */
-@Target( { METHOD, FIELD })
+@Target({ METHOD, FIELD })
 @Retention(RUNTIME)
 public @interface NotInJson {
 }

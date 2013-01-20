@@ -6,7 +6,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface EvictCache {
@@ -19,7 +18,7 @@ public @interface EvictCache {
 
 	// mvel expression
 	String onEvict() default "";
-	
+
 	String renew() default "";
 
 }

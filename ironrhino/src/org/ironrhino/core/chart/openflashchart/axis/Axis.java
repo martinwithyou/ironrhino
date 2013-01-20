@@ -51,7 +51,6 @@ public abstract class Axis implements Serializable {
 		return steps;
 	}
 
-
 	public void setSteps(Integer steps) {
 		this.steps = steps;
 
@@ -87,7 +86,6 @@ public abstract class Axis implements Serializable {
 
 	}
 
-
 	public Number getMax() {
 		return max;
 	}
@@ -96,7 +94,6 @@ public abstract class Axis implements Serializable {
 		this.max = max;
 
 	}
-
 
 	public void setRange(Number min, Number max, Integer step) {
 		setMin(min);

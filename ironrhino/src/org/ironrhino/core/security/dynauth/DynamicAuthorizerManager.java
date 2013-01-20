@@ -28,7 +28,8 @@ public class DynamicAuthorizerManager {
 		authorizers = ctx.getBeansOfType(DynamicAuthorizer.class).values();
 	}
 
-	public boolean authorize(Class<?> authorizer, UserDetails user, String resource) {
+	public boolean authorize(Class<?> authorizer, UserDetails user,
+			String resource) {
 		return authorize(authorizer.getName(), user, resource);
 	}
 

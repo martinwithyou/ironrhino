@@ -92,8 +92,8 @@ public class WebSocketServer {
 					new Comparator<String>() {
 						@Override
 						public int compare(String o1, String o2) {
-							int i =  o2.split("/").length - o1.split("/").length;
-							return i!=0?i:o1.compareTo(o2);
+							int i = o2.split("/").length - o1.split("/").length;
+							return i != 0 ? i : o1.compareTo(o2);
 						}
 					});
 			sortedMap.putAll(mapping);

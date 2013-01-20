@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.ironrhino.common.model.Region;
 
-
 public class RegionParser {
 
 	public static List<Region> parse() throws IOException {

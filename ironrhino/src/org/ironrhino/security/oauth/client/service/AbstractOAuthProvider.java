@@ -50,7 +50,8 @@ public abstract class AbstractOAuthProvider implements OAuthProvider {
 
 	public abstract String getProfileUrl();
 
-	protected abstract Profile getProfileFromContent(String content) throws Exception;
+	protected abstract Profile getProfileFromContent(String content)
+			throws Exception;
 
 	public String toString() {
 		return getName();

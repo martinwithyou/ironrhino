@@ -24,12 +24,12 @@ public class AclManagerImpl extends BaseManagerImpl<Acl> implements AclManager {
 	public void delete(Acl acl) {
 		super.delete(acl);
 	}
-	
+
 	@Transactional
 	@EvictCache(namespace = "acl", key = "${key = [];foreach (acl : retval) { key.add(acl.role+acl.resource);} return key;}")
-		public List<Acl> delete(Serializable... id) {
-			return super.delete(id);
-		}
+	public List<Acl> delete(Serializable... id) {
+		return super.delete(id);
+	}
 
 	@Override
 	@Transactional
