@@ -19,7 +19,6 @@ import org.ironrhino.core.event.ExpressionEvent;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.util.AnnotationUtils;
-import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.ExpressionUtils;
 import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
@@ -112,13 +111,13 @@ public class ApplicationContextConsole implements
 
 	public Object execute(String expression, boolean global) throws Exception {
 		Object value = null;
-			if (expression.matches(SET_PROPERTY_EXPRESSION_PATTERN)) {
-				executeSetProperty(expression);
-			} else {
-				value = executeMethodInvocation(expression);
-			}
-			if (global)
-				eventPublisher.publish(new ExpressionEvent(expression), true);
+		if (expression.matches(SET_PROPERTY_EXPRESSION_PATTERN)) {
+			executeSetProperty(expression);
+		} else {
+			value = executeMethodInvocation(expression);
+		}
+		if (global)
+			eventPublisher.publish(new ExpressionEvent(expression), true);
 		return value;
 	}
 
@@ -164,7 +163,7 @@ public class ApplicationContextConsole implements
 	}
 
 	public void onApplicationEvent(ExpressionEvent event) {
-		if (event.getInstanceId().equals(AppInfo.getInstanceId()))
+		if (event.isSelf())
 			return;
 		String expression = event.getExpression();
 		try {

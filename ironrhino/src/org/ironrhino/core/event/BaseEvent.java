@@ -9,6 +9,8 @@ public class BaseEvent<T> extends ApplicationEvent {
 
 	private String instanceId = AppInfo.getInstanceId();
 
+	private String host = AppInfo.getHostAddress();
+
 	protected T source;
 
 	public BaseEvent(T source) {
@@ -22,6 +24,14 @@ public class BaseEvent<T> extends ApplicationEvent {
 
 	public String getInstanceId() {
 		return instanceId;
+	}
+
+	public boolean isSelf() {
+		return getInstanceId().equals(AppInfo.getInstanceId());
+	}
+
+	public String getHost() {
+		return host;
 	}
 
 }

@@ -131,6 +131,14 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		}
 	}
 
+	public void evict(String host) {
+		for (Map.Entry<String, List<String>> entry : importServices.entrySet()) {
+			List<String> list = entry.getValue();
+			if (!list.isEmpty())
+				list.remove(host);
+		}
+	}
+
 	public String discover(String serviceName) {
 		List<String> hosts = getImportServices().get(serviceName);
 		if (hosts != null && hosts.size() > 0) {
@@ -185,14 +193,6 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	}
 
-	protected void evict(String host) {
-		for (Map.Entry<String, List<String>> entry : importServices.entrySet()) {
-			List<String> list = entry.getValue();
-			if (!list.isEmpty())
-				list.remove(host);
-		}
-	}
-
 	@PreDestroy
 	public void destroy() {
 		for (String serviceName : exportServices.keySet())
@@ -201,13 +201,10 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	@Override
 	public void onApplicationEvent(InstanceLifecycleEvent event) {
-		if (event instanceof InstanceStartupEvent
-				&& event.getInstanceId().equals(AppInfo.getInstanceId()))
+		if (event instanceof InstanceStartupEvent && event.isSelf())
 			init();
-		else if (event instanceof InstanceShutdownEvent
-				&& !event.getInstanceId().equals(AppInfo.getInstanceId())) {
+		else if (event instanceof InstanceShutdownEvent && !event.isSelf())
 			evict(event.getHost());
-		}
 	}
 
 }

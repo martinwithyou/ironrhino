@@ -10,8 +10,4 @@ public class InstanceLifecycleEvent extends BaseEvent<String> {
 		super(AppInfo.getHostAddress());
 	}
 
-	public String getHost() {
-		return getSource();
-	}
-
 }

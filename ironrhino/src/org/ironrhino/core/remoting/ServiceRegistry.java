@@ -11,5 +11,7 @@ public interface ServiceRegistry {
 	public void unregister(String serviceName);
 
 	public String discover(String serviceName);
+	
+	public void evict(String host);
 
 }
