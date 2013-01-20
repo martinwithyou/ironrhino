@@ -187,6 +187,7 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 			if (retryTimes < 0)
 				throw e;
 			if (urlFromDiscovery) {
+				serviceRegistry.evict(host);
 				String serviceUrl = discoverServiceUrl(getServiceInterface()
 						.getName());
 				if (!serviceUrl.equals(getServiceUrl())) {
