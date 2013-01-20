@@ -12,7 +12,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.ironrhino.core.event.EventPublisher;
-import org.ironrhino.core.event.InstanceLifecycleEvent;
+import org.ironrhino.core.remoting.ExportServicesEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -57,38 +57,6 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 
 	protected void doUnregister(String serviceName, String host) {
 		stringRedisTemplate.opsForList().remove(serviceName, 0, host);
-	}
-
-	public void onApplicationEvent(InstanceLifecycleEvent event) {
-		if (event instanceof ExportServicesEvent) {
-			if (event.isSelf())
-				return;
-			ExportServicesEvent ev = (ExportServicesEvent) event;
-			String host = ev.getHost();
-			for (String serviceName : ev.getExportServices()) {
-				List<String> hosts = importServices.get(serviceName);
-				if (hosts != null && !hosts.contains(host))
-					hosts.add(host);
-			}
-		} else {
-			super.onApplicationEvent(event);
-		}
-	}
-
-	public static class ExportServicesEvent extends InstanceLifecycleEvent {
-
-		private static final long serialVersionUID = 4564138152726138645L;
-
-		private List<String> exportServices;
-
-		public ExportServicesEvent(List<String> exportServices) {
-			this.exportServices = exportServices;
-		}
-
-		public List<String> getExportServices() {
-			return exportServices;
-		}
-
 	}
 
 }

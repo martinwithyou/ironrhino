@@ -14,6 +14,9 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
+import org.ironrhino.core.event.InstanceLifecycleEvent;
+import org.ironrhino.core.event.InstanceShutdownEvent;
+import org.ironrhino.core.remoting.ExportServicesEvent;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.zookeeper.WatchedEventListener;
@@ -206,6 +209,16 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	@Override
 	public void onNodeDataChanged(String path, byte[] data) {
 
+	}
+
+	@Override
+	public void onApplicationEvent(InstanceLifecycleEvent event) {
+		if (event instanceof ExportServicesEvent
+				|| event instanceof InstanceShutdownEvent)
+			// zookeeper has NodeChildrenChanged
+			return;
+		else
+			super.onApplicationEvent(event);
 	}
 
 }

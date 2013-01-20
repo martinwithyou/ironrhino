@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import org.ironrhino.core.event.InstanceLifecycleEvent;
 import org.ironrhino.core.event.InstanceShutdownEvent;
 import org.ironrhino.core.event.InstanceStartupEvent;
+import org.ironrhino.core.remoting.ExportServicesEvent;
 import org.ironrhino.core.remoting.HessianClient;
 import org.ironrhino.core.remoting.HttpInvokerClient;
 import org.ironrhino.core.remoting.JsonCallClient;
@@ -205,6 +206,17 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 			init();
 		else if (event instanceof InstanceShutdownEvent && !event.isSelf())
 			evict(event.getHost());
+		else if (event instanceof ExportServicesEvent) {
+			if (event.isSelf())
+				return;
+			ExportServicesEvent ev = (ExportServicesEvent) event;
+			String host = ev.getHost();
+			for (String serviceName : ev.getExportServices()) {
+				List<String> hosts = importServices.get(serviceName);
+				if (hosts != null && !hosts.contains(host))
+					hosts.add(host);
+			}
+		}
 	}
 
 }
