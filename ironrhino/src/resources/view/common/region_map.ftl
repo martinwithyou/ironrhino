@@ -2,7 +2,7 @@
 <#escape x as x?html><html>
 <head>
 <title>地图</title>
-<script type="text/javascript">
+<script>
 var map;
 var markers = [];
 var regions = {};
