@@ -1,5 +1,7 @@
 package org.ironrhino.core.dataroute;
 
+import static org.ironrhino.core.metadata.Profiles.CLUSTER;
+
 import java.util.Map;
 
 import javax.inject.Named;
@@ -13,6 +15,7 @@ import org.ironrhino.core.aop.BaseAspect;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.ExpressionUtils;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -25,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Aspect
 @Singleton
 @Named
+@Profile(CLUSTER)
 public class DataRouteAspect extends BaseAspect {
 
 	public DataRouteAspect() {
