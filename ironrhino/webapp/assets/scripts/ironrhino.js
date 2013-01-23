@@ -32181,36 +32181,35 @@ Observation.common = function(container) {
 			});
 
 	$('.tiped', container).each(function() {
-				var t = $(this);
-				var options = {
-					html : true,
-					trigger : t.data('trigger') || 'hover',
-					placement : t.data('placement') || 'top'
-				};
-				if (!t.attr('title') && t.data('tipurl'))
-					t.attr('title', MessageBundle.get('ajax.loading'));
-				t.bind(options.trigger, function() {
-							if (!t.hasClass('_tiped')) {
-								t.addClass('_tiped');
-								$.ajax({
-											url : t.data('tipurl'),
-											global : false,
-											dataType : 'html',
-											success : function(data) {
-												t.attr('data-original-title',
-														data);
-												t.tooltip(options)
-														.tooltip('show');
-											}
-										});
-							}
-						});
-				if (t.is(':input')) {
-					options.trigger = 'focus';
-					options.placement = 'right';
-				}
-				t.tooltip(options);
-			});
+		var t = $(this);
+		var options = {
+			html : true,
+			trigger : t.data('trigger') || 'hover',
+			placement : t.data('placement') || 'top'
+		};
+		if (!t.attr('title') && t.data('tipurl'))
+			t.attr('title', MessageBundle.get('ajax.loading'));
+		t.bind(options.trigger == 'hover' ? 'mouseenter' : options.trigger,
+				function() {
+					if (!t.hasClass('_tiped')) {
+						t.addClass('_tiped');
+						$.ajax({
+									url : t.data('tipurl'),
+									global : false,
+									dataType : 'html',
+									success : function(data) {
+										t.attr('data-original-title', data);
+										t.tooltip(options).tooltip('show');
+									}
+								});
+					}
+				});
+		if (t.is(':input')) {
+			options.trigger = 'focus';
+			options.placement = 'right';
+		}
+		t.tooltip(options);
+	});
 	$('.poped', container).each(function() {
 		var t = $(this);
 		var options = {
@@ -32223,10 +32222,11 @@ Observation.common = function(container) {
 		if (t.data('popurl')) {
 			if (!options.content && t.data('popurl'))
 				options.title = MessageBundle.get('ajax.loading');
-			t.bind(options.trigger, function() {
-				if (!t.hasClass('_poped')) {
-					t.addClass('_poped');
-					$.ajax({
+			t.bind(options.trigger == 'hover' ? 'mouseenter' : options.trigger,
+					function() {
+						if (!t.hasClass('_poped')) {
+							t.addClass('_poped');
+							$.ajax({
 								url : t.data('popurl'),
 								global : false,
 								dataType : 'html',
@@ -32259,8 +32259,8 @@ Observation.common = function(container) {
 									t.popover(options).popover('show');
 								}
 							});
-				}
-			});
+						}
+					});
 		}
 		t.popover(options);
 	});
