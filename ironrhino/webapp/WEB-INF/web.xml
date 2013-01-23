@@ -9,6 +9,7 @@
 			classpath*:resources/spring/applicationContext-*.xml
 		</param-value>
 	</context-param>
+	<absolute-ordering/>
 	<filter>
 		<filter-name>characterEncodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
