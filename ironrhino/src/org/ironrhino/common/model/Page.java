@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Type;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -45,13 +46,15 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	private String title;
 
 	@NotInJson
-	@Column(columnDefinition = "text")
+	@Column
+	@Type(type = "text")
 	@Access(AccessType.FIELD)
 	private String head;
 
 	@NotInJson
 	@SearchableProperty
-	@Column(columnDefinition = "text", nullable = false)
+	@Column(nullable = false)
+	@Type(type = "text")
 	@Access(AccessType.FIELD)
 	private String content;
 
@@ -59,7 +62,8 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	private int displayOrder;
 
 	@NotInJson
-	@Column(columnDefinition = "text")
+	@Column
+	@Type(type = "text")
 	@Access(AccessType.FIELD)
 	private String draft;
 
