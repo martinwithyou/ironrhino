@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.ForeignKey;
 import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
@@ -48,6 +49,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parentId")
+	@ForeignKey(name="none")
 	protected T parent;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "parent")

@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.ForeignKey;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
@@ -41,12 +42,14 @@ public class Authorization extends BaseEntity {
 	@UiConfig(displayOrder = 2)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "client")
+	@ForeignKey(name="none")
 	@Access(AccessType.FIELD)
 	private Client client;
 
 	@UiConfig(displayOrder = 3)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "grantor")
+	@ForeignKey(name="none")
 	@Access(AccessType.FIELD)
 	private User grantor;
 

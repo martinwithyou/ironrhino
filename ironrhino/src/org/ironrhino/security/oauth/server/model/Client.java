@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.ForeignKey;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
@@ -54,6 +55,7 @@ public class Client extends BaseEntity implements Switchable {
 	@UiConfig(hidden = true)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner", nullable = false)
+	@ForeignKey(name="none")
 	@Access(AccessType.FIELD)
 	private User owner;
 
