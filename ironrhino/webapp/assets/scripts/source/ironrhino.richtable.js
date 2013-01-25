@@ -223,7 +223,7 @@ Richtable = {
 						&& !$('#_window_ form.ajax').hasClass('dontreload'))
 					Richtable.reload(form);
 				$('#_window_ ').html('');
-				win.dialog('destroy');
+				win.dialog('destroy').remove();
 			},
 			beforeClose : function(event, ui) {
 				if ($('form', win).hasClass('dirty')) {

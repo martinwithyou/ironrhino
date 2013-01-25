@@ -157,7 +157,7 @@
 												form.addClass('dirty');
 										}
 									}
-									win.dialog('destroy');
+									win.dialog('destroy').remove();
 									return false;
 								});
 
@@ -233,7 +233,7 @@
 										form.addClass('dirty');
 								}
 							}
-							win.dialog('destroy');
+							win.dialog('destroy').remove();
 							return false;
 						});
 					}
