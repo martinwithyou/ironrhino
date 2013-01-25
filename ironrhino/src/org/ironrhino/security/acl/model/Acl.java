@@ -31,7 +31,7 @@ public class Acl extends BaseEntity {
 	@NaturalId(mutable = true)
 	@UiConfig(displayOrder = 2)
 	@org.hibernate.annotations.NaturalId(mutable = true)
-	@Column(length = 150, nullable = false)
+	@Column(name = "`resource`", length = 150, nullable = false)
 	@Access(AccessType.FIELD)
 	private String resource;
 
