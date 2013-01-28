@@ -110,12 +110,12 @@
 		<delete file="${target.dir}/${security-oauth-client-jar.name}" />
 		<delete file="${target.dir}/${security-oauth-server-jar.name}" />
 		<delete file="${target.dir}/${daq-jar.name}" />
-		<mkdir dir="${target.dir}/assets/META-INF/assets" />
 		<unzip dest="${webapp.dir}/assets/components">
 			<fileset dir="${webapp.dir}/assets/components" includes="/*.zip" />
 		</unzip>
-		<copy todir="${target.dir}/assets/META-INF/assets">
-			<fileset dir="${webapp.dir}/assets" includes="/scripts/*.js,/styles/*.css,**/images/**,/components/*/**" excludes="/components/*"/>
+		<mkdir dir="${target.dir}/assets/META-INF/resources/assets" />
+		<copy todir="${target.dir}/assets/META-INF/resources/assets">
+			<fileset dir="${webapp.dir}/assets" includes="/scripts/*.js,/styles/*.css,**/images/**,/components/*/**" excludes="/components/*" />
 		</copy>
 		<jar jarfile="${target.dir}/${assets-jar.name}" basedir="${target.dir}/assets">
 			<manifest>
