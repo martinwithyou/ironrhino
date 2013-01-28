@@ -5,6 +5,7 @@
 	<property name="webapp.dir" location="${basedir}/webapp" />
 	<property name="classes.dir" location="${webapp.dir}/WEB-INF/classes" />
 	<property name="target.dir" location="${basedir}/target" />
+	<property name="assets-jar.name" value="ironrhino-assets-${version}.jar" />
 	<property name="core-jar.name" value="ironrhino-core-${version}.jar" />
 	<property name="remoting-jar.name" value="ironrhino-remoting-${version}.jar" />
 	<property name="remoting-jar.includes" value="org/ironrhino/core/remoting/**" />
@@ -81,6 +82,7 @@
 			]]>
 		</script>
 		<mkdir dir="${target.dir}" />
+		<delete file="${target.dir}/${assets-jar.name}" />
 		<delete file="${target.dir}/${core-jar.name}" />
 		<delete file="${target.dir}/${remoting-jar.name}" />
 		<delete file="${target.dir}/${hibernate-config-jar.name}" />
@@ -108,6 +110,22 @@
 		<delete file="${target.dir}/${security-oauth-client-jar.name}" />
 		<delete file="${target.dir}/${security-oauth-server-jar.name}" />
 		<delete file="${target.dir}/${daq-jar.name}" />
+		<mkdir dir="${target.dir}/assets/META-INF/assets" />
+		<unzip dest="${webapp.dir}/assets/components">
+			<fileset dir="${webapp.dir}/assets/components" includes="/*.zip" />
+		</unzip>
+		<copy todir="${target.dir}/assets/META-INF/assets">
+			<fileset dir="${webapp.dir}/assets" includes="/scripts/*.js,/styles/*.css,**/images/**,/components/*/**" excludes="/components/*"/>
+		</copy>
+		<jar jarfile="${target.dir}/${assets-jar.name}" basedir="${target.dir}/assets">
+			<manifest>
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-assets" />
+				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
+				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
+			</manifest>
+		</jar>
+		<delete dir="${target.dir}/assets" />
 		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="META-INF/**,es-plugin.properties,struts-plugin.xml,xwork-conversion.properties,jasperreports_extension.properties,fonts.xml,META-INF/**,net/**,com/**,org/apache/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**,resources/view/setup.ftl,resources/view/decorator/simple.ftl,resources/hibernate/common/**" excludes="${remoting-jar.includes},${common-setting-jar.includes},${common-cms-jar.includes},${common-dictionary-jar.includes},${common-schema-jar.includes},${common-treenode-jar.includes},${common-region-jar.includes},${common-stat-jar.includes},${common-record-jar.includes},${common-upload-jar.includes},${common-install-jar.includes},${common-qrcode-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-core" />
