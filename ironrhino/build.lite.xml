@@ -42,32 +42,7 @@
 		<mkdir dir="${classes.dir}" />
 		<mkdir dir="${test.classes.dir}" />
 	</target>
-
-
-	<target name="syncIronrhinoAssets">
-		<copy todir="${basedir}/webapp/assets">
-			<fileset dir="${basedir}/../ironrhino/webapp/assets" includes="**/scripts/ironrhino*.js,**/styles/ironrhino*.css,**/styles/ie.css,**/styles/images/*,**/images/*" />
-		</copy>
-	</target>
-
-	<target name="syncComponents">
-		<delete dir="${basedir}/webapp/assets/components" />
-		<copy todir="${basedir}/webapp/assets">
-			<fileset dir="${basedir}/../ironrhino/webapp/assets" includes="**/components/*.zip" />
-		</copy>
-		<unzip dest="${basedir}/webapp/assets/components">
-			<fileset dir="${basedir}/webapp/assets/components" includes="**/*.zip" />
-		</unzip>
-		<delete>
-			<fileset dir="${basedir}/webapp/assets/components" includes="**/*.zip" />
-		</delete>
-	</target>
-
-	<target name="syncAssets">
-		<antcall target="syncIronrhinoAssets" />
-		<antcall target="syncComponents" />
-	</target>
-
+	
 	<target name="syncJars">
 		<script language="javascript">
 			<![CDATA[
@@ -182,12 +157,7 @@
 		</script>
 	</target>
 
-	<target name="sync">
-		<antcall target="syncAssets" />
-		<antcall target="syncJars" />
-	</target>
-
-	<target name="compile" depends="sync">
+	<target name="compile" depends="syncJars">
 		<antcall target="clean" />
 		<antcall target="init" />
 		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source" srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8">
@@ -310,19 +280,53 @@
 		<antcall target="reset-append-svn-revision-for-assets" />
 	</target>
 
-	<target name="war" depends="sync,jar">
+	<target name="war" depends="jar">
+		<move file="${webapp.dir}/assets" tofile="${webapp.dir}/assetsbak" />
+		<sync todir="${webapp.dir}/assets">
+			<fileset dir="${webapp.dir}/assetsbak" />
+			<preserveintarget>
+				<include name="**/**" />
+			</preserveintarget>
+		</sync>
+		<unzip dest="${webapp.dir}">
+			<fileset dir="${webapp.dir}/WEB-INF/lib" includes="ironrhino-assets-*.jar" />
+		</unzip>
+		<sync todir="${webapp.dir}/assets">
+			<fileset dir="${webapp.dir}/META-INF/resources/assets" />
+			<preserveintarget>
+				<include name="**/**" />
+			</preserveintarget>
+		</sync>
+		<delete dir="${webapp.dir}/META-INF" />
 		<move file="${target.dir}/${jar.name}" todir="${webapp.dir}/WEB-INF/lib" />
 		<mkdir dir="${target.dir}/classes" />
 		<move todir="${target.dir}/classes">
 			<fileset dir="${webapp.dir}/WEB-INF/classes" />
 		</move>
-		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}" webxml="${webapp.dir}/WEB-INF/web.xml" />
+		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}" webxml="${webapp.dir}/WEB-INF/web.xml" excludes="**/upload/**,/assetsbak/**,**/ironrhino-assets-*.jar" />
+		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}" />
+		<move todir="${webapp.dir}/WEB-INF/classes">
+			<fileset dir="${target.dir}/classes" />
+		</move>
+		<delete dir="${target.dir}/classes" />
+		<delete dir="${webapp.dir}/assets" />
+		<move file="${webapp.dir}/assetsbak" tofile="${webapp.dir}/assets" />
+	</target>
+
+	<target name="war2" depends="jar">
+		<move file="${target.dir}/${jar.name}" todir="${webapp.dir}/WEB-INF/lib" />
+		<mkdir dir="${target.dir}/classes" />
+		<move todir="${target.dir}/classes">
+			<fileset dir="${webapp.dir}/WEB-INF/classes" />
+		</move>
+		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}" webxml="${webapp.dir}/WEB-INF/web.xml" excludes="**/upload/**" />
 		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}" />
 		<move todir="${webapp.dir}/WEB-INF/classes">
 			<fileset dir="${target.dir}/classes" />
 		</move>
 		<delete dir="${target.dir}/classes" />
 	</target>
+
 
 	<target name="clean">
 		<delete dir="${classes.dir}" />
