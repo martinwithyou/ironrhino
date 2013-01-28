@@ -34,7 +34,7 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 	@UiConfig(displayOrder = 1, size = 50, width = "300px")
 	@SearchableProperty(boost = 3)
 	@org.hibernate.annotations.NaturalId(mutable = true)
-	@Column(name = "skey", unique = true, nullable = false)
+	@Column(name = "`key`", unique = true, nullable = false)
 	@Access(AccessType.FIELD)
 	private String key = "";
 
