@@ -25,6 +25,8 @@
 	<property name="rabbitmq-config-jar.includes" value="resources/spring/applicationContext-rabbitmq.xml" />
 	<property name="zookeeper-config-jar.name" value="ironrhino-zookeeper-config-${version}.jar" />
 	<property name="zookeeper-config-jar.includes" value="resources/spring/applicationContext-zookeeper.xml" />
+	<property name="sitemesh-config-jar.name" value="ironrhino-sitemesh-config-${version}.jar" />
+	<property name="sitemesh-config-jar.includes" value="resources/sitemesh/**" />
 	<property name="common-setting-jar.name" value="ironrhino-common-setting-${version}.jar" />
 	<property name="common-setting-jar.includes" value="org/ironrhino/common/**/Setting*,resources/hibernate/common/Setting*,resources/view/common/setting*,resources/view/meta/include/common_setting.ftl" />
 	<property name="common-cms-jar.name" value="ironrhino-common-cms-${version}.jar" />
@@ -93,6 +95,7 @@
 		<delete file="${target.dir}/${mongodb-config-jar.name}" />
 		<delete file="${target.dir}/${rabbitmq-config-jar.name}" />
 		<delete file="${target.dir}/${zookeeper-config-jar.name}" />
+		<delete file="${target.dir}/${sitemesh-config-jar.name}" />
 		<delete file="${target.dir}/${common-setting-jar.name}" />
 		<delete file="${target.dir}/${common-cms-jar.name}" />
 		<delete file="${target.dir}/${common-dictionary-jar.name}" />
@@ -214,6 +217,15 @@
 				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
+		</jar>
+		<jar jarfile="${target.dir}/${sitemesh-config-jar.name}" basedir="${classes.dir}" includes="${sitemesh-config-jar.includes}">
+					<manifest>
+						<attribute name="Ironrhino-Component-Id" value="ironrhino-sitemesh-config" />
+						<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
+						<attribute name="Ironrhino-Component-Version" value="${version}" />
+						<attribute name="Ironrhino-Component-Revision" value="${revision}" />
+						<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
+					</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${common-setting-jar.name}" basedir="${classes.dir}" includes="${common-setting-jar.includes}">
 			<manifest>

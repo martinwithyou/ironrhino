@@ -71,7 +71,7 @@
 		<filter-class>org.ironrhino.core.struts.MyFreemarkerPageFilter</filter-class>
 		<init-param>
 			<param-name>configFile</param-name>
-			<param-value>/WEB-INF/conf/sitemesh.xml</param-value>
+			<param-value>resources/sitemesh/sitemesh.xml</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>
