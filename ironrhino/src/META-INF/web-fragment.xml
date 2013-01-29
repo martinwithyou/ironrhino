@@ -131,6 +131,11 @@
 		<listener-class>
 			org.springframework.web.util.IntrospectorCleanupListener</listener-class>
 	</listener>
+	<servlet>
+		<servlet-name>test</servlet-name>
+		<servlet-class>org.ironrhino.core.servlet.TestServlet</servlet-class>
+		<load-on-startup>100</load-on-startup>
+	</servlet>
 	<error-page>
 		<error-code>500</error-code>
 		<location>/error/handle/500</location>
