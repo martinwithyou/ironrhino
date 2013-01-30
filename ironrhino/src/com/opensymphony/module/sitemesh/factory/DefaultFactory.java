@@ -53,7 +53,6 @@ public class DefaultFactory extends BaseFactory {
     Map<String,String> configProps = new HashMap<String,String>();
 
     String excludesFileName;
-    File excludesFile;
 
     public DefaultFactory(Config config) {
         super(config);
@@ -185,22 +184,13 @@ public class DefaultFactory extends BaseFactory {
 
         InputStream is = null;
 
-        if (excludesFile == null) {
-            is = config.getServletContext().getResourceAsStream(excludesFileName);
-            if (is == null){
-                is = getClass().getClassLoader().getResourceAsStream(excludesFileName);
-            }
-            if (is == null){
-                is = Thread.currentThread().getContextClassLoader().getResourceAsStream(excludesFileName);
-            }
-        }
-        else if (excludesFile.exists() && excludesFile.canRead()) {
-            is = excludesFile.toURI().toURL().openStream();
-        }
-
-        if (is == null){
+        is = config.getServletContext().getResourceAsStream(excludesFileName);
+        if (is == null)
+             is = getClass().getClassLoader().getResourceAsStream(excludesFileName);
+        if (is == null)
+             is = Thread.currentThread().getContextClassLoader().getResourceAsStream(excludesFileName);
+        if (is == null)
             throw new IllegalStateException("Cannot load excludes configuration file \"" + excludesFileName + "\" as specified in \"sitemesh.xml\" or \"sitemesh-default.xml\"");
-        }
 
         Document document = builder.parse(is);
         Element root = document.getDocumentElement();
