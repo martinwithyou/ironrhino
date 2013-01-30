@@ -1,39 +1,27 @@
-package org.ironrhino.core.remoting;
+package org.ironrhino.core.remoting.client;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.entity.StringEntity;
+import org.ironrhino.core.metadata.PostPropertiesReset;
+import org.ironrhino.core.remoting.Context;
+import org.ironrhino.core.remoting.ServiceRegistry;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
-import org.ironrhino.core.util.HttpClientUtils;
-import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.ProxyFactory;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.remoting.support.RemoteInvocationBasedAccessor;
+import org.springframework.remoting.RemoteAccessException;
+import org.springframework.remoting.caucho.HessianProxyFactoryBean;
 import org.springframework.util.Assert;
 
-public class JsonCallClient extends RemoteInvocationBasedAccessor implements
-		MethodInterceptor, FactoryBean<Object> {
+public class HessianClient extends HessianProxyFactoryBean {
 
-	private static Logger log = LoggerFactory.getLogger(JsonCallClient.class);
+	private static Logger log = LoggerFactory.getLogger(HessianClient.class);
 
 	private ServiceRegistry serviceRegistry;
 
@@ -55,11 +43,7 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 
 	private boolean discovered; // for lazy discover from serviceRegistry
 
-	private boolean poll;
-
-	public void setPoll(boolean poll) {
-		this.poll = poll;
-	}
+	private boolean reset;
 
 	public void setHost(String host) {
 		this.host = host;
@@ -98,6 +82,12 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 	}
 
 	@Override
+	public void setServiceUrl(String serviceUrl) {
+		super.setServiceUrl(serviceUrl);
+		reset = true;
+	}
+
+	@Override
 	public void afterPropertiesSet() {
 		if (port == 0) {
 			String p = System.getProperty("http.port");
@@ -110,24 +100,31 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 		if (serviceUrl == null) {
 			Assert.notNull(serviceRegistry);
 			setServiceUrl("http://fakehost/");
+			reset = false;
 			discovered = false;
 			urlFromDiscovery = true;
 		}
-		if (getServiceInterface() == null) {
-			throw new IllegalArgumentException(
-					"Property 'serviceInterface' is required");
+		setHessian2(true);
+		super.afterPropertiesSet();
+	}
+
+	@PostPropertiesReset
+	public void reset() {
+		if (reset) {
+			reset = false;
+			super.afterPropertiesSet();
 		}
-		this.serviceProxy = new ProxyFactory(getServiceInterface(), this)
-				.getProxy(getBeanClassLoader());
 	}
 
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
-		if (!discovered) {
-			setServiceUrl(discoverServiceUrl());
+		if (urlFromDiscovery && !discovered) {
+			String serviceUrl = discoverServiceUrl();
+			setServiceUrl(serviceUrl);
+			reset();
 			discovered = true;
-		} else if (poll)
-			setServiceUrl(discoverServiceUrl());
+		}
+
 		if (executorService != null && asyncMethods != null) {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
@@ -151,41 +148,8 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 			throws Throwable {
 		retryTimes--;
 		try {
-			String url = getServiceUrl() + "/"
-					+ invocation.getMethod().getName();
-			HttpPost postMethod = new HttpPost(url);
-			if (invocation.getMethod().getParameterTypes().length > 0)
-				postMethod.setEntity(new StringEntity(JsonUtils
-						.toJson(invocation.getArguments())));
-			HttpResponse rsp = HttpClientUtils.getDefaultInstance().execute(
-					postMethod);
-			StatusLine sl = rsp.getStatusLine();
-			if (sl.getStatusCode() >= 300) {
-				throw new RuntimeException(
-						"Did not receive successful HTTP response: status code = "
-								+ sl.getStatusCode() + ", status message = ["
-								+ sl.getReasonPhrase() + "]");
-			}
-			HttpEntity entity = rsp.getEntity();
-			StringBuilder sb = new StringBuilder();
-			InputStream is = entity.getContent();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					is, "utf-8"));
-			String line;
-			while ((line = reader.readLine()) != null)
-				sb.append(line).append("\n");
-			reader.close();
-			is.close();
-			String responseBody = null;
-			if (sb.length() > 0) {
-				sb.deleteCharAt(sb.length() - 1);
-				responseBody = sb.toString();
-			}
-			Type t = invocation.getMethod().getGenericReturnType();
-			if (t.equals(Void.class) || responseBody == null)
-				return null;
-			return JsonUtils.fromJson(responseBody, t);
-		} catch (ConnectTimeoutException e) {
+			return super.invoke(invocation);
+		} catch (RemoteAccessException e) {
 			if (retryTimes < 0)
 				throw e;
 			if (urlFromDiscovery) {
@@ -194,6 +158,7 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 				if (!serviceUrl.equals(getServiceUrl())) {
 					setServiceUrl(serviceUrl);
 					log.info("relocate service url:" + serviceUrl);
+					reset();
 				}
 			}
 			return invoke(invocation, retryTimes);
@@ -234,7 +199,7 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 		}
 		if (StringUtils.isNotBlank(contextPath))
 			sb.append(contextPath);
-		sb.append("/remoting/jsoncall/");
+		sb.append("/remoting/hessian/");
 		sb.append(serviceName);
 		boolean first = true;
 		if (StringUtils.isNotBlank(version)) {
@@ -265,19 +230,4 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 			}
 		return sb.toString();
 	}
-
-	private Object serviceProxy;
-
-	public Object getObject() {
-		return this.serviceProxy;
-	}
-
-	public Class<?> getObjectType() {
-		return getServiceInterface();
-	}
-
-	public boolean isSingleton() {
-		return true;
-	}
-
 }

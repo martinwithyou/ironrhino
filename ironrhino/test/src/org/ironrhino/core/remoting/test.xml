@@ -11,8 +11,8 @@
 	</bean>
 	<bean id="defaultWatcher" class="org.ironrhino.core.zookeeper.DefaultWatcher" />
 	<bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.ZookeeperServiceRegistry" />
-	<bean id="userDetailsServiceHessian" class="org.ironrhino.core.remoting.HessianClient"
+	<bean id="userDetailsServiceHessian" class="org.ironrhino.core.remoting.client.HessianClient"
 		p:serviceInterface="org.springframework.security.core.userdetails.UserDetailsService" />
-	<bean id="userDetailsServiceHttpInvoker" class="org.ironrhino.core.remoting.HttpInvokerClient"
+	<bean id="userDetailsServiceHttpInvoker" class="org.ironrhino.core.remoting.client.HttpInvokerClient"
 		p:serviceInterface="org.springframework.security.core.userdetails.UserDetailsService" />
 </beans>

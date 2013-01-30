@@ -7,8 +7,12 @@
 	<property name="target.dir" location="${basedir}/target" />
 	<property name="assets-jar.name" value="ironrhino-assets-${version}.jar" />
 	<property name="core-jar.name" value="ironrhino-core-${version}.jar" />
-	<property name="remoting-jar.name" value="ironrhino-remoting-${version}.jar" />
-	<property name="remoting-jar.includes" value="org/ironrhino/core/remoting/**" />
+	<property name="remoting-common-jar.name" value="ironrhino-remoting-common-${version}.jar" />
+	<property name="remoting-common-jar.includes" value="org/ironrhino/core/remoting/**" />
+	<property name="remoting-server-jar.name" value="ironrhino-remoting-server-${version}.jar" />
+	<property name="remoting-server-jar.includes" value="org/ironrhino/core/remoting/server/**" />
+	<property name="remoting-client-jar.name" value="ironrhino-remoting-client-${version}.jar" />
+	<property name="remoting-client-jar.includes" value="org/ironrhino/core/remoting/client/**" />
 	<property name="hibernate-config-jar.name" value="ironrhino-hibernate-config-${version}.jar" />
 	<property name="hibernate-config-jar.includes" value="resources/spring/applicationContext-hibernate.xml" />
 	<property name="mail-config-jar.name" value="ironrhino-mail-config-${version}.jar" />
@@ -86,7 +90,9 @@
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${assets-jar.name}" />
 		<delete file="${target.dir}/${core-jar.name}" />
-		<delete file="${target.dir}/${remoting-jar.name}" />
+		<delete file="${target.dir}/${remoting-common-jar.name}" />
+		<delete file="${target.dir}/${remoting-server-jar.name}" />
+		<delete file="${target.dir}/${remoting-client-jar.name}" />
 		<delete file="${target.dir}/${hibernate-config-jar.name}" />
 		<delete file="${target.dir}/${mail-config-jar.name}" />
 		<delete file="${target.dir}/${schedule-config-jar.name}" />
@@ -129,7 +135,7 @@
 			</manifest>
 		</jar>
 		<delete dir="${target.dir}/assets" />
-		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="META-INF/**,es-plugin.properties,struts-plugin.xml,xwork-conversion.properties,jasperreports_extension.properties,fonts.xml,META-INF/**,net/**,com/**,org/apache/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**,resources/view/setup.ftl,resources/view/decorator/simple.ftl,resources/hibernate/common/**" excludes="${remoting-jar.includes},${common-setting-jar.includes},${common-cms-jar.includes},${common-dictionary-jar.includes},${common-schema-jar.includes},${common-treenode-jar.includes},${common-region-jar.includes},${common-stat-jar.includes},${common-record-jar.includes},${common-upload-jar.includes},${common-install-jar.includes},${common-qrcode-jar.includes}">
+		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="META-INF/**,es-plugin.properties,struts-plugin.xml,xwork-conversion.properties,jasperreports_extension.properties,fonts.xml,META-INF/**,net/**,com/**,org/apache/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**,resources/view/setup.ftl,resources/view/decorator/simple.ftl,resources/hibernate/common/**" excludes="${remoting-common-jar.includes},${common-setting-jar.includes},${common-cms-jar.includes},${common-dictionary-jar.includes},${common-schema-jar.includes},${common-treenode-jar.includes},${common-region-jar.includes},${common-stat-jar.includes},${common-record-jar.includes},${common-upload-jar.includes},${common-install-jar.includes},${common-qrcode-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-core" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
@@ -137,9 +143,31 @@
 				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 			</manifest>
 		</jar>
-		<jar jarfile="${target.dir}/${remoting-jar.name}" basedir="${classes.dir}" includes="${remoting-jar.includes}">
+		<jar jarfile="${target.dir}/${remoting-common-jar.name}" basedir="${classes.dir}" includes="${remoting-common-jar.includes}" excludes="${remoting-server-jar.includes},${remoting-client-jar.includes}">
 			<manifest>
-				<attribute name="Ironrhino-Component-Id" value="ironrhino-remoting" />
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-remoting-common" />
+				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
+				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
+			</manifest>
+		</jar>
+		<move file="${classes.dir}/META-INF/web-fragment.xml" todir="${classes.dir}"/>
+		<move file="${classes.dir}/org/ironrhino/core/remoting/server/web-fragment.xml" todir="${classes.dir}/META-INF"/>
+		<jar jarfile="${target.dir}/${remoting-server-jar.name}" basedir="${classes.dir}" includes="${remoting-server-jar.includes},META-INF/**">
+			<manifest>
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-remoting-server" />
+				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
+				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
+			</manifest>
+		</jar>
+		<move file="${classes.dir}/META-INF/web-fragment.xml" todir="${classes.dir}/org/ironrhino/core/remoting/server"/>
+		<move file="${classes.dir}/web-fragment.xml" todir="${classes.dir}/META-INF"/>
+		<jar jarfile="${target.dir}/${remoting-client-jar.name}" basedir="${classes.dir}" includes="${remoting-client-jar.includes}">
+			<manifest>
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-remoting-client" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
 				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
@@ -219,13 +247,13 @@
 			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${sitemesh-config-jar.name}" basedir="${classes.dir}" includes="${sitemesh-config-jar.includes}">
-					<manifest>
-						<attribute name="Ironrhino-Component-Id" value="ironrhino-sitemesh-config" />
-						<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
-						<attribute name="Ironrhino-Component-Version" value="${version}" />
-						<attribute name="Ironrhino-Component-Revision" value="${revision}" />
-						<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
-					</manifest>
+			<manifest>
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-sitemesh-config" />
+				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
+				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
+			</manifest>
 		</jar>
 		<jar jarfile="${target.dir}/${common-setting-jar.name}" basedir="${classes.dir}" includes="${common-setting-jar.includes}">
 			<manifest>

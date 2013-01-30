@@ -1,4 +1,4 @@
-package org.ironrhino.core.remoting;
+package org.ironrhino.core.remoting.client;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

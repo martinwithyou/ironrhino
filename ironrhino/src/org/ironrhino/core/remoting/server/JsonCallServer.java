@@ -1,4 +1,4 @@
-package org.ironrhino.core.remoting;
+package org.ironrhino.core.remoting.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ironrhino.core.remoting.Context;
+import org.ironrhino.core.remoting.ServiceRegistry;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;

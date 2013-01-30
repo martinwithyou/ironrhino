@@ -1,4 +1,4 @@
-package org.ironrhino.core.remoting;
+package org.ironrhino.core.remoting.server;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.ironrhino.core.remoting.Context;
+import org.ironrhino.core.remoting.ServiceRegistry;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
 import org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter;
