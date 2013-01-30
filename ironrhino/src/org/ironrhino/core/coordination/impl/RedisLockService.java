@@ -20,7 +20,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Profile({ DUAL, CLOUD })
 public class RedisLockService implements LockService {
 
-	private static final String NAMESPACE = "{lock}";
+	private static final String NAMESPACE = "lock:";
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 

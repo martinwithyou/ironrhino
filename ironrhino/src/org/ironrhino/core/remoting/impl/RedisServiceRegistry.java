@@ -26,6 +26,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Profile({ DUAL, CLOUD })
 public class RedisServiceRegistry extends AbstractServiceRegistry {
 
+	private static final String NAMESPACE = "remoting:";
+
 	@Inject
 	@Named("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
@@ -59,18 +61,20 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 	}
 
 	protected void lookup(String serviceName) {
-		List<String> list = stringRedisTemplate.opsForList().range(serviceName,
-				0, -1);
+		List<String> list = stringRedisTemplate.opsForList().range(
+				NAMESPACE + serviceName, 0, -1);
 		if (list != null && list.size() > 0)
 			importServices.put(serviceName, list);
 	}
 
 	protected void doRegister(String serviceName, String host) {
-		stringRedisTemplate.opsForList().rightPush(serviceName, host);
+		stringRedisTemplate.opsForList().rightPush(NAMESPACE + serviceName,
+				host);
 	}
 
 	protected void doUnregister(String serviceName, String host) {
-		stringRedisTemplate.opsForList().remove(serviceName, 0, host);
+		stringRedisTemplate.opsForList().remove(NAMESPACE + serviceName, 0,
+				host);
 	}
 
 	@Override
@@ -87,7 +91,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 		final String host = AppInfo.getHostAddress();
 		Runnable runnable = new Runnable() {
 			public void run() {
-				stringRedisTemplate.opsForHash().putAll(host,
+				stringRedisTemplate.opsForHash().putAll(NAMESPACE + host,
 						discoveredServices);
 			}
 		};

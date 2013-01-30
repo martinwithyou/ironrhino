@@ -35,11 +35,11 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 	@Named("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
 
-	private static final String NAMESPACE_AUTHORIZATION = "{oauth:authorization}";
-	private static final String NAMESPACE_AUTHORIZATION_GRANTOR = "{oauth:authorization:grantor}";
+	private static final String NAMESPACE_AUTHORIZATION = "oauth:authorization";
+	private static final String NAMESPACE_AUTHORIZATION_GRANTOR = "oauth:authorization:grantor";
 
-	private static final String NAMESPACE_CLIENT = "{oauth:client}";
-	private static final String NAMESPACE_CLIENT_OWNER = "{oauth:client:owner}";
+	private static final String NAMESPACE_CLIENT = "oauth:client";
+	private static final String NAMESPACE_CLIENT_OWNER = "oauth:client:owner";
 
 	private long expireTime = DEFAULT_EXPIRE_TIME;
 
