@@ -115,8 +115,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
 		if (urlFromDiscovery && !discovered) {
-			String serviceUrl = discoverServiceUrl(getServiceInterface()
-					.getName());
+			String serviceUrl = discoverServiceUrl();
 			setServiceUrl(serviceUrl);
 			reset();
 			discovered = true;
@@ -151,8 +150,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 				throw e;
 			if (urlFromDiscovery) {
 				serviceRegistry.evict(host);
-				String serviceUrl = discoverServiceUrl(getServiceInterface()
-						.getName());
+				String serviceUrl = discoverServiceUrl();
 				if (!serviceUrl.equals(getServiceUrl())) {
 					setServiceUrl(serviceUrl);
 					log.info("relocate service url:" + serviceUrl);
@@ -163,7 +161,17 @@ public class HessianClient extends HessianProxyFactoryBean {
 		}
 	}
 
-	protected String discoverServiceUrl(String serviceName) {
+	public String getServiceUrl() {
+		String serviceUrl = super.getServiceUrl();
+		if (serviceUrl == null && StringUtils.isNotBlank(host)) {
+			serviceUrl = discoverServiceUrl();
+			setServiceUrl(serviceUrl);
+		}
+		return serviceUrl;
+	}
+
+	protected String discoverServiceUrl() {
+		String serviceName = getServiceInterface().getName();
 		StringBuilder sb = new StringBuilder();
 		sb.append("http://");
 		if (StringUtils.isBlank(host)) {

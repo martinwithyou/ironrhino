@@ -103,15 +103,14 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
 		if (!discovered) {
-			setServiceUrl(discoverServiceUrl(getServiceInterface().getName()));
+			setServiceUrl(discoverServiceUrl());
 			discovered = true;
 		} else if (poll)
-			setServiceUrl(discoverServiceUrl(getServiceInterface().getName()));
+			setServiceUrl(discoverServiceUrl());
 		if (executorService != null && asyncMethods != null) {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
 				executorService.execute(new Runnable() {
-
 					public void run() {
 						try {
 							invoke(invocation, maxRetryTimes);
@@ -136,8 +135,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 				throw e;
 			if (urlFromDiscovery) {
 				serviceRegistry.evict(host);
-				String serviceUrl = discoverServiceUrl(getServiceInterface()
-						.getName());
+				String serviceUrl = discoverServiceUrl();
 				if (!serviceUrl.equals(getServiceUrl())) {
 					setServiceUrl(serviceUrl);
 					log.info("relocate service url:" + serviceUrl);
@@ -147,7 +145,17 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 		}
 	}
 
-	protected String discoverServiceUrl(String serviceName) {
+	public String getServiceUrl() {
+		String serviceUrl = super.getServiceUrl();
+		if (serviceUrl == null && StringUtils.isNotBlank(host)) {
+			serviceUrl = discoverServiceUrl();
+			setServiceUrl(serviceUrl);
+		}
+		return serviceUrl;
+	}
+
+	protected String discoverServiceUrl() {
+		String serviceName = getServiceInterface().getName();
 		StringBuilder sb = new StringBuilder();
 		sb.append("http://");
 		if (StringUtils.isBlank(host)) {

@@ -122,10 +122,10 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 	@Override
 	public Object invoke(final MethodInvocation invocation) throws Throwable {
 		if (!discovered) {
-			setServiceUrl(discoverServiceUrl(getServiceInterface().getName()));
+			setServiceUrl(discoverServiceUrl());
 			discovered = true;
 		} else if (poll)
-			setServiceUrl(discoverServiceUrl(getServiceInterface().getName()));
+			setServiceUrl(discoverServiceUrl());
 		if (executorService != null && asyncMethods != null) {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
@@ -188,8 +188,7 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 				throw e;
 			if (urlFromDiscovery) {
 				serviceRegistry.evict(host);
-				String serviceUrl = discoverServiceUrl(getServiceInterface()
-						.getName());
+				String serviceUrl = discoverServiceUrl();
 				if (!serviceUrl.equals(getServiceUrl())) {
 					setServiceUrl(serviceUrl);
 					log.info("relocate service url:" + serviceUrl);
@@ -199,7 +198,17 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 		}
 	}
 
-	protected String discoverServiceUrl(String serviceName) {
+	public String getServiceUrl() {
+		String serviceUrl = super.getServiceUrl();
+		if (serviceUrl == null && StringUtils.isNotBlank(host)) {
+			serviceUrl = discoverServiceUrl();
+			setServiceUrl(serviceUrl);
+		}
+		return serviceUrl;
+	}
+
+	protected String discoverServiceUrl() {
+		String serviceName = getServiceInterface().getName();
 		StringBuilder sb = new StringBuilder();
 		sb.append("http://");
 		if (StringUtils.isBlank(host)) {
