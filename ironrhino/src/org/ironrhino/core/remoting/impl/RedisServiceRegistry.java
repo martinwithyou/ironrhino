@@ -4,8 +4,11 @@ import static org.ironrhino.core.metadata.Profiles.CLOUD;
 import static org.ironrhino.core.metadata.Profiles.DUAL;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -13,6 +16,8 @@ import javax.inject.Singleton;
 
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.remoting.ExportServicesEvent;
+import org.ironrhino.core.util.AppInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -28,6 +33,13 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 	@Inject
 	private EventPublisher eventPublisher;
 
+	@Autowired(required = false)
+	private ExecutorService executorService;
+
+	private Map<String, String> discoveredServices = new HashMap<String, String>();
+
+	private boolean ready;
+
 	protected void onReady() {
 		Set<String> services = getExportServices().keySet();
 		if (!services.isEmpty()) {
@@ -35,6 +47,8 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 					new ArrayList<String>(services));
 			eventPublisher.publish(event, true);
 		}
+		writeDiscoveredServices();
+		ready = true;
 	}
 
 	public String discover(String serviceName) {
@@ -57,6 +71,30 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 
 	protected void doUnregister(String serviceName, String host) {
 		stringRedisTemplate.opsForList().remove(serviceName, 0, host);
+	}
+
+	@Override
+	protected void onDiscover(String serviceName, String host) {
+		super.onDiscover(serviceName, host);
+		discoveredServices.put(serviceName, host);
+		if (ready)
+			writeDiscoveredServices();
+	}
+
+	protected void writeDiscoveredServices() {
+		if (discoveredServices.size() == 0)
+			return;
+		final String host = AppInfo.getHostAddress();
+		Runnable runnable = new Runnable() {
+			public void run() {
+				stringRedisTemplate.opsForHash().putAll(host,
+						discoveredServices);
+			}
+		};
+		if (executorService != null)
+			executorService.execute(runnable);
+		else
+			runnable.run();
 	}
 
 }

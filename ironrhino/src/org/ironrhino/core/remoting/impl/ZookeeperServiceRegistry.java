@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -20,6 +21,8 @@ import org.ironrhino.core.remoting.ExportServicesEvent;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.zookeeper.WatchedEventListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 
 @Singleton
@@ -30,33 +33,21 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	public static final String DEFAULT_ZOOKEEPER_PATH = "/remoting";
 
+	@Autowired(required = false)
 	private ExecutorService executorService;
 
+	@Inject
 	private ZooKeeper zooKeeper;
 
+	@Value("${serviceRegistry.zooKeeperPath:" + DEFAULT_ZOOKEEPER_PATH + "}")
 	private String zooKeeperPath = DEFAULT_ZOOKEEPER_PATH;
 
+	@Value("${serviceRegistry.maxRetryTimes:5}")
 	private int maxRetryTimes = 5;
 
 	private Map<String, String> discoveredServices = new HashMap<String, String>();
 
 	private boolean ready;
-
-	public void setZooKeeperPath(String zooKeeperPath) {
-		this.zooKeeperPath = zooKeeperPath;
-	}
-
-	public void setMaxRetryTimes(int maxRetryTimes) {
-		this.maxRetryTimes = maxRetryTimes;
-	}
-
-	public void setZooKeeper(ZooKeeper zooKeeper) {
-		this.zooKeeper = zooKeeper;
-	}
-
-	public void setExecutorService(ExecutorService executorService) {
-		this.executorService = executorService;
-	}
 
 	@Override
 	public void prepare() {
@@ -90,9 +81,8 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	protected void onDiscover(String serviceName, String host) {
 		super.onDiscover(serviceName, host);
 		discoveredServices.put(serviceName, host);
-		if (ready) {
+		if (ready)
 			writeDiscoveredServices();
-		}
 	}
 
 	protected void writeDiscoveredServices() {
@@ -105,11 +95,10 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 				doWriteDiscoveredServices(host, services, maxRetryTimes);
 			}
 		};
-		if (executorService != null) {
+		if (executorService != null)
 			executorService.execute(runnable);
-		} else {
+		else
 			runnable.run();
-		}
 	}
 
 	private void doRegister(String serviceName, String host, int retryTimes) {
