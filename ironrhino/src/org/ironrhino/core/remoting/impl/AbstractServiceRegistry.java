@@ -16,9 +16,6 @@ import org.ironrhino.core.event.InstanceStartupEvent;
 import org.ironrhino.core.remoting.ExportServicesEvent;
 import org.ironrhino.core.remoting.ServiceRegistry;
 import org.ironrhino.core.remoting.Remoting;
-import org.ironrhino.core.remoting.client.HessianClient;
-import org.ironrhino.core.remoting.client.HttpInvokerClient;
-import org.ironrhino.core.remoting.client.JsonCallClient;
 import org.ironrhino.core.util.AppInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,9 +64,9 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 				log.error(e.getMessage(), e);
 				continue;
 			}
-			if (clazz.equals(HessianClient.class)
-					|| clazz.equals(HttpInvokerClient.class)
-					|| clazz.equals(JsonCallClient.class)) {// remoting_client
+			if (beanClassName.startsWith("org.ironrhino.core.remoting.client.")
+					&& beanClassName.endsWith("Client")) {
+				// remoting_client
 				String serviceName = (String) bd.getPropertyValues()
 						.getPropertyValue("serviceInterface").getValue();
 				importServices.put(serviceName, Collections.EMPTY_LIST);
