@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.remoting.RemoteAccessException;
 import org.springframework.remoting.caucho.HessianProxyFactoryBean;
+import org.springframework.util.Assert;
 
 public class HessianClient extends HessianProxyFactoryBean {
 
@@ -95,6 +96,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 		}
 		String serviceUrl = getServiceUrl();
 		if (serviceUrl == null) {
+			Assert.notNull(serviceRegistry);
 			setServiceUrl("http://fakehost/");
 			reset = false;
 			discovered = false;

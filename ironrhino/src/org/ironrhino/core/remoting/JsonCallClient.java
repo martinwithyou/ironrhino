@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.remoting.support.RemoteInvocationBasedAccessor;
+import org.springframework.util.Assert;
 
 public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 		MethodInterceptor, FactoryBean<Object> {
@@ -107,6 +108,7 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 		}
 		String serviceUrl = getServiceUrl();
 		if (serviceUrl == null) {
+			Assert.notNull(serviceRegistry);
 			setServiceUrl("http://fakehost/");
 			discovered = false;
 			urlFromDiscovery = true;

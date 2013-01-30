@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.remoting.RemoteAccessException;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
+import org.springframework.util.Assert;
 
 public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 
@@ -93,6 +94,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 		}
 		String serviceUrl = getServiceUrl();
 		if (serviceUrl == null) {
+			Assert.notNull(serviceRegistry);
 			setServiceUrl("http://fakehost/");
 			discovered = false;
 			urlFromDiscovery = true;
