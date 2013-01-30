@@ -74,8 +74,8 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	@Transactional(readOnly = true)
 	@CheckCache(namespace = "user", key = "${username}")
 	public UserDetails loadUserByUsername(String username) {
-		if (StringUtils.isEmpty(username))
-			return null;
+		if (StringUtils.isBlank(username))
+			throw new UsernameNotFoundException("username  is blank");
 		username = username.toLowerCase();
 		User user;
 		if (username.indexOf('@') > 0)
