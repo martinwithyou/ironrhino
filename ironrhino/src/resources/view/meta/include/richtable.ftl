@@ -44,7 +44,7 @@
 </#if>
 </#list>
 </#if>
-<table class="table table-hover table-striped table-bordered richtable<#if sortable> sortable</#if><#if columnfilterable> filtercolumn</#if><#if resizable> resizable</#if>"<#if resizable> data-minColWidth="60"</#if>>
+<table class="table table-hover table-striped table-bordered richtable<#if sortable> sortable</#if><#if columnfilterable> filtercolumn</#if><#if resizable> resizable</#if>">
 <thead>
 <tr>
 <#if showCheckColumn>

@@ -12,6 +12,7 @@ table.richtable td,table.richtable th {
 	vertical-align: middle;
 }
 table.richtable th {
+	min-width: 60px;
 	padding: 0.5em 0;
 }
 .richtable th,.richtable .toolbar .action {
