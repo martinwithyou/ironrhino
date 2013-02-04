@@ -42,7 +42,7 @@
 		<mkdir dir="${classes.dir}" />
 		<mkdir dir="${test.classes.dir}" />
 	</target>
-	
+
 	<target name="syncJars">
 		<script language="javascript">
 			<![CDATA[
@@ -78,22 +78,22 @@
         				var filename2 = f.getName();
         				var jarname2 = filename2.substring(0,filename2.lastIndexOf(filename2.lastIndexOf('-')>0?'-':'.'));
         				var version2 = filename2.substring(jarname2.length()+1);
-						if(f.isFile() && filename != filename2 && jarname == jarname2 && version2.length()>0){
-								if(version.length()>4)
-									version = version.substring(0,version.length()-4);
-								if(version2.length()>4)
-									version2 = version2.substring(0,version2.length()-4);
-								var verarr1 = version.split("\\.");
-								var verarr2 = version2.split("\\.");
-		        				var upgrade = false;
-								for(var j=0;j<verarr2.length;j++){
-									if(j==verarr1.length || verarr2[j]>verarr1[j] || verarr2[j].length() > verarr1[j].length()){
-										upgrade = true;
-										break;
-									}
+        				if(f.isFile() && filename != filename2 && jarname == jarname2 && version2.length()>0){
+							if(version.length()>4)
+								version = version.substring(0,version.length()-4);
+							if(version2.length()>4)
+								version2 = version2.substring(0,version2.length()-4);
+							var verarr1 = version.split("\\.");
+							var verarr2 = version2.split("\\.");
+	        				var upgrade = false;
+							for(var j=0;j<verarr2.length;j++){
+								if(j==verarr1.length || verarr2[j]>verarr1[j] || verarr2[j].length() > verarr1[j].length()){
+									upgrade = true;
+									break;
 								}
-								if(!upgrade)
-										continue;
+							}
+							if(!upgrade)
+									continue;
         					println('upgrade jar from '+filename+' to '+f.getName());
         					file = f;
         					if(tofile.exists()){
@@ -108,8 +108,11 @@
         				}
         			}
         		}
+        		if(!file.exists())
+        			file = new File(basedir+'/extralib',filename);
         		copy.setFile(file);
         		copy.setTofile(tofile);
+				copy.setPreserveLastModified(true);
         		if(file.exists())
         			copy.perform();
 			}
@@ -163,7 +166,7 @@
 		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source" srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8">
 			<classpath refid="lib.classpath" />
 		</javac>
-		<copy todir="${classes.dir}">
+		<copy todir="${classes.dir}" preservelastmodified="true">
 			<fileset dir="${src.dir}">
 				<exclude name="**/*.java" />
 			</fileset>
@@ -178,7 +181,7 @@
 				<pathelement location="${classes.dir}" />
 			</classpath>
 		</javac>
-		<copy todir="${test.classes.dir}">
+		<copy todir="${test.classes.dir}" preservelastmodified="true">
 			<fileset dir="${test.src.dir}">
 				<exclude name="**/*.java" />
 			</fileset>
@@ -211,16 +214,17 @@
 		</java>
 	</target>
 
-	<target name="append-svn-revision-for-assets">
+	<target name="append-revision-for-assets">
 		<script language="javascript">
 			<![CDATA[
 			importPackage(java.io);
-			var dirs = 'scripts,styles,website'.split(',');
+			var assetsDir = new File(project.getProperty('webapp.dir')+'/assets');
+			var dirs = assetsDir.listFiles();
 			for(var n=0;n<dirs.length;n++){
-				var dir = new File(project.getProperty('webapp.dir')+'/assets/'+dirs[n]);
-				if(!dir.exists()||!dir.isDirectory())
+				var dir = dirs[n];
+				if(dir.getName()=='components'||dir.getName()=='images'||!dir.isDirectory())
 					continue;
-				var wcpropsfile = new File(project.getProperty('webapp.dir')+'/assets/'+dirs[n]+'/.svn/all-wcprops');
+				var wcpropsfile = new File(dir,'.svn/all-wcprops');
 				var wcprops = [];
 				if(wcpropsfile.exists()){
 					var is = new FileInputStream(wcpropsfile);
@@ -231,7 +235,7 @@
 					br.close();
 					is.close();
 				}
-				var files = new File(project.getProperty('webapp.dir')+'/assets/'+dirs[n]).listFiles();
+				var files = dir.listFiles();
 				for(var i=0;i<files.length;i++){
 					var file = files[i];
 					if(file.isDirectory())
@@ -245,7 +249,9 @@
 							break;
 						}
 					}
-					revision = revision || file.lastModified();
+					revision = revision || (''+file.lastModified());
+					if(revision.length==13)
+						revision = revision.substring(0,10);
 					var replaceregexp = project.createTask('replaceregexp');
 					replaceregexp.setEncoding('utf-8');
 					replaceregexp.setPreserveLastModified(true);
@@ -254,8 +260,8 @@
 	      			fs.setIncludes('**/*.ftl');
 	      			replaceregexp.addFileset(fs);
 	      			var namearr = name.split('\\.');
-	      			var match = '/'+dirs[n]+'/'+namearr[0]+'(.*)\\.'+namearr[1];
-	      			var replace = '/'+dirs[n]+'/'+namearr[0]+'\\1\\.'+namearr[1]+'?'+revision;
+	      			var match = '/'+dir.getName()+'/'+namearr[0]+'(.*)\\.'+namearr[1];
+	      			var replace = '/'+dir.getName()+'/'+namearr[0]+'\\1\\.'+namearr[1]+'?'+revision;
 	        		replaceregexp.setMatch(match);
 	        		replaceregexp.setReplace(replace);
 	        		replaceregexp.perform();
@@ -264,25 +270,17 @@
 			]]>
 		</script>
 	</target>
-	<target name="reset-append-svn-revision-for-assets">
-		<copy todir="${webapp.dir}/WEB-INF/classes/resources/view/decorator" overwrite="true">
+	<target name="reset-append-revision-for-assets">
+		<copy todir="${webapp.dir}/WEB-INF/classes/resources/view/decorator" preservelastmodified="true" overwrite="true">
 			<fileset dir="${src.dir}/resources/view/decorator">
 				<include name="**/*.ftl" />
 			</fileset>
 		</copy>
 	</target>
 
-	<target name="jar" depends="compile">
-		<mkdir dir="${target.dir}" />
-		<delete file="${target.dir}/${jar.name}" />
-		<antcall target="append-svn-revision-for-assets" />
-		<jar jarfile="${target.dir}/${jar.name}" basedir="${classes.dir}" />
-		<antcall target="reset-append-svn-revision-for-assets" />
-	</target>
-
-	<target name="war" depends="jar">
-		<move file="${webapp.dir}/assets" tofile="${webapp.dir}/assetsbak" />
-		<sync todir="${webapp.dir}/assets">
+	<target name="unzip-assets">
+		<move file="${webapp.dir}/assets" tofile="${webapp.dir}/assetsbak" preservelastmodified="true" failonerror="false" />
+		<sync todir="${webapp.dir}/assets" failonerror="false">
 			<fileset dir="${webapp.dir}/assetsbak" />
 			<preserveintarget>
 				<include name="**/**" />
@@ -298,40 +296,56 @@
 			</preserveintarget>
 		</sync>
 		<delete dir="${webapp.dir}/META-INF" />
-		<move file="${target.dir}/${jar.name}" todir="${webapp.dir}/WEB-INF/lib" />
+	</target>
+
+	<target name="reset-assets">
+		<delete dir="${webapp.dir}/assets" />
+		<move file="${webapp.dir}/assetsbak" tofile="${webapp.dir}/assets" preservelastmodified="true" failonerror="false" />
+	</target>
+
+	<target name="jar" depends="compile">
+		<mkdir dir="${target.dir}" />
+		<delete file="${target.dir}/${jar.name}" />
+		<antcall target="unzip-assets" />
+		<antcall target="append-revision-for-assets" />
+		<antcall target="reset-assets" />
+		<jar jarfile="${target.dir}/${jar.name}" basedir="${classes.dir}" />
+		<antcall target="reset-append-revision-for-assets" />
+	</target>
+
+	<target name="war" depends="jar">
+		<antcall target="unzip-assets" />
+		<move file="${target.dir}/${jar.name}" todir="${webapp.dir}/WEB-INF/lib" preservelastmodified="true"/>
 		<mkdir dir="${target.dir}/classes" />
-		<move todir="${target.dir}/classes">
+		<move todir="${target.dir}/classes" preservelastmodified="true">
 			<fileset dir="${webapp.dir}/WEB-INF/classes" />
 		</move>
 		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}" webxml="${webapp.dir}/WEB-INF/web.xml" excludes="**/upload/**,assetsbak/**,**/ironrhino-assets-*.jar" />
-		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}" />
-		<move todir="${webapp.dir}/WEB-INF/classes">
+		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}" preservelastmodified="true"/>
+		<move todir="${webapp.dir}/WEB-INF/classes" preservelastmodified="true">
 			<fileset dir="${target.dir}/classes" />
 		</move>
 		<delete dir="${target.dir}/classes" />
-		<delete dir="${webapp.dir}/assets" />
-		<move file="${webapp.dir}/assetsbak" tofile="${webapp.dir}/assets" />
+		<antcall target="reset-assets" />
 	</target>
 
 	<target name="war2" depends="jar">
-		<move file="${target.dir}/${jar.name}" todir="${webapp.dir}/WEB-INF/lib" />
+		<move file="${target.dir}/${jar.name}" todir="${webapp.dir}/WEB-INF/lib" preservelastmodified="true"/>
 		<mkdir dir="${target.dir}/classes" />
-		<move todir="${target.dir}/classes">
+		<move todir="${target.dir}/classes" preservelastmodified="true">
 			<fileset dir="${webapp.dir}/WEB-INF/classes" />
 		</move>
 		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}" webxml="${webapp.dir}/WEB-INF/web.xml" excludes="**/upload/**" />
-		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}" />
-		<move todir="${webapp.dir}/WEB-INF/classes">
+		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}" preservelastmodified="true"/>
+		<move todir="${webapp.dir}/WEB-INF/classes" preservelastmodified="true">
 			<fileset dir="${target.dir}/classes" />
 		</move>
 		<delete dir="${target.dir}/classes" />
 	</target>
-
 
 	<target name="clean">
 		<delete dir="${classes.dir}" />
 		<delete dir="${test.classes.dir}" />
-		<delete dir="${target.dir}" />
 	</target>
 
 
@@ -376,12 +390,15 @@
 			<http url="http://localhost:${server.startup.port}/?firewallHandler.allowedAddrPattern=127.0.0.1" />
 		</waitfor>
 		<sleep seconds="3" />
-		<exec executable="${server.shutdown.cmd}" dir="${server.home}" />
+		<exec executable="${server.shutdown.cmd}" dir="${server.home}">
+			<arg value="-force" />
+		</exec>
 		<waitfor checkevery="2" checkeveryunit="second" maxwait="60" maxwaitunit="second">
 			<not>
 				<socket server="localhost" port="${server.shutdown.port}" />
 			</not>
 		</waitfor>
+		<sleep seconds="3" />
 	</target>
 
 	<target name="startup" depends="shutdown">
@@ -396,7 +413,7 @@
 		<antcall target="war" />
 		<antcall target="backup" />
 		<antcall target="shutdown" />
-		<!-- <delete> <fileset dir="${webapp.deploy.dir}" /> </delete> -->
+		<delete dir="${webapp.deploy.dir}" />
 		<unzip dest="${webapp.deploy.dir}" src="${target.dir}/${war.name}" />
 		<antcall target="startup" />
 	</target>
