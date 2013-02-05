@@ -84,7 +84,6 @@
 						try{
 							if(parseInt(revision) > 0){
 								project.setProperty('revision',revision);
-								println(project.getProperty("revision"));
 								break;
 							}
 						}catch(e){
