@@ -82,7 +82,7 @@
 					if(arr2.length>1){
 						var revision = arr2[1].trim();
 						try{
-							if(parseInt(revision) > 0){
+							if(parseInt(revision) > 0 && !revision.contains('-')){
 								project.setProperty('revision',revision);
 								break;
 							}
