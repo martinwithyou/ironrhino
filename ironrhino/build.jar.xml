@@ -69,7 +69,7 @@
 	<property name="daq-jar.name" value="ironrhino-daq-${version}.jar" />
 	<property name="daq-jar.includes" value="org/ironrhino/daq/**,resources/**/daq/**" />
 	<target name="set-revision">
-		<exec executable="svn2" outputproperty="svninfo" failifexecutionfails="false">
+		<exec executable="svn" outputproperty="svninfo" failifexecutionfails="false">
 			<arg value="info" />
 		</exec>
 		<script language="javascript">
