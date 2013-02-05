@@ -68,25 +68,34 @@
 	<property name="security-oauth-server-jar.includes" value="org/ironrhino/security/oauth/package-info.class,org/ironrhino/security/oauth/server/**,resources/i18n/security/oauth/**,resources/hibernate/security/oauth/**,resources/view/oauth/oauth2**,resources/view/oauth/client**,resources/view/oauth/authorization**" />
 	<property name="daq-jar.name" value="ironrhino-daq-${version}.jar" />
 	<property name="daq-jar.includes" value="org/ironrhino/daq/**,resources/**/daq/**" />
-	<target name="jar">
+	<target name="set-revision">
+		<exec executable="svn" outputproperty="svninfo" failifexecutionfails="false">
+			<arg value="info" />
+		</exec>
 		<script language="javascript">
 			<![CDATA[
-			importPackage(java.io);
-			var is = new FileInputStream(project.getProperty('basedir')+'/.svn/entries');
-			var br = new BufferedReader(new InputStreamReader(is,'utf-8'));
-			var line;
-			var lineno = 0;
-			while(line=br.readLine()){
-				if(lineno==3){
-					project.setProperty("revision",line);
-					break;
+			var svninfo = project.getProperty('svninfo');
+			if(svninfo){
+				var arr = svninfo.split('\n');
+				for(var i=0;i<arr.length;i++){
+					var arr2 = arr[i].split(':',2);
+					if(arr2.length>1){
+						var revision = arr2[1].trim();
+						try{
+							if(parseInt(revision) > 0){
+								project.setProperty('revision',revision);
+								println(project.getProperty("revision"));
+								break;
+							}
+						}catch(e){
+						}
+					}
 				}
-				lineno++;
 			}
-			br.close();
-			is.close();
 			]]>
 		</script>
+	</target>
+	<target name="jar" depends="set-revision">
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${assets-jar.name}" />
 		<delete file="${target.dir}/${core-jar.name}" />
@@ -152,8 +161,8 @@
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
-		<move file="${classes.dir}/META-INF/web-fragment.xml" todir="${classes.dir}"/>
-		<move file="${classes.dir}/org/ironrhino/core/remoting/server/web-fragment.xml" todir="${classes.dir}/META-INF"/>
+		<move file="${classes.dir}/META-INF/web-fragment.xml" todir="${classes.dir}" />
+		<move file="${classes.dir}/org/ironrhino/core/remoting/server/web-fragment.xml" todir="${classes.dir}/META-INF" />
 		<jar jarfile="${target.dir}/${remoting-server-jar.name}" basedir="${classes.dir}" includes="${remoting-server-jar.includes},META-INF/**">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-remoting-server" />
@@ -163,8 +172,8 @@
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
-		<move file="${classes.dir}/META-INF/web-fragment.xml" todir="${classes.dir}/org/ironrhino/core/remoting/server"/>
-		<move file="${classes.dir}/web-fragment.xml" todir="${classes.dir}/META-INF"/>
+		<move file="${classes.dir}/META-INF/web-fragment.xml" todir="${classes.dir}/org/ironrhino/core/remoting/server" />
+		<move file="${classes.dir}/web-fragment.xml" todir="${classes.dir}/META-INF" />
 		<jar jarfile="${target.dir}/${remoting-client-jar.name}" basedir="${classes.dir}" includes="${remoting-client-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-remoting-client" />
