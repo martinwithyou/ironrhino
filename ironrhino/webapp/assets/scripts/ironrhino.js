@@ -9707,7 +9707,7 @@ jQuery.cookie = function (key, value, options) {
     var result, decode = options.raw ? function (s) { return s; } : decodeURIComponent;
     return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? decode(result[1]) : null;
 };
-/*! jQuery UI - v1.10.0 - 2013-01-17
+/*! jQuery UI - v1.10.1 - 2013-02-15
 * http://jqueryui.com
 * Includes: jquery.ui.core.js, jquery.ui.widget.js, jquery.ui.mouse.js, jquery.ui.position.js, jquery.ui.draggable.js, jquery.ui.droppable.js, jquery.ui.resizable.js, jquery.ui.selectable.js, jquery.ui.sortable.js, jquery.ui.button.js, jquery.ui.datepicker.js, jquery.ui.dialog.js
 * Copyright (c) 2013 jQuery Foundation and other contributors Licensed MIT */
@@ -9726,7 +9726,7 @@ if ( $.ui.version ) {
 }
 
 $.extend( $.ui, {
-	version: "1.10.0",
+	version: "1.10.1",
 
 	keyCode: {
 		BACKSPACE: 8,
@@ -10545,7 +10545,7 @@ $( document ).mouseup( function() {
 });
 
 $.widget("ui.mouse", {
-	version: "1.10.0",
+	version: "1.10.1",
 	options: {
 		cancel: "input,textarea,button,select,option",
 		distance: 1,
@@ -10703,15 +10703,15 @@ var cachedScrollbarWidth,
 	round = Math.round,
 	rhorizontal = /left|center|right/,
 	rvertical = /top|center|bottom/,
-	roffset = /[\+\-]\d+%?/,
+	roffset = /[\+\-]\d+(\.[\d]+)?%?/,
 	rposition = /^\w+/,
 	rpercent = /%$/,
 	_position = $.fn.position;
 
 function getOffsets( offsets, width, height ) {
 	return [
-		parseInt( offsets[ 0 ], 10 ) * ( rpercent.test( offsets[ 0 ] ) ? width / 100 : 1 ),
-		parseInt( offsets[ 1 ], 10 ) * ( rpercent.test( offsets[ 1 ] ) ? height / 100 : 1 )
+		parseFloat( offsets[ 0 ] ) * ( rpercent.test( offsets[ 0 ] ) ? width / 100 : 1 ),
+		parseFloat( offsets[ 1 ] ) * ( rpercent.test( offsets[ 1 ] ) ? height / 100 : 1 )
 	];
 }
 
@@ -11183,7 +11183,7 @@ $.ui.position = {
 (function( $, undefined ) {
 
 $.widget("ui.draggable", $.ui.mouse, {
-	version: "1.10.0",
+	version: "1.10.1",
 	widgetEventPrefix: "drag",
 	options: {
 		addClasses: true,
@@ -11810,7 +11810,7 @@ $.ui.plugin.add("draggable", "connectToSortable", {
 					this.instance.offset.click = inst.offset.click;
 					if (this !== thisSortable &&
 						this.instance._intersectsWith(this.instance.containerCache) &&
-						$.ui.contains(thisSortable.instance.element[0], this.instance.element[0])
+						$.contains(thisSortable.instance.element[0], this.instance.element[0])
 					) {
 						innermostIntersecting = false;
 					}
@@ -12075,22 +12075,19 @@ $.ui.plugin.add("draggable", "snap", {
 
 $.ui.plugin.add("draggable", "stack", {
 	start: function() {
-
 		var min,
-			o = $(this).data("ui-draggable").options,
+			o = this.data("ui-draggable").options,
 			group = $.makeArray($(o.stack)).sort(function(a,b) {
 				return (parseInt($(a).css("zIndex"),10) || 0) - (parseInt($(b).css("zIndex"),10) || 0);
 			});
 
 		if (!group.length) { return; }
 
-		min = parseInt(group[0].style.zIndex, 10) || 0;
+		min = parseInt($(group[0]).css("zIndex"), 10) || 0;
 		$(group).each(function(i) {
-			this.style.zIndex = min + i;
+			$(this).css("zIndex", min + i);
 		});
-
-		this[0].style.zIndex = min + group.length;
-
+		this.css("zIndex", (min + group.length));
 	}
 });
 
@@ -12118,7 +12115,7 @@ function isOverAxis( x, reference, size ) {
 }
 
 $.widget("ui.droppable", {
-	version: "1.10.0",
+	version: "1.10.1",
 	widgetEventPrefix: "drop",
 	options: {
 		accept: "*",
@@ -12477,7 +12474,7 @@ function isNumber(value) {
 }
 
 $.widget("ui.resizable", $.ui.mouse, {
-	version: "1.10.0",
+	version: "1.10.1",
 	widgetEventPrefix: "resize",
 	options: {
 		alsoResize: false,
@@ -13422,7 +13419,7 @@ $.ui.plugin.add("resizable", "grid", {
 (function( $, undefined ) {
 
 $.widget("ui.selectable", $.ui.mouse, {
-	version: "1.10.0",
+	version: "1.10.1",
 	options: {
 		appendTo: "body",
 		autoRefresh: true,
@@ -13690,7 +13687,7 @@ function isOverAxis( x, reference, size ) {
 }
 
 $.widget("ui.sortable", $.ui.mouse, {
-	version: "1.10.0",
+	version: "1.10.1",
 	widgetEventPrefix: "sort",
 	ready: false,
 	options: {
@@ -14947,7 +14944,7 @@ var lastActive, startXPos, startYPos, clickDragged,
 	};
 
 $.widget( "ui.button", {
-	version: "1.10.0",
+	version: "1.10.1",
 	defaultElement: "<button>",
 	options: {
 		disabled: null,
@@ -15264,7 +15261,7 @@ $.widget( "ui.button", {
 });
 
 $.widget( "ui.buttonset", {
-	version: "1.10.0",
+	version: "1.10.1",
 	options: {
 		items: "button, input[type=button], input[type=submit], input[type=reset], input[type=checkbox], input[type=radio], a, :data(ui-button)"
 	},
@@ -15323,7 +15320,7 @@ $.widget( "ui.buttonset", {
 }( jQuery ) );
 (function( $, undefined ) {
 
-$.extend($.ui, { datepicker: { version: "1.10.0" } });
+$.extend($.ui, { datepicker: { version: "1.10.1" } });
 
 var PROP_NAME = "datepicker",
 	dpuuid = new Date().getTime(),
@@ -17051,7 +17048,7 @@ $.extend(Datepicker.prototype, {
 							(otherMonth && !showOtherMonths ? "" : " " + daySettings[1] + // highlight custom dates
 							(printDate.getTime() === currentDate.getTime() ? " " + this._currentClass : "") + // highlight selected day
 							(printDate.getTime() === today.getTime() ? " ui-datepicker-today" : "")) + "'" + // highlight today (if different)
-							((!otherMonth || showOtherMonths) && daySettings[2] ? " title='" + daySettings[2] + "'" : "") + // cell title
+							((!otherMonth || showOtherMonths) && daySettings[2] ? " title='" + daySettings[2].replace(/'/g, "&#39;") + "'" : "") + // cell title
 							(unselectable ? "" : " data-handler='selectDay' data-event='click' data-month='" + printDate.getMonth() + "' data-year='" + printDate.getFullYear() + "'") + ">" + // actions
 							(otherMonth && !showOtherMonths ? "&#xa0;" : // display for other months
 							(unselectable ? "<span class='ui-state-default'>" + printDate.getDate() + "</span>" : "<a class='ui-state-default" +
@@ -17228,8 +17225,14 @@ $.extend(Datepicker.prototype, {
 			if (years){
 				yearSplit = years.split(":");
 				currentYear = new Date().getFullYear();
-				minYear = parseInt(yearSplit[0], 10) + currentYear;
-				maxYear = parseInt(yearSplit[1], 10) + currentYear;
+				minYear = parseInt(yearSplit[0], 10);
+				maxYear = parseInt(yearSplit[1], 10);
+				if ( yearSplit[0].match(/[+\-].*/) ) {
+					minYear += currentYear;
+				}
+				if ( yearSplit[1].match(/[+\-].*/) ) {
+					maxYear += currentYear;
+				}
 			}
 
 		return ((!minDate || date.getTime() >= minDate.getTime()) &&
@@ -17345,7 +17348,7 @@ $.fn.datepicker = function(options){
 $.datepicker = new Datepicker(); // singleton instance
 $.datepicker.initialized = false;
 $.datepicker.uuid = new Date().getTime();
-$.datepicker.version = "1.10.0";
+$.datepicker.version = "1.10.1";
 
 // Workaround for #4055
 // Add another global to avoid noConflict issues with inline event handlers
@@ -17371,7 +17374,7 @@ var sizeRelatedOptions = {
 	};
 
 $.widget( "ui.dialog", {
-	version: "1.10.0",
+	version: "1.10.1",
 	options: {
 		appendTo: "body",
 		autoOpen: true,
@@ -17542,6 +17545,7 @@ $.widget( "ui.dialog", {
 	},
 
 	open: function() {
+		var that = this;
 		if ( this._isOpen ) {
 			if ( this._moveToTop() ) {
 				this._focusTabbable();
@@ -17549,19 +17553,19 @@ $.widget( "ui.dialog", {
 			return;
 		}
 
+		this._isOpen = true;
 		this.opener = $( this.document[0].activeElement );
 
 		this._size();
 		this._position();
 		this._createOverlay();
 		this._moveToTop( null, true );
-		this._show( this.uiDialog, this.options.show );
+		this._show( this.uiDialog, this.options.show, function() {
+			that._focusTabbable();
+			that._trigger("focus");
+		});
 
-		this._focusTabbable();
-
-		this._isOpen = true;
 		this._trigger("open");
-		this._trigger("focus");
 	},
 
 	_focusTabbable: function() {
@@ -17730,7 +17734,7 @@ $.widget( "ui.dialog", {
 		this.uiDialogButtonPane.remove();
 		this.uiButtonSet.empty();
 
-		if ( $.isEmptyObject( buttons ) ) {
+		if ( $.isEmptyObject( buttons ) || ($.isArray( buttons ) && !buttons.length) ) {
 			this.uiDialog.removeClass("ui-dialog-buttons");
 			return;
 		}
@@ -17778,6 +17782,7 @@ $.widget( "ui.dialog", {
 			containment: "document",
 			start: function( event, ui ) {
 				$( this ).addClass("ui-dialog-dragging");
+				that._blockFrames();
 				that._trigger( "dragStart", event, filteredUi( ui ) );
 			},
 			drag: function( event, ui ) {
@@ -17789,6 +17794,7 @@ $.widget( "ui.dialog", {
 					ui.position.top - that.document.scrollTop()
 				];
 				$( this ).removeClass("ui-dialog-dragging");
+				that._unblockFrames();
 				that._trigger( "dragStop", event, filteredUi( ui ) );
 			}
 		});
@@ -17825,6 +17831,7 @@ $.widget( "ui.dialog", {
 			handles: resizeHandles,
 			start: function( event, ui ) {
 				$( this ).addClass("ui-dialog-resizing");
+				that._blockFrames();
 				that._trigger( "resizeStart", event, filteredUi( ui ) );
 			},
 			resize: function( event, ui ) {
@@ -17834,6 +17841,7 @@ $.widget( "ui.dialog", {
 				options.height = $( this ).height();
 				options.width = $( this ).width();
 				$( this ).removeClass("ui-dialog-resizing");
+				that._unblockFrames();
 				that._trigger( "resizeStop", event, filteredUi( ui ) );
 			}
 		})
@@ -18000,6 +18008,28 @@ $.widget( "ui.dialog", {
 		}
 	},
 
+	_blockFrames: function() {
+		this.iframeBlocks = this.document.find( "iframe" ).map(function() {
+			var iframe = $( this );
+
+			return $( "<div>" )
+				.css({
+					position: "absolute",
+					width: iframe.outerWidth(),
+					height: iframe.outerHeight()
+				})
+				.appendTo( iframe.parent() )
+				.offset( iframe.offset() )[0];
+		});
+	},
+
+	_unblockFrames: function() {
+		if ( this.iframeBlocks ) {
+			this.iframeBlocks.remove();
+			delete this.iframeBlocks;
+		}
+	},
+
 	_createOverlay: function() {
 		if ( !this.options.modal ) {
 			return;
@@ -18012,13 +18042,14 @@ $.widget( "ui.dialog", {
 			this._delay(function() {
 				// Handle .dialog().dialog("close") (#4065)
 				if ( $.ui.dialog.overlayInstances ) {
-					this._on( this.document, {
-						focusin: function( event ) {
-							if ( !$( event.target ).closest(".ui-dialog").length ) {
-								event.preventDefault();
-								$(".ui-dialog:visible:last .ui-dialog-content")
-									.data("ui-dialog")._focusTabbable();
-							}
+					this.document.bind( "focusin.dialog", function( event ) {
+						if ( !$( event.target ).closest(".ui-dialog").length &&
+								// TODO: Remove hack when datepicker implements
+								// the .ui-front logic (#8989)
+								!$( event.target ).closest(".ui-datepicker").length ) {
+							event.preventDefault();
+							$(".ui-dialog:visible:last .ui-dialog-content")
+								.data("ui-dialog")._focusTabbable();
 						}
 					});
 				}
@@ -18027,7 +18058,7 @@ $.widget( "ui.dialog", {
 
 		this.overlay = $("<div>")
 			.addClass("ui-widget-overlay ui-front")
-			.appendTo( this.document[0].body );
+			.appendTo( this._appendTo() );
 		this._on( this.overlay, {
 			mousedown: "_keepFocus"
 		});
@@ -18039,11 +18070,15 @@ $.widget( "ui.dialog", {
 			return;
 		}
 
-		$.ui.dialog.overlayInstances--;
-		if ( !$.ui.dialog.overlayInstances ) {
-			this._off( this.document, "focusin" );
+		if ( this.overlay ) {
+			$.ui.dialog.overlayInstances--;
+
+			if ( !$.ui.dialog.overlayInstances ) {
+				this.document.unbind( "focusin.dialog" );
+			}
+			this.overlay.remove();
+			this.overlay = null;
 		}
-		this.overlay.remove();
 	}
 });
 
