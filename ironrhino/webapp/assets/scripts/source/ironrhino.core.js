@@ -827,9 +827,7 @@ Observation.common = function(container) {
 		var options = {
 			html : true,
 			trigger : t.data('trigger') || 'hover',
-			placement : t.data('placement') || 'right',
-			title : t.data('title'),
-			content : t.data('content')
+			placement : t.data('placement') || 'right'
 		};
 		if (t.data('popurl')) {
 			if (!options.content && t.data('popurl'))

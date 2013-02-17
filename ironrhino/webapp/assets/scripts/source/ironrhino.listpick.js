@@ -104,6 +104,7 @@
 							minHeight : current.data('_options').minHeight
 									|| 500
 						});
+				win.closest('.ui-dialog').css('z-index', '2001');
 				if (win.html() && typeof $.fn.mask != 'undefined')
 					win.mask(MessageBundle.get('ajax.loading'));
 				else

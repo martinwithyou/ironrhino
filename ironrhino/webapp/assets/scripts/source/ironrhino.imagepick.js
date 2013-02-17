@@ -12,13 +12,19 @@
 		if (this.val())
 			$(this).attr('data-content', '<img src="' + this.val() + '"/>');
 		this.change(function() {
-			if (this.value)
-				$(this).attr('data-content', '<img src="' + this.value + '"/>');
-		});
+					var html = this.value
+							? '<img src="' + this.value + '"/>'
+							: '';
+					$(this).attr('data-content', html);
+					$('.popover-content', $(this).parent()).html(html);
+					var options = $(this).data('popover').options;
+					if (options)
+						options.content = html;
+				});
 		return this;
 	}
 })(jQuery);
 
-Observation.imagepick = function(container) {
+Observation._imagepick = function(container) {
 	$('input.imagepick', container).imagepick();
 };

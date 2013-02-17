@@ -110,6 +110,8 @@
 								minHeight : current.data('_options').minHeight
 										|| 500
 							});
+					$('#_tree_window').closest('.ui-dialog').css('z-index',
+							'2002');
 					if (nametarget && nametarget.length)
 						options.value = val(options.name) || '';
 					if (options.type != 'treeview') {

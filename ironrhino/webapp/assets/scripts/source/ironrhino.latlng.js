@@ -15,6 +15,7 @@
 									minWidth : 520,
 									minHeight : 400
 								});
+				win.closest('.ui-dialog').css('z-index', '2003');
 				if (typeof google == 'undefined') {
 					var script = document.createElement('script');
 					script.src = 'https://www.google.com/jsapi?callback=latlng_loadMaps';
