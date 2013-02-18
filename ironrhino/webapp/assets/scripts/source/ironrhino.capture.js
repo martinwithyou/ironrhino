@@ -22,7 +22,7 @@
 						Indicator.hide();
 					var container = options.container;
 					if (!container) {
-						$('<div id="capture-modal" class="modal"><div  id="capture-modal-body" class="modal-body" style="max-height:600px;"></div></div>')
+						$('<div id="capture-modal" class="modal" style="z-index:10000;"><div  id="capture-modal-body" class="modal-body" style="max-height:600px;"></div></div>')
 								.appendTo(document.body);
 						container = 'capture-modal-body';
 					}

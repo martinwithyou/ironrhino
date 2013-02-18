@@ -33105,7 +33105,7 @@ Observation.checkavailable = function(container) {
 						Indicator.hide();
 					var container = options.container;
 					if (!container) {
-						$('<div id="capture-modal" class="modal"><div  id="capture-modal-body" class="modal-body" style="max-height:600px;"></div></div>')
+						$('<div id="capture-modal" class="modal" style="z-index:10000;"><div  id="capture-modal-body" class="modal-body" style="max-height:600px;"></div></div>')
 								.appendTo(document.body);
 						container = 'capture-modal-body';
 					}
@@ -33464,12 +33464,15 @@ function uploadFiles(files, filenames) {
 						var div = $('<div/>').html(html);
 						var message = $('#message', div);
 						if (message.html()) {
-							if ($('#message').length)
-								$('#message').html(message.html());
-							else
-								$('<div id="message">' + message.html()
-										+ '</div>').prependTo($('#content'));
-							if ($('#message .action-error').length)
+							if ($('.action-error', message).length
+									|| !$('#upload_form input[name="pick"]').length)
+								if ($('#message').length)
+									$('#message').html(message.html());
+								else
+									$('<div id="message">' + message.html()
+											+ '</div>')
+											.prependTo($('#content'));
+							if ($('.action-error', message).length)
 								return;
 						}
 						$('#files button.reload').trigger('click');
