@@ -22,6 +22,9 @@
 									}
 								}
 							});
+				},
+				onerror : function(msg) {
+					Message.showError(msg);
 				}
 			});
 		});
