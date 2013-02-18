@@ -10,14 +10,11 @@
 </ul>
 <div class="tab-content">
 	<div id="decode" class="tab-pane active">
-		<#if content??>
-		<div class="alert alert-success">
-		<button type="button" class="close" data-dismiss="alert">×</button>
-		${content}
-		</div>
-		</#if>
 		<@s.form id="qrcode_form" action="qrcode" method="post" enctype="multipart/form-data" cssClass="form-horizontal">
 		<@s.hidden name="decode" value="true"/>
+		<@s.textfield id="decoded-content" label="%{getText('content')}" name="content" cssClass="input-xxlarge">
+		<@s.param name="after"><button type="button" class="btn decodeqrcode" data-target="#decoded-content"><i class="icon-screenshot"></i></button></@s.param>
+		</@s.textfield>
 		<@s.file label="%{getText('qrcode')}" name="file"/>
 		<@s.textfield label="%{getText('url')}" name="url" cssClass="input-xxlarge"/>
 		<@s.textfield label="%{getText('encoding')}" name="encoding" cssClass="input-small"/>

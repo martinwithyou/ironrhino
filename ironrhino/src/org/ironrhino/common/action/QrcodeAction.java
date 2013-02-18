@@ -1,18 +1,22 @@
 package org.ironrhino.common.action;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.BarcodeUtils;
 import org.ironrhino.core.util.ErrorMessage;
 
+import com.google.zxing.NotFoundException;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
-@AutoConfig(fileupload = "image/*")
+@AutoConfig(namespace = "/", fileupload = "image/*")
 public class QrcodeAction extends BaseAction {
 
 	private static final long serialVersionUID = 8180265410790553918L;
@@ -89,23 +93,40 @@ public class QrcodeAction extends BaseAction {
 
 	@Override
 	@InputConfig(resultName = "success")
+	@JsonConfig(root = "content")
 	public String execute() {
 		try {
 			if (decode) {
-				if (file == null && StringUtils.isBlank(url)) {
-					if (file == null) {
-						addFieldError("file", getText("validation.required"));
-						return SUCCESS;
-					}
-					if (url == null) {
-						addFieldError("url", getText("validation.required"));
-						return SUCCESS;
-					}
+				if (file == null && StringUtils.isBlank(url)
+						&& StringUtils.isBlank(requestBody)) {
+					addActionError("validation.required");
+					return SUCCESS;
 				}
 				if (file != null)
-					content = BarcodeUtils.decode(new FileInputStream(file));
-				else if (url != null)
-					content = BarcodeUtils.decode(url);
+					try {
+						content = BarcodeUtils.decode(
+								new FileInputStream(file), encoding);
+					} catch (NotFoundException e) {
+						addActionError(getText("notfound"));
+					}
+				else if (StringUtils.isNotBlank(url))
+					try {
+						content = BarcodeUtils.decode(url, encoding);
+					} catch (NotFoundException e) {
+						addActionError(getText("notfound"));
+					}
+				else if (StringUtils.isNotBlank(requestBody)) {
+					if (requestBody.startsWith("data:image"))
+						requestBody = requestBody.substring(requestBody
+								.indexOf(',') + 1);
+					try {
+						content = BarcodeUtils.decode(new ByteArrayInputStream(
+								Base64.decodeBase64(requestBody)), encoding);
+					} catch (NotFoundException e) {
+						content = "";
+					}
+					return JSON;
+				}
 				return SUCCESS;
 			} else {
 				if (content == null) {
@@ -122,5 +143,4 @@ public class QrcodeAction extends BaseAction {
 		}
 		return NONE;
 	}
-
 }

@@ -52,7 +52,7 @@
 	<property name="common-install-jar.name" value="ironrhino-common-install-${version}.jar" />
 	<property name="common-install-jar.includes" value="org/ironrhino/common/**/Install*,resources/view/common/install*" />
 	<property name="common-qrcode-jar.name" value="ironrhino-common-qrcode-${version}.jar" />
-	<property name="common-qrcode-jar.includes" value="org/ironrhino/common/action/Qrcode*,resources/view/common/qrcode*" />
+	<property name="common-qrcode-jar.includes" value="org/ironrhino/common/action/Qrcode*,resources/view/qrcode*" />
 	<property name="security-jar.name" value="ironrhino-security-${version}.jar" />
 	<property name="security-config-jar.name" value="ironrhino-security-config-${version}.jar" />
 	<property name="security-config-jar.includes" value="resources/spring/applicationContext-security.xml" />
