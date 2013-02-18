@@ -28,9 +28,9 @@ Initialization.upload = function() {
 								});
 					}
 				});
-	}).on('click', '#files button.capture', function() {
-		$.capture({
-					oncapture : function(data, timestamp) {
+	}).on('click', '#files button.snapshot', function() {
+		$.snapshot({
+					onsnapshot : function(data, timestamp) {
 						var filename = 'snapshot_'
 								+ new Date(timestamp).format('%Y%m%d%H%M%S')
 								+ '.png';

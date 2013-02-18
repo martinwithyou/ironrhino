@@ -1,5 +1,6 @@
 (function($) {
-	$.capture = function(options) {
+	var videoStream;
+	$.snapshot = function(options) {
 		options = options || {};
 		if (!navigator.getUserMedia)
 			navigator.getUserMedia = navigator.oGetUserMedia
@@ -18,20 +19,21 @@
 		navigator.getUserMedia({
 					video : true
 				}, function(stream) {
+					videoStream = stream;
 					if (typeof Indicator.hide != 'undefined')
 						Indicator.hide();
 					var container = options.container;
 					if (!container) {
-						$('<div id="capture-modal" class="modal" style="z-index:10000;"><div  id="capture-modal-body" class="modal-body" style="max-height:600px;"></div></div>')
+						$('<div id="snapshot-modal" class="modal" style="z-index:10000;"><div  id="snapshot-modal-body" class="modal-body" style="max-height:600px;"></div></div>')
 								.appendTo(document.body);
-						container = 'capture-modal-body';
+						container = 'snapshot-modal-body';
 					}
 					if (typeof container == 'string')
 						container = document.getElementById(container);
-					var video = document.getElementById('capture-video');
+					var video = document.getElementById('snapshot-video');
 					if (!video) {
 						video = document.createElement('video');
-						video.id = 'capture-video';
+						video.id = 'snapshot-video';
 						video.autoplay = true;
 						video.style.cursor = 'pointer';
 						video.style.width = '100%';
@@ -41,10 +43,10 @@
 						video.style.zIndex = '2000';
 						video.style.width = '20%';
 						video.style.position = 'absolute';
-						var canvas = document.getElementById('capture-canvas');
+						var canvas = document.getElementById('snapshot-canvas');
 						if (!canvas) {
 							canvas = document.createElement('canvas');
-							canvas.id = 'capture-canvas';
+							canvas.id = 'snapshot-canvas';
 							canvas.style.cursor = 'pointer';
 							canvas.style.width = '100%';
 							container.appendChild(canvas);
@@ -55,51 +57,28 @@
 						canvas.setAttribute('data-timestamp', new Date()
 										.getTime());
 						canvas.addEventListener('click', function() {
-							if (options.oncapture)
+							if (options.onsnapshot)
 								options
-										.oncapture(
+										.onsnapshot(
 												this.toDataURL(),
 												parseInt(this
 														.getAttribute('data-timestamp')));
-							this.parentNode.removeChild(this);
-							video.onerror = null;
-							video.pause();
-							if (video.mozSrcObject)
-								video.mozSrcObject = null;
-							window.URL.revokeObjectURL(video.src);
-							video.src = '';
-							video.parentNode.removeChild(video);
-							var modal = document
-									.getElementById('capture-modal');
-							if (modal)
-								modal.parentNode.removeChild(modal);
+							destroy(video, this);
 						});
 					});
 					video.addEventListener('dblclick', function(e) {
 								var canvas = document.createElement('canvas');
 								canvas.getContext('2d').drawImage(video, 0, 0);
-								if (options.oncapture)
-									options.oncapture(canvas.toDataURL(),
+								if (options.onsnapshot)
+									options.onsnapshot(canvas.toDataURL(),
 											new Date().getTime());
 								canvas = document
-										.getElementById('capture-canvas');
-								if (canvas)
-									canvas.parentNode.removeChild(canvas);
-								video.onerror = null;
-								video.pause();
-								if (video.mozSrcObject)
-									video.mozSrcObject = null;
-								window.URL.revokeObjectURL(video.src);
-								video.src = '';
-								video.parentNode.removeChild(video);
-								var modal = document
-										.getElementById('capture-modal');
-								if (modal)
-									modal.parentNode.removeChild(modal);
+										.getElementById('snapshot-canvas');
+								destroy(video, canvas);
 							});
 					video.onerror = function() {
 						if (video)
-							stop();
+							destroy(video);
 					};
 					// stream.onended = noStream;
 					if (window.webkitURL)
@@ -121,6 +100,30 @@
 					else
 						alert(error);
 				});
+	}
+
+	function destroy(video, canvas) {
+		if (canvas)
+			canvas.parentNode.removeChild(canvas);
+		if (videoStream) {
+			if (videoStream.stop)
+				videoStream.stop();
+			else if (videoStream.msStop)
+				videoStream.msStop();
+			videoStream.onended = null;
+			videoStream = null;
+		}
+		video.onerror = null;
+		video.pause();
+		if (video.mozSrcObject)
+			video.mozSrcObject = null;
+		if (window.URL)
+			window.URL.revokeObjectURL(video.src);
+		video.src = '';
+		video.parentNode.removeChild(video);
+		var modal = document.getElementById('snapshot-modal');
+		if (modal)
+			modal.parentNode.removeChild(modal);
 	}
 })(jQuery);
 /*
