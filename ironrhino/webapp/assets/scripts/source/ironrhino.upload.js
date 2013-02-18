@@ -28,6 +28,19 @@ Initialization.upload = function() {
 								});
 					}
 				});
+	}).on('click', '#files button.capture', function() {
+		$.capture({
+					oncapture : function(data, timestamp) {
+						var filename = 'snapshot_'
+								+ new Date(timestamp).format('%Y%m%d%H%M%S')
+								+ '.png';
+						var file = dataURLtoBlob(data);
+						uploadFiles([file], [filename]);
+					},
+					onerror : function(msg) {
+						Message.showError(msg);
+					}
+				});
 	}).on('click', '#files button.delete', function() {
 				if (!$('#files tbody input:checked').length)
 					Message.showMessage('no.selection');
@@ -132,22 +145,23 @@ function deleteFiles(file) {
 			});
 
 }
-function uploadFiles(files) {
-	if (files && files.length)
+function uploadFiles(files, filenames) {
+	if (files && files.length) {
+		var data = {
+			folder : $('#upload_form [name="folder"]').val(),
+			autorename : $('#upload_form [name="autorename"]').is(':checked')
+		};
+		if (filenames && filenames.length)
+			data.filename = filenames;
 		return $.ajaxupload(files, {
 					url : $('#upload_form').attr('action'),
 					name : $('#upload_form input[type="file"]').attr('name'),
-					data : {
-						folder : $('#upload_form [name="folder"]').val(),
-						autorename : $('#upload_form [name="autorename"]')
-								.is(':checked')
-					},
+					data : data,
 					beforeSend : Indicator.show,
 					success : function(xhr) {
-						Ajax.handleResponse(xhr.responseText, {
-									replacement : 'files'
-								});
 						Indicator.hide();
+						$('#files button.reload').trigger('click');
 					}
 				});
+	}
 }

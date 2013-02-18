@@ -29,6 +29,7 @@
 			<td colspan="4" class="center">
 			<button type="button" class="btn delete">${action.getText('delete')}</button>
 			<button type="button" class="btn mkdir">${action.getText('create.subfolder')}</button>
+			<button type="button" class="btn capture">${action.getText('capture')}</button>
 			<button type="button" class="btn reload">${action.getText('reload')}</button>
 			</td>
 		</tr>

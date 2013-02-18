@@ -35,6 +35,8 @@ public class UploadAction extends BaseAction {
 
 	private String[] fileFileName;
 
+	private String[] filename; // for override default filename
+
 	private String folder;
 
 	private String folderEncoded;
@@ -102,6 +104,10 @@ public class UploadAction extends BaseAction {
 		this.fileFileName = fileFileName;
 	}
 
+	public void setFilename(String[] filename) {
+		this.filename = filename;
+	}
+
 	public String getFileStoragePath() {
 		return settingControl.getStringValue(
 				Constants.SETTING_KEY_FILE_STORAGE_PATH, "/assets");
@@ -124,6 +130,8 @@ public class UploadAction extends BaseAction {
 			List<String> excludes = Arrays.asList(arr);
 			for (File f : file) {
 				String fn = fileFileName[i];
+				if (filename != null && filename.length > i)
+					fn = filename[i];
 				String suffix = fn.substring(fn.lastIndexOf('.') + 1);
 				if (!excludes.contains(suffix))
 					try {
