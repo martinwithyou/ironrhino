@@ -62,7 +62,11 @@ public class UploadFilesHandler implements AccessHandler {
 			if (contentType != null)
 				response.setContentType(contentType);
 			OutputStream os = response.getOutputStream();
-			IOUtils.copy(is, os);
+			try {
+				IOUtils.copy(is, os);
+			} catch (Exception e) {
+				//supress ClientAbortException
+			}
 			os.close();
 			is.close();
 		} catch (IOException e) {
