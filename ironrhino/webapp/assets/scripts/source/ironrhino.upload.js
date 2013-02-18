@@ -160,6 +160,20 @@ function uploadFiles(files, filenames) {
 					beforeSend : Indicator.show,
 					success : function(xhr) {
 						Indicator.hide();
+						var data = xhr.responseText;
+						var html = data
+								.replace(/<script(.|\s)*?\/script>/g, '');
+						var div = $('<div/>').html(html);
+						var message = $('#message', div);
+						if (message.html()) {
+							if ($('#message').length)
+								$('#message').html(message.html());
+							else
+								$('<div id="message">' + message.html()
+										+ '</div>').prependTo($('#content'));
+							if ($('#message .action-error').length)
+								return;
+						}
 						$('#files button.reload').trigger('click');
 					}
 				});
