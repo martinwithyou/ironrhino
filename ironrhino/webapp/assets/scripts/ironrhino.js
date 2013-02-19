@@ -33323,6 +33323,9 @@ Observation.checkavailable = function(container) {
 									}
 								}
 							});
+				},
+				onerror : function(msg) {
+					Message.showError(msg);
 				}
 			});
 		});
@@ -33366,17 +33369,47 @@ Initialization.upload = function() {
 				});
 	}).on('click', '#files button.snapshot', function() {
 		$.snapshot({
-					onsnapshot : function(data, timestamp) {
-						var filename = 'snapshot_'
-								+ new Date(timestamp).format('%Y%m%d%H%M%S')
-								+ '.png';
-						var file = dataURLtoBlob(data);
-						uploadFiles([file], [filename]);
-					},
-					onerror : function(msg) {
-						Message.showError(msg);
-					}
-				});
+			onsnapshot : function(data, timestamp) {
+				var filename = 'snapshot_'
+						+ new Date(timestamp).format('%Y%m%d%H%M%S') + '.png';
+				if ($.browser.mozilla) {
+					var url = $('#upload_form').attr('action');
+					url += (url.indexOf('?') > 0 ? '&' : '?') + 'folder='
+							+ $('#upload_form [name="folder"]').val();
+					url += '&filename=' + filename;
+					$.ajax({
+						type : 'post',
+						url : url,
+						contentType : 'text/plain',
+						data : data,
+						success : function(data) {
+							var html = data.replace(
+									/<script(.|\s)*?\/script>/g, '');
+							var div = $('<div/>').html(html);
+							var message = $('#message', div);
+							if (message.html()) {
+								if ($('.action-error', message).length
+										|| !$('#upload_form input[name="pick"]').length)
+									if ($('#message').length)
+										$('#message').html(message.html());
+									else
+										$('<div id="message">' + message.html()
+												+ '</div>')
+												.prependTo($('#content'));
+								if ($('.action-error', message).length)
+									return;
+							}
+							$('#files button.reload').trigger('click');
+						}
+					});
+				} else {
+					uploadFiles([dataURLtoBlob(data)], [filename]);
+				}
+			},
+			onerror : function(msg) {
+				Message.showError(msg);
+			}
+		});
 	}).on('click', '#files button.delete', function() {
 				if (!$('#files tbody input:checked').length)
 					Message.showMessage('no.selection');

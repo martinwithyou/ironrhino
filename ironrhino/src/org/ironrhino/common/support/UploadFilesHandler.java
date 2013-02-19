@@ -64,10 +64,10 @@ public class UploadFilesHandler implements AccessHandler {
 			OutputStream os = response.getOutputStream();
 			try {
 				IOUtils.copy(is, os);
+				os.close();
 			} catch (Exception e) {
 				//supress ClientAbortException
 			}
-			os.close();
 			is.close();
 		} catch (IOException e) {
 			e.printStackTrace();

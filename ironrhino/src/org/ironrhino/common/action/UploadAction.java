@@ -1,8 +1,10 @@
 package org.ironrhino.common.action;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Arrays;
@@ -12,6 +14,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.Constants;
@@ -144,6 +147,19 @@ public class UploadAction extends BaseAction {
 				i++;
 			}
 			addActionMessage(getText("operate.success"));
+		} else if (StringUtils.isNotBlank(requestBody) && filename != null
+				&& filename.length > 0) {
+			if (requestBody.startsWith("data:image"))
+				requestBody = requestBody
+						.substring(requestBody.indexOf(',') + 1);
+			InputStream is = new ByteArrayInputStream(
+					Base64.decodeBase64(requestBody));
+			try {
+				fileStorage.write(is, createPath(filename[0], autorename));
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new ErrorMessage(e.getMessage());
+			}
 		}
 		return list();
 	}
