@@ -25,7 +25,7 @@
 						Indicator.hide();
 					var container = options.container;
 					if (!container) {
-						var modal = $('<div id="snapshot-modal" class="modal" style="z-index:10000;"><div  id="snapshot-modal-body" class="modal-body" style="max-height:600px;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div></div>')
+						var modal = $('<div id="snapshot-modal" class="modal" style="z-index:10000;"><div style="padding: 5px 5px 0 0;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div><div  id="snapshot-modal-body" class="modal-body" style="max-height:600px;"></div></div>')
 								.appendTo(document.body);
 						$('button.close', modal).click(function() {
 									destroy();
@@ -40,7 +40,7 @@
 						video.id = 'snapshot-video';
 						video.autoplay = true;
 						video.style.cursor = 'pointer';
-						video.style.width = '95%';
+						video.style.width = '100%';
 						container.appendChild(video);
 					}
 					if (options.onsnapshot) {
@@ -54,7 +54,7 @@
 								canvas = document.createElement('canvas');
 								canvas.id = 'snapshot-canvas';
 								canvas.style.cursor = 'pointer';
-								canvas.style.width = '95%';
+								canvas.style.width = '100%';
 								container.appendChild(canvas);
 							}
 							canvas.width = this.videoWidth;
