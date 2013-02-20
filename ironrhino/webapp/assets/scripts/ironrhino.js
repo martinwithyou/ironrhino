@@ -33376,19 +33376,22 @@ Observation.upload = function(container) {
 			beforeSend : Indicator.show,
 			success : function(data) {
 				Indicator.hide();
-				var html = data.replace(/<script(.|\s)*?\/script>/g, '');
-				var div = $('<div/>').html(html);
-				var message = $('#message', div);
-				if (message.html()) {
-					if ($('.action-error', message).length
-							|| !$('#upload_form input[name="pick"]').length)
-						if ($('#message').length)
-							$('#message').html(message.html());
-						else
-							$('<div id="message">' + message.html() + '</div>')
-									.prependTo($('#content'));
-					if ($('.action-error', message).length)
-						return;
+				if (typeof data == 'string') {
+					var html = data.replace(/<script(.|\s)*?\/script>/g, '');
+					var div = $('<div/>').html(html);
+					var message = $('#message', div);
+					if (message.html()) {
+						if ($('.action-error', message).length
+								|| !$('#upload_form input[name="pick"]').length)
+							if ($('#message').length)
+								$('#message').html(message.html());
+							else
+								$('<div id="message">' + message.html()
+										+ '</div>').prependTo($('#content'));
+					}
+				} else {
+					Message.showActionError(data.actionErrors);
+					Message.showActionMessage(data.actionMessages);
 				}
 				$('#files button.reload').trigger('click');
 			}
