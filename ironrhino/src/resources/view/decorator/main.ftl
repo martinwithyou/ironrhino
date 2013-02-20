@@ -30,7 +30,7 @@
 <#noescape>${head}</#noescape>
 </head>
 
-<body>
+<body class="render-location-qrcode">
 
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 <div class="navbar navbar-fixed-top">

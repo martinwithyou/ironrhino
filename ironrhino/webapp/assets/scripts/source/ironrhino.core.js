@@ -588,6 +588,22 @@ Initialization.common = function() {
 			});
 		});
 	}
+	if ($(document.body).hasClass('render-location-qrcode')) {
+		$('<div id="render-location-qrcode" style="width:15px;position:fixed;bottom:0;right:0;cursor:pointer;"><i class="icon-qrcode"></i></div>')
+				.appendTo(document.body);
+		$('#render-location-qrcode').click(function() {
+			var _this = $(this);
+			_this.hide();
+			var modal = $('<div class="modal" style="z-index:10000;"><div class="modal-body" style="max-height:500px;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><div class="location-qrcode" style="width:495px;">'
+					+ document.location.href + '</div></div></div>')
+					.appendTo(document.body);
+			$('.location-qrcode', modal).encodeqrcode();
+			$('button.close', modal).click(function() {
+						modal.remove();
+						_this.show();
+					});
+		});
+	}
 	if (document.location.search.indexOf('printpage=true') != -1) {
 		window.print();
 		window.close();
