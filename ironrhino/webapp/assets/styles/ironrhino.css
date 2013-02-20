@@ -7186,6 +7186,14 @@ a.remove:hover {
   opacity: 0.4;
   filter: alpha(opacity=40);
 }
+
+.icon-download-alt,.icon-download{
+ opacity: 0.2;
+}
+.icon-download-alt:hover,.icon-download:hover{
+ opacity: 0.5;
+}
+
 .drophover { 
 	border: 2px dashed #333; 
 }

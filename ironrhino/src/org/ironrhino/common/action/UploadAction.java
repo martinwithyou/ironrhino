@@ -221,6 +221,30 @@ public class UploadAction extends BaseAction {
 		return list();
 	}
 
+	public String rename() {
+		String oldName = getUid();
+		if (filename == null || filename.length == 0) {
+			addActionError(getText("validation.required"));
+			return list();
+		}
+		String newName = filename[0];
+		if (!fileStorage.exists(Files.simplifyPath(UPLOAD_DIR + "/" + folder
+				+ "/" + oldName))) {
+			addActionError(getText("validation.not.exists"));
+			return list();
+		}
+		if (fileStorage.exists(Files.simplifyPath(UPLOAD_DIR + "/" + folder
+				+ "/" + newName))) {
+			addActionError(getText("validation.already.exists"));
+			return list();
+		}
+		fileStorage.rename(
+				Files.simplifyPath(UPLOAD_DIR + "/" + folder + "/" + oldName),
+				Files.simplifyPath(UPLOAD_DIR + "/" + folder + "/" + newName));
+		addActionMessage(getText("operate.success"));
+		return list();
+	}
+
 	private String createPath(String filename, boolean autorename) {
 		String dir = UPLOAD_DIR + "/";
 		if (StringUtils.isNotBlank(folder))

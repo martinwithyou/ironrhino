@@ -33344,7 +33344,7 @@ Observation.upload = function(container) {
 		}
 	}
 
-	$('.uploaditem', container).attr('draggable', true).each(function() {
+	$('.uploaditem', container).prop('draggable', true).each(function() {
 		var t = $(this);
 		this.ondragstart = function(e) {
 			e.dataTransfer.effectAllowed = 'copy';
@@ -33356,6 +33356,45 @@ Observation.upload = function(container) {
 	$('#more', container).click(function() {
 				addMore(1);
 			});
+
+	$('.filename').dblclick(function() {
+		if (this.contentEditable !== true) {
+			$(this).removeAttr('draggable').data('oldvalue', $(this).text())
+					.css('cursor', 'text');
+			this.contentEditable = true;
+			$(this).focus();
+		}
+	}).blur(function() {
+		var oldvalue = $(this).data('oldvalue');
+		var newvalue = $(this).text();
+		$.ajax({
+			url : CONTEXT_PATH + '/common/upload/rename/' + encodeURI(oldvalue),
+			data : {
+				folder : $('#upload_form [name="folder"]').val(),
+				filename : newvalue
+			},
+			beforeSend : Indicator.show,
+			success : function(data) {
+				Indicator.hide();
+				var html = data.replace(/<script(.|\s)*?\/script>/g, '');
+				var div = $('<div/>').html(html);
+				var message = $('#message', div);
+				if (message.html()) {
+					if ($('.action-error', message).length
+							|| !$('#upload_form input[name="pick"]').length)
+						if ($('#message').length)
+							$('#message').html(message.html());
+						else
+							$('<div id="message">' + message.html() + '</div>')
+									.prependTo($('#content'));
+					if ($('.action-error', message).length)
+						return;
+				}
+				$('#files button.reload').trigger('click');
+			}
+		});
+	});
+
 };
 
 function addMore(n) {
