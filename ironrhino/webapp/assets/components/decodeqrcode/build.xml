@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="compress" default="compress" basedir=".">
+
+	<target name="compress">
+		<concat destfile="decodeqrcode.js" encoding="utf-8" fixlastline="yes">
+			<filelist>
+				<file name="grid.js" />
+				<file name="version.js" />
+				<file name="detector.js" />
+				<file name="formatinf.js" />
+				<file name="errorlevel.js" />
+				<file name="bitmat.js" />
+				<file name="datablock.js" />
+				<file name="bmparser.js" />
+				<file name="datamask.js" />
+				<file name="rsdecoder.js" />
+				<file name="gf256poly.js" />
+				<file name="gf256.js" />
+				<file name="decoder.js" />
+				<file name="qrcode.js" />
+				<file name="findpat.js" />
+				<file name="alignpat.js" />
+				<file name="databr.js" />
+			</filelist>
+		</concat>
+		<java jar="${basedir}/../../../../lib/closure-compiler.jar" fork="true">
+			<arg line=" --js=decodeqrcode.js --js_output_file=decodeqrcode-min.js" />
+		</java>
+	</target>
+
+
+
+</project>

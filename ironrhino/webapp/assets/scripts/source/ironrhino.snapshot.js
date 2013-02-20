@@ -1,5 +1,6 @@
 (function($) {
 	var videoStream;
+	var interval;
 	$.snapshot = function(options) {
 		options = options || {};
 		if (!navigator.getUserMedia)
@@ -24,8 +25,11 @@
 						Indicator.hide();
 					var container = options.container;
 					if (!container) {
-						$('<div id="snapshot-modal" class="modal" style="z-index:10000;"><div  id="snapshot-modal-body" class="modal-body" style="max-height:600px;"></div></div>')
+						var modal = $('<div id="snapshot-modal" class="modal" style="z-index:10000;"><div  id="snapshot-modal-body" class="modal-body" style="max-height:600px;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></div></div>')
 								.appendTo(document.body);
+						$('button.close', modal).click(function() {
+									destroy();
+								});
 						container = 'snapshot-modal-body';
 					}
 					if (typeof container == 'string')
@@ -36,49 +40,69 @@
 						video.id = 'snapshot-video';
 						video.autoplay = true;
 						video.style.cursor = 'pointer';
-						video.style.width = '100%';
+						video.style.width = '95%';
 						container.appendChild(video);
 					}
-					video.addEventListener('click', function(e) {
-						video.style.zIndex = '2000';
-						video.style.width = '20%';
-						video.style.position = 'absolute';
-						var canvas = document.getElementById('snapshot-canvas');
-						if (!canvas) {
-							canvas = document.createElement('canvas');
-							canvas.id = 'snapshot-canvas';
-							canvas.style.cursor = 'pointer';
-							canvas.style.width = '100%';
-							container.appendChild(canvas);
-						}
-						canvas.width = this.videoWidth;
-						canvas.height = this.videoHeight;
-						canvas.getContext('2d').drawImage(video, 0, 0);
-						canvas.setAttribute('data-timestamp', new Date()
-										.getTime());
-						canvas.addEventListener('click', function() {
-							if (options.onsnapshot)
+					if (options.onsnapshot) {
+						video.addEventListener('click', function(e) {
+							video.style.zIndex = '2000';
+							video.style.width = '20%';
+							video.style.position = 'absolute';
+							var canvas = document
+									.getElementById('snapshot-canvas');
+							if (!canvas) {
+								canvas = document.createElement('canvas');
+								canvas.id = 'snapshot-canvas';
+								canvas.style.cursor = 'pointer';
+								canvas.style.width = '95%';
+								container.appendChild(canvas);
+							}
+							canvas.width = this.videoWidth;
+							canvas.height = this.videoHeight;
+							canvas.getContext('2d').drawImage(video, 0, 0);
+							canvas.setAttribute('data-timestamp', new Date()
+											.getTime());
+							canvas.addEventListener('click', function() {
+
 								options
 										.onsnapshot(
 												this,
 												parseInt(this
 														.getAttribute('data-timestamp')));
-							destroy(video, this);
+								destroy();
+							});
 						});
-					});
-					video.addEventListener('dblclick', function(e) {
-								var canvas = document.createElement('canvas');
-								canvas.getContext('2d').drawImage(video, 0, 0);
-								if (options.onsnapshot)
+						video.addEventListener('dblclick', function(e) {
+									var canvas = document
+											.createElement('canvas');
+									canvas.getContext('2d').drawImage(video, 0,
+											0);
 									options.onsnapshot(canvas, new Date()
 													.getTime());
-								canvas = document
-										.getElementById('snapshot-canvas');
-								destroy(video, canvas);
-							});
+									canvas = null;
+									destroy();
+								});
+					} else if (options.oncapture) {
+						interval = setInterval(function() {
+									var canvas = document
+											.getElementById('snapshot-canvas');
+									if (!canvas) {
+										canvas = document
+												.createElement('canvas');
+										canvas.id = 'snapshot-canvas';
+										canvas.style.display = 'none';
+										container.appendChild(canvas);
+									}
+									canvas.width = video.videoWidth;
+									canvas.height = video.videoHeight;
+									canvas.getContext('2d').drawImage(video, 0,
+											0);
+									options.oncapture(canvas, destroy);
+								}, 1000);
+					}
 					video.onerror = function() {
 						if (video)
-							destroy(video);
+							destroy();
 					};
 					// stream.onended = noStream;
 					if (window.webkitURL)
@@ -102,7 +126,13 @@
 				});
 	}
 
-	function destroy(video, canvas) {
+	function destroy() {
+		if (interval) {
+			clearInterval(interval);
+			interval = null;
+		}
+		var video = document.getElementById('snapshot-video');
+		var canvas = document.getElementById('snapshot-canvas');
 		if (canvas)
 			canvas.parentNode.removeChild(canvas);
 		if (videoStream) {

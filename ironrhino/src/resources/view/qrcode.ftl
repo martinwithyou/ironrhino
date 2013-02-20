@@ -2,6 +2,7 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('qrcode')}</title>
+<script type="text/javascript" src="<@url value="/assets/components/decodeqrcode/decodeqrcode-min.js"/>"></script>
 </head>
 <body>
 <ul class="nav nav-tabs">
