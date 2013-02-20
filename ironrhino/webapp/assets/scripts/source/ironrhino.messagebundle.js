@@ -17,7 +17,9 @@ MessageBundle = {
 		'select' : 'please select',
 		'confirm.delete' : 'are sure to delete?',
 		'confirm.save' : 'are sure to save?',
-		'confirm.exit' : 'you have unsaved modification,are sure to exit?'
+		'confirm.exit' : 'you have unsaved modification,are sure to exit?',
+		'unsupported.browser' : 'unsupported browser',
+		'action.denied' : 'requested action denied'
 	},
 	'zh-cn' : {
 		'ajax.loading' : '正在加载...',
@@ -49,7 +51,9 @@ MessageBundle = {
 		'confirm.save' : '确定要保存?',
 		'confirm.exit' : '有改动未保存,确定要离开?',
 		'true' : '是',
-		'false' : '否'
+		'false' : '否',
+		'unsupported.browser' : '你使用的浏览器不支持该功能',
+		'action.denied' : '你拒绝了请求'
 	},
 	get : function() {
 		var key = arguments[0];

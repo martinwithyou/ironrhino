@@ -8,7 +8,7 @@
 					|| navigator.mozGetUserMedia
 					|| navigator.webkitGetUserMedia || navigator.msGetUserMedia;
 		if (!navigator.getUserMedia) {
-			var error = 'getUserMedia() not available from your Web browser!';
+			var error = MessageBundle.get('unsupported.browser');
 			if (options.onerror)
 				options.onerror(error);
 			else
@@ -118,7 +118,9 @@
 					else
 						video.src = stream;
 				}, function() {
-					var error = 'Access to camera was denied!';
+					if (typeof Indicator.hide != 'undefined')
+						Indicator.hide();
+					var error = MessageBundle.get('action.denied');
 					if (options.onerror)
 						options.onerror(error);
 					else
