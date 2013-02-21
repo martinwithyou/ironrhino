@@ -90,7 +90,7 @@ $(function() {
 			}
 		};
 		setInterval(function(){
-			if(($('#form').attr('dirty')||ed.isDirty())&&$('#page_path').val()){
+			if(($('#form').attr('dirty')||ed.isDirty())&&$('#page_path').val()&&$('#page_content').val()){
 				var action = $('#form').attr('action');
 				$('#form').attr('action',action.substring(0,action.lastIndexOf('/')+1)+'draft');
 				ed.save();

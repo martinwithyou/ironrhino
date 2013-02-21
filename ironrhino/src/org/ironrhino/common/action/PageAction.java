@@ -158,9 +158,7 @@ public class PageAction extends BaseAction {
 
 	@Override
 	@JsonConfig(propertyName = "page")
-	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.pagepath", trim = true, key = "validation.required"),
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.pagepath", trim = true, key = "validation.required") })
 	public String save() {
 		String path = page.getPagepath().trim().toLowerCase();
 		if (!path.startsWith("/"))
