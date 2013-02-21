@@ -64,10 +64,14 @@ public class AnnotationUtils {
 		if (!cache.containsKey(key)) {
 			Set<String> set = new HashSet<String>();
 			try {
-				Field[] fs = clazz.getDeclaredFields();
-				for (Field f : fs)
-					if (f.getAnnotation(annotaionClass) != null)
-						set.add(f.getName());
+				Class<?> cls = clazz;
+				while (!cls.equals(Object.class)) {
+					Field[] fs = cls.getDeclaredFields();
+					for (Field f : fs)
+						if (f.getAnnotation(annotaionClass) != null)
+							set.add(f.getName());
+					cls = cls.getSuperclass();
+				}
 				PropertyDescriptor[] pds = Introspector.getBeanInfo(clazz)
 						.getPropertyDescriptors();
 				for (PropertyDescriptor pd : pds)
@@ -109,10 +113,15 @@ public class AnnotationUtils {
 		if (!cache.containsKey(key)) {
 			Map<String, Annotation> map = new HashMap<String, Annotation>();
 			try {
-				Field[] fs = clazz.getDeclaredFields();
-				for (Field f : fs)
-					if (f.getAnnotation(annotaionClass) != null)
-						map.put(f.getName(), f.getAnnotation(annotaionClass));
+				Class<?> cls = clazz;
+				while (!cls.equals(Object.class)) {
+					Field[] fs = cls.getDeclaredFields();
+					for (Field f : fs)
+						if (f.getAnnotation(annotaionClass) != null)
+							map.put(f.getName(),
+									f.getAnnotation(annotaionClass));
+					cls = cls.getSuperclass();
+				}
 				PropertyDescriptor[] pds = Introspector.getBeanInfo(clazz)
 						.getPropertyDescriptors();
 				for (PropertyDescriptor pd : pds)
