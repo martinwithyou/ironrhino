@@ -183,6 +183,7 @@ Message = {
 				msg = $('#' + fid + '_message');
 			}
 			msg.html(html);
+			_observe(msg);
 			$('html,body').animate({
 						scrollTop : msg.offset().top - 20
 					}, 100);
@@ -1064,6 +1065,7 @@ Observation.common = function(container) {
 					return false;
 				if (HISTORY_ENABLED
 						&& $(this).hasClass('view')
+						&& !$(this).hasClass('nohistory')
 						&& ($(this).hasClass('history') || !($(this)
 								.data('replacement')))) {
 					var hash = this.href;
