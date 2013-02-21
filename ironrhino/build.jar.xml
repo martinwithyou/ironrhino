@@ -55,7 +55,9 @@
 	<property name="common-qrcode-jar.includes" value="org/ironrhino/common/action/Qrcode*,resources/view/qrcode*" />
 	<property name="security-jar.name" value="ironrhino-security-${version}.jar" />
 	<property name="security-config-jar.name" value="ironrhino-security-config-${version}.jar" />
-	<property name="security-config-jar.includes" value="resources/spring/applicationContext-security.xml" />
+	<property name="security-config-jar.includes" value="resources/spring/applicationContext-security*.xml" />
+	<property name="security-config-base-jar.name" value="ironrhino-security-config-base-${version}.jar" />
+	<property name="security-config-base-jar.includes" value="resources/spring/applicationContext-security-base.xml" />
 	<property name="security-signup-jar.name" value="ironrhino-security-signup-${version}.jar" />
 	<property name="security-signup-jar.includes" value="org/ironrhino/security/action/SignupAction*,resources/view/signup*.ftl" />
 	<property name="security-loginrecord-jar.name" value="ironrhino-security-loginrecord-${version}.jar" />
@@ -120,6 +122,7 @@
 		<delete file="${target.dir}/${common-qrcode-jar.name}" />
 		<delete file="${target.dir}/${security-jar.name}" />
 		<delete file="${target.dir}/${security-config-jar.name}" />
+		<delete file="${target.dir}/${security-config-base-jar.name}" />
 		<delete file="${target.dir}/${security-loginrecord-jar.name}" />
 		<delete file="${target.dir}/${security-acl-jar.name}" />
 		<delete file="${target.dir}/${security-oauth-client-jar.name}" />
@@ -371,6 +374,15 @@
 		<jar jarfile="${target.dir}/${security-config-jar.name}" basedir="${classes.dir}" includes="${security-config-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-config" />
+				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
+				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core,ironrhino-security" />
+			</manifest>
+		</jar>
+		<jar jarfile="${target.dir}/${security-config-base-jar.name}" basedir="${classes.dir}" includes="${security-config-base-jar.includes}">
+			<manifest>
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-security-base-config" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
 				<attribute name="Ironrhino-Component-Version" value="${version}" />
 				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
