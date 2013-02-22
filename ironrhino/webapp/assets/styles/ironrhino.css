@@ -7195,7 +7195,7 @@ a.remove:hover {
 }
 
 .drophover { 
-	border: 2px dashed #333; 
+	border: 2px dashed #333 !important; 
 }
 .datagrided [class*="icon-"]{
 	opacity: 0.6;
