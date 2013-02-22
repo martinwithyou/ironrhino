@@ -428,7 +428,7 @@ Ajax = {
 			}
 		}
 		if (target && target.tagName == 'FORM') {
-			if (!hasError && target.hasClass('disposable'))
+			if (!hasError && $(target).hasClass('disposable'))
 				setTimeout(function() {
 							$(':input', target).prop('disabled', true)
 						}, 100);

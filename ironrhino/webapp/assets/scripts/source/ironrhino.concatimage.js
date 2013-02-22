@@ -85,9 +85,21 @@
 			target.removeChild(img);
 			height += img.height;
 		}
-		$(field).val(canvas.toDataURL());
 		target.appendChild(canvas);
-		$(target).data('times', imgs.length);
+		if (field) {
+			var data = canvas.toDataURL();
+			if (data.length > parseInt($(field).data('maximum'))) {
+				Message.showActionError(MessageBundle.get($(field)
+								.data('error')
+								|| 'maximum.exceeded', data.length, $(field)
+								.data('maximum')));
+				canvas.parentNode.removeChild(canvas);
+				$(target).data('count', '0');
+			} else {
+				$(field).val(data);
+				$(target).data('count', imgs.length);
+			}
+		}
 	}
 })(jQuery);
 
