@@ -23,6 +23,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.internal.CriteriaImpl.OrderEntry;
 import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.model.IdAssigned;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
@@ -126,7 +127,15 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			}
 			return;
 		}
-		session.saveOrUpdate(obj);
+		if (obj instanceof IdAssigned)
+			session.save(obj);
+		else
+			session.saveOrUpdate(obj);
+	}
+
+	@Transactional
+	public void update(T obj) {
+		sessionFactory.getCurrentSession().update(obj);
 	}
 
 	@Transactional

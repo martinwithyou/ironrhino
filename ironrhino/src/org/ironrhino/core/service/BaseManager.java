@@ -16,6 +16,8 @@ public interface BaseManager<T extends Persistable<?>> {
 
 	public void save(T obj);
 
+	public void update(T obj);
+
 	public T get(Serializable id);
 
 	public void evict(T obj);
