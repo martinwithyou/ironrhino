@@ -428,16 +428,18 @@ Ajax = {
 			}
 		}
 		if (target && target.tagName == 'FORM') {
-			setTimeout(function() {
-						$('button[type="submit"]', target).prop('disabled',
-								false);
-						Captcha.refresh()
-					}, 100);
-			if (!hasError && $(target).hasClass('reset')) {
-				if (typeof target.reset == 'function'
-						|| (typeof target.reset == 'object' && !target.reset.nodeType))
-					target.reset();
-			}
+			if (!hasError && target.hasClass('disposable'))
+				setTimeout(function() {
+							$(':input', target).prop('disabled', true)
+						}, 100);
+			else
+				setTimeout(function() {
+							$('button[type="submit"]', target).prop('disabled',
+									false);
+							Captcha.refresh()
+						}, 100);
+			if (!hasError && $(target).hasClass('reset') && target.reset)
+				target.reset();
 		}
 		Indicator.text = '';
 		Ajax.fire(target, 'oncomplete', data);

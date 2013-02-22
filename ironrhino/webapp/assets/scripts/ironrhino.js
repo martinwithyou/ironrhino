@@ -31505,7 +31505,8 @@ MessageBundle = {
 		'confirm.save' : 'are sure to save?',
 		'confirm.exit' : 'you have unsaved modification,are sure to exit?',
 		'unsupported.browser' : 'unsupported browser',
-		'action.denied' : 'requested action denied'
+		'action.denied' : 'requested action denied',
+		'maximum.exceeded' : '{0} , exceed maximum {1}'
 	},
 	'zh-cn' : {
 		'ajax.loading' : '正在加载...',
@@ -31539,7 +31540,8 @@ MessageBundle = {
 		'true' : '是',
 		'false' : '否',
 		'unsupported.browser' : '你使用的浏览器不支持该功能',
-		'action.denied' : '你拒绝了请求'
+		'action.denied' : '你拒绝了请求',
+		'maximum.exceeded' : '{0} ,超过最大限制数{1}'
 	},
 	get : function() {
 		var key = arguments[0];
@@ -31548,7 +31550,7 @@ MessageBundle = {
 		if (typeof(msg) == 'undefined')
 			msg = key;
 		for (var i = 1; i < arguments.length; i++)
-			msg = msg.replace('{' + i + '}', arguments[i]);
+			msg = msg.replace('{' + (i - 1) + '}', arguments[i]);
 		return msg;
 	},
 	lang : function() {
@@ -31996,16 +31998,18 @@ Ajax = {
 			}
 		}
 		if (target && target.tagName == 'FORM') {
-			setTimeout(function() {
-						$('button[type="submit"]', target).prop('disabled',
-								false);
-						Captcha.refresh()
-					}, 100);
-			if (!hasError && $(target).hasClass('reset')) {
-				if (typeof target.reset == 'function'
-						|| (typeof target.reset == 'object' && !target.reset.nodeType))
-					target.reset();
-			}
+			if (!hasError && target.hasClass('disposable'))
+				setTimeout(function() {
+							$(':input', target).prop('disabled', true)
+						}, 100);
+			else
+				setTimeout(function() {
+							$('button[type="submit"]', target).prop('disabled',
+									false);
+							Captcha.refresh()
+						}, 100);
+			if (!hasError && $(target).hasClass('reset') && target.reset)
+				target.reset();
 		}
 		Indicator.text = '';
 		Ajax.fire(target, 'oncomplete', data);
@@ -33263,6 +33267,166 @@ Observation.checkavailable = function(container) {
 			modal.parentNode.removeChild(modal);
 	}
 })(jQuery);
+(function($) {
+
+	$.fn.concatsnapshot = function() {
+		this.click(function() {
+					var t = $(this);
+					var target = t.data('target') ? document
+							.getElementById($(this).data('target')) : this
+							.parentNode();
+					var times = $(target).data('times');
+					if (times && parseInt(times) >= parseInt(t.data('maximum'))) {
+						Message.showActionError(MessageBundle.get(t
+										.data('error')
+										|| 'maximum.exceeded', times, t
+										.data('maximum')));
+						return false;
+					}
+
+					$.snapshot({
+								onsnapshot : function(canvas) {
+									var times = $(target).data('times');
+									times ? $(target).data('times',
+											parseInt(times) + 1) : $(target)
+											.data('times', 1);
+									var image = target.querySelector('canvas');
+									if (!image) {
+										image = document
+												.createElement('canvas');
+										image.width = canvas.width;
+										image.height = canvas.height;
+										target.innerHTML = '';
+										target.appendChild(image);
+										var context = image.getContext('2d');
+										context.drawImage(canvas, 0, 0);
+									} else {
+										var image2 = image;
+										image2.style.display = 'none';
+										image = document
+												.createElement('canvas');
+										image.width = Math.max(image2.width,
+												canvas.width);
+										image.height = image2.height
+												+ canvas.height;
+										target.appendChild(image);
+										var context = image.getContext('2d');
+										context.drawImage(image2, 0, 0);
+										context.drawImage(canvas, 0,
+												image2.height);
+										image2.parentNode.removeChild(image2);
+									}
+									$('#' + t.data('field')).val(image
+											.toDataURL());
+								},
+								onerror : function(error) {
+									Message.showActionError(error);
+								}
+							});
+				});
+		return this;
+	}
+})(jQuery);
+
+Observation.concatsnapshot = function(container) {
+	$('.concatsnapshot', container).concatsnapshot();
+};
+(function($) {
+
+	$.fn.concatimage = function() {
+		this.each(function() {
+					var t = $(this);
+					var target = t.data('target') ? document.getElementById(t
+							.data('target')) : this.parentNode();
+					var field = document.getElementById(t.data('field'));
+					var maximum = parseInt(t.data('maximum'));
+					t.click(function() {
+								$('<input type="file" multiple/>')
+										.appendTo(target).hide().change(
+												function() {
+													concatenateImages(
+															this.files, target,
+															field, maximum,
+															t.data('error'));
+													$(this).remove();
+												}).click();
+							});
+					$(target).bind('dragover', function(e) {
+								$(this).addClass('drophover');
+								return false;
+							}).bind('dragleave', function(e) {
+								$(this).removeClass('drophover');
+								return false;
+							}).get(0).ondrop = function(e) {
+						e.preventDefault();
+						$(this).removeClass('drophover');
+						concatenateImages(e.dataTransfer.files, target, field,
+								maximum, t.data('error'));
+						return true;
+					};
+				});
+		return this;
+	}
+
+	function concatenateImages(files, target, field, maximum, error) {
+		if (files.length > maximum) {
+			Message.showActionError(MessageBundle.get(error
+							|| 'maximum.exceeded', files.length, maximum));
+			return;
+		}
+		window.URL = window.URL || window.webkitURL || window.mozURL;
+		$(target).text('');
+		var count = files.length;
+		for (var i = 0; i < count; i++) {
+			var img = document.createElement("img");
+			var url = window.URL.createObjectURL(files[i]);
+			img.src = url;
+			img.onload = function() {
+				window.URL.revokeObjectURL(url);
+				count--;
+				if (count == 0)
+					doConcatenateImages(target, field);
+			}
+			img.onerror = function() {
+				this.parentNode.removeChild(this);
+				window.URL.revokeObjectURL(url);
+				count--;
+				if (count == 0)
+					doConcatenateImages(target, field);
+			}
+			target.appendChild(img);
+		}
+	}
+
+	function doConcatenateImages(target, field) {
+		var imgs = target.querySelectorAll("img");
+		var maxWidth = 0;
+		var height = 0;
+		for (var i = 0; i < imgs.length; i++) {
+			var img = imgs[i];
+			maxWidth = Math.max(img.width, maxWidth);
+			height += img.height;
+		}
+		var canvas = document.createElement("canvas");
+		canvas.width = maxWidth;
+		canvas.height = height;
+		var context = canvas.getContext('2d');
+		height = 0;
+		for (var i = 0; i < imgs.length; i++) {
+			var img = imgs[i];
+			context.drawImage(img, 0, height);
+			target.removeChild(img);
+			height += img.height;
+		}
+		$(field).val(canvas.toDataURL());
+		target.appendChild(canvas);
+		$(target).data('times', imgs.length);
+	}
+})(jQuery);
+
+Observation.concatimage = function(container) {
+	$('.concatimage', container).concatimage();
+};
 (function($) {
 
 	$.fn.decodeqrcode = function() {

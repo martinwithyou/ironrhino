@@ -19,7 +19,8 @@ MessageBundle = {
 		'confirm.save' : 'are sure to save?',
 		'confirm.exit' : 'you have unsaved modification,are sure to exit?',
 		'unsupported.browser' : 'unsupported browser',
-		'action.denied' : 'requested action denied'
+		'action.denied' : 'requested action denied',
+		'maximum.exceeded' : '{0} , exceed maximum {1}'
 	},
 	'zh-cn' : {
 		'ajax.loading' : '正在加载...',
@@ -53,7 +54,8 @@ MessageBundle = {
 		'true' : '是',
 		'false' : '否',
 		'unsupported.browser' : '你使用的浏览器不支持该功能',
-		'action.denied' : '你拒绝了请求'
+		'action.denied' : '你拒绝了请求',
+		'maximum.exceeded' : '{0} ,超过最大限制数{1}'
 	},
 	get : function() {
 		var key = arguments[0];
@@ -62,7 +64,7 @@ MessageBundle = {
 		if (typeof(msg) == 'undefined')
 			msg = key;
 		for (var i = 1; i < arguments.length; i++)
-			msg = msg.replace('{' + i + '}', arguments[i]);
+			msg = msg.replace('{' + (i - 1) + '}', arguments[i]);
 		return msg;
 	},
 	lang : function() {
