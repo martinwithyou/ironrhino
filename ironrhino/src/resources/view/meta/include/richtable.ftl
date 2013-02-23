@@ -1,4 +1,4 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' resizable=true sortable=true readonly=false createable=true viewable=false celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false createable=true viewable=false celleditable=true deleteable=true searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
 <@rtstart formid=formid action=action entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable>
 <#nested/>
 </@rtstart>
@@ -14,7 +14,7 @@
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
 <#local index=index+1>
-<@rttbodytrstart entity=entity readonly=readonly showCheckColumn=showCheckColumn multipleCheck=multipleCheck/>
+<@rttbodytrstart entity=entity readonly=readonly showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid/>
 <#list columns?keys as name>
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>
@@ -68,9 +68,15 @@
 <tbody>
 </#macro>
 
-<#macro rttbodytrstart entity readonly=false showCheckColumn=true multipleCheck=true>
-<tr<#if !showCheckColumn&&entity.id??> data-rowid="${entity.id?string}"</#if>>
-<#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if entity.id??> value="${entity.id?string}"</#if> class="custom"/></td></#if>
+<#macro rttbodytrstart entity readonly=false showCheckColumn=true multipleCheck=true rowid=''>
+<#if rowid==''>
+	<#local id=entity.id?string/>
+<#else>
+	<#local temp=rowid?interpret>
+	<#local id><@temp/></#local>
+</#if>
+<tr<#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if>>
+<#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if id?has_content> value="${id}"</#if> class="custom"/></td></#if>
 </#macro>
 
 <#macro rttbodytd value,entity,celleditable=true,template='',dynamicAttributes...>
