@@ -59,7 +59,7 @@
 									$(target).data('count', '0');
 									image.parentNode.removeChild(image);
 								} else {
-									field.val(data);
+									$(field).val(data);
 								}
 							}
 						},
