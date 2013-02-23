@@ -220,7 +220,8 @@ Richtable = {
 			closeOnEscape : false,
 			close : function() {
 				if (reloadonclose
-						&& !$('#_window_ form.ajax').hasClass('dontreload'))
+						&& ($('#_window_ form.ajax').hasClass('forcereload') || !$('#_window_ form.ajax')
+								.hasClass('dontreload')))
 					Richtable.reload(form);
 				$('#_window_ ').html('');
 				win.dialog('destroy').remove();
