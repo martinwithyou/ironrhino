@@ -158,7 +158,8 @@ Richtable = {
 					if (inputform.hasClass('view')
 							&& !(inputform.data('replacement')))
 						inputform.data('replacement', '_window_:content');
-					if (!inputform.hasClass('view')) {
+					if (!inputform.hasClass('view')
+							&& !inputform.hasClass('keepopen')) {
 						$('button[type=submit]', inputform).click(function(e) {
 							inputform[0].onsuccess = function() {
 								$(this).removeClass('dirty');
