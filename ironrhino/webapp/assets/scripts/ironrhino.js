@@ -31738,7 +31738,10 @@ Message = {
 							: 'action-message alert alert-info');
 		if (html) {
 			var parent = $('#content');
-			if (error && target && $(target).parents('#_window_').length)
+			if (target
+					&& $(target).parents('#_window_').length
+					&& (error || $(target).hasClass('view') || $(target)
+							.hasClass('keepopen')))
 				parent = $('#_window_');
 			if (!$('#message', parent).length)
 				$('<div id="message"></div>').prependTo(parent);
