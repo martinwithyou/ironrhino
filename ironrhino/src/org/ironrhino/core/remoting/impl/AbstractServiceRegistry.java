@@ -104,7 +104,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 							exportServices.put(inte.getName(),
 									ctx.getBean(beanName));
 							log.info(" exported service [{}] for bean [{}#{}]",
-									new String[] { inte.getName(), beanName,
+									new Object[] { inte.getName(), beanName,
 											beanClassName });
 						}
 					}
@@ -122,7 +122,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 				exportServices.put(clazz.getName(), ctx.getBean(beanName));
 				log.info(
 						" exported service [{}] for bean [{}#{}]",
-						new String[] { clazz.getName(), beanName, beanClassName });
+						new Object[] { clazz.getName(), beanName, beanClassName });
 			}
 			for (Class<?> c : clazz.getInterfaces())
 				export(c, beanName, beanClassName);

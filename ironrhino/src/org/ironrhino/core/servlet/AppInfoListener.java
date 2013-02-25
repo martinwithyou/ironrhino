@@ -59,7 +59,7 @@ public class AppInfoListener implements ServletContextListener {
 		logger.info("default timezone {}", TimeZone.getDefault().getID());
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={},profiles={}",
-				new String[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
+				new Object[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
 						AppInfo.getInstanceId(), AppInfo.getStage().toString(),
 						AppInfo.getAppHome(), AppInfo.getHostName(),
 						AppInfo.getHostAddress(), defaultProfiles });
@@ -71,7 +71,7 @@ public class AppInfoListener implements ServletContextListener {
 		System.clearProperty(AppInfo.getAppName() + ".instanceid");
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={} is shutdown",
-				new String[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
+				new Object[] { AppInfo.getAppName(), AppInfo.getAppVersion(),
 						AppInfo.getInstanceId(), AppInfo.getStage().toString(),
 						AppInfo.getAppHome(), AppInfo.getHostName(),
 						AppInfo.getHostAddress() });
