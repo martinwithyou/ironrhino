@@ -7077,7 +7077,7 @@ button.close {
 /*override bootstrap start*/
 body {
 	padding-top: 60px;
-	padding-bottom: 30px;
+	padding-bottom: 10px;
 }
 body.simple {
 	padding-top: 0;
