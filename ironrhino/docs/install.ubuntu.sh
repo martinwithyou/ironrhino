@@ -9,7 +9,7 @@ USER="$SUDO_USER"
 fi
 
 #install packages
-apt-get --force-yes --yes install openjdk-7-jdk ant mysql-server subversion nginx chkconfig sysv-rc-conf fontconfig xfonts-utils unzip iptables
+apt-get --force-yes --yes install openjdk-7-jdk ant mysql-server subversion nginx chkconfig sysv-rc-conf fontconfig xfonts-utils unzip iptables make gcc
 
 #install simsun font
 if [ -f "simsun.ttf" ]; then
@@ -227,4 +227,14 @@ EOF
 chmod +x /etc/init.d/iptables
 update-rc.d iptables defaults
 service iptables start
+fi
+
+#install redis
+if $(ls -l redis-*.tar.gz >/dev/null 2>&1);then 
+tar xvf redis-*.tar.gz >/dev/null && rm -rf redis-*.tar.gz
+rename s/^redis.*$/redis/g redis-*
+cd redis && make && make install
+cd utils && ./install_server.sh
+cd ../../
+rm -rf redis
 fi
