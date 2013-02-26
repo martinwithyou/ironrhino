@@ -26,6 +26,8 @@ if $(ls -l apache-tomcat-*.tar.gz >/dev/null 2>&1) && ! $(ls -l tomcat8080 >/dev
 tar xvf apache-tomcat-*.tar.gz >/dev/null && rm -rf apache-tomcat-*.tar.gz
 rename s/^apache-tomcat.*$/tomcat/g apache-tomcat-*
 cd tomcat && rm -rf bin/*.bat && rm -rf webapps/* && cd ..
+sed -i '99i export SPRING_PROFILES_DEFAULT' tomcat/bin/catalina.sh
+sed -i '99i SPRING_PROFILES_DEFAULT="dual"' tomcat/bin/catalina.sh
 sed -i '99i CATALINA_OPTS="-server -Xms128m -Xmx1024m -Xmn80m -Xss256k -XX:PermSize=128m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:+UseParNewGC -XX:CMSMaxAbortablePrecleanTime=5"' tomcat/bin/catalina.sh
 cp -R tomcat tomcat8080
 cp -R tomcat tomcat8081
