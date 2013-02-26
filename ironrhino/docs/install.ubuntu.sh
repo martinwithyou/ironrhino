@@ -22,7 +22,8 @@ fc-cache -fv
 fi
 
 #install tomcat
-if $(ls -l apache-tomcat-*.tar.gz >/dev/null 2>&1) && ! $(ls -l tomcat8080 >/dev/null 2>&1);then 
+if [ ! -d tomcat8080 ];then
+wget http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.37/bin/apache-tomcat-7.0.37.tar.gz
 tar xvf apache-tomcat-*.tar.gz >/dev/null && rm -rf apache-tomcat-*.tar.gz
 rename s/^apache-tomcat.*$/tomcat/g apache-tomcat-*
 cd tomcat && rm -rf bin/*.bat && rm -rf webapps/* && cd ..
@@ -60,6 +61,7 @@ cat>tomcat8081/conf/server.xml<<EOF
 EOF
 chown -R $USER:$USER tomcat*
 fi
+
 
 if [ ! -f /etc/init.d/tomcat8080 ]; then
 cat>/etc/init.d/tomcat8080<<EOF
