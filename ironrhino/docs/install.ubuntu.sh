@@ -234,11 +234,11 @@ service iptables start
 fi
 
 #install redis
-if ! which rdis-server > /dev/null ; then
+if ! which redis-server > /dev/null ; then
 wget http://redis.googlecode.com/files/redis-2.6.10.tar.gz
 tar xvf redis-*.tar.gz >/dev/null && rm -rf redis-*.tar.gz
 rename s/^redis.*$/redis/g redis-*
-cd redis && make && make install
+cd redis && make > /dev/null && make install > /dev/null
 cd utils && ./install_server.sh
 cd ../../
 rm -rf redis
