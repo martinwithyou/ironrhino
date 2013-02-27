@@ -23,10 +23,24 @@ fi
 
 #install tomcat
 if [ ! -d tomcat8080 ];then
+if ! $(ls -l apache-tomcat-*.tar.gz >/dev/null 2>&1) ; then
 wget http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.37/bin/apache-tomcat-7.0.37.tar.gz
+fi
 tar xvf apache-tomcat-*.tar.gz >/dev/null && rm -rf apache-tomcat-*.tar.gz
 rename s/^apache-tomcat.*$/tomcat/g apache-tomcat-*
 cd tomcat && rm -rf bin/*.bat && rm -rf webapps/* && cd ..
+cat>tomcat/conf/server.xml<<EOF
+<?xml version='1.0' encoding='utf-8'?>
+<Server port="\${port.shutdown}" shutdown="SHUTDOWN">
+  <Service name="Catalina">
+    <Connector port="\${port.http}" protocol="org.apache.coyote.http11.Http11NioProtocol" connectionTimeout="20000" redirectPort="8443" URIEncoding="UTF-8" useBodyEncodingForURI="true" enableLookups="false" bindOnInit="false" server="ironrhino" maxPostSize="4194304"/>
+    <Engine name="Catalina" defaultHost="localhost">
+      <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="false">
+      </Host>
+    </Engine>
+  </Service>
+</Server>
+EOF
 sed -i '99i export SPRING_PROFILES_DEFAULT' tomcat/bin/catalina.sh
 sed -i '99i SPRING_PROFILES_DEFAULT="dual"' tomcat/bin/catalina.sh
 sed -i '99i CATALINA_OPTS="-server -Xms128m -Xmx1024m -Xmn80m -Xss256k -XX:PermSize=128m -XX:MaxPermSize=512m -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:+UseParNewGC -XX:CMSMaxAbortablePrecleanTime=5"' tomcat/bin/catalina.sh
@@ -34,31 +48,9 @@ cp -R tomcat tomcat8080
 cp -R tomcat tomcat8081
 rm -rf tomcat
 sed -i '99i CATALINA_PID="/tmp/tomcat8080_pid"' tomcat8080/bin/catalina.sh
+sed -i '99i JAVA_OPTS="-Dport.http=8080 -Dport.shutdown=8005"' tomcat8080/bin/catalina.sh
 sed -i '99i CATALINA_PID="/tmp/tomcat8081_pid"' tomcat8081/bin/catalina.sh
-cat>tomcat8080/conf/server.xml<<EOF
-<?xml version='1.0' encoding='utf-8'?>
-<Server port="8005" shutdown="SHUTDOWN">
-  <Service name="Catalina">
-    <Connector port="8080" protocol="org.apache.coyote.http11.Http11NioProtocol" connectionTimeout="20000" redirectPort="8443" URIEncoding="UTF-8" useBodyEncodingForURI="true" enableLookups="false" bindOnInit="false" server="ironrhino" maxPostSize="4194304"/>
-    <Engine name="Catalina" defaultHost="localhost">
-      <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="false">
-      </Host>
-    </Engine>
-  </Service>
-</Server>
-EOF
-cat>tomcat8081/conf/server.xml<<EOF
-<?xml version='1.0' encoding='utf-8'?>
-<Server port="8006" shutdown="SHUTDOWN">
-  <Service name="Catalina">
-    <Connector port="8081" protocol="org.apache.coyote.http11.Http11NioProtocol" connectionTimeout="20000" redirectPort="8443" URIEncoding="UTF-8" useBodyEncodingForURI="true" enableLookups="false" bindOnInit="false" server="ironrhino" maxPostSize="4194304"/>
-    <Engine name="Catalina" defaultHost="localhost">
-      <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="false">
-      </Host>
-    </Engine>
-  </Service>
-</Server>
-EOF
+sed -i '99i JAVA_OPTS="-Dport.http=8081 -Dport.shutdown=8006"' tomcat8081/bin/catalina.sh
 chown -R $USER:$USER tomcat*
 fi
 
@@ -215,6 +207,8 @@ start)
 	iptables -A INPUT -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
 	iptables -A INPUT -p tcp --dport 8080 -j DROP
 	iptables -A INPUT -p tcp --dport 8081 -j DROP
+	iptables -A INPUT -p tcp --dport 8005 -j DROP
+	iptables -A INPUT -p tcp --dport 8006 -j DROP
        ;;
 stop)
 	iptables -F
@@ -234,7 +228,9 @@ fi
 
 #install redis
 if ! which redis-server > /dev/null ; then
+if ! $(ls -l redis-*.tar.gz >/dev/null 2>&1) ; then
 wget http://redis.googlecode.com/files/redis-2.6.10.tar.gz
+fi
 tar xvf redis-*.tar.gz >/dev/null && rm -rf redis-*.tar.gz
 rename s/^redis.*$/redis/g redis-*
 cd redis && make > /dev/null && make install > /dev/null

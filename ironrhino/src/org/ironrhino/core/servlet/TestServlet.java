@@ -27,7 +27,9 @@ public class TestServlet extends HttpServlet {
 				} else {
 					String contextPath = getServletContext().getContextPath();
 					String format = "http://localhost%s%s";
-					String port = System.getProperty("http.port");
+					String port = System.getProperty("port.http");
+					if (StringUtils.isBlank(port))
+						port = System.getProperty("port.http.nonssl");
 					String context = (contextPath.indexOf('/') == 0 ? "" : "/")
 							+ contextPath;
 					if (StringUtils.isNotBlank(port)) {

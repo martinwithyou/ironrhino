@@ -88,7 +88,9 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	@Override
 	public void afterPropertiesSet() {
 		if (port == 0) {
-			String p = System.getProperty("http.port");
+			String p = System.getProperty("port.http");
+			if (StringUtils.isBlank(p))
+				p = System.getProperty("port.http.nonssl");
 			if (StringUtils.isNotBlank(p) && StringUtils.isNumeric(p))
 				port = Integer.valueOf(p);
 			else
