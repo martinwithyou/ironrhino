@@ -179,6 +179,7 @@ cp -R /home/$USER/tomcat8080/webapps/ROOT /home/$USER/tomcat8081/webapps/ROOT
 ant -Dserver.home=/home/$USER/tomcat8081 -Dserver.shutdown.port=8006 -Dserver.startup.port=8081 startup
 EOF
 chown $USER:$USER deploy.sh
+chmod +x deploy.sh
 fi
 
 #generate backup.sh
@@ -197,6 +198,7 @@ rm -rf /home/$USER/backup/\$olddate*
 chown -R $USER:$USER /home/$USER/backup
 EOF
 chown $USER:$USER backup.sh
+chmod +x backup.sh
 fi
 
 
