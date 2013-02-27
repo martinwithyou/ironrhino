@@ -244,4 +244,8 @@ cd ../../
 rm -rf redis
 fi
 
+#svn checkout ironrhino
+if [ ! -d ironrhino ];then
+svn checkout http://ironrhino.googlecode.com/svn/trunk/ironrhino
+fi
 
