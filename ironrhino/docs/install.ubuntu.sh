@@ -166,16 +166,13 @@ elif [ ! -d "\$1" ]; then
     echo "directory \$1 doesn't exists"
     exit 1
 fi
-
 cd ironrhino && svn up && ant dist && cd ..
 cd \$1 && svn up
-#rm -rf webapp/WEB-INF/lib/*
 ant -Dserver.home=/home/$USER/tomcat8080 -Dwebapp.deploy.dir=/home/$USER/tomcat8080/webapps/ROOT deploy
-
 ant -Dserver.home=/home/$USER/tomcat8081 -Dserver.shutdown.port=8006 -Dserver.startup.port=8081 shutdown
 rm -rf /home/$USER/tomcat8081/webapps
-mkdir -p /home/$USER/tomcat8081/webapps/ROOT
-cp -R /home/$USER/tomcat8080/webapps/ROOT /home/$USER/tomcat8081/webapps/ROOT
+mkdir -p /home/$USER/tomcat8081/webapps
+cp -R /home/$USER/tomcat8080/webapps/ROOT /home/$USER/tomcat8081/webapps
 ant -Dserver.home=/home/$USER/tomcat8081 -Dserver.shutdown.port=8006 -Dserver.startup.port=8081 startup
 EOF
 chown $USER:$USER deploy.sh
