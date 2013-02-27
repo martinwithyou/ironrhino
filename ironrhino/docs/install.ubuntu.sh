@@ -169,7 +169,7 @@ fi
 
 cd ironrhino && svn up && ant dist && cd ..
 cd \$1 && svn up
-rm -rf webapp/WEB-INF/lib/*
+#rm -rf webapp/WEB-INF/lib/*
 ant -Dserver.home=/home/$USER/tomcat8080 -Dwebapp.deploy.dir=/home/$USER/tomcat8080/webapps/ROOT deploy
 
 ant -Dserver.home=/home/$USER/tomcat8081 -Dserver.shutdown.port=8006 -Dserver.startup.port=8081 shutdown

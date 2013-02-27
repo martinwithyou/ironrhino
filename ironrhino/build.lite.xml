@@ -409,7 +409,6 @@
 	</target>
 
 	<target name="deploy">
-		<antcall target="compile" />
 		<antcall target="war" />
 		<antcall target="backup" />
 		<antcall target="shutdown" />
