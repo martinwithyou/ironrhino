@@ -84,32 +84,6 @@
 
 	<import file="build.compress.xml" />
 
-	<target name="skeleton" depends="jar,compress">
-		<move todir="${webapp.dir}/WEB-INF/lib">
-			<fileset dir="${target.dir}">
-				<include name="ironrhino-*.jar" />
-			</fileset>
-		</move>
-		<mkdir dir="${basedir}/template/src/resources/spring" />
-		<copy todir="${basedir}/template/src/resources/spring">
-			<fileset dir="${src.dir}/resources/spring">
-				<exclude name="applicationContext-security.xml" />
-			</fileset>
-		</copy>
-		<mkdir dir="${basedir}/template/src/resources/view/decorator" />
-		<copy todir="${basedir}/template/src/resources/view/decorator">
-			<fileset dir="${src.dir}/resources/view/decorator" />
-		</copy>
-		<zip destfile="${target.dir}/${skeleton-zip.name}" basedir="." excludes="build.xml,docs/**,target/**,test/classes/**,test/src/org/ironrhino/core/**,webapp/WEB-INF/classes/**,webapp/assets/*/source/**,src/org/**,src/com/**,src/META-INF/**,src/struts-plugin.xml,src/template/**,src/resources/data/**,src/resources/hibernate/**,src/resources/i18n/**,src/resources/view/**,src/resources/spring/**" />
-		<delete dir="${basedir}/template" />
-		<move todir="${target.dir}">
-			<fileset dir="${webapp.dir}/WEB-INF/lib">
-				<include name="ironrhino-*.jar" />
-			</fileset>
-		</move>
-	</target>
-
-
 	<target name="doc.clean" description="Delete temporary and distribution directories for docs">
 		<delete dir="${reference.dir}/pdf" />
 		<delete dir="${reference.dir}/html_single" />
