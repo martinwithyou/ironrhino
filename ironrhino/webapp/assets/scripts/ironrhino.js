@@ -36556,53 +36556,54 @@ Richtable = {
 	}
 };
 Initialization.richtable = function() {
-	$('form.richtable').on('click', '.action button.btn,a[rel="richtable"]',
-			Richtable.click).on('click', '.firstPage:not(.disabled) a',
+	$(document).on('click',
+			'.richtable .action button.btn,form.richtable a[rel="richtable"]',
+			Richtable.click).on('click', '.richtable .firstPage:not(.disabled) a',
 			function(event) {
 				var form = $(this).closest('form');
 				$('.inputPage', form).val(1);
 				Richtable.reload(form, true);
 				return false;
-			}).on('click', '.prevPage:not(.disabled) a', function(event) {
+			}).on('click', '.richtable .prevPage:not(.disabled) a', function(event) {
 				var form = $(this).closest('form');
 				$('.inputPage', form).val(function(i, v) {
 							return parseInt(v) - 1
 						});
 				Richtable.reload(form, true);
 				return false;
-			}).on('click', '.nextPage:not(.disabled) a', function(event) {
+			}).on('click', '.richtable .nextPage:not(.disabled) a', function(event) {
 				var form = $(this).closest('form');
 				$('.inputPage', form).val(function(i, v) {
 							return parseInt(v) + 1
 						});
 				Richtable.reload(form, true);
 				return false;
-			}).on('click', '.lastPage:not(.disabled) a', function(event) {
+			}).on('click', '.richtable .lastPage:not(.disabled) a', function(event) {
 				var form = $(this).closest('form');
 				$('.inputPage', form).val($('.totalPage strong', form).text());
 				Richtable.reload(form, true);
 				return false;
-			}).on('change', '.inputPage', function(event) {
+			}).on('change', '.richtable .inputPage', function(event) {
 				var form = $(event.target).closest('form');
 				Richtable.reload(form, true);
 				event.preventDefault();
-			}).on('change', 'select.pageSize', function(event) {
+			}).on('change', '.richtable select.pageSize', function(event) {
 				var form = $(event.target).closest('form');
 				$('.inputPage', form).val(1);
 				Richtable.reload(form, true);
-			}).on('keydown', 'input[name="keyword"]', function(event) {
+			}).on('keydown', '.richtable input[name="keyword"]', function(event) {
 				var form = $(event.target).closest('form');
 				if (event.keyCode == 13) {
 					$('.inputPage', form).val(1);
 					Richtable.reload(form, true);
 					return false;
 				}
-			}).on('click', '.icon-search', function(event) {
+			}).on('click', '.richtable .icon-search', function(event) {
 				var form = $(event.target).closest('form');
 				$('.inputPage', form).val(1);
 				Richtable.reload(form, true);
 				return false;
-			}).on('click', '.loadmore', function(event) {
+			}).on('click', '.richtable .more', function(event) {
 		var form = $(event.target).closest('form');
 		if (!$('li.nextPage', form).length)
 			return;
