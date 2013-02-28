@@ -36286,7 +36286,7 @@ Richtable = {
 		var form = $(btn).closest('form');
 		if ($(btn).prop('tagName') != 'BUTTON' || $(btn).prop('tagName') != 'A')
 			btn = $(btn).closest('.btn');
-		if (btn.attr('onclick'))
+		if (btn.attr('onclick') || btn.hasClass('raw'))
 			return;
 		var url = Richtable.getBaseUrl(form) + Richtable.getPathParams();
 		var tr = $(btn).closest('tr');
@@ -36300,7 +36300,7 @@ Richtable = {
 		var form = $(btn).closest('form');
 		if ($(btn).prop('tagName') != 'BUTTON' || $(btn).prop('tagName') != 'A')
 			btn = $(btn).closest('button,a');
-		if (btn.attr('onclick'))
+		if (btn.attr('onclick') || btn.hasClass('raw'))
 			return;
 		var idparams;
 		var tr = $(btn).closest('tr');
@@ -36507,110 +36507,160 @@ Richtable = {
 		} else {
 			cell.removeClass('edited');
 		}
-	}
-};
-Observation.richtable = function(container) {
-	if ($('table.richtable', container).length) {
-		$('.action button.btn,a[rel="richtable"]', container)
-				.click(Richtable.click);
-		var theadCells = $('table.richtable thead:eq(0) th', container);
-		var rows = $('table.richtable tbody:eq(0) tr', container).each(
-				function() {
+	},
+	enhance : function(table) {
+		var t = $(table);
+		var theadCells = $('thead:eq(0) th', t);
+		$('tbody:eq(0) tr', t).each(function() {
 					var cells = this.cells;
 					theadCells.each(function(i) {
 								var cellEdit = $(this).data('celledit');
 								if (!cellEdit)
 									return;
 								var ar = cellEdit.split(',');
-								$(cells[i]).bind(ar[0], function() {
+								$(cells[i]).unbind(ar[0]).bind(ar[0],
+										function() {
 											Richtable.editCell(this, ar[1],
 													ar[2]);
 										});
 							});
 				});
-		$('.firstPage:not(.disabled) a', container).click(function(event) {
-					var form = $(this).closest('form');
-					$('.inputPage', form).val(1);
-					Richtable.reload(form, true);
-					return false;
-				});
-		$('.prevPage:not(.disabled) a', container).click(function(event) {
-					var form = $(this).closest('form');
-					$('.inputPage', form).val(function(i, v) {
-								return parseInt(v) - 1
-							});
-					Richtable.reload(form, true);
-					return false;
-				});
-		$('.nextPage:not(.disabled) a', container).click(function(event) {
-					var form = $(this).closest('form');
-					$('.inputPage', form).val(function(i, v) {
-								return parseInt(v) + 1
-							});
-					Richtable.reload(form, true);
-					return false;
-				});
-		$('.lastPage:not(.disabled) a', container).click(function(event) {
-					var form = $(this).closest('form');
-					$('.inputPage', form).val($('.totalPage strong', form)
-							.text());
-					Richtable.reload(form, true);
-					return false;
-				});
-		$('.inputPage', container).change(function(event) {
-					var form = $(event.target).closest('form');
-					Richtable.reload(form, true);
-					event.preventDefault();
-				});
-		$('select.pageSize', container).change(function(event) {
-					var form = $(event.target).closest('form');
-					$('.inputPage', form).val(1);
-					Richtable.reload(form, true);
-				});
-		$('input[name="keyword"]', container).keydown(function(event) {
-					var form = $(event.target).closest('form');
-					if (event.keyCode == 13) {
-						$('.inputPage', form).val(1);
-						Richtable.reload(form, true);
-						return false;
+
+		var need = false;
+		var classes = {};
+		$('th', t).each(function(i) {
+					var arr = [];
+					var tt = $(this);
+					var cls = tt.attr('class');
+					if (cls)
+						$.each(cls.split(/\s+/), function(i, v) {
+									if (v.indexOf('hidden-') == 0)
+										arr.push(v);
+								});
+					if (arr.length) {
+						need = true;
+						classes['' + i] = arr;
 					}
-				}).next().click(function(event) {
-					var form = $(event.target).closest('form');
-					$('.inputPage', form).val(1);
-					Richtable.reload(form, true);
-					return false;
 				});
-		$('table.richtable', container).each(function() {
-					var t = $(this);
-					var need = false;
-					var classes = {};
-					$('th', t).each(function(i) {
-								var arr = [];
+		$('tbody tr', t).each(function() {
+					$('td', $(this)).each(function(i) {
+								var arr = classes['' + i];
 								var tt = $(this);
-								var cls = tt.attr('class');
-								if (cls)
-									$.each(cls.split(/\s+/), function(i, v) {
-												if (v.indexOf('hidden-') == 0)
-													arr.push(v);
+								if (arr) {
+									$.each(arr, function(i, v) {
+												tt.addClass(v);
 											});
-								if (arr.length) {
-									need = true;
-									classes['' + i] = arr;
 								}
-							});
-					$('tbody tr', t).each(function() {
-								$('td', $(this)).each(function(i) {
-											var arr = classes['' + i];
-											var tt = $(this);
-											if (arr) {
-												$.each(arr, function(i, v) {
-															tt.addClass(v);
-														});
-											}
-										});
 							});
 				});
 	}
+};
+Initialization.richtable = function() {
+	$('form.richtable').on('click', '.action button.btn,a[rel="richtable"]',
+			Richtable.click).on('click', '.firstPage:not(.disabled) a',
+			function(event) {
+				var form = $(this).closest('form');
+				$('.inputPage', form).val(1);
+				Richtable.reload(form, true);
+				return false;
+			}).on('click', '.prevPage:not(.disabled) a', function(event) {
+				var form = $(this).closest('form');
+				$('.inputPage', form).val(function(i, v) {
+							return parseInt(v) - 1
+						});
+				Richtable.reload(form, true);
+				return false;
+			}).on('click', '.nextPage:not(.disabled) a', function(event) {
+				var form = $(this).closest('form');
+				$('.inputPage', form).val(function(i, v) {
+							return parseInt(v) + 1
+						});
+				Richtable.reload(form, true);
+				return false;
+			}).on('click', '.lastPage:not(.disabled) a', function(event) {
+				var form = $(this).closest('form');
+				$('.inputPage', form).val($('.totalPage strong', form).text());
+				Richtable.reload(form, true);
+				return false;
+			}).on('change', '.inputPage', function(event) {
+				var form = $(event.target).closest('form');
+				Richtable.reload(form, true);
+				event.preventDefault();
+			}).on('change', 'select.pageSize', function(event) {
+				var form = $(event.target).closest('form');
+				$('.inputPage', form).val(1);
+				Richtable.reload(form, true);
+			}).on('keydown', 'input[name="keyword"]', function(event) {
+				var form = $(event.target).closest('form');
+				if (event.keyCode == 13) {
+					$('.inputPage', form).val(1);
+					Richtable.reload(form, true);
+					return false;
+				}
+			}).on('click', '.icon-search', function(event) {
+				var form = $(event.target).closest('form');
+				$('.inputPage', form).val(1);
+				Richtable.reload(form, true);
+				return false;
+			}).on('click', '.loadmore', function(event) {
+		var form = $(event.target).closest('form');
+		if (!$('li.nextPage', form).length)
+			return;
+		$('.inputPage', form).val(function(i, v) {
+					return parseInt(v) + 1
+				});
+		$.ajax({
+			url : $(form).attr('action'),
+			type : $(form).attr('method'),
+			data : form.serialize(),
+			success : function(data) {
+				var html = data.replace(/<script(.|\s)*?\/script>/g, '');
+				var div = $('<div/>').html(html);
+				var append = false;
+				$('table.richtable tbody:eq(0) tr', div).each(function(i, v) {
+					if (!append) {
+						var id = $(v).data('rowid')
+								|| $(
+										'input[type="checkbox"],input[type="radio"]',
+										v).prop('value');
+						if (id) {
+							var rows = $('table.richtable tbody:eq(0) tr', form);
+							var exists = false;
+							for (var i = rows.length - 1; i >= 0; i--) {
+								if (($(rows[i]).data('rowid') || $(
+										'input[type="checkbox"],input[type="radio"]',
+										rows[i]).prop('value')) == id) {
+									exists = true;
+									break;
+								}
+							}
+							if (!exists)
+								append = true;
+						} else {
+							append = true;
+						}
+					}
+					if (append) {
+						$(v).appendTo($('table.richtable tbody', form));
+						_observe(v);
+					}
+				});
+				if (append)
+					Richtable.enhance($('table.richtable', form));
+				$('.pageSize', form)
+						.val($('table.richtable tbody tr', form).length);
+				$('div.pagination', form).replaceWith($('div.pagination', div));
+				$('div.pagination ul', form).hide();
+				$('div.status', form).replaceWith($('div.status', div));
+			}
+		});
+
+	});
+}
+Observation.richtable = function(container) {
+	$('table.richtable', container).each(function() {
+				Richtable.enhance(this);
+			});
 };
 (function($) {
 	$.fn.treearea = function(treeoptions) {
