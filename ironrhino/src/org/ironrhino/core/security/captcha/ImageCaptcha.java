@@ -52,8 +52,9 @@ public class ImageCaptcha {
 			// g.setColor(new
 			// Color((int)(Math.random()*256),0,(int)(Math.random()*256)));
 			g.setPaint(getPaint(p, size));
-			g.setFont(new Font(fonts.get((int) (Math.random() * fonts.size())),
-					getFace(), size));
+			if (fonts.size() > 0)
+				g.setFont(new Font(fonts.get((int) (Math.random() * fonts
+						.size())), getFace(), size));
 			g.drawString("" + use[i], p.x, p.y);
 		}
 		g.setStroke(new BasicStroke(1.0f));
