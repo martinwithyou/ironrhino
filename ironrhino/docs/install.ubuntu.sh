@@ -237,6 +237,7 @@ cd redis && make > /dev/null && make install > /dev/null
 cd utils && ./install_server.sh
 cd ../../
 rm -rf redis
+sed -i '31i bind 127.0.0.1' /etc/redis/6379.conf
 fi
 
 #svn checkout ironrhino
