@@ -168,8 +168,8 @@
 <#if createable><button type="button" class="btn" data-view="input">${action.getText("create")}</button></#if>
 <#if celleditable><button type="button" class="btn" data-action="save">${action.getText("save")}</button></#if>
 <#if enableable>
-<button type="button" class="btn" data-action="enable">${action.getText("enable")}</button>
-<button type="button" class="btn" data-action="disable">${action.getText("disable")}</button>
+<button type="button" class="btn hidden-pad" data-action="enable">${action.getText("enable")}</button>
+<button type="button" class="btn hidden-pad" data-action="disable">${action.getText("disable")}</button>
 </#if>
 <#if deleteable><button type="button" class="btn" data-action="delete">${action.getText("delete")}</button></#if>
 </#if><button type="button" class="btn" data-action="reload">${action.getText("reload")}</button></#if>
