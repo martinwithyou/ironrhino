@@ -1,6 +1,7 @@
 package org.ironrhino.common.support;
 
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -23,6 +24,9 @@ public class PageViewHandler implements AccessHandler {
 	@Autowired(required = false)
 	private PageViewService pageViewService;
 
+	@Autowired(required = false)
+	private ExecutorService executorService;
+
 	@Inject
 	private HttpSessionManager httpSessionManager;
 
@@ -32,17 +36,25 @@ public class PageViewHandler implements AccessHandler {
 	}
 
 	@Override
-	public boolean handle(HttpServletRequest request,
+	public boolean handle(final HttpServletRequest request,
 			HttpServletResponse response) {
 		if (pageViewService != null
-				&& request.getMethod().equalsIgnoreCase("GET")) {
-			pageViewService.put(new Date(),
-					RequestUtils.getRemoteAddr(request), request
-							.getRequestURL().toString(), httpSessionManager
+				&& request.getMethod().equalsIgnoreCase("GET")
+				&& !request.getRequestURI().startsWith("/assets/")) {
+			Runnable task = new Runnable() {
+				public void run() {
+					pageViewService.put(new Date(), RequestUtils
+							.getRemoteAddr(request), request.getRequestURL()
+							.toString(), httpSessionManager
 							.getSessionId(request), request
 							.getHeader("Referer"));
+				}
+			};
+			if (executorService == null)
+				task.run();
+			else
+				executorService.submit(task);
 		}
 		return false;
 	}
-
 }
