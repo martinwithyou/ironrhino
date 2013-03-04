@@ -77,10 +77,10 @@ public class PageViewServiceImpl implements PageViewService {
 	public long getPageView(String key) {
 		if (redisTemplate == null)
 			return 0;
-		Long value = (Long) redisTemplate.opsForValue().get(
+		String value = stringRedisTemplate.opsForValue().get(
 				KEY_PAGE_VIEW + (key == null ? "" : ":" + key));
 		if (value != null)
-			return value;
+			return Long.valueOf(value);
 		if (key.length() == 8) {
 			long total = 0;
 			for (int i = 0; i < 24; i++)
@@ -107,17 +107,17 @@ public class PageViewServiceImpl implements PageViewService {
 	public long getUniqueIp(String key) {
 		if (redisTemplate == null)
 			return 0;
-		Long value = (Long) redisTemplate.opsForValue().get(
+		String value = stringRedisTemplate.opsForValue().get(
 				KEY_PAGE_VIEW_UIP + key);
-		return value != null ? value : 0;
+		return value != null ? Long.valueOf(value) : 0;
 	}
 
 	public long getUniqueSessionId(String key) {
 		if (redisTemplate == null)
 			return 0;
-		Long value = (Long) redisTemplate.opsForValue().get(
+		String value = stringRedisTemplate.opsForValue().get(
 				KEY_PAGE_VIEW_USID + key);
-		return value != null ? value : 0;
+		return value != null ? Long.valueOf(value) : 0;
 	}
 
 	public Pair<String, Long> getMaxPageView() {
