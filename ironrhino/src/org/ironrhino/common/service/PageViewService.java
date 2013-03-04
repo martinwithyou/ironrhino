@@ -20,4 +20,5 @@ public interface PageViewService {
 	public Pair<String, Long> getMaxUniqueIp();
 
 	public Pair<String, Long> getMaxUniqueSessionId();
+	
 }
