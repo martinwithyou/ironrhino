@@ -29,7 +29,7 @@ import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.model.Switchable;
+import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Validatable;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
@@ -145,11 +145,11 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	}
 
 	protected void checkDelete(T obj) {
-		if (obj instanceof Switchable) {
-			Switchable switchable = (Switchable) obj;
-			if (switchable.isEnabled())
+		if (obj instanceof Enableable) {
+			Enableable enableable = (Enableable) obj;
+			if (enableable.isEnabled())
 				throw new ErrorMessage("delete.forbidden",
-						new Object[] { switchable },
+						new Object[] { enableable },
 						"delete.forbidden.notdisabled");
 		}
 	}

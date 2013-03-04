@@ -1,6 +1,6 @@
 package org.ironrhino.core.model;
 
-public interface Switchable {
+public interface Enableable {
 
 	public boolean isEnabled();
 

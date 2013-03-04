@@ -22,7 +22,7 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
-import org.ironrhino.core.model.Switchable;
+import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
@@ -38,7 +38,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 @Entity
 @Table(name = "`user`")
 public class User extends BaseEntity implements UserDetails, Recordable<User>,
-		Switchable {
+		Enableable {
 
 	private static final long serialVersionUID = -6135434863820342822L;
 
