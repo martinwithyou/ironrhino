@@ -36,7 +36,7 @@
 		<param name="encoding" value="utf-8"/>
 		<param name="threshold" value="INFO"/>
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d%X{username}@%X{remoteAddr} %X{method}%X{url}%X{userAgent}%X{referer} %m%n"/>
+			<param name="ConversionPattern" value="%d%X{username}@%X{remoteAddr} %X{method}%X{url}%X{userAgent}%X{referer}%X{session}%n"/>
 		</layout>
 	</appender>
 		<appender name="ACCESS-WARN" class="org.apache.log4j.DailyRollingFileAppender">

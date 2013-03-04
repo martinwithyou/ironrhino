@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.core.util.UserAgent;
@@ -57,6 +58,9 @@ public class AccessFilter implements Filter {
 
 	@Inject
 	private ApplicationContext ctx;
+
+	@Inject
+	private HttpSessionManager httpSessionManager;
 
 	public void setExcludePatterns(String excludePatterns) {
 		this.excludePatterns = excludePatterns;
@@ -119,6 +123,11 @@ public class AccessFilter implements Filter {
 		s = RequestUtils.getCookieValue(request,
 				DefaultAuthenticationSuccessHandler.COOKIE_NAME_LOGIN_USER);
 		MDC.put("username", s != null ? " " + s : " ");
+		if (httpSessionManager != null) {
+			String sessionId = httpSessionManager.getSessionId(request);
+			if (sessionId != null)
+				MDC.put("session", " session:" + sessionId);
+		}
 		if (print && !uri.startsWith("/assets/")
 				&& request.getHeader("Last-Event-Id") == null)
 			accessLog.info("");

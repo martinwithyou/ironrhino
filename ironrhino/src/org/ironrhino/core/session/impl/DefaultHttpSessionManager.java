@@ -10,7 +10,6 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.MDC;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.WrappedHttpSession;
@@ -102,6 +101,24 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		return supportSessionTrackerFromURL;
 	}
 
+	public String getSessionId(HttpServletRequest request) {
+		String sessionTracker = RequestUtils.getCookieValue(request,
+				getSessionTrackerName());
+		if (sessionTracker != null) {
+			sessionTracker = CodecUtils.swap(sessionTracker);
+			String[] array = sessionTracker.split(SESSION_TRACKER_SEPERATOR);
+			return array[0];
+		} else {
+			String path = request.getRequestURI();
+			if (path.indexOf(";") > -1) {
+				path = path.substring(path.indexOf(";") + 1);
+				if (path.startsWith(getSessionTrackerName() + "="))
+					return path.substring(path.indexOf("=") + 1);
+			}
+		}
+		return null;
+	}
+
 	@SuppressWarnings("unchecked")
 	public void initialize(WrappedHttpSession session) {
 
@@ -149,7 +166,6 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			session.setNew(true);
 			sessionId = CodecUtils.nextId(SALT);
 		}
-		MDC.put("session", " session:" + sessionId);
 		session.setId(sessionId);
 		session.setCreationTime(creationTime);
 		session.setLastAccessedTime(lastAccessedTime);

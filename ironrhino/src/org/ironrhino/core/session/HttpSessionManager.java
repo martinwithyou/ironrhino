@@ -14,6 +14,8 @@ public interface HttpSessionManager extends HttpSessionStore {
 
 	public static final String DEFAULT_COOKIE_NAME_LOCALE = "locale";
 
+	public String getSessionId(HttpServletRequest request);
+
 	public String getSessionTracker(WrappedHttpSession session);
 
 	public String getSessionTrackerName();
