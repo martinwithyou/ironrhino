@@ -74,7 +74,7 @@
 	</#list>	
 <@rttbodytrend entity=entity buttons=rtconfig.actionColumnButtons! editable=!readonly viewable=viewable/>
 </#list>
-<@rtend readonly=readonly searchable=searchable showPageSize=rtconfig.showPageSize! buttons=rtconfig.bottomButtons!/>
+<@rtend readonly=readonly searchable=searchable showPageSize=rtconfig.showPageSize! buttons=rtconfig.bottomButtons! enableable=enableable/>
 <#if !readonly && hasSelect>
 <div style="display: none;">
 <#list uiConfigs?keys as key>

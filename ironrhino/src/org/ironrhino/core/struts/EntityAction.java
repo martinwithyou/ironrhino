@@ -35,6 +35,7 @@ import org.ironrhino.core.metadata.NaturalId;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
+import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
@@ -101,6 +102,10 @@ public class EntityAction extends BaseAction {
 				if (entry.getValue().isSearchable())
 					return true;
 		return false;
+	}
+
+	public boolean isEnableable() {
+		return Enableable.class.isAssignableFrom(getEntityClass());
 	}
 
 	public boolean isReadonly() {
@@ -662,6 +667,44 @@ public class EntityAction extends BaseAction {
 		if (id.length > 0) {
 			entityManager.delete(id);
 			addActionMessage(getText("delete.success"));
+		}
+		return SUCCESS;
+	}
+
+	public String enable() {
+		return updateEnabled(true);
+	}
+
+	public String disable() {
+		return updateEnabled(false);
+	}
+
+	private String updateEnabled(boolean enabled) {
+		if (!isEnableable())
+			return ACCESSDENIED;
+		BaseManager<Persistable<?>> em = getEntityManager(getEntityClass());
+		String[] arr = getId();
+		Serializable[] id = (arr != null) ? new Serializable[arr.length]
+				: new Serializable[0];
+		try {
+			BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
+					.newInstance());
+			for (int i = 0; i < id.length; i++) {
+				bw.setPropertyValue("id", arr[i]);
+				id[i] = (Serializable) bw.getPropertyValue("id");
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		if (id.length > 0) {
+			for (Serializable s : id) {
+				Enableable en = (Enableable) em.get(s);
+				if (en != null && en.isEnabled() != enabled) {
+					en.setEnabled(enabled);
+					em.save((Persistable) en);
+				}
+			}
+			addActionMessage(getText("operate.success"));
 		}
 		return SUCCESS;
 	}
