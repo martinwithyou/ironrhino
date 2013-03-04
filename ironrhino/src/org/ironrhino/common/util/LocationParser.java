@@ -8,6 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.ironrhino.core.util.AppInfo;
+import org.ironrhino.core.util.HttpClientUtils;
+import org.ironrhino.core.util.JsonUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class LocationParser {
 
@@ -65,7 +69,7 @@ public class LocationParser {
 		}
 	}
 
-	public static Location parse(String host) {
+	public static Location parseLocal(String host) {
 		LocationParser instance = Holder.instance;
 		if (instance == null || !instance.available)
 			return null;
@@ -290,6 +294,32 @@ public class LocationParser {
 		super.finalize();
 		if (file != null)
 			file.close();
+	}
+
+	public static Location parse(String host) {
+		Location loc = parseLocal(host);
+		if (loc == null || loc.getFirstArea() == null) {
+			try {
+				String json = HttpClientUtils
+						.getResponseText("http://ip.taobao.com/service/getIpInfo.php?ip="
+								+ host);
+				JsonNode node = JsonUtils.fromJson(json, JsonNode.class);
+				if (node.get("code").asInt() == 0) {
+					node = node.get("data");
+					Location location = new Location();
+					location.setFirstArea(RegionUtils.shortenName(node.get(
+							"region").asText()));
+					location.setSecondArea(RegionUtils.shortenName(node.get(
+							"city").asText()));
+					location.setThirdArea(RegionUtils.shortenName(node.get(
+							"county").asText()));
+					return location;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return loc;
 	}
 
 }
