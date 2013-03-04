@@ -427,7 +427,8 @@ Richtable = {
 		}
 		ce.html(template);
 		$(':input', ce).blur(function() {
-					Richtable.updateCell(this)
+					if (!$(this).hasClass('date'))
+						Richtable.updateCell(this);
 				});
 		var select = $('select', ce);
 		if (value != undefined && select.length) {
@@ -517,27 +518,30 @@ Richtable = {
 Initialization.richtable = function() {
 	$(document).on('click',
 			'.richtable .action button.btn,form.richtable a[rel="richtable"]',
-			Richtable.click).on('click', '.richtable .firstPage:not(.disabled) a',
-			function(event) {
+			Richtable.click).on('click',
+			'.richtable .firstPage:not(.disabled) a', function(event) {
 				var form = $(this).closest('form');
 				$('.inputPage', form).val(1);
 				Richtable.reload(form, true);
 				return false;
-			}).on('click', '.richtable .prevPage:not(.disabled) a', function(event) {
+			}).on('click', '.richtable .prevPage:not(.disabled) a',
+			function(event) {
 				var form = $(this).closest('form');
 				$('.inputPage', form).val(function(i, v) {
 							return parseInt(v) - 1
 						});
 				Richtable.reload(form, true);
 				return false;
-			}).on('click', '.richtable .nextPage:not(.disabled) a', function(event) {
+			}).on('click', '.richtable .nextPage:not(.disabled) a',
+			function(event) {
 				var form = $(this).closest('form');
 				$('.inputPage', form).val(function(i, v) {
 							return parseInt(v) + 1
 						});
 				Richtable.reload(form, true);
 				return false;
-			}).on('click', '.richtable .lastPage:not(.disabled) a', function(event) {
+			}).on('click', '.richtable .lastPage:not(.disabled) a',
+			function(event) {
 				var form = $(this).closest('form');
 				$('.inputPage', form).val($('.totalPage strong', form).text());
 				Richtable.reload(form, true);
@@ -550,7 +554,8 @@ Initialization.richtable = function() {
 				var form = $(event.target).closest('form');
 				$('.inputPage', form).val(1);
 				Richtable.reload(form, true);
-			}).on('keydown', '.richtable input[name="keyword"]', function(event) {
+			}).on('keydown', '.richtable input[name="keyword"]',
+			function(event) {
 				var form = $(event.target).closest('form');
 				if (event.keyCode == 13) {
 					$('.inputPage', form).val(1);
