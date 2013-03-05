@@ -26,8 +26,10 @@ public interface PageViewService {
 
 	public Pair<String, Long> getMaxUniqueUsername();
 
-	public long getPageViewByUrl(String day, String url);
-
 	public Map<String, Long> getTopPageViewUrls(String day, int top);
+	
+	public Map<String, Long> getTopKeywords(String day, int top);
+	
+	public Map<String, Long> getTopSearchEngines(String day, int top);
 
 }

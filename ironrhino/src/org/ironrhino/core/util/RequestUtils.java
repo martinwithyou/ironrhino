@@ -247,6 +247,23 @@ public class RequestUtils {
 
 	}
 
+	public static String getValueFromQueryString(String queryString, String name) {
+		if (StringUtils.isBlank(queryString))
+			return null;
+		String[] arr = queryString.split("&");
+		for (String s : arr) {
+			String[] arr2 = s.split("=", 2);
+			if (arr2[0].equals(name)) {
+				if (arr2.length == 1)
+					return null;
+				String value = arr2[1];
+				value = org.ironrhino.core.util.StringUtils.decodeUrl(value);
+				return value;
+			}
+		}
+		return null;
+	}
+
 	private static String parseGlobalDomain(String host) {
 		if (host.matches("^(\\d+\\.){3}\\d+$"))
 			return host;

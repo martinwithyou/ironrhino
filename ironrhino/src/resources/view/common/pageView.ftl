@@ -5,6 +5,7 @@
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<@url value="/assets/components/flot/excanvas.js"/>"></script><![endif]-->
 <script src="<@url value="/assets/components/flot/jquery.flot.js"/>" type="text/javascript"></script>
 <script src="<@url value="/assets/components/flot/jquery.flot.time.js"/>" type="text/javascript"></script>
+<script src="<@url value="/assets/components/flot/jquery.flot.pie.js"/>" type="text/javascript"></script>
 <script>
 function showTooltip(x, y, content) {
 	$('<div id="tooltip">' + content + '</div>').css({
@@ -20,6 +21,12 @@ function showTooltip(x, y, content) {
 			}).appendTo("body").fadeIn(200);
 }
 
+function labelFormatter(label, series) {
+		var data = series.data;
+		data = data[0][1];
+		return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + Math.round(series.percent) + "%<br/>"+data+"</div>";
+}
+
 
 Observation.pageView = function() {
 
@@ -31,7 +38,7 @@ Observation.pageView = function() {
 			lies.each(function() {
 						var point = [];
 						point.push(parseInt($('span', this).data('time')));
-						point.push(parseFloat($('strong', this).text()));
+						point.push(parseInt($('strong', this).text()));
 						data.push(point);
 					});
 			$.plot(ul, [data], {
@@ -73,6 +80,37 @@ Observation.pageView = function() {
 					});
 
 		}
+	});
+	
+		$('ul.flotpiechart').each(function() {
+		var ul = $(this);
+		var data = [];
+		var lies = $('li', ul);
+			lies.each(function() {
+						var share = {};
+						share.label =$('span', this).text();
+						share.data =parseInt($('strong', this).text());
+						data.push(share);
+					});
+			setTimeout(function(){
+			$.plot(ul, data, {
+						series: {
+				        pie: {
+				            show: true,
+				            radius: 1,
+				            label: {
+				                show: true,
+				                radius: 2/3,
+				                formatter: labelFormatter,
+				                threshold: 0.1
+				            }
+				        }
+				    },
+				    legend: {
+				        show: false
+				    }
+					});
+			},20);		
 	});
 
 }
@@ -206,6 +244,62 @@ Observation.pageView = function() {
 </div>
 <div id="url_result">
 <#assign dataurl=getUrl("/common/pageView/url")/>
+<#if request.queryString?has_content>
+<#assign dataurl=dataurl+'?'+request.queryString/>
+<#elseif date??>
+<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
+</#if>
+<div class="ajaxpanel" data-url="${dataurl}"></div>
+</div>
+
+<div class="row" style="padding-top:20px;">
+<div class="span2 offset2">
+<strong>${action.getText('keyword')}</strong>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="kw_result">
+<span>${action.getText('date')}</span>
+<@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
+<@s.submit value="%{getText('query')}" theme="simple"/>
+</form>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="kw_result">
+<input type="hidden" name="date" value=""/>
+<@s.submit value="%{getText('total')}" theme="simple"/>
+</form>
+</div>
+</div>
+<div id="kw_result">
+<#assign dataurl=getUrl("/common/pageView/kw")/>
+<#if request.queryString?has_content>
+<#assign dataurl=dataurl+'?'+request.queryString/>
+<#elseif date??>
+<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
+</#if>
+<div class="ajaxpanel" data-url="${dataurl}"></div>
+</div>
+
+<div class="row" style="padding-top:20px;">
+<div class="span2 offset2">
+<strong>${action.getText('searchengine')}</strong>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="se_result">
+<span>${action.getText('date')}</span>
+<@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
+<@s.submit value="%{getText('query')}" theme="simple"/>
+</form>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="se_result">
+<input type="hidden" name="date" value=""/>
+<@s.submit value="%{getText('total')}" theme="simple"/>
+</form>
+</div>
+</div>
+<div id="se_result">
+<#assign dataurl=getUrl("/common/pageView/se")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 <#elseif date??>

@@ -1,8 +1,11 @@
 package org.ironrhino.common.service;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.tuples.Pair;
 import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.util.DateUtils;
+import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -39,6 +43,7 @@ public class PageViewServiceImpl implements PageViewService {
 		addUnique(day, "usid", sessionId);
 		addUnique(day, "uu", username);
 		addUrlVisit(day, url);
+		analyzeReferer(day, url);
 	}
 
 	private void addPageView(Date date) {
@@ -63,6 +68,36 @@ public class PageViewServiceImpl implements PageViewService {
 		sb.append(":");
 		sb.append(day);
 		stringRedisTemplate.opsForZSet().incrementScore(sb.toString(), url, 1);
+	}
+
+	private void analyzeReferer(String day, String referer) {
+		if (StringUtils.isBlank(referer))
+			return;
+		String[] result = parseSearchUrl(referer);
+		if (result == null)
+			return;
+		String searchengine = result[0];
+		String keyword = result[1];
+		if (StringUtils.isNotBlank(searchengine)) {
+			StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
+			sb.append("se");
+			stringRedisTemplate.opsForZSet().incrementScore(sb.toString(),
+					searchengine, 1);
+			sb.append(":");
+			sb.append(day);
+			stringRedisTemplate.opsForZSet().incrementScore(sb.toString(),
+					searchengine, 1);
+		}
+		if (StringUtils.isNotBlank(keyword)) {
+			StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
+			sb.append("kw");
+			stringRedisTemplate.opsForZSet().incrementScore(sb.toString(),
+					keyword, 1);
+			sb.append(":");
+			sb.append(day);
+			stringRedisTemplate.opsForZSet().incrementScore(sb.toString(),
+					keyword, 1);
+		}
 	}
 
 	public long getPageView(String key) {
@@ -97,32 +132,16 @@ public class PageViewServiceImpl implements PageViewService {
 		return getMax("uu");
 	}
 
-	public long getPageViewByUrl(String day, String url) {
-		if (stringRedisTemplate == null)
-			return 0;
-		StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
-		sb.append("url");
-		if (day != null)
-			sb.append(":").append(day);
-		Double d = stringRedisTemplate.opsForZSet().score(sb.toString(), url);
-		return d != null ? d.longValue() : 0;
+	public Map<String, Long> getTopPageViewUrls(String day, int top) {
+		return getTop(day, "url", top);
 	}
 
-	public Map<String, Long> getTopPageViewUrls(String day, int top) {
-		if (stringRedisTemplate == null)
-			return Collections.emptyMap();
-		StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
-		sb.append("url");
-		if (day != null)
-			sb.append(":").append(day);
-		String key = sb.toString();
-		Set<String> set = stringRedisTemplate.opsForZSet().reverseRange(key, 0,
-				top - 1);
-		Map<String, Long> map = new LinkedHashMap<String, Long>(set.size());
-		for (String member : set)
-			map.put(member, stringRedisTemplate.opsForZSet().score(key, member)
-					.longValue());
-		return map;
+	public Map<String, Long> getTopKeywords(String day, int top) {
+		return getTop(day, "kw", top);
+	}
+
+	public Map<String, Long> getTopSearchEngines(String day, int top) {
+		return getTop(day, "se", top);
 	}
 
 	@Trigger
@@ -191,5 +210,58 @@ public class PageViewServiceImpl implements PageViewService {
 		if (value > oldvalue)
 			stringRedisTemplate.opsForHash().put(key, type, day + "," + value);
 	}
+
+	public Map<String, Long> getTop(String day, String type, int top) {
+		if (stringRedisTemplate == null)
+			return Collections.emptyMap();
+		StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
+		sb.append(type);
+		if (day != null)
+			sb.append(":").append(day);
+		String key = sb.toString();
+		Set<String> set = stringRedisTemplate.opsForZSet().reverseRange(key, 0,
+				top - 1);
+		Map<String, Long> map = new LinkedHashMap<String, Long>(set.size());
+		for (String member : set)
+			map.put(member, stringRedisTemplate.opsForZSet().score(key, member)
+					.longValue());
+		return map;
+	}
+
+	private static String[] parseSearchUrl(String searchUrl) {
+		try {
+			URL url = new URL(searchUrl);
+			String host = url.getHost();
+			String query = url.getQuery();
+			for (Map.Entry<String, String> entry : searchengines.entrySet()) {
+				if (host.indexOf(entry.getKey() + ".") == 0
+						|| host.indexOf("." + entry.getKey() + ".") > 0) {
+					String[] result = new String[2];
+					result[0] = entry.getKey();
+					result[1] = RequestUtils.getValueFromQueryString(query,
+							entry.getValue());
+					return result;
+				}
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private static Map<String, String> searchengines = new HashMap<String, String>() {
+		private static final long serialVersionUID = 1L;
+		{
+			put("google", "q");
+			put("bing", "q");
+			put("taobao", "q");
+			put("360", "q");
+			put("yahoo", "p");
+			put("baidu", "wd");
+			put("sogou", "query");
+			put("soso", "w");
+			put("youdao", "q");
+		}
+	};
 
 }
