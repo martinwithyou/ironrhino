@@ -20,8 +20,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.Coordinate;
 import org.ironrhino.common.model.Region;
+import org.ironrhino.common.util.LocationUtils;
 import org.ironrhino.common.util.RegionParser;
-import org.ironrhino.common.util.RegionUtils;
 import org.ironrhino.core.metadata.Setup;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.XmlUtils;
@@ -58,7 +58,7 @@ public class RegionSetup {
 
 	@SuppressWarnings("unchecked")
 	private void save(Region region) {
-		String shortName = RegionUtils.shortenName(region.getName());
+		String shortName = LocationUtils.shortenName(region.getName());
 		region.setAreacode(regionAreacodeMap.get(region.getName()));
 		if (regionCoordinateMap != null) {
 			List<String> coordinateAndParentName = regionCoordinateMap

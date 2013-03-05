@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
@@ -52,9 +54,12 @@ public class LocationParser {
 			if (f.exists()) {
 				file = new RandomAccessFile(f, "r");
 			} else {
-				file = new RandomAccessFile(Thread.currentThread()
-						.getContextClassLoader()
-						.getResource("resources/data/wry.dat").getFile(), "r");
+				ClassLoader cl = Thread.currentThread().getContextClassLoader();
+				if (cl == null)
+					cl = LocationParser.class.getClassLoader();
+				URL url = cl.getResource("resources/data/wry.dat");
+				if (url != null)
+					file = new RandomAccessFile(url.getFile(), "r");
 			}
 			start = readLong4(0);
 			end = readLong4(4);
@@ -304,12 +309,14 @@ public class LocationParser {
 						.getResponseText("http://ip.taobao.com/service/getIpInfo.php?ip="
 								+ host);
 				JsonNode node = JsonUtils.fromJson(json, JsonNode.class);
-				if (node.get("code").asInt() == 0) {
+				if (node != null && node.get("code").asInt() == 0) {
 					node = node.get("data");
-					loc = new Location();
-					loc.setFirstArea(node.get("region").asText());
-					loc.setSecondArea(node.get("city").asText());
-					loc.setThirdArea(node.get("county").asText());
+					if (StringUtils.isNotBlank(node.get("region").asText())) {
+						loc = new Location();
+						loc.setFirstArea(node.get("region").asText());
+						loc.setSecondArea(node.get("city").asText());
+						loc.setThirdArea(node.get("county").asText());
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -317,11 +324,11 @@ public class LocationParser {
 		}
 		if (loc != null) {
 			if (loc.getFirstArea() != null)
-				loc.setFirstArea(RegionUtils.shortenName(loc.getFirstArea()));
+				loc.setFirstArea(LocationUtils.shortenName(loc.getFirstArea()));
 			if (loc.getSecondArea() != null)
-				loc.setSecondArea(RegionUtils.shortenName(loc.getSecondArea()));
+				loc.setSecondArea(LocationUtils.shortenName(loc.getSecondArea()));
 			if (loc.getThirdArea() != null)
-				loc.setThirdArea(RegionUtils.shortenName(loc.getThirdArea()));
+				loc.setThirdArea(LocationUtils.shortenName(loc.getThirdArea()));
 		}
 		return loc;
 	}

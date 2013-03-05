@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.ironrhino.common.util.RegionUtils;
+import org.ironrhino.common.util.LocationUtils;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -123,7 +123,7 @@ public class Region extends BaseTreeableEntity<Region> {
 	@NotInJson
 	@Transient
 	public String getShortFullname() {
-		return RegionUtils.shortenAddress(getFullname());
+		return LocationUtils.shortenAddress(getFullname());
 	}
 
 	public Region getDescendantOrSelfByAreacode(String areacode) {

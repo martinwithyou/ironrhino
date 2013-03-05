@@ -41,13 +41,17 @@ public class PageViewServiceImpl implements PageViewService {
 			return;
 		addPageView(date);
 		String day = DateUtils.formatDate8(date);
-		addUnique(day, "uip", ip);
-		boolean added = addUnique(day, "usid", sessionId);
+		boolean added = addUnique(day, "uip", ip);
+		addUnique(day, "usid", sessionId);
 		addUnique(day, "uu", username);
 		addUrlVisit(day, url);
 		analyzeReferer(day, url);
 		if (added)
-			analyzeLocation(day, ip);
+			try {
+				analyzeLocation(day, ip);
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
 	}
 
 	private void addPageView(Date date) {
