@@ -99,7 +99,7 @@ public class DateUtils {
 
 	public static Date parse(String string, String pattern) {
 		try {
-			return new SimpleDateFormat(DATETIME).parse(string);
+			return new SimpleDateFormat(pattern).parse(string);
 		} catch (ParseException e) {
 			return null;
 		}

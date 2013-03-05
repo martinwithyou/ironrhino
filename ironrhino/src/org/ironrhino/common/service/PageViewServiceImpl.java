@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.tuples.Pair;
+import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 @Singleton
 @Named("pageViewService")
-@SuppressWarnings("unchecked")
 public class PageViewServiceImpl implements PageViewService {
 
 	public static final String KEY_PAGE_VIEW = "{pv}";
@@ -37,15 +37,12 @@ public class PageViewServiceImpl implements PageViewService {
 	public static final String KEY_PAGE_VIEW_URL = "{pv}:url";
 
 	@Autowired(required = false)
-	private RedisTemplate<String, Long> redisTemplate;
-
-	@Autowired(required = false)
 	@Qualifier("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
 
 	public void put(Date date, String ip, String url, String sessionId,
 			String username, String referer) {
-		if (redisTemplate == null)
+		if (stringRedisTemplate == null)
 			return;
 		addPageView(date);
 		addUniqueIp(date, ip);
@@ -55,15 +52,19 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	private void addPageView(Date date) {
-		redisTemplate.opsForValue().increment(KEY_PAGE_VIEW, 1);
+		stringRedisTemplate.opsForValue().increment(KEY_PAGE_VIEW, 1);
 		String key = DateUtils.format(date, "yyyyMMddHH");
-		redisTemplate.opsForValue().increment(KEY_PAGE_VIEW + ":" + key, 1);
+		stringRedisTemplate.opsForValue().increment(KEY_PAGE_VIEW + ":" + key,
+				1);
 		key = DateUtils.format(date, "yyyyMMdd");
-		redisTemplate.opsForValue().increment(KEY_PAGE_VIEW + ":" + key, 1);
+		stringRedisTemplate.opsForValue().increment(KEY_PAGE_VIEW + ":" + key,
+				1);
 		key = DateUtils.format(date, "yyyyMM");
-		redisTemplate.opsForValue().increment(KEY_PAGE_VIEW + ":" + key, 1);
+		stringRedisTemplate.opsForValue().increment(KEY_PAGE_VIEW + ":" + key,
+				1);
 		key = DateUtils.format(date, "yyyy");
-		redisTemplate.opsForValue().increment(KEY_PAGE_VIEW + ":" + key, 1);
+		stringRedisTemplate.opsForValue().increment(KEY_PAGE_VIEW + ":" + key,
+				1);
 	}
 
 	private void addUniqueIp(Date date, String ip) {
@@ -72,7 +73,7 @@ public class PageViewServiceImpl implements PageViewService {
 		String key = KEY_PAGE_VIEW_UIP + DateUtils.format(date, "yyyyMMdd");
 		String keyForSet = key + "_set";
 		if (stringRedisTemplate.opsForSet().add(keyForSet, ip))
-			redisTemplate.opsForValue().increment(key, 1);
+			stringRedisTemplate.opsForValue().increment(key, 1);
 	}
 
 	private void addUniqueSessionId(Date date, String sessionId) {
@@ -81,7 +82,7 @@ public class PageViewServiceImpl implements PageViewService {
 		String key = KEY_PAGE_VIEW_USID + DateUtils.format(date, "yyyyMMdd");
 		String keyForSet = key + "_set";
 		if (stringRedisTemplate.opsForSet().add(keyForSet, sessionId))
-			redisTemplate.opsForValue().increment(key, 1);
+			stringRedisTemplate.opsForValue().increment(key, 1);
 	}
 
 	private void addUniqueUsername(Date date, String username) {
@@ -90,7 +91,7 @@ public class PageViewServiceImpl implements PageViewService {
 		String key = KEY_PAGE_VIEW_UU + DateUtils.format(date, "yyyyMMdd");
 		String keyForSet = key + "_set";
 		if (stringRedisTemplate.opsForSet().add(keyForSet, username))
-			redisTemplate.opsForValue().increment(key, 1);
+			stringRedisTemplate.opsForValue().increment(key, 1);
 	}
 
 	private void addUrlVisit(Date date, String url) {
@@ -102,7 +103,7 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	public long getPageView(String key) {
-		if (redisTemplate == null)
+		if (stringRedisTemplate == null)
 			return 0;
 		String value = stringRedisTemplate.opsForValue().get(
 				KEY_PAGE_VIEW + (key == null ? "" : ":" + key));
@@ -132,7 +133,7 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	public long getUniqueIp(String key) {
-		if (redisTemplate == null)
+		if (stringRedisTemplate == null)
 			return 0;
 		String value = stringRedisTemplate.opsForValue().get(
 				KEY_PAGE_VIEW_UIP + key);
@@ -140,7 +141,7 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	public long getUniqueSessionId(String key) {
-		if (redisTemplate == null)
+		if (stringRedisTemplate == null)
 			return 0;
 		String value = stringRedisTemplate.opsForValue().get(
 				KEY_PAGE_VIEW_USID + key);
@@ -148,7 +149,7 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	public long getUniqueUsername(String key) {
-		if (redisTemplate == null)
+		if (stringRedisTemplate == null)
 			return 0;
 		String value = stringRedisTemplate.opsForValue().get(
 				KEY_PAGE_VIEW_UU + key);
@@ -156,35 +157,23 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	public Pair<String, Long> getMaxPageView() {
-		if (redisTemplate == null)
-			return null;
-		return (Pair<String, Long>) redisTemplate.opsForHash().get(
-				KEY_PAGE_VIEW_MAX, "pv");
+		return getMax("pv");
 	}
 
 	public Pair<String, Long> getMaxUniqueIp() {
-		if (redisTemplate == null)
-			return null;
-		return (Pair<String, Long>) redisTemplate.opsForHash().get(
-				KEY_PAGE_VIEW_MAX, "uip");
+		return getMax("uip");
 	}
 
 	public Pair<String, Long> getMaxUniqueSessionId() {
-		if (redisTemplate == null)
-			return null;
-		return (Pair<String, Long>) redisTemplate.opsForHash().get(
-				KEY_PAGE_VIEW_MAX, "usid");
+		return getMax("usid");
 	}
 
 	public Pair<String, Long> getMaxUniqueUsername() {
-		if (redisTemplate == null)
-			return null;
-		return (Pair<String, Long>) redisTemplate.opsForHash().get(
-				KEY_PAGE_VIEW_MAX, "uu");
+		return getMax("uu");
 	}
 
 	public long getPageViewByUrl(String day, String url) {
-		if (redisTemplate == null)
+		if (stringRedisTemplate == null)
 			return 0;
 		String key = KEY_PAGE_VIEW_URL;
 		if (day != null)
@@ -194,7 +183,7 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	public Map<String, Long> getTopPageViewUrls(String day, int top) {
-		if (redisTemplate == null)
+		if (stringRedisTemplate == null)
 			return Collections.emptyMap();
 		String key = KEY_PAGE_VIEW_URL;
 		if (day != null)
@@ -208,41 +197,57 @@ public class PageViewServiceImpl implements PageViewService {
 		return map;
 	}
 
+	@Trigger
 	@Scheduled(cron = "0 5 0 * * ?")
 	public void archive() {
-		if (redisTemplate == null)
+		if (stringRedisTemplate == null)
 			return;
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, -1);
 		Date yesterday = cal.getTime();
 		String day = DateUtils.format(yesterday, "yyyyMMdd");
-		redisTemplate.delete(KEY_PAGE_VIEW_UIP + day + "_set");
-		redisTemplate.delete(KEY_PAGE_VIEW_USID + day + "_set");
-		redisTemplate.delete(KEY_PAGE_VIEW_UU + day + "_set");
+		stringRedisTemplate.delete(KEY_PAGE_VIEW_UIP + day + "_set");
+		stringRedisTemplate.delete(KEY_PAGE_VIEW_USID + day + "_set");
+		stringRedisTemplate.delete(KEY_PAGE_VIEW_UU + day + "_set");
 
-		long value = getPageView(day);
-		Pair<String, Long> pair = (Pair<String, Long>) redisTemplate
-				.opsForHash().get(KEY_PAGE_VIEW_MAX, "pv");
-		if (pair == null || value > pair.getB())
-			redisTemplate.opsForHash().put(KEY_PAGE_VIEW_MAX, "pv",
-					new Pair<String, Long>(day, value));
-		value = getUniqueIp(day);
-		pair = (Pair<String, Long>) redisTemplate.opsForHash().get(
-				KEY_PAGE_VIEW_MAX, "uip");
-		if (pair == null || value > pair.getB())
-			redisTemplate.opsForHash().put(KEY_PAGE_VIEW_MAX, "uip",
-					new Pair<String, Long>(day, value));
-		value = getUniqueSessionId(day);
-		pair = (Pair<String, Long>) redisTemplate.opsForHash().get(
-				KEY_PAGE_VIEW_MAX, "usid");
-		if (pair == null || value > pair.getB())
-			redisTemplate.opsForHash().put(KEY_PAGE_VIEW_MAX, "usid",
-					new Pair<String, Long>(day, value));
-		value = getUniqueUsername(day);
-		pair = (Pair<String, Long>) redisTemplate.opsForHash().get(
-				KEY_PAGE_VIEW_MAX, "uu");
-		if (pair == null || value > pair.getB())
-			redisTemplate.opsForHash().put(KEY_PAGE_VIEW_MAX, "uu",
-					new Pair<String, Long>(day, value));
+		updateMax(day, "pv");
+		updateMax(day, "uip");
+		updateMax(day, "usid");
+		updateMax(day, "uu");
 	}
+
+	private Pair<String, Long> getMax(String type) {
+		if (stringRedisTemplate == null)
+			return null;
+		String str = (String) stringRedisTemplate.opsForHash().get(
+				KEY_PAGE_VIEW_MAX, type);
+		if (StringUtils.isNotBlank(str)) {
+			String[] arr = str.split(",");
+			return new Pair<String, Long>(arr[0], Long.valueOf(arr[1]));
+		}
+		return null;
+	}
+
+	private void updateMax(String day, String type) {
+		if (stringRedisTemplate == null)
+			return;
+		long value = 0;
+		if ("pv".equals(type))
+			value = getPageView(day);
+		else if ("uip".equals(type))
+			value = getUniqueIp(day);
+		else if ("usid".equals(type))
+			value = getUniqueSessionId(day);
+		else if ("uu".equals(type))
+			value = getUniqueUsername(day);
+		long oldvalue = 0;
+		String str = (String) stringRedisTemplate.opsForHash().get(
+				KEY_PAGE_VIEW_MAX, type);
+		if (StringUtils.isNotBlank(str))
+			oldvalue = Long.valueOf(str.split(",")[1]);
+		if (value > oldvalue)
+			stringRedisTemplate.opsForHash().put(KEY_PAGE_VIEW_MAX, type,
+					day + "," + value);
+	}
+
 }
