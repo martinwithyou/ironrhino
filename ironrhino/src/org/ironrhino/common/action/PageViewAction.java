@@ -65,9 +65,10 @@ public class PageViewAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		date = DateUtils.beginOfDay(new Date());
+		if (date == null)
+			date = DateUtils.beginOfDay(new Date());
 		if (from == null && to == null) {
-			to = date;
+			to = DateUtils.beginOfDay(new Date());
 			from = DateUtils.addDays(to, -30);
 		}
 		return SUCCESS;
@@ -140,6 +141,24 @@ public class PageViewAction extends BaseAction {
 				date = DateUtils.addDays(date, 1);
 			}
 			Pair<String, Long> p = pageViewService.getMaxUniqueSessionId();
+			if (p != null)
+				max = new Pair<Date, Long>(
+						DateUtils.parse(p.getA(), "yyyyMMdd"), p.getB());
+		}
+		return "chart";
+	}
+
+	public String uu() {
+		if (from != null && to != null && from.before(to)) {
+			data = new ArrayList<Pair<Date, Long>>();
+			Date date = from;
+			while (!date.after(to)) {
+				String key = DateUtils.format(date, "yyyyMMdd");
+				Long value = pageViewService.getUniqueUsername(key);
+				data.add(new Pair<Date, Long>(date, value));
+				date = DateUtils.addDays(date, 1);
+			}
+			Pair<String, Long> p = pageViewService.getMaxUniqueUsername();
 			if (p != null)
 				max = new Pair<Date, Long>(
 						DateUtils.parse(p.getA(), "yyyyMMdd"), p.getB());

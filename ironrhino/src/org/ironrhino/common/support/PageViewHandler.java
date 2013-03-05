@@ -46,7 +46,8 @@ public class PageViewHandler implements AccessHandler {
 					pageViewService.put(new Date(), RequestUtils
 							.getRemoteAddr(request), request.getRequestURL()
 							.toString(), httpSessionManager
-							.getSessionId(request), request
+							.getSessionId(request), RequestUtils
+							.getCookieValue(request, "U"), request
 							.getHeader("Referer"));
 				}
 			};
