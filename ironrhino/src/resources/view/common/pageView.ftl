@@ -2,19 +2,97 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('pageView')}</title>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<@url value="/assets/components/flot/excanvas.js"/>"></script><![endif]-->
+<script src="<@url value="/assets/components/flot/jquery.flot.js"/>" type="text/javascript"></script>
+<script src="<@url value="/assets/components/flot/jquery.flot.time.js"/>" type="text/javascript"></script>
+<script>
+function showTooltip(x, y, content) {
+	$('<div id="tooltip">' + content + '</div>').css({
+				position : 'absolute',
+				display : 'none',
+				top : y + 5,
+				left : x + 5,
+				border : '1px solid #fdd',
+				padding : '2px',
+				'background-color' : '#fee',
+				opacity : 0.80,
+				zIndex : 10010
+			}).appendTo("body").fadeIn(200);
+}
+
+
+Observation.pageView = function() {
+
+	$('ul.flotlinechart').each(function() {
+		var ul = $(this);
+		var data = [];
+		var lies = $('li', ul);
+		if (lies.length > 2) {
+			lies.each(function() {
+						var point = [];
+						point.push(parseInt($('span', this).data('time')));
+						point.push(parseFloat($('strong', this).text()));
+						data.push(point);
+					});
+			$.plot(ul, [data], {
+						series : {
+							lines : {
+								show : true
+							},
+							points : {
+								show : true
+							}
+						},
+						grid : {
+							hoverable : true
+						},
+						xaxis : {
+							mode : 'time',
+							timeformat : '%m-%d'
+						}
+					});
+			var previousPoint = null;
+			ul.bind('plothover', function(event, pos, item) {
+						if (item) {
+							if (previousPoint != item.dataIndex) {
+								previousPoint = item.dataIndex;
+								$('#tooltip').remove();
+								var x = item.datapoint[0], y = item.datapoint[1];
+								var content = '<strong style="margin-right:5px;">'
+										+ (ul.hasClass('percent') ? y * 100
+												+ '%' : y)
+										+ '</strong><span>'
+										+ new Date(x).format($(this).data('format')||'%m-%d %H:%M')
+										+ '</span>';
+								showTooltip(item.pageX, item.pageY, content);
+							}
+						} else {
+							$('#tooltip').remove();
+							previousPoint = null;
+						}
+					});
+
+		}
+	});
+
+}
+</script>
 </head>
 <body>
 
 
 <div class="row">
-<div class="span6">
+<div class="span2 offset2">
+<strong>${action.getText('pv')}</strong>
+</div>
+<div class="span4">
 <form class="ajax view form-inline" data-replacement="pv_result">
 <span>${action.getText('date')}</span>
 <@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
 </div>
-<div class="span6">
+<div class="span4">
 <form class="ajax view form-inline" data-replacement="pv_result">
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"  size="10" maxlength="10"/>
@@ -34,10 +112,11 @@
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
 
-<div class="row">
-<div class="span6">
+<div class="row" style="padding-top:20px;">
+<div class="span2 offset2">
+<strong>${action.getText('uip')}</strong>
 </div>
-<div class="span6">
+<div class="span4 offset4">
 <form class="ajax view form-inline" data-replacement="uip_result">
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"  size="10" maxlength="10"/>
@@ -58,10 +137,11 @@
 </div>
 
 
-<div class="row">
-<div class="span6">
+<div class="row" style="padding-top:20px;">
+<div class="span2 offset2">
+<strong>${action.getText('usid')}</strong>
 </div>
-<div class="span6">
+<div class="span4 offset4">
 <form class="ajax view form-inline" data-replacement="usid_result">
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"  size="10" maxlength="10"/>
@@ -81,10 +161,11 @@
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
 
-<div class="row">
-<div class="span6">
+<div class="row" style="padding-top:20px;">
+<div class="span2 offset2">
+<strong>${action.getText('uu')}</strong>
 </div>
-<div class="span6">
+<div class="span4 offset4">
 <form class="ajax view form-inline" data-replacement="uu_result">
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"  size="10" maxlength="10"/>

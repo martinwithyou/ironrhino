@@ -90,8 +90,8 @@ public class PageViewAction extends BaseAction {
 					Long value = pageViewService.getPageView(key);
 					Calendar c = Calendar.getInstance();
 					c.setTime(d);
-					c.set(Calendar.MINUTE, 59);
-					c.set(Calendar.SECOND, 59);
+					c.set(Calendar.MINUTE, 30);
+					c.set(Calendar.SECOND, 30);
 					data.add(new Pair<Date, Long>(c.getTime(), value));
 				}
 			}
