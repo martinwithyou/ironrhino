@@ -306,18 +306,22 @@ public class LocationParser {
 				JsonNode node = JsonUtils.fromJson(json, JsonNode.class);
 				if (node.get("code").asInt() == 0) {
 					node = node.get("data");
-					Location location = new Location();
-					location.setFirstArea(RegionUtils.shortenName(node.get(
-							"region").asText()));
-					location.setSecondArea(RegionUtils.shortenName(node.get(
-							"city").asText()));
-					location.setThirdArea(RegionUtils.shortenName(node.get(
-							"county").asText()));
-					return location;
+					loc = new Location();
+					loc.setFirstArea(node.get("region").asText());
+					loc.setSecondArea(node.get("city").asText());
+					loc.setThirdArea(node.get("county").asText());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		if (loc != null) {
+			if (loc.getFirstArea() != null)
+				loc.setFirstArea(RegionUtils.shortenName(loc.getFirstArea()));
+			if (loc.getSecondArea() != null)
+				loc.setSecondArea(RegionUtils.shortenName(loc.getSecondArea()));
+			if (loc.getThirdArea() != null)
+				loc.setThirdArea(RegionUtils.shortenName(loc.getThirdArea()));
 		}
 		return loc;
 	}
