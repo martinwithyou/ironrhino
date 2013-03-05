@@ -35,6 +35,8 @@
 	<property name="sitemesh-config-jar.includes" value="resources/sitemesh/**" />
 	<property name="common-setting-jar.name" value="ironrhino-common-setting-${version}.jar" />
 	<property name="common-setting-jar.includes" value="org/ironrhino/common/**/Setting*,resources/hibernate/common/Setting*,resources/view/common/setting*,resources/view/meta/include/common_setting.ftl" />
+	<property name="common-pageview-jar.name" value="ironrhino-common-pageview-${version}.jar" />
+	<property name="common-pageview-jar.includes" value="org/ironrhino/common/**/*PageView*,resources/view/common/pageView*" />
 	<property name="common-cms-jar.name" value="ironrhino-common-cms-${version}.jar" />
 	<property name="common-cms-jar.includes" value="org/ironrhino/common/**/*Page*,org/ironrhino/common/**/Cms*,resources/hibernate/common/Page*,resources/view/common/page*,resources/view/meta/include/common_cms.ftl" />
 	<property name="common-dictionary-jar.name" value="ironrhino-common-dictionary-${version}.jar" />
@@ -114,6 +116,7 @@
 		<delete file="${target.dir}/${zookeeper-config-jar.name}" />
 		<delete file="${target.dir}/${sitemesh-config-jar.name}" />
 		<delete file="${target.dir}/${common-setting-jar.name}" />
+		<delete file="${target.dir}/${common-pageview-jar.name}" />
 		<delete file="${target.dir}/${common-cms-jar.name}" />
 		<delete file="${target.dir}/${common-dictionary-jar.name}" />
 		<delete file="${target.dir}/${common-treenode-jar.name}" />
@@ -284,7 +287,16 @@
 				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
 			</manifest>
 		</jar>
-		<jar jarfile="${target.dir}/${common-cms-jar.name}" basedir="${classes.dir}" includes="${common-cms-jar.includes}">
+		<jar jarfile="${target.dir}/${common-pageview-jar.name}" basedir="${classes.dir}" includes="${common-pageview-jar.includes}">
+			<manifest>
+				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-pageview" />
+				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
+				<attribute name="Ironrhino-Component-Version" value="${version}" />
+				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
+				<attribute name="Ironrhino-Component-Dependence" value="ironrhino-core" />
+			</manifest>
+		</jar>
+		<jar jarfile="${target.dir}/${common-cms-jar.name}" basedir="${classes.dir}" includes="${common-cms-jar.includes}" excludes="${common-pageview-jar.includes}">
 			<manifest>
 				<attribute name="Ironrhino-Component-Id" value="ironrhino-common-cms" />
 				<attribute name="Ironrhino-Component-Vendor" value="ironrhino" />
