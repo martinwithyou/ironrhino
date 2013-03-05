@@ -80,6 +80,14 @@ public class DateUtils {
 			return null;
 		}
 	}
+	
+	public static Date parseDate8(String string) {
+		try {
+			return new SimpleDateFormat(DATE8).parse(string);
+		} catch (ParseException e) {
+			return null;
+		}
+	}
 
 	public static Date parseDatetime(String string) {
 		try {

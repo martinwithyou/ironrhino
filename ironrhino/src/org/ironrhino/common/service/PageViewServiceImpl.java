@@ -56,7 +56,7 @@ public class PageViewServiceImpl implements PageViewService {
 		String key = DateUtils.format(date, "yyyyMMddHH");
 		stringRedisTemplate.opsForValue().increment(KEY_PAGE_VIEW + ":" + key,
 				1);
-		key = DateUtils.format(date, "yyyyMMdd");
+		key = DateUtils.formatDate8(date);
 		stringRedisTemplate.opsForValue().increment(KEY_PAGE_VIEW + ":" + key,
 				1);
 		key = DateUtils.format(date, "yyyyMM");
@@ -70,7 +70,7 @@ public class PageViewServiceImpl implements PageViewService {
 	private void addUniqueIp(Date date, String ip) {
 		if (StringUtils.isBlank(ip))
 			return;
-		String key = KEY_PAGE_VIEW_UIP + DateUtils.format(date, "yyyyMMdd");
+		String key = KEY_PAGE_VIEW_UIP + DateUtils.formatDate8(date);
 		String keyForSet = key + "_set";
 		if (stringRedisTemplate.opsForSet().add(keyForSet, ip))
 			stringRedisTemplate.opsForValue().increment(key, 1);
@@ -79,7 +79,7 @@ public class PageViewServiceImpl implements PageViewService {
 	private void addUniqueSessionId(Date date, String sessionId) {
 		if (StringUtils.isBlank(sessionId))
 			return;
-		String key = KEY_PAGE_VIEW_USID + DateUtils.format(date, "yyyyMMdd");
+		String key = KEY_PAGE_VIEW_USID + DateUtils.formatDate8(date);
 		String keyForSet = key + "_set";
 		if (stringRedisTemplate.opsForSet().add(keyForSet, sessionId))
 			stringRedisTemplate.opsForValue().increment(key, 1);
@@ -88,7 +88,7 @@ public class PageViewServiceImpl implements PageViewService {
 	private void addUniqueUsername(Date date, String username) {
 		if (StringUtils.isBlank(username))
 			return;
-		String key = KEY_PAGE_VIEW_UU + DateUtils.format(date, "yyyyMMdd");
+		String key = KEY_PAGE_VIEW_UU + DateUtils.formatDate8(date);
 		String keyForSet = key + "_set";
 		if (stringRedisTemplate.opsForSet().add(keyForSet, username))
 			stringRedisTemplate.opsForValue().increment(key, 1);
@@ -98,8 +98,7 @@ public class PageViewServiceImpl implements PageViewService {
 		stringRedisTemplate.opsForZSet().incrementScore(KEY_PAGE_VIEW_URL, url,
 				1);
 		stringRedisTemplate.opsForZSet().incrementScore(
-				KEY_PAGE_VIEW_URL + ":" + DateUtils.format(date, "yyyyMMdd"),
-				url, 1);
+				KEY_PAGE_VIEW_URL + ":" + DateUtils.formatDate8(date), url, 1);
 	}
 
 	public long getPageView(String key) {
@@ -205,7 +204,7 @@ public class PageViewServiceImpl implements PageViewService {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, -1);
 		Date yesterday = cal.getTime();
-		String day = DateUtils.format(yesterday, "yyyyMMdd");
+		String day = DateUtils.formatDate8(yesterday);
 		stringRedisTemplate.delete(KEY_PAGE_VIEW_UIP + day + "_set");
 		stringRedisTemplate.delete(KEY_PAGE_VIEW_USID + day + "_set");
 		stringRedisTemplate.delete(KEY_PAGE_VIEW_UU + day + "_set");

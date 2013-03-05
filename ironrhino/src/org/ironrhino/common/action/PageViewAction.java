@@ -120,15 +120,15 @@ public class PageViewAction extends BaseAction {
 			data = new ArrayList<Pair<Date, Long>>();
 			Date date = from;
 			while (!date.after(to)) {
-				String key = DateUtils.format(date, "yyyyMMdd");
+				String key = DateUtils.formatDate8(date);
 				Long value = pageViewService.getPageView(key);
 				data.add(new Pair<Date, Long>(date, value));
 				date = DateUtils.addDays(date, 1);
 			}
 			Pair<String, Long> p = pageViewService.getMaxPageView();
 			if (p != null)
-				max = new Pair<Date, Long>(
-						DateUtils.parse(p.getA(), "yyyyMMdd"), p.getB());
+				max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()),
+						p.getB());
 			long value = pageViewService.getPageView(null);
 			if (value > 0)
 				total = value;
@@ -141,15 +141,15 @@ public class PageViewAction extends BaseAction {
 			data = new ArrayList<Pair<Date, Long>>();
 			Date date = from;
 			while (!date.after(to)) {
-				String key = DateUtils.format(date, "yyyyMMdd");
+				String key = DateUtils.formatDate8(date);
 				Long value = pageViewService.getUniqueIp(key);
 				data.add(new Pair<Date, Long>(date, value));
 				date = DateUtils.addDays(date, 1);
 			}
 			Pair<String, Long> p = pageViewService.getMaxUniqueIp();
 			if (p != null)
-				max = new Pair<Date, Long>(
-						DateUtils.parse(p.getA(), "yyyyMMdd"), p.getB());
+				max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()),
+						p.getB());
 		}
 		return "chart";
 	}
@@ -159,15 +159,15 @@ public class PageViewAction extends BaseAction {
 			data = new ArrayList<Pair<Date, Long>>();
 			Date date = from;
 			while (!date.after(to)) {
-				String key = DateUtils.format(date, "yyyyMMdd");
+				String key = DateUtils.formatDate8(date);
 				Long value = pageViewService.getUniqueSessionId(key);
 				data.add(new Pair<Date, Long>(date, value));
 				date = DateUtils.addDays(date, 1);
 			}
 			Pair<String, Long> p = pageViewService.getMaxUniqueSessionId();
 			if (p != null)
-				max = new Pair<Date, Long>(
-						DateUtils.parse(p.getA(), "yyyyMMdd"), p.getB());
+				max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()),
+						p.getB());
 		}
 		return "chart";
 	}
@@ -177,21 +177,21 @@ public class PageViewAction extends BaseAction {
 			data = new ArrayList<Pair<Date, Long>>();
 			Date date = from;
 			while (!date.after(to)) {
-				String key = DateUtils.format(date, "yyyyMMdd");
+				String key = DateUtils.formatDate8(date);
 				Long value = pageViewService.getUniqueUsername(key);
 				data.add(new Pair<Date, Long>(date, value));
 				date = DateUtils.addDays(date, 1);
 			}
 			Pair<String, Long> p = pageViewService.getMaxUniqueUsername();
 			if (p != null)
-				max = new Pair<Date, Long>(
-						DateUtils.parse(p.getA(), "yyyyMMdd"), p.getB());
+				max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()),
+						p.getB());
 		}
 		return "chart";
 	}
 
 	public String url() {
-		String day = date != null ? DateUtils.format(date, "yyyyMMdd") : null;
+		String day = date != null ? DateUtils.formatDate8(date) : null;
 		urls = pageViewService.getTopPageViewUrls(day, limit);
 		return "url";
 	}
