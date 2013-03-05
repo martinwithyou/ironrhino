@@ -15,6 +15,8 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.tuples.Pair;
+import org.ironrhino.common.util.Location;
+import org.ironrhino.common.util.LocationParser;
 import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.RequestUtils;
@@ -39,11 +41,13 @@ public class PageViewServiceImpl implements PageViewService {
 			return;
 		addPageView(date);
 		String day = DateUtils.formatDate8(date);
-		addUnique(day, "uip", ip);
+		boolean added = addUnique(day, "uip", ip);
 		addUnique(day, "usid", sessionId);
 		addUnique(day, "uu", username);
 		addUrlVisit(day, url);
 		analyzeReferer(day, url);
+		if (added)
+			analyzeLocation(day, ip);
 	}
 
 	private void addPageView(Date date) {
@@ -100,6 +104,34 @@ public class PageViewServiceImpl implements PageViewService {
 		}
 	}
 
+	private void analyzeLocation(String day, String ip) {
+		Location loc = LocationParser.parse(ip);
+		if (loc != null) {
+			String state = loc.getFirstArea();
+			if (StringUtils.isNotBlank(state)) {
+				StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
+				sb.append("loc:pr");
+				stringRedisTemplate.opsForZSet().incrementScore(sb.toString(),
+						state, 1);
+				sb.append(":");
+				sb.append(day);
+				stringRedisTemplate.opsForZSet().incrementScore(sb.toString(),
+						state, 1);
+			}
+			String city = loc.getSecondArea();
+			if (StringUtils.isNotBlank(city)) {
+				StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
+				sb.append("loc:ct");
+				stringRedisTemplate.opsForZSet().incrementScore(sb.toString(),
+						city, 1);
+				sb.append(":");
+				sb.append(day);
+				stringRedisTemplate.opsForZSet().incrementScore(sb.toString(),
+						city, 1);
+			}
+		}
+	}
+
 	public long getPageView(String key) {
 		return get(key, "pv");
 	}
@@ -144,6 +176,14 @@ public class PageViewServiceImpl implements PageViewService {
 		return getTop(day, "se", top);
 	}
 
+	public Map<String, Long> getTopProvinces(String day, int top) {
+		return getTop(day, "loc:pr", top);
+	}
+
+	public Map<String, Long> getTopCities(String day, int top) {
+		return getTop(day, "loc:ct", top);
+	}
+
 	@Trigger
 	@Scheduled(cron = "0 5 0 * * ?")
 	public void archive() {
@@ -162,15 +202,18 @@ public class PageViewServiceImpl implements PageViewService {
 		updateMax(day, "uu");
 	}
 
-	private void addUnique(String day, String type, String value) {
+	private boolean addUnique(String day, String type, String value) {
 		if (StringUtils.isBlank(value))
-			return;
+			return false;
 		StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
 		sb.append(type).append(":").append(day);
 		String key = sb.toString();
 		sb.append("_set");
-		if (stringRedisTemplate.opsForSet().add(sb.toString(), value))
+		if (stringRedisTemplate.opsForSet().add(sb.toString(), value)) {
 			stringRedisTemplate.opsForValue().increment(key, 1);
+			return true;
+		}
+		return false;
 	}
 
 	private long get(String key, String type) {

@@ -32,7 +32,7 @@ public class PageViewAction extends BaseAction {
 
 	private Long total;
 
-	private int limit = 20;
+	private int limit;
 
 	private Map<String, Long> dataMap;
 
@@ -191,20 +191,42 @@ public class PageViewAction extends BaseAction {
 	}
 
 	public String url() {
+		if (limit <= 0)
+			limit = 20;
 		String day = date != null ? DateUtils.formatDate8(date) : null;
 		dataMap = pageViewService.getTopPageViewUrls(day, limit);
 		return "list";
 	}
 
 	public String kw() {
+		if (limit <= 0)
+			limit = 20;
 		String day = date != null ? DateUtils.formatDate8(date) : null;
 		dataMap = pageViewService.getTopKeywords(day, limit);
 		return "list";
 	}
 
 	public String se() {
+		if (limit <= 0)
+			limit = 10;
 		String day = date != null ? DateUtils.formatDate8(date) : null;
 		dataMap = pageViewService.getTopSearchEngines(day, limit);
+		return "piechart";
+	}
+
+	public String pr() {
+		if (limit <= 0)
+			limit = 10;
+		String day = date != null ? DateUtils.formatDate8(date) : null;
+		dataMap = pageViewService.getTopProvinces(day, limit);
+		return "piechart";
+	}
+
+	public String ct() {
+		if (limit <= 0)
+			limit = 10;
+		String day = date != null ? DateUtils.formatDate8(date) : null;
+		dataMap = pageViewService.getTopCities(day, limit);
 		return "piechart";
 	}
 

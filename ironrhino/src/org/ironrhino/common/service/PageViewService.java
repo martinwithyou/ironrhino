@@ -31,5 +31,9 @@ public interface PageViewService {
 	public Map<String, Long> getTopKeywords(String day, int top);
 	
 	public Map<String, Long> getTopSearchEngines(String day, int top);
+	
+	public Map<String, Long> getTopProvinces(String day, int top);
+	
+	public Map<String, Long> getTopCities(String day, int top);
 
 }
