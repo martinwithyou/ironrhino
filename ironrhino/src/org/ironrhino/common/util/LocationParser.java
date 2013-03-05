@@ -302,7 +302,12 @@ public class LocationParser {
 	}
 
 	public static Location parse(String host) {
-		Location loc = parseLocal(host);
+		Location loc = null;
+		try {
+			loc = parseLocal(host);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		if (loc == null || loc.getFirstArea() == null) {
 			try {
 				String json = HttpClientUtils
