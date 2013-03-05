@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.tuples.Pair;
 import org.ironrhino.common.service.PageViewService;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -29,6 +31,10 @@ public class PageViewAction extends BaseAction {
 	private Pair<Date, Long> max;
 
 	private Long total;
+
+	private int limit = 20;
+
+	private Map<String, Long> urls;
 
 	@Inject
 	private transient PageViewService pageViewService;
@@ -69,9 +75,18 @@ public class PageViewAction extends BaseAction {
 		return total;
 	}
 
+	public Map<String, Long> getUrls() {
+		return urls;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
 	@Override
 	public String execute() {
-		if (date == null)
+		if (date == null
+				&& ServletActionContext.getRequest().getParameter("date") == null)
 			date = DateUtils.beginOfDay(new Date());
 		if (from == null && to == null) {
 			to = DateUtils.beginOfDay(new Date());
@@ -173,6 +188,12 @@ public class PageViewAction extends BaseAction {
 						DateUtils.parse(p.getA(), "yyyyMMdd"), p.getB());
 		}
 		return "chart";
+	}
+
+	public String url() {
+		String day = date != null ? DateUtils.format(date, "yyyyMMdd") : null;
+		urls = pageViewService.getTopPageViewUrls(day, limit);
+		return "url";
 	}
 
 }

@@ -199,7 +199,7 @@ public class PageViewServiceImpl implements PageViewService {
 		String key = KEY_PAGE_VIEW_URL;
 		if (day != null)
 			key += ":" + day;
-		Set<String> set = stringRedisTemplate.opsForZSet().range(key, 0,
+		Set<String> set = stringRedisTemplate.opsForZSet().reverseRange(key, 0,
 				top - 1);
 		Map<String, Long> map = new LinkedHashMap<String, Long>(set.size());
 		for (String member : set)

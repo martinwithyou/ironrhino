@@ -185,5 +185,34 @@ Observation.pageView = function() {
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
 
+
+<div class="row" style="padding-top:20px;">
+<div class="span2 offset2">
+<strong>${action.getText('url')}</strong>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="url_result">
+<span>${action.getText('date')}</span>
+<@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
+<@s.submit value="%{getText('query')}" theme="simple"/>
+</form>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="url_result">
+<input type="hidden" name="date" value=""/>
+<@s.submit value="%{getText('total')}" theme="simple"/>
+</form>
+</div>
+</div>
+<div id="url_result">
+<#assign dataurl=getUrl("/common/pageView/url")/>
+<#if request.queryString?has_content>
+<#assign dataurl=dataurl+'?'+request.queryString/>
+<#elseif date??>
+<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
+</#if>
+<div class="ajaxpanel" data-url="${dataurl}"></div>
+</div>
+
 </body>
 </html></#escape>

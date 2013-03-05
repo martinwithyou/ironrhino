@@ -4,20 +4,18 @@
 <title>${action.getText('pageView')}</title>
 </head>
 <body>
-<ul>
-<#if max?? || total??>
 <div style="padding:5px;">
+	<#if date??><span style="margin-right:10px;">${date?string('yyyy-MM-dd')}<#elseif from??&&to??>${from?string('yyyy-MM-dd')} -> ${to?string('yyyy-MM-dd')}</span></#if>
 	<#if max??>
-	<span>${action.getText('max')}:</span>
-	<strong style="margin-right:10px;">${max.b?string}</strong>
-	<span>${max.a?string('yyyy-MM-dd')}</span>
+	<span class="pull-right" style="margin:0 10px;">${action.getText('max')}:
+	<strong>${max.b?string}</strong>
+	${max.a?string('yyyy-MM-dd')}
+	</span>
 	</#if>
 	<#if total??>
-	<span style="margin-left:10px;">${action.getText('total')}:</span>
-	<strong>${total?string}</strong>
+	<span class="pull-right" style="margin:0 10px;">${action.getText('total')}:<strong>${total?string}</strong></span>
 	</#if>
 </div>
-</#if>
 <ul class="unstyled flotlinechart" style="height:300px;" data-format="<#if date??>%H(%m-%d)<#else>%m-%d</#if>">
 	<#if data??>
 	<#list data as var>
@@ -27,7 +25,6 @@
 	</li>
 	</#list>
 	</#if>
-</ul>
 </ul>
 </body>
 </html></#escape>

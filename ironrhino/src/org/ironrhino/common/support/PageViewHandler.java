@@ -40,7 +40,8 @@ public class PageViewHandler implements AccessHandler {
 			HttpServletResponse response) {
 		if (pageViewService != null
 				&& request.getMethod().equalsIgnoreCase("GET")
-				&& !request.getRequestURI().startsWith("/assets/")) {
+				&& !request.getRequestURI().startsWith("/assets/")
+				&& !request.getRequestURI().endsWith("/favicon.ico")) {
 			Runnable task = new Runnable() {
 				public void run() {
 					pageViewService.put(new Date(), RequestUtils
