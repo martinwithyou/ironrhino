@@ -105,7 +105,6 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	private void analyzeLocation(String day, String ip) {
-		ip = "113.240.249.202";
 		Location loc = LocationParser.parse(ip);
 		if (loc != null) {
 			String province = loc.getFirstArea();
