@@ -105,18 +105,19 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	private void analyzeLocation(String day, String ip) {
+		ip = "113.240.249.202";
 		Location loc = LocationParser.parse(ip);
 		if (loc != null) {
-			String state = loc.getFirstArea();
-			if (StringUtils.isNotBlank(state)) {
+			String province = loc.getFirstArea();
+			if (StringUtils.isNotBlank(province)) {
 				StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
 				sb.append("loc:pr");
 				stringRedisTemplate.opsForZSet().incrementScore(sb.toString(),
-						state, 1);
+						province, 1);
 				sb.append(":");
 				sb.append(day);
 				stringRedisTemplate.opsForZSet().incrementScore(sb.toString(),
-						state, 1);
+						province, 1);
 			}
 			String city = loc.getSecondArea();
 			if (StringUtils.isNotBlank(city)) {
