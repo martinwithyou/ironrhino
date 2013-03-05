@@ -1,6 +1,7 @@
 package org.ironrhino.common.service;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.ironrhino.common.model.tuples.Pair;
 
@@ -24,5 +25,9 @@ public interface PageViewService {
 	public Pair<String, Long> getMaxUniqueSessionId();
 
 	public Pair<String, Long> getMaxUniqueUsername();
+
+	public long getPageViewByUrl(String day, String url);
+
+	public Map<String, Long> getTopPageViewUrls(String day, int top);
 
 }

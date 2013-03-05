@@ -5,10 +5,17 @@
 </head>
 <body>
 <ul>
-<#if max??>
+<#if max?? || total??>
 <div style="padding:5px;">
+	<#if max??>
+	<span>${action.getText('max')}:</span>
 	<strong style="margin-right:10px;">${max.b?string}</strong>
 	<span>${max.a?string('yyyy-MM-dd')}</span>
+	</#if>
+	<#if total??>
+	<span style="margin-left:10px;">${action.getText('total')}:</span>
+	<strong>${total?string}</strong>
+	</#if>
 </div>
 </#if>
 <ul class="unstyled flotlinechart" style="height:300px;" data-format="<#if date??>%H(%m-%d)<#else>%m-%d</#if>">

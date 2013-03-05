@@ -1,7 +1,11 @@
 package org.ironrhino.common.service;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -30,6 +34,8 @@ public class PageViewServiceImpl implements PageViewService {
 
 	public static final String KEY_PAGE_VIEW_MAX = "{pv}:max";
 
+	public static final String KEY_PAGE_VIEW_URL = "{pv}:url";
+
 	@Autowired(required = false)
 	private RedisTemplate<String, Long> redisTemplate;
 
@@ -45,6 +51,7 @@ public class PageViewServiceImpl implements PageViewService {
 		addUniqueIp(date, ip);
 		addUniqueSessionId(date, sessionId);
 		addUniqueUsername(date, username);
+		addUrlVisit(date, url);
 	}
 
 	private void addPageView(Date date) {
@@ -84,6 +91,14 @@ public class PageViewServiceImpl implements PageViewService {
 		String keyForSet = key + "_set";
 		if (stringRedisTemplate.opsForSet().add(keyForSet, username))
 			redisTemplate.opsForValue().increment(key, 1);
+	}
+
+	private void addUrlVisit(Date date, String url) {
+		stringRedisTemplate.opsForZSet().incrementScore(KEY_PAGE_VIEW_URL, url,
+				1);
+		stringRedisTemplate.opsForZSet().incrementScore(
+				KEY_PAGE_VIEW_URL + ":" + DateUtils.format(date, "yyyyMMdd"),
+				url, 1);
 	}
 
 	public long getPageView(String key) {
@@ -166,6 +181,31 @@ public class PageViewServiceImpl implements PageViewService {
 			return null;
 		return (Pair<String, Long>) redisTemplate.opsForHash().get(
 				KEY_PAGE_VIEW_MAX, "uu");
+	}
+
+	public long getPageViewByUrl(String day, String url) {
+		if (redisTemplate == null)
+			return 0;
+		String key = KEY_PAGE_VIEW_URL;
+		if (day != null)
+			key += ":" + day;
+		Double d = stringRedisTemplate.opsForZSet().score(key, url);
+		return d != null ? d.longValue() : 0;
+	}
+
+	public Map<String, Long> getTopPageViewUrls(String day, int top) {
+		if (redisTemplate == null)
+			return Collections.emptyMap();
+		String key = KEY_PAGE_VIEW_URL;
+		if (day != null)
+			key += ":" + day;
+		Set<String> set = stringRedisTemplate.opsForZSet().range(key, 0,
+				top - 1);
+		Map<String, Long> map = new LinkedHashMap<String, Long>(set.size());
+		for (String member : set)
+			map.put(member, stringRedisTemplate.opsForZSet().score(key, member)
+					.longValue());
+		return map;
 	}
 
 	@Scheduled(cron = "0 5 0 * * ?")

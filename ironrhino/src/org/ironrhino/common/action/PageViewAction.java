@@ -28,6 +28,8 @@ public class PageViewAction extends BaseAction {
 
 	private Pair<Date, Long> max;
 
+	private Long total;
+
 	@Inject
 	private transient PageViewService pageViewService;
 
@@ -61,6 +63,10 @@ public class PageViewAction extends BaseAction {
 
 	public Pair<Date, Long> getMax() {
 		return max;
+	}
+
+	public Long getTotal() {
+		return total;
 	}
 
 	@Override
@@ -108,6 +114,9 @@ public class PageViewAction extends BaseAction {
 			if (p != null)
 				max = new Pair<Date, Long>(
 						DateUtils.parse(p.getA(), "yyyyMMdd"), p.getB());
+			long value = pageViewService.getPageView(null);
+			if (value > 0)
+				total = value;
 		}
 		return "chart";
 	}
