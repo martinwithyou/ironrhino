@@ -120,8 +120,8 @@ fi
 
 
 #config nginx
-if [ ! -f /etc/nginx/sites-available/default ]; then
-cat>/etc/nginx/sites-available/default<<EOF
+if [ ! -f /etc/nginx/sites-enabled/default ]; then
+cat>/etc/nginx/sites-enabled/default<<EOF
 gzip_min_length  1024;
 gzip_types       text/xml text/css text/javascript application/x-javascript;
 upstream  backend  {
@@ -248,5 +248,6 @@ fi
 #svn checkout ironrhino
 if [ ! -d ironrhino ];then
 svn checkout http://ironrhino.googlecode.com/svn/trunk/ironrhino
+chown -R $USER:$USER ironrhino
 fi
 
