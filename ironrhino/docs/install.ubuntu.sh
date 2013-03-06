@@ -158,8 +158,12 @@ elif [ ! -d "\$1" ]; then
     echo "directory \$1 doesn't exists"
     exit 1
 fi
+app="\$1"
+if [[ "\$app" =~ "/" ]] ; then
+app="\${app:0:-1}"
+fi
 cd ironrhino && svn up && ant dist && cd ..
-cd \$1 && svn up
+cd \$app && svn up
 ant -Dserver.home=/home/$USER/tomcat8080 -Dwebapp.deploy.dir=/home/$USER/tomcat8080/webapps/ROOT deploy
 ant -Dserver.home=/home/$USER/tomcat8081 -Dserver.shutdown.port=8006 -Dserver.startup.port=8081 shutdown
 rm -rf /home/$USER/tomcat8081/webapps
