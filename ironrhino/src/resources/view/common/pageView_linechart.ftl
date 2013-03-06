@@ -20,8 +20,8 @@
 	<#if dataList??>
 	<#list dataList as var>
 	<li style="float:left;width:200px;padding:10px;">
-	<strong style="margin-right:10px;">${var.b?string}</strong>
-	<span class="pull-right" data-time="${var.a.time}">${var.a?string('yyyy-MM-dd')}</span>
+	<span data-time="${var.a.time}">${var.a?string('yyyy-MM-dd')}</span>
+	<strong class="pull-right" style="margin-right:10px;">${var.b?string}</strong>
 	</li>
 	</#list>
 	</#if>
