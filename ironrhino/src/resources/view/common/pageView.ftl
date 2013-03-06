@@ -311,62 +311,6 @@ Observation.pageView = function(container) {
 
 <div class="row" style="padding-top:20px;">
 <div class="span2 offset2">
-<strong>${action.getText('keyword')}</strong>
-</div>
-<div class="span4">
-<form class="ajax view form-inline" data-replacement="kw_result">
-<span>${action.getText('date')}</span>
-<@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
-<@s.submit value="%{getText('query')}" theme="simple"/>
-</form>
-</div>
-<div class="span4">
-<form class="ajax view form-inline" data-replacement="kw_result">
-<input type="hidden" name="date" value=""/>
-<@s.submit value="%{getText('total')}" theme="simple"/>
-</form>
-</div>
-</div>
-<div id="kw_result">
-<#assign dataurl=getUrl("/common/pageView/kw")/>
-<#if request.queryString?has_content>
-<#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif date??>
-<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
-</#if>
-<div class="ajaxpanel" data-url="${dataurl}"></div>
-</div>
-
-<div class="row" style="padding-top:20px;">
-<div class="span2 offset2">
-<strong>${action.getText('searchengine')}</strong>
-</div>
-<div class="span4">
-<form class="ajax view form-inline" data-replacement="se_result">
-<span>${action.getText('date')}</span>
-<@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
-<@s.submit value="%{getText('query')}" theme="simple"/>
-</form>
-</div>
-<div class="span4">
-<form class="ajax view form-inline" data-replacement="se_result">
-<input type="hidden" name="date" value=""/>
-<@s.submit value="%{getText('total')}" theme="simple"/>
-</form>
-</div>
-</div>
-<div id="se_result">
-<#assign dataurl=getUrl("/common/pageView/se")/>
-<#if request.queryString?has_content>
-<#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif date??>
-<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
-</#if>
-<div class="ajaxpanel" data-url="${dataurl}"></div>
-</div>
-
-<div class="row" style="padding-top:20px;">
-<div class="span2 offset2">
 <strong>${action.getText('province')}</strong>
 </div>
 <div class="span4">
@@ -414,6 +358,62 @@ Observation.pageView = function(container) {
 </div>
 <div id="ct_result">
 <#assign dataurl=getUrl("/common/pageView/ct")/>
+<#if request.queryString?has_content>
+<#assign dataurl=dataurl+'?'+request.queryString/>
+<#elseif date??>
+<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
+</#if>
+<div class="ajaxpanel" data-url="${dataurl}"></div>
+</div>
+
+<div class="row" style="padding-top:20px;">
+<div class="span2 offset2">
+<strong>${action.getText('keyword')}</strong>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="kw_result">
+<span>${action.getText('date')}</span>
+<@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
+<@s.submit value="%{getText('query')}" theme="simple"/>
+</form>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="kw_result">
+<input type="hidden" name="date" value=""/>
+<@s.submit value="%{getText('total')}" theme="simple"/>
+</form>
+</div>
+</div>
+<div id="kw_result">
+<#assign dataurl=getUrl("/common/pageView/kw")/>
+<#if request.queryString?has_content>
+<#assign dataurl=dataurl+'?'+request.queryString/>
+<#elseif date??>
+<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
+</#if>
+<div class="ajaxpanel" data-url="${dataurl}"></div>
+</div>
+
+<div class="row" style="padding-top:20px;">
+<div class="span2 offset2">
+<strong>${action.getText('searchengine')}</strong>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="se_result">
+<span>${action.getText('date')}</span>
+<@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
+<@s.submit value="%{getText('query')}" theme="simple"/>
+</form>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="se_result">
+<input type="hidden" name="date" value=""/>
+<@s.submit value="%{getText('total')}" theme="simple"/>
+</form>
+</div>
+</div>
+<div id="se_result">
+<#assign dataurl=getUrl("/common/pageView/se")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 <#elseif date??>
