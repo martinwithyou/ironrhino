@@ -84,12 +84,14 @@ Observation.pageView = function(container) {
 	$('ul.flotbarchart',container).each(function() {
 		var ul = $(this);
 		var data = [];
+		var xticks = [];
 		var lies = $('li', ul);
 		if (lies.length > 2) {
 			lies.each(function() {
 						var point = [];
 						point.push(parseInt($('span', this).text()));
 						point.push(parseInt($('strong', this).text()));
+						xticks.push(point[0]);
 						data.push(point);
 					});
 			$.plot(ul, [data], {
@@ -102,9 +104,8 @@ Observation.pageView = function(container) {
 							hoverable : true
 						},
 						xaxis : {
-							minTickSize:1,
-							autoscaleMargin:1,
-							tickLength:1,
+							ticks: xticks,
+							tickLength: 0,
 							max: 24
 						}
 					});
@@ -117,7 +118,7 @@ Observation.pageView = function(container) {
 								var x = item.datapoint[0], y = item.datapoint[1];
 								var content = '<strong style="margin-right:5px;">'
 										+ y
-										+ '</strong>';
+										+ ' </strong>';
 								showTooltip(item.pageX, item.pageY, content);
 							}
 						} else {
