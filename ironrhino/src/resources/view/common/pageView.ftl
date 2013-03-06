@@ -8,6 +8,7 @@
 <script src="<@url value="/assets/components/flot/jquery.flot.pie.js"/>" type="text/javascript"></script>
 <script>
 function showTooltip(x, y, content) {
+	$('#tooltip').remove();
 	$('<div id="tooltip">' + content + '</div>').css({
 				position : 'absolute',
 				display : 'none',
@@ -22,9 +23,7 @@ function showTooltip(x, y, content) {
 }
 
 function labelFormatter(label, series) {
-		var data = series.data;
-		data = data[0][1];
-		return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + Math.round(series.percent) + "%<br/>"+data+"</div>";
+		return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + Math.round(series.percent) +"</div>";
 }
 
 
@@ -107,7 +106,18 @@ Observation.pageView = function(container) {
 				    },
 				    legend: {
 				        show: true
-				    }
+				    },
+				    grid: {
+				    //hoverable:true,
+					clickable: true
+					}
+					});
+					ul.bind('plotclick', function(event, pos, obj) {
+					if (!obj) {
+						$('#tooltip').remove();
+						return;
+					}
+					showTooltip(pos.pageX,pos.pageY,obj.series.label+': '+obj.series.data[0][1]);
 					});
 	});
 
