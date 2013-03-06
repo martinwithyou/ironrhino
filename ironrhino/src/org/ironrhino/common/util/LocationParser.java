@@ -50,7 +50,7 @@ public class LocationParser {
 		b4 = new byte[4];
 		b3 = new byte[3];
 		try {
-			File f = new File(AppInfo.getAppHome() + "/resources/data/wry.dat");
+			File f = new File(AppInfo.getAppHome() + "/data/wry.dat");
 			if (f.exists()) {
 				file = new RandomAccessFile(f, "r");
 			} else {
