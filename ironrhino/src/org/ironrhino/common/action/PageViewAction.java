@@ -114,8 +114,11 @@ public class PageViewAction extends BaseAction {
 					c.set(Calendar.MINUTE, 30);
 					c.set(Calendar.SECOND, 30);
 					dataList.add(new Pair<Date, Long>(c.getTime(), value));
+				} else {
+					dataList.add(new Pair<Date, Long>(cal.getTime(), 0L));
 				}
 			}
+			return "barchart";
 		} else if (from != null && to != null && from.before(to)) {
 			dataList = new ArrayList<Pair<Date, Long>>();
 			Date date = from;
@@ -132,8 +135,9 @@ public class PageViewAction extends BaseAction {
 			long value = pageViewService.getPageView(null);
 			if (value > 0)
 				total = value;
+			return "linechart";
 		}
-		return "linechart";
+		return NONE;
 	}
 
 	public String uip() {

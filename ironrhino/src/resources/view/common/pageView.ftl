@@ -81,6 +81,54 @@ Observation.pageView = function(container) {
 		}
 	});
 	
+	$('ul.flotbarchart',container).each(function() {
+		var ul = $(this);
+		var data = [];
+		var lies = $('li', ul);
+		if (lies.length > 2) {
+			lies.each(function() {
+						var point = [];
+						point.push(parseInt($('span', this).text()));
+						point.push(parseInt($('strong', this).text()));
+						data.push(point);
+					});
+			$.plot(ul, [data], {
+						series : {
+							bars : {
+								show : true
+							}
+						},
+						grid : {
+							hoverable : true
+						},
+						xaxis : {
+							minTickSize:1,
+							autoscaleMargin:1,
+							tickLength:1,
+							max: 24
+						}
+					});
+			var previousPoint = null;
+			ul.bind('plothover', function(event, pos, item) {
+						if (item) {
+							if (previousPoint != item.dataIndex) {
+								previousPoint = item.dataIndex;
+								$('#tooltip').remove();
+								var x = item.datapoint[0], y = item.datapoint[1];
+								var content = '<strong style="margin-right:5px;">'
+										+ y
+										+ '</strong>';
+								showTooltip(item.pageX, item.pageY, content);
+							}
+						} else {
+							$('#tooltip').remove();
+							previousPoint = null;
+						}
+					});
+
+		}
+	});
+	
 		$('ul.flotpiechart',container).each(function() {
 		var ul = $(this);
 		var data = [];

@@ -5,7 +5,7 @@
 </head>
 <body>
 <div style="padding:5px;">
-	<#if date??><span style="margin-right:10px;">${date?string('yyyy-MM-dd')}<#elseif from??&&to??>${from?string('yyyy-MM-dd')} -> ${to?string('yyyy-MM-dd')}</span></#if>
+	<span style="margin-right:10px;">${from?string('yyyy-MM-dd')} -> ${to?string('yyyy-MM-dd')}</span>
 	<#if max??>
 	<span class="pull-right" style="margin:0 10px;">${action.getText('max')}:
 	<strong>${max.b?string}</strong>
@@ -21,7 +21,7 @@
 	<#list dataList as var>
 	<li style="float:left;width:200px;padding:10px;">
 	<strong style="margin-right:10px;">${var.b?string}</strong>
-	<span class="pull-right" data-time="${var.a.time}"><#if date??>${var.a?string('HH(yyyy-MM-dd)')}<#else>${var.a?string('yyyy-MM-dd')}</#if></span>
+	<span class="pull-right" data-time="${var.a.time}">${var.a?string('yyyy-MM-dd')}</span>
 	</li>
 	</#list>
 	</#if>
