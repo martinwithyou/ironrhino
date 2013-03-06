@@ -9,6 +9,7 @@ USER="$SUDO_USER"
 fi
 
 #install packages
+apt-get update
 apt-get --force-yes --yes install openjdk-7-jdk ant mysql-server subversion nginx chkconfig sysv-rc-conf fontconfig xfonts-utils unzip wget iptables make gcc
 
 #install simsun font
