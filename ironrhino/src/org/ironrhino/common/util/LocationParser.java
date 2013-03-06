@@ -39,11 +39,14 @@ public class LocationParser {
 
 	private boolean available;
 
-	private List<String> specialList1 = Arrays.asList(new String[] { "内蒙古",
-			"新疆", "西藏", "广西", "宁夏" });
+	private static List<String> specialList1 = Arrays.asList(new String[] {
+			"内蒙古", "新疆", "西藏", "广西", "宁夏" });
 
-	private List<String> specialList2 = Arrays
-			.asList(new String[] { "香港", "澳门" });
+	private static List<String> specialList2 = Arrays.asList(new String[] {
+			"香港", "澳门" });
+
+	private static List<String> specialList3 = Arrays.asList(new String[] {
+			"北京", "上海", "天津", "重庆" });
 
 	private LocationParser() {
 		buf = new byte[100];
@@ -84,7 +87,7 @@ public class LocationParser {
 			String string = (loc[0] != null ? loc[0] : "")
 					+ (loc[1] != null ? loc[1] : "");
 			Location location = new Location(string);
-			for (String s : instance.specialList1)
+			for (String s : specialList1)
 				if (string.startsWith(s)) {
 					location.setFirstArea(s);
 					if (string.indexOf("自治区") > 0)
@@ -99,7 +102,7 @@ public class LocationParser {
 					return location;
 				}
 
-			for (String s : instance.specialList2)
+			for (String s : specialList2)
 				if (string.startsWith(s)) {
 					location.setFirstArea(s);
 					return location;
@@ -328,12 +331,17 @@ public class LocationParser {
 			}
 		}
 		if (loc != null) {
-			if (loc.getFirstArea() != null)
-				loc.setFirstArea(LocationUtils.shortenName(loc.getFirstArea()));
-			if (loc.getSecondArea() != null)
-				loc.setSecondArea(LocationUtils.shortenName(loc.getSecondArea()));
 			if (loc.getThirdArea() != null)
 				loc.setThirdArea(LocationUtils.shortenName(loc.getThirdArea()));
+			if (loc.getSecondArea() != null)
+				loc.setSecondArea(LocationUtils.shortenName(loc.getSecondArea()));
+			if (loc.getFirstArea() != null) {
+				loc.setFirstArea(LocationUtils.shortenName(loc.getFirstArea()));
+				if (specialList2.contains(loc.getFirstArea())
+						|| specialList3.contains(loc.getFirstArea()))
+					loc.setSecondArea(loc.getFirstArea());
+			}
+
 		}
 		return loc;
 	}
