@@ -127,6 +127,9 @@ fi
 
 
 #config nginx
+if [ -f /etc/nginx/sites-enabled/default ] && ! $(more /etc/nginx/sites-enabled/default|grep backend >/dev/null 2>&1) ; then
+rm -rf /etc/nginx/sites-enabled/default
+fi
 if [ ! -f /etc/nginx/sites-enabled/default ]; then
 cat>/etc/nginx/sites-enabled/default<<EOF
 gzip_min_length  1024;
