@@ -64,7 +64,7 @@ public class RedisCyclicSequence extends AbstractCyclicSequence {
 						for (;;) {
 							operations.watch(Collections
 									.singleton(boundValueOperations.getKey()));
-							if (stringValue == boundValueOperations.get()) {
+							if (stringValue.equals(boundValueOperations.get())) {
 								operations.multi();
 								boundValueOperations.set(restart);
 								if (operations.exec() != null) {
