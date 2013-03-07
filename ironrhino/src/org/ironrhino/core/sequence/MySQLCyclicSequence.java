@@ -49,16 +49,16 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 				}
 				JdbcUtils.closeResultSet(rs);
 				if (!columnExists) {
-					stmt.execute("ALTER TABLE `" + getSequenceName() + "` ADD "
+					stmt.execute("ALTER TABLE `" + getTableName() + "` ADD "
 							+ columnName + " INT NOT NULL DEFAULT 0,ADD "
 							+ columnName
 							+ "_TIMESTAMP BIGINT DEFAULT UNIX_TIMESTAMP()");
 				}
 			} else {
-				stmt.execute("CREATE TABLE `" + getSequenceName() + "` ("
+				stmt.execute("CREATE TABLE `" + getTableName() + "` ("
 						+ columnName + " INT NOT NULL DEFAULT 0," + columnName
 						+ "_TIMESTAMP BIGINT) ");
-				stmt.execute("INSERT INTO `" + getSequenceName()
+				stmt.execute("INSERT INTO `" + getTableName()
 						+ "` VALUES(0,UNIX_TIMESTAMP())");
 			}
 		} catch (SQLException ex) {
