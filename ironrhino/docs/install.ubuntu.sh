@@ -12,6 +12,13 @@ fi
 apt-get update
 apt-get --force-yes --yes install openjdk-7-jdk ant mysql-server subversion nginx chkconfig sysv-rc-conf fontconfig xfonts-utils unzip wget iptables make gcc
 
+#config mysql
+if [ -f "/etc/mysql/my.cnf" ] && ! $(more /etc/mysql/my.cnf|grep collation-server >/dev/null 2>&1) ; then
+sed -i '32i collation-server = utf8_general_ci' /etc/mysql/my.cnf
+sed -i '32i character-set-server = utf8' /etc/mysql/my.cnf
+service mysql restart
+fi
+
 #install simsun font
 if [ -f "simsun.ttf" ]; then
 mv simsun.ttf /usr/share/fonts/truetype
