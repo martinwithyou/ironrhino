@@ -13,7 +13,7 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
 
-public class MySQLCyclicSequence extends AbstractCyclicSequence {
+public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 
 	private long nextId = 0;
 
@@ -70,7 +70,7 @@ public class MySQLCyclicSequence extends AbstractCyclicSequence {
 	}
 
 	@Override
-	public long nextLongValue() throws DataAccessException {
+	public String nextStringValue() throws DataAccessException {
 		Date lastInsertTimestamp = null;
 		Date thisTimestamp = null;
 		if (this.maxId == this.nextId) {
@@ -128,8 +128,8 @@ public class MySQLCyclicSequence extends AbstractCyclicSequence {
 		} else {
 			this.nextId++;
 		}
-		return getLongValue(thisTimestamp, getCycleType(), getPaddingLength(),
-				(int) nextId);
+		return getStringValue(thisTimestamp, getCycleType(),
+				getPaddingLength(), (int) nextId);
 	}
 
 }

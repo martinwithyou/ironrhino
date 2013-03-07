@@ -14,7 +14,7 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
 
 public abstract class AbstractSequenceCyclicSequence extends
-		AbstractCyclicSequence {
+		AbstractDatabaseCyclicSequence {
 
 	protected abstract String getQuerySequenceStatement();
 
@@ -91,7 +91,7 @@ public abstract class AbstractSequenceCyclicSequence extends
 	}
 
 	@Override
-	public long nextLongValue() throws DataAccessException {
+	public String nextStringValue() throws DataAccessException {
 		Date lastInsertTimestamp = null;
 		Date thisTimestamp = null;
 		long nextId = 0;
@@ -133,8 +133,8 @@ public abstract class AbstractSequenceCyclicSequence extends
 			JdbcUtils.closeStatement(stmt);
 			DataSourceUtils.releaseConnection(con, getDataSource());
 		}
-		return getLongValue(thisTimestamp, getCycleType(), getPaddingLength(),
-				(int) nextId);
+		return getStringValue(thisTimestamp, getCycleType(),
+				getPaddingLength(), (int) nextId);
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.ironrhino.core.sequence;
 
+import org.apache.commons.lang3.time.FastDateFormat;
+
 public interface CyclicSequence {
 
 	public CycleType getCycleType();
@@ -11,7 +13,19 @@ public interface CyclicSequence {
 	public String nextStringValue();
 
 	static enum CycleType {
-		minute, hour, day, month, year
+
+		MINUTE("yyyyMMddHHmm"), HOUR("yyyyMMddHH"), DAY("yyyyMMdd"), MONTH(
+				"yyyyMM"), YEAR("yyyy");
+		private FastDateFormat format;
+
+		private CycleType(String pattern) {
+			this.format = FastDateFormat.getInstance(pattern);
+		}
+
+		public FastDateFormat getFormat() {
+			return format;
+		}
+
 	}
 
 }
