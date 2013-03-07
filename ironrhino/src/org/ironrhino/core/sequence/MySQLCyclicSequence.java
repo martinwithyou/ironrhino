@@ -28,16 +28,16 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 			ResultSet rs = dbmd.getTables(null, null, "%", null);
 			boolean tableExists = false;
 			while (rs.next()) {
-				if (getSequenceName().equalsIgnoreCase(rs.getString(3))) {
+				if (getTableName().equalsIgnoreCase(rs.getString(3))) {
 					tableExists = true;
 					break;
 				}
 			}
 			stmt = con.createStatement();
 			DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
-			String columnName = getColumnName();
+			String columnName = getSequenceName();
 			if (tableExists) {
-				rs = stmt.executeQuery("SELECT * FROM " + getSequenceName());
+				rs = stmt.executeQuery("SELECT * FROM " + getTableName());
 				boolean columnExists = false;
 				ResultSetMetaData metadata = rs.getMetaData();
 				for (int i = 0; i < metadata.getColumnCount(); i++) {
@@ -81,10 +81,9 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 				stmt = con.createStatement();
 				DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 				// Increment the sequence column...
-				String columnName = getColumnName();
+				String columnName = getSequenceName();
 				rs = stmt.executeQuery("select  " + columnName
-						+ "_TIMESTAMP,UNIX_TIMESTAMP() from "
-						+ getSequenceName());
+						+ "_TIMESTAMP,UNIX_TIMESTAMP() from " + getTableName());
 				try {
 					rs.next();
 					Long last = rs.getLong(1);
@@ -98,12 +97,12 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 				boolean same = inSameCycle(getCycleType(), lastInsertTimestamp,
 						thisTimestamp);
 				if (same)
-					stmt.executeUpdate("update " + getSequenceName() + " set "
+					stmt.executeUpdate("update " + getTableName() + " set "
 							+ columnName + " = last_insert_id(" + columnName
 							+ " + " + getCacheSize() + ")," + columnName
 							+ "_TIMESTAMP = UNIX_TIMESTAMP()");
 				else
-					stmt.executeUpdate("update " + getSequenceName() + " set "
+					stmt.executeUpdate("update " + getTableName() + " set "
 							+ columnName + " = last_insert_id("
 							+ getCacheSize() + ")," + columnName
 							+ "_TIMESTAMP = UNIX_TIMESTAMP()");

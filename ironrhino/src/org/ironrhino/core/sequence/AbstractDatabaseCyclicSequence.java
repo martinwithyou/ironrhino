@@ -7,7 +7,7 @@ public abstract class AbstractDatabaseCyclicSequence extends
 
 	private DataSource dataSource;
 
-	private String columnName;
+	private String tableName;
 
 	private int cacheSize = 1;
 
@@ -27,12 +27,12 @@ public abstract class AbstractDatabaseCyclicSequence extends
 		this.dataSource = dataSource;
 	}
 
-	public String getColumnName() {
-		return columnName;
+	public String getTableName() {
+		return tableName;
 	}
 
-	public void setColumnName(String columnName) {
-		this.columnName = columnName;
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 
 	protected void checkDatabaseProductName(String databaseProductName) {
@@ -44,8 +44,8 @@ public abstract class AbstractDatabaseCyclicSequence extends
 	}
 
 	protected String getActualSequenceName() {
-		return new StringBuilder(getSequenceName()).append("_")
-				.append(getColumnName()).append("_SEQ").toString();
+		return new StringBuilder(getTableName()).append("_")
+				.append(getSequenceName()).append("_SEQ").toString();
 	}
 
 }

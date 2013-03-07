@@ -9,11 +9,11 @@ import org.springframework.beans.factory.InitializingBean;
 public abstract class AbstractCyclicSequence implements CyclicSequence,
 		InitializingBean {
 
-	protected CycleType cycleType = CycleType.DAY;
+	private CycleType cycleType = CycleType.DAY;
 
-	protected String sequenceName;
+	private String sequenceName;
 
-	protected int paddingLength = 5;
+	private int paddingLength = 5;
 
 	public CycleType getCycleType() {
 		return cycleType;
@@ -42,8 +42,7 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 	@Override
 	public int nextIntValue() {
 		String s = nextStringValue();
-		return Integer.valueOf(s.substring(cycleType.getFormat().getPattern()
-				.length()));
+		return Integer.valueOf(s.substring(cycleType.getPattern().length()));
 	}
 
 	@Override
@@ -90,7 +89,7 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 			int paddingLength, int nextId) {
 		if (date == null)
 			date = new Date();
-		return cycleType.getFormat().format(date)
+		return cycleType.format(date)
 				+ NumberUtils.format(nextId, paddingLength);
 	}
 

@@ -29,18 +29,18 @@ public abstract class AbstractSequenceCyclicSequence extends
 	}
 
 	protected String getCreateTableStatement() {
-		return "CREATE TABLE " + getSequenceName() + " (" + getColumnName()
+		return "CREATE TABLE " + getTableName() + " (" + getSequenceName()
 				+ "_TIMESTAMP " + getTimestampColumnType() + ") ";
 	}
 
 	protected String getAddColumnStatement() {
-		return "ALTER TABLE " + getSequenceName() + " ADD " + getColumnName()
+		return "ALTER TABLE " + getTableName() + " ADD " + getSequenceName()
 				+ "_TIMESTAMP " + getTimestampColumnType() + " DEFAULT "
 				+ getCurrentTimestampFunction();
 	}
 
 	protected String getInsertStatement() {
-		return "INSERT INTO " + getSequenceName() + " VALUES("
+		return "INSERT INTO " + getTableName() + " VALUES("
 				+ getCurrentTimestampFunction() + ")";
 	}
 
@@ -53,16 +53,16 @@ public abstract class AbstractSequenceCyclicSequence extends
 			ResultSet rs = dbmd.getTables(null, null, "%", null);
 			boolean tableExists = false;
 			while (rs.next()) {
-				if (getSequenceName().equalsIgnoreCase(rs.getString(3))) {
+				if (getTableName().equalsIgnoreCase(rs.getString(3))) {
 					tableExists = true;
 					break;
 				}
 			}
 			stmt = con.createStatement();
 			DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
-			String columnName = getColumnName();
+			String columnName = getSequenceName();
 			if (tableExists) {
-				rs = stmt.executeQuery("SELECT * FROM " + getSequenceName());
+				rs = stmt.executeQuery("SELECT * FROM " + getTableName());
 				boolean columnExists = false;
 				ResultSetMetaData metadata = rs.getMetaData();
 				for (int i = 0; i < metadata.getColumnCount(); i++) {
@@ -101,10 +101,11 @@ public abstract class AbstractSequenceCyclicSequence extends
 		try {
 			stmt = con.createStatement();
 			DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
-			String columnName = getColumnName();
-			rs = stmt.executeQuery("select  " + columnName + "_TIMESTAMP,"
-					+ getCurrentTimestampFunction() + " from "
-					+ getSequenceName());
+			String columnName = getSequenceName();
+			rs = stmt
+					.executeQuery("select  " + columnName + "_TIMESTAMP,"
+							+ getCurrentTimestampFunction() + " from "
+							+ getTableName());
 			try {
 				rs.next();
 				lastInsertTimestamp = new Date(rs.getLong(1) * 1000);
@@ -114,7 +115,7 @@ public abstract class AbstractSequenceCyclicSequence extends
 			}
 			boolean same = inSameCycle(getCycleType(), lastInsertTimestamp,
 					thisTimestamp);
-			stmt.executeUpdate("update " + getSequenceName() + " set "
+			stmt.executeUpdate("update " + getTableName() + " set "
 					+ columnName + "_TIMESTAMP = "
 					+ getCurrentTimestampFunction());
 			if (!same)

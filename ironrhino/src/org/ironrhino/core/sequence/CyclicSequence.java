@@ -1,5 +1,7 @@
 package org.ironrhino.core.sequence;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.time.FastDateFormat;
 
 public interface CyclicSequence {
@@ -22,8 +24,12 @@ public interface CyclicSequence {
 			this.format = FastDateFormat.getInstance(pattern);
 		}
 
-		public FastDateFormat getFormat() {
-			return format;
+		public String getPattern() {
+			return format.getPattern();
+		}
+
+		public String format(Date date) {
+			return format.format(date);
 		}
 
 	}
