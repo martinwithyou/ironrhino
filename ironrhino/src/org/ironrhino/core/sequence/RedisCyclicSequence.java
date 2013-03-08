@@ -29,7 +29,7 @@ public class RedisCyclicSequence extends AbstractCyclicSequence {
 		boundValueOperations = stringRedisTemplate.boundValueOps(KEY_SEQUENCE
 				+ getSequenceName());
 		boundValueOperations.setIfAbsent(getStringValue(new Date(),
-				getCycleType(), getPaddingLength(), 0));
+				getPaddingLength(), 0));
 	}
 
 	public String nextStringValue() {
@@ -55,8 +55,7 @@ public class RedisCyclicSequence extends AbstractCyclicSequence {
 		if (inSameCycle(d, new Date()))
 			return stringValue;
 
-		final String restart = getStringValue(new Date(), cycleType,
-				getPaddingLength(), 1);
+		final String restart = getStringValue(new Date(), getPaddingLength(), 1);
 		boolean success = stringRedisTemplate
 				.execute(new SessionCallback<Boolean>() {
 					@SuppressWarnings({ "unchecked", "rawtypes" })

@@ -126,8 +126,7 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 		} else {
 			this.nextId++;
 		}
-		return getStringValue(thisTimestamp, getCycleType(),
-				getPaddingLength(), (int) nextId);
+		return getStringValue(thisTimestamp, getPaddingLength(), (int) nextId);
 	}
 
 }

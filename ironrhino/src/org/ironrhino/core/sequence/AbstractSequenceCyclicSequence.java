@@ -133,8 +133,7 @@ public abstract class AbstractSequenceCyclicSequence extends
 			JdbcUtils.closeStatement(stmt);
 			DataSourceUtils.releaseConnection(con, getDataSource());
 		}
-		return getStringValue(thisTimestamp, getCycleType(),
-				getPaddingLength(), (int) nextId);
+		return getStringValue(thisTimestamp, getPaddingLength(), (int) nextId);
 	}
 
 }

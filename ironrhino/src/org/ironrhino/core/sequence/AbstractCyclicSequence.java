@@ -83,11 +83,10 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 		}
 	}
 
-	protected static String getStringValue(Date date, CycleType cycleType,
-			int paddingLength, int nextId) {
+	protected String getStringValue(Date date, int paddingLength, int nextId) {
 		if (date == null)
 			date = new Date();
-		return cycleType.format(date)
+		return getCycleType().format(date)
 				+ NumberUtils.format(nextId, paddingLength);
 	}
 
