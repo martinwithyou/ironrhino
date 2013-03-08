@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
+import org.ironrhino.core.util.XmlUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -304,27 +305,47 @@ public class LocationParser {
 			file.close();
 	}
 
-	public static Location parse(String host) {
+	public static Location parse(String ipOrMobile) {
 		Location loc = null;
-		try {
-			loc = parseLocal(host);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		if (loc == null || loc.getFirstArea() == null) {
+		if (ipOrMobile.indexOf('.') > 0) {
 			try {
-				String json = HttpClientUtils
-						.getResponseText("http://ip.taobao.com/service/getIpInfo.php?ip="
-								+ host);
-				JsonNode node = JsonUtils.fromJson(json, JsonNode.class);
-				if (node != null && node.get("code").asInt() == 0) {
-					node = node.get("data");
-					if (StringUtils.isNotBlank(node.get("region").asText())) {
-						loc = new Location();
-						loc.setFirstArea(node.get("region").asText());
-						loc.setSecondArea(node.get("city").asText());
-						loc.setThirdArea(node.get("county").asText());
+				loc = parseLocal(ipOrMobile);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			if (loc == null || loc.getFirstArea() == null) {
+				try {
+					String json = HttpClientUtils
+							.getResponseText("http://ip.taobao.com/service/getIpInfo.php?ip="
+									+ ipOrMobile);
+					JsonNode node = JsonUtils.fromJson(json, JsonNode.class);
+					if (node != null && node.get("code").asInt() == 0) {
+						node = node.get("data");
+						if (StringUtils.isNotBlank(node.get("region").asText())) {
+							loc = new Location();
+							loc.setFirstArea(node.get("region").asText());
+							loc.setSecondArea(node.get("city").asText());
+							loc.setThirdArea(node.get("county").asText());
+						}
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			try {
+				String xml = HttpClientUtils
+						.getResponseText("http://www.youdao.com/smartresult-xml/search.s?type=mobile&q="
+								+ ipOrMobile);
+				String location = XmlUtils.eval(
+						"/smartresult/product/location", xml);
+				if (StringUtils.isNotBlank(location)) {
+					loc = new Location();
+					loc.setLocation(location.trim());
+					String[] arr = loc.getLocation().split("\\s+");
+					if (arr.length > 1)
+						loc.setSecondArea(arr[1]);
+					loc.setFirstArea(arr[0]);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
