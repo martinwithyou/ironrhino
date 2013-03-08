@@ -8,9 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.Region;
-import org.ironrhino.common.util.RegionUtils;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.service.EntityManager;
@@ -39,16 +37,6 @@ public class RegionTreeControl implements
 					buildRegionTree();
 			}
 		return regionTree;
-	}
-
-	public Region parseByHost(String host) {
-		return RegionUtils.parseByHost(host, regionTree);
-	}
-
-	public Region parseByAddress(String address) {
-		if (StringUtils.isBlank(address))
-			return null;
-		return RegionUtils.parseByAddress(address, regionTree);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

@@ -5,9 +5,8 @@ import org.ironrhino.common.model.Region;
 
 public class RegionUtils {
 
-	public static Region parseByHost(String host, Region regionTree) {
-		// localhost 127.0.0.1
-		Location loc = LocationParser.parse(host);
+	public static Region parse(String ipOrMobile, Region regionTree) {
+		Location loc = LocationParser.parse(ipOrMobile);
 		if (loc == null)
 			return null;
 		Region firstRegion = getChildOrSelfByName(regionTree,
@@ -20,10 +19,7 @@ public class RegionUtils {
 			return firstRegion;
 		Region thirdRegion = getChildOrSelfByName(secondRegion,
 				loc.getThirdArea());
-		if (thirdRegion == null)
-			return secondRegion;
-		else
-			return thirdRegion;
+		return thirdRegion != null ? thirdRegion : secondRegion;
 	}
 
 	public static Region getChildOrSelfByName(Region parent, String name) {
