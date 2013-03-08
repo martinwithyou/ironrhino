@@ -61,19 +61,14 @@ public class RedisCyclicSequence extends AbstractCyclicSequence {
 				.execute(new SessionCallback<Boolean>() {
 					@SuppressWarnings({ "unchecked", "rawtypes" })
 					public Boolean execute(RedisOperations operations) {
-						for (;;) {
-							operations.watch(Collections
-									.singleton(boundValueOperations.getKey()));
-							if (stringValue.equals(boundValueOperations.get())) {
-								operations.multi();
-								boundValueOperations.set(restart);
-								if (operations.exec() != null) {
-									return true;
-								}
-							}
-							{
-								return false;
-							}
+						operations.watch(Collections
+								.singleton(boundValueOperations.getKey()));
+						if (stringValue.equals(boundValueOperations.get())) {
+							operations.multi();
+							boundValueOperations.set(restart);
+							return operations.exec() != null;
+						} else {
+							return false;
 						}
 					}
 				});
