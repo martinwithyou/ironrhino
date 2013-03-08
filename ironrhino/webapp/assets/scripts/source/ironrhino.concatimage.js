@@ -87,6 +87,9 @@
 		}
 		target.appendChild(canvas);
 		if (field) {
+			var maxwidth = parseInt($(field).data('maxwidth'));
+			if (maxwidth && canvas.width > maxwidth)
+				scale(canvas, maxwidth / canvas.width);
 			var data = canvas.toDataURL();
 			if (data.length > parseInt($(field).data('maximum'))) {
 				Message.showActionError(MessageBundle.get($(field)
@@ -101,6 +104,20 @@
 			}
 		}
 	}
+
+	function scale(canvas, stretchRatio) {
+		var copy = document.createElement('canvas');
+		copy.width = canvas.width;
+		copy.height = canvas.height;
+		var context = copy.getContext('2d');
+		context.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+		context = canvas.getContext('2d');
+		var width = canvas.width = Math.floor(copy.width * stretchRatio);
+		var height = canvas.height = Math.floor(copy.height * stretchRatio);
+		context.drawImage(copy, 0, 0, copy.width, copy.height, 0, 0, width,
+				height);
+		copy = null;
+	};
 })(jQuery);
 
 Observation.concatimage = function(container) {
