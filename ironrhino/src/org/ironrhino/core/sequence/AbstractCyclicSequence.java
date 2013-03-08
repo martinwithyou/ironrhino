@@ -1,6 +1,5 @@
 package org.ironrhino.core.sequence;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.ironrhino.core.util.NumberUtils;
@@ -48,39 +47,6 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 	@Override
 	public long nextLongValue() {
 		return Long.valueOf(nextStringValue());
-	}
-
-	protected boolean inSameCycle(Date lastInsert, Date thisTime) {
-		CycleType cycleType = getCycleType();
-		if (lastInsert == null)
-			return true;
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(lastInsert);
-		Calendar now = Calendar.getInstance();
-		now.setTime(thisTime);
-		switch (cycleType) {
-		case MINUTE:
-			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
-					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
-					&& now.get(Calendar.HOUR_OF_DAY) == cal
-							.get(Calendar.HOUR_OF_DAY) && now
-					.get(Calendar.MINUTE) <= cal.get(Calendar.MINUTE));
-		case HOUR:
-			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
-					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && now
-					.get(Calendar.HOUR_OF_DAY) <= cal.get(Calendar.HOUR_OF_DAY));
-		case DAY:
-			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
-					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && now
-					.get(Calendar.DAY_OF_YEAR) <= cal.get(Calendar.DAY_OF_YEAR));
-		case MONTH:
-			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && now
-					.get(Calendar.MONTH) <= cal.get(Calendar.MONTH));
-		case YEAR:
-			return (now.get(Calendar.YEAR) <= cal.get(Calendar.YEAR));
-		default:
-			return true;
-		}
 	}
 
 	protected String getStringValue(Date date, int paddingLength, int nextId) {

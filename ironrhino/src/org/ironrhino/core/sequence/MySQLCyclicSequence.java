@@ -94,7 +94,8 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 				} finally {
 					JdbcUtils.closeResultSet(rs);
 				}
-				boolean same = inSameCycle(lastInsertTimestamp, thisTimestamp);
+				boolean same = getCycleType().isSameCycle(lastInsertTimestamp,
+						thisTimestamp);
 				if (same)
 					stmt.executeUpdate("update " + getTableName() + " set "
 							+ columnName + " = last_insert_id(" + columnName
