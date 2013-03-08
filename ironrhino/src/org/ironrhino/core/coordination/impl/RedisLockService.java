@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 import org.ironrhino.core.coordination.LockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -28,10 +29,17 @@ public class RedisLockService implements LockService {
 	@Named("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
 
+	@Value("${lockService.timeout:300}")
+	private int timeout = 300;
+
 	@Override
 	public boolean tryLock(String name) {
 		String key = NAMESPACE + name;
-		return stringRedisTemplate.opsForValue().setIfAbsent(key, "");
+		boolean success = stringRedisTemplate.opsForValue()
+				.setIfAbsent(key, "");
+		if (success)
+			stringRedisTemplate.expire(key, timeout, TimeUnit.SECONDS);
+		return success;
 	}
 
 	@Override
@@ -48,6 +56,8 @@ public class RedisLockService implements LockService {
 				break;
 			success = stringRedisTemplate.opsForValue().setIfAbsent(key, "");
 		}
+		if (success)
+			stringRedisTemplate.expire(key, timeout, TimeUnit.SECONDS);
 		return success;
 	}
 
@@ -63,6 +73,8 @@ public class RedisLockService implements LockService {
 				e.printStackTrace();
 			}
 			success = stringRedisTemplate.opsForValue().setIfAbsent(key, "");
+			if (success)
+				stringRedisTemplate.expire(key, timeout, TimeUnit.SECONDS);
 		}
 
 	}
