@@ -305,11 +305,13 @@ public class LocationParser {
 			file.close();
 	}
 
-	public static Location parse(String ipOrMobile) {
+	public static Location parse(String value) {
+		if (StringUtils.isBlank(value))
+			return null;
 		Location loc = null;
-		if (ipOrMobile.indexOf('.') > 0) {
+		if (value.split("\\.").length == 4) {
 			try {
-				loc = parseLocal(ipOrMobile);
+				loc = parseLocal(value);
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -317,7 +319,7 @@ public class LocationParser {
 				try {
 					String json = HttpClientUtils
 							.getResponseText("http://ip.taobao.com/service/getIpInfo.php?ip="
-									+ ipOrMobile);
+									+ value);
 					JsonNode node = JsonUtils.fromJson(json, JsonNode.class);
 					if (node != null && node.get("code").asInt() == 0) {
 						node = node.get("data");
@@ -332,11 +334,11 @@ public class LocationParser {
 					e.printStackTrace();
 				}
 			}
-		} else {
+		} else if (StringUtils.isNumeric(value)) {
 			try {
 				String xml = HttpClientUtils
 						.getResponseText("http://www.youdao.com/smartresult-xml/search.s?type=mobile&q="
-								+ ipOrMobile);
+								+ value);
 				String location = XmlUtils.eval(
 						"/smartresult/product/location", xml);
 				if (StringUtils.isNotBlank(location)) {
@@ -349,6 +351,97 @@ public class LocationParser {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+		} else if (value.length() >= 2) {
+			String s = value.substring(0, 2);
+			if (specialList2.contains(s) || specialList3.contains(s)) {
+				loc = new Location();
+				loc.setLocation(value);
+				loc.setFirstArea(s);
+				loc.setSecondArea(s);
+				int index = value.indexOf("市");
+				value = index > 0 ? value.substring(index + 1) : value
+						.substring(s.length());
+				if (StringUtils.isNotBlank(value)) {
+					if ((index = value.indexOf("区")) > 0) {
+						loc.setThirdArea(LocationUtils.shortenName(value
+								.substring(0, index + 1)));
+						value = value.substring(index + 1);
+					} else if ((index = value.indexOf("县")) > 0) {
+						loc.setThirdArea(LocationUtils.shortenName(value
+								.substring(0, index + 1)));
+						value = value.substring(index + 1);
+					}
+				}
+				return loc;
+			}
+			boolean isSpecialList1 = false;
+			for (String str : specialList1)
+				if (value.startsWith(str)) {
+					isSpecialList1 = true;
+					loc = new Location();
+					loc.setLocation(value);
+					loc.setFirstArea(str);
+					int index = value.indexOf("自治区");
+					value = index > 0 ? value.substring(index + 3) : value
+							.substring(str.length());
+					if (StringUtils.isNotBlank(value)) {
+						boolean hasSecond = true;
+						if ((index = value.indexOf("市")) > 0) {
+							loc.setSecondArea(value.substring(0, index + 1));
+							value = value.substring(index + 1);
+						} else if ((index = value.indexOf("地区")) > 0) {
+							loc.setSecondArea(value.substring(0, index + 2));
+							value = value.substring(index + 2);
+						} else if ((index = value.indexOf("州")) > 0) {
+							loc.setSecondArea(value.substring(0, index + 1));
+							value = value.substring(index + 1);
+						} else {
+							hasSecond = false;
+						}
+						if (hasSecond) {
+							if ((index = value.indexOf("区")) > 0) {
+								loc.setThirdArea(value.substring(0, index + 1));
+								value = value.substring(index + 1);
+							} else if ((index = value.indexOf("县")) > 0) {
+								loc.setThirdArea(value.substring(0, index + 1));
+								value = value.substring(index + 1);
+							}
+						}
+					}
+				}
+			if (!isSpecialList1) {
+				int index = value.indexOf("省");
+				if (index == 2 || index == 3) {
+					loc = new Location();
+					loc.setLocation(value);
+					loc.setFirstArea(value.substring(0, index + 1));
+					value = value.substring(index + 1);
+					if (StringUtils.isNotBlank(value)) {
+						boolean hasSecond = true;
+						if ((index = value.indexOf("市")) > 0) {
+							loc.setSecondArea(value.substring(0, index + 1));
+							value = value.substring(index + 1);
+						} else if ((index = value.indexOf("地区")) > 0) {
+							loc.setSecondArea(value.substring(0, index + 2));
+							value = value.substring(index + 2);
+						} else if ((index = value.indexOf("州")) > 0) {
+							loc.setSecondArea(value.substring(0, index + 1));
+							value = value.substring(index + 1);
+						} else {
+							hasSecond = false;
+						}
+						if (hasSecond) {
+							if ((index = value.indexOf("区")) > 0) {
+								loc.setThirdArea(value.substring(0, index + 1));
+								value = value.substring(index + 1);
+							} else if ((index = value.indexOf("县")) > 0) {
+								loc.setThirdArea(value.substring(0, index + 1));
+								value = value.substring(index + 1);
+							}
+						}
+					}
+				}
 			}
 		}
 		if (loc != null) {
