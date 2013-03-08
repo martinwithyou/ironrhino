@@ -241,11 +241,11 @@ update-rc.d iptables defaults
 service iptables start
 fi
 
-#install redis
-if ! which redis-server > /dev/null ; then
-if ! $(ls -l redis-*.tar.gz >/dev/null 2>&1) ; then
+#install or upgrade redis
+if ! which redis-server > /dev/null && ! $(ls -l redis-*.tar.gz >/dev/null 2>&1) ; then
 wget http://redis.googlecode.com/files/redis-2.6.10.tar.gz
 fi
+if $(ls -l redis-*.tar.gz >/dev/null 2>&1) ; then
 tar xvf redis-*.tar.gz >/dev/null && rm -rf redis-*.tar.gz
 rename s/^redis.*$/redis/g redis-*
 cd redis && make > /dev/null && make install > /dev/null
