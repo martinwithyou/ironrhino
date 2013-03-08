@@ -50,36 +50,34 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 		return Long.valueOf(nextStringValue());
 	}
 
-	protected static boolean inSameCycle(CycleType cycleType,
-			Date lastInsertTimestamp, Date thisTimestamp) {
-		if (lastInsertTimestamp == null)
+	protected boolean inSameCycle(Date lastInsert, Date thisTime) {
+		CycleType cycleType = getCycleType();
+		if (lastInsert == null)
 			return true;
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(lastInsertTimestamp);
+		cal.setTime(lastInsert);
 		Calendar now = Calendar.getInstance();
-		now.setTime(thisTimestamp);
+		now.setTime(thisTime);
 		switch (cycleType) {
 		case MINUTE:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
 					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
 					&& now.get(Calendar.HOUR_OF_DAY) == cal
 							.get(Calendar.HOUR_OF_DAY) && now
-						.get(Calendar.MINUTE) == cal.get(Calendar.MINUTE));
+					.get(Calendar.MINUTE) <= cal.get(Calendar.MINUTE));
 		case HOUR:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
 					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && now
-						.get(Calendar.HOUR_OF_DAY) == cal
-					.get(Calendar.HOUR_OF_DAY));
+					.get(Calendar.HOUR_OF_DAY) <= cal.get(Calendar.HOUR_OF_DAY));
 		case DAY:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
 					&& now.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && now
-						.get(Calendar.DAY_OF_YEAR) == cal
-					.get(Calendar.DAY_OF_YEAR));
+					.get(Calendar.DAY_OF_YEAR) <= cal.get(Calendar.DAY_OF_YEAR));
 		case MONTH:
 			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && now
-					.get(Calendar.MONTH) == cal.get(Calendar.MONTH));
+					.get(Calendar.MONTH) <= cal.get(Calendar.MONTH));
 		case YEAR:
-			return (now.get(Calendar.YEAR) == cal.get(Calendar.YEAR));
+			return (now.get(Calendar.YEAR) <= cal.get(Calendar.YEAR));
 		default:
 			return true;
 		}

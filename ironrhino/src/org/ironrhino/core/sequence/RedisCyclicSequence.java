@@ -52,7 +52,7 @@ public class RedisCyclicSequence extends AbstractCyclicSequence {
 		if (cycleType.ordinal() <= CycleType.YEAR.ordinal())
 			cal.set(Calendar.YEAR, Integer.valueOf(stringValue.substring(0, 4)));
 		Date d = cal.getTime();
-		if (inSameCycle(cycleType, d, new Date()))
+		if (inSameCycle(d, new Date()))
 			return stringValue;
 
 		final String restart = getStringValue(new Date(), cycleType,

@@ -113,8 +113,7 @@ public abstract class AbstractSequenceCyclicSequence extends
 			} finally {
 				JdbcUtils.closeResultSet(rs);
 			}
-			boolean same = inSameCycle(getCycleType(), lastInsertTimestamp,
-					thisTimestamp);
+			boolean same = inSameCycle(lastInsertTimestamp, thisTimestamp);
 			stmt.executeUpdate("update " + getTableName() + " set "
 					+ columnName + "_TIMESTAMP = "
 					+ getCurrentTimestampFunction());
