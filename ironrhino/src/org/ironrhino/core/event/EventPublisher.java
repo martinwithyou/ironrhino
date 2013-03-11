@@ -1,5 +1,7 @@
 package org.ironrhino.core.event;
 
+import java.util.concurrent.ExecutorService;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -23,11 +25,22 @@ public class EventPublisher implements
 	@Autowired(required = false)
 	private ApplicationEventTopic applicationEventTopic;
 
-	public void publish(ApplicationEvent event, boolean global) {
-		if (applicationEventTopic != null && global)
-			applicationEventTopic.publish(event);
+	@Autowired(required = false)
+	private ExecutorService executorService;
+
+	public void publish(final ApplicationEvent event, final boolean global) {
+		Runnable task = new Runnable() {
+			public void run() {
+				if (applicationEventTopic != null && global)
+					applicationEventTopic.publish(event);
+				else
+					publisher.publishEvent(event);
+			}
+		};
+		if (executorService == null)
+			task.run();
 		else
-			publisher.publishEvent(event);
+			executorService.submit(task);
 	}
 
 	@Override
