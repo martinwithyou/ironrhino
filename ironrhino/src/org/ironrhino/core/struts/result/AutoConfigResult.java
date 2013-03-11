@@ -90,13 +90,35 @@ public class AutoConfigResult extends FreemarkerResult {
 				URL url = null;
 				location = getTemplateLocation(templateName);
 				if (location == null) {
-					location = new StringBuilder().append(ftlLocation)
-							.append("/meta/result/").append(result)
-							.append(".ftl").toString();
-					try {
-						url = context.getResource(location);
-					} catch (MalformedURLException e) {
-						e.printStackTrace();
+					if (StringUtils.isNotBlank(styleHolder.get())) {
+						location = new StringBuilder().append(ftlLocation)
+								.append("/meta/result/").append(result)
+								.append(".").append(styleHolder.get())
+								.append(".ftl").toString();
+						try {
+							url = context.getResource(location);
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+					}
+					if (url == null) {
+						location = new StringBuilder().append(ftlLocation)
+								.append("/meta/result/").append(result)
+								.append(".ftl").toString();
+						try {
+							url = context.getResource(location);
+						} catch (MalformedURLException e) {
+							e.printStackTrace();
+						}
+					}
+					if (url == null
+							&& StringUtils.isNotBlank(styleHolder.get())) {
+						location = new StringBuilder().append(ftlClasspath)
+								.append("/meta/result/").append(result)
+								.append(".").append(styleHolder.get())
+								.append(".ftl").toString();
+						url = ClassLoaderUtil.getResource(
+								location.substring(1), AutoConfigResult.class);
 					}
 					if (url == null)
 						location = new StringBuilder().append(ftlClasspath)
@@ -107,6 +129,7 @@ public class AutoConfigResult extends FreemarkerResult {
 					cache.put(templateName, location);
 			}
 		}
+		styleHolder.remove();
 		return location;
 	}
 
