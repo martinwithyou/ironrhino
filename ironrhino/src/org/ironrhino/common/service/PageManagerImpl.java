@@ -150,12 +150,16 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			ElasticSearchCriteria criteria = new ElasticSearchCriteria();
 			criteria.setQuery(query);
 			criteria.setTypes(new String[] { "page" });
+			criteria.addSort("displayOrder", false);
+			criteria.addSort("createDate", true);
 			if (limit > 0)
 				list = elasticSearchService.search(criteria, null, limit);
 			else
 				list = elasticSearchService.search(criteria);
 		} else {
 			DetachedCriteria dc = detachedCriteria();
+			dc.addOrder(Order.asc("displayOrder"));
+			dc.addOrder(Order.desc("createDate"));
 			for (int i = 0; i < tag.length; i++) {
 				dc.add(Restrictions.or(Restrictions.eq("tagsAsString", tag[i]),
 						Restrictions.or(Restrictions.like("tagsAsString",
@@ -170,7 +174,6 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			else
 				list = findListByCriteria(dc);
 		}
-		Collections.sort(list);
 		return list;
 	}
 
