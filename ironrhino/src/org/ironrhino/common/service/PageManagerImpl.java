@@ -127,8 +127,12 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return findListByTag(new String[] { tag });
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Page> findListByTag(String... tag) {
+		return findListByTag(-1, tag);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Page> findListByTag(int limit, String... tag) {
 		if (tag.length == 0 || StringUtils.isBlank(tag[0]))
 			return Collections.EMPTY_LIST;
 		List<Page> list;
@@ -146,7 +150,10 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			ElasticSearchCriteria criteria = new ElasticSearchCriteria();
 			criteria.setQuery(query);
 			criteria.setTypes(new String[] { "page" });
-			list = elasticSearchService.search(criteria);
+			if (limit > 0)
+				list = elasticSearchService.search(criteria, null, limit);
+			else
+				list = elasticSearchService.search(criteria);
 		} else {
 			DetachedCriteria dc = detachedCriteria();
 			for (int i = 0; i < tag.length; i++) {
@@ -158,7 +165,10 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 										.like("tagsAsString", "," + tag[i]
 												+ ",", MatchMode.ANYWHERE)))));
 			}
-			list = findListByCriteria(dc);
+			if (limit > 0)
+				list = findListByCriteria(dc, 1, limit);
+			else
+				list = findListByCriteria(dc);
 		}
 		Collections.sort(list);
 		return list;

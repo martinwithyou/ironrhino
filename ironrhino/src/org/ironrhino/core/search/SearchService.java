@@ -16,6 +16,9 @@ public interface SearchService<T> {
 
 	public List search(SearchCriteria searchCriteria, Mapper<T> mapper);
 
+	public List search(SearchCriteria searchCriteria, Mapper<T> mapper,
+			int limit);
+
 	public Map<String, Integer> countTermsByField(
 			SearchCriteria searchCriteria, String field);
 

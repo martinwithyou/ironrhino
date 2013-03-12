@@ -84,12 +84,20 @@ public class ElasticSearchService<T> implements SearchService<T> {
 	}
 
 	public List<T> search(SearchCriteria searchCriteria, Mapper mapper) {
+		return search(searchCriteria, mapper, -1);
+	}
+
+	public List<T> search(SearchCriteria searchCriteria, Mapper mapper,
+			int limit) {
 		ElasticSearchCriteria criteria = (ElasticSearchCriteria) searchCriteria;
 		if (criteria == null)
 			return null;
 		SearchRequestBuilder srb = criteria2builder(criteria);
 		srb.setFrom(0);
-		srb.setSize(1024);
+		if (limit > 0 && limit < 1024)
+			srb.setSize(limit);
+		else
+			srb.setSize(1024);
 		List list = null;
 		try {
 			SearchResponse response = srb.execute().get();
