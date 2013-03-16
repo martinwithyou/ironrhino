@@ -15,7 +15,9 @@
 			<label class="control-label">${action.getText(label)}</label>
 			<div class="controls">
 			<#if config.type=='textarea' >
+				<#if entity[key]?has_content>
 				<pre>${entity[key]!}</pre>
+				</#if>
 			<#elseif config.type=='dictionary' >
 				<#if displayDictionaryLabel??>
 					<@displayDictionaryLabel dictionaryName=evalTemplate(config.templateName) value="${entity[key]!}"/>
