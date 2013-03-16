@@ -117,8 +117,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 							entry.getValue().remove(p);
 							log.warn(
 									"package {} have been overriden from {} to {} in struts.xml",
-									new Object[] { p, entry.getKey(),
-											defaultNamespace });
+									p, entry.getKey(), defaultNamespace);
 						}
 					}
 					set.add(p);
