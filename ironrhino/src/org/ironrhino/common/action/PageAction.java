@@ -94,7 +94,7 @@ public class PageAction extends BaseAction {
 				dc.add(filtering);
 			if (StringUtils.isNotBlank(keyword))
 				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
-						"pagepath", "title"));
+						"pagepath", "title", "tagsAsString"));
 			dc.addOrder(Order.asc("displayOrder"));
 			dc.addOrder(Order.asc("pagepath"));
 			if (resultPage == null)
@@ -133,6 +133,8 @@ public class PageAction extends BaseAction {
 		}
 		if (page == null) {
 			page = new Page();
+			if (StringUtils.isNotBlank(id))
+				page.setPagepath(id.startsWith("/") ? id : "/" + id);
 			if (StringUtils.isNotBlank(keyword) && keyword.startsWith("tags:")) {
 				String tags = keyword.replace("tags:", "");
 				tags = tags.replace(" AND ", ",");
@@ -140,7 +142,7 @@ public class PageAction extends BaseAction {
 				int count = pageManager.findListByTag(tag).size();
 				String path = null;
 				while (true) {
-					path = "/" + tag + (++count);
+					path = "/" + tag + "/" + (++count);
 					if (pageManager.getByPath(path) == null)
 						break;
 				}
