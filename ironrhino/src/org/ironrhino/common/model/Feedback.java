@@ -38,7 +38,7 @@ public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 	private String comment;
 
 	@UiConfig(displayOrder = 5, width = "100px")
-	private String realm;
+	private String domain;
 
 	@UiConfig(readonly = true, width = "150px")
 	private Date createDate;
@@ -81,12 +81,12 @@ public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 		this.comment = comment;
 	}
 
-	public String getRealm() {
-		return realm;
+	public String getDomain() {
+		return domain;
 	}
 
-	public void setRealm(String realm) {
-		this.realm = realm;
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 
 	@Override

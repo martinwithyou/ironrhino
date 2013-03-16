@@ -42,6 +42,8 @@ public class PageViewServiceImpl implements PageViewService {
 		String domain = null;
 		try {
 			domain = new URL(url).getHost();
+			if (domain.startsWith("www."))
+				domain = domain.substring(4);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

@@ -15,7 +15,7 @@ public class SubmitFeedbackAction extends BaseAction {
 
 	private static final long serialVersionUID = -8376029703532190694L;
 
-	private String realm;
+	private String domain;
 
 	private String name;
 
@@ -26,12 +26,12 @@ public class SubmitFeedbackAction extends BaseAction {
 	@Inject
 	private EntityManager<Feedback> entityManager;
 
-	public String getRealm() {
-		return realm;
+	public String getDomain() {
+		return domain;
 	}
 
-	public void setRealm(String realm) {
-		this.realm = realm;
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 
 	public String getName() {
@@ -65,9 +65,9 @@ public class SubmitFeedbackAction extends BaseAction {
 			f.setName(name);
 			f.setContact(contact);
 			f.setContent(content);
-			if (StringUtils.isBlank(realm))
-				realm = null;
-			f.setRealm(realm);
+			if (StringUtils.isBlank(domain))
+				domain = null;
+			f.setDomain(domain);
 			entityManager.save(f);
 			addActionMessage(getText("save.success"));
 		}
