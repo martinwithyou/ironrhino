@@ -26,6 +26,40 @@ function labelFormatter(label, series) {
 		return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + series.percent.toFixed(1) +"%</div>";
 }
 
+Initialization.pageView = function() {
+	$('#select_domain').change(function() {
+		var domain = $(this).val();
+		$('form').each(function(){
+			$('input[name="domain"]',this).val(domain);
+		});
+		$('.ajaxpanel').each(function() {
+			var t = $(this);
+			var url = t.data('url');
+			if(url.indexOf('?')>0){
+			var uri = url.substring(0, url.indexOf('?'));
+			var query = url.substring(url.indexOf('?') + 1);
+			var params = query.split('&');
+			var arr = [];
+			for (var i = 0; i < params.length; i++) {
+				var arr2 = params[i].split('=', 2);
+				if (arr2[0] == 'domain') {
+					if (arr2[1] == domain)
+						return;
+				} else {
+					arr.push(params[i]);
+				}
+			}
+			if (domain)
+				arr.push('domain=' + domain);
+			url = uri + '?' + arr.join('&');
+			}else if (domain){
+				url+='?domain='+domain;
+			}
+			t.data('url', url);
+			t.trigger('load');
+		});
+	});
+}
 
 Observation.pageView = function(container) {
 
@@ -175,6 +209,18 @@ Observation.pageView = function(container) {
 </head>
 <body>
 
+<#if domains?? && domains?size gt 0 && !Parameters.domain??>
+<div class="clearfix" style="margin-bottom:10px;">
+	<span class="pull-right">
+	<select id="select_domain">
+		<option value=""></option>
+		<#list domains as var>
+		<option value="${var}"<#if domain?? && domain==var>selected</#if>>${action.getText(var)}</option>
+		</#list>
+	</select>
+	</span>
+</div>
+</#if>
 
 <div class="row">
 <div class="span2 offset2">
@@ -182,6 +228,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="pv_result">
+<@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}</span>
 <@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
@@ -189,6 +236,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="pv_result">
+<@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"  size="10" maxlength="10"/>
 <i class="icon-arrow-right"></i>
@@ -201,8 +249,6 @@ Observation.pageView = function(container) {
 <#assign dataurl=getUrl("/common/pageView/pv")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif date??>
-<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
 </#if>
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
@@ -213,6 +259,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4 offset4">
 <form class="ajax view form-inline" data-replacement="uip_result">
+<@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"  size="10" maxlength="10"/>
 <i class="icon-arrow-right"></i>
@@ -225,8 +272,6 @@ Observation.pageView = function(container) {
 <#assign dataurl=getUrl("/common/pageView/uip")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif from?? && to??>
-<#assign dataurl=dataurl+'?from='+from?string('yyyy-MM-dd')+'&to='+to?string('yyyy-MM-dd')/>
 </#if>
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
@@ -238,6 +283,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4 offset4">
 <form class="ajax view form-inline" data-replacement="usid_result">
+<@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"  size="10" maxlength="10"/>
 <i class="icon-arrow-right"></i>
@@ -250,8 +296,6 @@ Observation.pageView = function(container) {
 <#assign dataurl=getUrl("/common/pageView/usid")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif from?? && to??>
-<#assign dataurl=dataurl+'?from='+from?string('yyyy-MM-dd')+'&to='+to?string('yyyy-MM-dd')/>
 </#if>
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
@@ -262,6 +306,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4 offset4">
 <form class="ajax view form-inline" data-replacement="uu_result">
+<@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"  size="10" maxlength="10"/>
 <i class="icon-arrow-right"></i>
@@ -274,8 +319,6 @@ Observation.pageView = function(container) {
 <#assign dataurl=getUrl("/common/pageView/uu")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif from?? && to??>
-<#assign dataurl=dataurl+'?from='+from?string('yyyy-MM-dd')+'&to='+to?string('yyyy-MM-dd')/>
 </#if>
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
@@ -287,6 +330,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="url_result">
+<@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}</span>
 <@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
@@ -294,6 +338,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="url_result">
+<@s.hidden name="domain" id=""/>
 <input type="hidden" name="date" value=""/>
 <@s.submit value="%{getText('total')}" theme="simple"/>
 </form>
@@ -303,8 +348,6 @@ Observation.pageView = function(container) {
 <#assign dataurl=getUrl("/common/pageView/url")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif date??>
-<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
 </#if>
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
@@ -315,6 +358,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="pr_result">
+<@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}</span>
 <@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
@@ -322,6 +366,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="pr_result">
+<@s.hidden name="domain" id=""/>
 <input type="hidden" name="date" value=""/>
 <@s.submit value="%{getText('total')}" theme="simple"/>
 </form>
@@ -331,8 +376,6 @@ Observation.pageView = function(container) {
 <#assign dataurl=getUrl("/common/pageView/pr")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif date??>
-<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
 </#if>
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
@@ -344,6 +387,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="ct_result">
+<@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}</span>
 <@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
@@ -351,6 +395,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="ct_result">
+<@s.hidden name="domain" id=""/>
 <input type="hidden" name="date" value=""/>
 <@s.submit value="%{getText('total')}" theme="simple"/>
 </form>
@@ -360,8 +405,6 @@ Observation.pageView = function(container) {
 <#assign dataurl=getUrl("/common/pageView/ct")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif date??>
-<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
 </#if>
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
@@ -372,6 +415,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="kw_result">
+<@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}</span>
 <@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
@@ -379,6 +423,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="kw_result">
+<@s.hidden name="domain" id=""/>
 <input type="hidden" name="date" value=""/>
 <@s.submit value="%{getText('total')}" theme="simple"/>
 </form>
@@ -388,8 +433,6 @@ Observation.pageView = function(container) {
 <#assign dataurl=getUrl("/common/pageView/kw")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif date??>
-<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
 </#if>
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>
@@ -400,6 +443,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="se_result">
+<@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}</span>
 <@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
@@ -407,6 +451,7 @@ Observation.pageView = function(container) {
 </div>
 <div class="span4">
 <form class="ajax view form-inline" data-replacement="se_result">
+<@s.hidden name="domain" id=""/>
 <input type="hidden" name="date" value=""/>
 <@s.submit value="%{getText('total')}" theme="simple"/>
 </form>
@@ -416,8 +461,6 @@ Observation.pageView = function(container) {
 <#assign dataurl=getUrl("/common/pageView/se")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
-<#elseif date??>
-<#assign dataurl=dataurl+'?date='+date?string('yyyy-MM-dd')/>
 </#if>
 <div class="ajaxpanel" data-url="${dataurl}"></div>
 </div>

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -34,10 +35,26 @@ public class PageViewAction extends BaseAction {
 
 	private int limit;
 
+	private String domain;
+
+	private Set<String> domains;
+
 	private Map<String, Long> dataMap;
 
 	@Inject
 	private transient PageViewService pageViewService;
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public Set<String> getDomains() {
+		return domains;
+	}
 
 	public Date getDate() {
 		return date;
@@ -85,21 +102,31 @@ public class PageViewAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		if (date == null
-				&& ServletActionContext.getRequest().getParameter("date") == null)
-			date = DateUtils.beginOfDay(new Date());
-		if (from == null && to == null) {
-			to = DateUtils.beginOfDay(new Date());
-			from = DateUtils.addDays(to, -30);
-		}
+		domains = pageViewService.getDomains();
 		return SUCCESS;
 	}
 
 	public String pv() {
-		if (date == null && from != null && to != null
-				&& from.getTime() == to.getTime())
-			date = from;
-		if (date != null) {
+		if (from != null && to != null && from.before(to)) {
+			dataList = new ArrayList<Pair<Date, Long>>();
+			Date date = from;
+			while (!date.after(to)) {
+				String key = DateUtils.formatDate8(date);
+				Long value = pageViewService.getPageView(key, domain);
+				dataList.add(new Pair<Date, Long>(date, value));
+				date = DateUtils.addDays(date, 1);
+			}
+			Pair<String, Long> p = pageViewService.getMaxPageView(domain);
+			if (p != null)
+				max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()),
+						p.getB());
+			long value = pageViewService.getPageView(null, domain);
+			if (value > 0)
+				total = value;
+			return "linechart";
+		} else {
+			if (date == null)
+				date = new Date();
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
 			dataList = new ArrayList<Pair<Date, Long>>();
@@ -108,7 +135,7 @@ public class PageViewAction extends BaseAction {
 				if (cal.getTime().before(new Date())) {
 					Date d = cal.getTime();
 					String key = DateUtils.format(d, "yyyyMMddHH");
-					Long value = pageViewService.getPageView(key);
+					Long value = pageViewService.getPageView(key, domain);
 					Calendar c = Calendar.getInstance();
 					c.setTime(d);
 					c.set(Calendar.MINUTE, 30);
@@ -119,118 +146,118 @@ public class PageViewAction extends BaseAction {
 				}
 			}
 			return "barchart";
-		} else if (from != null && to != null && from.before(to)) {
-			dataList = new ArrayList<Pair<Date, Long>>();
-			Date date = from;
-			while (!date.after(to)) {
-				String key = DateUtils.formatDate8(date);
-				Long value = pageViewService.getPageView(key);
-				dataList.add(new Pair<Date, Long>(date, value));
-				date = DateUtils.addDays(date, 1);
-			}
-			Pair<String, Long> p = pageViewService.getMaxPageView();
-			if (p != null)
-				max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()),
-						p.getB());
-			long value = pageViewService.getPageView(null);
-			if (value > 0)
-				total = value;
-			return "linechart";
 		}
-		return NONE;
 	}
 
 	public String uip() {
-		if (from != null && to != null && from.before(to)) {
-			dataList = new ArrayList<Pair<Date, Long>>();
-			Date date = from;
-			while (!date.after(to)) {
-				String key = DateUtils.formatDate8(date);
-				Long value = pageViewService.getUniqueIp(key);
-				dataList.add(new Pair<Date, Long>(date, value));
-				date = DateUtils.addDays(date, 1);
-			}
-			Pair<String, Long> p = pageViewService.getMaxUniqueIp();
-			if (p != null)
-				max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()),
-						p.getB());
+		if (!(from != null && to != null && from.before(to))) {
+			to = DateUtils.beginOfDay(new Date());
+			from = DateUtils.addDays(to, -30);
 		}
+		dataList = new ArrayList<Pair<Date, Long>>();
+		Date date = from;
+		while (!date.after(to)) {
+			String key = DateUtils.formatDate8(date);
+			Long value = pageViewService.getUniqueIp(key, domain);
+			dataList.add(new Pair<Date, Long>(date, value));
+			date = DateUtils.addDays(date, 1);
+		}
+		Pair<String, Long> p = pageViewService.getMaxUniqueIp(domain);
+		if (p != null)
+			max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()), p.getB());
 		return "linechart";
 	}
 
 	public String usid() {
-		if (from != null && to != null && from.before(to)) {
-			dataList = new ArrayList<Pair<Date, Long>>();
-			Date date = from;
-			while (!date.after(to)) {
-				String key = DateUtils.formatDate8(date);
-				Long value = pageViewService.getUniqueSessionId(key);
-				dataList.add(new Pair<Date, Long>(date, value));
-				date = DateUtils.addDays(date, 1);
-			}
-			Pair<String, Long> p = pageViewService.getMaxUniqueSessionId();
-			if (p != null)
-				max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()),
-						p.getB());
+		if (!(from != null && to != null && from.before(to))) {
+			to = DateUtils.beginOfDay(new Date());
+			from = DateUtils.addDays(to, -30);
 		}
+		dataList = new ArrayList<Pair<Date, Long>>();
+		Date date = from;
+		while (!date.after(to)) {
+			String key = DateUtils.formatDate8(date);
+			Long value = pageViewService.getUniqueSessionId(key, domain);
+			dataList.add(new Pair<Date, Long>(date, value));
+			date = DateUtils.addDays(date, 1);
+		}
+		Pair<String, Long> p = pageViewService.getMaxUniqueSessionId(domain);
+		if (p != null)
+			max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()), p.getB());
 		return "linechart";
 	}
 
 	public String uu() {
-		if (from != null && to != null && from.before(to)) {
-			dataList = new ArrayList<Pair<Date, Long>>();
-			Date date = from;
-			while (!date.after(to)) {
-				String key = DateUtils.formatDate8(date);
-				Long value = pageViewService.getUniqueUsername(key);
-				dataList.add(new Pair<Date, Long>(date, value));
-				date = DateUtils.addDays(date, 1);
-			}
-			Pair<String, Long> p = pageViewService.getMaxUniqueUsername();
-			if (p != null)
-				max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()),
-						p.getB());
+		if (!(from != null && to != null && from.before(to))) {
+			to = DateUtils.beginOfDay(new Date());
+			from = DateUtils.addDays(to, -30);
 		}
+		dataList = new ArrayList<Pair<Date, Long>>();
+		Date date = from;
+		while (!date.after(to)) {
+			String key = DateUtils.formatDate8(date);
+			Long value = pageViewService.getUniqueUsername(key, domain);
+			dataList.add(new Pair<Date, Long>(date, value));
+			date = DateUtils.addDays(date, 1);
+		}
+		Pair<String, Long> p = pageViewService.getMaxUniqueUsername(domain);
+		if (p != null)
+			max = new Pair<Date, Long>(DateUtils.parseDate8(p.getA()), p.getB());
 		return "linechart";
 	}
 
 	public String url() {
 		if (limit <= 0)
 			limit = 20;
+		if (date == null
+				&& ServletActionContext.getRequest().getParameter("date") == null)
+			date = new Date();
 		String day = date != null ? DateUtils.formatDate8(date) : null;
-		dataMap = pageViewService.getTopPageViewUrls(day, limit);
+		dataMap = pageViewService.getTopPageViewUrls(day, limit, domain);
 		return "list";
 	}
 
 	public String kw() {
 		if (limit <= 0)
 			limit = 20;
+		if (date == null
+				&& ServletActionContext.getRequest().getParameter("date") == null)
+			date = new Date();
 		String day = date != null ? DateUtils.formatDate8(date) : null;
-		dataMap = pageViewService.getTopKeywords(day, limit);
+		dataMap = pageViewService.getTopKeywords(day, limit, domain);
 		return "list";
 	}
 
 	public String se() {
 		if (limit <= 0)
 			limit = 10;
+		if (date == null
+				&& ServletActionContext.getRequest().getParameter("date") == null)
+			date = new Date();
 		String day = date != null ? DateUtils.formatDate8(date) : null;
-		dataMap = pageViewService.getTopSearchEngines(day, limit);
+		dataMap = pageViewService.getTopSearchEngines(day, limit, domain);
 		return "piechart";
 	}
 
 	public String pr() {
 		if (limit <= 0)
 			limit = 10;
+		if (date == null
+				&& ServletActionContext.getRequest().getParameter("date") == null)
+			date = new Date();
 		String day = date != null ? DateUtils.formatDate8(date) : null;
-		dataMap = pageViewService.getTopProvinces(day, limit);
+		dataMap = pageViewService.getTopProvinces(day, limit, domain);
 		return "piechart";
 	}
 
 	public String ct() {
 		if (limit <= 0)
 			limit = 10;
+		if (date == null
+				&& ServletActionContext.getRequest().getParameter("date") == null)
+			date = new Date();
 		String day = date != null ? DateUtils.formatDate8(date) : null;
-		dataMap = pageViewService.getTopCities(day, limit);
+		dataMap = pageViewService.getTopCities(day, limit, domain);
 		return "piechart";
 	}
 
