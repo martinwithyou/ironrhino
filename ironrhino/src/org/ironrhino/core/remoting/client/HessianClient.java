@@ -173,8 +173,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 
 	protected String discoverServiceUrl() {
 		String serviceName = getServiceInterface().getName();
-		StringBuilder sb = new StringBuilder();
-		sb.append("http://");
+		StringBuilder sb = new StringBuilder("http://");
 		if (StringUtils.isBlank(host)) {
 			if (serviceRegistry != null) {
 				String ho = serviceRegistry.discover(serviceName);
