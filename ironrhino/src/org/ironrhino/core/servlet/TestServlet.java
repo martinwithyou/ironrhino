@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +28,10 @@ public class TestServlet extends HttpServlet {
 				} else {
 					String contextPath = getServletContext().getContextPath();
 					String format = "http://localhost%s%s";
-					String port = System.getProperty("port.http");
-					if (StringUtils.isBlank(port))
-						port = System.getProperty("port.http.nonssl");
+					int port = AppInfo.getHttpPort();
 					String context = (contextPath.indexOf('/') == 0 ? "" : "/")
 							+ contextPath;
-					if (StringUtils.isNotBlank(port)) {
+					if (port > 0 && port != 80) {
 						if (test(String.format(format, ":" + port, context)))
 							logger.info("test succussful");
 					} else {

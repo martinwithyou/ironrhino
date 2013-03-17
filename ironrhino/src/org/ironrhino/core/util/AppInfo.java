@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class AppInfo {
 
 	public static final String KEY_STAGE = "STAGE";
@@ -25,6 +27,8 @@ public class AppInfo {
 	private static String home;
 
 	private static String version = "1.0.0";
+
+	private static int httpPort = 0;
 
 	private static final Stage STAGE;
 
@@ -70,6 +74,12 @@ public class AppInfo {
 		}
 		HOSTNAME = name;
 		HOSTADDRESS = address;
+
+		String p = System.getProperty("port.http");
+		if (StringUtils.isBlank(p))
+			p = System.getProperty("port.http.nonssl");
+		if ((StringUtils.isNotBlank(p) && StringUtils.isNumeric(p)))
+			httpPort = Integer.valueOf(p);
 
 		String rack = getEnv(KEY_RACK);
 		if (rack == null)
@@ -132,6 +142,10 @@ public class AppInfo {
 
 	public static String getHostAddress() {
 		return HOSTADDRESS;
+	}
+
+	public static int getHttpPort() {
+		return httpPort;
 	}
 
 	public static String getNodePath() {

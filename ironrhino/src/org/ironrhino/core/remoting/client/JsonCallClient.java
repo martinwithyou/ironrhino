@@ -101,15 +101,10 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 
 	@Override
 	public void afterPropertiesSet() {
-		if (port == 0) {
-			String p = System.getProperty("port.http");
-			if (StringUtils.isBlank(p))
-				p = System.getProperty("port.http.nonssl");
-			if (StringUtils.isNotBlank(p) && StringUtils.isNumeric(p))
-				port = Integer.valueOf(p);
-			else
-				port = 8080;
-		}
+		if (port <= 0)
+			port = AppInfo.getHttpPort();
+		if (port <= 0)
+			port = 8080;
 		String serviceUrl = getServiceUrl();
 		if (serviceUrl == null) {
 			Assert.notNull(serviceRegistry);
