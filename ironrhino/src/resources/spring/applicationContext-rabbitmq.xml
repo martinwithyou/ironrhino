@@ -18,6 +18,6 @@
 		<rabbit:listener queue-names="org.ironrhino.core.mail.SimpleMailMessageWrapper" ref="rabbitSimpleMailMessageWrapperQueue" method="consume"/>
 		<rabbit:listener queue-names="#{rabbitApplicationEventTopic.queueName}" ref="rabbitApplicationEventTopic" method="subscribe"/>
 	</rabbit:listener-container>
-	<bean id="rabbitSimpleMailMessageWrapperQueue" class="org.ironrhino.core.mail.RabbitSimpleMailMessageWrapperQueue" primary="true"/>
-	<bean id="rabbitApplicationEventTopic" class="org.ironrhino.core.event.RabbitApplicationEventTopic" primary="true"/>
+	<bean id="rabbitSimpleMailMessageWrapperQueue" class="org.ironrhino.core.mail.RabbitSimpleMailMessageWrapperQueue"/>
+	<bean id="rabbitApplicationEventTopic" class="org.ironrhino.core.event.RabbitApplicationEventTopic"/>
 </beans>
