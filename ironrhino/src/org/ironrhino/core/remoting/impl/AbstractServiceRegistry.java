@@ -149,11 +149,15 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	public void register(String serviceName) {
 		String host = AppInfo.getHostAddress();
+		if (AppInfo.getHttpPort() > 0)
+			host += ":" + AppInfo.getHttpPort();
 		doRegister(serviceName, host);
 	}
 
 	public void unregister(String serviceName) {
 		String host = AppInfo.getHostAddress();
+		if (AppInfo.getHttpPort() > 0)
+			host += ":" + AppInfo.getHttpPort();
 		doUnregister(serviceName, host);
 	}
 
@@ -199,9 +203,12 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 	public void onApplicationEvent(InstanceLifecycleEvent event) {
 		if (event instanceof InstanceStartupEvent && event.isSelf())
 			init();
-		else if (event instanceof InstanceShutdownEvent && !event.isSelf())
-			evict(event.getHost());
-		else if (event instanceof ExportServicesEvent) {
+		else if (event instanceof InstanceShutdownEvent && !event.isSelf()) {
+			String host = event.getHost();
+			if (event.getHttpPort() > 0)
+				host += ":" + event.getHttpPort();
+			evict(host);
+		} else if (event instanceof ExportServicesEvent) {
 			if (event.isSelf())
 				return;
 			ExportServicesEvent ev = (ExportServicesEvent) event;

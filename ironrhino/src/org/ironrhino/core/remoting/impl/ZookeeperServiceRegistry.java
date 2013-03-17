@@ -88,7 +88,10 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	protected void writeDiscoveredServices() {
 		if (discoveredServices.size() == 0)
 			return;
-		final String host = AppInfo.getHostAddress();
+		String s = AppInfo.getHostAddress();
+		if (AppInfo.getHttpPort() > 0)
+			s += ":" + AppInfo.getHttpPort();
+		final String host = s;
 		final String services = JsonUtils.toJson(discoveredServices);
 		Runnable runnable = new Runnable() {
 			public void run() {

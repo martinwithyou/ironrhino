@@ -11,6 +11,8 @@ public class BaseEvent<T> extends ApplicationEvent {
 
 	private String host = AppInfo.getHostAddress();
 
+	private int httpPort = AppInfo.getHttpPort();
+
 	protected T source;
 
 	public BaseEvent(T source) {
@@ -32,6 +34,10 @@ public class BaseEvent<T> extends ApplicationEvent {
 
 	public String getHost() {
 		return host;
+	}
+
+	public int getHttpPort() {
+		return httpPort;
 	}
 
 }

@@ -136,7 +136,10 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 						CreateMode.PERSISTENT);
 			String memberNode = new StringBuilder(groupNode).append('/')
 					.append(instanceId).toString();
-			zooKeeper.create(memberNode, AppInfo.getHostAddress().getBytes(),
+			String host = AppInfo.getHostAddress();
+			if (AppInfo.getHttpPort() > 0)
+				host += ":" + AppInfo.getHttpPort();
+			zooKeeper.create(memberNode, host.getBytes(),
 					ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 			List<String> children = zooKeeper.getChildren(groupNode, true);
 			groups.put(group, children);

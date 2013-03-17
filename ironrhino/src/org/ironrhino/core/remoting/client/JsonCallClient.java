@@ -217,6 +217,10 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 				String ho = serviceRegistry.discover(serviceName);
 				if (ho != null) {
 					sb.append(ho);
+					if (ho.indexOf(':') < 0 && port != 80) {
+						sb.append(':');
+						sb.append(port);
+					}
 				} else {
 					sb.append("fakehost");
 					log.error("couldn't discover service:" + serviceName);
@@ -224,13 +228,15 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 			} else {
 				sb.append("fakehost");
 			}
+
 		} else {
 			sb.append(host);
+			if (port != 80) {
+				sb.append(':');
+				sb.append(port);
+			}
 		}
-		if (port != 80) {
-			sb.append(':');
-			sb.append(port);
-		}
+
 		if (StringUtils.isNotBlank(contextPath))
 			sb.append(contextPath);
 		sb.append("/remoting/jsoncall/");

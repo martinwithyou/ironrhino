@@ -158,12 +158,15 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	protected String discoverServiceUrl() {
 		String serviceName = getServiceInterface().getName();
 		StringBuilder sb = new StringBuilder();
-		sb.append("http://");
 		if (StringUtils.isBlank(host)) {
 			if (serviceRegistry != null) {
 				String ho = serviceRegistry.discover(serviceName);
 				if (ho != null) {
 					sb.append(ho);
+					if (ho.indexOf(':') < 0 && port != 80) {
+						sb.append(':');
+						sb.append(port);
+					}
 				} else {
 					sb.append("fakehost");
 					log.error("couldn't discover service:" + serviceName);
@@ -171,13 +174,15 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 			} else {
 				sb.append("fakehost");
 			}
+
 		} else {
 			sb.append(host);
+			if (port != 80) {
+				sb.append(':');
+				sb.append(port);
+			}
 		}
-		if (port != 80) {
-			sb.append(':');
-			sb.append(port);
-		}
+
 		if (StringUtils.isNotBlank(contextPath))
 			sb.append(contextPath);
 		sb.append("/remoting/httpinvoker/");

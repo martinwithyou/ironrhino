@@ -88,7 +88,10 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 	protected void writeDiscoveredServices() {
 		if (discoveredServices.size() == 0)
 			return;
-		final String host = AppInfo.getHostAddress();
+		String s = AppInfo.getHostAddress();
+		if (AppInfo.getHttpPort() > 0)
+			s += ":" + AppInfo.getHttpPort();
+		final String host = s;
 		Runnable runnable = new Runnable() {
 			public void run() {
 				stringRedisTemplate.opsForHash().putAll(NAMESPACE + host,
