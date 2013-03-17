@@ -65,7 +65,13 @@ $(function() {
           ed.isNotDirty = 0;
       	});
 		var form = $('#form');
-		form[0].onsuccess = function(){	
+		form[0].onsuccess = function(){
+		if($('#form').attr('action').indexOf('save')>0 && window.parent!=window){
+				Richtable.reload($('form.richtable',window.parent.document));
+				var win = $('#_window_ ',window.parent.document);
+				win.html('').dialog('destroy').remove();
+				return;
+			}
 		$('#form').removeAttr('dirty')
 		ed.isNotDirty = 1;
 		var page = Ajax.jsonResult.page;
