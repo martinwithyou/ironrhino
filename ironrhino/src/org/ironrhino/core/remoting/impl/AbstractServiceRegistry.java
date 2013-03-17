@@ -201,6 +201,8 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	@Override
 	public void onApplicationEvent(InstanceLifecycleEvent event) {
+		if (handle(event))
+			return;
 		if (event instanceof InstanceStartupEvent && event.isSelf())
 			init();
 		else if (event instanceof InstanceShutdownEvent && !event.isSelf()) {
@@ -219,6 +221,10 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 					hosts.add(host);
 			}
 		}
+	}
+
+	protected boolean handle(InstanceLifecycleEvent event) {
+		return false;
 	}
 
 }

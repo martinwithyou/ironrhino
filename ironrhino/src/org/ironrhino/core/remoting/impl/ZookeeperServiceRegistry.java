@@ -203,14 +203,10 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	}
 
-	@Override
-	public void onApplicationEvent(InstanceLifecycleEvent event) {
-		if (event instanceof ExportServicesEvent
-				|| event instanceof InstanceShutdownEvent)
-			// zookeeper has NodeChildrenChanged
-			return;
-		else
-			super.onApplicationEvent(event);
+	protected boolean handle(InstanceLifecycleEvent event) {
+		return event instanceof ExportServicesEvent
+				|| event instanceof InstanceShutdownEvent;
+		// zookeeper has onNodeChildrenChanged
 	}
 
 }
