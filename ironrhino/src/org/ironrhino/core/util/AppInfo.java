@@ -78,7 +78,7 @@ public class AppInfo {
 		String p = System.getProperty("port.http");
 		if (StringUtils.isBlank(p))
 			p = System.getProperty("port.http.nonssl");
-		if ((StringUtils.isNotBlank(p) && StringUtils.isNumeric(p)))
+		if (StringUtils.isNotBlank(p) && StringUtils.isNumeric(p))
 			httpPort = Integer.valueOf(p);
 
 		String rack = getEnv(KEY_RACK);
