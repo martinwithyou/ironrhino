@@ -4,6 +4,17 @@
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+	<context:annotation-config />
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" p:ignoreResourceNotFound="true">
+		<property name="locations">
+			<list>
+				<value>classpath:resources/spring/applicationContext.properties</value>
+				<value>/WEB-INF/conf/applicationContext.properties</value>
+				<value>file:///${ironrhino.home}/conf/applicationContext.properties</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="eventPublisher" class="org.ironrhino.core.event.EventPublisher"/>
 	<bean id="zooKeeper" class="org.apache.zookeeper.ZooKeeper" destroy-method="close" >
 		<constructor-arg index="0" value="127.0.0.1:2181"/>
 		<constructor-arg index="1" value="10000"/>
