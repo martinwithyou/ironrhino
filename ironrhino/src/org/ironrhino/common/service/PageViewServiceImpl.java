@@ -166,6 +166,8 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	public Set<String> getDomains() {
+		if (stringRedisTemplate == null)
+			return Collections.emptySet();
 		return stringRedisTemplate.opsForSet().members(
 				KEY_PAGE_VIEW + "domains");
 	}
