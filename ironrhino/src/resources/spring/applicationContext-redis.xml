@@ -6,7 +6,11 @@
 	<bean id="redisConnectionFactory"
 		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
 		p:usePool="true" p:hostName="${redis.host:localhost}" p:port="${redis.port:6379}"
-		p:database="${redis.database:0}" />
+		p:database="${redis.database:0}" >
+		<property name="poolConfig">
+			<bean class="redis.clients.jedis.JedisPoolConfig" p:maxActive="${redis.maxActive:50}"/>
+		</property>
+	</bean>
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
 		p:connectionFactory-ref="redisConnectionFactory" primary="true">
 		<property name="keySerializer">
