@@ -59,8 +59,8 @@ public class PageViewServiceImpl implements PageViewService {
 		addUnique(day, "uu", username, domain);
 		addUrlVisit(day, url, null);
 		addUrlVisit(day, url, domain);
-		analyzeReferer(day, url, null);
-		analyzeReferer(day, url, domain);
+		analyzeReferer(day, url, referer, null);
+		analyzeReferer(day, url, referer, domain);
 		if (added1)
 			analyzeLocation(day, ip, null);
 		if (added2)
@@ -99,16 +99,30 @@ public class PageViewServiceImpl implements PageViewService {
 		stringRedisTemplate.opsForZSet().incrementScore(sb.toString(), url, 1);
 	}
 
-	private void analyzeReferer(String day, String referer, String domain) {
-		if (StringUtils.isBlank(referer))
+	private void analyzeReferer(String day, String url, String referer,
+			String domain) {
+		if (StringUtils.isBlank(referer)
+				|| RequestUtils.isSameOrigin(url, referer))
 			return;
+
+		StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
+		if (StringUtils.isNotBlank(domain))
+			sb.append(domain).append(":");
+		sb.append("fr");
+		stringRedisTemplate.opsForZSet().incrementScore(sb.toString(), referer,
+				1);
+		sb.append(":");
+		sb.append(day);
+		stringRedisTemplate.opsForZSet().incrementScore(sb.toString(), referer,
+				1);
+
 		String[] result = parseSearchUrl(referer);
 		if (result == null)
 			return;
 		String searchengine = result[0];
 		String keyword = result[1];
 		if (StringUtils.isNotBlank(searchengine)) {
-			StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
+			sb = new StringBuilder(KEY_PAGE_VIEW);
 			if (StringUtils.isNotBlank(domain))
 				sb.append(domain).append(":");
 			sb.append("se");
@@ -120,7 +134,7 @@ public class PageViewServiceImpl implements PageViewService {
 					searchengine, 1);
 		}
 		if (StringUtils.isNotBlank(keyword)) {
-			StringBuilder sb = new StringBuilder(KEY_PAGE_VIEW);
+			sb = new StringBuilder(KEY_PAGE_VIEW);
 			if (StringUtils.isNotBlank(domain))
 				sb.append(domain).append(":");
 			sb.append("kw");
@@ -207,6 +221,11 @@ public class PageViewServiceImpl implements PageViewService {
 	public Map<String, Long> getTopPageViewUrls(String day, int top,
 			String domain) {
 		return getTop(day, "url", top, domain);
+	}
+
+	public Map<String, Long> getTopForeignReferers(String day, int top,
+			String domain) {
+		return getTop(day, "fr", top, domain);
 	}
 
 	public Map<String, Long> getTopKeywords(String day, int top, String domain) {

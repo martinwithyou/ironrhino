@@ -217,6 +217,17 @@ public class PageViewAction extends BaseAction {
 		return "list";
 	}
 
+	public String fr() {
+		if (limit <= 0)
+			limit = 20;
+		if (date == null
+				&& ServletActionContext.getRequest().getParameter("date") == null)
+			date = new Date();
+		String day = date != null ? DateUtils.formatDate8(date) : null;
+		dataMap = pageViewService.getTopForeignReferers(day, limit, domain);
+		return "list";
+	}
+
 	public String kw() {
 		if (limit <= 0)
 			limit = 20;

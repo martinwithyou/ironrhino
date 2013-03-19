@@ -191,6 +191,34 @@ Initialization.pageView = function() {
 
 <div class="row" style="padding-top:20px;">
 <div class="span2 offset2">
+<strong>${action.getText('fr')}</strong>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="fr_result">
+<@s.hidden name="domain" id=""/>
+<span>${action.getText('date')}</span>
+<@s.textfield label="%{getText('date')}" theme="simple" id="" name="date" cssClass="date" size="10" maxlength="10"/>
+<@s.submit value="%{getText('query')}" theme="simple"/>
+</form>
+</div>
+<div class="span4">
+<form class="ajax view form-inline" data-replacement="fr_result">
+<@s.hidden name="domain" id=""/>
+<input type="hidden" name="date" value=""/>
+<@s.submit value="%{getText('total')}" theme="simple"/>
+</form>
+</div>
+</div>
+<div id="fr_result">
+<#assign dataurl=getUrl("/common/pageView/fr")/>
+<#if request.queryString?has_content>
+<#assign dataurl=dataurl+'?'+request.queryString/>
+</#if>
+<div class="ajaxpanel" data-url="${dataurl}"></div>
+</div>
+
+<div class="row" style="padding-top:20px;">
+<div class="span2 offset2">
 <strong>${action.getText('province')}</strong>
 </div>
 <div class="span4">
