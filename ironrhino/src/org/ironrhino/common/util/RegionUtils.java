@@ -53,4 +53,25 @@ public class RegionUtils {
 		return region;
 	}
 
+	public static boolean isAutonomousRegion(Region region) {
+		if (region == null || StringUtils.isBlank(region.getName()))
+			return false;
+		return LocationUtils.autonomousRegions.contains(LocationUtils
+				.shortenName(region.getName()));
+	}
+
+	public static boolean isSpecialAdministrativeRegion(Region region) {
+		if (region == null || StringUtils.isBlank(region.getName()))
+			return false;
+		return LocationUtils.specialAdministrativeRegions
+				.contains(LocationUtils.shortenName(region.getName()));
+	}
+
+	public static boolean isMunicipalities(Region region) {
+		if (region == null || StringUtils.isBlank(region.getName()))
+			return false;
+		return LocationUtils.municipalities.contains(LocationUtils
+				.shortenName(region.getName()));
+	}
+
 }
