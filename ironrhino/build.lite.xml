@@ -64,8 +64,9 @@
 				is.close();
 				var replacement = [];
 				for(var n=0;n<lines.length;n++){
-					var arr = lines[n].split('"');
-					var path = arr[arr.length-2];
+					var line = lines[n];
+					var index = line.indexOf('path="')+6;
+					var path = line.substring(index,line.indexOf('"',index));
 					var arr2 = path.split('/');
 					var filename = arr2[arr2.length-1];
 					var jarname = filename.substring(0,filename.lastIndexOf(filename.lastIndexOf('-')>0?'-':'.'));
@@ -133,8 +134,8 @@
 				while(line=br.readLine()){
 					if(line.indexOf('kind="lib"') < 0)
 						continue;
-					var arr = line.split('"');
-					var path = arr[arr.length-2];
+					var index = line.indexOf('path="')+6;
+					var path = line.substring(index,line.indexOf('"',index));
 					var arr2 = path.split('/');
 					if(arr2[0]=='webapp')
 						jarnames.push(arr2[arr2.length-1]);	
