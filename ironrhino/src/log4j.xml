@@ -39,7 +39,7 @@
 			<param name="ConversionPattern" value="%d%X{username}@%X{remoteAddr} %X{method}%X{url}%X{userAgent}%X{referer}%X{session}%n"/>
 		</layout>
 	</appender>
-		<appender name="ACCESS-WARN" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="ACCESS-WARN" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="${ironrhino.home}/logs/access-warn.log"/>
 		<param name="encoding" value="utf-8"/>
 		<param name="threshold" value="WARN"/>
@@ -58,6 +58,9 @@
 		<level value="ERROR"/>
 	</logger>
 	<logger name="org.springframework.core.type.classreading.AnnotationAttributesReadingVisitor" additivity="true">
+		<level value="ERROR"/>
+	</logger>
+	<logger name="org.hibernate.engine.jdbc.internal" additivity="true">
 		<level value="ERROR"/>
 	</logger>
 	<logger name="org.ironrhino.core.remoting" additivity="false">
