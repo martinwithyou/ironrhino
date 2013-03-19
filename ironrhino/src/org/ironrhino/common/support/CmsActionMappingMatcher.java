@@ -21,6 +21,7 @@ import org.ironrhino.common.action.IssuePageAction;
 import org.ironrhino.common.action.SeriesPageAction;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.core.event.EntityOperationEvent;
+import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.mapper.ActionMappingMatcher;
 import org.ironrhino.core.struts.mapper.DefaultActionMapper;
 import org.ironrhino.core.util.RequestUtils;
@@ -91,6 +92,12 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				mapping.setName(SeriesPageAction.ACTION_NAME);
 				Map<String, Object> params = new HashMap<String, Object>(3);
 				params.put("name", name);
+				String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);
+				if (StringUtils.isNumeric(pn))
+					params.put("resultPage.pageNo", pn);
+				String ps = request.getParameter(ResultPage.PAGESIZE_PARAM_NAME);
+				if (StringUtils.isNumeric(ps))
+					params.put("resultPage.pageSize", ps);
 				if (uri.startsWith(pageurl)) {
 					params.put(DefaultActionMapper.ID,
 							uri.substring(pageurl.length()));
@@ -111,6 +118,12 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				mapping.setName(ColumnPageAction.ACTION_NAME);
 				Map<String, Object> params = new HashMap<String, Object>(3);
 				params.put("name", name);
+				String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);
+				if (StringUtils.isNumeric(pn))
+					params.put("resultPage.pageNo", pn);
+				String ps = request.getParameter(ResultPage.PAGESIZE_PARAM_NAME);
+				if (StringUtils.isNumeric(ps))
+					params.put("resultPage.pageSize", ps);
 				if (uri.startsWith(listurl)) {
 					mapping.setMethod("list");
 					try {
@@ -144,6 +157,12 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				mapping.setName(IssuePageAction.ACTION_NAME);
 				Map<String, Object> params = new HashMap<String, Object>(3);
 				params.put("name", name);
+				String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);
+				if (StringUtils.isNumeric(pn))
+					params.put("resultPage.pageNo", pn);
+				String ps = request.getParameter(ResultPage.PAGESIZE_PARAM_NAME);
+				if (StringUtils.isNumeric(ps))
+					params.put("resultPage.pageSize", ps);
 				if (uri.startsWith(listurl)) {
 					mapping.setMethod("list");
 					try {
