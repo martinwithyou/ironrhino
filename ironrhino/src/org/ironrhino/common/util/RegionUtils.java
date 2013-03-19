@@ -74,4 +74,17 @@ public class RegionUtils {
 				.shortenName(region.getName()));
 	}
 
+	public static String getCity(Region region) {
+		if (isMunicipalities(region) || isSpecialAdministrativeRegion(region))
+			return region.getName();
+		if (region.getLevel() >= 2) {
+			Region top = region.getAncestor(1);
+			if (isMunicipalities(top) || isSpecialAdministrativeRegion(top))
+				return top.getName();
+			else
+				return region.getAncestor(2).getName();
+		}
+		return null;
+	}
+
 }

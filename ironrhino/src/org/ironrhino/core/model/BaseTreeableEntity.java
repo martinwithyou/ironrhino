@@ -49,7 +49,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parentId")
-	@ForeignKey(name="none")
+	@ForeignKey(name = "none")
 	protected T parent;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "parent")
@@ -221,13 +221,13 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		return t != null && t.isAncestorOrSelfOf(this);
 	}
 
-	public String getAncestorName(int level) {
+	public T getAncestor(int level) {
 		if (level < 1 || level > this.getLevel())
 			return null;
 		T parent = (T) this;
 		while (parent != null) {
 			if (parent.getLevel() == level)
-				return parent.getName();
+				return parent;
 			parent = (T) parent.getParent();
 		}
 		return null;
