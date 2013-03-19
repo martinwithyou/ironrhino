@@ -6,11 +6,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -29,15 +29,6 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.search.SearchHit;
-import org.hibernate.CacheMode;
-import org.hibernate.Criteria;
-import org.hibernate.ObjectNotFoundException;
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Order;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.model.Persistable;
@@ -47,6 +38,8 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableComponent;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.search.elasticsearch.annotations.Store;
+import org.ironrhino.core.service.BaseManager.IterateCallback;
+import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.ClassScaner;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.JsonUtils;
@@ -78,7 +71,7 @@ public class IndexManagerImpl implements IndexManager {
 	private Client client;
 
 	@Inject
-	private SessionFactory sessionFactory;
+	private EntityManager entityManager;
 
 	private ObjectMapper objectMapper;
 
@@ -582,61 +575,32 @@ public class IndexManagerImpl implements IndexManager {
 
 	public void indexAll(String type) {
 		Class clz = typeToClass(type);
-		int fetchSize = 20;
-		int indexed = 0;
-		ScrollableResults cursor = null;
-		Session hibernateSession = sessionFactory.openSession();
-		hibernateSession.setCacheMode(CacheMode.IGNORE);
-		Transaction hibernateTransaction = null;
-		try {
-			hibernateTransaction = hibernateSession.beginTransaction();
-			Criteria c = hibernateSession.createCriteria(clz);
-			c.setFetchSize(fetchSize);
-			c.addOrder(Order.asc("id"));
-			cursor = c.scroll(ScrollMode.FORWARD_ONLY);
-			RowBuffer buffer = new RowBuffer(hibernateSession, fetchSize);
-			Object prev = null;
-			while (true) {
+		entityManager.setEntityClass(clz);
+		final AtomicLong indexed = new AtomicLong();
+		entityManager.iterate(20, new IterateCallback() {
+			@Override
+			public void process(Object[] entityArray) {
+				BulkRequestBuilder bulkRequest = client.prepareBulk();
+				for (int i = 0; i < entityArray.length; i++) {
+					indexed.incrementAndGet();
+					Persistable p = (Persistable) entityArray[i];
+					bulkRequest.add(client.prepareIndex(getIndexName(),
+							classToType(p.getClass()),
+							String.valueOf(p.getId())).setSource(
+							entityToDocument(p)));
+				}
 				try {
-					if (!cursor.next()) {
-						break;
+					if (bulkRequest.numberOfActions() > 0) {
+						ListenableActionFuture<BulkResponse> br = bulkRequest
+								.execute();
+						br.addListener(bulkResponseActionListener);
 					}
-				} catch (ObjectNotFoundException e) {
-					continue;
-				}
-				Object item = cursor.get(0);
-				if (prev != null && item != prev) {
-					buffer.put(prev);
-				}
-				prev = item;
-				if (buffer.shouldFlush()) {
-					// put also the item/prev since we are clearing the
-					// session
-					// in the flush process
-					buffer.put(prev);
-					indexed += buffer.flush();
-					prev = null;
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
-			if (prev != null) {
-				buffer.put(prev);
-			}
-			indexed += buffer.close();
-			cursor.close();
-			hibernateTransaction.commit();
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			if (hibernateTransaction != null) {
-				try {
-					hibernateTransaction.rollback();
-				} catch (Exception e1) {
-					logger.warn("Failed to rollback Hibernate", e1);
-				}
-			}
-		} finally {
-			hibernateSession.close();
-		}
-		logger.info("indexed {} for {}", indexed, type);
+		});
+		logger.info("indexed {} for {}", indexed.get(), type);
 	}
 
 	private ActionListener<BulkResponse> bulkResponseActionListener = new ActionListener<BulkResponse>() {
@@ -652,55 +616,4 @@ public class IndexManagerImpl implements IndexManager {
 		}
 	};
 
-	private class RowBuffer {
-		private Object[] buffer;
-		private int fetchCount;
-		private int index = 0;
-		private Session hibernateSession;
-
-		RowBuffer(Session hibernateSession, int fetchCount) {
-			this.hibernateSession = hibernateSession;
-			this.fetchCount = fetchCount;
-			this.buffer = new Object[fetchCount + 1];
-		}
-
-		public void put(Object row) {
-			buffer[index] = row;
-			index++;
-		}
-
-		public boolean shouldFlush() {
-			return index >= fetchCount;
-		}
-
-		public int close() {
-			int i = flush();
-			buffer = null;
-			return i;
-		}
-
-		private int flush() {
-			BulkRequestBuilder bulkRequest = client.prepareBulk();
-			for (int i = 0; i < index; i++) {
-				Persistable p = (Persistable) buffer[i];
-				bulkRequest.add(client.prepareIndex(getIndexName(),
-						classToType(p.getClass()), String.valueOf(p.getId()))
-						.setSource(entityToDocument(p)));
-			}
-			try {
-				if (bulkRequest.numberOfActions() > 0) {
-					ListenableActionFuture<BulkResponse> br = bulkRequest
-							.execute();
-					br.addListener(bulkResponseActionListener);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			Arrays.fill(buffer, null);
-			hibernateSession.clear();
-			int indexed = index;
-			index = 0;
-			return indexed;
-		}
-	}
 }

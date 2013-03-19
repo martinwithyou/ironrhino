@@ -2,6 +2,7 @@ package org.ironrhino.core.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -9,12 +10,17 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.NaturalIdLoadAccess;
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -23,13 +29,13 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.internal.CriteriaImpl.OrderEntry;
 import org.ironrhino.core.metadata.NaturalId;
-import org.ironrhino.core.model.IdAssigned;
 import org.ironrhino.core.model.BaseTreeableEntity;
+import org.ironrhino.core.model.Enableable;
+import org.ironrhino.core.model.IdAssigned;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Validatable;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
@@ -48,7 +54,7 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		BaseManager<T> {
 
-	protected Logger log = LoggerFactory.getLogger(getClass());
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	private Class<T> entityClass;
 
@@ -263,7 +269,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			c.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			return c.list();
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return new ArrayList<T>();
 		}
 	}
@@ -285,7 +291,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			}
 			return c.list();
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return new ArrayList<T>();
 		}
 	}
@@ -489,7 +495,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			assemble(root, (List<TE>) findAll(Order.asc("level")));
 			return root;
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -553,7 +559,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		try {
 			return callback.doInHibernate(sessionFactory.getCurrentSession());
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -561,6 +567,106 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	@Transactional(readOnly = true)
 	public <K> K executeFind(HibernateCallback<K> callback) {
 		return execute(callback);
+	}
+
+	public void iterate(int fetchSize, IterateCallback callback) {
+		ScrollableResults cursor = null;
+		Session hibernateSession = sessionFactory.openSession();
+		hibernateSession.setCacheMode(CacheMode.IGNORE);
+		Transaction hibernateTransaction = null;
+		try {
+			hibernateTransaction = hibernateSession.beginTransaction();
+			Criteria c = hibernateSession.createCriteria(getEntityClass());
+			c.setFetchSize(fetchSize);
+			c.addOrder(Order.asc("id"));
+			cursor = c.scroll(ScrollMode.FORWARD_ONLY);
+			RowBuffer buffer = new RowBuffer(hibernateSession, fetchSize,
+					callback);
+			Object prev = null;
+			while (true) {
+				try {
+					if (!cursor.next()) {
+						break;
+					}
+				} catch (ObjectNotFoundException e) {
+					continue;
+				}
+				Object item = cursor.get(0);
+				if (prev != null && item != prev) {
+					buffer.put(prev);
+				}
+				prev = item;
+				if (buffer.shouldFlush()) {
+					// put also the item/prev since we are clearing the
+					// session
+					// in the flush process
+					buffer.put(prev);
+					buffer.flush();
+					prev = null;
+				}
+			}
+			if (prev != null) {
+				buffer.put(prev);
+			}
+			buffer.close();
+			cursor.close();
+			hibernateTransaction.commit();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			if (hibernateTransaction != null) {
+				try {
+					hibernateTransaction.rollback();
+				} catch (Exception e1) {
+					logger.warn("Failed to rollback Hibernate", e1);
+				}
+			}
+		} finally {
+			hibernateSession.close();
+		}
+	}
+
+	private static class RowBuffer {
+		private Object[] buffer;
+		private int fetchCount;
+		private int index = 0;
+		private Session hibernateSession;
+		private IterateCallback callback;
+
+		RowBuffer(Session hibernateSession, int fetchCount,
+				IterateCallback callback) {
+			this.hibernateSession = hibernateSession;
+			this.fetchCount = fetchCount;
+			this.callback = callback;
+			this.buffer = new Object[fetchCount + 1];
+		}
+
+		public void put(Object row) {
+			buffer[index] = row;
+			index++;
+		}
+
+		public boolean shouldFlush() {
+			return index >= fetchCount;
+		}
+
+		public int close() {
+			int i = flush();
+			buffer = null;
+			return i;
+		}
+
+		private int flush() {
+			Object[] arr = new Object[index];
+			for (int i = 0; i < index; i++) {
+				arr[i] = buffer[i];
+			}
+			callback.process(arr);
+			Arrays.fill(buffer, null);
+			hibernateSession.clear();
+			int result = index;
+			index = 0;
+			return result;
+		}
 	}
 
 }
