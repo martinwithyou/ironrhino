@@ -67,9 +67,7 @@ $(function() {
 		var form = $('#form');
 		form[0].onsuccess = function(){
 		if($('#form').attr('action').indexOf('save')>0 && window.parent!=window){
-				Richtable.reload($('form.richtable',window.parent.document));
-				var win = $('#_window_ ',window.parent.document);
-				win.html('').dialog('destroy').remove();
+				$('.ui-dialog-titlebar-close',$('#_window_ ',window.parent.document).closest('.ui-dialog')).click();
 				return;
 			}
 		$('#form').removeAttr('dirty')
