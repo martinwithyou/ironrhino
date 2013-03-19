@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -103,6 +104,16 @@ public class PageAction extends BaseAction {
 			resultPage = pageManager.findByResultPage(resultPage);
 		} else {
 			String query = keyword.trim();
+			String url = ServletActionContext.getRequest().getRequestURL()
+					.toString();
+			String referer = ServletActionContext.getRequest().getHeader(
+					"Referer");
+			if (referer != null && referer.startsWith(url))
+				try {
+					Thread.sleep(1000); // wait index
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			ElasticSearchCriteria criteria = new ElasticSearchCriteria();
 			criteria.setQuery(query);
 			criteria.setTypes(new String[] { "page" });
