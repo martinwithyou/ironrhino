@@ -581,9 +581,9 @@ public class IndexManagerImpl implements IndexManager {
 			@Override
 			public void process(Object[] entityArray) {
 				BulkRequestBuilder bulkRequest = client.prepareBulk();
-				for (int i = 0; i < entityArray.length; i++) {
-					indexed.incrementAndGet();
-					Persistable p = (Persistable) entityArray[i];
+				indexed.addAndGet(entityArray.length);
+				for (Object obj : entityArray) {
+					Persistable p = (Persistable) obj;
 					bulkRequest.add(client.prepareIndex(getIndexName(),
 							classToType(p.getClass()),
 							String.valueOf(p.getId())).setSource(
