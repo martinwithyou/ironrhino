@@ -6,7 +6,7 @@ import org.ironrhino.common.model.Region;
 public class RegionUtils {
 
 	public static Region parse(String value, Region regionTree) {
-		Location loc = LocationParser.parse(value);
+		Location loc = LocationUtils.parse(value);
 		if (loc == null)
 			return null;
 		Region firstRegion = getChildOrSelfByName(regionTree,

@@ -16,7 +16,7 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.tuples.Pair;
 import org.ironrhino.common.util.Location;
-import org.ironrhino.common.util.LocationParser;
+import org.ironrhino.common.util.LocationUtils;
 import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.RequestUtils;
@@ -148,7 +148,7 @@ public class PageViewServiceImpl implements PageViewService {
 	}
 
 	private void analyzeLocation(String day, String ip, String domain) {
-		Location loc = LocationParser.parse(ip);
+		Location loc = LocationUtils.parse(ip);
 		if (loc != null) {
 			String province = loc.getFirstArea();
 			if (StringUtils.isNotBlank(province)) {
