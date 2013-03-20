@@ -54,6 +54,8 @@ public class LocationUtils {
 		if (value.split("\\.").length == 4) {
 			try {
 				loc = LocationParser.parseLocal(value);
+				if (loc != null && StringUtils.isBlank(loc.getSecondArea()))
+					loc = null;
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
