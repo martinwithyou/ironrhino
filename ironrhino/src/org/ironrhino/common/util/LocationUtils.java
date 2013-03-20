@@ -54,8 +54,14 @@ public class LocationUtils {
 		if (value.split("\\.").length == 4) {
 			try {
 				loc = LocationParser.parseLocal(value);
-				if (loc != null && StringUtils.isBlank(loc.getSecondArea()))
-					loc = null;
+				if (loc != null && StringUtils.isBlank(loc.getSecondArea())) {
+					if (specialAdministrativeRegions.contains(loc
+							.getFirstArea())
+							|| municipalities.contains(loc.getFirstArea()))
+						loc.setSecondArea(loc.getFirstArea());
+					else
+						loc = null;
+				}
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
