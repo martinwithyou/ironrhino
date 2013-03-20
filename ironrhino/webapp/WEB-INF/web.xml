@@ -111,6 +111,7 @@
 		<filter-name>sitemesh</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>ERROR</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>strutsExecuteFilter</filter-name>

@@ -111,7 +111,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 				mapping.setName(DirectTemplateAction.ACTION_NAME);
 				return mapping;
 			}
-
+			request.removeAttribute("com.opensymphony.sitemesh.APPLIED_ONCE");
 			return null;
 		}
 
