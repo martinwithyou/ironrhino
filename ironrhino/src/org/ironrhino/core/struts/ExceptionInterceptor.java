@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +27,6 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 			result = invocation.invoke();
 		} catch (Throwable e) {
 			if (e instanceof NoSuchMethodException) {
-				ServletActionContext.getRequest().setAttribute("decorator",
-						"none");
 				result = BaseAction.NOTFOUND;
 			} else {
 				Object action = invocation.getAction();
