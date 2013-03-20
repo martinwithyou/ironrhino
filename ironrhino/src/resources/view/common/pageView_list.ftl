@@ -8,9 +8,9 @@
 <ul class="unstyled clearfix">
 	<#if dataMap??>
 	<#list dataMap?keys as key>
-	<li style="float:left;width:50%;">
-	<span style="margin-right:10px;">${key}</span>
-	<strong class="pull-right" style="margin-right:20px;">${dataMap[key]?string}</strong>
+	<li>
+	<span style="margin-right:10px;word-break:break-all;">${key}</span>
+	<strong class="pull-right">${dataMap[key]?string}</strong>
 	</li>
 	</#list>
 	</#if>
