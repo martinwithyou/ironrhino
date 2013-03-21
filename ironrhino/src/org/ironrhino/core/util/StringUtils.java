@@ -369,19 +369,6 @@ public class StringUtils {
 		return compressRepeat(input, "/");
 	}
 
-	public static boolean isNumericOnly(String cs) {
-		if (cs == null || cs.trim().length() == 0) {
-			return false;
-		}
-		int sz = cs.length();
-		for (int i = 0; i < sz; i++) {
-			if (!Character.isDigit(cs.charAt(i))) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	public static boolean matchesAutocomplete(String text, String pattern) {
 		text = text.toLowerCase();
 		pattern = pattern.toLowerCase();

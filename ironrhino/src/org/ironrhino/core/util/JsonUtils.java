@@ -85,7 +85,7 @@ public class JsonUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> T fromJson(String json, Class<T> cls) throws Exception {
 		if (Date.class.isAssignableFrom(cls)) {
-			if (StringUtils.isNumericOnly(json)) {
+			if (org.apache.commons.lang3.StringUtils.isNumeric(json)) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(Long.valueOf(json));
 				return (T) cal.getTime();

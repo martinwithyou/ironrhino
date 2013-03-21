@@ -297,8 +297,7 @@ public class BaseAction extends ActionSupport {
 		HttpSession session = request.getSession();
 		String currentPasswordThreshold = (String) session
 				.getAttribute(SESSION_KEY_CURRENT_PASSWORD_THRESHOLD);
-		int threshold = org.ironrhino.core.util.StringUtils
-				.isNumericOnly(currentPasswordThreshold) ? Integer
+		int threshold = StringUtils.isNumeric(currentPasswordThreshold) ? Integer
 				.valueOf(currentPasswordThreshold) : 0;
 		boolean valid = currentPassword != null
 				&& AuthzUtils.isPasswordValid(currentPassword);
