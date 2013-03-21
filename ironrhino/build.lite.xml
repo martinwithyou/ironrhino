@@ -214,9 +214,6 @@
 		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
 			<arg line=" --charset utf-8 --type css -o ./webapp/assets/styles/app-min.css ./webapp/assets/styles/app.css" />
 		</java>
-		<java jar="${lib.dir}/yuicompressor.jar" fork="true">
-			<arg line=" --charset utf-8 --type css -o ./webapp/assets/website/style-min.css ./webapp/assets/website/style.css" />
-		</java>
 	</target>
 
 	<target name="append-revision-for-assets">
