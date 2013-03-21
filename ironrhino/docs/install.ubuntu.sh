@@ -186,6 +186,28 @@ chown $USER:$USER deploy.sh
 chmod +x deploy.sh
 fi
 
+#generate rollback.sh
+if [ ! -f rollback.sh ]; then
+cat>rollback.sh<<EOF
+if [ "\$1" = "" ];  then
+    echo "please run \$0 name"
+    exit 1
+elif [ ! -d "\$1" ]; then
+    echo "directory \$1 doesn't exists"
+    exit 1
+fi
+app="\$1"
+if [[ "\$app" =~ "/" ]] ; then
+app="\${app:0:-1}"
+fi
+cd \$app
+ant -Dserver.home=/home/$USER/tomcat8080 -Dwebapp.deploy.dir=/home/$USER/tomcat8080/webapps/ROOT rollback
+ant -Dserver.home=/home/$USER/tomcat8081 -Dwebapp.deploy.dir=/home/$USER/tomcat8081/webapps/ROOT -Dserver.shutdown.port=8006 -Dserver.startup.port=8081 rollback
+EOF
+chown $USER:$USER rollback.sh
+chmod +x rollback.sh
+fi
+
 #generate backup.sh
 if [ ! -f backup.sh ]; then
 cat>backup.sh<<EOF
