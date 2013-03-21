@@ -19,12 +19,12 @@ public class LocationUtils {
 			.split(",");
 
 	public static List<String> autonomousRegions = Arrays
-			.asList("内蒙古, 新疆, 西藏, 广西, 宁夏".split(","));
+			.asList("内蒙古,新疆,西藏,广西,宁夏".split(","));
 
 	public static List<String> specialAdministrativeRegions = Arrays
-			.asList("香港, 澳门".split(","));
+			.asList("香港,澳门".split(","));
 
-	public static List<String> municipalities = Arrays.asList("北京, 上海, 天津, 重庆"
+	public static List<String> municipalities = Arrays.asList("北京,上海,天津,重庆"
 			.split(","));
 
 	public static final Map<String, String> mapping = new HashMap<String, String>() {
