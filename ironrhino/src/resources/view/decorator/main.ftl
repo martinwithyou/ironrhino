@@ -27,6 +27,7 @@
 <link href="<@url value="/assets/styles/ironrhino${modernBrowser?string('-min','')}.css"/>" media="all" rel="stylesheet" type="text/css" />
 <#if !modernBrowser><link href="<@url value="/assets/styles/ie.css"/>" media="all" rel="stylesheet" type="text/css" /></#if>
 <script src="<@url value="/assets/scripts/ironrhino${modernBrowser?string('-min','')}.js"/>" type="text/javascript"<#if !head?contains('</script>')> defer</#if>></script>
+<#include "include/assets.ftl"/>
 <#noescape>${head}</#noescape>
 </head>
 
@@ -41,7 +42,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
 		</a>
-		<a class="brand" href="<@url value="/"/>">ironrhino</a>
+		<#include "include/brand.ftl"/>
 		<div class="btn-group pull-right">
 			<#assign user = authentication("principal")>
 	        <a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
@@ -57,20 +58,7 @@
 	        </ul>
 		</div>
 		<div class="nav-collapse">
-	        <ul class="nav">
-	          <li><a href="<@url value="/"/>">${action.getText('index')}</a></li>
-	          <@authorize ifAnyGranted="ROLE_ADMINISTRATOR">
-	          <li><a href="<@url value="/user"/>">${action.getText('user')}</a></li>
-	          <li><a href="<@url value="/common/region"/>">${action.getText('region')}</a></li>
-	          <li><a href="<@url value="/common/treeNode"/>">${action.getText('treeNode')}</a></li>
-	          <li><a href="<@url value="/common/setting"/>">${action.getText('setting')}</a></li>
-	          <li><a href="<@url value="/common/dictionary"/>">${action.getText('dictionary')}</a></li>
-	          <li><a href="<@url value="/common/schema"/>">${action.getText('schema')}</a></li>
-	          <li><a href="<@url value="/common/page"/>">${action.getText('page')}</a></li>
-	          <li><a href="<@url value="/common/upload"/>">${action.getText('upload')}</a></li>
-	          <li><a href="<@url value="/common/console"/>">${action.getText('console')}</a></li>
-	          </@authorize>
-	        </ul>
+	        <#include "include/nav.ftl"/>
       </div>
     </div>
   </div>
