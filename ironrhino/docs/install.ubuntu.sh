@@ -174,10 +174,10 @@ if [[ "\$app" =~ "/" ]] ; then
 app="\${app:0:-1}"
 fi
 cd ironrhino
-OLDLANG=\$LANG
-LANG=en
+OLDLANGUAGE=\$LANGUAGE
+LANGUAGE=en
 svnupoutput=\`svn up\`
-LANG=\$OLDLANG
+LANGUAGE=\$OLDLANGUAGE
 echo "\$svnupoutput"
 if \$(echo "\$svnupoutput"|grep Updated >/dev/null 2>&1) ; then
 ant dist
