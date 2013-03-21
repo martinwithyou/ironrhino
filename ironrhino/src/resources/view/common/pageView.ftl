@@ -83,7 +83,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="pv_result">
-<#assign dataurl=getUrl("/common/pageView/pv")/>
+<#assign dataurl=getUrl(actionBaseUrl+"/pv")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -106,7 +106,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="uip_result">
-<#assign dataurl=getUrl("/common/pageView/uip")/>
+<#assign dataurl=getUrl(actionBaseUrl+"/uip")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -130,7 +130,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="usid_result">
-<#assign dataurl=getUrl("/common/pageView/usid")/>
+<#assign dataurl=getUrl(actionBaseUrl+"/usid")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -153,7 +153,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="uu_result">
-<#assign dataurl=getUrl("/common/pageView/uu")/>
+<#assign dataurl=getUrl(actionBaseUrl+"/uu")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -182,7 +182,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="url_result">
-<#assign dataurl=getUrl("/common/pageView/url")/>
+<#assign dataurl=getUrl(actionBaseUrl+"/url")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -210,7 +210,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="fr_result">
-<#assign dataurl=getUrl("/common/pageView/fr")/>
+<#assign dataurl=getUrl(actionBaseUrl+"/fr")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -238,7 +238,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="pr_result">
-<#assign dataurl=getUrl("/common/pageView/pr")/>
+<#assign dataurl=getUrl(actionBaseUrl+"/pr")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -267,7 +267,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="ct_result">
-<#assign dataurl=getUrl("/common/pageView/ct")/>
+<#assign dataurl=getUrl(actionBaseUrl+"/ct")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -295,7 +295,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="kw_result">
-<#assign dataurl=getUrl("/common/pageView/kw")/>
+<#assign dataurl=getUrl(actionBaseUrl+"/kw")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -323,7 +323,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="se_result">
-<#assign dataurl=getUrl("/common/pageView/se")/>
+<#assign dataurl=getUrl(actionBaseUrl+"/se")/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
