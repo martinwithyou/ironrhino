@@ -173,7 +173,14 @@ app="\$1"
 if [[ "\$app" =~ "/" ]] ; then
 app="\${app:0:-1}"
 fi
-cd ironrhino && svn up && ant dist && cd ..
+cd ironrhino
+if [[ !  \`svn up|wc -l\` = 2 ]];then
+ant dist
+fi
+if ! \$(ls -l target/ironrhino*.jar >/dev/null 2>&1) ; then
+ant dist
+fi
+cd ..
 cd \$app && svn up
 ant -Dserver.home=/home/$USER/tomcat8080 -Dwebapp.deploy.dir=/home/$USER/tomcat8080/webapps/ROOT deploy
 ant -Dserver.home=/home/$USER/tomcat8081 -Dserver.shutdown.port=8006 -Dserver.startup.port=8081 shutdown
