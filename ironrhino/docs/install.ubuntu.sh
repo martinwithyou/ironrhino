@@ -174,7 +174,12 @@ if [[ "\$app" =~ "/" ]] ; then
 app="\${app:0:-1}"
 fi
 cd ironrhino
-if [[ !  \`svn up|wc -l\` = 2 ]];then
+OLDLANG=\$LANG
+LANG=en
+svnupoutput=\`svn up\`
+LANG=\$OLDLANG
+echo "\$svnupoutput"
+if \$(echo "\$svnupoutput"|grep Updated >/dev/null 2>&1) ; then
 ant dist
 fi
 if ! \$(ls -l target/ironrhino*.jar >/dev/null 2>&1) ; then
