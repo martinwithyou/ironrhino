@@ -361,21 +361,11 @@
 		</condition>
 	</target>
 
-	<target name="checksvnupdated">
-		<exec executable="svn" dir="${basedir}" outputproperty="svn.update.output">
-			<arg value="update" />
-		</exec>
-		<echo message="${svn.update.output}" />
-		<condition property="svn.updated">
-			<matches pattern="^.*\n.*$" string="${svn.update.output}" multiline="true" />
-		</condition>
-	</target>
-
 	<target name="backup" if="webapp.deployed" depends="checkwebappdeployed">
 		<war warfile="${target.dir}/${war.name}.bak" basedir="${webapp.deploy.dir}" webxml="${webapp.deploy.dir}/WEB-INF/web.xml" />
 	</target>
 
-	<target name="update" if="svn.updated" depends="checksvnupdated">
+	<target name="update">
 		<antcall target="compile" />
 		<sync todir="${webapp.deploy.dir}">
 			<fileset dir="${webapp.dir}" />
