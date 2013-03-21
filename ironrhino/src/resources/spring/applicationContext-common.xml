@@ -6,15 +6,9 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" p:ignoreResourceNotFound="true">
-		<property name="locations">
-			<list>
-				<value>classpath:resources/spring/applicationContext.properties</value>
-				<value>/WEB-INF/conf/applicationContext.properties</value>
-				<value>file:///${ironrhino.home}/conf/applicationContext.properties</value>
-			</list>
-		</property>
-	</bean>
+	<context:property-placeholder location="file:///${ironrhino.home}/conf/applicationContext.properties" ignore-resource-not-found="true" order="1"/>
+	<context:property-placeholder location="/WEB-INF/conf/applicationContext.properties" ignore-resource-not-found="true" order="2"/>
+	<context:property-placeholder location="classpath:resources/spring/applicationContext.properties" ignore-resource-not-found="true" order="3"/>
 	<context:annotation-config />
 	<context:component-scan base-package="org.ironrhino"/>
 	<aop:aspectj-autoproxy />
