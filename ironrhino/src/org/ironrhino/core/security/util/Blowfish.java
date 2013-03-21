@@ -15,6 +15,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.AppInfo;
+import org.ironrhino.core.util.AppInfo.Stage;
+import org.ironrhino.core.util.CodecUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +36,7 @@ public class Blowfish {
 		}
 	};
 
-	private static String defaultKey = "youcannotguessme";
+	private static String defaultKey = null;
 	private Cipher enCipher;
 	private Cipher deCipher;
 
@@ -43,7 +45,7 @@ public class Blowfish {
 		if (StringUtils.isNotBlank(s)) {
 			defaultKey = s;
 			log.info("using system property " + AppInfo.getAppName()
-					+ ".blowfish");
+					+ ".blowfish as default key");
 		} else {
 			try {
 				File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY
@@ -52,13 +54,19 @@ public class Blowfish {
 					defaultKey = FileUtils.readFileToString(file, "UTF-8");
 					log.info("using file " + file.getAbsolutePath());
 				} else {
-					log.warn("[" + file
-							+ "] doesn't exists,use classpath resources "
-							+ DEFAULT_KEY_LOCATION);
-					defaultKey = IOUtils
-							.toString(Blowfish.class
-									.getResourceAsStream(DEFAULT_KEY_LOCATION),
-									"UTF-8");
+					if (AppInfo.getStage() == Stage.PRODUCTION)
+						log.warn("file "
+								+ file.getAbsolutePath()
+								+ " doesn't exists, please use your own default key in production!");
+					if (Blowfish.class.getResource(DEFAULT_KEY_LOCATION) != null) {
+						defaultKey = IOUtils.toString(Blowfish.class
+								.getResourceAsStream(DEFAULT_KEY_LOCATION),
+								"UTF-8");
+						log.info("using classpath resource "
+								+ Blowfish.class.getResource(
+										DEFAULT_KEY_LOCATION).toString()
+								+ " as default key");
+					}
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -66,8 +74,18 @@ public class Blowfish {
 		}
 	}
 
+	private static String getDefaultKey() {
+		if (defaultKey == null) {
+			synchronized (Blowfish.class) {
+				if (defaultKey == null)
+					defaultKey = CodecUtils.fuzzify(AppInfo.getAppName());
+			}
+		}
+		return defaultKey;
+	}
+
 	public Blowfish() {
-		this(defaultKey);
+		this(getDefaultKey());
 	}
 
 	public Blowfish(String key) {

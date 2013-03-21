@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ironrhino.core.util.AppInfo;
+import org.ironrhino.core.util.CodecUtils;
+import org.ironrhino.core.util.AppInfo.Stage;
 
 public class RC4 {
 	private static Logger log = LoggerFactory.getLogger(RC4.class);
@@ -18,13 +20,14 @@ public class RC4 {
 	public static final String DEFAULT_KEY_LOCATION = "/resources/key/rc4";
 	public static final String KEY_DIRECTORY = "/key/";
 
-	private static String defaultKey = "youcannotguessme";
+	private static String defaultKey = null;
 
 	static {
 		String s = System.getProperty(AppInfo.getAppName() + ".rc4");
 		if (StringUtils.isNotBlank(s)) {
 			defaultKey = s;
-			log.info("using system property " + AppInfo.getAppName() + ".rc4");
+			log.info("using system property " + AppInfo.getAppName()
+					+ ".rc4 as default key");
 		} else {
 			try {
 				File file = new File(AppInfo.getAppHome() + KEY_DIRECTORY
@@ -33,13 +36,18 @@ public class RC4 {
 					defaultKey = FileUtils.readFileToString(file, "UTF-8");
 					log.info("using file " + file.getAbsolutePath());
 				} else {
-					log.warn("[" + file
-							+ "] doesn't exists,use classpath resources "
-							+ DEFAULT_KEY_LOCATION);
-					defaultKey = IOUtils
-							.toString(RC4.class
-									.getResourceAsStream(DEFAULT_KEY_LOCATION),
-									"UTF-8");
+					if (AppInfo.getStage() == Stage.PRODUCTION)
+						log.warn("file "
+								+ file.getAbsolutePath()
+								+ " doesn't exists, please use your own default key in production!");
+					if (RC4.class.getResource(DEFAULT_KEY_LOCATION) != null) {
+						defaultKey = IOUtils.toString(RC4.class
+								.getResourceAsStream(DEFAULT_KEY_LOCATION),
+								"UTF-8");
+						log.info("using classpath resource "
+								+ RC4.class.getResource(DEFAULT_KEY_LOCATION)
+										.toString() + " as default key");
+					}
 				}
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -47,12 +55,22 @@ public class RC4 {
 		}
 	}
 
+	private static String getDefaultKey() {
+		if (defaultKey == null) {
+			synchronized (Blowfish.class) {
+				if (defaultKey == null)
+					defaultKey = CodecUtils.fuzzify(AppInfo.getAppName());
+			}
+		}
+		return defaultKey;
+	}
+
 	private byte state[] = new byte[256];
 	private int x;
 	private int y;
 
 	public RC4() {
-		this(defaultKey);
+		this(getDefaultKey());
 	}
 
 	public RC4(String key) {
