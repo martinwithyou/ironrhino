@@ -224,8 +224,7 @@ Richtable = {
 						&& ($('#_window_ form.ajax').hasClass('forcereload') || !$('#_window_ form.ajax')
 								.hasClass('dontreload')))
 					Richtable.reload(form);
-				$('#_window_ ').html('');
-				win.dialog('destroy').remove();
+				win.html('').dialog('destroy').remove();
 			},
 			beforeClose : function(event, ui) {
 				if ($('form', win).hasClass('dirty')) {
@@ -326,7 +325,7 @@ Richtable = {
 					+ ($(btn).data('windowoptions') || '{}')))();
 			var url = $(btn).attr('href');
 			if (view) {
-				url = Richtable.getUrl(view, id, !id, form);
+				url = Richtable.getUrl(view, id, !id || options.includeParams, form);
 			} else {
 				if (!$(btn).hasClass('noid')) {
 					if (!id) {
