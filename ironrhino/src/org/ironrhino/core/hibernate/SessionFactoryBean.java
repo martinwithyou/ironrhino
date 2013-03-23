@@ -2,10 +2,12 @@ package org.ironrhino.core.hibernate;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.ClassScaner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,12 @@ public class SessionFactoryBean extends
 
 	private Class<?>[] annotatedClasses;
 
+	private String excludeFilter;
+
+	public void setExcludeFilter(String excludeFilter) {
+		this.excludeFilter = excludeFilter;
+	}
+
 	public void setAnnotatedClasses(Class<?>[] annotatedClasses) {
 		this.annotatedClasses = annotatedClasses;
 	}
@@ -26,6 +34,23 @@ public class SessionFactoryBean extends
 				ClassScaner.getAppPackages(), Entity.class);
 		if (annotatedClasses != null)
 			classes.addAll(Arrays.asList(annotatedClasses));
+		if (StringUtils.isNotBlank(excludeFilter)) {
+			Set<Class<?>> temp = classes;
+			classes = new HashSet<Class<?>>();
+			String[] arr = excludeFilter.split(",");
+			for (Class<?> clz : temp) {
+				boolean exclude = false;
+				for (String s : arr) {
+					if (org.ironrhino.core.util.StringUtils.matchesWildcard(
+							clz.getName(), s)) {
+						exclude = true;
+						break;
+					}
+				}
+				if (!exclude)
+					classes.add(clz);
+			}
+		}
 		annotatedClasses = classes.toArray(new Class<?>[0]);
 		logger.info("annotatedClasses: ");
 		for (Class<?> clz : annotatedClasses)
