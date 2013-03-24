@@ -32,7 +32,7 @@
 </head>
 
 <body class="render-location-qrcode">
-
+<#include "include/top.ftl"/>
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
@@ -71,7 +71,6 @@ ${title}
 </h1>
 </div>
 </@authorize>
-
 <div id="content" class="container">
 <#if action.hasActionMessages() || action.hasActionErrors()>
 <div id="message">
@@ -81,7 +80,6 @@ ${title}
 </#if>
 <#noescape>${body}</#noescape>
 </div>
-
-
+<#include "include/bottom.ftl"/>
 </body>
 </html></#escape></#compress>
