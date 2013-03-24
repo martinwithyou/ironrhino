@@ -33,9 +33,7 @@ $(function() {
 		var options = {
 			language : MessageBundle.lang(),
 			script_url : '<@url value="/assets/components/tiny_mce/tiny_mce.js"/>',
-			<#if Parameters.content_css?has_content>
-			content_css : '${Parameters.content_css}',
-			</#if>
+			content_css : '<#if Parameters.content_css?has_content>${Parameters.content_css}<#else><@url value="/assets/styles/ironrhino-min.css"/></#if>',
 			theme : "advanced",
 			plugins : "safari,pagebreak,layer,table,advimage,advlink,emotions,inlinepopups,preview,media,searchreplace,print,contextmenu,paste,fullscreen,noneditable,visualchars,xhtmlxtras,autosave",
 			theme_advanced_buttons1 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect,|,fullscreen,preview,code",
