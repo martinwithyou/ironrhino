@@ -11,7 +11,7 @@
 	<property name="test.src.dir" location="${basedir}/test/src" />
 	<property name="test.classes.dir" location="${basedir}/test/classes" />
 	<property name="test.results.dir" location="${basedir}/test/results" />
-	<property name="jar.name" value="${ant.project.name}-${version}.jar" />
+	<property name="jar.name" value="app-${ant.project.name}-${version}.jar" />
 	<property name="war.name" value="ROOT.war" />
 	<property name="server.home" value="/tomcat" />
 	<property name="server.startup.port" value="8080" />
