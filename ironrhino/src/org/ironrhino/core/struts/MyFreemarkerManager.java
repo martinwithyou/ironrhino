@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.ScopesHashModel;
 import org.ironrhino.core.util.AppInfo;
+import org.ironrhino.core.util.AppInfo.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -44,9 +44,10 @@ public class MyFreemarkerManager extends FreemarkerManager {
 		// Configuration configuration =
 		// super.createConfiguration(servletContext);
 		/** super.createConfiguration(servletContext) start **/
-		OverridableConfiguration configuration = new OverridableConfiguration();
+		MyConfiguration configuration = new MyConfiguration();
 		configuration
-				.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
+				.setTemplateExceptionHandler(AppInfo.getStage() == Stage.PRODUCTION ? TemplateExceptionHandler.IGNORE_HANDLER
+						: TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 		if (mruMaxStrongSize > 0) {
 			configuration.setSetting(Configuration.CACHE_STORAGE_KEY, "strong:"
 					+ mruMaxStrongSize);
@@ -60,13 +61,14 @@ public class MyFreemarkerManager extends FreemarkerManager {
 		}
 		configuration.setWhitespaceStripping(true);
 		/** super.createConfiguration(servletContext) end **/
-		try {
-			configuration
-					.setOverridableTemplateProvider(WebApplicationContextUtils
-							.getWebApplicationContext(servletContext).getBean(
-									OverridableTemplateProvider.class));
-		} catch (NoSuchBeanDefinitionException e) {
-		}
+		configuration
+				.setOverridableTemplateProviders(WebApplicationContextUtils
+						.getWebApplicationContext(servletContext)
+						.getBeansOfType(OverridableTemplateProvider.class)
+						.values());
+		configuration.setFallbackTemplateProviders(WebApplicationContextUtils
+				.getWebApplicationContext(servletContext)
+				.getBeansOfType(FallbackTemplateProvider.class).values());
 		TemplateProvider templateProvider = WebApplicationContextUtils
 				.getWebApplicationContext(servletContext).getBean(
 						"templateProvider", TemplateProvider.class);
