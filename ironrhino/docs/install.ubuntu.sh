@@ -86,8 +86,7 @@ restart)
        ;;
 *)
        echo "Usage: \$0 {start|stop|restart}"
-       esac
-
+esac
 exit 0
 EOF
 chmod +x /etc/init.d/tomcat8080
@@ -117,8 +116,7 @@ restart)
        ;;
 *)
        echo "Usage: \$0 {start|stop|restart}"
-       esac
-
+esac
 exit 0
 EOF
 chmod +x /etc/init.d/tomcat8081
@@ -266,8 +264,7 @@ stop)
        ;;
 *)
        echo "Usage: \$0 {start|stop}"
-       esac
-
+esac
 exit 0
 EOF
 chmod +x /etc/init.d/iptables
