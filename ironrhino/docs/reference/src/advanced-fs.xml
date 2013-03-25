@@ -4,7 +4,7 @@
 		下面的实例是使用本地文件系统当存储系统
 		<programlisting>
 		<![CDATA[
-		<bean id="fileStorage" class="org.ironrhino.core.fs.impl.LocalFileStorage" p:uri="file:///${ironrhino.home}/fs/"/>
+		<bean id="fileStorage" class="org.ironrhino.core.fs.impl.LocalFileStorage" p:uri="file:///${current.app.home}/fs/"/>
 		]]>
 		</programlisting>
 		下面的实例是使用hadoop的hdfs分布式文件系统当存储系统,并且配有一个本地文件存储当cache
