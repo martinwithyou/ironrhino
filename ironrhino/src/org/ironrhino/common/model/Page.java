@@ -1,8 +1,11 @@
 package org.ironrhino.common.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Access;
@@ -24,6 +27,9 @@ import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Searchable(type = "page")
@@ -214,6 +220,61 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	public void setModifyUser(String modifyUser) {
 		this.modifyUser = modifyUser;
+	}
+
+	public String abbreviate(int size) {
+		return StringUtils.isNotBlank(content) ? StringUtils.abbreviate(Jsoup
+				.parse(content).text(), size) : null;
+	}
+
+	@Transient
+	public List<Image> getImages() {
+		List<Image> images = new ArrayList<Image>();
+		if (StringUtils.isNotBlank(content)) {
+			Elements elements = Jsoup.parse(content).select("img");
+			for (int i = 0; i < elements.size(); i++) {
+				Element img = elements.get(i);
+				Image image = new Image();
+				image.setSrc(img.attr("src"));
+				image.setAlt(img.attr("alt"));
+				image.setTitle(img.attr("title"));
+				images.add(image);
+			}
+		}
+		return images;
+	}
+
+	public static class Image implements Serializable {
+
+		private static final long serialVersionUID = -3425565099362299759L;
+		private String src;
+		private String alt;
+		private String title;
+
+		public String getSrc() {
+			return src;
+		}
+
+		public void setSrc(String src) {
+			this.src = src;
+		}
+
+		public String getAlt() {
+			return alt;
+		}
+
+		public void setAlt(String alt) {
+			this.alt = alt;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
 	}
 
 	public int compareTo(Object object) {
