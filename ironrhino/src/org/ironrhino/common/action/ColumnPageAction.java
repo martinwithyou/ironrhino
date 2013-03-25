@@ -81,8 +81,9 @@ public class ColumnPageAction extends BaseAction {
 
 	@Override
 	public String list() {
-		columns = settingControl.getStringArray(getName()
-				+ Constants.SETTING_KEY_COLUMN_SUFFIX);
+		columns = settingControl
+				.getStringArray(Constants.SETTING_KEY_CMS_PREFIX + getName()
+						+ Constants.SETTING_KEY_CMS_COLUMN_SUFFIX);
 		column = getUid();
 		if (StringUtils.isBlank(column)) {
 			page = pageManager.getByPath("/" + getName() + "/preface");
@@ -102,8 +103,9 @@ public class ColumnPageAction extends BaseAction {
 	}
 
 	public String p() {
-		columns = settingControl.getStringArray(getName()
-				+ Constants.SETTING_KEY_COLUMN_SUFFIX);
+		columns = settingControl
+				.getStringArray(Constants.SETTING_KEY_CMS_PREFIX + getName()
+						+ Constants.SETTING_KEY_CMS_COLUMN_SUFFIX);
 		String path = getUid();
 		if (StringUtils.isNotBlank(path)) {
 			path = "/" + path;
