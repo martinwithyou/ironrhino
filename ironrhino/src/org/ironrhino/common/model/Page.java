@@ -223,8 +223,8 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	}
 
 	public String abbreviate(int size) {
-		return StringUtils.isNotBlank(content) ? StringUtils.abbreviate(Jsoup
-				.parse(content).text().trim(), size) : null;
+		return StringUtils.isNotBlank(content) ? StringUtils.abbreviate(
+				Jsoup.parse(content).text().trim(), size).trim() : null;
 	}
 
 	@Transient
