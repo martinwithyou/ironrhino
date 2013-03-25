@@ -15,12 +15,12 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.cache.EvictCache;
+import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
@@ -123,15 +123,42 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public List<Page> findListByTag(String tag) {
 		return findListByTag(new String[] { tag });
 	}
 
+	@Transactional(readOnly = true)
 	public List<Page> findListByTag(String... tag) {
 		return findListByTag(-1, tag);
 	}
 
+	@Transactional(readOnly = true)
+	public Page[] findPreviousAndNextPage(Page page, String... tags) {
+		Page[] arr = new Page[2];
+		DetachedCriteria dc = detachedCriteria();
+		for (String tag : tags)
+			if (StringUtils.isNotBlank(tag))
+				dc.add(CriterionUtils.matchTag("tagsAsString", tag));
+		dc.add(Restrictions.gt("createDate", page.getCreateDate()));
+		dc.add(Restrictions.le("displayOrder", page.getDisplayOrder()));
+		dc.addOrder(Order.desc("displayOrder"));
+		dc.addOrder(Order.asc("createDate"));
+		arr[0] = findByCriteria(dc);
+		dc = detachedCriteria();
+		for (String tag : tags)
+			if (StringUtils.isNotBlank(tag))
+				dc.add(CriterionUtils.matchTag("tagsAsString", tag));
+		dc.add(Restrictions.lt("createDate", page.getCreateDate()));
+		dc.add(Restrictions.ge("displayOrder", page.getDisplayOrder()));
+		dc.addOrder(Order.asc("displayOrder"));
+		dc.addOrder(Order.desc("createDate"));
+		arr[1] = findByCriteria(dc);
+		return arr;
+	}
+
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
 	public List<Page> findListByTag(int limit, String... tag) {
 		if (tag.length == 0 || StringUtils.isBlank(tag[0]))
 			return Collections.EMPTY_LIST;
@@ -161,13 +188,8 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			dc.addOrder(Order.asc("displayOrder"));
 			dc.addOrder(Order.desc("createDate"));
 			for (int i = 0; i < tag.length; i++) {
-				dc.add(Restrictions.or(Restrictions.eq("tagsAsString", tag[i]),
-						Restrictions.or(Restrictions.like("tagsAsString",
-								tag[i] + ",", MatchMode.START), Restrictions
-								.or(Restrictions.like("tagsAsString", ","
-										+ tag[i], MatchMode.END), Restrictions
-										.like("tagsAsString", "," + tag[i]
-												+ ",", MatchMode.ANYWHERE)))));
+				if (StringUtils.isNotBlank(tag[i]))
+					dc.add(CriterionUtils.matchTag("tagsAsString", tag[i]));
 			}
 			if (limit > 0)
 				list = findListByCriteria(dc, 1, limit);
@@ -177,12 +199,14 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return list;
 	}
 
+	@Transactional(readOnly = true)
 	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,
 			String tag) {
 		return findResultPageByTag(resultPage, new String[] { tag });
 	}
 
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
 	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,
 			String... tag) {
 		if (tag.length == 0 || StringUtils.isBlank(tag[0])) {
@@ -208,28 +232,22 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		}
 		criteria.setQuery(query);
 		criteria.setTypes(new String[] { "page" });
-		if (criteria.getSorts().size() == 0)
+		if (criteria.getSorts().size() == 0) {
 			criteria.addSort("displayOrder", false);
+			criteria.addSort("createDate", true);
+		}
 
 		if (elasticSearchService != null) {
 			resultPage = elasticSearchService.search(resultPage);
 		} else {
 			DetachedCriteria dc = detachedCriteria();
-			for (int i = 0; i < tag.length; i++) {
-				dc.add(Restrictions.or(Restrictions.eq("tagsAsString", tag[i]),
-						Restrictions.or(Restrictions.like("tagsAsString",
-								tag[i] + ",", MatchMode.START), Restrictions
-								.or(Restrictions.like("tagsAsString", ","
-										+ tag[i], MatchMode.END), Restrictions
-										.like("tagsAsString", "," + tag[i]
-												+ ",", MatchMode.ANYWHERE)))));
-			}
-
+			for (int i = 0; i < tag.length; i++)
+				if (StringUtils.isNotBlank(tag[i]))
+					dc.add(CriterionUtils.matchTag("tagsAsString", tag[i]));
 			for (Map.Entry<String, Boolean> entry : criteria.getSorts()
 					.entrySet())
 				dc.addOrder(entry.getValue() ? Order.desc(entry.getKey())
 						: Order.asc(entry.getKey()));
-
 			resultPage.setCriteria(dc);
 			resultPage = findByResultPage(resultPage);
 		}
@@ -237,6 +255,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	}
 
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly = true)
 	public Map<String, Integer> findMatchedTags(String keyword) {
 		if (keyword == null || keyword.length() < 2)
 			return Collections.EMPTY_MAP;

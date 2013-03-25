@@ -88,8 +88,6 @@ public class SeriesPageAction extends BaseAction {
 		}
 		if (page == null && pages.size() > 0)
 			page = pages.get(0);
-		if (page == null)
-			return NOTFOUND;
 		return "series";
 	}
 

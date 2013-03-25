@@ -1,7 +1,5 @@
 package org.ironrhino.common.action;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -92,20 +90,9 @@ public class IssuePageAction extends BaseAction {
 		}
 		if (page == null)
 			return NOTFOUND;
-		List<Page> pages = pageManager.findListByTag(getName());
-		if (StringUtils.isNotBlank(path)) {
-			for (int i = 0; i < pages.size(); i++) {
-				Page p = pages.get(i);
-				if (p.getPagepath().equals(path)) {
-					page = p;
-					if (i > 0)
-						previousPage = pages.get(i - 1);
-					if (i < pages.size() - 1)
-						nextPage = pages.get(i + 1);
-					break;
-				}
-			}
-		}
+		Page[] p = pageManager.findPreviousAndNextPage(page, getName());
+		previousPage = p[0];
+		nextPage = p[1];
 		return "issuepage";
 	}
 

@@ -23,14 +23,7 @@ public class CriterionUtils {
 			for (String name : names) {
 				if (name.equals(field) || name.equals(field + "AsString")) {
 					if (field.equals("tags")) {
-						c = Restrictions.or(Restrictions.eq(name, value),
-								Restrictions.or(Restrictions.like(name, value
-										+ ",", MatchMode.START), Restrictions
-										.or(Restrictions.like(name,
-												"," + value, MatchMode.END),
-												Restrictions.like(name, ","
-														+ value + ",",
-														MatchMode.ANYWHERE))));
+						c = matchTag(name, value);
 					} else {
 						c = Restrictions.like(name, value, MatchMode.ANYWHERE);
 					}
@@ -48,6 +41,16 @@ public class CriterionUtils {
 			}
 		}
 		return c;
+	}
+
+	public static Criterion matchTag(String tagFieldName, String tag) {
+		tag = tag.trim();
+		return Restrictions.or(Restrictions.eq(tagFieldName, tag),
+				Restrictions.or(Restrictions.like(tagFieldName, tag + ",",
+						MatchMode.START), Restrictions.or(Restrictions.like(
+						tagFieldName, "," + tag, MatchMode.END),
+						Restrictions.like(tagFieldName, "," + tag + ",",
+								MatchMode.ANYWHERE))));
 	}
 
 	public static Criterion filter(Persistable<?> entity, String... names) {

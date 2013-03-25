@@ -22,6 +22,8 @@ public interface PageManager extends BaseManager<Page> {
 	public List<Page> findListByTag(String tag);
 
 	public List<Page> findListByTag(String... tag);
+	
+	public Page[] findPreviousAndNextPage(Page page,String... tags);
 
 	public List<Page> findListByTag(int limit, String... tag);
 
