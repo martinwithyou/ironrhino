@@ -14,6 +14,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.Constants;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
@@ -93,9 +94,25 @@ public class PageAction extends BaseAction {
 					"title");
 			if (filtering != null)
 				dc.add(filtering);
-			if (StringUtils.isNotBlank(keyword))
-				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
-						"pagepath", "title", "tagsAsString"));
+			if (StringUtils.isNotBlank(keyword)) {
+				if (keyword.startsWith("tags:")) {
+					String tags = keyword.replace("tags:", "");
+					tags = tags.replace(" AND ", ",");
+					for (String tag : tags.split(",")) {
+						dc.add(Restrictions.or(Restrictions.eq("tagsAsString",
+								tag), Restrictions.or(Restrictions.like(
+								"tagsAsString", tag + ",", MatchMode.START),
+								Restrictions.or(Restrictions.like(
+										"tagsAsString", "," + tag,
+										MatchMode.END), Restrictions.like(
+										"tagsAsString", "," + tag + ",",
+										MatchMode.ANYWHERE)))));
+					}
+				} else {
+					dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
+							"pagepath", "title"));
+				}
+			}
 			dc.addOrder(Order.asc("displayOrder"));
 			dc.addOrder(Order.asc("pagepath"));
 			if (resultPage == null)

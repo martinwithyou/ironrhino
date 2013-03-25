@@ -250,7 +250,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		roles.clear();
 		if (StringUtils.isNotBlank(rolesAsString))
 			roles.addAll(Arrays.asList(org.ironrhino.core.util.StringUtils
-					.trimTail(rolesAsString, ",").split(",")));
+					.trimTail(rolesAsString, ",").split(",\\s*")));
 	}
 
 	public void setUsername(String username) {

@@ -1,5 +1,7 @@
 package org.ironrhino.common.action;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +41,10 @@ public class ColumnPageAction extends BaseAction {
 
 	protected Page page;
 
+	protected Page previousPage;
+
+	protected Page nextPage;
+
 	public ResultPage<Page> getResultPage() {
 		return resultPage;
 	}
@@ -61,6 +67,14 @@ public class ColumnPageAction extends BaseAction {
 
 	public Page getPage() {
 		return page;
+	}
+
+	public Page getPreviousPage() {
+		return previousPage;
+	}
+
+	public Page getNextPage() {
+		return nextPage;
 	}
 
 	public void setName(String name) {
@@ -110,6 +124,24 @@ public class ColumnPageAction extends BaseAction {
 		if (StringUtils.isNotBlank(path)) {
 			path = "/" + path;
 			page = pageManager.getByPath(path);
+		}
+		if (page == null)
+			return NOTFOUND;
+		List<Page> pages = null;
+		pages = StringUtils.isNotBlank(column) ? pageManager.findListByTag(
+				getName(), column) : pageManager.findListByTag(getName());
+		if (StringUtils.isNotBlank(path)) {
+			for (int i = 0; i < pages.size(); i++) {
+				Page p = pages.get(i);
+				if (p.getPagepath().equals(path)) {
+					page = p;
+					if (i > 0)
+						previousPage = pages.get(i - 1);
+					if (i < pages.size() - 1)
+						nextPage = pages.get(i + 1);
+					break;
+				}
+			}
 		}
 		return "columnpage";
 	}
