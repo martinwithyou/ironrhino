@@ -191,7 +191,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 		tags.clear();
 		if (StringUtils.isNotBlank(tagsAsString))
 			tags.addAll(Arrays.asList(org.ironrhino.core.util.StringUtils
-					.trimTail(tagsAsString, ",").split(",\\s*")));
+					.trimTail(tagsAsString, ",").split("\\s*,\\s*")));
 	}
 
 	@Override

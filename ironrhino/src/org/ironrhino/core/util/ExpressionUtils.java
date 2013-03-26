@@ -105,7 +105,7 @@ public class ExpressionUtils {
 			return null;
 		if (obj instanceof List)
 			return (List) obj;
-		return Arrays.asList(obj.toString().split(","));
+		return Arrays.asList(obj.toString().split("\\s*,\\s*"));
 	}
 
 }

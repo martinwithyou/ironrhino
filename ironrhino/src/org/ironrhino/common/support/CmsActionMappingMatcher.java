@@ -190,7 +190,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 	private void buildSerieses() {
 		List<String> list = new ArrayList<String>();
 		if (StringUtils.isNotBlank(serieses))
-			for (String s : serieses.split(","))
+			for (String s : serieses.split("\\s*,\\s*"))
 				list.add(s);
 		if (settingControl != null)
 			for (String s : settingControl
@@ -202,7 +202,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 	private void buildColumns() {
 		List<String> list = new ArrayList<String>();
 		if (StringUtils.isNotBlank(columns))
-			for (String s : columns.split(","))
+			for (String s : columns.split("\\s*,\\s*"))
 				list.add(s);
 		if (settingControl != null)
 			for (String s : settingControl
@@ -214,7 +214,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 	private void buildIssues() {
 		List<String> list = new ArrayList<String>();
 		if (StringUtils.isNotBlank(issues))
-			for (String s : issues.split(","))
+			for (String s : issues.split("\\s*,\\s*"))
 				list.add(s);
 		if (settingControl != null)
 			for (String s : settingControl

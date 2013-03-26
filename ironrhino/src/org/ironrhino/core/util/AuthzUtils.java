@@ -35,19 +35,19 @@ public class AuthzUtils {
 			String ifNotGranted) {
 		List<String> roles = getRoleNames();
 		if (StringUtils.isNotBlank(ifAllGranted)) {
-			String[] arr = ifAllGranted.split(",");
+			String[] arr = ifAllGranted.split("\\s*,\\s*");
 			for (String s : arr)
 				if (!roles.contains(s.trim()))
 					return false;
 			return true;
 		} else if (StringUtils.isNotBlank(ifAnyGranted)) {
-			String[] arr = ifAnyGranted.split(",");
+			String[] arr = ifAnyGranted.split("\\s*,\\s*");
 			for (String s : arr)
 				if (roles.contains(s.trim()))
 					return true;
 			return false;
 		} else if (StringUtils.isNotBlank(ifNotGranted)) {
-			String[] arr = ifNotGranted.split(",");
+			String[] arr = ifNotGranted.split("\\s*,\\s*");
 			boolean b = true;
 			for (String s : arr)
 				if (roles.contains(s.trim())) {

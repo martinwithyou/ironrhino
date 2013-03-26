@@ -97,7 +97,7 @@ public class PageAction extends BaseAction {
 				if (keyword.startsWith("tags:")) {
 					String tags = keyword.replace("tags:", "");
 					tags = tags.replace(" AND ", ",");
-					for (String tag : tags.split(","))
+					for (String tag : tags.split("\\s*,\\s*"))
 						dc.add(CriterionUtils.matchTag("tagsAsString", tag));
 				} else {
 					dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
@@ -157,7 +157,7 @@ public class PageAction extends BaseAction {
 			if (StringUtils.isNotBlank(keyword) && keyword.startsWith("tags:")) {
 				String tags = keyword.replace("tags:", "");
 				tags = tags.replace(" AND ", ",");
-				String tag = tags.split(",")[0];
+				String tag = tags.split("\\s*,\\s*")[0];
 				int count = pageManager.findListByTag(tag).size();
 				String path = null;
 				while (true) {
@@ -319,7 +319,7 @@ public class PageAction extends BaseAction {
 		files = new LinkedHashMap<String, String>();
 		String[] suffixes = null;
 		if (StringUtils.isNotBlank(suffix))
-			suffixes = suffix.toLowerCase().split(",");
+			suffixes = suffix.toLowerCase().split("\\s*,\\s*");
 		for (String s : list) {
 			if (suffixes != null) {
 				boolean matches = false;

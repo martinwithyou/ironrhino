@@ -40,7 +40,7 @@ public class HttpSessionFilter implements Filter {
 		String str = filterConfig.getInitParameter(KEY_EXCLUDE_PATTERNS);
 		if (StringUtils.isBlank(str))
 			str = DEFAULT_EXCLUDE_PATTERNS;
-		excludePatterns = str.split(",");
+		excludePatterns = str.split("\\s*,\\s*");
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response,

@@ -81,7 +81,7 @@ public class AccessFilter implements Filter {
 	@PostConstruct
 	public void _init() {
 		if (StringUtils.isNotBlank(excludePatterns))
-			excludePatternsList = Arrays.asList(excludePatterns.split(","));
+			excludePatternsList = Arrays.asList(excludePatterns.split("\\s*,\\s*"));
 		handlers = ctx.getBeansOfType(AccessHandler.class).values();
 	}
 
@@ -136,7 +136,7 @@ public class AccessFilter implements Filter {
 			String pattern = handler.getPattern();
 			boolean matched = StringUtils.isBlank(pattern);
 			if (!matched) {
-				String[] arr = pattern.split(",");
+				String[] arr = pattern.split("\\s*,\\s*");
 				for (String pa : arr)
 					if (org.ironrhino.core.util.StringUtils.matchesWildcard(
 							uri, pa)) {

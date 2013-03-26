@@ -296,7 +296,7 @@ public class InstallationManager {
 			this.setVersion(manifest.get(IRONRHINO_COMPONENT_VERSION));
 			String dependence = manifest.get(IRONRHINO_COMPONENT_DEPENDENCE);
 			if (StringUtils.isNotBlank(dependence)) {
-				String[] arr = dependence.split(",");
+				String[] arr = dependence.split("\\s*,\\s*");
 				Map<String, String> map = new HashMap<String, String>(
 						arr.length);
 				for (String s : arr) {

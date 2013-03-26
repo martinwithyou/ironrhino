@@ -115,7 +115,7 @@ public class SettingControl implements
 	public String[] getStringArray(String key) {
 		Setting s = settings.get(key);
 		if (s != null && StringUtils.isNotBlank(s.getValue()))
-			return s.getValue().trim().split(",");
+			return s.getValue().trim().split("\\s*,\\s*");
 		return new String[0];
 	}
 
@@ -144,4 +144,5 @@ public class SettingControl implements
 			}
 		}
 	}
+
 }

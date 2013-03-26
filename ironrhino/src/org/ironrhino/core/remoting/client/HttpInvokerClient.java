@@ -72,7 +72,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 	public void setAsyncMethods(String asyncMethods) {
 		if (StringUtils.isNotBlank(asyncMethods)) {
 			asyncMethods = asyncMethods.trim();
-			String[] array = asyncMethods.split(",");
+			String[] array = asyncMethods.split("\\s*,\\s*");
 			this.asyncMethods = Arrays.asList(array);
 		}
 	}

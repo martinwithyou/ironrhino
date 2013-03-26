@@ -70,7 +70,7 @@ public class MailSender {
 	public static String encode(String to) {
 		if (StringUtils.isBlank(to))
 			return to;
-		String[] array = to.split(",");
+		String[] array = to.split("\\s*,\\s*");
 		for (int i = 0; i < array.length; i++) {
 			if (array[i].indexOf('<') < 0)
 				continue;

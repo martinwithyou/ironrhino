@@ -110,7 +110,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 					set = new HashSet<String>();
 					packages.put(defaultNamespace, set);
 				}
-				for (String p : packs.split(",")) {
+				for (String p : packs.split("\\s*,\\s*")) {
 					for (Map.Entry<String, Set<String>> entry : packages
 							.entrySet()) {
 						if (entry.getValue().contains(p)) {

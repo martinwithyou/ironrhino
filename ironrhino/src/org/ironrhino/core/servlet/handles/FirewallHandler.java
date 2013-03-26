@@ -71,7 +71,7 @@ public class FirewallHandler implements AccessHandler {
 	private static boolean isAllowed(String addr, String allow) {
 		if (StringUtils.isBlank(allow))
 			return true;
-		String[] arr = allow.split(",");
+		String[] arr = allow.split("\\s*,\\s*");
 		for (String s : arr) {
 			if (org.ironrhino.core.util.StringUtils.matchesWildcard(addr, s))
 				return true;

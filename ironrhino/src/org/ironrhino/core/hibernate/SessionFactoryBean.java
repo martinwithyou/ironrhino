@@ -37,7 +37,7 @@ public class SessionFactoryBean extends
 		if (StringUtils.isNotBlank(excludeFilter)) {
 			Set<Class<?>> temp = classes;
 			classes = new HashSet<Class<?>>();
-			String[] arr = excludeFilter.split(",");
+			String[] arr = excludeFilter.split("\\s*,\\s*");
 			for (Class<?> clz : temp) {
 				boolean exclude = false;
 				for (String s : arr) {
