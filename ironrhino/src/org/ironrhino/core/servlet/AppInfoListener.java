@@ -37,8 +37,10 @@ public class AppInfoListener implements ServletContextListener {
 		if (StringUtils.isNotBlank(home)) {
 			AppInfo.setAppHome(home);
 		}
-		System.setProperty(AppInfo.getAppName() + ".home", AppInfo.getAppHome());
-		System.setProperty("current.app.home", AppInfo.getAppHome());
+		// System.setProperty(AppInfo.getAppName() + ".home",
+		// AppInfo.getAppHome());
+		System.setProperty(AppInfo.KEY_APP_HOME, AppInfo.getAppHome());
+		System.setProperty(AppInfo.KEY_APP_NAME, AppInfo.getAppName());
 		String context = ctx.getRealPath("/");
 		if (context == null)
 			context = "";

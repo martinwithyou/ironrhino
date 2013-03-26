@@ -10,7 +10,7 @@
 			<list>
 				<value>classpath:resources/spring/applicationContext.properties</value>
 				<value>/WEB-INF/conf/applicationContext.properties</value>
-				<value>file:///${current.app.home}/conf/applicationContext.properties</value>
+				<value>file:///${app.home}/conf/applicationContext.properties</value>
 			</list>
 		</property>
 	</bean>

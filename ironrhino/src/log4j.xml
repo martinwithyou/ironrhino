@@ -8,7 +8,7 @@
 		</layout>
 	</appender>
 	<appender name="APPLICATION" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="${current.app.home}/logs/application.log"/>
+		<param name="file" value="${app.home}/logs/application.log"/>
 		<param name="encoding" value="utf-8"/>
 		<param name="threshold" value="INFO"/>
 		<layout class="org.apache.log4j.PatternLayout">
@@ -16,7 +16,7 @@
 		</layout>
 	</appender>
 	<appender name="ERROR" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="${current.app.home}/logs/application-error.log"/>
+		<param name="file" value="${app.home}/logs/application-error.log"/>
 		<param name="encoding" value="utf-8"/>
 		<param name="threshold" value="ERROR"/>
 		<layout class="org.apache.log4j.PatternLayout">
@@ -24,7 +24,7 @@
 		</layout>
 	</appender>
 	<appender name="REMOTING" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="${current.app.home}/logs/remoting.log"/>
+		<param name="file" value="${app.home}/logs/remoting.log"/>
 		<param name="encoding" value="utf-8"/>
 		<param name="threshold" value="INFO"/>
 		<layout class="org.apache.log4j.PatternLayout">
@@ -32,7 +32,7 @@
 		</layout>
 	</appender>
 	<appender name="ACCESS" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="${current.app.home}/logs/access.log"/>
+		<param name="file" value="${app.home}/logs/access.log"/>
 		<param name="encoding" value="utf-8"/>
 		<param name="threshold" value="INFO"/>
 		<layout class="org.apache.log4j.PatternLayout">
@@ -40,7 +40,7 @@
 		</layout>
 	</appender>
 	<appender name="ACCESS-WARN" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="${current.app.home}/logs/access-warn.log"/>
+		<param name="file" value="${app.home}/logs/access-warn.log"/>
 		<param name="encoding" value="utf-8"/>
 		<param name="threshold" value="WARN"/>
 		<layout class="org.apache.log4j.PatternLayout">
