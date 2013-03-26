@@ -28,7 +28,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	public static final int DEFAULT_LIFETIME = -1; // in seconds
 
-	public static final int DEFAULT_MAXINACTIVEINTERVAL = 1800; // in seconds
+	public static final int DEFAULT_MAXINACTIVEINTERVAL = 43200; // in seconds
 
 	public static final int DEFAULT_MINACTIVEINTERVAL = 60;// in seconds
 
