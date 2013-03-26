@@ -36,7 +36,7 @@ public class LocalFileStorage implements FileStorage {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Value("${fileStorage.uri:file:///tmp}")
+	@Value("${fileStorage.uri:file:///${app.context}/assets/}")
 	protected String uri;
 
 	private File directory;

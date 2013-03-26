@@ -37,16 +37,12 @@ public class AppInfoListener implements ServletContextListener {
 		if (StringUtils.isNotBlank(home)) {
 			AppInfo.setAppHome(home);
 		}
-		// System.setProperty(AppInfo.getAppName() + ".home",
-		// AppInfo.getAppHome());
 		System.setProperty(AppInfo.KEY_APP_HOME, AppInfo.getAppHome());
 		System.setProperty(AppInfo.KEY_APP_NAME, AppInfo.getAppName());
 		String context = ctx.getRealPath("/");
 		if (context == null)
 			context = "";
-		System.setProperty(AppInfo.getAppName() + ".context", context);
-		System.setProperty(AppInfo.getAppName() + ".instanceid",
-				AppInfo.getInstanceId());
+		System.setProperty("app.context", context);
 
 		String userTimezone = System.getProperty("user.timezone");
 		if (StringUtils.isBlank(userTimezone)
@@ -69,9 +65,6 @@ public class AppInfoListener implements ServletContextListener {
 	}
 
 	public void contextDestroyed(ServletContextEvent event) {
-		System.clearProperty(AppInfo.getAppName() + ".home");
-		System.clearProperty(AppInfo.getAppName() + ".context");
-		System.clearProperty(AppInfo.getAppName() + ".instanceid");
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={} is shutdown",
 				AppInfo.getAppName(), AppInfo.getAppVersion(),
