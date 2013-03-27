@@ -54,9 +54,7 @@
 
 <#macro rttheadtd name,alias='',title='',cellName='',cellEdit='',class='',width='',readonly=false,resizable=true,excludeIfNotEdited=false>
 <th<#if title!=''> title="${action.getText(title)}"</#if><#if excludeIfNotEdited||class!=''> class="<#if excludeIfNotEdited> excludeIfNotEdited</#if><#if class!=''> ${class}</#if>"</#if><#if width!=''> style="width:${width};"</#if><#if !readonly> data-cellName="${cellName}"</#if><#if cellEdit!=''> data-cellEdit="${cellEdit}"</#if>>
-<#if resizable><span class="resizeTitle"></#if>
-<#if alias!=''>${action.getText(alias)}<#else>${action.getText(name)}</#if>
-<#if resizable></span><span class="resizeBar visible-desktop"></span></#if>
+<#if resizable><span class="resizeTitle"></#if><#if alias!=''>${action.getText(alias)}<#else>${action.getText(name)}</#if><#if resizable></span><span class="resizeBar visible-desktop"></span></#if>
 </th>
 </#macro>
 <#macro rtmiddle width='50px' showActionColumn=true>
