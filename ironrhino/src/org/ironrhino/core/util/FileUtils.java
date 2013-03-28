@@ -85,9 +85,7 @@ public class FileUtils {
 	}
 
 	public static Map<String, String> parseManifestFile(File jarfile) {
-		JarFile jar = null;
-		try {
-			jar = new JarFile(jarfile);
+		try (JarFile jar = new JarFile(jarfile)) {
 			Manifest mf = jar.getManifest();
 			if (mf == null)
 				return null;
@@ -103,13 +101,6 @@ public class FileUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
-		} finally {
-			try {
-				if (jar != null)
-					jar.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 

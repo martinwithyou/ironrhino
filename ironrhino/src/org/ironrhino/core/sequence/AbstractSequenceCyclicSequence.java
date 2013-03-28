@@ -45,9 +45,8 @@ public abstract class AbstractSequenceCyclicSequence extends
 	}
 
 	public void afterPropertiesSet() {
-		Connection con = DataSourceUtils.getConnection(getDataSource());
-		Statement stmt = null;
-		try {
+		try (Connection con = DataSourceUtils.getConnection(getDataSource());
+				Statement stmt = con.createStatement()) {
 			DatabaseMetaData dbmd = con.getMetaData();
 			checkDatabaseProductName(dbmd.getDatabaseProductName());
 			ResultSet rs = dbmd.getTables(null, null, "%", null);
@@ -58,7 +57,6 @@ public abstract class AbstractSequenceCyclicSequence extends
 					break;
 				}
 			}
-			stmt = con.createStatement();
 			DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 			String columnName = getSequenceName();
 			if (tableExists) {
@@ -84,9 +82,6 @@ public abstract class AbstractSequenceCyclicSequence extends
 			}
 		} catch (SQLException ex) {
 			throw new DataAccessResourceFailureException(ex.getMessage(), ex);
-		} finally {
-			JdbcUtils.closeStatement(stmt);
-			DataSourceUtils.releaseConnection(con, getDataSource());
 		}
 	}
 
@@ -95,23 +90,16 @@ public abstract class AbstractSequenceCyclicSequence extends
 		Date lastInsertTimestamp = null;
 		Date thisTimestamp = null;
 		long nextId = 0;
-		Connection con = DataSourceUtils.getConnection(getDataSource());
-		Statement stmt = null;
-		ResultSet rs = null;
-		try {
-			stmt = con.createStatement();
+		try (Connection con = DataSourceUtils.getConnection(getDataSource());
+				Statement stmt = con.createStatement()) {
 			DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 			String columnName = getSequenceName();
-			rs = stmt
-					.executeQuery("select  " + columnName + "_TIMESTAMP,"
-							+ getCurrentTimestampFunction() + " from "
-							+ getTableName());
-			try {
+			try (ResultSet rs = stmt.executeQuery("select  " + columnName
+					+ "_TIMESTAMP," + getCurrentTimestampFunction() + " from "
+					+ getTableName())) {
 				rs.next();
 				lastInsertTimestamp = new Date(rs.getLong(1) * 1000);
 				thisTimestamp = new Date(rs.getLong(2) * 1000);
-			} finally {
-				JdbcUtils.closeResultSet(rs);
 			}
 			boolean same = getCycleType().isSameCycle(lastInsertTimestamp,
 					thisTimestamp);
@@ -120,19 +108,13 @@ public abstract class AbstractSequenceCyclicSequence extends
 					+ getCurrentTimestampFunction());
 			if (!same)
 				stmt.execute(getRestartSequenceStatement());
-			rs = stmt.executeQuery(getQuerySequenceStatement());
-			try {
+			try (ResultSet rs = stmt.executeQuery(getQuerySequenceStatement())) {
 				rs.next();
 				nextId = rs.getLong(1);
-			} finally {
-				JdbcUtils.closeResultSet(rs);
 			}
 		} catch (SQLException ex) {
 			throw new DataAccessResourceFailureException(
 					"Could not obtain next value of sequence", ex);
-		} finally {
-			JdbcUtils.closeStatement(stmt);
-			DataSourceUtils.releaseConnection(con, getDataSource());
 		}
 		return getStringValue(thisTimestamp, getPaddingLength(), (int) nextId);
 	}

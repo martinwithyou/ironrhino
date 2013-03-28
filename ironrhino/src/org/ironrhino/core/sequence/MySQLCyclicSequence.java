@@ -20,9 +20,8 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 	private long maxId = 0;
 
 	public void afterPropertiesSet() {
-		Connection con = DataSourceUtils.getConnection(getDataSource());
-		Statement stmt = null;
-		try {
+		try (Connection con = DataSourceUtils.getConnection(getDataSource());
+				Statement stmt = con.createStatement()) {
 			DatabaseMetaData dbmd = con.getMetaData();
 			checkDatabaseProductName(dbmd.getDatabaseProductName());
 			ResultSet rs = dbmd.getTables(null, null, "%", null);
@@ -33,7 +32,7 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 					break;
 				}
 			}
-			stmt = con.createStatement();
+
 			DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 			String columnName = getSequenceName();
 			if (tableExists) {
@@ -63,9 +62,6 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 			}
 		} catch (SQLException ex) {
 			throw new DataAccessResourceFailureException(ex.getMessage(), ex);
-		} finally {
-			JdbcUtils.closeStatement(stmt);
-			DataSourceUtils.releaseConnection(con, getDataSource());
 		}
 	}
 
@@ -74,25 +70,20 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 		Date lastInsertTimestamp = null;
 		Date thisTimestamp = null;
 		if (this.maxId == this.nextId) {
-			Connection con = DataSourceUtils.getConnection(getDataSource());
-			Statement stmt = null;
-			ResultSet rs = null;
-			try {
-				stmt = con.createStatement();
+			try (Connection con = DataSourceUtils
+					.getConnection(getDataSource());
+					Statement stmt = con.createStatement()) {
 				DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 				// Increment the sequence column...
 				String columnName = getSequenceName();
-				rs = stmt.executeQuery("select  " + columnName
-						+ "_TIMESTAMP,UNIX_TIMESTAMP() from " + getTableName());
-				try {
+				try (ResultSet rs = stmt.executeQuery("select  " + columnName
+						+ "_TIMESTAMP,UNIX_TIMESTAMP() from " + getTableName())) {
 					rs.next();
 					Long last = rs.getLong(1);
 					if (last < 10000000000L) // no mills
 						last *= 1000;
 					lastInsertTimestamp = new Date(last);
 					thisTimestamp = new Date(rs.getLong(2) * 1000);
-				} finally {
-					JdbcUtils.closeResultSet(rs);
 				}
 				boolean same = getCycleType().isSameCycle(lastInsertTimestamp,
 						thisTimestamp);
@@ -106,23 +97,18 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 							+ columnName + " = last_insert_id("
 							+ getCacheSize() + ")," + columnName
 							+ "_TIMESTAMP = UNIX_TIMESTAMP()");
-				rs = stmt.executeQuery("select last_insert_id()");
-				try {
+				try (ResultSet rs = stmt
+						.executeQuery("select last_insert_id()")) {
 					if (!rs.next()) {
 						throw new DataAccessResourceFailureException(
 								"last_insert_id() failed after executing an update");
 					}
 					this.maxId = rs.getLong(1);
-				} finally {
-					JdbcUtils.closeResultSet(rs);
 				}
 				this.nextId = this.maxId - getCacheSize() + 1;
 			} catch (SQLException ex) {
 				throw new DataAccessResourceFailureException(
 						"Could not obtain last_insert_id()", ex);
-			} finally {
-				JdbcUtils.closeStatement(stmt);
-				DataSourceUtils.releaseConnection(con, getDataSource());
 			}
 		} else {
 			this.nextId++;
