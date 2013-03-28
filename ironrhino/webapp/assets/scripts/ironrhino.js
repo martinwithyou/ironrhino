@@ -36165,9 +36165,9 @@ Richtable = {
 				url += ids.join('&');
 			}
 		}
-		if (includeParams && document.location.search)
-			url += (url.indexOf('?') > 0 ? '&' : '?')
-					+ document.location.search.substring(1);
+		var data = $(' input[type="hidden"]', form).serialize();
+		if (includeParams && data)
+			url += (url.indexOf('?') > 0 ? '&' : '?') + data;
 		return url;
 	},
 	reload : function(form, pushstate) {
@@ -36439,7 +36439,8 @@ Richtable = {
 					+ ($(btn).data('windowoptions') || '{}')))();
 			var url = $(btn).attr('href');
 			if (view) {
-				url = Richtable.getUrl(view, id, !id || options.includeParams, form);
+				url = Richtable.getUrl(view, id, !id || options.includeParams,
+						form);
 			} else {
 				if (!$(btn).hasClass('noid')) {
 					if (!id) {
