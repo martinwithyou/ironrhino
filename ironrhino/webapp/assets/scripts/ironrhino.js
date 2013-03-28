@@ -36165,7 +36165,7 @@ Richtable = {
 				url += ids.join('&');
 			}
 		}
-		var data = $(' input[type="hidden"]', form).serialize();
+		var data = $('input[type="hidden"],input[name="keyword"]', form).serialize();
 		if (includeParams && data)
 			url += (url.indexOf('?') > 0 ? '&' : '?') + data;
 		return url;
