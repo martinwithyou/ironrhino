@@ -2,7 +2,7 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('pageView')}</title>
-<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<@url value="/assets/components/flot/excanvas.js"/>"></script><![endif]-->
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="<@url value="/assets/components/flot/excanvas.min.js"/>"></script><![endif]-->
 <script src="<@url value="/assets/components/flot/jquery.flot.js"/>" type="text/javascript"></script>
 <script src="<@url value="/assets/components/flot/jquery.flot.time.js"/>" type="text/javascript"></script>
 <script src="<@url value="/assets/components/flot/jquery.flot.pie.js"/>" type="text/javascript"></script>
