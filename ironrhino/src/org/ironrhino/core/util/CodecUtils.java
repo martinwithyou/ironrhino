@@ -4,8 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
@@ -189,29 +189,27 @@ public class CodecUtils {
 
 	private static String string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-	private static Random random = new Random();
-
 	public static String randomString(int digits) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < digits; i++)
-			sb.append(string.charAt(random.nextInt(26)));
+			sb.append(string.charAt(ThreadLocalRandom.current().nextInt(26)));
 		return sb.toString();
 	}
 
 	public static String randomDigitalString(int digits) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < digits; i++)
-			sb.append(random.nextInt(10));
+			sb.append(ThreadLocalRandom.current().nextInt(10));
 		return sb.toString();
 	}
 
 	public static int randomInt(int digits) {
 		if (digits <= 1)
-			return random.nextInt(10);
+			return ThreadLocalRandom.current().nextInt(10);
 		int n = 10;
 		for (int i = 1; i < digits - 1; i++)
 			n *= 10;
-		return n + random.nextInt(n * 9);
+		return n + ThreadLocalRandom.current().nextInt(n * 9);
 	}
 
 	public static String nextId() {

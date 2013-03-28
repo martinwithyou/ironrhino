@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -14,8 +14,8 @@ import org.ironrhino.core.event.InstanceLifecycleEvent;
 import org.ironrhino.core.event.InstanceShutdownEvent;
 import org.ironrhino.core.event.InstanceStartupEvent;
 import org.ironrhino.core.remoting.ExportServicesEvent;
-import org.ironrhino.core.remoting.ServiceRegistry;
 import org.ironrhino.core.remoting.Remoting;
+import org.ironrhino.core.remoting.ServiceRegistry;
 import org.ironrhino.core.util.AppInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +34,6 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 	protected Map<String, List<String>> importServices = new ConcurrentHashMap<String, List<String>>();
 
 	protected Map<String, Object> exportServices = new HashMap<String, Object>();
-
-	private Random random = new Random();
 
 	public Map<String, List<String>> getImportServices() {
 		return importServices;
@@ -138,7 +136,8 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 	public String discover(String serviceName) {
 		List<String> hosts = getImportServices().get(serviceName);
 		if (hosts != null && hosts.size() > 0) {
-			String host = hosts.get(random.nextInt(hosts.size()));
+			String host = hosts.get(ThreadLocalRandom.current().nextInt(
+					hosts.size()));
 			onDiscover(serviceName, host);
 			return host;
 		} else {
