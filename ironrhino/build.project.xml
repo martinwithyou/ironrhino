@@ -45,7 +45,7 @@
 	</target>
 
 	<target name="sync">
-		<copy  tofile="build.xml" file="${basedir}/../ironrhino/build.project.xml"  failonerror="false" />
+		<copy  tofile="build.xml" file="${basedir}/../ironrhino/build.project.xml" failonerror="false"/>
 		<script language="javascript">
 			<![CDATA[
 			importPackage(java.io);
