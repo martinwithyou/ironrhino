@@ -22,6 +22,7 @@ public class AppInfoListener implements ServletContextListener {
 	private Logger logger;
 
 	public void contextInitialized(ServletContextEvent event) {
+		ServletContext ctx = event.getServletContext();
 		String defaultProfiles = System
 				.getenv(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME
 						.replaceAll("\\.", "_").toUpperCase());
@@ -29,8 +30,7 @@ public class AppInfoListener implements ServletContextListener {
 			System.setProperty(
 					AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME,
 					defaultProfiles);
-		ServletContext ctx = event.getServletContext();
-		String name = getAppName();
+		String name = getProperties().getProperty("APP_NAME");
 		if (StringUtils.isBlank(name)) {
 			name = ctx.getInitParameter(AppInfo.KEY_APP_NAME);
 			if (StringUtils.isBlank(name))
@@ -52,6 +52,9 @@ public class AppInfoListener implements ServletContextListener {
 			context = "";
 		System.setProperty("app.context", context);
 
+		String appBasePackage = getProperties().getProperty("APP_BASE_PACKAGE");
+		if (StringUtils.isNotBlank(appBasePackage))
+			System.setProperty("APP_BASE_PACKAGE", appBasePackage);
 		String userTimezone = System.getProperty("user.timezone");
 		if (StringUtils.isBlank(userTimezone)
 				|| !TimeZone.getTimeZone(userTimezone).getID()
@@ -70,6 +73,7 @@ public class AppInfoListener implements ServletContextListener {
 				AppInfo.getInstanceId(), AppInfo.getStage().toString(),
 				AppInfo.getAppHome(), AppInfo.getHostName(),
 				AppInfo.getHostAddress(), defaultProfiles);
+		properties = null;
 	}
 
 	public void contextDestroyed(ServletContextEvent event) {
@@ -81,19 +85,22 @@ public class AppInfoListener implements ServletContextListener {
 				AppInfo.getHostAddress());
 	}
 
-	private String getAppName() {
-		Resource resource = new ClassPathResource(
-				"resources/spring/applicationContext.properties");
-		if (resource.exists()) {
-			Properties p = new Properties();
-			try (InputStream is = resource.getInputStream()) {
-				p.load(is);
-			} catch (IOException e) {
-				e.printStackTrace();
+	private Properties properties;
+
+	private Properties getProperties() {
+		if (properties == null) {
+			properties = new Properties();
+			Resource resource = new ClassPathResource(
+					"resources/spring/applicationContext.properties");
+			if (resource.exists()) {
+				try (InputStream is = resource.getInputStream()) {
+					properties.load(is);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-			return p.getProperty("APP_NAME");
 		}
-		return null;
+		return properties;
 	}
 
 }
