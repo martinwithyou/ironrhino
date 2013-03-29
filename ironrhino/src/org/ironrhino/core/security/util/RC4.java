@@ -53,16 +53,9 @@ public class RC4 {
 				log.error(e.getMessage(), e);
 			}
 		}
-	}
-
-	private static String getDefaultKey() {
-		if (defaultKey == null) {
-			synchronized (Blowfish.class) {
-				if (defaultKey == null)
-					defaultKey = CodecUtils.fuzzify(AppInfo.getAppName());
-			}
-		}
-		return defaultKey;
+		if (defaultKey == null)
+			defaultKey = AppInfo.getAppName();
+		defaultKey = CodecUtils.fuzzify(AppInfo.getAppName());
 	}
 
 	private byte state[] = new byte[256];
@@ -70,7 +63,7 @@ public class RC4 {
 	private int y;
 
 	public RC4() {
-		this(getDefaultKey());
+		this(defaultKey);
 	}
 
 	public RC4(String key) {

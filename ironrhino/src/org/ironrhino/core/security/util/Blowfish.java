@@ -28,6 +28,7 @@ public class Blowfish {
 
 	private static String CIPHER_NAME = "Blowfish/CFB8/NoPadding";
 	private static String KEY_SPEC_NAME = "Blowfish";
+	public static int KEY_LENGTH = 128;
 	// thread safe
 	private static final ThreadLocal<SoftReference<Blowfish>> pool = new ThreadLocal<SoftReference<Blowfish>>() {
 		@Override
@@ -72,22 +73,15 @@ public class Blowfish {
 				log.error(e.getMessage(), e);
 			}
 		}
-	}
-
-	private static String getDefaultKey() {
-		if (defaultKey == null) {
-			synchronized (Blowfish.class) {
-				if (defaultKey == null)
-					defaultKey = CodecUtils.fuzzify(AppInfo.getAppName());
-			}
-		}
-		if (defaultKey.length() > 16)
-			defaultKey = defaultKey.substring(0, 16);
-		return defaultKey;
+		if (defaultKey == null)
+			defaultKey = AppInfo.getAppName();
+		defaultKey = CodecUtils.fuzzify(AppInfo.getAppName());
+		if (defaultKey.length() > KEY_LENGTH / 8)
+			defaultKey = defaultKey.substring(0, KEY_LENGTH / 8);
 	}
 
 	public Blowfish() {
-		this(getDefaultKey());
+		this(defaultKey);
 	}
 
 	public Blowfish(String key) {
