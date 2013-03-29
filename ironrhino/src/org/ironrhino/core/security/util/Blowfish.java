@@ -81,6 +81,8 @@ public class Blowfish {
 					defaultKey = CodecUtils.fuzzify(AppInfo.getAppName());
 			}
 		}
+		if (defaultKey.length() > 16)
+			defaultKey = defaultKey.substring(0, 16);
 		return defaultKey;
 	}
 
