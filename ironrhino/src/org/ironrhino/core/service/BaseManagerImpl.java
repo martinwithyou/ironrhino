@@ -315,8 +315,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			resultPage.setTotalResults(totalResults);
 			if (resultPage.getPageSize() < 1)
 				resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
-			else if (resultPage.getPageSize() < Integer.MAX_VALUE
-					&& resultPage.isPageSizeOverflow())
+			else if (resultPage.isPageSizeOverflow())
 				resultPage.setPageSize(ResultPage.MAX_PAGESIZE);
 			if (resultPage.getPageNo() < 1)
 				resultPage.setPageNo(1);
