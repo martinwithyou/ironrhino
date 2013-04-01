@@ -170,3 +170,28 @@
 		</#if>
 	</#if>
 </#macro>
+<#function getAttributeOptions schemaName name>
+	<#if schemaName?index_of(",") gt 0>
+		<#local schemaNames = schemaName?split(",")>
+		<#list schemaNames as name>
+			<#local temp=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findOne(true,[name])!>
+			<#local tempisnotnull=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findOne(true,[name])??>
+			<#if tempisnotnull>
+				<#if !schema.name?? && temp??>
+					<#local schema=temp>
+				<#elseif schema.name?? && temp??>
+					<#local schema=schema.merge(temp)>
+				</#if>
+			</#if>
+		</#list>
+	<#else>
+		<#local schema=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findOne(true,[schemaName])!>
+	</#if>
+	<#if schema?? && schema.fields??>
+	<#list schema.fields as field>
+		<#if field.name?? && field.name==name && field.type?? && ('SELECT'==field.type.name() || 'CHECKBOX'==field.type.name())>
+			<#return field.values>
+		</#if>
+	</#list>
+	</#if>
+</#function>
