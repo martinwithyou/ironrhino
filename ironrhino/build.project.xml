@@ -342,7 +342,7 @@
 			<fileset dir="${webapp.dir}/WEB-INF/classes" />
 		</move>
 		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}"
-			webxml="${webapp.dir}/WEB-INF/web.xml" excludes="**/upload/**,assetsbak/**,**/ironrhino-assets-*.jar" />
+			needxmlfile="false" excludes="**/upload/**,assetsbak/**,**/ironrhino-assets-*.jar" />
 		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}"
 			preservelastmodified="true" />
 		<move todir="${webapp.dir}/WEB-INF/classes" preservelastmodified="true">
@@ -387,7 +387,7 @@
 
 	<target name="backup" if="webapp.deployed" depends="checkwebappdeployed">
 		<war warfile="${target.dir}/${war.name}.bak" basedir="${webapp.deploy.dir}"
-			webxml="${webapp.deploy.dir}/WEB-INF/web.xml" />
+			needxmlfile="false" />
 	</target>
 
 	<target name="update">
