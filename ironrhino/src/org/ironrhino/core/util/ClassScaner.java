@@ -200,7 +200,7 @@ public class ClassScaner {
 		if (strict) {
 			String appBasePackage = AppInfo.getAppBasePackage();
 			if (StringUtils.isNotBlank(appBasePackage)) {
-				if (appBasePackage.contains("org.ironrhino"))
+				if (!appBasePackage.contains("org.ironrhino"))
 					appBasePackage = "org.ironrhino," + appBasePackage;
 			} else {
 				String appName = AppInfo.getAppName();
