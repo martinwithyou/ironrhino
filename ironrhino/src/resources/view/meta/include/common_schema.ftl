@@ -1,5 +1,4 @@
-<#macro editAttributes schemaName attributes=[] parameterNamePrefix=""  headerKey="" headerValue="">
-	<input type="hidden" name="__datagrid_${parameterNamePrefix}attributes"/>
+<#macro editAttributes schemaName attributes=[] parameterNamePrefix=""  headerKey="" headerValue="" ignoreIfNotFound=true>
 	<#if schemaName?index_of(",") gt 0>
 		<#local schemaNames = schemaName?split(",")>
 		<#list schemaNames as name>
@@ -16,6 +15,8 @@
 	<#else>
 		<#local schema=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findOne(true,[schemaName])!>
 	</#if>
+	<#if !ignoreIfNotFound || schema??&&schema.fields??>
+	<input type="hidden" name="__datagrid_${parameterNamePrefix}attributes"/>
 	<table class="datagrid table table-condensed nullable">
 		<thead>
 			<tr>
@@ -80,7 +81,7 @@
 						</#if>
 					</td>
 					<#if !schema.strict>
-					<td class="manipulate"></td>
+					<td class="manipulate<#if field.required> required</#if>"></td>
 					</#if>
 				</tr>
 				</#if>
@@ -126,6 +127,7 @@
 				</#if>
 		</tbody>
 	</table>
+	</#if>
 </#macro>
 
 <#macro printAttributes attributes grouping=true>
