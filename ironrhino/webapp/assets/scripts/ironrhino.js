@@ -35698,11 +35698,14 @@ Observation.sortableTable = function(container) {
 		$('.hideonadd', r).hide();
 		$('.showonadd', r).show();
 		$(':input', r).eq(0).focus();
+		r.removeClass('required');
 		if (options.onadd)
 			options.onadd.apply(r.get(0));
 	};
 	var removeRow = function(event, options) {
 		var row = $(event.target).closest('tr');
+		if (row.hasClass('required'))
+			return;
 		var tbody = row.closest('tbody');
 		var table = tbody.closest('table.datagrided');
 		if (!table.hasClass('nullable') && $('tr', tbody).length == 1

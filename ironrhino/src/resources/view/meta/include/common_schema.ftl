@@ -52,7 +52,7 @@
 						<#break/>
 					</#if>
 				</#list>
-				<tr>
+				<tr<#if field.required> class="required"</#if>>
 					<td><@s.textfield theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name?html}" readonly=(schema.strict || field.strict || field.required)?string/></td>
 					<td>
 						<#if type=='SELECT'>
@@ -81,7 +81,7 @@
 						</#if>
 					</td>
 					<#if !schema.strict>
-					<td class="manipulate<#if field.required> required</#if>"></td>
+					<td class="manipulate"></td>
 					</#if>
 				</tr>
 				</#if>
