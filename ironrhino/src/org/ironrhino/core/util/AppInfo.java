@@ -13,6 +13,8 @@ public class AppInfo {
 	public static final String KEY_APP_NAME = "app.name";
 
 	public static final String KEY_APP_HOME = "app.home";
+	
+	public static final String KEY_APP_BASEPACKAGE = "app.basePackage";
 
 	public static final String KEY_APP_VERSION = "app.version";
 

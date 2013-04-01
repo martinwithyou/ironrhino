@@ -30,21 +30,17 @@ public class AppInfoListener implements ServletContextListener {
 			System.setProperty(
 					AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME,
 					defaultProfiles);
-		String name = getProperties().getProperty("APP_NAME");
-		if (StringUtils.isBlank(name)) {
-			name = ctx.getInitParameter(AppInfo.KEY_APP_NAME);
-			if (StringUtils.isBlank(name))
-				name = ctx.getServletContextName();
-		}
+		String name = getProperties().getProperty(AppInfo.KEY_APP_NAME);
+		if (StringUtils.isBlank(name))
+			name = ctx.getServletContextName();
 		if (StringUtils.isNotBlank(name))
 			AppInfo.setAppName(name);
-		String version = ctx.getInitParameter(AppInfo.KEY_APP_VERSION);
+		String version = getProperties().getProperty(AppInfo.KEY_APP_VERSION);
 		if (StringUtils.isNotBlank(version))
 			AppInfo.setAppVersion(version);
-		String home = ctx.getInitParameter(AppInfo.KEY_APP_HOME);
-		if (StringUtils.isNotBlank(home)) {
+		String home = getProperties().getProperty(AppInfo.KEY_APP_HOME);
+		if (StringUtils.isNotBlank(home))
 			AppInfo.setAppHome(home);
-		}
 		System.setProperty(AppInfo.KEY_APP_HOME, AppInfo.getAppHome());
 		System.setProperty(AppInfo.KEY_APP_NAME, AppInfo.getAppName());
 		String context = ctx.getRealPath("/");
@@ -52,9 +48,10 @@ public class AppInfoListener implements ServletContextListener {
 			context = "";
 		System.setProperty("app.context", context);
 
-		String appBasePackage = getProperties().getProperty("APP_BASE_PACKAGE");
+		String appBasePackage = getProperties().getProperty(
+				AppInfo.KEY_APP_BASEPACKAGE);
 		if (StringUtils.isNotBlank(appBasePackage))
-			System.setProperty("APP_BASE_PACKAGE", appBasePackage);
+			System.setProperty(AppInfo.KEY_APP_BASEPACKAGE, appBasePackage);
 		String userTimezone = System.getProperty("user.timezone");
 		if (StringUtils.isBlank(userTimezone)
 				|| !TimeZone.getTimeZone(userTimezone).getID()
@@ -90,8 +87,7 @@ public class AppInfoListener implements ServletContextListener {
 	private Properties getProperties() {
 		if (properties == null) {
 			properties = new Properties();
-			Resource resource = new ClassPathResource(
-					"resources/spring/applicationContext.properties");
+			Resource resource = new ClassPathResource("app.properties");
 			if (resource.exists()) {
 				try (InputStream is = resource.getInputStream()) {
 					properties.load(is);
