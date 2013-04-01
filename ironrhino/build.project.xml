@@ -45,7 +45,8 @@
 	</target>
 
 	<target name="sync">
-		<copy  tofile="build.xml" file="${basedir}/../ironrhino/build.project.xml" failonerror="false"/>
+		<copy tofile="build.xml" file="${basedir}/../ironrhino/build.project.xml"
+			failonerror="false" />
 		<script language="javascript">
 			<![CDATA[
 			importPackage(java.io);
@@ -359,7 +360,7 @@
 			<fileset dir="${webapp.dir}/WEB-INF/classes" />
 		</move>
 		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}"
-			webxml="${webapp.dir}/WEB-INF/web.xml" excludes="**/upload/**" />
+			needxmlfile="false" excludes="**/upload/**" />
 		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}"
 			preservelastmodified="true" />
 		<move todir="${webapp.dir}/WEB-INF/classes" preservelastmodified="true">
