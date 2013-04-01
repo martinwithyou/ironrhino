@@ -35663,7 +35663,7 @@ Observation.sortableTable = function(container) {
 		$('span.info', r).html('');
 		$(':input[type!=checkbox][type!=radio]', r).val('');
 		$('input[type=checkbox],input[type=radio]', r).prop('checked', false);
-		$(':input').prop('readonly', false).removeAttr('keyupValidate');
+		$(':input', r).prop('readonly', false).removeAttr('keyupValidate');
 		$('.datagrided tr', r).each(function(i) {
 					if (i > 0)
 						$(this).remove();
