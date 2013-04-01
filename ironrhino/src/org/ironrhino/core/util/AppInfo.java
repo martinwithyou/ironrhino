@@ -27,6 +27,8 @@ public class AppInfo {
 	private static String _instanceId;
 
 	private static String home;
+	
+	private static String basePackage;
 
 	private static String version = "1.0.0";
 
@@ -103,6 +105,10 @@ public class AppInfo {
 	public static void setAppHome(String home) {
 		AppInfo.home = home;
 	}
+	
+	public static void setAppBasePackage(String basePackage){
+		AppInfo.basePackage = basePackage;
+	}
 
 	public static void setAppVersion(String version) {
 		AppInfo.version = version;
@@ -136,6 +142,10 @@ public class AppInfo {
 					+ name;
 		}
 		return home;
+	}
+	
+	public static String getAppBasePackage(){
+		return basePackage;
 	}
 
 	public static String getHostName() {

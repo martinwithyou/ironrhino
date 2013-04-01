@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -26,8 +25,6 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.SystemPropertyUtils;
 
 public class ClassScaner {
-
-	private static Logger logger = LoggerFactory.getLogger(ClassScaner.class);
 
 	private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
@@ -196,20 +193,36 @@ public class ClassScaner {
 	}
 
 	public static String[] getAppPackages() {
-		Set<String> packages = new TreeSet<String>();
-		for (Package p : Package.getPackages()) {
-			String name = p.getName();
-			if (isExcludePackage(name))
-				continue;
-			int deep = name.split("\\.").length;
-			if (deep <= 2)
-				packages.add(name);
-			else
-				packages.add(name.substring(0,
-						name.indexOf(".", name.indexOf(".") + 1)));
+		return getAppPackages(true);
+	}
+
+	public static String[] getAppPackages(boolean strict) {
+		if (strict) {
+			String appBasePackage = AppInfo.getAppBasePackage();
+			if (StringUtils.isNotBlank(appBasePackage)) {
+				if (appBasePackage.contains("org.ironrhino"))
+					appBasePackage = "org.ironrhino," + appBasePackage;
+			} else {
+				String appName = AppInfo.getAppName();
+				appBasePackage = "org.ironrhino,com." + appName;
+			}
+			String[] arr = appBasePackage.split(",+");
+			return arr;
+		} else {
+			Set<String> packages = new TreeSet<String>();
+			for (Package p : Package.getPackages()) {
+				String name = p.getName();
+				if (isExcludePackage(name))
+					continue;
+				int deep = name.split("\\.").length;
+				if (deep <= 2)
+					packages.add(name);
+				else
+					packages.add(name.substring(0,
+							name.indexOf(".", name.indexOf(".") + 1)));
+			}
+			return packages.toArray(new String[0]);
 		}
-		logger.info("appPackages: {}", packages);
-		return packages.toArray(new String[0]);
 	}
 
 	private static boolean isExcludePackage(String name) {
