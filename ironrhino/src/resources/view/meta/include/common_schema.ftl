@@ -52,7 +52,7 @@
 					</#if>
 				</#list>
 				<tr>
-					<td><@s.textfield theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name?html}" readonly=field.strict?string/></td>
+					<td><@s.textfield theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name?html}" readonly=field.required?string/></td>
 					<td>
 						<#if type=='SELECT'>
 							<select name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combobox</#if>">
