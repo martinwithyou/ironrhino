@@ -8,17 +8,11 @@
 	<#if !schema.new>
 		<@s.hidden name="schema.id" />
 	</#if>
-	<#if Parameters.brief??>
-		<@s.hidden name="schema.name"/>
-		<@s.hidden name="schema.description" />
-	<@s.hidden name="schema.strict" />
-		<#else>
-		<div class="row-fluid">
-			<div class="span4"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable input-medium"/></div>
-			<div class="span5"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description"/></div>
-			<div class="span3"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" cssClass="custom"/></div>
-		</div>
-	</#if>
+	<div class="row-fluid">
+		<div class="span4"><#if Parameters.brief??><@s.hidden name="schema.name"/><#else><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable input-medium"/></#if></div>
+		<div class="span5"><#if Parameters.brief??><@s.hidden name="schema.description" /><#else><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description"/></#if></div>
+		<div class="span3"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" cssClass="custom"/></div>
+	</div>
 	<table class="datagrid table table-condensed">
 		<style scoped>
 		tr.linkage{
