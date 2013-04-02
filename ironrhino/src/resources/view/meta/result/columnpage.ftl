@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <#escape x as x?html><html>
 <head>
-<title>${action.getText(name)}</title>
+<title>${page.title!}</title>
 </head>
 <body>
 <ul class="breadcrumb">
