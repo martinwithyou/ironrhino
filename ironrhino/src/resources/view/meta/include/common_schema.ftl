@@ -1,21 +1,38 @@
-<#macro editAttributes schemaName attributes=[] parameterNamePrefix=""  headerKey="" headerValue="" ignoreIfNotFound=true>
-	<#if schemaName?index_of(",") gt 0>
-		<#local schemaNames = schemaName?split(",")>
-		<#list schemaNames as name>
-			<#local temp=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findOne(true,[name])!>
-			<#local tempisnotnull=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findOne(true,[name])??>
-			<#if tempisnotnull>
-				<#if !schema.name?? && temp??>
-					<#local schema=temp>
-				<#elseif schema.name?? && temp??>
-					<#local schema=schema.merge(temp)>
+<#macro editAttributes schemaName merge=false attributes=[] parameterNamePrefix=""  headerKey="" headerValue="" ignoreIfNotFound=true>
+	<#local schemaManager=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager')/>
+	<#if schemaName?is_string>
+		<#local schema=schemaManager.findOne(true,[schemaName])!>
+	<#elseif schemaName?is_sequence && schemaName?size gt 0>
+		<#if schemaName?size == 1>
+			<#local schema=schemaManager.findOne(true,schemaName)!>
+		<#else>
+			<#if merge>
+			<#list schemaName as name>
+				<#local temp=schemaManager.findOne(true,[name])!>
+				<#local tempisnotnull=schemaManager.findOne(true,[name])??>
+				<#if tempisnotnull>
+					<#if !schema?? && temp??>
+						<#local schema=temp>
+					<#elseif schema.name?? && temp??>
+						<#local schema=schema.merge(temp)>
+					</#if>
 				</#if>
+			</#list>
+			<#else>
+			<#list schemaName as name>
+				<#local temp=schemaManager.findOne(true,[name])!>
+				<#local tempisnotnull=schemaManager.findOne(true,[name])??>
+				<#if tempisnotnull>
+					<#if !schema?? && temp??>
+						<#local schema=temp>
+						<#break>
+					</#if>
+				</#if>
+			</#list>
 			</#if>
-		</#list>
-	<#else>
-		<#local schema=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findOne(true,[schemaName])!>
+		</#if>
 	</#if>
-	<#if !ignoreIfNotFound || schema??&&schema.fields??>
+	<#if !ignoreIfNotFound || schema??&&schema.fields??&&schema.fields?size gt 0>
 	<input type="hidden" name="__datagrid_${parameterNamePrefix}attributes"/>
 	<table class="datagrid table table-condensed nullable">
 		<thead>
@@ -173,21 +190,38 @@
 	</#if>
 </#macro>
 <#function getAttributeOptions schemaName name>
-	<#if schemaName?index_of(",") gt 0>
-		<#local schemaNames = schemaName?split(",")>
-		<#list schemaNames as name>
-			<#local temp=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findOne(true,[name])!>
-			<#local tempisnotnull=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findOne(true,[name])??>
-			<#if tempisnotnull>
-				<#if !schema.name?? && temp??>
-					<#local schema=temp>
-				<#elseif schema.name?? && temp??>
-					<#local schema=schema.merge(temp)>
+	<#local schemaManager=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager')/>
+	<#if schemaName?is_string>
+		<#local schema=schemaManager.findOne(true,[schemaName])!>
+	<#elseif schemaName?is_sequence && schemaName?size gt 0>
+		<#if schemaName?size == 1>
+			<#local schema=schemaManager.findOne(true,schemaName)!>
+		<#else>
+			<#if merge>
+			<#list schemaName as name>
+				<#local temp=schemaManager.findOne(true,[name])!>
+				<#local tempisnotnull=schemaManager.findOne(true,[name])??>
+				<#if tempisnotnull>
+					<#if !schema.name?? && temp??>
+						<#local schema=temp>
+					<#elseif schema.name?? && temp??>
+						<#local schema=schema.merge(temp)>
+					</#if>
 				</#if>
+			</#list>
+			<#else>
+			<#list schemaName as name>
+				<#local temp=schemaManager.findOne(true,[name])!>
+				<#local tempisnotnull=schemaManager.findOne(true,[name])??>
+				<#if tempisnotnull>
+					<#if !schema.name?? && temp??>
+						<#local schema=temp>
+						<#break>
+					</#if>
+				</#if>
+			</#list>
 			</#if>
-		</#list>
-	<#else>
-		<#local schema=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager').findOne(true,[schemaName])!>
+		</#if>
 	</#if>
 	<#if schema?? && schema.fields??>
 	<#list schema.fields as field>
