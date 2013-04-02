@@ -147,12 +147,12 @@
 	</#if>
 </#macro>
 
-<#macro printAttributes attributes grouping=true>
+<#macro printAttributes attributes grouping=true excludes=[]>
 	<#if attributes?? && attributes?size gt 0>
 		<#if !grouping>
 			<ul class="attributes">
 			<#list attributes as attr>
-				<#if attr.value?? && attr.value?has_content>
+				<#if attr.value?? && attr.value?has_content && !excludes?seq_contains(attr.name)>
 					<li><span class="name">${attr.name?html}:<span><span class="value">${attr.value?html}</span></li>
 				</#if>
 			</#list>
@@ -178,7 +178,9 @@
 						</#if>
 					</#if>
 				<#else>
+					<#if !excludes?seq_contains(attr.name)>
 					<li><span class="name">${attr.name?html}:<span><span class="value">${attr.value?html}</span></li>
+					</#if>
 					<#if group?has_content && index==attributes?size-1>
 						</ul></li>
 					</#if>
