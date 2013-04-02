@@ -17,9 +17,8 @@
 
 	<path id="lib.classpath">
 		<fileset dir="${lib.dir}">
-			<include name="servlet-api*.jar" />
-			<include name="junit*.jar" />
-			<include name="spring-test*.jar" />
+			<exclude name="closure*.jar" />
+			<exclude name="yuicompressor*.jar" />
 		</fileset>
 		<fileset dir="${webapp.dir}/WEB-INF/lib">
 			<include name="*.jar" />
