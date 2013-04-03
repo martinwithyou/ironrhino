@@ -76,7 +76,7 @@
 	<classpathentry kind="lib" path="lib/closure-compiler.jar"/>
 	<classpathentry kind="lib" path="lib/yuicompressor.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/postgresql-9.2.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/elasticsearch-0.20.4.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/elasticsearch-0.20.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-analyzers-3.6.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-core-3.6.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-highlighter-3.6.2.jar"/>
