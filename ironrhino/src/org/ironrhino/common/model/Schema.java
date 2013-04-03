@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Type;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NaturalId;
@@ -99,7 +100,8 @@ public class Schema extends BaseEntity implements Validatable {
 	}
 
 	@NotInCopy
-	@Column(name = "fields", length = 1024)
+	@Column(name = "fields")
+	@Type(type = "java.sql.Clob")
 	@Access(AccessType.PROPERTY)
 	public String getFieldsAsString() {
 		return JsonUtils.toJson(fields);

@@ -53,14 +53,14 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@NotInJson
 	@Column
-	@Type(type = "text")
+	@Type(type = "java.sql.Clob")
 	@Access(AccessType.FIELD)
 	private String head;
 
 	@NotInJson
 	@SearchableProperty
 	@Column(nullable = false)
-	@Type(type = "text")
+	@Type(type = "java.sql.Clob")
 	@Access(AccessType.FIELD)
 	private String content;
 
@@ -69,7 +69,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@NotInJson
 	@Column
-	@Type(type = "text")
+	@Type(type = "java.sql.Clob")
 	@Access(AccessType.FIELD)
 	private String draft;
 

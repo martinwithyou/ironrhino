@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Type;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -89,7 +90,8 @@ public class Dictionary extends BaseEntity implements Validatable {
 	}
 
 	@NotInCopy
-	@Column(name = "items", length = 1024)
+	@Column(name = "items")
+	@Type(type = "java.sql.Clob")
 	@Access(AccessType.PROPERTY)
 	public String getItemsAsString() {
 		if (items == null || items.isEmpty())
