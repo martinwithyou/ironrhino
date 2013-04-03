@@ -101,7 +101,7 @@ public class Schema extends BaseEntity implements Validatable {
 
 	@NotInCopy
 	@Column(name = "fields")
-	@Type(type = "java.sql.Clob")
+	@Type(type = "text")
 	@Access(AccessType.PROPERTY)
 	public String getFieldsAsString() {
 		return JsonUtils.toJson(fields);

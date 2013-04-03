@@ -91,7 +91,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 
 	@NotInCopy
 	@Column(name = "items")
-	@Type(type = "java.sql.Clob")
+	@Type(type = "text")
 	@Access(AccessType.PROPERTY)
 	public String getItemsAsString() {
 		if (items == null || items.isEmpty())
