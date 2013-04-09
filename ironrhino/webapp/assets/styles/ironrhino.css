@@ -1,5 +1,6 @@
 /* changes
 remove .ui-accordion .ui-menu .ui-autocomplete .ui-spinner .ui-slider .ui-tab .ui-tooltip .ui-progressbar .ui-toolbar bootstrap wijmo
+.ui-dialog remove overflow:hidden;
 .ui-dialog .ui-dialog-content remove overflow:auto;
 .ui-dialog-title .ui-dialog-title remove margin-top margin-bottom;
 .ui-dialog .ui-dialog-titlebar add min-height:30px;
@@ -597,7 +598,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  *
  * http://docs.jquery.com/UI/Dialog#theming
  */
-.ui-dialog { position: absolute; top: 0; left: 0; padding: .2em; width: 300px; overflow: hidden; outline: 0; }
+.ui-dialog { position: absolute; top: 0; left: 0; padding: .2em; width: 300px; outline: 0; }
 .ui-dialog .ui-dialog-titlebar { /*padding: .4em 1em;*/
 
   position: relative;
@@ -7757,10 +7758,6 @@ table.richtable {
 .ui-dialog .richtable .toolbar .status{
 	margin-left: 0;
 	width:20%;
-}
-.ui-dialog .combobox .dropdown-menu ,.ui-dialog .typeahead.dropdown-menu {
-	max-height: 400px;
-	overflow: auto;
 }
 th.filtercolumn li.selecton
 {
