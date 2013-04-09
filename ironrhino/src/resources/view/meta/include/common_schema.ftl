@@ -1,4 +1,4 @@
-<#macro editAttributes schemaName merge=false attributes=[] parameterNamePrefix=""  headerKey="" headerValue="" ignoreIfNotFound=true elementsDynamicAttributes={"":{"":""}}>
+<#macro editAttributes schemaName merge=false attributes=[] parameterNamePrefix=""  headerKey="" headerValue="" ignoreIfNotFound=true dynamicAttributesMapping={}>
 	<#local schemaManager=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager')/>
 	<#if schemaName?is_string>
 		<#local schema=schemaManager.findOne(true,[schemaName])!>
@@ -70,7 +70,7 @@
 					</#if>
 				</#list>
 				<tr<#if field.required> class="required"</#if>>
-					<#local dynamicAttributes = elementsDynamicAttributes[field.name]!{}>
+					<#local dynamicAttributes = dynamicAttributesMapping[field.name]!{}>
 					<td><@s.textfield theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name?html}" readonly=(schema.strict || field.strict || field.required)?string/></td>
 					<td>
 						<#if type=='SELECT'>
