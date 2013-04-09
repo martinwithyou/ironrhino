@@ -71,10 +71,10 @@
 				</#list>
 				<tr<#if field.required> class="required"</#if>>
 					<#local dynamicAttributes = dynamicAttributesMapping[field.name]!{}>
-					<td><@s.textfield theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name?html}" readonly=(schema.strict || field.strict || field.required)?string/></td>
+					<td><@s.textfield theme="simple" id="${parameterNamePrefix?replace('.','_')}attributes__${index}__name" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name?html}" readonly=(schema.strict || field.strict || field.required)?string/></td>
 					<td>
 						<#if type=='SELECT'>
-							<select name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combobox</#if> ${dynamicAttributes['class']!}"<#list dynamicAttributes?keys as attr><#if attr!='class'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>
+							<select id="${parameterNamePrefix?replace('.','_')}attributes__${index}__value" name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combobox</#if> ${dynamicAttributes['class']!}"<#list dynamicAttributes?keys as attr><#if attr!='class'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>
 								<option value="${headerKey?html}">${headerValue?html}</option>
 								<#list field.values as value>
 								<option value="${value}"<#if persistValueExists && persistValue=value> selected="selected"</#if>>${value?html}</option>
@@ -95,7 +95,7 @@
 								<#local i=i+1>
 							</#list>
 						<#elseif type=='INPUT'>
-							<input type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if persistValueExists> value="${persistValue?html}"</#if> class="<#if field.required>required</#if> ${dynamicAttributes['class']!}"<#list dynamicAttributes?keys as attr><#if attr!='class'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>
+							<input id="${parameterNamePrefix?replace('.','_')}attributes__${index}__value" type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if persistValueExists> value="${persistValue?html}"</#if> class="<#if field.required>required</#if> ${dynamicAttributes['class']!}"<#list dynamicAttributes?keys as attr><#if attr!='class'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>
 						</#if>
 					</td>
 					<#if !schema.strict>
