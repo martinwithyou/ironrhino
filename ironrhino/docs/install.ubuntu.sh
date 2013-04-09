@@ -175,7 +175,6 @@ cd ironrhino
 OLDLANGUAGE=\$LANGUAGE
 LANGUAGE=en
 svnupoutput=\`svn up\`
-LANGUAGE=\$OLDLANGUAGE
 echo "\$svnupoutput"
 if \$(echo "\$svnupoutput"|grep Updated >/dev/null 2>&1) ; then
 ant dist
@@ -186,6 +185,7 @@ fi
 cd ..
 cd \$app && svn up
 ant -Dserver.home=/home/$USER/tomcat8080 -Dwebapp.deploy.dir=/home/$USER/tomcat8080/webapps/ROOT deploy
+LANGUAGE=\$OLDLANGUAGE
 ant -Dserver.home=/home/$USER/tomcat8081 -Dserver.shutdown.port=8006 -Dserver.startup.port=8081 shutdown
 rm -rf /home/$USER/tomcat8081/webapps
 mkdir -p /home/$USER/tomcat8081/webapps
