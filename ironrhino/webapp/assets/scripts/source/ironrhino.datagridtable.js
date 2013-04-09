@@ -86,9 +86,10 @@
 						placeholder_text : MessageBundle.get('select'),
 						no_results_text : ' '
 					});
-		$('select.textonadd', r).each(function() {
+		$('select.textonadd,div.combobox', r).each(function() {
 			$(this).replaceWith('<input type="text" name="'
-					+ $(this).attr('name') + '">');
+					+ ($(this).attr('name') || $(':input', this).attr('name'))
+					+ '">');
 		});
 		var checkboxname = '';
 		$('input.textonadd[type=checkbox]', r).each(function() {

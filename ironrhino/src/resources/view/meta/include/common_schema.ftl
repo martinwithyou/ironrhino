@@ -1,4 +1,4 @@
-<#macro editAttributes schemaName merge=false attributes=[] parameterNamePrefix=""  headerKey="" headerValue="" ignoreIfNotFound=true>
+<#macro editAttributes schemaName merge=false attributes=[] parameterNamePrefix=""  headerKey="" headerValue="" ignoreIfNotFound=true elementsDynamicAttributes={"":{"":""}}>
 	<#local schemaManager=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('schemaManager')/>
 	<#if schemaName?is_string>
 		<#local schema=schemaManager.findOne(true,[schemaName])!>
@@ -70,10 +70,11 @@
 					</#if>
 				</#list>
 				<tr<#if field.required> class="required"</#if>>
+					<#local dynamicAttributes = elementsDynamicAttributes[field.name]!{}>
 					<td><@s.textfield theme="simple" name="${parameterNamePrefix}attributes[${index}].name" value="${field.name?html}" readonly=(schema.strict || field.strict || field.required)?string/></td>
 					<td>
 						<#if type=='SELECT'>
-							<select name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combobox</#if>">
+							<select name="${parameterNamePrefix}attributes[${index}].value" class="textonadd<#if field.required> required</#if><#if !field.strict> combobox</#if> ${dynamicAttributes['class']!}"<#list dynamicAttributes?keys as attr><#if attr!='class'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>
 								<option value="${headerKey?html}">${headerValue?html}</option>
 								<#list field.values as value>
 								<option value="${value}"<#if persistValueExists && persistValue=value> selected="selected"</#if>>${value?html}</option>
@@ -90,11 +91,11 @@
 							</#if>
 							<#local i=0>
 							<#list field.values as value>
-								<label for="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${i}" class="checkbox inline removeonadd"><input id="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${i}" type="checkbox" class="custom" name="${parameterNamePrefix}attributes[${index}].value" value="${value!?html}" class="textonadd"<#list persistValueArray as tempValue><#if tempValue=value> checked="checked"<#break/></#if></#list>>${value!?html}</label>
+								<label for="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${i}" class="checkbox inline removeonadd"><input id="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${i}" type="checkbox" name="${parameterNamePrefix}attributes[${index}].value" value="${value!?html}" class="textonadd custom ${dynamicAttributes['class']!}"<#list persistValueArray as tempValue><#if tempValue=value> checked="checked"<#break/></#if></#list><#list dynamicAttributes?keys as attr><#if attr!='class'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${value!?html}</label>
 								<#local i=i+1>
 							</#list>
 						<#elseif type=='INPUT'>
-							<input type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if persistValueExists> value="${persistValue?html}"</#if><#if field.required> class="required"</#if>/>
+							<input type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if persistValueExists> value="${persistValue?html}"</#if> class="<#if field.required>required</#if> ${dynamicAttributes['class']!}"<#list dynamicAttributes?keys as attr><#if attr!='class'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>
 						</#if>
 					</td>
 					<#if !schema.strict>

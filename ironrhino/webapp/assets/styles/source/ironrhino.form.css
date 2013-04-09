@@ -255,4 +255,15 @@ input[type="radio"].custom + label.custom:active, input[type="radio"].custom:che
 .controls label.checkbox label.custom,.controls label.radio label.custom{
 	margin-left: -20px;
 }
-
+.radio.inline, .checkbox.inline {
+	padding-left: 0px;
+}
+.controls > .radio.inline:first-child, .controls > .checkbox.inline{
+	padding-left: 20px;
+}
+.inline > label.custom {
+	margin-right: 5px;
+}
+.inline > label.custom {
+	margin-right: 5px;
+}
