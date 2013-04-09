@@ -2,6 +2,7 @@
 <project name="ironrhino-jar" default="jar" basedir=".">
 
 	<property name="version" value="1.0" />
+	<property name="src.dir" location="${basedir}/src" />
 	<property name="webapp.dir" location="${basedir}/webapp" />
 	<property name="classes.dir" location="${webapp.dir}/WEB-INF/classes" />
 	<property name="target.dir" location="${basedir}/target" />
@@ -100,6 +101,80 @@
 			]]>
 		</script>
 	</target>
+	<target name="append-revision-for-assets">
+		<script language="javascript">
+						<![CDATA[
+			importPackage(java.io);
+			var assetsDir = new File(project.getProperty('webapp.dir')+'/assets');
+			var dirs = assetsDir.listFiles();
+			for(var n=0;n<dirs.length;n++){
+				var dir = dirs[n];
+				if(dir.getName()=='components'||dir.getName()=='images'||!dir.isDirectory())
+					continue;
+				var files = dir.listFiles();
+				for(var i=0;i<files.length;i++){
+					var file = files[i];
+					if(file.isDirectory())
+						continue;
+					var name = file.getName();
+					if(name.indexOf('-min.') > 0)
+						continue;
+					var revision = null;
+					var exec = project.createTask('exec');
+					exec.setExecutable('svn');
+					exec.setOutputproperty(name+'.svninfo');
+					exec.setFailIfExecutionFails(false);
+					exec.setResultProperty('resultCode');
+					var arg = exec.createArg();
+					arg.setValue('info');
+					arg = exec.createArg();
+					arg.setValue(file.getPath());
+					exec.execute();
+					var svninfo = project.getProperty(name+'.svninfo');
+						if(svninfo){
+							var arr = svninfo.split('\n');
+							for(var j=0;j<arr.length;j++){
+								var arr2 = arr[j].split(':',2);
+								if(arr2.length>1){
+									var s = arr2[1].trim();
+									try{
+										if(s.match(/^\d+$/)){
+											revision = s;
+										}
+									}catch(e){
+									}
+								}
+							}
+						}
+					revision = revision || (''+file.lastModified());
+					if(revision.length==13)
+						revision = revision.substring(0,10);
+					var replaceregexp = project.createTask('replaceregexp');
+					replaceregexp.setEncoding('utf-8');
+					replaceregexp.setPreserveLastModified(true);
+					var fs = project.createDataType("fileset");
+	      			fs.setDir(new File(project.getProperty('webapp.dir')+'/WEB-INF/classes/resources/view/decorator'));
+	      			fs.setIncludes('**/*.ftl');
+	      			replaceregexp.addFileset(fs);
+	      			var namearr = name.split('\\.');
+	      			var match = '/'+dir.getName()+'/'+namearr[0]+'(.*)\\.'+namearr[1];
+	      			var replace = '/'+dir.getName()+'/'+namearr[0]+'\\1\\.'+namearr[1]+'?'+revision;
+	        		replaceregexp.setMatch(match);
+	        		replaceregexp.setReplace(replace);
+	        		replaceregexp.perform();
+				}
+			}
+			]]>
+		</script>
+	</target>
+	<target name="reset-append-revision-for-assets">
+		<copy todir="${webapp.dir}/WEB-INF/classes/resources/view/decorator"
+			preservelastmodified="true" overwrite="true">
+			<fileset dir="${src.dir}/resources/view/decorator">
+				<include name="**/*.ftl" />
+			</fileset>
+		</copy>
+	</target>
 	<target name="jar" depends="set-revision">
 		<mkdir dir="${target.dir}" />
 		<delete file="${target.dir}/${assets-jar.name}" />
@@ -155,6 +230,7 @@
 			</manifest>
 		</jar>
 		<delete dir="${target.dir}/assets" />
+		<antcall target="append-revision-for-assets" />
 		<jar jarfile="${target.dir}/${core-jar.name}" basedir="${classes.dir}" includes="META-INF/**,log4j.xml,ehcache.xml,es-plugin.properties,struts-plugin.xml,xwork-conversion.properties,jasperreports_extension.properties,fonts.xml,META-INF/**,net/**,com/**,org/apache/**,org/ironrhino/core/**,org/ironrhino/common/**,template/**,resources/i18n/common/**,resources/view/common/**,resources/view/meta/**,resources/view/setup.ftl,resources/view/locale.ftl,resources/view/decorator/**,resources/hibernate/common/**,resources/spring/applicationContext-common.xml" excludes="${fs-jar.includes},${remoting-common-jar.includes},${common-setting-jar.includes},${common-cms-jar.includes},${common-dictionary-jar.includes},${common-schema-jar.includes},${common-treenode-jar.includes},${common-region-jar.includes},${common-stat-jar.includes},${common-record-jar.includes},${common-upload-jar.includes},${common-install-jar.includes},${common-qrcode-jar.includes},${common-feedback-jar.includes}">
 			<manifest>
 				<attribute name="Implementation-Title" value="ironrhino-core" />
@@ -166,6 +242,7 @@
 				<attribute name="Ironrhino-Component-Revision" value="${revision}" />
 			</manifest>
 		</jar>
+		<antcall target="reset-append-revision-for-assets" />
 		<jar jarfile="${target.dir}/${fs-jar.name}" basedir="${classes.dir}" includes="${fs-jar.includes}">
 			<manifest>
 				<attribute name="Implementation-Title" value="ironrhino-fs" />

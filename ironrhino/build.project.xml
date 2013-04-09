@@ -239,6 +239,8 @@
 					if(file.isDirectory())
 						continue;
 					var name = file.getName();
+					if(name.indexOf('-min.') > 0)
+						continue;
 					var revision = null;
 					var exec = project.createTask('exec');
 					exec.setExecutable('svn');
