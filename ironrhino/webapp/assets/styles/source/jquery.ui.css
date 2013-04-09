@@ -13,10 +13,10 @@ border:none;
  }
 */
 /*!
- * jQuery UI Bootstrap (0.22)
+ * jQuery UI Bootstrap (0.5)
  * http://addyosmani.github.com/jquery-ui-bootstrap
  *
- * Copyright 2012, Addy Osmani
+ * Copyright 2012 - 2013, Addy Osmani
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
  * Portions copyright jQuery UI & Twitter Bootstrap
@@ -26,16 +26,60 @@ border:none;
 /* Layout helpers
 ----------------------------------*/
 .ui-helper-hidden { display: none; }
-.ui-helper-hidden-accessible { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
-.ui-helper-reset { margin: 0; padding: 0; border: 0; outline: 0; line-height: 1.3; text-decoration: none; font-size: 100%; list-style: none; }
-.ui-helper-clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-.ui-helper-clearfix { display: inline-block; }
+.ui-helper-hidden-accessible { 
+  border: 0; clip: rect(0 0 0 0);
+  height: 1px; 
+  margin: -1px; 
+  overflow: hidden; 
+  padding: 0; 
+  position: absolute; 
+  width: 1px; 
+}
+.ui-helper-reset { 
+  margin: 0; 
+  padding: 0; 
+  border: 0; 
+  outline: 0; 
+  line-height: 1.3; 
+  text-decoration: none; 
+  font-size: 100%; 
+  list-style: none; 
+}
+.ui-helper-clearfix:before,
+.ui-helper-clearfix:after {
+  content: "";
+  display: table;
+}
+.ui-helper-clearfix:after { 
+  content: "."; 
+  display: block; 
+  height: 0; 
+  clear: both; 
+  visibility: hidden; 
+}
+.ui-helper-clearfix { 
+  /*display: inline-block; */
+  display:block;
+  min-height: 0; /* support: IE7 */
+}
 /* required comment for clearfix to work in Opera \*/
-* html .ui-helper-clearfix { height:1%; }
-.ui-helper-clearfix { display:block; }
-/* end clearfix */
-.ui-helper-zfix { width: 100%; height: 100%; top: 0; left: 0; position: absolute; opacity: 0; filter:Alpha(Opacity=0); }
+* html .ui-helper-clearfix { 
+  height:1%; 
+}
 
+/* end clearfix */
+.ui-helper-zfix { 
+  width: 100%; 
+  height: 100%; 
+  top: 0; 
+  left: 0; 
+  position: absolute; 
+  opacity: 0; 
+  filter:Alpha(Opacity=0); 
+}
+.ui-front {
+  z-index: 100;
+}
 
 
 /* Interaction Cues
@@ -47,28 +91,131 @@ border:none;
 ----------------------------------*/
 
 /* states and images */
-.ui-icon { display: block; text-indent: -99999px; overflow: hidden; background-repeat: no-repeat; }
+.ui-icon { 
+  display: block; 
+  text-indent: -99999px; 
+  overflow: hidden; 
+  background-repeat: no-repeat; 
+}
 
 
 /* Misc visuals
 ----------------------------------*/
 
 /* Overlays */
-.ui-widget-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
+.ui-widget-overlay { 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+}
 
 /*
- * jQuery UI CSS Framework 1.8.16
+ * jQuery UI Resizable 1.10.0
  *
- * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
- * http://docs.jquery.com/UI/Theming/API
- *
- * To view and modify this theme, visit http://jqueryui.com/themeroller/?ctl=themeroller
+ * http://api.jqueryui.com/resizable/
  */
 
+.ui-resizable { 
+  position: relative;
+}
+.ui-resizable-handle { 
+  position: absolute;
+  font-size: 0.1px;
+  z-index: 99999; 
+  display: block; 
+}
+.ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { 
+  display: none; 
+}
+.ui-resizable-n { 
+  cursor: n-resize; 
+  height: 7px; 
+  width: 100%; 
+  top: -5px; 
+  left: 0; 
+}
+.ui-resizable-s { 
+  cursor: s-resize; 
+  height: 7px; 
+  width: 100%; 
+  bottom: -5px; 
+  left: 0; 
+}
+.ui-resizable-e { 
+  cursor: e-resize; 
+  width: 7px; 
+  right: -5px; 
+  top: 0; 
+  height: 100%; 
+}
+.ui-resizable-w { 
+  cursor: w-resize; 
+  width: 7px; 
+  left: -5px; 
+  top: 0; 
+  height: 100%; 
+}
+.ui-resizable-se { 
+  cursor: se-resize; 
+  width: 12px; 
+  height: 12px; 
+  right: 1px; 
+  bottom: 1px; 
+}
+.ui-resizable-sw { 
+  cursor: sw-resize; 
+  width: 9px; 
+  height: 9px; 
+  left: -5px; 
+  bottom: -5px; 
+}
+.ui-resizable-nw { 
+  cursor: nw-resize; 
+  width: 9px; 
+  height: 9px; 
+  left: -5px; 
+  top: -5px; 
+}
+.ui-resizable-ne { 
+  cursor: ne-resize; 
+  width: 9px; 
+  height: 9px; 
+  right: -5px; 
+  top: -5px;
+}
+
+/*
+ * jQuery UI Selectable 1.10.0
+ *
+ * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://jqueryui.com/selectable/
+ */
+.ui-selectable-helper { 
+  position: absolute; 
+  z-index: 100; 
+  border:1px dotted black; 
+}
+
+/*
+ * jQuery UI CSS Framework 1.10.0
+ *
+ * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * 
+ *
+ * To view and modify this theme, visit http://jqueryui.com/themeroller/
+ */
 
 /* Component containers
 ----------------------------------*/
@@ -125,10 +272,9 @@ border:none;
   background-position: 0 -15px;
   color: #333;
   text-decoration: none;
-
-
  }
-.ui-state-hover a, .ui-state-hover a:hover, .ui-state-hover a:link, .ui-state-hover a:visited { color: #212121/*{fcHover}*/; text-decoration: none; }
+
+.ui-state-hover a, .ui-state-hover a:hover, .ui-state-hover a:link, .ui-state-hover a:visited { color: #212121; text-decoration: none; }
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #aaaaaa;  font-weight: normal; color: #212121; }
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #212121; text-decoration: none; }
 .ui-widget :active { outline: none; }
@@ -138,10 +284,10 @@ border:none;
 
 
 .ui-state-highlight p, .ui-state-error p, .ui-state-default p{
-	font-size: 13px;
-	font-weight: normal;
-	line-height: 18px;
-	margin:7px 15px;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 18px;
+  margin:7px 15px;
 }
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight  {
 
@@ -403,56 +549,78 @@ border:none;
 .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
 .ui-icon-grip-diagonal-se { background-position: -80px -224px; }
 
+
 /* Misc visuals
 ----------------------------------*/
 
 /* Corner radius */
-.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -khtml-border-top-left-radius: 4px; border-top-left-radius: 4px; }
-.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr { -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; -khtml-border-top-right-radius: 4px; border-top-right-radius: 4px; }
-.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl { -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -khtml-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; }
-.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br { -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
+.ui-corner-all, 
+.ui-corner-top, 
+.ui-corner-left, 
+.ui-corner-tl { 
+  -moz-border-radius-topleft: 4px; 
+  -webkit-border-top-left-radius: 4px; 
+  -khtml-border-top-left-radius: 4px; 
+  border-top-left-radius: 4px; 
+}
+.ui-corner-all, 
+.ui-corner-top, 
+.ui-corner-right, 
+.ui-corner-tr { 
+  -moz-border-radius-topright: 4px; 
+  -webkit-border-top-right-radius: 4px; 
+  -khtml-border-top-right-radius: 4px; 
+  border-top-right-radius: 4px; 
+}
+.ui-corner-all, 
+.ui-corner-bottom, 
+.ui-corner-left, 
+.ui-corner-bl { 
+  -moz-border-radius-bottomleft: 4px; 
+  -webkit-border-bottom-left-radius: 4px; 
+  -khtml-border-bottom-left-radius: 4px; 
+  border-bottom-left-radius: 4px; 
+}
+.ui-corner-all, 
+.ui-corner-bottom, 
+.ui-corner-right, 
+.ui-corner-br { 
+  -moz-border-radius-bottomright: 4px; 
+  -webkit-border-bottom-right-radius: 4px; 
+  -khtml-border-bottom-right-radius: 4px; 
+  border-bottom-right-radius: 4px; 
+}
 
 
 /* Overlays */
-.ui-widget-overlay { background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }
-.ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }/*
- * jQuery UI Resizable 1.8.16
- *
- * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
- * Dual licensed under the MIT or GPL Version 2 licenses.
- * http://jquery.org/license
- *
- * http://docs.jquery.com/UI/Resizable#theming
- */
-.ui-resizable { position: relative;}
-.ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block; }
-.ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
-.ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0; }
-.ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0; }
-.ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0; height: 100%; }
-.ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }
-.ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
-.ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
-.ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
-.ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}/*
- * jQuery UI Selectable 1.8.16
- *
- * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
- * Dual licensed under the MIT or GPL Version 2 licenses.
- * http://jquery.org/license
- *
- * http://docs.jquery.com/UI/Selectable#theming
- */
-.ui-selectable-helper { position: absolute; z-index: 100; border:1px dotted black; }
+
+.ui-widget-overlay { 
+  background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; 
+  opacity: .30;
+  filter:Alpha(Opacity=30); 
+}
+
+.ui-widget-shadow { 
+  margin: -8px 0 0 -8px; 
+  padding: 8px; 
+  background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; 
+  opacity: .30;filter:Alpha(Opacity=30); 
+  -moz-border-radius: 8px; 
+  -khtml-border-radius: 8px; 
+  -webkit-border-radius: 8px; 
+  border-radius: 8px; 
+}
+
 /*
- * jQuery UI Button 1.8.16
+ * jQuery UI Button 1.10.0
  *
- * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Button#theming
  */
+
 .ui-button {
 
   cursor: pointer;
@@ -484,7 +652,6 @@ border:none;
   -o-transition: 0.1s linear background-image;
   transition: 0.1s linear background-image;
    overflow: visible;
-
 } /* the overflow property removes extra width in IE */
 
 .ui-button-primary {
@@ -502,9 +669,7 @@ border:none;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   border-color: #0064cd #0064cd #003f81;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-
 }
-
 
 
 .ui-button-success{
@@ -590,21 +755,38 @@ button.ui-button-icons-only { width: 3.7em; }
 button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra padding in Firefox */
 
 /*
- * jQuery UI Dialog 1.8.16
+ * jQuery UI Dialog 1.10.0
  *
- * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Dialog#theming
  */
-.ui-dialog { position: absolute; top: 0; left: 0; padding: .2em; width: 300px; outline: 0; }
+.ui-dialog { 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  padding: .2em; 
+  width: 300px; 
+  outline: 0; 
+  background-clip: padding-box;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 6px 6px 6px 6px;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  /*left: 50%;
+  margin-left: -280px;*/
+  outline: medium none;
+  position: fixed;
+  /*top: 10%;
+  width: 560px;*/
+  z-index: 1050;
+}
 .ui-dialog .ui-dialog-titlebar { /*padding: .4em 1em;*/
-
-  position: relative;
   min-height:30px;
+  position: relative;
   padding:5px 15px;
-
   border:0px 0px 0px 1px solid;
   border-color: white;
   padding: 5px 15px;
@@ -619,23 +801,22 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   -webkit-border-bottom-left-radius: 0px;
   -khtml-border-bottom-left-radius: 0px;
   border-bottom-left-radius: 0px;
-
   border-bottom:1px solid #ccc;
-
 }
 .ui-dialog .ui-dialog-title {
   float: left;
   color:#404040;
   font-weight:bold;
   padding:5px;
-
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .ui-dialog .ui-dialog-titlebar-close {
   position: absolute;
   right: .3em;
   top: 50%;
   width: 19px;
-  margin: -10px 0 0 0;
+  margin: -20px 0 0 0;
   padding: 1px;
   height: 18px;
   font-size: 20px;
@@ -646,11 +827,15 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   -khtml-opacity: 0.25;
   -moz-opacity: 0.25;
   opacity: 0.25;
-background-color: transparent;
-background-image: url(images/ui-icons_222222_256x240.png); 
-background-position: -96px -128px;
-outline: none;
-border:none;
+  background:none;
+  border-width: 0;
+  border:none;
+  box-shadow: none;
+  background-color: transparent;
+  background-image: url(images/ui-icons_222222_256x240.png); 
+  background-position: -96px -128px;
+  outline: none;
+  border:none;
 }
 
 .ui-dialog .ui-dialog-titlebar-close span { 
@@ -662,7 +847,8 @@ border:none;
 .ui-dialog .ui-dialog-titlebar-close:hover, .ui-dialog .ui-dialog-titlebar-close:focus { padding: 1px;   filter: alpha(opacity=90);
   -khtml-opacity: 0.90;
   -moz-opacity: 0.90;
-  opacity: 0.90;   }
+  opacity: 0.90;   
+}
 
 .ui-dialog .ui-dialog-content { position: relative; border: 0; padding: .5em 1em; background: none; zoom: 1; }
 
@@ -705,6 +891,7 @@ border:none;
   border-color: #0064cd #0064cd #003f81;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
+
 /*
  * jQuery UI Datepicker 1.9.0
  *
@@ -848,6 +1035,7 @@ border:none;
     -khtml-border-radius: 4px;
     border-radius: 4px;
 }
+
 
 /***Dialog fixes**/
 
