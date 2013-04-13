@@ -31,7 +31,7 @@
 <#noescape>${head}</#noescape>
 </head>
 
-<body class="render-location-qrcode">
+<body class="main render-location-qrcode">
 <#include "include/top.ftl"/>
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 <div class="navbar navbar-fixed-top">

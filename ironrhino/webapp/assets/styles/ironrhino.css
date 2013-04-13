@@ -7264,11 +7264,11 @@ button.close {
   height: auto;
 }
 /*override bootstrap start*/
-body {
+body.main {
 	padding-top: 60px;
 	padding-bottom: 10px;
 }
-body.simple {
+body {
 	padding-top: 0;
 	padding-bottom: 0;
 }
