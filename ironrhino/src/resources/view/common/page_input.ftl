@@ -121,28 +121,39 @@ $(function() {
 </script>
 </head>
 <body>
-<@s.form id="form" action="${getUrl(actionBaseUrl+'/draft')}" method="post" cssClass="ajax" cssStyle="padding-top:13px;">
-	<@s.hidden id="page_id" name="page.id" />
+<@s.form id="form" action="${getUrl(actionBaseUrl+'/draft')}" method="post" cssClass="ajax form-horizontal" cssStyle="padding-top:13px;">
 	<#if Parameters.brief??>
-		<@s.hidden name="page.pagepath"/>
-		<@s.hidden name="page.displayOrder"/>
-		<@s.hidden name="page.tagsAsString"/>
-	<#else>
-		<@s.textfield id="page_path" label="%{getText('path')}" name="page.pagepath" cssClass="required" size="50" cssStyle="width:400px;"/>
-		<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" type="number" cssClass="integer"/>
-		<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tags" dynamicAttributes={"data-source":"${getUrl(actionBaseUrl+'/suggest')}"} cssStyle="width:400px;"/>
-	</#if>
+	<@s.hidden name="page.pagepath"/>
+	<@s.hidden name="page.displayOrder"/>
+	<@s.hidden name="page.tagsAsString"/>
+	<@s.hidden name="page.head"/>
 	<@s.textfield label="%{getText('title')}" name="page.title" size="50" cssStyle="width:400px;"/>
-	<@s.textarea id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cssStyle="width:800px;height:200px;"/>
-	<#if Parameters.brief??>
-		<@s.hidden name="page.head"/>
+	<@s.textarea theme="simple" id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cssStyle="width:800px;height:320px;"/>
 	<#else>
-		<@s.textarea id="page_head" name="page.head" cssStyle="display:none;width:800px;height:100px;"/>
-		<div class="control-group">
-			<button type="button" class="btn" id="display_page_head">${action.getText('edit')}${action.getText('head')}</button>
-		</div>
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#_page_base" data-toggle="tab">${action.getText('base')}</a></li>
+		<li><a href="#_page_content" data-toggle="tab">${action.getText('content')}</a></li>
+		<li><a href="#_page_head" data-toggle="tab">${action.getText('head')}</a></li>
+	</ul>
+	<div class="tab-content">
+	<div id="_page_base" class="tab-pane active">
+	<@s.hidden id="page_id" name="page.id" />
+	<@s.textfield id="page_path" label="%{getText('path')}" name="page.pagepath" cssClass="required" size="50" cssStyle="width:400px;"/>
+	<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" type="number" cssClass="integer"/>
+	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tags" dynamicAttributes={"data-source":"${getUrl(actionBaseUrl+'/suggest')}"} cssStyle="width:400px;"/>
+	<@s.textfield label="%{getText('title')}" name="page.title" size="50" cssStyle="width:400px;"/>
+	</div>
+	<div id="_page_content" class="tab-pane">
+	<@s.textarea theme="simple" id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cssStyle="width:800px;height:260px;"/>
+	</div>
+	<div id="_page_head" class="tab-pane">
+	<@s.textarea theme="simple" id="page_head" name="page.head" cssStyle="width:800px;height:300px;"/>
+	</div>
+	</div>
 	</#if>
-	<div class="control-group">
+	<div class="form-actions">
+	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
+	
 	<@s.submit id="draft" value="%{getText('draft')}" theme="simple"/>
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
 	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>
@@ -153,15 +164,13 @@ $(function() {
 	</#if>
 	<@s.submit id="drop" value="%{getText('drop')}" theme="simple"/>
 	</span>
-	</div>
-	<div class="control-group">
-	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
 	<#if page.id??>
 	<a class="btn" id="view" href="${getUrl(cmsPath+page.pagepath)}" target="_blank">${action.getText('view')}</a>
 	<#else>
 	<a class="btn" id="view" target="_blank">${action.getText('view')}</a>
 	</#if>
 	</div>
+	
 </@s.form>
 </body>
 </html></#escape>
