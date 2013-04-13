@@ -127,8 +127,8 @@ $(function() {
 	<@s.hidden name="page.displayOrder"/>
 	<@s.hidden name="page.tagsAsString"/>
 	<@s.hidden name="page.head"/>
-	<@s.textfield label="%{getText('title')}" name="page.title" size="50" cssStyle="width:400px;"/>
-	<@s.textarea theme="simple" id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cssStyle="width:800px;height:320px;"/>
+	<@s.textfield label="%{getText('title')}" name="page.title" cssStyle="width:600px;"/>
+	<@s.textarea theme="simple" id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cssStyle="width:600px;height:320px;"/>
 	<#else>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#_page_base" data-toggle="tab">${action.getText('base')}</a></li>
@@ -138,10 +138,10 @@ $(function() {
 	<div class="tab-content">
 	<div id="_page_base" class="tab-pane active">
 	<@s.hidden id="page_id" name="page.id" />
-	<@s.textfield id="page_path" label="%{getText('path')}" name="page.pagepath" cssClass="required" size="50" cssStyle="width:400px;"/>
+	<@s.textfield id="page_path" label="%{getText('path')}" name="page.pagepath" cssClass="required" cssStyle="width:600px;"/>
 	<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" type="number" cssClass="integer"/>
-	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString" size="50" cssClass="tags" dynamicAttributes={"data-source":"${getUrl(actionBaseUrl+'/suggest')}"} cssStyle="width:400px;"/>
-	<@s.textfield label="%{getText('title')}" name="page.title" size="50" cssStyle="width:400px;"/>
+	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString"  cssClass="tags" dynamicAttributes={"data-source":"${getUrl(actionBaseUrl+'/suggest')}"} cssStyle="width:600px;"/>
+	<@s.textfield label="%{getText('title')}" name="page.title" cssStyle="width:600px;"/>
 	</div>
 	<div id="_page_content" class="tab-pane">
 	<@s.textarea theme="simple" id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cssStyle="width:800px;height:260px;"/>
