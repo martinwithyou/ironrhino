@@ -34920,7 +34920,29 @@ Initialization.upload = function() {
 					Message.showMessage('no.selection');
 				else
 					deleteFiles()
-			});
+			}).on('keyup', '#files input.filter', function(event) {
+		var tbody = $('tbody', $(event.target).closest('table'));
+		var keyword = this.value.toLowerCase();
+		if (event.keyCode == 8) {
+			if (!keyword)
+				$('tr:hidden', tbody).show();
+			else
+				$('tr:hidden', tbody).each(function(i, v) {
+							var tr = $(v);
+							var filename = $('td:eq(1)', tr).text()
+									.toLowerCase();
+							if (filename.indexOf(keyword) >= 0)
+								tr.show();
+						});
+		} else {
+			$('tr:visible', tbody).each(function(i, v) {
+						var tr = $(v);
+						var filename = $('td:eq(1)', tr).text().toLowerCase();
+						if (filename.indexOf(keyword) < 0)
+							tr.hide();
+					});
+		}
+	});;
 }
 Observation.upload = function(container) {
 	var upload_form = $('#upload_form', container);

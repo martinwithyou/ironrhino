@@ -11,7 +11,7 @@
 		<thead>
 		<tr style="font-weight:bold;height:43px;">
 			<td style="width:30px" class="radio;"></td>
-			<td style="width:200px;">${action.getText('name')}</td>
+			<td style="width:200px;">${action.getText('name')}<input type="search" class="filter input-small pull-right"/></td>
 			<td class="center">${action.getText('preview')}</td>
 		</tr>
 		</thead>

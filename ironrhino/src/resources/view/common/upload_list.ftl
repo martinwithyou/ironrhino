@@ -19,7 +19,7 @@
 		<thead>
 		<tr style="font-weight:bold;height:43px;">
 			<td style="width:30px" class="checkbox"><input type="checkbox" class="checkbox custom"/></td>
-			<td style="width:300px;">${action.getText('name')}</td>
+			<td style="width:300px;">${action.getText('name')}<input type="search" class="filter input-small pull-right"/></td>
 			<td style="width:150px" class="center;">${action.getText('preview')}</td>
 			<td >${action.getText('path')}</td>
 		</tr>
