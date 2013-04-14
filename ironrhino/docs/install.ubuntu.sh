@@ -186,6 +186,7 @@ cd ..
 cd \$app && svn up
 ant -Dserver.home=/home/$USER/tomcat8080 -Dwebapp.deploy.dir=/home/$USER/tomcat8080/webapps/ROOT deploy
 LANGUAGE=\$OLDLANGUAGE
+sleep 5
 ant -Dserver.home=/home/$USER/tomcat8081 -Dserver.shutdown.port=8006 -Dserver.startup.port=8081 shutdown
 rm -rf /home/$USER/tomcat8081/webapps
 mkdir -p /home/$USER/tomcat8081/webapps
