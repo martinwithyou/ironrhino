@@ -1,6 +1,6 @@
 /* changes
 remove .ui-accordion .ui-menu .ui-autocomplete .ui-spinner .ui-slider .ui-tab .ui-tooltip .ui-progressbar .ui-toolbar bootstrap wijmo
-.ui-dialog remove overflow:hidden;
+.ui-dialog remove overflow:hidden position: fixed;
 .ui-dialog .ui-dialog-content remove overflow:auto;
 .ui-dialog-title .ui-dialog-title remove margin-top margin-bottom;
 .ui-dialog .ui-dialog-titlebar add min-height:30px;
@@ -10,7 +10,7 @@ background-image: url(images/ui-icons_222222_256x240.png);
 background-position: -96px -128px;
 outline: none;
 border:none;
- }
+ } and change margin: -20px to margin: -10px
 */
 /*!
  * jQuery UI Bootstrap (0.5)
@@ -778,7 +778,6 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   /*left: 50%;
   margin-left: -280px;*/
   outline: medium none;
-  position: fixed;
   /*top: 10%;
   width: 560px;*/
   z-index: 1050;
@@ -816,7 +815,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   right: .3em;
   top: 50%;
   width: 19px;
-  margin: -20px 0 0 0;
+  margin: -10px 0 0 0;
   padding: 1px;
   height: 18px;
   font-size: 20px;

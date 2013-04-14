@@ -32803,7 +32803,7 @@ var Dialog = {
 			var viewportWidth = $(window).width() - 10;
 			var viewportHeight = $(window).height() - 10;
 			dialog.outerWidth(viewportWidth);
-			if ($(d).dialog('option', 'minHeight') < viewportHeight)
+			if (dialog.outerHeight() < viewportHeight)
 				dialog.outerHeight(viewportHeight);
 			d.dialog('option', 'position', 'top');
 		}
