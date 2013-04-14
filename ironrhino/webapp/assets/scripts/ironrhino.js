@@ -32802,9 +32802,9 @@ var Dialog = {
 					'orginal-height', dialog.height() + 0.2);
 			var viewportWidth = $(window).width() - 10;
 			var viewportHeight = $(window).height() - 10;
-			dialog.width(viewportWidth);
+			dialog.outerWidth(viewportWidth);
 			if ($(d).dialog('option', 'minHeight') < viewportHeight)
-				dialog.height(viewportHeight);
+				dialog.outerHeight(viewportHeight);
 			d.dialog('option', 'position', 'top');
 		}
 	}
