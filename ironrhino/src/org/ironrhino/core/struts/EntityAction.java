@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.SearchService.Mapper;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
+import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.service.BaseManager;
@@ -92,6 +94,8 @@ public class EntityAction extends BaseAction {
 	}
 
 	public boolean isSearchable() {
+		if (getEntityClass().getAnnotation(Searchable.class) != null)
+			return true;
 		AutoConfig ac = getAutoConfig();
 		boolean searchable = (ac != null) && ac.searchable();
 		if (searchable)
@@ -200,6 +204,31 @@ public class EntityAction extends BaseAction {
 		}
 		AutoConfig ac = getAutoConfig();
 		boolean searchable = isSearchable();
+		if (searchable
+				&& StringUtils.isNumeric(keyword)
+				|| StringUtils.isAlphanumeric(keyword)
+				&& (keyword.length() == 32 || keyword.length() >= 22
+						&& keyword.length() <= 24)) // keyword is id
+			try {
+				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
+						.newInstance());
+				bw.setPropertyValue("id", keyword);
+				Serializable idvalue = (Serializable) bw.getPropertyValue("id");
+				if (idvalue != null) {
+					Persistable p = getEntityManager(getEntityClass()).get(
+							idvalue);
+					if (p != null) {
+						resultPage = new ResultPage();
+						resultPage.setPageNo(1);
+						resultPage.setTotalResults(1);
+						resultPage.setResult(Collections.singletonList(p));
+						return LIST;
+					}
+				}
+			} catch (Exception e) {
+
+			}
+
 		if (!searchable || StringUtils.isBlank(keyword)
 				|| (searchable && elasticSearchService == null)) {
 			DetachedCriteria dc = entityManager.detachedCriteria();
