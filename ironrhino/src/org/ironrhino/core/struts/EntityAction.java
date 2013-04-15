@@ -765,7 +765,10 @@ public class EntityAction extends BaseAction {
 					.getPropertyDescriptors(clazz);
 			for (PropertyDescriptor pd : pds) {
 				String propertyName = pd.getName();
-				if (pd.getWriteMethod() == null || pd.getReadMethod() == null)
+				if (pd.getReadMethod() == null)
+					continue;
+				if (pd.getWriteMethod() == null
+						&& pd.getReadMethod().getAnnotation(UiConfig.class) == null)
 					continue;
 				SearchableProperty searchableProperty = pd.getReadMethod()
 						.getAnnotation(SearchableProperty.class);
@@ -952,6 +955,7 @@ public class EntityAction extends BaseAction {
 		private int displayOrder = Integer.MAX_VALUE;
 		private String alias;
 		private boolean hiddenInList;
+		private boolean hiddenInInput;
 		private String template;
 		private String width;
 		private Map<String, String> dynamicAttributes = new HashMap<String, String>(
@@ -984,6 +988,7 @@ public class EntityAction extends BaseAction {
 			if (StringUtils.isNotBlank(config.alias()))
 				this.alias = config.alias();
 			this.hiddenInList = config.hiddenInList();
+			this.hiddenInInput = config.hiddenInInput();
 			this.template = config.template();
 			this.width = config.width();
 			if (StringUtils.isNotBlank(config.dynamicAttributes()))
@@ -1015,6 +1020,14 @@ public class EntityAction extends BaseAction {
 
 		public void setHiddenInList(boolean hiddenInList) {
 			this.hiddenInList = hiddenInList;
+		}
+
+		public boolean isHiddenInInput() {
+			return hiddenInInput;
+		}
+
+		public void setHiddenInInput(boolean hiddenInInput) {
+			this.hiddenInInput = hiddenInInput;
 		}
 
 		public String getPickUrl() {

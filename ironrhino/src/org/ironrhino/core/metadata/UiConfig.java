@@ -45,6 +45,8 @@ public @interface UiConfig {
 	boolean hidden() default false;
 
 	boolean hiddenInList() default false;
+	
+	boolean hiddenInInput() default false;
 
 	boolean searchable() default false;
 

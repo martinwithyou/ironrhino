@@ -10,6 +10,7 @@
 	</#if>
 	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
+		<#if !config.hiddenInInput>
 		<#assign label=key>
 		<#if config.alias??>
 			<#assign label=config.alias>
@@ -82,6 +83,7 @@
 					<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" type="${(config.inputType!)}" cssClass="${config.cssClass}" size="${(config.size>0)?string(config.size,20)}" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes />
 				</#if>
 			</#if>
+		</#if>
 		</#if>
 	</#list>
 	<@s.submit value="%{getText('save')}" />
