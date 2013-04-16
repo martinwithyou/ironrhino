@@ -12,6 +12,8 @@
 			access="ROLE_ADMINISTRATOR" />
 		<security:intercept-url pattern="/remoting/**"
 			access="ROLE_BUILTIN_ANONYMOUS" />
+		<security:intercept-url pattern="/locale"
+			access="ROLE_BUILTIN_ANONYMOUS" />
 		<security:intercept-url pattern="/setup"
 			access="ROLE_BUILTIN_ANONYMOUS" />
 		<security:intercept-url pattern="/login"
