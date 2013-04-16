@@ -59,6 +59,16 @@ public class UploadAction extends BaseAction {
 	@Inject
 	private transient TemplateProvider templateProvider;
 
+	private String suffix;
+
+	public String getSuffix() {
+		return suffix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+
 	public Map<String, Boolean> getFiles() {
 		return files;
 	}
@@ -250,46 +260,35 @@ public class UploadAction extends BaseAction {
 		return list();
 	}
 
-	private String suffix;
-
-	private Map<String, String> filesMap;
-
-	public String getSuffix() {
-		return suffix;
-	}
-
-	public void setSuffix(String suffix) {
-		this.suffix = suffix;
-	}
-
-	public Map<String, String> getFilesMap() {
-		return filesMap;
-	}
-
-	@JsonConfig(root = "filesMap")
+	@JsonConfig(root = "files")
 	public String files() {
 		String path = Files.simplifyPath(UPLOAD_DIR + "/" + folder);
-		List<String> list = fileStorage.listFiles(path);
-		filesMap = new LinkedHashMap<String, String>();
+		Map<String, Boolean> map = fileStorage.listFilesAndDirectory(path);
+		files = new LinkedHashMap<String, Boolean>();
 		String[] suffixes = null;
 		if (StringUtils.isNotBlank(suffix))
 			suffixes = suffix.toLowerCase().split("\\s*,\\s*");
-		for (String s : list) {
-			if (suffixes != null) {
-				boolean matches = false;
-				for (String sf : suffixes)
-					if (s.toLowerCase().endsWith("." + sf))
-						matches = true;
-				if (!matches)
-					continue;
+		for (Map.Entry<String, Boolean> entry : map.entrySet()) {
+			String s = entry.getKey();
+			if (!entry.getValue()) {
+				files.put(Files.simplifyPath(folder + "/" + s) + "/", false);
+			} else {
+				if (suffixes != null) {
+					boolean matches = false;
+					for (String sf : suffixes)
+						if (s.toLowerCase().endsWith("." + sf))
+							matches = true;
+					if (!matches)
+						continue;
+				}
+				files.put(
+						new StringBuilder(templateProvider.getAssetsBase())
+								.append(settingControl
+										.getStringValue(
+												Constants.SETTING_KEY_FILE_STORAGE_PATH,
+												"/assets")).append(path)
+								.append("/").append(s).toString(), true);
 			}
-			filesMap.put(
-					s,
-					new StringBuilder(templateProvider.getAssetsBase())
-							.append(settingControl.getStringValue(
-									Constants.SETTING_KEY_FILE_STORAGE_PATH,
-									"/assets")).append(path).append("/")
-							.append(s).toString());
 		}
 		return JSON;
 	}

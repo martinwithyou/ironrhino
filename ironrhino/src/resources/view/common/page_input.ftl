@@ -89,7 +89,7 @@ $(function() {
 </head>
 <body>
 <@s.form id="form" action="${getUrl(actionBaseUrl+'/draft')}" method="post" cssClass="ajax form-horizontal" cssStyle="padding-top:13px;">
-	<@s.hidden id="page_id" name="page.id" />
+	<@s.hidden name="page.id" />
 	<#if Parameters.brief??>
 	<@s.hidden name="page.pagepath"/>
 	<@s.hidden name="page.displayOrder"/>

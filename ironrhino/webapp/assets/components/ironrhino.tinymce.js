@@ -1,15 +1,29 @@
 $(function() {
 	$(document).on('click', '.mce-i-image', function() {
-				if ($('#page_id').val()) {
-					var interval = setInterval(function() {
-								if (appendIcon())
-									clearInterval(interval);
-							}, 200);
-				}
-			}).on('click', '.mce-i-browse', function() {
+				var interval = setInterval(function() {
+							if (appendIcon())
+								clearInterval(interval);
+						}, 200);
+			}).on('click', '.mce-combobox button', function() {
 		if (!$('#mce-browse-modal').length) {
-			var modal = $('<div id="mce-browse-modal" class="modal" style="z-index:65537;height:500px;"><div style="padding: 5px 5px 0 0;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div><div  id="mce-browse-modal-body" class="modal-body" style="height:400px;"></div><div  id="mce-browse-modal-footer" class="modal-footer"></div></div>')
+			var modal = $('<div id="mce-browse-modal" class="modal" style="z-index:65537;height:500px;"><input id="mce-browse-folder" type="hidden"/><div style="padding: 5px 5px 0 0;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div><div  id="mce-browse-modal-body" class="modal-body" style="height:400px;"></div><div  id="mce-browse-modal-footer" class="modal-footer"></div></div>')
 					.appendTo(document.body);
+			var folder = '/page/';
+			if ($('input[name="page.id"]').val())
+				folder += $('input[name="page.id"]').val() + '/';
+			$('#mce-browse-folder').val(folder);
+			$('#mce-browse-modal-body').bind('dragover', function(e) {
+						$(this).css('border', '2px dashed #333');
+						return false;
+					}).bind('dragleave', function(e) {
+						$(this).css('border', '0');
+						return false;
+					}).get(0).ondrop = function(e) {
+				e.preventDefault();
+				$(this).css('border', '0');
+				upload(e.dataTransfer.files);
+				return true;
+			};
 			$('button.close', modal).click(function() {
 						modal.fadeIn().remove();
 					});
@@ -33,7 +47,7 @@ $(function() {
 			e.stopPropagation();
 		if (confirm(MessageBundle.get('confirm.delete'))) {
 			$.post(CONTEXT_PATH + '/common/upload/delete', {
-						folder : '/page/' + $('#page_id').val(),
+						folder : $('#mce-browse-folder').val(),
 						id : id
 					}, browse);
 		}
@@ -53,32 +67,38 @@ function appendIcon() {
 }
 
 function browse() {
-	var pageid = $('#page_id').val();
+	var folder = $('#mce-browse-folder').val() || '/';
 	var panel = $('#mce-browse-modal-body');
-	panel.bind('dragover', function(e) {
-				$(this).css('border', '2px dashed #333');
-				return false;
-			}).bind('dragleave', function(e) {
-				$(this).css('border', '0');
-				return false;
-			}).get(0).ondrop = function(e) {
-		e.preventDefault();
-		$(this).css('border', '0');
-		upload(e.dataTransfer.files);
-		return true;
-	};
-	$.getJSON(CONTEXT_PATH + '/common/upload/files?folder=/page/' + pageid
+	$.getJSON(CONTEXT_PATH + '/common/upload/files?folder=' + folder
 					+ '&suffix=jpg,gif,png,bmp', function(data) {
 				var html = '';
 				$.each(data, function(key, val) {
-					html += '<img src="'
-							+ val
-							+ '" alt="'
-							+ key
-							+ '" title="'
-							+ key
-							+ '" style="margin:5px;width:92px;height:92px;cursor:pointer;"/>';
+
+					if (val) {
+						var name = key.substring(key.lastIndexOf('/') + 1);
+						html += '<img src="'
+								+ key
+								+ '" alt="'
+								+ name
+								+ '" title="'
+								+ name
+								+ '" style="margin:5px;width:92px;height:92px;cursor:pointer;"/>';
+					} else {
+						var name = key.substring(0, key.length - 1);
+						var name = name.substring(name.lastIndexOf('/') + 1);
+						html += '<a href="#" style="display:block;" data-folder="'
+								+ key + '">' + name + '</a>';
+					}
 				});
+				if (folder != '/') {
+					var tmp = folder.substring(1);
+					tmp = tmp.substring(0, tmp.length - 1);
+					var arr = tmp.split('/');
+					arr.pop();
+					html += '<a href="#" style="display:block;" data-folder="/'
+							+ (arr.length != 0 ? arr.join('/') + '/' : '')
+							+ '"> .. </a>';
+				}
 				panel.html(html);
 				$('img', panel).attr('draggable', true).each(function() {
 							var t = $(this);
@@ -91,6 +111,11 @@ function browse() {
 							$('.mce-combobox input.mce-textbox').val(this.src);
 							$('input.mce-textbox:eq(1)').focus();
 						});
+				$('a', panel).click(function() {
+							$('#mce-browse-folder').val($(this).data('folder'));
+							browse();
+							return false;
+						});
 				$('#mce-browse-modal-footer')
 						.html('<input id="files" type="file" multiple="true"/>')
 						.find('input[type="file"]').change(function() {
@@ -101,9 +126,9 @@ function browse() {
 }
 
 function upload(files) {
+	var folder = $('#mce-browse-folder').val() || '/';
 	$.ajaxupload(files, {
-				url : CONTEXT_PATH + '/common/upload?folder=/page/'
-						+ $('#page_id').val(),
+				url : CONTEXT_PATH + '/common/upload?folder=' + folder,
 				success : browse
 			});
 }
