@@ -3,52 +3,22 @@
 <head>
 <title><#if page.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('page')}</title>
 <meta name="cms_path" content="${cmsPath}" />
-<#if Parameters.decorator??>
-<style>
-body {
-	background:#FFFFFF;
-}
-#content {
-	padding: 10px;
-	margin-bottom: 10px;
-	background:#fff;
-	border-radius: 0;
-	-webkit-border-radius:  0;
-	-moz-border-radius:  0 ;
-	box-shadow: none;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-}
-</#if>
-</style>
-<script type="text/javascript" src="<@url value="/assets/components/tiny_mce/jquery.tinymce.js"/>"></script>
+<script type="text/javascript" src="<@url value="/assets/components/tinymce/tinymce.min.js"/>"></script>
+<script type="text/javascript" src="<@url value="/assets/components/tinymce/ironrhino.tinymce.js"/>"></script>
 <script type="text/javascript">
 $(function() {
-		window.pageid = function(){		//for tinymce browseimage.js
-			return $('#page_id').val();
-		}
-		$('#display_page_head').click(function(){$('#page_head').toggle()});
-
 		var cmsPath= $('meta[name="cms_path"]').attr('content') || '';
-		var options = {
-			language : MessageBundle.lang(),
-			script_url : '<@url value="/assets/components/tiny_mce/tiny_mce.js"/>',
-			content_css : '<#if Parameters.content_css?has_content>${Parameters.content_css}<#else><@url value="/assets/styles/ironrhino-min.css"/></#if>',
-			theme : "advanced",
-			plugins : "safari,pagebreak,layer,table,advimage,advlink,emotions,inlinepopups,preview,media,searchreplace,print,contextmenu,paste,fullscreen,noneditable,visualchars,xhtmlxtras,autosave",
-			theme_advanced_buttons1 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect,|,fullscreen,preview,code",
-			theme_advanced_buttons2 : "blockquote,|,undo,redo,|,link,unlink,anchor,image,media,cleanup,|,forecolor,backcolor,tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,|,print",
-			theme_advanced_buttons3 : "",
-        	theme_advanced_buttons4 : "",
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_toolbar_align : "left",
-			theme_advanced_statusbar_location : "bottom",
-			theme_advanced_resizing : true,
-			remove_script_host : false,
-        	convert_urls : false,
-			mode : "textareas"
-		};
-		$('#page_content').tinymce(options);
+		tinymce.init({
+		    selector: "#page_content",
+		    //language : MessageBundle.lang(),
+		    content_css : '<#if Parameters.content_css?has_content>${Parameters.content_css}<#else><@url value="/assets/styles/ironrhino-min.css"/></#if>',
+		    plugins: [
+		        "advlist autolink lists link image charmap print preview anchor",
+		        "searchreplace visualblocks code fullscreen",
+		        "insertdatetime media table contextmenu paste"
+		    ],
+		    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+		});
 		setTimeout(function(){
 		var ed = tinymce.EditorManager.get('page_content');
 		$('#draft').click(function(){
@@ -62,9 +32,6 @@ $(function() {
 			$('#form').attr('action',action.substring(0,action.lastIndexOf('/')+1)+'save');
 			ed.save();
 		});
-		ed.onKeyUp.add(function(ed, e) {
-          ed.isNotDirty = 0;
-      	});
 		var form = $('#form');
 		form[0].onsuccess = function(){
 		if($('#form').attr('action').indexOf('save')>0 && window.parent!=window){
