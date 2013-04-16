@@ -187,7 +187,7 @@
 <div class="status span2">
 <span>
 <#if resultPage??>
-${resultPage.totalResults}${action.getText('record')}
+${resultPage.totalResults} ${action.getText('record')}
 <#else>
 ${list?size}${action.getText('record')}
 </#if>
