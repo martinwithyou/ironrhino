@@ -2,7 +2,6 @@ package org.ironrhino.common.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,11 +13,8 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.ironrhino.common.Constants;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
-import org.ironrhino.common.support.SettingControl;
-import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.LabelValue;
@@ -51,7 +47,7 @@ public class PageAction extends BaseAction {
 	@Autowired(required = false)
 	private transient ElasticSearchService<Page> elasticSearchService;
 
-	@Autowired
+	@Inject
 	private transient TemplateProvider templateProvider;
 
 	@com.opensymphony.xwork2.inject.Inject(value = "ironrhino.cmsPath", required = false)
@@ -287,61 +283,6 @@ public class PageAction extends BaseAction {
 			suggestions.add(lv);
 		}
 		return JSON;
-	}
-
-	private Map<String, String> files;
-
-	@Inject
-	private transient FileStorage fileStorage;
-
-	@Inject
-	private transient SettingControl settingControl;
-
-	private String suffix;
-
-	public String getSuffix() {
-		return suffix;
-	}
-
-	public void setSuffix(String suffix) {
-		this.suffix = suffix;
-	}
-
-	public Map<String, String> getFiles() {
-		return files;
-	}
-
-	@JsonConfig(root = "files")
-	public String files() {
-		String path = getHomePath(getUid());
-		List<String> list = fileStorage.listFiles(path);
-
-		files = new LinkedHashMap<String, String>();
-		String[] suffixes = null;
-		if (StringUtils.isNotBlank(suffix))
-			suffixes = suffix.toLowerCase().split("\\s*,\\s*");
-		for (String s : list) {
-			if (suffixes != null) {
-				boolean matches = false;
-				for (String sf : suffixes)
-					if (s.toLowerCase().endsWith("." + sf))
-						matches = true;
-				if (!matches)
-					continue;
-			}
-			files.put(
-					s,
-					new StringBuilder(templateProvider.getAssetsBase())
-							.append(settingControl.getStringValue(
-									Constants.SETTING_KEY_FILE_STORAGE_PATH,
-									"/assets")).append(path).append("/")
-							.append(s).toString());
-		}
-		return JSON;
-	}
-
-	public static String getHomePath(String id) {
-		return UploadAction.UPLOAD_DIR + "/page/" + id;
 	}
 
 }

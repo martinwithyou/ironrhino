@@ -67,8 +67,8 @@ function browse() {
 		upload(e.dataTransfer.files);
 		return true;
 	};
-	$.getJSON(CONTEXT_PATH + '/common/page/files/' + pageid
-					+ '?suffix=jpg,gif,png,bmp', function(data) {
+	$.getJSON(CONTEXT_PATH + '/common/upload/files?folder=/page/' + pageid
+					+ '&suffix=jpg,gif,png,bmp', function(data) {
 				var html = '';
 				$.each(data, function(key, val) {
 					html += '<img src="'

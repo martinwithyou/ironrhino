@@ -21,7 +21,9 @@ import org.ironrhino.common.Constants;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.struts.TemplateProvider;
 import org.ironrhino.core.util.ErrorMessage;
 
 import com.google.common.io.Files;
@@ -53,6 +55,9 @@ public class UploadAction extends BaseAction {
 
 	@Inject
 	private transient SettingControl settingControl;
+
+	@Inject
+	private transient TemplateProvider templateProvider;
 
 	public Map<String, Boolean> getFiles() {
 		return files;
@@ -243,6 +248,50 @@ public class UploadAction extends BaseAction {
 				Files.simplifyPath(UPLOAD_DIR + "/" + folder + "/" + newName));
 		addActionMessage(getText("operate.success"));
 		return list();
+	}
+
+	private String suffix;
+
+	private Map<String, String> filesMap;
+
+	public String getSuffix() {
+		return suffix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+
+	public Map<String, String> getFilesMap() {
+		return filesMap;
+	}
+
+	@JsonConfig(root = "filesMap")
+	public String files() {
+		String path = Files.simplifyPath(UPLOAD_DIR + "/" + folder);
+		List<String> list = fileStorage.listFiles(path);
+		filesMap = new LinkedHashMap<String, String>();
+		String[] suffixes = null;
+		if (StringUtils.isNotBlank(suffix))
+			suffixes = suffix.toLowerCase().split("\\s*,\\s*");
+		for (String s : list) {
+			if (suffixes != null) {
+				boolean matches = false;
+				for (String sf : suffixes)
+					if (s.toLowerCase().endsWith("." + sf))
+						matches = true;
+				if (!matches)
+					continue;
+			}
+			filesMap.put(
+					s,
+					new StringBuilder(templateProvider.getAssetsBase())
+							.append(settingControl.getStringValue(
+									Constants.SETTING_KEY_FILE_STORAGE_PATH,
+									"/assets")).append(path).append("/")
+							.append(s).toString());
+		}
+		return JSON;
 	}
 
 	private String createPath(String filename, boolean autorename) {
