@@ -78,7 +78,7 @@
 							});
 				} else {
 					var text = val(options.name);
-					if (text && text != '...') {
+					if (text && text.indexOf('...') < 0) {
 						$('<a class="remove" href="#">&times;</a>')
 								.appendTo(nametarget).click(function(event) {
 									current = $(event.target)
