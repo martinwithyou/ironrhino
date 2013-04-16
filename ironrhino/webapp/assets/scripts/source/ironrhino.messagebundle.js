@@ -68,10 +68,15 @@ MessageBundle = {
 		return msg;
 	},
 	lang : function() {
-		var lang = (navigator.language || navigator.browserLanguage || '')
-				.toLowerCase();
-		if (!MessageBundle[lang])
-			lang = 'en';
+		var lang = ($.cookie('locale') || navigator.language
+				|| navigator.browserLanguage || '').toLowerCase();
+		if (!MessageBundle[lang]) {
+			var i = lang.indexOf('_');
+			if (i > 0)
+				lang = lang.substring(0, i);
+			if (!MessageBundle[lang])
+				lang = 'en';
+		}
 		return lang;
 	},
 	shortLang : function() {
