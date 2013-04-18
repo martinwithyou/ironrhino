@@ -418,7 +418,9 @@ Ajax = {
 				Ajax.fire(target, 'onsuccess', data);
 			}
 			Message.showActionError(data.actionErrors, target);
-			Message.showActionMessage(data.actionMessages, target);
+			setTimeout(function() {
+						Message.showActionMessage(data.actionMessages, target);
+					}, 100);
 
 			if (data.fieldErrors) {
 				if (target) {
