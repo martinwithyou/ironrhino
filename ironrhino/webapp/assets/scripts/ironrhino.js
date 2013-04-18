@@ -31786,6 +31786,8 @@ Message = {
 					&& (error || $(target).hasClass('view') || $(target)
 							.hasClass('keepopen')))
 				parent = $('#_window_');
+			if ($('.modal:visible').length)
+				parent = $('.modal:visible .modal-body');
 			if (!$('#message', parent).length)
 				$('<div id="message"></div>').prependTo(parent);
 			var msg = $('#message', parent);
