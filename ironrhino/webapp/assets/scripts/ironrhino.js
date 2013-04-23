@@ -36932,7 +36932,7 @@ Observation.richtable = function(container) {
 					return ele.val();
 				else
 					return ele.contents().filter(function() {
-								return this.nodeType == Node.TEXT_NODE;
+								return this.nodeType == 3;
 							}).text();
 			} else if (i == 0) {
 				return current.attr(expr.substring(i + 1));
@@ -37135,7 +37135,7 @@ Observation.treeselect = function(container) {
 					return ele.val();
 				else
 					return ele.contents().filter(function() {
-								return this.nodeType == Node.TEXT_NODE;
+								return this.nodeType == 3;
 							}).text();
 			} else if (i == 0) {
 				return current.attr(expr.substring(i + 1));
