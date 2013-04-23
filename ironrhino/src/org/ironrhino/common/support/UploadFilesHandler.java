@@ -1,5 +1,6 @@
 package org.ironrhino.common.support;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -66,13 +67,21 @@ public class UploadFilesHandler implements AccessHandler {
 				IOUtils.copy(is, os);
 				os.close();
 			} catch (Exception e) {
-				//supress ClientAbortException
+				// supress ClientAbortException
 			}
 			is.close();
+		} catch (FileNotFoundException fne) {
+			try {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+				return true;
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			try {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				return true;
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
