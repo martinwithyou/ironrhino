@@ -7887,6 +7887,12 @@ table.richtable {
 }
 .richtable input[name="keyword"]{
 	width:100px;
+	-moz-transition: all .2s linear;
+	-webkit-transition: all .2s linear;
+	transition: all .2s linear;
+}
+.richtable input[name="keyword"]:focus{
+	width:100%;
 }
 .richtable .pagination ul{
   -webkit-border-radius: 0;
