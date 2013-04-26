@@ -28,7 +28,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.internal.CriteriaImpl.OrderEntry;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.IdAssigned;
@@ -380,7 +380,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		}
 		if (objects.length == 1) {
 			Set<String> naturalIds = AnnotationUtils.getAnnotatedPropertyNames(
-					getEntityClass(), NaturalId.class);
+					getEntityClass(), CaseInsensitive.class);
 			if (naturalIds.size() != 1)
 				throw new IllegalArgumentException(
 						"@NaturalId must and only be one");
@@ -415,7 +415,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			Criteria c = sessionFactory.getCurrentSession().createCriteria(
 					getEntityClass());
 			Set<String> naturalIds = AnnotationUtils.getAnnotatedPropertyNames(
-					getEntityClass(), NaturalId.class);
+					getEntityClass(), CaseInsensitive.class);
 			if (naturalIds.size() != 1)
 				throw new IllegalArgumentException(
 						"@NaturalId must and only be one");
@@ -443,7 +443,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				+ " entity where ";
 		if (objects.length == 1) {
 			Set<String> naturalIds = AnnotationUtils.getAnnotatedPropertyNames(
-					getEntityClass(), NaturalId.class);
+					getEntityClass(), CaseInsensitive.class);
 			if (naturalIds.size() != 1)
 				throw new IllegalArgumentException(
 						"@NaturalId must and only be one");
@@ -461,7 +461,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			List<String> list = new ArrayList<String>(doubles);
 			for (int i = 0; i < doubles; i++)
 				list.add("lower(entity." + String.valueOf(objects[2 * i])
-						+ ")=lower(?+" + (i + 1) + "+)");
+						+ ")=lower(?" + (i + 1) + ")");
 			hql += StringUtils.join(list, " and ");
 		}
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
