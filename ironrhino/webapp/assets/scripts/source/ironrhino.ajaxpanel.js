@@ -43,11 +43,6 @@
 			},
 			success : function(data) {
 				ele.addClass('loaded');
-				if (typeof data != 'string') {
-					ele.empty();
-					$.tmpl($('#' + ele.data('tmpl')), data).appendTo(ele);
-					_observe(ele);
-				}
 			}
 		};
 		if (url)
