@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.security.model.UserRole;
@@ -21,15 +21,15 @@ public class Acl extends BaseEntity {
 
 	private static final long serialVersionUID = 7186455276739721437L;
 
-	@NaturalId(mutable = true)
 	@UiConfig(displayOrder = 1)
+	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Column(length = 50, nullable = false)
 	@Access(AccessType.FIELD)
 	private String role;
 
-	@NaturalId(mutable = true)
 	@UiConfig(displayOrder = 2)
+	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Column(name = "`resource`", length = 150, nullable = false)
 	@Access(AccessType.FIELD)

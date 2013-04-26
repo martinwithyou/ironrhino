@@ -19,7 +19,7 @@ import javax.persistence.OrderBy;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ForeignKey;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
@@ -87,7 +87,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		this.level = level;
 	}
 
-	@NaturalId
+	@CaseInsensitive
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
 	public String getName() {
 		return name;

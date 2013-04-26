@@ -18,7 +18,7 @@ import javax.persistence.Transient;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
@@ -41,9 +41,9 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	private static final long serialVersionUID = 4688382703803043164L;
 
-	@NaturalId(mutable = true, caseInsensitive = true)
 	@SearchableProperty(index = Index.NOT_ANALYZED)
 	@Column(unique = true, nullable = false)
+	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Access(AccessType.FIELD)
 	private String pagepath;

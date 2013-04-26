@@ -9,10 +9,6 @@ import java.lang.annotation.Target;
 
 @Target({ METHOD, FIELD })
 @Retention(RUNTIME)
-public @interface NaturalId {
-
-	boolean mutable() default false;
-
-	boolean caseInsensitive() default false;
+public @interface CaseInsensitive {
 
 }

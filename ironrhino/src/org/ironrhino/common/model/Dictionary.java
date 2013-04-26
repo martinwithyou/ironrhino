@@ -19,7 +19,7 @@ import org.hibernate.annotations.Type;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
@@ -44,9 +44,9 @@ public class Dictionary extends BaseEntity implements Validatable {
 
 	private static final long serialVersionUID = -8352037604261222984L;
 
-	@NaturalId(caseInsensitive = true, mutable = true)
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 1)
+	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Column(unique = true, nullable = false)
 	@Access(AccessType.FIELD)

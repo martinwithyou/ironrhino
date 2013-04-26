@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.util.AnnotationUtils;
 
 public abstract class Entity<PK extends Serializable> implements
@@ -15,7 +15,7 @@ public abstract class Entity<PK extends Serializable> implements
 	@Override
 	public int hashCode() {
 		Map<String, Object> map = AnnotationUtils
-				.getAnnotatedPropertyNameAndValues(this, NaturalId.class);
+				.getAnnotatedPropertyNameAndValues(this, CaseInsensitive.class);
 		HashCodeBuilder builder = new HashCodeBuilder();
 		builder.append(this.getId());
 		for (Object value : map.values())
@@ -39,7 +39,7 @@ public abstract class Entity<PK extends Serializable> implements
 
 	private String toIdentifiedString() {
 		Map<String, Object> map = AnnotationUtils
-				.getAnnotatedPropertyNameAndValues(this, NaturalId.class);
+				.getAnnotatedPropertyNameAndValues(this, CaseInsensitive.class);
 		if (map.size() == 1)
 			return String.valueOf(map.values().iterator().next());
 		return getClass().getName() + "{id=" + getId() + ",naturalId="

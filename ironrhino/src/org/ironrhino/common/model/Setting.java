@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import org.ironrhino.common.record.RecordAware;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
@@ -30,9 +30,9 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 
 	private static final long serialVersionUID = -8352037603261222984L;
 
-	@NaturalId(caseInsensitive = true, mutable = true)
 	@UiConfig(displayOrder = 1, size = 50, width = "300px")
 	@SearchableProperty(boost = 3)
+	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Column(name = "`key`", unique = true, nullable = false)
 	@Access(AccessType.FIELD)

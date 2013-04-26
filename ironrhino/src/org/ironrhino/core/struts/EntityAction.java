@@ -24,6 +24,7 @@ import javax.persistence.JoinColumn;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -32,7 +33,7 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
@@ -460,9 +461,9 @@ public class EntityAction extends BaseAction {
 		Persistable persisted = null;
 		Map<String, Annotation> naturalIds = getNaturalIds();
 		boolean naturalIdMutable = isNaturalIdMutable();
-		boolean caseInsensitive = naturalIds.size() > 0
-				&& ((NaturalId) naturalIds.values().iterator().next())
-						.caseInsensitive();
+		boolean caseInsensitive = AnnotationUtils
+				.getAnnotatedPropertyNameAndAnnotations(getEntityClass(),
+						CaseInsensitive.class).size() > 0;
 		if (entity.isNew()) {
 			if (naturalIds.size() > 0) {
 				Serializable[] args = new Serializable[naturalIds.size() * 2];

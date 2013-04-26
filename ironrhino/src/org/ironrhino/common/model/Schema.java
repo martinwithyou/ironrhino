@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
@@ -40,10 +40,10 @@ public class Schema extends BaseEntity implements Validatable {
 
 	private static final long serialVersionUID = -8352037604269012984L;
 
-	@NaturalId(caseInsensitive = true, mutable = true)
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 1)
 	@Column(unique = true, nullable = false)
+	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Access(AccessType.FIELD)
 	private String name;

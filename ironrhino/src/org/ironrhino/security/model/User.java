@@ -17,7 +17,7 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
@@ -46,9 +46,9 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 
 	public static final String USERNAME_REGEX_FOR_SIGNUP = "^[\\w]{3,20}$";
 
-	@NaturalId(caseInsensitive = true)
 	@SearchableProperty(boost = 5, index = Index.NOT_ANALYZED)
 	@NotInCopy
+	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId
 	@Column(unique = true, nullable = false)
 	@Access(AccessType.FIELD)

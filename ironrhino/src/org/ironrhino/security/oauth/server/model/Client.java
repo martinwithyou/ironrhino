@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ForeignKey;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
@@ -35,8 +35,8 @@ public class Client extends BaseEntity implements Enableable {
 
 	public static final String OAUTH_OOB = "urn:ietf:wg:oauth:2.0:oob";
 
-	@NaturalId(caseInsensitive = true, mutable = true)
 	@UiConfig(displayOrder = 1, size = 50)
+	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Column(nullable = false)
 	private String name;
@@ -55,7 +55,7 @@ public class Client extends BaseEntity implements Enableable {
 	@UiConfig(hidden = true)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner", nullable = false)
-	@ForeignKey(name="none")
+	@ForeignKey(name = "none")
 	@Access(AccessType.FIELD)
 	private User owner;
 

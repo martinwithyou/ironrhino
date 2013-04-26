@@ -15,7 +15,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.ForeignKey;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.NaturalId;
+import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
@@ -33,8 +33,8 @@ public class Authorization extends BaseEntity {
 
 	private static final long serialVersionUID = -559379341059695550L;
 
-	@NaturalId
 	@UiConfig(displayOrder = 1)
+	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Access(AccessType.FIELD)
 	private String accessToken = CodecUtils.nextId();
@@ -42,14 +42,14 @@ public class Authorization extends BaseEntity {
 	@UiConfig(displayOrder = 2)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "client")
-	@ForeignKey(name="none")
+	@ForeignKey(name = "none")
 	@Access(AccessType.FIELD)
 	private Client client;
 
 	@UiConfig(displayOrder = 3)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "grantor")
-	@ForeignKey(name="none")
+	@ForeignKey(name = "none")
 	@Access(AccessType.FIELD)
 	private User grantor;
 
