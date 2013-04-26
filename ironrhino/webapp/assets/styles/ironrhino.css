@@ -7466,7 +7466,9 @@ input.latlng{
 	width: 300px;
 }
 input.required {
-	background: #FFF url(../images/required.png) no-repeat right;
+	background-image: url(../images/required.png);
+	background-repeat: no-repeat;
+	background-position: right;
 }
 span.checkboxgroup{
 	display: inline-block;
