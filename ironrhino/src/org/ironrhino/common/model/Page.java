@@ -42,7 +42,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	private static final long serialVersionUID = 4688382703803043164L;
 
 	@SearchableProperty(index = Index.NOT_ANALYZED)
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Access(AccessType.FIELD)

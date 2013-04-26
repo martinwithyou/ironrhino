@@ -48,7 +48,7 @@ public class Dictionary extends BaseEntity implements Validatable {
 	@UiConfig(displayOrder = 1)
 	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	@Access(AccessType.FIELD)
 	private String name;
 

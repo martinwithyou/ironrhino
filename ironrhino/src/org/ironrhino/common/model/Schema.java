@@ -42,7 +42,7 @@ public class Schema extends BaseEntity implements Validatable {
 
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 1)
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Access(AccessType.FIELD)

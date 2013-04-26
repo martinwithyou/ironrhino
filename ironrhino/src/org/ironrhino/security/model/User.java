@@ -50,7 +50,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@NotInCopy
 	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	@Access(AccessType.FIELD)
 	private String username;
 
