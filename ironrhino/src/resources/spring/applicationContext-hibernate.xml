@@ -38,10 +38,6 @@
 				<prop key="hibernate.hbm2ddl.auto">
 					${hibernate.hbm2ddl.auto:update}
 				</prop>
-				<prop key="hibernate.schema_update.unique_constraint_strategy">
-					${hibernate.schema_update.unique_constraint_strategy:skip}
-				</prop>
-
 			</props>
 		</property>
 	</bean>
