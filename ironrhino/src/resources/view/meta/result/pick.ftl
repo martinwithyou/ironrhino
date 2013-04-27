@@ -22,19 +22,21 @@
 	<#assign columnNames=uiConfigs?keys>
 </#if>
 <#assign treeable = action.getParentId??>
+<#if treeable>
+	<#assign href=requestURI>
+	<#assign index=0>
+	<#list Parameters?keys as name>
+	<#if name!='_'&&name!='parentId'&&name!='keyword'>
+	<#assign href=href+(index==0)?string('?','&')+name+'='+Parameters[name]>
+	<#assign index=index+1>
+	</#if>
+	</#list>
+</#if>
 <#assign columns={}>
 <#if columnNames??>
 	<#list columnNames as column>
 		<#if !uiConfigs?? || !uiConfigs[column].hiddenInList>
 			<#if treeable && column == 'name'||column == 'fullname'>
-				<#assign href=requestURI>
-				<#assign index=0>
-				<#list Parameters?keys as name>
-				<#if name!='_'&&name!='parentId'&&name!='keyword'>
-				<#assign href=href+(index==0)?string('?','&')+name+'='+Parameters[name]>
-				<#assign index=index+1>
-				</#if>
-				</#list>
 				<#assign columns=columns+{column:{'template':r'<#if !entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parentId="+entity.id}" class="ajax view" data-replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
 			<#else>
 				<#assign columns=columns+{column:{}}/>
@@ -42,11 +44,22 @@
 		</#if>
 	</#list>
 </#if>
+<#if treeable>
+<#assign _entity=entityName?eval!>
+<#if _entity?? && _entity.parent??><#assign _parentId=_entity.parent.id><#else><#assign _parentId=0></#if>
+</#if>
 <#if !multiple>
-<#assign bottomButtons="<span></span>">
+<#assign bottomButtons=r'
+<#if treeable&&Parameters.parentId??>
+<a href="${href}<#if _parentId?? && _parentId gt 0>${href?contains("?")?string("&","?")+"parentId="+_parentId}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>
+</#if>
+'>
 <#else>
 <#assign bottomButtons=r'
 <button type="button" class="btn confirm">${action.getText("confirm")}</button>
+<#if treeable&&Parameters.parentId??>
+<a href="${href}<#if _parentId?? && _parentId gt 0>${href?contains("?")?string("&","?")+"parentId="+_parentId}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>
+</#if>
 '>
 </#if>
 <@richtable entityName=entityName formid=entityName+"_pick_form" action=requestURI columns=columns bottomButtons=bottomButtons searchable=true readonly=true showCheckColumn=true multipleCheck=multiple columnfilterable=false resizable=false sortable=false showPageSize=false/>
