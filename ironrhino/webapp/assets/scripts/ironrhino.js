@@ -32478,9 +32478,10 @@ Date.prototype.format = function(fmt, monthNames, dayNames) {
 					}).change(function() {
 								t.addClass('dirty');
 							}).blur(function() {
-								if (t.hasClass('dirty'))
-									t.trigger('checkavailable');
-							});
+						if (t.hasClass('dirty')
+								&& !t.next('.field-error').length)
+							t.trigger('checkavailable');
+					});
 				})
 		return this;
 	};
