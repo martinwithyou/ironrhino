@@ -4,6 +4,5 @@
 <title>${action.getText('index')}</title>
 </head>
 <body>
-${action.getText('index')}
 </body>
 </html></#escape>
