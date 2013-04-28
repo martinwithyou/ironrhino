@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 
@@ -59,6 +60,11 @@ public class DataSourceConfiguration {
 		ds.setMaxConnectionAgeInSeconds(maxConnectionAgeInSeconds);
 		ds.setConnectionTestStatement(connectionTestStatement);
 		return ds;
+	}
+
+	public @Bean
+	JdbcTemplate jdbcTemplate() {
+		return new JdbcTemplate(dataSource());
 	}
 
 }
