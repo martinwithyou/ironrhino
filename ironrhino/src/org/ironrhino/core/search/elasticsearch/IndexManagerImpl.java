@@ -532,7 +532,7 @@ public class IndexManagerImpl implements IndexManager {
 		try {
 			IndicesExistsResponse ies = adminClient.exists(
 					new IndicesExistsRequest(getIndexName())).get();
-			if (!ies.exists())
+			if (!ies.isExists())
 				adminClient.create(new CreateIndexRequest(getIndexName()))
 						.get();
 		} catch (Exception e) {
@@ -561,7 +561,7 @@ public class IndexManagerImpl implements IndexManager {
 		try {
 			IndicesExistsResponse ies = adminClient.exists(
 					new IndicesExistsRequest(getIndexName())).get();
-			if (ies.exists())
+			if (ies.isExists())
 				adminClient.delete(new DeleteIndexRequest(getIndexName()))
 						.get();
 		} catch (Exception e) {

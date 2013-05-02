@@ -135,8 +135,8 @@ public class ElasticSearchService<T> implements SearchService<T> {
 			TermsFacet facet = response.getFacets().facet(TermsFacet.class,
 					field);
 			Map<String, Integer> result = new LinkedHashMap<String, Integer>();
-			for (TermsFacet.Entry entry : facet.entries())
-				result.put(entry.getTerm(), entry.getCount());
+			for (TermsFacet.Entry entry : facet.getEntries())
+				result.put(entry.getTerm().string(), entry.getCount());
 			return result;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
