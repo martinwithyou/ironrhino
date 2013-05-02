@@ -177,25 +177,11 @@ public class PageAction extends BaseAction {
 	@JsonConfig(propertyName = "page")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.pagepath", trim = true, key = "validation.required") })
 	public String save() {
-		String path = page.getPagepath().trim().toLowerCase();
-		if (!path.startsWith("/"))
-			path = "/" + path;
-		page.setPagepath(path);
-		if (page.isNew()) {
-			if (pageManager.findByNaturalId(page.getPagepath()) != null) {
-				addFieldError("page.pagepath",
-						getText("validation.already.exists"));
-				return INPUT;
-			}
-		} else {
+		if (!makeEntityValid())
+			return INPUT;
+		if (!page.isNew()) {
 			Page temp = page;
 			page = pageManager.get(page.getId());
-			if (!page.getPagepath().equals(temp.getPagepath())
-					&& pageManager.findByNaturalId(temp.getPagepath()) != null) {
-				addFieldError("page.pagepath",
-						getText("validation.already.exists"));
-				return INPUT;
-			}
 			page.setPagepath(temp.getPagepath());
 			page.setTags(temp.getTags());
 			page.setDisplayOrder(temp.getDisplayOrder());
@@ -213,6 +199,20 @@ public class PageAction extends BaseAction {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.pagepath", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
 	public String draft() {
+		if (!makeEntityValid())
+			return INPUT;
+		page = pageManager.saveDraft(page);
+		pageManager.pullDraft(page);
+		draft = true;
+		return INPUT;
+	}
+
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.pagepath", trim = true, key = "validation.required") })
+	public String checkavailable() {
+		return makeEntityValid() ? NONE : INPUT;
+	}
+
+	private boolean makeEntityValid() {
 		String path = page.getPagepath().trim().toLowerCase();
 		if (!path.startsWith("/"))
 			path = "/" + path;
@@ -221,7 +221,7 @@ public class PageAction extends BaseAction {
 			if (pageManager.findByNaturalId(page.getPagepath()) != null) {
 				addFieldError("page.pagepath",
 						getText("validation.already.exists"));
-				return INPUT;
+				return false;
 			}
 		} else {
 			Page p = pageManager.get(page.getId());
@@ -229,13 +229,10 @@ public class PageAction extends BaseAction {
 					&& pageManager.findByNaturalId(page.getPagepath()) != null) {
 				addFieldError("page.pagepath",
 						getText("validation.already.exists"));
-				return INPUT;
+				return false;
 			}
 		}
-		page = pageManager.saveDraft(page);
-		pageManager.pullDraft(page);
-		draft = true;
-		return INPUT;
+		return true;
 	}
 
 	public String drop() {

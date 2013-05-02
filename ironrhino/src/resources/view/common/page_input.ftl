@@ -105,7 +105,7 @@ $(function() {
 	</ul>
 	<div class="tab-content">
 	<div id="_page_base" class="tab-pane active">
-	<@s.textfield id="page_path" label="%{getText('path')}" name="page.pagepath" cssClass="required" cssStyle="width:600px;"/>
+	<@s.textfield id="page_path" label="%{getText('path')}" name="page.pagepath" cssClass="required checkavailable" cssStyle="width:600px;"/>
 	<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" type="number" cssClass="integer"/>
 	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString"  cssClass="tags" dynamicAttributes={"data-source":"${getUrl(actionBaseUrl+'/suggest')}"} cssStyle="width:600px;"/>
 	<@s.textfield label="%{getText('title')}" name="page.title" cssStyle="width:600px;"/>
