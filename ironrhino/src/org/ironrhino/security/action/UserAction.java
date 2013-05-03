@@ -181,6 +181,7 @@ public class UserAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	@Validations(regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "user.username", regex = User.USERNAME_REGEX, key = "validation.invalid") })
 	public String checkavailable() {
 		return makeEntityValid() ? NONE : INPUT;
 	}
