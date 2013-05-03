@@ -114,11 +114,7 @@ public class SignupAction extends BaseAction {
 			return ACCESSDENIED;
 		if (StringUtils.isBlank(username))
 			username = userManager.suggestUsername(email);
-		if (userManager.findOne("email", email) != null)
-			addFieldError("email", getText("validation.already.exists"));
-		else if (userManager.findByNaturalId(username) != null)
-			addFieldError("username", getText("validation.already.exists"));
-		if (hasErrors())
+		if (!check())
 			return INPUT;
 		if (StringUtils.isBlank(password))
 			password = CodecUtils.randomString(10);
@@ -135,21 +131,35 @@ public class SignupAction extends BaseAction {
 			user.setPassword(password);// for send mail
 			addActionMessage(getText("signup.success"));
 			sendActivationMail(user);
+		} else {
+			AuthzUtils.autoLogin(user);
+			eventPublisher.publish(new LoginEvent(user), false);
 		}
 		targetUrl = "/";
 		return REDIRECT;
 	}
 
-	@Validations(regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "username", regex = User.USERNAME_REGEX_FOR_SIGNUP, key = "validation.invalid") })
+	@Validations(regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "username", regex = User.USERNAME_REGEX_FOR_SIGNUP, key = "validation.invalid") }, emails = { @EmailValidator(type = ValidatorType.FIELD, fieldName = "email", key = "validation.invalid") })
 	public String checkavailable() {
+		return check() ? NONE : INPUT;
+	}
+
+	private boolean check() {
+		boolean valid = true;
 		if (settingControl.getBooleanValue(
-				Constants.SETTING_KEY_SIGNUP_ENABLED, false)
-				&& StringUtils.isNotBlank(username)
-				&& userManager.findByNaturalId(username) != null) {
-			addFieldError("username", getText("validation.already.exists"));
-			return INPUT;
+				Constants.SETTING_KEY_SIGNUP_ENABLED, false)) {
+			if (StringUtils.isNotBlank(username)
+					&& userManager.findByNaturalId(username) != null) {
+				addFieldError("username", getText("validation.already.exists"));
+				valid = false;
+			}
+			if (StringUtils.isNotBlank(email)
+					&& userManager.findOne("email", email) != null) {
+				addFieldError("email", getText("validation.already.exists"));
+				valid = false;
+			}
 		}
-		return NONE;
+		return valid;
 	}
 
 	@SkipValidation
