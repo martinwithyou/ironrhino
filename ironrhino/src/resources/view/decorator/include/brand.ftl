@@ -1,1 +1,1 @@
-<a class="brand" href="<@url value="/"/>">${action.getText(statics['org.ironrhino.core.util.AppInfo'].getAppName())}</a>
+<a class="brand" href="<@url value="/"/>">${action.getText(statics['org.ironrhino.core.util.AppInfo'].getAppName())?cap_first}</a>
