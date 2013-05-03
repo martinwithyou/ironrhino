@@ -21,8 +21,8 @@ import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
-import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.Enableable;
+import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
@@ -51,13 +51,11 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId
 	@Column(nullable = false)
-	@Access(AccessType.FIELD)
 	private String username;
 
 	@NotInCopy
 	@NotInJson
 	@Column(nullable = false)
-	@Access(AccessType.FIELD)
 	private String password;
 
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
@@ -65,7 +63,6 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 
 	@SearchableProperty(boost = 3)
 	@Column(unique = true)
-	@Access(AccessType.FIELD)
 	private String email;
 
 	@SearchableProperty
@@ -81,6 +78,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 
 	@NotInCopy
 	@NotInJson
+	@Transient
 	private Collection<GrantedAuthority> authorities;
 
 	@NotInCopy
@@ -106,7 +104,6 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@NotInJson
 	private String modifyUser;
 
-	@Transient
 	public Collection<GrantedAuthority> getAuthorities() {
 		return authorities;
 	}
@@ -143,7 +140,6 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		return phone;
 	}
 
-	@Transient
 	public Set<String> getRoles() {
 		return roles;
 	}
@@ -163,19 +159,16 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	}
 
 	@NotInJson
-	@Transient
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
 	@NotInJson
-	@Transient
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
 	@NotInJson
-	@Transient
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
@@ -272,7 +265,6 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 			attributes.put(key, value);
 	}
 
-	@Transient
 	public Map<String, String> getAttributes() {
 		return attributes;
 	}

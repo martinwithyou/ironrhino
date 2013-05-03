@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -44,8 +45,7 @@ public class Schema extends BaseEntity implements Validatable {
 	@UiConfig(displayOrder = 1)
 	@Column(nullable = false)
 	@CaseInsensitive
-	@org.hibernate.annotations.NaturalId(mutable = true)
-	@Access(AccessType.FIELD)
+	@NaturalId(mutable = true)
 	private String name;
 
 	@SearchableProperty(boost = 3)
@@ -90,7 +90,6 @@ public class Schema extends BaseEntity implements Validatable {
 		this.strict = strict;
 	}
 
-	@Transient
 	public List<SchemaField> getFields() {
 		return fields;
 	}

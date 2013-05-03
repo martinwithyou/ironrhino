@@ -2,8 +2,6 @@ package org.ironrhino.security.model;
 
 import java.util.Date;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -23,7 +21,6 @@ public class LoginRecord extends BaseEntity {
 
 	@UiConfig(displayOrder = 1)
 	@Column(nullable = false)
-	@Access(AccessType.FIELD)
 	private String username;
 
 	@UiConfig(displayOrder = 2)
@@ -37,7 +34,6 @@ public class LoginRecord extends BaseEntity {
 
 	@UiConfig(displayOrder = 5, width = "150px")
 	@Column(name = "`date`")
-	@Access(AccessType.FIELD)
 	private Date date = new Date();
 
 	public String getUsername() {

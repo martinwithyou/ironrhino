@@ -2,15 +2,12 @@ package org.ironrhino.security.oauth.server.model;
 
 import java.util.Date;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ForeignKey;
@@ -56,7 +53,6 @@ public class Client extends BaseEntity implements Enableable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner", nullable = false)
 	@ForeignKey(name = "none")
-	@Access(AccessType.FIELD)
 	private User owner;
 
 	@UiConfig(displayOrder = 5)
@@ -144,7 +140,6 @@ public class Client extends BaseEntity implements Enableable {
 	}
 
 	@UiConfig(hidden = true)
-	@Transient
 	public boolean isNative() {
 		return OAUTH_OOB.equals(redirectUri);
 	}

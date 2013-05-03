@@ -2,8 +2,6 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -35,7 +33,6 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Column(name = "`key`", nullable = false)
-	@Access(AccessType.FIELD)
 	private String key = "";
 
 	@UiConfig(displayOrder = 2, type = "textarea", width = "400px")

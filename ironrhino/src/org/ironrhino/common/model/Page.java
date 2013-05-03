@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
@@ -44,8 +45,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	@SearchableProperty(index = Index.NOT_ANALYZED)
 	@Column(nullable = false)
 	@CaseInsensitive
-	@org.hibernate.annotations.NaturalId(mutable = true)
-	@Access(AccessType.FIELD)
+	@NaturalId(mutable = true)
 	private String pagepath;
 
 	@SearchableProperty
@@ -54,14 +54,12 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	@NotInJson
 	@Column
 	@Type(type = "text")
-	@Access(AccessType.FIELD)
 	private String head;
 
 	@NotInJson
 	@SearchableProperty
 	@Column(nullable = false)
 	@Type(type = "text")
-	@Access(AccessType.FIELD)
 	private String content;
 
 	@SearchableProperty
@@ -70,7 +68,6 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	@NotInJson
 	@Column
 	@Type(type = "text")
-	@Access(AccessType.FIELD)
 	private String draft;
 
 	private Date draftDate;
@@ -168,7 +165,6 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 		this.modifyDate = modifyDate;
 	}
 
-	@Transient
 	public Set<String> getTags() {
 		return tags;
 	}
@@ -227,7 +223,6 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 				Jsoup.parse(content).text().trim(), size).trim() : null;
 	}
 
-	@Transient
 	public List<Image> getImages() {
 		List<Image> images = new ArrayList<Image>();
 		if (StringUtils.isNotBlank(content)) {

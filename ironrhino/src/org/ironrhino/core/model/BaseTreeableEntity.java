@@ -19,6 +19,7 @@ import javax.persistence.OrderBy;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
@@ -37,7 +38,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
 
-	@org.hibernate.annotations.NaturalId(mutable = true)
+	@NaturalId(mutable = true)
 	protected String fullId;
 
 	@Column(nullable = false)

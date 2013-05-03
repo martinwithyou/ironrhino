@@ -1,7 +1,5 @@
 package org.ironrhino.security.acl.model;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -25,14 +23,12 @@ public class Acl extends BaseEntity {
 	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Column(length = 50, nullable = false)
-	@Access(AccessType.FIELD)
 	private String role;
 
 	@UiConfig(displayOrder = 2)
 	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Column(name = "`resource`", length = 150, nullable = false)
-	@Access(AccessType.FIELD)
 	private String resource;
 
 	@UiConfig(displayOrder = 3)

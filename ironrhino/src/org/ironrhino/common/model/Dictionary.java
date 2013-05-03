@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.Authorize;
@@ -47,9 +48,8 @@ public class Dictionary extends BaseEntity implements Validatable {
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 1)
 	@CaseInsensitive
-	@org.hibernate.annotations.NaturalId(mutable = true)
+	@NaturalId(mutable = true)
 	@Column(nullable = false)
-	@Access(AccessType.FIELD)
 	private String name;
 
 	@SearchableProperty(boost = 3)
@@ -58,11 +58,8 @@ public class Dictionary extends BaseEntity implements Validatable {
 
 	@SearchableComponent
 	@UiConfig(displayOrder = 3, hiddenInList = true)
+	@Transient
 	private List<LabelValue> items = new ArrayList<LabelValue>();
-
-	public Dictionary() {
-
-	}
 
 	public String getName() {
 		return name;
@@ -80,7 +77,6 @@ public class Dictionary extends BaseEntity implements Validatable {
 		this.description = description;
 	}
 
-	@Transient
 	public List<LabelValue> getItems() {
 		return items;
 	}
@@ -112,7 +108,6 @@ public class Dictionary extends BaseEntity implements Validatable {
 
 	@UiConfig(hidden = true)
 	@NotInCopy
-	@Transient
 	public Map<String, String> getItemsAsMap() {
 		Map<String, String> map = new LinkedHashMap<String, String>(
 				items.size(), 1);
@@ -125,7 +120,6 @@ public class Dictionary extends BaseEntity implements Validatable {
 
 	@UiConfig(hidden = true)
 	@NotInCopy
-	@Transient
 	public Map<String, Map<String, String>> getItemsAsGroup() {
 		Map<String, Map<String, String>> map = new LinkedHashMap<String, Map<String, String>>(
 				items.size(), 1);
@@ -153,7 +147,6 @@ public class Dictionary extends BaseEntity implements Validatable {
 
 	@UiConfig(hidden = true)
 	@NotInCopy
-	@Transient
 	public boolean isGroupable() {
 		boolean groupable = false;
 		for (LabelValue item : items) {

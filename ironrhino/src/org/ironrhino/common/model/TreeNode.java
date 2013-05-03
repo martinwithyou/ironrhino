@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Type;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -68,7 +69,8 @@ public class TreeNode extends BaseTreeableEntity<TreeNode> implements
 	}
 
 	@NotInCopy
-	@Column(name = "attributes", length = 1024)
+	@Column(name = "attributes")
+	@Type(type = "text")
 	@Access(AccessType.PROPERTY)
 	public String getAttributesAsString() {
 		if (attributes == null || attributes.isEmpty()

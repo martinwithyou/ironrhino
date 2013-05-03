@@ -2,8 +2,6 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +30,6 @@ public class Stat extends KeyValuePair implements Persistable<String> {
 	@Id
 	@GeneratedValue(generator = "stringId")
 	@GenericGenerator(name = "stringId", strategy = "org.ironrhino.core.hibernate.StringIdGenerator")
-	@Access(AccessType.FIELD)
 	private String id;
 
 	@UiConfig(hidden = true)

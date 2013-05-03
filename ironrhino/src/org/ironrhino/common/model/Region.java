@@ -1,12 +1,9 @@
 package org.ironrhino.common.model;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.ironrhino.common.util.LocationUtils;
 import org.ironrhino.core.aop.PublishAware;
@@ -31,11 +28,9 @@ public class Region extends BaseTreeableEntity<Region> {
 	private String fullname;
 
 	@Column(length = 6)
-	@Access(AccessType.FIELD)
 	private String areacode;
 
 	@Column(length = 6)
-	@Access(AccessType.FIELD)
 	private String postcode;
 
 	private Integer rank;
@@ -109,19 +104,17 @@ public class Region extends BaseTreeableEntity<Region> {
 	}
 
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
-	@Transient
 	public String getNameAsPinyin() {
 		return StringUtils.pinyin(name);
 	}
 
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
-	@Transient
 	public String getNameAsPinyinAbbr() {
 		return StringUtils.pinyinAbbr(name);
 	}
 
 	@NotInJson
-	@Transient
+	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
 	public String getShortFullname() {
 		return LocationUtils.shortenAddress(getFullname());
 	}
