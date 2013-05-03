@@ -140,6 +140,18 @@ public class SignupAction extends BaseAction {
 		return REDIRECT;
 	}
 
+	@Validations(regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "username", regex = User.USERNAME_REGEX, key = "validation.invalid") })
+	public String checkavailable() {
+		if (settingControl.getBooleanValue(
+				Constants.SETTING_KEY_SIGNUP_ENABLED, false)
+				&& StringUtils.isNotBlank(username)
+				&& userManager.findByNaturalId(username) != null) {
+			addFieldError("username", getText("validation.already.exists"));
+			return INPUT;
+		}
+		return NONE;
+	}
+
 	@SkipValidation
 	public String activate() {
 		String u = getUid();

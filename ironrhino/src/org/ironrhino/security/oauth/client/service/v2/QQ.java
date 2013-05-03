@@ -1,5 +1,8 @@
 package org.ironrhino.security.oauth.client.service.v2;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
@@ -7,8 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-//@Named("qq")
-//@Singleton
+@Named("qq")
+@Singleton
 public class QQ extends OAuth2Provider {
 
 	@Value("${qq.logo:http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_5.png}")
@@ -51,11 +54,6 @@ public class QQ extends OAuth2Provider {
 		return profileUrl;
 	}
 
-	public String getAccessKey() {
-		return settingControl.getStringValue("oauth." + getName()
-				+ ".accessKey");
-	}
-
 	@Override
 	public boolean isUseAuthorizationHeader() {
 		return false;
@@ -76,21 +74,18 @@ public class QQ extends OAuth2Provider {
 		return p;
 	}
 
-	protected void postProccessProfile(Profile p, String accessToken)
+	@Override
+	protected void postProcessProfile(Profile p, String accessToken)
 			throws Exception {
 		String uid = p.getUid();
 		p.setUid(generateUid(uid));
 		String content = invoke(accessToken,
-				"https://graph.qq.com/user/get_info?oauth_consumer_key="
+				"https://graph.qq.com/user/get_user_info?oauth_consumer_key="
 						+ getClientId() + "&openid=" + uid);
 		JsonNode data = JsonUtils.getObjectMapper().readValue(content,
 				JsonNode.class);
-		p.setDisplayName(data.get("nick").textValue());
-		p.setName(data.get("name").textValue());
-		p.setPicture(data.get("head").textValue());
-		p.setLocation(data.get("location").textValue());
-		p.setGender(data.get("sex").textValue());
-		p.setEmail(data.get("email").textValue());
+		p.setDisplayName(data.get("nickname").textValue());
+		p.setName(data.get("nickname").textValue());
 	}
 
 }

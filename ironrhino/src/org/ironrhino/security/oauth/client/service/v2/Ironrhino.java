@@ -53,11 +53,6 @@ public class Ironrhino extends OAuth2Provider {
 		return profileUrl;
 	}
 
-	public String getAccessKey() {
-		return settingControl.getStringValue("oauth." + getName()
-				+ ".accessKey");
-	}
-
 	@Override
 	public boolean isUseAuthorizationHeader() {
 		return true;

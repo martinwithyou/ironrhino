@@ -54,11 +54,6 @@ public class Weibo extends OAuth2Provider {
 		return profileUrl;
 	}
 
-	public String getAccessKey() {
-		return settingControl.getStringValue("oauth." + getName()
-				+ ".accessKey");
-	}
-
 	@Override
 	public boolean isUseAuthorizationHeader() {
 		return true;
@@ -78,6 +73,7 @@ public class Weibo extends OAuth2Provider {
 		return p;
 	}
 
+	@Override
 	protected void postProcessProfile(Profile p, String accessToken)
 			throws Exception {
 		String uid = p.getUid();

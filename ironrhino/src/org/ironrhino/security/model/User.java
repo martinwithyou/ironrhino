@@ -42,9 +42,9 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 
 	private static final long serialVersionUID = -6135434863820342822L;
 
-	public static final String USERNAME_REGEX = "^[\\w\\(\\)]{3,20}$";
+	public static final String USERNAME_REGEX = "^[\\w\\(\\)]{1,40}$";
 
-	public static final String USERNAME_REGEX_FOR_SIGNUP = "^[\\w]{3,20}$";
+	public static final String USERNAME_REGEX_FOR_SIGNUP = "^\\w{3,20}$";
 
 	@SearchableProperty(boost = 5, index = Index.NOT_ANALYZED)
 	@NotInCopy

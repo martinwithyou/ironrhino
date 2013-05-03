@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-@Named("qq")
+@Named("tencent")
 @Singleton
-public class QQ extends OAuth1Provider {
+public class Tencent extends OAuth1Provider {
 
 	@Value("${qq.requestTokenUrl:https://open.t.qq.com/cgi-bin/request_token}")
 	private String requestTokenUrl;
