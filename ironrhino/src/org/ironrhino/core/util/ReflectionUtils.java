@@ -1,10 +1,14 @@
 package org.ironrhino.core.util;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Set;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -111,6 +115,34 @@ public class ReflectionUtils {
 			}
 		}
 		return proxy;
+	}
+
+	public static void processCallback(Object obj,
+			Class<? extends Annotation> callbackAnnotation) {
+		Set<Method> methods = AnnotationUtils.getAnnotatedMethods(
+				obj.getClass(), callbackAnnotation);
+		for (Method m : methods) {
+			if (m.getParameterTypes().length == 0
+					&& m.getReturnType() == void.class
+					&& Modifier.isPublic(m.getModifiers()))
+				try {
+					m.invoke(obj, new Object[0]);
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException(e.getMessage(), e);
+				} catch (IllegalArgumentException e) {
+					throw new RuntimeException(e.getMessage(), e);
+				} catch (InvocationTargetException e) {
+					Throwable cause = e.getCause();
+					if (cause != null) {
+						if (cause instanceof RuntimeException)
+							throw (RuntimeException) cause;
+						else
+							throw new RuntimeException(cause.getMessage(),
+									cause);
+					} else
+						throw new RuntimeException(e.getMessage(), e);
+				}
+		}
 	}
 
 }

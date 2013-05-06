@@ -1,6 +1,8 @@
 package org.ironrhino.core.service;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,6 +10,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import javax.persistence.PostPersist;
+import javax.persistence.PostRemove;
+import javax.persistence.PostUpdate;
+import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.CacheMode;
@@ -36,7 +45,6 @@ import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.model.Validatable;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
@@ -82,9 +90,31 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	@Transactional
 	public void save(T obj) {
 		Session session = sessionFactory.getCurrentSession();
-		if (obj instanceof Validatable) {
-			Validatable v = (Validatable) obj;
-			v.validate();
+		Set<Method> methods = AnnotationUtils.getAnnotatedMethods(obj
+				.getClass(), obj.isNew() ? PrePersist.class : PreUpdate.class);
+		ReflectionUtils.processCallback(obj, obj.isNew() ? PrePersist.class
+				: PreUpdate.class);
+		for (Method m : methods) {
+			if (m.getParameterTypes().length == 0
+					&& m.getReturnType() == void.class)
+				try {
+					m.invoke(obj, new Object[0]);
+				} catch (IllegalAccessException e) {
+					logger.error(e.getMessage(), e);
+				} catch (IllegalArgumentException e) {
+					logger.error(e.getMessage(), e);
+				} catch (InvocationTargetException e) {
+					Throwable cause = e.getCause();
+					if (cause != null) {
+						if (cause instanceof RuntimeException) {
+							throw (RuntimeException) cause;
+						} else {
+							logger.error(cause.getMessage(), cause);
+							throw new RuntimeException(cause.getMessage());
+						}
+					} else
+						logger.error(e.getMessage(), e);
+				}
 		}
 		if (obj instanceof Recordable) {
 			Recordable r = (Recordable) obj;
@@ -137,17 +167,26 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			session.save(obj);
 		else
 			session.saveOrUpdate(obj);
+		ReflectionUtils.processCallback(obj, obj.isNew() ? PostPersist.class
+				: PostUpdate.class);
 	}
 
 	@Transactional
 	public void update(T obj) {
+		if (obj.isNew())
+			throw new IllegalArgumentException(obj
+					+ " must be persisted before update");
+		ReflectionUtils.processCallback(obj, PreUpdate.class);
 		sessionFactory.getCurrentSession().update(obj);
+		ReflectionUtils.processCallback(obj, PostUpdate.class);
 	}
 
 	@Transactional
 	public void delete(T obj) {
 		checkDelete(obj);
+		ReflectionUtils.processCallback(obj, PreRemove.class);
 		sessionFactory.getCurrentSession().delete(obj);
+		ReflectionUtils.processCallback(obj, PostRemove.class);
 	}
 
 	protected void checkDelete(T obj) {

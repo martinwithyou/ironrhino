@@ -10,6 +10,8 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -22,7 +24,6 @@ import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
-import org.ironrhino.core.model.Validatable;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableComponent;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
@@ -37,7 +38,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "common_schema")
-public class Schema extends BaseEntity implements Validatable {
+public class Schema extends BaseEntity {
 
 	private static final long serialVersionUID = -8352037604269012984L;
 
@@ -133,6 +134,8 @@ public class Schema extends BaseEntity implements Validatable {
 		return this;
 	}
 
+	@PrePersist
+	@PreUpdate
 	public void validate() {
 		if (fields == null || fields.size() == 0) {
 			ValidationException ve = new ValidationException();
