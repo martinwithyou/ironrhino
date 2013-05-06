@@ -1,8 +1,6 @@
 package org.ironrhino.core.service;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -90,32 +88,8 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	@Transactional
 	public void save(T obj) {
 		Session session = sessionFactory.getCurrentSession();
-		Set<Method> methods = AnnotationUtils.getAnnotatedMethods(obj
-				.getClass(), obj.isNew() ? PrePersist.class : PreUpdate.class);
 		ReflectionUtils.processCallback(obj, obj.isNew() ? PrePersist.class
 				: PreUpdate.class);
-		for (Method m : methods) {
-			if (m.getParameterTypes().length == 0
-					&& m.getReturnType() == void.class)
-				try {
-					m.invoke(obj, new Object[0]);
-				} catch (IllegalAccessException e) {
-					logger.error(e.getMessage(), e);
-				} catch (IllegalArgumentException e) {
-					logger.error(e.getMessage(), e);
-				} catch (InvocationTargetException e) {
-					Throwable cause = e.getCause();
-					if (cause != null) {
-						if (cause instanceof RuntimeException) {
-							throw (RuntimeException) cause;
-						} else {
-							logger.error(cause.getMessage(), cause);
-							throw new RuntimeException(cause.getMessage());
-						}
-					} else
-						logger.error(e.getMessage(), e);
-				}
-		}
 		if (obj instanceof Recordable) {
 			Recordable r = (Recordable) obj;
 			Date date = new Date();
