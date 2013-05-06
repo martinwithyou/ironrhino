@@ -31295,11 +31295,8 @@ Message = {
 							: 'action-message alert alert-info');
 		if (html) {
 			var parent = $('#content');
-			if (target
-					&& $(target).parents('#_window_').length
-					&& (error || $(target).hasClass('view') || $(target)
-							.hasClass('keepopen')))
-				parent = $('#_window_');
+			if ($('.ui-dialog:visible').length)
+				parent = $('.ui-dialog:visible .ui-dialog-content');
 			if ($('.modal:visible').length)
 				parent = $('.modal:visible .modal-body');
 			if (!$('#message', parent).length)
