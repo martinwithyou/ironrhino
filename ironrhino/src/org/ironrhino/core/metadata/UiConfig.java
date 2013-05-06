@@ -23,10 +23,7 @@ public @interface UiConfig {
 
 	String type() default DEFAULT_TYPE; // input,textarea,select,checkbox,listpick,dictionary,schema...
 
-	String inputType() default DEFAULT_INPUT_TYPE; // text,password,email,number,color
-													// ...
-
-	int size() default 0;
+	String inputType() default DEFAULT_INPUT_TYPE; // text,password,email,number ...
 
 	int maxlength() default 0;
 
@@ -45,7 +42,7 @@ public @interface UiConfig {
 	boolean hidden() default false;
 
 	boolean hiddenInList() default false;
-	
+
 	boolean hiddenInInput() default false;
 
 	boolean searchable() default false;

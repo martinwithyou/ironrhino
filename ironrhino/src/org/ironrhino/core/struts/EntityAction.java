@@ -977,7 +977,6 @@ public class EntityAction extends BaseAction {
 		private String inputType = UiConfig.DEFAULT_INPUT_TYPE;
 		private boolean required;
 		private boolean unique;
-		private int size;
 		private int maxlength;
 		private String regex;
 		private String cssClass = "";
@@ -1010,7 +1009,6 @@ public class EntityAction extends BaseAction {
 			this.listValue = config.listValue();
 			this.required = config.required();
 			this.unique = config.unique();
-			this.size = config.size();
 			this.maxlength = config.maxlength();
 			this.regex = config.regex();
 			this.readonly = config.readonly();
@@ -1130,14 +1128,6 @@ public class EntityAction extends BaseAction {
 
 		public void setInputType(String inputType) {
 			this.inputType = inputType;
-		}
-
-		public int getSize() {
-			return size;
-		}
-
-		public void setSize(int size) {
-			this.size = size;
 		}
 
 		public int getMaxlength() {

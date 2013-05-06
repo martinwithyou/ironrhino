@@ -43,8 +43,8 @@
 <body>
 <form class="form-inline clearfix">
 	<div class="control-group">
-		<input id="filename" type="text" size="50"/>
-		<input id="tail" type="text" size="5" value="4096"/>
+		<input id="filename" type="text" class="span6"/>
+		<input id="tail" type="text"  class="span1" value="4096"/>
 		<button type="button" class="btn" id="view">${action.getText('view')}</button>
 		<button type="button" class="btn" id="clear">${action.getText('clear')}</button>
 		<button type="button" class="btn" id="download">${action.getText('download')}</button>

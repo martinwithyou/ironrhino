@@ -32,20 +32,20 @@ public class Client extends BaseEntity implements Enableable {
 
 	public static final String OAUTH_OOB = "urn:ietf:wg:oauth:2.0:oob";
 
-	@UiConfig(displayOrder = 1, size = 50)
+	@UiConfig(displayOrder = 1, cssClass = "span4")
 	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
 	@Column(nullable = false)
 	private String name;
 
-	@UiConfig(displayOrder = 2, size = 50)
+	@UiConfig(displayOrder = 2, cssClass = "span4")
 	@Column(nullable = false)
 	private String secret = CodecUtils.nextId();
 
-	@UiConfig(displayOrder = 3, size = 50)
+	@UiConfig(displayOrder = 3, cssClass = "span4")
 	private String redirectUri;
 
-	@UiConfig(displayOrder = 4, type = "textarea")
+	@UiConfig(displayOrder = 4, cssClass = "span4", type = "textarea")
 	private String description;
 
 	@NotInCopy

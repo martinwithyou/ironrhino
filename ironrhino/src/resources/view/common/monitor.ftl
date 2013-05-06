@@ -22,16 +22,16 @@
 <div class="span6">
 <form class="ajax view form-inline" data-replacement="result">
 <span>${action.getText('date')}</span>
-<@s.textfield label="%{getText('date')}" theme="simple" name="date" cssClass="date" size="10" maxlength="10"/>
+<@s.textfield label="%{getText('date')}" theme="simple" name="date" cssClass="date"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
 </div>
 <div class="span6">
 <form class="ajax view form-inline" data-replacement="result">
 <span>${action.getText('date')}${action.getText('range')}</span>
-<@s.textfield label="%{getText('from')}" theme="simple" name="from" cssClass="date"  size="10" maxlength="10"/>
+<@s.textfield label="%{getText('from')}" theme="simple" name="from" cssClass="date"/>
 <i class="icon-arrow-right"></i>
-<@s.textfield label="%{getText('to')}" theme="simple" name="to" cssClass="date"  size="10" maxlength="10"/>
+<@s.textfield label="%{getText('to')}" theme="simple" name="to" cssClass="date"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
 </div>

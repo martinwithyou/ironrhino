@@ -28,7 +28,7 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 
 	private static final long serialVersionUID = -8352037603261222984L;
 
-	@UiConfig(displayOrder = 1, size = 50, width = "300px")
+	@UiConfig(displayOrder = 1, width = "300px")
 	@SearchableProperty(boost = 3)
 	@CaseInsensitive
 	@org.hibernate.annotations.NaturalId(mutable = true)
