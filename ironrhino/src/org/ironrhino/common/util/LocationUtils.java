@@ -87,22 +87,27 @@ public class LocationUtils {
 		} else if (StringUtils.isNumeric(value)) {
 			try {
 				String xml = HttpClientUtils
-						.getResponseText("http://www.youdao.com/smartresult-xml/search.s?type=mobile&q="
-								+ value);
+						.getResponseText("http://www.youdao.com/smartresult-xml/search.s?type="
+								+ (value.length() == 18 ? "id" : "mobile")
+								+ "&q=" + value);
 				String location = XmlUtils.eval(
 						"/smartresult/product/location", xml);
 				if (StringUtils.isNotBlank(location)) {
 					loc = new Location();
 					loc.setLocation(location.trim());
 					String[] arr = loc.getLocation().split("\\s+");
-					if (arr.length > 1)
+					if (arr.length > 1) {
 						loc.setSecondArea(arr[1]);
-					loc.setFirstArea(arr[0]);
+						loc.setFirstArea(arr[0]);
+					} else {
+						value = location.trim();
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (value.length() >= 2) {
+		}
+		if (value.length() >= 2) {
 			String s = value.substring(0, 2);
 			if (specialAdministrativeRegions.contains(s)
 					|| municipalities.contains(s)) {

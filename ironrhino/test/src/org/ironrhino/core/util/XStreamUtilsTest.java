@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-public class XmlUtilsTest {
+public class XStreamUtilsTest {
 
 	@XStreamAlias("user")
 	public static class User implements Serializable {
@@ -124,9 +124,9 @@ public class XmlUtilsTest {
 		name.setFirst("hello");
 		name.setLast("world");
 		names.add(name);
-		String xml = XmlUtils.toXml(user);
+		String xml = XStreamUtils.toXml(user);
 		assertTrue(xml.startsWith("<user>"));
-		User u = XmlUtils.fromXml(xml, User.class);
+		User u = XStreamUtils.fromXml(xml, User.class);
 		assertEquals(user.getUsername(), u.getUsername());
 		assertEquals(user.getPassword(), u.getPassword());
 		assertEquals(user.isEnabled(), u.isEnabled());
