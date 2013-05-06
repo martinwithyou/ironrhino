@@ -63,6 +63,7 @@
 							</#if>
 						</#if>
 					<#else>
+						<#assign value=entity[key]!>
 						<#assign temp=config.template?interpret>
 						<@temp/>
 					</#if>
