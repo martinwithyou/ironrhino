@@ -60,7 +60,9 @@ function appendIcon() {
 		combobox
 				.addClass('mce-has-open')
 				.append('<div class="mce-btn mce-open" tabindex="-1"><button hidefocus="" tabindex="-1"><i class="mce-ico mce-i-browse"></i></button></div>')
-				.find('input.mce-textbox').css('width', '254px');
+				.find('input.mce-textbox').width($('input.mce-textbox:eq(1)')
+						.width()
+						- 33);
 		return true;
 	}
 	return false;

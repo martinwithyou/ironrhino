@@ -31060,7 +31060,7 @@ MessageBundle = {
 		'action.denied' : 'requested action denied',
 		'maximum.exceeded' : '{0} , exceed maximum {1}'
 	},
-	'zh-cn' : {
+	'zh_CN' : {
 		'ajax.loading' : '正在加载...',
 		'ajax.error' : '错误,请稍后再试',
 		'required' : '请填写',
@@ -31107,7 +31107,7 @@ MessageBundle = {
 	},
 	lang : function() {
 		var lang = ($.cookie('locale') || navigator.language
-				|| navigator.browserLanguage || '').toLowerCase();
+				|| navigator.browserLanguage || '').replace('-', '_');
 		if (!MessageBundle[lang]) {
 			var i = lang.indexOf('_');
 			if (i > 0)
@@ -31119,7 +31119,7 @@ MessageBundle = {
 	},
 	shortLang : function() {
 		var lang = MessageBundle.lang();
-		var i = lang.indexOf('-');
+		var i = lang.indexOf('_');
 		if (i > 0)
 			lang = lang.substring(0, i);
 		return lang;

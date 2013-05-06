@@ -10,7 +10,7 @@ $(function() {
 		var cmsPath= $('meta[name="cms_path"]').attr('content') || '';
 		tinymce.init({
 		    selector: "#page_content",
-		    //language : MessageBundle.lang(),
+		    language : MessageBundle.lang(),
 		    content_css : '<#if Parameters.content_css?has_content>${Parameters.content_css}<#else><@url value="/assets/styles/ironrhino-min.css"/></#if>',
 		    plugins: [
 		        "advlist autolink lists link image charmap print preview anchor",
