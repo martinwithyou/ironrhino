@@ -11,7 +11,7 @@
 		<@s.password label="%{getText('password')}" name="password"/>
 		<@s.password label="%{getText('confirmPassword')}" name="confirmPassword"/>
 	<#else>
-		<@s.textfield label="%{getText('username')}" name="user.username" cssClass="required checkavailable regex" dynamicAttributes={"data-regex":"^[\\w\\(\\)]{1,40}$","data-checkurl":"${getUrl(actionBaseUrl+'/checkavailable')}"}/>
+		<@s.textfield label="%{getText('username')}" name="user.username" cssClass="required checkavailable regex" dynamicAttributes={"data-regex":"${statics['org.ironrhino.security.model.User'].USERNAME_REGEX}","data-checkurl":"${getUrl(actionBaseUrl+'/checkavailable')}"}/>
 		<@s.password label="%{getText('password')}" name="password" cssClass="required"/>
 		<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" cssClass="required"/>
 	</#if>

@@ -1,9 +1,9 @@
 package org.ironrhino.security.event;
 
 import org.ironrhino.core.event.BaseEvent;
-import org.ironrhino.security.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public abstract class AbstractEvent extends BaseEvent<User> {
+public abstract class AbstractEvent extends BaseEvent<UserDetails> {
 
 	private static final long serialVersionUID = 2656926225727363987L;
 
@@ -11,17 +11,17 @@ public abstract class AbstractEvent extends BaseEvent<User> {
 
 	private String provider; // google github
 
-	public AbstractEvent(User user) {
+	public AbstractEvent(UserDetails user) {
 		super(user);
 	}
 
-	public AbstractEvent(User user, String from, String provider) {
+	public AbstractEvent(UserDetails user, String from, String provider) {
 		super(user);
 		this.from = from;
 		this.provider = provider;
 	}
 
-	public User getUser() {
+	public UserDetails getUser() {
 		return getSource();
 	}
 
