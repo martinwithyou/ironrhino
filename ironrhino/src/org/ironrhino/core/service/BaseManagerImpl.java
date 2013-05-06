@@ -87,7 +87,6 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 
 	@Transactional
 	public void save(T obj) {
-		Session session = sessionFactory.getCurrentSession();
 		ReflectionUtils.processCallback(obj, obj.isNew() ? PrePersist.class
 				: PreUpdate.class);
 		if (obj instanceof Recordable) {
@@ -102,6 +101,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				r.setModifyUserDetails(user);
 			}
 		}
+		Session session = sessionFactory.getCurrentSession();
 		if (obj instanceof BaseTreeableEntity) {
 			final BaseTreeableEntity entity = (BaseTreeableEntity) obj;
 			boolean childrenNeedChange = false;
