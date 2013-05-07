@@ -28,6 +28,7 @@ import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -35,7 +36,6 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.internal.CriteriaImpl.OrderEntry;
-import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.IdAssigned;
@@ -393,7 +393,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		}
 		if (objects.length == 1) {
 			Set<String> naturalIds = AnnotationUtils.getAnnotatedPropertyNames(
-					getEntityClass(), CaseInsensitive.class);
+					getEntityClass(), NaturalId.class);
 			if (naturalIds.size() != 1)
 				throw new IllegalArgumentException(
 						"@NaturalId must and only be one");
@@ -428,7 +428,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			Criteria c = sessionFactory.getCurrentSession().createCriteria(
 					getEntityClass());
 			Set<String> naturalIds = AnnotationUtils.getAnnotatedPropertyNames(
-					getEntityClass(), CaseInsensitive.class);
+					getEntityClass(), NaturalId.class);
 			if (naturalIds.size() != 1)
 				throw new IllegalArgumentException(
 						"@NaturalId must and only be one");
@@ -456,7 +456,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				+ " entity where ";
 		if (objects.length == 1) {
 			Set<String> naturalIds = AnnotationUtils.getAnnotatedPropertyNames(
-					getEntityClass(), CaseInsensitive.class);
+					getEntityClass(), NaturalId.class);
 			if (naturalIds.size() != 1)
 				throw new IllegalArgumentException(
 						"@NaturalId must and only be one");

@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -49,7 +50,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@SearchableProperty(boost = 5, index = Index.NOT_ANALYZED)
 	@NotInCopy
 	@CaseInsensitive
-	@org.hibernate.annotations.NaturalId
+	@NaturalId
 	@Column(nullable = false)
 	private String username;
 

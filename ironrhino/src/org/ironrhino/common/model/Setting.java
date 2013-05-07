@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NaturalId;
 import org.ironrhino.common.record.RecordAware;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -31,7 +32,7 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 	@UiConfig(displayOrder = 1, width = "300px")
 	@SearchableProperty(boost = 3)
 	@CaseInsensitive
-	@org.hibernate.annotations.NaturalId(mutable = true)
+	@NaturalId(mutable = true)
 	@Column(name = "`key`", nullable = false)
 	private String key = "";
 

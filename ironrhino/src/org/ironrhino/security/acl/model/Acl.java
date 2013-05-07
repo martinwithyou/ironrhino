@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
@@ -21,13 +22,13 @@ public class Acl extends BaseEntity {
 
 	@UiConfig(displayOrder = 1)
 	@CaseInsensitive
-	@org.hibernate.annotations.NaturalId(mutable = true)
+	@NaturalId(mutable = true)
 	@Column(length = 50, nullable = false)
 	private String role;
 
 	@UiConfig(displayOrder = 2)
 	@CaseInsensitive
-	@org.hibernate.annotations.NaturalId(mutable = true)
+	@NaturalId(mutable = true)
 	@Column(name = "`resource`", length = 150, nullable = false)
 	private String resource;
 

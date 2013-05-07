@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
@@ -34,7 +35,7 @@ public class Client extends BaseEntity implements Enableable {
 
 	@UiConfig(displayOrder = 1, cssClass = "span4")
 	@CaseInsensitive
-	@org.hibernate.annotations.NaturalId(mutable = true)
+	@NaturalId(mutable = true)
 	@Column(nullable = false)
 	private String name;
 

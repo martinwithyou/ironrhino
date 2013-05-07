@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
@@ -32,7 +33,7 @@ public class Authorization extends BaseEntity {
 
 	@UiConfig(displayOrder = 1)
 	@CaseInsensitive
-	@org.hibernate.annotations.NaturalId(mutable = true)
+	@NaturalId(mutable = true)
 	private String accessToken = CodecUtils.nextId();
 
 	@UiConfig(displayOrder = 2)
