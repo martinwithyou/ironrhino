@@ -22,6 +22,8 @@ import org.ironrhino.common.model.Coordinate;
 import org.ironrhino.common.model.Region;
 import org.ironrhino.common.util.LocationUtils;
 import org.ironrhino.common.util.RegionParser;
+import org.ironrhino.core.aop.AopContext;
+import org.ironrhino.core.aop.PublishAspect;
 import org.ironrhino.core.metadata.Setup;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.XmlUtils;
@@ -101,6 +103,7 @@ public class RegionSetup {
 			else
 				region.setRank(4);
 		}
+		AopContext.setBypass(PublishAspect.class);
 		entityManager.save(region);
 		List<Region> list = new ArrayList<Region>();
 		for (Region child : region.getChildren())
