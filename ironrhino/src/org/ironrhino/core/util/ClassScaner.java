@@ -203,8 +203,7 @@ public class ClassScaner {
 				if (!appBasePackage.contains("org.ironrhino"))
 					appBasePackage = "org.ironrhino," + appBasePackage;
 			} else {
-				String appName = AppInfo.getAppName();
-				appBasePackage = "org.ironrhino,com." + appName;
+				appBasePackage = "org.ironrhino";
 			}
 			String[] arr = appBasePackage.split(",+");
 			return arr;

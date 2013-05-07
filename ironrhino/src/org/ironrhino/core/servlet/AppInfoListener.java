@@ -50,10 +50,10 @@ public class AppInfoListener implements ServletContextListener {
 
 		String appBasePackage = getProperties().getProperty(
 				AppInfo.KEY_APP_BASEPACKAGE);
-		if (StringUtils.isNotBlank(appBasePackage)){
-			System.setProperty(AppInfo.KEY_APP_BASEPACKAGE, appBasePackage);
-			AppInfo.setAppBasePackage(appBasePackage);
-		}
+		if (StringUtils.isBlank(appBasePackage))
+			appBasePackage = "com." + AppInfo.getAppName();
+		AppInfo.setAppBasePackage(appBasePackage);
+		System.setProperty(AppInfo.KEY_APP_BASEPACKAGE, appBasePackage);
 		String userTimezone = System.getProperty("user.timezone");
 		if (StringUtils.isBlank(userTimezone)
 				|| !TimeZone.getTimeZone(userTimezone).getID()
