@@ -123,6 +123,49 @@ chmod +x /etc/init.d/tomcat8081
 update-rc.d tomcat8081 defaults
 fi
 
+if [ ! -f upgrade_tomcat.sh ]; then
+cat>upgrade_tomcat.sh<<EOF
+version=`tomcat8080/bin/version.sh|grep 'Server version'|awk -F '/' '{print \$2}'|tr -d ' '`
+if [ "\$1" = "" ];  then
+    echo "current version is \$version, if you want to upgrade, please run \$0 version"
+    exit 1
+fi
+if expr "\$version" \>= "\$1" >/dev/null 2>&1; then
+   echo "target version \$1 is le than current version \$version"
+   exit 1
+fi
+version="\$1"
+if [ ! -d apache-tomcat-\$version ];then
+if [ ! -f apache-tomcat-\$version.tar.gz ];then
+wget http://archive.apache.org/dist/tomcat/tomcat-\${version:0:1}/v\$version/bin/apache-tomcat-\$version.tar.gz
+fi
+tar xf apache-tomcat-\$version.tar.gz && rm -rf apache-tomcat-\$version.tar.gz
+cd apache-tomcat-\$version && rm -rf bin/*.bat && rm -rf webapps/* && cd ..
+fi
+tomcat8080/bin/catalina.sh stop 10 -force
+cp tomcat8080/conf/server.xml .
+cp tomcat8080/bin/catalina.sh .
+rm -rf tomcat8080
+cp -R apache-tomcat-\$version tomcat8080
+mv server.xml tomcat8080/conf/
+mv catalina.sh tomcat8080/bin/
+cp -R tomcat8081/webapps* tomcat8080
+tomcat8080/bin/catalina.sh start
+sleep 120
+tomcat8081/bin/catalina.sh stop 10 -force
+cp tomcat8081/conf/server.xml .
+cp tomcat8081/bin/catalina.sh .
+rm -rf tomcat8081
+cp -R apache-tomcat-\$version tomcat8081
+mv server.xml tomcat8081/conf/
+mv catalina.sh tomcat8081/bin/
+cp -R tomcat8080/webapps* tomcat8081
+tomcat8081/bin/catalina.sh start
+EOF
+chown $USER:$USER upgrade_tomcat.sh
+chmod +x upgrade_tomcat.sh
+fi
+
 
 #config nginx
 if [ -f /etc/nginx/sites-enabled/default ] && ! $(more /etc/nginx/sites-enabled/default|grep backend >/dev/null 2>&1) ; then
