@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.Topic;
+import org.springframework.data.redis.serializer.SerializationException;
 
 @SuppressWarnings("rawtypes")
 public abstract class RedisTopic<T extends Serializable> implements
@@ -46,8 +47,14 @@ public abstract class RedisTopic<T extends Serializable> implements
 		messageListenerContainer.addMessageListener(new MessageListener() {
 			@Override
 			public void onMessage(Message message, byte[] pattern) {
-				subscribe((T) redisTemplate.getValueSerializer().deserialize(
-						message.getBody()));
+				try {
+					subscribe((T) redisTemplate.getValueSerializer()
+							.deserialize(message.getBody()));
+				} catch (SerializationException e) {
+					// message from other app
+					if (!(e.getCause() instanceof ClassNotFoundException))
+						throw e;
+				}
 			}
 		}, Collections.singleton(topic));
 	}
