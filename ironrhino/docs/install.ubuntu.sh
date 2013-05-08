@@ -125,7 +125,7 @@ fi
 
 if [ ! -f upgrade_tomcat.sh ]; then
 cat>upgrade_tomcat.sh<<EOF
-version=`tomcat8080/bin/version.sh|grep 'Server version'|awk -F '/' '{print \$2}'|tr -d ' '`
+version=\`tomcat8080/bin/version.sh|grep 'Server version'|awk -F '/' '{print \$2}'|tr -d ' '\`
 if [ "\$1" = "" ];  then
     echo "current version is \$version, if you want to upgrade, please run \$0 version"
     exit 1
@@ -316,7 +316,7 @@ update-rc.d iptables defaults
 service iptables start
 fi
 
-#install or upgrade redis
+#install redis
 if ! which redis-server > /dev/null && ! $(ls -l redis-*.tar.gz >/dev/null 2>&1) ; then
 wget http://redis.googlecode.com/files/redis-2.6.13.tar.gz
 fi
