@@ -275,7 +275,7 @@ fi
 
 #install or upgrade redis
 if ! which redis-server > /dev/null && ! $(ls -l redis-*.tar.gz >/dev/null 2>&1) ; then
-wget http://redis.googlecode.com/files/redis-2.6.10.tar.gz
+wget http://redis.googlecode.com/files/redis-2.6.13.tar.gz
 fi
 if $(ls -l redis-*.tar.gz >/dev/null 2>&1) ; then
 tar xvf redis-*.tar.gz >/dev/null && rm -rf redis-*.tar.gz
