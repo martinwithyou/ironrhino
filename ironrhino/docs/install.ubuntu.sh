@@ -14,6 +14,7 @@ apt-get --force-yes --yes install openjdk-7-jdk ant mysql-server subversion ngin
 
 #config mysql
 if [ -f "/etc/mysql/my.cnf" ] && ! $(more /etc/mysql/my.cnf|grep collation-server >/dev/null 2>&1) ; then
+sed -i '32i innodb_stats_on_metadata = off' /etc/mysql/my.cnf
 sed -i '32i collation-server = utf8_general_ci' /etc/mysql/my.cnf
 sed -i '32i character-set-server = utf8' /etc/mysql/my.cnf
 service mysql restart
