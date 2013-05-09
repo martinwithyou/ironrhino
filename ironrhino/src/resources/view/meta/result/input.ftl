@@ -22,7 +22,7 @@
 		</#if>
 		<#if !(entity.new && readonly)>
 			<#if config.type=='textarea'>
-				<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cssStyle="${(config.cssClass?contains('span')||config.cssClass?contains('input-'))?string('','width:400px;')}height:150px;" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes/>
+				<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cssStyle="${(config.cssClass?contains('span')||config.cssClass?contains('input-'))?string('','width:400px;')}height:150px;" readonly=readonly dynamicAttributes=config.dynamicAttributes/>
 			<#elseif config.type=='checkbox'>
 				<#if !readonly>
 					<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass+config.cssClass?has_content?string(' ','')}custom" dynamicAttributes=config.dynamicAttributes />
@@ -77,11 +77,7 @@
 					</div>
 				</#if>
 			<#else>
-				<#if config.maxlength gt 0>
-					<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" type="${(config.inputType!)}" cssClass="${config.cssClass}" maxlength="${(config.maxlength)}" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes />
-				<#else>
-					<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" type="${(config.inputType!)}" cssClass="${config.cssClass}" readonly="${readonly?string}" dynamicAttributes=config.dynamicAttributes />
-				</#if>
+				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" type="${(config.inputType!)}" cssClass="${config.cssClass}" maxlength="${(config.maxlength gt 0)?string(config.maxlength,'')}" readonly=readonly dynamicAttributes=config.dynamicAttributes />
 			</#if>
 		</#if>
 		</#if>
