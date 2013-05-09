@@ -126,7 +126,7 @@ fi
 if [ ! -f upgrade_tomcat.sh ]; then
 cat>upgrade_tomcat.sh<<EOF
 version=\`tomcat8080/bin/version.sh|grep 'Server version'|awk -F '/' '{print \$2}'|tr -d ' '\`
-if [ "\$1" = "" ];  then
+if [ "\$1" = "" ] || [ "\$1" = "-help" ] || [ "\$1" = "--help" ];  then
     echo "current version is \$version, if you want to upgrade, please run \$0 version"
     exit 1
 fi
@@ -203,7 +203,7 @@ fi
 #generate deploy.sh
 if [ ! -f deploy.sh ]; then
 cat>deploy.sh<<EOF
-if [ "\$1" = "" ];  then
+if [ "\$1" = "" ] || [ "\$1" = "-help" ] || [ "\$1" = "--help" ];  then
     echo "please run \$0 name"
     exit 1
 elif [ ! -d "\$1" ]; then
@@ -243,7 +243,7 @@ fi
 #generate rollback.sh
 if [ ! -f rollback.sh ]; then
 cat>rollback.sh<<EOF
-if [ "\$1" = "" ];  then
+if [ "\$1" = "" ] || [ "\$1" = "-help" ] || [ "\$1" = "--help" ];  then
     echo "please run \$0 name"
     exit 1
 elif [ ! -d "\$1" ]; then
@@ -329,6 +329,42 @@ cd ../../
 rm -rf redis
 sed -i '31i bind 127.0.0.1' /etc/redis/6379.conf
 fi
+
+if [ ! -f upgrade_redis.sh ]; then
+cat>upgrade_redis.sh<<EOF
+#must run with sudo
+if [ ! -n "\$SUDO_USER" ];then
+echo please run sudo \$0
+exit 1
+fi
+version=\`redis-cli --version|awk -F ' ' '{print \$2}'|tr -d ' '\`
+if [ "\$1" = "" ] || [ "\$1" = "-help" ] || [ "\$1" = "--help" ];  then
+    echo "current version is \$version, if you want to upgrade, please run \$0 version"
+    exit 1
+fi
+if expr "\$version" \>= "\$1" >/dev/null 2>&1; then
+   echo "target version \$1 is le than current version \$version"
+   exit 1
+fi
+version="\$1"
+if [ ! -d redis-\$version ];then
+if [ ! -f redis-\$version.tar.gz ];then
+wget http://redis.googlecode.com/files/redis-\$version.tar.gz
+fi
+tar xf redis-\$version.tar.gz && rm -rf redis-\$version.tar.gz
+fi
+cd redis-\$version && make > /dev/null && make install > /dev/null
+cd utils && ./install_server.sh
+cd ../../
+rm -rf redis-\$version
+sed -i '31i bind 127.0.0.1' /etc/redis/6379.conf
+service redis_6379 stop
+service redis_6379 start
+EOF
+chown $USER:$USER upgrade_redis.sh
+chmod +x upgrade_redis.sh
+fi
+
 
 #svn checkout ironrhino
 if [ ! -d ironrhino ];then
