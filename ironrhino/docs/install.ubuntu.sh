@@ -130,7 +130,7 @@ if [ "\$1" = "" ] || [ "\$1" = "-help" ] || [ "\$1" = "--help" ];  then
     echo "current version is \$version, if you want to upgrade, please run \$0 version"
     exit 1
 fi
-if expr "\$version" \>= "\$1" >/dev/null 2>&1; then
+if [  "\$1" = "\`echo -e "\$1\n\$version" | sort -V | head -n1\`" ]; then
    echo "target version \$1 is le than current version \$version"
    exit 1
 fi
@@ -342,7 +342,7 @@ if [ "\$1" = "" ] || [ "\$1" = "-help" ] || [ "\$1" = "--help" ];  then
     echo "current version is \$version, if you want to upgrade, please run \$0 version"
     exit 1
 fi
-if expr "\$version" \>= "\$1" >/dev/null 2>&1; then
+if [  "\$1" = "\`echo -e "\$1\n\$version" | sort -V | head -n1\`" ]; then
    echo "target version \$1 is le than current version \$version"
    exit 1
 fi
