@@ -34,14 +34,19 @@ public abstract class Entity<PK extends Serializable> implements
 				&& !object.getClass().isAssignableFrom(this.getClass()))
 			return false;
 		Entity that = (Entity) object;
-		return this.toIdentifiedString().equals(that.toIdentifiedString());
+		return this.toIdentifiedString() != null
+				&& this.toIdentifiedString().equals(that.toIdentifiedString());
 	}
 
 	private String toIdentifiedString() {
 		Map<String, Object> map = AnnotationUtils
 				.getAnnotatedPropertyNameAndValues(this, NaturalId.class);
-		if (map.size() == 1)
-			return String.valueOf(map.values().iterator().next());
+		if (map.size() == 1) {
+			Object naturalId = map.values().iterator().next();
+			if (naturalId == null)
+				return null;
+			return String.valueOf(naturalId);
+		}
 		return getClass().getName() + "{id=" + getId() + ",naturalId="
 				+ map.toString() + "}";
 	}

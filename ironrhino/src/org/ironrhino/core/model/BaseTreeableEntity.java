@@ -235,6 +235,22 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	}
 
 	@Override
+	public int hashCode() {
+		String fullname = getFullname();
+		return fullname != null ? getFullname().hashCode() : 0;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (object == this)
+			return true;
+		if (object == null || this.getClass() != object.getClass()
+				|| this.hashCode() == 0 || object.hashCode() == 0)
+			return false;
+		return this.hashCode() == object.hashCode();
+	}
+
+	@Override
 	public String toString() {
 		return this.name;
 	}

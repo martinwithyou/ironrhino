@@ -67,8 +67,8 @@ public class RegionParser {
 		for (int i = 1; i < array.length; i++) {
 			Region child = parseLine(array[i]);
 			child.setDisplayOrder(i - 1);
-			region.getChildren().add(child);
 			child.setParent(region);
+			region.getChildren().add(child);
 		}
 		return region;
 	}
@@ -92,8 +92,8 @@ public class RegionParser {
 			}
 			for (int i = 0; i < list.size(); i++) {
 				Region child = new Region(list.get(i), i);
-				region.getChildren().add(child);
 				child.setParent(region);
+				region.getChildren().add(child);
 			}
 		}
 		return region;
