@@ -103,9 +103,12 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	}
 
 	public String getFullname() {
+		return getFullname(getFullnameSeperator());
+	}
+
+	public String getFullname(String seperator) {
 		if (name == null)
 			return null;
-		String seperator = getFullnameSeperator();
 		StringBuilder fullname = new StringBuilder(name);
 		BaseTreeableEntity e = this;
 		while ((e = e.getParent()) != null) {
@@ -236,7 +239,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	@Override
 	public int hashCode() {
-		String fullname = getFullname();
+		String fullname = getFullname(",");
 		return fullname != null ? getFullname().hashCode() : 0;
 	}
 
