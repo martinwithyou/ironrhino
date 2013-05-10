@@ -99,9 +99,9 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-sandbox-4.2.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/lucene-codecs-4.2.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-annotations-2.2.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-2.2.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-databind-2.2.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-annotations-2.2.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-2.2.1.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-databind-2.2.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jpa-api-2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-core-4.2.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mmseg4j-core-1.9.1.jar"/>
