@@ -12,6 +12,7 @@ fi
 apt-get update
 apt-get --force-yes --yes install openjdk-7-jdk ant mysql-server subversion nginx chkconfig sysv-rc-conf fontconfig xfonts-utils unzip wget iptables make gcc
 apt-get --force-yes --yes remove openjdk-6-jre-headless
+ln -s /usr/lib/insserv/insserv /sbin/insserv
 
 #config mysql
 if [ -f "/etc/mysql/my.cnf" ] && ! $(more /etc/mysql/my.cnf|grep collation-server >/dev/null 2>&1) ; then
