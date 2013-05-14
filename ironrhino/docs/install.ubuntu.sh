@@ -145,7 +145,13 @@ fi
 tar xf apache-tomcat-\$version.tar.gz && rm -rf apache-tomcat-\$version.tar.gz
 cd apache-tomcat-\$version && rm -rf bin/*.bat && rm -rf webapps/* && cd ..
 fi
+running=0
+if [ -f /tmp/tomcat8080_pid ] && [ ! "\$( ps -P \`more /tmp/tomcat8080_pid\`|grep tomcat8080)" = "" ] ; then
+running=1
+fi
+if [ \$running = 1 ];then
 tomcat8080/bin/catalina.sh stop 10 -force
+fi
 cp tomcat8080/conf/server.xml .
 cp tomcat8080/bin/catalina.sh .
 rm -rf tomcat8080
@@ -153,9 +159,11 @@ cp -R apache-tomcat-\$version tomcat8080
 mv server.xml tomcat8080/conf/
 mv catalina.sh tomcat8080/bin/
 cp -R tomcat8081/webapps* tomcat8080
+if [ \$running = 1 ];then
 tomcat8080/bin/catalina.sh start
 sleep 120
 tomcat8081/bin/catalina.sh stop 10 -force
+fi
 cp tomcat8081/conf/server.xml .
 cp tomcat8081/bin/catalina.sh .
 rm -rf tomcat8081
@@ -163,7 +171,9 @@ cp -R apache-tomcat-\$version tomcat8081
 mv server.xml tomcat8081/conf/
 mv catalina.sh tomcat8081/bin/
 cp -R tomcat8080/webapps* tomcat8081
+if [ \$running = 1 ];then
 tomcat8081/bin/catalina.sh start
+fi
 EOF
 chown $USER:$USER upgrade_tomcat.sh
 chmod +x upgrade_tomcat.sh
