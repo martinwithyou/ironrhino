@@ -43,36 +43,22 @@ $(function(){
 			});
 		});
 		<#if printSetting??>
-		$('#switch .btn-group').each(function() {
-			var t = $(this);
-			$('.active',t).css({
-									'font-weight' : 'bold'
-								});
-			t.children().click(function() {
-						var button = $(this);
-						if(button.hasClass('active'))
-							return;
-						var key = button.closest('div').prev().text();
-						var value = button.data('value');
-						$.post('<@url value="${actionBaseUrl}/executeJson"/>',
+		$('#switch input:checkbox').change(function(e){
+			var t = this;
+			var key = t.name;
+			var value = t.checked;
+			$.post('<@url value="${actionBaseUrl}/executeJson"/>',
 								{
 								expression : 'settingControl.setValue("'+key+'","'+value+'")',
 								global: false
 								}
 								,function(data){
 									if(data && data.actionErrors){
+										$(t).closest('.switch').bootstrapSwitch('toggleState');
 										alert(data.actionErrors[0]);
 										return;
 									}
-									t.children().removeClass('active').css({
-												'font-weight' : 'normal'
-											});
-									button.addClass('active').css({
-												'font-weight' : 'bold'
-											});
 								});
-						
-					});
 		});
 		</#if>
 							
@@ -109,8 +95,8 @@ $(function(){
 	<#if index%3 == 0>
 	<div class="row-fluid">
 	</#if>
-	<div class="span2 key"<#if setting.description?has_content> title="${setting.description}"</#if> data-key="${setting.key}">${action.getText(setting.key)}</div>
-	<div class="span2"><span class="btn-group"><button class="btn<#if setting.value=='true'> active</#if>" data-value="true">${action.getText("true")}</button><button class="btn<#if setting.value=='false'> active</#if>" data-value="false">${action.getText("false")}</button></span></div>
+	<div class="span2 key"<#if setting.description?has_content> title="${setting.description}"</#if>>${action.getText(setting.key)}</div>
+	<div class="span2"><div class="switch"><input type="checkbox" name="${setting.key}"<#if setting.value=='true'> checked="checked"</#if>></div></div>
 	<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
 	</div>
 	</#if>
