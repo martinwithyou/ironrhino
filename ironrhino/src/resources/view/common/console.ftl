@@ -96,7 +96,7 @@ $(function(){
 	<div class="row-fluid">
 	</#if>
 	<div class="span2 key"<#if setting.description?has_content> title="${setting.description}"</#if>>${action.getText(setting.key)}</div>
-	<div class="span2"><div class="switch"><input type="checkbox" name="${setting.key}"<#if setting.value=='true'> checked="checked"</#if>></div></div>
+	<div class="span2"><div class="switch" data-on-label="${action.getText('ON')}" data-off-label="${action.getText('OFF')}"><input type="checkbox" name="${setting.key}"<#if setting.value=='true'> checked="checked"</#if>></div></div>
 	<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
 	</div>
 	</#if>
