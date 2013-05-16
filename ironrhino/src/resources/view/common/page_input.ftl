@@ -8,9 +8,8 @@
 <script type="text/javascript">
 $(function() {
 		var cmsPath= $('meta[name="cms_path"]').attr('content') || '';
-		tinymce.init({
+		var options = {
 		    selector: "#page_content",
-		    language : MessageBundle.lang(),
 		    content_css : '<#if Parameters.content_css?has_content>${Parameters.content_css}<#else><@url value="/assets/styles/ironrhino-min.css"/></#if>',
 		    plugins: [
 		        "advlist autolink lists link image charmap print preview anchor",
@@ -18,7 +17,10 @@ $(function() {
 		        "insertdatetime media table contextmenu paste"
 		    ],
 		    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-		});
+		};
+		if(MessageBundle && MessageBundle.lang()!='en')
+			options.language=MessageBundle.lang();
+		tinymce.init(options);
 		setTimeout(function(){
 		var ed = tinymce.EditorManager.get('page_content');
 		$('#draft').click(function(){
