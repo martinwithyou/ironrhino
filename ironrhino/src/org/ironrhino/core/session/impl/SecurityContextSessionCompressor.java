@@ -9,6 +9,8 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.session.SessionCompressor;
 import org.ironrhino.core.util.CodecUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -22,6 +24,8 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 @Named
 public class SecurityContextSessionCompressor implements
 		SessionCompressor<SecurityContext> {
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Inject
 	private UserDetailsService userDetailsService;
@@ -61,7 +65,7 @@ public class SecurityContextSessionCompressor implements
 					sc.setAuthentication(new UsernamePasswordAuthenticationToken(
 							ud, ud.getPassword(), ud.getAuthorities()));
 			} catch (UsernameNotFoundException e) {
-				e.printStackTrace();
+				logger.warn(e.getMessage());
 			}
 		return sc;
 	}
