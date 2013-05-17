@@ -89,7 +89,7 @@ public class AppInfoListener implements ServletContextListener {
 	private Properties getProperties() {
 		if (properties == null) {
 			properties = new Properties();
-			Resource resource = new ClassPathResource("app.properties");
+			Resource resource = new ClassPathResource("ironrhino.properties");
 			if (resource.exists()) {
 				try (InputStream is = resource.getInputStream()) {
 					properties.load(is);
