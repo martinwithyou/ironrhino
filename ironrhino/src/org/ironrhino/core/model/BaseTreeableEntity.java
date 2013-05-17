@@ -184,6 +184,23 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		}
 		return null;
 	}
+	
+	public T getDescendantOrSelfByName(String name) {
+		if (name == null)
+			throw new IllegalArgumentException("name must not be null");
+		if (name.equals(this.getName()))
+			return (T) this;
+		for (T t : getChildren()) {
+			if (name.equals(t.getName())) {
+				return t;
+			} else {
+				T tt = (T) t.getDescendantOrSelfByName(name);
+				if (tt != null)
+					return tt;
+			}
+		}
+		return null;
+	}
 
 	@NotInJson
 	public List<T> getDescendants() {
