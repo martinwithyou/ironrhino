@@ -931,7 +931,8 @@ public class EntityAction extends BaseAction {
 					if (StringUtils.isBlank(uci.getCellEdit()))
 						uci.setCellEdit("click,date");
 				} else if (String.class == returnType
-						&& pd.getName().toLowerCase().contains("email")) {
+						&& pd.getName().toLowerCase().contains("email")
+						&& !pd.getName().contains("Password")) {
 					uci.setInputType("email");
 					uci.addCssClass("email");
 				} else if (returnType == Boolean.TYPE
