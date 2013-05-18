@@ -4,15 +4,16 @@ import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.util.AppInfo;
+import org.ironrhino.core.util.AppInfo.Stage;
+import org.ironrhino.core.util.CodecUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ironrhino.core.util.AppInfo;
-import org.ironrhino.core.util.CodecUtils;
-import org.ironrhino.core.util.AppInfo.Stage;
 
 public class RC4 {
 	private static Logger log = LoggerFactory.getLogger(RC4.class);
@@ -167,6 +168,8 @@ public class RC4 {
 			return URLDecoder.decode(
 					new String(rc4.rc4(Hex.decodeHex(input.toCharArray())),
 							"UTF-8"), "UTF-8");
+		} catch (DecoderException de) {
+			return input;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return input;
