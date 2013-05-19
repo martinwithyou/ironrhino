@@ -5,15 +5,18 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.core.annotation.Order;
 
 @SuppressWarnings("unchecked")
 public class AnnotationUtils {
@@ -39,16 +42,29 @@ public class AnnotationUtils {
 		sb.append(annotaionClass.getName());
 		String key = sb.toString();
 		if (!cache.containsKey(key)) {
-			Set<Method> set = new HashSet<Method>();
+			final Map<Method, Integer> map = new HashMap<Method, Integer>();
 			try {
 				Method[] methods = clazz.getMethods();
 				for (Method m : methods)
-					if (m.getAnnotation(annotaionClass) != null)
-						set.add(m);
+					if (m.getAnnotation(annotaionClass) != null) {
+						Order o = m.getAnnotation(Order.class);
+						map.put(m, o != null ? o.value() : 0);
+					}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			cache.put(key, set);
+			Map<Method, Integer> tree = new TreeMap<Method, Integer>(
+					new Comparator<Method>() {
+						@Override
+						public int compare(Method o1, Method o2) {
+							int result = map.get(o1).compareTo(map.get(o2));
+							return result != 0 ? result : o1.hashCode()
+									- o2.hashCode();
+						}
+
+					});
+			tree.putAll(map);
+			cache.put(key, tree.keySet());
 		}
 		return (Set<Method>) cache.get(key);
 	}
