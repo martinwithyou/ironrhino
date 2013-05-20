@@ -394,6 +394,7 @@ public class PageViewServiceImpl implements PageViewService {
 			put("bing", "q");
 			put("taobao", "q");
 			put("360", "q");
+			put("so", "q");
 			put("yahoo", "p");
 			put("baidu", "wd");
 			put("sogou", "query");
