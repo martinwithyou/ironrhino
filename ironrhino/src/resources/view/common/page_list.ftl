@@ -10,7 +10,7 @@
 '>
 <#assign bottomButtons='
 <button type="button" class="btn" data-view="input" data-windowoptions="{\'iframe\':true,\'width\':\'900px\'}">${action.getText("create")}</button>
-<button type="button" class="btn" data-action="delete">${action.getText("delete")}</button>
+<button type="button" class="btn" data-action="delete" data-shown="selected">${action.getText("delete")}</button>
 <button type="button" class="btn" data-action="reload">${action.getText("reload")}</button>
 '>
 <@richtable entityName="page" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false searchable=true/>

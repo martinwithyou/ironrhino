@@ -169,7 +169,7 @@
 <button type="button" class="btn hidden-pad" data-action="enable">${action.getText("enable")}</button>
 <button type="button" class="btn hidden-pad" data-action="disable">${action.getText("disable")}</button>
 </#if>
-<#if deleteable><button type="button" class="btn" data-action="delete">${action.getText("delete")}</button></#if>
+<#if deleteable><button type="button" class="btn" data-action="delete" data-shown="selected">${action.getText("delete")}</button></#if>
 </#if><button type="button" class="btn" data-action="reload">${action.getText("reload")}</button></#if>
 </div>
 <div class="search span2">

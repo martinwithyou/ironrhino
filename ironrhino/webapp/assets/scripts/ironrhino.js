@@ -35981,7 +35981,8 @@ Richtable = {
 				url += ids.join('&');
 			}
 		}
-		var data = $('input[type="hidden"],input[name="keyword"]', form).serialize();
+		var data = $('input[type="hidden"],input[name="keyword"]', form)
+				.serialize();
 		if (includeParams && data)
 			url += (url.indexOf('?') > 0 ? '&' : '?') + data;
 		return url;
@@ -36318,6 +36319,8 @@ Richtable = {
 							onsuccess : function() {
 								$('td', row).removeClass('edited')
 										.removeData('oldvalue');
+								$('.btn[data-action="save"]', form)
+										.removeClass('btn-primary').hide();
 							}
 						});
 			}
@@ -36397,6 +36400,10 @@ Richtable = {
 		} else {
 			cell.removeClass('edited');
 		}
+		var savebtn = $('.btn[data-action="save"]', cell.closest('form'));
+		$('td.edited', cell.closest('form')).length ? savebtn
+				.addClass('btn-primary').show() : savebtn
+				.removeClass('btn-primary').hide();
 	},
 	enhance : function(table) {
 		var t = $(table);
@@ -36553,6 +36560,39 @@ Initialization.richtable = function() {
 	});
 }
 Observation.richtable = function(container) {
+	$('.toolbar .btn[data-shown],.toolbar .btn[data-action="save"]', container)
+			.hide();
+	$('table.richtable', container)
+			.on(
+					'change',
+					'input[type="checkbox"][name="check"],input[type="checkbox"]:not([name])',
+					function() {
+						var checked = 0;
+						$('tbody tr', $(this).closest('table.richtable')).each(
+								function() {
+									if ($('td:eq(0) input[type="checkbox"]',
+											this).is(':checked'))
+										checked++;
+								});
+						var form = $(this).closest('form.richtable');
+						var selected = $(
+								'.toolbar .btn[data-shown="selected"]', form);
+						var singleselected = $(
+								'.toolbar .btn[data-shown="singleselected"]',
+								form);
+						var multiselected = $(
+								'.toolbar .btn[data-shown="multiselected"]',
+								form);
+						checked > 0
+								? selected.addClass('btn-primary').show()
+								: selected.removeClass('btn-primary').hide();
+						checked == 1 ? singleselected.addClass('btn-primary')
+								.show() : singleselected
+								.removeClass('btn-primary').hide();
+						checked > 1 ? multiselected.addClass('btn-primary')
+								.show() : multiselected
+								.removeClass('btn-primary').hide();
+					});
 	$('table.richtable', container).each(function() {
 				Richtable.enhance(this);
 			});
