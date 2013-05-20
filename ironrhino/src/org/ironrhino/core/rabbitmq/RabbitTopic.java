@@ -31,16 +31,10 @@ public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
 
 	protected String routingKey = "";
 
-	protected String globalQueueName;
+	protected String queueName;
 
-	protected String applicationQueueName;
-
-	public String getGlobalQueueName() {
-		return globalQueueName;
-	}
-
-	public String getApplicationQueueName() {
-		return applicationQueueName;
+	public String getQueueName() {
+		return queueName;
 	}
 
 	public RabbitTopic() {
@@ -53,27 +47,24 @@ public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
 	public void init() {
 		rabbitAdmin
 				.declareExchange(new TopicExchange(exchangeName, true, false));
-		Queue globalQueue = rabbitAdmin.declareQueue();
-		globalQueueName = globalQueue.getName();
-		rabbitAdmin.declareBinding(new Binding(globalQueueName,
-				DestinationType.QUEUE, exchangeName,
-				getRoutingKey(Scope.GLOBAL), null));
-		Queue applicationQueue = rabbitAdmin.declareQueue();
-		applicationQueueName = applicationQueue.getName();
-		rabbitAdmin.declareBinding(new Binding(applicationQueueName,
-				DestinationType.QUEUE, exchangeName,
-				getRoutingKey(Scope.APPLICATION), null));
+		Queue queue = rabbitAdmin.declareQueue();
+		queueName = queue.getName();
+		rabbitAdmin.declareBinding(new Binding(queueName,
+				DestinationType.QUEUE, exchangeName, routingKey + "@#", null));
 	}
 
 	@PreDestroy
 	public void destroy() {
-		rabbitAdmin.deleteQueue(globalQueueName);
-		rabbitAdmin.deleteQueue(applicationQueueName);
+		rabbitAdmin.deleteQueue(queueName);
 	}
 
-	public String getRoutingKey(Scope scope) {
-		return (scope == Scope.APPLICATION) ? routingKey + "@"
-				+ AppInfo.getAppName() : routingKey;
+	protected String getRoutingKey(Scope scope) {
+		if (scope == null || scope == Scope.LOCAL)
+			return null;
+		StringBuilder sb = new StringBuilder(routingKey).append("@");
+		if (scope == Scope.APPLICATION)
+			sb.append(AppInfo.getAppName());
+		return sb.toString();
 	}
 
 	public void publish(T message, Scope scope) {

@@ -67,9 +67,13 @@ public abstract class RedisTopic<T extends Serializable> implements
 		}, topics);
 	}
 
-	private String getChannelName(Scope scope) {
-		return (scope == Scope.APPLICATION) ? channelName + "@"
-				+ AppInfo.getAppName() : channelName;
+	protected String getChannelName(Scope scope) {
+		if (scope == null || scope == Scope.LOCAL)
+			return null;
+		StringBuilder sb = new StringBuilder(channelName).append("@");
+		if (scope == Scope.APPLICATION)
+			sb.append(AppInfo.getAppName());
+		return sb.toString();
 	}
 
 	public void publish(T message, Scope scope) {
