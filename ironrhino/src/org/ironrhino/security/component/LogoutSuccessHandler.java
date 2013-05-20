@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ironrhino.core.event.EventPublisher;
+import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.spring.security.DefaultLogoutSuccessHandler;
 import org.ironrhino.security.event.LogoutEvent;
 import org.ironrhino.security.model.User;
@@ -26,8 +27,8 @@ public class LogoutSuccessHandler extends DefaultLogoutSuccessHandler {
 		if (authentication != null) {
 			Object principal = authentication.getPrincipal();
 			if (principal instanceof User)
-				eventPublisher
-						.publish(new LogoutEvent((User) principal), false);
+				eventPublisher.publish(new LogoutEvent((User) principal),
+						Scope.LOCAL);
 		}
 	}
 

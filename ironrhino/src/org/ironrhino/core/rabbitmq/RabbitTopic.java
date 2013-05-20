@@ -7,6 +7,8 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.ironrhino.core.message.Topic;
+import org.ironrhino.core.metadata.Scope;
+import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.ReflectionUtils;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
@@ -29,14 +31,16 @@ public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
 
 	protected String routingKey = "";
 
-	protected String queueName;
+	protected String globalQueueName;
 
-	public String getQueueName() {
-		return queueName;
+	protected String applicationQueueName;
+
+	public String getGlobalQueueName() {
+		return globalQueueName;
 	}
 
-	public void setQueueName(String queueName) {
-		this.queueName = queueName;
+	public String getApplicationQueueName() {
+		return applicationQueueName;
 	}
 
 	public RabbitTopic() {
@@ -49,22 +53,34 @@ public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
 	public void init() {
 		rabbitAdmin
 				.declareExchange(new TopicExchange(exchangeName, true, false));
-		Queue q = rabbitAdmin.declareQueue();
-		queueName = q.getName();
-		rabbitAdmin.declareBinding(new Binding(queueName,
-				DestinationType.QUEUE, exchangeName, routingKey, null));
+		Queue globalQueue = rabbitAdmin.declareQueue();
+		globalQueueName = globalQueue.getName();
+		rabbitAdmin.declareBinding(new Binding(globalQueueName,
+				DestinationType.QUEUE, exchangeName,
+				getRoutingKey(Scope.GLOBAL), null));
+		Queue applicationQueue = rabbitAdmin.declareQueue();
+		applicationQueueName = applicationQueue.getName();
+		rabbitAdmin.declareBinding(new Binding(applicationQueueName,
+				DestinationType.QUEUE, exchangeName,
+				getRoutingKey(Scope.APPLICATION), null));
 	}
 
 	@PreDestroy
 	public void destroy() {
-		rabbitAdmin.deleteQueue(queueName);
+		rabbitAdmin.deleteQueue(globalQueueName);
+		rabbitAdmin.deleteQueue(applicationQueueName);
 	}
 
-	public String getRoutingKey() {
-		return routingKey;
+	public String getRoutingKey(Scope scope) {
+		return (scope == Scope.APPLICATION) ? routingKey + "@"
+				+ AppInfo.getAppName() : routingKey;
 	}
 
-	public void publish(T message) {
-		amqpTemplate.convertAndSend(exchangeName, getRoutingKey(), message);
+	public void publish(T message, Scope scope) {
+		if (scope == null || scope == Scope.LOCAL)
+			subscribe(message);
+		else
+			amqpTemplate.convertAndSend(exchangeName, getRoutingKey(scope),
+					message);
 	}
 }

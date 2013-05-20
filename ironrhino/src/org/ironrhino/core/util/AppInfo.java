@@ -13,7 +13,7 @@ public class AppInfo {
 	public static final String KEY_APP_NAME = "app.name";
 
 	public static final String KEY_APP_HOME = "app.home";
-	
+
 	public static final String KEY_APP_BASEPACKAGE = "app.basePackage";
 
 	public static final String KEY_APP_VERSION = "app.version";
@@ -27,7 +27,7 @@ public class AppInfo {
 	private static String _instanceId;
 
 	private static String home;
-	
+
 	private static String basePackage;
 
 	private static String version = "1.0.0";
@@ -105,8 +105,8 @@ public class AppInfo {
 	public static void setAppHome(String home) {
 		AppInfo.home = home;
 	}
-	
-	public static void setAppBasePackage(String basePackage){
+
+	public static void setAppBasePackage(String basePackage) {
 		AppInfo.basePackage = basePackage;
 	}
 
@@ -143,8 +143,8 @@ public class AppInfo {
 		}
 		return home;
 	}
-	
-	public static String getAppBasePackage(){
+
+	public static String getAppBasePackage() {
 		return basePackage;
 	}
 

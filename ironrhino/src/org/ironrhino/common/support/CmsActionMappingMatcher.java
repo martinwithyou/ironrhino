@@ -95,7 +95,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);
 				if (StringUtils.isNumeric(pn))
 					params.put("resultPage.pageNo", pn);
-				String ps = request.getParameter(ResultPage.PAGESIZE_PARAM_NAME);
+				String ps = request
+						.getParameter(ResultPage.PAGESIZE_PARAM_NAME);
 				if (StringUtils.isNumeric(ps))
 					params.put("resultPage.pageSize", ps);
 				if (uri.startsWith(pageurl)) {
@@ -121,7 +122,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);
 				if (StringUtils.isNumeric(pn))
 					params.put("resultPage.pageNo", pn);
-				String ps = request.getParameter(ResultPage.PAGESIZE_PARAM_NAME);
+				String ps = request
+						.getParameter(ResultPage.PAGESIZE_PARAM_NAME);
 				if (StringUtils.isNumeric(ps))
 					params.put("resultPage.pageSize", ps);
 				if (uri.startsWith(listurl)) {
@@ -160,7 +162,8 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);
 				if (StringUtils.isNumeric(pn))
 					params.put("resultPage.pageNo", pn);
-				String ps = request.getParameter(ResultPage.PAGESIZE_PARAM_NAME);
+				String ps = request
+						.getParameter(ResultPage.PAGESIZE_PARAM_NAME);
 				if (StringUtils.isNumeric(ps))
 					params.put("resultPage.pageSize", ps);
 				if (uri.startsWith(listurl)) {

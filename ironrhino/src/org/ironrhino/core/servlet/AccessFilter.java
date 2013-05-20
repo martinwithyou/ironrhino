@@ -81,7 +81,8 @@ public class AccessFilter implements Filter {
 	@PostConstruct
 	public void _init() {
 		if (StringUtils.isNotBlank(excludePatterns))
-			excludePatternsList = Arrays.asList(excludePatterns.split("\\s*,\\s*"));
+			excludePatternsList = Arrays.asList(excludePatterns
+					.split("\\s*,\\s*"));
 		handlers = ctx.getBeansOfType(AccessHandler.class).values();
 	}
 

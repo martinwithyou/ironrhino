@@ -15,6 +15,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.ironrhino.core.event.EventPublisher;
+import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.remoting.ExportServicesEvent;
 import org.ironrhino.core.util.AppInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 		if (!services.isEmpty()) {
 			ExportServicesEvent event = new ExportServicesEvent(
 					new ArrayList<String>(services));
-			eventPublisher.publish(event, true);
+			eventPublisher.publish(event, Scope.GLOBAL);
 		}
 		writeDiscoveredServices();
 		ready = true;

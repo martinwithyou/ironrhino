@@ -1,11 +1,14 @@
 package org.ironrhino.core.redis;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.ironrhino.core.metadata.Scope;
+import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.ReflectionUtils;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -43,7 +46,12 @@ public abstract class RedisTopic<T extends Serializable> implements
 	@PostConstruct
 	@SuppressWarnings("unchecked")
 	public void afterPropertiesSet() {
-		Topic topic = new ChannelTopic(channelName);
+		Topic globalTopic = new ChannelTopic(getChannelName(Scope.GLOBAL));
+		Topic applicationTopic = new ChannelTopic(
+				getChannelName(Scope.APPLICATION));
+		List<Topic> topics = new ArrayList<Topic>();
+		topics.add(globalTopic);
+		topics.add(applicationTopic);
 		messageListenerContainer.addMessageListener(new MessageListener() {
 			@Override
 			public void onMessage(Message message, byte[] pattern) {
@@ -56,11 +64,19 @@ public abstract class RedisTopic<T extends Serializable> implements
 						throw e;
 				}
 			}
-		}, Collections.singleton(topic));
+		}, topics);
 	}
 
-	public void publish(T message) {
-		redisTemplate.convertAndSend(channelName, message);
+	private String getChannelName(Scope scope) {
+		return (scope == Scope.APPLICATION) ? channelName + "@"
+				+ AppInfo.getAppName() : channelName;
+	}
+
+	public void publish(T message, Scope scope) {
+		if (scope == null || scope == Scope.LOCAL)
+			subscribe(message);
+		else
+			redisTemplate.convertAndSend(getChannelName(scope), message);
 	}
 
 }

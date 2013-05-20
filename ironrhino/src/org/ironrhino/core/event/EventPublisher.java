@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.ironrhino.core.metadata.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -28,11 +29,12 @@ public class EventPublisher implements
 	@Autowired(required = false)
 	private ExecutorService executorService;
 
-	public void publish(final ApplicationEvent event, final boolean global) {
+	public void publish(final ApplicationEvent event, final Scope scope) {
 		Runnable task = new Runnable() {
 			public void run() {
-				if (applicationEventTopic != null && global)
-					applicationEventTopic.publish(event);
+				if (applicationEventTopic != null && scope != null
+						&& scope != Scope.LOCAL)
+					applicationEventTopic.publish(event, scope);
 				else
 					publisher.publishEvent(event);
 			}
@@ -49,12 +51,14 @@ public class EventPublisher implements
 			return;
 		if (event instanceof ContextRefreshedEvent) {
 			if (applicationEventTopic != null)
-				applicationEventTopic.publish(new InstanceStartupEvent());
+				applicationEventTopic.publish(new InstanceStartupEvent(),
+						Scope.GLOBAL);
 			else
 				publisher.publishEvent(new InstanceStartupEvent());
 		} else if (event instanceof ContextClosedEvent) {
 			if (applicationEventTopic != null)
-				applicationEventTopic.publish(new InstanceShutdownEvent());
+				applicationEventTopic.publish(new InstanceShutdownEvent(),
+						Scope.GLOBAL);
 			else
 				publisher.publishEvent(new InstanceShutdownEvent());
 		}

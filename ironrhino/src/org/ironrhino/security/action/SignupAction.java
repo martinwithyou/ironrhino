@@ -12,6 +12,7 @@ import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.mail.MailService;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
+import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.metadata.Redirect;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.struts.BaseAction;
@@ -126,14 +127,14 @@ public class SignupAction extends BaseAction {
 		user.setLegiblePassword(password);
 		user.setEnabled(!activationRequired);
 		userManager.save(user);
-		eventPublisher.publish(new SignupEvent(user), false);
+		eventPublisher.publish(new SignupEvent(user), Scope.LOCAL);
 		if (activationRequired) {
 			user.setPassword(password);// for send mail
 			addActionMessage(getText("signup.success"));
 			sendActivationMail(user);
 		} else {
 			AuthzUtils.autoLogin(user);
-			eventPublisher.publish(new LoginEvent(user), false);
+			eventPublisher.publish(new LoginEvent(user), Scope.LOCAL);
 		}
 		targetUrl = "/";
 		return REDIRECT;
@@ -178,7 +179,7 @@ public class SignupAction extends BaseAction {
 					AuthzUtils.autoLogin(ud);
 					LoginEvent loginEvent = new LoginEvent(ud);
 					loginEvent.setFirst(true);
-					eventPublisher.publish(loginEvent, false);
+					eventPublisher.publish(loginEvent, Scope.LOCAL);
 				} catch (RuntimeException e) {
 					log.warn(e.getMessage(), e);
 				}

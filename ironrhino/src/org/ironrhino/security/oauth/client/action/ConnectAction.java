@@ -11,6 +11,7 @@ import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
@@ -129,13 +130,13 @@ public class ConnectAction extends BaseAction {
 							token);
 					userManager.save(user);
 					eventPublisher.publish(new SignupEvent(user, "oauth",
-							provider.getName()), false);
+							provider.getName()), Scope.LOCAL);
 					loginEvent = new LoginEvent(user, "oauth",
 							provider.getName());
 					loginEvent.setFirst(true);
 				}
 				AuthzUtils.autoLogin(user);
-				eventPublisher.publish(loginEvent, false);
+				eventPublisher.publish(loginEvent, Scope.LOCAL);
 			} else {
 				OAuthTokenUtils
 						.putTokenIntoUserAttribute(provider, user, token);

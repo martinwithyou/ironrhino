@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.event.ExpressionEvent;
+import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.metadata.PostPropertiesReset;
 import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.util.AnnotationUtils;
@@ -117,7 +118,8 @@ public class ApplicationContextConsole implements
 			value = executeMethodInvocation(expression);
 		}
 		if (global)
-			eventPublisher.publish(new ExpressionEvent(expression), true);
+			eventPublisher.publish(new ExpressionEvent(expression),
+					Scope.GLOBAL);
 		return value;
 	}
 

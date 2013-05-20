@@ -59,13 +59,13 @@ public class BeanUtilsTest {
 		user1.setId("test");
 		user1.setUsername("username");
 		user1.setPassword("password");
-		
+
 		User user2 = new User();
 		BeanUtils.copyProperties(user1, user2);
 		assertNotNull(user2.getId());
 		assertNotNull(user2.getUsername());
 		assertNull(user2.getPassword());
-		
+
 		user2 = new User();
 		BeanUtils.copyProperties(user1, user2, "id");
 		assertNull(user2.getId());

@@ -184,7 +184,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		}
 		return null;
 	}
-	
+
 	public T getDescendantOrSelfByName(String name) {
 		if (name == null)
 			throw new IllegalArgumentException("name must not be null");

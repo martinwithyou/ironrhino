@@ -9,6 +9,7 @@ import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Captcha;
+import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.metadata.Redirect;
 import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
 import org.ironrhino.core.spring.security.DefaultUsernamePasswordAuthenticationFilter;
@@ -100,7 +101,7 @@ public class LoginAction extends BaseAction {
 				Object principal = authResult.getPrincipal();
 				if (principal instanceof User)
 					eventPublisher.publish(new LoginEvent((User) principal),
-							false);
+							Scope.LOCAL);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}

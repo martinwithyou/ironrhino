@@ -7,9 +7,11 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.ironrhino.core.metadata.Scope;
+
 @Target(TYPE)
 @Retention(RUNTIME)
 @Inherited
 public @interface PublishAware {
-	boolean global() default true;
+	Scope scope() default Scope.APPLICATION;
 }

@@ -37,7 +37,7 @@ public class PublishAspect extends BaseAspect {
 				if (publishAware != null)
 					eventPublisher.publish(new EntityOperationEvent(
 							(Persistable) entity, EntityOperationType.DELETE),
-							publishAware.global());
+							publishAware.scope());
 			}
 	}
 
@@ -51,7 +51,7 @@ public class PublishAspect extends BaseAspect {
 				eventPublisher.publish(new EntityOperationEvent(entity,
 						isNew ? EntityOperationType.CREATE
 								: EntityOperationType.UPDATE), publishAware
-						.global());
+						.scope());
 		}
 		return result;
 	}
@@ -62,7 +62,7 @@ public class PublishAspect extends BaseAspect {
 			return;
 		if (eventPublisher != null)
 			eventPublisher.publish(new EntityOperationEvent(entity,
-					EntityOperationType.DELETE), publishAware.global());
+					EntityOperationType.DELETE), publishAware.scope());
 	}
 
 }
