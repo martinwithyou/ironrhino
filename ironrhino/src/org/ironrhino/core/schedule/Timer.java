@@ -6,12 +6,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.ironrhino.core.metadata.Scope;
+
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface Timer {
 
 	Period period();
 
-	boolean global() default false;
+	Scope scope() default Scope.LOCAL;
 
 }

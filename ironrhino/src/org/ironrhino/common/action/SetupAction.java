@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.metadata.Setup;
 import org.ironrhino.core.metadata.SetupParameter;
 import org.ironrhino.core.model.Ordered;
@@ -79,7 +80,7 @@ public class SetupAction extends BaseAction {
 						.getBean(ApplicationContextConsole.class);
 				String expression = "settingControl.getBooleanValue(\""
 						+ SETUP_ENABLED_KEY + "\",true)";
-				return (Boolean) console.execute(expression, false);
+				return (Boolean) console.execute(expression, Scope.LOCAL);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -94,7 +95,7 @@ public class SetupAction extends BaseAction {
 						.getBean(ApplicationContextConsole.class);
 				String expression = "settingControl.setValue(\""
 						+ SETUP_ENABLED_KEY + "\",\"false\")";
-				console.execute(expression, false);
+				console.execute(expression, Scope.LOCAL);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

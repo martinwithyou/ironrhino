@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.ironrhino.core.mail.MailService;
+import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.util.ExceptionUtils;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class BatchExecutor {
 	public void execute() {
 		for (String cmd : commands) {
 			try {
-				applicationContextConsole.execute(cmd, false);
+				applicationContextConsole.execute(cmd, Scope.LOCAL);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				if (mailService != null) {

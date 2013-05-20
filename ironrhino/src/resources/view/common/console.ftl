@@ -3,9 +3,6 @@
 <head>
 <title>${action.getText('console')}</title>
 <style>
-#expression{
-	width: 400px;
-}
 .row-fluid{
 	margin-top: 10px;
 }
@@ -23,7 +20,7 @@ $(function(){
 				url:'<@url value="${actionBaseUrl}/executeJson"/>',
 				data:{
 					expression : $(this).data('expression')||$(this).text(),
-					global: $(this).data('global')||'false'
+					scope: $(this).data('scope')
 				},
 				beforeSend:function(){
 					t.prop('disabled',true);
@@ -49,8 +46,7 @@ $(function(){
 			var value = t.checked;
 			$.post('<@url value="${actionBaseUrl}/executeJson"/>',
 								{
-								expression : 'settingControl.setValue("'+key+'","'+value+'")',
-								global: false
+								expression : 'settingControl.setValue("'+key+'","'+value+'")'
 								}
 								,function(data){
 									if(data && data.actionErrors){
@@ -67,8 +63,8 @@ $(function(){
 </head>
 <body>
 <@s.form id="form" action="console" method="post" cssClass="ajax focus form-inline well">
-	<span>${action.getText('expression')}:<@s.textfield theme="simple" id="expression" name="expression"/></span>
-	<label for="global">${action.getText('global')}:</label><@s.checkbox theme="simple" id="global" name="global" cssClass="custom"/>
+	<span>${action.getText('expression')}:<@s.textfield theme="simple" id="expression" name="expression" cssClass="input-xxlarge"/></span>
+	<span>${action.getText('scope')}:<@s.select theme="simple" id="scope" name="scope" cssClass="input-medium" list="@org.ironrhino.core.metadata.Scope@values()"/></span>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 </@s.form>
 <div id="trigger" class="well">
@@ -79,7 +75,7 @@ $(function(){
 	<#if index%3 == 0>
 	<div class="row-fluid">
 	</#if>
-	<button type="button" class="btn span4" data-global="${triggers[expression]?string}"  data-expression="${expression}">${action.getText(expression)}</button>
+	<button type="button" class="btn span4" data-scope="${triggers[expression]?string}"  data-expression="${expression}">${action.getText(expression)}</button>
 	<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
 	</div>
 	</#if>

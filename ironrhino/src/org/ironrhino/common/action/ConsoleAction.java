@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.JsonUtils;
@@ -28,7 +29,7 @@ public class ConsoleAction extends BaseAction {
 
 	private String expression;
 
-	private boolean global = false;
+	private Scope scope = Scope.LOCAL;
 
 	private Object result;
 
@@ -43,12 +44,12 @@ public class ConsoleAction extends BaseAction {
 		this.expression = expression;
 	}
 
-	public boolean isGlobal() {
-		return global;
+	public Scope getScope() {
+		return scope;
 	}
 
-	public void setGlobal(boolean global) {
-		this.global = global;
+	public void setScope(Scope scope) {
+		this.scope = scope;
 	}
 
 	public Object getResult() {
@@ -60,7 +61,7 @@ public class ConsoleAction extends BaseAction {
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "expression", trim = true, key = "validation.required") })
 	public String execute() {
 		try {
-			result = applicationContextConsole.execute(expression, global);
+			result = applicationContextConsole.execute(expression, scope);
 			addActionMessage(getText("operate.success") + ":"
 					+ JsonUtils.toJson(result));
 		} catch (Exception e) {
@@ -75,7 +76,7 @@ public class ConsoleAction extends BaseAction {
 	@JsonConfig(root = "result")
 	public String executeJson() {
 		try {
-			result = applicationContextConsole.execute(expression, global);
+			result = applicationContextConsole.execute(expression, scope);
 		} catch (Exception e) {
 			Throwable throwable = e;
 			if (e instanceof InvocationTargetException)

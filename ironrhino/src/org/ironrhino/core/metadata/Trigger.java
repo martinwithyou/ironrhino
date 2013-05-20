@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface Trigger {
-	boolean global() default false;
+	Scope scope() default Scope.LOCAL;
 }

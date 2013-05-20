@@ -16,8 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.event.ExpressionEvent;
-import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.metadata.PostPropertiesReset;
+import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ExpressionUtils;
@@ -51,7 +51,7 @@ public class ApplicationContextConsole implements
 
 	private Map<String, Object> beans = new HashMap<String, Object>();
 
-	private Map<String, Boolean> triggers;
+	private Map<String, Scope> triggers;
 
 	public Map<String, Object> getBeans() {
 		if (beans.isEmpty()) {
@@ -70,10 +70,11 @@ public class ApplicationContextConsole implements
 		return beans;
 	}
 
-	public Map<String, Boolean> getTriggers() {
+	public Map<String, Scope> getTriggers() {
 		if (triggers == null) {
-			triggers = new TreeMap<String, Boolean>();
-			triggers.put("freemarkerConfiguration.clearTemplateCache()", true);
+			triggers = new TreeMap<String, Scope>();
+			triggers.put("freemarkerConfiguration.clearTemplateCache()",
+					Scope.APPLICATION);
 			String[] beanNames = ctx.getBeanDefinitionNames();
 			for (String beanName : beanNames) {
 				if (StringUtils.isAlphanumeric(beanName)
@@ -96,7 +97,7 @@ public class ApplicationContextConsole implements
 								expression.append(".").append(m.getName())
 										.append("()");
 								triggers.put(expression.toString(), m
-										.getAnnotation(Trigger.class).global());
+										.getAnnotation(Trigger.class).scope());
 							}
 						}
 					} catch (NoSuchBeanDefinitionException e) {
@@ -110,14 +111,14 @@ public class ApplicationContextConsole implements
 		return triggers;
 	}
 
-	public Object execute(String expression, boolean global) throws Exception {
+	public Object execute(String expression, Scope scope) throws Exception {
 		Object value = null;
 		if (expression.matches(SET_PROPERTY_EXPRESSION_PATTERN)) {
 			executeSetProperty(expression);
 		} else {
 			value = executeMethodInvocation(expression);
 		}
-		if (global)
+		if (scope != null && scope != Scope.LOCAL)
 			eventPublisher.publish(new ExpressionEvent(expression),
 					Scope.GLOBAL);
 		return value;
@@ -169,7 +170,7 @@ public class ApplicationContextConsole implements
 			return;
 		String expression = event.getExpression();
 		try {
-			execute(expression, false);
+			execute(expression, Scope.LOCAL);
 		} catch (Exception e) {
 			log.error("execute '" + expression + "' error", e);
 		}
