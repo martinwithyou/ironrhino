@@ -24,7 +24,7 @@ public class RedisSimpleMailMessageWrapperQueue extends
 	@PostConstruct
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
-		Runnable ruannble = new Runnable() {
+		Runnable task = new Runnable() {
 
 			@Override
 			public void run() {
@@ -41,9 +41,9 @@ public class RedisSimpleMailMessageWrapperQueue extends
 
 		};
 		if (executorService != null)
-			executorService.execute(ruannble);
+			executorService.execute(task);
 		else
-			new Thread(ruannble).start();
+			new Thread(task).start();
 	}
 
 	@PreDestroy

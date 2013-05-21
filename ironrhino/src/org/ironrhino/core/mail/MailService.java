@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.ironrhino.core.struts.TemplateProvider;
 import org.slf4j.Logger;
@@ -28,8 +27,7 @@ public class MailService {
 	@Inject
 	private MailSender mailSender;
 
-	@Inject
-	@Named("executorService")
+	@Autowired(required = false)
 	private ExecutorService executorService;
 
 	private boolean forceLocalAsync;
@@ -58,12 +56,16 @@ public class MailService {
 	public void send(final SimpleMailMessage smm, final boolean useHtmlFormat) {
 		if ((simpleMailMessageWrapperQueue == null) || forceLocalAsync) {
 			// localAsync
-			executorService.execute(new Runnable() {
+			Runnable task = new Runnable() {
 				@Override
 				public void run() {
 					mailSender.send(smm, useHtmlFormat);
 				}
-			});
+			};
+			if (executorService != null)
+				executorService.execute(task);
+			else
+				new Thread(task).start();
 			return;
 		}
 		try {

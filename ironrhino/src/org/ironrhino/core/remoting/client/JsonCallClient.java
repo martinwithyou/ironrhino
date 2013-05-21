@@ -125,13 +125,13 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 		if (!discovered) {
 			setServiceUrl(discoverServiceUrl());
 			discovered = true;
-		} else if (poll)
+		} else if (poll) {
 			setServiceUrl(discoverServiceUrl());
-		if (executorService != null && asyncMethods != null) {
+		}
+		if (asyncMethods != null) {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
-				executorService.execute(new Runnable() {
-
+				Runnable task = new Runnable() {
 					public void run() {
 						try {
 							invoke(invocation, maxRetryTimes);
@@ -139,7 +139,11 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 							log.error(e.getMessage(), e);
 						}
 					}
-				});
+				};
+				if (executorService != null)
+					executorService.execute(task);
+				else
+					new Thread(task).start();
 				return null;
 			}
 		}

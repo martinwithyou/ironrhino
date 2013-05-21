@@ -121,12 +121,10 @@ public class HessianClient extends HessianProxyFactoryBean {
 			reset();
 			discovered = true;
 		}
-
-		if (executorService != null && asyncMethods != null) {
+		if (asyncMethods != null) {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
-				executorService.execute(new Runnable() {
-
+				Runnable task = new Runnable() {
 					public void run() {
 						try {
 							invoke(invocation, maxRetryTimes);
@@ -134,7 +132,11 @@ public class HessianClient extends HessianProxyFactoryBean {
 							log.error(e.getMessage(), e);
 						}
 					}
-				});
+				};
+				if (executorService != null)
+					executorService.execute(task);
+				else
+					new Thread(task).start();
 				return null;
 			}
 		}

@@ -93,16 +93,16 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 		if (AppInfo.getHttpPort() > 0)
 			s += ":" + AppInfo.getHttpPort();
 		final String host = s;
-		Runnable runnable = new Runnable() {
+		Runnable task = new Runnable() {
 			public void run() {
 				stringRedisTemplate.opsForHash().putAll(NAMESPACE + host,
 						discoveredServices);
 			}
 		};
 		if (executorService != null)
-			executorService.execute(runnable);
+			executorService.execute(task);
 		else
-			runnable.run();
+			task.run();
 	}
 
 }

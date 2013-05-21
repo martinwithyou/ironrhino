@@ -93,15 +93,15 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			s += ":" + AppInfo.getHttpPort();
 		final String host = s;
 		final String services = JsonUtils.toJson(discoveredServices);
-		Runnable runnable = new Runnable() {
+		Runnable task = new Runnable() {
 			public void run() {
 				doWriteDiscoveredServices(host, services, maxRetryTimes);
 			}
 		};
 		if (executorService != null)
-			executorService.execute(runnable);
+			executorService.execute(task);
 		else
-			runnable.run();
+			task.run();
 	}
 
 	private void doRegister(String serviceName, String host, int retryTimes) {

@@ -81,27 +81,21 @@ public class TimerExecutor {
 	}
 
 	public void execute(final String expression, final Scope scope) {
-		if (executorService != null) {
-			executorService.execute(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						applicationContextConsole.execute(expression, scope);
-					} catch (Exception e) {
-						log.error(e.getMessage(), e);
-					}
-
+		Runnable task = new Runnable() {
+			@Override
+			public void run() {
+				try {
+					applicationContextConsole.execute(expression, scope);
+				} catch (Exception e) {
+					log.error(e.getMessage(), e);
 				}
-			});
-		} else {
-			try {
-				applicationContextConsole.execute(expression, scope);
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
 
-		}
+			}
+		};
+		if (executorService != null)
+			executorService.execute(task);
+		else
+			task.run();
 	}
 
 	@Scheduled(cron = "0 0 0 * * ?")

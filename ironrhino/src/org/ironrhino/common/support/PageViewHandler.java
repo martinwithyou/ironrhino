@@ -55,7 +55,7 @@ public class PageViewHandler implements AccessHandler {
 			if (executorService == null)
 				task.run();
 			else
-				executorService.submit(task);
+				executorService.execute(task);
 		}
 		return false;
 	}

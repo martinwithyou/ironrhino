@@ -78,29 +78,31 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 	public void join(final String group) {
 		if (zooKeeper == null)
 			return;
+		Runnable task = new Runnable() {
+			@Override
+			public void run() {
+				doJoin(group, AppInfo.getInstanceId(), maxRetryTimes);
+			}
+		};
 		if (executorService != null) {
-			executorService.execute(new Runnable() {
-				@Override
-				public void run() {
-					doJoin(group, AppInfo.getInstanceId(), maxRetryTimes);
-				}
-			});
+			executorService.execute(task);
 		} else
-			doJoin(group, AppInfo.getInstanceId(), maxRetryTimes);
+			task.run();
 	}
 
 	public void leave(final String group) {
 		if (zooKeeper == null)
 			return;
+		Runnable task = new Runnable() {
+			@Override
+			public void run() {
+				doLeave(group, AppInfo.getInstanceId(), maxRetryTimes);
+			}
+		};
 		if (executorService != null) {
-			executorService.execute(new Runnable() {
-				@Override
-				public void run() {
-					doLeave(group, AppInfo.getInstanceId(), maxRetryTimes);
-				}
-			});
+			executorService.execute(task);
 		} else
-			doLeave(group, AppInfo.getInstanceId(), maxRetryTimes);
+			task.run();
 	}
 
 	public boolean isLeader(String group) {
