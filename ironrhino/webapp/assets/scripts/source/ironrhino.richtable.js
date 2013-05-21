@@ -630,8 +630,6 @@ Initialization.richtable = function() {
 	});
 }
 Observation.richtable = function(container) {
-	$('.toolbar .btn[data-shown],.toolbar .btn[data-action="save"]', container)
-			.hide();
 	$('table.richtable', container)
 			.on(
 					'change',

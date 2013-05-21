@@ -130,6 +130,9 @@ table.richtable {
   background-color: transparent;
   border: 0;
 }
+.toolbar .btn[data-shown],.toolbar .btn[data-action="save"]{
+	display: none;
+}
 /*override bootstrap end*/
 
 .ui-dialog .richtable .toolbar .pagination{
