@@ -1,7 +1,7 @@
 package org.ironrhino.core.redis;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PostConstruct;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.Topic;
 import org.springframework.data.redis.serializer.SerializationException;
@@ -50,7 +50,9 @@ public abstract class RedisTopic<T extends Serializable> implements
 	@PostConstruct
 	@SuppressWarnings("unchecked")
 	public void afterPropertiesSet() {
-		Topic topic = new PatternTopic(getChannelName(Scope.GLOBAL) + "*");
+		Topic globalTopic = new ChannelTopic(getChannelName(Scope.GLOBAL));
+		Topic applicationTopic = new ChannelTopic(
+				getChannelName(Scope.APPLICATION));
 		messageListenerContainer.addMessageListener(new MessageListener() {
 			@Override
 			public void onMessage(Message message, byte[] pattern) {
@@ -63,7 +65,7 @@ public abstract class RedisTopic<T extends Serializable> implements
 						throw e;
 				}
 			}
-		}, Collections.singleton(topic));
+		}, Arrays.asList(globalTopic, applicationTopic));
 	}
 
 	protected String getChannelName(Scope scope) {

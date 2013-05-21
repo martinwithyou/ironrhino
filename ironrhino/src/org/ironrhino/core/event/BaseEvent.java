@@ -28,7 +28,7 @@ public class BaseEvent<T> extends ApplicationEvent {
 		return instanceId;
 	}
 
-	public boolean isSelf() {
+	public boolean isLocal() {
 		return getInstanceId().equals(AppInfo.getInstanceId());
 	}
 

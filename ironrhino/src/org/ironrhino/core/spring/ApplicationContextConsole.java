@@ -166,7 +166,7 @@ public class ApplicationContextConsole implements
 	}
 
 	public void onApplicationEvent(ExpressionEvent event) {
-		if (event.isSelf())
+		if (event.isLocal())
 			return;
 		String expression = event.getExpression();
 		try {

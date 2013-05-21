@@ -202,15 +202,15 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 	public void onApplicationEvent(InstanceLifecycleEvent event) {
 		if (handle(event))
 			return;
-		if (event instanceof InstanceStartupEvent && event.isSelf())
+		if (event instanceof InstanceStartupEvent && event.isLocal())
 			init();
-		else if (event instanceof InstanceShutdownEvent && !event.isSelf()) {
+		else if (event instanceof InstanceShutdownEvent && !event.isLocal()) {
 			String host = event.getHost();
 			if (event.getHttpPort() > 0)
 				host += ":" + event.getHttpPort();
 			evict(host);
 		} else if (event instanceof ExportServicesEvent) {
-			if (event.isSelf())
+			if (event.isLocal())
 				return;
 			ExportServicesEvent ev = (ExportServicesEvent) event;
 			String host = ev.getHost();
