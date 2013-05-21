@@ -69,7 +69,7 @@ public abstract class RedisTopic<T extends Serializable> implements
 	protected String getChannelName(Scope scope) {
 		if (scope == null || scope == Scope.LOCAL)
 			return null;
-		StringBuilder sb = new StringBuilder(channelName).append("@");
+		StringBuilder sb = new StringBuilder(channelName).append(".");
 		if (scope == Scope.APPLICATION)
 			sb.append(AppInfo.getAppName());
 		return sb.toString();

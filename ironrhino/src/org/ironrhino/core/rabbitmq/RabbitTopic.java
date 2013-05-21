@@ -67,7 +67,7 @@ public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
 	protected String getRoutingKey(Scope scope) {
 		if (scope == null || scope == Scope.LOCAL)
 			return null;
-		StringBuilder sb = new StringBuilder(routingKey).append("@");
+		StringBuilder sb = new StringBuilder(routingKey).append(".");
 		if (scope == Scope.APPLICATION)
 			sb.append(AppInfo.getAppName());
 		return sb.toString();
