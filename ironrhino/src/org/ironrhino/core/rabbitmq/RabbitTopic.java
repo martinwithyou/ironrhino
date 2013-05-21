@@ -1,6 +1,7 @@
 package org.ironrhino.core.rabbitmq;
 
 import java.io.Serializable;
+import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -16,6 +17,7 @@ import org.springframework.amqp.core.Binding.DestinationType;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
@@ -32,6 +34,9 @@ public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
 	protected String routingKey = "";
 
 	protected String queueName;
+
+	@Autowired(required = false)
+	private ExecutorService executorService;
 
 	public String getQueueName() {
 		return queueName;
@@ -68,11 +73,21 @@ public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
 		return sb.toString();
 	}
 
-	public void publish(T message, Scope scope) {
-		if (scope == null || scope == Scope.LOCAL)
-			subscribe(message);
-		else
+	public void publish(final T message, Scope scope) {
+		if (scope == null || scope == Scope.LOCAL) {
+			Runnable task = new Runnable() {
+				@Override
+				public void run() {
+					subscribe(message);
+				}
+			};
+			if (executorService != null)
+				executorService.execute(task);
+			else
+				task.run();
+		} else {
 			amqpTemplate.convertAndSend(exchangeName, getRoutingKey(scope),
 					message);
+		}
 	}
 }

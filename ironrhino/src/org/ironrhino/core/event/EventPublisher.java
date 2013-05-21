@@ -1,7 +1,5 @@
 package org.ironrhino.core.event;
 
-import java.util.concurrent.ExecutorService;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -26,23 +24,11 @@ public class EventPublisher implements
 	@Autowired(required = false)
 	private ApplicationEventTopic applicationEventTopic;
 
-	@Autowired(required = false)
-	private ExecutorService executorService;
-
 	public void publish(final ApplicationEvent event, final Scope scope) {
-		Runnable task = new Runnable() {
-			public void run() {
-				if (applicationEventTopic != null && scope != null
-						&& scope != Scope.LOCAL)
-					applicationEventTopic.publish(event, scope);
-				else
-					publisher.publishEvent(event);
-			}
-		};
-		if (executorService == null)
-			task.run();
+		if (applicationEventTopic != null)
+			applicationEventTopic.publish(event, scope);
 		else
-			executorService.submit(task);
+			publisher.publishEvent(event);
 	}
 
 	@Override
@@ -50,17 +36,17 @@ public class EventPublisher implements
 		if (event.getApplicationContext().getParent() != null)
 			return;
 		if (event instanceof ContextRefreshedEvent) {
+			InstanceStartupEvent ise = new InstanceStartupEvent();
 			if (applicationEventTopic != null)
-				applicationEventTopic.publish(new InstanceStartupEvent(),
-						Scope.GLOBAL);
+				applicationEventTopic.publish(ise, Scope.GLOBAL);
 			else
-				publisher.publishEvent(new InstanceStartupEvent());
+				publisher.publishEvent(ise);
 		} else if (event instanceof ContextClosedEvent) {
+			InstanceShutdownEvent ise = new InstanceShutdownEvent();
 			if (applicationEventTopic != null)
-				applicationEventTopic.publish(new InstanceShutdownEvent(),
-						Scope.GLOBAL);
+				applicationEventTopic.publish(ise, Scope.GLOBAL);
 			else
-				publisher.publishEvent(new InstanceShutdownEvent());
+				publisher.publishEvent(ise);
 		}
 	}
 

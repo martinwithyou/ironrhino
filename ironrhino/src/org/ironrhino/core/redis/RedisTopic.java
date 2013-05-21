@@ -2,6 +2,7 @@ package org.ironrhino.core.redis;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -9,6 +10,7 @@ import javax.inject.Inject;
 import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.ReflectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,6 +30,9 @@ public abstract class RedisTopic<T extends Serializable> implements
 
 	@Inject
 	private RedisTemplate redisTemplate;
+
+	@Autowired(required = false)
+	private ExecutorService executorService;
 
 	public void setChannelName(String channelName) {
 		this.channelName = channelName;
@@ -70,11 +75,21 @@ public abstract class RedisTopic<T extends Serializable> implements
 		return sb.toString();
 	}
 
-	public void publish(T message, Scope scope) {
-		if (scope == null || scope == Scope.LOCAL)
-			subscribe(message);
-		else
+	public void publish(final T message, Scope scope) {
+		if (scope == null || scope == Scope.LOCAL) {
+			Runnable task = new Runnable() {
+				@Override
+				public void run() {
+					subscribe(message);
+				}
+			};
+			if (executorService != null)
+				executorService.execute(task);
+			else
+				task.run();
+		} else {
 			redisTemplate.convertAndSend(getChannelName(scope), message);
+		}
 	}
 
 }
