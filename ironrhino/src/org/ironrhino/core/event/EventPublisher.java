@@ -25,7 +25,8 @@ public class EventPublisher implements
 	private ApplicationEventTopic applicationEventTopic;
 
 	public void publish(final ApplicationEvent event, final Scope scope) {
-		if (applicationEventTopic != null)
+		if (applicationEventTopic != null && scope != null
+				&& scope != Scope.LOCAL)
 			applicationEventTopic.publish(event, scope);
 		else
 			publisher.publishEvent(event);

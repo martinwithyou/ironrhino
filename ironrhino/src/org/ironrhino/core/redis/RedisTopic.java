@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.Topic;
 import org.springframework.data.redis.serializer.SerializationException;
@@ -50,7 +50,7 @@ public abstract class RedisTopic<T extends Serializable> implements
 	@PostConstruct
 	@SuppressWarnings("unchecked")
 	public void afterPropertiesSet() {
-		Topic topic = new ChannelTopic(getChannelName(Scope.GLOBAL) + "*");
+		Topic topic = new PatternTopic(getChannelName(Scope.GLOBAL) + "*");
 		messageListenerContainer.addMessageListener(new MessageListener() {
 			@Override
 			public void onMessage(Message message, byte[] pattern) {
