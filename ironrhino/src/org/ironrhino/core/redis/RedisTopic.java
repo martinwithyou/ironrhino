@@ -1,8 +1,7 @@
 package org.ironrhino.core.redis;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -46,12 +45,7 @@ public abstract class RedisTopic<T extends Serializable> implements
 	@PostConstruct
 	@SuppressWarnings("unchecked")
 	public void afterPropertiesSet() {
-		Topic globalTopic = new ChannelTopic(getChannelName(Scope.GLOBAL));
-		Topic applicationTopic = new ChannelTopic(
-				getChannelName(Scope.APPLICATION));
-		List<Topic> topics = new ArrayList<Topic>();
-		topics.add(globalTopic);
-		topics.add(applicationTopic);
+		Topic topic = new ChannelTopic(getChannelName(Scope.GLOBAL) + "*");
 		messageListenerContainer.addMessageListener(new MessageListener() {
 			@Override
 			public void onMessage(Message message, byte[] pattern) {
@@ -64,7 +58,7 @@ public abstract class RedisTopic<T extends Serializable> implements
 						throw e;
 				}
 			}
-		}, topics);
+		}, Collections.singleton(topic));
 	}
 
 	protected String getChannelName(Scope scope) {
