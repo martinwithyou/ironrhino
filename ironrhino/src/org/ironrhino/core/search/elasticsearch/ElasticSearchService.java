@@ -58,10 +58,6 @@ public class ElasticSearchService<T> implements SearchService<T> {
 			return resultPage;
 		SearchRequestBuilder srb = criteria2builder(criteria);
 		srb.setFrom(resultPage.getStart());
-		if (resultPage.getPageSize() < 1)
-			resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
-		else if (resultPage.isPageSizeOverflow())
-			resultPage.setPageSize(ResultPage.MAX_PAGESIZE);
 		srb.setSize(resultPage.getPageSize());
 		try {
 			SearchResponse response = srb.execute().get();
@@ -98,10 +94,10 @@ public class ElasticSearchService<T> implements SearchService<T> {
 			return null;
 		SearchRequestBuilder srb = criteria2builder(criteria);
 		srb.setFrom(0);
-		if (limit > 0 && limit < ResultPage.MAX_PAGESIZE)
+		if (limit > 0 && limit < ResultPage.DEFAULT_MAX_PAGESIZE)
 			srb.setSize(limit);
 		else
-			srb.setSize(ResultPage.MAX_PAGESIZE);
+			srb.setSize(ResultPage.DEFAULT_MAX_PAGESIZE);
 		List list = null;
 		try {
 			SearchResponse response = srb.execute().get();

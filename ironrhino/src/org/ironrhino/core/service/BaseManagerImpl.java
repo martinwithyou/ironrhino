@@ -326,10 +326,6 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		if (resultPage.isCounting()) {
 			totalResults = countByCriteria(detachedCriteria);
 			resultPage.setTotalResults(totalResults);
-			if (resultPage.getPageSize() < 1)
-				resultPage.setPageSize(ResultPage.DEFAULT_PAGE_SIZE);
-			else if (resultPage.isPageSizeOverflow())
-				resultPage.setPageSize(ResultPage.MAX_PAGESIZE);
 			if (resultPage.getPageNo() < 1)
 				resultPage.setPageNo(1);
 			else if (resultPage.getPageNo() > resultPage.getTotalPage()) {
