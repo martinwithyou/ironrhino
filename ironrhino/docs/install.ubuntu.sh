@@ -385,3 +385,12 @@ svn checkout http://ironrhino.googlecode.com/svn/trunk/ironrhino
 chown -R $USER:$USER ironrhino
 fi
 
+#ulimit
+if $(more /etc/pam.d/su |grep pam_limits.so|grep "#" >/dev/null 2>&1); then
+sed -i '/pam_limits/d' /etc/pam.d/su 
+sed -i '53i session    required   pam_limits.so' /etc/pam.d/su
+sed -i '$i *               soft    nofile          65535' /etc/security/limits.conf
+sed -i '$i *               hard    nofile          65535' /etc/security/limits.conf
+reboot
+fi
+
