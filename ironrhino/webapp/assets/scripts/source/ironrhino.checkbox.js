@@ -18,9 +18,10 @@
 					check(this);
 				});
 
-		$('input[type=checkbox]', this).change(function(event) {
+		$('input[type=checkbox]', this).click(function(event) {
 			if ($(this).hasClass('normal'))
 				return;
+			document.getSelection().removeAllRanges();
 			var group = $(this).closest('.checkboxgroup');
 			if (!group.length)
 				group = $(this).closest('form.richtable');
@@ -38,25 +39,56 @@
 								}
 							});
 			} else {
-				var tr = $(this).closest('tr');
-				if (tr) {
-					if (group.length && this.checked)
-						tr.addClass('selected');
-					else
-						tr.removeClass('selected');
+				if (!event.shiftKey) {
+					var tr = $(this).closest('tr');
+					if (tr) {
+						if (group.length && this.checked)
+							tr.addClass('selected');
+						else
+							tr.removeClass('selected');
+					}
+					var table = $(this).closest('table');
+					if (table.hasClass('treeTable')) {
+						var checked = this.checked;
+						$('tr.child-of-node-' + this.value, table)
+								.find('input[type=checkbox]').prop('checked',
+										checked).end().each(function() {
+											if (checked)
+												$(this).addClass('selected');
+											else
+												$(this).removeClass('selected');
+										});
+					}
+				} else {
+					var boxes = $('input[type=checkbox][name]', group);
+					var start = -1, end = -1, checked = false;
+					for (var i = 0; i < boxes.length; i++) {
+						if ($(boxes[i]).hasClass('lastClicked')) {
+							checked = boxes[i].checked;
+							start = i;
+						}
+						if (boxes[i] == this) {
+							end = i;
+						}
+					}
+					if (start > end) {
+						var tmp = end;
+						end = start;
+						start = tmp;
+					}
+					for (var i = start; i <= end; i++) {
+						boxes[i].checked = checked;
+						tr = $(boxes[i]).closest('tr');
+						if (tr) {
+							if (boxes[i].checked)
+								tr.addClass('selected');
+							else
+								tr.removeClass('selected');
+						}
+					}
 				}
-				var table = $(this).closest('table');
-				if (table.hasClass('treeTable')) {
-					var checked = this.checked;
-					$('tr.child-of-node-' + this.value, table)
-							.find('input[type=checkbox]').prop('checked',
-									checked).end().each(function() {
-										if (checked)
-											$(this).addClass('selected');
-										else
-											$(this).removeClass('selected');
-									});
-				}
+				$('input[type=checkbox]', group).removeClass('lastClicked');
+				$(this).addClass('lastClicked');
 				check(group);
 			}
 		});
