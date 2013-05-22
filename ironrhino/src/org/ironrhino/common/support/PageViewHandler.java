@@ -42,20 +42,21 @@ public class PageViewHandler implements AccessHandler {
 				&& request.getMethod().equalsIgnoreCase("GET")
 				&& !request.getRequestURI().startsWith("/assets/")
 				&& !request.getRequestURI().endsWith("/favicon.ico")) {
+			final String remoteAddr = RequestUtils.getRemoteAddr(request);
+			final String requestURL = request.getRequestURL().toString();
+			final String sessionId = httpSessionManager.getSessionId(request);
+			final String username = RequestUtils.getCookieValue(request, "U");
+			final String referer = request.getHeader("Referer");
 			Runnable task = new Runnable() {
 				public void run() {
-					pageViewService.put(new Date(), RequestUtils
-							.getRemoteAddr(request), request.getRequestURL()
-							.toString(), httpSessionManager
-							.getSessionId(request), RequestUtils
-							.getCookieValue(request, "U"), request
-							.getHeader("Referer"));
+					pageViewService.put(new Date(), remoteAddr, requestURL,
+							sessionId, username, referer);
 				}
 			};
-			if (executorService == null)
-				task.run();
-			else
+			if (executorService != null)
 				executorService.execute(task);
+			else
+				task.run();
 		}
 		return false;
 	}
