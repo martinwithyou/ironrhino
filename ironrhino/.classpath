@@ -49,7 +49,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-sitemesh-plugin-2.3.14.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/struts2-spring-plugin-2.3.14.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xmemcached-1.4.1.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xwork-core-2.3.14.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/xwork-core-2.3.14.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zookeeper-3.4.5.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.11.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-3.0.jar"/>
