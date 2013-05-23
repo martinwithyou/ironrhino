@@ -35091,7 +35091,6 @@ Observation.ajaxpanel = function(container) {
 		$('input[type=checkbox]', this).click(function(event) {
 			if ($(this).hasClass('normal'))
 				return;
-			document.getSelection().removeAllRanges();
 			var group = $(this).closest('.checkboxgroup');
 			if (!group.length)
 				group = $(this).closest('form.richtable');
@@ -35109,6 +35108,10 @@ Observation.ajaxpanel = function(container) {
 								}
 							});
 			} else {
+				try {
+					document.getSelection().removeAllRanges();
+				} catch (e) {
+				}
 				if (!event.shiftKey) {
 					var tr = $(this).closest('tr');
 					if (tr) {
