@@ -39,7 +39,12 @@ wget http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.40/bin/apache-tomcat-7.
 fi
 tar xvf apache-tomcat-*.tar.gz >/dev/null && rm -rf apache-tomcat-*.tar.gz
 rename s/^apache-tomcat.*$/tomcat/g apache-tomcat-*
-cd tomcat && rm -rf bin/*.bat && rm -rf webapps/* && cd ..
+cd tomcat && rm -rf bin/*.bat && rm -rf webapps/*
+cd conf
+sed -i  's/\s[3-4][a-x-]*manager.org.apache.juli.FileHandler,//g' logging.properties
+sed -i '/manager/d' logging.properties
+cd ..
+cd ..
 cat>tomcat/conf/server.xml<<EOF
 <?xml version='1.0' encoding='utf-8'?>
 <Server port="\${port.shutdown}" shutdown="SHUTDOWN">
@@ -143,7 +148,12 @@ if [ ! -f apache-tomcat-\$version.tar.gz ];then
 wget http://archive.apache.org/dist/tomcat/tomcat-\${version:0:1}/v\$version/bin/apache-tomcat-\$version.tar.gz
 fi
 tar xf apache-tomcat-\$version.tar.gz && rm -rf apache-tomcat-\$version.tar.gz
-cd apache-tomcat-\$version && rm -rf bin/*.bat && rm -rf webapps/* && cd ..
+cd apache-tomcat-\$version && rm -rf bin/*.bat && rm -rf webapps/*
+cd conf
+sed -i  's/\s[3-4][a-x-]*manager.org.apache.juli.FileHandler,//g' logging.properties
+sed -i '/manager/d' logging.properties
+cd ..
+cd ..
 fi
 running=0
 if [ -f /tmp/tomcat8080_pid ] && [ ! "\$( ps -P \`more /tmp/tomcat8080_pid\`|grep tomcat8080)" = "" ] ; then
