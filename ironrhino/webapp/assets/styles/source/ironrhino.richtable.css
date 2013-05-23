@@ -13,6 +13,7 @@ table.richtable td,table.richtable th {
 	padding: 0.5em;
 	height: 30px;
 	vertical-align: middle;
+	word-break: break-all;
 }
 table.richtable th {
 	min-width: 60px;
