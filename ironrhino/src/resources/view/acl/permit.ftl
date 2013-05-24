@@ -5,7 +5,7 @@
 </head>
 <body>
 <form action="${getUrl(actionBaseUrl+'/input')}" method="get" class="form-inline ajax view clearfix" data-replacement="save" style="margin-bottom:20px;">
-	<div class="control-group switch">
+	<div class="control-group btn-switch">
 	<#list roles?keys as role>
 	<a class="btn ajax view" href="permit/input?role=${role}" data-replacement="save">${roles[role]}</a>
 	</#list>

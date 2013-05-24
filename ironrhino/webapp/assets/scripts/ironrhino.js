@@ -32299,7 +32299,7 @@ Observation.common = function(container) {
 		t.popover(options);
 	});
 	// bootstrap end
-	$('.switch', container).each(function() {
+	$('.btn-switch', container).each(function() {
 				var t = $(this);
 				t.children().css('cursor', 'pointer').click(function() {
 							t.children().removeClass('active').css({

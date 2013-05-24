@@ -265,10 +265,10 @@ $(function(){
 </script> 
 </head> 
 <body>
-<div class="clearfix">
-  <div style="float: left; width: 20%;height: 600px;overflow:scroll;">
+<div class="row-fluid">
+  <div class="span3" style="height: 600px;overflow-y:scroll;overflow-x:hidden;">
   	<div class="btn-toolbar" style="margin-bottom:10px;">
-		<div class="btn-group switch">
+		<div class="btn-group btn-switch">
 		  <button class="btn active moveTo">移动</button>
 		  <button class="btn mark">标注</button>
 		</div>
@@ -278,7 +278,7 @@ $(function(){
 	</div>
 	<div id="regionTree"></div>
 	</div>
-	<div style="float: left; width: 80%;">
+	<div class="span9">
 	<div id="map_container" style="height: 600px;"></div>
 	</div>
 </div>
