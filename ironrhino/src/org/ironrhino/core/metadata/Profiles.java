@@ -1,6 +1,8 @@
 package org.ironrhino.core.metadata;
 
-public interface Profiles {
+public enum Profiles {
+
+	;
 
 	public static final String DEFAULT = "default";
 
