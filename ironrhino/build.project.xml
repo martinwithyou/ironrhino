@@ -331,7 +331,11 @@
 		<antcall target="unzip-assets" />
 		<antcall target="append-revision-for-assets" />
 		<antcall target="reset-assets" />
+		<copy todir="${classes.dir}/META-INF/resources" preservelastmodified="true" failonerror="false">
+			<fileset dir="${webapp.dir}" includes="assets/**"/>
+		</copy>
 		<jar jarfile="${target.dir}/${jar.name}" basedir="${classes.dir}" />
+		<delete dir="${classes.dir}/META-INF/resources"/>
 		<antcall target="reset-append-revision-for-assets" />
 	</target>
 
@@ -362,7 +366,7 @@
 			<fileset dir="${webapp.dir}/WEB-INF/classes" />
 		</move>
 		<war warfile="${target.dir}/${war.name}" basedir="${webapp.dir}"
-			needxmlfile="false" excludes="**/upload/**" />
+			needxmlfile="false" excludes="assets/**" />
 		<move file="${webapp.dir}/WEB-INF/lib/${jar.name}" todir="${target.dir}"
 			preservelastmodified="true" />
 		<move todir="${webapp.dir}/WEB-INF/classes" preservelastmodified="true">
