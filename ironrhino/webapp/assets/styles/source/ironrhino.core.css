@@ -30,21 +30,21 @@ td.middle {
 	font-size: 1em;
 }
 /*override bootstrap end*/
-::-webkit-scrollbar {
+body ::-webkit-scrollbar {
     width: 12px;
 }
-::-webkit-scrollbar-track {
+body ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
     -webkit-border-radius: 10px;
     border-radius: 10px;
 }
-::-webkit-scrollbar-thumb {
+body ::-webkit-scrollbar-thumb {
     -webkit-border-radius: 10px;
     border-radius: 10px;
     background: rgba(225,225,225,0.8); 
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }
-::-webkit-scrollbar-thumb:window-inactive {
+body ::-webkit-scrollbar-thumb:window-inactive {
 	background: rgba(225,225,225,0.4); 
 }
 #indicator {
