@@ -7844,8 +7844,8 @@ input.integer,input.double,input.date {
 	width: 75px;
 	font-family: Arial;
 }
-input.filterselect{
-	width: 75px;
+input.long {
+	width: 150px;
 }
 input.latlng{
 	width: 300px;

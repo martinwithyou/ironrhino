@@ -915,10 +915,12 @@ public class EntityAction extends BaseAction {
 
 				if (returnType == Integer.TYPE || returnType == Integer.class
 						|| returnType == Short.TYPE
-						|| returnType == Short.class || returnType == Long.TYPE
-						|| returnType == Long.class) {
+						|| returnType == Short.class) {
 					uci.setInputType("number");
 					uci.addCssClass("integer");
+				} else if (returnType == Long.TYPE || returnType == Long.class) {
+					uci.setInputType("number");
+					uci.addCssClass("long");
 				} else if (returnType == Double.TYPE
 						|| returnType == Double.class
 						|| returnType == Float.TYPE

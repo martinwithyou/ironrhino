@@ -270,7 +270,9 @@ Form = {
 						&& !value.match(/^[\d-]+$/)) {
 					Message.showFieldError(target, null, 'phone');
 					return false;
-				} else if ($(target).hasClass('integer') && value) {
+				} else if (($(target).hasClass('integer') || $(target)
+						.hasClass('long'))
+						&& value) {
 					if ($(target).hasClass('positive')
 							&& !value.match(/^[+]?\d*$/)) {
 						Message
@@ -715,6 +717,8 @@ Observation.common = function(container) {
 						$(this).attr('maxlength', '10');
 					else if ($(this).hasClass('integer'))
 						$(this).attr('maxlength', '11');
+					else if ($(this).hasClass('long'))
+						$(this).attr('maxlength', '20');
 					else if ($(this).hasClass('double'))
 						$(this).attr('maxlength', '22');
 					else
