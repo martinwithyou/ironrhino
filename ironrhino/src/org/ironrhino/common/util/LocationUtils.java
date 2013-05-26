@@ -63,7 +63,8 @@ public class LocationUtils {
 						loc = null;
 				}
 			} catch (Throwable e) {
-				e.printStackTrace();
+				if (!(e instanceof NullPointerException))
+					e.printStackTrace();
 			}
 			if (loc == null || loc.getFirstArea() == null) {
 				try {
