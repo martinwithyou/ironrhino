@@ -28,9 +28,9 @@
 		</style>
 		<thead>
 			<tr>
-				<td>${action.getText('label')}</td>
-				<td>${action.getText('value')}</td>
-				<td>${action.getText('type')}</td>
+				<td style="width:225px;">${action.getText('label')}</td>
+				<td style="width:225px;">${action.getText('value')}</td>
+				<td style="width:100px;">${action.getText('type')}</td>
 				<td class="manipulate"></td>
 			</tr>
 		</thead>
