@@ -32,10 +32,10 @@
 				</#if>
 			<#elseif config.type=='select'>
 				<#if !readonly>
-					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="custom ${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes/>
+					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes/>
 				<#else>
 					<@s.hidden name="${entityName}.${key}" value="%{${entityName+'.'+key+'.id'}}"/>
-					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="custom ${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue="" disabled="true" dynamicAttributes=config.dynamicAttributes />
+					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue="" disabled="true" dynamicAttributes=config.dynamicAttributes />
 				</#if>
 			<#elseif config.type=='listpick'>
 				<#if !readonly>
