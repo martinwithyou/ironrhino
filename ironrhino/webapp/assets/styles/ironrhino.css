@@ -8120,6 +8120,14 @@ label.select:after {
 label.select:hover:after{
 	color:#333;
 }
+::-ms-expand {
+	border: none;
+    color:#aaa;
+}
+::-ms-expand:hover {
+	border: none;
+    color:#333;
+}
 
 .editme{
 	margin:0px;
