@@ -142,7 +142,7 @@
 </span>
 <#if showPageSize>
 <li class="visible-desktop">
-<select name="resultPage.pageSize" class="pageSize" title="${action.getText('pagesize')}">
+<select name="resultPage.pageSize" class="custom pageSize" title="${action.getText('pagesize')}">
 <#local array=[5,10,20,50,100,500]>
 <#local selected=false>
 <#list array as ps>

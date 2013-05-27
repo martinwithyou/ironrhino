@@ -43,7 +43,7 @@
 			<tr class="linkage">
 				<td><@s.textfield theme="simple" name="dictionary.items[${index}].label"/></td>
 				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required showonadd linkage_component option"/></td>
-				<td><select class="linkage_switch" style="width:80px;">
+				<td><select class="custom linkage_switch" style="width:100px;">
 						<option value="option">${action.getText('option')}</option>
 						<option value="group"<#if dictionary.items[index]?? && dictionary.items[index].value?? && !dictionary.items[index].value?has_content>selected="selected"</#if>>${action.getText('group')}</option>
 					</select></td>

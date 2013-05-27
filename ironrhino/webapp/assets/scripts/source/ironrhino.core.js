@@ -725,16 +725,18 @@ Observation.common = function(container) {
 						$(this).attr('maxlength', '255');
 				}
 			});
-	$('input[type="checkbox"].custom,input[type="radio"].custom').each(
-			function(i) {
+	$('input[type="checkbox"].custom,input[type="radio"].custom', container)
+			.each(function(i) {
 				$(this).hide();
 				if (!this.id)
 					this.id = ('a' + (i + Math.random())).replace('.', '')
-							.substring(0, 5);
+							.substring(0, 9);
 				if (!$(this).next('lable.custom').length)
 					$(this).after($('<label class="custom" for="' + this.id
 							+ '"></label>'));
 			});
+	if ($.browser.webkit)
+		$('select.custom', container).wrap('<label class="select" />');
 	$('.linkage', container).each(function() {
 		var c = $(this);
 		c.data('originalclass', c.attr('class'));
