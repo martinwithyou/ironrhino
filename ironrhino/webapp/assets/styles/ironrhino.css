@@ -792,11 +792,11 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   font-size: 18px;
   text-decoration:none;
   background:none;
-  -moz-border-radius-bottomright: 0px;
+  -moz-border-radius-bottom-right: 0px;
   -webkit-border-bottom-right-radius: 0px;
   -khtml-border-bottom-right-radius: 0px;
-
-  -moz-border-radius-bottomleft: 0px;
+  border-bottom-right-radius: 0px;
+  -moz-border-radius-bottom-left: 0px;
   -webkit-border-bottom-left-radius: 0px;
   -khtml-border-bottom-left-radius: 0px;
   border-bottom-left-radius: 0px;
