@@ -82,6 +82,8 @@ public class AppInfo {
 		String p = System.getProperty("port.http");
 		if (StringUtils.isBlank(p))
 			p = System.getProperty("port.http.nonssl");
+		if (StringUtils.isBlank(p))
+			p = System.getProperty("VCAP_APP_PORT");
 		if (StringUtils.isNotBlank(p) && StringUtils.isNumeric(p))
 			httpPort = Integer.valueOf(p);
 
