@@ -184,6 +184,7 @@ cp -R tomcat8080/webapps* tomcat8081
 if [ \$running = 1 ];then
 tomcat8081/bin/catalina.sh start
 fi
+rm -rf apache-tomcat-\$version
 EOF
 chown $USER:$USER upgrade_tomcat.sh
 chmod +x upgrade_tomcat.sh
@@ -383,6 +384,7 @@ rm -rf redis-\$version
 sed -i '31i bind 127.0.0.1' /etc/redis/6379.conf
 service redis_6379 stop
 service redis_6379 start
+rm -rf redis-\$version
 EOF
 chown $USER:$USER upgrade_redis.sh
 chmod +x upgrade_redis.sh
