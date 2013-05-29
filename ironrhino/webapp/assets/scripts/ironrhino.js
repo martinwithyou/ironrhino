@@ -36616,7 +36616,7 @@ Richtable = {
 		} else {
 			$('input.date', cell).datepicker({
 						dateFormat : 'yy-mm-dd',
-						onSelect : function() {
+						onClose : function() {
 							Richtable.updateCell(this)
 						}
 					});
@@ -37016,6 +37016,18 @@ Observation.richtable = function(container) {
 			}
 		}
 	}
+	function removeAction(event) {
+		current = $(event.target).closest('.treeselect');
+		var options = current.data('_options');
+		var nametarget = find(options.name);
+		val(options.name, nametarget.is(':input,td') ? '' : MessageBundle
+						.get('select'));
+		val(options.id, '');
+		$(this).remove();
+		event.stopPropagation();
+		return false;
+
+	}
 	$.fn.treeselect = function() {
 		$(this).each(function() {
 			current = $(this);
@@ -37033,34 +37045,12 @@ Observation.richtable = function(container) {
 				nametarget = find(options.name);
 				var remove = nametarget.children('a.remove');
 				if (remove.length) {
-					remove.click(function(event) {
-								current = $(event.target)
-										.closest('.treeselect');
-								val(options.name, nametarget.is(':input,td')
-												? ''
-												: MessageBundle.get('select'));
-								val(options.id, '');
-								$(this).remove();
-								event.stopPropagation();
-								return false;
-							});
+					remove.click(removeAction);
 				} else {
 					var text = val(options.name);
 					if (text && text.indexOf('...') < 0) {
 						$('<a class="remove" href="#">&times;</a>')
-								.appendTo(nametarget).click(function(event) {
-									current = $(event.target)
-											.closest('.treeselect');
-									val(options.name, nametarget
-													.is(':input,td')
-													? ''
-													: MessageBundle
-															.get('select'));
-									val(options.id, '');
-									$(this).remove();
-									event.stopPropagation();
-									return false;
-								});
+								.appendTo(nametarget).click(removeAction);
 					}
 				}
 			}
@@ -37137,16 +37127,7 @@ Observation.richtable = function(container) {
 					form.addClass('dirty');
 			} else {
 				$('<a class="remove" href="#">&times;</a>')
-						.appendTo(nametarget).click(function(event) {
-							current = $(event.target).closest('.treeselect');
-							val(options.name, nametarget.is(':input,td')
-											? ''
-											: MessageBundle.get('select'));
-							val(options.id, '');
-							$(this).remove();
-							event.stopPropagation();
-							return false;
-						});
+						.appendTo(nametarget).click(removeAction);
 			}
 		}
 		if (options.id) {
@@ -37224,6 +37205,18 @@ Observation.treeselect = function(container) {
 			}
 		}
 	}
+	function removeAction(event) {
+		current = $(event.target).closest('.listpick');
+		var options = current.data('_options');
+		var nametarget = find(options.name);
+		val(options.name, nametarget.is(':input,td') ? '' : MessageBundle
+						.get('pick'));
+		val(options.id, '');
+		$(this).remove();
+		event.stopPropagation();
+		return false;
+
+	}
 	$.fn.listpick = function() {
 		$(this).each(function() {
 			current = $(this);
@@ -37240,32 +37233,12 @@ Observation.treeselect = function(container) {
 				nametarget = find(options.name);
 				var remove = nametarget.children('a.remove');
 				if (remove.length) {
-					remove.click(function(event) {
-								current = $(event.target).closest('.listpick');
-								val(options.name, nametarget.is(':input,td')
-												? ''
-												: MessageBundle.get('select'));
-								val(options.id, '');
-								$(this).remove();
-								event.stopPropagation();
-								return false;
-							});
+					remove.click(removeAction);
 				} else {
 					var text = val(options.name);
 					if (text && text.indexOf('...') < 0) {
 						$('<a class="remove" href="#">&times;</a>')
-								.appendTo(nametarget).click(function(event) {
-									current = $(event.target)
-											.closest('.listpick');
-									val(options.name, nametarget
-													.is(':input,td')
-													? ''
-													: MessageBundle.get('pick'));
-									val(options.id, '');
-									$(this).remove();
-									event.stopPropagation();
-									return false;
-								});
+								.appendTo(nametarget).click(removeAction);
 					}
 				}
 			}
@@ -37308,21 +37281,7 @@ Observation.treeselect = function(container) {
 										} else {
 											$('<a class="remove" href="#">&times;</a>')
 													.appendTo(nametarget)
-													.click(function(event) {
-														current = $(event.target)
-																.closest('.listpick');
-														val(
-																options.name,
-																nametarget
-																		.is(':input,td')
-																		? ''
-																		: MessageBundle
-																				.get('select'));
-														val(options.id, '');
-														$(this).remove();
-														event.stopPropagation();
-														return false;
-													});
+													.click(removeAction);
 										}
 									}
 									if (options.id) {
@@ -37378,24 +37337,8 @@ Observation.treeselect = function(container) {
 									nametarget.data('picked', picked);
 									val(options.name, picked);
 									$('<a class="remove" href="#">&times;</a>')
-											.appendTo(nametarget).click(
-													function(event) {
-														current = $(event.target)
-																.closest('.listpick');
-														val(
-																options.name,
-																nametarget
-																		.is(':input,td')
-																		? ''
-																		: MessageBundle
-																				.get('pick'));
-														val(options.id, '');
-														nametarget.data(
-																'picked', null);
-														$(this).remove();
-														event.stopPropagation();
-														return false;
-													});
+											.appendTo(nametarget)
+											.click(removeAction);
 								}
 							}
 							if (options.id) {

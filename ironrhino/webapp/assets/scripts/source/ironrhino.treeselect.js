@@ -52,6 +52,18 @@
 			}
 		}
 	}
+	function removeAction(event) {
+		current = $(event.target).closest('.treeselect');
+		var options = current.data('_options');
+		var nametarget = find(options.name);
+		val(options.name, nametarget.is(':input,td') ? '' : MessageBundle
+						.get('select'));
+		val(options.id, '');
+		$(this).remove();
+		event.stopPropagation();
+		return false;
+
+	}
 	$.fn.treeselect = function() {
 		$(this).each(function() {
 			current = $(this);
@@ -69,34 +81,12 @@
 				nametarget = find(options.name);
 				var remove = nametarget.children('a.remove');
 				if (remove.length) {
-					remove.click(function(event) {
-								current = $(event.target)
-										.closest('.treeselect');
-								val(options.name, nametarget.is(':input,td')
-												? ''
-												: MessageBundle.get('select'));
-								val(options.id, '');
-								$(this).remove();
-								event.stopPropagation();
-								return false;
-							});
+					remove.click(removeAction);
 				} else {
 					var text = val(options.name);
 					if (text && text.indexOf('...') < 0) {
 						$('<a class="remove" href="#">&times;</a>')
-								.appendTo(nametarget).click(function(event) {
-									current = $(event.target)
-											.closest('.treeselect');
-									val(options.name, nametarget
-													.is(':input,td')
-													? ''
-													: MessageBundle
-															.get('select'));
-									val(options.id, '');
-									$(this).remove();
-									event.stopPropagation();
-									return false;
-								});
+								.appendTo(nametarget).click(removeAction);
 					}
 				}
 			}
@@ -173,16 +163,7 @@
 					form.addClass('dirty');
 			} else {
 				$('<a class="remove" href="#">&times;</a>')
-						.appendTo(nametarget).click(function(event) {
-							current = $(event.target).closest('.treeselect');
-							val(options.name, nametarget.is(':input,td')
-											? ''
-											: MessageBundle.get('select'));
-							val(options.id, '');
-							$(this).remove();
-							event.stopPropagation();
-							return false;
-						});
+						.appendTo(nametarget).click(removeAction);
 			}
 		}
 		if (options.id) {
