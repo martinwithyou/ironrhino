@@ -444,7 +444,7 @@ Richtable = {
 		} else {
 			$('input.date', cell).datepicker({
 						dateFormat : 'yy-mm-dd',
-						onSelect : function() {
+						onClose : function() {
 							Richtable.updateCell(this)
 						}
 					});
