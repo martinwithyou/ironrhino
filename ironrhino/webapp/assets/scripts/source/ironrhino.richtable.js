@@ -643,12 +643,20 @@ Observation.richtable = function(container) {
 					'input[type="checkbox"][name="check"],input[type="checkbox"]:not([name])',
 					function() {
 						var checked = 0;
-						$('tbody tr', $(this).closest('table.richtable')).each(
-								function() {
-									if ($('td:eq(0) input[type="checkbox"]',
-											this).is(':checked'))
-										checked++;
-								});
+						if ($(this).attr('name') === undefined) {
+							checked = this.checked
+									? $('tbody tr', $(this)
+													.closest('table.richtable')).length
+									: 0;
+						} else {
+							$('tbody tr', $(this).closest('table.richtable'))
+									.each(function() {
+										if ($(
+												'td:eq(0) input[type="checkbox"]',
+												this).is(':checked'))
+											checked++;
+									});
+						}
 						var form = $(this).closest('form.richtable');
 						var selected = $(
 								'.toolbar .btn[data-shown="selected"]', form);
