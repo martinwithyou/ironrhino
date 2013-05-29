@@ -20,16 +20,21 @@
 					Form.validate(ele);
 				} else {
 					ele.text(val);
-					if (ele.parents('.richtable').length
-							&& ele.prop('tagName') == 'TD')
-						ele.addClass('edited');
 				}
 			} else if (i == 0) {
 				current.attr(expr.substring(i + 1), val);
 			} else {
 				var selector = expr.substring(0, i);
 				var ele = selector == 'this' ? current : $(selector);
-				ele.attr(expr.substring(i + 1), val);
+				if (ele.parents('.richtable').length
+						&& ele.prop('tagName') == 'TD'
+						&& expr.indexOf('data-cellvalue') > -1) {
+					if (typeof ele.data('oldvalue') == 'undefined')
+						ele.data('oldvalue', ele.data('cellvalue') || '');
+					Richtable.updateValue(ele, val);
+				} else {
+					ele.attr(expr.substring(i + 1), val);
+				}
 			}
 		} else {
 			var i = expr.indexOf('@');
@@ -67,6 +72,7 @@
 				var remove = nametarget.children('a.remove');
 				if (remove.length) {
 					remove.click(function(event) {
+								current = $(event.target).closest('.listpick');
 								val(options.name, nametarget.is(':input,td')
 												? ''
 												: MessageBundle.get('select'));
@@ -134,6 +140,8 @@
 											$('<a class="remove" href="#">&times;</a>')
 													.appendTo(nametarget)
 													.click(function(event) {
+														current = $(event.target)
+																.closest('.listpick');
 														val(
 																options.name,
 																nametarget
@@ -203,6 +211,8 @@
 									$('<a class="remove" href="#">&times;</a>')
 											.appendTo(nametarget).click(
 													function(event) {
+														current = $(event.target)
+																.closest('.listpick');
 														val(
 																options.name,
 																nametarget

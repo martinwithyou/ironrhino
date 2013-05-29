@@ -69,7 +69,7 @@
 		</#if>
 		<#assign dynamicAttributes={}>
 		<#if config.type=='listpick' && !rowReadonly>
-			<#assign dynamicAttributes={"class":"listpick","data-options":"{'url':'"+uiConfigs[key].pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
+			<#assign dynamicAttributes={"class":"listpick","data-cellvalue":(value.id?string)!,"data-options":"{'url':'"+uiConfigs[key].pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
 		</#if>
 		<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
 	</#if>

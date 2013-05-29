@@ -456,20 +456,24 @@ Richtable = {
 	updateCell : function(cellEdit) {
 		var ce = $(cellEdit);
 		var cell = ce.parent();
-		cell.removeClass('editing');
-		cell.data('cellvalue', ce.val());
+		var value = ce.val();
+		var label = value;
 		var editType = ce.prop('tagName');
 		if (editType == 'SELECT')
-			cell.text($('option:selected', ce).text());
+			label = $('option:selected', ce).text();
 		else if (editType == 'CHECKBOX' || editType == 'RADIO')
-			cell.text(ce.next().text());
-		else
-			cell.text(ce.val());
-		if (cell.data('oldvalue') != cell.data('cellvalue')) {
+			label = ce.next().text();
+		Richtable.updateValue(cell, value, label);
+	},
+	updateValue : function(cell, value, label) {
+		cell.removeClass('editing');
+		cell.data('cellvalue', value);
+		if (typeof label != 'undefined')
+			cell.text(label);
+		if (cell.data('oldvalue') != cell.data('cellvalue'))
 			cell.addClass('edited');
-		} else {
+		else
 			cell.removeClass('edited');
-		}
 		var savebtn = $('.btn[data-action="save"]', cell.closest('form'));
 		$('td.edited', cell.closest('form')).length ? savebtn
 				.addClass('btn-primary').show() : savebtn
