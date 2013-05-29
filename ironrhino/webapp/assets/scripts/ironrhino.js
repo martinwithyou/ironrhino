@@ -36573,17 +36573,15 @@ Richtable = {
 		}
 	},
 	editCell : function(cell, type, templateId) {
-		var ce = $(cell);
-		if (ce.hasClass('editing'))
+		var cell = $(cell);
+		if (cell.hasClass('editing'))
 			return;
-		ce.addClass('editing');
-		var value = ce.data('cellvalue');
+		var value = cell.data('cellvalue');
 		if (value === undefined)
-			value = $.trim(ce.text());
+			value = $.trim(cell.text());
 		else
 			value = '' + value;
-		if (!ce.hasClass('edited'))
-			ce.data('oldvalue', value);
+		cell.addClass('editing');
 		var template = '';
 		if (templateId) {
 			template = $('#' + templateId).text();
@@ -36600,12 +36598,12 @@ Richtable = {
 			else
 				template = '<input type="text" class="text"/>';
 		}
-		ce.html(template);
-		$(':input', ce).blur(function() {
+		cell.html(template);
+		$(':input', cell).blur(function() {
 					if (!$(this).hasClass('date'))
 						Richtable.updateCell(this);
 				});
-		var select = $('select', ce);
+		var select = $('select', cell);
 		if (value != undefined && select.length) {
 			var arr = $('option', select).toArray();
 			for (var i = 0; i < arr.length; i++) {
@@ -36616,13 +36614,13 @@ Richtable = {
 			};
 			select.focus();
 		} else {
-			$('input.date', ce).datepicker({
+			$('input.date', cell).datepicker({
 						dateFormat : 'yy-mm-dd',
 						onSelect : function() {
 							Richtable.updateCell(this)
 						}
 					});
-			$(':input', ce).val(value).focus();
+			$(':input', cell).val(value).focus();
 		}
 	},
 	updateCell : function(cellEdit) {
@@ -36638,6 +36636,14 @@ Richtable = {
 		Richtable.updateValue(cell, value, label);
 	},
 	updateValue : function(cell, value, label) {
+		if (cell.data('oldvalue') === undefined) {
+			var oldvalue = cell.data('cellvalue');
+			if (oldvalue === undefined)
+				oldvalue = $.trim(cell.text());
+			else
+				oldvalue = '' + oldvalue;
+			cell.data('oldvalue', oldvalue);
+		}
 		cell.removeClass('editing');
 		cell.data('cellvalue', value);
 		if (typeof label != 'undefined')
@@ -36986,13 +36992,10 @@ Observation.richtable = function(container) {
 				var ele = selector == 'this' ? current : $(selector);
 				if (ele.parents('.richtable').length
 						&& ele.prop('tagName') == 'TD'
-						&& expr.indexOf('data-cellvalue') > -1) {
-					if (typeof ele.data('oldvalue') == 'undefined')
-						ele.data('oldvalue', ele.data('cellvalue') || '');
+						&& expr.indexOf('data-cellvalue') > -1)
 					Richtable.updateValue(ele, val);
-				} else {
+				else
 					ele.attr(expr.substring(i + 1), val);
-				}
 			}
 		} else {
 			var i = expr.indexOf('@');
@@ -37197,13 +37200,10 @@ Observation.treeselect = function(container) {
 				var ele = selector == 'this' ? current : $(selector);
 				if (ele.parents('.richtable').length
 						&& ele.prop('tagName') == 'TD'
-						&& expr.indexOf('data-cellvalue') > -1) {
-					if (typeof ele.data('oldvalue') == 'undefined')
-						ele.data('oldvalue', ele.data('cellvalue') || '');
+						&& expr.indexOf('data-cellvalue') > -1)
 					Richtable.updateValue(ele, val);
-				} else {
+				else
 					ele.attr(expr.substring(i + 1), val);
-				}
 			}
 		} else {
 			var i = expr.indexOf('@');

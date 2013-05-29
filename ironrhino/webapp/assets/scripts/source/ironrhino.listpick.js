@@ -28,13 +28,10 @@
 				var ele = selector == 'this' ? current : $(selector);
 				if (ele.parents('.richtable').length
 						&& ele.prop('tagName') == 'TD'
-						&& expr.indexOf('data-cellvalue') > -1) {
-					if (typeof ele.data('oldvalue') == 'undefined')
-						ele.data('oldvalue', ele.data('cellvalue') || '');
+						&& expr.indexOf('data-cellvalue') > -1)
 					Richtable.updateValue(ele, val);
-				} else {
+				else
 					ele.attr(expr.substring(i + 1), val);
-				}
 			}
 		} else {
 			var i = expr.indexOf('@');
