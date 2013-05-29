@@ -1,5 +1,6 @@
 package org.ironrhino.core.model;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -19,6 +20,7 @@ public class BaseEntity extends Entity<String> {
 	@Id
 	@GeneratedValue(generator = "stringId")
 	@GenericGenerator(name = "stringId", strategy = "org.ironrhino.core.hibernate.StringIdGenerator")
+	@Column(length = 32)
 	protected String id;
 
 	public String getId() {
