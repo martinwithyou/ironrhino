@@ -62,10 +62,10 @@ public class LocationParser {
 	}
 
 	public static Location parseLocal(String host) {
-		LocationParser instance = Holder.instance;
-		if (instance == null || !instance.available)
-			return null;
 		try {
+			LocationParser instance = Holder.instance;
+			if (instance == null || !instance.available)
+				return null;
 			String[] loc = instance.parseLocation(InetAddress.getByName(host)
 					.getAddress());
 			String string = (loc[0] != null ? loc[0] : "")
