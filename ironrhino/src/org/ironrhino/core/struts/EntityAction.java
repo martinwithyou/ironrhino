@@ -2,6 +2,8 @@ package org.ironrhino.core.struts;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -68,6 +70,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
+
+import freemarker.template.Template;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class EntityAction extends BaseAction {
@@ -345,6 +349,13 @@ public class EntityAction extends BaseAction {
 			return ACCESSDENIED;
 		}
 		tryFindEntity();
+		if (entity != null
+				&& !entity.isNew()
+				&& checkRowReadonly(getRichtableConfig()
+						.getRowReadonlyExpression(), entity)) {
+			addActionError(getText("access.denied"));
+			return ACCESSDENIED;
+		}
 		if (entity == null)
 			try {
 				entity = (Persistable) getEntityClass().newInstance();
@@ -423,6 +434,13 @@ public class EntityAction extends BaseAction {
 		}
 		if (!makeEntityValid())
 			return INPUT;
+		if (entity != null
+				&& !entity.isNew()
+				&& checkRowReadonly(getRichtableConfig()
+						.getRowReadonlyExpression(), entity)) {
+			addActionError(getText("access.denied"));
+			return ACCESSDENIED;
+		}
 		BeanWrapperImpl bwp = new BeanWrapperImpl(entity);
 		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
 			String name = entry.getKey();
@@ -663,6 +681,24 @@ public class EntityAction extends BaseAction {
 			log.error(e.getMessage(), e);
 		}
 		return true;
+	}
+
+	private static boolean checkRowReadonly(String expression,
+			Persistable<?> entity) {
+		if (StringUtils.isNotBlank(expression)) {
+			try {
+				Template template = new Template(null, new StringReader("${("
+						+ expression + ")?string!}"), null, "utf-8");
+				StringWriter sw = new StringWriter();
+				Map<String, Object> rootMap = new HashMap<String, Object>();
+				rootMap.put("entity", entity);
+				template.process(rootMap, sw);
+				return sw.toString().equals("true");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 
 	@Override
