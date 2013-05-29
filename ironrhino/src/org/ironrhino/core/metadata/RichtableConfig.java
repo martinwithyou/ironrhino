@@ -20,4 +20,5 @@ public @interface RichtableConfig {
 
 	String listFooter() default "";
 
+	String rowReadonlyExpression() default "";
 }

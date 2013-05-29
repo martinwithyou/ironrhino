@@ -9,7 +9,7 @@
 <#assign listHeader=rtconfig.listHeader?interpret>
 <@listHeader/>
 </#if>
-<@rtstart entityName=entityName readonly=readonly/>
+<@rtstart entityName=entityName/>
 <#assign size=0>
 <#list uiConfigs?keys as key>
 	<#if !uiConfigs[key].hiddenInList>
@@ -57,22 +57,24 @@
 <#assign index=0>
 <#list resultPage.result as entity>
 <#assign index=index+1>
-<@rttbodytrstart entity=entity readonly=readonly/>
-	<#list uiConfigs?keys as key>
-		<#assign config=uiConfigs[key]>
-		<#if !config.hiddenInList>
-			<#assign value = entity[key]!>
-			<#if config.type=='dictionary' && selectDictionary??>
-							<#assign value=getDictionaryLabel(evalTemplate(config.templateName),value)/>	
-			</#if>
-			<#assign dynamicAttributes={}>
-			<#if config.type=='listpick' && !readonly>
-				<#assign dynamicAttributes={"class":"listpick","data-options":"{'url':'"+uiConfigs[key].pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
-			</#if>
-			<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
+<#assign rowReadonly = readonly/>
+<#if !rowReadonly && rtconfig.rowReadonlyExpression?has_content><#assign rowReadonly=rtconfig.rowReadonlyExpression?eval></#if>
+<@rttbodytrstart entity=entity rowReadonly=rowReadonly/>
+<#list uiConfigs?keys as key>
+	<#assign config=uiConfigs[key]>
+	<#if !config.hiddenInList>
+		<#assign value = entity[key]!>
+		<#if config.type=='dictionary' && selectDictionary??>
+						<#assign value=getDictionaryLabel(evalTemplate(config.templateName),value)/>	
 		</#if>
-	</#list>	
-<@rttbodytrend entity=entity buttons=rtconfig.actionColumnButtons! editable=!readonly viewable=viewable/>
+		<#assign dynamicAttributes={}>
+		<#if config.type=='listpick' && !rowReadonly>
+			<#assign dynamicAttributes={"class":"listpick","data-options":"{'url':'"+uiConfigs[key].pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
+		</#if>
+		<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
+	</#if>
+</#list>	
+<@rttbodytrend entity=entity buttons=rtconfig.actionColumnButtons! editable=!readonly viewable=viewable rowReadonly=rowReadonly/>
 </#list>
 <@rtend readonly=readonly searchable=searchable showPageSize=rtconfig.showPageSize! buttons=rtconfig.bottomButtons! enableable=enableable/>
 <#if !readonly && hasSelect>

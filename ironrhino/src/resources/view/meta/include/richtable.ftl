@@ -1,5 +1,5 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false createable=true viewable=false celleditable=true deleteable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
-<@rtstart formid=formid action=action entityName=entityName readonly=readonly resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false rowReadonlyExpression="" createable=true viewable=false celleditable=true deleteable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
+<@rtstart formid=formid action=action entityName=entityName resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable>
 <#nested/>
 </@rtstart>
 <#local index = 0>
@@ -10,11 +10,10 @@
 <@rttheadtd name=name alias=columns[name]['alias']! title=columns[name]['title']! class=columns[name]['cssClass']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=(readonly&&index!=size||!readonly)&&resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
 </#list>
 <@rtmiddle width=actionColumnWidth showActionColumn=actionColumnButtons?has_content||!readonly||viewable/>
-<#local index=0>
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
-<#local index=index+1>
-<@rttbodytrstart entity=entity readonly=readonly showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid/>
+<#local rowReadonly = celleditable && !readonly && rowReadonlyExpression?has_content && rowReadonlyExpression?eval />
+<@rttbodytrstart entity=entity rowReadonly=rowReadonly showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid/>
 <#list columns?keys as name>
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>
@@ -28,12 +27,12 @@
 	<#assign dynamicAttributes=columns[name]['dynamicAttributes']!>
 	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']! dynamicAttributes=dynamicAttributes/>
 </#list>
-<@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable/>
+<@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable rowReadonly=rowReadonly/>
 </#list>
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable enableable=enableable searchable=searchable searchButtons=searchButtons showPageSize=showPageSize/>
 </#macro>
 
-<#macro rtstart formid='',action='',entityName='',readonly=false,resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true>
+<#macro rtstart formid='',action='',entityName='',resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true>
 <#local action=action?has_content?string(action,request.requestURI?substring(request.contextPath?length))>
 <form id="<#if formid!=''>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view"<#if actionBaseUrl!=action> data-actionBaseUrl="${actionBaseUrl}"</#if><#if entityName!=action&&entityName!=''> data-entity="${entityName}"</#if>>
 <#nested/>
@@ -66,14 +65,14 @@
 <tbody>
 </#macro>
 
-<#macro rttbodytrstart entity readonly=false showCheckColumn=true multipleCheck=true rowid=''>
+<#macro rttbodytrstart entity rowReadonly=false showCheckColumn=true multipleCheck=true rowid=''>
 <#if rowid==''>
 	<#local id=entity.id?string/>
 <#else>
 	<#local temp=rowid?interpret>
 	<#local id><@temp/></#local>
 </#if>
-<tr<#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if>>
+<tr<#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if><#if rowReadonly> data-readonly="true"</#if>>
 <#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if id?has_content> value="${id}"</#if> class="custom"/></td></#if>
 </#macro>
 
@@ -96,7 +95,7 @@
 </td>
 </#macro>
 
-<#macro rttbodytrend entity buttons='' editable=true viewable=false>
+<#macro rttbodytrend entity buttons='' editable=true viewable=false rowReadonly=false>
 <#if buttons?has_content || editable || viewable>
 <td class="action">
 <#if buttons!=''>
@@ -106,7 +105,7 @@
 <#if viewable>
 <button type="button" class="btn" data-view="view">${action.getText("view")}</button>
 </#if>
-<#if editable>
+<#if editable && !rowReadonly>
 <button type="button" class="btn" data-view="input">${action.getText("edit")}</button>
 </#if>
 </#if>

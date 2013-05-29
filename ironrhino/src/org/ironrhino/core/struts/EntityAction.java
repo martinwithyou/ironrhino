@@ -1243,6 +1243,7 @@ public class EntityAction extends BaseAction {
 		private String bottomButtons = "";
 		private String listHeader = "";
 		private String listFooter = "";
+		private String rowReadonlyExpression = "";
 
 		public RichtableConfigImpl() {
 		}
@@ -1255,6 +1256,7 @@ public class EntityAction extends BaseAction {
 			this.bottomButtons = config.bottomButtons();
 			this.listHeader = config.listHeader();
 			this.listFooter = config.listFooter();
+			this.rowReadonlyExpression = config.rowReadonlyExpression();
 		}
 
 		public boolean isShowPageSize() {
@@ -1295,6 +1297,14 @@ public class EntityAction extends BaseAction {
 
 		public void setListFooter(String listFooter) {
 			this.listFooter = listFooter;
+		}
+
+		public String getRowReadonlyExpression() {
+			return rowReadonlyExpression;
+		}
+
+		public void setRowReadonlyExpression(String rowReadonlyExpression) {
+			this.rowReadonlyExpression = rowReadonlyExpression;
 		}
 
 	}

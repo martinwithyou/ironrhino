@@ -480,17 +480,18 @@ Richtable = {
 		var theadCells = $('thead:eq(0) th', t);
 		$('tbody:eq(0) tr', t).each(function() {
 					var cells = this.cells;
-					theadCells.each(function(i) {
-								var cellEdit = $(this).data('celledit');
-								if (!cellEdit)
-									return;
-								var ar = cellEdit.split(',');
-								$(cells[i]).unbind(ar[0]).bind(ar[0],
-										function() {
-											Richtable.editCell(this, ar[1],
-													ar[2]);
-										});
-							});
+					if (!$(this).data('readonly'))
+						theadCells.each(function(i) {
+									var cellEdit = $(this).data('celledit');
+									if (!cellEdit)
+										return;
+									var ar = cellEdit.split(',');
+									$(cells[i]).unbind(ar[0]).bind(ar[0],
+											function() {
+												Richtable.editCell(this, ar[1],
+														ar[2]);
+											});
+								});
 				});
 
 		var need = false;
