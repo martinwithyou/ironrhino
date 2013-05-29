@@ -36581,6 +36581,8 @@ Richtable = {
 			value = $.trim(cell.text());
 		else
 			value = '' + value;
+		if (cell.data('oldvalue') === undefined)
+			cell.data('oldvalue', value);
 		cell.addClass('editing');
 		var template = '';
 		if (templateId) {
@@ -36636,14 +36638,8 @@ Richtable = {
 		Richtable.updateValue(cell, value, label);
 	},
 	updateValue : function(cell, value, label) {
-		if (cell.data('oldvalue') === undefined) {
-			var oldvalue = cell.data('cellvalue');
-			if (oldvalue === undefined)
-				oldvalue = $.trim(cell.text());
-			else
-				oldvalue = '' + oldvalue;
-			cell.data('oldvalue', oldvalue);
-		}
+		if (cell.data('oldvalue') === undefined)
+			cell.data('oldvalue', '' + cell.data('cellvalue'));
 		cell.removeClass('editing');
 		cell.data('cellvalue', value);
 		if (typeof label != 'undefined')
