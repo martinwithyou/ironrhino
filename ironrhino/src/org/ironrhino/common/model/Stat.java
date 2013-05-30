@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.ironrhino.core.dataroute.DataRoute;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.Readonly;
+import org.ironrhino.core.metadata.ReadonlyConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.stat.Key;
@@ -22,7 +22,7 @@ import org.ironrhino.core.stat.Value;
 
 @DataRoute("miscGroup")
 @AutoConfig
-@Readonly(true)
+@ReadonlyConfig(readonly = true)
 @Entity
 @Table(name = "common_stat")
 public class Stat extends KeyValuePair implements Persistable<String> {

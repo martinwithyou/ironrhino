@@ -38,7 +38,7 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
-import org.ironrhino.core.metadata.Readonly;
+import org.ironrhino.core.metadata.ReadonlyConfig;
 import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Enableable;
@@ -89,21 +89,25 @@ public class EntityAction extends BaseAction {
 
 	private Persistable entity;
 
-	private Map<String, UiConfigImpl> _uiConfigs;
+	private String entityName;
+
+	private Map<String, Annotation> naturalIds;
+
+	private Map<String, UiConfigImpl> uiConfigs;
+
+	private RichtableConfigImpl richtableConfig;
+
+	private ReadonlyConfigImpl readonlyConfig;
 
 	private Map<String, List> lists;
 
 	@Autowired(required = false)
 	private transient ElasticSearchService<Persistable<?>> elasticSearchService;
 
-	public Map<String, List> getLists() {
-		return lists;
-	}
-
 	public boolean isSearchable() {
 		if (getEntityClass().getAnnotation(Searchable.class) != null)
 			return true;
-		AutoConfig ac = getAutoConfig();
+		AutoConfig ac = getEntityClass().getAnnotation(AutoConfig.class);
 		boolean searchable = (ac != null) && ac.searchable();
 		if (searchable)
 			return true;
@@ -119,16 +123,6 @@ public class EntityAction extends BaseAction {
 		return Enableable.class.isAssignableFrom(getEntityClass());
 	}
 
-	public boolean isReadonly() {
-		Readonly readonly = getEntityClass().getAnnotation(Readonly.class);
-		return (readonly != null) && readonly.value();
-	}
-
-	public String getEntityReadonlyExpression() {
-		Readonly readonly = getEntityClass().getAnnotation(Readonly.class);
-		return (readonly != null) ? readonly.expression() : null;
-	}
-
 	public Persistable getEntity() {
 		return entity;
 	}
@@ -141,8 +135,242 @@ public class EntityAction extends BaseAction {
 		this.resultPage = resultPage;
 	}
 
-	private AutoConfig getAutoConfig() {
-		return getEntityClass().getAnnotation(AutoConfig.class);
+	public RichtableConfigImpl getRichtableConfig() {
+		if (richtableConfig == null)
+			richtableConfig = new RichtableConfigImpl(getEntityClass()
+					.getAnnotation(RichtableConfig.class));
+		return richtableConfig;
+	}
+
+	public ReadonlyConfigImpl getReadonlyConfig() {
+		if (readonlyConfig == null)
+			readonlyConfig = new ReadonlyConfigImpl(getEntityClass()
+					.getAnnotation(ReadonlyConfig.class));
+		return readonlyConfig;
+	}
+
+	public boolean isNew() {
+		return entity == null || entity.isNew();
+	}
+
+	// need call once before view
+	public String getEntityName() {
+		if (entityName == null)
+			entityName = ActionContext.getContext().getActionInvocation()
+					.getProxy().getActionName();
+		return entityName;
+	}
+
+	public Map<String, Annotation> getNaturalIds() {
+		if (naturalIds != null)
+			return naturalIds;
+		naturalIds = AnnotationUtils.getAnnotatedPropertyNameAndAnnotations(
+				getEntityClass(), NaturalId.class);
+		return naturalIds;
+	}
+
+	public boolean isNaturalIdMutable() {
+		return getNaturalIds().size() > 0
+				&& ((NaturalId) getNaturalIds().values().iterator().next())
+						.mutable();
+	}
+
+	public Map<String, UiConfigImpl> getUiConfigs() {
+		if (uiConfigs == null) {
+			Class clazz = getEntityClass();
+			Set<String> hides = new HashSet<String>();
+			hides.addAll(AnnotationUtils.getAnnotatedPropertyNames(clazz,
+					NotInCopy.class));
+			final Map<String, UiConfigImpl> map = new HashMap<String, UiConfigImpl>();
+			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
+					.getPropertyDescriptors(clazz);
+			for (PropertyDescriptor pd : pds) {
+				String propertyName = pd.getName();
+				if (pd.getReadMethod() == null)
+					continue;
+				if (pd.getWriteMethod() == null
+						&& pd.getReadMethod().getAnnotation(UiConfig.class) == null)
+					continue;
+				SearchableProperty searchableProperty = pd.getReadMethod()
+						.getAnnotation(SearchableProperty.class);
+				if (searchableProperty == null)
+					try {
+						Field f = clazz.getDeclaredField(propertyName);
+						if (f != null)
+							searchableProperty = f
+									.getAnnotation(SearchableProperty.class);
+					} catch (Exception e) {
+					}
+				SearchableId searchableId = pd.getReadMethod().getAnnotation(
+						SearchableId.class);
+				if (searchableId == null)
+					try {
+						Field f = clazz.getDeclaredField(propertyName);
+						if (f != null)
+							searchableId = f.getAnnotation(SearchableId.class);
+					} catch (Exception e) {
+					}
+				UiConfig uiConfig = pd.getReadMethod().getAnnotation(
+						UiConfig.class);
+				if (uiConfig == null)
+					try {
+						Field f = clazz.getDeclaredField(propertyName);
+						if (f != null)
+							uiConfig = f.getAnnotation(UiConfig.class);
+					} catch (Exception e) {
+					}
+
+				if (uiConfig != null && uiConfig.hidden())
+					continue;
+				if ("new".equals(propertyName) || "id".equals(propertyName)
+						|| "class".equals(propertyName)
+						|| pd.getReadMethod() == null
+						|| hides.contains(propertyName))
+					continue;
+				Column columnannotation = pd.getReadMethod().getAnnotation(
+						Column.class);
+				if (columnannotation == null)
+					try {
+						Field f = clazz.getDeclaredField(propertyName);
+						if (f != null)
+							columnannotation = f.getAnnotation(Column.class);
+					} catch (Exception e) {
+					}
+
+				UiConfigImpl uci = new UiConfigImpl(uiConfig);
+				if (columnannotation != null && !columnannotation.nullable())
+					uci.setRequired(true);
+				Class<?> returnType = pd.getPropertyType();
+				if (returnType.isEnum()) {
+					uci.setType("select");
+					uci.setListKey("name");
+					uci.setListValue("displayName");
+					try {
+						if (lists == null)
+							lists = new HashMap<String, List>();
+						Method method = pd.getReadMethod().getReturnType()
+								.getMethod("values", new Class[0]);
+						lists.put(propertyName,
+								Arrays.asList((Enum[]) method.invoke(null)));
+					} catch (Exception e) {
+						log.error(e.getMessage(), e);
+					}
+					map.put(propertyName, uci);
+					continue;
+				} else if (Persistable.class.isAssignableFrom(returnType)) {
+					JoinColumn joincolumnannotation = pd.getReadMethod()
+							.getAnnotation(JoinColumn.class);
+					if (joincolumnannotation == null)
+						try {
+							Field f = clazz.getDeclaredField(propertyName);
+							if (f != null)
+								joincolumnannotation = f
+										.getAnnotation(JoinColumn.class);
+						} catch (Exception e) {
+						}
+					if (joincolumnannotation != null
+							&& !joincolumnannotation.nullable())
+						uci.setRequired(true);
+					uci.setType("listpick");
+					uci.setExcludeIfNotEdited(true);
+					if (StringUtils.isBlank(uci.getPickUrl())) {
+						String url = ((AutoConfigPackageProvider) packageProvider)
+								.getEntityUrl(returnType);
+						if (url != null) {
+							StringBuilder sb = new StringBuilder(url);
+							sb.append("/pick");
+							Set columns = new LinkedHashSet();
+							columns.addAll(AnnotationUtils
+									.getAnnotatedPropertyNameAndAnnotations(
+											returnType, NaturalId.class)
+									.keySet());
+							for (String column : "fullname,name,description,code"
+									.split(","))
+								try {
+									if (returnType.getMethod("get"
+											+ StringUtils.capitalize(column),
+											new Class[0]) != null) {
+										if (!columns.contains("fullname")
+												&& column.equals("name")
+												|| !column.equals("name"))
+											columns.add(column);
+									}
+								} catch (NoSuchMethodException e) {
+								}
+							if (!columns.isEmpty()) {
+								sb.append("?columns="
+										+ StringUtils.join(columns, ','));
+							}
+							uci.setPickUrl(sb.toString());
+						}
+					}
+					map.put(propertyName, uci);
+					continue;
+				}
+
+				if (returnType == Integer.TYPE || returnType == Integer.class
+						|| returnType == Short.TYPE
+						|| returnType == Short.class) {
+					uci.setInputType("number");
+					uci.addCssClass("integer");
+				} else if (returnType == Long.TYPE || returnType == Long.class) {
+					uci.setInputType("number");
+					uci.addCssClass("long");
+				} else if (returnType == Double.TYPE
+						|| returnType == Double.class
+						|| returnType == Float.TYPE
+						|| returnType == Float.class
+						|| returnType == BigDecimal.class) {
+					uci.setInputType("number");
+					uci.addCssClass("double");
+				} else if (Date.class.isAssignableFrom(returnType)) {
+					uci.addCssClass("date");
+					if (StringUtils.isBlank(uci.getCellEdit()))
+						uci.setCellEdit("click,date");
+				} else if (String.class == returnType
+						&& pd.getName().toLowerCase().contains("email")
+						&& !pd.getName().contains("Password")) {
+					uci.setInputType("email");
+					uci.addCssClass("email");
+				} else if (returnType == Boolean.TYPE
+						|| returnType == Boolean.class) {
+					uci.setType("checkbox");
+				}
+				if (columnannotation != null && columnannotation.unique())
+					uci.setUnique(true);
+				if (String.class == returnType
+						&& (searchableProperty != null || searchableId != null))
+					uci.setSearchable(true);
+
+				if (getNaturalIds().containsKey(pd.getName())) {
+					uci.setRequired(true);
+					if (getNaturalIds().size() == 1)
+						uci.addCssClass("checkavailable");
+				}
+				map.put(propertyName, uci);
+			}
+			Map<String, UiConfigImpl> sortedMap = new TreeMap<String, UiConfigImpl>(
+					new Comparator<String>() {
+						public int compare(String o1, String o2) {
+							UiConfigImpl uci1 = map.get(o1);
+							UiConfigImpl uci2 = map.get(o2);
+							if (uci1 == null)
+								return -1;
+							if (uci2 == null)
+								return 1;
+							int i = Integer.valueOf(uci1.getDisplayOrder())
+									.compareTo(uci2.getDisplayOrder());
+							return i != 0 ? i : o1.compareTo(o2);
+						}
+					});
+			sortedMap.putAll(map);
+			uiConfigs = sortedMap;
+		}
+		return uiConfigs;
+	}
+
+	public Map<String, List> getLists() {
+		return lists;
 	}
 
 	protected <T extends Persistable<?>> BaseManager<T> getEntityManager(
@@ -214,7 +442,7 @@ public class EntityAction extends BaseAction {
 			if (entry.getValue().isSearchable())
 				searchablePropertyNames.add(entry.getKey());
 		}
-		AutoConfig ac = getAutoConfig();
+		AutoConfig ac = getEntityClass().getAnnotation(AutoConfig.class);
 		boolean searchable = isSearchable();
 		if (searchable
 				&& StringUtils.isNumeric(keyword)
@@ -351,13 +579,15 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String input() {
-		if (isReadonly()) {
+		if (getReadonlyConfig().isReadonly()) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
 		tryFindEntity();
-		if (entity != null && !entity.isNew()
-				&& checkEntityReadonly(getEntityReadonlyExpression(), entity)) {
+		if (entity != null
+				&& !entity.isNew()
+				&& checkEntityReadonly(getReadonlyConfig().getExpression(),
+						entity)) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
@@ -433,14 +663,16 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String save() {
-		if (isReadonly()) {
+		if (getReadonlyConfig().isReadonly()) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
 		if (!makeEntityValid())
 			return INPUT;
-		if (entity != null && !entity.isNew()
-				&& checkEntityReadonly(getEntityReadonlyExpression(), entity)) {
+		if (entity != null
+				&& !entity.isNew()
+				&& checkEntityReadonly(getReadonlyConfig().getExpression(),
+						entity)) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
@@ -715,10 +947,12 @@ public class EntityAction extends BaseAction {
 
 	@Override
 	public String delete() {
-		if (isReadonly()) {
+		if (getReadonlyConfig().isReadonly()
+				&& !getReadonlyConfig().isDeletable()) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
+
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		String[] arr = getId();
 		Serializable[] id = (arr != null) ? new Serializable[arr.length]
@@ -734,8 +968,25 @@ public class EntityAction extends BaseAction {
 			log.error(e.getMessage(), e);
 		}
 		if (id.length > 0) {
-			entityManager.delete(id);
-			addActionMessage(getText("delete.success"));
+			boolean deletable = true;
+			String expression = getReadonlyConfig().getExpression();
+			if (StringUtils.isNotBlank(expression)) {
+				for (Serializable uid : id) {
+					Persistable<?> en = entityManager.get(uid);
+					if (en != null && checkEntityReadonly(expression, en)
+							&& !getReadonlyConfig().isDeletable()) {
+						addActionError(getText("delete.forbidden",
+								new String[] { en.toString() }));
+						deletable = false;
+						break;
+					}
+				}
+			}
+			if (deletable) {
+				List<Persistable<?>> list = entityManager.delete(id);
+				if (list.size() > 0)
+					addActionMessage(getText("delete.success"));
+			}
 		}
 		return SUCCESS;
 	}
@@ -749,7 +1000,7 @@ public class EntityAction extends BaseAction {
 	}
 
 	private String updateEnabled(boolean enabled) {
-		if (!isEnableable())
+		if (!isEnableable() || getReadonlyConfig().isReadonly())
 			return ACCESSDENIED;
 		BaseManager<Persistable<?>> em = getEntityManager(getEntityClass());
 		String[] arr = getId();
@@ -768,7 +1019,10 @@ public class EntityAction extends BaseAction {
 		if (id.length > 0) {
 			for (Serializable s : id) {
 				Enableable en = (Enableable) em.get(s);
-				if (en != null && en.isEnabled() != enabled) {
+				if (en != null
+						&& checkEntityReadonly(getReadonlyConfig()
+								.getExpression(), (Persistable<?>) en)
+						&& en.isEnabled() != enabled) {
 					en.setEnabled(enabled);
 					em.save((Persistable) en);
 				}
@@ -786,235 +1040,6 @@ public class EntityAction extends BaseAction {
 			return c.getAnnotation(Authorize.class);
 		}
 		return authorize;
-	}
-
-	public boolean isNew() {
-		return entity == null || entity.isNew();
-	}
-
-	private Map<String, Annotation> _naturalIds;
-
-	// need call once before view
-	public String getEntityName() {
-		if (entityName == null)
-			entityName = ActionContext.getContext().getActionInvocation()
-					.getProxy().getActionName();
-		return entityName;
-	}
-
-	private String entityName;
-
-	public Map<String, Annotation> getNaturalIds() {
-		if (_naturalIds != null)
-			return _naturalIds;
-		_naturalIds = AnnotationUtils.getAnnotatedPropertyNameAndAnnotations(
-				getEntityClass(), NaturalId.class);
-		return _naturalIds;
-	}
-
-	public boolean isNaturalIdMutable() {
-		return getNaturalIds().size() > 0
-				&& ((NaturalId) getNaturalIds().values().iterator().next())
-						.mutable();
-	}
-
-	public RichtableConfigImpl getRichtableConfig() {
-		return new RichtableConfigImpl(getEntityClass().getAnnotation(
-				RichtableConfig.class));
-	}
-
-	public Map<String, UiConfigImpl> getUiConfigs() {
-		if (_uiConfigs == null) {
-			Class clazz = getEntityClass();
-			Set<String> hides = new HashSet<String>();
-			hides.addAll(AnnotationUtils.getAnnotatedPropertyNames(clazz,
-					NotInCopy.class));
-			final Map<String, UiConfigImpl> map = new HashMap<String, UiConfigImpl>();
-			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
-					.getPropertyDescriptors(clazz);
-			for (PropertyDescriptor pd : pds) {
-				String propertyName = pd.getName();
-				if (pd.getReadMethod() == null)
-					continue;
-				if (pd.getWriteMethod() == null
-						&& pd.getReadMethod().getAnnotation(UiConfig.class) == null)
-					continue;
-				SearchableProperty searchableProperty = pd.getReadMethod()
-						.getAnnotation(SearchableProperty.class);
-				if (searchableProperty == null)
-					try {
-						Field f = clazz.getDeclaredField(propertyName);
-						if (f != null)
-							searchableProperty = f
-									.getAnnotation(SearchableProperty.class);
-					} catch (Exception e) {
-					}
-				SearchableId searchableId = pd.getReadMethod().getAnnotation(
-						SearchableId.class);
-				if (searchableId == null)
-					try {
-						Field f = clazz.getDeclaredField(propertyName);
-						if (f != null)
-							searchableId = f.getAnnotation(SearchableId.class);
-					} catch (Exception e) {
-					}
-				UiConfig uiConfig = pd.getReadMethod().getAnnotation(
-						UiConfig.class);
-				if (uiConfig == null)
-					try {
-						Field f = clazz.getDeclaredField(propertyName);
-						if (f != null)
-							uiConfig = f.getAnnotation(UiConfig.class);
-					} catch (Exception e) {
-					}
-
-				if (uiConfig != null && uiConfig.hidden())
-					continue;
-				if ("new".equals(propertyName) || "id".equals(propertyName)
-						|| "class".equals(propertyName)
-						|| pd.getReadMethod() == null
-						|| hides.contains(propertyName))
-					continue;
-				Column columnannotation = pd.getReadMethod().getAnnotation(
-						Column.class);
-				if (columnannotation == null)
-					try {
-						Field f = clazz.getDeclaredField(propertyName);
-						if (f != null)
-							columnannotation = f.getAnnotation(Column.class);
-					} catch (Exception e) {
-					}
-
-				UiConfigImpl uci = new UiConfigImpl(uiConfig);
-				if (columnannotation != null && !columnannotation.nullable())
-					uci.setRequired(true);
-				Class<?> returnType = pd.getPropertyType();
-				if (returnType.isEnum()) {
-					uci.setType("select");
-					uci.setListKey("name");
-					uci.setListValue("displayName");
-					try {
-						if (lists == null)
-							lists = new HashMap<String, List>();
-						Method method = pd.getReadMethod().getReturnType()
-								.getMethod("values", new Class[0]);
-						lists.put(propertyName,
-								Arrays.asList((Enum[]) method.invoke(null)));
-					} catch (Exception e) {
-						log.error(e.getMessage(), e);
-					}
-					map.put(propertyName, uci);
-					continue;
-				} else if (Persistable.class.isAssignableFrom(returnType)) {
-					JoinColumn joincolumnannotation = pd.getReadMethod()
-							.getAnnotation(JoinColumn.class);
-					if (joincolumnannotation == null)
-						try {
-							Field f = clazz.getDeclaredField(propertyName);
-							if (f != null)
-								joincolumnannotation = f
-										.getAnnotation(JoinColumn.class);
-						} catch (Exception e) {
-						}
-					if (joincolumnannotation != null
-							&& !joincolumnannotation.nullable())
-						uci.setRequired(true);
-					uci.setType("listpick");
-					uci.setExcludeIfNotEdited(true);
-					if (StringUtils.isBlank(uci.getPickUrl())) {
-						String url = ((AutoConfigPackageProvider) packageProvider)
-								.getEntityUrl(returnType);
-						if (url != null) {
-							StringBuilder sb = new StringBuilder(url);
-							sb.append("/pick");
-							Set columns = new LinkedHashSet();
-							columns.addAll(AnnotationUtils
-									.getAnnotatedPropertyNameAndAnnotations(
-											returnType, NaturalId.class)
-									.keySet());
-							for (String column : "fullname,name,description,code"
-									.split(","))
-								try {
-									if (returnType.getMethod("get"
-											+ StringUtils.capitalize(column),
-											new Class[0]) != null) {
-										if (!columns.contains("fullname")
-												&& column.equals("name")
-												|| !column.equals("name"))
-											columns.add(column);
-									}
-								} catch (NoSuchMethodException e) {
-								}
-							if (!columns.isEmpty()) {
-								sb.append("?columns="
-										+ StringUtils.join(columns, ','));
-							}
-							uci.setPickUrl(sb.toString());
-						}
-					}
-					map.put(propertyName, uci);
-					continue;
-				}
-
-				if (returnType == Integer.TYPE || returnType == Integer.class
-						|| returnType == Short.TYPE
-						|| returnType == Short.class) {
-					uci.setInputType("number");
-					uci.addCssClass("integer");
-				} else if (returnType == Long.TYPE || returnType == Long.class) {
-					uci.setInputType("number");
-					uci.addCssClass("long");
-				} else if (returnType == Double.TYPE
-						|| returnType == Double.class
-						|| returnType == Float.TYPE
-						|| returnType == Float.class
-						|| returnType == BigDecimal.class) {
-					uci.setInputType("number");
-					uci.addCssClass("double");
-				} else if (Date.class.isAssignableFrom(returnType)) {
-					uci.addCssClass("date");
-					if (StringUtils.isBlank(uci.getCellEdit()))
-						uci.setCellEdit("click,date");
-				} else if (String.class == returnType
-						&& pd.getName().toLowerCase().contains("email")
-						&& !pd.getName().contains("Password")) {
-					uci.setInputType("email");
-					uci.addCssClass("email");
-				} else if (returnType == Boolean.TYPE
-						|| returnType == Boolean.class) {
-					uci.setType("checkbox");
-				}
-				if (columnannotation != null && columnannotation.unique())
-					uci.setUnique(true);
-				if (String.class == returnType
-						&& (searchableProperty != null || searchableId != null))
-					uci.setSearchable(true);
-
-				if (getNaturalIds().containsKey(pd.getName())) {
-					uci.setRequired(true);
-					if (getNaturalIds().size() == 1)
-						uci.addCssClass("checkavailable");
-				}
-				map.put(propertyName, uci);
-			}
-			Map<String, UiConfigImpl> sortedMap = new TreeMap<String, UiConfigImpl>(
-					new Comparator<String>() {
-						public int compare(String o1, String o2) {
-							UiConfigImpl uci1 = map.get(o1);
-							UiConfigImpl uci2 = map.get(o2);
-							if (uci1 == null)
-								return -1;
-							if (uci2 == null)
-								return 1;
-							int i = Integer.valueOf(uci1.getDisplayOrder())
-									.compareTo(uci2.getDisplayOrder());
-							return i != 0 ? i : o1.compareTo(o2);
-						}
-					});
-			sortedMap.putAll(map);
-			_uiConfigs = sortedMap;
-		}
-		return _uiConfigs;
 	}
 
 	public static class UiConfigImpl implements Serializable {
@@ -1274,6 +1299,50 @@ public class EntityAction extends BaseAction {
 
 		public void setSearchable(boolean searchable) {
 			this.searchable = searchable;
+		}
+
+	}
+
+	public static class ReadonlyConfigImpl implements Serializable {
+
+		private static final long serialVersionUID = 6566440254646584026L;
+		private boolean readonly = false;
+		private String expression = "";
+		private boolean deletable = false;
+
+		public ReadonlyConfigImpl() {
+		}
+
+		public ReadonlyConfigImpl(ReadonlyConfig config) {
+			if (config == null)
+				return;
+			this.readonly = config.readonly();
+			this.expression = config.expression();
+			this.deletable = config.deletable();
+		}
+
+		public boolean isReadonly() {
+			return readonly;
+		}
+
+		public void setReadonly(boolean readonly) {
+			this.readonly = readonly;
+		}
+
+		public String getExpression() {
+			return expression;
+		}
+
+		public void setExpression(String expression) {
+			this.expression = expression;
+		}
+
+		public boolean isDeletable() {
+			return deletable;
+		}
+
+		public void setDeletable(boolean deletable) {
+			this.deletable = deletable;
 		}
 
 	}

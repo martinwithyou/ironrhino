@@ -15,7 +15,7 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
-import org.ironrhino.core.metadata.Readonly;
+import org.ironrhino.core.metadata.ReadonlyConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.util.CodecUtils;
@@ -23,7 +23,7 @@ import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 
 @AutoConfig(order = "createDate desc")
-@Readonly(value = true, deletable = true)
+@ReadonlyConfig(readonly = true, deletable = true)
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "oauth_authorization")

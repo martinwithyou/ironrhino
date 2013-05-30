@@ -1,4 +1,4 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false entityReadonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false readonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
 <@rtstart formid=formid action=action entityName=entityName resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable>
 <#nested/>
 </@rtstart>
@@ -12,8 +12,11 @@
 <@rtmiddle width=actionColumnWidth showActionColumn=actionColumnButtons?has_content||!readonly||viewable/>
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
-<#local entityReadonly = celleditable && !readonly && entityReadonlyExpression?has_content && entityReadonlyExpression?eval />
-<@rttbodytrstart entity=entity entityReadonly=entityReadonly showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid/>
+<#local entityReadonly = !readonly && readonlyExpression?has_content && readonlyExpression?eval />
+<#if celleditable&&!readonly&&entityReadonly>
+<#local dynamicAttributes={"data-readonly":"true"}/>
+</#if>
+<@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid dynamicAttributes=dynamicAttributes!/>
 <#list columns?keys as name>
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>
@@ -65,14 +68,14 @@
 <tbody>
 </#macro>
 
-<#macro rttbodytrstart entity entityReadonly=false showCheckColumn=true multipleCheck=true rowid=''>
+<#macro rttbodytrstart entity showCheckColumn=true multipleCheck=true rowid='' dynamicAttributes...>
 <#if rowid==''>
 	<#local id=entity.id?string/>
 <#else>
 	<#local temp=rowid?interpret>
 	<#local id><@temp/></#local>
 </#if>
-<tr<#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if><#if entityReadonly> data-readonly="true"</#if>>
+<tr<#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if><#list dynamicAttributes?keys as attr><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?string}"</#list><#else> ${attr}="${dynamicAttributes[attr]?string}"</#if></#list>>
 <#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if id?has_content> value="${id}"</#if> class="custom"/></td></#if>
 </#macro>
 
@@ -168,8 +171,10 @@
 <button type="button" class="btn hidden-pad" data-action="enable" data-shown="selected">${action.getText("enable")}</button>
 <button type="button" class="btn hidden-pad" data-action="disable" data-shown="selected">${action.getText("disable")}</button>
 </#if>
-<#if deletable><button type="button" class="btn" data-action="delete" data-shown="selected">${action.getText("delete")}</button></#if>
-</#if><button type="button" class="btn" data-action="reload">${action.getText("reload")}</button></#if>
+</#if>
+<#if !readonly||deletable><button type="button" class="btn" data-action="delete" data-shown="selected">${action.getText("delete")}</button></#if>
+<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button>
+</#if>
 </div>
 <div class="search span2">
 <#if searchable>

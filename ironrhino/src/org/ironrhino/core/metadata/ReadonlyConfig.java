@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface Readonly {
+public @interface ReadonlyConfig {
 
-	boolean value() default false; // all readonly
+	boolean readonly() default false; // all readonly
 
 	String expression() default ""; // some entity readonly
 

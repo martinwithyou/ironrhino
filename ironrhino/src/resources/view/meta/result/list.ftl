@@ -4,9 +4,9 @@
 <title>${action.getText(entityName)}${action.getText('list')}</title>
 </head>
 <body>
-<#assign rtconfig = richtableConfig!>
-<#if rtconfig.listHeader?has_content>
-<#assign listHeader=rtconfig.listHeader?interpret>
+<#assign readonly=readonlyConfig.readonly>
+<#if richtableConfig.listHeader?has_content>
+<#assign listHeader=richtableConfig.listHeader?interpret>
 <@listHeader/>
 </#if>
 <@rtstart entityName=entityName/>
@@ -53,13 +53,16 @@
 			<#assign viewable=true>
 		</#if>
 </#list>
-<@rtmiddle showActionColumn=rtconfig.actionColumnButtons?has_content||!readonly||viewable/>
+<@rtmiddle showActionColumn=richtableConfig.actionColumnButtons?has_content||!readonly||viewable/>
 <#assign index=0>
 <#list resultPage.result as entity>
 <#assign index=index+1>
 <#assign entityReadonly = readonly/>
-<#if !entityReadonly && entityReadonlyExpression?has_content><#assign entityReadonly=entityReadonlyExpression?eval></#if>
-<@rttbodytrstart entity=entity entityReadonly=entityReadonly/>
+<#if !entityReadonly && readonlyConfig.expression?has_content><#assign entityReadonly=readonlyConfig.expression?eval></#if>
+<#if !readonly&&entityReadonly>
+<#assign dynamicAttributes={"data-readonly":"true"}/>
+</#if>
+<@rttbodytrstart entity=entity dynamicAttributes=dynamicAttributes!/>
 <#list uiConfigs?keys as key>
 	<#assign config=uiConfigs[key]>
 	<#if !config.hiddenInList>
@@ -74,9 +77,9 @@
 		<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
 	</#if>
 </#list>	
-<@rttbodytrend entity=entity buttons=rtconfig.actionColumnButtons! editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
+<@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
-<@rtend readonly=readonly searchable=searchable showPageSize=rtconfig.showPageSize! buttons=rtconfig.bottomButtons! enableable=enableable/>
+<@rtend readonly=readonly deletable=!readonly||readonlyConfig.deletable searchable=searchable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable/>
 <#if !readonly && hasSelect>
 <div style="display: none;">
 <#list uiConfigs?keys as key>
@@ -101,8 +104,8 @@
 	</#if>
 </#list></div>
 </#if>
-<#if rtconfig.listFooter?has_content>
-<#assign listFooter=rtconfig.listFooter?interpret>
+<#if richtableConfig.listFooter?has_content>
+<#assign listFooter=richtableConfig.listFooter?interpret>
 <@listFooter/>
 </#if>
 </body>

@@ -7,13 +7,13 @@ import javax.persistence.Table;
 
 import org.ironrhino.core.dataroute.DataRoute;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.Readonly;
+import org.ironrhino.core.metadata.ReadonlyConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 
 @DataRoute("miscGroup")
 @AutoConfig(order = "recordDate desc")
-@Readonly(value = true, deletable = true)
+@ReadonlyConfig(readonly = true, deletable = true)
 @Entity
 @Table(name = "common_record")
 public class Record extends BaseEntity {
