@@ -137,7 +137,7 @@
 </#if>
 <li>
 <span class="input-append">
-    <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage" title="${action.getText('currentpage')}"/><span class="add-on totalPage"><span class="divider">/</span><strong title="${action.getText('totalpage')}">${resultPage.totalPage}</strong></span>
+    <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage integer positive" title="${action.getText('currentpage')}"/><span class="add-on totalPage"><span class="divider">/</span><strong title="${action.getText('totalpage')}">${resultPage.totalPage}</strong></span>
 </span>
 <#if showPageSize>
 <li class="visible-desktop">
