@@ -1,4 +1,4 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false rowReadonlyExpression="" createable=true viewable=false celleditable=true deleteable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false rowReadonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
 <@rtstart formid=formid action=action entityName=entityName resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable>
 <#nested/>
 </@rtstart>
@@ -29,7 +29,7 @@
 </#list>
 <@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable rowReadonly=rowReadonly/>
 </#list>
-<@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deleteable=deleteable enableable=enableable searchable=searchable searchButtons=searchButtons showPageSize=showPageSize/>
+<@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deletable=deletable enableable=enableable searchable=searchable searchButtons=searchButtons showPageSize=showPageSize/>
 </#macro>
 
 <#macro rtstart formid='',action='',entityName='',resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true>
@@ -114,7 +114,7 @@
 </tr>
 </#macro>
 
-<#macro rtend buttons='' readonly=false createable=true celleditable=true deleteable=true enableable=false searchable=false searchButtons='' showPageSize=true>
+<#macro rtend buttons='' readonly=false createable=true celleditable=true deletable=true enableable=false searchable=false searchButtons='' showPageSize=true>
 </tbody>
 </table>
 <div class="toolbar row-fluid">
@@ -168,7 +168,7 @@
 <button type="button" class="btn hidden-pad" data-action="enable" data-shown="selected">${action.getText("enable")}</button>
 <button type="button" class="btn hidden-pad" data-action="disable" data-shown="selected">${action.getText("disable")}</button>
 </#if>
-<#if deleteable><button type="button" class="btn" data-action="delete" data-shown="selected">${action.getText("delete")}</button></#if>
+<#if deletable><button type="button" class="btn" data-action="delete" data-shown="selected">${action.getText("delete")}</button></#if>
 </#if><button type="button" class="btn" data-action="reload">${action.getText("reload")}</button></#if>
 </div>
 <div class="search span2">
