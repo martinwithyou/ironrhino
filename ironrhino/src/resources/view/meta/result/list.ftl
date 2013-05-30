@@ -57,9 +57,9 @@
 <#assign index=0>
 <#list resultPage.result as entity>
 <#assign index=index+1>
-<#assign rowReadonly = readonly/>
-<#if !rowReadonly && rtconfig.rowReadonlyExpression?has_content><#assign rowReadonly=rtconfig.rowReadonlyExpression?eval></#if>
-<@rttbodytrstart entity=entity rowReadonly=rowReadonly/>
+<#assign entityReadonly = readonly/>
+<#if !entityReadonly && entityReadonlyExpression?has_content><#assign entityReadonly=entityReadonlyExpression?eval></#if>
+<@rttbodytrstart entity=entity entityReadonly=entityReadonly/>
 <#list uiConfigs?keys as key>
 	<#assign config=uiConfigs[key]>
 	<#if !config.hiddenInList>
@@ -68,13 +68,13 @@
 						<#assign value=getDictionaryLabel(evalTemplate(config.templateName),value)/>	
 		</#if>
 		<#assign dynamicAttributes={}>
-		<#if config.type=='listpick' && !rowReadonly>
+		<#if config.type=='listpick' && !entityReadonly>
 			<#assign dynamicAttributes={"class":"listpick","data-cellvalue":(value.id?string)!,"data-options":"{'url':'"+uiConfigs[key].pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
 		</#if>
 		<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
 	</#if>
 </#list>	
-<@rttbodytrend entity=entity buttons=rtconfig.actionColumnButtons! editable=!readonly viewable=viewable rowReadonly=rowReadonly/>
+<@rttbodytrend entity=entity buttons=rtconfig.actionColumnButtons! editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
 <@rtend readonly=readonly searchable=searchable showPageSize=rtconfig.showPageSize! buttons=rtconfig.bottomButtons! enableable=enableable/>
 <#if !readonly && hasSelect>

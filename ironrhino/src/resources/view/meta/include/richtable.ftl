@@ -1,4 +1,4 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false rowReadonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false entityReadonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
 <@rtstart formid=formid action=action entityName=entityName resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable>
 <#nested/>
 </@rtstart>
@@ -12,8 +12,8 @@
 <@rtmiddle width=actionColumnWidth showActionColumn=actionColumnButtons?has_content||!readonly||viewable/>
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
-<#local rowReadonly = celleditable && !readonly && rowReadonlyExpression?has_content && rowReadonlyExpression?eval />
-<@rttbodytrstart entity=entity rowReadonly=rowReadonly showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid/>
+<#local entityReadonly = celleditable && !readonly && entityReadonlyExpression?has_content && entityReadonlyExpression?eval />
+<@rttbodytrstart entity=entity entityReadonly=entityReadonly showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid/>
 <#list columns?keys as name>
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>
@@ -27,7 +27,7 @@
 	<#assign dynamicAttributes=columns[name]['dynamicAttributes']!>
 	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']! dynamicAttributes=dynamicAttributes/>
 </#list>
-<@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable rowReadonly=rowReadonly/>
+<@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
 <@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deletable=deletable enableable=enableable searchable=searchable searchButtons=searchButtons showPageSize=showPageSize/>
 </#macro>
@@ -65,14 +65,14 @@
 <tbody>
 </#macro>
 
-<#macro rttbodytrstart entity rowReadonly=false showCheckColumn=true multipleCheck=true rowid=''>
+<#macro rttbodytrstart entity entityReadonly=false showCheckColumn=true multipleCheck=true rowid=''>
 <#if rowid==''>
 	<#local id=entity.id?string/>
 <#else>
 	<#local temp=rowid?interpret>
 	<#local id><@temp/></#local>
 </#if>
-<tr<#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if><#if rowReadonly> data-readonly="true"</#if>>
+<tr<#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if><#if entityReadonly> data-readonly="true"</#if>>
 <#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if id?has_content> value="${id}"</#if> class="custom"/></td></#if>
 </#macro>
 
@@ -95,7 +95,7 @@
 </td>
 </#macro>
 
-<#macro rttbodytrend entity buttons='' editable=true viewable=false rowReadonly=false>
+<#macro rttbodytrend entity buttons='' editable=true viewable=false entityReadonly=false>
 <#if buttons?has_content || editable || viewable>
 <td class="action">
 <#if buttons!=''>
@@ -105,7 +105,7 @@
 <#if viewable>
 <button type="button" class="btn" data-view="view">${action.getText("view")}</button>
 </#if>
-<#if editable && !rowReadonly>
+<#if editable && !entityReadonly>
 <button type="button" class="btn" data-view="input">${action.getText("edit")}</button>
 </#if>
 </#if>

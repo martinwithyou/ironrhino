@@ -38,6 +38,7 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.Readonly;
 import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Enableable;
@@ -119,8 +120,13 @@ public class EntityAction extends BaseAction {
 	}
 
 	public boolean isReadonly() {
-		AutoConfig ac = getAutoConfig();
-		return (ac != null) && ac.readonly();
+		Readonly readonly = getEntityClass().getAnnotation(Readonly.class);
+		return (readonly != null) && readonly.value();
+	}
+
+	public String getEntityReadonlyExpression() {
+		Readonly readonly = getEntityClass().getAnnotation(Readonly.class);
+		return (readonly != null) ? readonly.expression() : null;
 	}
 
 	public Persistable getEntity() {
@@ -350,10 +356,8 @@ public class EntityAction extends BaseAction {
 			return ACCESSDENIED;
 		}
 		tryFindEntity();
-		if (entity != null
-				&& !entity.isNew()
-				&& checkRowReadonly(getRichtableConfig()
-						.getRowReadonlyExpression(), entity)) {
+		if (entity != null && !entity.isNew()
+				&& checkEntityReadonly(getEntityReadonlyExpression(), entity)) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
@@ -435,10 +439,8 @@ public class EntityAction extends BaseAction {
 		}
 		if (!makeEntityValid())
 			return INPUT;
-		if (entity != null
-				&& !entity.isNew()
-				&& checkRowReadonly(getRichtableConfig()
-						.getRowReadonlyExpression(), entity)) {
+		if (entity != null && !entity.isNew()
+				&& checkEntityReadonly(getEntityReadonlyExpression(), entity)) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
@@ -684,11 +686,12 @@ public class EntityAction extends BaseAction {
 		return true;
 	}
 
-	private boolean checkRowReadonly(String expression, Persistable<?> entity) {
+	private boolean checkEntityReadonly(String expression, Persistable<?> entity) {
 		if (StringUtils.isNotBlank(expression)) {
 			try {
 				Template template = new Template(null, new StringReader("${("
-						+ expression + ")?string!}"), freemarkerManager.getConfig(), "utf-8");
+						+ expression + ")?string!}"),
+						freemarkerManager.getConfig(), "utf-8");
 				StringWriter sw = new StringWriter();
 				Map<String, Object> rootMap = new HashMap<String, Object>();
 				rootMap.put("entity", entity);
@@ -1283,7 +1286,6 @@ public class EntityAction extends BaseAction {
 		private String bottomButtons = "";
 		private String listHeader = "";
 		private String listFooter = "";
-		private String rowReadonlyExpression = "";
 
 		public RichtableConfigImpl() {
 		}
@@ -1296,7 +1298,6 @@ public class EntityAction extends BaseAction {
 			this.bottomButtons = config.bottomButtons();
 			this.listHeader = config.listHeader();
 			this.listFooter = config.listFooter();
-			this.rowReadonlyExpression = config.rowReadonlyExpression();
 		}
 
 		public boolean isShowPageSize() {
@@ -1337,14 +1338,6 @@ public class EntityAction extends BaseAction {
 
 		public void setListFooter(String listFooter) {
 			this.listFooter = listFooter;
-		}
-
-		public String getRowReadonlyExpression() {
-			return rowReadonlyExpression;
-		}
-
-		public void setRowReadonlyExpression(String rowReadonlyExpression) {
-			this.rowReadonlyExpression = rowReadonlyExpression;
 		}
 
 	}

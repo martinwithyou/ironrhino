@@ -8,16 +8,11 @@ import java.lang.annotation.Target;
 
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface RichtableConfig {
+public @interface Readonly {
 
-	boolean showPageSize() default true;
+	boolean value() default false; // all readonly
 
-	String actionColumnButtons() default "";
+	String expression() default ""; // some entity readonly
 
-	String bottomButtons() default "";
-
-	String listHeader() default "";
-
-	String listFooter() default "";
-
+	boolean deletable() default false; // can delete when readonly
 }

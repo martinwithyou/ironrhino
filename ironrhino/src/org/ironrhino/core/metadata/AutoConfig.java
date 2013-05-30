@@ -17,8 +17,6 @@ public @interface AutoConfig {
 
 	String fileupload() default "";
 
-	boolean readonly() default false;
-
 	boolean searchable() default false;
 
 	String order() default "";

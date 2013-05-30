@@ -8,10 +8,12 @@ import javax.persistence.Table;
 
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.Readonly;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 
-@AutoConfig(readonly = true, order = "date desc")
+@AutoConfig(order = "date desc")
+@Readonly(value = true)
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "loginrecord")
