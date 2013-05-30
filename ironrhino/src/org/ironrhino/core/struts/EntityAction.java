@@ -26,6 +26,7 @@ import javax.persistence.JoinColumn;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
@@ -683,12 +684,11 @@ public class EntityAction extends BaseAction {
 		return true;
 	}
 
-	private static boolean checkRowReadonly(String expression,
-			Persistable<?> entity) {
+	private boolean checkRowReadonly(String expression, Persistable<?> entity) {
 		if (StringUtils.isNotBlank(expression)) {
 			try {
 				Template template = new Template(null, new StringReader("${("
-						+ expression + ")?string!}"), null, "utf-8");
+						+ expression + ")?string!}"), freemarkerManager.getConfig(), "utf-8");
 				StringWriter sw = new StringWriter();
 				Map<String, Object> rootMap = new HashMap<String, Object>();
 				rootMap.put("entity", entity);
@@ -1402,5 +1402,8 @@ public class EntityAction extends BaseAction {
 
 	@Inject
 	private transient ValueStackFactory valueStackFactory;
+
+	@Inject
+	private transient FreemarkerManager freemarkerManager;
 
 }
