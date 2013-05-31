@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -40,6 +41,7 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.search.elasticsearch.annotations.Store;
 import org.ironrhino.core.service.BaseManager.IterateCallback;
 import org.ironrhino.core.service.EntityManager;
+import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ClassScaner;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.JsonUtils;
@@ -457,35 +459,19 @@ public class IndexManagerImpl implements IndexManager {
 	}
 
 	private String entityToDocument(Persistable entity) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
-		PropertyDescriptor[] pds = bw.getPropertyDescriptors();
-		for (PropertyDescriptor pd : pds) {
-			String name = pd.getName();
-			boolean searchable = false;
-			Method m = pd.getReadMethod();
-			if (m != null
-					&& (m.getAnnotation(SearchableId.class) != null
-							|| m.getAnnotation(SearchableProperty.class) != null || m
-							.getAnnotation(SearchableComponent.class) != null))
-				searchable = true;
-			if (!searchable) {
-
-				try {
-					Field f = entity.getClass().getDeclaredField(name);
-					if (f != null
-							&& (f.getAnnotation(SearchableId.class) != null
-									|| f.getAnnotation(SearchableProperty.class) != null || f
-									.getAnnotation(SearchableComponent.class) != null))
-						searchable = true;
-				} catch (Exception e) {
-				}
-			}
-			if (searchable) {
-				Object value = bw.getPropertyValue(name);
-				if (value != null && !"".equals(value))
-					map.put(name, value);
-			}
+		Map<String, Object> map = AnnotationUtils
+				.getAnnotatedPropertyNameAndValues(entity, SearchableId.class,
+						SearchableProperty.class, SearchableComponent.class);
+		Iterator<Map.Entry<String, Object>> it = map.entrySet().iterator();
+		while (it.hasNext()) {
+			Object value = it.next().getValue();
+			if (value == null || value instanceof String
+					&& StringUtils.isBlank((String) value)
+					|| value instanceof Collection
+					&& ((Collection) value).isEmpty()
+					|| value.getClass().isArray()
+					&& ((Object[]) value).length == 0)
+				it.remove();
 		}
 		if (map.isEmpty())
 			logger.warn("{} is empty", entity);

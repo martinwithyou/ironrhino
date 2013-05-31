@@ -5,6 +5,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -102,11 +103,16 @@ public class AnnotationUtils {
 		return (Set<String>) cache.get(key);
 	}
 
+	@SafeVarargs
 	public static Map<String, Object> getAnnotatedPropertyNameAndValues(
-			Object object, Class<? extends Annotation> annotaionClass) {
-		Set<String> propertyNames = getAnnotatedPropertyNames(
-				object.getClass(), annotaionClass);
+			Object object, Class<? extends Annotation>... annotaionClass) {
+		if (annotaionClass.length == 0)
+			return Collections.emptyMap();
 		Map<String, Object> map = new HashMap<String, Object>();
+		Set<String> propertyNames = new HashSet<String>();
+		for (Class<? extends Annotation> clz : annotaionClass)
+			propertyNames.addAll(getAnnotatedPropertyNames(object.getClass(),
+					clz));
 		BeanWrapperImpl bw = new BeanWrapperImpl(object);
 		try {
 			for (String key : propertyNames) {

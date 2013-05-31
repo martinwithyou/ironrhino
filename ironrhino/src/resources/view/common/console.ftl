@@ -91,7 +91,9 @@ $(function(){
 	</#list>
 	</ul>
 </div>
+<#if settings?size gt 0>
 <hr/>
+</#if>
 </#if>
 </body>
 </html></#escape>

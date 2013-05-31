@@ -62,8 +62,8 @@ public class ConsoleAction extends BaseAction {
 	public String execute() {
 		try {
 			result = applicationContextConsole.execute(expression, scope);
-			addActionMessage(getText("operate.success") + ":"
-					+ JsonUtils.toJson(result));
+			addActionMessage(getText("operate.success")
+					+ (result != null ? (":" + JsonUtils.toJson(result)) : ""));
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			addActionError(getText("error") + ":" + e.getMessage());
