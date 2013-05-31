@@ -59,9 +59,11 @@ $(function(){
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 </@s.form>
 <hr/>
+
+<#assign triggers = statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('applicationContextConsole').getTriggers()>
+<#if triggers?keys?size gt 0>
 <div id="trigger">
 	<ul class="thumbnails">
-	<#assign triggers = statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('applicationContextConsole').getTriggers()>
 	<#list triggers.keySet() as expression>
 	<li class="span4">
 	<button type="button" class="btn btn-block" data-scope="${triggers[expression]?string}"  data-expression="${expression}">${action.getText(expression)}</button>
@@ -70,7 +72,11 @@ $(function(){
 	</ul>
 </div>
 <hr/>
+</#if>
+
 <#if printSetting??>
+<#assign settings = statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getAllBooleanSettings()>
+<#if settings?size gt 0>
 <div id="switch">
 	<style scoped>
 	div.key{
@@ -80,7 +86,6 @@ $(function(){
 	}
 	</style>
 	<ul class="thumbnails">
-	<#assign settings = statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getAllBooleanSettings()>
 	<#list settings as setting>
 	<li class="span4">
 	<div class="row-fluid">
@@ -91,7 +96,6 @@ $(function(){
 	</#list>
 	</ul>
 </div>
-<#if settings?size gt 0>
 <hr/>
 </#if>
 </#if>
