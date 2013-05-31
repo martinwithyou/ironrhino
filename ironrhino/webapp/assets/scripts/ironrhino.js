@@ -1,6 +1,6 @@
 
 /*!
- * jQuery JavaScript Library v1.10.0
+ * jQuery JavaScript Library v1.10.1
  * http://jquery.com/
  *
  * Includes Sizzle.js
@@ -10,7 +10,7 @@
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2013-05-24T18:39Z
+ * Date: 2013-05-30T21:49Z
  */
 (function( window, undefined ) {
 
@@ -47,7 +47,7 @@ var
 	// List of deleted data cache ids, so we can reuse them
 	core_deletedIds = [],
 
-	core_version = "1.10.0",
+	core_version = "1.10.1",
 
 	// Save a reference to some core methods
 	core_concat = core_deletedIds.concat,
@@ -1008,7 +1008,7 @@ rootjQuery = jQuery(document);
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2013-05-15
+ * Date: 2013-05-27
  */
 (function( window, undefined ) {
 
@@ -1493,7 +1493,8 @@ support = Sizzle.support = {};
  * @returns {Object} Returns the current document
  */
 setDocument = Sizzle.setDocument = function( node ) {
-	var doc = node ? node.ownerDocument || node : preferredDoc;
+	var doc = node ? node.ownerDocument || node : preferredDoc,
+		parent = doc.parentWindow;
 
 	// If no document and documentElement is available, return
 	if ( doc === document || doc.nodeType !== 9 || !doc.documentElement ) {
@@ -1506,6 +1507,15 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 	// Support tests
 	documentIsHTML = !isXML( doc );
+
+	// Support: IE>8
+	// If iframe document is assigned to "document" variable and if iframe has been reloaded,
+	// IE will throw "permission denied" error when accessing "document" variable, see jQuery #13936
+	if ( parent && parent.frameElement ) {
+		parent.attachEvent( "onbeforeunload", function() {
+			setDocument();
+		});
+	}
 
 	/* Attributes
 	---------------------------------------------------------------------- */
@@ -3952,7 +3962,6 @@ jQuery.extend({
 			startLength--;
 		}
 
-		hooks.cur = fn;
 		if ( fn ) {
 
 			// Add a progress sentinel to prevent the fx queue from being
@@ -8865,8 +8874,8 @@ var fxNow, timerId,
 
 			// Update tween properties
 			if ( parts ) {
+				start = tween.start = +start || +target || 0;
 				tween.unit = unit;
-				tween.start = +start || +target || 0;
 				// If a +=/-= token was provided, we're doing a relative animation
 				tween.end = parts[ 1 ] ?
 					start + ( parts[ 1 ] + 1 ) * parts[ 2 ] :
@@ -9313,9 +9322,7 @@ jQuery.fn.extend({
 			doAnimation = function() {
 				// Operate on a copy of prop so per-property easing won't be lost
 				var anim = Animation( this, jQuery.extend( {}, prop ), optall );
-				doAnimation.finish = function() {
-					anim.stop( true );
-				};
+
 				// Empty animations, or finishing resolves immediately
 				if ( empty || jQuery._data( this, "finish" ) ) {
 					anim.stop( true );
@@ -9395,8 +9402,8 @@ jQuery.fn.extend({
 			// empty the queue first
 			jQuery.queue( this, type, [] );
 
-			if ( hooks && hooks.cur && hooks.cur.finish ) {
-				hooks.cur.finish.call( this );
+			if ( hooks && hooks.stop ) {
+				hooks.stop.call( this, true );
 			}
 
 			// look for any active animations, and finish them
@@ -9776,7 +9783,7 @@ jQuery.fn.size = function() {
 jQuery.fn.andSelf = jQuery.fn.addBack;
 
 // })();
-if ( typeof module === "object" && typeof module.exports === "object" ) {
+if ( typeof module === "object" && module && typeof module.exports === "object" ) {
 	// Expose jQuery as module.exports in loaders that implement the Node
 	// module pattern (including browserify). Do not create the global, since
 	// the user will be storing it themselves locally, and globals are frowned
