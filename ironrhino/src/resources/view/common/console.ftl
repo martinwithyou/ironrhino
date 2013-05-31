@@ -2,15 +2,6 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('console')}</title>
-<style>
-.row-fluid{
-	margin-top: 10px;
-}
-.key{
-	text-align: right;
-	line-height: 30px;
-}
-</style>
 <script>
 $(function(){
 		$('#trigger .btn').click(function(){
@@ -67,38 +58,40 @@ $(function(){
 	<span>${action.getText('scope')}:<@s.select theme="simple" id="scope" name="scope" cssClass="input-medium" list="@org.ironrhino.core.metadata.Scope@values()"/></span>
 	<@s.submit id="submit" theme="simple" value="%{getText('confirm')}" />
 </@s.form>
-<div id="trigger" class="well">
+<hr/>
+<div id="trigger">
+	<ul class="thumbnails">
 	<#assign triggers = statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('applicationContextConsole').getTriggers()>
-	<#assign index=0>
-	<#assign count=triggers.keySet()?size>
 	<#list triggers.keySet() as expression>
-	<#if index%3 == 0>
-	<div class="row-fluid">
-	</#if>
-	<button type="button" class="btn span4" data-scope="${triggers[expression]?string}"  data-expression="${expression}">${action.getText(expression)}</button>
-	<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
-	</div>
-	</#if>
-	<#assign index=index+1>
+	<li class="span4">
+	<button type="button" class="btn btn-block" data-scope="${triggers[expression]?string}"  data-expression="${expression}">${action.getText(expression)}</button>
+	</li>
 	</#list>
+	</ul>
 </div>
+<hr/>
 <#if printSetting??>
-<div id="switch" class="well">
+<div id="switch">
+	<style scoped>
+	div.key{
+		text-align: right;
+		line-height: 30px;
+		font-weight: bold;
+	}
+	</style>
+	<ul class="thumbnails">
 	<#assign settings = statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('settingControl').getAllBooleanSettings()>
-	<#assign index=0>
-	<#assign count=settings?size>
 	<#list settings as setting>
-	<#if index%3 == 0>
+	<li class="span4">
 	<div class="row-fluid">
-	</#if>
-	<div class="span2 key"<#if setting.description?has_content> title="${setting.description}"</#if>>${action.getText(setting.key)}</div>
-	<div class="span2"><div class="switch" data-on-label="${action.getText('ON')}" data-off-label="${action.getText('OFF')}"><input type="checkbox" name="${setting.key}"<#if setting.value=='true'> checked="checked"</#if>></div></div>
-	<#if (index+1)%3 == 0 || count%3!=0 && index==count-1>
+	<div class="span6 key"<#if setting.description?has_content> title="${setting.description}"</#if>>${action.getText(setting.key)}</div>
+	<div class="span6"><div class="switch" data-on-label="${action.getText('ON')}" data-off-label="${action.getText('OFF')}"><input type="checkbox" name="${setting.key}"<#if setting.value=='true'> checked="checked"</#if>></div></div>
 	</div>
-	</#if>
-	<#assign index=index+1>
+	</li>
 	</#list>
+	</ul>
 </div>
+<hr/>
 </#if>
 </body>
 </html></#escape>
