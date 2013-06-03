@@ -711,6 +711,20 @@ public class EntityAction extends BaseAction {
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		entity = constructEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
+		for (Map.Entry<String, UiConfigImpl> entry : uiConfigs.entrySet()) {
+			String regex = entry.getValue().getDynamicAttributes()
+					.get("data-regex");
+			if (StringUtils.isNotBlank(regex)) {
+				Object value = bw.getPropertyValue(entry.getKey());
+				if (value instanceof String) {
+					if (!value.toString().matches(regex)) {
+						addFieldError(getEntityName() + "." + entry.getKey(),
+								getText("validation.invalid"));
+						return false;
+					}
+				}
+			}
+		}
 		Persistable persisted = null;
 		Map<String, Annotation> naturalIds = getNaturalIds();
 		boolean naturalIdMutable = isNaturalIdMutable();
