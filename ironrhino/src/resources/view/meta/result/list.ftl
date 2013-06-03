@@ -23,7 +23,7 @@
 		<#assign config=uiConfigs[key]>
 		<#if !config.hiddenInList>
 			<#assign label=key>
-			<#if !(readonly||config.readonly) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
+			<#if !(readonly||config.readonly||config.readonlyWhenEdit) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
 				<#assign cellEdit=config.cellEdit!/>
 				<#if cellEdit==''>
 					<#if config.type=='input'>
@@ -71,7 +71,7 @@
 						<#assign value=getDictionaryLabel(evalTemplate(config.templateName),value)/>	
 		</#if>
 		<#assign dynamicAttributes={}>
-		<#if config.type=='listpick' && !entityReadonly>
+		<#if config.type=='listpick'&&!entityReadonly&&!config.readonly&&!config.readonlyWhenEdit>
 			<#assign dynamicAttributes={"class":"listpick","data-cellvalue":(value.id?string)!,"data-options":"{'url':'"+uiConfigs[key].pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
 		</#if>
 		<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
@@ -98,7 +98,7 @@
 		</textarea>
 		<#elseif config.type=='dictionary' && selectDictionary??>
 		<textarea id="rt_select_template_${key}">
-		<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" required=config.required  onblur="Richtable.updateCell(this)" style="width: 100%;"/>
+		<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" required=config.required/>
 		</textarea>
 		</#if>
 	</#if>

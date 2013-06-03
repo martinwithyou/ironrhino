@@ -54,7 +54,6 @@ import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
-import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.JsonUtils;
@@ -774,7 +773,38 @@ public class EntityAction extends BaseAction {
 			try {
 				Persistable temp = entity;
 				entity = (Persistable) getEntityClass().newInstance();
-				BeanUtils.copyProperties(temp, entity);
+				bw = new BeanWrapperImpl(temp);
+				BeanWrapperImpl bwp = new BeanWrapperImpl(entity);
+				Set<String> editedPropertyNames = new HashSet<String>();
+				String propertyName = null;
+				for (String parameterName : ServletActionContext.getRequest()
+						.getParameterMap().keySet()) {
+					if (parameterName.startsWith(getEntityName() + '.')
+							|| parameterName.startsWith("__checkbox_"
+									+ getEntityName() + '.')
+							|| parameterName.startsWith("__datagrid_"
+									+ getEntityName() + '.')) {
+						propertyName = parameterName.substring(parameterName
+								.indexOf('.') + 1);
+						if (propertyName.indexOf('.') > 0)
+							propertyName = propertyName.substring(0,
+									propertyName.indexOf('.'));
+						if (propertyName.indexOf('[') > 0)
+							propertyName = propertyName.substring(0,
+									propertyName.indexOf('['));
+					}
+					UiConfigImpl uiConfig = uiConfigs.get(propertyName);
+					if (uiConfig == null
+							|| uiConfig.isReadonly()
+							|| Persistable.class.isAssignableFrom(bwp
+									.getPropertyDescriptor(propertyName)
+									.getPropertyType()))
+						continue;
+					editedPropertyNames.add(propertyName);
+				}
+				for (String name : editedPropertyNames)
+					bwp.setPropertyValue(name, bw.getPropertyValue(name));
+				bw = bwp;
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
@@ -855,23 +885,19 @@ public class EntityAction extends BaseAction {
 									propertyName.indexOf('['));
 					}
 					UiConfigImpl uiConfig = uiConfigs.get(propertyName);
-					if (uiConfig == null)
-						continue;
-					if (uiConfig.isReadonly())
-						continue;
-					if (!naturalIdMutable
-							&& naturalIds.keySet().contains(propertyName))
-						continue;
-					if (Persistable.class.isAssignableFrom(bwp
-							.getPropertyDescriptor(propertyName)
-							.getPropertyType()))
+					if (uiConfig == null
+							|| uiConfig.isReadonly()
+							|| uiConfig.isReadonlyWhenEdit()
+							|| !naturalIdMutable
+							&& naturalIds.keySet().contains(propertyName)
+							|| Persistable.class.isAssignableFrom(bwp
+									.getPropertyDescriptor(propertyName)
+									.getPropertyType()))
 						continue;
 					editedPropertyNames.add(propertyName);
 				}
-
 				for (String name : editedPropertyNames)
 					bwp.setPropertyValue(name, bw.getPropertyValue(name));
-
 				bw = bwp;
 				entity = persisted;
 			} catch (Exception e) {
@@ -879,39 +905,36 @@ public class EntityAction extends BaseAction {
 			}
 		}
 		try {
-			Set<String> editablePropertyNames = getUiConfigs().keySet();
-			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
-					.getPropertyDescriptors(entity.getClass());
-			for (PropertyDescriptor pd : pds) {
-				if (!editablePropertyNames.contains(pd.getName()))
-					continue;
-				Class<Persistable<?>> returnType = (Class<Persistable<?>>) pd
+			for (String propertyName : getUiConfigs().keySet()) {
+				UiConfigImpl config = getUiConfigs().get(propertyName);
+				Class type = bw.getPropertyDescriptor(propertyName)
 						.getPropertyType();
-				if (!Persistable.class.isAssignableFrom(returnType))
+				if (config.isReadonly()
+						|| (config.isReadonlyWhenEdit() || !naturalIdMutable
+								&& naturalIds.keySet().contains(propertyName))
+						&& !entity.isNew()
+						|| !Persistable.class.isAssignableFrom(type))
 					continue;
 				String parameterValue = ServletActionContext.getRequest()
-						.getParameter(getEntityName() + "." + pd.getName());
+						.getParameter(getEntityName() + "." + propertyName);
 				if (parameterValue == null)
 					parameterValue = ServletActionContext.getRequest()
 							.getParameter(
-									getEntityName() + "." + pd.getName()
+									getEntityName() + "." + propertyName
 											+ ".id");
 				if (parameterValue == null)
 					parameterValue = ServletActionContext.getRequest()
-							.getParameter(pd.getName() + "Id");
+							.getParameter(propertyName + "Id");
 				if (parameterValue == null) {
 					continue;
 				} else if (StringUtils.isBlank(parameterValue)) {
-					pd.getWriteMethod().invoke(entity, new Object[] { null });
+					bw.setPropertyValue(propertyName, null);
 				} else {
-					UiConfig uiConfig = pd.getReadMethod().getAnnotation(
-							UiConfig.class);
-					String listKey = uiConfig != null ? uiConfig.listKey()
-							: UiConfig.DEFAULT_LIST_KEY;
+					String listKey = config.getListKey();
 					BeanWrapperImpl temp = new BeanWrapperImpl(
-							returnType.newInstance());
+							type.newInstance());
 					temp.setPropertyValue(listKey, parameterValue);
-					BaseManager em = getEntityManager(returnType);
+					BaseManager em = getEntityManager(type);
 					Object obj;
 					if (listKey.equals(UiConfig.DEFAULT_LIST_KEY))
 						obj = em.get((Serializable) temp
@@ -919,7 +942,7 @@ public class EntityAction extends BaseAction {
 					else
 						obj = em.findOne(listKey,
 								(Serializable) temp.getPropertyValue(listKey));
-					pd.getWriteMethod().invoke(entity, new Object[] { obj });
+					bw.setPropertyValue(propertyName, obj);
 					em = getEntityManager(getEntityClass());
 				}
 			}
@@ -1063,6 +1086,7 @@ public class EntityAction extends BaseAction {
 		private String regex;
 		private String cssClass = "";
 		private boolean readonly;
+		private boolean readonlyWhenEdit;
 		private int displayOrder = Integer.MAX_VALUE;
 		private String alias;
 		private boolean hiddenInList;
@@ -1094,6 +1118,7 @@ public class EntityAction extends BaseAction {
 			this.maxlength = config.maxlength();
 			this.regex = config.regex();
 			this.readonly = config.readonly();
+			this.readonlyWhenEdit = config.readonlyWhenEdit();
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.alias()))
 				this.alias = config.alias();
@@ -1264,6 +1289,14 @@ public class EntityAction extends BaseAction {
 
 		public void setReadonly(boolean readonly) {
 			this.readonly = readonly;
+		}
+
+		public boolean isReadonlyWhenEdit() {
+			return readonlyWhenEdit;
+		}
+
+		public void setReadonlyWhenEdit(boolean readonlyWhenEdit) {
+			this.readonlyWhenEdit = readonlyWhenEdit;
 		}
 
 		public String getTemplate() {

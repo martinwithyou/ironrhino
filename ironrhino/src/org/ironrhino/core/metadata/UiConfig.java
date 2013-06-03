@@ -38,6 +38,8 @@ public @interface UiConfig {
 	boolean unique() default false;
 
 	boolean readonly() default false;
+	
+	boolean readonlyWhenEdit() default false;
 
 	boolean hidden() default false;
 

@@ -18,7 +18,7 @@
 		<#if naturalIds?keys?seq_contains(key)>
 			<#assign readonly=!naturalIdMutable&&!action.isNew()>
 		<#else>
-			<#assign readonly=config.readonly>
+			<#assign readonly=config.readonly||!action.isNew()&&config.readonlyWhenEdit>
 		</#if>
 		<#if !(entity.new && readonly)>
 			<#if config.type=='textarea'>
