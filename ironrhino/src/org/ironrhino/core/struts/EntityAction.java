@@ -28,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -488,9 +487,7 @@ public class EntityAction extends BaseAction {
 								.substring(propertyName.indexOf('.') + 1);
 						propertyName = propertyName.substring(0,
 								propertyName.indexOf('.'));
-						if (propertyNames.contains(propertyName)
-								&& !searchablePropertyNames
-										.contains(propertyName)) {
+						if (propertyNames.contains(propertyName)) {
 							Class type = bw.getPropertyType(propertyName);
 							if (Persistable.class.isAssignableFrom(type)) {
 								BeanWrapperImpl bw2 = new BeanWrapperImpl(
@@ -512,8 +509,7 @@ public class EntityAction extends BaseAction {
 											+ subPropertyName, value));
 							}
 						}
-					} else if (propertyNames.contains(propertyName)
-							&& !searchablePropertyNames.contains(propertyName)) {
+					} else if (propertyNames.contains(propertyName)) {
 						String parameterValue = ServletActionContext
 								.getRequest().getParameter(parameterName);
 						Class type = bw.getPropertyType(propertyName);
@@ -539,17 +535,11 @@ public class EntityAction extends BaseAction {
 							else
 								dc.add(Restrictions.eq(propertyName, value));
 						}
-
 					}
-
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Criterion filtering = CriterionUtils.filter(constructEntity(),
-					searchablePropertyNames.toArray(new String[0]));
-			if (filtering != null)
-				dc.add(filtering);
 			if (searchable && StringUtils.isNotBlank(keyword)
 					&& searchablePropertyNames.size() > 0)
 				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
