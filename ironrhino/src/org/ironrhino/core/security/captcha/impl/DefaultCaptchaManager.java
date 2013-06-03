@@ -42,10 +42,10 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		String answer = answer(challenge);
 		cacheManager.put(CACHE_PREFIX_ANSWER + token, answer, -1,
 				CACHE_ANSWER_TIME_TO_LIVE, KEY_CAPTCHA);
-		return fuzzify(challenge);
+		return challenge;
 	}
 
-	protected String fuzzify(String challenge) {
+	public String fuzzifyChallenge(String challenge) {
 		char[] chars = challenge.toCharArray();
 		StringBuilder sb = new StringBuilder();
 		for (char c : chars)
@@ -53,7 +53,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		return sb.toString();
 	}
 
-	protected String clarify(String input) {
+	public String clarifyChallenge(String input) {
 		if (StringUtils.isNumeric(input))
 			return input;
 		char[] chars = input.toCharArray();
@@ -76,7 +76,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 	protected boolean validate(String input, String answer) {
 		if (input == null || answer == null)
 			return false;
-		return clarify(input).equals(answer);
+		return clarifyChallenge(input).equals(answer);
 	}
 
 	public void addCaptachaThreshold(HttpServletRequest request) {
