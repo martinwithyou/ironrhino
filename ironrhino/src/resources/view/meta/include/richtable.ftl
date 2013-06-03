@@ -14,9 +14,9 @@
 <#list list as entity>
 <#local entityReadonly = !readonly && readonlyExpression?has_content && readonlyExpression?eval />
 <#if celleditable&&!readonly&&entityReadonly>
-<#local dynamicAttributes={"data-readonly":"true"}/>
+<#local _dynamicAttributes={"data-readonly":"true"}/>
 </#if>
-<@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid dynamicAttributes=dynamicAttributes!/>
+<@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid dynamicAttributes=_dynamicAttributes!/>
 <#list columns?keys as name>
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>
