@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <#escape x as x?html><html>
 <head>
-<title><#if !entity??><#assign entity=entityName?eval></#if><#if entity.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText(entityName)}</title>
+<title><#if !entity??><#assign entity=entityName?eval></#if><#assign isnew = !entity??||entity.new/><#if isnew>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText(entityName)}</title>
 </head>
 <body>
 <@s.form action="${getUrl(actionBaseUrl+'/save')}" method="post" cssClass="ajax form-horizontal">
-	<#if !entity.new>
+	<#if !isnew>
 	<@s.hidden name="${entityName}.id" />
 	</#if>
 	<#list uiConfigs?keys as key>
@@ -15,11 +15,7 @@
 		<#if config.alias??>
 			<#assign label=config.alias>
 		</#if>
-		<#if naturalIds?keys?seq_contains(key)>
-			<#assign readonly=!naturalIdMutable&&!action.isNew()>
-		<#else>
-			<#assign readonly=config.readonly||!action.isNew()&&config.readonlyWhenEdit>
-		</#if>
+		<#assign readonly=naturalIds?keys?seq_contains(key)&&!naturalIdMutable&&!isnew||config.readonly||config.readonlyExpression?has_content&&config.readonlyExpression?eval>
 		<#if !(entity.new && readonly)>
 			<#if config.type=='textarea'>
 				<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cssStyle="${(config.cssClass?contains('span')||config.cssClass?contains('input-'))?string('','width:400px;')}height:150px;" readonly=readonly dynamicAttributes=config.dynamicAttributes/>

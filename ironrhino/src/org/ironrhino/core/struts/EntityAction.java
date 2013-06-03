@@ -148,10 +148,6 @@ public class EntityAction extends BaseAction {
 		return readonlyConfig;
 	}
 
-	public boolean isNew() {
-		return entity == null || entity.isNew();
-	}
-
 	// need call once before view
 	public String getEntityName() {
 		if (entityName == null)
@@ -887,12 +883,18 @@ public class EntityAction extends BaseAction {
 					UiConfigImpl uiConfig = uiConfigs.get(propertyName);
 					if (uiConfig == null
 							|| uiConfig.isReadonly()
-							|| uiConfig.isReadonlyWhenEdit()
 							|| !naturalIdMutable
 							&& naturalIds.keySet().contains(propertyName)
 							|| Persistable.class.isAssignableFrom(bwp
 									.getPropertyDescriptor(propertyName)
 									.getPropertyType()))
+						continue;
+					if (StringUtils
+							.isNotBlank(uiConfig.getReadonlyExpression())
+							&& checkFieldReadonly(
+									uiConfig.getReadonlyExpression(),
+									persisted,
+									bwp.getPropertyValue(propertyName)))
 						continue;
 					editedPropertyNames.add(propertyName);
 				}
@@ -906,14 +908,19 @@ public class EntityAction extends BaseAction {
 		}
 		try {
 			for (String propertyName : getUiConfigs().keySet()) {
-				UiConfigImpl config = getUiConfigs().get(propertyName);
+				UiConfigImpl uiConfig = getUiConfigs().get(propertyName);
 				Class type = bw.getPropertyDescriptor(propertyName)
 						.getPropertyType();
-				if (config.isReadonly()
-						|| (config.isReadonlyWhenEdit() || !naturalIdMutable
-								&& naturalIds.keySet().contains(propertyName))
+				if (uiConfig.isReadonly() || !naturalIdMutable
+						&& naturalIds.keySet().contains(propertyName)
 						&& !entity.isNew()
 						|| !Persistable.class.isAssignableFrom(type))
+					continue;
+				if (!entity.isNew()
+						&& StringUtils.isNotBlank(uiConfig
+								.getReadonlyExpression())
+						&& checkFieldReadonly(uiConfig.getReadonlyExpression(),
+								entity, bw.getPropertyValue(propertyName)))
 					continue;
 				String parameterValue = ServletActionContext.getRequest()
 						.getParameter(getEntityName() + "." + propertyName);
@@ -930,7 +937,7 @@ public class EntityAction extends BaseAction {
 				} else if (StringUtils.isBlank(parameterValue)) {
 					bw.setPropertyValue(propertyName, null);
 				} else {
-					String listKey = config.getListKey();
+					String listKey = uiConfig.getListKey();
 					BeanWrapperImpl temp = new BeanWrapperImpl(
 							type.newInstance());
 					temp.setPropertyValue(listKey, parameterValue);
@@ -961,6 +968,26 @@ public class EntityAction extends BaseAction {
 				StringWriter sw = new StringWriter();
 				Map<String, Object> rootMap = new HashMap<String, Object>();
 				rootMap.put("entity", entity);
+				template.process(rootMap, sw);
+				return sw.toString().equals("true");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	private boolean checkFieldReadonly(String expression,
+			Persistable<?> entity, Object value) {
+		if (StringUtils.isNotBlank(expression)) {
+			try {
+				Template template = new Template(null, new StringReader("${("
+						+ expression + ")?string!}"),
+						freemarkerManager.getConfig(), "utf-8");
+				StringWriter sw = new StringWriter();
+				Map<String, Object> rootMap = new HashMap<String, Object>();
+				rootMap.put("entity", entity);
+				rootMap.put("value", value);
 				template.process(rootMap, sw);
 				return sw.toString().equals("true");
 			} catch (Exception e) {
@@ -1086,7 +1113,7 @@ public class EntityAction extends BaseAction {
 		private String regex;
 		private String cssClass = "";
 		private boolean readonly;
-		private boolean readonlyWhenEdit;
+		private String readonlyExpression;
 		private int displayOrder = Integer.MAX_VALUE;
 		private String alias;
 		private boolean hiddenInList;
@@ -1118,7 +1145,7 @@ public class EntityAction extends BaseAction {
 			this.maxlength = config.maxlength();
 			this.regex = config.regex();
 			this.readonly = config.readonly();
-			this.readonlyWhenEdit = config.readonlyWhenEdit();
+			this.readonlyExpression = config.readonlyExpression();
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.alias()))
 				this.alias = config.alias();
@@ -1291,12 +1318,12 @@ public class EntityAction extends BaseAction {
 			this.readonly = readonly;
 		}
 
-		public boolean isReadonlyWhenEdit() {
-			return readonlyWhenEdit;
+		public String getReadonlyExpression() {
+			return readonlyExpression;
 		}
 
-		public void setReadonlyWhenEdit(boolean readonlyWhenEdit) {
-			this.readonlyWhenEdit = readonlyWhenEdit;
+		public void setReadonlyExpression(String readonlyExpression) {
+			this.readonlyExpression = readonlyExpression;
 		}
 
 		public String getTemplate() {

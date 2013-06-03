@@ -39,7 +39,7 @@ public @interface UiConfig {
 
 	boolean readonly() default false;
 	
-	boolean readonlyWhenEdit() default false;
+	String readonlyExpression() default "";
 
 	boolean hidden() default false;
 

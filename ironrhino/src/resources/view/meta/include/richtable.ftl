@@ -27,7 +27,10 @@
 		<#local value=('entity.'+name)?eval!>
 	</#if>
 	</#if>
-	<#assign dynamicAttributes=columns[name]['dynamicAttributes']!>
+	<#local dynamicAttributes=columns[name]['dynamicAttributes']!{}>
+	<#if columns[name]['readonlyExpression']?has_content && columns[name]['readonlyExpression']?eval>
+		<#local dynamicAttributes=dynamicAttributes+{'data-readonly':'true'}/>
+	</#if>
 	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']! dynamicAttributes=dynamicAttributes/>
 </#list>
 <@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable entityReadonly=entityReadonly/>

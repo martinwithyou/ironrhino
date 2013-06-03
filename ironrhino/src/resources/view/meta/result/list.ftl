@@ -23,7 +23,7 @@
 		<#assign config=uiConfigs[key]>
 		<#if !config.hiddenInList>
 			<#assign label=key>
-			<#if !(readonly||config.readonly||config.readonlyWhenEdit) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
+			<#if !(readonly||config.readonly) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
 				<#assign cellEdit=config.cellEdit!/>
 				<#if cellEdit==''>
 					<#if config.type=='input'>
@@ -71,8 +71,11 @@
 						<#assign value=getDictionaryLabel(evalTemplate(config.templateName),value)/>	
 		</#if>
 		<#assign dynamicAttributes={}>
-		<#if config.type=='listpick'&&!entityReadonly&&!config.readonly&&!config.readonlyWhenEdit>
+		<#if config.type=='listpick'&&!entityReadonly&&!config.readonly&&!(config.readonlyExpression?has_content&&config.readonlyExpression?eval)>
 			<#assign dynamicAttributes={"class":"listpick","data-cellvalue":(value.id?string)!,"data-options":"{'url':'"+uiConfigs[key].pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
+		</#if>
+		<#if config.readonlyExpression?has_content && config.readonlyExpression?eval>
+		<#assign dynamicAttributes=dynamicAttributes+{'data-readonly':'true'}/>
 		</#if>
 		<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
 	</#if>
