@@ -688,13 +688,6 @@ public class EntityAction extends BaseAction {
 						getText("validation.required"));
 				return INPUT;
 			}
-			if (StringUtils.isNotBlank(uiconfig.getRegex())
-					&& (value instanceof String && !value.toString().matches(
-							uiconfig.getRegex()))) {
-				addFieldError(getEntityName() + "." + name,
-						getText("validation.invalid"));
-				return INPUT;
-			}
 		}
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		entityManager.save(entity);
@@ -712,12 +705,12 @@ public class EntityAction extends BaseAction {
 		entity = constructEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
 		for (Map.Entry<String, UiConfigImpl> entry : uiConfigs.entrySet()) {
-			String regex = entry.getValue().getDynamicAttributes()
-					.get("data-regex");
+			String regex = entry.getValue().getRegex();
 			if (StringUtils.isNotBlank(regex)) {
 				Object value = bw.getPropertyValue(entry.getKey());
 				if (value instanceof String) {
-					if (!value.toString().matches(regex)) {
+					String str = (String) value;
+					if (StringUtils.isNotBlank(str) && !str.matches(regex)) {
 						addFieldError(getEntityName() + "." + entry.getKey(),
 								getText("validation.invalid"));
 						return false;
