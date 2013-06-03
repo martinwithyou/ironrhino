@@ -57,6 +57,7 @@ import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.core.util.CodecUtils;
+import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -498,10 +499,17 @@ public class EntityAction extends BaseAction {
 										ServletActionContext.getRequest()
 												.getParameter(parameterName));
 								String alias = CodecUtils.randomString(2);
-								dc.createAlias(propertyName, alias)
-										.add(Restrictions.eq(
-												alias + "." + subPropertyName,
-												bw2.getPropertyValue(subPropertyName)));
+								dc.createAlias(propertyName, alias);
+								Object value = bw2
+										.getPropertyValue(subPropertyName);
+								if (value instanceof Date)
+									dc.add(Restrictions.between(alias + "."
+											+ subPropertyName,
+											DateUtils.beginOfDay((Date) value),
+											DateUtils.endOfDay((Date) value)));
+								else
+									dc.add(Restrictions.eq(alias + "."
+											+ subPropertyName, value));
 							}
 						}
 					} else if (propertyNames.contains(propertyName)
@@ -520,12 +528,18 @@ public class EntityAction extends BaseAction {
 
 								}
 							}
+							dc.add(Restrictions.eq(propertyName, value));
 						} else {
 							bw.setPropertyValue(propertyName, parameterValue);
 							value = bw.getPropertyValue(propertyName);
+							if (value instanceof Date)
+								dc.add(Restrictions.between(propertyName,
+										DateUtils.beginOfDay((Date) value),
+										DateUtils.endOfDay((Date) value)));
+							else
+								dc.add(Restrictions.eq(propertyName, value));
 						}
-						// if (value != null)
-						dc.add(Restrictions.eq(propertyName, value));
+
 					}
 
 				}
