@@ -796,6 +796,12 @@ public class EntityAction extends BaseAction {
 									.getPropertyDescriptor(propertyName)
 									.getPropertyType()))
 						continue;
+					if (StringUtils
+							.isNotBlank(uiConfig.getReadonlyExpression())
+							&& checkFieldReadonly(
+									uiConfig.getReadonlyExpression(), entity,
+									bwp.getPropertyValue(propertyName)))
+						continue;
 					editedPropertyNames.add(propertyName);
 				}
 				for (String name : editedPropertyNames)
