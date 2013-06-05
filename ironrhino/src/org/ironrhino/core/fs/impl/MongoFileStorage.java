@@ -44,7 +44,7 @@ public class MongoFileStorage implements FileStorage {
 	private MongoTemplate mongoTemplate;
 
 	@PostConstruct
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		if (!mongoTemplate.collectionExists(File.class))
 			mongoTemplate.createCollection(File.class);
 	}

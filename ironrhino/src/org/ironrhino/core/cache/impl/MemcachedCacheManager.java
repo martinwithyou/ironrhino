@@ -50,8 +50,13 @@ public class MemcachedCacheManager implements CacheManager {
 	}
 
 	@PostConstruct
-	public void init() throws IOException {
-		memcached = build(serverAddress);
+	public void init() {
+		try {
+			memcached = build(serverAddress);
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	@PostPropertiesReset
@@ -70,7 +75,7 @@ public class MemcachedCacheManager implements CacheManager {
 			try {
 				memcached.shutdown();
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 	}
 

@@ -33,7 +33,7 @@ public class DictionaryControl implements
 	private EntityManager<Dictionary> entityManager;
 
 	@PostConstruct
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		refresh();
 	}
 

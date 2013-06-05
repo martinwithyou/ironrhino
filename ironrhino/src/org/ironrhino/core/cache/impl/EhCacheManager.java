@@ -25,7 +25,7 @@ public class EhCacheManager implements CacheManager {
 	private net.sf.ehcache.CacheManager ehCacheManager;
 
 	@PostConstruct
-	public void init() throws Exception {
+	public void init() {
 		this.ehCacheManager = new net.sf.ehcache.CacheManager();
 	}
 

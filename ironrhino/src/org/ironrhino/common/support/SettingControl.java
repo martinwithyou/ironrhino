@@ -38,7 +38,7 @@ public class SettingControl implements
 	}
 
 	@PostConstruct
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		refresh();
 	}
 
