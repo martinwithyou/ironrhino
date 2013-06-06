@@ -13,7 +13,7 @@ import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
-public class AuthorizationAction extends EntityAction {
+public class AuthorizationAction extends EntityAction<Authorization> {
 
 	private static final long serialVersionUID = 2920367147774798742L;
 

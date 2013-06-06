@@ -19,7 +19,7 @@ import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
-public class ClientAction extends EntityAction {
+public class ClientAction extends EntityAction<Client> {
 
 	private static final long serialVersionUID = -4833030589707102084L;
 

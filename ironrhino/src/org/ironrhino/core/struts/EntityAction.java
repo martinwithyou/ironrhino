@@ -60,6 +60,7 @@ import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.JsonUtils;
+import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
@@ -79,7 +80,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import freemarker.template.Template;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class EntityAction extends BaseAction {
+public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	private static final long serialVersionUID = -8442983706126047413L;
 
@@ -1607,6 +1608,9 @@ public class EntityAction extends BaseAction {
 
 	// need call once before view
 	protected Class<Persistable<?>> getEntityClass() {
+		if (entityClass == null)
+			entityClass = (Class<Persistable<?>>) ReflectionUtils
+					.getGenericClass(getClass());
 		if (entityClass == null) {
 			ActionProxy proxy = ActionContext.getContext()
 					.getActionInvocation().getProxy();
