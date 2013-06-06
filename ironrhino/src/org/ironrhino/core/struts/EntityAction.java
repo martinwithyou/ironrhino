@@ -40,10 +40,12 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.ReadonlyConfig;
 import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
+import org.ironrhino.core.metadata.UserIsolation;
 import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.model.Tuple;
 import org.ironrhino.core.search.SearchService.Mapper;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
@@ -54,6 +56,7 @@ import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
+import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.JsonUtils;
@@ -62,6 +65,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.opensymphony.xwork2.ActionContext;
@@ -464,9 +468,17 @@ public class EntityAction extends BaseAction {
 
 			}
 
-		if (!searchable || StringUtils.isBlank(keyword)
-				|| (searchable && elasticSearchService == null)) {
+		Tuple<String, Class<? extends UserDetails>> userIsolationProperty = getUserIsolationProperty();
+		if (userIsolationProperty != null
+				|| (!searchable || StringUtils.isBlank(keyword) || (searchable && elasticSearchService == null))) {
 			DetachedCriteria dc = entityManager.detachedCriteria();
+			if (userIsolationProperty != null) {
+				UserDetails ud = AuthzUtils
+						.getUserDetails(userIsolationProperty.getValue());
+				if (ud == null)
+					return ACCESSDENIED;
+				dc.add(Restrictions.eq(userIsolationProperty.getKey(), ud));
+			}
 			try {
 				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
 						.newInstance());
@@ -583,12 +595,22 @@ public class EntityAction extends BaseAction {
 			return ACCESSDENIED;
 		}
 		tryFindEntity();
-		if (entity != null
-				&& !entity.isNew()
-				&& checkEntityReadonly(getReadonlyConfig().getExpression(),
-						entity)) {
-			addActionError(getText("access.denied"));
-			return ACCESSDENIED;
+		if (entity != null && !entity.isNew()) {
+			Tuple<String, Class<? extends UserDetails>> userIsolationProperty = getUserIsolationProperty();
+			if (userIsolationProperty != null) {
+				UserDetails ud = AuthzUtils
+						.getUserDetails(userIsolationProperty.getValue());
+				Object value = new BeanWrapperImpl(entity)
+						.getPropertyValue(userIsolationProperty.getKey());
+				if (ud == null || value == null || !ud.equals(value)) {
+					addActionError(getText("access.denied"));
+					return ACCESSDENIED;
+				}
+			}
+			if (checkEntityReadonly(getReadonlyConfig().getExpression(), entity)) {
+				addActionError(getText("access.denied"));
+				return ACCESSDENIED;
+			}
 		}
 		if (entity == null)
 			try {
@@ -668,14 +690,35 @@ public class EntityAction extends BaseAction {
 		}
 		if (!makeEntityValid())
 			return INPUT;
-		if (entity != null
-				&& !entity.isNew()
-				&& checkEntityReadonly(getReadonlyConfig().getExpression(),
-						entity)) {
-			addActionError(getText("access.denied"));
-			return ACCESSDENIED;
-		}
 		BeanWrapperImpl bwp = new BeanWrapperImpl(entity);
+		Tuple<String, Class<? extends UserDetails>> userIsolationProperty = getUserIsolationProperty();
+		if (!entity.isNew()) {
+			if (userIsolationProperty != null) {
+				UserDetails ud = AuthzUtils
+						.getUserDetails(userIsolationProperty.getValue());
+				Object value = bwp.getPropertyValue(userIsolationProperty
+						.getKey());
+				if (ud == null || value == null || !ud.equals(value)) {
+					addActionError(getText("access.denied"));
+					return ACCESSDENIED;
+				}
+			}
+			if (checkEntityReadonly(getReadonlyConfig().getExpression(), entity)) {
+				addActionError(getText("access.denied"));
+				return ACCESSDENIED;
+			}
+		} else {
+			if (userIsolationProperty != null) {
+				UserDetails ud = AuthzUtils
+						.getUserDetails(userIsolationProperty.getValue());
+				if (ud == null) {
+					addActionError(getText("access.denied"));
+					return ACCESSDENIED;
+				}
+				bwp.setPropertyValue(userIsolationProperty.getKey(), ud);
+			}
+		}
+
 		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
 			String name = entry.getKey();
 			UiConfigImpl uiconfig = entry.getValue();
@@ -1003,11 +1046,43 @@ public class EntityAction extends BaseAction {
 		return false;
 	}
 
+	private Tuple<String, Class<? extends UserDetails>> getUserIsolationProperty() {
+		UserIsolation isolation = getEntityClass().getAnnotation(
+				UserIsolation.class);
+		if (isolation == null)
+			return null;
+		String propertyName = isolation.value();
+		if (StringUtils.isBlank(propertyName))
+			return null;
+		BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass());
+		Class type = bw.getPropertyType(propertyName);
+		if (type == null)
+			throw new IllegalArgumentException("No Such property "
+					+ propertyName + " of bean " + getEntityClass());
+		if (!UserDetails.class.isAssignableFrom(type))
+			throw new IllegalArgumentException("property " + propertyName
+					+ " of bean " + getEntityClass() + " is not instanceof "
+					+ UserDetails.class);
+		return new Tuple<String, Class<? extends UserDetails>>(propertyName,
+				type);
+	}
+
 	@Override
 	public String view() {
 		tryFindEntity();
 		if (entity == null)
 			return NOTFOUND;
+		Tuple<String, Class<? extends UserDetails>> userIsolationProperty = getUserIsolationProperty();
+		if (userIsolationProperty != null) {
+			UserDetails ud = AuthzUtils.getUserDetails(userIsolationProperty
+					.getValue());
+			Object value = new BeanWrapperImpl(entity)
+					.getPropertyValue(userIsolationProperty.getKey());
+			if (ud == null || value == null || !ud.equals(value)) {
+				addActionError(getText("access.denied"));
+				return ACCESSDENIED;
+			}
+		}
 		putEntityToValueStack(entity);
 		return VIEW;
 	}
@@ -1035,12 +1110,37 @@ public class EntityAction extends BaseAction {
 			log.error(e.getMessage(), e);
 		}
 		if (id.length > 0) {
+			Tuple<String, Class<? extends UserDetails>> userIsolationProperty = getUserIsolationProperty();
+			UserDetails ud = null;
+			if (userIsolationProperty != null) {
+				ud = AuthzUtils
+						.getUserDetails(userIsolationProperty.getValue());
+				if (ud == null) {
+					addActionError(getText("access.denied"));
+					return ACCESSDENIED;
+				}
+			}
 			boolean deletable = true;
 			String expression = getReadonlyConfig().getExpression();
-			if (StringUtils.isNotBlank(expression)) {
+			if (userIsolationProperty != null
+					|| StringUtils.isNotBlank(expression)) {
 				for (Serializable uid : id) {
 					Persistable<?> en = entityManager.get(uid);
-					if (en != null && checkEntityReadonly(expression, en)
+					if (en == null)
+						continue;
+					if (userIsolationProperty != null) {
+						Object value = new BeanWrapperImpl(en)
+								.getPropertyValue(userIsolationProperty
+										.getKey());
+						if (value == null || !ud.equals(value)) {
+							addActionError(getText("delete.forbidden",
+									new String[] { en.toString() }));
+							deletable = false;
+							break;
+						}
+					}
+					if (StringUtils.isNotBlank(expression)
+							&& checkEntityReadonly(expression, en)
 							&& !getReadonlyConfig().isDeletable()) {
 						addActionError(getText("delete.forbidden",
 								new String[] { en.toString() }));
@@ -1084,15 +1184,32 @@ public class EntityAction extends BaseAction {
 			log.error(e.getMessage(), e);
 		}
 		if (id.length > 0) {
+			Tuple<String, Class<? extends UserDetails>> userIsolationProperty = getUserIsolationProperty();
+			UserDetails ud = null;
+			if (userIsolationProperty != null) {
+				ud = AuthzUtils
+						.getUserDetails(userIsolationProperty.getValue());
+				if (ud == null) {
+					addActionError(getText("access.denied"));
+					return ACCESSDENIED;
+				}
+			}
 			for (Serializable s : id) {
 				Enableable en = (Enableable) em.get(s);
-				if (en != null
-						&& checkEntityReadonly(getReadonlyConfig()
-								.getExpression(), (Persistable<?>) en)
-						&& en.isEnabled() != enabled) {
-					en.setEnabled(enabled);
-					em.save((Persistable) en);
+				if (en == null || en.isEnabled() == enabled)
+					continue;
+				if (userIsolationProperty != null) {
+					Object value = new BeanWrapperImpl(en)
+							.getPropertyValue(userIsolationProperty.getKey());
+					if (value == null || !ud.equals(value))
+						continue;
 				}
+				String expression = getReadonlyConfig().getExpression();
+				if (StringUtils.isNotBlank(expression)
+						&& checkEntityReadonly(expression, (Persistable<?>) en))
+					continue;
+				en.setEnabled(enabled);
+				em.save((Persistable) en);
 			}
 			addActionMessage(getText("operate.success"));
 		}
