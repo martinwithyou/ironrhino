@@ -90,7 +90,6 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 			String s = i == 0 ? cookieMap.get(sessionCookieName) : cookieMap
 					.get(sessionCookieName + (i - 1));
 			if (s == null) {
-				log.error(sessionCookieName + i + " is null");
 				clearCookie(session);
 				return null;
 			}
