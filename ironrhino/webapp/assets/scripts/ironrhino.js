@@ -32318,7 +32318,12 @@ Observation.common = function(container) {
 								return Form.validate(this)
 							});
 			});
-	$('input[type="text"]', container).each(function() {
+	$('input[type="text"]', container).on('paste', function() {
+				var t = $(this);
+				setTimeout(function() {
+							t.val($.trim(t.val()));
+						}, 50);
+			}).each(function() {
 				if (!$(this).attr('autocomplete'))
 					$(this).attr('autocomplete', 'off');
 				var maxlength = $(this).attr('maxlength');
