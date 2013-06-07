@@ -71,7 +71,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-tx-3.2.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-web-3.2.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-webmvc-3.2.3.jar"/>
-	<classpathentry kind="lib" path="lib/spring-test-3.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/spring-test-3.2.3.jar"/>
 	<classpathentry kind="lib" path="lib/closure-compiler.jar"/>
 	<classpathentry kind="lib" path="lib/yuicompressor.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/postgresql-9.2.jar"/>
