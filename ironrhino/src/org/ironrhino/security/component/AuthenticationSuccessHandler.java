@@ -19,12 +19,14 @@ import org.ironrhino.security.model.LoginRecord;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.service.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 @Singleton
 @Named
+@Primary
 public class AuthenticationSuccessHandler extends
 		DefaultAuthenticationSuccessHandler {
 

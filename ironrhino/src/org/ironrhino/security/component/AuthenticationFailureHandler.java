@@ -16,12 +16,14 @@ import org.ironrhino.core.spring.security.DefaultAuthenticationFailureHandler;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.security.model.LoginRecord;
 import org.ironrhino.security.service.UserManager;
+import org.springframework.context.annotation.Primary;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Singleton
 @Named
+@Primary
 public class AuthenticationFailureHandler extends
 		DefaultAuthenticationFailureHandler {
 
