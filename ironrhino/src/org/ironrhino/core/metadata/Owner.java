@@ -8,8 +8,12 @@ import java.lang.annotation.Target;
 
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface UserIsolation {
+public @interface Owner {
 
-	String value(); // property name of entity
+	String propertyName(); 
+	
+	boolean isolate() default true;
+	
+	boolean readonlyForOther() default true;
 
 }
