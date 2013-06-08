@@ -60,9 +60,10 @@
 <#assign entityReadonly = readonly/>
 <#if !entityReadonly && readonlyConfig.expression?has_content><#assign entityReadonly=readonlyConfig.expression?eval></#if>
 <#if !readonly&&entityReadonly>
-<#assign _dynamicAttributes={"data-readonly":"true"}/>
+<@rttbodytrstart entity=entity dynamicAttributes={"data-readonly":"true"}/>
+<#else>
+<@rttbodytrstart entity=entity/>
 </#if>
-<@rttbodytrstart entity=entity dynamicAttributes=_dynamicAttributes!/>
 <#list uiConfigs?keys as key>
 	<#assign config=uiConfigs[key]>
 	<#if !config.hiddenInList>
