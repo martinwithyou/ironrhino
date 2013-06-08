@@ -151,7 +151,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			ReadonlyConfig rc = getEntityClass().getAnnotation(
 					ReadonlyConfig.class);
 			Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
-			if (rc == null && !ownerProperty.getKey().isolate()
+			if (rc == null && ownerProperty != null
+					&& !ownerProperty.getKey().isolate()
 					&& ownerProperty.getKey().readonlyForOther()) {
 				readonlyConfig = new ReadonlyConfigImpl();
 				readonlyConfig.setReadonly(false);
