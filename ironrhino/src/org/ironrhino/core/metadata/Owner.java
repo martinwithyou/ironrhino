@@ -10,10 +10,12 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface Owner {
 
-	String propertyName(); 
-	
+	String propertyName();
+
 	boolean isolate() default true;
-	
+
 	boolean readonlyForOther() default true;
+
+	String supervisorRole() default "";
 
 }
