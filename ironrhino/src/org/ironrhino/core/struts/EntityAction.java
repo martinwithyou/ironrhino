@@ -151,16 +151,26 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			ReadonlyConfig rc = getEntityClass().getAnnotation(
 					ReadonlyConfig.class);
 			Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
-			if (rc == null && ownerProperty != null
-					&& !ownerProperty.getKey().isolate()
-					&& ownerProperty.getKey().readonlyForOther()) {
-				readonlyConfig = new ReadonlyConfigImpl();
-				readonlyConfig.setReadonly(false);
-				readonlyConfig.setExpression("entity."
-						+ ownerProperty.getKey().propertyName()
-						+ "!=authentication('principal')");
-				readonlyConfig.setDeletable(false);
-			} else {
+			if (rc == null && ownerProperty != null) {
+				Owner owner = ownerProperty.getKey();
+				if (!owner.isolate()
+						&& owner.readonlyForOther()
+						&& !(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
+								.getRoleNames()
+								.contains(owner.supervisorRole()))) {
+					readonlyConfig = new ReadonlyConfigImpl();
+					readonlyConfig.setReadonly(false);
+					StringBuilder sb = new StringBuilder("!entity.");
+					sb.append(ownerProperty.getKey().propertyName())
+							.append("?? || entity.")
+							.append(ownerProperty.getKey().propertyName())
+							.append("!=authentication('principal')");
+					String expression = sb.toString();
+					readonlyConfig.setExpression(expression);
+					readonlyConfig.setDeletable(false);
+				}
+			}
+			if (readonlyConfig == null) {
 				readonlyConfig = new ReadonlyConfigImpl(rc);
 			}
 		}
