@@ -10,7 +10,7 @@ fi
 
 #install packages
 apt-get update
-apt-get --force-yes --yes install openjdk-7-jdk ant mysql-server subversion nginx chkconfig sysv-rc-conf fontconfig xfonts-utils unzip wget iptables make gcc
+apt-get --force-yes --yes install openjdk-7-jdk ant mysql-server subversion nginx chkconfig sysv-rc-conf fontconfig xfonts-utils zip unzip wget iptables make gcc
 apt-get --force-yes --yes remove openjdk-6-jre-headless
 ln -s /usr/lib/insserv/insserv /sbin/insserv
 
@@ -230,13 +230,46 @@ cat>deploy.sh<<EOF
 if [ "\$1" = "" ] || [ "\$1" = "-help" ] || [ "\$1" = "--help" ];  then
     echo "please run \$0 name"
     exit 1
-elif [ ! -d "\$1" ]; then
-    echo "directory \$1 doesn't exists"
-    exit 1
 fi
 app="\$1"
 if [[ "\$app" =~ "/" ]] ; then
 app="\${app:0:-1}"
+fi
+if [[ "\$app" =~ ".war" ]] ; then
+if [ ! -f "\$1" ]; then
+    echo "file \$1 doesn't exists"
+    exit 1
+fi
+running=0
+if [ -f /tmp/tomcat8080_pid ] && [ ! "\$( ps -P \`more /tmp/tomcat8080_pid\`|grep tomcat8080)" = "" ] ; then
+running=1
+fi
+if [ \$running = 1 ];then
+/home/$USER/tomcat8080/bin/catalina.sh stop -force 
+fi
+rm -rf \$1.bak
+cd /home/$USER/tomcat8080/webapps/ROOT/
+zip -r \$1.bak *  >/dev/null 2>&1
+mv \$1.bak /home/$USER
+cd
+rm -rf /home/$USER/tomcat8080/webapps
+mkdir -p /home/$USER/tomcat8080/webapps
+unzip \$1 -d /home/$USER/tomcat8080/webapps/ROOT >/dev/null 2>&1
+if [ \$running = 1 ];then
+/home/$USER/tomcat8080/bin/catalina.sh start
+sleep 60 
+/home/$USER/tomcat8081/bin/catalina.sh stop -force 
+fi
+rm -rf /home/$USER/tomcat8081/webapps
+mkdir -p /home/$USER/tomcat8081/webapps
+cp -R /home/$USER/tomcat8080/webapps/ROOT /home/$USER/tomcat8081/webapps
+if [ \$running = 1 ];then
+/home/$USER/tomcat8081/bin/catalina.sh start
+fi
+else
+if [ ! -d "\$1" ]; then
+    echo "directory \$1 doesn't exists"
+    exit 1
 fi
 cd ironrhino
 OLDLANGUAGE=\$LANGUAGE
@@ -259,6 +292,7 @@ rm -rf /home/$USER/tomcat8081/webapps
 mkdir -p /home/$USER/tomcat8081/webapps
 cp -R /home/$USER/tomcat8080/webapps/ROOT /home/$USER/tomcat8081/webapps
 ant -Dserver.home=/home/$USER/tomcat8081 -Dserver.shutdown.port=8006 -Dserver.startup.port=8081 startup
+fi
 EOF
 chown $USER:$USER deploy.sh
 chmod +x deploy.sh
