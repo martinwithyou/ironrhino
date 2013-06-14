@@ -2,9 +2,16 @@
  * jQuery TextExt Plugin
  * http://textextjs.com
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
  * @license MIT License
+ */
+/**
+ * changes by zhouyanming 
+ * 0. change width height in method p.invalidateBounds
+ * 1. target = $(e.target).closest(CSS_DOT_SUGGESTION)
+ * 2. target = $(e.target).closest(CSS_DOT_LABEL)
+ * 3. seperate css
  */
 (function($, undefined)
 {
@@ -69,9 +76,9 @@
 	 */
 	function TextExtPlugin() {};
 
-	var stringify = (window.JSON || {}).stringify,
+	var stringify = (JSON || {}).stringify,
 		slice     = Array.prototype.slice,
-
+		p,
 		UNDEFINED = 'undefined',
 
 		/**
@@ -472,7 +479,7 @@
 
 	// Freak out if there's no JSON.stringify function found
 	if(!stringify)
-		stringify = function(){alert('JSON.stringify() not found')};
+		throw new Error('JSON.stringify() not found');
 
 	/**
 	 * Returns object property by name where name is dot-separated and object is multiple levels deep.
@@ -1617,7 +1624,7 @@
  * jQuery TextExt Plugin
  * http://textextjs.com
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
  * @license MIT License
  */
@@ -1971,7 +1978,7 @@
  * jQuery TextExt Plugin
  * http://textextjs.com
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
  * @license MIT License
  */
@@ -2077,14 +2084,14 @@
  * jQuery TextExt Plugin
  * http://textextjs.com
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
  * @license MIT License
  */
 (function($)
 {
 	/**
-	 * Autocomplete plugin brings the classic autocomplete functionality to the TextExt echosystem.
+	 * Autocomplete plugin brings the classic autocomplete functionality to the TextExt ecosystem.
 	 * The gist of functionality is when user starts typing in, for example a term or a tag, a
 	 * dropdown would be presented with possible suggestions to complete the input quicker.
 	 *
@@ -3187,7 +3194,7 @@
  * jQuery TextExt Plugin
  * http://textextjs.com
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
  * @license MIT License
  */
@@ -3429,7 +3436,7 @@
  * jQuery TextExt Plugin
  * http://textextjs.com
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
  * @license MIT License
  */
@@ -3603,7 +3610,7 @@
  * jQuery TextExt Plugin
  * http://textextjs.com
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
  * @license MIT License
  */
@@ -3912,7 +3919,7 @@
  * jQuery TextExt Plugin
  * http://textextjs.com
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
  * @license MIT License
  */
@@ -4087,7 +4094,7 @@
  * jQuery TextExt Plugin
  * http://textextjs.com
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @copyright Copyright (C) 2011 Alex Gorbatchev. All rights reserved.
  * @license MIT License
  */
@@ -4269,7 +4276,6 @@
 	p.init = function(core)
 	{
 		this.baseInit(core, DEFAULT_OPTS);
-
 		var self  = this,
 			input = self.input(),
 			container

@@ -99,6 +99,9 @@ Observation.tags = function(container) {
 								break;
 							}
 					});
+			t.blur(function() {
+						$(this).trigger('enterKeyPress').val('');
+					});
 		});
 	}
 };
