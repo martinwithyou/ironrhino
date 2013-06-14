@@ -32957,7 +32957,7 @@ Date.prototype.format = function(fmt, monthNames, dayNames) {
 						if (!t.val())
 							return;
 						var inputs = $('input[type=hidden]', t.closest('form'))
-								.not('[name^="__"]').add(t);
+								.not('[name^="__"]').not('.nocheck').add(t);
 						var url = t.data('checkurl');
 						if (!url) {
 							url = t.closest('form').prop('action');
