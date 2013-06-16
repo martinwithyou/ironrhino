@@ -51,8 +51,8 @@ public class Client extends BaseEntity implements Enableable {
 
 	@NotInCopy
 	@UiConfig(hidden = true)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "owner", nullable = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "owner")
 	@ForeignKey(name = "none")
 	private User owner;
 

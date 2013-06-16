@@ -23,6 +23,7 @@ import java.util.TreeMap;
 
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -37,10 +38,10 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.Owner;
 import org.ironrhino.core.metadata.ReadonlyConfig;
 import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
-import org.ironrhino.core.metadata.Owner;
 import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
@@ -294,6 +295,17 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						}
 					if (joincolumnannotation != null
 							&& !joincolumnannotation.nullable())
+						uci.setRequired(true);
+					ManyToOne manyToOne = pd.getReadMethod().getAnnotation(
+							ManyToOne.class);
+					if (manyToOne == null)
+						try {
+							Field f = clazz.getDeclaredField(propertyName);
+							if (f != null)
+								manyToOne = f.getAnnotation(ManyToOne.class);
+						} catch (Exception e) {
+						}
+					if (manyToOne != null && !manyToOne.optional())
 						uci.setRequired(true);
 					uci.setType("listpick");
 					uci.setExcludeIfNotEdited(true);
