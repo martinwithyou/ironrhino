@@ -152,7 +152,7 @@ public class LocationParser {
 			ret |= ((file.readByte() << 16) & 0xFF0000);
 			ret |= ((file.readByte() << 24) & 0xFF000000);
 			return ret;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return -1;
 		}
 	}
