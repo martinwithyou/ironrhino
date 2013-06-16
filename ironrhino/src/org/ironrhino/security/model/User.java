@@ -200,6 +200,13 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	}
 
 	public void setEmail(String email) {
+		if (email != null && email.endsWith("@gmail.com")) {
+			String name = email.substring(0, email.indexOf('@'));
+			if (name.indexOf('+') > 0)
+				name = name.substring(0, name.indexOf('+'));
+			name = name.replaceAll("\\.", "");
+			email = name + "@gmail.com";
+		}
 		this.email = email;
 	}
 
