@@ -274,7 +274,9 @@ Form = {
 						.hasClass('long'))
 						&& value) {
 					if ($(target).hasClass('positive')
-							&& !value.match(/^[+]?\d*$/)) {
+							&& !value.match(/^[+]?\d*$/)
+							|| !$(target).hasClass('zero')
+							&& parseInt(value) == 0) {
 						Message
 								.showFieldError(target, null,
 										'integer.positive');
@@ -288,7 +290,9 @@ Form = {
 					return true;
 				} else if ($(target).hasClass('double') && value) {
 					if ($(target).hasClass('positive')
-							&& !value.match(/^[+]?\d+(\.\d+)?$/)) {
+							&& !value.match(/^[+]?\d+(\.\d+)?$/)
+							|| !$(target).hasClass('zero')
+							&& parseFloat(value) == 0) {
 						Message.showFieldError(target, null, 'double.positive');
 						return false;
 					}

@@ -343,22 +343,38 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					map.put(propertyName, uci);
 					continue;
 				}
-
-				if (returnType == Integer.TYPE || returnType == Integer.class
-						|| returnType == Short.TYPE
-						|| returnType == Short.class) {
-					uci.setInputType("number");
-					uci.addCssClass("integer");
-				} else if (returnType == Long.TYPE || returnType == Long.class) {
-					uci.setInputType("number");
-					uci.addCssClass("long");
-				} else if (returnType == Double.TYPE
-						|| returnType == Double.class
+				if (returnType == Integer.TYPE || returnType == Short.TYPE
+						|| returnType == Long.TYPE || returnType == Double.TYPE
 						|| returnType == Float.TYPE
-						|| returnType == Float.class
-						|| returnType == BigDecimal.class) {
-					uci.setInputType("number");
-					uci.addCssClass("double");
+						|| Number.class.isAssignableFrom(returnType)) {
+					if (returnType == Integer.TYPE
+							|| returnType == Integer.class
+							|| returnType == Short.TYPE
+							|| returnType == Short.class) {
+						uci.setInputType("number");
+						uci.addCssClass("integer");
+
+					} else if (returnType == Long.TYPE
+							|| returnType == Long.class) {
+						uci.setInputType("number");
+						uci.addCssClass("long");
+					} else if (returnType == Double.TYPE
+							|| returnType == Double.class
+							|| returnType == Float.TYPE
+							|| returnType == Float.class
+							|| returnType == BigDecimal.class) {
+						uci.setInputType("number");
+						uci.addCssClass("double");
+					}
+					Set<String> cssClasses = uci.getCssClasses();
+					if (cssClasses.contains("positive")) {
+						int min = 1;
+						if (cssClasses.contains("zero"))
+							min = 0;
+						if (uci.getDynamicAttributes().get("min") == null)
+							uci.getDynamicAttributes().put("min",
+									String.valueOf(min));
+					}
 				} else if (Date.class.isAssignableFrom(returnType)) {
 					uci.addCssClass("date");
 					if (StringUtils.isBlank(uci.getCellEdit()))
@@ -1306,7 +1322,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private boolean unique;
 		private int maxlength;
 		private String regex;
-		private String cssClass = "";
+		private Set<String> cssClasses = new LinkedHashSet<>(0);
 		private boolean readonly;
 		private String readonlyExpression;
 		private int displayOrder = Integer.MAX_VALUE;
@@ -1359,14 +1375,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				}
 			this.cellEdit = config.cellEdit();
 			this.excludeIfNotEdited = config.excludeIfNotEdited();
-			this.cssClass = config.cssClass();
-			if (this.excludeIfNotEdited)
-				cssClass += " excludeIfNotEdited";
+			if (StringUtils.isNotBlank(config.cssClass()))
+				this.cssClasses.addAll(Arrays.asList(config.cssClass().split(
+						"\\s")));
 			this.searchable = config.searchable();
 			this.pickUrl = config.pickUrl();
 			this.templateName = config.templateName();
 			if (StringUtils.isNotBlank(this.regex)) {
-				cssClass += " regex";
+				cssClasses.add("regex");
 				dynamicAttributes.put("data-regex", this.regex);
 			}
 		}
@@ -1493,16 +1509,20 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public String getCssClass() {
 			if (required)
-				this.cssClass += (this.cssClass.length() > 0 ? " " : "")
-						+ "required";
+				addCssClass("required");
 			if (unique)
-				this.cssClass += (this.cssClass.length() > 0 ? " " : "")
-						+ "checkavailable";
-			return this.cssClass;
+				addCssClass("checkavailable");
+			if (excludeIfNotEdited)
+				addCssClass("excludeIfNotEdited");
+			return StringUtils.join(cssClasses, " ");
 		}
 
 		public void addCssClass(String cssClass) {
-			this.cssClass += (this.cssClass.length() > 0 ? " " : "") + cssClass;
+			this.cssClasses.add(cssClass);
+		}
+
+		public Set<String> getCssClasses() {
+			return cssClasses;
 		}
 
 		public boolean isReadonly() {
@@ -1543,12 +1563,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public void setExcludeIfNotEdited(boolean excludeIfNotEdited) {
 			this.excludeIfNotEdited = excludeIfNotEdited;
-			if (this.excludeIfNotEdited
-					&& !this.cssClass.contains("excludeIfNotEdited"))
-				cssClass += "excludeIfNotEdited";
-			if (!this.excludeIfNotEdited
-					&& this.cssClass.contains("excludeIfNotEdited"))
-				cssClass = cssClass.replace("excludeIfNotEdited", "");
 		}
 
 		public String getCellEdit() {

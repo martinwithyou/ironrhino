@@ -13,7 +13,7 @@
 	<@s.textfield label="%{getText('coordinate')}" name="region.coordinate.latLngAsString" cssClass="latlng" dynamicAttributes={"data-address":"${region.fullname!}"}/>
 	<@s.textfield label="%{getText('areacode')}" name="region.areacode" maxlength="6"/>
 	<@s.textfield label="%{getText('postcode')}" name="region.postcode" maxlength="6"/>
-	<@s.textfield label="%{getText('rank')}" name="region.rank" type="number" cssClass="integer positive"/>
+	<@s.textfield label="%{getText('rank')}" name="region.rank" type="number" cssClass="integer positive" min="1"/>
 	<@s.textfield label="%{getText('displayOrder')}" name="region.displayOrder" type="number" cssClass="integer"/>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
