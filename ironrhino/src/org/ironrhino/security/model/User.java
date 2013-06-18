@@ -23,14 +23,18 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Enableable;
+import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
+import org.ironrhino.core.service.EntityManager;
+import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.ClassUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -104,6 +108,9 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@NotInCopy
 	@NotInJson
 	private String modifyUser;
+
+	@Transient
+	private Map<Class<? extends Persistable<?>>, Persistable<?>> extras;
 
 	public Collection<GrantedAuthority> getAuthorities() {
 		return authorities;
@@ -300,8 +307,41 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 			}
 	}
 
+	@SuppressWarnings("unchecked")
+	public <T extends Persistable<?>> T getExtra(Class<T> clazz) {
+		if (extras == null)
+			extras = new HashMap<Class<? extends Persistable<?>>, Persistable<?>>(
+					2);
+		if (!extras.containsKey(clazz)) {
+			T extra = null;
+			EntityManager<T> entityManager = ApplicationContextUtils
+					.getBean(EntityManager.class);
+			if (entityManager != null) {
+				entityManager.setEntityClass(clazz);
+				extra = entityManager.get(getId());
+			}
+			extras.put(clazz, extra);
+		}
+		return (T) extras.get(clazz);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Persistable<?> getExtra(String className) {
+		Class<? extends Persistable<?>> clazz = null;
+		if (ClassUtils.isPresent(className, getClass().getClassLoader())) {
+			try {
+				clazz = (Class<? extends Persistable<?>>) Class
+						.forName(className);
+			} catch (ClassNotFoundException e) {
+				throw new IllegalArgumentException(className + "not found");
+			}
+		}
+		return (clazz != null) ? getExtra(clazz) : null;
+	}
+
 	@Override
 	public String toString() {
 		return StringUtils.isNotBlank(this.name) ? this.name : this.username;
 	}
+
 }
