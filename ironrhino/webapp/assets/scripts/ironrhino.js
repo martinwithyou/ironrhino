@@ -36162,7 +36162,8 @@ Observation.tags = function(container) {
 							}
 					});
 			t.blur(function() {
-						$(this).trigger('enterKeyPress').val('');
+						if (t.hasClass('required') || t.val())
+							$(this).trigger('enterKeyPress').val('');
 					});
 		});
 	}
