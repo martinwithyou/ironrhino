@@ -256,6 +256,8 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	@Override
 	public int hashCode() {
+		if (id != null)
+			return id.intValue();
 		String fullname = getFullname(",");
 		return fullname != null ? getFullname().hashCode() : 0;
 	}
