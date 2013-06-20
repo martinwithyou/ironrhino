@@ -31545,6 +31545,7 @@ MessageBundle = {
 		'confirm.delete' : 'are sure to delete?',
 		'confirm.save' : 'are sure to save?',
 		'confirm.exit' : 'you have unsaved modification,are sure to exit?',
+		'confirm.action' : 'please confirm this action?',
 		'unsupported.browser' : 'unsupported browser',
 		'action.denied' : 'requested action denied',
 		'maximum.exceeded' : '{0} , exceed maximum {1}'
@@ -31578,6 +31579,7 @@ MessageBundle = {
 		'confirm.delete' : '确定要删除?',
 		'confirm.save' : '确定要保存?',
 		'confirm.exit' : '有改动未保存,确定要离开?',
+		'confirm.action' : '请确认此操作',
 		'true' : '是',
 		'false' : '否',
 		'unsupported.browser' : '你使用的浏览器不支持该功能',
@@ -36511,14 +36513,27 @@ Richtable = {
 				var url = Richtable.getBaseUrl(form) + '/' + action
 						+ Richtable.getPathParams();
 				url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
-				ajax({
-							url : url,
-							type : 'POST',
-							dataType : 'json',
-							success : function() {
-								Richtable.reload(form)
-							}
-						});
+				var action = function() {
+					ajax({
+								url : url,
+								type : 'POST',
+								dataType : 'json',
+								success : function() {
+									Richtable.reload(form)
+								}
+							});
+				}
+				if ($(btn).hasClass('confirm')) {
+					$.alerts.confirm(MessageBundle.get('confirm.action'),
+							MessageBundle.get('select'), function(b) {
+								if (b) {
+									action();
+								}
+							});
+				} else {
+					action();
+				}
+
 			}
 		} else {
 			var options = (new Function("return "

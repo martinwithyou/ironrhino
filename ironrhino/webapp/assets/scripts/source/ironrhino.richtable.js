@@ -312,14 +312,27 @@ Richtable = {
 				var url = Richtable.getBaseUrl(form) + '/' + action
 						+ Richtable.getPathParams();
 				url += (url.indexOf('?') > 0 ? '&' : '?') + idparams;
-				ajax({
-							url : url,
-							type : 'POST',
-							dataType : 'json',
-							success : function() {
-								Richtable.reload(form)
-							}
-						});
+				var action = function() {
+					ajax({
+								url : url,
+								type : 'POST',
+								dataType : 'json',
+								success : function() {
+									Richtable.reload(form)
+								}
+							});
+				}
+				if ($(btn).hasClass('confirm')) {
+					$.alerts.confirm(MessageBundle.get('confirm.action'),
+							MessageBundle.get('select'), function(b) {
+								if (b) {
+									action();
+								}
+							});
+				} else {
+					action();
+				}
+
 			}
 		} else {
 			var options = (new Function("return "
