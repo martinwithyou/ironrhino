@@ -43,6 +43,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	@Column(nullable = false)
 	protected String name;
 
+	@Column(name = "`level`")
 	protected int level;
 
 	protected int displayOrder;
