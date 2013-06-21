@@ -1635,6 +1635,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private String bottomButtons = "";
 		private String listHeader = "";
 		private String listFooter = "";
+		private String rowDynamicAttributes = "";
 
 		public RichtableConfigImpl() {
 		}
@@ -1647,6 +1648,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			this.bottomButtons = config.bottomButtons();
 			this.listHeader = config.listHeader();
 			this.listFooter = config.listFooter();
+			this.rowDynamicAttributes = config.rowDynamicAttributes();
 		}
 
 		public boolean isShowPageSize() {
@@ -1687,6 +1689,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public void setListFooter(String listFooter) {
 			this.listFooter = listFooter;
+		}
+
+		public String getRowDynamicAttributes() {
+			return rowDynamicAttributes;
+		}
+
+		public void setRowDynamicAttributes(String rowDynamicAttributes) {
+			this.rowDynamicAttributes = rowDynamicAttributes;
 		}
 
 	}

@@ -19,5 +19,7 @@ public @interface RichtableConfig {
 	String listHeader() default "";
 
 	String listFooter() default "";
+	
+	String rowDynamicAttributes() default "";
 
 }

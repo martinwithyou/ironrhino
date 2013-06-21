@@ -1,4 +1,4 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false readonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false readonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true rowDynamicAttributes=''>
 <@rtstart formid=formid action=action entityName=entityName resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable>
 <#nested/>
 </@rtstart>
@@ -13,11 +13,14 @@
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
 <#local entityReadonly = !readonly && readonlyExpression?has_content && readonlyExpression?eval />
-<#if celleditable&&!readonly&&entityReadonly>
-<@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid dynamicAttributes={"data-readonly":"true"}/>
-<#else>
-<@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid/>
+<#local _rowDynamicAttributes={}>
+<#if rowDynamicAttributes?has_content>
+<#local _rowDynamicAttributes=rowDynamicAttributes?eval>
 </#if>
+<#if celleditable&&!readonly&&entityReadonly>
+<#local _rowDynamicAttributes=_rowDynamicAttributes+{"data-readonly":"true"}>
+</#if>
+<@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid dynamicAttributes=_rowDynamicAttributes/>
 <#list columns?keys as name>
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>

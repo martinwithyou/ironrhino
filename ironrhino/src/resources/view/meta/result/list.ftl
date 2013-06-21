@@ -59,11 +59,14 @@
 <#assign index=index+1>
 <#assign entityReadonly = readonly/>
 <#if !entityReadonly && readonlyConfig.expression?has_content><#assign entityReadonly=readonlyConfig.expression?eval></#if>
-<#if !readonly&&entityReadonly>
-<@rttbodytrstart entity=entity dynamicAttributes={"data-readonly":"true"}/>
-<#else>
-<@rttbodytrstart entity=entity/>
+<#assign rowDynamicAttributes={}>
+<#if richtableConfig.rowDynamicAttributes?has_content>
+<#assign rowDynamicAttributes=richtableConfig.rowDynamicAttributes?eval>
 </#if>
+<#if !readonly&&entityReadonly>
+<#assign rowDynamicAttributes=rowDynamicAttributes+{"data-readonly":"true"}>
+</#if>
+<@rttbodytrstart entity=entity dynamicAttributes=rowDynamicAttributes/>
 <#list uiConfigs?keys as key>
 	<#assign config=uiConfigs[key]>
 	<#if !config.hiddenInList>
