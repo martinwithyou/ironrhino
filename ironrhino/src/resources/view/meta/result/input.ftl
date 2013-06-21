@@ -10,6 +10,7 @@
 	</#if>
 	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
+		<#assign templateName><@config.templateName?interpret /></#assign>
 		<#if !config.hiddenInInput>
 		<#assign label=key>
 		<#if config.alias??>
@@ -60,17 +61,17 @@
 				<label class="control-label" for="${key}">${action.getText(label)}</label>
 				<div class="controls">
 				<#if !readonly>
-					<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required class="${config.cssClass}" dynamicAttributes=config.dynamicAttributes/>
+					<@selectDictionary dictionaryName=templateName id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required class="${config.cssClass}" dynamicAttributes=config.dynamicAttributes/>
 				<#else>
 					<@s.hidden name="${entityName}.${key}"/>
-					<span id="${key}"><@displayDictionaryLabel dictionaryName=evalTemplate(config.templateName) value="${entity[key]!}"/></span>
+					<span id="${key}"><@displayDictionaryLabel dictionaryName=templateName value="${entity[key]!}"/></span>
 				</#if>
 				</div>
 				</div>
 			<#elseif config.type=='schema'>
 				<#if editAttributes??>
 					<div id="editAttributes">
-					<@editAttributes schemaName=evalTemplate(config.templateName) attributes=entity.attributes parameterNamePrefix=entityName+'.'/>
+					<@editAttributes schemaName=templateName attributes=entity.attributes parameterNamePrefix=entityName+'.'/>
 					</div>
 				</#if>
 			<#else>

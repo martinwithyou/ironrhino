@@ -44,7 +44,7 @@
 </#macro>
 
 <#function getDictionaryLabel dictionaryName value="">
-	<#return dictionary=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getDictionaryLabel(dictionaryName,value)>
+	<#return statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getDictionaryLabel(dictionaryName,value)>
 </#function>
 
 <#macro displayDictionaryLabel dictionaryName value="">

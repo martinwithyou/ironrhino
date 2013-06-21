@@ -20,7 +20,8 @@
 				</#if>
 			<#elseif config.type=='dictionary' >
 				<#if displayDictionaryLabel??>
-					<@displayDictionaryLabel dictionaryName=evalTemplate(config.templateName) value="${entity[key]!}"/>
+					<#assign templateName><@config.templateName?interpret /></#assign>
+					<@displayDictionaryLabel dictionaryName=templateName value="${entity[key]!}"/>
 				</#if>
 			<#elseif config.type=='schema'>
 				<#if printAttributes??>

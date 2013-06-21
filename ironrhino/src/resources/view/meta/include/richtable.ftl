@@ -15,7 +15,8 @@
 <#local entityReadonly = !readonly && readonlyExpression?has_content && readonlyExpression?eval />
 <#local _rowDynamicAttributes={}>
 <#if rowDynamicAttributes?has_content>
-<#local _rowDynamicAttributes=rowDynamicAttributes?eval>
+<#local _rowDynamicAttributes><@rowDynamicAttributes?interpret /></#local>
+<#local _rowDynamicAttributes=_rowDynamicAttributes?eval>
 </#if>
 <#if celleditable&&!readonly&&entityReadonly>
 <#local _rowDynamicAttributes=_rowDynamicAttributes+{"data-readonly":"true"}>

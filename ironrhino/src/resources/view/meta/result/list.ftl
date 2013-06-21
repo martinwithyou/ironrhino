@@ -61,7 +61,8 @@
 <#if !entityReadonly && readonlyConfig.expression?has_content><#assign entityReadonly=readonlyConfig.expression?eval></#if>
 <#assign rowDynamicAttributes={}>
 <#if richtableConfig.rowDynamicAttributes?has_content>
-<#assign rowDynamicAttributes=richtableConfig.rowDynamicAttributes?eval>
+<#assign rowDynamicAttributes><@richtableConfig.rowDynamicAttributes?interpret /></#assign>
+<#assign rowDynamicAttributes=rowDynamicAttributes?eval>
 </#if>
 <#if !readonly&&entityReadonly>
 <#assign rowDynamicAttributes=rowDynamicAttributes+{"data-readonly":"true"}>
@@ -72,7 +73,8 @@
 	<#if !config.hiddenInList>
 		<#assign value = entity[key]!>
 		<#if config.type=='dictionary' && selectDictionary??>
-						<#assign value=getDictionaryLabel(evalTemplate(config.templateName),value)/>	
+			<#assign templateName><@config.templateName?interpret /></#assign>
+			<#assign value=getDictionaryLabel(templateName,value)/>	
 		</#if>
 		<#assign dynamicAttributes={}>
 		<#if config.type=='listpick'&&!entityReadonly&&!config.readonly&&!(config.readonlyExpression?has_content&&config.readonlyExpression?eval)>
@@ -105,7 +107,8 @@
 		</textarea>
 		<#elseif config.type=='dictionary' && selectDictionary??>
 		<textarea id="rt_select_template_${key}">
-		<@selectDictionary dictionaryName=evalTemplate(config.templateName) id=key name="${entityName}.${key}" required=config.required/>
+		<#assign templateName><@config.templateName?interpret /></#assign>
+		<@selectDictionary dictionaryName=templateName id=key name="${entityName}.${key}" required=config.required/>
 		</textarea>
 		</#if>
 	</#if>
