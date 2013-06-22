@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.ForeignKey;
@@ -34,7 +35,8 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	private static final long serialVersionUID = 2462271646391940930L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "treeable_entity_seq")
+	@SequenceGenerator(name = "treeable_entity_seq", sequenceName = "treeable_entity_seq")
 	protected Long id;
 
 	@Column(unique = false)
