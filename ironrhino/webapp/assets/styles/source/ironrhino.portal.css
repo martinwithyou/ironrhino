@@ -1,12 +1,17 @@
 .portal-column { 
-	width: 33.33%;
 	float: left;
 	}
-.portal-column.half { 
+.portal-column:first-child:nth-last-child(1) {
+	width: 100%;
+	}
+.portal-column:first-child:nth-last-child(2), .portal-column:first-child:nth-last-child(2) ~ .portal-column {
 	width: 50%;
 	}
-.portal-column.full { 
-	width: 100%;
+.portal-column:first-child:nth-last-child(3), .portal-column:first-child:nth-last-child(3) ~ .portal-column {
+	width: 33.33%;
+	}
+.portal-column:first-child:nth-last-child(4), .portal-column:first-child:nth-last-child(4) ~ .portal-column {
+	width: 25%;
 	}
 .portal-column.empty {
 	padding-bottom: 100px;
