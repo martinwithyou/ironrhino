@@ -2,6 +2,7 @@ package org.ironrhino.core.util;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.SoftReference;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
@@ -214,14 +215,28 @@ public class CodecUtils {
 
 	public static String nextId() {
 		String id = UUID.randomUUID().toString().replace("-", "");
-		id = NumberUtils.xToY(16, 62, id);
+		id = encodeBase62(id);
 		return id;
 	}
 
 	public static String nextId(String salt) {
 		String id = md5Hex(salt + UUID.randomUUID().toString());
-		id = NumberUtils.xToY(16, 62, id);
+		id = encodeBase62(id);
 		return id;
+	}
+
+	public static String encodeBase62(String hex) {
+		char[] buf = new char[hex.length()];
+		int charPos = hex.length() - 1;
+		BigInteger i = new BigInteger(hex, 16);
+		BigInteger radix = BigInteger.valueOf(62);
+		while (i.compareTo(radix) >= 0) {
+			buf[charPos--] = NumberUtils.NUMBERS
+					.charAt(i.mod(radix).intValue());
+			i = i.divide(radix);
+		}
+		buf[charPos] = NumberUtils.NUMBERS.charAt(i.intValue());
+		return new String(buf, charPos, (hex.length() - charPos));
 	}
 
 }
