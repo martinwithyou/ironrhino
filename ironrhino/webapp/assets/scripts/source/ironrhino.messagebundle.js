@@ -71,7 +71,11 @@ MessageBundle = {
 	},
 	lang : function() {
 		var lang = ($.cookie('locale') || navigator.language
-				|| navigator.browserLanguage || '').replace('-', '_');
+				|| navigator.browserLanguage || '');
+		var i = lang.indexOf('-');
+		if (i > 0)
+			lang = lang.substring(0, i) + '_'
+					+ lang.substring(i + 1).toUpperCase();
 		if (!MessageBundle[lang]) {
 			var i = lang.indexOf('_');
 			if (i > 0)
