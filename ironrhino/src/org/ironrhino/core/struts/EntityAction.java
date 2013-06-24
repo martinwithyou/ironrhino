@@ -371,7 +371,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 							&& !uci.getDynamicAttributes().containsKey("min")) {
 						uci.getDynamicAttributes().put("min", "1");
 						if (cssClasses.contains("double"))
-							uci.getDynamicAttributes().put("min", "0.01");
+							uci.getDynamicAttributes().put("min", "0");
 						if (cssClasses.contains("zero"))
 							uci.getDynamicAttributes().put("min", "0");
 					}
