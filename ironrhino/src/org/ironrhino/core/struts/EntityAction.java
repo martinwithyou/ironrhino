@@ -367,11 +367,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						uci.addCssClass("double");
 					}
 					Set<String> cssClasses = uci.getCssClasses();
+					if (cssClasses.contains("double")
+							&& !uci.getDynamicAttributes().containsKey("step"))
+						uci.getDynamicAttributes().put("step", "0.01");
 					if (cssClasses.contains("positive")
 							&& !uci.getDynamicAttributes().containsKey("min")) {
 						uci.getDynamicAttributes().put("min", "1");
 						if (cssClasses.contains("double"))
-							uci.getDynamicAttributes().put("min", "0");
+							uci.getDynamicAttributes().put("min", "0.01");
 						if (cssClasses.contains("zero"))
 							uci.getDynamicAttributes().put("min", "0");
 					}
