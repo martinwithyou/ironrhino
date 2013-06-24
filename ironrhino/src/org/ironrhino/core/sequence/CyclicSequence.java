@@ -19,54 +19,38 @@ public interface CyclicSequence {
 
 		MINUTE("yyyyMMddHHmm") {
 			protected boolean isSameCycle(Calendar lastCal, Calendar nowCal) {
-				if (lastCal == null)
-					return true;
-				return (nowCal.get(Calendar.YEAR) == lastCal.get(Calendar.YEAR)
-						&& nowCal.get(Calendar.MONTH) == lastCal
-								.get(Calendar.MONTH)
-						&& nowCal.get(Calendar.HOUR_OF_DAY) == lastCal
-								.get(Calendar.HOUR_OF_DAY) && nowCal
-						.get(Calendar.MINUTE) <= lastCal.get(Calendar.MINUTE));
+				return HOUR.isSameCycle(lastCal, nowCal)
+						&& nowCal.get(Calendar.MINUTE) <= lastCal
+								.get(Calendar.MINUTE);
 
 			}
 		},
 		HOUR("yyyyMMddHH") {
 			protected boolean isSameCycle(Calendar lastCal, Calendar nowCal) {
-				if (lastCal == null)
-					return true;
-				return (nowCal.get(Calendar.YEAR) == lastCal.get(Calendar.YEAR)
-						&& nowCal.get(Calendar.MONTH) == lastCal
-								.get(Calendar.MONTH) && nowCal
-						.get(Calendar.HOUR_OF_DAY) <= lastCal
-						.get(Calendar.HOUR_OF_DAY));
+				return DAY.isSameCycle(lastCal, nowCal)
+						&& nowCal.get(Calendar.HOUR_OF_DAY) <= lastCal
+								.get(Calendar.HOUR_OF_DAY);
 			}
 
 		},
 		DAY("yyyyMMdd") {
 			protected boolean isSameCycle(Calendar lastCal, Calendar nowCal) {
-				if (lastCal == null)
-					return true;
-				return (nowCal.get(Calendar.YEAR) == lastCal.get(Calendar.YEAR)
-						&& nowCal.get(Calendar.MONTH) == lastCal
-								.get(Calendar.MONTH) && nowCal
-						.get(Calendar.DAY_OF_YEAR) <= lastCal
-						.get(Calendar.DAY_OF_YEAR));
+				return MONTH.isSameCycle(lastCal, nowCal)
+						&& nowCal.get(Calendar.DAY_OF_YEAR) <= lastCal
+								.get(Calendar.DAY_OF_YEAR);
 			}
 
 		},
 		MONTH("yyyyMM") {
 			protected boolean isSameCycle(Calendar lastCal, Calendar nowCal) {
-				if (lastCal == null)
-					return true;
-				return (nowCal.get(Calendar.YEAR) == lastCal.get(Calendar.YEAR) && nowCal
-						.get(Calendar.MONTH) <= lastCal.get(Calendar.MONTH));
+				return YEAR.isSameCycle(lastCal, nowCal)
+						&& nowCal.get(Calendar.MONTH) <= lastCal
+								.get(Calendar.MONTH);
 			}
 
 		},
 		YEAR("yyyy") {
 			protected boolean isSameCycle(Calendar lastCal, Calendar nowCal) {
-				if (lastCal == null)
-					return true;
 				return (nowCal.get(Calendar.YEAR) <= lastCal.get(Calendar.YEAR));
 			}
 
@@ -95,8 +79,7 @@ public interface CyclicSequence {
 			return isSameCycle(lastCalendar, nowCalendar);
 		}
 
-		protected abstract boolean isSameCycle(Calendar lastCalendar,
-				Calendar nowCalendar);
+		protected abstract boolean isSameCycle(Calendar lastCal, Calendar nowCal);
 
 	}
 
