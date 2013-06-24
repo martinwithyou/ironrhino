@@ -80,8 +80,7 @@
 <#if rowid==''>
 	<#local id=entity.id?string/>
 <#else>
-	<#local temp=rowid?interpret>
-	<#local id><@temp/></#local>
+	<#local id><@rowid?interpret/></#local>
 </#if>
 <tr<#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if><#list dynamicAttributes?keys as attr><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?string}"</#list><#else> ${attr}="${dynamicAttributes[attr]?string}"</#if></#list>>
 <#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if id?has_content> value="${id}"</#if> class="custom"/></td></#if>
@@ -100,8 +99,7 @@
 		</#if>
 	</#if>
 <#else>
-	<#local temp=template?interpret>
-	<@temp/><#t>
+	<@template?interpret/><#t>
 </#if>
 </td>
 </#macro>
@@ -110,8 +108,7 @@
 <#if buttons?has_content || editable || viewable>
 <td class="action">
 <#if buttons!=''>
-<#local temp=buttons?interpret>
-<@temp/>
+<@buttons?interpret/>
 <#else>
 <#if viewable>
 <button type="button" class="btn" data-view="view">${action.getText("view")}</button>
@@ -169,8 +166,7 @@
 </div>
 <div class="action span4">
 <#if buttons!=''>
-<#local temp=buttons?interpret>
-<@temp/>
+<@buttons?interpret/>
 <#else>
 <#if !readonly>
 <#if createable><button type="button" class="btn" data-view="input">${action.getText("create")}</button></#if>
@@ -191,8 +187,7 @@
 </span>
 </#if>
 <#if searchButtons!=''>
-<#local temp=searchButtons?interpret>
-<@temp/>
+<@searchButtons?interpret/>
 <#else>
 </#if>
 </div>

@@ -6,8 +6,7 @@
 <body>
 <#assign readonly=readonlyConfig.readonly>
 <#if richtableConfig.listHeader?has_content>
-<#assign listHeader=richtableConfig.listHeader?interpret>
-<@listHeader/>
+<@richtableConfig.listHeader?interpret/>
 </#if>
 <@rtstart entityName=entityName/>
 <#assign size=0>
@@ -116,7 +115,7 @@
 </#if>
 <#if richtableConfig.listFooter?has_content>
 <#assign listFooter=richtableConfig.listFooter?interpret>
-<@listFooter/>
+<@richtableConfig.listFooter?interpret/>
 </#if>
 </body>
 </html></#escape>

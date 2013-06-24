@@ -14,12 +14,11 @@
 <#else>
 <#local _content=page.content>
 </#if>
-<#local content=_content?interpret>
 <#local designMode=(Parameters.designMode!)=='true'&&abbr==0&&statics['org.ironrhino.core.util.AuthzUtils'].authorize("ROLE_ADMINISTRATOR","","")>
 <#if designMode>
 <div class="editme" data-url="<@url value="/common/page/editme?id=${page.id}"/>" name="page.content">
 </#if>
-<@content/>
+<@_content?interpret/>
 <#if designMode>
 </div>
 </#if>
