@@ -36,7 +36,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "treeable_entity_seq")
-	@SequenceGenerator(name = "treeable_entity_seq", sequenceName = "treeable_entity_seq")
+	@SequenceGenerator(name = "treeable_entity_seq", sequenceName = "treeable_entity_seq", allocationSize = 1)
 	protected Long id;
 
 	@Column(unique = false)
