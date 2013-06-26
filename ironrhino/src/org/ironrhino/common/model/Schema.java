@@ -100,6 +100,7 @@ public class Schema extends BaseEntity {
 	}
 
 	@NotInCopy
+	@UiConfig(hidden = true)
 	@Column(name = "fields")
 	@Type(type = "text")
 	@Access(AccessType.PROPERTY)

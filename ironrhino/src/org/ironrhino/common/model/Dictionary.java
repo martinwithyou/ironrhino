@@ -87,6 +87,7 @@ public class Dictionary extends BaseEntity {
 	}
 
 	@NotInCopy
+	@UiConfig(hidden = true)
 	@Column(name = "items")
 	@Type(type = "text")
 	@Access(AccessType.PROPERTY)

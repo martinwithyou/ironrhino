@@ -23,6 +23,7 @@ import org.hibernate.annotations.ForeignKey;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
@@ -140,6 +141,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	@NotInCopy
 	@NotInJson
+	@UiConfig(hidden = true)
 	public Collection<T> getChildren() {
 		return children;
 	}
@@ -162,6 +164,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 
 	@NotInCopy
 	@NotInJson
+	@UiConfig(hidden = true)
 	public T getParent() {
 		return parent;
 	}
