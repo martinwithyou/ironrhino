@@ -229,7 +229,8 @@ Richtable = {
 			},
 			beforeClose : function(event, ui) {
 				if ($('form', win).hasClass('dirty')) {
-					return confirm(MessageBundle.get('confirm.exit'));
+					return confirm($('form', win).data('confirm')
+							|| MessageBundle.get('confirm.exit'));
 				}
 			}
 		};
@@ -291,7 +292,8 @@ Richtable = {
 				return false;
 			}
 			if (action == 'delete') {
-				$.alerts.confirm(MessageBundle.get('confirm.delete'),
+				$.alerts.confirm($(btn).data('confirm')
+								|| MessageBundle.get('confirm.delete'),
 						MessageBundle.get('select'), function(b) {
 							if (b) {
 								var url = Richtable.getBaseUrl(form) + '/'
@@ -323,7 +325,8 @@ Richtable = {
 							});
 				}
 				if ($(btn).hasClass('confirm')) {
-					$.alerts.confirm(MessageBundle.get('confirm.action'),
+					$.alerts.confirm($(btn).data('confirm')
+									|| MessageBundle.get('confirm.action'),
 							MessageBundle.get('select'), function(b) {
 								if (b) {
 									action();
@@ -413,7 +416,8 @@ Richtable = {
 						|| $(btn).prop('tagName') != 'A')
 					btn = $(btn).closest('button,a');
 				if ($(btn).closest('.btn').hasClass('confirm')) {
-					$.alerts.confirm(MessageBundle.get('confirm.save'),
+					$.alerts.confirm($(btn).data('confirm')
+									|| MessageBundle.get('confirm.save'),
 							MessageBundle.get('select'), function(b) {
 								if (b) {
 									action();
