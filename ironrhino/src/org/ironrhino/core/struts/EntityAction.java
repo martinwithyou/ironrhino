@@ -37,7 +37,6 @@ import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
-import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.Owner;
 import org.ironrhino.core.metadata.ReadonlyConfig;
 import org.ironrhino.core.metadata.RichtableConfig;
@@ -204,8 +203,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		if (uiConfigs == null) {
 			Class clazz = getEntityClass();
 			Set<String> hides = new HashSet<String>();
-			hides.addAll(AnnotationUtils.getAnnotatedPropertyNames(clazz,
-					NotInCopy.class));
 			final Map<String, UiConfigImpl> map = new HashMap<String, UiConfigImpl>();
 			PropertyDescriptor[] pds = org.springframework.beans.BeanUtils
 					.getPropertyDescriptors(clazz);
