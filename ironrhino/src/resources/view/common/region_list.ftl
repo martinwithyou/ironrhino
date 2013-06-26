@@ -11,7 +11,7 @@
 '>
 <#assign bottomButtons='
 <button type="button" class="btn" data-view="input">${action.getText("create")}</button>
-<button type="button" class="btn" data-action="save">${action.getText("save")}</button>
+<button type="button" class="btn confirm" data-action="save">${action.getText("save")}</button>
 <button type="button" class="btn" data-action="delete" data-shown="selected">${action.getText("delete")}</button>
 '+r'
 <#if region?? && parentId??>

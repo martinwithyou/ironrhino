@@ -36596,21 +36596,37 @@ Richtable = {
 						});
 				var url = Richtable.getBaseUrl(form) + '/save'
 						+ Richtable.getPathParams();
-				ajax({
-							url : url,
-							type : 'POST',
-							data : params,
-							dataType : 'json',
-							headers : {
-								'X-Edit' : 'cell'
-							},
-							onsuccess : function() {
-								$('td', row).removeClass('edited')
-										.removeData('oldvalue');
-								$('.btn[data-action="save"]', form)
-										.removeClass('btn-primary').hide();
-							}
-						});
+				var action = function() {
+					ajax({
+								url : url,
+								type : 'POST',
+								data : params,
+								dataType : 'json',
+								headers : {
+									'X-Edit' : 'cell'
+								},
+								onsuccess : function() {
+									$('td', row).removeClass('edited')
+											.removeData('oldvalue');
+									$('.btn[data-action="save"]', form)
+											.removeClass('btn-primary').hide();
+								}
+							});
+				}
+				var btn = event.target;
+				if ($(btn).prop('tagName') != 'BUTTON'
+						|| $(btn).prop('tagName') != 'A')
+					btn = $(btn).closest('button,a');
+				if ($(btn).closest('.btn').hasClass('confirm')) {
+					$.alerts.confirm(MessageBundle.get('confirm.save'),
+							MessageBundle.get('select'), function(b) {
+								if (b) {
+									action();
+								}
+							});
+				} else {
+					action();
+				}
 			}
 		});
 		if (!modified) {
