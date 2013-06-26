@@ -577,16 +577,22 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return execute(callback);
 	}
 
-	public void iterate(int fetchSize, IterateCallback callback) {
-		ScrollableResults cursor = null;
+	public void iterate(int fetchSize, IterateCallback callback,
+			DetachedCriteria... dc) {
 		Session hibernateSession = sessionFactory.openSession();
+		Criteria c;
+		if (dc.length == 1) {
+			c = dc[0].getExecutableCriteria(hibernateSession);
+		} else {
+			c = hibernateSession.createCriteria(getEntityClass());
+			c.addOrder(Order.asc("id"));
+		}
 		hibernateSession.setCacheMode(CacheMode.IGNORE);
+		ScrollableResults cursor = null;
 		Transaction hibernateTransaction = null;
 		try {
 			hibernateTransaction = hibernateSession.beginTransaction();
-			Criteria c = hibernateSession.createCriteria(getEntityClass());
 			c.setFetchSize(fetchSize);
-			c.addOrder(Order.asc("id"));
 			cursor = c.scroll(ScrollMode.FORWARD_ONLY);
 			RowBuffer buffer = new RowBuffer(hibernateSession, fetchSize,
 					callback);
