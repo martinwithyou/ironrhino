@@ -3,7 +3,7 @@
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	<beans profile="default,dual">
+	<beans profile="default">
 		<bean id="elasticSearchClient"
 			class="org.ironrhino.core.search.elasticsearch.ElasticSearchClientFactoryBean"
 			p:connectString="${elasticSearchClient.connectString:}">
@@ -20,11 +20,29 @@
 				</map>
 			</property>
 		</bean>
-		<bean id="elasticSearchService"
-			class="org.ironrhino.core.search.elasticsearch.ElasticSearchService" />
 		<bean id="indexManager"
 			class="org.ironrhino.core.search.elasticsearch.IndexManagerImpl"/>
-		<bean id="indexAspect" class="org.ironrhino.core.search.elasticsearch.IndexAspect" />
+	</beans>
+	
+	<beans profile="dual">
+		<bean id="elasticSearchClient"
+			class="org.ironrhino.core.search.elasticsearch.ElasticSearchClientFactoryBean"
+			p:connectString="${elasticSearchClient.connectString:}">
+			<property name="settings">
+				<map>
+					<entry key="name" value="ironrhino" />
+					<entry key="cluster.name" value="iornrhino" />
+					<entry key="node.local" value="false" />
+					<entry key="http.enabled" value="true" />
+					<entry key="discovery.zen.ping.multicast.enabled" value="true" />
+					<entry key="index.number_of_shards" value="1" />
+					<entry key="index.number_of_replicas" value="0" />
+					<entry key="index.analysis.analyzer.default.type" value="mmseg" />
+				</map>
+			</property>
+		</bean>
+		<bean id="indexManager"
+			class="org.ironrhino.core.search.elasticsearch.IndexManagerImpl"/>
 	</beans>
 	
 	<beans profile="cloud">
@@ -46,11 +64,12 @@
 				</map>
 			</property>
 		</bean>
-		<bean id="elasticSearchService"
-			class="org.ironrhino.core.search.elasticsearch.ElasticSearchService" />
 		<bean id="indexManager"
 			class="org.ironrhino.core.search.elasticsearch.IndexManagerImpl"  p:rebuildWhenInitialize="true" />
-		<bean id="indexAspect" class="org.ironrhino.core.search.elasticsearch.IndexAspect" />
 	</beans>
+	
+	<bean id="elasticSearchService"
+		class="org.ironrhino.core.search.elasticsearch.ElasticSearchService" />
+	<bean id="indexAspect" class="org.ironrhino.core.search.elasticsearch.IndexAspect" />
 	
 </beans>
