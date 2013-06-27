@@ -2,6 +2,8 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,14 +35,6 @@ public class Stat extends KeyValuePair implements Persistable<String> {
 	@GeneratedValue(generator = "stringId")
 	@GenericGenerator(name = "stringId", strategy = "org.ironrhino.core.hibernate.StringIdGenerator")
 	private String id;
-
-	@UiConfig(hidden = true)
-	@Column(nullable = false)
-	private String keyAsString;
-
-	@UiConfig(hidden = true)
-	@Column(nullable = false)
-	private String valueAsString;
 
 	public Stat() {
 
@@ -79,31 +73,29 @@ public class Stat extends KeyValuePair implements Persistable<String> {
 	}
 
 	@UiConfig(displayOrder = 0, alias = "key")
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getKeyAsString() {
-		if (keyAsString != null)
-			return keyAsString;
 		if (key != null)
 			return key.toString();
 		return null;
 	}
 
 	public void setKeyAsString(String keyAsString) {
-		this.keyAsString = keyAsString;
 		if (key == null)
 			key = Key.fromString(keyAsString);
 	}
 
 	@UiConfig(displayOrder = 1, alias = "value")
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getValueAsString() {
-		if (valueAsString != null)
-			return valueAsString;
 		if (value != null)
 			return value.toString();
 		return null;
 	}
 
 	public void setValueAsString(String valueAsString) {
-		this.valueAsString = valueAsString;
 		if (value == null)
 			value = Value.fromString(valueAsString);
 	}

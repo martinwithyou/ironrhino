@@ -22,7 +22,6 @@ import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
 import org.ironrhino.core.struts.BaseAction;
-import org.ironrhino.core.struts.TemplateProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.validator.annotations.RequiredStringValidator;
@@ -46,9 +45,6 @@ public class PageAction extends BaseAction {
 
 	@Autowired(required = false)
 	private transient ElasticSearchService<Page> elasticSearchService;
-
-	@Inject
-	private transient TemplateProvider templateProvider;
 
 	@com.opensymphony.xwork2.inject.Inject(value = "ironrhino.cmsPath", required = false)
 	public void setCmsPath(String val) {
