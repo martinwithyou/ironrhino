@@ -87,7 +87,8 @@
 							},
 							xaxis : {
 								ticks : xticks,
-								tickLength : 0
+								tickLength : 0,
+								tickDecimals : 0
 							}
 						});
 				var previousPoint = null;
