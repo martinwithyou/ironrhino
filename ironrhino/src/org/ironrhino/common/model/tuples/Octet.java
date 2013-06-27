@@ -2,6 +2,10 @@ package org.ironrhino.common.model.tuples;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class Octet<A, B, C, D, E, F, G, H> implements Serializable {
 
 	private static final long serialVersionUID = 5814884804875760320L;
@@ -99,6 +103,18 @@ public class Octet<A, B, C, D, E, F, G, H> implements Serializable {
 
 	public void setH(H h) {
 		this.h = h;
+	}
+
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this, false);
+	}
+
+	public boolean equals(Object that) {
+		return EqualsBuilder.reflectionEquals(this, that, false);
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

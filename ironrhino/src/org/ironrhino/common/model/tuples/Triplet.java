@@ -2,6 +2,10 @@ package org.ironrhino.common.model.tuples;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class Triplet<A, B, C> implements Serializable {
 
 	private static final long serialVersionUID = -41533742214141900L;
@@ -44,6 +48,18 @@ public class Triplet<A, B, C> implements Serializable {
 
 	public void setC(C c) {
 		this.c = c;
+	}
+
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this, false);
+	}
+
+	public boolean equals(Object that) {
+		return EqualsBuilder.reflectionEquals(this, that, false);
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }
