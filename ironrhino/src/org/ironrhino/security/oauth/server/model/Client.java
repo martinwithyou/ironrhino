@@ -50,13 +50,13 @@ public class Client extends BaseEntity implements Enableable {
 	private String description;
 
 	@NotInCopy
-	@UiConfig(hidden = true)
+	@UiConfig(displayOrder = 5, width = "200px")
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner")
 	@ForeignKey(name = "none")
 	private User owner;
 
-	@UiConfig(displayOrder = 5)
+	@UiConfig(displayOrder = 6, width = "80px")
 	private boolean enabled = true;
 
 	@NotInCopy

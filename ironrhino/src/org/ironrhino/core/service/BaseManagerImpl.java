@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
@@ -37,7 +38,6 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.internal.CriteriaImpl.OrderEntry;
 import org.ironrhino.core.model.BaseTreeableEntity;
-import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.IdAssigned;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
@@ -46,12 +46,10 @@ import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
-import org.ironrhino.core.util.ErrorMessage;
 import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,12 +62,11 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 
 	private Class<T> entityClass;
 
+	@Inject
 	protected SessionFactory sessionFactory;
 
-	@Required
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+	@Inject
+	private DeleteChecker deleteChecker;
 
 	public BaseManagerImpl() {
 		Class<T> clazz = (Class<T>) ReflectionUtils.getGenericClass(getClass());
@@ -164,13 +161,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	}
 
 	protected void checkDelete(T obj) {
-		if (obj instanceof Enableable) {
-			Enableable enableable = (Enableable) obj;
-			if (enableable.isEnabled())
-				throw new ErrorMessage("delete.forbidden",
-						new Object[] { enableable },
-						"delete.forbidden.notdisabled");
-		}
+		deleteChecker.check(obj);
 	}
 
 	@Transactional
@@ -262,6 +253,8 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			for (OrderEntry oe : orderEntries)
 				impl.addOrder(oe.getOrder());
 		}
+		dc.setProjection(null);
+		dc.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		return count;
 	}
 
@@ -334,9 +327,6 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				return resultPage;
 			}
 		}
-		detachedCriteria.setProjection(null);
-		detachedCriteria
-				.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		int start, end;
 		if (!resultPage.isReverse()) {
 			start = (resultPage.getPageNo() - 1) * resultPage.getPageSize();
