@@ -2,7 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	
+	<bean id="elasticSearchService" class="org.ironrhino.core.search.elasticsearch.ElasticSearchService" />
+	<bean id="indexAspect" class="org.ironrhino.core.search.elasticsearch.IndexAspect" />
 	<beans profile="default">
 		<bean id="elasticSearchClient"
 			class="org.ironrhino.core.search.elasticsearch.ElasticSearchClientFactoryBean"
@@ -67,9 +68,5 @@
 		<bean id="indexManager"
 			class="org.ironrhino.core.search.elasticsearch.IndexManagerImpl"  p:rebuildWhenInitialize="true" />
 	</beans>
-	
-	<bean id="elasticSearchService"
-		class="org.ironrhino.core.search.elasticsearch.ElasticSearchService" />
-	<bean id="indexAspect" class="org.ironrhino.core.search.elasticsearch.IndexAspect" />
 	
 </beans>
