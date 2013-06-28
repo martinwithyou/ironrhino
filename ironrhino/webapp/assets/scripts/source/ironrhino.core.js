@@ -786,7 +786,7 @@ Observation.common = function(container) {
 						});
 			});
 	if (typeof $.fn.datepicker != 'undefined')
-		$('input.date', container).datepicker({
+		$('input.date:not([readonly]):not([disabled])', container).datepicker({
 					dateFormat : 'yy-mm-dd'
 				});
 	$('input.captcha', container).focus(function() {
