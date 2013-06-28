@@ -22,6 +22,8 @@ public class DatabaseCyclicSequenceDelegate extends
 			seq = new PostgreSQLCyclicSequence();
 		else if (databaseProductName.contains("oracle"))
 			seq = new PostgreSQLCyclicSequence();
+		else if (databaseProductName.contains("db2"))
+			seq = new DB2CyclicSequence();
 		else
 			throw new RuntimeException("not implemented for database "
 					+ databaseProductName);
