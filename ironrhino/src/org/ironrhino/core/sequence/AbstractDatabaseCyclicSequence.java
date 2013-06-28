@@ -44,8 +44,7 @@ public abstract class AbstractDatabaseCyclicSequence extends
 	}
 
 	protected String getActualSequenceName() {
-		return new StringBuilder(getTableName()).append("_")
-				.append(getSequenceName()).append("_SEQ").toString();
+		return new StringBuilder(getSequenceName()).append("_SEQ").toString();
 	}
 
 }

@@ -16,32 +16,51 @@ import org.springframework.jdbc.support.JdbcUtils;
 public abstract class AbstractSequenceCyclicSequence extends
 		AbstractDatabaseCyclicSequence {
 
-	protected abstract String getQuerySequenceStatement();
-
-	protected abstract String getCreateSequenceStatement();
-
-	protected abstract String getRestartSequenceStatement();
-
-	protected abstract String getCurrentTimestampFunction();
-
 	protected String getTimestampColumnType() {
-		return "BIGINT";
+		return "TIMESTAMP";
+	}
+
+	protected String getCurrentTimestampFunction() {
+		return "STATEMENT_TIMESTAMP()";
 	}
 
 	protected String getCreateTableStatement() {
-		return "CREATE TABLE " + getTableName() + " (" + getSequenceName()
-				+ "_TIMESTAMP " + getTimestampColumnType() + ") ";
+		return new StringBuilder("CREATE TABLE ").append(getTableName())
+				.append(" (").append(getSequenceName()).append("_TIMESTAMP ")
+				.append(getTimestampColumnType()).append(")").toString();
 	}
 
 	protected String getAddColumnStatement() {
-		return "ALTER TABLE " + getTableName() + " ADD " + getSequenceName()
-				+ "_TIMESTAMP " + getTimestampColumnType() + " DEFAULT "
-				+ getCurrentTimestampFunction();
+		return new StringBuilder("ALTER TABLE ").append(getTableName())
+				.append(" ADD ").append(getSequenceName())
+				.append("_TIMESTAMP ").append(getTimestampColumnType())
+				.append(" DEFAULT ").append(getCurrentTimestampFunction())
+				.toString();
 	}
 
 	protected String getInsertStatement() {
-		return "INSERT INTO " + getTableName() + " VALUES("
-				+ getCurrentTimestampFunction() + ")";
+		return new StringBuilder("INSERT INTO ").append(getTableName())
+				.append(" VALUES(").append(getCurrentTimestampFunction())
+				.append(")").toString();
+	}
+
+	protected String getQuerySequenceStatement() {
+		return new StringBuilder("SELECT NEXTVAL('")
+				.append(getActualSequenceName()).append("')").toString();
+	}
+
+	protected String getCreateSequenceStatement() {
+		StringBuilder sb = new StringBuilder("CREATE SEQUENCE ")
+				.append(getActualSequenceName());
+		if (getCacheSize() > 1)
+			sb.append(" CACHE ").append(getCacheSize());
+		return sb.toString();
+	}
+
+	protected String getRestartSequenceStatement() {
+		return new StringBuilder("ALTER SEQUENCE ")
+				.append(getActualSequenceName()).append(" RESTART WITH 1")
+				.toString();
 	}
 
 	public void afterPropertiesSet() {
@@ -103,23 +122,24 @@ public abstract class AbstractSequenceCyclicSequence extends
 			DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 			String columnName = getSequenceName();
 			rs = stmt
-					.executeQuery("select  " + columnName + "_TIMESTAMP,"
-							+ getCurrentTimestampFunction() + " from "
+					.executeQuery("SELECT  " + columnName + "_TIMESTAMP,"
+							+ getCurrentTimestampFunction() + " FROM "
 							+ getTableName());
 			try {
 				rs.next();
-				lastInsertTimestamp = new Date(rs.getLong(1) * 1000);
-				thisTimestamp = new Date(rs.getLong(2) * 1000);
+				lastInsertTimestamp = rs.getTimestamp(1);
+				thisTimestamp = rs.getTimestamp(2);
 			} finally {
 				JdbcUtils.closeResultSet(rs);
 			}
 			boolean same = getCycleType().isSameCycle(lastInsertTimestamp,
 					thisTimestamp);
-			stmt.executeUpdate("update " + getTableName() + " set "
+			if (!same)
+				restartSequence(stmt);
+			stmt.executeUpdate("UPDATE " + getTableName() + " SET "
 					+ columnName + "_TIMESTAMP = "
 					+ getCurrentTimestampFunction());
-			if (!same)
-				stmt.execute(getRestartSequenceStatement());
+			con.commit();
 			rs = stmt.executeQuery(getQuerySequenceStatement());
 			try {
 				rs.next();
@@ -135,6 +155,10 @@ public abstract class AbstractSequenceCyclicSequence extends
 			DataSourceUtils.releaseConnection(con, getDataSource());
 		}
 		return getStringValue(thisTimestamp, getPaddingLength(), (int) nextId);
+	}
+
+	protected void restartSequence(Statement stmt) throws SQLException {
+		stmt.execute(getRestartSequenceStatement());
 	}
 
 }
