@@ -82,8 +82,8 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 				DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 				// Increment the sequence column...
 				String columnName = getSequenceName();
-				rs = stmt.executeQuery("select  " + columnName
-						+ "_TIMESTAMP,UNIX_TIMESTAMP() from " + getTableName());
+				rs = stmt.executeQuery("SELECT  " + columnName
+						+ "_TIMESTAMP,UNIX_TIMESTAMP() FROM " + getTableName());
 				try {
 					rs.next();
 					Long last = rs.getLong(1);
@@ -97,20 +97,21 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 				boolean same = getCycleType().isSameCycle(lastInsertTimestamp,
 						thisTimestamp);
 				if (same)
-					stmt.executeUpdate("update " + getTableName() + " set "
-							+ columnName + " = last_insert_id(" + columnName
+					stmt.executeUpdate("UPDATE " + getTableName() + " SET "
+							+ columnName + " = LAST_INSERT_ID(" + columnName
 							+ " + " + getCacheSize() + ")," + columnName
 							+ "_TIMESTAMP = UNIX_TIMESTAMP()");
 				else
-					stmt.executeUpdate("update " + getTableName() + " set "
-							+ columnName + " = last_insert_id("
+					stmt.executeUpdate("UPDATE " + getTableName() + " SET "
+							+ columnName + " = LAST_INSERT_ID("
 							+ getCacheSize() + ")," + columnName
 							+ "_TIMESTAMP = UNIX_TIMESTAMP()");
-				rs = stmt.executeQuery("select last_insert_id()");
+				con.commit();
+				rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
 				try {
 					if (!rs.next()) {
 						throw new DataAccessResourceFailureException(
-								"last_insert_id() failed after executing an update");
+								"LAST_INSERT_ID() failed after executing an update");
 					}
 					this.maxId = rs.getLong(1);
 				} finally {
