@@ -4,6 +4,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean id="elasticSearchService"
 		class="org.ironrhino.core.search.elasticsearch.ElasticSearchService" />
+	<bean id="indexManager"
+		class="org.ironrhino.core.search.elasticsearch.IndexManagerImpl" />
 	<bean id="indexAspect" class="org.ironrhino.core.search.elasticsearch.IndexAspect" />
 	<beans profile="default">
 		<bean id="elasticSearchClient"
@@ -12,8 +14,8 @@
 				<map>
 					<entry key="name" value="ironrhino" />
 					<entry key="cluster.name" value="iornrhino" />
-					<entry key="node.local" value="true" />
 					<entry key="http.enabled" value="false" />
+					<entry key="node.local" value="true" />
 					<entry key="discovery.zen.ping.multicast.enabled" value="false" />
 					<entry key="index.number_of_shards" value="1" />
 					<entry key="index.number_of_replicas" value="0" />
@@ -21,8 +23,6 @@
 				</map>
 			</property>
 		</bean>
-		<bean id="indexManager"
-			class="org.ironrhino.core.search.elasticsearch.IndexManagerImpl" />
 	</beans>
 
 	<beans profile="dual">
@@ -32,8 +32,8 @@
 				<map>
 					<entry key="name" value="ironrhino" />
 					<entry key="cluster.name" value="iornrhino" />
-					<entry key="node.local" value="false" />
 					<entry key="http.enabled" value="false" />
+					<entry key="node.local" value="false" />
 					<entry key="discovery.zen.ping.multicast.enabled" value="true" />
 					<entry key="index.number_of_shards" value="1" />
 					<entry key="index.number_of_replicas" value="0" />
@@ -41,8 +41,6 @@
 				</map>
 			</property>
 		</bean>
-		<bean id="indexManager"
-			class="org.ironrhino.core.search.elasticsearch.IndexManagerImpl" />
 	</beans>
 
 	<beans profile="cloud">
@@ -52,8 +50,8 @@
 				<map>
 					<entry key="name" value="ironrhino" />
 					<entry key="cluster.name" value="iornrhino" />
-					<entry key="node.local" value="true" />
 					<entry key="http.enabled" value="false" />
+					<entry key="node.local" value="true" />
 					<entry key="discovery.zen.ping.multicast.enabled" value="false" />
 					<entry key="index.number_of_shards" value="1" />
 					<entry key="index.number_of_replicas" value="0" />
@@ -63,18 +61,13 @@
 				</map>
 			</property>
 		</bean>
-		<bean id="indexManager"
-			class="org.ironrhino.core.search.elasticsearch.IndexManagerImpl"
-			p:rebuildWhenInitialize="true" />
 	</beans>
 
 	<beans profile="cluster">
 		<bean id="elasticSearchClient"
 			class="org.ironrhino.core.search.elasticsearch.ElasticSearchClientFactoryBean"
-			p:connectString="${elasticSearchClient.connectString:}">
+			p:connectString="${elasticSearchClient.connectString:localhost}">
 		</bean>
-		<bean id="indexManager"
-			class="org.ironrhino.core.search.elasticsearch.IndexManagerImpl" />
 	</beans>
 
 </beans>

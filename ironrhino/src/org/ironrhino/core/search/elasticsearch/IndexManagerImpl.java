@@ -29,6 +29,7 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.search.SearchHit;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.Trigger;
@@ -62,9 +63,6 @@ public class IndexManagerImpl implements IndexManager {
 	@Value("${indexManager.indexName:ironrhino}")
 	private String indexName;
 
-	@Value("${indexManager.rebuildWhenInitialize:false}")
-	private boolean rebuildWhenInitialize;
-
 	private Map<String, Class> typeClassMapping;
 
 	private Map<Class, Map<String, Object>> schemaMapping;
@@ -83,14 +81,6 @@ public class IndexManagerImpl implements IndexManager {
 
 	public void setIndexName(String indexName) {
 		this.indexName = indexName;
-	}
-
-	public boolean isRebuildWhenInitialize() {
-		return rebuildWhenInitialize;
-	}
-
-	public void setRebuildWhenInitialize(boolean rebuildWhenInitialize) {
-		this.rebuildWhenInitialize = rebuildWhenInitialize;
 	}
 
 	@PostConstruct
@@ -129,14 +119,16 @@ public class IndexManagerImpl implements IndexManager {
 			schemaMapping.put(c, getSchemaMapping(c, false));
 		}
 		initialize();
-		// use memory
-		if (rebuildWhenInitialize)
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					rebuild();
-				}
-			}).start();
+		if (client instanceof NodeClient) {
+			NodeClient nc = (NodeClient) client;
+			if ("memory".equals(nc.settings().get("index.store.type")))
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						rebuild();
+					}
+				}).start();
+		}
 	}
 
 	private static Map<String, Object> getSchemaMapping(Class c,
