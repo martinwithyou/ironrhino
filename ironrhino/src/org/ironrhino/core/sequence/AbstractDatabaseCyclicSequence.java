@@ -35,14 +35,6 @@ public abstract class AbstractDatabaseCyclicSequence extends
 		this.tableName = tableName;
 	}
 
-	protected void checkDatabaseProductName(String databaseProductName) {
-		String impl = getClass().getSimpleName();
-		impl = impl.substring(0, impl.indexOf("CyclicSequence"));
-		if (!databaseProductName.toLowerCase().contains(impl.toLowerCase()))
-			throw new RuntimeException(getClass()
-					+ " is not compatibility with " + databaseProductName);
-	}
-
 	protected String getActualSequenceName() {
 		return new StringBuilder(getSequenceName()).append("_SEQ").toString();
 	}

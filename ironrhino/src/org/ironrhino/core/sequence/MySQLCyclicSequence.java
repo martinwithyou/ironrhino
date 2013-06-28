@@ -24,7 +24,6 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 		Statement stmt = null;
 		try {
 			DatabaseMetaData dbmd = con.getMetaData();
-			checkDatabaseProductName(dbmd.getDatabaseProductName());
 			ResultSet rs = dbmd.getTables(null, null, "%", null);
 			boolean tableExists = false;
 			while (rs.next()) {
