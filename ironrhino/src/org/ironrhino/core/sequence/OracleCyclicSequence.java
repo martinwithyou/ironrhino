@@ -15,7 +15,7 @@ public class OracleCyclicSequence extends AbstractSequenceCyclicSequence {
 		stmt.execute(getCreateSequenceStatement());
 	}
 
-	protected String getCurrentTimestampFunction() {
+	protected String getCurrentTimestamp() {
 		return "SYSDATE";
 	}
 

@@ -17,7 +17,7 @@ public class DB2CyclicSequence extends AbstractSequenceCyclicSequence {
 				.append(" FROM SYSIBM.SYSDUMMY1").toString();
 	}
 
-	protected String getCurrentTimestampFunction() {
+	protected String getCurrentTimestamp() {
 		return "CURRENT TIMESTAMP";
 	}
 

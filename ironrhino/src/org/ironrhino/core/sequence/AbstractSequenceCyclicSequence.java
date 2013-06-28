@@ -20,8 +20,8 @@ public abstract class AbstractSequenceCyclicSequence extends
 		return "TIMESTAMP";
 	}
 
-	protected String getCurrentTimestampFunction() {
-		return "STATEMENT_TIMESTAMP()";
+	protected String getCurrentTimestamp() {
+		return "CURRENT_TIMESTAMP";
 	}
 
 	protected String getCreateTableStatement() {
@@ -34,14 +34,13 @@ public abstract class AbstractSequenceCyclicSequence extends
 		return new StringBuilder("ALTER TABLE ").append(getTableName())
 				.append(" ADD ").append(getSequenceName())
 				.append("_TIMESTAMP ").append(getTimestampColumnType())
-				.append(" DEFAULT ").append(getCurrentTimestampFunction())
-				.toString();
+				.append(" DEFAULT ").append(getCurrentTimestamp()).toString();
 	}
 
 	protected String getInsertStatement() {
 		return new StringBuilder("INSERT INTO ").append(getTableName())
-				.append(" VALUES(").append(getCurrentTimestampFunction())
-				.append(")").toString();
+				.append(" VALUES(").append(getCurrentTimestamp()).append(")")
+				.toString();
 	}
 
 	protected String getQuerySequenceStatement() {
@@ -120,10 +119,8 @@ public abstract class AbstractSequenceCyclicSequence extends
 			stmt = con.createStatement();
 			DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 			String columnName = getSequenceName();
-			rs = stmt
-					.executeQuery("SELECT  " + columnName + "_TIMESTAMP,"
-							+ getCurrentTimestampFunction() + " FROM "
-							+ getTableName());
+			rs = stmt.executeQuery("SELECT  " + columnName + "_TIMESTAMP,"
+					+ getCurrentTimestamp() + " FROM " + getTableName());
 			try {
 				rs.next();
 				lastInsertTimestamp = rs.getTimestamp(1);
@@ -136,8 +133,7 @@ public abstract class AbstractSequenceCyclicSequence extends
 			if (!same)
 				restartSequence(stmt);
 			stmt.executeUpdate("UPDATE " + getTableName() + " SET "
-					+ columnName + "_TIMESTAMP = "
-					+ getCurrentTimestampFunction());
+					+ columnName + "_TIMESTAMP = " + getCurrentTimestamp());
 			con.commit();
 			rs = stmt.executeQuery(getQuerySequenceStatement());
 			try {
