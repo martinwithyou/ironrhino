@@ -26,6 +26,8 @@ public class DatabaseCyclicSequenceDelegate extends
 			seq = new DB2CyclicSequence();
 		else if (databaseProductName.contains("hsql"))
 			seq = new HSQLCyclicSequence();
+		else if (databaseProductName.contains("h2"))
+			seq = new H2CyclicSequence();
 		else
 			throw new RuntimeException("not implemented for database "
 					+ databaseProductName);
