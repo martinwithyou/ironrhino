@@ -2,7 +2,6 @@ package org.ironrhino.core.struts;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -1080,9 +1079,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	private boolean checkEntityReadonly(String expression, Persistable<?> entity) {
 		if (StringUtils.isNotBlank(expression)) {
 			try {
-				Template template = new Template(null, new StringReader("${("
-						+ expression + ")?string!}"),
-						freemarkerManager.getConfig(), "utf-8");
+				Template template = new Template(null, "${(" + expression
+						+ ")?string!}", freemarkerManager.getConfig());
 				StringWriter sw = new StringWriter();
 				Map<String, Object> rootMap = new HashMap<String, Object>();
 				rootMap.put("entity", entity);
@@ -1099,9 +1097,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			Persistable<?> entity, Object value) {
 		if (StringUtils.isNotBlank(expression)) {
 			try {
-				Template template = new Template(null, new StringReader("${("
-						+ expression + ")?string!}"),
-						freemarkerManager.getConfig(), "utf-8");
+				Template template = new Template(null, "${(" + expression
+						+ ")?string!}", freemarkerManager.getConfig());
 				StringWriter sw = new StringWriter();
 				Map<String, Object> rootMap = new HashMap<String, Object>();
 				rootMap.put("entity", entity);
