@@ -31,6 +31,8 @@ public class DatabaseCyclicSequenceDelegate extends
 			seq = new HSQLCyclicSequence();
 		else if (databaseProductName.contains("h2"))
 			seq = new H2CyclicSequence();
+		else if (databaseProductName.contains("derby"))
+			seq = new DerbyCyclicSequence();
 		else
 			throw new RuntimeException("not implemented for database "
 					+ databaseProductName);
