@@ -25,6 +25,8 @@ public class DatabaseCyclicSequenceDelegate extends
 			seq = new PostgreSQLCyclicSequence();
 		else if (databaseProductName.contains("db2"))
 			seq = new DB2CyclicSequence();
+		else if (databaseProductName.contains("sql server"))
+			seq = new SqlServerCyclicSequence();
 		else if (databaseProductName.contains("hsql"))
 			seq = new HSQLCyclicSequence();
 		else if (databaseProductName.contains("h2"))
