@@ -16,9 +16,11 @@ public class TestServlet extends HttpServlet {
 	private static final long serialVersionUID = 9128941579865103381L;
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
+	@Override
 	public void init() {
 		final String url = getInitParameter("url");
 		new Thread() {
+			@Override
 			public void run() {
 				if (StringUtils.isNotBlank(url)) {
 					if (test(url))

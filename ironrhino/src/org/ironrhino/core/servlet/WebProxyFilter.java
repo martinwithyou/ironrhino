@@ -38,10 +38,12 @@ public class WebProxyFilter implements Filter {
 
 	private boolean checkSameOrigin = false;
 
+	@Override
 	public void destroy() {
 		httpClient.getConnectionManager().shutdown();
 	}
 
+	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
@@ -128,6 +130,7 @@ public class WebProxyFilter implements Filter {
 		}
 	}
 
+	@Override
 	public void init(FilterConfig config) throws ServletException {
 		String s = config.getInitParameter("checkSameOrigin");
 		if (StringUtils.isNotBlank(s))

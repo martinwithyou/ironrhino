@@ -62,6 +62,7 @@ public abstract class AbstractSequenceCyclicSequence extends
 				.toString();
 	}
 
+	@Override
 	public void afterPropertiesSet() {
 		Connection con = DataSourceUtils.getConnection(getDataSource());
 		Statement stmt = null;

@@ -35,6 +35,7 @@ public class PageViewServiceImpl implements PageViewService {
 	@Qualifier("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
 
+	@Override
 	public void put(Date date, String ip, String url, String sessionId,
 			String username, String referer) {
 		if (stringRedisTemplate == null)
@@ -179,6 +180,7 @@ public class PageViewServiceImpl implements PageViewService {
 		}
 	}
 
+	@Override
 	public Set<String> getDomains() {
 		if (stringRedisTemplate == null)
 			return Collections.emptySet();
@@ -186,61 +188,75 @@ public class PageViewServiceImpl implements PageViewService {
 				KEY_PAGE_VIEW + "domains");
 	}
 
+	@Override
 	public long getPageView(String key, String domain) {
 		return get(key, "pv", domain);
 	}
 
+	@Override
 	public long getUniqueIp(String key, String domain) {
 		return get(key, "uip", domain);
 	}
 
+	@Override
 	public long getUniqueSessionId(String key, String domain) {
 		return get(key, "usid", domain);
 	}
 
+	@Override
 	public long getUniqueUsername(String key, String domain) {
 		return get(key, "uu", domain);
 	}
 
+	@Override
 	public Pair<String, Long> getMaxPageView(String domain) {
 		return getMax("pv", domain);
 	}
 
+	@Override
 	public Pair<String, Long> getMaxUniqueIp(String domain) {
 		return getMax("uip", domain);
 	}
 
+	@Override
 	public Pair<String, Long> getMaxUniqueSessionId(String domain) {
 		return getMax("usid", domain);
 	}
 
+	@Override
 	public Pair<String, Long> getMaxUniqueUsername(String domain) {
 		return getMax("uu", domain);
 	}
 
+	@Override
 	public Map<String, Long> getTopPageViewUrls(String day, int top,
 			String domain) {
 		return getTop(day, "url", top, domain);
 	}
 
+	@Override
 	public Map<String, Long> getTopForeignReferers(String day, int top,
 			String domain) {
 		return getTop(day, "fr", top, domain);
 	}
 
+	@Override
 	public Map<String, Long> getTopKeywords(String day, int top, String domain) {
 		return getTop(day, "kw", top, domain);
 	}
 
+	@Override
 	public Map<String, Long> getTopSearchEngines(String day, int top,
 			String domain) {
 		return getTop(day, "se", top, domain);
 	}
 
+	@Override
 	public Map<String, Long> getTopProvinces(String day, int top, String domain) {
 		return getTop(day, "loc:pr", top, domain);
 	}
 
+	@Override
 	public Map<String, Long> getTopCities(String day, int top, String domain) {
 		return getTop(day, "loc:ct", top, domain);
 	}

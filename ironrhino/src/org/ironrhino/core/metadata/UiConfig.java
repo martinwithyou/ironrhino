@@ -38,7 +38,7 @@ public @interface UiConfig {
 	boolean unique() default false;
 
 	boolean readonly() default false;
-	
+
 	String readonlyExpression() default "";
 
 	boolean hidden() default false;

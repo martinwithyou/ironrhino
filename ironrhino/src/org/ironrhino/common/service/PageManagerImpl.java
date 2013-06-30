@@ -55,12 +55,14 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		super.delete(page);
 	}
 
+	@Override
 	@Transactional
 	@EvictCache(key = "${key = [];foreach (page : retval) { key.add(page.pagepath); } return key;}", namespace = "page")
 	public List<Page> delete(Serializable... id) {
 		return super.delete(id);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	@CheckCache(key = "${pagepath}", namespace = "page", eternal = true)
 	public Page getByPath(String pagepath) {
@@ -70,6 +72,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return page;
 	}
 
+	@Override
 	@Transactional
 	public Page saveDraft(Page page) {
 		Page p = get(page.getId());
@@ -92,6 +95,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return p;
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public Page getDraftByPath(String path) {
 		Page page = findByNaturalId(path);
@@ -101,6 +105,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return page;
 	}
 
+	@Override
 	@Transactional
 	public Page dropDraft(String id) {
 		Page page = get(id);
@@ -110,6 +115,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return page;
 	}
 
+	@Override
 	public void pullDraft(Page page) {
 		try {
 			Map<String, String> map = JsonUtils.fromJson(page.getDraft(),
@@ -123,16 +129,19 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		}
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<Page> findListByTag(String tag) {
 		return findListByTag(new String[] { tag });
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<Page> findListByTag(String... tag) {
 		return findListByTag(-1, tag);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public Page[] findPreviousAndNextPage(Page page, String... tags) {
 		Page[] arr = new Page[2];
@@ -157,6 +166,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return arr;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public List<Page> findListByTag(int limit, String... tag) {
@@ -199,12 +209,14 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return list;
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,
 			String tag) {
 		return findResultPageByTag(resultPage, new String[] { tag });
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public ResultPage<Page> findResultPageByTag(ResultPage<Page> resultPage,
@@ -254,6 +266,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		return resultPage;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	public Map<String, Integer> findMatchedTags(String keyword) {

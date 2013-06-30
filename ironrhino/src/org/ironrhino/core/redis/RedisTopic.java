@@ -77,6 +77,7 @@ public abstract class RedisTopic<T extends Serializable> implements
 		return sb.toString();
 	}
 
+	@Override
 	public void publish(final T message, Scope scope) {
 		if (scope == null || scope == Scope.LOCAL) {
 			Runnable task = new Runnable() {

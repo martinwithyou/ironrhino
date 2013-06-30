@@ -22,6 +22,7 @@ public class RequestDecoratorMapper extends AbstractDecoratorMapper {
 
 	private String decoratorParameter = "decorator";
 
+	@Override
 	public void init(Config config, Properties properties,
 			DecoratorMapper parent) throws InstantiationException {
 		super.init(config, properties, parent);
@@ -31,6 +32,7 @@ public class RequestDecoratorMapper extends AbstractDecoratorMapper {
 				"decorator");
 	}
 
+	@Override
 	public Decorator getDecorator(HttpServletRequest request, Page page) {
 		Decorator result = null;
 		Object attr = request.getAttribute(decoratorParameter);

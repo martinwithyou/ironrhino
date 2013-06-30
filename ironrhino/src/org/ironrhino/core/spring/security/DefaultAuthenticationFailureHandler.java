@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 public class DefaultAuthenticationFailureHandler implements
 		AuthenticationFailureHandler {
 
+	@Override
 	public void onAuthenticationFailure(HttpServletRequest request,
 			HttpServletResponse response, AuthenticationException e)
 			throws IOException, ServletException {

@@ -35,6 +35,7 @@ public class HttpSessionFilter implements Filter {
 
 	private String[] excludePatterns;
 
+	@Override
 	public void init(FilterConfig filterConfig) {
 		servletContext = filterConfig.getServletContext();
 		String str = filterConfig.getInitParameter(KEY_EXCLUDE_PATTERNS);
@@ -43,6 +44,7 @@ public class HttpSessionFilter implements Filter {
 		excludePatterns = str.split("\\s*,\\s*");
 	}
 
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
@@ -78,6 +80,7 @@ public class HttpSessionFilter implements Filter {
 		}
 	}
 
+	@Override
 	public void destroy() {
 
 	}

@@ -64,12 +64,14 @@ public class TextFileIterator<T> implements Iterator<T> {
 		}
 	}
 
+	@Override
 	public boolean hasNext() {
 		if (this.files.size() == 0)
 			return false;
 		return nextline != null || currentIndex < files.size() - 1;
 	}
 
+	@Override
 	public T next() {
 		if (this.files.size() == 0)
 			return null;
@@ -92,6 +94,7 @@ public class TextFileIterator<T> implements Iterator<T> {
 		}
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

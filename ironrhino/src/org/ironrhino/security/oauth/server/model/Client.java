@@ -107,10 +107,12 @@ public class Client extends BaseEntity implements Enableable {
 		this.owner = owner;
 	}
 
+	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}
 
+	@Override
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
@@ -131,6 +133,7 @@ public class Client extends BaseEntity implements Enableable {
 		this.createDate = createDate;
 	}
 
+	@Override
 	public String toString() {
 		return this.name;
 	}
@@ -145,6 +148,7 @@ public class Client extends BaseEntity implements Enableable {
 		return OAUTH_OOB.equals(redirectUri);
 	}
 
+	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Client) {
 			Client that = (Client) other;
@@ -156,6 +160,7 @@ public class Client extends BaseEntity implements Enableable {
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		return id != null ? id.hashCode() : -1;
 	}

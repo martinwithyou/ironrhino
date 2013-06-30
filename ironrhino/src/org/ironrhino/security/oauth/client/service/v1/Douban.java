@@ -36,18 +36,22 @@ public class Douban extends OAuth1Provider {
 		return profileUrl;
 	}
 
+	@Override
 	public String getLogo() {
 		return logo;
 	}
 
+	@Override
 	public String getRequestTokenUrl() {
 		return requestTokenUrl;
 	}
 
+	@Override
 	public String getAuthorizeUrl() {
 		return authorizeUrl;
 	}
 
+	@Override
 	public String getAccessTokenUrl() {
 		return accessTokenUrl;
 	}

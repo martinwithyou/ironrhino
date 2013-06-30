@@ -12,10 +12,12 @@ public class EntityManagerImpl<T extends Persistable<?>> extends
 
 	private ThreadLocal<Class<T>> entityClassHolder = new ThreadLocal<Class<T>>();
 
+	@Override
 	public void setEntityClass(Class<T> clazz) {
 		entityClassHolder.set(clazz);
 	}
 
+	@Override
 	public Class<? extends Persistable<?>> getEntityClass() {
 		return entityClassHolder.get();
 	}

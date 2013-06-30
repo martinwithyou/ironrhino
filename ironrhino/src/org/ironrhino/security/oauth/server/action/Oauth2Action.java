@@ -192,6 +192,7 @@ public class Oauth2Action extends BaseAction {
 		return denied;
 	}
 
+	@Override
 	public String execute() {
 		return SUCCESS;
 	}

@@ -23,6 +23,7 @@ public class RedisCyclicSequence extends AbstractCyclicSequence {
 
 	private BoundValueOperations<String, String> boundValueOperations;
 
+	@Override
 	public void afterPropertiesSet() {
 		Assert.hasText(getSequenceName());
 		Assert.isTrue(getPaddingLength() > 0);
@@ -32,6 +33,7 @@ public class RedisCyclicSequence extends AbstractCyclicSequence {
 				getPaddingLength(), 0));
 	}
 
+	@Override
 	public String nextStringValue() {
 		long value = boundValueOperations.increment(1);
 		final String stringValue = String.valueOf(value);
@@ -58,6 +60,7 @@ public class RedisCyclicSequence extends AbstractCyclicSequence {
 		final String restart = getStringValue(new Date(), getPaddingLength(), 1);
 		boolean success = stringRedisTemplate
 				.execute(new SessionCallback<Boolean>() {
+					@Override
 					@SuppressWarnings({ "unchecked", "rawtypes" })
 					public Boolean execute(RedisOperations operations) {
 						operations.watch(Collections

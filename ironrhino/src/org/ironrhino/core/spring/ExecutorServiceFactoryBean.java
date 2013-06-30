@@ -17,22 +17,27 @@ public class ExecutorServiceFactoryBean implements
 
 	private ExecutorService executorService;
 
+	@Override
 	public void afterPropertiesSet() {
 		executorService = Executors.newCachedThreadPool();
 	}
 
+	@Override
 	public void destroy() {
 		executorService.shutdown();
 	}
 
+	@Override
 	public ExecutorService getObject() throws Exception {
 		return executorService;
 	}
 
+	@Override
 	public Class<? extends ExecutorService> getObjectType() {
 		return ExecutorService.class;
 	}
 
+	@Override
 	public boolean isSingleton() {
 		return true;
 	}

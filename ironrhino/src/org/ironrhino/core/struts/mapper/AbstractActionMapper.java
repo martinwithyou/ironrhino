@@ -21,6 +21,7 @@ public abstract class AbstractActionMapper implements ActionMapper {
 		return uri;
 	}
 
+	@Override
 	public ActionMapping getMappingFromActionName(String actionName) {
 		ActionMapping mapping = new ActionMapping();
 		mapping.setName(actionName);

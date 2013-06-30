@@ -86,6 +86,7 @@ public class RecordAspect implements Ordered {
 		}
 	}
 
+	@Override
 	public int getOrder() {
 		return order;
 	}

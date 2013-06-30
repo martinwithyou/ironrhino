@@ -127,6 +127,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		return packages;
 	}
 
+	@Override
 	public void init(Configuration configuration) throws ConfigurationException {
 		this.configuration = configuration;
 		ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
@@ -163,6 +164,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		}
 	}
 
+	@Override
 	public void loadPackages() throws ConfigurationException {
 		Map<String, Set<String>> packages = configPackages();
 		if (packages.size() == 0)
@@ -325,6 +327,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		return pkgConfig;
 	}
 
+	@Override
 	public boolean needsReload() {
 		return !initialized;
 	}

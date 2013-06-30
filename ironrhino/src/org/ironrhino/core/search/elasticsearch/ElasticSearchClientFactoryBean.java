@@ -38,6 +38,7 @@ public class ElasticSearchClientFactoryBean implements FactoryBean<Client>,
 		this.connectString = connectString;
 	}
 
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (StringUtils.isBlank(connectString)) {
 			Map<String, String> map = new HashMap<String, String>();
@@ -60,18 +61,22 @@ public class ElasticSearchClientFactoryBean implements FactoryBean<Client>,
 		}
 	}
 
+	@Override
 	public void destroy() throws Exception {
 		client.close();
 	}
 
+	@Override
 	public Client getObject() throws Exception {
 		return client;
 	}
 
+	@Override
 	public Class<? extends Client> getObjectType() {
 		return Client.class;
 	}
 
+	@Override
 	public boolean isSingleton() {
 		return true;
 	}

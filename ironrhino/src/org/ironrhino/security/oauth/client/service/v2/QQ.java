@@ -59,6 +59,7 @@ public class QQ extends OAuth2Provider {
 		return false;
 	}
 
+	@Override
 	protected String getAccessTokenParameterName() {
 		return "access_token";
 	}

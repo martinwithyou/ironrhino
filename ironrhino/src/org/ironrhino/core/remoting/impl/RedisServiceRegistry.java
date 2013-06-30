@@ -43,6 +43,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 
 	private boolean ready;
 
+	@Override
 	protected void onReady() {
 		Set<String> services = getExportServices().keySet();
 		if (!services.isEmpty()) {
@@ -54,6 +55,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 		ready = true;
 	}
 
+	@Override
 	public String discover(String serviceName) {
 		List<String> hosts = getImportServices().get(serviceName);
 		if (hosts == null || hosts.size() == 0)
@@ -61,6 +63,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 		return super.discover(serviceName);
 	}
 
+	@Override
 	protected void lookup(String serviceName) {
 		List<String> list = stringRedisTemplate.opsForList().range(
 				NAMESPACE + serviceName, 0, -1);
@@ -68,11 +71,13 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 			importServices.put(serviceName, list);
 	}
 
+	@Override
 	protected void doRegister(String serviceName, String host) {
 		stringRedisTemplate.opsForList().rightPush(NAMESPACE + serviceName,
 				host);
 	}
 
+	@Override
 	protected void doUnregister(String serviceName, String host) {
 		stringRedisTemplate.opsForList().remove(NAMESPACE + serviceName, 0,
 				host);
@@ -94,6 +99,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 			s += ":" + AppInfo.getHttpPort();
 		final String host = s;
 		Runnable task = new Runnable() {
+			@Override
 			public void run() {
 				stringRedisTemplate.opsForHash().putAll(NAMESPACE + host,
 						discoveredServices);

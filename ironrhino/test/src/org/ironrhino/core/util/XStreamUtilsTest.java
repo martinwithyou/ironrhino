@@ -99,14 +99,17 @@ public class XStreamUtilsTest {
 			this.last = last;
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			return EqualsBuilder.reflectionEquals(this, o, false);
 		}
 
+		@Override
 		public int hashCode() {
 			return HashCodeBuilder.reflectionHashCode(this, false);
 		}
 
+		@Override
 		public String toString() {
 			return ToStringBuilder.reflectionToString(this);
 		}

@@ -30,11 +30,13 @@ public class SecurityContextSessionCompressor implements
 	@Inject
 	private UserDetailsService userDetailsService;
 
+	@Override
 	public boolean supportsKey(String key) {
 		return HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY
 				.equals(key);
 	}
 
+	@Override
 	public String compress(SecurityContext sc) {
 		if (sc != null) {
 			Authentication auth = sc.getAuthentication();
@@ -52,6 +54,7 @@ public class SecurityContextSessionCompressor implements
 		return null;
 	}
 
+	@Override
 	public SecurityContext uncompress(String string) {
 		SecurityContext sc = SecurityContextHolder.getContext();
 		if (StringUtils.isNotBlank(string))

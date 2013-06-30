@@ -76,6 +76,7 @@ public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
 		return sb.toString();
 	}
 
+	@Override
 	public void publish(final T message, Scope scope) {
 		if (scope == null || scope == Scope.LOCAL) {
 			Runnable task = new Runnable() {

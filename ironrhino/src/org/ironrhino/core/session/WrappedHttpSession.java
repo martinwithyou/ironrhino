@@ -142,37 +142,45 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		this.attrMap = attrMap;
 	}
 
+	@Override
 	public String getId() {
 		return id;
 	}
 
+	@Override
 	public void setAttribute(String key, Object object) {
 		attrMap.put(key, object);
 		dirty = true;
 	}
 
+	@Override
 	public Object getAttribute(String key) {
 		return attrMap.get(key);
 	}
 
+	@Override
 	public void removeAttribute(String key) {
 		attrMap.remove(key);
 		dirty = true;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Enumeration<String> getAttributeNames() {
 		return new IteratorEnumeration(attrMap.keySet().iterator());
 	}
 
+	@Override
 	public long getCreationTime() {
 		return this.creationTime;
 	}
 
+	@Override
 	public void invalidate() {
 		httpSessionManager.invalidate(this);
 	}
 
+	@Override
 	public boolean isNew() {
 		return isnew;
 	}
@@ -181,18 +189,22 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		this.isnew = isnew;
 	}
 
+	@Override
 	public long getLastAccessedTime() {
 		return lastAccessedTime;
 	}
 
+	@Override
 	public ServletContext getServletContext() {
 		return context;
 	}
 
+	@Override
 	public void setMaxInactiveInterval(int arg0) {
 		maxInactiveInterval = arg0;
 	}
 
+	@Override
 	public int getMaxInactiveInterval() {
 		return maxInactiveInterval;
 	}
@@ -288,6 +300,7 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 		return sb.toString();
 	}
 
+	@Override
 	@Deprecated
 	public String[] getValueNames() {
 		List<String> names = new ArrayList<String>();
@@ -296,24 +309,28 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 			names.add(e.nextElement());
 		}
 
-		return (String[]) names.toArray(new String[names.size()]);
+		return names.toArray(new String[names.size()]);
 	}
 
+	@Override
 	@Deprecated
 	public Object getValue(String key) {
 		return getAttribute(key);
 	}
 
+	@Override
 	@Deprecated
 	public void removeValue(String key) {
 		removeAttribute(key);
 	}
 
+	@Override
 	@Deprecated
 	public void putValue(String key, Object object) {
 		setAttribute(key, object);
 	}
 
+	@Override
 	@Deprecated
 	public javax.servlet.http.HttpSessionContext getSessionContext() {
 		throw new UnsupportedOperationException(

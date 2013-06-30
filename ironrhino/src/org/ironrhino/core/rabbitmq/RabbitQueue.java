@@ -50,6 +50,7 @@ public abstract class RabbitQueue<T extends Serializable> implements Queue<T> {
 				queueName, durable, false, false));
 	}
 
+	@Override
 	public void produce(T message) {
 		amqpTemplate.convertAndSend(getQueueName(), "", message);
 	}

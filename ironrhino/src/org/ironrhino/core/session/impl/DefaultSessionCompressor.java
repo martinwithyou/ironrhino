@@ -8,10 +8,12 @@ public class DefaultSessionCompressor implements SessionCompressor<Object> {
 
 	private static final String SEPERATOR = "@";
 
+	@Override
 	public boolean supportsKey(String key) {
 		return false;
 	}
 
+	@Override
 	public String compress(Object value) throws Exception {
 		if (value == null)
 			return null;
@@ -19,6 +21,7 @@ public class DefaultSessionCompressor implements SessionCompressor<Object> {
 
 	}
 
+	@Override
 	public Object uncompress(String string) throws Exception {
 		if (StringUtils.isBlank(string))
 			return null;

@@ -63,6 +63,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 		this.deadFailureThreshold = deadFailureThreshold;
 	}
 
+	@Override
 	public void setBeanName(String beanName) {
 		this.groupName = beanName;
 	}
@@ -110,6 +111,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 			writeSlaves.put(masterName, master);
 			writeRoundRobin = new RoundRobin<String>(writeSlaveNames,
 					new RoundRobin.UsableChecker<String>() {
+						@Override
 						public boolean isUsable(String target) {
 							DataSource ds = writeSlaves.get(target);
 							return !deadDataSources.contains(ds);
@@ -121,6 +123,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 				readSlaves.put(name, (DataSource) beanFactory.getBean(name));
 			readRoundRobin = new RoundRobin<String>(readSlaveNames,
 					new RoundRobin.UsableChecker<String>() {
+						@Override
 						public boolean isUsable(String target) {
 							DataSource ds = readSlaves.get(target);
 							return !deadDataSources.contains(ds);
@@ -129,6 +132,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 		}
 	}
 
+	@Override
 	public Connection getConnection(String username, String password)
 			throws SQLException {
 		return getConnection(username, password, maxRetryTimes);
@@ -181,6 +185,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 		}
 	}
 
+	@Override
 	public Connection getConnection() throws SQLException {
 		return getConnection(null, null);
 	}

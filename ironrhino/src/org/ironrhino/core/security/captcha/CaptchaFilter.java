@@ -30,9 +30,11 @@ public class CaptchaFilter implements Filter {
 		this.imageCaptchaUrl = imageCaptchaUrl;
 	}
 
+	@Override
 	public void destroy() {
 	}
 
+	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
@@ -47,14 +49,15 @@ public class CaptchaFilter implements Filter {
 			String challenge = captchaManager.getChallenge(request, token);
 			ImageIO.write(
 					new ImageCaptcha(challenge, captchaManager
-							.fuzzifyChallenge(challenge)).getImage(), "JPEG", response
-							.getOutputStream());
+							.fuzzifyChallenge(challenge)).getImage(), "JPEG",
+					response.getOutputStream());
 			response.getOutputStream().close();
 			return;
 		}
 		chain.doFilter(req, resp);
 	}
 
+	@Override
 	public void init(FilterConfig config) throws ServletException {
 
 	}

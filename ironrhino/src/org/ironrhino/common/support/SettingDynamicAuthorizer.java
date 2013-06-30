@@ -15,6 +15,7 @@ public class SettingDynamicAuthorizer implements DynamicAuthorizer {
 	@Inject
 	protected SettingControl settingControl;
 
+	@Override
 	public boolean authorize(UserDetails user, String resource) {
 		String ifAnyGranted = settingControl.getStringValue("resource:"
 				+ resource);

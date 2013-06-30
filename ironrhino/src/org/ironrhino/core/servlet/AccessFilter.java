@@ -86,10 +86,12 @@ public class AccessFilter implements Filter {
 		handlers = ctx.getBeansOfType(AccessHandler.class).values();
 	}
 
+	@Override
 	public void init(FilterConfig filterConfig) {
 		_init();
 	}
 
+	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp,
 			FilterChain chain) throws IOException, ServletException {
 
@@ -166,6 +168,7 @@ public class AccessFilter implements Filter {
 		MDC.clear();
 	}
 
+	@Override
 	public void destroy() {
 
 	}

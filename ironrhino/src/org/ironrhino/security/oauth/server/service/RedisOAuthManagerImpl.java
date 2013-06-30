@@ -47,6 +47,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		this.expireTime = expireTime;
 	}
 
+	@Override
 	public long getExpireTime() {
 		return expireTime;
 	}
@@ -57,6 +58,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		this.clientRedisTemplate = redisTemplate;
 	}
 
+	@Override
 	public Authorization generate(Client client, String redirectUri,
 			String scope, String responseType) {
 		if (!client.supportsRedirectUri(redirectUri))
@@ -74,6 +76,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public Authorization reuse(Authorization auth) {
 		auth.setCode(CodecUtils.nextId());
 		auth.setModifyDate(new Date());
@@ -87,6 +90,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public Authorization grant(String authorizationId, User grantor) {
 		String key = NAMESPACE_AUTHORIZATION + authorizationId;
 		Authorization auth = authorizationRedisTemplate.opsForValue().get(key);
@@ -117,11 +121,13 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public void deny(String authorizationId) {
 		authorizationRedisTemplate.delete(NAMESPACE_AUTHORIZATION
 				+ authorizationId);
 	}
 
+	@Override
 	public Authorization authenticate(String code, Client client) {
 		String key = NAMESPACE_AUTHORIZATION + code;
 		Authorization auth = authorizationRedisTemplate.opsForValue().get(key);
@@ -152,6 +158,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public Authorization retrieve(String accessToken) {
 		String key = NAMESPACE_AUTHORIZATION + accessToken;
 		Authorization auth = authorizationRedisTemplate.opsForValue().get(key);
@@ -162,6 +169,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public Authorization refresh(String refreshToken) {
 		String keyRefreshToken = NAMESPACE_AUTHORIZATION + refreshToken;
 		Authorization auth = authorizationRedisTemplate.opsForValue().get(
@@ -180,6 +188,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public void revoke(String accessToken) {
 		String key = NAMESPACE_AUTHORIZATION + accessToken;
 		Authorization auth = authorizationRedisTemplate.opsForValue().get(key);
@@ -191,6 +200,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 						+ auth.getGrantor().getUsername(), 0, accessToken);
 	}
 
+	@Override
 	public void create(Authorization auth) {
 		authorizationRedisTemplate.opsForValue().set(
 				NAMESPACE_AUTHORIZATION + auth.getAccessToken(), auth,
@@ -201,6 +211,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 				auth.getAccessToken());
 	}
 
+	@Override
 	public List<Authorization> findAuthorizationsByGrantor(User grantor) {
 		String keyForList = NAMESPACE_AUTHORIZATION_GRANTOR
 				+ grantor.getUsername();
@@ -214,9 +225,11 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 		return authorizationRedisTemplate.opsForValue().multiGet(keys);
 	}
 
+	@Override
 	public void removeExpired() {
 	}
 
+	@Override
 	public void saveClient(Client client) {
 		if (client.isNew())
 			client.setId(CodecUtils.nextId());
@@ -228,6 +241,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 					client.getId());
 	}
 
+	@Override
 	public void deleteClient(Client client) {
 		if (client.isNew())
 			return;
@@ -239,12 +253,14 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 					client.getId());
 	}
 
+	@Override
 	public Client findClientById(String clientId) {
 		String key = NAMESPACE_CLIENT + clientId;
 		Client c = clientRedisTemplate.opsForValue().get(key);
 		return c != null && c.isEnabled() ? c : null;
 	}
 
+	@Override
 	public List<Client> findClientByOwner(User owner) {
 		String keyForSet = NAMESPACE_CLIENT_OWNER + owner.getUsername();
 		Set<String> ids = stringRedisTemplate.opsForSet().members(keyForSet);
@@ -255,6 +271,7 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 			keys.add(NAMESPACE_CLIENT + id);
 		List<Client> list = clientRedisTemplate.opsForValue().multiGet(keys);
 		Collections.sort(list, new Comparator<Client>() {
+			@Override
 			public int compare(Client o1, Client o2) {
 				return o1.getCreateDate().compareTo(o2.getCreateDate());
 			}

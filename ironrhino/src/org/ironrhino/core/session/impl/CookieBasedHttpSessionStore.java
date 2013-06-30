@@ -39,6 +39,7 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 		this.sessionCookieName = sessionCookieName;
 	}
 
+	@Override
 	public void initialize(WrappedHttpSession session) {
 		String cookie = getCookie(session);
 		if (StringUtils.isNotBlank(cookie)) {
@@ -54,6 +55,7 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 		}
 	}
 
+	@Override
 	public void save(WrappedHttpSession session) {
 		if (!session.isDirty())
 			return;
@@ -67,6 +69,7 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 			clearCookie(session);
 	}
 
+	@Override
 	public void invalidate(WrappedHttpSession session) {
 		clearCookie(session);
 	}

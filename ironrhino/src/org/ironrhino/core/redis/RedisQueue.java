@@ -39,6 +39,7 @@ public abstract class RedisQueue<T extends Serializable> implements
 
 	}
 
+	@Override
 	public void produce(T message) {
 		queue.add(message);
 	}

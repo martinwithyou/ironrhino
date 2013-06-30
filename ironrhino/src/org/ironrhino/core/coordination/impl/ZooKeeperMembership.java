@@ -75,6 +75,7 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 
 	}
 
+	@Override
 	public void join(final String group) {
 		if (zooKeeper == null)
 			return;
@@ -90,6 +91,7 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 			task.run();
 	}
 
+	@Override
 	public void leave(final String group) {
 		if (zooKeeper == null)
 			return;
@@ -105,10 +107,12 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 			task.run();
 	}
 
+	@Override
 	public boolean isLeader(String group) {
 		return AppInfo.getInstanceId().equals(getLeader(group));
 	}
 
+	@Override
 	public String getLeader(String group) {
 		List<String> members = getMembers(group);
 		if (members == null || members.isEmpty())
@@ -117,6 +121,7 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 			return members.get(0);
 	}
 
+	@Override
 	public List<String> getMembers(String group) {
 		if (zooKeeper == null)
 			return Arrays.asList(AppInfo.getInstanceId());
@@ -176,6 +181,7 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 		}
 	}
 
+	@Override
 	public boolean supports(String path) {
 		if (path != null && path.startsWith(zooKeeperPath)) {
 			String group = path.substring(zooKeeperPath.length() + 1);
@@ -184,11 +190,13 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 		return false;
 	}
 
+	@Override
 	public void onNodeChildrenChanged(String path, List<String> children) {
 		String group = path.substring(zooKeeperPath.length() + 1);
 		groups.put(group, children);
 	}
 
+	@Override
 	public void onNodeCreated(String path) {
 		path = path.substring(zooKeeperPath.length() + 1);
 		String[] array = path.split("/");
@@ -205,6 +213,7 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 		}
 	}
 
+	@Override
 	public void onNodeDeleted(String path) {
 		path = path.substring(zooKeeperPath.length() + 1);
 		String[] array = path.split("/");
@@ -217,6 +226,7 @@ public class ZooKeeperMembership implements Membership, WatchedEventListener {
 		}
 	}
 
+	@Override
 	public void onNodeDataChanged(String path, byte[] data) {
 
 	}

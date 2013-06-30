@@ -179,6 +179,7 @@ public class UploadAction extends BaseAction {
 		return list();
 	}
 
+	@Override
 	public String list() {
 		if (folder == null) {
 			folder = getUid();
@@ -206,11 +207,13 @@ public class UploadAction extends BaseAction {
 				: LIST;
 	}
 
+	@Override
 	public String pick() {
 		list();
 		return "pick";
 	}
 
+	@Override
 	public String delete() {
 		String[] paths = getId();
 		if (paths != null) {

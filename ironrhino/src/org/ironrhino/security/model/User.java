@@ -112,10 +112,12 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@Transient
 	private Map<Class<? extends Persistable<?>>, Persistable<?>> extras;
 
+	@Override
 	public Collection<GrantedAuthority> getAuthorities() {
 		return authorities;
 	}
 
+	@Override
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -128,6 +130,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		return email;
 	}
 
+	@Override
 	public Date getModifyDate() {
 		return modifyDate;
 	}
@@ -140,6 +143,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		return name;
 	}
 
+	@Override
 	public String getPassword() {
 		return password;
 	}
@@ -162,25 +166,30 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		return null;
 	}
 
+	@Override
 	public String getUsername() {
 		return username;
 	}
 
+	@Override
 	@NotInJson
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	@Override
 	@NotInJson
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	@Override
 	@NotInJson
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
+	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -193,6 +202,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		this.authorities = authorities;
 	}
 
+	@Override
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
@@ -201,6 +211,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		this.createUser = createUser;
 	}
 
+	@Override
 	public void setCreateUserDetails(User createUser) {
 		if (createUser != null)
 			this.createUser = createUser.getUsername();
@@ -217,6 +228,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		this.email = email;
 	}
 
+	@Override
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
@@ -225,6 +237,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		this.password = AuthzUtils.encodePassword(this, legiblePassword);
 	}
 
+	@Override
 	public void setModifyDate(Date modifyDate) {
 		this.modifyDate = modifyDate;
 	}
@@ -233,6 +246,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		this.modifyUser = modifyUser;
 	}
 
+	@Override
 	public void setModifyUserDetails(User modifyUser) {
 		if (modifyUser != null)
 			this.modifyUser = modifyUser.getUsername();

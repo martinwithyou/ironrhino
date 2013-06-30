@@ -22,6 +22,7 @@ import org.ironrhino.common.action.SeriesPageAction;
 import org.ironrhino.common.model.Setting;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.struts.mapper.AbstractActionMapper;
 import org.ironrhino.core.struts.mapper.ActionMappingMatcher;
 import org.ironrhino.core.struts.mapper.DefaultActionMapper;
 import org.ironrhino.core.util.RequestUtils;
@@ -64,6 +65,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 		buildIssues();
 	}
 
+	@Override
 	public ActionMapping tryMatch(HttpServletRequest request,
 			DefaultActionMapper actionMapper) {
 		String uri = RequestUtils.getRequestUri(request);
@@ -75,7 +77,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			mapping.setName(DisplayPageAction.ACTION_NAME);
 			Map<String, Object> params = new HashMap<String, Object>(3);
 			try {
-				params.put(DefaultActionMapper.ID,
+				params.put(AbstractActionMapper.ID,
 						URLDecoder.decode(pagePath, encoding));
 				mapping.setParams(params);
 			} catch (UnsupportedEncodingException e) {
@@ -100,7 +102,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				if (StringUtils.isNumeric(ps))
 					params.put("resultPage.pageSize", ps);
 				if (uri.startsWith(pageurl)) {
-					params.put(DefaultActionMapper.ID,
+					params.put(AbstractActionMapper.ID,
 							uri.substring(pageurl.length()));
 				}
 				mapping.setParams(params);
@@ -129,7 +131,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				if (uri.startsWith(listurl)) {
 					mapping.setMethod("list");
 					try {
-						params.put(DefaultActionMapper.ID, URLDecoder.decode(
+						params.put(AbstractActionMapper.ID, URLDecoder.decode(
 								uri.substring(listurl.length()), encoding));
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
@@ -137,7 +139,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				} else if (uri.startsWith(pageurl)) {
 					mapping.setMethod("p");
 					try {
-						params.put(DefaultActionMapper.ID, URLDecoder.decode(
+						params.put(AbstractActionMapper.ID, URLDecoder.decode(
 								uri.substring(pageurl.length()), encoding));
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
@@ -169,7 +171,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				if (uri.startsWith(listurl)) {
 					mapping.setMethod("list");
 					try {
-						params.put(DefaultActionMapper.ID, URLDecoder.decode(
+						params.put(AbstractActionMapper.ID, URLDecoder.decode(
 								uri.substring(listurl.length()), encoding));
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
@@ -177,7 +179,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				} else if (uri.startsWith(pageurl)) {
 					mapping.setMethod("p");
 					try {
-						params.put(DefaultActionMapper.ID, URLDecoder.decode(
+						params.put(AbstractActionMapper.ID, URLDecoder.decode(
 								uri.substring(pageurl.length()), encoding));
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
@@ -226,6 +228,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 		issuesList = list;
 	}
 
+	@Override
 	public void onApplicationEvent(EntityOperationEvent event) {
 		if (event.getEntity() instanceof Setting) {
 			Setting settingInEvent = (Setting) event.getEntity();

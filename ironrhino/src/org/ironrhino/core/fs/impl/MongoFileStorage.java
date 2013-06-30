@@ -49,6 +49,7 @@ public class MongoFileStorage implements FileStorage {
 			mongoTemplate.createCollection(File.class);
 	}
 
+	@Override
 	public void write(InputStream is, String path) throws IOException {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
@@ -91,6 +92,7 @@ public class MongoFileStorage implements FileStorage {
 		mongoTemplate.save(file);
 	}
 
+	@Override
 	public InputStream open(String path) throws IOException {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
@@ -103,6 +105,7 @@ public class MongoFileStorage implements FileStorage {
 		return new ByteArrayInputStream(file.getData());
 	}
 
+	@Override
 	public boolean mkdir(String path) {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
@@ -137,6 +140,7 @@ public class MongoFileStorage implements FileStorage {
 		return true;
 	}
 
+	@Override
 	public boolean delete(String path) {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
@@ -157,6 +161,7 @@ public class MongoFileStorage implements FileStorage {
 		return true;
 	}
 
+	@Override
 	public long getLastModified(String path) {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
@@ -165,6 +170,7 @@ public class MongoFileStorage implements FileStorage {
 		return file != null ? file.getLastModified() : -1;
 	}
 
+	@Override
 	public boolean exists(String path) {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
@@ -172,6 +178,7 @@ public class MongoFileStorage implements FileStorage {
 		return mongoTemplate.findById(path, File.class) != null;
 	}
 
+	@Override
 	public boolean rename(String fromPath, String toPath) {
 		fromPath = Files.simplifyPath(fromPath);
 		toPath = Files.simplifyPath(toPath);
@@ -196,6 +203,7 @@ public class MongoFileStorage implements FileStorage {
 		return true;
 	}
 
+	@Override
 	public boolean isDirectory(String path) {
 		path = Files.simplifyPath(path);
 		if (path.equals("/"))
@@ -204,6 +212,7 @@ public class MongoFileStorage implements FileStorage {
 		return file != null && file.isDirectory();
 	}
 
+	@Override
 	public List<String> listFiles(String path) {
 		path = Files.simplifyPath(path);
 		File file = mongoTemplate.findById(path, File.class);
@@ -224,6 +233,7 @@ public class MongoFileStorage implements FileStorage {
 		return list;
 	}
 
+	@Override
 	public Map<String, Boolean> listFilesAndDirectory(String path) {
 		path = Files.simplifyPath(path);
 		final Map<String, Boolean> map = new HashMap<String, Boolean>();

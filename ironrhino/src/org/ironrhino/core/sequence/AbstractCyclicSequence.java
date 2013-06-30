@@ -14,6 +14,7 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 
 	private int paddingLength = 5;
 
+	@Override
 	public CycleType getCycleType() {
 		return cycleType;
 	}

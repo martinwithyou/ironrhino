@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 
 import com.opensymphony.xwork2.ActionInvocation;
@@ -45,13 +45,14 @@ public class DynamicReportsResult extends StrutsResultSupport {
 		this.jasperReportBuilder = jasperReportBuilder;
 	}
 
+	@Override
 	protected void doExecute(String finalLocation, ActionInvocation invocation)
 			throws Exception {
 		initializeProperties(invocation);
 		HttpServletRequest request = (HttpServletRequest) invocation
-				.getInvocationContext().get(ServletActionContext.HTTP_REQUEST);
+				.getInvocationContext().get(StrutsStatics.HTTP_REQUEST);
 		HttpServletResponse response = (HttpServletResponse) invocation
-				.getInvocationContext().get(ServletActionContext.HTTP_RESPONSE);
+				.getInvocationContext().get(StrutsStatics.HTTP_RESPONSE);
 
 		// Handle IE special case: it sends a "contype" request first.
 		if ("contype".equals(request.getHeader("User-Agent"))) {

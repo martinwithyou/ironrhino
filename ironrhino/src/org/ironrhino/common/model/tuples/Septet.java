@@ -94,14 +94,17 @@ public class Septet<A, B, C, D, E, F, G> implements Serializable {
 		this.g = g;
 	}
 
+	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this, false);
 	}
 
+	@Override
 	public boolean equals(Object that) {
 		return EqualsBuilder.reflectionEquals(this, that, false);
 	}
 
+	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}

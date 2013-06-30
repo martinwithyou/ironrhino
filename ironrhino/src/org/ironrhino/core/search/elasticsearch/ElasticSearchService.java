@@ -47,10 +47,12 @@ public class ElasticSearchService<T> implements SearchService<T> {
 				.prepareSearch(new String[] { indexManager.getIndexName() });
 	}
 
+	@Override
 	public ResultPage<T> search(ResultPage resultPage) {
 		return search(resultPage, null);
 	}
 
+	@Override
 	public ResultPage<T> search(ResultPage resultPage, Mapper mapper) {
 		ElasticSearchCriteria criteria = (ElasticSearchCriteria) resultPage
 				.getCriteria();
@@ -79,14 +81,17 @@ public class ElasticSearchService<T> implements SearchService<T> {
 		return resultPage;
 	}
 
+	@Override
 	public List<T> search(SearchCriteria searchCriteria) {
 		return search(searchCriteria, null);
 	}
 
+	@Override
 	public List<T> search(SearchCriteria searchCriteria, Mapper mapper) {
 		return search(searchCriteria, mapper, -1);
 	}
 
+	@Override
 	public List<T> search(SearchCriteria searchCriteria, Mapper mapper,
 			int limit) {
 		ElasticSearchCriteria criteria = (ElasticSearchCriteria) searchCriteria;
@@ -115,6 +120,7 @@ public class ElasticSearchService<T> implements SearchService<T> {
 		return list;
 	}
 
+	@Override
 	public Map<String, Integer> countTermsByField(
 			SearchCriteria searchCriteria, String field) {
 		ElasticSearchCriteria criteria = (ElasticSearchCriteria) searchCriteria;

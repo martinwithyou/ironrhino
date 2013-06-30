@@ -23,6 +23,7 @@ public class BaseAspect implements Ordered {
 		return AopContext.isBypass(this.getClass());
 	}
 
+	@Override
 	public int getOrder() {
 		return order;
 	}

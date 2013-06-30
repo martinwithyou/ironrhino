@@ -101,6 +101,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 		this.head = head;
 	}
 
+	@Override
 	public int getDisplayOrder() {
 		return displayOrder;
 	}
@@ -149,18 +150,22 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 		this.draftDate = draftDate;
 	}
 
+	@Override
 	public Date getCreateDate() {
 		return createDate;
 	}
 
+	@Override
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
 
+	@Override
 	public Date getModifyDate() {
 		return modifyDate;
 	}
 
+	@Override
 	public void setModifyDate(Date modifyDate) {
 		this.modifyDate = modifyDate;
 	}
@@ -272,6 +277,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	}
 
+	@Override
 	public int compareTo(Object object) {
 		if (!(object instanceof Ordered))
 			return 0;
@@ -281,6 +287,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 		return this.toString().compareTo(ordered.toString());
 	}
 
+	@Override
 	public String toString() {
 		return this.pagepath;
 	}

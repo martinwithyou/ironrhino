@@ -43,6 +43,7 @@ public class CumulativeAnalyzer extends
 		super(iterator);
 	}
 
+	@Override
 	public Map<String, List<TreeNode>> getResult() {
 		return result;
 	}
@@ -87,6 +88,7 @@ public class CumulativeAnalyzer extends
 			// sort children,set and cumulate to parent
 			for (TreeNode topNode : topTreeNodes) {
 				TreeWalker.walk(topNode, new TreeWalker.Visitor() {
+					@Override
 					public void visit(TreeNode node) {
 						if (!node.isLeaf()) {
 							Value v = node.getValue();
@@ -97,6 +99,7 @@ public class CumulativeAnalyzer extends
 							List<TreeNode> children = node.getChildren();
 							Collections.sort(children,
 									new Comparator<TreeNode>() {
+										@Override
 										public int compare(TreeNode o1,
 												TreeNode o2) {
 											return o1.getKey().compareTo(
@@ -115,6 +118,7 @@ public class CumulativeAnalyzer extends
 			// set Id and caculate percent
 			final CumulativeAnalyzer ca = this;
 			TreeWalker.Visitor vistor = new TreeWalker.Visitor() {
+				@Override
 				public void visit(TreeNode node) {
 					node.setId(ca.generateId());
 					if (node.isLeaf())

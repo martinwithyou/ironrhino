@@ -65,12 +65,14 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		super.save(user);
 	}
 
+	@Override
 	@Transactional
 	@EvictCache(namespace = "user", key = "${key = [];foreach (user : retval) { key.add(user.username); key.add(user.email);} return key;}")
 	public List<User> delete(Serializable... id) {
 		return super.delete(id);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	@CheckCache(namespace = "user", key = "${username}")
 	public UserDetails loadUserByUsername(String username) {
@@ -107,6 +109,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		user.setAuthorities(auths);
 	}
 
+	@Override
 	public String suggestUsername(String candidate) {
 		if (candidate.indexOf("://") > 0) {
 			try {

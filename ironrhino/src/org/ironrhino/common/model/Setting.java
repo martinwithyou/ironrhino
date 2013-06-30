@@ -93,18 +93,22 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 		this.description = description;
 	}
 
+	@Override
 	public Date getCreateDate() {
 		return createDate;
 	}
 
+	@Override
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
 
+	@Override
 	public Date getModifyDate() {
 		return modifyDate;
 	}
 
+	@Override
 	public void setModifyDate(Date modifyDate) {
 		this.modifyDate = modifyDate;
 	}
@@ -125,11 +129,13 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 		this.modifyUser = modifyUser;
 	}
 
+	@Override
 	public void setCreateUserDetails(UserDetails user) {
 		if (user != null)
 			createUser = user.getUsername();
 	}
 
+	@Override
 	public void setModifyUserDetails(UserDetails user) {
 		if (user != null)
 			modifyUser = user.getUsername();

@@ -18,6 +18,7 @@ public class OAuth1Token extends OAuthToken {
 		super(source);
 	}
 
+	@Override
 	public void setSource(String source) {
 		super.setSource(source);
 		if (StringUtils.isBlank(source))

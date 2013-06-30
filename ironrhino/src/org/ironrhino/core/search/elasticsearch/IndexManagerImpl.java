@@ -75,6 +75,7 @@ public class IndexManagerImpl implements IndexManager {
 
 	private ObjectMapper objectMapper;
 
+	@Override
 	public String getIndexName() {
 		return indexName;
 	}
@@ -93,6 +94,7 @@ public class IndexManagerImpl implements IndexManager {
 
 					private static final long serialVersionUID = -2795053276465297328L;
 
+					@Override
 					protected boolean _isIgnorable(Annotated a) {
 						if (a instanceof SearchableId
 								|| a instanceof SearchableProperty
@@ -487,11 +489,13 @@ public class IndexManagerImpl implements IndexManager {
 		return typeClassMapping.get(type);
 	}
 
+	@Override
 	public Object searchHitToEntity(SearchHit sh) throws Exception {
 		return objectMapper.readValue(sh.sourceAsString(),
 				typeToClass(sh.getType()));
 	}
 
+	@Override
 	public ListenableActionFuture<IndexResponse> index(Persistable entity) {
 		return client
 				.prepareIndex(getIndexName(), classToType(entity.getClass()),
@@ -499,6 +503,7 @@ public class IndexManagerImpl implements IndexManager {
 				.setSource(entityToDocument(entity)).execute();
 	}
 
+	@Override
 	public ListenableActionFuture<DeleteResponse> delete(Persistable entity) {
 		return client.prepareDelete(getIndexName(),
 				classToType(entity.getClass()), String.valueOf(entity.getId()))
@@ -533,6 +538,7 @@ public class IndexManagerImpl implements IndexManager {
 		}
 	}
 
+	@Override
 	@Trigger
 	public void rebuild() {
 		IndicesAdminClient adminClient = client.admin().indices();
@@ -551,6 +557,7 @@ public class IndexManagerImpl implements IndexManager {
 		logger.info("rebuild completed");
 	}
 
+	@Override
 	public void indexAll(String type) {
 		Class clz = typeToClass(type);
 		entityManager.setEntityClass(clz);

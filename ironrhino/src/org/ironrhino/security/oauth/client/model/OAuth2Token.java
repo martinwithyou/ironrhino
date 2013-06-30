@@ -23,6 +23,7 @@ public class OAuth2Token extends OAuthToken {
 		super(source);
 	}
 
+	@Override
 	public void setSource(String source) {
 		if (StringUtils.isBlank(source))
 			return;

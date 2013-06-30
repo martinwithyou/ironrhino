@@ -18,6 +18,7 @@ public class DictionaryUserRoleProvider implements UserRoleProvider {
 	@Inject
 	private DictionaryControl dictionaryControl;
 
+	@Override
 	public Map<String, String> getRoles() {
 		return dictionaryControl.getItemsAsMap(DICTIONARY_NAME);
 	}

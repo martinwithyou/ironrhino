@@ -66,6 +66,7 @@ public class ClientAction extends EntityAction<Client> {
 		return "show";
 	}
 
+	@Override
 	@Authorize(ifAllGranted = UserRole.ROLE_BUILTIN_USER)
 	public String disable() {
 		BaseManager<Client> entityManager = getEntityManager(Client.class);

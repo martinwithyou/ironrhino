@@ -250,6 +250,7 @@ public class ConsistentHash<K, V> {
 			return hash64A(key, 0x1234ABCD);
 		}
 
+		@Override
 		public long hash(String key) {
 			try {
 				return hash(key.getBytes("UTF-8"));
@@ -270,6 +271,7 @@ public class ConsistentHash<K, V> {
 			this.node = node;
 		}
 
+		@Override
 		public int compareTo(Point<V> o) {
 			return start.compareTo(o.start);
 		}

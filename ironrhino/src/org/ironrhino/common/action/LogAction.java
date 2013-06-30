@@ -30,8 +30,7 @@ public class LogAction extends BaseAction {
 		File file = new File(AppInfo.getAppHome() + File.separator + "logs",
 				getUid());
 		if (file.exists()) {
-			HttpServletResponse response = (HttpServletResponse) ServletActionContext
-					.getResponse();
+			HttpServletResponse response = ServletActionContext.getResponse();
 			response.addHeader("Content-Disposition", "attachment;filename="
 					+ getUid());
 			response.setContentType("application/octet-stream");

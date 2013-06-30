@@ -22,6 +22,7 @@ public class RefererResult implements Result {
 		this.includeQueryString = includeQueryString;
 	}
 
+	@Override
 	public void execute(ActionInvocation invocation) throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		HttpServletResponse response = ServletActionContext.getResponse();

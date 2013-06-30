@@ -31,6 +31,7 @@ public class MyConfiguration extends Configuration {
 		}
 	}
 
+	@Override
 	public Template getTemplate(String name, Locale locale, String encoding,
 			boolean parse) throws IOException {
 		Template result = null;

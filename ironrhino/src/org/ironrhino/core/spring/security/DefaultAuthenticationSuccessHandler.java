@@ -26,6 +26,7 @@ public class DefaultAuthenticationSuccessHandler implements
 	@Value("${authenticationSuccessHandler.usernameInCookieMaxAge:31536000}")
 	private int usernameInCookieMaxAge;
 
+	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request,
 			HttpServletResponse response, Authentication authentication)
 			throws ServletException, IOException {

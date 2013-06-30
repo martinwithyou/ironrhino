@@ -63,6 +63,7 @@ public class LocalFileStorage implements FileStorage {
 				logger.error("mkdirs error:" + directory.getAbsolutePath());
 	}
 
+	@Override
 	public void write(InputStream is, String path) throws IOException {
 		File dest = new File(directory, path);
 		dest.getParentFile().mkdirs();
@@ -72,26 +73,32 @@ public class LocalFileStorage implements FileStorage {
 		is.close();
 	}
 
+	@Override
 	public InputStream open(String path) throws IOException {
 		return new FileInputStream(new File(directory, path));
 	}
 
+	@Override
 	public boolean mkdir(String path) {
 		return new File(directory, path).mkdirs();
 	}
 
+	@Override
 	public boolean delete(String path) {
 		return new File(directory, path).delete();
 	}
 
+	@Override
 	public long getLastModified(String path) {
 		return new File(directory, path).lastModified();
 	}
 
+	@Override
 	public boolean exists(String path) {
 		return new File(directory, path).exists();
 	}
 
+	@Override
 	public boolean rename(String fromPath, String toPath) {
 		String s1 = fromPath.substring(0, fromPath.lastIndexOf('/'));
 		String s2 = toPath.substring(0, fromPath.lastIndexOf('/'));
@@ -101,10 +108,12 @@ public class LocalFileStorage implements FileStorage {
 				toPath));
 	}
 
+	@Override
 	public boolean isDirectory(String path) {
 		return new File(directory, path).isDirectory();
 	}
 
+	@Override
 	public List<String> listFiles(String path) {
 		final List<String> list = new ArrayList<String>();
 		new File(directory, path).listFiles(new FileFilter() {
@@ -119,6 +128,7 @@ public class LocalFileStorage implements FileStorage {
 		return list;
 	}
 
+	@Override
 	public Map<String, Boolean> listFilesAndDirectory(String path) {
 		final Map<String, Boolean> map = new HashMap<String, Boolean>();
 		new File(directory, path).listFiles(new FileFilter() {

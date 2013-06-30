@@ -120,6 +120,7 @@ public class TreeNode implements Serializable {
 
 	public void calculate() {
 		TreeWalker.Visitor vistor = new TreeWalker.Visitor() {
+			@Override
 			public void visit(TreeNode node) {
 				if (node.isLeaf())
 					return;

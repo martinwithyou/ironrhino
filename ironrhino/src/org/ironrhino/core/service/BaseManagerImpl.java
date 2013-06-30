@@ -78,10 +78,12 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		entityClass = clazz;
 	}
 
+	@Override
 	public Class<? extends Persistable<?>> getEntityClass() {
 		return entityClass;
 	}
 
+	@Override
 	@Transactional
 	public void save(T obj) {
 		ReflectionUtils.processCallback(obj, obj.isNew() ? PrePersist.class
@@ -142,6 +144,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				: PostUpdate.class);
 	}
 
+	@Override
 	@Transactional
 	public void update(T obj) {
 		if (obj.isNew())
@@ -152,6 +155,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		ReflectionUtils.processCallback(obj, PostUpdate.class);
 	}
 
+	@Override
 	@Transactional
 	public void delete(T obj) {
 		checkDelete(obj);
@@ -164,6 +168,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		deleteChecker.check(obj);
 	}
 
+	@Override
 	@Transactional
 	public List<T> delete(Serializable... id) {
 		if (id == null || id.length == 0 || id.length == 1 && id[0] == null)
@@ -212,6 +217,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return list;
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public T get(Serializable id) {
 		if (id == null)
@@ -219,15 +225,18 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return (T) sessionFactory.getCurrentSession().get(getEntityClass(), id);
 	}
 
+	@Override
 	public void evict(T obj) {
 		if (obj != null)
 			sessionFactory.getCurrentSession().evict(obj);
 	}
 
+	@Override
 	public DetachedCriteria detachedCriteria() {
 		return DetachedCriteria.forClass(getEntityClass());
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public long countByCriteria(DetachedCriteria dc) {
 		CriteriaImpl impl = ReflectionUtils.getFieldValue(dc, "impl",
@@ -258,6 +267,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return count;
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public T findByCriteria(DetachedCriteria dc) {
 		Criteria c = dc.getExecutableCriteria(sessionFactory
@@ -267,6 +277,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return (T) c.uniqueResult();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<T> findListByCriteria(DetachedCriteria dc) {
 		try {
@@ -280,6 +291,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		}
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<T> findBetweenListByCriteria(DetachedCriteria dc, int start,
 			int end) {
@@ -302,6 +314,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		}
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<T> findListByCriteria(DetachedCriteria dc, int pageNo,
 			int pageSize) {
@@ -309,6 +322,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 				* pageSize);
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public ResultPage<T> findByResultPage(ResultPage<T> resultPage) {
 		DetachedCriteria detachedCriteria = (DetachedCriteria) resultPage
@@ -346,11 +360,13 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return resultPage;
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public long countAll() {
 		return countByCriteria(detachedCriteria());
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<T> findAll(Order... orders) {
 		Criteria c = sessionFactory.getCurrentSession().createCriteria(
@@ -365,6 +381,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return c.list();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public T findByNaturalId(Serializable... objects) {
 		if (objects == null || objects.length == 0 || objects.length == 1
@@ -398,6 +415,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return (T) naturalIdLoadAccess.load();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public T findOne(Serializable... objects) {
 		if (objects == null || objects.length == 0 || objects.length == 1
@@ -434,6 +452,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return (T) c.uniqueResult();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public T findOne(boolean caseInsensitive, Serializable... objects) {
 		if (!caseInsensitive)
@@ -470,6 +489,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return (T) query.uniqueResult();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public List<T> find(final String queryString, final Object... args) {
 		Query query = sessionFactory.getCurrentSession().createQuery(
@@ -479,6 +499,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return query.list();
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public <TE extends BaseTreeableEntity<TE>> TE loadTree() {
 		if (getEntityClass() == null
@@ -540,6 +561,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			assemble(r, list);
 	}
 
+	@Override
 	@Transactional
 	public int executeUpdate(String queryString, Object... values) {
 		Query queryObject = sessionFactory.getCurrentSession().createQuery(
@@ -552,6 +574,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		return queryObject.executeUpdate();
 	}
 
+	@Override
 	@Transactional
 	public <K> K execute(HibernateCallback<K> callback) {
 		try {
@@ -562,11 +585,13 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		}
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public <K> K executeFind(HibernateCallback<K> callback) {
 		return execute(callback);
 	}
 
+	@Override
 	public void iterate(int fetchSize, IterateCallback callback,
 			DetachedCriteria... dc) {
 		Session hibernateSession = sessionFactory.openSession();

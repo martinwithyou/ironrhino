@@ -69,6 +69,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		this.fullId = fullId;
 	}
 
+	@Override
 	@SearchableId
 	public Long getId() {
 		return id;
@@ -78,11 +79,13 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		this.id = id;
 	}
 
+	@Override
 	@NotInJson
 	public boolean isNew() {
 		return id == null || id == 0;
 	}
 
+	@Override
 	public int getLevel() {
 		return level;
 	}
@@ -121,6 +124,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		return fullname.toString();
 	}
 
+	@Override
 	@NotInJson
 	public int getDisplayOrder() {
 		return displayOrder;
@@ -130,6 +134,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		this.displayOrder = displayOrder;
 	}
 
+	@Override
 	public int compareTo(Object object) {
 		if (!(object instanceof Ordered))
 			return 0;
@@ -139,6 +144,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		return this.toString().compareTo(ordered.toString());
 	}
 
+	@Override
 	@NotInCopy
 	@NotInJson
 	@UiConfig(hidden = true)
@@ -162,6 +168,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 		return this.parent == null;
 	}
 
+	@Override
 	@NotInCopy
 	@NotInJson
 	@UiConfig(hidden = true)

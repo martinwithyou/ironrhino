@@ -28,6 +28,7 @@ public class ErrorMessage extends RuntimeException {
 		this.submessage = submessage;
 	}
 
+	@Override
 	public String getMessage() {
 		return message;
 	}
@@ -52,6 +53,7 @@ public class ErrorMessage extends RuntimeException {
 		this.submessage = submessage;
 	}
 
+	@Override
 	public Throwable fillInStackTrace() {
 		return this;
 	}

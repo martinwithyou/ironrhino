@@ -83,14 +83,17 @@ public class Sextet<A, B, C, D, E, F> implements Serializable {
 		this.f = f;
 	}
 
+	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this, false);
 	}
 
+	@Override
 	public boolean equals(Object that) {
 		return EqualsBuilder.reflectionEquals(this, that, false);
 	}
 
+	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}

@@ -44,6 +44,7 @@ public class JsonUtils {
 
 					private static final long serialVersionUID = 8855888602140931060L;
 
+					@Override
 					protected boolean _isIgnorable(Annotated a) {
 						boolean b = super._isIgnorable(a);
 						if (b)

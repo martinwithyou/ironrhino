@@ -402,6 +402,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			}
 			Map<String, UiConfigImpl> sortedMap = new TreeMap<String, UiConfigImpl>(
 					new Comparator<String>() {
+						@Override
 						public int compare(String o1, String o2) {
 							UiConfigImpl uci1 = map.get(o1);
 							UiConfigImpl uci2 = map.get(o2);
@@ -638,6 +639,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			resultPage.setCriteria(criteria);
 			resultPage = elasticSearchService.search(resultPage,
 					new Mapper<Persistable<?>>() {
+						@Override
 						public Persistable map(Persistable source) {
 							return entityManager.get(source.getId());
 						}
@@ -677,7 +679,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		}
 		if (entity == null)
 			try {
-				entity = (Persistable) getEntityClass().newInstance();
+				entity = getEntityClass().newInstance();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
@@ -879,7 +881,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			}
 			try {
 				Persistable temp = entity;
-				entity = (Persistable) getEntityClass().newInstance();
+				entity = getEntityClass().newInstance();
 				bw = new BeanWrapperImpl(temp);
 				BeanWrapperImpl bwp = new BeanWrapperImpl(entity);
 				Set<String> editedPropertyNames = new HashSet<String>();
@@ -1725,7 +1727,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	private Persistable constructEntity() {
 		Persistable entity = null;
 		try {
-			entity = (Persistable) getEntityClass().newInstance();
+			entity = getEntityClass().newInstance();
 			ValueStack temp = valueStackFactory.createValueStack();
 			temp.set(getEntityName(), entity);
 			Map<String, Object> context = temp.getContext();

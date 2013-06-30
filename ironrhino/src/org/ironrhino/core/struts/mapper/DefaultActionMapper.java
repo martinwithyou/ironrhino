@@ -15,7 +15,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.ironrhino.common.action.DirectTemplateAction;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.struts.result.DirectTemplateResult;
+import org.ironrhino.core.struts.result.AutoConfigResult;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.opensymphony.xwork2.config.Configuration;
@@ -34,6 +34,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 		return encoding;
 	}
 
+	@Override
 	public String getUriFromActionMapping(ActionMapping mapping) {
 		StringBuilder sb = new StringBuilder();
 		String namespace = mapping.getNamespace();
@@ -102,7 +103,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 					return mapping;
 			}
 
-			String location = DirectTemplateResult
+			String location = AutoConfigResult
 					.getTemplateLocation(org.ironrhino.core.util.StringUtils
 							.toCamelCase(uri));
 			if (location != null) {

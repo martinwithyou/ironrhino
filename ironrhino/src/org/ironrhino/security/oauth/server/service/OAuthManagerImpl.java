@@ -40,10 +40,12 @@ public class OAuthManagerImpl implements OAuthManager {
 		this.expireTime = expireTime;
 	}
 
+	@Override
 	public long getExpireTime() {
 		return expireTime;
 	}
 
+	@Override
 	public Authorization generate(Client client, String redirectUri,
 			String scope, String responseType) {
 		if (!client.supportsRedirectUri(redirectUri))
@@ -58,6 +60,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public Authorization reuse(Authorization auth) {
 		auth.setCode(CodecUtils.nextId());
 		auth.setModifyDate(new Date());
@@ -66,6 +69,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public Authorization grant(String authorizationId, User grantor) {
 		entityManager.setEntityClass(Authorization.class);
 		Authorization auth = (Authorization) entityManager.get(authorizationId);
@@ -79,6 +83,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public void deny(String authorizationId) {
 		entityManager.setEntityClass(Authorization.class);
 		Authorization auth = (Authorization) entityManager.get(authorizationId);
@@ -86,6 +91,7 @@ public class OAuthManagerImpl implements OAuthManager {
 			entityManager.delete(auth);
 	}
 
+	@Override
 	public Authorization authenticate(String code, Client client) {
 		entityManager.setEntityClass(Authorization.class);
 		Authorization auth = (Authorization) entityManager
@@ -110,6 +116,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public Authorization retrieve(String accessToken) {
 		entityManager.setEntityClass(Authorization.class);
 		Authorization auth = (Authorization) entityManager
@@ -125,6 +132,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public Authorization refresh(String refreshToken) {
 		entityManager.setEntityClass(Authorization.class);
 		Authorization auth = (Authorization) entityManager.findOne(
@@ -141,6 +149,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		return auth;
 	}
 
+	@Override
 	public void revoke(String accessToken) {
 		entityManager.setEntityClass(Authorization.class);
 		Authorization auth = (Authorization) entityManager
@@ -149,10 +158,12 @@ public class OAuthManagerImpl implements OAuthManager {
 			entityManager.delete(auth);
 	}
 
+	@Override
 	public void create(Authorization authorization) {
 		entityManager.save(authorization);
 	}
 
+	@Override
 	public List<Authorization> findAuthorizationsByGrantor(User grantor) {
 		entityManager.setEntityClass(Authorization.class);
 		DetachedCriteria dc = entityManager.detachedCriteria();
@@ -161,6 +172,7 @@ public class OAuthManagerImpl implements OAuthManager {
 		return entityManager.findListByCriteria(dc);
 	}
 
+	@Override
 	@Trigger
 	@Scheduled(cron = "0 30 23 * * ?")
 	public void removeExpired() {
@@ -172,20 +184,24 @@ public class OAuthManagerImpl implements OAuthManager {
 						cal.getTime());
 	}
 
+	@Override
 	public void saveClient(Client client) {
 		entityManager.save(client);
 	}
 
+	@Override
 	public void deleteClient(Client client) {
 		entityManager.delete(client);
 	}
 
+	@Override
 	public Client findClientById(String clientId) {
 		entityManager.setEntityClass(Client.class);
 		Client c = (Client) entityManager.get(clientId);
 		return c != null && c.isEnabled() ? c : null;
 	}
 
+	@Override
 	public List<Client> findClientByOwner(User owner) {
 		entityManager.setEntityClass(Client.class);
 		DetachedCriteria dc = entityManager.detachedCriteria();

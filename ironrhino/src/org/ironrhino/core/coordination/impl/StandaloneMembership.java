@@ -23,6 +23,7 @@ public class StandaloneMembership implements Membership {
 
 	private Map<String, List<String>> groups = new HashMap<String, List<String>>();
 
+	@Override
 	public void join(String group) {
 		List<String> members = groups.get(group);
 		if (members == null) {
@@ -34,6 +35,7 @@ public class StandaloneMembership implements Membership {
 			members.add(instanceId);
 	}
 
+	@Override
 	public void leave(String group) {
 		List<String> members = groups.get(group);
 		if (members != null) {
@@ -42,10 +44,12 @@ public class StandaloneMembership implements Membership {
 		}
 	}
 
+	@Override
 	public boolean isLeader(String group) {
 		return AppInfo.getInstanceId().equals(getLeader(group));
 	}
 
+	@Override
 	public String getLeader(String group) {
 		List<String> members = getMembers(group);
 		if (members == null || members.isEmpty())
@@ -54,6 +58,7 @@ public class StandaloneMembership implements Membership {
 			return members.get(0);
 	}
 
+	@Override
 	public List<String> getMembers(String group) {
 		return groups.get(group);
 	}

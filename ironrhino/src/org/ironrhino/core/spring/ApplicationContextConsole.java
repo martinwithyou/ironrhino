@@ -165,6 +165,7 @@ public class ApplicationContextConsole implements
 		}
 	}
 
+	@Override
 	public void onApplicationEvent(ExpressionEvent event) {
 		if (event.isLocal())
 			return;

@@ -31,6 +31,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 
 	public abstract String getAccessTokenEndpoint();
 
+	@Override
 	public String getVersion() {
 		return "v2";
 	}
@@ -49,6 +50,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 				+ ".clientSecret");
 	}
 
+	@Override
 	public boolean isEnabled() {
 		return super.isEnabled() && StringUtils.isNotBlank(getClientId());
 	}
@@ -57,6 +59,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		return "Authorization";
 	}
 
+	@Override
 	protected String getAuthorizationHeaderType() {
 		return "Bearer";
 	}
@@ -74,6 +77,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		}
 	}
 
+	@Override
 	public String getAuthRedirectURL(HttpServletRequest request,
 			String targetUrl) throws Exception {
 		OAuth2Token accessToken = restoreToken(request);
@@ -114,6 +118,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		return sb.toString();
 	}
 
+	@Override
 	public OAuthToken getToken(HttpServletRequest request) throws Exception {
 		OAuth2Token accessToken = restoreToken(request);
 		if (accessToken != null) {
@@ -160,6 +165,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 		return accessToken;
 	}
 
+	@Override
 	public Profile getProfile(HttpServletRequest request) throws Exception {
 		OAuth2Token accessToken = (OAuth2Token) getToken(request);
 		String content = invoke(accessToken.getAccess_token(), getProfileUrl());

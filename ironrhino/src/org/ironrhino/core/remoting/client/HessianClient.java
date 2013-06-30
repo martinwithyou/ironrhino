@@ -125,6 +125,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
 				Runnable task = new Runnable() {
+					@Override
 					public void run() {
 						try {
 							invoke(invocation, maxRetryTimes);
@@ -164,6 +165,7 @@ public class HessianClient extends HessianProxyFactoryBean {
 		}
 	}
 
+	@Override
 	public String getServiceUrl() {
 		String serviceUrl = super.getServiceUrl();
 		if (serviceUrl == null && StringUtils.isNotBlank(host)) {

@@ -89,6 +89,7 @@ public class MyFreemarkerManager extends FreemarkerManager {
 		configuration.setCacheStorage(new StrongCacheStorage());
 		configuration
 				.setTemplateExceptionHandler(new TemplateExceptionHandler() {
+					@Override
 					public void handleTemplateException(TemplateException ex,
 							Environment env, Writer writer)
 							throws TemplateException {

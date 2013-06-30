@@ -59,6 +59,7 @@ public class Weibo extends OAuth2Provider {
 		return true;
 	}
 
+	@Override
 	protected String getAuthorizationHeaderType() {
 		return "OAuth2";
 	}

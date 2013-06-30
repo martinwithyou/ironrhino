@@ -19,10 +19,12 @@ public class CompositeIterator<T> implements Iterator<T> {
 			throw new RuntimeException("no iterator available");
 	}
 
+	@Override
 	public boolean hasNext() {
 		return iterators.get(index).hasNext() || index < iterators.size() - 1;
 	}
 
+	@Override
 	public T next() {
 		if (hasNext() && !iterators.get(index).hasNext())
 			index++;
@@ -31,6 +33,7 @@ public class CompositeIterator<T> implements Iterator<T> {
 		return iterators.get(index).next();
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

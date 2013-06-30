@@ -84,6 +84,7 @@ public class InstallationManager {
 						.add(component);
 			}
 			Collections.sort(list, new Comparator<Component>() {
+				@Override
 				public int compare(Component o1, Component o2) {
 					return o1.getId().compareTo(o2.getId());
 				}

@@ -19,6 +19,7 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 
 	private long maxId = 0;
 
+	@Override
 	public void afterPropertiesSet() {
 		Connection con = DataSourceUtils.getConnection(getDataSource());
 		Statement stmt = null;

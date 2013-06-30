@@ -9,6 +9,7 @@ import org.ironrhino.security.model.User;
 @Singleton
 public class UsernameRoleMapper implements UserRoleMapper {
 
+	@Override
 	public String[] map(User user) {
 		return new String[] { map(user.getUsername()) };
 	}

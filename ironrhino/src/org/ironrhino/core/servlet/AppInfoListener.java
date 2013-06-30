@@ -21,6 +21,7 @@ public class AppInfoListener implements ServletContextListener {
 
 	private Logger logger;
 
+	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		ServletContext ctx = event.getServletContext();
 		String defaultProfiles = System
@@ -75,6 +76,7 @@ public class AppInfoListener implements ServletContextListener {
 		properties = null;
 	}
 
+	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={} is shutdown",

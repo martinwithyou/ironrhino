@@ -58,6 +58,7 @@ public class SubmitFeedbackAction extends BaseAction {
 		this.content = content;
 	}
 
+	@Override
 	@InputConfig(resultName = INPUT)
 	public String execute() {
 		if (StringUtils.isNotBlank(content)) {

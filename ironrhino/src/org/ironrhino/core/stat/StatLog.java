@@ -77,6 +77,7 @@ public class StatLog {
 
 	private static void startNewThread() {
 		writeThread = new Thread(new Runnable() {
+			@Override
 			public void run() {
 				while (true) {
 					timerLock.lock();

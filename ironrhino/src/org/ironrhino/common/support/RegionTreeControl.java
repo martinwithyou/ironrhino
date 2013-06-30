@@ -107,6 +107,7 @@ public class RegionTreeControl implements
 		r.getParent().getChildren().remove(r);
 	}
 
+	@Override
 	public void onApplicationEvent(EntityOperationEvent event) {
 		if (regionTree == null)
 			return;

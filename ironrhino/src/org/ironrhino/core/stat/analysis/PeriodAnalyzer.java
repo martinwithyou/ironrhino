@@ -72,6 +72,7 @@ public class PeriodAnalyzer extends AbstractAnalyzer<List<Value>> {
 		this.cumulative = cumulative;
 	}
 
+	@Override
 	public List<Value> getResult() {
 		return result;
 	}

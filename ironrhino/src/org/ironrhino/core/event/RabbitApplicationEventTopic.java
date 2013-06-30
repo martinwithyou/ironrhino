@@ -12,6 +12,7 @@ public class RabbitApplicationEventTopic extends RabbitTopic<ApplicationEvent>
 	@Inject
 	private EventPublisher eventPublisher;
 
+	@Override
 	public void subscribe(ApplicationEvent event) {
 		eventPublisher.publish(event, Scope.LOCAL);
 	}

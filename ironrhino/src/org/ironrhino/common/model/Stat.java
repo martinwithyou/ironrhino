@@ -48,10 +48,12 @@ public class Stat extends KeyValuePair implements Persistable<String> {
 		this.host = host;
 	}
 
+	@Override
 	public boolean isNew() {
 		return StringUtils.isNotBlank(id);
 	}
 
+	@Override
 	public String getId() {
 		return id;
 	}

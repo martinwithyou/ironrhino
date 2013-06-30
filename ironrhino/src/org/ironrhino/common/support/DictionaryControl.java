@@ -75,6 +75,7 @@ public class DictionaryControl implements
 		return value;
 	}
 
+	@Override
 	public void onApplicationEvent(EntityOperationEvent event) {
 		if (event.getEntity() instanceof Dictionary) {
 			Dictionary dictInEvent = (Dictionary) event.getEntity();

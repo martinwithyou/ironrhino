@@ -11,6 +11,7 @@ public class RabbitSimpleMailMessageWrapperQueue extends
 	@Inject
 	private MailSender mailSender;
 
+	@Override
 	public void consume(SimpleMailMessageWrapper smmw) {
 		mailSender.send(smmw.getSimpleMailMessage(), smmw.isUseHtmlFormat());
 	}

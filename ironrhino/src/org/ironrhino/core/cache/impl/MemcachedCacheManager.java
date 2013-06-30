@@ -88,10 +88,12 @@ public class MemcachedCacheManager implements CacheManager {
 		return builder.build();
 	}
 
+	@Override
 	public void put(String key, Object value, int timeToLive, String namespace) {
 		put(key, value, -1, timeToLive, namespace);
 	}
 
+	@Override
 	public void put(String key, Object value, int timeToIdle, int timeToLive,
 			String namespace) {
 		if (key == null || value == null)
@@ -106,6 +108,7 @@ public class MemcachedCacheManager implements CacheManager {
 		}
 	}
 
+	@Override
 	public Object get(String key, String namespace) {
 		if (key == null)
 			return null;
@@ -119,6 +122,7 @@ public class MemcachedCacheManager implements CacheManager {
 		}
 	}
 
+	@Override
 	public Object get(String key, String namespace, int timeToLive) {
 		if (key == null)
 			return null;
@@ -135,6 +139,7 @@ public class MemcachedCacheManager implements CacheManager {
 		}
 	}
 
+	@Override
 	public void delete(String key, String namespace) {
 		if (key == null)
 			return;
@@ -147,6 +152,7 @@ public class MemcachedCacheManager implements CacheManager {
 		}
 	}
 
+	@Override
 	public void mput(Map<String, Object> map, int timeToLive, String namespace) {
 		if (map == null)
 			return;
@@ -154,6 +160,7 @@ public class MemcachedCacheManager implements CacheManager {
 			put(entry.getKey(), entry.getValue(), timeToLive, namespace);
 	}
 
+	@Override
 	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
 			String namespace) {
 		if (map == null)
@@ -161,6 +168,7 @@ public class MemcachedCacheManager implements CacheManager {
 		mput(map, timeToLive, namespace);
 	}
 
+	@Override
 	public Map<String, Object> mget(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return null;
@@ -177,6 +185,7 @@ public class MemcachedCacheManager implements CacheManager {
 		}
 	}
 
+	@Override
 	public void mdelete(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return;
@@ -186,6 +195,7 @@ public class MemcachedCacheManager implements CacheManager {
 			delete(key, namespace);
 	}
 
+	@Override
 	public boolean containsKey(String key, String namespace) {
 		if (key == null)
 			return false;
@@ -199,6 +209,7 @@ public class MemcachedCacheManager implements CacheManager {
 		}
 	}
 
+	@Override
 	public boolean putIfAbsent(String key, Object value, int timeToLive,
 			String namespace) {
 		try {
@@ -218,10 +229,12 @@ public class MemcachedCacheManager implements CacheManager {
 		return sb.toString();
 	}
 
+	@Override
 	public boolean supportsTimeToIdle() {
 		return false;
 	}
 
+	@Override
 	public boolean supportsUpdateTimeToLive() {
 		return true;
 	}

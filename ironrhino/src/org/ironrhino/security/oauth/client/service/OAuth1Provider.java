@@ -34,6 +34,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 
 	public abstract String getAccessTokenUrl();
 
+	@Override
 	public String getVersion() {
 		return "v1";
 	}
@@ -56,6 +57,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 				+ ".consumerSecret");
 	}
 
+	@Override
 	public boolean isEnabled() {
 		return super.isEnabled() && StringUtils.isNotBlank(getConsumerKey());
 	}
@@ -68,6 +70,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 			logger.warn(getName() + " key or secret is empty");
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public String getAuthRedirectURL(HttpServletRequest request,
 			String targetUrl) throws Exception {
@@ -112,6 +115,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 		return sb.toString();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public OAuthToken getToken(HttpServletRequest request) throws Exception {
 		OAuth1Token accessToken = restoreToken(request, "access");
@@ -143,6 +147,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 		return accessToken;
 	}
 
+	@Override
 	public Profile getProfile(HttpServletRequest request) throws Exception {
 		OAuth1Token accessToken = (OAuth1Token) getToken(request);
 		String content = invoke(accessToken, getProfileUrl());

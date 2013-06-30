@@ -26,6 +26,7 @@ public class QRCodeResult implements Result {
 	@Inject(value = "qrcode.height", required = false)
 	private int height = -1;
 
+	@Override
 	public void execute(ActionInvocation invocation) throws Exception {
 		String content = invocation.getStack().findValue("responseBody")
 				.toString();

@@ -39,6 +39,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		return importServices;
 	}
 
+	@Override
 	public Map<String, Object> getExportServices() {
 		return exportServices;
 	}
@@ -125,6 +126,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		}
 	}
 
+	@Override
 	public void evict(String host) {
 		for (Map.Entry<String, List<String>> entry : importServices.entrySet()) {
 			List<String> list = entry.getValue();
@@ -133,6 +135,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		}
 	}
 
+	@Override
 	public String discover(String serviceName) {
 		List<String> hosts = getImportServices().get(serviceName);
 		if (hosts != null && hosts.size() > 0) {
@@ -146,6 +149,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	}
 
+	@Override
 	public void register(String serviceName) {
 		String host = AppInfo.getHostAddress();
 		if (AppInfo.getHttpPort() > 0)
@@ -153,6 +157,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 		doRegister(serviceName, host);
 	}
 
+	@Override
 	public void unregister(String serviceName) {
 		String host = AppInfo.getHostAddress();
 		if (AppInfo.getHttpPort() > 0)

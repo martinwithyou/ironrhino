@@ -21,10 +21,12 @@ public abstract class AbstractOAuthProvider implements OAuthProvider {
 		this.forceDisabled = forceDisabled;
 	}
 
+	@Override
 	public String getName() {
 		return getClass().getSimpleName().toLowerCase();
 	}
 
+	@Override
 	public boolean isEnabled() {
 		return !forceDisabled
 				&& settingControl.getBooleanValue("oauth." + getName()
@@ -53,10 +55,12 @@ public abstract class AbstractOAuthProvider implements OAuthProvider {
 	protected abstract Profile getProfileFromContent(String content)
 			throws Exception;
 
+	@Override
 	public String toString() {
 		return getName();
 	}
 
+	@Override
 	public int compareTo(OAuthProvider object) {
 		if (!(object instanceof AbstractOAuthProvider))
 			return 0;

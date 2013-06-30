@@ -282,6 +282,7 @@ public class LocationParser {
 		return null;
 	}
 
+	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
 		if (file != null)

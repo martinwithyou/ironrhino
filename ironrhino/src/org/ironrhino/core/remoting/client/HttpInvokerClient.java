@@ -113,6 +113,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
 				Runnable task = new Runnable() {
+					@Override
 					public void run() {
 						try {
 							invoke(invocation, maxRetryTimes);
@@ -151,6 +152,7 @@ public class HttpInvokerClient extends HttpInvokerProxyFactoryBean {
 		}
 	}
 
+	@Override
 	public String getServiceUrl() {
 		String serviceUrl = super.getServiceUrl();
 		if (serviceUrl == null && StringUtils.isNotBlank(host)) {

@@ -60,14 +60,17 @@ public class TreeNode extends BaseTreeableEntity<TreeNode> implements
 		this.description = description;
 	}
 
+	@Override
 	public List<Attribute> getAttributes() {
 		return attributes;
 	}
 
+	@Override
 	public void setAttributes(List<Attribute> attributes) {
 		this.attributes = attributes;
 	}
 
+	@Override
 	@NotInCopy
 	@Column(name = "attributes")
 	@Type(type = "text")
@@ -82,6 +85,7 @@ public class TreeNode extends BaseTreeableEntity<TreeNode> implements
 		return JsonUtils.toJson(map);
 	}
 
+	@Override
 	public void setAttributesAsString(String str) {
 		if (StringUtils.isNotBlank(str))
 			try {

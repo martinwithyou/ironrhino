@@ -25,10 +25,12 @@ public class SessionFactoryBean extends
 		this.excludeFilter = excludeFilter;
 	}
 
+	@Override
 	public void setAnnotatedClasses(Class<?>[] annotatedClasses) {
 		this.annotatedClasses = annotatedClasses;
 	}
 
+	@Override
 	public void afterPropertiesSet() throws IOException {
 		Set<Class<?>> classes = ClassScaner.scanAnnotated(
 				ClassScaner.getAppPackages(), Entity.class);

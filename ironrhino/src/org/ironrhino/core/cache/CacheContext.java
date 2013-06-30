@@ -70,6 +70,7 @@ public class CacheContext {
 
 	static Replacer replacer = new Replacer() {
 
+		@Override
 		public String replace(StartTag st, Attribute attr) {
 			if (!st.getName().equals("a") || !attr.getKey().equals("href"))
 				return null;

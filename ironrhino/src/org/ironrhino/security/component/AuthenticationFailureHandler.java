@@ -39,7 +39,7 @@ public class AuthenticationFailureHandler extends
 			throws IOException, ServletException {
 		super.onAuthenticationFailure(request, response, e);
 		LoginRecord loginRecord = new LoginRecord();
-		loginRecord.setUsername((String) request
+		loginRecord.setUsername(request
 				.getParameter(usernamePasswordAuthenticationFilter
 						.getUsernameParameter()));
 		loginRecord.setAddress(RequestUtils.getRemoteAddr(request));
@@ -51,6 +51,7 @@ public class AuthenticationFailureHandler extends
 
 	private void save(final LoginRecord loginRecord) {
 		userManager.execute(new HibernateCallback<LoginRecord>() {
+			@Override
 			public LoginRecord doInHibernate(Session session)
 					throws HibernateException, SQLException {
 				session.save(loginRecord);

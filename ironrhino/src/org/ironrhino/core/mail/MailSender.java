@@ -49,6 +49,7 @@ public class MailSender {
 			smm.setTo(defaultTo);
 		for (final String to : smm.getTo()) {
 			javaMailSender.send(new MimeMessagePreparator() {
+				@Override
 				public void prepare(MimeMessage mimeMessage)
 						throws MessagingException {
 					MimeMessageHelper message = new MimeMessageHelper(

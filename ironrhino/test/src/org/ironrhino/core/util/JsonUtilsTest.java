@@ -17,6 +17,7 @@ public class JsonUtilsTest {
 
 	static enum Status {
 		ACTIVE, DISABLED;
+		@Override
 		public String toString() {
 			return name().toLowerCase();
 		}

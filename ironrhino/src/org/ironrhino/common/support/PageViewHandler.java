@@ -48,6 +48,7 @@ public class PageViewHandler implements AccessHandler {
 			final String username = RequestUtils.getCookieValue(request, "U");
 			final String referer = request.getHeader("Referer");
 			Runnable task = new Runnable() {
+				@Override
 				public void run() {
 					pageViewService.put(new Date(), remoteAddr, requestURL,
 							sessionId, username, referer);

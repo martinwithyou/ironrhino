@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 public class DefaultLogoutSuccessHandler extends
 		AbstractAuthenticationTargetUrlRequestHandler implements
 		LogoutSuccessHandler {
+	@Override
 	protected String determineTargetUrl(HttpServletRequest request,
 			HttpServletResponse response) {
 		String targetUrl = getDefaultTargetUrl();

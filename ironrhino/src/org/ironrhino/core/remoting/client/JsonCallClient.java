@@ -132,6 +132,7 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 			String name = invocation.getMethod().getName();
 			if (asyncMethods.contains(name)) {
 				Runnable task = new Runnable() {
+					@Override
 					public void run() {
 						try {
 							invoke(invocation, maxRetryTimes);
@@ -203,6 +204,7 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 		}
 	}
 
+	@Override
 	public String getServiceUrl() {
 		String serviceUrl = super.getServiceUrl();
 		if (serviceUrl == null && StringUtils.isNotBlank(host)) {
@@ -276,14 +278,17 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 
 	private Object serviceProxy;
 
+	@Override
 	public Object getObject() {
 		return this.serviceProxy;
 	}
 
+	@Override
 	public Class<?> getObjectType() {
 		return getServiceInterface();
 	}
 
+	@Override
 	public boolean isSingleton() {
 		return true;
 	}

@@ -89,18 +89,22 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		this.minActiveInterval = minActiveInterval;
 	}
 
+	@Override
 	public String getLocaleCookieName() {
 		return localeCookieName;
 	}
 
+	@Override
 	public String getSessionTrackerName() {
 		return sessionTrackerName;
 	}
 
+	@Override
 	public boolean supportSessionTrackerFromURL() {
 		return supportSessionTrackerFromURL;
 	}
 
+	@Override
 	public String getSessionId(HttpServletRequest request) {
 		String sessionTracker = RequestUtils.getCookieValue(request,
 				getSessionTrackerName());
@@ -119,6 +123,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		return null;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void initialize(WrappedHttpSession session) {
 
@@ -176,6 +181,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		doInitialize(session);
 	}
 
+	@Override
 	public void save(WrappedHttpSession session) {
 		// simulated session
 		if (session.getRequest()
@@ -205,6 +211,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		doSave(session);
 	}
 
+	@Override
 	public void invalidate(WrappedHttpSession session) {
 		session.setInvalid(true);
 		session.getAttrMap().clear();
@@ -219,6 +226,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 		session.setSessionTracker(this.getSessionTracker(session));
 	}
 
+	@Override
 	public String getSessionTracker(WrappedHttpSession session) {
 		if (session.isRequestedSessionIdFromURL())
 			return session.getId();
@@ -255,6 +263,7 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 			cookieBased.invalidate(session);
 	}
 
+	@Override
 	public Locale getLocale(HttpServletRequest request) {
 		String localeName = RequestUtils.getCookieValue(request,
 				localeCookieName);

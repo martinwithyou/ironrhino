@@ -84,6 +84,7 @@ public class JsonResult implements Result {
 		return JsonUtils.toJson(map);
 	}
 
+	@Override
 	public void execute(ActionInvocation invocation) throws Exception {
 		String jsonp = ServletActionContext.getRequest().getParameter("jsonp");
 		if (StringUtils.isBlank(jsonp))

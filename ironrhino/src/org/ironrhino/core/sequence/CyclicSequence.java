@@ -18,6 +18,7 @@ public interface CyclicSequence {
 	static enum CycleType {
 
 		MINUTE("yyyyMMddHHmm") {
+			@Override
 			protected boolean isSameCycle(Calendar lastCal, Calendar nowCal) {
 				return HOUR.isSameCycle(lastCal, nowCal)
 						&& nowCal.get(Calendar.MINUTE) <= lastCal
@@ -26,6 +27,7 @@ public interface CyclicSequence {
 			}
 		},
 		HOUR("yyyyMMddHH") {
+			@Override
 			protected boolean isSameCycle(Calendar lastCal, Calendar nowCal) {
 				return DAY.isSameCycle(lastCal, nowCal)
 						&& nowCal.get(Calendar.HOUR_OF_DAY) <= lastCal
@@ -34,6 +36,7 @@ public interface CyclicSequence {
 
 		},
 		DAY("yyyyMMdd") {
+			@Override
 			protected boolean isSameCycle(Calendar lastCal, Calendar nowCal) {
 				return MONTH.isSameCycle(lastCal, nowCal)
 						&& nowCal.get(Calendar.DAY_OF_YEAR) <= lastCal
@@ -42,6 +45,7 @@ public interface CyclicSequence {
 
 		},
 		MONTH("yyyyMM") {
+			@Override
 			protected boolean isSameCycle(Calendar lastCal, Calendar nowCal) {
 				return YEAR.isSameCycle(lastCal, nowCal)
 						&& nowCal.get(Calendar.MONTH) <= lastCal
@@ -50,6 +54,7 @@ public interface CyclicSequence {
 
 		},
 		YEAR("yyyy") {
+			@Override
 			protected boolean isSameCycle(Calendar lastCal, Calendar nowCal) {
 				return (nowCal.get(Calendar.YEAR) <= lastCal.get(Calendar.YEAR));
 			}

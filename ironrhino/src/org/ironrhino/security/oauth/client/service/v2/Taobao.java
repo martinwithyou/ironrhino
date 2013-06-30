@@ -77,6 +77,7 @@ public class Taobao extends OAuth2Provider {
 		return false;
 	}
 
+	@Override
 	protected String getAccessTokenParameterName() {
 		return "session";
 	}

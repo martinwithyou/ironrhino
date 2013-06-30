@@ -208,6 +208,7 @@ public class PermitAction extends BaseAction {
 		return resources;
 	}
 
+	@Override
 	public String execute() {
 		roles = userRoleManager.getAllRoles();
 		for (Map.Entry<String, String> entry : roles.entrySet())

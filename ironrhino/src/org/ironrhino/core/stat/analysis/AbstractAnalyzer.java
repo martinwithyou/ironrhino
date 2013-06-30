@@ -99,6 +99,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		};
 	}
 
+	@Override
 	public void analyze() {
 		preAnalyze();
 		try {
@@ -112,6 +113,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 
 	}
 
+	@Override
 	public Iterator<? extends KeyValuePair> iterate() {
 		return this.iterator;
 	}
@@ -142,6 +144,7 @@ public abstract class AbstractAnalyzer<T> implements Analyzer<T> {
 		final String suffix = sb.toString();
 		File dir = StatLogSettings.getLogFileDirectory();
 		dir.listFiles(new FileFilter() {
+			@Override
 			public boolean accept(File f) {
 				String name = f.getName();
 				if (localhost && name.equals(suffix)) {

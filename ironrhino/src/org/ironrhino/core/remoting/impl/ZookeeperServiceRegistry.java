@@ -73,6 +73,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		doLookup(serviceName, 3);
 	}
 
+	@Override
 	public void doRegister(String serviceName, String host) {
 		doRegister(serviceName, host, maxRetryTimes);
 	}
@@ -94,6 +95,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		final String host = s;
 		final String services = JsonUtils.toJson(discoveredServices);
 		Runnable task = new Runnable() {
+			@Override
 			public void run() {
 				doWriteDiscoveredServices(host, services, maxRetryTimes);
 			}
@@ -203,6 +205,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	}
 
+	@Override
 	protected boolean handle(InstanceLifecycleEvent event) {
 		return event instanceof ExportServicesEvent
 				|| event instanceof InstanceShutdownEvent;

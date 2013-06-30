@@ -78,7 +78,7 @@ public class MenuControl {
 						continue;
 					}
 					Menu menuOnClass = c.getAnnotation(Menu.class);
-					Authorize authorizeOnClass = (Authorize) c
+					Authorize authorizeOnClass = c
 							.getAnnotation(Authorize.class);
 					if (menuOnClass != null) {
 						StringBuilder sb = new StringBuilder();
@@ -182,10 +182,12 @@ public class MenuControl {
 			this.authorize = authorize;
 		}
 
+		@Override
 		public Long getId() {
 			return (long) hashCode();
 		}
 
+		@Override
 		public int getLevel() {
 			int level = 0;
 			MenuNode parent = this;
@@ -194,11 +196,13 @@ public class MenuControl {
 			return level;
 		}
 
+		@Override
 		public int hashCode() {
 			return url == null ? (name == null ? 0 : name.hashCode()) : url
 					.hashCode();
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			return obj instanceof MenuNode && this.hashCode() == obj.hashCode();
 		}
@@ -236,6 +240,7 @@ public class MenuControl {
 		MenuNode root = new MenuNode();
 		Map<String, Pair<Menu, Authorize>> sortedMap = new TreeMap<String, Pair<Menu, Authorize>>(
 				new Comparator<String>() {
+					@Override
 					public int compare(String o1, String o2) {
 						Pair<Menu, Authorize> p1 = mapping.get(o1);
 						Pair<Menu, Authorize> p2 = mapping.get(o2);

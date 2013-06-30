@@ -150,6 +150,7 @@ public class JavaSourceExecutor {
 
 		private static ByteArrayClassLoader instance = AccessController
 				.doPrivileged(new PrivilegedAction<ByteArrayClassLoader>() {
+					@Override
 					public ByteArrayClassLoader run() {
 						return new ByteArrayClassLoader();
 					}

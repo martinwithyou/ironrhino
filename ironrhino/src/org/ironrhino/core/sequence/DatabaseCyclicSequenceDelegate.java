@@ -10,6 +10,7 @@ public class DatabaseCyclicSequenceDelegate extends
 
 	private AbstractDatabaseCyclicSequence seq = null;
 
+	@Override
 	public void afterPropertiesSet() throws java.lang.Exception {
 		Connection con = DataSourceUtils.getConnection(getDataSource());
 		DatabaseMetaData dbmd = con.getMetaData();

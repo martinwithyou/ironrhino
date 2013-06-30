@@ -34,10 +34,12 @@ public class EhCacheManager implements CacheManager {
 		ehCacheManager.shutdown();
 	}
 
+	@Override
 	public void put(String key, Object value, int timeToLive, String namespace) {
 		put(key, value, -1, timeToLive, namespace);
 	}
 
+	@Override
 	public void put(String key, Object value, int timeToIdle, int timeToLive,
 			String namespace) {
 		if (key == null || value == null)
@@ -59,6 +61,7 @@ public class EhCacheManager implements CacheManager {
 					&& timeToLive > 0 ? Integer.valueOf(timeToLive) : null));
 	}
 
+	@Override
 	public Object get(String key, String namespace) {
 		if (key == null)
 			return null;
@@ -71,6 +74,7 @@ public class EhCacheManager implements CacheManager {
 		return element != null ? element.getObjectValue() : null;
 	}
 
+	@Override
 	public Object get(String key, String namespace, int timeToLive) {
 		if (key == null)
 			return null;
@@ -91,6 +95,7 @@ public class EhCacheManager implements CacheManager {
 
 	}
 
+	@Override
 	public void delete(String key, String namespace) {
 		if (key == null)
 			return;
@@ -101,10 +106,12 @@ public class EhCacheManager implements CacheManager {
 			cache.remove(key);
 	}
 
+	@Override
 	public void mput(Map<String, Object> map, int timeToLive, String namespace) {
 		mput(map, -1, timeToLive, namespace);
 	}
 
+	@Override
 	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
 			String namespace) {
 		if (map == null)
@@ -122,6 +129,7 @@ public class EhCacheManager implements CacheManager {
 							.valueOf(timeToLive) : null));
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> mget(Collection<String> keys, String namespace) {
 		if (keys == null)
@@ -134,6 +142,7 @@ public class EhCacheManager implements CacheManager {
 		return cache.getAllWithLoader(keys, null);
 	}
 
+	@Override
 	public void mdelete(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return;
@@ -145,6 +154,7 @@ public class EhCacheManager implements CacheManager {
 				cache.remove(key);
 	}
 
+	@Override
 	public boolean containsKey(String key, String namespace) {
 		if (key == null)
 			return false;
@@ -157,6 +167,7 @@ public class EhCacheManager implements CacheManager {
 			return false;
 	}
 
+	@Override
 	public boolean putIfAbsent(String key, Object value, int timeToLive,
 			String namespace) {
 		if (key == null || value == null)
@@ -168,10 +179,12 @@ public class EhCacheManager implements CacheManager {
 				.putIfAbsent(new Element(key, value, null, null, timeToLive)) != null;
 	}
 
+	@Override
 	public boolean supportsTimeToIdle() {
 		return true;
 	}
 
+	@Override
 	public boolean supportsUpdateTimeToLive() {
 		return true;
 	}

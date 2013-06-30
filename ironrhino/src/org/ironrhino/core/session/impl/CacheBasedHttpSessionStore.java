@@ -26,6 +26,7 @@ public class CacheBasedHttpSessionStore implements HttpSessionStore {
 		this.cacheManager = cacheManager;
 	}
 
+	@Override
 	public void initialize(WrappedHttpSession session) {
 		String sessionString;
 		if (!cacheManager.supportsTimeToIdle()
@@ -38,6 +39,7 @@ public class CacheBasedHttpSessionStore implements HttpSessionStore {
 		sessionCompressorManager.uncompress(session, sessionString);
 	}
 
+	@Override
 	public void save(WrappedHttpSession session) {
 		String sessionString = sessionCompressorManager.compress(session);
 		if (session.isDirty() && StringUtils.isBlank(sessionString)) {
@@ -61,6 +63,7 @@ public class CacheBasedHttpSessionStore implements HttpSessionStore {
 		}
 	}
 
+	@Override
 	public void invalidate(WrappedHttpSession session) {
 		cacheManager.delete(session.getId(), CACHE_NAMESPACE);
 	}

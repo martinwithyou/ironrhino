@@ -40,6 +40,7 @@ public class OptimizeTrafficFilter implements Filter {
 		this.cacheSeconds = cacheSeconds;
 	}
 
+	@Override
 	public void doFilter(ServletRequest rq, ServletResponse rs,
 			FilterChain chain) throws IOException, ServletException {
 		if (!etag && !compress)
@@ -119,6 +120,7 @@ public class OptimizeTrafficFilter implements Filter {
 		}
 	}
 
+	@Override
 	public void init(FilterConfig filterConfig) {
 		if ("false".equals(filterConfig.getInitParameter("etag")))
 			etag = false;
@@ -129,6 +131,7 @@ public class OptimizeTrafficFilter implements Filter {
 					.getInitParameter("cacheSeconds"));
 	}
 
+	@Override
 	public void destroy() {
 
 	}

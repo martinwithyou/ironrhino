@@ -124,6 +124,7 @@ public class TreeNodeControl implements
 		r.getParent().getChildren().remove(r);
 	}
 
+	@Override
 	public void onApplicationEvent(EntityOperationEvent event) {
 		if (tree == null)
 			return;

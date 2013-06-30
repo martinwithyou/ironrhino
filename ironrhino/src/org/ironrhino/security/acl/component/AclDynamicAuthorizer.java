@@ -17,6 +17,7 @@ public class AclDynamicAuthorizer implements DynamicAuthorizer {
 	@Inject
 	private AclManager aclManager;
 
+	@Override
 	public boolean authorize(UserDetails user, String resource) {
 		if (user != null)
 			for (GrantedAuthority ga : user.getAuthorities()) {

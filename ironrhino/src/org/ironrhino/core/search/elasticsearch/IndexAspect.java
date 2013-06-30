@@ -65,6 +65,7 @@ public class IndexAspect implements Ordered {
 		}
 	}
 
+	@Override
 	public int getOrder() {
 		return order;
 	}

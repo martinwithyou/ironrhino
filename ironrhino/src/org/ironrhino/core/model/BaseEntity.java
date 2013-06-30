@@ -23,6 +23,7 @@ public class BaseEntity extends Entity<String> {
 	@Column(length = 32)
 	protected String id;
 
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -32,6 +33,7 @@ public class BaseEntity extends Entity<String> {
 			this.id = id;
 	}
 
+	@Override
 	@NotInJson
 	public boolean isNew() {
 		return id == null || StringUtils.isBlank(id);

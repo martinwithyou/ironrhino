@@ -27,7 +27,6 @@ import org.ironrhino.core.aop.PublishAspect;
 import org.ironrhino.core.metadata.Setup;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.XmlUtils;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -195,7 +194,7 @@ public class RegionSetup {
 			NodeList nl = element.getChildNodes();
 			for (int j = 0; j < nl.getLength(); j++) {
 				Node node = nl.item(j);
-				if (node.getNodeType() == Document.ELEMENT_NODE) {
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element ele = (Element) node;
 					if (ele.getTagName().equals("name")) {
 						name = ele.getTextContent();
@@ -203,7 +202,7 @@ public class RegionSetup {
 						NodeList nl2 = ele.getChildNodes();
 						for (int k = 0; k < nl2.getLength(); k++) {
 							Node node2 = nl2.item(k);
-							if (node2.getNodeType() == Document.ELEMENT_NODE) {
+							if (node2.getNodeType() == Node.ELEMENT_NODE) {
 								Element ele2 = (Element) node2;
 								if (ele2.getTagName().equals("coordinates")) {
 									coordinate = ele2.getTextContent();
@@ -224,7 +223,7 @@ public class RegionSetup {
 		NodeList children = element.getChildNodes();
 		for (int j = 0; j < children.getLength(); j++) {
 			Node node = children.item(j);
-			if (node.getNodeType() == Document.ELEMENT_NODE) {
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				Element ele = (Element) node;
 				if (ele.getTagName().equals("name")) {
 					return ele.getTextContent();

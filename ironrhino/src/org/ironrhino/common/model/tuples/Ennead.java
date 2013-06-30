@@ -116,14 +116,17 @@ public class Ennead<A, B, C, D, E, F, G, H, I> implements Serializable {
 		this.i = i;
 	}
 
+	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this, false);
 	}
 
+	@Override
 	public boolean equals(Object that) {
 		return EqualsBuilder.reflectionEquals(this, that, false);
 	}
 
+	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}

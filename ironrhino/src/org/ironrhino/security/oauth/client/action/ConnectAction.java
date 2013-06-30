@@ -51,6 +51,7 @@ public class ConnectAction extends BaseAction {
 		return providers;
 	}
 
+	@Override
 	public String execute() {
 		if (!isEnabled())
 			return ACCESSDENIED;
@@ -64,8 +65,7 @@ public class ConnectAction extends BaseAction {
 			return SUCCESS;
 		} else {
 			try {
-				OAuthProvider provider = (OAuthProvider) oauthProviderManager
-						.lookup(getUid());
+				OAuthProvider provider = oauthProviderManager.lookup(getUid());
 				if (provider == null)
 					return ACCESSDENIED;
 				StringBuilder sb = new StringBuilder(
@@ -92,8 +92,7 @@ public class ConnectAction extends BaseAction {
 			return REDIRECT;
 		}
 		try {
-			OAuthProvider provider = (OAuthProvider) oauthProviderManager
-					.lookup(getUid());
+			OAuthProvider provider = oauthProviderManager.lookup(getUid());
 			if (provider == null)
 				return ACCESSDENIED;
 			OAuthToken token = provider.getToken(request);

@@ -18,6 +18,7 @@ public class MyFreemarkerMapper2DecoratorSelector implements DecoratorSelector {
 		this.decoratorMapper = decoratorMapper;
 	}
 
+	@Override
 	public com.opensymphony.sitemesh.Decorator selectDecorator(Content content,
 			SiteMeshContext context) {
 		SiteMeshWebAppContext webAppContext = (SiteMeshWebAppContext) context;

@@ -119,6 +119,7 @@ public class SettingControl implements
 		return new String[0];
 	}
 
+	@Override
 	public void onApplicationEvent(EntityOperationEvent event) {
 		if (event.getEntity() instanceof Setting) {
 			Setting settingInEvent = (Setting) event.getEntity();

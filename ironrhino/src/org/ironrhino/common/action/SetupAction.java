@@ -54,6 +54,7 @@ public class SetupAction extends BaseAction {
 		return REDIRECT;
 	}
 
+	@Override
 	public String input() {
 		if (!canSetup())
 			return NOTFOUND;
@@ -303,6 +304,7 @@ public class SetupAction extends BaseAction {
 			this.required = required;
 		}
 
+		@Override
 		public int getDisplayOrder() {
 			return displayOrder;
 		}
@@ -321,6 +323,7 @@ public class SetupAction extends BaseAction {
 			return this.toString().compareTo(ordered.toString());
 		}
 
+		@Override
 		public String toString() {
 			return this.name;
 		}

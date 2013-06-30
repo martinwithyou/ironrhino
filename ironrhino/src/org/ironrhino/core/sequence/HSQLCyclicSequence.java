@@ -1,6 +1,5 @@
 package org.ironrhino.core.sequence;
 
-
 public class HSQLCyclicSequence extends AbstractSequenceCyclicSequence {
 
 	@Override

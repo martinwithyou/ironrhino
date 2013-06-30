@@ -36,6 +36,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 	@Inject
 	protected CacheManager cacheManager;
 
+	@Override
 	public String getChallenge(HttpServletRequest request, String token) {
 		String challenge = String.valueOf(ThreadLocalRandom.current().nextInt(
 				8999) + 1000);// width=60
@@ -45,6 +46,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		return challenge;
 	}
 
+	@Override
 	public String fuzzifyChallenge(String challenge) {
 		char[] chars = challenge.toCharArray();
 		StringBuilder sb = new StringBuilder();
@@ -53,6 +55,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		return sb.toString();
 	}
 
+	@Override
 	public String clarifyChallenge(String input) {
 		if (StringUtils.isNumeric(input))
 			return input;
@@ -79,6 +82,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		return clarifyChallenge(input).equals(answer);
 	}
 
+	@Override
 	public void addCaptachaThreshold(HttpServletRequest request) {
 		boolean added = request
 				.getAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_THRESHOLD_ADDED) != null;
@@ -97,6 +101,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 
 	}
 
+	@Override
 	public boolean[] isCaptchaRequired(HttpServletRequest request,
 			Captcha captcha) {
 		boolean[] required = (boolean[]) request
@@ -130,6 +135,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		return required;
 	}
 
+	@Override
 	public boolean validate(HttpServletRequest request, String token) {
 		Boolean validated = (Boolean) request
 				.getAttribute(REQUEST_ATTRIBUTE_KEY_CAPTACHA_VALIDATED);

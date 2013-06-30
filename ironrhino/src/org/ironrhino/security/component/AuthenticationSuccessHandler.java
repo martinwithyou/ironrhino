@@ -57,6 +57,7 @@ public class AuthenticationSuccessHandler extends
 
 	private void save(final LoginRecord loginRecord) {
 		userManager.execute(new HibernateCallback<LoginRecord>() {
+			@Override
 			public LoginRecord doInHibernate(Session session)
 					throws HibernateException, SQLException {
 				session.save(loginRecord);

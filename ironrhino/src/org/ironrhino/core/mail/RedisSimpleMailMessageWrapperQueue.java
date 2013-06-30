@@ -21,6 +21,7 @@ public class RedisSimpleMailMessageWrapperQueue extends
 
 	private boolean stop;
 
+	@Override
 	@PostConstruct
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
@@ -51,6 +52,7 @@ public class RedisSimpleMailMessageWrapperQueue extends
 		stop = true;
 	}
 
+	@Override
 	public void consume(SimpleMailMessageWrapper smmw) {
 		mailSender.send(smmw.getSimpleMailMessage(), smmw.isUseHtmlFormat());
 	}
