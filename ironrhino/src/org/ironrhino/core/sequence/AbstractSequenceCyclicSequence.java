@@ -93,11 +93,13 @@ public abstract class AbstractSequenceCyclicSequence extends
 				if (!columnExists) {
 					stmt.execute(getAddColumnStatement());
 					stmt.execute(getCreateSequenceStatement());
+					con.commit();
 				}
 			} else {
 				stmt.execute(getCreateTableStatement());
 				stmt.execute(getInsertStatement());
 				stmt.execute(getCreateSequenceStatement());
+				con.commit();
 			}
 		} catch (SQLException ex) {
 			throw new DataAccessResourceFailureException(ex.getMessage(), ex);
@@ -131,7 +133,7 @@ public abstract class AbstractSequenceCyclicSequence extends
 			boolean same = getCycleType().isSameCycle(lastInsertTimestamp,
 					thisTimestamp);
 			if (!same)
-				restartSequence(stmt);
+				restartSequence(con, stmt);
 			stmt.executeUpdate("UPDATE " + getTableName() + " SET "
 					+ columnName + "_TIMESTAMP = " + getCurrentTimestamp());
 			con.commit();
@@ -152,8 +154,10 @@ public abstract class AbstractSequenceCyclicSequence extends
 		return getStringValue(thisTimestamp, getPaddingLength(), (int) nextId);
 	}
 
-	protected void restartSequence(Statement stmt) throws SQLException {
+	protected void restartSequence(Connection con, Statement stmt)
+			throws SQLException {
 		stmt.execute(getRestartSequenceStatement());
+		con.commit();
 	}
 
 }
