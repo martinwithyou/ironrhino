@@ -20,9 +20,4 @@ public class OracleCyclicSequence extends AbstractSequenceCyclicSequence {
 		con.commit();
 	}
 
-	@Override
-	protected String getCurrentTimestamp() {
-		return "SYSDATE";
-	}
-
 }
