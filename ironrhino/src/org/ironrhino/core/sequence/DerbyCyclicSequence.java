@@ -1,5 +1,9 @@
 package org.ironrhino.core.sequence;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class DerbyCyclicSequence extends AbstractSequenceCyclicSequence {
 
 	@Override
@@ -13,6 +17,14 @@ public class DerbyCyclicSequence extends AbstractSequenceCyclicSequence {
 	protected String getQuerySequenceStatement() {
 		return new StringBuilder("SELECT NEXT VALUE FOR ").append(
 				getActualSequenceName()).toString();
+	}
+
+	@Override
+	protected void restartSequence(Connection con, Statement stmt)
+			throws SQLException {
+		stmt.execute("DROP SEQUENCE " + getActualSequenceName());
+		stmt.execute(getCreateSequenceStatement());
+		con.commit();
 	}
 
 }
