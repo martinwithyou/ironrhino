@@ -22,7 +22,7 @@ public class DatabaseCyclicSequenceDelegate extends
 		else if (databaseProductName.contains("postgres"))
 			seq = new PostgreSQLCyclicSequence();
 		else if (databaseProductName.contains("oracle"))
-			seq = new PostgreSQLCyclicSequence();
+			seq = new OracleCyclicSequence();
 		else if (databaseProductName.contains("db2"))
 			seq = new DB2CyclicSequence();
 		else if (databaseProductName.contains("sql server"))
