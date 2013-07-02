@@ -49,6 +49,10 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	private boolean ready;
 
+	private String servicesParentPath;
+
+	private String hostsParentPath;
+
 	@Override
 	public void prepare() {
 		try {
@@ -59,7 +63,24 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-
+		servicesParentPath = zooKeeperPath + "/services";
+		try {
+			Stat stat = zooKeeper.exists(servicesParentPath, false);
+			if (stat == null)
+				zooKeeper.create(servicesParentPath, null,
+						ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		hostsParentPath = zooKeeperPath + "/hosts";
+		try {
+			Stat stat = zooKeeper.exists(hostsParentPath, false);
+			if (stat == null)
+				zooKeeper.create(hostsParentPath, null,
+						ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -112,8 +133,8 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 			log.error("error register " + serviceName + "@" + host);
 			return;
 		}
-		String node = new StringBuilder().append(zooKeeperPath).append("/")
-				.append(serviceName).toString();
+		String node = new StringBuilder().append(servicesParentPath)
+				.append("/").append(serviceName).toString();
 		try {
 			Stat stat = zooKeeper.exists(node, false);
 			if (stat == null)
@@ -136,8 +157,8 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		retryTimes--;
 		try {
 			List<String> children = zooKeeper.getChildren(new StringBuilder(
-					zooKeeperPath).append("/").append(serviceName).toString(),
-					true);
+					servicesParentPath).append("/").append(serviceName)
+					.toString(), true);
 			if (children != null && children.size() > 0)
 				importServices.put(serviceName, children);
 		} catch (Exception e) {
@@ -151,7 +172,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	private void doWriteDiscoveredServices(String host, String services,
 			int retryTimes) {
 		retryTimes--;
-		String node = new StringBuilder().append(zooKeeperPath).append("/")
+		String node = new StringBuilder().append(hostsParentPath).append("/")
 				.append(host).toString();
 		byte[] data = services.getBytes();
 		try {
@@ -177,8 +198,9 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	@Override
 	public boolean supports(String path) {
-		if (path != null && path.startsWith(zooKeeperPath)) {
-			String serviceName = path.substring(zooKeeperPath.length() + 1);
+		if (path != null && path.startsWith(servicesParentPath)) {
+			String serviceName = path
+					.substring(servicesParentPath.length() + 1);
 			return importServices.containsKey(serviceName);
 		}
 		return false;
@@ -186,7 +208,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	@Override
 	public void onNodeChildrenChanged(String path, List<String> children) {
-		String serviceName = path.substring(zooKeeperPath.length() + 1);
+		String serviceName = path.substring(servicesParentPath.length() + 1);
 		importServices.put(serviceName, children);
 	}
 
