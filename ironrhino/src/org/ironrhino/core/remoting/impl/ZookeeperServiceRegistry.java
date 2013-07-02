@@ -226,6 +226,8 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	}
 
 	public Map<String, String> getDiscoveredServices(String host) {
+		if (host.indexOf(':') < 0)
+			host += ":" + DEFAULT_PORT;
 		try {
 			String path = new StringBuilder().append(hostsParentPath)
 					.append("/").append(host).toString();
