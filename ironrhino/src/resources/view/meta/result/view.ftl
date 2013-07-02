@@ -27,6 +27,10 @@
 				<#if printAttributes??>
 					<@printAttributes attributes=entity.attributes grouping=true/>
 				</#if>
+			<#elseif config.type=='imageupload'>
+				<#if entity[key]?has_content>
+					<img src="${entity[key]}"/>
+				</#if>
 			<#else>
 					<#if !config.template?has_content>
 						<#if entity[key]??>
