@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.ironrhino.core.util.AppInfo;
 import org.springframework.context.annotation.Profile;
 
 @Singleton
@@ -22,7 +21,7 @@ public class StandaloneServiceRegistry extends AbstractServiceRegistry {
 	}
 
 	public Collection<String> getHostsForService(String service) {
-		return Collections.singleton(AppInfo.getHostAddress());
+		return Collections.singleton(host);
 	}
 
 	public Map<String, String> getDiscoveredServices(String host) {

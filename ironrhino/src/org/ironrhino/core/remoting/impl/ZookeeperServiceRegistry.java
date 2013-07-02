@@ -22,7 +22,6 @@ import org.apache.zookeeper.data.Stat;
 import org.ironrhino.core.event.InstanceLifecycleEvent;
 import org.ironrhino.core.event.InstanceShutdownEvent;
 import org.ironrhino.core.remoting.ExportServicesEvent;
-import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.zookeeper.WatchedEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,10 +115,6 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	protected void writeDiscoveredServices() {
 		if (discoveredServices.size() == 0)
 			return;
-		String s = AppInfo.getHostAddress();
-		if (AppInfo.getHttpPort() > 0)
-			s += ":" + AppInfo.getHttpPort();
-		final String host = s;
 		final String services = JsonUtils.toJson(discoveredServices);
 		Runnable task = new Runnable() {
 			@Override

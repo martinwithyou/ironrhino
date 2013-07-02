@@ -20,7 +20,6 @@ import javax.inject.Singleton;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.remoting.ExportServicesEvent;
-import org.ironrhino.core.util.AppInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -101,10 +100,6 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 	protected void writeDiscoveredServices() {
 		if (discoveredServices.size() == 0)
 			return;
-		String s = AppInfo.getHostAddress();
-		if (AppInfo.getHttpPort() > 0)
-			s += ":" + AppInfo.getHttpPort();
-		final String host = s;
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
