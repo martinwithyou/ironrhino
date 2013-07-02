@@ -15,7 +15,7 @@
 	<property name="remoting-server-jar.name" value="ironrhino-remoting-server-${version}.jar" />
 	<property name="remoting-server-jar.includes" value="org/ironrhino/core/remoting/server/**" />
 	<property name="remoting-client-jar.name" value="ironrhino-remoting-client-${version}.jar" />
-	<property name="remoting-client-jar.includes" value="org/ironrhino/core/remoting/client/**" />
+	<property name="remoting-client-jar.includes" value="org/ironrhino/core/remoting/client/**,org/ironrhino/core/remoting/action/**,resources/view/service/**" />
 	<property name="hibernate-config-jar.name" value="ironrhino-hibernate-config-${version}.jar" />
 	<property name="hibernate-config-jar.includes" value="resources/spring/applicationContext-hibernate.xml" />
 	<property name="mail-config-jar.name" value="ironrhino-mail-config-${version}.jar" />
