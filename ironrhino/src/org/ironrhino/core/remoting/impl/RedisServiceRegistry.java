@@ -29,6 +29,10 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 
 	private static final String NAMESPACE = "remoting:";
 
+	private static final String NAMESPACE_SERVICES = NAMESPACE + "services:";
+
+	private static final String NAMESPACE_HOSTS = NAMESPACE + "hosts:";
+
 	@Inject
 	@Named("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
@@ -66,21 +70,21 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 	@Override
 	protected void lookup(String serviceName) {
 		List<String> list = stringRedisTemplate.opsForList().range(
-				NAMESPACE + serviceName, 0, -1);
+				NAMESPACE_SERVICES + serviceName, 0, -1);
 		if (list != null && list.size() > 0)
 			importServices.put(serviceName, list);
 	}
 
 	@Override
 	protected void doRegister(String serviceName, String host) {
-		stringRedisTemplate.opsForList().rightPush(NAMESPACE + serviceName,
-				host);
+		stringRedisTemplate.opsForList().rightPush(
+				NAMESPACE_SERVICES + serviceName, host);
 	}
 
 	@Override
 	protected void doUnregister(String serviceName, String host) {
-		stringRedisTemplate.opsForList().remove(NAMESPACE + serviceName, 0,
-				host);
+		stringRedisTemplate.opsForList().remove(
+				NAMESPACE_SERVICES + serviceName, 0, host);
 	}
 
 	@Override
@@ -101,7 +105,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
-				stringRedisTemplate.opsForHash().putAll(NAMESPACE + host,
+				stringRedisTemplate.opsForHash().putAll(NAMESPACE_HOSTS + host,
 						discoveredServices);
 			}
 		};
