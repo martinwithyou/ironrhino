@@ -10,14 +10,16 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
@@ -52,22 +54,23 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	private String title;
 
 	@NotInJson
-	@Column
-	@Type(type = "text")
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
 	private String head;
 
 	@NotInJson
 	@SearchableProperty
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
 	@Column(nullable = false)
-	@Type(type = "text")
 	private String content;
 
 	@SearchableProperty
 	private int displayOrder;
 
 	@NotInJson
-	@Column
-	@Type(type = "text")
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
 	private String draft;
 
 	private Date draftDate;

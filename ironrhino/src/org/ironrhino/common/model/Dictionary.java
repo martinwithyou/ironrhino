@@ -9,8 +9,11 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -18,7 +21,6 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -89,7 +91,8 @@ public class Dictionary extends BaseEntity {
 	@NotInCopy
 	@UiConfig(hidden = true)
 	@Column(name = "items")
-	@Type(type = "text")
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
 	@Access(AccessType.PROPERTY)
 	public String getItemsAsString() {
 		if (items == null || items.isEmpty())
