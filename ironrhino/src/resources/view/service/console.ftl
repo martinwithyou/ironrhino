@@ -27,18 +27,17 @@ $(document).on('click','a.host',function(e){
 	var t = $(this);
 	var url = CONTEXT_PATH+'${actionBaseUrl}/services/'+t.text();
 	$.getJSON(url,function(data){
-		
 		if(!$('#discovered-services').length)
 			$('<div id="discovered-services"/>').insertAfter($('hr'));
 		var ul = $('<ul class="unstyled"/>').appendTo($('#discovered-services'));
 		$.each(data,function(k,v){
 			$('<li/>').appendTo(ul).html(k+'<a class="host" href="#" style="margin-left:20px;">'+v+'</a>');
 		});	
+		if(!$('#discovered-services li').length){
+			$('#discovered-services').remove();
+			alert('no discovered services');
+		}
 	});
-	if(!$('#discovered-services li').length){
-		$('#discovered-services').remove();
-		alert('no discovered services');
-	}
 	return false;
 });
 });
