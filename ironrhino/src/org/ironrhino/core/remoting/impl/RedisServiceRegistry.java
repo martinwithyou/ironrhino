@@ -4,10 +4,13 @@ import static org.ironrhino.core.metadata.Profiles.CLOUD;
 import static org.ironrhino.core.metadata.Profiles.DUAL;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
@@ -113,6 +116,33 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 			executorService.execute(task);
 		else
 			task.run();
+	}
+
+	public Collection<String> getAllServices() {
+		Set<String> keys = stringRedisTemplate.keys(NAMESPACE_SERVICES + "*");
+		List<String> services = new ArrayList<String>(keys.size());
+		for (String s : keys)
+			services.add(s.substring(NAMESPACE_SERVICES.length()));
+		Collections.sort(services);
+		return services;
+	}
+
+	public Collection<String> getHostsForService(String service) {
+		List<String> list = stringRedisTemplate.opsForList().range(
+				NAMESPACE_SERVICES + service, 0, -1);
+		List<String> hosts = new ArrayList<String>(list.size());
+		hosts.addAll(list);
+		Collections.sort(hosts);
+		return hosts;
+	}
+
+	public Map<String, String> getDiscoveredServices(String host) {
+		Map<Object, Object> map = stringRedisTemplate.opsForHash().entries(
+				NAMESPACE_HOSTS + host);
+		Map<String, String> services = new TreeMap<String, String>();
+		for (Map.Entry<Object, Object> entry : map.entrySet())
+			services.put((String) entry.getKey(), (String) entry.getValue());
+		return services;
 	}
 
 }
