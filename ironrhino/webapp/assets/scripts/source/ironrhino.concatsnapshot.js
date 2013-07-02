@@ -49,17 +49,14 @@
 								if (maxwidth && canvas.width > maxwidth)
 									scale(canvas, maxwidth / canvas.width);
 								var data = image.toDataURL();
-								if (data.length > parseInt($(field)
-										.data('maximum'))) {
-									Message
-											.showActionError(MessageBundle
-													.get(
-															$(field)
-																	.data('error')
-																	|| 'maximum.exceeded',
-															data.length,
-															field
-																	.data('maximum')));
+								var maxlength = parseInt($(field)
+										.data('maximum'))
+										|| parseInt($(field).attr('maxlength'));
+								if (data.length > maxlength) {
+									Message.showActionError(MessageBundle.get(
+											$(field).data('error')
+													|| 'maximum.exceeded',
+											data.length, maxlength));
 									$(target).data('count', '0');
 									image.parentNode.removeChild(image);
 								} else {

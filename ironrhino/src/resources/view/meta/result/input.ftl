@@ -38,11 +38,7 @@
 			<#elseif config.type=='listpick'>
 				<#if !readonly>
 					<div class="control-group listpick" data-options="{'url':'<@url value="${config.pickUrl}"/>','name':'#${key}','id':'#${key}Id'}">
-					<#if config.required>
-						<@s.hidden id="${key}Id" name="${entityName}.${key}.id" cssClass="required"/>
-					<#else>
-						<@s.hidden id="${key}Id" name="${entityName}.${key}.id"/>
-					</#if>
+						<@s.hidden id="${key}Id" name="${entityName}.${key}.id" cssClass="${config.cssClass}"/>
 						<label class="control-label" for="${key}">${action.getText(label)}</label>
 						<div class="controls">
 						<span id="${key}"><#if entity[key]??><#if entity[key].fullname??>${entity[key].fullname!}<#else>${entity[key]!}</#if><a class="remove" href="#">&times;</a><#else>...</#if></span>
@@ -74,13 +70,42 @@
 					<@editAttributes schemaName=templateName attributes=entity.attributes parameterNamePrefix=entityName+'.'/>
 					</div>
 				</#if>
+			<#elseif config.type=='imageupload'>
+				<#if !readonly>
+					<div class="control-group">
+						<@s.hidden id="${entityName}-${key}" name="${entityName}.${key}" cssClass="nocheck ${config.cssClass}" maxlength="${(config.maxlength gt 0)?string(config.maxlength,'')}" dynamicAttributes=config.dynamicAttributes/>
+						<label class="control-label" for="${key}">${action.getText(label)}</label>
+						<div class="controls">
+							<div style="margin-bottom:5px;">
+							<button class="btn concatimage" type="button" data-target="${entityName}-${key}-image" data-field="${entityName}-${key}" data-maximum="1">${action.getText('upload')}</button>
+							<#if config.cssClasses?seq_contains('concatsnapshot')>
+							<button class="btn concatsnapshot" type="button" data-target="${entityName}-${key}-image" data-field="${entityName}-${key}" data-maximum="1">${action.getText('snapshot')}</button>
+							</#if>
+							</div>
+							<div id="${entityName}-${key}-image" style="text-align:center;min-height:100px;border:1px solid #ccc;">
+								<#if entity[key]?has_content>
+									<img src="${entity[key]}"/>
+								<#else>
+									${action.getText('drag.image.file')}
+								</#if>
+							</div>
+						</div>
+					</div>
+				<#else>
+					<div class="control-group">
+						<label class="control-label" for="${key}">${action.getText(label)}</label>
+						<div class="controls">
+						<span id="${key}">${entity[key]!}</span>
+						</div>
+					</div>
+				</#if>
 			<#else>
 				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" type="${(config.inputType!)}" cssClass="${config.cssClass}" maxlength="${(config.maxlength gt 0)?string(config.maxlength,'')}" readonly=readonly dynamicAttributes=config.dynamicAttributes />
 			</#if>
 		</#if>
 		</#if>
 	</#list>
-	<@s.submit value="%{getText('save')}" />
+	<@s.submit value="%{getText('save')}" cssClass="btn-primary"/>
 </@s.form>
 </body>
 </html></#escape>
