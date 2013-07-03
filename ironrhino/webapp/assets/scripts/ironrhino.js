@@ -33346,6 +33346,7 @@ Observation.checkavailable = function(container) {
 			var t = $(this);
 			var target = t.data('target') ? document.getElementById($(this)
 					.data('target')) : this.parentNode();
+			$(target).data('original-width', $(target).innerWidth());
 			var field = document.getElementById(t.data('field'));
 			var count = $(target).data('count');
 			if (count && parseInt(count) >= parseInt(t.data('maximum'))) {
@@ -33384,6 +33385,8 @@ Observation.checkavailable = function(container) {
 								context.drawImage(canvas, 0, image2.height);
 								image2.parentNode.removeChild(image2);
 							}
+							if (image.width > $(target).data('original-width'))
+								$(image).css('width', '100%');
 							if (field) {
 								var maxwidth = parseInt($(field)
 										.data('maxwidth'));
@@ -33441,6 +33444,7 @@ Observation.concatsnapshot = function(container) {
 					var t = $(this);
 					var target = t.data('target') ? document.getElementById(t
 							.data('target')) : this.parentNode();
+					$(target).data('original-width', $(target).innerWidth());
 					var field = document.getElementById(t.data('field'));
 					var maximum = parseInt(t.data('maximum'));
 					t.click(function() {
@@ -33507,8 +33511,8 @@ Observation.concatsnapshot = function(container) {
 		var height = 0;
 		for (var i = 0; i < imgs.length; i++) {
 			var img = imgs[i];
-			maxWidth = Math.max(img.width, maxWidth);
-			height += img.height;
+			maxWidth = Math.max(img.naturalWidth || img.width, maxWidth);
+			height += img.naturalHeight || img.height;
 		}
 		var canvas = document.createElement("canvas");
 		canvas.width = maxWidth;
@@ -33522,6 +33526,8 @@ Observation.concatsnapshot = function(container) {
 			height += img.height;
 		}
 		target.appendChild(canvas);
+		if (canvas.width > $(target).data('original-width'))
+			$(canvas).css('width', '100%');
 		if (field) {
 			var maxwidth = parseInt($(field).data('maxwidth'));
 			if (maxwidth && canvas.width > maxwidth)

@@ -5,6 +5,7 @@
 			var t = $(this);
 			var target = t.data('target') ? document.getElementById($(this)
 					.data('target')) : this.parentNode();
+			$(target).data('original-width', $(target).innerWidth());
 			var field = document.getElementById(t.data('field'));
 			var count = $(target).data('count');
 			if (count && parseInt(count) >= parseInt(t.data('maximum'))) {
@@ -43,6 +44,8 @@
 								context.drawImage(canvas, 0, image2.height);
 								image2.parentNode.removeChild(image2);
 							}
+							if (image.width > $(target).data('original-width'))
+								$(image).css('width', '100%');
 							if (field) {
 								var maxwidth = parseInt($(field)
 										.data('maxwidth'));

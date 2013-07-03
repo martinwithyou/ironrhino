@@ -5,6 +5,7 @@
 					var t = $(this);
 					var target = t.data('target') ? document.getElementById(t
 							.data('target')) : this.parentNode();
+					$(target).data('original-width', $(target).innerWidth());
 					var field = document.getElementById(t.data('field'));
 					var maximum = parseInt(t.data('maximum'));
 					t.click(function() {
@@ -71,8 +72,8 @@
 		var height = 0;
 		for (var i = 0; i < imgs.length; i++) {
 			var img = imgs[i];
-			maxWidth = Math.max(img.width, maxWidth);
-			height += img.height;
+			maxWidth = Math.max(img.naturalWidth || img.width, maxWidth);
+			height += img.naturalHeight || img.height;
 		}
 		var canvas = document.createElement("canvas");
 		canvas.width = maxWidth;
@@ -86,6 +87,8 @@
 			height += img.height;
 		}
 		target.appendChild(canvas);
+		if (canvas.width > $(target).data('original-width'))
+			$(canvas).css('width', '100%');
 		if (field) {
 			var maxwidth = parseInt($(field).data('maxwidth'));
 			if (maxwidth && canvas.width > maxwidth)
