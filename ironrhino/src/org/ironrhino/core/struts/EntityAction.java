@@ -1724,7 +1724,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			vs.set(getEntityName(), entity);
 	}
 
-	private Persistable constructEntity() {
+	protected Persistable constructEntity() {
 		Persistable entity = null;
 		try {
 			entity = getEntityClass().newInstance();
