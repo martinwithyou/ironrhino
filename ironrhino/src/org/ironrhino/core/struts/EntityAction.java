@@ -1305,7 +1305,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	@Override
 	protected Authorize findAuthorize() {
-		Authorize authorize = getAnnotation(Authorize.class);
+		Authorize authorize = findAuthorize();
 		if (authorize == null) {
 			Class<?> c = getEntityClass();
 			return c.getAnnotation(Authorize.class);
