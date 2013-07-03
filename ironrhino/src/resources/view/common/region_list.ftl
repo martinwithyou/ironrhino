@@ -5,9 +5,9 @@
 </head>
 <body>
 <#assign columns={"name":{"cellEdit":"click"},"areacode":{"cellEdit":"click","width":"100px"},"postcode":{"cellEdit":"click","width":"100px"},"rank":{"cellEdit":"click","width":"100px"},"displayOrder":{"cellEdit":"click","width":"100px"}}>
-<#assign actionColumnButtons='
+<#assign actionColumnButtons=r'
 <button type="button" class="btn" data-view="input">${action.getText("edit")}</button>
-<button type="button" class="btn" data-action="enter">${action.getText("enter")}</button>
+<a class="btn ajax view" href="${getUrl(actionBaseUrl+"?parentId="+entity.id)}">${action.getText("enter")}</a>
 '>
 <#assign bottomButtons='
 <button type="button" class="btn" data-view="input">${action.getText("create")}</button>
@@ -16,15 +16,31 @@
 '+r'
 <#if region?? && parentId??>
 <#if region.parent??>
-<a class="btn" href="${getUrl(actionBaseUrl+"?parentId="+region.parent.id)}">${action.getText("upward")}</a>
+<a class="btn ajax view" href="${getUrl(actionBaseUrl+"?parentId="+region.parent.id)}">${action.getText("upward")}</a>
 <#else>
-<a class="btn" href="${getUrl(actionBaseUrl)}">${action.getText("upward")}</a>
+<a class="btn ajax view" href="${getUrl(actionBaseUrl)}">${action.getText("upward")}</a>
 </#if>
 </#if>
 '+'
 <button type="button" class="btn" onclick="$(\'#move\').toggle()">${action.getText("move")}</button>
 <button type="button" class="btn" onclick="$(\'#merge\').toggle()">${action.getText("merge")}</button>
 '>
+<#if region?? && region.id?? && region.id gt 0>
+<ul class="breadcrumb">
+	<li>
+    	<a href="<@url value="${actionBaseUrl}"/>" class="ajax view">${action.getText('region')}</a> <span class="divider">/</span>
+	</li>
+	<#if region.level gt 1>
+	<#list 1..region.level-1 as level>
+	<#assign ancestor=region.getAncestor(level)>
+	<li>
+    	<a href="<@url value="${actionBaseUrl}?parentId=${ancestor.id?string}"/>" class="ajax view">${ancestor.name}</a> <span class="divider">/</span>
+	</li>
+	</#list>
+	</#if>
+	<li class="active">${region.name}</li>
+</ul>
+</#if>
 <@richtable entityName="region" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons/>
 <form id="move" action="region/move" method="post" class="ajax reset" style="display:none;" onprepare="return confirm('${action.getText('confirm')}?');" onsuccess="Richtable.reload($('#region_form'))">
 	<div style="padding-top:10px;text-align:center;">
