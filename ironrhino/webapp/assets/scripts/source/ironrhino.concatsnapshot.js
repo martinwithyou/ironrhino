@@ -61,6 +61,9 @@
 									image.parentNode.removeChild(image);
 								} else {
 									$(field).val(data);
+									var form = $(field).closest('form');
+									if (!form.hasClass('nodirty'))
+										form.addClass('dirty');
 								}
 							}
 						},

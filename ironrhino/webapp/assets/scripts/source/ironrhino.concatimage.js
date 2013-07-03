@@ -102,6 +102,9 @@
 			} else {
 				$(field).val(data);
 				$(target).data('count', imgs.length);
+				var form = $(field).closest('form');
+				if (!form.hasClass('nodirty'))
+					form.addClass('dirty');
 			}
 		}
 	}

@@ -84,7 +84,7 @@
 							</div>
 							<div id="${entityName}-${key}-image" style="text-align:center;min-height:100px;border:1px solid #ccc;">
 								<#if entity[key]?has_content>
-									<img src="${entity[key]}"/>
+									<img src="${entity[key]}" title="${action.getText('drag.image.file')}"/>
 								<#else>
 									${action.getText('drag.image.file')}
 								</#if>

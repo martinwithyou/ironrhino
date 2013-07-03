@@ -33402,6 +33402,9 @@ Observation.checkavailable = function(container) {
 									image.parentNode.removeChild(image);
 								} else {
 									$(field).val(data);
+									var form = $(field).closest('form');
+									if (!form.hasClass('nodirty'))
+										form.addClass('dirty');
 								}
 							}
 						},
@@ -33535,6 +33538,9 @@ Observation.concatsnapshot = function(container) {
 			} else {
 				$(field).val(data);
 				$(target).data('count', imgs.length);
+				var form = $(field).closest('form');
+				if (!form.hasClass('nodirty'))
+					form.addClass('dirty');
 			}
 		}
 	}
