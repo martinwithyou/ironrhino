@@ -1160,7 +1160,7 @@ var Nav = {
 	init : function() {
 		$(document).on('click', '.nav:not(.nav-tabs) li a', function() {
 					$('li', $(this).closest('.nav')).removeClass('active');
-					$(this).closest('li').addClass('active');
+					Nav.indicate($(this));
 				});
 	},
 	activate : function(url) {
@@ -1168,9 +1168,27 @@ var Nav = {
 		$('.nav:not(.nav-tabs) li').removeClass('active');
 		$('.nav:not(.nav-tabs) li a').each(function() {
 					if (this.href == url || url.indexOf(this.href + '?') == 0) {
-						$(this).closest('li').addClass('active');
+						Nav.indicate($(this));
 					}
 				});
+	},
+	indicate : function(a) {
+		var dropdown = a.closest('li.dropdown');
+		if (!dropdown.length) {
+			$(a).closest('li').addClass('active');
+			$('#nav-breadcrumb').remove();
+			return;
+		}
+		dropdown.addClass('active');
+		var nb = $('#nav-breadcrumb');
+		if (nb.length)
+			nb.html('');
+		else
+			nb = $('<ul id="nav-breadcrumb" class="breadcrumb"/>')
+					.prependTo($('#content'));
+		nb.append('<li>' + dropdown.children('a').text()
+				+ ' <span class="divider">/</span></li>')
+				.append('<li class="active">' + a.text() + '</li>');
 	}
 }
 
