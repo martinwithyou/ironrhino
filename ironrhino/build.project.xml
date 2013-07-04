@@ -301,17 +301,17 @@
 	<target name="unzip-assets">
 		<move file="${webapp.dir}/assets" tofile="${webapp.dir}/assetsbak"
 			preservelastmodified="true" failonerror="false" />
-		<sync todir="${webapp.dir}/assets" failonerror="false">
-			<fileset dir="${webapp.dir}/assetsbak" />
-			<preserveintarget>
-				<include name="**/**" />
-			</preserveintarget>
-		</sync>
 		<unzip dest="${webapp.dir}">
 			<fileset dir="${webapp.dir}/WEB-INF/lib" includes="ironrhino-assets-*.jar" />
 		</unzip>
 		<sync todir="${webapp.dir}/assets">
 			<fileset dir="${webapp.dir}/META-INF/resources/assets" />
+			<preserveintarget>
+				<include name="**/**" />
+			</preserveintarget>
+		</sync>
+		<sync todir="${webapp.dir}/assets" failonerror="false">
+			<fileset dir="${webapp.dir}/assetsbak" />
 			<preserveintarget>
 				<include name="**/**" />
 			</preserveintarget>
@@ -331,11 +331,12 @@
 		<antcall target="unzip-assets" />
 		<antcall target="append-revision-for-assets" />
 		<antcall target="reset-assets" />
-		<copy todir="${classes.dir}/META-INF/resources" preservelastmodified="true" failonerror="false">
-			<fileset dir="${webapp.dir}" includes="assets/**"/>
+		<copy todir="${classes.dir}/META-INF/resources"
+			preservelastmodified="true" failonerror="false">
+			<fileset dir="${webapp.dir}" includes="assets/**" />
 		</copy>
 		<jar jarfile="${target.dir}/${jar.name}" basedir="${classes.dir}" />
-		<delete dir="${classes.dir}/META-INF/resources"/>
+		<delete dir="${classes.dir}/META-INF/resources" />
 		<antcall target="reset-append-revision-for-assets" />
 	</target>
 
