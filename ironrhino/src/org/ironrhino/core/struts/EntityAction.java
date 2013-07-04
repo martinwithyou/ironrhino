@@ -155,8 +155,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				if (!owner.isolate()
 						&& owner.readonlyForOther()
 						&& !(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
-								.getRoleNames()
-								.contains(owner.supervisorRole()))) {
+								.authorize(null, owner.supervisorRole(), null))) {
 					readonlyConfig = new ReadonlyConfigImpl();
 					readonlyConfig.setReadonly(false);
 					StringBuilder sb = new StringBuilder("!entity.");
@@ -529,7 +528,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();
 				if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
-						.getRoleNames().contains(owner.supervisorRole()))
+						.authorize(null, owner.supervisorRole(), null))
 						&& owner.isolate()) {
 					UserDetails ud = AuthzUtils.getUserDetails(ownerProperty
 							.getValue());
@@ -660,7 +659,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();
 				if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
-						.getRoleNames().contains(owner.supervisorRole()))
+						.authorize(null, owner.supervisorRole(), null))
 						&& (owner.isolate() || owner.readonlyForOther())) {
 					UserDetails ud = AuthzUtils.getUserDetails(ownerProperty
 							.getValue());
@@ -761,7 +760,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();
 				if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
-						.getRoleNames().contains(owner.supervisorRole()))
+						.authorize(null, owner.supervisorRole(), null))
 						&& (ownerProperty.getKey().isolate() || ownerProperty
 								.getKey().readonlyForOther())) {
 					UserDetails ud = AuthzUtils.getUserDetails(ownerProperty
@@ -1142,7 +1141,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		if (ownerProperty != null) {
 			Owner owner = ownerProperty.getKey();
 			if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
-					.getRoleNames().contains(owner.supervisorRole()))
+					.authorize(null, owner.supervisorRole(), null))
 					&& owner.isolate()) {
 				UserDetails ud = AuthzUtils.getUserDetails(ownerProperty
 						.getValue());
@@ -1187,7 +1186,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();
 				if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
-						.getRoleNames().contains(owner.supervisorRole()))) {
+						.authorize(null, owner.supervisorRole(), null))) {
 					ud = AuthzUtils.getUserDetails(ownerProperty.getValue());
 					if (ud == null) {
 						addActionError(getText("access.denied"));
@@ -1205,8 +1204,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					if (ownerProperty != null) {
 						Owner owner = ownerProperty.getKey();
 						if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
-								.getRoleNames()
-								.contains(owner.supervisorRole()))
+								.authorize(null, owner.supervisorRole(), null))
 								&& (owner.isolate() || owner.readonlyForOther())) {
 							Object value = new BeanWrapperImpl(en)
 									.getPropertyValue(owner.propertyName());
@@ -1268,7 +1266,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();
 				if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
-						.getRoleNames().contains(owner.supervisorRole()))) {
+						.authorize(null, owner.supervisorRole(), null))) {
 					ud = AuthzUtils.getUserDetails(ownerProperty.getValue());
 					if (ud == null) {
 						addActionError(getText("access.denied"));
@@ -1283,7 +1281,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				if (ownerProperty != null) {
 					Owner owner = ownerProperty.getKey();
 					if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
-							.getRoleNames().contains(owner.supervisorRole()))
+							.authorize(null, owner.supervisorRole(), null))
 							&& (owner.isolate() || owner.readonlyForOther())) {
 						Object value = new BeanWrapperImpl(en)
 								.getPropertyValue(owner.propertyName());
