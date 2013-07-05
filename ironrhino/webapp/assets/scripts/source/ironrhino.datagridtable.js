@@ -59,6 +59,7 @@
 
 	var addRow = function(event, options, row, first) {
 		var current = $(event.target).closest('tr');
+		var table = current.closest('table');
 		var row = row
 				|| $(event.target).closest('tbody')
 						.children(':not(.nontemplate):eq(0)');
@@ -70,6 +71,26 @@
 		$(':input[type!=checkbox][type!=radio]', r).val('');
 		$('input[type=checkbox],input[type=radio]', r).prop('checked', false);
 		$(':input', r).prop('readonly', false).removeAttr('keyupValidate');
+		$('select.decrease', r).each(function() {
+			var selectedValues = $.map($('select.decrease', table), function(e,
+							i) {
+						return $(e).val();
+					});
+			$('option', this).each(function() {
+				var t = $(this);
+				t.css('display', '');
+				var selected = false;
+				for (var j = 0; j < selectedValues.length; j++) {
+					if (selectedValues[j]
+							&& t.attr('value') == selectedValues[j]) {
+						selected = true;
+						break;
+					}
+				}
+				if (selected)
+					t.css('display', 'none');
+			});
+		});
 		$('.datagrided tr', r).each(function(i) {
 					if (i > 0)
 						$(this).remove();
