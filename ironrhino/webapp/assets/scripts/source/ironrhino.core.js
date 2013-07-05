@@ -1179,6 +1179,8 @@ var Nav = {
 			$('#nav-breadcrumb').remove();
 			return;
 		}
+		if (a.hasClass('dropdown-toggle'))
+			return;
 		dropdown.addClass('active');
 		var nb = $('#nav-breadcrumb');
 		if (nb.length)
