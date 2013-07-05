@@ -76,6 +76,8 @@ public class BaseAction extends ActionSupport {
 
 	protected boolean csrfRequired;
 
+	private String actionBaseUrl;
+
 	@Autowired(required = false)
 	protected transient CaptchaManager captchaManager;
 
@@ -117,11 +119,17 @@ public class BaseAction extends ActionSupport {
 	}
 
 	public String getActionBaseUrl() {
-		ActionProxy proxy = ActionContext.getContext().getActionInvocation()
-				.getProxy();
-		String actionName = proxy.getActionName();
-		String namespace = proxy.getNamespace();
-		return namespace + (namespace.endsWith("/") ? "" : "/") + actionName;
+		if (actionBaseUrl == null) {
+			ActionProxy proxy = ActionContext.getContext()
+					.getActionInvocation().getProxy();
+			String namespace = proxy.getNamespace();
+			StringBuilder sb = new StringBuilder(ServletActionContext
+					.getRequest().getContextPath()).append(namespace)
+					.append(namespace.endsWith("/") ? "" : "/")
+					.append(proxy.getActionName());
+			actionBaseUrl = sb.toString();
+		}
+		return actionBaseUrl;
 	}
 
 	public String getKeyword() {

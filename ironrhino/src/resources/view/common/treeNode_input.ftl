@@ -4,7 +4,7 @@
 <title><#if treeNode.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('treeNode')}</title>
 </head>
 <body>
-<@s.form action="${getUrl(actionBaseUrl+'/save')}" method="post" cssClass="ajax form-horizontal">
+<@s.form action="${actionBaseUrl}/save" method="post" cssClass="ajax form-horizontal">
 	<#if !treeNode.new>
 		<@s.hidden name="treeNode.id" />
 	</#if>

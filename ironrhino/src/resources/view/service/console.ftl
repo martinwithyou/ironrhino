@@ -9,7 +9,7 @@ $('.service').click(function(){
 	if(t.next('ul').length){
 		t.next('ul').remove();
 	}else{
-		var url = CONTEXT_PATH+'${actionBaseUrl}/hosts/'+t.text();
+		var url = '${actionBaseUrl}/hosts/'+t.text();
 		$.getJSON(url,function(data){
 			if(!data.length){
 				alert('no active providers for this service');
@@ -25,7 +25,7 @@ $('.service').click(function(){
 $(document).on('click','a.host',function(e){
 	$('#discovered-services').remove();
 	var t = $(this);
-	var url = CONTEXT_PATH+'${actionBaseUrl}/services/'+t.text();
+	var url = '${actionBaseUrl}/services/'+t.text();
 	$.getJSON(url,function(data){
 		if(!$('#discovered-services').length)
 			$('<div id="discovered-services"/>').insertAfter($('hr'));

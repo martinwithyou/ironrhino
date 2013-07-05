@@ -6,7 +6,7 @@
 <body>
 <div class="row">
 <div class="span6">
-<form action="<@url value="${actionBaseUrl}/chart/${uid}"/>" class="ajax view form-inline" data-replacement="c">
+<form action="${actionBaseUrl}/chart/${uid}" class="ajax view form-inline" data-replacement="c">
 <@s.hidden name="vtype"/>
 <@s.hidden name="ctype"/>
 <span>${action.getText('date')}</span>
@@ -15,7 +15,7 @@
 </form>
 </div>
 <div class="span6">
-<form action="<@url value="${actionBaseUrl}/chart/${uid}"/>" class="ajax view form-inline" data-replacement="c">
+<form action="${actionBaseUrl}/chart/${uid}" class="ajax view form-inline" data-replacement="c">
 <@s.hidden name="vtype"/>
 <@s.hidden name="ctype"/>
 <span>${action.getText('date.range')}</span>

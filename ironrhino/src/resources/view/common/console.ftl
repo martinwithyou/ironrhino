@@ -8,7 +8,7 @@ $(function(){
 			var t = $(this);
 			$.ajax({
 				type:'POST',
-				url:'<@url value="${actionBaseUrl}/executeJson"/>',
+				url:'${actionBaseUrl}/executeJson',
 				data:{
 					expression : $(this).data('expression')||$(this).text(),
 					scope: $(this).data('scope')
@@ -35,7 +35,7 @@ $(function(){
 			var t = this;
 			var key = t.name;
 			var value = t.checked;
-			$.post('<@url value="${actionBaseUrl}/executeJson"/>',
+			$.post('${actionBaseUrl}/executeJson',
 								{
 								expression : 'settingControl.setValue("'+key+'","'+value+'")'
 								}

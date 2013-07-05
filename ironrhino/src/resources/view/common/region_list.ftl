@@ -7,7 +7,7 @@
 <#assign columns={"name":{"cellEdit":"click"},"areacode":{"cellEdit":"click","width":"100px"},"postcode":{"cellEdit":"click","width":"100px"},"rank":{"cellEdit":"click","width":"100px"},"displayOrder":{"cellEdit":"click","width":"100px"}}>
 <#assign actionColumnButtons=r'
 <button type="button" class="btn" data-view="input">${action.getText("edit")}</button>
-<a class="btn ajax view" href="${getUrl(actionBaseUrl+"?parentId="+entity.id)}">${action.getText("enter")}</a>
+<a class="btn ajax view" href="${actionBaseUrl+"?parentId="+entity.id}">${action.getText("enter")}</a>
 '>
 <#assign bottomButtons='
 <button type="button" class="btn" data-view="input">${action.getText("create")}</button>
@@ -16,9 +16,9 @@
 '+r'
 <#if region?? && parentId??>
 <#if region.parent??>
-<a class="btn ajax view" href="${getUrl(actionBaseUrl+"?parentId="+region.parent.id)}">${action.getText("upward")}</a>
+<a class="btn ajax view" href="${actionBaseUrl+"?parentId="+region.parent.id}">${action.getText("upward")}</a>
 <#else>
-<a class="btn ajax view" href="${getUrl(actionBaseUrl)}">${action.getText("upward")}</a>
+<a class="btn ajax view" href="${actionBaseUrl}">${action.getText("upward")}</a>
 </#if>
 </#if>
 '+'
@@ -28,13 +28,13 @@
 <#if region?? && region.id?? && region.id gt 0>
 <ul class="breadcrumb">
 	<li>
-    	<a href="<@url value="${actionBaseUrl}"/>" class="ajax view">${action.getText('region')}</a> <span class="divider">/</span>
+    	<a href="${actionBaseUrl}" class="ajax view">${action.getText('region')}</a> <span class="divider">/</span>
 	</li>
 	<#if region.level gt 1>
 	<#list 1..region.level-1 as level>
 	<#assign ancestor=region.getAncestor(level)>
 	<li>
-    	<a href="<@url value="${actionBaseUrl}?parentId=${ancestor.id?string}"/>" class="ajax view">${ancestor.name}</a> <span class="divider">/</span>
+    	<a href="${actionBaseUrl}?parentId=${ancestor.id?string}" class="ajax view">${ancestor.name}</a> <span class="divider">/</span>
 	</li>
 	</#list>
 	</#if>

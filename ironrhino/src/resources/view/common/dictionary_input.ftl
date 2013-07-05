@@ -4,7 +4,7 @@
 <title><#if dictionary.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('dictionary')}</title>
 </head>
 <body>
-<@s.form action="${getUrl(actionBaseUrl+'/save')}" method="post" cssClass="ajax" cssStyle="text-align:center;">
+<@s.form action="${actionBaseUrl}/save" method="post" cssClass="ajax" cssStyle="text-align:center;">
 	<#if !dictionary.new>
 		<@s.hidden name="dictionary.id" />
 	</#if>

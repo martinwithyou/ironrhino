@@ -83,7 +83,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="pv_result">
-<#assign dataurl=getUrl(actionBaseUrl+"/pv")/>
+<#assign dataurl=actionBaseUrl+"/pv"/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -106,7 +106,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="uip_result">
-<#assign dataurl=getUrl(actionBaseUrl+"/uip")/>
+<#assign dataurl=actionBaseUrl+"/uip"/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -130,7 +130,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="usid_result">
-<#assign dataurl=getUrl(actionBaseUrl+"/usid")/>
+<#assign dataurl=actionBaseUrl+"/usid"/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -153,7 +153,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="uu_result">
-<#assign dataurl=getUrl(actionBaseUrl+"/uu")/>
+<#assign dataurl=actionBaseUrl+"/uu"/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -182,7 +182,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="url_result">
-<#assign dataurl=getUrl(actionBaseUrl+"/url")/>
+<#assign dataurl=actionBaseUrl+"/url"/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -210,7 +210,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="fr_result">
-<#assign dataurl=getUrl(actionBaseUrl+"/fr")/>
+<#assign dataurl=actionBaseUrl+"/fr"/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -238,7 +238,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="pr_result">
-<#assign dataurl=getUrl(actionBaseUrl+"/pr")/>
+<#assign dataurl=actionBaseUrl+"/pr"/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -267,7 +267,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="ct_result">
-<#assign dataurl=getUrl(actionBaseUrl+"/ct")/>
+<#assign dataurl=actionBaseUrl+"/ct"/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -295,7 +295,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="kw_result">
-<#assign dataurl=getUrl(actionBaseUrl+"/kw")/>
+<#assign dataurl=actionBaseUrl+"/kw"/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>
@@ -323,7 +323,7 @@ Initialization.pageView = function() {
 </div>
 </div>
 <div id="se_result">
-<#assign dataurl=getUrl(actionBaseUrl+"/se")/>
+<#assign dataurl=actionBaseUrl+"/se"/>
 <#if request.queryString?has_content>
 <#assign dataurl=dataurl+'?'+request.queryString/>
 </#if>

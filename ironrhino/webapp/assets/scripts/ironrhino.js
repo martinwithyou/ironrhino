@@ -36266,7 +36266,7 @@ Richtable = {
 		else
 			url = entity ? entity : form.attr('action');
 		if (form.data('actionbaseurl'))
-			url = CONTEXT_PATH + form.data('actionbaseurl');
+			url = form.data('actionbaseurl');
 		var p = url.indexOf('?');
 		if (p > 0)
 			url = url.substring(0, p);

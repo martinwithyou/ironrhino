@@ -90,7 +90,7 @@ $(function() {
 </script>
 </head>
 <body>
-<@s.form id="form" action="${getUrl(actionBaseUrl+'/draft')}" method="post" cssClass="ajax form-horizontal" cssStyle="padding-top:13px;">
+<@s.form id="form" action="${actionBaseUrl}/draft" method="post" cssClass="ajax form-horizontal" cssStyle="padding-top:13px;">
 	<@s.hidden name="page.id" />
 	<#if Parameters.brief??>
 	<@s.hidden name="page.pagepath"/>
@@ -109,7 +109,7 @@ $(function() {
 	<div id="_page_base" class="tab-pane active">
 	<@s.textfield id="page_path" label="%{getText('path')}" name="page.pagepath" cssClass="required checkavailable" cssStyle="width:600px;"/>
 	<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" type="number" cssClass="integer"/>
-	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString"  cssClass="tags" dynamicAttributes={"data-source":"${getUrl(actionBaseUrl+'/suggest')}"} cssStyle="width:600px;"/>
+	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString"  cssClass="tags" dynamicAttributes={"data-source":"${actionBaseUrl}/suggest"} cssStyle="width:600px;"/>
 	<@s.textfield label="%{getText('title')}" name="page.title" cssStyle="width:600px;"/>
 	</div>
 	<div id="_page_content" class="tab-pane">

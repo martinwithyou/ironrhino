@@ -55,7 +55,7 @@ function getMarkers(){
 	var bounds = map.getBounds();
 	var southWest = bounds.getSouthWest();
 	var northEast = bounds.getNorthEast();
-	var url = '<@url value="${actionBaseUrl}/markers?southWest="/>'+southWest.lat()+','+southWest.lng()+'&northEast='+northEast.lat()+','+northEast.lng()+'&zoom='+map.getZoom();
+	var url = '${actionBaseUrl}/markers?southWest='+southWest.lat()+','+southWest.lng()+'&northEast='+northEast.lat()+','+northEast.lng()+'&zoom='+map.getZoom();
 	$.ajax({
 		url:url, 
 		global:false,
@@ -120,7 +120,7 @@ function moveMarker(marker){
 				'region.coordinate.latitude':region.coordinate.latitude,
 				'region.coordinate.longitude':region.coordinate.longitude
 			}	
-			$.ajax({url:'<@url value="${actionBaseUrl}/mark"/>',data:data,global:false,success:function(resp){
+			$.ajax({url:'${actionBaseUrl}/mark',data:data,global:false,success:function(resp){
 				if(resp.actionMessages){
 					  closeSuccessInfoWindow();	
 					  successInfoWindow = new google.maps.InfoWindow();
@@ -171,7 +171,7 @@ function moveTo(region){
 			'region.coordinate.latitude':region.coordinate.latitude,
 			'region.coordinate.longitude':region.coordinate.longitude
 			}
-			$.ajax({url:'<@url value="${actionBaseUrl}/mark"/>',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
+			$.ajax({url:'${actionBaseUrl}/mark',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
 	      } else {
 	      	alert(status);
 	      }
@@ -193,7 +193,7 @@ function mark(region){
 			'region.coordinate.latitude':region.coordinate.latitude,
 			'region.coordinate.longitude':region.coordinate.longitude
 		}	
-		$.ajax({url:'<@url value="${actionBaseUrl}/mark"/>',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
+		$.ajax({url:'${actionBaseUrl}/mark',data:data,global:false,success:function(resp){if(resp.actionMessages)addMarker(region)}});
 		
 	}else{
 		alert('请先点击此地点在地图上的位置再标注');
@@ -202,7 +202,7 @@ function mark(region){
 }
 
 function markall(){
-	var url = '<@url value="${actionBaseUrl}/unmarked"/>';
+	var url = '${actionBaseUrl}/unmarked';
 	$.getJSON(url,function(data){
 		unmarked = data;
 		nextRequestInQueue();
@@ -222,7 +222,7 @@ function nextRequestInQueue(){
 						'region.coordinate.latitude':pos.lat(),
 						'region.coordinate.longitude':pos.lng()
 						}
-						$.ajax({url:'<@url value="${actionBaseUrl}/mark"/>',data:data,global:false,success:function(resp){}});
+						$.ajax({url:'${actionBaseUrl}/mark',data:data,global:false,success:function(resp){}});
 
                   } else {
                         if (status == "OVER_QUERY_LIMIT") {
