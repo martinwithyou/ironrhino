@@ -38,7 +38,7 @@ public class DefaultActionMapper extends AbstractActionMapper {
 	public String getUriFromActionMapping(ActionMapping mapping) {
 		StringBuilder sb = new StringBuilder();
 		String namespace = mapping.getNamespace();
-		namespace = "".equals(namespace) ? "/" : namespace;
+		namespace = StringUtils.isBlank(namespace) ? "/" : namespace;
 		sb.append(namespace);
 		if (sb.length() > 0 && sb.charAt(sb.length() - 1) != '/')
 			sb.append("/");
