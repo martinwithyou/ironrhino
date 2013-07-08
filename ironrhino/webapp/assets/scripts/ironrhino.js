@@ -32622,10 +32622,8 @@ Observation.common = function(container) {
 			});
 			content.push('<\/body><\/html>');
 			var img_win = window.open('', '_blank');
-			with (img_win.document) {
-				write(content.join(''));
-				img_win.document.close();
-			}
+			img_win.document.write(content.join(''));
+			img_win.document.close();
 		}
 	}
 	$('a.ajax,form.ajax', container).each(function() {
