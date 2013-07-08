@@ -3,10 +3,16 @@ package org.ironrhino.core.sequence;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
 public class DatabaseCyclicSequenceDelegate extends
 		AbstractDatabaseCyclicSequence {
+
+	@Inject
+	private AutowireCapableBeanFactory beanFactory;
 
 	private AbstractDatabaseCyclicSequence seq = null;
 
@@ -42,6 +48,7 @@ public class DatabaseCyclicSequenceDelegate extends
 		seq.setPaddingLength(getPaddingLength());
 		seq.setTableName(getTableName());
 		seq.setSequenceName(getSequenceName());
+		beanFactory.autowireBean(seq);
 		seq.afterPropertiesSet();
 	}
 

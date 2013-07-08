@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -112,31 +111,39 @@ public abstract class AbstractSequenceCyclicSequence extends
 
 	@Override
 	public String nextStringValue() throws DataAccessException {
-		Date lastInsertTimestamp = null;
-		Date thisTimestamp = null;
+		String lockName = getLockName();
 		long nextId = 0;
 		Connection con = DataSourceUtils.getConnection(getDataSource());
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
 			stmt = con.createStatement();
-			DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
-			String columnName = getSequenceName();
-			rs = stmt.executeQuery("SELECT  " + columnName + "_TIMESTAMP,"
-					+ getCurrentTimestamp() + " FROM " + getTableName());
-			try {
-				rs.next();
-				lastInsertTimestamp = rs.getTimestamp(1);
-				thisTimestamp = rs.getTimestamp(2);
-			} finally {
-				JdbcUtils.closeResultSet(rs);
+			if (!isSameCycle(con, stmt)) {
+				if (getLockService().tryLock(lockName)) {
+					try {
+						restartSequence(con, stmt);
+					} finally {
+						getLockService().unlock(lockName);
+					}
+				} else {
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					if (!isSameCycle(con, stmt)
+							&& getLockService().tryLock(lockName)) {
+						try {
+							restartSequence(con, stmt);
+						} finally {
+							getLockService().unlock(lockName);
+						}
+					}
+				}
 			}
-			boolean same = getCycleType().isSameCycle(lastInsertTimestamp,
-					thisTimestamp);
-			if (!same)
-				restartSequence(con, stmt);
 			stmt.executeUpdate("UPDATE " + getTableName() + " SET "
-					+ columnName + "_TIMESTAMP = " + getCurrentTimestamp());
+					+ getSequenceName() + "_TIMESTAMP = "
+					+ getCurrentTimestamp());
 			con.commit();
 			rs = stmt.executeQuery(getQuerySequenceStatement());
 			try {
@@ -153,6 +160,22 @@ public abstract class AbstractSequenceCyclicSequence extends
 			DataSourceUtils.releaseConnection(con, getDataSource());
 		}
 		return getStringValue(thisTimestamp, getPaddingLength(), (int) nextId);
+	}
+
+	protected boolean isSameCycle(Connection con, Statement stmt)
+			throws SQLException {
+		DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
+		ResultSet rs = stmt.executeQuery("SELECT  " + getSequenceName()
+				+ "_TIMESTAMP," + getCurrentTimestamp() + " FROM "
+				+ getTableName());
+		try {
+			rs.next();
+			lastInsertTimestamp = rs.getTimestamp(1);
+			thisTimestamp = rs.getTimestamp(2);
+		} finally {
+			JdbcUtils.closeResultSet(rs);
+		}
+		return getCycleType().isSameCycle(lastInsertTimestamp, thisTimestamp);
 	}
 
 	protected void restartSequence(Connection con, Statement stmt)

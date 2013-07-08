@@ -71,43 +71,37 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 
 	@Override
 	public String nextStringValue() throws DataAccessException {
-		Date lastInsertTimestamp = null;
-		Date thisTimestamp = null;
 		if (this.maxId == this.nextId) {
 			Connection con = DataSourceUtils.getConnection(getDataSource());
 			Statement stmt = null;
-			ResultSet rs = null;
 			try {
 				stmt = con.createStatement();
-				DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
-				// Increment the sequence column...
 				String columnName = getSequenceName();
-				rs = stmt.executeQuery("SELECT  " + columnName
-						+ "_TIMESTAMP,UNIX_TIMESTAMP() FROM " + getTableName());
-				try {
-					rs.next();
-					Long last = rs.getLong(1);
-					if (last < 10000000000L) // no mills
-						last *= 1000;
-					lastInsertTimestamp = new Date(last);
-					thisTimestamp = new Date(rs.getLong(2) * 1000);
-				} finally {
-					JdbcUtils.closeResultSet(rs);
-				}
-				boolean same = getCycleType().isSameCycle(lastInsertTimestamp,
-						thisTimestamp);
-				if (same)
+				if (isSameCycle(con, stmt)) {
 					stmt.executeUpdate("UPDATE " + getTableName() + " SET "
 							+ columnName + " = LAST_INSERT_ID(" + columnName
 							+ " + " + getCacheSize() + ")," + columnName
 							+ "_TIMESTAMP = UNIX_TIMESTAMP()");
-				else
-					stmt.executeUpdate("UPDATE " + getTableName() + " SET "
-							+ columnName + " = LAST_INSERT_ID("
-							+ getCacheSize() + ")," + columnName
-							+ "_TIMESTAMP = UNIX_TIMESTAMP()");
+				} else {
+					if (getLockService().tryLock(getLockName())) {
+						stmt.executeUpdate("UPDATE " + getTableName() + " SET "
+								+ columnName + " = LAST_INSERT_ID("
+								+ getCacheSize() + ")," + columnName
+								+ "_TIMESTAMP = UNIX_TIMESTAMP()");
+					} else {
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						stmt.executeUpdate("UPDATE " + getTableName() + " SET "
+								+ columnName + " = LAST_INSERT_ID("
+								+ columnName + " + " + getCacheSize() + "),"
+								+ columnName + "_TIMESTAMP = UNIX_TIMESTAMP()");
+					}
+				}
 				con.commit();
-				rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
+				ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
 				try {
 					if (!rs.next()) {
 						throw new DataAccessResourceFailureException(
@@ -129,6 +123,24 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 			this.nextId++;
 		}
 		return getStringValue(thisTimestamp, getPaddingLength(), (int) nextId);
+	}
+
+	protected boolean isSameCycle(Connection con, Statement stmt)
+			throws SQLException {
+		DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
+		ResultSet rs = stmt.executeQuery("SELECT  " + getSequenceName()
+				+ "_TIMESTAMP,UNIX_TIMESTAMP() FROM " + getTableName());
+		try {
+			rs.next();
+			Long last = rs.getLong(1);
+			if (last < 10000000000L) // no mills
+				last *= 1000;
+			lastInsertTimestamp = new Date(last);
+			thisTimestamp = new Date(rs.getLong(2) * 1000);
+		} finally {
+			JdbcUtils.closeResultSet(rs);
+		}
+		return getCycleType().isSameCycle(lastInsertTimestamp, thisTimestamp);
 	}
 
 }
