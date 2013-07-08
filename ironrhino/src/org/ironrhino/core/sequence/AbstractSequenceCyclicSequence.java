@@ -131,14 +131,6 @@ public abstract class AbstractSequenceCyclicSequence extends
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					if (!isSameCycle(con, stmt)
-							&& getLockService().tryLock(lockName)) {
-						try {
-							restartSequence(con, stmt);
-						} finally {
-							getLockService().unlock(lockName);
-						}
-					}
 				}
 			}
 			stmt.executeUpdate("UPDATE " + getTableName() + " SET "
