@@ -38,13 +38,14 @@ public class RedisCacheManager implements CacheManager {
 	}
 
 	@Override
-	public void put(String key, Object value, int timeToLive, String namespace) {
-		put(key, value, -1, timeToLive, namespace);
+	public void put(String key, Object value, int timeToLive,
+			TimeUnit timeUnit, String namespace) {
+		put(key, value, -1, timeToLive, timeUnit, namespace);
 	}
 
 	@Override
 	public void put(String key, Object value, int timeToIdle, int timeToLive,
-			String namespace) {
+			TimeUnit timeUnit, String namespace) {
 		if (key == null || value == null)
 			return;
 		if (StringUtils.isBlank(namespace))
@@ -52,7 +53,7 @@ public class RedisCacheManager implements CacheManager {
 		try {
 			if (timeToLive > 0)
 				redisTemplate.opsForValue().set(generateKey(key, namespace),
-						value, timeToLive, TimeUnit.SECONDS);
+						value, timeToLive, timeUnit);
 			else
 				redisTemplate.opsForValue().set(generateKey(key, namespace),
 						value);
@@ -76,13 +77,14 @@ public class RedisCacheManager implements CacheManager {
 	}
 
 	@Override
-	public Object get(String key, String namespace, int timeToLive) {
+	public Object get(String key, String namespace, int timeToLive,
+			TimeUnit timeUnit) {
 		if (key == null)
 			return null;
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		String actualKey = generateKey(key, namespace);
-		redisTemplate.expire(actualKey, timeToLive, TimeUnit.SECONDS);
+		redisTemplate.expire(actualKey, timeToLive, timeUnit);
 		return redisTemplate.opsForValue().get(actualKey);
 	}
 
@@ -101,11 +103,12 @@ public class RedisCacheManager implements CacheManager {
 
 	@Override
 	public void mput(Map<String, Object> map, final int timeToLive,
-			String namespace) {
+			TimeUnit timeUnit, String namespace) {
 		if (map == null)
 			return;
 		for (Map.Entry<String, Object> entry : map.entrySet())
-			put(entry.getKey(), entry.getValue(), timeToLive, namespace);
+			put(entry.getKey(), entry.getValue(), timeToLive, timeUnit,
+					namespace);
 		try {
 			final Map<byte[], byte[]> actualMap = new HashMap<byte[], byte[]>();
 			for (Map.Entry<String, Object> entry : map.entrySet())
@@ -134,10 +137,10 @@ public class RedisCacheManager implements CacheManager {
 
 	@Override
 	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
-			String namespace) {
+			TimeUnit timeUnit, String namespace) {
 		if (map == null)
 			return;
-		mput(map, timeToLive, namespace);
+		mput(map, timeToLive, timeUnit, namespace);
 	}
 
 	@Override
@@ -218,10 +221,14 @@ public class RedisCacheManager implements CacheManager {
 
 	@Override
 	public boolean putIfAbsent(String key, Object value, int timeToLive,
-			String namespace) {
+			TimeUnit timeUnit, String namespace) {
 		try {
-			return redisTemplate.opsForValue().setIfAbsent(
-					generateKey(key, namespace), value);
+			String actrualkey = generateKey(key, namespace);
+			boolean success = redisTemplate.opsForValue().setIfAbsent(
+					actrualkey, value);
+			if (success)
+				redisTemplate.expire(actrualkey, timeToLive, timeUnit);
+			return success;
 		} catch (Exception e) {
 			return false;
 		}
@@ -229,7 +236,7 @@ public class RedisCacheManager implements CacheManager {
 
 	private String generateKey(String key, String namespace) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(namespace);
+		sb.append(namespace != null ? namespace : DEFAULT_NAMESPACE);
 		sb.append(':');
 		sb.append(key);
 		return sb.toString();

@@ -1,5 +1,7 @@
 package org.ironrhino.core.session.impl;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -32,7 +34,8 @@ public class CacheBasedHttpSessionStore implements HttpSessionStore {
 		if (!cacheManager.supportsTimeToIdle()
 				&& cacheManager.supportsUpdateTimeToLive())
 			sessionString = (String) cacheManager.get(session.getId(),
-					CACHE_NAMESPACE, session.getMaxInactiveInterval());
+					CACHE_NAMESPACE, session.getMaxInactiveInterval(),
+					TimeUnit.SECONDS);
 		else
 			sessionString = (String) cacheManager.get(session.getId(),
 					CACHE_NAMESPACE);
@@ -49,17 +52,20 @@ public class CacheBasedHttpSessionStore implements HttpSessionStore {
 		if (cacheManager.supportsTimeToIdle()) {
 			if (session.isDirty())
 				cacheManager.put(session.getId(), sessionString,
-						session.getMaxInactiveInterval(), -1, CACHE_NAMESPACE);
+						session.getMaxInactiveInterval(), -1, TimeUnit.SECONDS,
+						CACHE_NAMESPACE);
 		} else if (cacheManager.supportsUpdateTimeToLive()) {
 			if (session.isDirty())
 				cacheManager.put(session.getId(), sessionString, -1,
-						session.getMaxInactiveInterval(), CACHE_NAMESPACE);
+						session.getMaxInactiveInterval(), TimeUnit.SECONDS,
+						CACHE_NAMESPACE);
 		} else {
 			if (session.isDirty()
 					|| session.getNow() - session.getLastAccessedTime() > session
 							.getMinActiveInterval() * 1000)
 				cacheManager.put(session.getId(), sessionString,
-						session.getMaxInactiveInterval(), CACHE_NAMESPACE);
+						session.getMaxInactiveInterval(), TimeUnit.SECONDS,
+						CACHE_NAMESPACE);
 		}
 	}
 

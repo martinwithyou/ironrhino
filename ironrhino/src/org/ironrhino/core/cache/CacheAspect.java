@@ -2,6 +2,7 @@ package org.ironrhino.core.cache;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,7 +30,7 @@ public class CacheAspect extends BaseAspect {
 	@Inject
 	private CacheManager cacheManager;
 
-	@Value("${cacheAspect.mutex:false}")
+	@Value("${cacheAspect.mutex:true}")
 	private boolean mutex;
 
 	@Value("${cacheAspect.mutexWait:" + DEFAULT_MUTEX_WAIT + "}")
@@ -56,15 +57,17 @@ public class CacheAspect extends BaseAspect {
 					context, 0);
 			Object value = (timeToIdle > 0 && !cacheManager
 					.supportsTimeToIdle()) ? cacheManager.get(key, namespace,
-					timeToIdle) : cacheManager.get(key, namespace);
+					timeToIdle, checkCache.timeUnit()) : cacheManager.get(key,
+					namespace);
 			if (value != null) {
 				putReturnValueIntoContext(context, value);
 				ExpressionUtils.eval(checkCache.onHit(), context);
 				return value;
 			} else {
 				if (mutex
-						&& !cacheManager.putIfAbsent(keyMutex, "", 180,
-								namespace)) {
+						&& !cacheManager.putIfAbsent(keyMutex, "",
+								Math.max(10000, mutexWait),
+								TimeUnit.MILLISECONDS, namespace)) {
 					Thread.sleep(mutexWait);
 					value = cacheManager.get(key, namespace);
 					if (value != null) {
@@ -82,14 +85,15 @@ public class CacheAspect extends BaseAspect {
 				&& ExpressionUtils
 						.evalBoolean(checkCache.when(), context, true)) {
 			if (checkCache.eternal()) {
-				cacheManager.put(key, result, 0, namespace);
+				cacheManager.put(key, result, 0, checkCache.timeUnit(),
+						namespace);
 			} else {
 				int timeToLive = ExpressionUtils.evalInt(
 						checkCache.timeToLive(), context, 0);
 				int timeToIdle = ExpressionUtils.evalInt(
 						checkCache.timeToIdle(), context, 0);
-				cacheManager
-						.put(key, result, timeToIdle, timeToLive, namespace);
+				cacheManager.put(key, result, timeToIdle, timeToLive,
+						checkCache.timeUnit(), namespace);
 			}
 			if (mutex)
 				cacheManager.delete(keyMutex, namespace);
@@ -112,7 +116,8 @@ public class CacheAspect extends BaseAspect {
 			Object value = ExpressionUtils.eval(evictCache.renew(), context);
 			for (Object key : keys)
 				if (key != null)
-					cacheManager.put(key.toString(), value, 0, namespace);
+					cacheManager.put(key.toString(), value, 0,
+							TimeUnit.SECONDS, namespace);
 		} else {
 			cacheManager.mdelete(keys, namespace);
 		}

@@ -1,5 +1,7 @@
 package org.ironrhino.core.cache;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.http.HttpServletRequest;
 
 import net.htmlparser.jericho.Attribute;
@@ -94,7 +96,8 @@ public class CacheContext {
 			int _timeToIdle = Integer.valueOf(eval(timeToIdle).toString());
 			int _timeToLive = Integer.valueOf(eval(timeToLive).toString());
 			getCacheManager().put(completeKey(key, scope), content,
-					_timeToIdle, _timeToLive, NAMESPACE_PAGE_FRAGMENT);
+					_timeToIdle, _timeToLive, TimeUnit.SECONDS,
+					NAMESPACE_PAGE_FRAGMENT);
 		} catch (Throwable e) {
 		}
 	}

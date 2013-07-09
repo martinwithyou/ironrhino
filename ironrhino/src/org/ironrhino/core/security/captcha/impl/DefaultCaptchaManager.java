@@ -1,6 +1,7 @@
 package org.ironrhino.core.security.captcha.impl;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,7 +43,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 				8999) + 1000);// width=60
 		String answer = answer(challenge);
 		cacheManager.put(CACHE_PREFIX_ANSWER + token, answer, -1,
-				CACHE_ANSWER_TIME_TO_LIVE, KEY_CAPTCHA);
+				CACHE_ANSWER_TIME_TO_LIVE, TimeUnit.SECONDS, KEY_CAPTCHA);
 		return challenge;
 	}
 
@@ -94,7 +95,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 			else
 				threshold = 1;
 			cacheManager.put(key, threshold, -1, CACHE_THRESHOLD_TIME_TO_LIVE,
-					KEY_CAPTCHA);
+					TimeUnit.SECONDS, KEY_CAPTCHA);
 			request.setAttribute(
 					REQUEST_ATTRIBUTE_KEY_CAPTACHA_THRESHOLD_ADDED, true);
 		}

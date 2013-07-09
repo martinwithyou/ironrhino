@@ -4,6 +4,7 @@ import static org.ironrhino.core.metadata.Profiles.DEFAULT;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -35,13 +36,14 @@ public class EhCacheManager implements CacheManager {
 	}
 
 	@Override
-	public void put(String key, Object value, int timeToLive, String namespace) {
-		put(key, value, -1, timeToLive, namespace);
+	public void put(String key, Object value, int timeToLive,
+			TimeUnit timeUnit, String namespace) {
+		put(key, value, -1, timeToLive, timeUnit, namespace);
 	}
 
 	@Override
 	public void put(String key, Object value, int timeToIdle, int timeToLive,
-			String namespace) {
+			TimeUnit timeUnit, String namespace) {
 		if (key == null || value == null)
 			return;
 		if (StringUtils.isBlank(namespace))
@@ -50,15 +52,17 @@ public class EhCacheManager implements CacheManager {
 		if (cache == null) {
 			try {
 				ehCacheManager.addCache(namespace);
-				cache = ehCacheManager.getCache(namespace);
 			} catch (Exception e) {
 
 			}
+			cache = ehCacheManager.getCache(namespace);
 		}
 		if (cache != null)
-			cache.put(new Element(key, value, null, timeToIdle > 0 ? Integer
-					.valueOf(timeToIdle) : null, timeToIdle <= 0
-					&& timeToLive > 0 ? Integer.valueOf(timeToLive) : null));
+			cache.put(new Element(key, value, null,
+					timeToIdle > 0 ? (int) timeUnit.toSeconds(timeToIdle)
+							: null,
+					timeToIdle <= 0 && timeToLive > 0 ? (int) timeUnit
+							.toSeconds(timeToLive) : null));
 	}
 
 	@Override
@@ -75,7 +79,8 @@ public class EhCacheManager implements CacheManager {
 	}
 
 	@Override
-	public Object get(String key, String namespace, int timeToLive) {
+	public Object get(String key, String namespace, int timeToLive,
+			TimeUnit timeUnit) {
 		if (key == null)
 			return null;
 		if (StringUtils.isBlank(namespace))
@@ -107,13 +112,14 @@ public class EhCacheManager implements CacheManager {
 	}
 
 	@Override
-	public void mput(Map<String, Object> map, int timeToLive, String namespace) {
-		mput(map, -1, timeToLive, namespace);
+	public void mput(Map<String, Object> map, int timeToLive,
+			TimeUnit timeUnit, String namespace) {
+		mput(map, -1, timeToLive, timeUnit, namespace);
 	}
 
 	@Override
 	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
-			String namespace) {
+			TimeUnit timeUnit, String namespace) {
 		if (map == null)
 			return;
 		if (StringUtils.isBlank(namespace))
@@ -124,9 +130,10 @@ public class EhCacheManager implements CacheManager {
 		cache = ehCacheManager.getCache(namespace);
 		for (Map.Entry<String, Object> entry : map.entrySet())
 			cache.put(new Element(entry.getKey(), entry.getValue(), null,
-					timeToIdle > 0 ? Integer.valueOf(timeToIdle) : null,
-					timeToIdle <= 0 && timeToLive > 0 ? Integer
-							.valueOf(timeToLive) : null));
+					timeToIdle > 0 ? (int) timeUnit.toSeconds(timeToIdle)
+							: null,
+					timeToIdle <= 0 && timeToLive > 0 ? (int) timeUnit
+							.toSeconds(timeToLive) : null));
 	}
 
 	@Override
@@ -169,14 +176,14 @@ public class EhCacheManager implements CacheManager {
 
 	@Override
 	public boolean putIfAbsent(String key, Object value, int timeToLive,
-			String namespace) {
+			TimeUnit timeUnit, String namespace) {
 		if (key == null || value == null)
 			return false;
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		Cache cache = ehCacheManager.getCache(namespace);
-		return cache
-				.putIfAbsent(new Element(key, value, null, null, timeToLive)) != null;
+		return cache.putIfAbsent(new Element(key, value, null, null,
+				(int) timeUnit.toSeconds(timeToLive))) != null;
 	}
 
 	@Override
