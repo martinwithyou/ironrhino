@@ -95,10 +95,10 @@ public class CacheAspect extends BaseAspect {
 				cacheManager.put(key, result, timeToIdle, timeToLive,
 						checkCache.timeUnit(), namespace);
 			}
-			if (mutex)
-				cacheManager.delete(keyMutex, namespace);
 			ExpressionUtils.eval(checkCache.onPut(), context);
 		}
+		if (mutex)
+			cacheManager.delete(keyMutex, namespace);
 		return result;
 	}
 

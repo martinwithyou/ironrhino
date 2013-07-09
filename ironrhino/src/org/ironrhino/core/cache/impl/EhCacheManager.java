@@ -192,7 +192,7 @@ public class EhCacheManager implements CacheManager {
 		}
 		if (cache != null)
 			return cache.putIfAbsent(new Element(key, value, null, null,
-					(int) timeUnit.toSeconds(timeToLive))) != null;
+					(int) timeUnit.toSeconds(timeToLive))) == null;
 		else
 			return false;
 	}
