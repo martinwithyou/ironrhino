@@ -15,6 +15,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.aop.BaseAspect;
+import org.ironrhino.core.model.NullObject;
 import org.ironrhino.core.util.ExpressionUtils;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -50,6 +51,7 @@ public class CacheAspect extends BaseAspect {
 		if (key == null || isBypass())
 			return jp.proceed();
 		String keyMutex = MUTEX + key;
+		boolean mutexed = false;
 		if (CacheContext.isForceFlush()) {
 			cacheManager.delete(key, namespace);
 		} else {
@@ -62,18 +64,21 @@ public class CacheAspect extends BaseAspect {
 			if (value != null) {
 				putReturnValueIntoContext(context, value);
 				ExpressionUtils.eval(checkCache.onHit(), context);
-				return value;
+				return value instanceof NullObject ? null : value;
 			} else {
-				if (mutex
-						&& !cacheManager.putIfAbsent(keyMutex, "",
-								Math.max(10000, mutexWait),
-								TimeUnit.MILLISECONDS, namespace)) {
-					Thread.sleep(mutexWait);
-					value = cacheManager.get(key, namespace);
-					if (value != null) {
-						putReturnValueIntoContext(context, value);
-						ExpressionUtils.eval(checkCache.onHit(), context);
-						return value;
+				if (mutex) {
+					if (cacheManager.putIfAbsent(keyMutex, "",
+							Math.max(10000, mutexWait), TimeUnit.MILLISECONDS,
+							namespace)) {
+						mutexed = true;
+					} else {
+						Thread.sleep(mutexWait);
+						value = cacheManager.get(key, namespace);
+						if (value != null) {
+							putReturnValueIntoContext(context, value);
+							ExpressionUtils.eval(checkCache.onHit(), context);
+							return value instanceof NullObject ? null : value;
+						}
 					}
 				}
 				ExpressionUtils.eval(checkCache.onMiss(), context);
@@ -81,23 +86,23 @@ public class CacheAspect extends BaseAspect {
 		}
 		Object result = jp.proceed();
 		putReturnValueIntoContext(context, result);
-		if (result != null
-				&& ExpressionUtils
-						.evalBoolean(checkCache.when(), context, true)) {
+		if (ExpressionUtils.evalBoolean(checkCache.when(), context, true)) {
+			Object cacheResult = (result == null ? NullObject.get() : result);
 			if (checkCache.eternal()) {
-				cacheManager.put(key, result, 0, checkCache.timeUnit(),
+				cacheManager.put(key, cacheResult, 0, checkCache.timeUnit(),
 						namespace);
 			} else {
 				int timeToLive = ExpressionUtils.evalInt(
 						checkCache.timeToLive(), context, 0);
 				int timeToIdle = ExpressionUtils.evalInt(
 						checkCache.timeToIdle(), context, 0);
-				cacheManager.put(key, result, timeToIdle, timeToLive,
+				cacheManager.put(key, cacheResult, timeToIdle, timeToLive,
 						checkCache.timeUnit(), namespace);
 			}
-			ExpressionUtils.eval(checkCache.onPut(), context);
+			if (result != null)
+				ExpressionUtils.eval(checkCache.onPut(), context);
 		}
-		if (mutex)
+		if (mutexed)
 			cacheManager.delete(keyMutex, namespace);
 		return result;
 	}
