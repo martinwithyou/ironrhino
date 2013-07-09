@@ -182,8 +182,19 @@ public class EhCacheManager implements CacheManager {
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		Cache cache = ehCacheManager.getCache(namespace);
-		return cache.putIfAbsent(new Element(key, value, null, null,
-				(int) timeUnit.toSeconds(timeToLive))) != null;
+		if (cache == null) {
+			try {
+				ehCacheManager.addCache(namespace);
+			} catch (Exception e) {
+
+			}
+			cache = ehCacheManager.getCache(namespace);
+		}
+		if (cache != null)
+			return cache.putIfAbsent(new Element(key, value, null, null,
+					(int) timeUnit.toSeconds(timeToLive))) != null;
+		else
+			return false;
 	}
 
 	@Override
