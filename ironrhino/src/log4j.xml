@@ -60,7 +60,7 @@
 	<logger name="org.springframework.core.type.classreading.AnnotationAttributesReadingVisitor" additivity="true">
 		<level value="ERROR"/>
 	</logger>
-	<logger name="org.hibernate.engine.jdbc.internal" additivity="true">
+	<logger name="com.opensymphony.xwork2.config.providers.XmlConfigurationProvider" additivity="true">
 		<level value="ERROR"/>
 	</logger>
 	<logger name="org.ironrhino.core.remoting" additivity="false">
