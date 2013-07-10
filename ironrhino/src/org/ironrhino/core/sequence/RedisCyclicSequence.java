@@ -23,6 +23,11 @@ public class RedisCyclicSequence extends AbstractCyclicSequence {
 
 	private BoundValueOperations<String, String> boundValueOperations;
 
+	public void setStringRedisTemplate(
+			RedisTemplate<String, String> stringRedisTemplate) {
+		this.stringRedisTemplate = stringRedisTemplate;
+	}
+
 	@Override
 	public void afterPropertiesSet() {
 		Assert.hasText(getSequenceName());
