@@ -135,12 +135,12 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 			Long last = rs.getLong(1);
 			if (last < 10000000000L) // no mills
 				last *= 1000;
-			lastInsertTimestamp = new Date(last);
+			lastTimestamp = new Date(last);
 			thisTimestamp = new Date(rs.getLong(2) * 1000);
 		} finally {
 			JdbcUtils.closeResultSet(rs);
 		}
-		return getCycleType().isSameCycle(lastInsertTimestamp, thisTimestamp);
+		return getCycleType().isSameCycle(lastTimestamp, thisTimestamp);
 	}
 
 }

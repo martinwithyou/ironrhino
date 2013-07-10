@@ -9,7 +9,7 @@ import org.springframework.beans.factory.InitializingBean;
 public abstract class AbstractCyclicSequence implements CyclicSequence,
 		InitializingBean {
 
-	protected Date lastInsertTimestamp;
+	protected Date lastTimestamp;
 
 	protected Date thisTimestamp;
 

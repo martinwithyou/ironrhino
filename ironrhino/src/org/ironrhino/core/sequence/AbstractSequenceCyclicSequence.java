@@ -121,6 +121,10 @@ public abstract class AbstractSequenceCyclicSequence extends
 			if (!isSameCycle(con, stmt)) {
 				if (getLockService().tryLock(lockName)) {
 					try {
+						stmt.executeUpdate("UPDATE " + getTableName() + " SET "
+								+ getSequenceName() + "_TIMESTAMP = "
+								+ getCurrentTimestamp());
+						con.commit();
 						restartSequence(con, stmt);
 					} finally {
 						getLockService().unlock(lockName);
@@ -133,10 +137,6 @@ public abstract class AbstractSequenceCyclicSequence extends
 					}
 				}
 			}
-			stmt.executeUpdate("UPDATE " + getTableName() + " SET "
-					+ getSequenceName() + "_TIMESTAMP = "
-					+ getCurrentTimestamp());
-			con.commit();
 			rs = stmt.executeQuery(getQuerySequenceStatement());
 			try {
 				rs.next();
@@ -162,12 +162,12 @@ public abstract class AbstractSequenceCyclicSequence extends
 				+ getTableName());
 		try {
 			rs.next();
-			lastInsertTimestamp = rs.getTimestamp(1);
+			lastTimestamp = rs.getTimestamp(1);
 			thisTimestamp = rs.getTimestamp(2);
 		} finally {
 			JdbcUtils.closeResultSet(rs);
 		}
-		return getCycleType().isSameCycle(lastInsertTimestamp, thisTimestamp);
+		return getCycleType().isSameCycle(lastTimestamp, thisTimestamp);
 	}
 
 	protected void restartSequence(Connection con, Statement stmt)
