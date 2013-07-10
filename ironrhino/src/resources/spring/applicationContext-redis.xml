@@ -24,6 +24,4 @@
 		task-executor="executorService">
 	</redis:listener-container>
 	<bean id="redisApplicationEventTopic" class="org.ironrhino.core.event.RedisApplicationEventTopic" />
-	<bean id="redisSimpleMailMessageWrapperQueue"
-		class="org.ironrhino.core.mail.RedisSimpleMailMessageWrapperQueue" />
 </beans>

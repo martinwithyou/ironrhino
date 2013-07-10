@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
 import org.ironrhino.core.redis.RedisQueue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class RedisSimpleMailMessageWrapperQueue extends
 	@Autowired(required = false)
 	private ExecutorService executorService;
 
-	@Autowired(required = false)
+	@Inject
 	private MailSender mailSender;
 
 	private boolean stop;
@@ -24,28 +25,26 @@ public class RedisSimpleMailMessageWrapperQueue extends
 	@PostConstruct
 	public void afterPropertiesSet() {
 		super.afterPropertiesSet();
-		if (mailSender != null) {
-			Runnable task = new Runnable() {
+		Runnable task = new Runnable() {
 
-				@Override
-				public void run() {
-					while (!stop) {
-						try {
-							SimpleMailMessageWrapper smmw = queue.take();
-							consume(smmw);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-
+			@Override
+			public void run() {
+				while (!stop) {
+					try {
+						SimpleMailMessageWrapper smmw = queue.take();
+						consume(smmw);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
-				}
 
-			};
-			if (executorService != null)
-				executorService.execute(task);
-			else
-				new Thread(task).start();
-		}
+				}
+			}
+
+		};
+		if (executorService != null)
+			executorService.execute(task);
+		else
+			new Thread(task).start();
 	}
 
 	@PreDestroy
@@ -55,9 +54,7 @@ public class RedisSimpleMailMessageWrapperQueue extends
 
 	@Override
 	public void consume(SimpleMailMessageWrapper smmw) {
-		if (mailSender != null)
-			mailSender
-					.send(smmw.getSimpleMailMessage(), smmw.isUseHtmlFormat());
+		mailSender.send(smmw.getSimpleMailMessage(), smmw.isUseHtmlFormat());
 	}
 
 }

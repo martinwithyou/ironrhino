@@ -11,14 +11,9 @@
 	<rabbit:admin id="rabbitAdmin" connection-factory="rabbitConnectionFactory" />
 	<rabbit:listener-container
 		connection-factory="rabbitConnectionFactory">
-		<rabbit:listener queue-names="org.ironrhino.core.mail.SimpleMailMessageWrapper"
-			ref="rabbitSimpleMailMessageWrapperQueue" method="consume" />
 		<rabbit:listener queue-names="#{rabbitApplicationEventTopic.queueName}"
 			ref="rabbitApplicationEventTopic" method="subscribe" />
 	</rabbit:listener-container>
-	<bean id="rabbitSimpleMailMessageWrapperQueue"
-		class="org.ironrhino.core.mail.RabbitSimpleMailMessageWrapperQueue"
-		primary="true" />
 	<bean id="rabbitApplicationEventTopic" class="org.ironrhino.core.event.RabbitApplicationEventTopic"
 		primary="true" />
 </beans>
