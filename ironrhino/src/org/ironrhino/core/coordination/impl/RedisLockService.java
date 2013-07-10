@@ -51,7 +51,7 @@ public class RedisLockService implements LockService {
 		long millisTimeout = unit.toMillis(timeout);
 		long start = System.currentTimeMillis();
 		while (!success) {
-			Thread.sleep(1000);
+			Thread.sleep(100);
 			if ((System.currentTimeMillis() - start) >= millisTimeout)
 				break;
 			success = stringRedisTemplate.opsForValue().setIfAbsent(key, "");
@@ -68,7 +68,7 @@ public class RedisLockService implements LockService {
 				.setIfAbsent(key, "");
 		while (!success) {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
