@@ -7,6 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -15,9 +16,21 @@ import org.springframework.jdbc.support.JdbcUtils;
 
 public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 
-	private long nextId = 0;
+	private AtomicInteger nextId = new AtomicInteger(0);
 
-	private long maxId = 0;
+	private AtomicInteger maxId = new AtomicInteger(0);
+
+	private int cacheSize = 20;
+
+	@Override
+	public int getCacheSize() {
+		return cacheSize;
+	}
+
+	@Override
+	public void setCacheSize(int cacheSize) {
+		this.cacheSize = cacheSize;
+	}
 
 	@Override
 	public void afterPropertiesSet() {
@@ -71,63 +84,70 @@ public class MySQLCyclicSequence extends AbstractDatabaseCyclicSequence {
 
 	@Override
 	public String nextStringValue() throws DataAccessException {
-		if (this.maxId == this.nextId) {
-			Connection con = DataSourceUtils.getConnection(getDataSource());
-			Statement stmt = null;
-			try {
-				stmt = con.createStatement();
-				String columnName = getSequenceName();
-				if (isSameCycle(con, stmt)) {
-					stmt.executeUpdate("UPDATE " + getTableName() + " SET "
-							+ columnName + " = LAST_INSERT_ID(" + columnName
-							+ " + " + getCacheSize() + ")," + columnName
-							+ "_TIMESTAMP = UNIX_TIMESTAMP()");
-				} else {
-					if (getLockService().tryLock(getLockName())) {
-						stmt.executeUpdate("UPDATE " + getTableName() + " SET "
-								+ columnName + " = LAST_INSERT_ID("
-								+ getCacheSize() + ")," + columnName
-								+ "_TIMESTAMP = UNIX_TIMESTAMP()");
-					} else {
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						stmt.executeUpdate("UPDATE " + getTableName() + " SET "
-								+ columnName + " = LAST_INSERT_ID("
-								+ columnName + " + " + getCacheSize() + "),"
-								+ columnName + "_TIMESTAMP = UNIX_TIMESTAMP()");
-					}
-				}
-				con.commit();
-				ResultSet rs = stmt.executeQuery("SELECT LAST_INSERT_ID()");
+		int next = 0;
+		if (this.maxId.get() <= this.nextId.get()) {
+			if (getLockService().tryLock(getLockName())) {
 				try {
-					if (!rs.next()) {
+					Connection con = DataSourceUtils
+							.getConnection(getDataSource());
+					Statement stmt = null;
+					try {
+						stmt = con.createStatement();
+						String columnName = getSequenceName();
+						if (isSameCycle(con, stmt)) {
+							stmt.executeUpdate("UPDATE " + getTableName()
+									+ " SET " + columnName
+									+ " = LAST_INSERT_ID(" + columnName + " + "
+									+ getCacheSize() + ")," + columnName
+									+ "_TIMESTAMP = UNIX_TIMESTAMP()");
+						} else {
+							stmt.executeUpdate("UPDATE " + getTableName()
+									+ " SET " + columnName
+									+ " = LAST_INSERT_ID(" + getCacheSize()
+									+ ")," + columnName
+									+ "_TIMESTAMP = UNIX_TIMESTAMP()");
+						}
+						con.commit();
+						ResultSet rs = stmt
+								.executeQuery("SELECT LAST_INSERT_ID()");
+						try {
+							if (!rs.next()) {
+								throw new DataAccessResourceFailureException(
+										"LAST_INSERT_ID() failed after executing an update");
+							}
+							next = rs.getInt(1) - getCacheSize() + 1;
+							this.nextId.set(next);
+							this.maxId.set(rs.getInt(1));
+						} finally {
+							JdbcUtils.closeResultSet(rs);
+						}
+
+					} catch (SQLException ex) {
 						throw new DataAccessResourceFailureException(
-								"LAST_INSERT_ID() failed after executing an update");
+								"Could not obtain last_insert_id()", ex);
+					} finally {
+						JdbcUtils.closeStatement(stmt);
+						DataSourceUtils.releaseConnection(con, getDataSource());
 					}
-					this.maxId = rs.getLong(1);
 				} finally {
-					JdbcUtils.closeResultSet(rs);
+					getLockService().unlock(getLockName());
 				}
-				this.nextId = this.maxId - getCacheSize() + 1;
-			} catch (SQLException ex) {
-				throw new DataAccessResourceFailureException(
-						"Could not obtain last_insert_id()", ex);
-			} finally {
-				JdbcUtils.closeStatement(stmt);
-				DataSourceUtils.releaseConnection(con, getDataSource());
+			} else {
+				try {
+					Thread.sleep(100);
+					return nextStringValue();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		} else {
-			this.nextId++;
+			next = this.nextId.incrementAndGet();
 		}
-		return getStringValue(thisTimestamp, getPaddingLength(), (int) nextId);
+		return getStringValue(thisTimestamp, getPaddingLength(), next);
 	}
 
 	protected boolean isSameCycle(Connection con, Statement stmt)
 			throws SQLException {
-		DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
 		ResultSet rs = stmt.executeQuery("SELECT  " + getSequenceName()
 				+ "_TIMESTAMP,UNIX_TIMESTAMP() FROM " + getTableName());
 		try {
