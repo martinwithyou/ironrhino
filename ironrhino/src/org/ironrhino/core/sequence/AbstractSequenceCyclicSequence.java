@@ -144,6 +144,7 @@ public abstract class AbstractSequenceCyclicSequence extends
 			} finally {
 				JdbcUtils.closeResultSet(rs);
 			}
+			con.commit();
 		} catch (SQLException ex) {
 			throw new DataAccessResourceFailureException(
 					"Could not obtain next value of sequence", ex);
