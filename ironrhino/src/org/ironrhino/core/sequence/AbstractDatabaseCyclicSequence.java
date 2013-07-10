@@ -2,6 +2,8 @@ package org.ironrhino.core.sequence;
 
 import javax.sql.DataSource;
 
+import org.ironrhino.core.coordination.LockService;
+
 public abstract class AbstractDatabaseCyclicSequence extends
 		AbstractCyclicSequence {
 
@@ -10,6 +12,8 @@ public abstract class AbstractDatabaseCyclicSequence extends
 	private String tableName = "common_sequence";
 
 	private int cacheSize = 1;
+
+	private LockService lockService;
 
 	public int getCacheSize() {
 		return cacheSize;
@@ -37,6 +41,18 @@ public abstract class AbstractDatabaseCyclicSequence extends
 
 	protected String getActualSequenceName() {
 		return new StringBuilder(getSequenceName()).append("_SEQ").toString();
+	}
+
+	public LockService getLockService() {
+		return lockService;
+	}
+
+	public void setLockService(LockService lockService) {
+		this.lockService = lockService;
+	}
+
+	public String getLockName() {
+		return "SEQLOCK:" + getSequenceName();
 	}
 
 }

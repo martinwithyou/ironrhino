@@ -2,7 +2,6 @@ package org.ironrhino.core.sequence;
 
 import java.util.Date;
 
-import org.ironrhino.core.coordination.LockService;
 import org.ironrhino.core.util.NumberUtils;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -18,8 +17,6 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 	private String sequenceName;
 
 	private int paddingLength = 5;
-
-	private LockService lockService;
 
 	@Override
 	public CycleType getCycleType() {
@@ -44,18 +41,6 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 
 	public void setPaddingLength(int paddingLength) {
 		this.paddingLength = paddingLength;
-	}
-
-	public LockService getLockService() {
-		return lockService;
-	}
-
-	public void setLockService(LockService lockService) {
-		this.lockService = lockService;
-	}
-
-	public String getLockName() {
-		return "SEQLOCK:" + getSequenceName();
 	}
 
 	@Override
