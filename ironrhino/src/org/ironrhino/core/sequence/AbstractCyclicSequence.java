@@ -2,11 +2,13 @@ package org.ironrhino.core.sequence;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.NumberUtils;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 
 public abstract class AbstractCyclicSequence implements CyclicSequence,
-		InitializingBean {
+		InitializingBean, BeanNameAware {
 
 	protected Date lastTimestamp;
 
@@ -15,6 +17,8 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 	private CycleType cycleType = CycleType.DAY;
 
 	private String sequenceName;
+
+	private String beanName;
 
 	private int paddingLength = 5;
 
@@ -28,7 +32,7 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 	}
 
 	public String getSequenceName() {
-		return sequenceName;
+		return StringUtils.isNotBlank(sequenceName) ? sequenceName : beanName;
 	}
 
 	public void setSequenceName(String sequenceName) {
@@ -61,4 +65,20 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 				+ NumberUtils.format(nextId, paddingLength);
 	}
 
+	@Override
+	public void setBeanName(String beanName) {
+		if (StringUtils.isNotBlank(beanName)) {
+			if (beanName.endsWith("CyclicSequence")) {
+				beanName = beanName.substring(0, beanName.length()
+						- "CyclicSequence".length());
+			} else if (beanName.endsWith("Sequence")) {
+				beanName = beanName.substring(0,
+						beanName.length() - "Sequence".length());
+			} else if (beanName.endsWith("Seq")) {
+				beanName = beanName.substring(0,
+						beanName.length() - "Seq".length());
+			}
+			this.beanName = beanName;
+		}
+	}
 }
