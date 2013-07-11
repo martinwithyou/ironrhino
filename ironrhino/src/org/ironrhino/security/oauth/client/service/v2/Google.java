@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
@@ -88,7 +89,8 @@ public class Google extends OAuth2Provider {
 			Map<String, String> headers) {
 		if (params == null)
 			params = new HashMap<String, String>();
-		params.put("key", getAccessKey());
+		if (StringUtils.isNotBlank(getAccessKey()))
+			params.put("key", getAccessKey());
 		return super.invoke(protectedURL, params, headers);
 	}
 

@@ -102,7 +102,7 @@ public class SettingControl implements
 	}
 
 	public String getStringValue(String key) {
-		return getStringValue(key, "");
+		return getStringValue(key, null);
 	}
 
 	public String getStringValue(String key, String defaultValue) {
