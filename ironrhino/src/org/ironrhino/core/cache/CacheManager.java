@@ -28,9 +28,6 @@ public interface CacheManager {
 	public void mput(Map<String, Object> map, int timeToLive,
 			TimeUnit timeUnit, String namespace);
 
-	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
-			TimeUnit timeUnit, String namespace);
-
 	public Map<String, Object> mget(Collection<String> keys, String namespace);
 
 	public void mdelete(Collection<String> keys, String namespace);
@@ -38,6 +35,9 @@ public interface CacheManager {
 	public boolean containsKey(String key, String namespace);
 
 	public boolean putIfAbsent(String key, Object value, int timeToLive,
+			TimeUnit timeUnit, String namespace);
+
+	public long increment(String key, long delta, int timeToLive,
 			TimeUnit timeUnit, String namespace);
 
 	public boolean supportsTimeToIdle();

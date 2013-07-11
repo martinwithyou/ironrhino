@@ -166,14 +166,6 @@ public class MemcachedCacheManager implements CacheManager {
 	}
 
 	@Override
-	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
-			TimeUnit timeUnit, String namespace) {
-		if (map == null)
-			return;
-		mput(map, timeToLive, timeUnit, namespace);
-	}
-
-	@Override
 	public Map<String, Object> mget(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return null;
@@ -223,6 +215,18 @@ public class MemcachedCacheManager implements CacheManager {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			return false;
+		}
+	}
+
+	@Override
+	public long increment(String key, long delta, int timeToLive,
+			TimeUnit timeUnit, String namespace) {
+		try {
+			return memcached.incr(generateKey(key, namespace), delta, delta,
+					2000, (int) timeUnit.toSeconds(timeToLive));
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return -1;
 		}
 	}
 

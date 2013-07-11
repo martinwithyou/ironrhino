@@ -84,7 +84,8 @@ public class RedisCacheManager implements CacheManager {
 		if (StringUtils.isBlank(namespace))
 			namespace = DEFAULT_NAMESPACE;
 		String actualKey = generateKey(key, namespace);
-		redisTemplate.expire(actualKey, timeToLive, timeUnit);
+		if (timeToLive > 0)
+			redisTemplate.expire(actualKey, timeToLive, timeUnit);
 		return redisTemplate.opsForValue().get(actualKey);
 	}
 
@@ -106,9 +107,6 @@ public class RedisCacheManager implements CacheManager {
 			TimeUnit timeUnit, String namespace) {
 		if (map == null)
 			return;
-		for (Map.Entry<String, Object> entry : map.entrySet())
-			put(entry.getKey(), entry.getValue(), timeToLive, timeUnit,
-					namespace);
 		try {
 			final Map<byte[], byte[]> actualMap = new HashMap<byte[], byte[]>();
 			for (Map.Entry<String, Object> entry : map.entrySet())
@@ -123,8 +121,9 @@ public class RedisCacheManager implements CacheManager {
 						throws DataAccessException {
 					conn.multi();
 					conn.mSet(actualMap);
-					for (byte[] k : actualMap.keySet())
-						conn.expire(k, timeToLive);
+					if (timeToLive > 0)
+						for (byte[] k : actualMap.keySet())
+							conn.expire(k, timeToLive);
 					conn.exec();
 					return null;
 				}
@@ -133,14 +132,6 @@ public class RedisCacheManager implements CacheManager {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
-	}
-
-	@Override
-	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
-			TimeUnit timeUnit, String namespace) {
-		if (map == null)
-			return;
-		mput(map, timeToLive, timeUnit, namespace);
 	}
 
 	@Override
@@ -226,11 +217,26 @@ public class RedisCacheManager implements CacheManager {
 			String actrualkey = generateKey(key, namespace);
 			boolean success = redisTemplate.opsForValue().setIfAbsent(
 					actrualkey, value);
-			if (success)
+			if (success && timeToLive > 0)
 				redisTemplate.expire(actrualkey, timeToLive, timeUnit);
 			return success;
 		} catch (Exception e) {
 			return false;
+		}
+	}
+
+	@Override
+	public long increment(String key, long delta, int timeToLive,
+			TimeUnit timeUnit, String namespace) {
+		try {
+			String actrualkey = generateKey(key, namespace);
+			long result = redisTemplate.opsForValue().increment(actrualkey,
+					delta);
+			if (timeToLive > 0)
+				redisTemplate.expire(actrualkey, timeToLive, timeUnit);
+			return result;
+		} catch (Exception e) {
+			return -1;
 		}
 	}
 

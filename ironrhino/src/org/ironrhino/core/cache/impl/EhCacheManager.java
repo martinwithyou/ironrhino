@@ -114,12 +114,6 @@ public class EhCacheManager implements CacheManager {
 	@Override
 	public void mput(Map<String, Object> map, int timeToLive,
 			TimeUnit timeUnit, String namespace) {
-		mput(map, -1, timeToLive, timeUnit, namespace);
-	}
-
-	@Override
-	public void mput(Map<String, Object> map, int timeToIdle, int timeToLive,
-			TimeUnit timeUnit, String namespace) {
 		if (map == null)
 			return;
 		if (StringUtils.isBlank(namespace))
@@ -129,11 +123,9 @@ public class EhCacheManager implements CacheManager {
 			ehCacheManager.addCache(namespace);
 		cache = ehCacheManager.getCache(namespace);
 		for (Map.Entry<String, Object> entry : map.entrySet())
-			cache.put(new Element(entry.getKey(), entry.getValue(), null,
-					timeToIdle > 0 ? (int) timeUnit.toSeconds(timeToIdle)
-							: null,
-					timeToIdle <= 0 && timeToLive > 0 ? (int) timeUnit
-							.toSeconds(timeToLive) : null));
+			cache.put(new Element(entry.getKey(), entry.getValue(), null, null,
+					timeToLive > 0 ? (int) timeUnit.toSeconds(timeToLive)
+							: null));
 	}
 
 	@Override
@@ -195,6 +187,38 @@ public class EhCacheManager implements CacheManager {
 					(int) timeUnit.toSeconds(timeToLive))) == null;
 		else
 			return false;
+	}
+
+	@Override
+	public long increment(String key, long delta, int timeToLive,
+			TimeUnit timeUnit, String namespace) {
+		if (key == null || delta == 0)
+			return -1;
+		if (StringUtils.isBlank(namespace))
+			namespace = DEFAULT_NAMESPACE;
+		Cache cache = ehCacheManager.getCache(namespace);
+		if (cache == null) {
+			try {
+				ehCacheManager.addCache(namespace);
+			} catch (Exception e) {
+
+			}
+			cache = ehCacheManager.getCache(namespace);
+		}
+		if (cache != null) {
+			Element element = cache.putIfAbsent(new Element(key,
+					new Long(delta), null, null, (int) timeUnit
+							.toSeconds(timeToLive)));
+			if (element == null) {
+				return delta;
+			} else {
+				long value = ((long) element.getObjectValue()) + delta;
+				cache.put(new Element(key, new Long(value), null, null,
+						(int) timeUnit.toSeconds(timeToLive)));
+				return value;
+			}
+		} else
+			return -1;
 	}
 
 	@Override
