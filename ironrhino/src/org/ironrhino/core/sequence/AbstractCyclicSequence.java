@@ -20,7 +20,7 @@ public abstract class AbstractCyclicSequence implements CyclicSequence,
 
 	private String beanName;
 
-	private int paddingLength = 5;
+	private int paddingLength = 4;
 
 	@Override
 	public CycleType getCycleType() {
