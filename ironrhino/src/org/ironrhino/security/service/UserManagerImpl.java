@@ -77,7 +77,7 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 	@CheckCache(namespace = "user", key = "${username}")
 	public UserDetails loadUserByUsername(String username) {
 		if (StringUtils.isBlank(username))
-			throw new UsernameNotFoundException("username  is blank");
+			throw new UsernameNotFoundException("username is blank");
 		username = username.toLowerCase();
 		User user;
 		if (username.indexOf('@') > 0)
