@@ -1,6 +1,8 @@
 package org.ironrhino.core.model;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -197,11 +199,17 @@ public class ResultPage<T> implements Serializable {
 						|| name.startsWith(StringUtils
 								.uncapitalize(ResultPage.class.getSimpleName()) + '.'))
 					continue;
-				for (String value : values)
-					sb.append(name)
-							.append('=')
-							.append(value.length() > 256 ? value.substring(0,
-									256) : value).append('&');
+				try {
+					for (String value : values)
+						sb.append(name)
+								.append('=')
+								.append(URLEncoder.encode(
+										value.length() > 256 ? value.substring(
+												0, 256) : value, "UTF-8"))
+								.append('&');
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 			}
 			if (sb.length() > 0)
 				sb.deleteCharAt(sb.length() - 1);
