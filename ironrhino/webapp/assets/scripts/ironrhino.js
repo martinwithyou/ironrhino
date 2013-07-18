@@ -31991,10 +31991,13 @@ Ajax = {
 				var r = $('#' + key);
 				if (key == Ajax.defaultRepacement && !r.length)
 					r = $('body');
-				if (!options.quiet && r.length)
+				if (!options.quiet && r.length) {
+					var pin = $('.pin', r);
+					var top = pin.length ? pin.offset().top : r.offset().top;
 					$('html,body').animate({
-								scrollTop : r.offset().top - 50
+								scrollTop : top - 50
 							}, 100);
+				}
 				var rep = div.find('#' + replacement[key]);
 				if (rep.length) {
 					r.html(rep.html());
