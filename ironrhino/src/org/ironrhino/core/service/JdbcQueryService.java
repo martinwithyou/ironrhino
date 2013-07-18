@@ -81,7 +81,7 @@ public class JdbcQueryService {
 	}
 
 	public long count(String sql, Map<String, Object> parameters) {
-		String alias = "_tfc_";
+		String alias = "tfc";
 		while (sql.contains(alias))
 			alias += "0";
 		StringBuilder sb = new StringBuilder("select count(*) from (")
