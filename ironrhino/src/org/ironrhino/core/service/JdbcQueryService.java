@@ -19,6 +19,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.H2Dialect;
+import org.hibernate.dialect.HSQLDialect;
 import org.hibernate.dialect.MySQL5Dialect;
 import org.hibernate.dialect.MySQLDialect;
 import org.hibernate.dialect.Oracle8iDialect;
@@ -109,7 +111,8 @@ public class JdbcQueryService {
 		if (lm.supportsLimitOffset()) {
 			rowSelection.setFirstRow(offset);
 			sql = lm.getProcessedSql();
-			if (dialect instanceof MySQLDialect) {
+			if (dialect instanceof MySQLDialect
+					|| dialect instanceof HSQLDialect) {
 				if (offset > 0) {
 					sql = sql.replaceFirst("\\s+\\?\\s*", " " + offset);
 					sql = sql.replaceFirst("\\s+\\?\\s*", " " + limit);
@@ -117,7 +120,8 @@ public class JdbcQueryService {
 					sql = sql.replaceFirst("\\s+\\?\\s*", " " + limit);
 				}
 				return namedParameterJdbcTemplate.queryForList(sql, parameters);
-			} else if (dialect instanceof PostgreSQL81Dialect) {
+			} else if (dialect instanceof PostgreSQL81Dialect
+					|| dialect instanceof H2Dialect) {
 				if (offset > 0) {
 					sql = sql.replaceFirst("\\s+\\?\\s*", " " + limit);
 					sql = sql.replaceFirst("\\s+\\?\\s*", " " + offset);
@@ -175,7 +179,11 @@ public class JdbcQueryService {
 			Map<String, Object> parameters,
 			ResultPage<Map<String, Object>> resultPage) {
 		resultPage.setTotalResults(count(sql, parameters));
-		if (resultPage.getTotalResults() > ResultPage.DEFAULT_MAX_PAGESIZE)
+		if (resultPage.getTotalResults() > ResultPage.DEFAULT_MAX_PAGESIZE
+				&& !(dialect instanceof MySQLDialect
+						|| dialect instanceof PostgreSQL81Dialect
+						|| dialect instanceof Oracle8iDialect
+						|| dialect instanceof H2Dialect || dialect instanceof HSQLDialect))
 			throw new ErrorMessage("number of results exceed "
 					+ ResultPage.DEFAULT_MAX_PAGESIZE);
 		resultPage.setResult(query(sql, parameters, resultPage.getPageSize(),
