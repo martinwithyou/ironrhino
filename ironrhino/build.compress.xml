@@ -55,6 +55,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.combobox.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.tags.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.resizabletable.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.pagination.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.richtable.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.treearea.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.treeselect.js" />
@@ -81,6 +82,7 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.tags.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxupload.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.ajaxpanel.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.pagination.js" />
 			</filelist>
 		</concat>
 		<replace file="${webapp.dir}/assets/scripts/ironrhino.js" token="@license" value="license" encoding="utf-8" />
@@ -110,6 +112,7 @@
 				<file name="${webapp.dir}/assets/styles/source/bootstrap.switch.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.editme.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.portal.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.sortabletable.css" />
@@ -126,6 +129,7 @@
 				<file name="${webapp.dir}/assets/styles/source/jquery.textext.my.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.core.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.form.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.pagination.css" />
 			</filelist>
 		</concat>
 		<replaceregexp file="${webapp.dir}/assets/styles/ironrhino.css" match="^\/\*!" replace="/*" byline="true" encoding="utf-8" />

@@ -36237,6 +36237,104 @@ $(function() {
 						}
 					});
 		});
+(function($) {
+	function submit(form) {
+		var pushstate = false;
+		if (form.hasClass('history'))
+			pushstate = true;
+		if (form.parents('.ui-dialog,.tab-content').length)
+			pushstate = false;
+		if (pushstate && typeof history.pushState != 'undefined') {
+			var url = form.attr('action');
+			var params = form.serializeArray();
+			if (params) {
+				$.map(params, function(v, i) {
+							if (v.name == 'resultPage.pageNo')
+								v.name = 'pn';
+							else if (v.name == 'resultPage.pageSize')
+								v.name = 'ps';
+							else if (v.name == 'check') {
+								v.name = '';
+								v.value = '';
+							} else if (v.name == 'keyword' && !v.value) {
+								v.name = '';
+								v.value = '';
+							}
+						});
+				var param = $.param(params).replace(/(&=)/g, '');
+				if (param)
+					url += (url.indexOf('?') > 0 ? '&' : '?') + param;
+			}
+			var location = document.location.href;
+			history.replaceState({
+						url : location
+					}, '', location);
+			history.pushState(url, '', url);
+		}
+		form.submit();
+	}
+	$(function() {
+				$(document).on('click',
+						'.toolbar .pagination .firstPage:not(.disabled) a',
+						function(event) {
+							var form = $(this).closest('form');
+							$('.inputPage', form).val(1);
+							submit(form);
+							return false;
+						}).on('click',
+						'.toolbar .pagination .prevPage:not(.disabled) a',
+						function(event) {
+							var form = $(this).closest('form');
+							$('.inputPage', form).val(function(i, v) {
+										return parseInt(v) - 1
+									});
+							submit(form);
+							return false;
+						}).on('click',
+						'.toolbar .pagination .nextPage:not(.disabled) a',
+						function(event) {
+							var form = $(this).closest('form');
+							$('.inputPage', form).val(function(i, v) {
+										return parseInt(v) + 1
+									});
+							submit(form);
+							return false;
+						}).on('click',
+						'.toolbar .pagination .lastPage:not(.disabled) a',
+						function(event) {
+							var form = $(this).closest('form');
+							$('.inputPage', form).val($('.totalPage strong',
+									form).text());
+							submit(form);
+							return false;
+						}).on('change', '.toolbar .pagination .inputPage',
+						function(event) {
+							var form = $(event.target).closest('form');
+							submit(form);
+							event.preventDefault();
+						}).on('change', '.toolbar .pagination select.pageSize',
+						function(event) {
+							var form = $(event.target).closest('form');
+							$('.inputPage', form).val(1);
+							submit(form);
+						}).on('keydown', '.toolbar input[name="keyword"]',
+						function(event) {
+							var form = $(event.target).closest('form');
+							if (event.keyCode == 13) {
+								$('.inputPage', form).val(1);
+								submit(form);
+								return false;
+							}
+						}).on('click', '.toolbar .icon-search',
+						function(event) {
+							var form = $(event.target).closest('form');
+							$('.inputPage', form).val(1);
+							submit(form);
+							return false;
+						});
+
+			});
+})(jQuery);
 Richtable = {
 	getBaseUrl : function(form) {
 		form = form || $('form.richtable');
@@ -36295,39 +36393,6 @@ Richtable = {
 		if (includeParams && data)
 			url += (url.indexOf('?') > 0 ? '&' : '?') + data;
 		return url;
-	},
-	reload : function(form, pushstate) {
-		form = form || $('form.richtable');
-		if (form.parents('.ui-dialog,.tab-content').length)
-			pushstate = false;
-		if (pushstate && typeof history.pushState != 'undefined') {
-			var url = form.attr('action');
-			var params = form.serializeArray();
-			if (params) {
-				$.map(params, function(v, i) {
-							if (v.name == 'resultPage.pageNo')
-								v.name = 'pn';
-							else if (v.name == 'resultPage.pageSize')
-								v.name = 'ps';
-							else if (v.name == 'check') {
-								v.name = '';
-								v.value = '';
-							} else if (v.name == 'keyword' && !v.value) {
-								v.name = '';
-								v.value = '';
-							}
-						});
-				var param = $.param(params).replace(/(&=)/g, '');
-				if (param)
-					url += (url.indexOf('?') > 0 ? '&' : '?') + param;
-			}
-			var location = document.location.href;
-			history.replaceState({
-						url : location
-					}, '', location);
-			history.pushState(url, '', url);
-		}
-		$(form).submit();
 	},
 	open : function(url, reloadonclose, useiframe, form) {
 		form = form || $('form.richtable');
@@ -36463,7 +36528,7 @@ Richtable = {
 				if (reloadonclose
 						&& ($('#_window_ form.ajax').hasClass('forcereload') || !$('#_window_ form.ajax')
 								.hasClass('dontreload')))
-					Richtable.reload(form);
+					$(form).submit();
 				win.html('').dialog('destroy').remove();
 			},
 			beforeClose : function(event, ui) {
@@ -36520,7 +36585,7 @@ Richtable = {
 		var action = $(btn).data('action');
 		var view = $(btn).data('view');
 		if (action == 'reload')
-			Richtable.reload(form);
+			$(form).submit();
 		else if (action == 'enter')
 			Richtable.enter(event);
 		else if (action == 'save')
@@ -36544,7 +36609,7 @@ Richtable = {
 											type : 'POST',
 											dataType : 'json',
 											success : function() {
-												Richtable.reload(form)
+												$(form).submit();
 											}
 										});
 							}
@@ -36559,7 +36624,7 @@ Richtable = {
 								type : 'POST',
 								dataType : 'json',
 								success : function() {
-									Richtable.reload(form)
+									$(form).submit();
 								}
 							});
 				}
@@ -36805,56 +36870,7 @@ Richtable = {
 Initialization.richtable = function() {
 	$(document).on('click',
 			'.richtable .action button.btn,form.richtable a[rel="richtable"]',
-			Richtable.click).on('click',
-			'.richtable .firstPage:not(.disabled) a', function(event) {
-				var form = $(this).closest('form');
-				$('.inputPage', form).val(1);
-				Richtable.reload(form, true);
-				return false;
-			}).on('click', '.richtable .prevPage:not(.disabled) a',
-			function(event) {
-				var form = $(this).closest('form');
-				$('.inputPage', form).val(function(i, v) {
-							return parseInt(v) - 1
-						});
-				Richtable.reload(form, true);
-				return false;
-			}).on('click', '.richtable .nextPage:not(.disabled) a',
-			function(event) {
-				var form = $(this).closest('form');
-				$('.inputPage', form).val(function(i, v) {
-							return parseInt(v) + 1
-						});
-				Richtable.reload(form, true);
-				return false;
-			}).on('click', '.richtable .lastPage:not(.disabled) a',
-			function(event) {
-				var form = $(this).closest('form');
-				$('.inputPage', form).val($('.totalPage strong', form).text());
-				Richtable.reload(form, true);
-				return false;
-			}).on('change', '.richtable .inputPage', function(event) {
-				var form = $(event.target).closest('form');
-				Richtable.reload(form, true);
-				event.preventDefault();
-			}).on('change', '.richtable select.pageSize', function(event) {
-				var form = $(event.target).closest('form');
-				$('.inputPage', form).val(1);
-				Richtable.reload(form, true);
-			}).on('keydown', '.richtable input[name="keyword"]',
-			function(event) {
-				var form = $(event.target).closest('form');
-				if (event.keyCode == 13) {
-					$('.inputPage', form).val(1);
-					Richtable.reload(form, true);
-					return false;
-				}
-			}).on('click', '.richtable .icon-search', function(event) {
-				var form = $(event.target).closest('form');
-				$('.inputPage', form).val(1);
-				Richtable.reload(form, true);
-				return false;
-			}).on('click', '.richtable .more', function(event) {
+			Richtable.click).on('click', '.richtable .more', function(event) {
 		var form = $(event.target).closest('form');
 		if (!$('li.nextPage', form).length)
 			return;
