@@ -64,9 +64,9 @@ $(function(){
 <#if triggers?keys?size gt 0>
 <div id="trigger">
 	<ul class="thumbnails">
-	<#list triggers.keySet() as expression>
+	<#list triggers.entrySet() as entry>
 	<li class="span4">
-	<button type="button" class="btn btn-block" data-scope="${triggers[expression]?string}"  data-expression="${expression}">${action.getText(expression)}</button>
+	<button type="button" class="btn btn-block" data-scope="${entry.value?string}"  data-expression="${entry.key}">${action.getText(entry.key)}</button>
 	</li>
 	</#list>
 	</ul>

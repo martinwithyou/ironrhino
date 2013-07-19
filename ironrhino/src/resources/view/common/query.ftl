@@ -37,8 +37,8 @@
 			<tbody>
 			<#list resultPage.result as row>
 			<tr>
-				<#list map.keySet() as name>
-				<td>${(row[name]?string)!}</td>
+				<#list map.entrySet() as entry>
+				<td>${(entry.value?string)!}</td>
 				</#list>
 				<td></td>
 			</tr>
