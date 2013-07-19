@@ -7,9 +7,9 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.jdbc.JdbcQueryService;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.service.JdbcQueryService;
 import org.ironrhino.core.struts.BaseAction;
 
 @AutoConfig

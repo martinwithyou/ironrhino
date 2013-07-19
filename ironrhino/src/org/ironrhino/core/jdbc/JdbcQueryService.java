@@ -1,4 +1,4 @@
-package org.ironrhino.core.service;
+package org.ironrhino.core.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,7 +18,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
@@ -41,26 +40,26 @@ public class JdbcQueryService {
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	private String databaseProductName;
+	private DatabaseProduct databaseProduct;
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public void setDatabaseProductName(String databaseProductName) {
-		this.databaseProductName = databaseProductName;
+	public void setDatabaseProduct(DatabaseProduct databaseProduct) {
+		this.databaseProduct = databaseProduct;
 	}
 
 	@PostConstruct
 	public void init() {
 		namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(
 				jdbcTemplate);
-		if (StringUtils.isBlank(databaseProductName)) {
+		if (databaseProduct == null) {
 			Connection con = DataSourceUtils.getConnection(jdbcTemplate
 					.getDataSource());
 			try {
-				databaseProductName = con.getMetaData()
-						.getDatabaseProductName();
+				databaseProduct = DatabaseProduct.parse(con.getMetaData()
+						.getDatabaseProductName());
 			} catch (SQLException e) {
 				logger.error(e.getMessage(), e);
 			} finally {
@@ -104,9 +103,9 @@ public class JdbcQueryService {
 
 	public List<Map<String, Object>> query(String sql,
 			Map<String, Object> paramMap, final int limit, final int offset) {
-		if (databaseProductName.toLowerCase().contains("mysql")
-				|| databaseProductName.toLowerCase().contains("postgres")
-				|| databaseProductName.toLowerCase().equals("h2")) {
+		if (databaseProduct == DatabaseProduct.MYSQL
+				|| databaseProduct == DatabaseProduct.POSTGRESQL
+				|| databaseProduct == DatabaseProduct.H2) {
 			StringBuilder sb = new StringBuilder(sql.length() + 20);
 			sb.append(sql);
 			sb.append(" limit ");
@@ -117,7 +116,7 @@ public class JdbcQueryService {
 			}
 			return namedParameterJdbcTemplate.queryForList(sb.toString(),
 					paramMap);
-		} else if (databaseProductName.toLowerCase().contains("hsql")) {
+		} else if (databaseProduct == DatabaseProduct.HSQL) {
 			StringBuilder sb = new StringBuilder(sql.length() + 20);
 			sb.append(sql);
 			if (offset > 0) {
@@ -128,7 +127,7 @@ public class JdbcQueryService {
 			sb.append(limit);
 			return namedParameterJdbcTemplate.queryForList(sb.toString(),
 					paramMap);
-		} else if (databaseProductName.toLowerCase().contains("oracle")) {
+		} else if (databaseProduct == DatabaseProduct.ORACLE) {
 			sql = sql.trim();
 			boolean isForUpdate = false;
 			if (sql.toLowerCase().endsWith(" for update")) {
@@ -153,7 +152,7 @@ public class JdbcQueryService {
 			}
 			return namedParameterJdbcTemplate.queryForList(sb.toString(),
 					paramMap);
-		} else if (databaseProductName.toLowerCase().startsWith("db2")) {
+		} else if (databaseProduct == DatabaseProduct.DB2) {
 			StringBuilder sb;
 			if (offset > 0) {
 				sb = new StringBuilder(sql.length() + 200)
@@ -172,7 +171,7 @@ public class JdbcQueryService {
 			}
 			return namedParameterJdbcTemplate.queryForList(sb.toString(),
 					paramMap);
-		} else if (databaseProductName.toLowerCase().contains("derby")) {
+		} else if (databaseProduct == DatabaseProduct.DERBY) {
 			StringBuilder sb = new StringBuilder(sql.length() + 50);
 			sb.append(sql);
 			if (offset == 0)
@@ -185,9 +184,8 @@ public class JdbcQueryService {
 					paramMap);
 		}
 
-		if (databaseProductName.toLowerCase().contains("sql server")
-				|| databaseProductName.equals("Adaptive Server Enterprise")
-				|| databaseProductName.equals("ASE")) {
+		if (databaseProduct == DatabaseProduct.SQLSERVER
+				|| databaseProduct == DatabaseProduct.SYBASE) {
 			int selectIndex = sql.toLowerCase().indexOf("select");
 			int selectDistinctIndex = sql.toLowerCase().indexOf(
 					"select distinct");
@@ -198,7 +196,7 @@ public class JdbcQueryService {
 			if (offset <= 0)
 				return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 		}
-		if (databaseProductName.toLowerCase().contains("informix")) {
+		if (databaseProduct == DatabaseProduct.INFORMIX) {
 			int selectIndex = sql.toLowerCase().indexOf("select");
 			int selectDistinctIndex = sql.toLowerCase().indexOf(
 					"select distinct");
@@ -239,14 +237,12 @@ public class JdbcQueryService {
 			ResultPage<Map<String, Object>> resultPage) {
 		resultPage.setTotalResults(count(sql, parameters));
 		if (resultPage.getTotalResults() > ResultPage.DEFAULT_MAX_PAGESIZE
-				&& !(databaseProductName.toLowerCase().contains("mysql")
-						|| databaseProductName.toLowerCase().contains(
-								"postgres")
-						|| databaseProductName.toLowerCase().equals("h2")
-						|| databaseProductName.toLowerCase().contains("hsql")
-						|| databaseProductName.toLowerCase().contains("oracle")
-						|| databaseProductName.toLowerCase().startsWith("db2") || databaseProductName
-						.toLowerCase().contains("derby")))
+				&& !(databaseProduct == DatabaseProduct.MYSQL
+						|| databaseProduct == DatabaseProduct.POSTGRESQL
+						|| databaseProduct == DatabaseProduct.H2
+						|| databaseProduct == DatabaseProduct.HSQL
+						|| databaseProduct == DatabaseProduct.ORACLE
+						|| databaseProduct == DatabaseProduct.DB2 || databaseProduct == DatabaseProduct.DERBY))
 			throw new ErrorMessage("number of results exceed "
 					+ ResultPage.DEFAULT_MAX_PAGESIZE);
 		resultPage.setResult(query(sql, parameters, resultPage.getPageSize(),

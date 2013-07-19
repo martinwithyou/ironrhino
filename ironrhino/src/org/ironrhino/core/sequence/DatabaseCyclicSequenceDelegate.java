@@ -3,6 +3,7 @@ package org.ironrhino.core.sequence;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 
+import org.ironrhino.core.jdbc.DatabaseProduct;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
 public class DatabaseCyclicSequenceDelegate extends
@@ -13,31 +14,35 @@ public class DatabaseCyclicSequenceDelegate extends
 	@Override
 	public void afterPropertiesSet() throws java.lang.Exception {
 		Connection con = DataSourceUtils.getConnection(getDataSource());
-		DatabaseMetaData dbmd = con.getMetaData();
-		String databaseProductName = dbmd.getDatabaseProductName()
-				.toLowerCase();
-		con.close();
-		if (databaseProductName.contains("mysql"))
+		DatabaseProduct databaseProduct = null;
+		try {
+			DatabaseMetaData dbmd = con.getMetaData();
+			databaseProduct = DatabaseProduct.parse(dbmd
+					.getDatabaseProductName().toLowerCase());
+		} finally {
+			DataSourceUtils.releaseConnection(con, getDataSource());
+		}
+		if (databaseProduct == DatabaseProduct.MYSQL)
 			seq = new MySQLCyclicSequence();
-		else if (databaseProductName.contains("postgres"))
+		else if (databaseProduct == DatabaseProduct.POSTGRESQL)
 			seq = new PostgreSQLCyclicSequence();
-		else if (databaseProductName.contains("oracle"))
+		else if (databaseProduct == DatabaseProduct.ORACLE)
 			seq = new OracleCyclicSequence();
-		else if (databaseProductName.contains("db2"))
+		else if (databaseProduct == DatabaseProduct.DB2)
 			seq = new DB2CyclicSequence();
-		else if (databaseProductName.contains("sql server"))
-			seq = new SqlServerCyclicSequence();
-		else if (databaseProductName.contains("hsql"))
-			seq = new HSQLCyclicSequence();
-		else if (databaseProductName.contains("h2"))
-			seq = new H2CyclicSequence();
-		else if (databaseProductName.contains("derby"))
-			seq = new DerbyCyclicSequence();
-		else if (databaseProductName.contains("informix"))
+		else if (databaseProduct == DatabaseProduct.INFORMIX)
 			seq = new InformixCyclicSequence();
+		else if (databaseProduct == DatabaseProduct.SQLSERVER)
+			seq = new SqlServerCyclicSequence();
+		else if (databaseProduct == DatabaseProduct.H2)
+			seq = new H2CyclicSequence();
+		else if (databaseProduct == DatabaseProduct.HSQL)
+			seq = new HSQLCyclicSequence();
+		else if (databaseProduct == DatabaseProduct.DERBY)
+			seq = new DerbyCyclicSequence();
 		else
 			throw new RuntimeException("not implemented for database "
-					+ databaseProductName);
+					+ databaseProduct);
 		seq.setDataSource(getDataSource());
 		if (getCacheSize() > 1)
 			seq.setCacheSize(getCacheSize());
