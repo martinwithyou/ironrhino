@@ -2,6 +2,8 @@ package org.ironrhino.core.spring.configuration;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.jdbc.DatabaseProduct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +44,7 @@ public class DataSourceConfiguration {
 	@Value("${dataSource.maxConnectionAgeInSeconds:14400}")
 	private int maxConnectionAgeInSeconds;
 
-	@Value("${jdbc.connectionTestStatement:/* ping */ select 1}")
+	@Value("${jdbc.connectionTestStatement:}")
 	private String connectionTestStatement;
 
 	public @Bean(destroyMethod = "close")
@@ -58,6 +60,10 @@ public class DataSourceConfiguration {
 		ds.setIdleConnectionTestPeriodInMinutes(idleConnectionTestPeriodInMinutes);
 		ds.setIdleMaxAgeInMinutes(idleMaxAgeInMinutes);
 		ds.setMaxConnectionAgeInSeconds(maxConnectionAgeInSeconds);
+		DatabaseProduct databaseProduct = DatabaseProduct.parse(jdbcUrl);
+		if (StringUtils.isBlank(connectionTestStatement)
+				&& databaseProduct != null)
+			connectionTestStatement = databaseProduct.getValidationQuery();
 		ds.setConnectionTestStatement(connectionTestStatement);
 		return ds;
 	}
