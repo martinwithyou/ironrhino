@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 
@@ -66,11 +65,6 @@ public class DataSourceConfiguration {
 	public @Bean
 	JdbcTemplate jdbcTemplate() {
 		return new JdbcTemplate(dataSource());
-	}
-
-	public @Bean
-	NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
-		return new NamedParameterJdbcTemplate(dataSource());
 	}
 
 }
