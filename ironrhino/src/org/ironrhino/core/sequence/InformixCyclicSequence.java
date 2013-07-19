@@ -9,6 +9,7 @@ public class InformixCyclicSequence extends AbstractSequenceCyclicSequence {
 				.toString();
 	}
 
+	@Override
 	protected String getTimestampColumnType() {
 		return "DATETIME";
 	}

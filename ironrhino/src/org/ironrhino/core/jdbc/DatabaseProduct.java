@@ -3,26 +3,31 @@ package org.ironrhino.core.jdbc;
 public enum DatabaseProduct {
 
 	MYSQL, POSTGRESQL, ORACLE {
+		@Override
 		public String getValidationQuery() {
 			return "SELECT 1 FROM DUAL";
 		}
 	},
 	DB2 {
+		@Override
 		public String getValidationQuery() {
 			return "VALUES 1";
 		}
 	},
 	INFORMIX {
+		@Override
 		public String getValidationQuery() {
 			return "SELECT FIRST 1 CURRENT FROM SYSTABLES";
 		}
 	},
 	SQLSERVER, SYBASE, H2, HSQL {
+		@Override
 		public String getValidationQuery() {
 			return "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS";
 		}
 	},
 	DERBY {
+		@Override
 		public String getValidationQuery() {
 			return "SELECT 1 FROM SYSIBM.SYSDUMMY1";
 		}

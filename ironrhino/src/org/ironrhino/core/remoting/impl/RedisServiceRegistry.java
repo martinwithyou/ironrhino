@@ -113,6 +113,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 			task.run();
 	}
 
+	@Override
 	public Collection<String> getAllServices() {
 		Set<String> keys = stringRedisTemplate.keys(NAMESPACE_SERVICES + "*");
 		List<String> services = new ArrayList<String>(keys.size());
@@ -122,6 +123,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 		return services;
 	}
 
+	@Override
 	public Collection<String> getHostsForService(String service) {
 		List<String> list = stringRedisTemplate.opsForList().range(
 				NAMESPACE_SERVICES + service, 0, -1);
@@ -131,6 +133,7 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 		return hosts;
 	}
 
+	@Override
 	public Map<String, String> getDiscoveredServices(String host) {
 		if (host.indexOf(':') < 0)
 			host += ":" + DEFAULT_PORT;

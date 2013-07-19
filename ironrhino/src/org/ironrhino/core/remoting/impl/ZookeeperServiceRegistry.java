@@ -197,6 +197,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		}
 	}
 
+	@Override
 	public Collection<String> getAllServices() {
 		try {
 			List<String> list = zooKeeper.getChildren(servicesParentPath, true);
@@ -210,6 +211,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		}
 	}
 
+	@Override
 	public Collection<String> getHostsForService(String service) {
 		try {
 			List<String> list = zooKeeper.getChildren(new StringBuilder()
@@ -225,6 +227,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		}
 	}
 
+	@Override
 	public Map<String, String> getDiscoveredServices(String host) {
 		if (host.indexOf(':') < 0)
 			host += ":" + DEFAULT_PORT;
