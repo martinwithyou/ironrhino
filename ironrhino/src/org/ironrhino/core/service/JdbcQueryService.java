@@ -189,7 +189,7 @@ public class JdbcQueryService {
 				|| databaseProductName.equals("Adaptive Server Enterprise")
 				|| databaseProductName.equals("ASE")) {
 			int selectIndex = sql.toLowerCase().indexOf("select");
-			final int selectDistinctIndex = sql.toLowerCase().indexOf(
+			int selectDistinctIndex = sql.toLowerCase().indexOf(
 					"select distinct");
 			int position = selectIndex
 					+ (selectDistinctIndex == selectIndex ? 15 : 6);
@@ -198,6 +198,18 @@ public class JdbcQueryService {
 			if (offset <= 0)
 				return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 		}
+		if (databaseProductName.toLowerCase().contains("informix")) {
+			int selectIndex = sql.toLowerCase().indexOf("select");
+			int selectDistinctIndex = sql.toLowerCase().indexOf(
+					"select distinct");
+			int position = selectIndex
+					+ (selectDistinctIndex == selectIndex ? 15 : 6);
+			sql = new StringBuilder(sql.length() + 8).append(sql)
+					.insert(position, " first " + limit).toString();
+			if (offset <= 0)
+				return namedParameterJdbcTemplate.queryForList(sql, paramMap);
+		}
+
 		return namedParameterJdbcTemplate.execute(sql,
 				new PreparedStatementCallback<List<Map<String, Object>>>() {
 					@Override

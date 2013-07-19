@@ -33,6 +33,8 @@ public class DatabaseCyclicSequenceDelegate extends
 			seq = new H2CyclicSequence();
 		else if (databaseProductName.contains("derby"))
 			seq = new DerbyCyclicSequence();
+		else if (databaseProductName.contains("informix"))
+			seq = new InformixCyclicSequence();
 		else
 			throw new RuntimeException("not implemented for database "
 					+ databaseProductName);
