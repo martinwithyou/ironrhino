@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -143,36 +142,30 @@ public class JdbcQueryService {
 		}
 		if (lm.supportsLimit()) {
 			sql = lm.getProcessedSql();
-			sql = sql.replaceFirst("\\s+\\?\\s*", " " + limit);
-			List<Map<String, Object>> result = namedParameterJdbcTemplate
-					.queryForList(sql, parameters);
-			if (offset <= 0)
-				return result;
-			else if (result.size() > offset) {
-				return result.subList(offset, result.size());
-			} else {
-				return Collections.emptyList();
-			}
-		} else {
-			return namedParameterJdbcTemplate.execute(sql,
-					new PreparedStatementCallback<List<Map<String, Object>>>() {
-						@Override
-						public List<Map<String, Object>> doInPreparedStatement(
-								PreparedStatement preparedStatement)
-								throws SQLException, DataAccessException {
-							preparedStatement.setMaxRows(offset + limit);
-							ResultSet rs = preparedStatement.executeQuery();
-							ColumnMapRowMapper crm = new ColumnMapRowMapper();
-							List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
-							int i = 0;
-							while (rs.next())
-								if (i >= offset)
-									result.add(crm.mapRow(rs, i++));
-							rs.close();
-							return result;
-						}
-					});
+			sql = sql.replaceFirst("\\s+\\?\\s*", " " + (limit + offset));
 		}
+		return namedParameterJdbcTemplate.execute(sql,
+				new PreparedStatementCallback<List<Map<String, Object>>>() {
+					@Override
+					public List<Map<String, Object>> doInPreparedStatement(
+							PreparedStatement preparedStatement)
+							throws SQLException, DataAccessException {
+						preparedStatement.setMaxRows(offset + limit);
+						ResultSet rs = preparedStatement.executeQuery();
+						ColumnMapRowMapper crm = new ColumnMapRowMapper();
+						List<Map<String, Object>> result = new ArrayList<Map<String, Object>>(
+								limit);
+						int i = 0;
+						while (rs.next()) {
+							if (i >= offset)
+								result.add(crm.mapRow(rs, i));
+							i++;
+						}
+						rs.close();
+						return result;
+					}
+				});
+
 	}
 
 	public ResultPage<Map<String, Object>> query(String sql,
