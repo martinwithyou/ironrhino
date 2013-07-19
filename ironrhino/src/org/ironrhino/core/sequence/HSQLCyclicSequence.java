@@ -6,7 +6,7 @@ public class HSQLCyclicSequence extends AbstractSequenceCyclicSequence {
 	protected String getCreateSequenceStatement() {
 		return new StringBuilder("CREATE SEQUENCE ")
 				.append(getActualSequenceName())
-				.append("AS BIGINT START WITH 1").toString();
+				.append(" AS BIGINT START WITH 1").toString();
 	}
 
 	@Override
