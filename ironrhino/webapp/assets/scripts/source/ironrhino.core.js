@@ -187,7 +187,7 @@ Message = {
 			msg.html(html);
 			_observe(msg);
 			$('html,body').animate({
-						scrollTop : msg.offset().top - 20
+						scrollTop : msg.offset().top - 50
 					}, 100);
 		}
 	},

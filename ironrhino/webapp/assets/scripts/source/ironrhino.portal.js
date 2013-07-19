@@ -51,9 +51,14 @@
 					t
 							.append('<div class="portal-footer"><button class="btn save">'
 									+ MessageBundle.get('save')
-									+ '</button> <button class="btn restore">'
-									+ MessageBundle.get('restore')
 									+ '</button></div>');
+					if (localStorage
+							&& localStorage[document.location.pathname
+									+ '_portal-layout'])
+						t.find('.portal-footer')
+								.append(' <button class="btn restore">'
+										+ MessageBundle.get('restore')
+										+ '</button>');
 					$('.portal-footer .save', t).click(function() {
 								t.portal('layout', 'save');
 								Message.showMessage('success');
@@ -80,9 +85,19 @@
 				return '[' + layout.join(',') + ']';
 			} else {
 				if (arguments[1] == 'save') {
-					if (window.localStorage) {
+					if (localStorage) {
 						localStorage[document.location.pathname
 								+ '_portal-layout'] = this.portal('layout');
+						var footer = this.eq(0).find('.portal-footer');
+						if (!footer.find('.restore').length) {
+							footer.append(' <button class="btn restore">'
+									+ MessageBundle.get('restore')
+									+ '</button>');
+							var t = this;
+							$('.restore', footer).click(function() {
+										t.portal('layout', 'restore')
+									});
+						}
 					}
 				} else if (arguments[1] == 'restore') {
 					delete localStorage[document.location.pathname
