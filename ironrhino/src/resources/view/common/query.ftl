@@ -72,8 +72,8 @@ $(function(){
 			</#list>
 			</tbody>
 		</table>
-		<div class="toolbar row">
-			<div class="pagination span8">
+		<div class="toolbar row-fluid">
+			<div class="pagination span5">
 				<#if resultPage.paginating>
 				<ul>
 				<#if resultPage.first>
@@ -109,7 +109,10 @@ $(function(){
 				</ul>
 				</#if>
 			</div>
-			<div class="status span4">
+			<div class="action span2">
+				<button type="button" class="btn">${action.getText('export')}</button>
+			</div>
+			<div class="status span5">
 				${resultPage.totalResults} ${action.getText('record')}
 			</div>
 		</div>

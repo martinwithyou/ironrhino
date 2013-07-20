@@ -23,6 +23,7 @@ import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
@@ -77,6 +78,13 @@ public class JdbcQueryService {
 			parameters.put(name, "0");
 		try {
 			query(sql, parameters, 1);
+		} catch (BadSqlGrammarException bse) {
+			Throwable t = bse.getCause();
+			String cause = "";
+			if (t instanceof SQLException)
+				cause = t.getMessage();
+			throw new ErrorMessage("query.bad.sql.grammar",
+					new Object[] { cause });
 		} catch (DataAccessException e) {
 			throw new ErrorMessage(e.getMessage());
 		}
@@ -252,8 +260,8 @@ public class JdbcQueryService {
 						|| databaseProduct == DatabaseProduct.HSQL
 						|| databaseProduct == DatabaseProduct.ORACLE
 						|| databaseProduct == DatabaseProduct.DB2 || databaseProduct == DatabaseProduct.DERBY))
-			throw new ErrorMessage("number of results exceed "
-					+ ResultPage.DEFAULT_MAX_PAGESIZE);
+			throw new ErrorMessage("query.result.number.exceed",
+					new Object[] { ResultPage.DEFAULT_MAX_PAGESIZE });
 		resultPage.setResult(query(sql, parameters, resultPage.getPageSize(),
 				(resultPage.getPageNo() - 1) * resultPage.getPageSize()));
 		return resultPage;

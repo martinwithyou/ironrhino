@@ -8081,7 +8081,9 @@ line-height: 18px;
 	margin-top:0;
 	margin-bottom:0;
 }
-
+.toolbar .action{
+	text-align:center;
+}
 .toolbar .status{
 	text-align:right;
 }
