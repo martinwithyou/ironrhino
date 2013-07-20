@@ -1079,13 +1079,46 @@ Observation.common = function(container) {
 							'X-Fragment' : ids.join(',')
 						});
 			$(this).bind('submit', function(e) {
-						var btn = $('._clicked_:submit', this);
-						$(':submit', this).removeClass('_clicked_');
-						if (btn.hasClass('noajax'))
-							return true;
-						$(this).ajaxSubmit(options);
-						return false;
-					});
+				var btn = $('._clicked_:submit', this);
+				$(':submit', this).removeClass('_clicked_');
+				if (btn.hasClass('noajax'))
+					return true;
+				var form = $(this);
+				var pushstate = false;
+				if (form.hasClass('history'))
+					pushstate = true;
+				if (form.parents('.ui-dialog,.tab-content').length)
+					pushstate = false;
+				if (pushstate && typeof history.pushState != 'undefined') {
+					var url = form.attr('action');
+					var params = form.serializeArray();
+					if (params) {
+						$.map(params, function(v, i) {
+									if (v.name == 'resultPage.pageNo')
+										v.name = 'pn';
+									else if (v.name == 'resultPage.pageSize')
+										v.name = 'ps';
+									else if (v.name == 'check') {
+										v.name = '';
+										v.value = '';
+									} else if (v.name == 'keyword' && !v.value) {
+										v.name = '';
+										v.value = '';
+									}
+								});
+						var param = $.param(params).replace(/(&=)/g, '');
+						if (param)
+							url += (url.indexOf('?') > 0 ? '&' : '?') + param;
+					}
+					var location = document.location.href;
+					history.replaceState({
+								url : location
+							}, '', location);
+					history.pushState(url, '', url);
+				}
+				$(this).ajaxSubmit(options);
+				return false;
+			});
 			return;
 		} else {
 			$(this).click(function() {
