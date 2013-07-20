@@ -2,6 +2,7 @@ package org.ironrhino.common.action;
 
 import java.io.PrintWriter;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +18,8 @@ import org.ironrhino.core.jdbc.JdbcQueryService;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.BaseAction;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.support.JdbcUtils;
 
 @AutoConfig
 public class QueryAction extends BaseAction {
@@ -104,18 +105,42 @@ public class QueryAction extends BaseAction {
 			final PrintWriter writer = response.getWriter();
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.putAll(params);
-			final ColumnMapRowMapper crm = new ColumnMapRowMapper();
 			final AtomicInteger ai = new AtomicInteger(0);
 			jdbcQueryService.query(sql, map, new RowCallbackHandler() {
+
+				private int columnCount;
 
 				@Override
 				public void processRow(ResultSet rs) throws SQLException {
 					int index = ai.getAndIncrement();
-					Map<String, Object> map = crm.mapRow(rs, index);
 					if (index == 0) {
-						writer.println(StringUtils.join(map.keySet(), ","));
+						ResultSetMetaData rsmd = rs.getMetaData();
+						columnCount = rsmd.getColumnCount();
+						for (int i = 1; i <= columnCount; i++) {
+							writer.print(JdbcUtils.lookupColumnName(rsmd, i));
+							if (i < columnCount)
+								writer.print(",");
+							else
+								writer.println();
+						}
 					}
-					writer.println(StringUtils.join(map.values(), ","));
+					for (int i = 1; i <= columnCount; i++) {
+						Object value = JdbcUtils.getResultSetValue(rs, i);
+						String text = value != null ? value.toString() : "";
+						if (text.contains(",") || text.contains("\"")
+								|| text.contains("\n")) {
+							if (text.contains("\""))
+								text = text.replaceAll("\"", "\"\"");
+							text = new StringBuilder(text.length() + 2)
+									.append("\"").append(text).append("\"")
+									.toString();
+						}
+						writer.print(text);
+						if (i < columnCount)
+							writer.print(",");
+						else
+							writer.println();
+					}
 					if (index > 0 && index % 100 == 0)
 						writer.flush();
 				}
