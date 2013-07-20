@@ -10,5 +10,6 @@
   <li><a href="<@url value="/common/page"/>">${action.getText('page')}</a></li>
   <li><a href="<@url value="/common/upload"/>">${action.getText('upload')}</a></li>
   <li><a href="<@url value="/common/console"/>">${action.getText('console')}</a></li>
+  <li><a href="<@url value="/common/query"/>">${action.getText('query')}</a></li>
   </@authorize>
 </ul>

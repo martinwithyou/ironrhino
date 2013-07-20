@@ -70,6 +70,7 @@ public class JdbcQueryService {
 	}
 
 	public void validate(String sql) {
+		sql = refineSql(sql);
 		Set<String> names = extractParameters(sql);
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		for (String name : names)
@@ -82,6 +83,7 @@ public class JdbcQueryService {
 	}
 
 	public long count(String sql, Map<String, Object> parameters) {
+		sql = refineSql(sql);
 		String alias = "tfc";
 		while (sql.contains(alias))
 			alias += "0";
@@ -103,6 +105,7 @@ public class JdbcQueryService {
 
 	public List<Map<String, Object>> query(String sql,
 			Map<String, Object> paramMap, final int limit, final int offset) {
+		sql = refineSql(sql);
 		if (hasLimit(sql))
 			return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 		if (databaseProduct == DatabaseProduct.MYSQL
@@ -237,6 +240,7 @@ public class JdbcQueryService {
 	public ResultPage<Map<String, Object>> query(String sql,
 			Map<String, Object> parameters,
 			ResultPage<Map<String, Object>> resultPage) {
+		sql = refineSql(sql);
 		boolean hasLimit = hasLimit(sql);
 		resultPage.setPaginating(!hasLimit);
 		resultPage.setTotalResults(count(sql, parameters));
@@ -261,6 +265,13 @@ public class JdbcQueryService {
 		while (m.find())
 			names.add(m.group().substring(1));
 		return names;
+	}
+
+	private static String refineSql(String sql) {
+		sql = sql.trim();
+		if (sql.endsWith(";"))
+			sql = sql.substring(0, sql.length() - 1);
+		return sql;
 	}
 
 	private static String trimOrderby(String sql) {
