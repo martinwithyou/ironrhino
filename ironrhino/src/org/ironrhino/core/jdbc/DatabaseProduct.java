@@ -1,8 +1,39 @@
 package org.ironrhino.core.jdbc;
 
+import org.apache.commons.lang3.StringUtils;
+
 public enum DatabaseProduct {
 
-	MYSQL, POSTGRESQL, ORACLE {
+	MYSQL {
+		@Override
+		public int getDefaultPort() {
+			return 3306;
+		}
+	},
+	POSTGRESQL {
+		@Override
+		public int getDefaultPort() {
+			return 5432;
+		}
+	},
+	ORACLE {
+		@Override
+		public int getDefaultPort() {
+			return 1521;
+		}
+
+		@Override
+		public String getJdbcUrl(String host, int port, String databaseName,
+				String params) {
+			StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
+			sb.append(":thin:@//");
+			sb.append(StringUtils.isNotBlank(host) ? host : "localhost");
+			if (port > 0 && port != getDefaultPort())
+				sb.append(":").append(port);
+			sb.append("/").append(databaseName);
+			return sb.toString();
+		}
+
 		@Override
 		public String getValidationQuery() {
 			return "SELECT 1 FROM DUAL";
@@ -10,17 +41,144 @@ public enum DatabaseProduct {
 	},
 	DB2 {
 		@Override
+		public int getDefaultPort() {
+			return 50000;
+		}
+
+		@Override
+		public String getJdbcUrl(String host, int port, String databaseName,
+				String params) {
+			StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
+			sb.append("://");
+			sb.append(StringUtils.isNotBlank(host) ? host : "localhost");
+			if (port > 0 && port != getDefaultPort())
+				sb.append(":").append(port);
+			sb.append("/").append(databaseName);
+			if (StringUtils.isNotBlank(params)) {
+				if (!params.startsWith(";"))
+					sb.append(";");
+				sb.append(params);
+			}
+			return sb.toString();
+		}
+
+		@Override
 		public String getValidationQuery() {
 			return "VALUES 1";
 		}
 	},
 	INFORMIX {
 		@Override
+		public int getDefaultPort() {
+			return 1533;
+		}
+
+		@Override
+		public String getJdbcUrl(String host, int port, String databaseName,
+				String params) {
+			StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
+			sb.append("-sqli://");
+			sb.append(StringUtils.isNotBlank(host) ? host : "localhost");
+			if (port > 0 && port != getDefaultPort())
+				sb.append(":").append(port);
+			sb.append("/").append(databaseName);
+			if (StringUtils.isNotBlank(params))
+				sb.append(":").append(params);
+			return sb.toString();
+		}
+
+		@Override
 		public String getValidationQuery() {
 			return "SELECT FIRST 1 CURRENT FROM SYSTABLES";
 		}
 	},
-	SQLSERVER, SYBASE, H2, HSQL {
+	SQLSERVER {
+		@Override
+		public int getDefaultPort() {
+			return 1433;
+		}
+
+		@Override
+		public String getJdbcUrlPrefix() {
+			return "jdbc:microsoft:sqlserver";
+		}
+
+		@Override
+		public String getJdbcUrl(String host, int port, String databaseName,
+				String params) {
+			StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
+			sb.append("://");
+			sb.append(StringUtils.isNotBlank(host) ? host : "localhost");
+			if (port > 0 && port != getDefaultPort())
+				sb.append(":").append(port);
+			sb.append(";DatabaseName=").append(databaseName);
+			return sb.toString();
+		}
+	},
+	SYBASE {
+		@Override
+		public int getDefaultPort() {
+			return 7100;
+		}
+
+		@Override
+		public String getJdbcUrlPrefix() {
+			return "jdbc:sybase:Tds";
+		}
+
+		@Override
+		public String getJdbcUrl(String host, int port, String databaseName,
+				String params) {
+			StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
+			sb.append(":");
+			sb.append(StringUtils.isNotBlank(host) ? host : "localhost");
+			if (port > 0 && port != getDefaultPort())
+				sb.append(":").append(port);
+			sb.append("/").append(databaseName);
+			return sb.toString();
+		}
+	},
+	H2 {
+		@Override
+		public int getDefaultPort() {
+			return 9092;
+		}
+
+		@Override
+		public String getJdbcUrl(String host, int port, String databaseName,
+				String params) {
+			StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
+			sb.append(":tcp://");
+			sb.append(StringUtils.isNotBlank(host) ? host : "localhost");
+			if (port > 0 && port != getDefaultPort())
+				sb.append(":").append(port);
+			sb.append("/").append(databaseName);
+			return sb.toString();
+		}
+	},
+	HSQL {
+		@Override
+		public int getDefaultPort() {
+			return 9001;
+		}
+
+		@Override
+		public String getJdbcUrlPrefix() {
+			return "jdbc:hsqldb";
+		}
+
+		@Override
+		public String getJdbcUrl(String host, int port, String databaseName,
+				String params) {
+			StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
+			sb.append(":hsql://");
+			sb.append(StringUtils.isNotBlank(host) ? host : "localhost");
+			if (port > 0 && port != getDefaultPort())
+				sb.append(":").append(port);
+			sb.append("/").append(databaseName);
+			return sb.toString();
+		}
+
 		@Override
 		public String getValidationQuery() {
 			return "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS";
@@ -28,34 +186,39 @@ public enum DatabaseProduct {
 	},
 	DERBY {
 		@Override
+		public int getDefaultPort() {
+			return 1527;
+		}
+
+		@Override
+		public String getJdbcUrl(String host, int port, String databaseName,
+				String params) {
+			StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
+			sb.append("://");
+			sb.append(StringUtils.isNotBlank(host) ? host : "localhost");
+			if (port > 0 && port != getDefaultPort())
+				sb.append(":").append(port);
+			sb.append("/").append(databaseName);
+			if (StringUtils.isNotBlank(params)) {
+				if (!params.startsWith(";"))
+					sb.append(";");
+				sb.append(params);
+			}
+			return sb.toString();
+		}
+
+		@Override
 		public String getValidationQuery() {
 			return "SELECT 1 FROM SYSIBM.SYSDUMMY1";
 		}
 	};
 
 	public static DatabaseProduct parse(String nameOrUrl) {
+		nameOrUrl = nameOrUrl.trim();
 		if (nameOrUrl.toLowerCase().startsWith("jdbc:")) {
-			nameOrUrl = nameOrUrl.trim();
-			if (nameOrUrl.toLowerCase().startsWith("jdbc:mysql:"))
-				return MYSQL;
-			else if (nameOrUrl.toLowerCase().startsWith("jdbc:postgresql:"))
-				return POSTGRESQL;
-			else if (nameOrUrl.toLowerCase().startsWith("jdbc:oracle:"))
-				return ORACLE;
-			else if (nameOrUrl.toLowerCase().startsWith("jdbc:db2:"))
-				return DB2;
-			else if (nameOrUrl.toLowerCase().startsWith("jdbc:informix"))
-				return INFORMIX;
-			else if (nameOrUrl.toLowerCase().startsWith("jdbc:sqlserver:"))
-				return SQLSERVER;
-			else if (nameOrUrl.toLowerCase().contains(":sybase:"))
-				return SYBASE;
-			else if (nameOrUrl.toLowerCase().startsWith("jdbc:h2:"))
-				return H2;
-			else if (nameOrUrl.toLowerCase().startsWith("jdbc:hsqldb:"))
-				return HSQL;
-			else if (nameOrUrl.toLowerCase().startsWith("jdbc:derby:"))
-				return DERBY;
+			for (DatabaseProduct p : values())
+				if (nameOrUrl.startsWith(p.getJdbcUrlPrefix()))
+					return p;
 			return null;
 		} else {
 			if (nameOrUrl.toLowerCase().contains("mysql"))
@@ -84,8 +247,27 @@ public enum DatabaseProduct {
 		return null;
 	}
 
+	public abstract int getDefaultPort();
+
 	public String getValidationQuery() {
 		return "SELECT 1";
+	}
+
+	public String getJdbcUrlPrefix() {
+		return "jdbc:" + name().toLowerCase();
+	}
+
+	public String getJdbcUrl(String host, int port, String databaseName,
+			String params) {
+		StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
+		sb.append("://");
+		sb.append(StringUtils.isNotBlank(host) ? host : "localhost");
+		if (port > 0 && port != getDefaultPort())
+			sb.append(":").append(port);
+		sb.append("/").append(databaseName);
+		if (StringUtils.isNotBlank(params))
+			sb.append("?").append(params);
+		return sb.toString();
 	}
 
 }
