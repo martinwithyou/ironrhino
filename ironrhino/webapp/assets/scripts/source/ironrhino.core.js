@@ -559,7 +559,8 @@ Initialization.common = function() {
 			}).on('keyup', 'input,textarea', $.debounce(200, function(ev) {
 				if (!$(this).hasClass('email') && !$(this).hasClass('regex')
 						&& ev.keyCode != 13)
-					Form.validate(this);
+					if ($(this).val())
+						Form.validate(this);
 				return true;
 			})).on('focusout', 'input,textarea', function(ev) {
 		// if (this.value != this.defaultValue)
