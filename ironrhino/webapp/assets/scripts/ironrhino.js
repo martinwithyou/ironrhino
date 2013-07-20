@@ -32179,6 +32179,8 @@ Initialization.common = function() {
 						.closest('.ui-dialog')));
 	}).on('mouseenter', '.popover,.tooltip', function() {
 				$(this).remove()
+			}).on('click', ':submit', function(e) {
+				$(this).addClass('_clicked_');
 			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
@@ -32680,7 +32682,11 @@ Observation.common = function(container) {
 				$.extend(options.headers, {
 							'X-Fragment' : ids.join(',')
 						});
-			$(this).bind('submit', function() {
+			$(this).bind('submit', function(e) {
+						var btn = $('._clicked_:submit', this);
+						$(':submit', this).removeClass('_clicked_');
+						if (btn.hasClass('noajax'))
+							return true;
 						$(this).ajaxSubmit(options);
 						return false;
 					});

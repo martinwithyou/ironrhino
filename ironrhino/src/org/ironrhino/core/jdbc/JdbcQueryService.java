@@ -27,6 +27,7 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
@@ -104,6 +105,15 @@ public class JdbcQueryService {
 	public List<Map<String, Object>> query(String sql,
 			Map<String, Object> parameters) {
 		return namedParameterJdbcTemplate.queryForList(sql, parameters);
+	}
+
+	public void query(String sql, Map<String, Object> parameters,
+			RowCallbackHandler rch) {
+		long count = count(sql, parameters);
+		if (count > 10 * ResultPage.DEFAULT_MAX_PAGESIZE)
+			throw new ErrorMessage("query.result.number.exceed",
+					new Object[] { 10 * ResultPage.DEFAULT_MAX_PAGESIZE });
+		namedParameterJdbcTemplate.query(sql, parameters, rch);
 	}
 
 	public List<Map<String, Object>> query(String sql,
@@ -221,6 +231,7 @@ public class JdbcQueryService {
 				return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 		}
 
+		final ColumnMapRowMapper crm = new ColumnMapRowMapper();
 		return namedParameterJdbcTemplate.execute(sql,
 				new PreparedStatementCallback<List<Map<String, Object>>>() {
 					@Override
@@ -229,7 +240,6 @@ public class JdbcQueryService {
 							throws SQLException, DataAccessException {
 						preparedStatement.setMaxRows(offset + limit);
 						ResultSet rs = preparedStatement.executeQuery();
-						ColumnMapRowMapper crm = new ColumnMapRowMapper();
 						List<Map<String, Object>> result = new ArrayList<Map<String, Object>>(
 								limit);
 						int i = 0;

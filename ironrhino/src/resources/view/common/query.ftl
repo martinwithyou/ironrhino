@@ -110,7 +110,7 @@ $(function(){
 				</#if>
 			</div>
 			<div class="action span2">
-				<button type="button" class="btn">${action.getText('export')}</button>
+				<input type="submit" class="btn noajax" value="${action.getText('export')}" formaction="${actionBaseUrl}/export"/>
 			</div>
 			<div class="status span5">
 				${resultPage.totalResults} ${action.getText('record')}
