@@ -103,6 +103,8 @@ public class JdbcQueryService {
 
 	public List<Map<String, Object>> query(String sql,
 			Map<String, Object> paramMap, final int limit, final int offset) {
+		if (hasLimit(sql))
+			return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 		if (databaseProduct == DatabaseProduct.MYSQL
 				|| databaseProduct == DatabaseProduct.POSTGRESQL
 				|| databaseProduct == DatabaseProduct.H2) {
@@ -235,9 +237,12 @@ public class JdbcQueryService {
 	public ResultPage<Map<String, Object>> query(String sql,
 			Map<String, Object> parameters,
 			ResultPage<Map<String, Object>> resultPage) {
+		boolean hasLimit = hasLimit(sql);
+		resultPage.setPaginating(!hasLimit);
 		resultPage.setTotalResults(count(sql, parameters));
 		if (resultPage.getTotalResults() > ResultPage.DEFAULT_MAX_PAGESIZE
-				&& !(databaseProduct == DatabaseProduct.MYSQL
+				&& hasLimit
+				|| !(databaseProduct == DatabaseProduct.MYSQL
 						|| databaseProduct == DatabaseProduct.POSTGRESQL
 						|| databaseProduct == DatabaseProduct.H2
 						|| databaseProduct == DatabaseProduct.HSQL
@@ -263,10 +268,44 @@ public class JdbcQueryService {
 		return m.replaceAll("");
 	}
 
+	private boolean hasLimit(String sql) {
+		if (databaseProduct == DatabaseProduct.MYSQL
+				|| databaseProduct == DatabaseProduct.POSTGRESQL
+				|| databaseProduct == DatabaseProduct.H2
+				|| databaseProduct == DatabaseProduct.HSQL) {
+			return LIMIT_PATTERN.matcher(sql).find();
+		} else if (databaseProduct == DatabaseProduct.DB2
+				|| databaseProduct == DatabaseProduct.INFORMIX) {
+			return FIRST_PATTERN.matcher(sql).find();
+		} else if (databaseProduct == DatabaseProduct.DERBY) {
+			return FIRST_PATTERN.matcher(sql).find()
+					|| NEXT_PATTERN.matcher(sql).find();
+		} else if (databaseProduct == DatabaseProduct.SQLSERVER
+				|| databaseProduct == DatabaseProduct.SYBASE) {
+			return TOP_PATTERN.matcher(sql).find();
+		} else if (databaseProduct == DatabaseProduct.ORACLE) {
+			return ROWNUM_PATTERN.matcher(sql).find();
+		}
+		return false;
+	}
+
 	private static final Pattern PARAMETER_PATTERN = Pattern
 			.compile("(:[a-z]\\w*)");
 
-	private static final Pattern ORDERBY_PATTERN = Pattern
-			.compile("\\s+order\\s+by\\s+.+$");
+	private static final Pattern ORDERBY_PATTERN = Pattern.compile(
+			"\\s+order\\s+by\\s+.+$", Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern LIMIT_PATTERN = Pattern.compile(
+			"\\s+limit\\s+\\d+", Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern TOP_PATTERN = Pattern.compile(
+			"\\s+top\\s+\\d+\\s+", Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern FIRST_PATTERN = Pattern.compile(
+			"\\s+first\\s+\\d+\\s+", Pattern.CASE_INSENSITIVE);
+	private static final Pattern NEXT_PATTERN = Pattern.compile(
+			"\\s+next\\s+\\d+\\s+", Pattern.CASE_INSENSITIVE);
+	private static final Pattern ROWNUM_PATTERN = Pattern.compile("\\s+rownum",
+			Pattern.CASE_INSENSITIVE);
 
 }

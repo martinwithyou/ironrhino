@@ -45,6 +45,8 @@ public class ResultPage<T> implements Serializable {
 
 	private boolean counting = true;
 
+	private boolean paginating = true;
+
 	private int start = -1;
 
 	public int getStart() {
@@ -69,6 +71,14 @@ public class ResultPage<T> implements Serializable {
 
 	public void setCounting(boolean counting) {
 		this.counting = counting;
+	}
+
+	public boolean isPaginating() {
+		return paginating;
+	}
+
+	public void setPaginating(boolean paginating) {
+		this.paginating = paginating;
 	}
 
 	public int getPageNo() {

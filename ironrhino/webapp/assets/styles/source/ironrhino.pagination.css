@@ -4,18 +4,24 @@
 }
 
 .toolbar .status{
-	line-height: 26px;
 	text-align:right;
 }
-
+.toolbar .pagination ul{
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
 .toolbar .pagination .inputPage {
 	width: 25px;
-	height: 18px;
+	height: 22px;
+	line-height: 22px;
+	margin-bottom: -4px;
 	text-align:right;
 }
 .toolbar .pagination .totalPage {
 	min-width: 25px;
-	height: 18px;
+	height: 22px;
+	line-height: 22px;
 	text-align:left;
 }
 .toolbar .pagination .pageSize {
@@ -24,7 +30,7 @@
     -moz-border-radius: 3px;
     border-radius: 3px;
 	width: 60px;
-	height: 28px;
+	height: 32px;
 }
 
 .toolbar input[name="keyword"]{
@@ -46,7 +52,7 @@
 }
 .toolbar .pagination a{
 	padding:0 8px;
-	line-height: 26px;
+	line-height: 30px;
 }
 .toolbar .pagination li.disabled a i{
 	filter: Alpha(Opacity=20); 
@@ -67,7 +73,7 @@
   line-height: 20px;
   background-color: transparent;
   border: 0;
-  margin-bottom: 4px;
+  margin-bottom: 0px;
 }
 .toolbar .pagination span.add-on {
   float: none;

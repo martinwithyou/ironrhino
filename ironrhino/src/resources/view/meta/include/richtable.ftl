@@ -127,7 +127,7 @@
 </table>
 <div class="toolbar row-fluid">
 <div class="pagination span4">
-<#if resultPage??>
+<#if resultPage?? && resultPage.paginating>
 <ul>
 <#if resultPage.first>
 <li class="disabled firstPage"><a title="${action.getText('firstpage')}"><i class="icon-fast-backward"></i></a></li>
@@ -161,8 +161,8 @@
 </select>
 </li>
 </#if>
-</#if>
 </ul>
+</#if>
 </div>
 <div class="action span4">
 <#if buttons!=''>

@@ -74,6 +74,7 @@ $(function(){
 		</table>
 		<div class="toolbar row">
 			<div class="pagination span8">
+				<#if resultPage.paginating>
 				<ul>
 				<#if resultPage.first>
 				<li class="disabled firstPage"><a title="${action.getText('firstpage')}"><i class="icon-fast-backward"></i></a></li>
@@ -106,6 +107,7 @@ $(function(){
 				</select>
 				</li>
 				</ul>
+				</#if>
 			</div>
 			<div class="status span4">
 				${resultPage.totalResults} ${action.getText('record')}
