@@ -3,15 +3,42 @@
 <head>
 <title>${action.getText('query')}</title>
 <style>
-#result th {
+#result th:not(:first-of-type) {
 	text-align: center;
 	min-width: 100px;
 	padding: .5em 0;
+}
+#result th:first-of-type{
+	width:50px;
 }
 #result td {
 	white-space: nowrap;
 }
 </style>
+<script>
+$(function(){
+	$(document).on('click','#result tbody .btn',function(){
+		if(!$('#row-modal').length)
+			var modal = $('<div id="row-modal" class="modal" style="z-index:10000;"><div style="padding: 5px 5px 0 0;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div><div  id="row-modal-body" class="modal-body" style="min-height:300px;max-height:600px;"></div></div>')
+									.appendTo(document.body).fadeIn().find('button.close').click(function() {
+						$(this).closest('.modal').fadeOut().remove();
+					});
+		var ths = $('th:not(:first-child)',$(this).closest('table'));
+		var tds = $('td:not(:first-child)',$(this).closest('tr'));
+		var arr = [];
+		arr.push('<div class="form-horizontal">');
+		for(var i=0;i<ths.length;i++){
+			arr.push('<div class="control-group"><label class="control-label">');
+			arr.push(ths.eq(i).text());
+			arr.push('</label><div class="controls">');
+			arr.push(tds.eq(i).text());
+			arr.push('</div></div>');
+		}
+		arr.push('</div>');
+		$('#row-modal-body').html(arr.join(''));
+	});
+});
+</script>
 </head>
 <body>
 <@s.form id="query-form" action="${actionBaseUrl}" method="post" cssClass="form-horizontal ajax view history">
@@ -28,19 +55,19 @@
 		<table class="pin table table-hover table-striped table-bordered sortable filtercolumn resizable">
 			<thead>
 			<tr>
+				<th class="nosort filtercolumn"></th>
 				<#list map.keySet() as name>
 				<th>${name}</th>
 				</#list>
-				<th class="nosort" style="min-width:40px;"></th>
 			</tr>
 			</thead>
 			<tbody>
 			<#list resultPage.result as row>
 			<tr>
-				<#list map.entrySet() as entry>
+				<td><button type="button" class="btn">${action.getText('view')}</button></td>
+				<#list row.entrySet() as entry>
 				<td>${(entry.value?string)!}</td>
 				</#list>
-				<td></td>
 			</tr>
 			</#list>
 			</tbody>

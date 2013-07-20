@@ -26,10 +26,10 @@
 					var container = options.container;
 					if (!container) {
 						var modal = $('<div id="snapshot-modal" class="modal" style="z-index:10000;"><div style="padding: 5px 5px 0 0;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div><div  id="snapshot-modal-body" class="modal-body" style="max-height:600px;"></div></div>')
-								.appendTo(document.body);
-						$('button.close', modal).click(function() {
-									destroy();
-								});
+								.appendTo(document.body).find('button.close')
+								.click(function() {
+											destroy();
+										});
 						container = 'snapshot-modal-body';
 					}
 					if (typeof container == 'string')

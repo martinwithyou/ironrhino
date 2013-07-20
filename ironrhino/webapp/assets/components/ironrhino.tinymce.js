@@ -25,7 +25,7 @@ $(function() {
 				return true;
 			};
 			$('button.close', modal).click(function() {
-						modal.fadeIn().remove();
+						modal.fadeOut().remove();
 					});
 			browse();
 		}
