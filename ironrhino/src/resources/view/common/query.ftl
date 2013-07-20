@@ -42,7 +42,7 @@ $(function(){
 </head>
 <body>
 <@s.form id="query-form" action="${actionBaseUrl}" method="post" cssClass="form-horizontal ajax view history">
-	<@s.textarea label="sql" name="sql" cssClass="required span10"/>
+	<@s.textarea label="sql" name="sql" cssClass="required span10" placeholder="select username,name,email from user where username=:username"/>
 	<#if paramNames??>
 	<#list paramNames as var>
 	<@s.textfield label="${var}" name="params['${var}']" cssClass="required"/>

@@ -556,12 +556,12 @@ Initialization.common = function() {
 	});
 	$(document).on('click', '.removeonclick', function() {
 				$(this).remove()
-			}).on('keyup', 'input', $.debounce(200, function(ev) {
+			}).on('keyup', 'input,textarea', $.debounce(200, function(ev) {
 				if (!$(this).hasClass('email') && !$(this).hasClass('regex')
 						&& ev.keyCode != 13)
 					Form.validate(this);
 				return true;
-			})).on('focusout', 'input', function(ev) {
+			})).on('focusout', 'input,textarea', function(ev) {
 		// if (this.value != this.defaultValue)
 		if ($(this).hasClass('email') || $(this).hasClass('regex')
 				|| !$(this).hasClass('required'))
