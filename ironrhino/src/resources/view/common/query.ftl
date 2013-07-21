@@ -14,6 +14,12 @@
 #result td {
 	white-space: nowrap;
 }
+textarea{
+	resize: vertical;
+}
+#tables,#tables_chzn{
+	vertical-align: top;
+}
 </style>
 <script>
 $(function(){
@@ -47,7 +53,21 @@ $(function(){
 				textarea.val('select * from '+table);
 			else
 				textarea.val(textarea.val()+' '+table);
-			textarea.focus();
+			setTimeout(function(){
+			var pos = textarea.val().length;
+			var ta = textarea.get(0);
+			if (ta.setSelectionRange) {
+		    	ta.setSelectionRange(pos, pos);
+		    } else if (ta.createTextRange) {
+		    	var range = ta.createTextRange();
+		    	range.collapse(true);
+		    	range.moveEnd('character', pos);
+		    	range.moveStart('character', pos);
+		    	range.select();
+		    }else{
+		    	textarea.focus();
+		    }
+			},100);
 		}
 	});
 });
