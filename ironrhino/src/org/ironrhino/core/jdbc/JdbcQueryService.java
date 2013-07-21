@@ -74,11 +74,11 @@ public class JdbcQueryService {
 	public void validate(String sql) {
 		sql = refineSql(sql);
 		Set<String> names = extractParameters(sql);
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, String> paramMap = new HashMap<String, String>();
 		for (String name : names)
-			parameters.put(name, "0");
+			paramMap.put(name, "0");
 		try {
-			query(sql, parameters, 1);
+			query(sql, paramMap, 1);
 		} catch (BadSqlGrammarException bse) {
 			Throwable t = bse.getCause();
 			String cause = "";
@@ -91,7 +91,7 @@ public class JdbcQueryService {
 		}
 	}
 
-	public long count(String sql, Map<String, Object> parameters) {
+	public long count(String sql, Map<String, ?> paramMap) {
 		sql = refineSql(sql);
 		String alias = "tfc";
 		while (sql.contains(alias))
@@ -99,30 +99,30 @@ public class JdbcQueryService {
 		StringBuilder sb = new StringBuilder("select count(*) from (")
 				.append(trimOrderby(sql)).append(") ").append(alias);
 		return namedParameterJdbcTemplate.queryForObject(sb.toString(),
-				parameters, Long.class);
+				paramMap, Long.class);
 	}
 
 	public List<Map<String, Object>> query(String sql,
-			Map<String, Object> parameters) {
-		return namedParameterJdbcTemplate.queryForList(sql, parameters);
+			Map<String, ?> paramMap) {
+		return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 	}
 
-	public void query(String sql, Map<String, Object> parameters,
+	public void query(String sql, Map<String, ?> paramMap,
 			RowCallbackHandler rch) {
-		long count = count(sql, parameters);
+		long count = count(sql, paramMap);
 		if (count > 10 * ResultPage.DEFAULT_MAX_PAGESIZE)
 			throw new ErrorMessage("query.result.number.exceed",
 					new Object[] { 10 * ResultPage.DEFAULT_MAX_PAGESIZE });
-		namedParameterJdbcTemplate.query(sql, parameters, rch);
+		namedParameterJdbcTemplate.query(sql, paramMap, rch);
 	}
 
 	public List<Map<String, Object>> query(String sql,
-			Map<String, Object> parameters, final int limit) {
-		return query(sql, parameters, limit, 0);
+			Map<String, ?> paramMap, final int limit) {
+		return query(sql, paramMap, limit, 0);
 	}
 
 	public List<Map<String, Object>> query(String sql,
-			Map<String, Object> paramMap, final int limit, final int offset) {
+			Map<String, ?> paramMap, final int limit, final int offset) {
 		sql = refineSql(sql);
 		if (hasLimit(sql))
 			return namedParameterJdbcTemplate.queryForList(sql, paramMap);
@@ -256,12 +256,12 @@ public class JdbcQueryService {
 	}
 
 	public ResultPage<Map<String, Object>> query(String sql,
-			Map<String, Object> parameters,
-			ResultPage<Map<String, Object>> resultPage) {
+			Map<String, ?> paramMap,
+ ResultPage<Map<String, Object>> resultPage) {
 		sql = refineSql(sql);
 		boolean hasLimit = hasLimit(sql);
 		resultPage.setPaginating(!hasLimit);
-		resultPage.setTotalResults(count(sql, parameters));
+		resultPage.setTotalResults(count(sql, paramMap));
 		if (resultPage.getTotalResults() > ResultPage.DEFAULT_MAX_PAGESIZE
 				&& hasLimit
 				|| !(databaseProduct == DatabaseProduct.MYSQL
@@ -272,7 +272,7 @@ public class JdbcQueryService {
 						|| databaseProduct == DatabaseProduct.DB2 || databaseProduct == DatabaseProduct.DERBY))
 			throw new ErrorMessage("query.result.number.exceed",
 					new Object[] { ResultPage.DEFAULT_MAX_PAGESIZE });
-		resultPage.setResult(query(sql, parameters, resultPage.getPageSize(),
+		resultPage.setResult(query(sql, paramMap, resultPage.getPageSize(),
 				(resultPage.getPageNo() - 1) * resultPage.getPageSize()));
 		return resultPage;
 	}

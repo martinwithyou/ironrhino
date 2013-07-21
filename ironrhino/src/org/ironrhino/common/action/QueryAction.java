@@ -28,9 +28,9 @@ public class QueryAction extends BaseAction {
 
 	private String sql;
 
-	private Set<String> paramNames;
+	private Set<String> params;
 
-	private Map<String, String> params = new HashMap<String, String>();
+	private Map<String, String> paramMap = new HashMap<String, String>();
 
 	private ResultPage<Map<String, Object>> resultPage;
 
@@ -45,16 +45,17 @@ public class QueryAction extends BaseAction {
 		this.sql = sql;
 	}
 
-	public Map<String, String> getParams() {
+	
+	public Map<String, String> getParamMap() {
+		return paramMap;
+	}
+
+	public void setParamMap(Map<String, String> paramMap) {
+		this.paramMap = paramMap;
+	}
+
+	public Set<String> getParams() {
 		return params;
-	}
-
-	public void setParams(Map<String, String> params) {
-		this.params = params;
-	}
-
-	public Set<String> getParamNames() {
-		return paramNames;
 	}
 
 	public ResultPage<Map<String, Object>> getResultPage() {
@@ -69,10 +70,10 @@ public class QueryAction extends BaseAction {
 	public String execute() {
 		if (StringUtils.isNotBlank(sql)) {
 			jdbcQueryService.validate(sql);
-			paramNames = jdbcQueryService.extractParameters(sql);
-			if (paramNames.size() > 0) {
-				for (String s : paramNames) {
-					if (!params.containsKey(s)) {
+			params = jdbcQueryService.extractParameters(sql);
+			if (params.size() > 0) {
+				for (String s : params) {
+					if (!paramMap.containsKey(s)) {
 						return SUCCESS;
 					}
 				}
@@ -80,9 +81,7 @@ public class QueryAction extends BaseAction {
 			if (resultPage == null) {
 				resultPage = new ResultPage<>();
 			}
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.putAll(params);
-			resultPage = jdbcQueryService.query(sql, map, resultPage);
+			resultPage = jdbcQueryService.query(sql, paramMap, resultPage);
 		}
 		return SUCCESS;
 	}
@@ -90,10 +89,10 @@ public class QueryAction extends BaseAction {
 	public String export() throws Exception {
 		if (StringUtils.isNotBlank(sql)) {
 			jdbcQueryService.validate(sql);
-			paramNames = jdbcQueryService.extractParameters(sql);
-			if (paramNames.size() > 0) {
-				for (String s : paramNames) {
-					if (!params.containsKey(s)) {
+			params = jdbcQueryService.extractParameters(sql);
+			if (params.size() > 0) {
+				for (String s : params) {
+					if (!paramMap.containsKey(s)) {
 						return SUCCESS;
 					}
 				}
@@ -103,10 +102,8 @@ public class QueryAction extends BaseAction {
 			response.setHeader("Content-disposition",
 					"attachment;filename=data.csv");
 			final PrintWriter writer = response.getWriter();
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.putAll(params);
 			final AtomicInteger ai = new AtomicInteger(0);
-			jdbcQueryService.query(sql, map, new RowCallbackHandler() {
+			jdbcQueryService.query(sql, paramMap, new RowCallbackHandler() {
 
 				private int columnCount;
 
