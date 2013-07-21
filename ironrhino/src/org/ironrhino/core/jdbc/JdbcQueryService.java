@@ -24,6 +24,7 @@ import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
@@ -46,6 +47,13 @@ public class JdbcQueryService {
 
 	private DatabaseProduct databaseProduct;
 
+	@Value("${jdbcQueryService.restricted:true}")
+	private boolean restricted = true;
+
+	private String catalog;
+
+	private String schema;
+
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
@@ -54,22 +62,32 @@ public class JdbcQueryService {
 		this.databaseProduct = databaseProduct;
 	}
 
+	public boolean isRestricted() {
+		return restricted;
+	}
+
+	public void setRestricted(boolean restricted) {
+		this.restricted = restricted;
+	}
+
 	@PostConstruct
 	public void init() {
 		namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(
 				jdbcTemplate);
-		if (databaseProduct == null) {
-			Connection con = DataSourceUtils.getConnection(jdbcTemplate
-					.getDataSource());
-			try {
+
+		Connection con = DataSourceUtils.getConnection(jdbcTemplate
+				.getDataSource());
+		try {
+			catalog = con.getCatalog();
+			schema = con.getSchema();
+			if (databaseProduct == null)
 				databaseProduct = DatabaseProduct.parse(con.getMetaData()
 						.getDatabaseProductName());
-			} catch (SQLException e) {
-				logger.error(e.getMessage(), e);
-			} finally {
-				DataSourceUtils.releaseConnection(con,
-						jdbcTemplate.getDataSource());
-			}
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			DataSourceUtils
+					.releaseConnection(con, jdbcTemplate.getDataSource());
 		}
 	}
 
@@ -111,6 +129,45 @@ public class JdbcQueryService {
 					new Object[] { cause });
 		} catch (DataAccessException e) {
 			throw new ErrorMessage(e.getMessage());
+		}
+		if (restricted) {
+			for (String table : extractTables(sql)) {
+				if (table.indexOf('.') < 0)
+					continue;
+				if (table.startsWith("`")
+						&& table.endsWith("`")
+						&& !table.substring(1, table.length() - 1)
+								.contains("`"))
+					continue;
+				if (table.startsWith("\"")
+						&& table.endsWith("\"")
+						&& !table.substring(1, table.length() - 1).contains(
+								"\""))
+					continue;
+				if (table.startsWith("'")
+						&& table.endsWith("'")
+						&& !table.substring(1, table.length() - 1)
+								.contains("'"))
+					continue;
+				String[] arr = table.split("\\.");
+				if (arr.length == 2) {
+					String prefix = arr[0].replaceAll("\"", "")
+							.replaceAll("'", "").replaceAll("`", "");
+					if (!prefix.equals(catalog) && !prefix.equals(schema)) {
+						throw new ErrorMessage("query.access.denied",
+								new Object[] { table });
+					}
+				} else if (arr.length > 2) {
+					String prefix1 = arr[0].replaceAll("\"", "")
+							.replaceAll("'", "").replaceAll("`", "");
+					String prefix2 = arr[0].replaceAll("\"", "")
+							.replaceAll("'", "").replaceAll("`", "");
+					if (!prefix1.equals(catalog) && !prefix2.equals(schema)) {
+						throw new ErrorMessage("query.access.denied",
+								new Object[] { table });
+					}
+				}
+			}
 		}
 	}
 
@@ -306,6 +363,18 @@ public class JdbcQueryService {
 		return names;
 	}
 
+	private static Set<String> extractTables(String sql) {
+		Set<String> names = new LinkedHashSet<String>();
+		Matcher m = TABLE_PATTERN.matcher(sql);
+		while (m.find()) {
+			String arr[] = m.group(1).split(",");
+			for (String s : arr) {
+				names.add(s.trim().split("\\s+")[0]);
+			}
+		}
+		return names;
+	}
+
 	private static String refineSql(String sql) {
 		sql = sql.trim();
 		if (sql.endsWith(";"))
@@ -339,8 +408,11 @@ public class JdbcQueryService {
 		return false;
 	}
 
-	private static final Pattern PARAMETER_PATTERN = Pattern
-			.compile("(:[a-z]\\w*)");
+	private static final Pattern PARAMETER_PATTERN = Pattern.compile(
+			"(:[a-z]\\w*)", Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern TABLE_PATTERN = Pattern.compile(
+			"from\\s+([\\w\\.\"'`,\\s]+)", Pattern.CASE_INSENSITIVE);
 
 	private static final Pattern ORDERBY_PATTERN = Pattern.compile(
 			"\\s+order\\s+by\\s+.+$", Pattern.CASE_INSENSITIVE);
@@ -357,5 +429,10 @@ public class JdbcQueryService {
 			"\\s+next\\s+\\d+\\s+", Pattern.CASE_INSENSITIVE);
 	private static final Pattern ROWNUM_PATTERN = Pattern.compile("\\s+rownum",
 			Pattern.CASE_INSENSITIVE);
+
+	public static void main(String[] args) {
+		System.out
+				.println(extractTables("select * from (select * from `ironrhino.user`, user t2) t3"));
+	}
 
 }
