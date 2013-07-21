@@ -16,13 +16,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.jdbc.JdbcQueryService;
+import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.security.model.UserRole;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.JdbcUtils;
 
 @AutoConfig
+@Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 public class QueryAction extends BaseAction {
 
 	private static final long serialVersionUID = 8180265410790553918L;

@@ -8,12 +8,14 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.JsonUtils;
+import org.ironrhino.security.model.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +25,7 @@ import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 @AutoConfig
+@Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 public class ConsoleAction extends BaseAction {
 
 	private static final long serialVersionUID = 8180265410790553918L;
