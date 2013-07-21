@@ -14,7 +14,7 @@ public @interface CheckCache {
 	String key();
 
 	// mvel expression
-	String namespace() default CacheManager.DEFAULT_NAMESPACE;
+	String namespace() default "";
 
 	// mvel expression
 	String when() default "true";

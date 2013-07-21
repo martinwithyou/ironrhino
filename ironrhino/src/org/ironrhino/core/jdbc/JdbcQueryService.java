@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
@@ -72,6 +73,7 @@ public class JdbcQueryService {
 		}
 	}
 
+	@CheckCache(key = "jdbcQueryService.getTables()")
 	public List<String> getTables() {
 		List<String> tables = new ArrayList<String>();
 		Connection con = DataSourceUtils.getConnection(jdbcTemplate

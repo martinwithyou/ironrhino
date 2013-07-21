@@ -10,8 +10,6 @@ public interface CacheManager {
 
 	public static final String DEFAULT_TIME_TO_IDLE = "-1";
 
-	public static final String DEFAULT_NAMESPACE = "default";
-
 	public void put(String key, Object value, int timeToLive,
 			TimeUnit timeUnit, String namespace);
 

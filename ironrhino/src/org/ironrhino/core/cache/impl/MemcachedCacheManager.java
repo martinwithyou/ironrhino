@@ -100,8 +100,6 @@ public class MemcachedCacheManager implements CacheManager {
 			TimeUnit timeUnit, String namespace) {
 		if (key == null || value == null)
 			return;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		try {
 			memcached.setWithNoReply(generateKey(key, namespace),
 					(int) timeUnit.toSeconds(timeToLive), value);
@@ -114,8 +112,6 @@ public class MemcachedCacheManager implements CacheManager {
 	public Object get(String key, String namespace) {
 		if (key == null)
 			return null;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		try {
 			return memcached.get(generateKey(key, namespace));
 		} catch (Exception e) {
@@ -131,8 +127,6 @@ public class MemcachedCacheManager implements CacheManager {
 			return null;
 		if (timeToLive <= 0)
 			return get(key, namespace);
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		try {
 			return memcached.getAndTouch(generateKey(key, namespace),
 					(int) timeUnit.toSeconds(timeToLive));
@@ -146,8 +140,6 @@ public class MemcachedCacheManager implements CacheManager {
 	public void delete(String key, String namespace) {
 		if (key == null)
 			return;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		try {
 			memcached.deleteWithNoReply(generateKey(key, namespace));
 		} catch (Exception e) {
@@ -169,8 +161,6 @@ public class MemcachedCacheManager implements CacheManager {
 	public Map<String, Object> mget(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return null;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		List<String> list = new ArrayList<String>();
 		for (String key : keys)
 			list.add(generateKey(key, namespace));
@@ -186,8 +176,6 @@ public class MemcachedCacheManager implements CacheManager {
 	public void mdelete(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		for (String key : keys)
 			delete(key, namespace);
 	}
@@ -196,8 +184,6 @@ public class MemcachedCacheManager implements CacheManager {
 	public boolean containsKey(String key, String namespace) {
 		if (key == null)
 			return false;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		try {
 			return (memcached.get(generateKey(key, namespace)) != null);
 		} catch (Exception e) {
@@ -231,11 +217,17 @@ public class MemcachedCacheManager implements CacheManager {
 	}
 
 	private String generateKey(String key, String namespace) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(namespace);
-		sb.append(':');
-		sb.append(key);
-		return sb.toString();
+		if (StringUtils.isNotBlank(namespace)) {
+			StringBuilder sb = new StringBuilder(namespace.length()
+					+ key.length() + 1);
+			sb.append(namespace);
+			sb.append(':');
+			sb.append(key);
+			return sb.toString();
+		} else {
+			return key;
+		}
+
 	}
 
 	@Override

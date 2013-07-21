@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.ObjectExistsException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
@@ -46,17 +47,7 @@ public class EhCacheManager implements CacheManager {
 			TimeUnit timeUnit, String namespace) {
 		if (key == null || value == null)
 			return;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
-		Cache cache = ehCacheManager.getCache(namespace);
-		if (cache == null) {
-			try {
-				ehCacheManager.addCache(namespace);
-			} catch (Exception e) {
-
-			}
-			cache = ehCacheManager.getCache(namespace);
-		}
+		Cache cache = getCache(namespace, true);
 		if (cache != null)
 			cache.put(new Element(key, value, null,
 					timeToIdle > 0 ? (int) timeUnit.toSeconds(timeToIdle)
@@ -69,9 +60,7 @@ public class EhCacheManager implements CacheManager {
 	public Object get(String key, String namespace) {
 		if (key == null)
 			return null;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
-		Cache cache = ehCacheManager.getCache(namespace);
+		Cache cache = getCache(namespace, false);
 		if (cache == null)
 			return null;
 		Element element = cache.get(key);
@@ -83,9 +72,7 @@ public class EhCacheManager implements CacheManager {
 			TimeUnit timeUnit) {
 		if (key == null)
 			return null;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
-		Cache cache = ehCacheManager.getCache(namespace);
+		Cache cache = getCache(namespace, false);
 		if (cache == null)
 			return null;
 		Element element = cache.get(key);
@@ -97,16 +84,13 @@ public class EhCacheManager implements CacheManager {
 			return element.getObjectValue();
 		}
 		return null;
-
 	}
 
 	@Override
 	public void delete(String key, String namespace) {
 		if (key == null)
 			return;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
-		Cache cache = ehCacheManager.getCache(namespace);
+		Cache cache = getCache(namespace, false);
 		if (cache != null)
 			cache.remove(key);
 	}
@@ -116,12 +100,7 @@ public class EhCacheManager implements CacheManager {
 			TimeUnit timeUnit, String namespace) {
 		if (map == null)
 			return;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
-		Cache cache = ehCacheManager.getCache(namespace);
-		if (cache == null)
-			ehCacheManager.addCache(namespace);
-		cache = ehCacheManager.getCache(namespace);
+		Cache cache = getCache(namespace, true);
 		for (Map.Entry<String, Object> entry : map.entrySet())
 			cache.put(new Element(entry.getKey(), entry.getValue(), null, null,
 					timeToLive > 0 ? (int) timeUnit.toSeconds(timeToLive)
@@ -133,9 +112,7 @@ public class EhCacheManager implements CacheManager {
 	public Map<String, Object> mget(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return null;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
-		Cache cache = ehCacheManager.getCache(namespace);
+		Cache cache = getCache(namespace, false);
 		if (cache == null)
 			return null;
 		return cache.getAllWithLoader(keys, null);
@@ -145,9 +122,7 @@ public class EhCacheManager implements CacheManager {
 	public void mdelete(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
-		Cache cache = ehCacheManager.getCache(namespace);
+		Cache cache = getCache(namespace, false);
 		if (cache != null)
 			for (String key : keys)
 				cache.remove(key);
@@ -157,9 +132,7 @@ public class EhCacheManager implements CacheManager {
 	public boolean containsKey(String key, String namespace) {
 		if (key == null)
 			return false;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
-		Cache cache = ehCacheManager.getCache(namespace);
+		Cache cache = getCache(namespace, false);
 		if (cache != null)
 			return cache.isKeyInCache(key);
 		else
@@ -171,17 +144,7 @@ public class EhCacheManager implements CacheManager {
 			TimeUnit timeUnit, String namespace) {
 		if (key == null || value == null)
 			return false;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
-		Cache cache = ehCacheManager.getCache(namespace);
-		if (cache == null) {
-			try {
-				ehCacheManager.addCache(namespace);
-			} catch (Exception e) {
-
-			}
-			cache = ehCacheManager.getCache(namespace);
-		}
+		Cache cache = getCache(namespace, true);
 		if (cache != null)
 			return cache.putIfAbsent(new Element(key, value, null, null,
 					(int) timeUnit.toSeconds(timeToLive))) == null;
@@ -194,17 +157,7 @@ public class EhCacheManager implements CacheManager {
 			TimeUnit timeUnit, String namespace) {
 		if (key == null || delta == 0)
 			return -1;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
-		Cache cache = ehCacheManager.getCache(namespace);
-		if (cache == null) {
-			try {
-				ehCacheManager.addCache(namespace);
-			} catch (Exception e) {
-
-			}
-			cache = ehCacheManager.getCache(namespace);
-		}
+		Cache cache = getCache(namespace, true);
 		if (cache != null) {
 			Element element = cache.putIfAbsent(new Element(key,
 					new Long(delta), null, null, (int) timeUnit
@@ -229,5 +182,21 @@ public class EhCacheManager implements CacheManager {
 	@Override
 	public boolean supportsUpdateTimeToLive() {
 		return true;
+	}
+
+	private Cache getCache(String namespace, boolean create) {
+		if (StringUtils.isBlank(namespace))
+			namespace = "_default";
+		Cache cache = ehCacheManager.getCache(namespace);
+		if (create && cache == null) {
+			try {
+				ehCacheManager.addCache(namespace);
+			} catch (ObjectExistsException e) {
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			cache = ehCacheManager.getCache(namespace);
+		}
+		return cache;
 	}
 }

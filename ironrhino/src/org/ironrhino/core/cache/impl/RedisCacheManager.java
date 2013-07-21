@@ -48,8 +48,6 @@ public class RedisCacheManager implements CacheManager {
 			TimeUnit timeUnit, String namespace) {
 		if (key == null || value == null)
 			return;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		try {
 			if (timeToLive > 0)
 				redisTemplate.opsForValue().set(generateKey(key, namespace),
@@ -66,8 +64,6 @@ public class RedisCacheManager implements CacheManager {
 	public Object get(String key, String namespace) {
 		if (key == null)
 			return null;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		try {
 			return redisTemplate.opsForValue().get(generateKey(key, namespace));
 		} catch (Exception e) {
@@ -81,8 +77,6 @@ public class RedisCacheManager implements CacheManager {
 			TimeUnit timeUnit) {
 		if (key == null)
 			return null;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		String actualKey = generateKey(key, namespace);
 		if (timeToLive > 0)
 			redisTemplate.expire(actualKey, timeToLive, timeUnit);
@@ -93,8 +87,6 @@ public class RedisCacheManager implements CacheManager {
 	public void delete(String key, String namespace) {
 		if (key == null)
 			return;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		try {
 			redisTemplate.delete(generateKey(key, namespace));
 		} catch (Exception e) {
@@ -138,8 +130,6 @@ public class RedisCacheManager implements CacheManager {
 	public Map<String, Object> mget(Collection<String> keys, String namespace) {
 		if (keys == null)
 			return null;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		final List<byte[]> _keys = new ArrayList<byte[]>();
 		for (String key : keys)
 			_keys.add(redisTemplate.getKeySerializer().serialize(
@@ -172,8 +162,6 @@ public class RedisCacheManager implements CacheManager {
 	public void mdelete(final Collection<String> keys, String namespace) {
 		if (keys == null)
 			return;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		final String ns = namespace;
 		try {
 			redisTemplate.execute(new RedisCallback() {
@@ -200,8 +188,6 @@ public class RedisCacheManager implements CacheManager {
 	public boolean containsKey(String key, String namespace) {
 		if (key == null)
 			return false;
-		if (StringUtils.isBlank(namespace))
-			namespace = DEFAULT_NAMESPACE;
 		try {
 			return redisTemplate.hasKey(generateKey(key, namespace));
 		} catch (Exception e) {
@@ -241,11 +227,17 @@ public class RedisCacheManager implements CacheManager {
 	}
 
 	private String generateKey(String key, String namespace) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(namespace != null ? namespace : DEFAULT_NAMESPACE);
-		sb.append(':');
-		sb.append(key);
-		return sb.toString();
+		if (StringUtils.isNotBlank(namespace)) {
+			StringBuilder sb = new StringBuilder(namespace.length()
+					+ key.length() + 1);
+			sb.append(namespace);
+			sb.append(':');
+			sb.append(key);
+			return sb.toString();
+		} else {
+			return key;
+		}
+
 	}
 
 	@Override
