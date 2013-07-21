@@ -37,19 +37,39 @@ $(function(){
 		arr.push('</div>');
 		$('#row-modal-body').html(arr.join(''));
 	});
+	
+	$(document).on('change','#tables',function(){
+		var t = $(this);
+		var table = t.val();
+		if(table){
+			var textarea = $('textarea[name="sql"]',t.closest('form'));
+			if(!textarea.val())
+				textarea.val('select * from '+table);
+			else
+				textarea.val(textarea.val()+' '+table);
+			textarea.focus();
+		}
+	});
 });
 </script>
 </head>
 <body>
 <@s.form id="query-form" action="${actionBaseUrl}" method="post" cssClass="form-horizontal ajax view history">
-	<@s.textarea label="sql" name="sql" cssClass="required span10" placeholder="select username,name,email from user where username=:username"/>
+	<@s.textarea label="sql" name="sql" cssClass="required span8" placeholder="select username,name,email from user where username=:username">
+	<#if tables?? && tables?size gt 0>
+	<@s.param name="after">
+	<span style="margin-left:20px;"><@s.select id="tables" theme="simple" cssClass="chosen" list="tables" listKey="top" listValue="top" headerKey="" headerValue=""/></span>
+	</@s.param>
+	</#if>
+	</@s.textarea>
 	<#if params??>
 	<#list params as var>
 	<@s.textfield label="${var}" name="paramMap['${var}']" cssClass="required"/>
 	</#list>
 	</#if>
 	<@s.submit value="%{getText('submit')}" />
-	<#if resultPage?? && resultPage.result?? && resultPage.result?size gt 0>
+	<#if resultPage??>
+	<#if resultPage.result?size gt 0>
 	<#assign map=resultPage.result[0]/>
 	<div id="result">
 		<table class="pin table table-hover table-striped table-bordered sortable filtercolumn resizable">
@@ -117,6 +137,12 @@ $(function(){
 			</div>
 		</div>
 	</div>
+	<#elseif resultPage.executed??>
+	<div class="alert">
+	  <button type="button" class="close" data-dismiss="alert">&times;</button>
+	  <strong>${action.getText('query.result.empty')}</strong>
+	</div>
+	</#if>
 	</#if>
 </@s.form>
 </body>

@@ -1,6 +1,7 @@
 package org.ironrhino.core.jdbc;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -71,6 +72,26 @@ public class JdbcQueryService {
 		}
 	}
 
+	public List<String> getTables() {
+		List<String> tables = new ArrayList<String>();
+		Connection con = DataSourceUtils.getConnection(jdbcTemplate
+				.getDataSource());
+		try {
+			DatabaseMetaData dbmd = con.getMetaData();
+			ResultSet rs = dbmd.getTables(con.getCatalog(), con.getSchema(),
+					"%", new String[] { "Table" });
+			while (rs.next())
+				tables.add(rs.getString(3));
+			rs.close();
+		} catch (SQLException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			DataSourceUtils
+					.releaseConnection(con, jdbcTemplate.getDataSource());
+		}
+		return tables;
+	}
+
 	public void validate(String sql) {
 		sql = refineSql(sql);
 		Set<String> names = extractParameters(sql);
@@ -102,8 +123,7 @@ public class JdbcQueryService {
 				paramMap, Long.class);
 	}
 
-	public List<Map<String, Object>> query(String sql,
-			Map<String, ?> paramMap) {
+	public List<Map<String, Object>> query(String sql, Map<String, ?> paramMap) {
 		return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 	}
 
@@ -116,13 +136,13 @@ public class JdbcQueryService {
 		namedParameterJdbcTemplate.query(sql, paramMap, rch);
 	}
 
-	public List<Map<String, Object>> query(String sql,
-			Map<String, ?> paramMap, final int limit) {
+	public List<Map<String, Object>> query(String sql, Map<String, ?> paramMap,
+			final int limit) {
 		return query(sql, paramMap, limit, 0);
 	}
 
-	public List<Map<String, Object>> query(String sql,
-			Map<String, ?> paramMap, final int limit, final int offset) {
+	public List<Map<String, Object>> query(String sql, Map<String, ?> paramMap,
+			final int limit, final int offset) {
 		sql = refineSql(sql);
 		if (hasLimit(sql))
 			return namedParameterJdbcTemplate.queryForList(sql, paramMap);
@@ -256,8 +276,7 @@ public class JdbcQueryService {
 	}
 
 	public ResultPage<Map<String, Object>> query(String sql,
-			Map<String, ?> paramMap,
- ResultPage<Map<String, Object>> resultPage) {
+			Map<String, ?> paramMap, ResultPage<Map<String, Object>> resultPage) {
 		sql = refineSql(sql);
 		boolean hasLimit = hasLimit(sql);
 		resultPage.setPaginating(!hasLimit);

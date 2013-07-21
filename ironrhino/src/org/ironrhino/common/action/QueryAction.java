@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,6 +31,8 @@ public class QueryAction extends BaseAction {
 
 	private Set<String> params;
 
+	private List<String> tables;
+
 	private Map<String, String> paramMap = new HashMap<String, String>();
 
 	private ResultPage<Map<String, Object>> resultPage;
@@ -45,7 +48,6 @@ public class QueryAction extends BaseAction {
 		this.sql = sql;
 	}
 
-	
 	public Map<String, String> getParamMap() {
 		return paramMap;
 	}
@@ -58,6 +60,10 @@ public class QueryAction extends BaseAction {
 		return params;
 	}
 
+	public List<String> getTables() {
+		return tables;
+	}
+
 	public ResultPage<Map<String, Object>> getResultPage() {
 		return resultPage;
 	}
@@ -68,6 +74,7 @@ public class QueryAction extends BaseAction {
 
 	@Override
 	public String execute() {
+		tables = jdbcQueryService.getTables();
 		if (StringUtils.isNotBlank(sql)) {
 			jdbcQueryService.validate(sql);
 			params = jdbcQueryService.extractParameters(sql);
