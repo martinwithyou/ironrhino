@@ -230,12 +230,6 @@ public class JdbcQueryService {
 			return namedParameterJdbcTemplate.queryForList(sb.toString(),
 					paramMap);
 		} else if (databaseProduct == DatabaseProduct.ORACLE) {
-			sql = sql.trim();
-			boolean isForUpdate = false;
-			if (sql.toLowerCase().endsWith(" for update")) {
-				sql = sql.substring(0, sql.length() - 11);
-				isForUpdate = true;
-			}
 			StringBuilder sb = new StringBuilder(sql.length() + 100);
 			if (offset > 0) {
 				sb.append("select * from ( select row_.*, rownum rownum_ from ( ");
@@ -248,9 +242,6 @@ public class JdbcQueryService {
 						+ " and rownum_ > " + offset);
 			} else {
 				sb.append(" ) where rownum <= " + limit);
-			}
-			if (isForUpdate) {
-				sb.append(" for update");
 			}
 			return namedParameterJdbcTemplate.queryForList(sb.toString(),
 					paramMap);
