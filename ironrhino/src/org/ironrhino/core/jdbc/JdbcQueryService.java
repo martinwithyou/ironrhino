@@ -1,5 +1,6 @@
 package org.ironrhino.core.jdbc;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -188,20 +189,29 @@ public class JdbcQueryService {
 		} catch (BadSqlGrammarException bse) {
 			Throwable t = bse.getCause();
 			if (t.getClass().getSimpleName().equals("PSQLException")) {
-				String error = t.getMessage();
-				if ((error.indexOf("integer") > 0 || error.indexOf("bigint") > 0)
+				String error = t.getMessage().toLowerCase();
+				if ((error.indexOf("smallint") > 0
+						|| error.indexOf("integer") > 0 || error
+						.indexOf("bigint") > 0)
 						&& error.indexOf("character varying") > 0
 						&& error.indexOf("：") > 0) {
 					int location = Integer.valueOf(error.substring(
 							error.lastIndexOf("：") + 1).trim());
 					String paramName = sql.substring(location + 1).split("\\s")[0]
 							.split("\\)")[0];
+					if (error.indexOf("small") > 0)
+						paramMap.put(paramName, Short.valueOf(paramMap.get(
+								paramName).toString()));
 					if (error.indexOf("integer") > 0)
 						paramMap.put(paramName, Integer.valueOf(paramMap.get(
 								paramName).toString()));
 					else if (error.indexOf("bigint") > 0)
 						paramMap.put(paramName, Long.valueOf(paramMap.get(
 								paramName).toString()));
+					else if (error.indexOf("numeric") > 0)
+						paramMap.put(paramName,
+								new BigDecimal(paramMap.get(paramName)
+										.toString()));
 					validate(sql, paramMap);
 					return paramMap;
 				}
@@ -408,11 +418,19 @@ public class JdbcQueryService {
 		Map<String, ?> tempMap = paramMap;
 		Map newMap = new HashMap();
 		for (Map.Entry<String, ?> entry : map.entrySet())
-			if ((entry.getValue() instanceof Integer)) {
-				newMap.put(entry.getKey(), Integer.valueOf(tempMap.get(entry.getKey()).toString()));
+			if ((entry.getValue() instanceof Short)) {
+				newMap.put(entry.getKey(),
+						Short.valueOf(tempMap.get(entry.getKey()).toString()));
+			} else if ((entry.getValue() instanceof Integer)) {
+				newMap.put(entry.getKey(),
+						Integer.valueOf(tempMap.get(entry.getKey()).toString()));
 			} else if ((entry.getValue() instanceof Long)) {
-				newMap.put(entry.getKey(), Long.valueOf(tempMap.get(entry.getKey()).toString()));
-			}else{
+				newMap.put(entry.getKey(),
+						Long.valueOf(tempMap.get(entry.getKey()).toString()));
+			} else if ((entry.getValue() instanceof BigDecimal)) {
+				newMap.put(entry.getKey(),
+						new BigDecimal(tempMap.get(entry.getKey()).toString()));
+			} else {
 				newMap.put(entry.getKey(), tempMap.get(entry.getKey()));
 			}
 		boolean hasLimit = hasLimit(sql);
