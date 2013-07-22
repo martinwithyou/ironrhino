@@ -87,7 +87,7 @@ public class JdbcQueryService {
 			catalog = con.getCatalog();
 			try {
 				schema = con.getSchema();
-			} catch (Error e) {
+			} catch (Throwable t) {
 
 			}
 			DatabaseMetaData dbmd = con.getMetaData();
