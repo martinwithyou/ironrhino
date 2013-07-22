@@ -313,8 +313,11 @@ public class JdbcQueryService {
 					"select distinct");
 			int position = selectIndex
 					+ (selectDistinctIndex == selectIndex ? 15 : 6);
-			sql = new StringBuilder(sql.length() + 8).append(sql)
-					.insert(position, " top " + limit).toString();
+			sql = new StringBuilder(sql.length() + 8)
+					.append(sql)
+					.insert(position,
+							" top " + (offset > 0 ? offset + limit : limit))
+					.toString();
 			if (offset <= 0)
 				return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 		}
@@ -324,8 +327,11 @@ public class JdbcQueryService {
 					"select distinct");
 			int position = selectIndex
 					+ (selectDistinctIndex == selectIndex ? 15 : 6);
-			sql = new StringBuilder(sql.length() + 8).append(sql)
-					.insert(position, " first " + limit).toString();
+			sql = new StringBuilder(sql.length() + 8)
+					.append(sql)
+					.insert(position,
+							" first " + (offset > 0 ? offset + limit : limit))
+					.toString();
 			if (offset <= 0)
 				return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 		}
