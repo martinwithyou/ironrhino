@@ -99,11 +99,6 @@ public enum DatabaseProduct {
 		}
 
 		@Override
-		public String getJdbcUrlPrefix() {
-			return "jdbc:microsoft:sqlserver";
-		}
-
-		@Override
 		public String getJdbcUrl(String host, int port, String databaseName,
 				String params) {
 			StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
