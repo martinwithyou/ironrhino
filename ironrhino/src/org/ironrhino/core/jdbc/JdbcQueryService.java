@@ -241,8 +241,22 @@ public class JdbcQueryService {
 			} else {
 				sb.append(" ) where rownum <= " + limit);
 			}
-			return namedParameterJdbcTemplate.queryForList(sb.toString(),
-					paramMap);
+			List<Map<String, Object>> list = namedParameterJdbcTemplate
+					.queryForList(sb.toString(), paramMap);
+			if (offset > 0) {
+				String columnName = null;
+				for (Map<String, Object> map : list) {
+					if (columnName == null)
+						for (String s : map.keySet())
+							if (s.equalsIgnoreCase("rownum_")) {
+								columnName = s;
+								break;
+							}
+					map.remove(columnName);
+				}
+			}
+			return list;
+
 		} else if (databaseProduct == DatabaseProduct.DB2) {
 			StringBuilder sb;
 			if (offset > 0) {
@@ -260,8 +274,21 @@ public class JdbcQueryService {
 				sb.append(limit);
 				sb.append(" rows only");
 			}
-			return namedParameterJdbcTemplate.queryForList(sb.toString(),
-					paramMap);
+			List<Map<String, Object>> list = namedParameterJdbcTemplate
+					.queryForList(sb.toString(), paramMap);
+			if (offset > 0) {
+				String columnName = null;
+				for (Map<String, Object> map : list) {
+					if (columnName == null)
+						for (String s : map.keySet())
+							if (s.equalsIgnoreCase("rownumber_")) {
+								columnName = s;
+								break;
+							}
+					map.remove(columnName);
+				}
+			}
+			return list;
 		} else if (databaseProduct == DatabaseProduct.DERBY) {
 			StringBuilder sb = new StringBuilder(sql.length() + 50);
 			sb.append(sql);
@@ -300,7 +327,7 @@ public class JdbcQueryService {
 		}
 
 		final ColumnMapRowMapper crm = new ColumnMapRowMapper();
-		return namedParameterJdbcTemplate.execute(sql,
+		return namedParameterJdbcTemplate.execute(sql, paramMap,
 				new PreparedStatementCallback<List<Map<String, Object>>>() {
 					@Override
 					public List<Map<String, Object>> doInPreparedStatement(
