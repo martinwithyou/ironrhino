@@ -157,7 +157,7 @@ $(function(){
 			</div>
 		</div>
 	</div>
-	<#elseif resultPage.executed??>
+	<#elseif resultPage.executed>
 	<div class="alert">
 	  <button type="button" class="close" data-dismiss="alert">&times;</button>
 	  <strong>${action.getText('query.result.empty')}</strong>
