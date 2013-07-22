@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.util.ErrorMessage;
@@ -54,6 +56,10 @@ public class JdbcQueryService {
 
 	private String schema;
 
+	private String quoteString = "\"";
+
+	private List<String> keywords = new ArrayList<String>();
+
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
@@ -84,15 +90,27 @@ public class JdbcQueryService {
 			} catch (Error e) {
 
 			}
+			DatabaseMetaData dbmd = con.getMetaData();
 			if (databaseProduct == null)
-				databaseProduct = DatabaseProduct.parse(con.getMetaData()
+				databaseProduct = DatabaseProduct.parse(dbmd
 						.getDatabaseProductName());
+			keywords = databaseProduct.getKeywords();
+			String str = dbmd.getIdentifierQuoteString();
+			if (StringUtils.isNotBlank(str))
+				quoteString = str.trim().substring(0, 1);
+			if (keywords.isEmpty()) {
+				str = dbmd.getSQLKeywords();
+				if (StringUtils.isNotBlank(str))
+					keywords.addAll(Arrays.asList(str.split(",")));
+			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		} finally {
 			DataSourceUtils
 					.releaseConnection(con, jdbcTemplate.getDataSource());
 		}
+		TABLE_PATTERN = Pattern.compile("from\\s+([\\w\\." + quoteString
+				+ ",\\s]+)", Pattern.CASE_INSENSITIVE);
 	}
 
 	@CheckCache(key = "jdbcQueryService.getTables()")
@@ -104,8 +122,18 @@ public class JdbcQueryService {
 			DatabaseMetaData dbmd = con.getMetaData();
 			ResultSet rs = dbmd.getTables(catalog, schema, "%",
 					new String[] { "TABLE" });
-			while (rs.next())
-				tables.add(rs.getString(3));
+			while (rs.next()) {
+				String table = rs.getString(3);
+				for (String s : keywords) {
+					if (table.equalsIgnoreCase(s)) {
+						table = new StringBuilder(table.length() + 2)
+								.append(quoteString).append(table)
+								.append(quoteString).toString();
+						break;
+					}
+				}
+				tables.add(table);
+			}
 			rs.close();
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
@@ -118,6 +146,34 @@ public class JdbcQueryService {
 
 	public void validate(String sql) {
 		sql = refineSql(sql);
+		if (restricted) {
+			for (String table : extractTables(sql)) {
+				if (table.indexOf('.') < 0)
+					continue;
+				if (table.startsWith(quoteString)
+						&& table.endsWith(quoteString)
+						&& !table.substring(1, table.length() - 1).contains(
+								quoteString))
+					continue;
+				String[] arr = table.split("\\.");
+				if (arr.length == 2) {
+					String prefix = arr[0].replaceAll(quoteString, "");
+					if (!prefix.equalsIgnoreCase(catalog)
+							&& !prefix.equalsIgnoreCase(schema)) {
+						throw new ErrorMessage("query.access.denied",
+								new Object[] { table });
+					}
+				} else if (arr.length > 2) {
+					String prefix1 = arr[0].replaceAll(quoteString, "");
+					String prefix2 = arr[1].replaceAll(quoteString, "");
+					if (!prefix1.equalsIgnoreCase(catalog)
+							&& !prefix2.equalsIgnoreCase(schema)) {
+						throw new ErrorMessage("query.access.denied",
+								new Object[] { table });
+					}
+				}
+			}
+		}
 		Set<String> names = extractParameters(sql);
 		Map<String, String> paramMap = new HashMap<String, String>();
 		for (String name : names)
@@ -133,47 +189,6 @@ public class JdbcQueryService {
 					new Object[] { cause });
 		} catch (DataAccessException e) {
 			throw new ErrorMessage(e.getMessage());
-		}
-		if (restricted) {
-			for (String table : extractTables(sql)) {
-				if (table.indexOf('.') < 0)
-					continue;
-				if (table.startsWith("`")
-						&& table.endsWith("`")
-						&& !table.substring(1, table.length() - 1)
-								.contains("`"))
-					continue;
-				if (table.startsWith("\"")
-						&& table.endsWith("\"")
-						&& !table.substring(1, table.length() - 1).contains(
-								"\""))
-					continue;
-				if (table.startsWith("'")
-						&& table.endsWith("'")
-						&& !table.substring(1, table.length() - 1)
-								.contains("'"))
-					continue;
-				String[] arr = table.split("\\.");
-				if (arr.length == 2) {
-					String prefix = arr[0].replaceAll("\"", "")
-							.replaceAll("'", "").replaceAll("`", "");
-					if (!prefix.equalsIgnoreCase(catalog)
-							&& !prefix.equalsIgnoreCase(schema)) {
-						throw new ErrorMessage("query.access.denied",
-								new Object[] { table });
-					}
-				} else if (arr.length > 2) {
-					String prefix1 = arr[0].replaceAll("\"", "")
-							.replaceAll("'", "").replaceAll("`", "");
-					String prefix2 = arr[0].replaceAll("\"", "")
-							.replaceAll("'", "").replaceAll("`", "");
-					if (!prefix1.equalsIgnoreCase(catalog)
-							&& !prefix2.equalsIgnoreCase(schema)) {
-						throw new ErrorMessage("query.access.denied",
-								new Object[] { table });
-					}
-				}
-			}
 		}
 	}
 
@@ -388,7 +403,7 @@ public class JdbcQueryService {
 		return names;
 	}
 
-	private static Set<String> extractTables(String sql) {
+	private Set<String> extractTables(String sql) {
 		Set<String> names = new LinkedHashSet<String>();
 		Matcher m = TABLE_PATTERN.matcher(sql);
 		while (m.find()) {
@@ -433,11 +448,11 @@ public class JdbcQueryService {
 		return false;
 	}
 
+	private Pattern TABLE_PATTERN = Pattern.compile(
+			"from\\s+([\\w\\.\"'`,\\s]+)", Pattern.CASE_INSENSITIVE);
+
 	private static final Pattern PARAMETER_PATTERN = Pattern.compile(
 			"(:[a-z]\\w*)", Pattern.CASE_INSENSITIVE);
-
-	private static final Pattern TABLE_PATTERN = Pattern.compile(
-			"from\\s+([\\w\\.\"'`,\\s]+)", Pattern.CASE_INSENSITIVE);
 
 	private static final Pattern ORDERBY_PATTERN = Pattern.compile(
 			"\\s+order\\s+by\\s+.+$", Pattern.CASE_INSENSITIVE);
