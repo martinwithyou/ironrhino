@@ -19,6 +19,7 @@ textarea{
 }
 #tables,#tables_chzn{
 	vertical-align: top;
+	margin-left: 20px;
 }
 </style>
 <script>
@@ -78,7 +79,7 @@ $(function(){
 	<@s.textarea label="sql" name="sql" cssClass="required span8" placeholder="select username,name,email from user where username=:username">
 	<#if tables?? && tables?size gt 0>
 	<@s.param name="after">
-	<span style="margin-left:20px;"><@s.select id="tables" theme="simple" cssClass="chosen" list="tables" listKey="top" listValue="top" headerKey="" headerValue=""/></span>
+	<@s.select id="tables" theme="simple" cssClass="chosen" cssStyle="" list="tables" listKey="top" listValue="top" headerKey="" headerValue=""/>
 	</@s.param>
 	</#if>
 	</@s.textarea>
