@@ -79,7 +79,11 @@ public class JdbcQueryService {
 				.getDataSource());
 		try {
 			catalog = con.getCatalog();
-			schema = con.getSchema();
+			try {
+				schema = con.getSchema();
+			} catch (Error e) {
+
+			}
 			if (databaseProduct == null)
 				databaseProduct = DatabaseProduct.parse(con.getMetaData()
 						.getDatabaseProductName());
@@ -98,8 +102,8 @@ public class JdbcQueryService {
 				.getDataSource());
 		try {
 			DatabaseMetaData dbmd = con.getMetaData();
-			ResultSet rs = dbmd.getTables(con.getCatalog(), con.getSchema(),
-					"%", new String[] { "TABLE" });
+			ResultSet rs = dbmd.getTables(catalog, schema, "%",
+					new String[] { "TABLE" });
 			while (rs.next())
 				tables.add(rs.getString(3));
 			rs.close();
@@ -357,13 +361,12 @@ public class JdbcQueryService {
 		resultPage.setPaginating(!hasLimit);
 		resultPage.setTotalResults(count(sql, paramMap));
 		if (resultPage.getTotalResults() > ResultPage.DEFAULT_MAX_PAGESIZE
-				&& hasLimit
-				|| !(databaseProduct == DatabaseProduct.MYSQL
+				&& (hasLimit || !(databaseProduct == DatabaseProduct.MYSQL
 						|| databaseProduct == DatabaseProduct.POSTGRESQL
 						|| databaseProduct == DatabaseProduct.H2
 						|| databaseProduct == DatabaseProduct.HSQL
 						|| databaseProduct == DatabaseProduct.ORACLE
-						|| databaseProduct == DatabaseProduct.DB2 || databaseProduct == DatabaseProduct.DERBY))
+						|| databaseProduct == DatabaseProduct.DB2 || databaseProduct == DatabaseProduct.DERBY)))
 			throw new ErrorMessage("query.result.number.exceed",
 					new Object[] { ResultPage.DEFAULT_MAX_PAGESIZE });
 		resultPage.setResult(query(sql, paramMap, resultPage.getPageSize(),
@@ -445,10 +448,5 @@ public class JdbcQueryService {
 			"\\s+next\\s+\\d+\\s+", Pattern.CASE_INSENSITIVE);
 	private static final Pattern ROWNUM_PATTERN = Pattern.compile("\\s+rownum",
 			Pattern.CASE_INSENSITIVE);
-
-	public static void main(String[] args) {
-		System.out
-				.println(extractTables("select * from (select * from `ironrhino.user`, user t2) t3"));
-	}
 
 }
