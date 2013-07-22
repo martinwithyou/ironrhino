@@ -34,6 +34,8 @@ public class DatabaseCyclicSequenceDelegate extends
 			seq = new InformixCyclicSequence();
 		else if (databaseProduct == DatabaseProduct.SQLSERVER)
 			seq = new SqlServerCyclicSequence();
+		else if (databaseProduct == DatabaseProduct.SYBASE)
+			seq = new SybaseCyclicSequence();
 		else if (databaseProduct == DatabaseProduct.H2)
 			seq = new H2CyclicSequence();
 		else if (databaseProduct == DatabaseProduct.HSQL)
