@@ -153,7 +153,8 @@ public class JdbcQueryService {
 				if (arr.length == 2) {
 					String prefix = arr[0].replaceAll("\"", "")
 							.replaceAll("'", "").replaceAll("`", "");
-					if (!prefix.equals(catalog) && !prefix.equals(schema)) {
+					if (!prefix.equalsIgnoreCase(catalog)
+							&& !prefix.equalsIgnoreCase(schema)) {
 						throw new ErrorMessage("query.access.denied",
 								new Object[] { table });
 					}
@@ -162,7 +163,8 @@ public class JdbcQueryService {
 							.replaceAll("'", "").replaceAll("`", "");
 					String prefix2 = arr[0].replaceAll("\"", "")
 							.replaceAll("'", "").replaceAll("`", "");
-					if (!prefix1.equals(catalog) && !prefix2.equals(schema)) {
+					if (!prefix1.equalsIgnoreCase(catalog)
+							&& !prefix2.equalsIgnoreCase(schema)) {
 						throw new ErrorMessage("query.access.denied",
 								new Object[] { table });
 					}
