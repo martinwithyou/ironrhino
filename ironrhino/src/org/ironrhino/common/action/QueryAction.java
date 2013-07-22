@@ -20,6 +20,7 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.util.ErrorMessage;
 import org.ironrhino.security.model.UserRole;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -107,6 +108,10 @@ public class QueryAction extends BaseAction {
 					}
 				}
 			}
+			long count = jdbcQueryService.count(sql, paramMap);
+			if (count > 10 * ResultPage.DEFAULT_MAX_PAGESIZE)
+				throw new ErrorMessage("query.result.number.exceed",
+						new Object[] { 10 * ResultPage.DEFAULT_MAX_PAGESIZE });
 			HttpServletResponse response = ServletActionContext.getResponse();
 			response.setHeader("Content-type", "text/csv");
 			response.setHeader("Content-disposition",

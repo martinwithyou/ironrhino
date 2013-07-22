@@ -36696,30 +36696,29 @@ Richtable = {
 		}
 	},
 	save : function(event) {
-		var form = $(event.target).closest('form');
-		var modified = false;
-		var theadCells = $('.richtable thead:eq(0) th');
-		$.each($('.richtable tbody')[0].rows, function() {
-			var row = this;
-			if ($('td.edited', row).length) {
-				modified = true;
-				var params = {};
-				var entity = form.data('entity') || form.attr('action');
-				params[entity + '.id'] = $(this).data('rowid')
-						|| $('input[type="checkbox"]:eq(0)', this).val();;
-				$.each(row.cells, function(i) {
-							var theadCell = $(theadCells[i]);
-							var name = theadCell.data('cellname');
-							if (!name || !$(this).hasClass('edited')
-									&& theadCell.hasClass('excludeIfNotEdited'))
-								return;
-							var value = $(this).data('cellvalue')
-									|| $(this).text();
-							params[name] = value;
-						});
-				var url = Richtable.getBaseUrl(form) + '/save'
-						+ Richtable.getPathParams();
-				var action = function() {
+		var action = function() {
+			var form = $(event.target).closest('form');
+			var modified = false;
+			var theadCells = $('.richtable thead:eq(0) th');
+			$.each($('.richtable tbody')[0].rows, function() {
+				var row = this;
+				if ($('td.edited', row).length) {
+					modified = true;
+					var params = {};
+					var entity = form.data('entity') || form.attr('action');
+					params[entity + '.id'] = $(this).data('rowid')
+							|| $('input[type="checkbox"]:eq(0)', this).val();;
+					$.each(row.cells, function(i) {
+						var theadCell = $(theadCells[i]);
+						var name = theadCell.data('cellname');
+						if (!name || !$(this).hasClass('edited')
+								&& theadCell.hasClass('excludeIfNotEdited'))
+							return;
+						var value = $(this).data('cellvalue') || $(this).text();
+						params[name] = value;
+					});
+					var url = Richtable.getBaseUrl(form) + '/save'
+							+ Richtable.getPathParams();
 					ajax({
 								url : url,
 								type : 'POST',
@@ -36736,26 +36735,27 @@ Richtable = {
 								}
 							});
 				}
-				var btn = event.target;
+			});
+			if (!modified) {
+				Message.showMessage('no.modification');
+				return false;
+			}
+		}
+
+		var btn = event.target;
 				if ($(btn).prop('tagName') != 'BUTTON'
 						|| $(btn).prop('tagName') != 'A')
 					btn = $(btn).closest('button,a');
-				if ($(btn).closest('.btn').hasClass('confirm')) {
-					$.alerts.confirm($(btn).data('confirm')
-									|| MessageBundle.get('confirm.save'),
-							MessageBundle.get('select'), function(b) {
-								if (b) {
-									action();
-								}
-							});
-				} else {
-					action();
-				}
-			}
-		});
-		if (!modified) {
-			Message.showMessage('no.modification');
-			return false;
+		if ($(btn).closest('.btn').hasClass('confirm')) {
+			$.alerts.confirm($(btn).data('confirm')
+							|| MessageBundle.get('confirm.save'), MessageBundle
+							.get('select'), function(b) {
+						if (b) {
+							action();
+						}
+					});
+		} else {
+			action();
 		}
 	},
 	editCell : function(cell, type, templateId) {

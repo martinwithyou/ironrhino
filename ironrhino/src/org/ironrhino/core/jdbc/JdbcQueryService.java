@@ -99,7 +99,7 @@ public class JdbcQueryService {
 		try {
 			DatabaseMetaData dbmd = con.getMetaData();
 			ResultSet rs = dbmd.getTables(con.getCatalog(), con.getSchema(),
-					"%", new String[] { "Table" });
+					"%", new String[] { "TABLE" });
 			while (rs.next())
 				tables.add(rs.getString(3));
 			rs.close();
@@ -188,10 +188,6 @@ public class JdbcQueryService {
 
 	public void query(String sql, Map<String, ?> paramMap,
 			RowCallbackHandler rch) {
-		long count = count(sql, paramMap);
-		if (count > 10 * ResultPage.DEFAULT_MAX_PAGESIZE)
-			throw new ErrorMessage("query.result.number.exceed",
-					new Object[] { 10 * ResultPage.DEFAULT_MAX_PAGESIZE });
 		namedParameterJdbcTemplate.query(sql, paramMap, rch);
 	}
 
