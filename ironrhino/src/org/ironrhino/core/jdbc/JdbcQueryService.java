@@ -258,17 +258,17 @@ public class JdbcQueryService {
 			return list;
 
 		} else if (databaseProduct == DatabaseProduct.DB2) {
-			StringBuilder sb;
+			StringBuilder sb = new StringBuilder(
+					sql.length() + offset > 0 ? 200 : 20);
 			if (offset > 0) {
-				sb = new StringBuilder(sql.length() + 200)
-						.append("select * from ( select inner2_.*, rownumber() over(order by order of inner2_) as rownumber_ from ( ")
+				sb.append(
+						"select * from ( select inner2_.*, rownumber() over(order by order of inner2_) as rownumber_ from ( ")
 						.append(sql)
 						.append(" fetch first ")
 						.append(limit)
 						.append(" rows only ) as inner2_ ) as inner1_ where rownumber_ > ")
 						.append(offset).append(" order by rownumber_");
 			} else {
-				sb = new StringBuilder(sql.length() + 20);
 				sb.append(sql);
 				sb.append(" fetch first ");
 				sb.append(limit);
