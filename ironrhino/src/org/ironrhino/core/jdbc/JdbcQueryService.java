@@ -144,7 +144,7 @@ public class JdbcQueryService {
 		return tables;
 	}
 
-	public void validate(String sql) {
+	public Map<String, ?> validate(String sql) {
 		sql = refineSql(sql);
 		if (restricted) {
 			for (String table : extractTables(sql)) {
@@ -175,13 +175,37 @@ public class JdbcQueryService {
 			}
 		}
 		Set<String> names = extractParameters(sql);
-		Map<String, String> paramMap = new HashMap<String, String>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
 		for (String name : names)
 			paramMap.put(name, "0");
+		return validate(sql, paramMap);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Map<String, ?> validate(String sql, Map paramMap) {
 		try {
 			query(sql, paramMap, 1);
 		} catch (BadSqlGrammarException bse) {
 			Throwable t = bse.getCause();
+			if (t.getClass().getSimpleName().equals("PSQLException")) {
+				String error = t.getMessage();
+				if ((error.indexOf("integer") > 0 || error.indexOf("bigint") > 0)
+						&& error.indexOf("character varying") > 0
+						&& error.indexOf("：") > 0) {
+					int location = Integer.valueOf(error.substring(
+							error.lastIndexOf("：") + 1).trim());
+					String paramName = sql.substring(location + 1).split("\\s")[0]
+							.split("\\)")[0];
+					if (error.indexOf("integer") > 0)
+						paramMap.put(paramName, Integer.valueOf(paramMap.get(
+								paramName).toString()));
+					else if (error.indexOf("bigint") > 0)
+						paramMap.put(paramName, Long.valueOf(paramMap.get(
+								paramName).toString()));
+					validate(sql, paramMap);
+					return paramMap;
+				}
+			}
 			String cause = "";
 			if (t instanceof SQLException)
 				cause = t.getMessage();
@@ -190,6 +214,7 @@ public class JdbcQueryService {
 		} catch (DataAccessException e) {
 			throw new ErrorMessage(e.getMessage());
 		}
+		return paramMap;
 	}
 
 	public long count(String sql, Map<String, ?> paramMap) {
@@ -375,12 +400,24 @@ public class JdbcQueryService {
 
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ResultPage<Map<String, Object>> query(String sql,
 			Map<String, ?> paramMap, ResultPage<Map<String, Object>> resultPage) {
 		sql = refineSql(sql);
+		Map<String, ?> map = validate(sql, paramMap);
+		Map<String, ?> tempMap = paramMap;
+		Map newMap = new HashMap();
+		for (Map.Entry<String, ?> entry : map.entrySet())
+			if ((entry.getValue() instanceof Integer)) {
+				newMap.put(entry.getKey(), Integer.valueOf(tempMap.get(entry.getKey()).toString()));
+			} else if ((entry.getValue() instanceof Long)) {
+				newMap.put(entry.getKey(), Long.valueOf(tempMap.get(entry.getKey()).toString()));
+			}else{
+				newMap.put(entry.getKey(), tempMap.get(entry.getKey()));
+			}
 		boolean hasLimit = hasLimit(sql);
 		resultPage.setPaginating(!hasLimit);
-		resultPage.setTotalResults(count(sql, paramMap));
+		resultPage.setTotalResults(count(sql, newMap));
 		if (resultPage.getTotalResults() > ResultPage.DEFAULT_MAX_PAGESIZE
 				&& (hasLimit || !(databaseProduct == DatabaseProduct.MYSQL
 						|| databaseProduct == DatabaseProduct.POSTGRESQL
@@ -390,7 +427,7 @@ public class JdbcQueryService {
 						|| databaseProduct == DatabaseProduct.DB2 || databaseProduct == DatabaseProduct.DERBY)))
 			throw new ErrorMessage("query.result.number.exceed",
 					new Object[] { ResultPage.DEFAULT_MAX_PAGESIZE });
-		resultPage.setResult(query(sql, paramMap, resultPage.getPageSize(),
+		resultPage.setResult(query(sql, newMap, resultPage.getPageSize(),
 				(resultPage.getPageNo() - 1) * resultPage.getPageSize()));
 		return resultPage;
 	}
