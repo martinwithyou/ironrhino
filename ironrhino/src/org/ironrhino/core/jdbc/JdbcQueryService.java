@@ -23,7 +23,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
-import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.ErrorMessage;
@@ -116,7 +115,6 @@ public class JdbcQueryService {
 				+ ",\\s]+)", Pattern.CASE_INSENSITIVE);
 	}
 
-	@CheckCache(key = "jdbcQueryService.getTables()")
 	public List<String> getTables() {
 		List<String> tables = new ArrayList<String>();
 		Connection con = DataSourceUtils.getConnection(jdbcTemplate
