@@ -92,7 +92,9 @@ public class QueryAction extends BaseAction {
 			if (resultPage == null) {
 				resultPage = new ResultPage<>();
 			}
-			resultPage = jdbcQueryService.query(sql, paramMap, resultPage);
+			Map<String, String> copy = new HashMap<String, String>();
+			copy.putAll(paramMap);
+			resultPage = jdbcQueryService.query(sql, copy, resultPage);
 		}
 		return SUCCESS;
 	}

@@ -206,10 +206,9 @@ public class JdbcQueryService {
 						&& error.indexOf("：") > 0) {
 					int location = Integer.valueOf(error.substring(
 							error.lastIndexOf("：") + 1).trim());
-					String paramName = sql.substring(location + 1).split("\\s")[0]
-							.split("\\)")[0];
-					if (paramName.startsWith(":"))
-						paramName = paramName.substring(1);
+					String paramName = sql.substring(location);
+					paramName = paramName.substring(paramName.indexOf(":") + 1);
+					paramName = paramName.split("\\s")[0].split("\\)")[0];
 					Object object = paramMap.get(paramName);
 					if (object != null) {
 						String value = object.toString();
