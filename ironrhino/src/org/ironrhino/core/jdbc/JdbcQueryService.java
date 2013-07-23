@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,7 +147,7 @@ public class JdbcQueryService {
 		return tables;
 	}
 
-	public Map<String, ?> validate(String sql) {
+	public void validate(String sql) {
 		sql = refineSql(sql);
 		if (restricted) {
 			for (String table : extractTables(sql)) {
@@ -179,11 +181,11 @@ public class JdbcQueryService {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		for (String name : names)
 			paramMap.put(name, "0");
-		return validate(sql, paramMap);
+		validateAndConvertTypes(sql, paramMap);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Map<String, ?> validate(String sql, Map paramMap) {
+	private void validateAndConvertTypes(String sql, Map paramMap) {
 		try {
 			query(sql, paramMap, 1);
 		} catch (BadSqlGrammarException bse) {
@@ -191,29 +193,39 @@ public class JdbcQueryService {
 			if (t.getClass().getSimpleName().equals("PSQLException")) {
 				String error = t.getMessage().toLowerCase();
 				if ((error.indexOf("smallint") > 0
-						|| error.indexOf("integer") > 0 || error
-						.indexOf("bigint") > 0)
+						|| error.indexOf("integer") > 0
+						|| error.indexOf("bigint") > 0
+						|| error.indexOf("numeric") > 0
+						|| error.indexOf("timestamp") > 0 || error
+						.indexOf("date") > 0)
 						&& error.indexOf("character varying") > 0
 						&& error.indexOf("：") > 0) {
 					int location = Integer.valueOf(error.substring(
 							error.lastIndexOf("：") + 1).trim());
 					String paramName = sql.substring(location + 1).split("\\s")[0]
 							.split("\\)")[0];
-					if (error.indexOf("small") > 0)
-						paramMap.put(paramName, Short.valueOf(paramMap.get(
-								paramName).toString()));
-					if (error.indexOf("integer") > 0)
-						paramMap.put(paramName, Integer.valueOf(paramMap.get(
-								paramName).toString()));
-					else if (error.indexOf("bigint") > 0)
-						paramMap.put(paramName, Long.valueOf(paramMap.get(
-								paramName).toString()));
-					else if (error.indexOf("numeric") > 0)
-						paramMap.put(paramName,
-								new BigDecimal(paramMap.get(paramName)
-										.toString()));
-					validate(sql, paramMap);
-					return paramMap;
+					if (paramName.startsWith(":"))
+						paramName = paramName.substring(1);
+					Object object = paramMap.get(paramName);
+					if (object != null) {
+						String value = object.toString();
+						if (error.indexOf("small") > 0)
+							paramMap.put(paramName, Short.valueOf(value));
+						if (error.indexOf("integer") > 0)
+							paramMap.put(paramName, Integer.valueOf(value));
+						else if (error.indexOf("bigint") > 0)
+							paramMap.put(paramName, Long.valueOf(value));
+						else if (error.indexOf("numeric") > 0)
+							paramMap.put(paramName, new BigDecimal(value));
+						else if (error.indexOf("timestamp") > 0
+								|| error.indexOf("date") > 0)
+							paramMap.put(
+									paramName,
+									value.equals("0") ? new Date() : DateUtils
+											.parse(value));
+						validateAndConvertTypes(sql, paramMap);
+						return;
+					}
 				}
 			}
 			String cause = "";
@@ -224,7 +236,6 @@ public class JdbcQueryService {
 		} catch (DataAccessException e) {
 			throw new ErrorMessage(e.getMessage());
 		}
-		return paramMap;
 	}
 
 	public long count(String sql, Map<String, ?> paramMap) {
@@ -410,32 +421,13 @@ public class JdbcQueryService {
 
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ResultPage<Map<String, Object>> query(String sql,
 			Map<String, ?> paramMap, ResultPage<Map<String, Object>> resultPage) {
 		sql = refineSql(sql);
-		Map<String, ?> map = validate(sql, paramMap);
-		Map<String, ?> tempMap = paramMap;
-		Map newMap = new HashMap();
-		for (Map.Entry<String, ?> entry : map.entrySet())
-			if ((entry.getValue() instanceof Short)) {
-				newMap.put(entry.getKey(),
-						Short.valueOf(tempMap.get(entry.getKey()).toString()));
-			} else if ((entry.getValue() instanceof Integer)) {
-				newMap.put(entry.getKey(),
-						Integer.valueOf(tempMap.get(entry.getKey()).toString()));
-			} else if ((entry.getValue() instanceof Long)) {
-				newMap.put(entry.getKey(),
-						Long.valueOf(tempMap.get(entry.getKey()).toString()));
-			} else if ((entry.getValue() instanceof BigDecimal)) {
-				newMap.put(entry.getKey(),
-						new BigDecimal(tempMap.get(entry.getKey()).toString()));
-			} else {
-				newMap.put(entry.getKey(), tempMap.get(entry.getKey()));
-			}
+		validateAndConvertTypes(sql, paramMap);
 		boolean hasLimit = hasLimit(sql);
 		resultPage.setPaginating(!hasLimit);
-		resultPage.setTotalResults(count(sql, newMap));
+		resultPage.setTotalResults(count(sql, paramMap));
 		if (resultPage.getTotalResults() > ResultPage.DEFAULT_MAX_PAGESIZE
 				&& (hasLimit || !(databaseProduct == DatabaseProduct.MYSQL
 						|| databaseProduct == DatabaseProduct.POSTGRESQL
@@ -445,7 +437,7 @@ public class JdbcQueryService {
 						|| databaseProduct == DatabaseProduct.DB2 || databaseProduct == DatabaseProduct.DERBY)))
 			throw new ErrorMessage("query.result.number.exceed",
 					new Object[] { ResultPage.DEFAULT_MAX_PAGESIZE });
-		resultPage.setResult(query(sql, newMap, resultPage.getPageSize(),
+		resultPage.setResult(query(sql, paramMap, resultPage.getPageSize(),
 				(resultPage.getPageNo() - 1) * resultPage.getPageSize()));
 		return resultPage;
 	}

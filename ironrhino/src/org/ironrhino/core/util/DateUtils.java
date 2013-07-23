@@ -8,6 +8,7 @@ import java.util.Date;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 public class DateUtils {
+
 	public static final String DATE10 = "yyyy-MM-dd";
 
 	private static final FastDateFormat DATE10_DF = FastDateFormat
@@ -37,6 +38,9 @@ public class DateUtils {
 
 	private static final FastDateFormat TIMESTAMP_DF = FastDateFormat
 			.getInstance(TIMESTAMP);
+
+	public static final String[] ACCEPT_DATE_FORMATS = { "yyyy/MM/dd",
+			DATETIME, DATETIME_ISO, DATE10 };
 
 	public static String formatDate10(Date date) {
 		return DATE10_DF.format(date);
@@ -111,6 +115,17 @@ public class DateUtils {
 		} catch (ParseException e) {
 			return null;
 		}
+	}
+
+	public static Date parse(String string) {
+		for (String format : ACCEPT_DATE_FORMATS) {
+			try {
+				return new SimpleDateFormat(format).parse(string);
+			} catch (ParseException e) {
+				continue;
+			}
+		}
+		return null;
 	}
 
 	public static boolean isToday(Date date) {
