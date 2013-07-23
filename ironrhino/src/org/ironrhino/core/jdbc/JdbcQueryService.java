@@ -103,7 +103,7 @@ public class JdbcQueryService {
 			if (keywords.isEmpty()) {
 				str = dbmd.getSQLKeywords();
 				if (StringUtils.isNotBlank(str))
-					keywords.addAll(Arrays.asList(str.split(",")));
+					keywords.addAll(Arrays.asList(str.toUpperCase().split(",")));
 			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
@@ -125,14 +125,10 @@ public class JdbcQueryService {
 					new String[] { "TABLE" });
 			while (rs.next()) {
 				String table = rs.getString(3);
-				for (String s : keywords) {
-					if (table.equalsIgnoreCase(s)) {
-						table = new StringBuilder(table.length() + 2)
-								.append(quoteString).append(table)
-								.append(quoteString).toString();
-						break;
-					}
-				}
+				if (keywords.contains(table.toUpperCase()))
+					table = new StringBuilder(table.length() + 2)
+							.append(quoteString).append(table)
+							.append(quoteString).toString();
 				tables.add(table);
 			}
 			rs.close();
