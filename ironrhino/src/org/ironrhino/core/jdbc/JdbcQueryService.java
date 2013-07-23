@@ -191,11 +191,17 @@ public class JdbcQueryService {
 			if (t.getClass().getSimpleName().equals("PSQLException")) {
 				String error = t.getMessage().toLowerCase();
 				if ((error.indexOf("smallint") > 0
-						|| error.indexOf("integer") > 0
 						|| error.indexOf("bigint") > 0
+						|| error.indexOf("bigserial") > 0
+						|| error.indexOf("integer") > 0
+						|| error.indexOf("serial") > 0
 						|| error.indexOf("numeric") > 0
-						|| error.indexOf("timestamp") > 0 || error
-						.indexOf("date") > 0)
+						|| error.indexOf("decimal") > 0
+						|| error.indexOf("real") > 0
+						|| error.indexOf("double precision") > 0
+						|| error.indexOf("money") > 0
+						|| error.indexOf("timestamp") > 0
+						|| error.indexOf("date") > 0 || error.indexOf("time") > 0)
 						&& error.indexOf("character varying") > 0
 						&& error.indexOf("：") > 0) {
 					int location = Integer.valueOf(error.substring(
@@ -209,14 +215,21 @@ public class JdbcQueryService {
 						String value = object.toString();
 						if (error.indexOf("small") > 0)
 							paramMap.put(paramName, Short.valueOf(value));
-						if (error.indexOf("integer") > 0)
-							paramMap.put(paramName, Integer.valueOf(value));
-						else if (error.indexOf("bigint") > 0)
+						else if (error.indexOf("bigint") > 0
+								|| error.indexOf("bigserial") > 0)
 							paramMap.put(paramName, Long.valueOf(value));
-						else if (error.indexOf("numeric") > 0)
+						else if (error.indexOf("integer") > 0
+								|| error.indexOf("serial") > 0)
+							paramMap.put(paramName, Integer.valueOf(value));
+						else if (error.indexOf("numeric") > 0
+								|| error.indexOf("decimal") > 0
+								|| error.indexOf("real") > 0
+								|| error.indexOf("double precision") > 0
+								|| error.indexOf("money") > 0)
 							paramMap.put(paramName, new BigDecimal(value));
 						else if (error.indexOf("timestamp") > 0
-								|| error.indexOf("date") > 0)
+								|| error.indexOf("date") > 0
+								|| error.indexOf("time") > 0)
 							paramMap.put(
 									paramName,
 									value.equals("0") ? new Date() : DateUtils
@@ -416,7 +429,6 @@ public class JdbcQueryService {
 						return result;
 					}
 				});
-
 	}
 
 	public ResultPage<Map<String, Object>> query(String sql,
