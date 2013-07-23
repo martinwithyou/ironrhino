@@ -50,7 +50,7 @@ public enum DatabaseProduct {
 	DB2 {
 		@Override
 		public int getDefaultPort() {
-			return 50000;
+			return 446;
 		}
 
 		@Override
