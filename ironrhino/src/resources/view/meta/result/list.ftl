@@ -61,7 +61,11 @@
 <#assign rowDynamicAttributes={}>
 <#if richtableConfig.rowDynamicAttributes?has_content>
 <#assign rowDynamicAttributes><@richtableConfig.rowDynamicAttributes?interpret /></#assign>
+<#if rowDynamicAttributes?has_content>
 <#assign rowDynamicAttributes=rowDynamicAttributes?eval>
+<#else>
+<#assign rowDynamicAttributes={}>
+</#if>
 </#if>
 <#if !readonly&&entityReadonly>
 <#assign rowDynamicAttributes=rowDynamicAttributes+{"data-readonly":"true"}>

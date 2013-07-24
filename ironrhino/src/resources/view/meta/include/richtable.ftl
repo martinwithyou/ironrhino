@@ -16,7 +16,11 @@
 <#local _rowDynamicAttributes={}>
 <#if rowDynamicAttributes?has_content>
 <#local _rowDynamicAttributes><@rowDynamicAttributes?interpret /></#local>
+<#if _rowDynamicAttributes?has_content>
 <#local _rowDynamicAttributes=_rowDynamicAttributes?eval>
+<#else>
+<#local _rowDynamicAttributes={}>
+</#if>
 </#if>
 <#if celleditable&&!readonly&&entityReadonly>
 <#local _rowDynamicAttributes=_rowDynamicAttributes+{"data-readonly":"true"}>
