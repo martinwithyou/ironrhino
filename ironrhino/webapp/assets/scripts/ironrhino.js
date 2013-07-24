@@ -32694,8 +32694,13 @@ Observation.common = function(container) {
 				if (btn.data('action')
 						|| form.parents('.ui-dialog,.tab-content').length)
 					pushstate = false;
-				if (pushstate && typeof history.pushState != 'undefined') {
+				if (pushstate && HISTORY_ENABLED) {
 					var url = form.attr('action');
+					var index = url.indexOf('://');
+					if (index > -1) {
+						url = url.substring(index + 3);
+						url = url.substring(url.indexOf('/'));
+					}
 					var params = form.serializeArray();
 					if (params) {
 						$.map(params, function(v, i) {
@@ -32716,10 +32721,17 @@ Observation.common = function(container) {
 							url += (url.indexOf('?') > 0 ? '&' : '?') + param;
 					}
 					var location = document.location.href;
-					history.replaceState({
-								url : location
-							}, '', location);
-					history.pushState(url, '', url);
+					if (SESSION_HISTORY_SUPPORT) {
+						history.replaceState({
+									url : location
+								}, '', location);
+						history.pushState(url, '', url);
+					} else {
+						var hash = url;
+						if (CONTEXT_PATH)
+							hash = hash.substring(CONTEXT_PATH.length);
+						$.history.load('!' + hash);
+					}
 				}
 				$(this).ajaxSubmit(options);
 				return false;
@@ -32736,7 +32748,7 @@ Observation.common = function(container) {
 								.data('replacement')))) {
 					var hash = this.href;
 					if (UrlUtils.isSameDomain(hash)) {
-						hash = hash.substring(hash.indexOf('//') + 2);
+						hash = hash.substring(hash.indexOf('://') + 3);
 						hash = hash.substring(hash.indexOf('/'));
 						if (SESSION_HISTORY_SUPPORT) {
 							var location = document.location.href;
