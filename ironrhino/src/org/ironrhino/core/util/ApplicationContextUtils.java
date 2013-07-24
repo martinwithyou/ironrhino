@@ -17,9 +17,10 @@ public class ApplicationContextUtils {
 		return applicationContext;
 	}
 
-	public static Object getBean(String name) {
+	@SuppressWarnings("unchecked")
+	public static <T> T getBean(String name) {
 		try {
-			return getApplicationContext().getBean(name);
+			return (T)getApplicationContext().getBean(name);
 		} catch (BeansException e) {
 			return null;
 		}

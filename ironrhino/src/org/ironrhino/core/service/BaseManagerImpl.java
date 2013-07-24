@@ -239,8 +239,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	@Override
 	@Transactional(readOnly = true)
 	public long countByCriteria(DetachedCriteria dc) {
-		CriteriaImpl impl = ReflectionUtils.getFieldValue(dc, "impl",
-				CriteriaImpl.class);
+		CriteriaImpl impl = ReflectionUtils.<CriteriaImpl>getFieldValue(dc, "impl");
 		Iterator<OrderEntry> it = impl.iterateOrderings();
 		List<OrderEntry> orderEntries = null;
 		boolean notEmpty = it.hasNext();

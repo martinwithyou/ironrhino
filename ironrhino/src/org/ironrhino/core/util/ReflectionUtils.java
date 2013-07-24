@@ -84,7 +84,7 @@ public class ReflectionUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T getFieldValue(Object o, String name, Class<T> c) {
+	public static <T> T getFieldValue(Object o, String name) {
 		try {
 			Field f = o.getClass().getDeclaredField(name);
 			f.setAccessible(true);
