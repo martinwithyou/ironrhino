@@ -46,6 +46,7 @@ public class ErrorAction extends BaseAction {
 		default:
 			result = NOTFOUND;
 		}
+		ServletActionContext.getResponse().setStatus(errorcode);
 		return result;
 	}
 }
