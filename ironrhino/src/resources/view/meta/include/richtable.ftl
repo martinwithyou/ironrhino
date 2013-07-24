@@ -21,7 +21,7 @@
 <#if celleditable&&!readonly&&entityReadonly>
 <#local _rowDynamicAttributes=_rowDynamicAttributes+{"data-readonly":"true"}>
 </#if>
-<@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid enableable=enableable dynamicAttributes=_rowDynamicAttributes/>
+<@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid dynamicAttributes=_rowDynamicAttributes/>
 <#list columns?keys as name>
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>
@@ -76,13 +76,13 @@
 <tbody>
 </#macro>
 
-<#macro rttbodytrstart entity showCheckColumn=true multipleCheck=true rowid='' enableable=false dynamicAttributes...>
+<#macro rttbodytrstart entity showCheckColumn=true multipleCheck=true rowid='' dynamicAttributes...>
 <#if rowid==''>
 	<#local id=entity.id?string/>
 <#else>
 	<#local id><@rowid?interpret/></#local>
 </#if>
-<tr<#if enableable> data-enabled="${entity.enabled?string}"</#if><#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if><#list dynamicAttributes?keys as attr><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?string}"</#list><#else> ${attr}="${dynamicAttributes[attr]?string}"</#if></#list>>
+<tr<#if entity.enabled??> data-enabled="${entity.enabled?string}"</#if><#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if><#list dynamicAttributes?keys as attr><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?string}"</#list><#else> ${attr}="${dynamicAttributes[attr]?string}"</#if></#list>>
 <#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if id?has_content> value="${id}"</#if> class="custom"/></td></#if>
 </#macro>
 

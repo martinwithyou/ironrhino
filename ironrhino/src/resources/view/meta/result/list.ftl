@@ -66,7 +66,7 @@
 <#if !readonly&&entityReadonly>
 <#assign rowDynamicAttributes=rowDynamicAttributes+{"data-readonly":"true"}>
 </#if>
-<@rttbodytrstart entity=entity enableable=enableable dynamicAttributes=rowDynamicAttributes/>
+<@rttbodytrstart entity=entity dynamicAttributes=rowDynamicAttributes/>
 <#list uiConfigs?keys as key>
 	<#assign config=uiConfigs[key]>
 	<#if !config.hiddenInList>
