@@ -236,8 +236,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 				sb.append(" AND ").append("tags:").append(tag[i]);
 			query = sb.toString();
 		}
-		ElasticSearchCriteria criteria = (ElasticSearchCriteria) resultPage
-				.getCriteria();
+		ElasticSearchCriteria criteria = resultPage.getCriteria();
 		if (criteria == null) {
 			criteria = new ElasticSearchCriteria();
 			resultPage.setCriteria(criteria);

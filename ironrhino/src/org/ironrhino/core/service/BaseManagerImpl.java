@@ -239,7 +239,8 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	@Override
 	@Transactional(readOnly = true)
 	public long countByCriteria(DetachedCriteria dc) {
-		CriteriaImpl impl = ReflectionUtils.<CriteriaImpl>getFieldValue(dc, "impl");
+		CriteriaImpl impl = ReflectionUtils.<CriteriaImpl> getFieldValue(dc,
+				"impl");
 		Iterator<OrderEntry> it = impl.iterateOrderings();
 		List<OrderEntry> orderEntries = null;
 		boolean notEmpty = it.hasNext();
@@ -324,8 +325,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	@Override
 	@Transactional(readOnly = true)
 	public ResultPage<T> findByResultPage(ResultPage<T> resultPage) {
-		DetachedCriteria detachedCriteria = (DetachedCriteria) resultPage
-				.getCriteria();
+		DetachedCriteria detachedCriteria = resultPage.getCriteria();
 		if (detachedCriteria == null)
 			detachedCriteria = detachedCriteria();
 		long totalResults = -1;

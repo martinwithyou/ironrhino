@@ -48,14 +48,13 @@ public class ElasticSearchService<T> implements SearchService<T> {
 	}
 
 	@Override
-	public ResultPage<T> search(ResultPage resultPage) {
+	public ResultPage<T> search(ResultPage<T> resultPage) {
 		return search(resultPage, null);
 	}
 
 	@Override
-	public ResultPage<T> search(ResultPage resultPage, Mapper mapper) {
-		ElasticSearchCriteria criteria = (ElasticSearchCriteria) resultPage
-				.getCriteria();
+	public ResultPage<T> search(ResultPage<T> resultPage, Mapper<T> mapper) {
+		ElasticSearchCriteria criteria = resultPage.getCriteria();
 		if (criteria == null)
 			return resultPage;
 		SearchRequestBuilder srb = criteria2builder(criteria);
@@ -69,7 +68,7 @@ public class ElasticSearchService<T> implements SearchService<T> {
 				List list = new ArrayList(shs.getHits().length);
 				resultPage.setResult(list);
 				for (SearchHit sh : shs.getHits()) {
-					Object data = indexManager.searchHitToEntity(sh);
+					T data = (T) indexManager.searchHitToEntity(sh);
 					data = mapper == null ? data : mapper.map(data);
 					if (data != null)
 						list.add(data);

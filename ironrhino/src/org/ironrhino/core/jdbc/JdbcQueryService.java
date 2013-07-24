@@ -426,8 +426,11 @@ public class JdbcQueryService {
 				});
 	}
 
-	public ResultPage<Map<String, Object>> query(String sql,
-			Map<String, ?> paramMap, ResultPage<Map<String, Object>> resultPage) {
+	public ResultPage<Map<String, Object>> query(
+			ResultPage<Map<String, Object>> resultPage) {
+		QueryCriteria criteria = resultPage.getCriteria();
+		String sql = criteria.getQuery();
+		Map<String, ?> paramMap = criteria.getParameters();
 		sql = refineSql(sql);
 		validateAndConvertTypes(sql, paramMap);
 		boolean hasLimit = hasLimit(sql);

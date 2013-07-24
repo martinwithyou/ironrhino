@@ -131,11 +131,12 @@ public class ResultPage<T> implements Serializable {
 		this.totalResults = totalResults;
 	}
 
-	public Object getCriteria() {
-		return criteria;
+	@SuppressWarnings("unchecked")
+	public <CT> CT getCriteria() {
+		return (CT) criteria;
 	}
 
-	public void setCriteria(Object criteria) {
+	public <CT> void setCriteria(CT criteria) {
 		this.criteria = criteria;
 	}
 

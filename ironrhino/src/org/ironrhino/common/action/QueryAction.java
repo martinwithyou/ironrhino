@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.jdbc.JdbcQueryService;
+import org.ironrhino.core.jdbc.QueryCriteria;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
@@ -94,7 +95,8 @@ public class QueryAction extends BaseAction {
 			}
 			Map<String, String> copy = new HashMap<String, String>();
 			copy.putAll(paramMap);
-			resultPage = jdbcQueryService.query(sql, copy, resultPage);
+			resultPage.setCriteria(new QueryCriteria(sql, copy));
+			resultPage = jdbcQueryService.query(resultPage);
 		}
 		return SUCCESS;
 	}
