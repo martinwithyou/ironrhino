@@ -385,9 +385,8 @@ Richtable = {
 		}
 
 		var btn = event.target;
-				if ($(btn).prop('tagName') != 'BUTTON'
-						|| $(btn).prop('tagName') != 'A')
-					btn = $(btn).closest('button,a');
+		if ($(btn).prop('tagName') != 'BUTTON' || $(btn).prop('tagName') != 'A')
+			btn = $(btn).closest('button,a');
 		if ($(btn).closest('.btn').hasClass('confirm')) {
 			$.alerts.confirm($(btn).data('confirm')
 							|| MessageBundle.get('confirm.save'), MessageBundle
@@ -594,39 +593,54 @@ Observation.richtable = function(container) {
 					'change',
 					'input[type="checkbox"][name="check"],input[type="checkbox"]:not([name])',
 					function() {
-						var checked = 0;
+						var rows = [];
 						if ($(this).attr('name') === undefined) {
-							checked = this.checked
-									? $('tbody tr', $(this)
-													.closest('table.richtable')).length
-									: 0;
+							if (this.checked)
+								$('tbody tr',
+										$(this).closest('table.richtable'))
+										.each(function() {
+													rows.push(this);
+												});
 						} else {
 							$('tbody tr', $(this).closest('table.richtable'))
 									.each(function() {
 										if ($(
 												'td:eq(0) input[type="checkbox"]',
 												this).is(':checked'))
-											checked++;
+											rows.push(this);
 									});
 						}
 						var form = $(this).closest('form.richtable');
-						var selected = $(
-								'.toolbar .btn[data-shown="selected"]', form);
-						var singleselected = $(
-								'.toolbar .btn[data-shown="singleselected"]',
-								form);
-						var multiselected = $(
-								'.toolbar .btn[data-shown="multiselected"]',
-								form);
-						checked > 0
-								? selected.addClass('btn-primary').show()
-								: selected.removeClass('btn-primary').hide();
-						checked == 1 ? singleselected.addClass('btn-primary')
-								.show() : singleselected
-								.removeClass('btn-primary').hide();
-						checked > 1 ? multiselected.addClass('btn-primary')
-								.show() : multiselected
-								.removeClass('btn-primary').hide();
+						$('.toolbar .btn[data-shown]', form).each(function() {
+							var t = $(this);
+							var filter = t.data('filterselector');
+							var allmatch = t.data('allmatch');
+							if (allmatch == undefined)
+								allmatch = true;
+							var count = 0;
+							$.each(rows, function(i, v) {
+										var row = $(v);
+										try {
+											if (!filter || row.is(filter)
+													|| row.find(filter) > 0)
+												count++;
+										} catch (e) {
+
+										}
+									});
+							t.is('[data-shown="selected"]')
+									&& (!allmatch || count == rows.length)
+									&& count > 0
+									|| t.is('[data-shown="singleselected"]')
+									&& (!allmatch || count == rows.length)
+									&& count == 1
+									|| t.is('[data-shown="multiselected"]')
+									&& (!allmatch || count == rows.length)
+									&& count > 1 ? t.addClass('btn-primary')
+									.show() : t.removeClass('btn-primary')
+									.hide();
+						});
+
 					});
 	$('table.richtable', container).each(function() {
 				Richtable.enhance(this);

@@ -21,7 +21,7 @@
 <#if celleditable&&!readonly&&entityReadonly>
 <#local _rowDynamicAttributes=_rowDynamicAttributes+{"data-readonly":"true"}>
 </#if>
-<@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid dynamicAttributes=_rowDynamicAttributes/>
+<@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid enableable=enableable dynamicAttributes=_rowDynamicAttributes/>
 <#list columns?keys as name>
 	<#if columns[name]['value']??>
 	<#local value=columns[name]['value']>
@@ -76,13 +76,13 @@
 <tbody>
 </#macro>
 
-<#macro rttbodytrstart entity showCheckColumn=true multipleCheck=true rowid='' dynamicAttributes...>
+<#macro rttbodytrstart entity showCheckColumn=true multipleCheck=true rowid='' enableable=false dynamicAttributes...>
 <#if rowid==''>
 	<#local id=entity.id?string/>
 <#else>
 	<#local id><@rowid?interpret/></#local>
 </#if>
-<tr<#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if><#list dynamicAttributes?keys as attr><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?string}"</#list><#else> ${attr}="${dynamicAttributes[attr]?string}"</#if></#list>>
+<tr<#if enableable> data-enabled="${entity.enabled?string}"</#if><#if !showCheckColumn&&id?has_content> data-rowid="${id}"</#if><#list dynamicAttributes?keys as attr><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?string}"</#list><#else> ${attr}="${dynamicAttributes[attr]?string}"</#if></#list>>
 <#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if id?has_content> value="${id}"</#if> class="custom"/></td></#if>
 </#macro>
 
@@ -172,11 +172,11 @@
 <#if createable><button type="button" class="btn" data-view="input">${action.getText("create")}</button></#if>
 <#if celleditable><button type="button" class="btn confirm" data-action="save">${action.getText("save")}</button></#if>
 <#if enableable>
-<button type="button" class="btn confirm hidden-pad" data-action="enable" data-shown="selected">${action.getText("enable")}</button>
-<button type="button" class="btn confirm hidden-pad" data-action="disable" data-shown="selected">${action.getText("disable")}</button>
+<button type="button" class="btn confirm hidden-pad" data-action="enable" data-shown="selected" data-filterselector="[data-enabled='false']">${action.getText("enable")}</button>
+<button type="button" class="btn confirm hidden-pad" data-action="disable" data-shown="selected" data-filterselector="[data-enabled='true']">${action.getText("disable")}</button>
 </#if>
 </#if>
-<#if !readonly||deletable><button type="button" class="btn" data-action="delete" data-shown="selected">${action.getText("delete")}</button></#if>
+<#if !readonly||deletable><button type="button" class="btn" data-action="delete" data-shown="selected"<#if enableable> data-filterselector="[data-enabled='false']"</#if>>${action.getText("delete")}</button></#if>
 <button type="button" class="btn" data-action="reload">${action.getText("reload")}</button>
 </#if>
 </div>
