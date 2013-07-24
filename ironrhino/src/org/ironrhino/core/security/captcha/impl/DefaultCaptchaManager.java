@@ -14,7 +14,6 @@ import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.security.captcha.CaptchaManager;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.RequestUtils;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Singleton
 @Named("captchaManager")
@@ -113,8 +112,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 					required = new boolean[] { true, false };
 				} else if (captcha.bypassLoggedInUser()) {
 					required = new boolean[] {
-							AuthzUtils.getUserDetails(UserDetails.class) == null,
-							false };
+							AuthzUtils.getUserDetails() == null, false };
 				} else {
 					Integer threshold = (Integer) cacheManager.get(
 							getThresholdKey(request), KEY_CAPTCHA);

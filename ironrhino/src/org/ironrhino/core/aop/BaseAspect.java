@@ -9,7 +9,6 @@ import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
-import org.springframework.security.core.userdetails.UserDetails;
 
 public class BaseAspect implements Ordered {
 
@@ -56,7 +55,7 @@ public class BaseAspect implements Ordered {
 		if (!context.containsKey("args"))
 			context.put("args", jp.getArgs());
 		if (!context.containsKey("user"))
-			context.put("user", AuthzUtils.getUserDetails(UserDetails.class));
+			context.put("user", AuthzUtils.getUserDetails());
 		return context;
 	}
 

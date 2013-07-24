@@ -202,7 +202,7 @@ public class Oauth2Action extends BaseAction {
 			client = oauthManager.findClientById(client_id);
 			if (client == null)
 				throw new IllegalArgumentException("CLIENT_ID_INVALID");
-			User grantor = AuthzUtils.getUserDetails(User.class);
+			User grantor = AuthzUtils.getUserDetails();
 			if (!"force".equals(approval_prompt) && grantor != null) {
 				List<Authorization> auths = oauthManager
 						.findAuthorizationsByGrantor(grantor);
@@ -238,7 +238,7 @@ public class Oauth2Action extends BaseAction {
 	}
 
 	public String grant() {
-		User grantor = AuthzUtils.getUserDetails(User.class);
+		User grantor = AuthzUtils.getUserDetails();
 		if (grantor == null) {
 			HttpServletRequest request = ServletActionContext.getRequest();
 			HttpServletResponse response = ServletActionContext.getResponse();

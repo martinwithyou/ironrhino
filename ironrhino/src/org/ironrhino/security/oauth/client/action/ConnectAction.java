@@ -101,7 +101,7 @@ public class ConnectAction extends BaseAction {
 				targetUrl = "/oauth/connect";
 				return REDIRECT;
 			}
-			User user = AuthzUtils.getUserDetails(User.class);
+			User user = AuthzUtils.getUserDetails();
 			if (user == null) {
 				String id = p.getUid();
 				LoginEvent loginEvent;

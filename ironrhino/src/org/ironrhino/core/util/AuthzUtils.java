@@ -95,24 +95,24 @@ public class AuthzUtils {
 		return auth.getName();
 	}
 
-	public static UserDetails getUserDetails() {
-		return getUserDetails(UserDetails.class);
+	@SuppressWarnings("unchecked")
+	public static <T extends UserDetails> T getUserDetails() {
+		SecurityContext sc = SecurityContextHolder.getContext();
+		if (sc != null) {
+			Authentication auth = sc.getAuthentication();
+			if (auth != null) {
+				Object principal = auth.getPrincipal();
+				return principal instanceof UserDetails ? (T) principal : null;
+			}
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T extends UserDetails> T getUserDetails(Class<T> clazz) {
-		SecurityContext sc = SecurityContextHolder.getContext();
-		if (sc == null)
-			return null;
-		Authentication auth = sc.getAuthentication();
-		if (auth == null)
-			return null;
-		Object principal = auth.getPrincipal();
-		if (principal == null)
-			return null;
-		if (clazz.isAssignableFrom(principal.getClass()))
-			return (T) principal;
-		return null;
+		UserDetails ud = getUserDetails();
+		return ud != null && clazz.isAssignableFrom(ud.getClass()) ? (T) ud
+				: null;
 	}
 
 	public static void autoLogin(UserDetails ud) {

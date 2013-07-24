@@ -69,7 +69,7 @@ public class RecordAspect implements Ordered {
 	private void record(Persistable<?> entity, EntityOperationType action) {
 		try {
 			Record record = new Record();
-			UserDetails ud = AuthzUtils.getUserDetails(UserDetails.class);
+			UserDetails ud = AuthzUtils.getUserDetails();
 			if (ud != null) {
 				record.setOperatorId(ud.getUsername());
 				record.setOperatorClass(ud.getClass().getName());

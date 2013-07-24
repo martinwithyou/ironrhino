@@ -91,7 +91,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 		if (obj instanceof Recordable) {
 			Recordable r = (Recordable) obj;
 			Date date = new Date();
-			UserDetails user = AuthzUtils.getUserDetails(UserDetails.class);
+			UserDetails user = AuthzUtils.getUserDetails();
 			if (obj.isNew()) {
 				r.setCreateDate(date);
 				r.setCreateUserDetails(user);
