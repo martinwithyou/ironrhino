@@ -2,26 +2,6 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('query')}</title>
-<style>
-#result th:not(:first-of-type) {
-	text-align: center;
-	min-width: 100px;
-	padding: .5em 0;
-}
-#result th:first-of-type{
-	width:50px;
-}
-#result td {
-	white-space: nowrap;
-}
-textarea{
-	resize: vertical;
-}
-#tables,#tables_chzn{
-	vertical-align: top;
-	margin-left: 20px;
-}
-</style>
 <script>
 $(function(){
 	$(document).on('click','#result tbody .btn',function(){
@@ -76,10 +56,12 @@ $(function(){
 </head>
 <body>
 <@s.form id="query-form" action="${actionBaseUrl}" method="post" cssClass="form-horizontal ajax view history">
-	<@s.textarea label="sql" name="sql" cssClass="required span8" placeholder="select username,name,email from user where username=:username">
+	<@s.textarea label="sql" name="sql" cssClass="required span8" cssStyle="resize: vertical;" placeholder="select username,name,email from user where username=:username">
 	<#if tables?? && tables?size gt 0>
 	<@s.param name="after">
-	<@s.select id="tables" theme="simple" cssClass="chosen" cssStyle="" list="tables" listKey="top" listValue="top" headerKey="" headerValue=""/>
+	<div style="display:inline-block;vertical-align:top;margin-left:20px;">
+	<@s.select id="tables" theme="simple" cssClass="chosen" list="tables" listKey="top" listValue="top" headerKey="" headerValue=""/>
+	</div>
 	</@s.param>
 	</#if>
 	</@s.textarea>
@@ -93,10 +75,10 @@ $(function(){
 	<#if resultPage.result?size gt 0>
 	<#assign map=resultPage.result[0]/>
 	<div id="result">
-		<table class="pin table table-hover table-striped table-bordered sortable filtercolumn resizable">
+		<table class="pin table table-hover table-striped table-bordered sortable filtercolumn resizable" style="white-space: nowrap;">
 			<thead>
 			<tr>
-				<th class="nosort filtercolumn"></th>
+				<th class="nosort filtercolumn" style="width:50px;"></th>
 				<#list map.keySet() as name>
 				<th>${name}</th>
 				</#list>

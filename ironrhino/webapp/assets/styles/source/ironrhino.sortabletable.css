@@ -1,7 +1,11 @@
+.sortcol{
+	padding-left: 10px !important;
+	text-align: center!important;;
+}
 .sortcol div.sort{
 	cursor: pointer;
 	position: relative;
-	margin-left:2px;
+	margin-left: -10px;
 }
 .sortcol span.sort{
 	position:absolute;
