@@ -32181,7 +32181,7 @@ Initialization.common = function() {
 	}).on('mouseenter', '.popover,.tooltip', function() {
 				$(this).remove()
 			}).on('click', ':submit', function(e) {
-				$(this).addClass('_clicked_');
+				$(this).addClass('clicked');
 			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
@@ -32684,15 +32684,15 @@ Observation.common = function(container) {
 							'X-Fragment' : ids.join(',')
 						});
 			$(this).bind('submit', function(e) {
-				var btn = $('._clicked_:submit', this);
-				$(':submit', this).removeClass('_clicked_');
+				var btn = $('.clicked', this).removeClass('clicked');
 				if (btn.hasClass('noajax'))
 					return true;
 				var form = $(this);
 				var pushstate = false;
 				if (form.hasClass('history'))
 					pushstate = true;
-				if (form.parents('.ui-dialog,.tab-content').length)
+				if (btn.data('action')
+						|| form.parents('.ui-dialog,.tab-content').length)
 					pushstate = false;
 				if (pushstate && typeof history.pushState != 'undefined') {
 					var url = form.attr('action');
@@ -36566,20 +36566,6 @@ Richtable = {
 		win.closest('.ui-dialog').css('z-index', '2000');
 		$('.ui-dialog-titlebar-close', win.closest('.ui-dialog')).blur();
 	},
-	enter : function(event) {
-		var btn = event.target;
-		var form = $(btn).closest('form');
-		if ($(btn).prop('tagName') != 'BUTTON' || $(btn).prop('tagName') != 'A')
-			btn = $(btn).closest('.btn');
-		if (btn.attr('onclick') || btn.hasClass('raw'))
-			return;
-		var url = Richtable.getBaseUrl(form) + Richtable.getPathParams();
-		var tr = $(btn).closest('tr');
-		var id = tr.data('rowid')
-				|| $('input[type="checkbox"]:eq(0)', tr).val();
-		url += (url.indexOf('?') > 0 ? '&' : '?') + 'parentId=' + id;
-		document.location.href = url;
-	},
 	click : function(event) {
 		var btn = event.target;
 		var form = $(btn).closest('form');
@@ -36604,11 +36590,11 @@ Richtable = {
 			idparams = arr.join('&');
 		}
 		var action = $(btn).data('action');
+		if (action)
+			btn.addClass('clicked');
 		var view = $(btn).data('view');
 		if (action == 'reload')
 			$(form).submit();
-		else if (action == 'enter')
-			Richtable.enter(event);
 		else if (action == 'save')
 			Richtable.save(event);
 		else if (action) {

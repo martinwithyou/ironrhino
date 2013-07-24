@@ -577,7 +577,7 @@ Initialization.common = function() {
 	}).on('mouseenter', '.popover,.tooltip', function() {
 				$(this).remove()
 			}).on('click', ':submit', function(e) {
-				$(this).addClass('_clicked_');
+				$(this).addClass('clicked');
 			});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
@@ -1080,15 +1080,15 @@ Observation.common = function(container) {
 							'X-Fragment' : ids.join(',')
 						});
 			$(this).bind('submit', function(e) {
-				var btn = $('._clicked_:submit', this);
-				$(':submit', this).removeClass('_clicked_');
+				var btn = $('.clicked', this).removeClass('clicked');
 				if (btn.hasClass('noajax'))
 					return true;
 				var form = $(this);
 				var pushstate = false;
 				if (form.hasClass('history'))
 					pushstate = true;
-				if (form.parents('.ui-dialog,.tab-content').length)
+				if (btn.data('action')
+						|| form.parents('.ui-dialog,.tab-content').length)
 					pushstate = false;
 				if (pushstate && typeof history.pushState != 'undefined') {
 					var url = form.attr('action');

@@ -160,7 +160,10 @@
 <option value="${ps}"<#if resultPage.pageSize==ps><#local selected=true> selected</#if>>${ps}</option>
 </#list>
 <#if resultPage.canListAll>
-<option value="${resultPage.totalResults}"<#if !selected && resultPage.pageSize==resultPage.totalResults> selected</#if>>${action.getText('all')}</option>
+<option value="${resultPage.totalResults}"<#if !selected && resultPage.pageSize==resultPage.totalResults><#local selected=true> selected</#if>>${action.getText('all')}</option>
+</#if>
+<#if !selected !array?seq_contains(resultPage.pageSize)>
+<option value="${resultPage.pageSize}" selected>${resultPage.pageSize}</option>
 </#if>
 </select>
 </li>

@@ -208,20 +208,6 @@ Richtable = {
 		win.closest('.ui-dialog').css('z-index', '2000');
 		$('.ui-dialog-titlebar-close', win.closest('.ui-dialog')).blur();
 	},
-	enter : function(event) {
-		var btn = event.target;
-		var form = $(btn).closest('form');
-		if ($(btn).prop('tagName') != 'BUTTON' || $(btn).prop('tagName') != 'A')
-			btn = $(btn).closest('.btn');
-		if (btn.attr('onclick') || btn.hasClass('raw'))
-			return;
-		var url = Richtable.getBaseUrl(form) + Richtable.getPathParams();
-		var tr = $(btn).closest('tr');
-		var id = tr.data('rowid')
-				|| $('input[type="checkbox"]:eq(0)', tr).val();
-		url += (url.indexOf('?') > 0 ? '&' : '?') + 'parentId=' + id;
-		document.location.href = url;
-	},
 	click : function(event) {
 		var btn = event.target;
 		var form = $(btn).closest('form');
@@ -246,11 +232,11 @@ Richtable = {
 			idparams = arr.join('&');
 		}
 		var action = $(btn).data('action');
+		if (action)
+			btn.addClass('clicked');
 		var view = $(btn).data('view');
 		if (action == 'reload')
 			$(form).submit();
-		else if (action == 'enter')
-			Richtable.enter(event);
 		else if (action == 'save')
 			Richtable.save(event);
 		else if (action) {
