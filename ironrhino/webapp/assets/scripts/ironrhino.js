@@ -32230,7 +32230,9 @@ Initialization.common = function() {
 	}
 	if (document.location.search.indexOf('printpage=true') != -1) {
 		window.print();
-		window.close();
+		setTimeout(function() {
+					window.close();
+				}, 1000);
 	}
 };
 
