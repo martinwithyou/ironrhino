@@ -59,6 +59,8 @@ public class ZooKeeperLockService implements LockService {
 	@Override
 	public boolean tryLock(String name, long timeout, TimeUnit unit)
 			throws InterruptedException {
+		if (timeout <= 0)
+			return tryLock(name);
 		WriteLock lock = locks.get(name);
 		if (lock == null) {
 			locks.putIfAbsent(name, new WriteLock(zooKeeper, zooKeeperPath

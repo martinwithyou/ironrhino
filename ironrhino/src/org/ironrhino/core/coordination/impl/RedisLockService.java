@@ -45,6 +45,8 @@ public class RedisLockService implements LockService {
 	@Override
 	public boolean tryLock(String name, long timeout, TimeUnit unit)
 			throws InterruptedException {
+		if (timeout <= 0)
+			return tryLock(name);
 		String key = NAMESPACE + name;
 		boolean success = stringRedisTemplate.opsForValue()
 				.setIfAbsent(key, "");
