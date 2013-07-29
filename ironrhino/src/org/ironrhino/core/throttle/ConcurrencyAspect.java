@@ -25,25 +25,23 @@ public class ConcurrencyAspect extends BaseAspect {
 		order = -1000;
 	}
 
-	@Around("execution(public * *(..)) and @annotation(concurrencyControl)")
-	public Object control(ProceedingJoinPoint jp,
-			Concurrency concurrencyControl) throws Throwable {
+	@Around("execution(public * *(..)) and @annotation(concurrency)")
+	public Object control(ProceedingJoinPoint jp, Concurrency concurrency)
+			throws Throwable {
 		Map<String, Object> context = buildContext(jp);
 		String key = jp.getSignature().toLongString();
-		int permits = ExpressionUtils.evalInt(concurrencyControl.permits(),
-				context, 0);
-		if (!concurrencyControl.block()) {
-			if (concurrencyService
-					.tryAcquire(key, permits, concurrencyControl.timeout(),
-							concurrencyControl.timeUnit())) {
+		int permits = ExpressionUtils
+				.evalInt(concurrency.permits(), context, 0);
+		if (!concurrency.block()) {
+			if (concurrencyService.tryAcquire(key, permits,
+					concurrency.timeout(), concurrency.timeUnit())) {
 				try {
 					return jp.proceed();
 				} finally {
 					concurrencyService.release(key);
 				}
 			} else {
-				throw new ErrorMessage(
-						"no available permit for @ConcurrencyControl");
+				throw new ErrorMessage("no available permits for @Concurrency");
 			}
 		} else {
 			concurrencyService.acquire(key, permits);

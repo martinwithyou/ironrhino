@@ -20,7 +20,7 @@ public class ApplicationContextUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> T getBean(String name) {
 		try {
-			return (T)getApplicationContext().getBean(name);
+			return (T) getApplicationContext().getBean(name);
 		} catch (BeansException e) {
 			return null;
 		}

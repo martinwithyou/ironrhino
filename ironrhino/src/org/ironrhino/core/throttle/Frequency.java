@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 @Target({ METHOD })
 @Retention(RUNTIME)
-public @interface Concurrency {
+public @interface Frequency {
 
 	/**
 	 * 
@@ -17,12 +17,10 @@ public @interface Concurrency {
 	 * 
 	 * @return
 	 */
-	String permits();
+	String limits();
 
-	boolean block() default false;
+	int duration() default 1;
 
-	int timeout() default 0;
-
-	TimeUnit timeUnit() default TimeUnit.MILLISECONDS;
+	TimeUnit timeUnit() default TimeUnit.HOURS;
 
 }
