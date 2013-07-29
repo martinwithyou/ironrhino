@@ -69,6 +69,9 @@
 </#if>
 <#if !readonly&&entityReadonly>
 <#assign rowDynamicAttributes=rowDynamicAttributes+{"data-readonly":"true"}>
+<#if !readonlyConfig.deletable>
+<#assign rowDynamicAttributes=rowDynamicAttributes+{"data-deletable":"false"}>
+</#if>
 </#if>
 <@rttbodytrstart entity=entity dynamicAttributes=rowDynamicAttributes/>
 <#list uiConfigs?keys as key>

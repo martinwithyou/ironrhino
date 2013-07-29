@@ -183,7 +183,7 @@
 <button type="button" class="btn confirm hidden-pad" data-action="disable" data-shown="selected" data-filterselector="[data-enabled='true']:not([data-readonly='true'])">${action.getText("disable")}</button>
 </#if>
 </#if>
-<#if !readonly||deletable><button type="button" class="btn" data-action="delete" data-shown="selected"<#if enableable> data-filterselector="[data-enabled='false']"</#if>>${action.getText("delete")}</button></#if>
+<#if !readonly||deletable><button type="button" class="btn" data-action="delete" data-shown="selected" data-filterselector="<#if enableable>[data-enabled='false']</#if>:not([data-deletable='false'])">${action.getText("delete")}</button></#if>
 <button type="button" class="btn" data-action="reload">${action.getText("reload")}</button>
 </#if>
 </div>
