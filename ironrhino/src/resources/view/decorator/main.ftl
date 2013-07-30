@@ -1,8 +1,8 @@
 <#assign requestURI=request.requestURI?substring(request.contextPath?length)/>
-<#assign modernBrowser = false/>
-<#assign ua = request.getAttribute('userAgent')/>
-<#if ua?? && (ua.name!='msie' || ua.majorVersion gt 8)>
 <#assign modernBrowser = true/>
+<#assign ua = request.getAttribute('userAgent')!/>
+<#if ua?? && ua.name=='msie' && ua.majorVersion lt 9>
+<#assign modernBrowser = false/>
 </#if>
 <#if modernBrowser>
 <!DOCTYPE html>
@@ -26,7 +26,7 @@
 <link rel="shortcut icon" href="<@url value="/assets/images/favicon.ico"/>" />
 <link href="<@url value="/assets/styles/ironrhino${modernBrowser?string('-min','')}.css"/>" media="all" rel="stylesheet" type="text/css" />
 <#if !modernBrowser><link href="<@url value="/assets/styles/ie.css"/>" media="all" rel="stylesheet" type="text/css" /></#if>
-<script src="<@url value="/assets/scripts/ironrhino${modernBrowser?string('-min','')}.js"/>" type="text/javascript"<#if modernBrowser&&!head?contains('</script>')> defer</#if>></script>
+<script src="<@url value="/assets/scripts/ironrhino${modernBrowser?string('-min','-ie')}.js"/>" type="text/javascript"<#if modernBrowser&&!head?contains('</script>')> defer</#if>></script>
 <#include "include/assets.ftl"/>
 <#noescape>${head}</#noescape>
 </head>
