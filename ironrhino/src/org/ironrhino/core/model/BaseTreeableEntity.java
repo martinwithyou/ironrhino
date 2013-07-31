@@ -30,7 +30,7 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 @MappedSuperclass
-public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
+public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 		Entity<Long> implements Treeable<T>, Ordered {
 
 	private static final long serialVersionUID = 2462271646391940930L;
@@ -251,7 +251,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity> extends
 	}
 
 	public boolean isDescendantOrSelfOf(T t) {
-		return t != null && t.isAncestorOrSelfOf(this);
+		return t != null && t.isAncestorOrSelfOf((T)this);
 	}
 
 	public T getAncestor(int level) {
