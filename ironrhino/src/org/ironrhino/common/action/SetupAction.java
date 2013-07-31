@@ -106,7 +106,6 @@ public class SetupAction extends BaseAction {
 
 	private List<SetupParameterImpl> setupParameters;
 
-	@SuppressWarnings("unchecked")
 	public List<SetupParameterImpl> getSetupParameters() throws Exception {
 		if (setupParameters == null) {
 			setupParameters = new ArrayList<SetupParameterImpl>();
@@ -219,7 +218,8 @@ public class SetupAction extends BaseAction {
 		}
 	}
 
-	public static class SetupParameterImpl implements Serializable, Ordered {
+	public static class SetupParameterImpl implements Serializable,
+			Ordered<SetupParameterImpl> {
 
 		private static final long serialVersionUID = -3004203941981232510L;
 
@@ -314,13 +314,12 @@ public class SetupAction extends BaseAction {
 		}
 
 		@Override
-		public int compareTo(Object object) {
-			if (!(object instanceof Ordered))
-				return 0;
-			Ordered ordered = (Ordered) object;
-			if (this.getDisplayOrder() != ordered.getDisplayOrder())
-				return this.getDisplayOrder() - ordered.getDisplayOrder();
-			return this.toString().compareTo(ordered.toString());
+		public int compareTo(SetupParameterImpl sp) {
+			if (sp == null)
+				return 1;
+			if (this.getDisplayOrder() != sp.getDisplayOrder())
+				return this.getDisplayOrder() - sp.getDisplayOrder();
+			return this.toString().compareTo(sp.toString());
 		}
 
 		@Override

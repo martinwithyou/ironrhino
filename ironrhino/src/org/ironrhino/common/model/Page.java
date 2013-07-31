@@ -40,7 +40,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "common_page")
 public class Page extends BaseEntity implements Recordable<UserDetails>,
-		Ordered {
+		Ordered<Page> {
 
 	private static final long serialVersionUID = 4688382703803043164L;
 
@@ -281,13 +281,12 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	}
 
 	@Override
-	public int compareTo(Object object) {
-		if (!(object instanceof Ordered))
-			return 0;
-		Ordered ordered = (Ordered) object;
-		if (this.getDisplayOrder() != ordered.getDisplayOrder())
-			return this.getDisplayOrder() - ordered.getDisplayOrder();
-		return this.toString().compareTo(ordered.toString());
+	public int compareTo(Page page) {
+		if (page == null)
+			return 1;
+		if (this.getDisplayOrder() != page.getDisplayOrder())
+			return this.getDisplayOrder() - page.getDisplayOrder();
+		return this.toString().compareTo(page.toString());
 	}
 
 	@Override
