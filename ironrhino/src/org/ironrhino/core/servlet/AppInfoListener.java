@@ -23,21 +23,21 @@ public class AppInfoListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
-
+		Properties appProperties = getAppProperties();
 		String defaultProfiles = null;
 		if (StringUtils
 				.isBlank(System
 						.getProperty(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME))) {
-			String defaultProfilesKey = AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME
-					.replaceAll("\\.", "_").toUpperCase();
-			defaultProfiles = System.getenv(defaultProfilesKey);
+			defaultProfiles = System
+					.getenv(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME
+							.replaceAll("\\.", "_").toUpperCase());
 			if (StringUtils.isNotBlank(defaultProfiles)) {
 				System.setProperty(
 						AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME,
 						defaultProfiles);
 			} else {
-				defaultProfiles = getProperties().getProperty(
-						defaultProfilesKey);
+				defaultProfiles = appProperties
+						.getProperty(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME);
 				if (StringUtils.isNotBlank(defaultProfiles)) {
 					System.setProperty(
 							AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME,
@@ -46,15 +46,15 @@ public class AppInfoListener implements ServletContextListener {
 			}
 		}
 		ServletContext ctx = event.getServletContext();
-		String name = getProperties().getProperty(AppInfo.KEY_APP_NAME);
+		String name = appProperties.getProperty(AppInfo.KEY_APP_NAME);
 		if (StringUtils.isBlank(name))
 			name = ctx.getServletContextName();
 		if (StringUtils.isNotBlank(name))
 			AppInfo.setAppName(name);
-		String version = getProperties().getProperty(AppInfo.KEY_APP_VERSION);
+		String version = appProperties.getProperty(AppInfo.KEY_APP_VERSION);
 		if (StringUtils.isNotBlank(version))
 			AppInfo.setAppVersion(version);
-		String home = getProperties().getProperty(AppInfo.KEY_APP_HOME);
+		String home = appProperties.getProperty(AppInfo.KEY_APP_HOME);
 		if (StringUtils.isNotBlank(home))
 			AppInfo.setAppHome(home);
 		System.setProperty(AppInfo.KEY_APP_HOME, AppInfo.getAppHome());
@@ -64,8 +64,8 @@ public class AppInfoListener implements ServletContextListener {
 			context = "";
 		System.setProperty("app.context", context);
 
-		String appBasePackage = getProperties().getProperty(
-				AppInfo.KEY_APP_BASEPACKAGE);
+		String appBasePackage = appProperties
+				.getProperty(AppInfo.KEY_APP_BASEPACKAGE);
 		if (StringUtils.isBlank(appBasePackage))
 			appBasePackage = "com." + AppInfo.getAppName();
 		AppInfo.setAppBasePackage(appBasePackage);
@@ -89,7 +89,6 @@ public class AppInfoListener implements ServletContextListener {
 				AppInfo.getAppHome(), AppInfo.getHostName(), AppInfo
 						.getHostAddress(),
 				defaultProfiles != null ? defaultProfiles : "");
-		properties = null;
 	}
 
 	@Override
@@ -102,18 +101,14 @@ public class AppInfoListener implements ServletContextListener {
 				AppInfo.getHostAddress());
 	}
 
-	private Properties properties;
-
-	private Properties getProperties() {
-		if (properties == null) {
-			properties = new Properties();
-			Resource resource = new ClassPathResource("ironrhino.properties");
-			if (resource.exists()) {
-				try (InputStream is = resource.getInputStream()) {
-					properties.load(is);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+	private Properties getAppProperties() {
+		Properties properties = new Properties();
+		Resource resource = new ClassPathResource("ironrhino.properties");
+		if (resource.exists()) {
+			try (InputStream is = resource.getInputStream()) {
+				properties.load(is);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		return properties;
