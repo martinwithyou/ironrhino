@@ -263,8 +263,18 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				Class<?> returnType = pd.getPropertyType();
 				if (returnType.isEnum()) {
 					uci.setType("select");
-					uci.setListKey("name");
-					uci.setListValue("displayName");
+					try {
+						returnType.getMethod("getName");
+						uci.setListKey("name");
+					} catch (NoSuchMethodException e) {
+						uci.setListKey("top");
+					}
+					try {
+						returnType.getMethod("getDisplayName");
+						uci.setListValue("displayName");
+					} catch (NoSuchMethodException e) {
+						uci.setListValue("top");
+					}
 					try {
 						if (lists == null)
 							lists = new HashMap<String, List>();

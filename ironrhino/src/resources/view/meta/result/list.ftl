@@ -107,7 +107,7 @@
 				<option value=""></option>
 				</#if>
 				<#list lists[key] as var>
-				<option value="<#if config.listKey=='name'&&var.name()??>${var.name()}<#else>${var[config.listKey]}</#if>">${var[config.listValue]}</option>
+				<option value="<#if config.listKey=='top'>${var?string}<#else>${var[config.listKey]}</#if>"><#if config.listValue=='top'>${var?string}<#else>${var[config.listValue]}</#if></option>
 				</#list>
 		</select>
 		</textarea>
