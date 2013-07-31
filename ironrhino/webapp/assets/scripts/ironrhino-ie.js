@@ -31973,20 +31973,10 @@ Ajax = {
 				if (options.replaceTitle)
 					document.title = Ajax.title;
 			}
-			var replacement = {};
-			var entries = (options.replacement
-					|| $(target).data('replacement')
-					|| ($(target).prop('tagName') == 'FORM' ? $(target)
-							.attr('id') : null) || Ajax.defaultRepacement)
-					.split(',');
-			for (var i = 0; i < entries.length; i++) {
-				var entry = entries[i];
-				var ss = entry.split(':', 2);
-				replacement[ss[0]] = (ss.length == 2 ? ss[1] : ss[0]);
-			}
 			var html = data.replace(/<script(.|\s)*?\/script>/g, '');
 			var div = $('<div/>').html(html);
 			// others
+			var replacement = options.replacement;
 			for (var key in replacement) {
 				var r = $('#' + key);
 				if (key == Ajax.defaultRepacement && !r.length)
@@ -32000,7 +31990,10 @@ Ajax = {
 				}
 				var rep = div.find('#' + replacement[key]);
 				if (rep.length) {
-					r.html(rep.html());
+					if (rep.children().length == 0)
+						r.replaceWith(rep);
+					else
+						r.html(rep.html());
 				} else {
 					if (div.find('#content').length)
 						r.html(div.find('#content').html());
@@ -32071,8 +32064,27 @@ function ajaxOptions(options) {
 		options.dataType = 'text';
 	if (!options.headers)
 		options.headers = {};
+
 	$.extend(options.headers, {
 				'X-Data-Type' : options.dataType
+			});
+	var target = $(options.target);
+	var replacement = {};
+	var entries = (options.replacement
+			|| $(options.target).data('replacement')
+			|| ($(options.target).prop('tagName') == 'FORM' ? $(target)
+					.attr('id') : null) || Ajax.defaultRepacement).split(',');
+	var arr = [];
+	for (var i = 0; i < entries.length; i++) {
+		var entry = entries[i];
+		var ss = entry.split(':', 2);
+		var sss = ss.length == 2 ? ss[1] : ss[0];
+		replacement[ss[0]] = sss;
+		arr.push(sss != Ajax.defaultRepacement ? sss : '_');
+	}
+	options.replacement = replacement;
+	$.extend(options.headers, {
+				'X-Fragment' : arr.join(',')
 			});
 	var beforeSend = options.beforeSend;
 	options.beforeSend = function(xhr) {
@@ -32254,10 +32266,7 @@ if (HISTORY_ENABLED) {
 								url : url,
 								replaceTitle : true,
 								replacement : event.state.replacement,
-								cache : false,
-								headers : {
-									'X-Fragment' : '_'
-								}
+								cache : false
 							});
 				}
 			};
@@ -32285,9 +32294,6 @@ if (HISTORY_ENABLED) {
 								replaceTitle : true,
 								success : function() {
 									Nav.activate(url);
-								},
-								headers : {
-									'X-Fragment' : '_'
 								}
 							});
 				}, {
@@ -32636,19 +32642,9 @@ Observation.common = function(container) {
 	}
 	$('a.ajax,form.ajax', container).each(function() {
 		var target = this;
-		var ids = [];
-		var targetId = $(target).attr('id');
-		if (typeof targetId != 'string')
-			targetId = '';
-		var entries = ($(target).data('replacement') || ($(target)
-				.prop('tagName') == 'FORM' ? targetId : '')).split(',');
-		for (var i = 0; i < entries.length; i++) {
-			var entry = entries[i];
-			var ss = entry.split(':', 2);
-			var id = ss.length == 2 ? ss[1] : ss[0];
-			if (id)
-				ids.push(id);
-		}
+		var _opt = ajaxOptions({
+					'target' : target
+				});
 		if (this.tagName == 'FORM') {
 			var options = {
 				beforeSubmit : function() {
@@ -32671,19 +32667,13 @@ Observation.common = function(container) {
 					Ajax.fire(target, 'onerror');
 				},
 				success : function(data) {
-					Ajax.handleResponse(data, {
-								'target' : target
-							});
+					Ajax.handleResponse(data, _opt);
 				},
-				headers : {}
+				headers : _opt.headers
 			};
 			if (!$(this).hasClass('view'))
 				$.extend(options.headers, {
 							'X-Data-Type' : 'json'
-						});
-			if (ids.length > 0)
-				$.extend(options.headers, {
-							'X-Fragment' : ids.join(',')
 						});
 			$(this).bind('submit', function(e) {
 				var btn = $('.clicked', this).removeClass('clicked');
@@ -32783,32 +32773,16 @@ Observation.common = function(container) {
 					},
 					error : function() {
 						Ajax.fire(target, 'onerror');
-					},
-					headers : {}
-				};
-				var _opt = {
-					'target' : target
+					}
 				};
 				if (!$(this).hasClass('view'))
 					$.extend(options.headers, {
 								'X-Data-Type' : 'json'
 							});
-				if (ids.length > 0) {
-					$.extend(options.headers, {
-								'X-Fragment' : ids.join(',')
-							});
-				} else {
-					$.extend(options.headers, {
-								'X-Fragment' : '_'
-							});
-					_opt.replaceTitle = true;
-				}
-
-				options.success = function(data) {
+				options.onsuccess = function() {
 					Nav.activate(options.url);
-					Ajax.handleResponse(data, _opt);
 				};
-				$.ajax(options);
+				ajax(options);
 				return false;
 			});
 		}
