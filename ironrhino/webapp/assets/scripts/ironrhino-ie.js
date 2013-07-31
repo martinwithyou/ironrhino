@@ -36270,6 +36270,22 @@ Observation.tags = function(container) {
 								});
 							});
 				}
+			} else if (t.attr('list') && $('#' + t.attr('list')).length) {
+				options.plugins = 'tags prompt focus autocomplete arrow';
+				var list = [];
+				$('option', $('#' + t.attr('list'))).each(function() {
+							list.push(this.value);
+						});
+				t.bind('getSuggestions', function(e, data) {
+							var textext = $(e.target).textext()[0], query = (data
+									? data.query
+									: '')
+									|| '';
+							$(this).trigger('setSuggestions', {
+								result : textext.itemManager().filter(list,
+										query)
+							});
+						});
 			} else {
 				options.plugins = 'tags prompt focus';
 			}
