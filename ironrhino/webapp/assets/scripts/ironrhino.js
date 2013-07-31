@@ -35284,17 +35284,32 @@ Observation.tags = function(container) {
 					options.tagsItems = value.split(',');
 			}
 			if (t.data('source')) {
-				options.plugins = 'tags prompt focus autocomplete ajax arrow';
-				options.ajax = {
-					global : false,
-					url : t.data('source'),
-					cacheResults : false,
-					dataCallback : function(q) {
-						return {
-							'keyword' : q
-						};
-					}
-				};
+				if (t.data('source').indexOf('[') != 0) {
+					options.plugins = 'tags prompt focus autocomplete ajax arrow';
+					options.ajax = {
+						global : false,
+						url : t.data('source'),
+						cacheResults : false,
+						dataCallback : function(q) {
+							return {
+								'keyword' : q
+							};
+						}
+					};
+				} else {
+					options.plugins = 'tags prompt focus autocomplete arrow';
+					var list = (new Function("return " + t.data('source')))();
+					t.bind('getSuggestions', function(e, data) {
+								var textext = $(e.target).textext()[0], query = (data
+										? data.query
+										: '')
+										|| '';
+								$(this).trigger('setSuggestions', {
+									result : textext.itemManager().filter(list,
+											query)
+								});
+							});
+				}
 			} else {
 				options.plugins = 'tags prompt focus';
 			}
