@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.sitemesh.OldDecorator2NewStrutsFreemarkerDecorator;
 import org.ironrhino.core.util.HtmlUtils;
 
@@ -30,7 +31,7 @@ public class MyOldDecorator2NewStrutsFreemarkerDecorator extends
 			HttpServletResponse response, ServletContext servletContext,
 			ActionContext ctx) throws ServletException, IOException {
 		String replacement = request.getHeader(X_FRAGMENT);
-		if (replacement != null) {
+		if (StringUtils.isNotBlank(replacement)) {
 			if ("_".equals(replacement)) {
 				Writer writer = response.getWriter();
 				try {
@@ -49,11 +50,16 @@ public class MyOldDecorator2NewStrutsFreemarkerDecorator extends
 				try {
 					StringWriter writer = new StringWriter();
 					content.writeBody(writer);
-					response.getWriter().write(
-							HtmlUtils.compress(writer.toString(),
-									replacement.split(",")));
-					response.getWriter().flush();
-					return;
+					String compressed = HtmlUtils.compress(writer.toString(),
+							replacement.split(","));
+					if (compressed == null || compressed.length() == 0) {
+						super.render(content, request, response,
+								servletContext, ctx);
+					} else {
+						response.getWriter().write(compressed);
+						response.getWriter().flush();
+						return;
+					}
 				} catch (Exception e) {
 
 				}
