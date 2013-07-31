@@ -23,14 +23,29 @@ public class AppInfoListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
+
+		String defaultProfiles = null;
+		if (StringUtils
+				.isBlank(System
+						.getProperty(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME))) {
+			String defaultProfilesKey = AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME
+					.replaceAll("\\.", "_").toUpperCase();
+			defaultProfiles = System.getenv(defaultProfilesKey);
+			if (StringUtils.isNotBlank(defaultProfiles)) {
+				System.setProperty(
+						AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME,
+						defaultProfiles);
+			} else {
+				defaultProfiles = getProperties().getProperty(
+						defaultProfilesKey);
+				if (StringUtils.isNotBlank(defaultProfiles)) {
+					System.setProperty(
+							AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME,
+							defaultProfiles);
+				}
+			}
+		}
 		ServletContext ctx = event.getServletContext();
-		String defaultProfiles = System
-				.getenv(AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME
-						.replaceAll("\\.", "_").toUpperCase());
-		if (StringUtils.isNotBlank(defaultProfiles))
-			System.setProperty(
-					AbstractEnvironment.DEFAULT_PROFILES_PROPERTY_NAME,
-					defaultProfiles);
 		String name = getProperties().getProperty(AppInfo.KEY_APP_NAME);
 		if (StringUtils.isBlank(name))
 			name = ctx.getServletContextName();
@@ -69,10 +84,11 @@ public class AppInfoListener implements ServletContextListener {
 		logger.info("default timezone {}", TimeZone.getDefault().getID());
 		logger.info(
 				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={},profiles={}",
-				AppInfo.getAppName(), AppInfo.getAppVersion(),
-				AppInfo.getInstanceId(), AppInfo.getStage().toString(),
-				AppInfo.getAppHome(), AppInfo.getHostName(),
-				AppInfo.getHostAddress(), defaultProfiles);
+				AppInfo.getAppName(), AppInfo.getAppVersion(), AppInfo
+						.getInstanceId(), AppInfo.getStage().toString(),
+				AppInfo.getAppHome(), AppInfo.getHostName(), AppInfo
+						.getHostAddress(),
+				defaultProfiles != null ? defaultProfiles : "");
 		properties = null;
 	}
 
