@@ -1,9 +1,11 @@
 package org.ironrhino.common.model;
 
+import org.ironrhino.core.model.Displayable;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
-public enum SchemaFieldType {
+public enum SchemaFieldType implements Displayable {
 	SELECT, CHECKBOX, INPUT, GROUP;
 	public String getName() {
 		return name();

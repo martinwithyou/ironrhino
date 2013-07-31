@@ -1,9 +1,11 @@
 package org.ironrhino.common.model;
 
+import org.ironrhino.core.model.Displayable;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
-public enum Gender {
+public enum Gender implements Displayable {
 
 	MALE, FEMALE;
 
