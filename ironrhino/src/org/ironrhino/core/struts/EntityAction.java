@@ -1323,6 +1323,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	public static class UiConfigImpl implements Serializable {
 		private static final long serialVersionUID = -5963246979386241924L;
+		private String id;
 		private String type = UiConfig.DEFAULT_TYPE;
 		private String inputType = UiConfig.DEFAULT_INPUT_TYPE;
 		private boolean required;
@@ -1354,6 +1355,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		public UiConfigImpl(UiConfig config) {
 			if (config == null)
 				return;
+			if (StringUtils.isNotBlank(config.id()))
+				this.id = config.id();
 			this.type = config.type();
 			this.inputType = config.inputType();
 			this.listKey = config.listKey();
@@ -1464,6 +1467,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public void setDisplayOrder(int displayOrder) {
 			this.displayOrder = displayOrder;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
 		}
 
 		public String getType() {
