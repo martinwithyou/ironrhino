@@ -35607,8 +35607,10 @@ Richtable = {
 			close : function() {
 				if (reloadonclose
 						&& ($('#_window_ form.ajax').hasClass('forcereload') || !$('#_window_ form.ajax')
-								.hasClass('dontreload')))
+								.hasClass('dontreload'))) {
+					$('[data-action]:eq(0)', form).addClass('clicked');
 					$(form).submit();
+				}
 				win.html('').dialog('destroy').remove();
 			},
 			beforeClose : function(event, ui) {
