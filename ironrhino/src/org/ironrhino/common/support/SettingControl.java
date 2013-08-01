@@ -23,7 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationListener;
 
 @Singleton
-@Named("settingControl")
+@Named
 public class SettingControl implements
 		ApplicationListener<EntityOperationEvent> {
 
