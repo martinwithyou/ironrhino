@@ -32,18 +32,18 @@ public class QueryAction extends BaseAction {
 
 	private static final long serialVersionUID = 8180265410790553918L;
 
-	private String sql;
+	protected String sql;
 
-	private Set<String> params;
+	protected Set<String> params;
 
-	private List<String> tables;
+	protected List<String> tables;
 
-	private Map<String, String> paramMap = new HashMap<String, String>();
+	protected Map<String, String> paramMap = new HashMap<String, String>();
 
-	private ResultPage<Map<String, Object>> resultPage;
+	protected ResultPage<Map<String, Object>> resultPage;
 
 	@Inject
-	private transient JdbcQueryService jdbcQueryService;
+	protected transient JdbcQueryService jdbcQueryService;
 
 	public String getSql() {
 		return sql;
