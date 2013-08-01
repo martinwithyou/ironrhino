@@ -38,7 +38,7 @@
 				</#if>
 			<#elseif config.type=='listpick'>
 				<#if !readonly>
-					<div class="control-group listpick" data-options="{'url':'<@url value=config.pickUrl/>','name':'#${key}','id':'#${id}'}">
+					<div class="control-group listpick" data-options="{'url':'<@url value=config.pickUrl/>','name':'#${id}-control','id':'#${id}'}">
 						<@s.hidden id=id name=entityName+"."+key+".id" cssClass=config.cssClass/>
 						<label class="control-label" for="${id}-control">${action.getText(label)}</label>
 						<div class="controls">
