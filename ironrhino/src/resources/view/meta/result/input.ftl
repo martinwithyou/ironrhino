@@ -20,25 +20,26 @@
 		<#assign readonly=naturalIds?keys?seq_contains(key)&&!naturalIdMutable&&!isnew||config.readonly||config.readonlyExpression?has_content&&config.readonlyExpression?eval>
 		<#if !(entity.new && readonly)>
 			<#if config.type=='textarea'>
-				<@s.textarea label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" cssStyle="${(config.cssClass?contains('span')||config.cssClass?contains('input-'))?string('','width:400px;')}height:150px;" readonly=readonly dynamicAttributes=config.dynamicAttributes/>
+				<@s.textarea id=config.id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass cssStyle=(config.cssClass?contains('span')||config.cssClass?contains('input-'))?string('','width:400px;')+"height:150px;" readonly=readonly dynamicAttributes=config.dynamicAttributes/>
 			<#elseif config.type=='checkbox'>
 				<#if !readonly>
-					<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass+config.cssClass?has_content?string(' ','')}custom" dynamicAttributes=config.dynamicAttributes />
+					<@s.checkbox id=config.id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass+config.cssClass?has_content?string(' ','')+"custom" dynamicAttributes=config.dynamicAttributes />
 				<#else>
-					<@s.hidden name="${entityName}.${key}" />
-					<@s.checkbox label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" disabled="true" dynamicAttributes=config.dynamicAttributes />
+					<@s.hidden name=entityName+"."+key />
+					<@s.checkbox id=config.id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass disabled="true" dynamicAttributes=config.dynamicAttributes />
 				</#if>
 			<#elseif config.type=='select'>
 				<#if !readonly>
-					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes/>
+					<@s.select id=config.id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass list="lists."+key listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes/>
 				<#else>
-					<@s.hidden name="${entityName}.${key}" value="%{${entityName+'.'+key+'.id'}}"/>
-					<@s.select label="%{getText('${label}')}" name="${entityName}.${key}" cssClass="${config.cssClass}" list="lists.${key}" listKey="${config.listKey}" listValue="${config.listValue}"  headerKey="" headerValue="" disabled="true" dynamicAttributes=config.dynamicAttributes />
+					<@s.hidden name=entityName+"."+key value="%{${entityName+'.'+key+'.id'}}"/>
+					<@s.select id=config.id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass list="lists."+key listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" disabled="true" dynamicAttributes=config.dynamicAttributes />
 				</#if>
 			<#elseif config.type=='listpick'>
+				<#assign _id=config.id?has_content?string(config.id,key+'-id')/>
 				<#if !readonly>
-					<div class="control-group listpick" data-options="{'url':'<@url value="${config.pickUrl}"/>','name':'#${key}','id':'#${key}Id'}">
-						<@s.hidden id="${key}Id" name="${entityName}.${key}.id" cssClass="${config.cssClass}"/>
+					<div class="control-group listpick" data-options="{'url':'<@url value=config.pickUrl/>','name':'#${key}','id':'#${_id}'}">
+						<@s.hidden id=_id name=entityName+"."+key+".id" cssClass=config.cssClass/>
 						<label class="control-label" for="${key}">${action.getText(label)}</label>
 						<div class="controls">
 						<span id="${key}"><#if entity[key]??><#if entity[key].fullname??>${entity[key].fullname!}<#else>${entity[key]!}</#if><a class="remove" href="#">&times;</a><#else>...</#if></span>
@@ -57,10 +58,10 @@
 				<label class="control-label" for="${key}">${action.getText(label)}</label>
 				<div class="controls">
 				<#if !readonly>
-					<@selectDictionary dictionaryName=templateName id=key name="${entityName}.${key}" value="${entity[key]!}" required=config.required class="${config.cssClass}" dynamicAttributes=config.dynamicAttributes/>
+					<@selectDictionary id=config.id dictionaryName=templateName name=entityName+"."+key value="${entity[key]!}" required=config.required class=config.cssClass dynamicAttributes=config.dynamicAttributes/>
 				<#else>
-					<@s.hidden name="${entityName}.${key}"/>
-					<span id="${key}"><@displayDictionaryLabel dictionaryName=templateName value="${entity[key]!}"/></span>
+					<@s.hidden id=config.id name=entityName+"."+key/>
+					<span id="${key}"><@displayDictionaryLabel dictionaryName=templateName value=entity[key]!/></span>
 				</#if>
 				</div>
 				</div>
@@ -73,16 +74,17 @@
 			<#elseif config.type=='imageupload'>
 				<#if !readonly>
 					<div class="control-group">
-						<@s.hidden id="${entityName}-${key}" name="${entityName}.${key}" cssClass="nocheck ${config.cssClass}" maxlength="${(config.maxlength gt 0)?string(config.maxlength,'')}" dynamicAttributes=config.dynamicAttributes/>
-						<label class="control-label" for="${key}">${action.getText(label)}</label>
+						<#assign _id=config.id?has_content?string(config.id,key+'-id')/>
+						<@s.hidden id=_id name=entityName+"."+key cssClass=config.cssClass+" nocheck" maxlength=(config.maxlength gt 0)?string(config.maxlength,'') dynamicAttributes=config.dynamicAttributes/>
+						<label class="control-label" for="${_id}-upload-button">${action.getText(label)}</label>
 						<div class="controls">
 							<div style="margin-bottom:5px;">
-							<button class="btn concatimage" type="button" data-target="${entityName}-${key}-image" data-field="${entityName}-${key}" data-maximum="1">${action.getText('upload')}</button>
+							<button id="${_id}-upload-button" class="btn concatimage" type="button" data-target="${_id}-image" data-field="${_id}" data-maximum="1">${action.getText('upload')}</button>
 							<#if config.cssClasses?seq_contains('concatsnapshot')>
-							<button class="btn concatsnapshot" type="button" data-target="${entityName}-${key}-image" data-field="${entityName}-${key}" data-maximum="1">${action.getText('snapshot')}</button>
+							<button class="btn concatsnapshot" type="button" data-target="${_id}-image" data-field="${_id}" data-maximum="1">${action.getText('snapshot')}</button>
 							</#if>
 							</div>
-							<div id="${entityName}-${key}-image" style="text-align:center;min-height:100px;border:1px solid #ccc;">
+							<div id="${_id}-image" style="text-align:center;min-height:100px;border:1px solid #ccc;">
 								<#if entity[key]?has_content>
 									<img src="${entity[key]}" title="${action.getText('drag.image.file')}"/>
 								<#else>
@@ -93,14 +95,19 @@
 					</div>
 				<#else>
 					<div class="control-group">
-						<label class="control-label" for="${key}">${action.getText(label)}</label>
+						<@s.hidden id=_id name=entityName+"."+key cssClass=config.cssClass+" nocheck" maxlength=(config.maxlength gt 0)?string(config.maxlength,'') dynamicAttributes=config.dynamicAttributes/>
+						<label class="control-label">${action.getText(label)}</label>
 						<div class="controls">
-						<span id="${key}">${entity[key]!}</span>
+							<span>
+							<#if entity[key]?has_content>
+								<img src="${entity[key]}" title="${action.getText('drag.image.file')}"/>
+							</#if>
+							</span>
 						</div>
 					</div>
 				</#if>
 			<#else>
-				<@s.textfield label="%{getText('${label}')}" name="${entityName}.${key}" type="${(config.inputType!)}" cssClass="${config.cssClass}" maxlength="${(config.maxlength gt 0)?string(config.maxlength,'')}" readonly=readonly dynamicAttributes=config.dynamicAttributes />
+				<@s.textfield id=config.id label="%{getText('${label}')}" name=entityName+"."+key type=config.inputType cssClass=config.cssClass maxlength="${(config.maxlength gt 0)?string(config.maxlength,'')}" readonly=readonly dynamicAttributes=config.dynamicAttributes />
 			</#if>
 		</#if>
 		</#if>
