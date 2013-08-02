@@ -20,11 +20,12 @@ public class LabelValue implements Serializable {
 	private Boolean selected;
 
 	public LabelValue() {
+
 	}
 
-	public LabelValue(String value, String label) {
-		this.value = value;
+	public LabelValue(String label, String value) {
 		this.label = label;
+		this.value = value;
 	}
 
 	public String getLabel() {

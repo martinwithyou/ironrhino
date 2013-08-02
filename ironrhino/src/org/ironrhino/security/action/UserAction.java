@@ -1,7 +1,9 @@
 package org.ironrhino.security.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -15,6 +17,7 @@ import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
@@ -45,7 +48,7 @@ public class UserAction extends BaseAction {
 
 	private String[] roleId;
 
-	private Map<String, String> roles;
+	private List<LabelValue> roles;
 
 	private ResultPage<User> resultPage;
 
@@ -70,7 +73,7 @@ public class UserAction extends BaseAction {
 		this.roleId = roleId;
 	}
 
-	public Map<String, String> getRoles() {
+	public List<LabelValue> getRoles() {
 		return roles;
 	}
 
@@ -156,10 +159,12 @@ public class UserAction extends BaseAction {
 			while (it.hasNext())
 				roleId[i++] = it.next();
 		}
-		roles = userRoleManager.getAllRoles();
-		for (Map.Entry<String, String> entry : roles.entrySet())
-			if (StringUtils.isBlank(entry.getValue()))
-				entry.setValue(getText(entry.getKey()));
+		Map<String, String> map = userRoleManager.getAllRoles();
+		roles = new ArrayList<LabelValue>(map.size());
+		for (Map.Entry<String, String> entry : map.entrySet())
+			roles.add(new LabelValue(
+					StringUtils.isNotBlank(entry.getValue()) ? entry.getValue()
+							: getText(entry.getKey()), entry.getKey()));
 		return INPUT;
 	}
 
@@ -285,6 +290,18 @@ public class UserAction extends BaseAction {
 	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
 	public String self() {
 		user = AuthzUtils.getUserDetails();
+		return JSON;
+	}
+
+	@JsonConfig(root = "roles")
+	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
+	public String roles() {
+		Map<String, String> map = userRoleManager.getAllRoles();
+		roles = new ArrayList<LabelValue>(map.size());
+		for (Map.Entry<String, String> entry : map.entrySet())
+			roles.add(new LabelValue(
+					StringUtils.isNotBlank(entry.getValue()) ? entry.getValue()
+							: getText(entry.getKey()), entry.getKey()));
 		return JSON;
 	}
 

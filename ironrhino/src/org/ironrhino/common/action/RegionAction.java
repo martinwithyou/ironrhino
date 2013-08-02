@@ -378,7 +378,7 @@ public class RegionAction extends BaseAction {
 		List<Region> result = entityManager.findListByCriteria(dc);
 		list = new ArrayList(result.size());
 		for (Region r : result)
-			list.add(new LabelValue(r.getId().toString(), r.getFullname()));
+			list.add(new LabelValue(r.getFullname(), r.getId().toString()));
 		return JSON;
 	}
 }
