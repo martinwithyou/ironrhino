@@ -86,8 +86,6 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@Transient
 	private Collection<GrantedAuthority> authorities;
 
-	@NotInCopy
-	@NotInJson
 	@SearchableProperty
 	@Transient
 	private Set<String> roles = new HashSet<String>(0);

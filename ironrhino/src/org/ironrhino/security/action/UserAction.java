@@ -2,7 +2,6 @@ package org.ironrhino.security.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,8 +45,6 @@ public class UserAction extends BaseAction {
 
 	private User user;
 
-	private String[] roleId;
-
 	private List<LabelValue> roles;
 
 	private ResultPage<User> resultPage;
@@ -64,14 +61,6 @@ public class UserAction extends BaseAction {
 
 	@Autowired(required = false)
 	private transient ElasticSearchService<User> elasticSearchService;
-
-	public String[] getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(String[] roleId) {
-		this.roleId = roleId;
-	}
 
 	public List<LabelValue> getRoles() {
 		return roles;
@@ -153,11 +142,7 @@ public class UserAction extends BaseAction {
 		if (user == null) {
 			user = new User();
 		} else {
-			roleId = new String[user.getRoles().size()];
-			Iterator<String> it = user.getRoles().iterator();
-			int i = 0;
-			while (it.hasNext())
-				roleId[i++] = it.next();
+
 		}
 		Map<String, String> map = userRoleManager.getAllRoles();
 		roles = new ArrayList<LabelValue>(map.size());
@@ -177,11 +162,6 @@ public class UserAction extends BaseAction {
 			return INPUT;
 		if (StringUtils.isBlank(user.getEmail()))
 			user.setEmail(null);
-		user.getRoles().clear();
-		if (roleId != null) {
-			for (String role : roleId)
-				user.getRoles().add(role);
-		}
 		userManager.save(user);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;

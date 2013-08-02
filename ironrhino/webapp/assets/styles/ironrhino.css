@@ -8051,7 +8051,10 @@ input[type="radio"].custom + label.custom:active, input[type="radio"].custom:che
 .radio.inline, .checkbox.inline {
 	padding-left: 0px;
 }
-.controls > .radio.inline:first-child, .controls > .checkbox.inline{
+.controls > .radio.inline, .controls > .checkbox.inline{
+	padding-left: 40px;
+}
+.controls > .radio.inline:first-child, .controls > .checkbox.inline:first-child{
 	padding-left: 20px;
 }
 .inline > label.custom {
