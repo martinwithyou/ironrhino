@@ -66,6 +66,7 @@ input.required {
 }
 textarea{
 	height: 150px;
+	resize: vertical;
 }
 span.checkboxgroup{
 	display: inline-block;

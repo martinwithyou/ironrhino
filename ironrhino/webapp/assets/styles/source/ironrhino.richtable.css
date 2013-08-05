@@ -19,6 +19,10 @@ table.richtable th {
 	min-width: 60px;
 	padding: 0.5em 0;
 }
+table.richtable td {
+	word-wrap: break-word;
+	white-space: pre-wrap;
+}
 .richtable th,.richtable .toolbar .action {
 	text-align: center;
 }
