@@ -58,14 +58,13 @@ ul.portal-column {
 	clear:none;
 	float:left;
 	margin:5px 2px 0 2px;
-	width:4px;
+	width:5px;
 	border-radius: 40px;
 	-webkit-border-radius: 40px;
 	-moz-border-radius: 40px;
-	padding: 5px 13px;
 }
 .portlet-icon a i{
-	margin-left:-4.5px;
+	margin-left:-4px;
 }
 
 .portlet-content{
