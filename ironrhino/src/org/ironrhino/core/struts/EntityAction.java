@@ -206,9 +206,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					.getPropertyDescriptors(clazz);
 			for (PropertyDescriptor pd : pds) {
 				String propertyName = pd.getName();
-				if (pd.getReadMethod() == null)
-					continue;
-				if (pd.getWriteMethod() == null
+				if (pd.getReadMethod() == null
+						|| pd.getWriteMethod() == null
 						&& pd.getReadMethod().getAnnotation(UiConfig.class) == null)
 					continue;
 				SearchableProperty searchableProperty = pd.getReadMethod()
@@ -244,6 +243,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					continue;
 				if ("new".equals(propertyName) || "id".equals(propertyName)
 						|| "class".equals(propertyName)
+						|| "fieldHandler".equals(propertyName)
 						|| pd.getReadMethod() == null
 						|| hides.contains(propertyName))
 					continue;
