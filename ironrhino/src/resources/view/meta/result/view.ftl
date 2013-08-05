@@ -7,6 +7,7 @@
 	<div class="form-horizontal">
 	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
+		<#if !config.hiddenInView>
 		<#assign label=key>
 		<#if config.alias??>
 			<#assign label=config.alias>
@@ -74,6 +75,7 @@
 			</#if>
 			</div>
 		</div>
+		</#if>
 	</#list>
 	</div>
 </body>

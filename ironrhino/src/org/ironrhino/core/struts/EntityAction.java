@@ -1332,6 +1332,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private String alias;
 		private boolean hiddenInList;
 		private boolean hiddenInInput;
+		private boolean hiddenInView;
 		private String template;
 		private String width;
 		private Map<String, String> dynamicAttributes = new HashMap<String, String>(
@@ -1367,6 +1368,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				this.alias = config.alias();
 			this.hiddenInList = config.hiddenInList();
 			this.hiddenInInput = config.hiddenInInput();
+			this.hiddenInView = config.hiddenInView();
 			this.template = config.template();
 			this.width = config.width();
 			if (StringUtils.isNotBlank(config.dynamicAttributes()))
@@ -1406,6 +1408,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public void setHiddenInInput(boolean hiddenInInput) {
 			this.hiddenInInput = hiddenInInput;
+		}
+
+		public boolean isHiddenInView() {
+			return hiddenInView;
+		}
+
+		public void setHiddenInView(boolean hiddenInView) {
+			this.hiddenInView = hiddenInView;
 		}
 
 		public String getPickUrl() {
