@@ -7,10 +7,8 @@ import java.util.Map;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -76,7 +74,6 @@ public class TreeNode extends BaseTreeableEntity<TreeNode> implements
 	@NotInCopy
 	@Column(name = "attributes")
 	@Lob
-	@Basic(fetch = FetchType.LAZY)
 	@Access(AccessType.PROPERTY)
 	public String getAttributesAsString() {
 		if (attributes == null || attributes.isEmpty()

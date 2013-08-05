@@ -9,10 +9,8 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -92,7 +90,6 @@ public class Dictionary extends BaseEntity {
 	@UiConfig(hidden = true)
 	@Column(name = "items")
 	@Lob
-	@Basic(fetch = FetchType.LAZY)
 	@Access(AccessType.PROPERTY)
 	public String getItemsAsString() {
 		if (items == null || items.isEmpty())

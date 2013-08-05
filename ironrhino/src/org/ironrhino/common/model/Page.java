@@ -10,10 +10,8 @@ import java.util.Set;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -55,13 +53,11 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@NotInJson
 	@Lob
-	@Basic(fetch = FetchType.LAZY)
 	private String head;
 
 	@NotInJson
 	@SearchableProperty
 	@Lob
-	@Basic(fetch = FetchType.LAZY)
 	@Column(nullable = false)
 	private String content;
 
@@ -70,7 +66,6 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@NotInJson
 	@Lob
-	@Basic(fetch = FetchType.LAZY)
 	private String draft;
 
 	private Date draftDate;
