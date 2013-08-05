@@ -37,6 +37,7 @@ import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 @Singleton
 @Named
@@ -115,6 +116,7 @@ public class JdbcQueryService {
 				+ ",\\s]+)", Pattern.CASE_INSENSITIVE);
 	}
 
+	@Transactional(readOnly = true)
 	public List<String> getTables() {
 		List<String> tables = new ArrayList<String>();
 		Connection con = DataSourceUtils.getConnection(jdbcTemplate
@@ -141,6 +143,7 @@ public class JdbcQueryService {
 		return tables;
 	}
 
+	@Transactional(readOnly = true)
 	public void validate(String sql) {
 		sql = refineSql(sql);
 		if (restricted) {
@@ -244,6 +247,7 @@ public class JdbcQueryService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public long count(String sql, Map<String, ?> paramMap) {
 		sql = refineSql(sql);
 		String alias = "tfc";
@@ -255,20 +259,22 @@ public class JdbcQueryService {
 				paramMap, Long.class);
 	}
 
+	@Transactional(readOnly = true)
 	public List<Map<String, Object>> query(String sql, Map<String, ?> paramMap) {
 		return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 	}
 
+	@Transactional(readOnly = true)
 	public void query(String sql, Map<String, ?> paramMap,
 			RowCallbackHandler rch) {
 		namedParameterJdbcTemplate.query(sql, paramMap, rch);
 	}
-
+	@Transactional(readOnly = true)
 	public List<Map<String, Object>> query(String sql, Map<String, ?> paramMap,
 			final int limit) {
 		return query(sql, paramMap, limit, 0);
 	}
-
+	@Transactional(readOnly = true)
 	public List<Map<String, Object>> query(String sql, Map<String, ?> paramMap,
 			final int limit, final int offset) {
 		sql = refineSql(sql);
@@ -426,6 +432,7 @@ public class JdbcQueryService {
 				});
 	}
 
+	@Transactional(readOnly = true)
 	public ResultPage<Map<String, Object>> query(
 			ResultPage<Map<String, Object>> resultPage) {
 		QueryCriteria criteria = resultPage.getCriteria();
