@@ -180,14 +180,6 @@
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
-		<taskdef name="instrument" classname="org.hibernate.tool.instrument.javassist.InstrumentTask">
-			<classpath refid="lib.classpath" />
-		</taskdef>
-		<instrument verbose="true">
-			<fileset dir="${classes.dir}">
-				<include name="**/model/*.class" />
-			</fileset>
-		</instrument>
 	</target>
 
 	<target name="test" depends="compile">
