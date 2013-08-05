@@ -73,7 +73,7 @@ public class AuthzUtils {
 	}
 
 	public static boolean hasPermission(Secured entity) {
-		return hasPermission(entity, true);
+		return hasPermission(entity, false);
 	}
 
 	public static boolean hasPermission(Secured entity, boolean defaultWhenEmpty) {
