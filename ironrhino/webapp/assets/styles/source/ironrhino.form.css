@@ -64,6 +64,9 @@ input.required {
 	background-repeat: no-repeat;
 	background-position: right;
 }
+textarea{
+	height: 150px;
+}
 span.checkboxgroup{
 	display: inline-block;
 	margin:0 20px;

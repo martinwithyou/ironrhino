@@ -73,10 +73,14 @@ public class AuthzUtils {
 	}
 
 	public static boolean hasPermission(Secured entity) {
+		return hasPermission(entity, true);
+	}
+
+	public static boolean hasPermission(Secured entity, boolean defaultWhenEmpty) {
 		if (entity == null)
 			return false;
 		if (entity.getRoles() == null || entity.getRoles().size() == 0)
-			return true;
+			return defaultWhenEmpty;
 		List<String> roleNames = getRoleNames();
 		for (String s : entity.getRoles()) {
 			if (roleNames.contains(s))

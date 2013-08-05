@@ -10,13 +10,13 @@
 	</#if>
 	<#if Parameters.brief??>
 		<@s.hidden name="setting.key"/>
-		<@s.textarea label="%{getText('description')}" name="setting.description" tabindex="-1" readonly=true cssStyle="width:400px;height:20px;border:none;resize:none;outline:none;"/>
+		<@s.textarea label="%{getText('description')}" name="setting.description" tabindex="-1" readonly=true  cssClass="input-xxlarge" cssStyle="height:20px;border:none;resize:none;outline:none;"/>
 	<#else>
-		<@s.textfield label="%{getText('key')}" name="setting.key" cssClass="required checkavailable span4"/>
+		<@s.textfield label="%{getText('key')}" name="setting.key" cssClass="required checkavailable input-xxlarge"/>
 	</#if>
-	<@s.textarea label="%{getText('value')}" name="setting.value" cssClass="span4" cssStyle="height:150px;"/>
+	<@s.textarea label="%{getText('value')}" name="setting.value" cssClass="input-xxlarge"/>
 	<#if !Parameters.brief??>
-		<@s.textarea label="%{getText('description')}" name="setting.description" cssClass="span4" cssStyle="height:150px;" />
+		<@s.textarea label="%{getText('description')}" name="setting.description" cssClass="input-xxlarge"/>
 	</#if>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>

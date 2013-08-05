@@ -5,9 +5,9 @@
 </head>
 <body>
 <@s.form action="apply" method="post" cssClass="ajax reset form-horizontal">
-	<@s.textfield label="%{getText('name')}" name="client.name" cssClass="required checkavailable span4"/>
-	<@s.textfield label="%{getText('redirectUri')}" name="client.redirectUri" cssClass="required span4"/>
-	<@s.textarea label="%{getText('description')}" name="client.description" cssClass="span4" cssStyle="height:150px;"/>
+	<@s.textfield label="%{getText('name')}" name="client.name" cssClass="required checkavailable input-xxlarge"/>
+	<@s.textfield label="%{getText('redirectUri')}" name="client.redirectUri" cssClass="required  input-xxlarge"/>
+	<@s.textarea label="%{getText('description')}" name="client.description" cssClass=" input-xxlarge"/>
 	<@s.submit value="%{getText('apply')}" />
 </@s.form>
 </body>

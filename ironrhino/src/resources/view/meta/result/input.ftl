@@ -21,7 +21,7 @@
 		<#if !(entity.new && readonly)>
 			<#assign id=(config.id?has_content)?string(config.id!,entityName+'-'+key)/>
 			<#if config.type=='textarea'>
-				<@s.textarea id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass cssStyle=(config.cssClass?contains('span')||config.cssClass?contains('input-'))?string('','width:400px;')+"height:150px;" readonly=readonly dynamicAttributes=config.dynamicAttributes/>
+				<@s.textarea id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass+(config.cssClass?contains('span')||config.cssClass?contains('input-'))?string('',' input-xxlarge') readonly=readonly dynamicAttributes=config.dynamicAttributes/>
 			<#elseif config.type=='checkbox'>
 				<#if !readonly>
 					<@s.checkbox id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass+config.cssClass?has_content?string(' ','')+"custom" dynamicAttributes=config.dynamicAttributes />
