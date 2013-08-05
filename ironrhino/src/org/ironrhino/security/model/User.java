@@ -25,7 +25,6 @@ import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
-import org.ironrhino.core.model.Secured;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
@@ -44,7 +43,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 @Entity
 @Table(name = "`user`")
 public class User extends BaseEntity implements UserDetails, Recordable<User>,
-		Enableable, Secured {
+		Enableable {
 
 	private static final long serialVersionUID = -6135434863820342822L;
 
@@ -151,12 +150,10 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		return phone;
 	}
 
-	@Override
 	public Set<String> getRoles() {
 		return roles;
 	}
 
-	@Override
 	@NotInCopy
 	@NotInJson
 	@Column(name = "roles")
@@ -269,7 +266,6 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		this.roles = roles;
 	}
 
-	@Override
 	public void setRolesAsString(String rolesAsString) {
 		roles.clear();
 		if (StringUtils.isNotBlank(rolesAsString))
