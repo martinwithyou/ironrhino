@@ -2,6 +2,7 @@ package org.ironrhino.security.service;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -32,6 +33,18 @@ public class UserRoleManager {
 		providers = ctx.getBeansOfType(UserRoleProvider.class).values();
 	}
 
+	public Set<String> getStaticRoles(boolean excludeBuiltin) {
+		Set<String> roles = getStaticRoles();
+		if (excludeBuiltin) {
+			Set<String> set = new LinkedHashSet<String>();
+			for (String s : roles)
+				if (!s.startsWith("ROLE_BUILTIN_"))
+					set.add(s);
+			roles = set;
+		}
+		return roles;
+	}
+
 	public Set<String> getStaticRoles() {
 		if (staticRoles == null) {
 			Set<String> temp = new LinkedHashSet<String>();
@@ -45,13 +58,11 @@ public class UserRoleManager {
 				} else {
 					Field[] fields = c.getDeclaredFields();
 					for (Field f : fields) {
-						if (f.getName().startsWith("ROLE_BUILTIN_"))
-							continue;
 						temp.add(f.getName());
 					}
 				}
 			}
-			staticRoles = temp;
+			staticRoles = Collections.unmodifiableSet(temp);
 		}
 		return staticRoles;
 	}
@@ -66,8 +77,8 @@ public class UserRoleManager {
 		return customRoles;
 	}
 
-	public Map<String, String> getAllRoles() {
-		Set<String> staticRoles = getStaticRoles();
+	public Map<String, String> getAllRoles(boolean excludeBuiltin) {
+		Set<String> staticRoles = getStaticRoles(excludeBuiltin);
 		Map<String, String> customRoles = getCustomRoles();
 		Map<String, String> roles = new LinkedHashMap<String, String>(
 				staticRoles.size() + customRoles.size());

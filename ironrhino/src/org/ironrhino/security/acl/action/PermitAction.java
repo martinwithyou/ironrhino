@@ -210,7 +210,7 @@ public class PermitAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		roles = userRoleManager.getAllRoles();
+		roles = userRoleManager.getAllRoles(false);
 		for (Map.Entry<String, String> entry : roles.entrySet())
 			if (StringUtils.isBlank(entry.getValue()))
 				entry.setValue(getText(entry.getKey()));

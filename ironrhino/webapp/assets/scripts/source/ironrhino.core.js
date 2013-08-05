@@ -1159,6 +1159,7 @@ Observation.common = function(container) {
 
 				}
 				var options = {
+					target : this,
 					url : this.href,
 					type : $(this).data('method') || 'GET',
 					cache : $(this).hasClass('cache'),

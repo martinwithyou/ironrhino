@@ -95,7 +95,6 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 
 	private void populateAuthorities(User user) {
 		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
-		auths.add(new SimpleGrantedAuthority(UserRole.ROLE_BUILTIN_ANONYMOUS));
 		auths.add(new SimpleGrantedAuthority(UserRole.ROLE_BUILTIN_USER));
 		for (String role : user.getRoles())
 			auths.add(new SimpleGrantedAuthority(role));

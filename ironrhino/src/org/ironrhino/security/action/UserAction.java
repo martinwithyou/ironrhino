@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -144,7 +145,7 @@ public class UserAction extends BaseAction {
 		} else {
 
 		}
-		Map<String, String> map = userRoleManager.getAllRoles();
+		Map<String, String> map = userRoleManager.getAllRoles(true);
 		roles = new ArrayList<LabelValue>(map.size());
 		for (Map.Entry<String, String> entry : map.entrySet())
 			roles.add(new LabelValue(
@@ -276,7 +277,9 @@ public class UserAction extends BaseAction {
 	@JsonConfig(root = "roles")
 	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
 	public String roles() {
-		Map<String, String> map = userRoleManager.getAllRoles();
+		Map<String, String> map = userRoleManager
+				.getAllRoles(ServletActionContext.getRequest().getParameter(
+						"excludeBuiltin") != null);
 		roles = new ArrayList<LabelValue>(map.size());
 		for (Map.Entry<String, String> entry : map.entrySet())
 			roles.add(new LabelValue(
