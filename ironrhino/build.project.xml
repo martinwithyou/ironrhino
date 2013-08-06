@@ -18,6 +18,8 @@
 	<property file="build.properties" />
 	<property name="version" value="1.0" />
 	<property name="jar.name" value="app-${version}.jar" />
+	
+	<import file="build.include.xml" optional="true"/>
 
 	<condition property="cmd.suffix" value="bat">
 		<os family="windows" />
@@ -171,6 +173,12 @@
 	<target name="compile" depends="sync">
 		<antcall target="clean" />
 		<antcall target="init" />
+		<script language="javascript">
+			<![CDATA[
+			if(project.getTargets().containsKey('pre-compile'))
+				project.executeTarget('pre-compile');
+			]]>
+		</script>
 		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source"
 			srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8">
 			<classpath refid="lib.classpath" />
@@ -180,10 +188,22 @@
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
+		<script language="javascript">
+			<![CDATA[
+			if(project.getTargets().containsKey('post-compile'))
+				project.executeTarget('post-compile');
+			]]>
+		</script>
 	</target>
 
 	<target name="test" depends="compile">
 		<mkdir dir="${test.classes.dir}" />
+		<script language="javascript">
+			<![CDATA[
+			if(project.getTargets().containsKey('pre-test'))
+				project.executeTarget('pre-test');
+			]]>
+		</script>
 		<javac includeantruntime="false" debug="true" debuglevel="lines,vars,source"
 			srcdir="${test.src.dir}" destdir="${test.classes.dir}" encoding="utf-8">
 			<classpath>
@@ -196,6 +216,12 @@
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
+		<script language="javascript">
+			<![CDATA[
+			if(project.getTargets().containsKey('post-test'))
+				project.executeTarget('post-test');
+			]]>
+		</script>		
 		<mkdir dir="${test.results.dir}" />
 		<junit haltonfailure="no" printsummary="on">
 			<classpath>
