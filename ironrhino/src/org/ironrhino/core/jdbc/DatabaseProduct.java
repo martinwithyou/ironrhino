@@ -63,6 +63,7 @@ public enum DatabaseProduct {
 				sb.append(":").append(port);
 			sb.append("/").append(databaseName);
 			if (StringUtils.isNotBlank(params)) {
+				params = params.replaceAll("&", ";");
 				if (!params.startsWith(";"))
 					sb.append(";");
 				sb.append(params);
@@ -90,8 +91,12 @@ public enum DatabaseProduct {
 			if (port > 0 && port != getDefaultPort())
 				sb.append(":").append(port);
 			sb.append("/").append(databaseName);
-			if (StringUtils.isNotBlank(params))
-				sb.append(":").append(params);
+			if (StringUtils.isNotBlank(params)) {
+				params = params.replaceAll("&", ":");
+				if (!params.startsWith(":"))
+					sb.append(":");
+				sb.append(params);
+			}
 			return sb.toString();
 		}
 
@@ -115,6 +120,14 @@ public enum DatabaseProduct {
 			if (port > 0 && port != getDefaultPort())
 				sb.append(":").append(port);
 			sb.append(";DatabaseName=").append(databaseName);
+			if (StringUtils.isNotBlank(params)) {
+				params = params.replaceAll("&", ";");
+				if (!params.startsWith(";"))
+					sb.append(";");
+				sb.append(params);
+				if (!params.endsWith(";"))
+					sb.append(";");
+			}
 			return sb.toString();
 		}
 	},
@@ -138,6 +151,11 @@ public enum DatabaseProduct {
 			if (port > 0 && port != getDefaultPort())
 				sb.append(":").append(port);
 			sb.append("/").append(databaseName);
+			if (StringUtils.isNotBlank(params)) {
+				if (!params.startsWith("?"))
+					sb.append("?");
+				sb.append(params);
+			}
 			return sb.toString();
 		}
 	},
@@ -156,6 +174,12 @@ public enum DatabaseProduct {
 			if (port > 0 && port != getDefaultPort())
 				sb.append(":").append(port);
 			sb.append("/").append(databaseName);
+			if (StringUtils.isNotBlank(params)) {
+				params = params.replaceAll("&", ";");
+				if (!params.startsWith(";"))
+					sb.append(";");
+				sb.append(params);
+			}
 			return sb.toString();
 		}
 	},
@@ -179,6 +203,12 @@ public enum DatabaseProduct {
 			if (port > 0 && port != getDefaultPort())
 				sb.append(":").append(port);
 			sb.append("/").append(databaseName);
+			if (StringUtils.isNotBlank(params)) {
+				params = params.replaceAll("&", ";");
+				if (!params.startsWith(";"))
+					sb.append(";");
+				sb.append(params);
+			}
 			return sb.toString();
 		}
 
@@ -203,6 +233,7 @@ public enum DatabaseProduct {
 				sb.append(":").append(port);
 			sb.append("/").append(databaseName);
 			if (StringUtils.isNotBlank(params)) {
+				params = params.replaceAll("&", ";");
 				if (!params.startsWith(";"))
 					sb.append(";");
 				sb.append(params);
@@ -284,8 +315,11 @@ public enum DatabaseProduct {
 		if (port > 0 && port != getDefaultPort())
 			sb.append(":").append(port);
 		sb.append("/").append(databaseName);
-		if (StringUtils.isNotBlank(params))
-			sb.append("?").append(params);
+		if (StringUtils.isNotBlank(params)) {
+			if (!params.startsWith("?"))
+				sb.append("?");
+			sb.append(params);
+		}
 		return sb.toString();
 	}
 
