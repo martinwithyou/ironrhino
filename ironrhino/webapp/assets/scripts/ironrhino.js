@@ -31550,7 +31550,7 @@ Observation.common = function(container) {
 																				+ 7,
 																		data
 																				.indexOf('</title>')));
-									if (data.indexOf('<body>') >= 0
+									if (data.indexOf('<body') >= 0
 											&& data.indexOf('</body>') > 0)
 										t
 												.attr(
@@ -31558,8 +31558,12 @@ Observation.common = function(container) {
 														data
 																.substring(
 																		data
-																				.indexOf('<body>')
-																				+ 6,
+																				.indexOf(
+																						'>',
+																						data
+																								.indexOf('<body')
+																								+ 5)
+																				+ 1,
 																		data
 																				.indexOf('</body>')));
 									t.popover(options).popover('show');
