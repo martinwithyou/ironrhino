@@ -121,7 +121,7 @@ public enum DatabaseProduct {
 	SYBASE {
 		@Override
 		public int getDefaultPort() {
-			return 7100;
+			return 4100;
 		}
 
 		@Override
