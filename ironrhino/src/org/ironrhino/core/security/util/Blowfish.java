@@ -28,7 +28,7 @@ public class Blowfish {
 
 	private static String CIPHER_NAME = "Blowfish/CFB8/NoPadding";
 	private static String KEY_SPEC_NAME = "Blowfish";
-	public static int KEY_LENGTH = 128;
+	public static int KEY_LENGTH = 16;
 	// thread safe
 	private static final ThreadLocal<SoftReference<Blowfish>> pool = new ThreadLocal<SoftReference<Blowfish>>() {
 		@Override
@@ -76,8 +76,6 @@ public class Blowfish {
 		if (defaultKey == null)
 			defaultKey = AppInfo.getAppName();
 		defaultKey = CodecUtils.fuzzify(AppInfo.getAppName());
-		if (defaultKey.length() > KEY_LENGTH / 8)
-			defaultKey = defaultKey.substring(0, KEY_LENGTH / 8);
 	}
 
 	public Blowfish() {
@@ -85,11 +83,12 @@ public class Blowfish {
 	}
 
 	public Blowfish(String key) {
+		key = DigestUtils.md5Hex(key).substring(0, KEY_LENGTH);
 		try {
 			SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(),
 					KEY_SPEC_NAME);
 			IvParameterSpec ivParameterSpec = new IvParameterSpec(
-					(DigestUtils.md5Hex(key).substring(0, 8)).getBytes());
+					(key.substring(0, 8)).getBytes());
 			enCipher = Cipher.getInstance(CIPHER_NAME);
 			deCipher = Cipher.getInstance(CIPHER_NAME);
 			enCipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
