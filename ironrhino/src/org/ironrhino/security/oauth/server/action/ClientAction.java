@@ -40,8 +40,7 @@ public class ClientAction extends EntityAction<Client> {
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "client.redirectUri", trim = true, key = "validation.required") })
 	public String apply() {
 		BaseManager<Client> entityManager = getEntityManager(Client.class);
-		User user = AuthzUtils.getUserDetails();
-		client.setOwner(user);
+		client.setOwner(AuthzUtils.<User> getUserDetails());
 		entityManager.save(client);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
@@ -52,8 +51,7 @@ public class ClientAction extends EntityAction<Client> {
 	public String mine() {
 		BaseManager<Client> entityManager = getEntityManager(Client.class);
 		DetachedCriteria dc = entityManager.detachedCriteria();
-		User user = AuthzUtils.getUserDetails();
-		dc.add(Restrictions.eq("owner", user));
+		dc.add(Restrictions.eq("owner", AuthzUtils.<User> getUserDetails()));
 		if (resultPage == null)
 			resultPage = new ResultPage<Client>();
 		resultPage.setCriteria(dc);
