@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.jdbc.JdbcQueryService;
 import org.ironrhino.core.jdbc.QueryCriteria;
+import org.ironrhino.core.jdbc.SqlUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
@@ -82,7 +83,7 @@ public class QueryAction extends BaseAction {
 		tables = jdbcQueryService.getTables();
 		if (StringUtils.isNotBlank(sql)) {
 			jdbcQueryService.validate(sql);
-			params = jdbcQueryService.extractParameters(sql);
+			params = SqlUtils.extractParameters(sql);
 			if (params.size() > 0) {
 				for (String s : params) {
 					if (!paramMap.containsKey(s)) {
@@ -104,7 +105,7 @@ public class QueryAction extends BaseAction {
 	public String export() throws Exception {
 		if (StringUtils.isNotBlank(sql)) {
 			jdbcQueryService.validate(sql);
-			params = jdbcQueryService.extractParameters(sql);
+			params = SqlUtils.extractParameters(sql);
 			if (params.size() > 0) {
 				for (String s : params) {
 					if (!paramMap.containsKey(s)) {
