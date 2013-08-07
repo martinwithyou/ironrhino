@@ -103,10 +103,14 @@
 	</#if>
 	<#local cellDynamicAttributes=_cellDynamicAttributes>
 </#if>
-<#if cellDynamicAttributes?keys?size gt 0>
-<#local dynamicAttributes=dynamicAttributes+cellDynamicAttributes>
+<#if dynamicAttributes['dynamicAttributes']??>
+<#local dynamicAttributes=dynamicAttributes+dynamicAttributes['dynamicAttributes']>
 </#if>
-<td<#if celleditable><#if value??><#if value?is_boolean> data-cellvalue="${value?string}"</#if><#if value?is_hash&&value.displayName??> data-cellvalue="${value.name()}"</#if></#if></#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>><#rt>
+<#if cellDynamicAttributes['class']?? && dynamicAttributes['class']??>
+<#local cellDynamicAttributes=cellDynamicAttributes+{'class':dynamicAttributes['class']+' '+cellDynamicAttributes['class']}>
+</#if>
+<#local dynamicAttributes=dynamicAttributes+cellDynamicAttributes>
+<td<#if celleditable><#if value??><#if value?is_boolean> data-cellvalue="${value?string}"</#if><#if value?is_hash&&value.displayName??> data-cellvalue="${value.name()}"</#if></#if></#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>><#rt>
 <#if template==''>
 	<#if value??>
 		<#if value?is_boolean>
