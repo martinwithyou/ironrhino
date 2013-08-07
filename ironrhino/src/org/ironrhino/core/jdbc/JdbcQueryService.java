@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -112,8 +111,6 @@ public class JdbcQueryService {
 			DataSourceUtils
 					.releaseConnection(con, jdbcTemplate.getDataSource());
 		}
-		TABLE_PATTERN = Pattern.compile("from\\s+([\\w\\." + quoteString
-				+ ",\\s]+)", Pattern.CASE_INSENSITIVE);
 	}
 
 	@Transactional(readOnly = true)
@@ -145,9 +142,9 @@ public class JdbcQueryService {
 
 	@Transactional(readOnly = true)
 	public void validate(String sql) {
-		sql = refineSql(sql);
+		sql = SqlUtils.refineSql(sql);
 		if (restricted) {
-			for (String table : extractTables(sql)) {
+			for (String table : SqlUtils.extractTables(sql)) {
 				if (table.indexOf('.') < 0)
 					continue;
 				if (table.startsWith(quoteString)
@@ -174,7 +171,7 @@ public class JdbcQueryService {
 				}
 			}
 		}
-		Set<String> names = extractParameters(sql);
+		Set<String> names = SqlUtils.extractParameters(sql);
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		for (String name : names)
 			paramMap.put(name, "0");
@@ -249,7 +246,7 @@ public class JdbcQueryService {
 
 	@Transactional(readOnly = true)
 	public long count(String sql, Map<String, ?> paramMap) {
-		sql = refineSql(sql);
+		sql = SqlUtils.refineSql(sql);
 		String alias = "tfc";
 		while (sql.contains(alias))
 			alias += "0";
@@ -269,15 +266,17 @@ public class JdbcQueryService {
 			RowCallbackHandler rch) {
 		namedParameterJdbcTemplate.query(sql, paramMap, rch);
 	}
+
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> query(String sql, Map<String, ?> paramMap,
 			final int limit) {
 		return query(sql, paramMap, limit, 0);
 	}
+
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> query(String sql, Map<String, ?> paramMap,
 			final int limit, final int offset) {
-		sql = refineSql(sql);
+		sql = SqlUtils.refineSql(sql);
 		if (hasLimit(sql))
 			return namedParameterJdbcTemplate.queryForList(sql, paramMap);
 		if (databaseProduct == DatabaseProduct.MYSQL
@@ -438,7 +437,7 @@ public class JdbcQueryService {
 		QueryCriteria criteria = resultPage.getCriteria();
 		String sql = criteria.getQuery();
 		Map<String, ?> paramMap = criteria.getParameters();
-		sql = refineSql(sql);
+		sql = SqlUtils.refineSql(sql);
 		validateAndConvertTypes(sql, paramMap);
 		boolean hasLimit = hasLimit(sql);
 		resultPage.setPaginating(!hasLimit);
@@ -455,33 +454,6 @@ public class JdbcQueryService {
 		resultPage.setResult(query(sql, paramMap, resultPage.getPageSize(),
 				(resultPage.getPageNo() - 1) * resultPage.getPageSize()));
 		return resultPage;
-	}
-
-	public Set<String> extractParameters(String sql) {
-		Set<String> names = new LinkedHashSet<String>();
-		Matcher m = PARAMETER_PATTERN.matcher(sql);
-		while (m.find())
-			names.add(m.group().substring(1));
-		return names;
-	}
-
-	private Set<String> extractTables(String sql) {
-		Set<String> names = new LinkedHashSet<String>();
-		Matcher m = TABLE_PATTERN.matcher(sql);
-		while (m.find()) {
-			String arr[] = m.group(1).split(",");
-			for (String s : arr) {
-				names.add(s.trim().split("\\s+")[0]);
-			}
-		}
-		return names;
-	}
-
-	private static String refineSql(String sql) {
-		sql = sql.trim();
-		if (sql.endsWith(";"))
-			sql = sql.substring(0, sql.length() - 1);
-		return sql;
 	}
 
 	private static String trimOrderby(String sql) {
@@ -509,12 +481,6 @@ public class JdbcQueryService {
 		}
 		return false;
 	}
-
-	private Pattern TABLE_PATTERN = Pattern.compile(
-			"from\\s+([\\w\\.\"'`,\\s]+)", Pattern.CASE_INSENSITIVE);
-
-	private static final Pattern PARAMETER_PATTERN = Pattern.compile(
-			"(:[a-z]\\w*)", Pattern.CASE_INSENSITIVE);
 
 	private static final Pattern ORDERBY_PATTERN = Pattern.compile(
 			"\\s+order\\s+by\\s+.+$", Pattern.CASE_INSENSITIVE);
