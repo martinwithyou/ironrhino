@@ -58,6 +58,8 @@ public @interface UiConfig {
 	String width() default "";
 
 	String dynamicAttributes() default ""; // json map
+	
+	String cellDynamicAttributes() default ""; // json map
 
 	boolean excludeIfNotEdited() default false;
 

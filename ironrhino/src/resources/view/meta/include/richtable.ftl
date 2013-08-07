@@ -36,11 +36,11 @@
 		<#local value=('entity.'+name)?eval!>
 	</#if>
 	</#if>
-	<#local dynamicAttributes=columns[name]['dynamicAttributes']!{}>
+	<#local dynamicAttributes={}>
 	<#if columns[name]['readonlyExpression']?has_content && columns[name]['readonlyExpression']?eval>
 		<#local dynamicAttributes=dynamicAttributes+{'data-readonly':'true'}/>
 	</#if>
-	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']! dynamicAttributes=dynamicAttributes/>
+	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']! cellDynamicAttributes=columns[name]['dynamicAttributes'] dynamicAttributes=dynamicAttributes/>
 </#list>
 <@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
@@ -90,7 +90,22 @@
 <#if showCheckColumn><td class="<#if multipleCheck>checkbox<#else>radio</#if>"><input type="<#if multipleCheck>checkbox<#else>radio</#if>" name="check"<#if id?has_content> value="${id}"</#if> class="custom"/></td></#if>
 </#macro>
 
-<#macro rttbodytd value,entity,celleditable=true,template='',dynamicAttributes...>
+<#macro rttbodytd value,entity,celleditable=true,template='',cellDynamicAttributes='',dynamicAttributes...>
+<#if cellDynamicAttributes?is_string>
+	<#local _cellDynamicAttributes={}>
+	<#if cellDynamicAttributes?has_content>
+		<#local _cellDynamicAttributes><@cellDynamicAttributes?interpret /></#local>
+		<#if _cellDynamicAttributes?has_content>
+			<#local _cellDynamicAttributes=_cellDynamicAttributes?eval>
+		<#else>
+			<#local _cellDynamicAttributes={}>
+		</#if>
+	</#if>
+	<#local cellDynamicAttributes=_cellDynamicAttributes>
+</#if>
+<#if cellDynamicAttributes?keys?size gt 0>
+<#local dynamicAttributes=dynamicAttributes+cellDynamicAttributes>
+</#if>
 <td<#if celleditable><#if value??><#if value?is_boolean> data-cellvalue="${value?string}"</#if><#if value?is_hash&&value.displayName??> data-cellvalue="${value.name()}"</#if></#if></#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if><#if attr=='dynamicAttributes'><#list dynamicAttributes['dynamicAttributes']?keys as attr> ${attr}="${dynamicAttributes['dynamicAttributes'][attr]?html}"</#list></#if></#list>><#rt>
 <#if template==''>
 	<#if value??>

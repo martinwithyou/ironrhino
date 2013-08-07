@@ -89,7 +89,7 @@
 		<#if config.readonlyExpression?has_content && config.readonlyExpression?eval>
 		<#assign dynamicAttributes=dynamicAttributes+{'data-readonly':'true'}/>
 		</#if>
-		<@rttbodytd entity=entity value=value template=uiConfigs[key].template dynamicAttributes=dynamicAttributes/>
+		<@rttbodytd entity=entity value=value template=uiConfigs[key].template cellDynamicAttributes=config.cellDynamicAttributes dynamicAttributes=dynamicAttributes/>
 	</#if>
 </#list>	
 <@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly viewable=viewable entityReadonly=entityReadonly/>

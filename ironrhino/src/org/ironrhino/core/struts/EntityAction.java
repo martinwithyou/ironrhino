@@ -1337,6 +1337,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private String width;
 		private Map<String, String> dynamicAttributes = new HashMap<String, String>(
 				0);
+		private String cellDynamicAttributes = "";
 		private boolean excludeIfNotEdited;
 		private String listKey = UiConfig.DEFAULT_LIST_KEY;
 		private String listValue = UiConfig.DEFAULT_LIST_VALUE;
@@ -1380,6 +1381,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			this.cellDynamicAttributes = config.cellDynamicAttributes();
 			this.cellEdit = config.cellEdit();
 			this.excludeIfNotEdited = config.excludeIfNotEdited();
 			if (StringUtils.isNotBlank(config.cssClass()))
@@ -1440,6 +1442,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public void setDynamicAttributes(Map<String, String> dynamicAttributes) {
 			this.dynamicAttributes = dynamicAttributes;
+		}
+
+		public String getCellDynamicAttributes() {
+			return cellDynamicAttributes;
+		}
+
+		public void setCellDynamicAttributes(String cellDynamicAttributes) {
+			this.cellDynamicAttributes = cellDynamicAttributes;
 		}
 
 		public boolean isRequired() {
