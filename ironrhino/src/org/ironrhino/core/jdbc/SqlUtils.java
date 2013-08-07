@@ -11,7 +11,8 @@ public class SqlUtils {
 		sql = sql.trim();
 		if (sql.endsWith(";"))
 			sql = sql.substring(0, sql.length() - 1);
-		return sql;
+		return new StringBuilder(sql.length() + 2).append("\n").append(sql)
+				.append("\n").toString();
 	}
 
 	public static String trimComments(String sql) {
@@ -19,14 +20,19 @@ public class SqlUtils {
 	}
 
 	private static String trimBlockComments(String sql) {
+		if (sql.indexOf("/*") > -1)
+			sql = BLOCK_COMMENTS_PATTERN.matcher(sql).replaceAll("");
 		return sql;
 	}
 
 	private static String trimLineComments(String sql) {
+		if (sql.indexOf("--") > -1)
+			sql = LINE_COMMENTS_PATTERN.matcher(sql).replaceAll("");
 		return sql;
 	}
 
 	public static Set<String> extractParameters(String sql) {
+		sql = trimComments(sql);
 		Set<String> names = new LinkedHashSet<String>();
 		Matcher m = PARAMETER_PATTERN.matcher(sql);
 		while (m.find())
@@ -54,5 +60,11 @@ public class SqlUtils {
 
 	private static final Pattern PARAMETER_PATTERN = Pattern.compile(
 			"(:[a-z]\\w*)", Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern BLOCK_COMMENTS_PATTERN = Pattern
+			.compile("/\\*[^(*/)]*\\*/");
+
+	private static final Pattern LINE_COMMENTS_PATTERN = Pattern.compile(
+			"^\\s*--.*$", Pattern.MULTILINE);
 
 }
