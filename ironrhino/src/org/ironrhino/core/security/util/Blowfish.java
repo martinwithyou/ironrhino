@@ -98,7 +98,7 @@ public class Blowfish {
 		}
 	}
 
-	public static Blowfish getThreadLocalInstance() {
+	private static Blowfish getThreadLocalInstance() {
 		SoftReference<Blowfish> instanceRef = pool.get();
 		Blowfish instance;
 		if (instanceRef == null || (instance = instanceRef.get()) == null) {
@@ -110,11 +110,17 @@ public class Blowfish {
 	}
 
 	public static String encrypt(String str) {
+		return encrypt(str, null);
+	}
+
+	public static String encrypt(String str, String key) {
 		if (str == null)
 			return null;
+		Blowfish blowfish = key == null ? getThreadLocalInstance()
+				: new Blowfish(key);
 		try {
-			return new String(Base64.encodeBase64(getThreadLocalInstance()
-					.encrypt(str.getBytes("UTF-8"))), "UTF-8");
+			return new String(Base64.encodeBase64(blowfish.encrypt(str
+					.getBytes("UTF-8"))), "UTF-8");
 		} catch (Exception ex) {
 			log.error("encrypt exception!", ex);
 			return "";
@@ -122,45 +128,20 @@ public class Blowfish {
 	}
 
 	public static String decrypt(String str) {
+		return decrypt(str, null);
+	}
+
+	public static String decrypt(String str, String key) {
 		if (str == null)
 			return null;
+		Blowfish blowfish = key == null ? getThreadLocalInstance()
+				: new Blowfish(key);
 		try {
-			return new String(getThreadLocalInstance().decrypt(
-					Base64.decodeBase64(str.getBytes("UTF-8"))), "UTF-8");
+			return new String(blowfish.decrypt(Base64.decodeBase64(str
+					.getBytes("UTF-8"))), "UTF-8");
 		} catch (Exception ex) {
 			log.error("decrypt exception!", ex);
 			return "";
-		}
-	}
-
-	public static String encryptBytesToString(byte[] bytes) {
-		try {
-			return new String(Base64.encodeBase64(getThreadLocalInstance()
-					.encrypt(bytes)), "UTF-8");
-		} catch (Exception ex) {
-			log.error("decrypt exception!", ex);
-			return "";
-		}
-	}
-
-	public static String encryptBytesToString(byte[] bytes, int offset,
-			int length) {
-		try {
-			return new String(Base64.encodeBase64(getThreadLocalInstance()
-					.encrypt(bytes, offset, length)), "UTF-8");
-		} catch (Exception ex) {
-			log.error("decrypt exception!", ex);
-			return "";
-		}
-	}
-
-	public static byte[] decryptStringToBytes(String str) {
-		try {
-			return getThreadLocalInstance().decrypt(
-					Base64.decodeBase64(str.getBytes("UTF-8")));
-		} catch (Exception ex) {
-			log.error("decrypt exception!", ex);
-			return new byte[0];
 		}
 	}
 
