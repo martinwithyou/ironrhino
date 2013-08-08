@@ -450,6 +450,7 @@ public class JdbcQueryService {
 	@Transactional(readOnly = true)
 	public ResultPage<Map<String, Object>> query(
 			ResultPage<Map<String, Object>> resultPage) {
+		int queryTimeout = jdbcTemplate.getQueryTimeout();
 		QueryCriteria criteria = resultPage.getCriteria();
 		String sql = criteria.getQuery();
 		Map<String, ?> paramMap = criteria.getParameters();
@@ -457,6 +458,7 @@ public class JdbcQueryService {
 		validateAndConvertTypes(sql, paramMap);
 		boolean hasLimit = hasLimit(sql);
 		resultPage.setPaginating(!hasLimit);
+		jdbcTemplate.setQueryTimeout(queryTimeout);
 		resultPage.setTotalResults(count(sql, paramMap));
 		if (resultPage.getTotalResults() > ResultPage.DEFAULT_MAX_PAGESIZE
 				&& (hasLimit || !(databaseProduct == DatabaseProduct.MYSQL
@@ -468,6 +470,7 @@ public class JdbcQueryService {
 			throw new ErrorMessage("query.result.number.exceed",
 					new Object[] { ResultPage.DEFAULT_MAX_PAGESIZE });
 		long time = System.currentTimeMillis();
+		jdbcTemplate.setQueryTimeout(queryTimeout);
 		resultPage.setResult(query(sql, paramMap, resultPage.getPageSize(),
 				(resultPage.getPageNo() - 1) * resultPage.getPageSize()));
 		resultPage.setTookInMillis(System.currentTimeMillis() - time);
