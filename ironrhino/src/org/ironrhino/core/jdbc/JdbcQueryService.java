@@ -54,6 +54,9 @@ public class JdbcQueryService {
 	@Value("${jdbcQueryService.restricted:true}")
 	private boolean restricted = true;
 
+	@Value("${jdbcQueryService.queryTimeout:0}")
+	private int queryTimeout;
+
 	private String catalog;
 
 	private String schema;
@@ -70,6 +73,10 @@ public class JdbcQueryService {
 		this.databaseProduct = databaseProduct;
 	}
 
+	public void setQueryTimeout(int queryTimeout) {
+		this.queryTimeout = queryTimeout;
+	}
+
 	public boolean isRestricted() {
 		return restricted;
 	}
@@ -80,9 +87,10 @@ public class JdbcQueryService {
 
 	@PostConstruct
 	public void init() {
+		if (queryTimeout > 0)
+			jdbcTemplate.setQueryTimeout(queryTimeout);
 		namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(
 				jdbcTemplate);
-
 		Connection con = DataSourceUtils.getConnection(jdbcTemplate
 				.getDataSource());
 		try {
