@@ -14,9 +14,9 @@
 	<#else>
 		<@s.textfield label="%{getText('key')}" name="setting.key" cssClass="required checkavailable input-xxlarge"/>
 	</#if>
-	<@s.textarea label="%{getText('value')}" name="setting.value" cssClass="input-xxlarge"/>
+	<@s.textarea label="%{getText('value')}" name="setting.value" cssClass="input-xxlarge" maxlength="4000"/>
 	<#if !Parameters.brief??>
-		<@s.textarea label="%{getText('description')}" name="setting.description" cssClass="input-xxlarge"/>
+		<@s.textarea label="%{getText('description')}" name="setting.description" cssClass="input-xxlarge" maxlength="4000"/>
 	</#if>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
