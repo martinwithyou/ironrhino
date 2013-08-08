@@ -136,7 +136,7 @@ $(function(){
 				<input type="submit" class="btn noajax" value="${action.getText('export')}" formaction="${actionBaseUrl}/export"/>
 			</div>
 			<div class="status span5">
-				${resultPage.totalResults} ${action.getText('record')}
+				${resultPage.totalResults} ${action.getText('record')} , ${action.getText('tookInMillis',[resultPage.tookInMillis])}
 			</div>
 		</div>
 	</div>

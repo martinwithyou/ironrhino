@@ -49,6 +49,8 @@ public class ResultPage<T> implements Serializable {
 
 	private boolean executed;
 
+	private long tookInMillis;
+
 	private int start = -1;
 
 	public int getStart() {
@@ -85,6 +87,14 @@ public class ResultPage<T> implements Serializable {
 
 	public boolean isExecuted() {
 		return executed;
+	}
+
+	public long getTookInMillis() {
+		return tookInMillis;
+	}
+
+	public void setTookInMillis(long tookInMillis) {
+		this.tookInMillis = tookInMillis;
 	}
 
 	public int getPageNo() {

@@ -451,8 +451,10 @@ public class JdbcQueryService {
 						|| databaseProduct == DatabaseProduct.DB2 || databaseProduct == DatabaseProduct.DERBY)))
 			throw new ErrorMessage("query.result.number.exceed",
 					new Object[] { ResultPage.DEFAULT_MAX_PAGESIZE });
+		long time = System.currentTimeMillis();
 		resultPage.setResult(query(sql, paramMap, resultPage.getPageSize(),
 				(resultPage.getPageNo() - 1) * resultPage.getPageSize()));
+		resultPage.setTookInMillis(System.currentTimeMillis() - time);
 		return resultPage;
 	}
 

@@ -64,6 +64,7 @@ public class ElasticSearchService<T> implements SearchService<T> {
 			SearchResponse response = srb.execute().get();
 			SearchHits shs = response.getHits();
 			if (shs != null) {
+				resultPage.setTookInMillis(response.getTookInMillis());
 				resultPage.setTotalResults(shs.getTotalHits());
 				List list = new ArrayList(shs.getHits().length);
 				resultPage.setResult(list);
