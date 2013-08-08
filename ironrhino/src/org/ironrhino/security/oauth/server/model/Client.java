@@ -47,6 +47,7 @@ public class Client extends BaseEntity implements Enableable {
 	private String redirectUri;
 
 	@UiConfig(displayOrder = 4, cssClass = "span4", type = "textarea")
+	@Column(length = 4000)
 	private String description;
 
 	@NotInCopy

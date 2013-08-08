@@ -38,10 +38,12 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 
 	@UiConfig(displayOrder = 2, type = "textarea", width = "400px")
 	@SearchableProperty
+	@Column(length = 4000)
 	private String value = "";
 
 	@UiConfig(displayOrder = 3, type = "textarea")
 	@SearchableProperty
+	@Column(length = 4000)
 	private String description = "";
 
 	@NotInCopy

@@ -2,6 +2,7 @@ package org.ironrhino.common.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -31,10 +32,12 @@ public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 3, type = "textarea")
+	@Column(length = 4000)
 	private String content;
 
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 4, hiddenInList = true, type = "textarea")
+	@Column(length = 4000)
 	private String comment;
 
 	@UiConfig(displayOrder = 5, width = "100px")
