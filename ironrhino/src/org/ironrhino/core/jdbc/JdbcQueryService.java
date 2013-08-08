@@ -69,6 +69,10 @@ public class JdbcQueryService {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
 	public void setDatabaseProduct(DatabaseProduct databaseProduct) {
 		this.databaseProduct = databaseProduct;
 	}
