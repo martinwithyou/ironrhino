@@ -31,12 +31,12 @@ public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 	private String contact;
 
 	@SearchableProperty(boost = 3)
-	@UiConfig(displayOrder = 3, type = "textarea")
+	@UiConfig(displayOrder = 3, type = "textarea", maxlength = 4000)
 	@Column(length = 4000)
 	private String content;
 
 	@SearchableProperty(boost = 3)
-	@UiConfig(displayOrder = 4, hiddenInList = true, type = "textarea")
+	@UiConfig(displayOrder = 4, hiddenInList = true, type = "textarea", maxlength = 4000)
 	@Column(length = 4000)
 	private String comment;
 

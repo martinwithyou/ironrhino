@@ -46,7 +46,7 @@ public class Client extends BaseEntity implements Enableable {
 	@UiConfig(displayOrder = 3, cssClass = "span4")
 	private String redirectUri;
 
-	@UiConfig(displayOrder = 4, cssClass = "span4", type = "textarea")
+	@UiConfig(displayOrder = 4, cssClass = "span4", type = "textarea", maxlength = 4000)
 	@Column(length = 4000)
 	private String description;
 
