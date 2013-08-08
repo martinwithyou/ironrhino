@@ -1,5 +1,7 @@
 package org.ironrhino.core.jdbc;
 
+import javax.sql.DataSource;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class IndividualSettingsJdbcTemplate extends JdbcTemplate {
@@ -36,6 +38,14 @@ public class IndividualSettingsJdbcTemplate extends JdbcTemplate {
 		}
 
 	};
+
+	public IndividualSettingsJdbcTemplate() {
+		super();
+	}
+
+	public IndividualSettingsJdbcTemplate(DataSource ds) {
+		super(ds);
+	}
 
 	public int getDefaultFetchSize() {
 		return defaultFetchSize;

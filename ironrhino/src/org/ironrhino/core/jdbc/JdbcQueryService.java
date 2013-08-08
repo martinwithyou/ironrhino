@@ -77,6 +77,10 @@ public class JdbcQueryService {
 		this.databaseProduct = databaseProduct;
 	}
 
+	public DatabaseProduct getDatabaseProduct() {
+		return databaseProduct;
+	}
+
 	public void setQueryTimeout(int queryTimeout) {
 		this.queryTimeout = queryTimeout;
 	}
