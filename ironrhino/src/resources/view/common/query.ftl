@@ -53,19 +53,35 @@ $(function(){
 	});
 	$(document).on('change','textarea[name="sql"]',function(){
 		if(this.value){
+			var map = {};
+			$('input[name^="paramMap[\'"').each(function(){
+				if(this.value)
+					map[this.name]=this.value;
+				$(this).closest('.control-group').remove();	
+			});
 			var reg =new RegExp(':([a-z]\\w*)','gi');
 			var params = [];
-			var result = null;
+			var result;
 			while((result=reg.exec(this.value))){
-			var param = result[1];
-			if($.inArray(param, params)==-1)
-				params.push(param);
+				var param = result[1];
+				if($.inArray(param, params)==-1)
+					params.push(param);
 			}
-			if(params.length){
-				for(var i=params.length-1;i>=0;i--){
-					var param = params[i];
-					if(!$('#query-form-paramMap-'+param).length)
-						$('textarea[name="sql"]').closest('.control-group').after('<div class="control-group"><label class="control-label" for="query-form-paramMap-'+param+'">'+param+'</label><div class="controls"><input type="text" name="paramMap[\''+param+'\']" id="query-form-paramMap-'+param+'" autocomplete="off" maxlength="255"></div></div>');
+			
+			for(var i=params.length-1;i>=0;i--){
+				var param = params[i];
+				var name = "paramMap['"+param+"']";
+				if(!$('input[name="'+name+'"]').length)
+					input = $('<div class="control-group"><label class="control-label" for="query-form_paramMap_\''+param+'\'_">'+param+'</label><div class="controls"><input type="text" name="'+name+'" id="query-form_paramMap_\''+param+'\'_" autocomplete="off" maxlength="255"></div></div>')
+					.insertAfter($('textarea[name="sql"]').closest('.control-group')).find('input').val(map[name]);
+			}
+			
+			var paramMap = $('input[name^="paramMap[\'"');
+			for(var i=0;i<paramMap.length;i++){
+				var input = paramMap[i];
+				if(!input.value){
+					setTimeout(function(){$(input).focus()},200);
+					break;
 				}
 			}
 		}
