@@ -111,11 +111,8 @@ public class LoginAction extends BaseAction {
 	@Override
 	public String input() {
 		HttpServletRequest request = ServletActionContext.getRequest();
-		if (StringUtils.isBlank(targetUrl)) {
-			targetUrl = request.getHeader("Referer");
-			if (StringUtils.isBlank(targetUrl))
-				targetUrl = "/";
-		}
+		if (StringUtils.isBlank(targetUrl))
+			targetUrl = "/";
 		username = RequestUtils.getCookieValue(request,
 				DefaultAuthenticationSuccessHandler.COOKIE_NAME_LOGIN_USER);
 		return SUCCESS;
