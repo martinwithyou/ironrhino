@@ -14,13 +14,24 @@ import org.springframework.util.StringUtils;
 public class DefaultLogoutSuccessHandler extends
 		AbstractAuthenticationTargetUrlRequestHandler implements
 		LogoutSuccessHandler {
+
+	private boolean useReferer;
+
+	public boolean isUseReferer() {
+		return useReferer;
+	}
+
+	public void setUseReferer(boolean useReferer) {
+		this.useReferer = useReferer;
+	}
+
 	@Override
 	protected String determineTargetUrl(HttpServletRequest request,
 			HttpServletResponse response) {
 		String targetUrl = getDefaultTargetUrl();
 		if (StringUtils.hasText(request.getParameter("targetUrl"))) {
 			targetUrl = request.getParameter("targetUrl");
-		} else if (request.getParameter("referer") != null) {
+		} else if (useReferer && request.getParameter("referer") != null) {
 			String temp = request.getHeader("Referer");
 			if (StringUtils.hasText(temp))
 				targetUrl = temp;
