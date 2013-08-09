@@ -51,6 +51,25 @@ $(function(){
 			},100);
 		}
 	});
+	$(document).on('change','textarea[name="sql"]',function(){
+		if(this.value){
+			var reg =new RegExp(':([a-z]\\w*)','gi');
+			var params = [];
+			var result = null;
+			while((result=reg.exec(this.value))){
+			var param = result[1];
+			if($.inArray(param, params)==-1)
+				params.push(param);
+			}
+			if(params.length){
+				for(var i=params.length-1;i>=0;i--){
+					var param = params[i];
+					if(!$('#query-form-paramMap-'+param).length)
+						$('textarea[name="sql"]').closest('.control-group').after('<div class="control-group"><label class="control-label" for="query-form-paramMap-'+param+'">'+param+'</label><div class="controls"><input type="text" name="paramMap[\''+param+'\']" id="query-form-paramMap-'+param+'" autocomplete="off" maxlength="255"></div></div>');
+				}
+			}
+		}
+	});
 });
 </script>
 </head>
