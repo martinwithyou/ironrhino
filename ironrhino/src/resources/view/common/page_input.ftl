@@ -24,7 +24,7 @@ $(function() {
 		setTimeout(function(){
 		var ed = tinymce.EditorManager.get('page_content');
 		$('#draft').click(function(){
-			if(!$('#form').attr('dirty')&&!ed.isDirty()) return false;
+			if(!$('#form').hasClass('dirty')&&!ed.isDirty()) return false;
 			var action = $('#form').attr('action');
 			$('#form').attr('action',action.substring(0,action.lastIndexOf('/')+1)+'draft');
 			ed.save();
@@ -40,7 +40,7 @@ $(function() {
 				$('.ui-dialog-titlebar-close',$('#_window_ ',window.parent.document).closest('.ui-dialog')).click();
 				return;
 			}
-		$('#form').removeAttr('dirty')
+		$('#form').removeClass('dirty')
 		ed.isNotDirty = 1;
 		var page = Ajax.jsonResult.page;
 		if(page){
@@ -64,7 +64,7 @@ $(function() {
 			}
 		};
 		setInterval(function(){
-			if(($('#form').attr('dirty')||ed.isDirty())&&$('#page_path').val()&&$('#page_content').val()){
+			if(($('#form').hasClass('dirty')||ed.isDirty())&&$('#page_path').val()&&$('#page_content').val()){
 				var action = $('#form').attr('action');
 				$('#form').attr('action',action.substring(0,action.lastIndexOf('/')+1)+'draft');
 				ed.save();
@@ -73,7 +73,7 @@ $(function() {
 		},60000);
 		},1500);
 		$('input[name="page.pagepath"],input[name="page.title"]').keyup(function(){
-			$('#form').attr('dirty',true);
+			$('#form').addClass('dirty');
 		});
 		$('#drop').click(function(){
 			var form = $('#form');

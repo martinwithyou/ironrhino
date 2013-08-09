@@ -35619,7 +35619,22 @@ Richtable = {
 				win.html('').dialog('destroy').remove();
 			},
 			beforeClose : function(event, ui) {
-				if ($('form', win).hasClass('dirty')) {
+				var form = $('form', win);
+				if (!form.length && $('iframe', win).length) {
+					try {
+						var iframe = $('iframe', win)[0];
+						var doc = iframe.document;
+						if (iframe.contentDocument) {
+							doc = iframe.contentDocument;
+						} else if (iframe.contentWindow) {
+							doc = iframe.contentWindow.document;
+						}
+						form = $('form', doc);
+					} catch (e) {
+
+					}
+				}
+				if (form.hasClass('dirty')) {
 					return confirm($('form', win).data('confirm')
 							|| MessageBundle.get('confirm.exit'));
 				}
