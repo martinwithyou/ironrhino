@@ -40,13 +40,15 @@ public class SqlUtils {
 		return names;
 	}
 
-	public static Set<String> extractTables(String sql) {
-		return extractTables(sql, "\"");
+	public static Set<String> extractTables(String sql, String quoteString) {
+		return extractTables(sql, quoteString, "from");
 	}
 
-	public static Set<String> extractTables(String sql, String quoteString) {
-		Pattern tablePattern = Pattern.compile("from\\s+([\\w\\." + quoteString
-				+ ",\\s]+)", Pattern.CASE_INSENSITIVE);
+	public static Set<String> extractTables(String sql, String quoteString,
+			String frontKeyword) {
+		sql = trimComments(sql);
+		Pattern tablePattern = Pattern.compile(frontKeyword + "\\s+([\\w\\."
+				+ quoteString + ",\\s]+)", Pattern.CASE_INSENSITIVE);
 		Set<String> names = new LinkedHashSet<String>();
 		Matcher m = tablePattern.matcher(sql);
 		while (m.find()) {

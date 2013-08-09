@@ -159,8 +159,13 @@ public class JdbcQueryService {
 	@Transactional(readOnly = true)
 	public void validate(String sql) {
 		sql = SqlUtils.refineSql(sql);
+		Set<String> names = SqlUtils.extractParameters(sql);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		for (String name : names)
+			paramMap.put(name, "0");
+		validateAndConvertTypes(sql, paramMap);
 		if (restricted) {
-			for (String table : SqlUtils.extractTables(sql)) {
+			for (String table : SqlUtils.extractTables(sql, quoteString)) {
 				if (table.indexOf('.') < 0)
 					continue;
 				if (table.startsWith(quoteString)
@@ -187,11 +192,6 @@ public class JdbcQueryService {
 				}
 			}
 		}
-		Set<String> names = SqlUtils.extractParameters(sql);
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		for (String name : names)
-			paramMap.put(name, "0");
-		validateAndConvertTypes(sql, paramMap);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

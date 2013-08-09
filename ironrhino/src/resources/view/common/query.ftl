@@ -67,7 +67,7 @@ $(function(){
 	</@s.textarea>
 	<#if params??>
 	<#list params as var>
-	<@s.textfield label="${var}" name="paramMap['${var}']" cssClass="required"/>
+	<@s.textfield label="${var}" name="paramMap['${var}']"/>
 	</#list>
 	</#if>
 	<@s.submit value="%{getText('submit')}" />
