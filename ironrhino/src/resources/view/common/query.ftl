@@ -3,25 +3,6 @@
 <head>
 <title>${action.getText('query')}</title>
 <script>
-var BLOCK_COMMENT =new RegExp('/\\*(?:.|[\\n\\r])*?\\*/','g');
-var LINE_COMMENT =new RegExp('\r?\n?\\s*--.*\r?(\n|$)','g');
-var PARAM =new RegExp(':([a-z]\\w*)','gi');
-function clearComments(sql){
-	return $.trim(sql.replace(BLOCK_COMMENT, '').replace(LINE_COMMENT,'\n'));
-}
-function highlight(sql){
-	return sql.replace(BLOCK_COMMENT, '<span class="comment">$&</span>').replace(LINE_COMMENT,'<span class="comment">$&</span>').replace(PARAM,'<strong>$&</strong>');
-}
-function preview(textarea){
-	var t = $(textarea);
-	if(!t.next('div.preview').length)
-		t.after('<div class="preview"></div>');
-	t.hide().next('div.preview').width(t.width()).css('height',t.height()+'px').html(highlight(t.val())).show();
-		
-}
-function edit(preview){
-	$(preview).hide().prev('textarea[name="sql"]').show().focus();
-}
 $(function(){
 	$(document).on('click','#result tbody .btn',function(){
 		if(!$('#row-modal').length)
@@ -71,23 +52,13 @@ $(function(){
 		}
 	});
 	$(document).on('blur','textarea[name="sql"]',function(){
-		preview(this);
-		var sql = clearComments(this.value);
 		var map = {};
 		$('input[name^="paramMap[\'"]').each(function(){
 			if(this.value)
 				map[this.name]=this.value;
 			$(this).closest('.control-group').remove();	
 		});
-		
-		var params = [];
-		var result;
-		while((result=PARAM.exec(sql))){
-			var param = result[1];
-			if($.inArray(param, params)==-1)
-				params.push(param);
-		}
-		
+		var params = $.sqleditor.extractParams(this.value);
 		for(var i=params.length-1;i>=0;i--){
 			var param = params[i];
 			var name = "paramMap['"+param+"']";
@@ -105,20 +76,13 @@ $(function(){
 			}
 		}
 	});
-	$(document).on('click','div.preview',function(){
-		edit(this);
-	});
+	
 });
-Observation.sql = function(container){
-	$('textarea[name="sql"]',container).each(function(){
-		preview(this);
-	});
-}
 </script>
 </head>
 <body>
 <@s.form id="query-form" action="${actionBaseUrl}" method="post" cssClass="form-horizontal ajax view history">
-	<@s.textarea label="sql" name="sql" cssClass="required span8" placeholder="select username,name,email from user where username=:username">
+	<@s.textarea label="sql" name="sql" cssClass="required span8 sqleditor" placeholder="select username,name,email from user where username=:username">
 	<#if tables?? && tables?size gt 0>
 	<@s.param name="after">
 	<div style="display:inline-block;vertical-align:top;margin-left:20px;">
