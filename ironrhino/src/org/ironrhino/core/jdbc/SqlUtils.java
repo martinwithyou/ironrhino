@@ -67,7 +67,7 @@ public class SqlUtils {
 			.compile("/\\*(?:.|[\\n\\r])*?\\*/");
 
 	private static final Pattern LINE_COMMENTS_PATTERN = Pattern
-			.compile("\r?\n?\\s*--.*\r?\n");
+			.compile("\r?\n?\\s*--.*\r?(\n|$)");
 
 
 }

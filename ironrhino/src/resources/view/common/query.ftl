@@ -2,9 +2,45 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('query')}</title>
+<style>
+div.preview{
+	padding: 4px 6px;
+	display:inline-block;
+	white-space:pre-wrap;
+	border: 1px solid #ccc;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+	-moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+}
+div.preview span.comment{
+	background-color:yellow;
+	color:#999;
+}
+div.preview span.param{
+	font-weight:bold;
+}
+</style>
 <script>
 var BLOCK_COMMENT =new RegExp('/\\*(?:.|[\\n\\r])*?\\*/','g');
-var LINE_COMMENT =new RegExp('\r?\n?\\s*--.*\r?\n','g');
+var LINE_COMMENT =new RegExp('\r?\n?\\s*--.*\r?(\n|$)','g');
+var PARAM =new RegExp(':([a-z]\\w*)','gi');
+function clearComments(sql){
+	return $.trim(sql.replace(BLOCK_COMMENT, '').replace(LINE_COMMENT,'\n'));
+}
+function highlight(sql){
+	return sql.replace(BLOCK_COMMENT, '<span class="comment">$&</span>').replace(LINE_COMMENT,'<span class="comment">$&</span>').replace(PARAM,'<span class="param">$&</span>');
+}
+function preview(textarea){
+	$(textarea).hide();
+	$('<div class="preview"></div>').width($(textarea).width()).css('min-height',$(textarea).height()+'px').insertAfter(textarea).html(highlight($(textarea).val()));
+		
+}
+function edit(preview){
+	$(preview).hide().prev('textarea[name="sql"]').show().focus();
+}
 $(function(){
 	$(document).on('click','#result tbody .btn',function(){
 		if(!$('#row-modal').length)
@@ -53,18 +89,19 @@ $(function(){
 			},100);
 		}
 	});
-	$(document).on('change','textarea[name="sql"]',function(){
-		var sql = $.trim(this.value.replace(BLOCK_COMMENT, '').replace(LINE_COMMENT,'\n'));
+	$(document).on('blur','textarea[name="sql"]',function(){
+		preview(this);
+		var sql = clearComments(this.value);
 		var map = {};
 		$('input[name^="paramMap[\'"]').each(function(){
 			if(this.value)
 				map[this.name]=this.value;
 			$(this).closest('.control-group').remove();	
 		});
-		var reg =new RegExp(':([a-z]\\w*)','gi');
+		
 		var params = [];
 		var result;
-		while((result=reg.exec(sql))){
+		while((result=PARAM.exec(sql))){
 			var param = result[1];
 			if($.inArray(param, params)==-1)
 				params.push(param);
@@ -87,7 +124,15 @@ $(function(){
 			}
 		}
 	});
+	$(document).on('click','div.preview',function(){
+		edit(this);
+	});
 });
+Observation.sql = function(container){
+	$('textarea[name="sql"]',container).each(function(){
+		preview(this);
+	});
+}
 </script>
 </head>
 <body>
