@@ -6,6 +6,7 @@
 div.preview{
 	padding: 4px 6px;
 	display:inline-block;
+	overflow: auto;
 	white-space:pre-wrap;
 	border: 1px solid #ccc;
 	-webkit-border-radius: 4px;
@@ -34,8 +35,10 @@ function highlight(sql){
 	return sql.replace(BLOCK_COMMENT, '<span class="comment">$&</span>').replace(LINE_COMMENT,'<span class="comment">$&</span>').replace(PARAM,'<span class="param">$&</span>');
 }
 function preview(textarea){
-	$(textarea).hide();
-	$('<div class="preview"></div>').width($(textarea).width()).css('min-height',$(textarea).height()+'px').insertAfter(textarea).html(highlight($(textarea).val()));
+	var t = $(textarea);
+	if(!t.next('div.preview').length)
+		t.after('<div class="preview"></div>');
+	t.hide().next('div.preview').width(t.width()).css('height',t.height()+'px').html(highlight(t.val())).show();
 		
 }
 function edit(preview){
