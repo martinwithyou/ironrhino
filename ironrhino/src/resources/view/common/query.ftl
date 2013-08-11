@@ -30,6 +30,7 @@ $(function(){
 		var table = t.val();
 		if(table){
 			var textarea = $('textarea[name="sql"]',t.closest('form'));
+			textarea.next('div.preview').click();
 			if(!textarea.val())
 				textarea.val('select * from '+table);
 			else

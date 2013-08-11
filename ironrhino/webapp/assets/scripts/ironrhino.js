@@ -36099,14 +36099,18 @@ Observation.richtable = function(container) {
 		}
 	}
 	function preview(textarea) {
-		var t = $(textarea);
-		if (!t.next('div.preview').length)
-			$('<div class="preview"></div>').insertAfter(t).click(function() {
-						$(this).hide().prev('textarea.sqleditor').show()
-								.focus();;
-					});
-		t.hide().next('div.preview').width(t.width()).css('height',
-				t.height() + 'px').html($.sqleditor.highlight(t.val())).show();
+		var t = $(textarea).hide();
+		var p = t.next('div.preview');
+		if (!p.length) {
+			p = $('<div class="preview"></div>').insertAfter(t);
+			if (!(t.prop('readonly') || t.prop('disabled')))
+				p.click(function() {
+							$(this).hide().prev('textarea.sqleditor').show()
+									.focus();
+						});
+		}
+		p.width(t.width()).css('height', t.height() + 'px').html($.sqleditor
+				.highlight(t.val())).show();
 
 	}
 	$.fn.sqleditor = function() {
