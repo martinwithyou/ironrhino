@@ -2,28 +2,6 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('query')}</title>
-<style>
-div.preview{
-	padding: 4px 6px;
-	display:inline-block;
-	overflow: auto;
-	white-space:pre-wrap;
-	border: 1px solid #ccc;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-	-moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-}
-div.preview span.comment{
-	background-color:yellow;
-	color:#999;
-}
-div.preview span.param{
-	font-weight:bold;
-}
-</style>
 <script>
 var BLOCK_COMMENT =new RegExp('/\\*(?:.|[\\n\\r])*?\\*/','g');
 var LINE_COMMENT =new RegExp('\r?\n?\\s*--.*\r?(\n|$)','g');
@@ -32,7 +10,7 @@ function clearComments(sql){
 	return $.trim(sql.replace(BLOCK_COMMENT, '').replace(LINE_COMMENT,'\n'));
 }
 function highlight(sql){
-	return sql.replace(BLOCK_COMMENT, '<span class="comment">$&</span>').replace(LINE_COMMENT,'<span class="comment">$&</span>').replace(PARAM,'<span class="param">$&</span>');
+	return sql.replace(BLOCK_COMMENT, '<span class="comment">$&</span>').replace(LINE_COMMENT,'<span class="comment">$&</span>').replace(PARAM,'<strong>$&</strong>');
 }
 function preview(textarea){
 	var t = $(textarea);

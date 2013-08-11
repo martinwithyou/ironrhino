@@ -15,24 +15,23 @@ public class SqlUtils {
 				.append("\n").toString();
 	}
 
-	public static String trimComments(String sql) {
-		return trimLineComments(trimBlockComments(sql));
+	public static String clearComments(String sql) {
+		return LINE_COMMENTS_PATTERN
+				.matcher(BLOCK_COMMENTS_PATTERN.matcher(sql).replaceAll(""))
+				.replaceAll("\n").replaceAll("\n+", "\n").trim();
 	}
 
-	private static String trimBlockComments(String sql) {
-		if (sql.indexOf("/*") > -1)
-			sql = BLOCK_COMMENTS_PATTERN.matcher(sql).replaceAll("");
-		return sql;
-	}
-
-	private static String trimLineComments(String sql) {
-		if (sql.indexOf("--") > -1)
-			sql = LINE_COMMENTS_PATTERN.matcher(sql).replaceAll("\n").replaceAll("\n+", "\n").trim();
-		return sql;
+	public static String highlight(String sql) {
+		return PARAMETER_PATTERN.matcher(
+				LINE_COMMENTS_PATTERN.matcher(
+						BLOCK_COMMENTS_PATTERN.matcher(sql).replaceAll(
+								"<span class=\"comment\">$0</span>"))
+						.replaceAll("\n<span class=\"comment\">$1</span>\n"))
+				.replaceAll("<strong>$0</strong>");
 	}
 
 	public static Set<String> extractParameters(String sql) {
-		sql = trimComments(sql);
+		sql = clearComments(sql);
 		Set<String> names = new LinkedHashSet<String>();
 		Matcher m = PARAMETER_PATTERN.matcher(sql);
 		while (m.find())
@@ -46,7 +45,7 @@ public class SqlUtils {
 
 	public static Set<String> extractTables(String sql, String quoteString,
 			String frontKeyword) {
-		sql = trimComments(sql);
+		sql = clearComments(sql);
 		Pattern tablePattern = Pattern.compile(frontKeyword + "\\s+([\\w\\."
 				+ quoteString + ",\\s]+)", Pattern.CASE_INSENSITIVE);
 		Set<String> names = new LinkedHashSet<String>();
@@ -67,7 +66,6 @@ public class SqlUtils {
 			.compile("/\\*(?:.|[\\n\\r])*?\\*/");
 
 	private static final Pattern LINE_COMMENTS_PATTERN = Pattern
-			.compile("\r?\n?\\s*--.*\r?(\n|$)");
-
+			.compile("\r?\n?([ \\t]*--.*)\r?(\n|$)");
 
 }
