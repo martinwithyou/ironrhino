@@ -27,7 +27,7 @@ public class SqlUtils {
 
 	private static String trimLineComments(String sql) {
 		if (sql.indexOf("--") > -1)
-			sql = LINE_COMMENTS_PATTERN.matcher(sql).replaceAll("");
+			sql = LINE_COMMENTS_PATTERN.matcher(sql).replaceAll("\n").replaceAll("\n+", "\n").trim();
 		return sql;
 	}
 
@@ -64,9 +64,10 @@ public class SqlUtils {
 			"(:[a-z]\\w*)", Pattern.CASE_INSENSITIVE);
 
 	private static final Pattern BLOCK_COMMENTS_PATTERN = Pattern
-			.compile("/\\*[^(*/)]*\\*/");
+			.compile("/\\*(?:.|[\\n\\r])*?\\*/");
 
-	private static final Pattern LINE_COMMENTS_PATTERN = Pattern.compile(
-			"^\\s*--.*$", Pattern.MULTILINE);
+	private static final Pattern LINE_COMMENTS_PATTERN = Pattern
+			.compile("\r?\n?\\s*--.*\r?\n");
+
 
 }
