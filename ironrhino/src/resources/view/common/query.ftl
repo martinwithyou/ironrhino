@@ -3,6 +3,8 @@
 <head>
 <title>${action.getText('query')}</title>
 <script>
+var BLOCK_COMMENT =new RegExp('/\\*(?:.|[\\n\\r])*?\\*/','g');
+var LINE_COMMENT =new RegExp('\r?\n?\\s*--.*\r?\n','g');
 $(function(){
 	$(document).on('click','#result tbody .btn',function(){
 		if(!$('#row-modal').length)
@@ -52,37 +54,36 @@ $(function(){
 		}
 	});
 	$(document).on('change','textarea[name="sql"]',function(){
-		if(this.value){
-			var map = {};
-			$('input[name^="paramMap[\'"').each(function(){
-				if(this.value)
-					map[this.name]=this.value;
-				$(this).closest('.control-group').remove();	
-			});
-			var reg =new RegExp(':([a-z]\\w*)','gi');
-			var params = [];
-			var result;
-			while((result=reg.exec(this.value))){
-				var param = result[1];
-				if($.inArray(param, params)==-1)
-					params.push(param);
-			}
-			
-			for(var i=params.length-1;i>=0;i--){
-				var param = params[i];
-				var name = "paramMap['"+param+"']";
-				if(!$('input[name="'+name+'"]').length)
-					input = $('<div class="control-group"><label class="control-label" for="query-form_paramMap_\''+param+'\'_">'+param+'</label><div class="controls"><input type="text" name="'+name+'" id="query-form_paramMap_\''+param+'\'_" autocomplete="off" maxlength="255"></div></div>')
-					.insertAfter($('textarea[name="sql"]').closest('.control-group')).find('input').val(map[name]);
-			}
-			
-			var paramMap = $('input[name^="paramMap[\'"');
-			for(var i=0;i<paramMap.length;i++){
-				var input = paramMap[i];
-				if(!input.value){
-					setTimeout(function(){$(input).focus()},200);
-					break;
-				}
+		var sql = $.trim(this.value.replace(BLOCK_COMMENT, '').replace(LINE_COMMENT,'\n'));
+		var map = {};
+		$('input[name^="paramMap[\'"]').each(function(){
+			if(this.value)
+				map[this.name]=this.value;
+			$(this).closest('.control-group').remove();	
+		});
+		var reg =new RegExp(':([a-z]\\w*)','gi');
+		var params = [];
+		var result;
+		while((result=reg.exec(sql))){
+			var param = result[1];
+			if($.inArray(param, params)==-1)
+				params.push(param);
+		}
+		
+		for(var i=params.length-1;i>=0;i--){
+			var param = params[i];
+			var name = "paramMap['"+param+"']";
+			if(!$('input[name="'+name+'"]').length)
+				input = $('<div class="control-group"><label class="control-label" for="query-form_paramMap_\''+param+'\'_">'+param+'</label><div class="controls"><input type="text" name="'+name+'" id="query-form_paramMap_\''+param+'\'_" autocomplete="off" maxlength="255"></div></div>')
+				.insertAfter($('textarea[name="sql"]').closest('.control-group')).find('input').val(map[name]);
+		}
+		
+		var paramMap = $('input[name^="paramMap[\'"]');
+		for(var i=0;i<paramMap.length;i++){
+			var input = paramMap[i];
+			if(!input.value){
+				setTimeout(function(){$(input).focus()},200);
+				break;
 			}
 		}
 	});
