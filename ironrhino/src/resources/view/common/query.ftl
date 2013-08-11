@@ -58,7 +58,7 @@ $(function(){
 				map[this.name]=this.value;
 			$(this).closest('.control-group').remove();	
 		});
-		var params = $.sqleditor.extractParams(this.value);
+		var params = $.sqleditor.extractParameters(this.value);
 		for(var i=params.length-1;i>=0;i--){
 			var param = params[i];
 			var name = "paramMap['"+param+"']";

@@ -35,7 +35,7 @@ public class SqlUtils {
 		Set<String> names = new LinkedHashSet<String>();
 		Matcher m = PARAMETER_PATTERN.matcher(sql);
 		while (m.find())
-			names.add(m.group().substring(1));
+			names.add(m.group(1).substring(1));
 		return names;
 	}
 
@@ -59,8 +59,8 @@ public class SqlUtils {
 		return names;
 	}
 
-	private static final Pattern PARAMETER_PATTERN = Pattern.compile(
-			"(:[a-z]\\w*)", Pattern.CASE_INSENSITIVE);
+	private static final Pattern PARAMETER_PATTERN = Pattern
+			.compile("(:\\w*)(,|\\)|\\s|\\||\\+|$)");
 
 	private static final Pattern BLOCK_COMMENTS_PATTERN = Pattern
 			.compile("/\\*(?:.|[\\n\\r])*?\\*/");

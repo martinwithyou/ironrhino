@@ -36074,14 +36074,14 @@ Observation.richtable = function(container) {
 (function($) {
 	var BLOCK_COMMENT = new RegExp('/\\*(?:.|[\\n\\r])*?\\*/', 'g');
 	var LINE_COMMENT = new RegExp('\r?\n?\\s*--.*\r?(\n|$)', 'g');
-	var PARAM = new RegExp(':([a-z]\\w*)', 'gi');
+	var PARAMETER = new RegExp('(:\\w*)(,|\\)|\\s|\\||\\+|$)', 'g');
 	$.sqleditor = {
-		extractParams : function(sql) {
+		extractParameters : function(sql) {
 			sql = $.sqleditor.clearComments(sql);
 			var params = [];
 			var result;
-			while ((result = PARAM.exec(sql))) {
-				var param = result[1];
+			while ((result = PARAMETER.exec(sql))) {
+				var param = result[1].substring(1);
 				if ($.inArray(param, params) == -1)
 					params.push(param);
 			}
@@ -36095,7 +36095,7 @@ Observation.richtable = function(container) {
 			return sql
 					.replace(BLOCK_COMMENT, '<span class="comment">$&</span>')
 					.replace(LINE_COMMENT, '<span class="comment">$&</span>')
-					.replace(PARAM, '<strong>$&</strong>');
+					.replace(PARAMETER, '<strong>$&</strong>');
 		}
 	}
 	function preview(textarea) {
