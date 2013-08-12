@@ -36098,14 +36098,14 @@ Observation.richtable = function(container) {
 					.replace(PARAMETER, '<strong>$&</strong>');
 		}
 	}
-	function preview(textarea) {
-		var t = $(textarea).hide();
+	function preview(input) {
+		var t = $(input).hide();
 		var p = t.next('div.preview');
 		if (!p.length) {
 			p = $('<div class="preview"></div>').insertAfter(t);
 			if (!(t.prop('readonly') || t.prop('disabled')))
 				p.click(function() {
-							$(this).hide().prev('textarea.sqleditor').show()
+							$(this).hide().prev('.sqleditor:input').show()
 									.focus();
 						});
 		}
@@ -36116,7 +36116,7 @@ Observation.richtable = function(container) {
 	$.fn.sqleditor = function() {
 		$(this).each(function() {
 					var t = $(this);
-					if (t.is('textarea')) {
+					if (t.is(':input')) {
 						preview(t);
 						t.blur(function() {
 									preview(t)
