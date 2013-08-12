@@ -7804,9 +7804,9 @@ div.text-core{
 div.form-horizontal  .control-label{
 	font-weight: bold;
 }
-div.form-horizontal .controls {
-	margin-top: 5px;
-	margin-bottom: 5px;
+div.form-horizontal .controls,.controls.text {
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 .form-horizontal .form-actions {
 	padding-left: 120px;
