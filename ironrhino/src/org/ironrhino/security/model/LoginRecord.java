@@ -13,7 +13,7 @@ import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 
 @AutoConfig(order = "date desc")
-@ReadonlyConfig(readonly = true)
+@ReadonlyConfig(true)
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "loginrecord")

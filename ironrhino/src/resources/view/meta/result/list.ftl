@@ -4,7 +4,7 @@
 <title>${action.getText(entityName)}${action.getText('list')}</title>
 </head>
 <body>
-<#assign readonly=readonlyConfig.readonly>
+<#assign readonly=readonlyConfig.value>
 <#if richtableConfig.listHeader?has_content>
 <@richtableConfig.listHeader?interpret/>
 </#if>

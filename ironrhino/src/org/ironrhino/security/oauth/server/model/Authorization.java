@@ -23,7 +23,7 @@ import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 
 @AutoConfig(order = "createDate desc")
-@ReadonlyConfig(readonly = true, deletable = true)
+@ReadonlyConfig(value = true, deletable = true)
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "oauth_authorization")

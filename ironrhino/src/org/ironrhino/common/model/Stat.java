@@ -24,7 +24,7 @@ import org.ironrhino.core.stat.Value;
 
 @DataRoute("miscGroup")
 @AutoConfig
-@ReadonlyConfig(readonly = true)
+@ReadonlyConfig(true)
 @Entity
 @Table(name = "common_stat")
 public class Stat extends KeyValuePair implements Persistable<String> {

@@ -158,7 +158,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						&& !(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
 								.authorize(null, owner.supervisorRole(), null))) {
 					readonlyConfig = new ReadonlyConfigImpl();
-					readonlyConfig.setReadonly(false);
+					readonlyConfig.setValue(false);
 					StringBuilder sb = new StringBuilder("!entity.");
 					sb.append(ownerProperty.getKey().propertyName())
 							.append("?? || entity.")
@@ -670,7 +670,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	@Override
 	public String input() {
-		if (getReadonlyConfig().isReadonly()) {
+		if (getReadonlyConfig().isValue()) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
@@ -769,7 +769,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	@Override
 	public String save() {
-		if (getReadonlyConfig().isReadonly()) {
+		if (getReadonlyConfig().isValue()) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
@@ -1180,8 +1180,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	@Override
 	public String delete() {
-		if (getReadonlyConfig().isReadonly()
-				&& !getReadonlyConfig().isDeletable()) {
+		if (getReadonlyConfig().isValue() && !getReadonlyConfig().isDeletable()) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
@@ -1265,7 +1264,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	private String updateEnabled(boolean enabled) {
-		if (!isEnableable() || getReadonlyConfig().isReadonly())
+		if (!isEnableable() || getReadonlyConfig().isValue())
 			return ACCESSDENIED;
 		BaseManager<Persistable<?>> em = getEntityManager(getEntityClass());
 		String[] arr = getId();
@@ -1635,7 +1634,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public static class ReadonlyConfigImpl implements Serializable {
 
 		private static final long serialVersionUID = 6566440254646584026L;
-		private boolean readonly = false;
+		private boolean value = false;
 		private String expression = "";
 		private boolean deletable = false;
 
@@ -1645,17 +1644,17 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		public ReadonlyConfigImpl(ReadonlyConfig config) {
 			if (config == null)
 				return;
-			this.readonly = config.readonly();
+			this.value = config.value();
 			this.expression = config.expression();
 			this.deletable = config.deletable();
 		}
 
-		public boolean isReadonly() {
-			return readonly;
+		public boolean isValue() {
+			return value;
 		}
 
-		public void setReadonly(boolean readonly) {
-			this.readonly = readonly;
+		public void setValue(boolean value) {
+			this.value = value;
 		}
 
 		public String getExpression() {

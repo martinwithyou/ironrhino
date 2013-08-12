@@ -13,7 +13,7 @@ import org.ironrhino.core.model.BaseEntity;
 
 @DataRoute("miscGroup")
 @AutoConfig(order = "recordDate desc")
-@ReadonlyConfig(readonly = true, deletable = true)
+@ReadonlyConfig(value = true, deletable = true)
 @Entity
 @Table(name = "common_record")
 public class Record extends BaseEntity {
