@@ -227,15 +227,19 @@ public class JdbcUpdateService {
 	}
 
 	@Transactional
-	public int update(String sql, Map<String, ?> paramMap) {
-		return namedParameterJdbcTemplate.update(sql, paramMap);
+	public int[] update(String sql, Map<String, ?> paramMap) {
+		int[] result = new int[2];
+		long time = System.currentTimeMillis();
+		result[0] = namedParameterJdbcTemplate.update(sql, paramMap);
+		result[1] = (int) (System.currentTimeMillis() - time);
+		return result;
 	}
 
 	@Transactional
-	public int[] update(String[] sql, Map<String, ?> paramMap) {
-		int[] result = new int[sql.length];
+	public int[][] update(String[] sql, Map<String, ?> paramMap) {
+		int[][] result = new int[sql.length][2];
 		for (int i = 0; i < sql.length; i++)
-			result[i] = namedParameterJdbcTemplate.update(sql[i], paramMap);
+			result[i] = update(sql[i], paramMap);
 		return result;
 	}
 
