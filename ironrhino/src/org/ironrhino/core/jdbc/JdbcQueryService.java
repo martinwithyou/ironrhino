@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +38,7 @@ import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @Singleton
@@ -278,12 +281,6 @@ public class JdbcQueryService {
 	}
 
 	@Transactional(readOnly = true)
-	public void query(String sql, Map<String, ?> paramMap,
-			RowCallbackHandler rch) {
-		namedParameterJdbcTemplate.query(sql, paramMap, rch);
-	}
-
-	@Transactional(readOnly = true)
 	public List<Map<String, Object>> query(String sql, Map<String, ?> paramMap,
 			final int limit) {
 		return query(sql, paramMap, limit, 0);
@@ -475,6 +472,72 @@ public class JdbcQueryService {
 				(resultPage.getPageNo() - 1) * resultPage.getPageSize()));
 		resultPage.setTookInMillis(System.currentTimeMillis() - time);
 		return resultPage;
+	}
+
+	@Transactional(readOnly = true)
+	public void query(String sql, Map<String, ?> paramMap, final LineHandler lh) {
+		query(sql, paramMap, new RowHandler() {
+
+			@Override
+			public boolean isWithHeader() {
+				return lh.isWithHeader();
+			}
+
+			@Override
+			public void handleRow(int index, Object[] row) {
+				char seperator = lh.getSeperatorChar();
+				if (index == -1) {
+					lh.handleLine(-1, StringUtils.join(row, seperator));
+					return;
+				}
+				String[] arr = new String[row.length];
+				for (int i = 0; i < arr.length; i++) {
+					Object value = row[i];
+					String text = value != null ? value.toString() : "";
+					if (text.contains(String.valueOf(seperator))
+							|| text.contains("\"") || text.contains("\n")) {
+						if (text.contains("\""))
+							text = text.replaceAll("\"", "\"\"");
+						text = new StringBuilder(text.length() + 2)
+								.append("\"").append(text).append("\"")
+								.toString();
+					}
+					arr[i] = text;
+				}
+				lh.handleLine(index, StringUtils.join(arr, seperator));
+			}
+		});
+	}
+
+	@Transactional(readOnly = true)
+	public void query(String sql, Map<String, ?> paramMap, final RowHandler rh) {
+		final AtomicInteger ai = new AtomicInteger(0);
+		namedParameterJdbcTemplate.query(sql, paramMap,
+				new RowCallbackHandler() {
+
+					private int columnCount;
+
+					@Override
+					public void processRow(ResultSet rs) throws SQLException {
+						int index = ai.getAndIncrement();
+						if (index == 0) {
+							ResultSetMetaData rsmd = rs.getMetaData();
+							columnCount = rsmd.getColumnCount();
+							if (rh.isWithHeader()) {
+								String[] arr = new String[columnCount];
+								for (int i = 1; i <= columnCount; i++)
+									arr[i - 1] = JdbcUtils.lookupColumnName(
+											rsmd, i);
+								rh.handleRow(-1, arr);
+							}
+						}
+						Object[] arr = new Object[columnCount];
+						for (int i = 1; i <= columnCount; i++) {
+							arr[i - 1] = JdbcUtils.getResultSetValue(rs, i);
+						}
+						rh.handleRow(index, arr);
+					}
+				});
 	}
 
 	private static String trimOrderby(String sql) {

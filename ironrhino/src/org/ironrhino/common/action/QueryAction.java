@@ -1,14 +1,10 @@
 package org.ironrhino.common.action;
 
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.jdbc.JdbcQueryService;
 import org.ironrhino.core.jdbc.QueryCriteria;
+import org.ironrhino.core.jdbc.LineHandler;
 import org.ironrhino.core.jdbc.SqlUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -24,8 +21,6 @@ import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.ErrorMessage;
 import org.ironrhino.security.model.UserRole;
-import org.springframework.jdbc.core.RowCallbackHandler;
-import org.springframework.jdbc.support.JdbcUtils;
 
 @AutoConfig
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
@@ -122,42 +117,21 @@ public class QueryAction extends BaseAction {
 			response.setHeader("Content-disposition",
 					"attachment;filename=data.csv");
 			final PrintWriter writer = response.getWriter();
-			final AtomicInteger ai = new AtomicInteger(0);
-			jdbcQueryService.query(sql, paramMap, new RowCallbackHandler() {
-
-				private int columnCount;
+			jdbcQueryService.query(sql, paramMap, new LineHandler() {
+				@Override
+				public boolean isWithHeader() {
+					return true;
+				}
 
 				@Override
-				public void processRow(ResultSet rs) throws SQLException {
-					int index = ai.getAndIncrement();
-					if (index == 0) {
-						ResultSetMetaData rsmd = rs.getMetaData();
-						columnCount = rsmd.getColumnCount();
-						for (int i = 1; i <= columnCount; i++) {
-							writer.print(JdbcUtils.lookupColumnName(rsmd, i));
-							if (i < columnCount)
-								writer.print(",");
-							else
-								writer.println();
-						}
-					}
-					for (int i = 1; i <= columnCount; i++) {
-						Object value = JdbcUtils.getResultSetValue(rs, i);
-						String text = value != null ? value.toString() : "";
-						if (text.contains(",") || text.contains("\"")
-								|| text.contains("\n")) {
-							if (text.contains("\""))
-								text = text.replaceAll("\"", "\"\"");
-							text = new StringBuilder(text.length() + 2)
-									.append("\"").append(text).append("\"")
-									.toString();
-						}
-						writer.print(text);
-						if (i < columnCount)
-							writer.print(",");
-						else
-							writer.println();
-					}
+				public char getSeperatorChar() {
+					return ',';
+				}
+
+				@Override
+				public void handleLine(int index, String line) {
+					writer.write(line);
+					writer.write('\n');
 					if (index > 0 && index % 100 == 0)
 						writer.flush();
 				}
