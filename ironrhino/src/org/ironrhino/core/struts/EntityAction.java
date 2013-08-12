@@ -37,6 +37,7 @@ import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
+import org.ironrhino.core.metadata.HiddenConfig;
 import org.ironrhino.core.metadata.Owner;
 import org.ironrhino.core.metadata.ReadonlyConfig;
 import org.ironrhino.core.metadata.RichtableConfig;
@@ -1347,7 +1348,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private String alias;
 		private boolean hiddenInList;
 		private boolean hiddenInInput;
-		private boolean hiddenInView;
+		private HiddenConfigImpl hiddenInView;
 		private String template;
 		private String width;
 		private Map<String, String> dynamicAttributes = new HashMap<String, String>(
@@ -1384,7 +1385,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				this.alias = config.alias();
 			this.hiddenInList = config.hiddenInList();
 			this.hiddenInInput = config.hiddenInInput();
-			this.hiddenInView = config.hiddenInView();
+			this.hiddenInView = new HiddenConfigImpl(config.hiddenInView());
 			this.template = config.template();
 			this.width = config.width();
 			if (StringUtils.isNotBlank(config.dynamicAttributes()))
@@ -1427,11 +1428,11 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			this.hiddenInInput = hiddenInInput;
 		}
 
-		public boolean isHiddenInView() {
+		public HiddenConfigImpl getHiddenInView() {
 			return hiddenInView;
 		}
 
-		public void setHiddenInView(boolean hiddenInView) {
+		public void setHiddenInView(HiddenConfigImpl hiddenInView) {
 			this.hiddenInView = hiddenInView;
 		}
 
@@ -1671,6 +1672,43 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public void setDeletable(boolean deletable) {
 			this.deletable = deletable;
+		}
+
+	}
+
+	public static class HiddenConfigImpl implements Serializable {
+
+		private static final long serialVersionUID = 6566440254646584026L;
+		private boolean value = false;
+		private String expression = "";
+
+		public HiddenConfigImpl() {
+		}
+
+		public HiddenConfigImpl(HiddenConfig config) {
+			if (config == null)
+				return;
+			this.value = config.value();
+			this.expression = config.expression();
+			if (!this.value && StringUtils.isBlank(this.expression)
+					&& config.hideWhenBlank())
+				this.expression = "!(value?? && value?string?has_content)";
+		}
+
+		public boolean isValue() {
+			return value;
+		}
+
+		public void setValue(boolean value) {
+			this.value = value;
+		}
+
+		public String getExpression() {
+			return expression;
+		}
+
+		public void setExpression(String expression) {
+			this.expression = expression;
 		}
 
 	}

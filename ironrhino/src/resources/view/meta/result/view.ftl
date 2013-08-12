@@ -7,7 +7,15 @@
 	<div class="form-horizontal">
 	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
-		<#if !config.hiddenInView>
+		<#assign value=entity[key]!>
+		<#assign hidden=false>
+		<#if config.hiddenInView.value>
+			<#assign hidden=true>
+		</#if>
+		<#if !hidden && config.hiddenInView.expression?has_content>
+			<#assign hidden=config.hiddenInView.expression?eval>
+		</#if>
+		<#if !hidden>
 		<#assign label=key>
 		<#if config.alias??>
 			<#assign label=config.alias>
@@ -15,27 +23,26 @@
 		<div class="control-group">
 			<label class="control-label">${action.getText(label)}</label>
 			<div class="controls">
-			<#if config.type=='textarea' >
-				<#if entity[key]?has_content>
-				<div style="white-space:pre-wrap;"<#if config.cssClass?has_content> class="${config.cssClass}"</#if>>${entity[key]!}</div>
+			<#if config.type=='textarea'>
+				<#if value?has_content>
+				<div style="white-space:pre-wrap;"<#if config.cssClass?has_content> class="${config.cssClass}"</#if>>${value!}</div>
 				</#if>
-			<#elseif config.type=='dictionary' >
+			<#elseif config.type=='dictionary'>
 				<#if displayDictionaryLabel??>
 					<#assign templateName><@config.templateName?interpret /></#assign>
-					<@displayDictionaryLabel dictionaryName=templateName value="${entity[key]!}"/>
+					<@displayDictionaryLabel dictionaryName=templateName value=value!/>
 				</#if>
 			<#elseif config.type=='schema'>
 				<#if printAttributes??>
 					<@printAttributes attributes=entity.attributes grouping=true/>
 				</#if>
 			<#elseif config.type=='imageupload'>
-				<#if entity[key]?has_content>
-					<img src="${entity[key]}"/>
+				<#if value?has_content>
+					<img src="${value}"/>
 				</#if>
 			<#else>
 					<#if !config.template?has_content>
-						<#if entity[key]??>
-							<#assign value=entity[key]>
+						<#if value??>
 							<#if value?is_boolean>
 								${action.getText(value?string)}
 							<#elseif value?is_sequence>
@@ -69,7 +76,6 @@
 							</#if>
 						</#if>
 					<#else>
-						<#assign value=entity[key]!>
 						<@config.template?interpret/>
 					</#if>
 			</#if>

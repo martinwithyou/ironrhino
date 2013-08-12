@@ -20,7 +20,7 @@ public @interface UiConfig {
 	public static final String DEFAULT_LIST_VALUE = "name";
 
 	String alias() default "";
-	
+
 	String id() default "";
 
 	String type() default DEFAULT_TYPE; // input,textarea,select,checkbox,listpick,dictionary,schema...
@@ -48,8 +48,8 @@ public @interface UiConfig {
 	boolean hiddenInList() default false;
 
 	boolean hiddenInInput() default false;
-	
-	boolean hiddenInView() default false;
+
+	HiddenConfig hiddenInView() default @HiddenConfig;
 
 	boolean searchable() default false;
 
@@ -58,7 +58,7 @@ public @interface UiConfig {
 	String width() default "";
 
 	String dynamicAttributes() default ""; // json map
-	
+
 	String cellDynamicAttributes() default ""; // json map
 
 	boolean excludeIfNotEdited() default false;
