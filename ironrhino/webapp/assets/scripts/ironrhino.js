@@ -36116,17 +36116,21 @@ Observation.richtable = function(container) {
 	$.fn.sqleditor = function() {
 		$(this).each(function() {
 					var t = $(this);
-					preview(t);
-					t.blur(function() {
-								preview(t)
-							});
+					if (t.is('textarea')) {
+						preview(t);
+						t.blur(function() {
+									preview(t)
+								});
+					} else {
+						t.html($.sqleditor.highlight(t.text()));
+					}
 				});
 		return this;
 	};
 })(jQuery);
 
 Observation.sqleditor = function(container) {
-	$('textarea.sqleditor', container).sqleditor();
+	$('.sqleditor', container).sqleditor();
 };
 (function($) {
 	$.fn.treearea = function(treeoptions) {

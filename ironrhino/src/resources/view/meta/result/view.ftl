@@ -17,7 +17,7 @@
 			<div class="controls">
 			<#if config.type=='textarea' >
 				<#if entity[key]?has_content>
-				<div style="white-space:pre-wrap;">${entity[key]!}</div>
+				<div style="white-space:pre-wrap;"<#if config.cssClass?has_content> class="${config.cssClass}"</#if>>${entity[key]!}</div>
 				</#if>
 			<#elseif config.type=='dictionary' >
 				<#if displayDictionaryLabel??>
