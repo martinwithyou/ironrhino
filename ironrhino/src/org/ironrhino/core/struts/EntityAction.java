@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -256,9 +257,19 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 							columnannotation = f.getAnnotation(Column.class);
 					} catch (Exception e) {
 					}
-
+				Basic basicannotation = pd.getReadMethod().getAnnotation(
+						Basic.class);
+				if (basicannotation == null)
+					try {
+						Field f = clazz.getDeclaredField(propertyName);
+						if (f != null)
+							basicannotation = f.getAnnotation(Basic.class);
+					} catch (Exception e) {
+					}
 				UiConfigImpl uci = new UiConfigImpl(uiConfig);
-				if (columnannotation != null && !columnannotation.nullable())
+				if (columnannotation != null && !columnannotation.nullable()
+						|| basicannotation != null
+						&& !basicannotation.optional())
 					uci.setRequired(true);
 				Class<?> returnType = pd.getPropertyType();
 				if (returnType.isEnum()) {
