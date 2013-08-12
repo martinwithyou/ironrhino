@@ -237,9 +237,12 @@ public class JdbcUpdateService {
 
 	@Transactional
 	public int[][] update(String[] sql, Map<String, ?> paramMap) {
+		int queryTimeout = jdbcTemplate.getQueryTimeout();
 		int[][] result = new int[sql.length][2];
-		for (int i = 0; i < sql.length; i++)
+		for (int i = 0; i < sql.length; i++) {
+			jdbcTemplate.setQueryTimeout(queryTimeout);
 			result[i] = update(sql[i], paramMap);
+		}
 		return result;
 	}
 
