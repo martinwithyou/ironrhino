@@ -1,9 +1,12 @@
 package org.ironrhino.core.jdbc;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class SqlUtils {
 
@@ -16,12 +19,16 @@ public class SqlUtils {
 	}
 
 	public static String clearComments(String sql) {
+		if (StringUtils.isBlank(sql))
+			return sql;
 		return LINE_COMMENTS_PATTERN
 				.matcher(BLOCK_COMMENTS_PATTERN.matcher(sql).replaceAll(""))
 				.replaceAll("\n").replaceAll("\n+", "\n").trim();
 	}
 
 	public static String highlight(String sql) {
+		if (StringUtils.isBlank(sql))
+			return sql;
 		return PARAMETER_PATTERN.matcher(
 				LINE_COMMENTS_PATTERN.matcher(
 						BLOCK_COMMENTS_PATTERN.matcher(sql).replaceAll(
@@ -31,6 +38,8 @@ public class SqlUtils {
 	}
 
 	public static Set<String> extractParameters(String sql) {
+		if (StringUtils.isBlank(sql))
+			return Collections.emptySet();
 		sql = clearComments(sql);
 		Set<String> names = new LinkedHashSet<String>();
 		Matcher m = PARAMETER_PATTERN.matcher(sql);
@@ -45,6 +54,8 @@ public class SqlUtils {
 
 	public static Set<String> extractTables(String sql, String quoteString,
 			String frontKeyword) {
+		if (StringUtils.isBlank(sql))
+			return Collections.emptySet();
 		sql = clearComments(sql);
 		Pattern tablePattern = Pattern.compile(frontKeyword + "\\s+([\\w\\."
 				+ quoteString + ",\\s]+)", Pattern.CASE_INSENSITIVE);
@@ -60,7 +71,7 @@ public class SqlUtils {
 	}
 
 	private static final Pattern PARAMETER_PATTERN = Pattern
-			.compile("(:\\w*)(,|\\)|\\s|\\||\\+|$)");
+			.compile("(:\\w*)(,|;|\\)|\\s|\\||\\+|$)");
 
 	private static final Pattern BLOCK_COMMENTS_PATTERN = Pattern
 			.compile("/\\*(?:.|[\\n\\r])*?\\*/");
