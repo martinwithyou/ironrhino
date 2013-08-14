@@ -49,12 +49,15 @@ th.radio input[type="radio"],th.checkbox input[type="checkbox"],td.radio input[t
 	float: none !important;
 	margin: 0;
 }
-input.integer,input.double,input.date {
+input.integer,input.long,input.double,input.date,input.datetime {
 	width: 75px;
 	font-family: Arial;
 }
 input.long {
 	width: 150px;
+}
+input.datetime {
+	width: 120px;
 }
 input.latlng{
 	width: 300px;

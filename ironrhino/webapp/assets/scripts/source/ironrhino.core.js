@@ -803,6 +803,11 @@ Observation.common = function(container) {
 		$('input.date:not([readonly]):not([disabled])', container).datepicker({
 					dateFormat : 'yy-mm-dd'
 				});
+	if (typeof $.fn.datetimepicker != 'undefined')
+		$('input.datetime:not([readonly]):not([disabled])', container)
+				.datetimepicker({
+							language : MessageBundle.lang().replace('_', '-')
+						});
 	$('input.captcha', container).focus(function() {
 				if ($(this).data('_captcha_'))
 					return;
