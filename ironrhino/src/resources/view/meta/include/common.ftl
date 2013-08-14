@@ -24,7 +24,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#if>
 </#macro>
 
-<#function getUrl value secure=''>
+<#function getUrl value secure=false includeQueryString=false>
 <#if value?starts_with('/assets/')>
 	<#if assetsBase??>
 		<#local value=assetsBase+value>
@@ -34,24 +34,33 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 	<#return value>
 <#elseif value?starts_with('/')>
 	<#if request??>
-		<#if !request.isSecure() && secure=='true'>
+		<#if !request.isSecure() && secure>
 			<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,true)+value>
-		<#elseif request.isSecure() && secure=='false'>
+		<#elseif request.isSecure() && !secure>
 			<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,false)+value>
 		<#else>
 			<#local value=base+value>
 		</#if>
 	<#else>
-		<#if value?starts_with('http://') && secure=='true'>
+		<#if value?starts_with('http://') && secure>
 			<#local value=value?replace('http://','https://')?replace('8080','8443')>
-		<#elseif value?starts_with('https://') && secure=='false'>
+		<#elseif value?starts_with('https://') && !secure>
 			<#local value=value?replace('https://','http://')?replace('8443','8080')>
 		</#if>
 	</#if>
 </#if>
-<#return response.encodeURL(value)>
+<#local value=response.encodeURL(value)/>
+<#if includeQueryString && request.queryString?has_content && !request.queryString?matches('^_=\\d+$')>
+	<#local value=value+(value?index_of('?') gt 0)?string('&','?')/>
+	<#if request.queryString?index_of('&_=') gt 0>
+		<#local value=value+request.queryString?substring(0,request.queryString?index_of('&_='))/>
+	<#else>
+		<#local value=value+request.queryString/>
+	</#if>
+</#if>
+<#return value>
 </#function>
 
-<#macro url value secure=''>
-${getUrl(value,secure)}<#t>
+<#macro url value secure=false includeQueryString=false>
+${getUrl(value,secure,includeQueryString)}<#t>
 </#macro>
