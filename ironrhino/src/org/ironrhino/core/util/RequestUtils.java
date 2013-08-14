@@ -81,6 +81,11 @@ public class RequestUtils {
 	}
 
 	public static String getBaseUrl(HttpServletRequest request, boolean secured) {
+		return getBaseUrl(request, secured, true);
+	}
+
+	public static String getBaseUrl(HttpServletRequest request,
+			boolean secured, boolean includeContextPath) {
 		String host = "localhost";
 		String protocol = "http";
 		int port = 80;
@@ -99,7 +104,6 @@ public class RequestUtils {
 				|| (protocol.equalsIgnoreCase("http") && !secured)) {
 			return getBaseUrl(request);
 		}
-		String contextPath = request.getContextPath();
 		StringBuilder sb = new StringBuilder();
 		sb.append(secured ? "https://" : "http://");
 		sb.append(host);
@@ -110,7 +114,8 @@ public class RequestUtils {
 			if (port == 8443)
 				sb.append(":8080");
 		}
-		sb.append(contextPath);
+		if (includeContextPath)
+			sb.append(request.getContextPath());
 		return sb.toString();
 	}
 

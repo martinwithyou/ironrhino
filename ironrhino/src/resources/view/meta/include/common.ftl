@@ -24,8 +24,8 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 </#if>
 </#macro>
 
-<#function getUrl value secure=false includeQueryString=false>
-<#if value?starts_with('/assets/')>
+<#function getUrl value includeContextPath=true includeQueryString=false secure=false>
+<#if value?starts_with('/assets/') && includeContextPath>
 	<#if assetsBase??>
 		<#local value=assetsBase+value>
 	<#else>
@@ -35,10 +35,10 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <#elseif value?starts_with('/')>
 	<#if request??>
 		<#if !request.isSecure() && secure>
-			<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,true)+value>
+			<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,true,includeContextPath)+value>
 		<#elseif request.isSecure() && !secure>
-			<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,false)+value>
-		<#else>
+			<#local value=statics['org.ironrhino.core.util.RequestUtils'].getBaseUrl(request,false,includeContextPath)+value>
+		<#elseif includeContextPath>
 			<#local value=base+value>
 		</#if>
 	<#else>
@@ -50,7 +50,7 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 	</#if>
 </#if>
 <#local value=response.encodeURL(value)/>
-<#if includeQueryString && request.queryString?has_content && !request.queryString?matches('^_=\\d+$')>
+<#if includeQueryString && request?? && request.queryString?has_content && !request.queryString?matches('^_=\\d+$')>
 	<#local value=value+(value?index_of('?') gt 0)?string('&','?')/>
 	<#if request.queryString?index_of('&_=') gt 0>
 		<#local value=value+request.queryString?substring(0,request.queryString?index_of('&_='))/>
@@ -61,6 +61,6 @@ ${statics['org.ironrhino.core.cache.CacheContext'].putPageFragment(key,content,s
 <#return value>
 </#function>
 
-<#macro url value secure=false includeQueryString=false>
-${getUrl(value,secure,includeQueryString)}<#t>
+<#macro url value includeContextPath=true includeQueryString=false secure=false>
+${getUrl(value,includeContextPath,includeQueryString,secure)}<#t>
 </#macro>
