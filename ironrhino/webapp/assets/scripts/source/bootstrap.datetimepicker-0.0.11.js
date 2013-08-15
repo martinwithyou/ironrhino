@@ -28,6 +28,7 @@
  * 4.comment if (!this.isInput) on event mousedown.datetimepicker
  * 5.change this.$element.outerHeight() to this.$element.outerHeight() + 5
  * 6.exchange Hour pattern HH and hh
+ * 7.comment this.set(); in hide()
  */
 
 (function($) {
@@ -182,7 +183,7 @@
 			this.widget.hide();
 			this.viewMode = this.startViewMode;
 			this.showMode();
-			this.set();
+			//this.set();
 			this.$element.trigger({
 						type : 'hide',
 						date : this._date

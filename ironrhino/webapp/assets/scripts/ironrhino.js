@@ -28528,6 +28528,7 @@ $(function () {
  * 4.comment if (!this.isInput) on event mousedown.datetimepicker
  * 5.change this.$element.outerHeight() to this.$element.outerHeight() + 5
  * 6.exchange Hour pattern HH and hh
+ * 7.comment this.set(); in hide()
  */
 
 (function($) {
@@ -28682,7 +28683,7 @@ $(function () {
 			this.widget.hide();
 			this.viewMode = this.startViewMode;
 			this.showMode();
-			this.set();
+			//this.set();
 			this.$element.trigger({
 						type : 'hide',
 						date : this._date
@@ -35241,10 +35242,8 @@ Richtable = {
 		if (templateId) {
 			template = $('#' + templateId).text();
 		} else {
-			if (type == 'textarea') {
+			if (type == 'textarea')
 				template = '<textarea type="text" class="text"/>';
-			} else if (type == 'date')
-				template = '<input type="text" class="text date"/>';
 			else if (type == 'boolean')
 				template = '<select><option value="true">'
 						+ MessageBundle.get('true')
@@ -35254,36 +35253,27 @@ Richtable = {
 				template = '<input type="text" class="text"/>';
 		}
 		cell.html(template);
-		$(':input', cell).blur(function() {
-					if (!$(this).hasClass('date'))
+		var input = $(':input', cell).val(value).blur(function() {
+					if (!$(this).hasClass('date')
+							&& !$(this).hasClass('datetime'))
 						Richtable.updateCell(this);
 				});
-		var select = $('select', cell);
-		if (value != undefined && select.length) {
-			var arr = $('option', select).toArray();
-			for (var i = 0; i < arr.length; i++) {
-				if (arr[i].value == value || $(arr[i]).text() == value) {
-					$(arr[i]).prop('selected', true);
-					break;
-				}
+		if (type == 'date' || type == 'datetime') {
+			var option = {
+				language : MessageBundle.lang().replace('_', '-')
 			};
-			select.focus();
-		} else {
-			// $('input.date', cell).datepicker({
-			// dateFormat : 'yy-mm-dd',
-			// onClose : function() {
-			// Richtable.updateCell(this)
-			// }
-			// });
-			$('input.date', cell).datetimepicker({
-						language : MessageBundle.lang().replace('_', '-'),
-						format : 'yyyy-MM-dd',
-						pickTime : false
-					}).bind('hide', function(e) {
+			if (type == 'date') {
+				option.format = 'yyyy-MM-dd';
+				option.pickTime = false;
+			} else {
+				option.format = 'yyyy-MM-dd HH:mm:ss';
+			}
+			input.addClass(type).datetimepicker(option).bind('hide',
+					function(e) {
 						Richtable.updateCell(this)
 					});
-			$(':input', cell).val(value).focus();
 		}
+		input.focus();
 	},
 	updateCell : function(cellEdit) {
 		var ce = $(cellEdit);
@@ -35324,11 +35314,19 @@ Richtable = {
 							if (!cellEdit)
 								return;
 							var ar = cellEdit.split(',');
+							var action = ar[0];
+							var type = ar[1];
+							var template = ar[2];
+							if (action != 'click' && action != 'dblclick') {
+								template = type;
+								type = action;
+								action = 'click';
+							}
 							if (!$(cells[i]).data('readonly'))
-								$(cells[i]).unbind(ar[0]).bind(ar[0],
+								$(cells[i]).unbind(action).bind(action,
 										function() {
-											Richtable.editCell(this, ar[1],
-													ar[2]);
+											Richtable.editCell(this, type,
+													template);
 										});
 						});
 		});
