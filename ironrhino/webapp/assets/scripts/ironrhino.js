@@ -35533,7 +35533,8 @@ Observation.richtable = function(container) {
 									preview(t)
 								});
 					} else {
-						t.html($.sqleditor.highlight(t.text()));
+						t.addClass('preview').html($.sqleditor.highlight(t
+								.text()));
 					}
 				});
 		return this;

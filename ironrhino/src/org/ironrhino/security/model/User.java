@@ -351,6 +351,16 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		return (clazz != null) ? getExtra(clazz) : null;
 	}
 
+	public <T extends Persistable<?>> void removeExtra(Class<T> clazz) {
+		if (extras != null)
+			extras.remove(clazz);
+	}
+
+	public void clearExtra() {
+		if (extras != null)
+			extras.clear();
+	}
+
 	@Override
 	public String toString() {
 		return StringUtils.isNotBlank(this.name) ? this.name : this.username;
