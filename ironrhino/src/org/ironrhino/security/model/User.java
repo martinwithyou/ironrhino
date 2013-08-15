@@ -351,14 +351,14 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		return (clazz != null) ? getExtra(clazz) : null;
 	}
 
-	public <T extends Persistable<?>> void removeExtra(Class<T> clazz) {
-		if (extras != null)
+	public <T extends Persistable<?>> void setExtra(Class<T> clazz, T extra) {
+		if (extras == null)
+			extras = new HashMap<Class<? extends Persistable<?>>, Persistable<?>>(
+					2);
+		if (extra == null)
 			extras.remove(clazz);
-	}
-
-	public void clearExtra() {
-		if (extras != null)
-			extras.clear();
+		else
+			extras.put(clazz, extra);
 	}
 
 	@Override
