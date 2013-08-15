@@ -108,7 +108,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	private String modifyUser;
 
 	@Transient
-	private Map<Class<? extends Persistable<?>>, Persistable<?>> extras;
+	private transient Map<Class<? extends Persistable<?>>, Persistable<?>> extras;
 
 	@Override
 	public Collection<GrantedAuthority> getAuthorities() {
