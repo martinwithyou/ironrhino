@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 @Target(TYPE)
 @Retention(RUNTIME)
 public @interface RichtableConfig {
+	
+	String formid() default "";
 
 	boolean showPageSize() default true;
 

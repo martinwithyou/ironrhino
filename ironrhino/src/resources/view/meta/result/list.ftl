@@ -8,7 +8,10 @@
 <#if richtableConfig.listHeader?has_content>
 <@richtableConfig.listHeader?interpret/>
 </#if>
-<@rtstart entityName=entityName/>
+<#if richtableConfig.formid?has_content>
+<#assign formid><@richtableConfig.formid?interpret/></#assign>
+</#if>
+<@rtstart formid=formid entityName=entityName/>
 <#assign size=0>
 <#list uiConfigs?keys as key>
 	<#if !uiConfigs[key].hiddenInList>

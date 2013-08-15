@@ -1716,6 +1716,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public static class RichtableConfigImpl implements Serializable {
 
 		private static final long serialVersionUID = 7346213812241502993L;
+		private String formid = "";
 		private boolean showPageSize = true;
 		private String actionColumnButtons = "";
 		private String bottomButtons = "";
@@ -1729,12 +1730,21 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		public RichtableConfigImpl(RichtableConfig config) {
 			if (config == null)
 				return;
+			this.formid = config.formid();
 			this.showPageSize = config.showPageSize();
 			this.actionColumnButtons = config.actionColumnButtons();
 			this.bottomButtons = config.bottomButtons();
 			this.listHeader = config.listHeader();
 			this.listFooter = config.listFooter();
 			this.rowDynamicAttributes = config.rowDynamicAttributes();
+		}
+
+		public String getFormid() {
+			return formid;
+		}
+
+		public void setFormid(String formid) {
+			this.formid = formid;
 		}
 
 		public boolean isShowPageSize() {
