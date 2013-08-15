@@ -21,13 +21,12 @@
  */
 
 /**
- * changes 
- * 2.change find('.input-append') to find('.input-append').length,find('.input-prepend') to find('.input-prepend').length 
- * 3.if (icon && icon.length)
- * 4.comment if (!this.isInput) on event mousedown.datetimepicker
- * 5.change this.$element.outerHeight() to this.$element.outerHeight() + 5
- * 6.exchange Hour pattern HH and hh
- * 7.comment this.set(); in hide()
+ * changes 2.change find('.input-append') to
+ * find('.input-append').length,find('.input-prepend') to
+ * find('.input-prepend').length 3.if (icon && icon.length) 4.comment if
+ * (!this.isInput) on event mousedown.datetimepicker 5.change
+ * this.$element.outerHeight() to this.$element.outerHeight() + 5 6.exchange
+ * Hour pattern HH and hh 7.comment this.set(); in hide()
  */
 
 (function($) {
@@ -77,14 +76,16 @@
 				icon = this.component.find('i');
 			}
 			if (this.pickTime) {
+				this.timeIcon = 'icon-time';
 				if (icon && icon.length) {
-					this.timeIcon = icon.data('time-icon') || 'icon-time';
+					this.timeIcon = icon.data('time-icon') || this.timeIcon;
 					icon.addClass(this.timeIcon);
 				}
 			}
 			if (this.pickDate) {
+				this.dateIcon = 'icon-calendar';
 				if (icon && icon.length) {
-					this.dateIcon = icon.data('date-icon') || 'icon-calendar';
+					this.dateIcon = icon.data('date-icon') || this.dateIcon;
 					icon.removeClass(this.timeIcon).addClass(this.dateIcon);
 				}
 			}
@@ -176,7 +177,7 @@
 			this.widget.hide();
 			this.viewMode = this.startViewMode;
 			this.showMode();
-			//this.set();
+			// this.set();
 			this.$element.trigger({
 						type : 'hide',
 						date : this._date
