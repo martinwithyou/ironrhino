@@ -738,8 +738,10 @@ Observation.common = function(container) {
 				if (!maxlength || maxlength > 3000) {
 					if ($(this).hasClass('date'))
 						$(this).attr('maxlength', '10');
-					if ($(this).hasClass('datetime'))
+					else if ($(this).hasClass('datetime'))
 						$(this).attr('maxlength', '19');
+					else if ($(this).hasClass('time'))
+						$(this).attr('maxlength', '8');
 					else if ($(this).hasClass('integer'))
 						$(this).attr('maxlength', '11');
 					else if ($(this).hasClass('long'))
@@ -805,19 +807,25 @@ Observation.common = function(container) {
 	// $('input.date:not([readonly]):not([disabled])', container).datepicker({
 	// dateFormat : 'yy-mm-dd'
 	// });
-	if (typeof $.fn.datetimepicker != 'undefined') {
-		$('input.date:not([readonly]):not([disabled])', container)
-				.datetimepicker({
-							language : MessageBundle.lang().replace('_', '-'),
-							format : 'yyyy-MM-dd',
-							pickTime : false
-						});
-		$('input.datetime:not([readonly]):not([disabled])', container)
-				.datetimepicker({
-							language : MessageBundle.lang().replace('_', '-'),
-							format : 'yyyy-MM-dd HH:mm:ss'
-						});
-	}
+	if (typeof $.fn.datetimepicker != 'undefined')
+		$('input.date,input.datetime,input.time', container).not('[readonly]')
+				.not('[disabled]').each(function() {
+					var t = $(this);
+					var option = {
+						language : MessageBundle.lang().replace('_', '-')
+					};
+					if (t.hasClass('datetime')) {
+						option.format = t.data('format')
+								|| 'yyyy-MM-dd HH:mm:ss';
+					} else if (t.hasClass('time')) {
+						option.format = t.data('format') || 'HH:mm:ss';
+						option.pickDate = false;
+					} else {
+						option.format = t.data('format') || 'yyyy-MM-dd';
+						option.pickTime = false;
+					}
+					t.datetimepicker(option);
+				});
 	$('input.captcha', container).focus(function() {
 				if ($(this).data('_captcha_'))
 					return;

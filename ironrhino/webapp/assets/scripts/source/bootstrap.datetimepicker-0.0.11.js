@@ -22,9 +22,8 @@
 
 /**
  * changes 
- * 1.change default format to yyyy-MM-dd HH:mm:ss 
  * 2.change find('.input-append') to find('.input-append').length,find('.input-prepend') to find('.input-prepend').length 
- * 3.if (icon && icon.length){
+ * 3.if (icon && icon.length)
  * 4.comment if (!this.isInput) on event mousedown.datetimepicker
  * 5.change this.$element.outerHeight() to this.$element.outerHeight() + 5
  * 6.exchange Hour pattern HH and hh
@@ -71,29 +70,23 @@
 				else
 					this.format = this.$element.find('input').data('format');
 				if (!this.format)
-					this.format = 'yyyy-MM-dd HH:mm:ss';
+					this.format = 'MM/dd/yyyy';
 			}
 			this._compileFormat();
 			if (this.component) {
 				icon = this.component.find('i');
 			}
 			if (this.pickTime) {
-				if (icon && icon.length)
-					this.timeIcon = icon.data('time-icon');
-					if (!this.timeIcon)
-						this.timeIcon = 'icon-time';
-					if (icon && icon.length)
-						icon.addClass(this.timeIcon);
+				if (icon && icon.length) {
+					this.timeIcon = icon.data('time-icon') || 'icon-time';
+					icon.addClass(this.timeIcon);
+				}
 			}
 			if (this.pickDate) {
-				if (icon && icon.length)
-					this.dateIcon = icon.data('date-icon');
-					if (!this.dateIcon)
-						this.dateIcon = 'icon-calendar';
-					if (icon && icon.length){
-						icon.removeClass(this.timeIcon);
-						icon.addClass(this.dateIcon);
-					}
+				if (icon && icon.length) {
+					this.dateIcon = icon.data('date-icon') || 'icon-calendar';
+					icon.removeClass(this.timeIcon).addClass(this.dateIcon);
+				}
 			}
 			this.widget = $(getTemplate(this.timeIcon, options.pickDate,
 					options.pickTime, options.pick12HourFormat,

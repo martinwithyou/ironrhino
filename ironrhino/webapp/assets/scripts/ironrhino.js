@@ -28522,9 +28522,8 @@ $(function () {
 
 /**
  * changes 
- * 1.change default format to yyyy-MM-dd HH:mm:ss 
  * 2.change find('.input-append') to find('.input-append').length,find('.input-prepend') to find('.input-prepend').length 
- * 3.if (icon && icon.length){
+ * 3.if (icon && icon.length)
  * 4.comment if (!this.isInput) on event mousedown.datetimepicker
  * 5.change this.$element.outerHeight() to this.$element.outerHeight() + 5
  * 6.exchange Hour pattern HH and hh
@@ -28571,29 +28570,23 @@ $(function () {
 				else
 					this.format = this.$element.find('input').data('format');
 				if (!this.format)
-					this.format = 'yyyy-MM-dd HH:mm:ss';
+					this.format = 'MM/dd/yyyy';
 			}
 			this._compileFormat();
 			if (this.component) {
 				icon = this.component.find('i');
 			}
 			if (this.pickTime) {
-				if (icon && icon.length)
-					this.timeIcon = icon.data('time-icon');
-					if (!this.timeIcon)
-						this.timeIcon = 'icon-time';
-					if (icon && icon.length)
-						icon.addClass(this.timeIcon);
+				if (icon && icon.length) {
+					this.timeIcon = icon.data('time-icon') || 'icon-time';
+					icon.addClass(this.timeIcon);
+				}
 			}
 			if (this.pickDate) {
-				if (icon && icon.length)
-					this.dateIcon = icon.data('date-icon');
-					if (!this.dateIcon)
-						this.dateIcon = 'icon-calendar';
-					if (icon && icon.length){
-						icon.removeClass(this.timeIcon);
-						icon.addClass(this.dateIcon);
-					}
+				if (icon && icon.length) {
+					this.dateIcon = icon.data('date-icon') || 'icon-calendar';
+					icon.removeClass(this.timeIcon).addClass(this.dateIcon);
+				}
 			}
 			this.widget = $(getTemplate(this.timeIcon, options.pickDate,
 					options.pickTime, options.pick12HourFormat,
@@ -30768,8 +30761,10 @@ Observation.common = function(container) {
 				if (!maxlength || maxlength > 3000) {
 					if ($(this).hasClass('date'))
 						$(this).attr('maxlength', '10');
-					if ($(this).hasClass('datetime'))
+					else if ($(this).hasClass('datetime'))
 						$(this).attr('maxlength', '19');
+					else if ($(this).hasClass('time'))
+						$(this).attr('maxlength', '8');
 					else if ($(this).hasClass('integer'))
 						$(this).attr('maxlength', '11');
 					else if ($(this).hasClass('long'))
@@ -30835,19 +30830,25 @@ Observation.common = function(container) {
 	// $('input.date:not([readonly]):not([disabled])', container).datepicker({
 	// dateFormat : 'yy-mm-dd'
 	// });
-	if (typeof $.fn.datetimepicker != 'undefined') {
-		$('input.date:not([readonly]):not([disabled])', container)
-				.datetimepicker({
-							language : MessageBundle.lang().replace('_', '-'),
-							format : 'yyyy-MM-dd',
-							pickTime : false
-						});
-		$('input.datetime:not([readonly]):not([disabled])', container)
-				.datetimepicker({
-							language : MessageBundle.lang().replace('_', '-'),
-							format : 'yyyy-MM-dd HH:mm:ss'
-						});
-	}
+	if (typeof $.fn.datetimepicker != 'undefined')
+		$('input.date,input.datetime,input.time', container).not('[readonly]')
+				.not('[disabled]').each(function() {
+					var t = $(this);
+					var option = {
+						language : MessageBundle.lang().replace('_', '-')
+					};
+					if (t.hasClass('datetime')) {
+						option.format = t.data('format')
+								|| 'yyyy-MM-dd HH:mm:ss';
+					} else if (t.hasClass('time')) {
+						option.format = t.data('format') || 'HH:mm:ss';
+						option.pickDate = false;
+					} else {
+						option.format = t.data('format') || 'yyyy-MM-dd';
+						option.pickTime = false;
+					}
+					t.datetimepicker(option);
+				});
 	$('input.captcha', container).focus(function() {
 				if ($(this).data('_captcha_'))
 					return;
@@ -34906,7 +34907,8 @@ Richtable = {
 					$(':input:visible', inputform).filter(function(i) {
 						return $(this).attr('name')
 								&& !($(this).val() || $(this).hasClass('date')
-										|| $(this).hasClass('datetime') || $(this)
+										|| $(this).hasClass('datetime')
+										|| $(this).hasClass('time') || $(this)
 										.prop('tagName') == 'BUTTON');
 					}).eq(0).focus();
 					if (!inputform.hasClass('keepopen')) {
@@ -35254,19 +35256,21 @@ Richtable = {
 		}
 		cell.html(template);
 		var input = $(':input', cell).val(value).blur(function() {
-					if (!$(this).hasClass('date')
-							&& !$(this).hasClass('datetime'))
+					if (!$(this).is('.date,.datetime,.time'))
 						Richtable.updateCell(this);
 				});
-		if (type == 'date' || type == 'datetime') {
+		if (type == 'date' || type == 'datetime' || type == 'time') {
 			var option = {
 				language : MessageBundle.lang().replace('_', '-')
 			};
-			if (type == 'date') {
-				option.format = 'yyyy-MM-dd';
-				option.pickTime = false;
+			if (type == 'datetime') {
+				option.format = t.data('format') || 'yyyy-MM-dd HH:mm:ss';
+			} else if (type == 'time') {
+				option.format = t.data('format') || 'HH:mm:ss';
+				option.pickDate = false;
 			} else {
-				option.format = 'yyyy-MM-dd HH:mm:ss';
+				option.format = t.data('format') || 'yyyy-MM-dd';
+				option.pickTime = false;
 			}
 			input.addClass(type).datetimepicker(option).bind('hide',
 					function(e) {
