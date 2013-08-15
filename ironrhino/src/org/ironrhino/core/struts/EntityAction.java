@@ -54,7 +54,6 @@ import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.service.BaseManager;
-import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.AuthzUtils;
@@ -65,7 +64,6 @@ import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -86,9 +84,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	private static final long serialVersionUID = -8442983706126047413L;
 
 	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
-
-	@javax.inject.Inject
-	private transient EntityManager<Persistable<?>> _entityManager;
 
 	protected ResultPage resultPage;
 
@@ -443,18 +438,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	protected <T extends Persistable<?>> BaseManager<T> getEntityManager(
 			Class<T> entityClass) {
-		String entityManagerName = StringUtils.uncapitalize(entityClass
-				.getSimpleName()) + "Manager";
-		try {
-			Object bean = ApplicationContextUtils.getBean(entityManagerName);
-			if (bean != null)
-				return (BaseManager<T>) bean;
-			else
-				((EntityManager<T>) _entityManager).setEntityClass(entityClass);
-		} catch (NoSuchBeanDefinitionException e) {
-			((EntityManager<T>) _entityManager).setEntityClass(entityClass);
-		}
-		return ((EntityManager<T>) _entityManager);
+		return ApplicationContextUtils.getEntityManager(entityClass);
 	}
 
 	private void tryFindEntity() {

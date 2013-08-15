@@ -28,7 +28,7 @@ import org.ironrhino.core.model.Recordable;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
-import org.ironrhino.core.service.EntityManager;
+import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.JsonUtils;
@@ -106,9 +106,6 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@NotInCopy
 	@NotInJson
 	private String modifyUser;
-
-	@Transient
-	private transient Map<Class<? extends Persistable<?>>, Persistable<?>> extras;
 
 	@Override
 	public Collection<GrantedAuthority> getAuthorities() {
@@ -319,22 +316,13 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 			}
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T extends Persistable<?>> T getExtra(Class<T> clazz) {
-		if (extras == null)
-			extras = new HashMap<Class<? extends Persistable<?>>, Persistable<?>>(
-					2);
-		if (!extras.containsKey(clazz)) {
-			T extra = null;
-			EntityManager<T> entityManager = ApplicationContextUtils
-					.getBean(EntityManager.class);
-			if (entityManager != null) {
-				entityManager.setEntityClass(clazz);
-				extra = entityManager.get(getId());
-			}
-			extras.put(clazz, extra);
-		}
-		return (T) extras.get(clazz);
+		T extra = null;
+		BaseManager<T> baseManager = ApplicationContextUtils
+				.getEntityManager(clazz);
+		if (baseManager != null)
+			extra = baseManager.get(getId());
+		return extra;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -349,16 +337,6 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 			}
 		}
 		return (clazz != null) ? getExtra(clazz) : null;
-	}
-
-	public <T extends Persistable<?>> void setExtra(Class<T> clazz, T extra) {
-		if (extras == null)
-			extras = new HashMap<Class<? extends Persistable<?>>, Persistable<?>>(
-					2);
-		if (extra == null)
-			extras.remove(clazz);
-		else
-			extras.put(clazz, extra);
 	}
 
 	@Override
