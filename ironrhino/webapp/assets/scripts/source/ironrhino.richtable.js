@@ -82,7 +82,8 @@ Richtable = {
 					var inputform = $(this);
 					$(':input:visible', inputform).filter(function(i) {
 						return $(this).attr('name')
-								&& !($(this).val() || $(this).hasClass('date') || $(this)
+								&& !($(this).val() || $(this).hasClass('date')
+										|| $(this).hasClass('datetime') || $(this)
 										.prop('tagName') == 'BUTTON');
 					}).eq(0).focus();
 					if (!inputform.hasClass('keepopen')) {
@@ -446,11 +447,18 @@ Richtable = {
 			};
 			select.focus();
 		} else {
-			$('input.date', cell).datepicker({
-						dateFormat : 'yy-mm-dd',
-						onClose : function() {
-							Richtable.updateCell(this)
-						}
+			// $('input.date', cell).datepicker({
+			// dateFormat : 'yy-mm-dd',
+			// onClose : function() {
+			// Richtable.updateCell(this)
+			// }
+			// });
+			$('input.date', cell).datetimepicker({
+						language : MessageBundle.lang().replace('_', '-'),
+						format : 'yyyy-MM-dd',
+						pickTime : false
+					}).bind('hide', function(e) {
+						Richtable.updateCell(this)
 					});
 			$(':input', cell).val(value).focus();
 		}

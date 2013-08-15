@@ -738,6 +738,8 @@ Observation.common = function(container) {
 				if (!maxlength || maxlength > 3000) {
 					if ($(this).hasClass('date'))
 						$(this).attr('maxlength', '10');
+					if ($(this).hasClass('datetime'))
+						$(this).attr('maxlength', '19');
 					else if ($(this).hasClass('integer'))
 						$(this).attr('maxlength', '11');
 					else if ($(this).hasClass('long'))
@@ -799,15 +801,23 @@ Observation.common = function(container) {
 							replacement : t.data('replacement')
 						});
 			});
-	if (typeof $.fn.datepicker != 'undefined')
-		$('input.date:not([readonly]):not([disabled])', container).datepicker({
-					dateFormat : 'yy-mm-dd'
-				});
-	if (typeof $.fn.datetimepicker != 'undefined')
+	// if (typeof $.fn.datepicker != 'undefined')
+	// $('input.date:not([readonly]):not([disabled])', container).datepicker({
+	// dateFormat : 'yy-mm-dd'
+	// });
+	if (typeof $.fn.datetimepicker != 'undefined') {
+		$('input.date:not([readonly]):not([disabled])', container)
+				.datetimepicker({
+							language : MessageBundle.lang().replace('_', '-'),
+							format : 'yyyy-MM-dd',
+							pickTime : false
+						});
 		$('input.datetime:not([readonly]):not([disabled])', container)
 				.datetimepicker({
-							language : MessageBundle.lang().replace('_', '-')
+							language : MessageBundle.lang().replace('_', '-'),
+							format : 'yyyy-MM-dd HH:mm:ss'
 						});
+	}
 	$('input.captcha', container).focus(function() {
 				if ($(this).data('_captcha_'))
 					return;

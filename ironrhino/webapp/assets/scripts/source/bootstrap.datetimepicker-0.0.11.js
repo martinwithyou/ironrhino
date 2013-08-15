@@ -26,7 +26,8 @@
  * 2.change find('.input-append') to find('.input-append').length,find('.input-prepend') to find('.input-prepend').length 
  * 3.if (icon && icon.length){
  * 4.comment if (!this.isInput) on event mousedown.datetimepicker
- * 5 change this.$element.outerHeight() to this.$element.outerHeight() + 5
+ * 5.change this.$element.outerHeight() to this.$element.outerHeight() + 5
+ * 6.exchange Hour pattern HH and hh
  */
 
 (function($) {
@@ -1228,7 +1229,7 @@
 				return '(\\d{4})\\b';
 			}
 		},
-		hh : {
+		HH : {
 			property : 'UTCHours',
 			getPattern : function() {
 				return '(0?[0-9]|1[0-9]|2[0-3])\\b';
@@ -1252,7 +1253,7 @@
 				return '([0-9]{1,3})\\b';
 			}
 		},
-		HH : {
+		hh : {
 			property : 'Hours12',
 			getPattern : function() {
 				return '(0?[1-9]|1[0-2])\\b';

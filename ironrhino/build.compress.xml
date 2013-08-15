@@ -19,7 +19,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.browser-1.0.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.10.3.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.10.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.history-2.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.rc4-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.95.js" />
@@ -75,7 +74,6 @@
 				<file name="${webapp.dir}/assets/scripts/source/jquery.browser-1.0.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.cookie-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.ui-1.10.3.js" />
-				<file name="${webapp.dir}/assets/scripts/source/jquery.ui.datepicker-zh-CN-1.10.2.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.history-2.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.rc4-1.0.js" />
 				<file name="${webapp.dir}/assets/scripts/source/jquery.form-2.95.js" />
