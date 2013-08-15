@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Lob;
+
 import org.ironrhino.core.metadata.NotInJson;
 import org.junit.Test;
 
@@ -29,6 +31,8 @@ public class JsonUtilsTest {
 		private String password;
 		private int age;
 		private Status status;
+		@Lob
+		private String content;
 
 		private Date date = DateUtils.beginOfDay(new Date());
 
@@ -72,6 +76,14 @@ public class JsonUtilsTest {
 			this.status = status;
 		}
 
+		public String getContent() {
+			return content;
+		}
+
+		public void setContent(String content) {
+			this.content = content;
+		}
+
 	}
 
 	@Test
@@ -81,6 +93,7 @@ public class JsonUtilsTest {
 		u.setPassword("password");
 		u.setStatus(Status.ACTIVE);
 		u.setAge(12);
+		u.setContent("this is a lob");
 		String json = JsonUtils.toJson(u);
 		try {
 			User u2 = JsonUtils.fromJson(json, User.class);
@@ -89,6 +102,7 @@ public class JsonUtilsTest {
 			assertEquals(u.getStatus(), u2.getStatus());
 			assertEquals(u.getDate().getTime(), u2.getDate().getTime());
 			assertNull(u2.getPassword());
+			assertNull(u2.getContent());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());

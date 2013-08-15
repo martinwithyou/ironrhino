@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.Lob;
+
 import org.ironrhino.core.metadata.NotInJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,10 +49,16 @@ public class JsonUtils {
 					@Override
 					protected boolean _isIgnorable(Annotated a) {
 						boolean b = super._isIgnorable(a);
-						if (b)
-							return b;
-						NotInJson ann = a.getAnnotation(NotInJson.class);
-						return ann != null;
+						if (!b) {
+							NotInJson notInJson = a
+									.getAnnotation(NotInJson.class);
+							b = notInJson != null;
+							if (!b) {
+								Lob lob = a.getAnnotation(Lob.class);
+								b = lob != null;
+							}
+						}
+						return b;
 					}
 
 				});
