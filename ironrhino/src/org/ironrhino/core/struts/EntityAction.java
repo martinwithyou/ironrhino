@@ -64,6 +64,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -102,6 +103,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	@Autowired(required = false)
 	private transient ElasticSearchService<Persistable<?>> elasticSearchService;
+
+	@Autowired(required = false)
+	private transient ConversionService conversionService;
 
 	public boolean isSearchable() {
 		if (getEntityClass().getAnnotation(Searchable.class) != null)
@@ -445,6 +449,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		try {
 			BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
 					.newInstance());
+			bw.setConversionService(conversionService);
 			Set<String> naturalIds = getNaturalIds().keySet();
 			if (StringUtils.isNotBlank(getUid())) {
 				bw.setPropertyValue("id", getUid());
@@ -503,6 +508,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			try {
 				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
 						.newInstance());
+				bw.setConversionService(conversionService);
 				bw.setPropertyValue("id", keyword);
 				Serializable idvalue = (Serializable) bw.getPropertyValue("id");
 				if (idvalue != null) {
@@ -541,6 +547,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			try {
 				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
 						.newInstance());
+				bw.setConversionService(conversionService);
 				Set<String> propertyNames = getUiConfigs().keySet();
 				for (String parameterName : ServletActionContext.getRequest()
 						.getParameterMap().keySet()) {
@@ -550,7 +557,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					Object value1 = null;
 					Object value2 = null;
 					String operator = ServletActionContext.getRequest()
-							.getParameter(parameterName + ":op");
+							.getParameter(parameterName + "-op");
 					if (propertyName.startsWith(getEntityName() + "."))
 						propertyName = propertyName.substring(propertyName
 								.indexOf('.') + 1);
@@ -564,6 +571,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 							if (Persistable.class.isAssignableFrom(type)) {
 								BeanWrapperImpl bw2 = new BeanWrapperImpl(
 										type.newInstance());
+								bw2.setConversionService(conversionService);
 								bw2.setPropertyValue(subPropertyName,
 										parameterValues[0]);
 								value1 = bw2.getPropertyValue(subPropertyName);
@@ -673,8 +681,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						&& (owner.isolate() || owner.readonlyForOther())) {
 					UserDetails ud = AuthzUtils.getUserDetails(ownerProperty
 							.getValue());
-					Object value = new BeanWrapperImpl(entity)
-							.getPropertyValue(owner.propertyName());
+					BeanWrapperImpl bwi = new BeanWrapperImpl(entity);
+					bwi.setConversionService(conversionService);
+					Object value = bwi.getPropertyValue(owner.propertyName());
 					if (ud == null || value == null || !ud.equals(value)) {
 						addActionError(getText("access.denied"));
 						return ACCESSDENIED;
@@ -693,6 +702,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				log.error(e.getMessage(), e);
 			}
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
+		bw.setConversionService(conversionService);
 		if (entity != null && entity.isNew()) {
 			Set<String> naturalIds = getNaturalIds().keySet();
 			if (getUid() != null && naturalIds.size() == 1) {
@@ -765,6 +775,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		if (!makeEntityValid())
 			return INPUT;
 		BeanWrapperImpl bwp = new BeanWrapperImpl(entity);
+		bwp.setConversionService(conversionService);
 		Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
 		if (!entity.isNew()) {
 			if (ownerProperty != null) {
@@ -825,6 +836,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		entity = constructEntity();
 		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
+		bw.setConversionService(conversionService);
 		for (Map.Entry<String, UiConfigImpl> entry : uiConfigs.entrySet()) {
 			String regex = entry.getValue().getRegex();
 			if (StringUtils.isNotBlank(regex)) {
@@ -892,7 +904,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				Persistable temp = entity;
 				entity = getEntityClass().newInstance();
 				bw = new BeanWrapperImpl(temp);
+				bw.setConversionService(conversionService);
 				BeanWrapperImpl bwp = new BeanWrapperImpl(entity);
+				bwp.setConversionService(conversionService);
 				Set<String> editedPropertyNames = new HashSet<String>();
 				String propertyName = null;
 				for (String parameterName : ServletActionContext.getRequest()
@@ -990,6 +1004,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					persisted = entityManager.get((Serializable) bw
 							.getPropertyValue("id"));
 				BeanWrapperImpl bwp = new BeanWrapperImpl(persisted);
+				bwp.setConversionService(conversionService);
 				Set<String> editedPropertyNames = new HashSet<String>();
 				String propertyName = null;
 				for (String parameterName : ServletActionContext.getRequest()
@@ -1068,6 +1083,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					String listKey = uiConfig.getListKey();
 					BeanWrapperImpl temp = new BeanWrapperImpl(
 							type.newInstance());
+					temp.setConversionService(conversionService);
 					temp.setPropertyValue(listKey, parameterValue);
 					BaseManager em = getEntityManager(type);
 					Object obj;
@@ -1131,6 +1147,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		if (StringUtils.isBlank(propertyName))
 			return null;
 		BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass());
+		bw.setConversionService(conversionService);
 		Class type = bw.getPropertyType(propertyName);
 		if (type == null)
 			throw new IllegalArgumentException("No Such property "
@@ -1155,8 +1172,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					&& owner.isolate()) {
 				UserDetails ud = AuthzUtils.getUserDetails(ownerProperty
 						.getValue());
-				Object value = new BeanWrapperImpl(entity)
-						.getPropertyValue(owner.propertyName());
+				BeanWrapperImpl bwi = new BeanWrapperImpl(entity);
+				bwi.setConversionService(conversionService);
+				Object value = bwi.getPropertyValue(owner.propertyName());
 				if (ud == null || value == null || !ud.equals(value)) {
 					addActionError(getText("access.denied"));
 					return ACCESSDENIED;
@@ -1181,6 +1199,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		try {
 			BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
 					.newInstance());
+			bw.setConversionService(conversionService);
 			for (int i = 0; i < id.length; i++) {
 				bw.setPropertyValue("id", arr[i]);
 				id[i] = (Serializable) bw.getPropertyValue("id");
@@ -1215,8 +1234,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
 								.authorize(null, owner.supervisorRole(), null))
 								&& (owner.isolate() || owner.readonlyForOther())) {
-							Object value = new BeanWrapperImpl(en)
-									.getPropertyValue(owner.propertyName());
+							BeanWrapperImpl bwi = new BeanWrapperImpl(en);
+							bwi.setConversionService(conversionService);
+							Object value = bwi.getPropertyValue(owner
+									.propertyName());
 							if (value == null || !ud.equals(value)) {
 								addActionError(getText("delete.forbidden",
 										new String[] { en.toString() }));
@@ -1262,6 +1283,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		try {
 			BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
 					.newInstance());
+			bw.setConversionService(conversionService);
 			for (int i = 0; i < id.length; i++) {
 				bw.setPropertyValue("id", arr[i]);
 				id[i] = (Serializable) bw.getPropertyValue("id");
@@ -1292,8 +1314,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
 							.authorize(null, owner.supervisorRole(), null))
 							&& (owner.isolate() || owner.readonlyForOther())) {
-						Object value = new BeanWrapperImpl(en)
-								.getPropertyValue(owner.propertyName());
+						BeanWrapperImpl bwi = new BeanWrapperImpl(en);
+						bwi.setConversionService(conversionService);
+						Object value = bwi.getPropertyValue(owner
+								.propertyName());
 						if (value == null || !ud.equals(value))
 							continue;
 					}
