@@ -29,10 +29,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.ironrhino.core.hibernate.CriterionOperator;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -556,8 +558,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 							.getRequest().getParameterMap().get(parameterName);
 					Object value1 = null;
 					Object value2 = null;
-					String operator = ServletActionContext.getRequest()
+					String operatorValue = ServletActionContext.getRequest()
 							.getParameter(parameterName + "-op");
+					CriterionOperator operator = null;
+					if (StringUtils.isNotBlank(operatorValue))
+						operator = CriterionOperator.valueOf(operatorValue
+								.toUpperCase());
+					if (operator == null)
+						operator = CriterionOperator.EQ;
 					if (propertyName.startsWith(getEntityName() + "."))
 						propertyName = propertyName.substring(propertyName
 								.indexOf('.') + 1);
@@ -583,10 +591,12 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 								}
 								String alias = CodecUtils.randomString(4);
 								dc.createAlias(propertyName, alias);
-								dc.add(CriterionUtils
-										.operator(operator, alias + "."
-												+ subPropertyName, value1,
-												value2));
+								Criterion criterion = operator
+										.operator(
+												alias + "." + subPropertyName,
+												value1, value2);
+								if (criterion != null)
+									dc.add(criterion);
 							}
 						}
 					} else if (propertyNames.contains(propertyName)) {
@@ -611,8 +621,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 										parameterValues[1]);
 								value2 = bw.getPropertyValue(propertyName);
 							}
-							dc.add(CriterionUtils.operator(operator,
-									propertyName, value1, value2));
+							Criterion criterion = operator.operator(
+									propertyName, value1, value2);
+							if (criterion != null)
+								dc.add(criterion);
 						}
 					}
 				}
