@@ -25,7 +25,7 @@
 		<thead>
 			<tr>
 				<td>${action.getText('name')}</td>
-				<td style="width:38%;">${action.getText('value')}</td>
+				<td style="width:36%;">${action.getText('value')}</td>
 				<td>${action.getText('type')}</td>
 				<td>${action.getText('required')}</td>
 				<td>${action.getText('strict')}</td>
