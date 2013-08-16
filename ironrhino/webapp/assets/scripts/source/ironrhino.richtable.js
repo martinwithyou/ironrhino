@@ -474,9 +474,10 @@ Richtable = {
 		cell.data('cellvalue', value);
 		if (typeof label != 'undefined')
 			cell.text(label);
-		if (cell.data('oldvalue') != cell.data('cellvalue'))
+		if (cell.data('oldvalue') != cell.data('cellvalue')) {
 			cell.addClass('edited');
-		else
+			cell.removeAttr('data-tooltip');
+		} else
 			cell.removeClass('edited');
 		var savebtn = $('.btn[data-action="save"]', cell.closest('form'));
 		$('td.edited', cell.closest('form')).length ? savebtn

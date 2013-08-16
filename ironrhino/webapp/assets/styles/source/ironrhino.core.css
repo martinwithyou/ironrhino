@@ -1,6 +1,6 @@
 /*override bootstrap start*/
 body.main {
-	padding-top: 60px;
+	padding-top: 80px;
 	padding-bottom: 10px;
 }
 body {
@@ -148,6 +148,45 @@ a.remove:hover {
 	opacity: 1;
   	filter: alpha(opacity=1);
 }
+/* tooltip start */
+[data-tooltip]{
+	position: relative;
+}
+[data-tooltip]:before {
+  content: "";
+  position: absolute;
+  border-top: 20px solid #a1a1a8;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  visibility: hidden;
+  top: -18px;
+  left: -26px;
+}
+
+[data-tooltip]:after {
+  content: attr(data-tooltip);
+  position: absolute;
+  color: white;
+  top: -35px;
+  left: -26px;
+  background: #a1a1a8;
+  padding: 5px 15px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  white-space: nowrap;
+  visibility: hidden;
+}
+
+[data-tooltip]:hover:before, [data-tooltip]:hover:after {
+  visibility: visible;
+  -webkit-transition: visibility 0s linear .3s;
+  -moz-transition: visibility 0s linear .3s;
+  -o-transition: visibility 0s linear .3s;
+  transition: visibility 0s linear .3s;
+}
+/* tooltip end */
+
 /*textext*/
 div.text-core{
 	display:inline-block;
