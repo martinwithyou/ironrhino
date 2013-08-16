@@ -168,22 +168,30 @@ public class DateUtils {
 				&& day == cal.get(Calendar.DAY_OF_MONTH);
 	}
 
-	public static boolean isMonthEnd(Date date) {
+	public static boolean isBeginOfDay(Date date) {
+		return date.getTime() == beginOfDay(date).getTime();
+	}
+
+	public static boolean isEndOfDay(Date date) {
+		return date.getTime() == endOfDay(date).getTime();
+	}
+
+	public static boolean isEndOfMonth(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		return cal.get(Calendar.DAY_OF_MONTH) == cal
 				.getActualMaximum(Calendar.DAY_OF_MONTH);
 	}
 
-	public static boolean isYearEnd(Date date) {
+	public static boolean isEndOfYear(Date date) {
 		return formatDate10(date).endsWith("12-31");
 	}
 
-	public static boolean isMonthStart(Date date) {
+	public static boolean isBeginOfMonth(Date date) {
 		return formatDate10(date).endsWith("01");
 	}
 
-	public static boolean isYearStart(Date date) {
+	public static boolean isBeginOfYear(Date date) {
 		return formatDate10(date).endsWith("01-01");
 	}
 

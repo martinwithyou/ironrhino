@@ -58,7 +58,6 @@ import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
-import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
@@ -546,6 +545,12 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				for (String parameterName : ServletActionContext.getRequest()
 						.getParameterMap().keySet()) {
 					String propertyName = parameterName;
+					String[] parameterValues = ServletActionContext
+							.getRequest().getParameterMap().get(parameterName);
+					Object value1 = null;
+					Object value2 = null;
+					String operator = ServletActionContext.getRequest()
+							.getParameter(parameterName + ":op");
 					if (propertyName.startsWith(getEntityName() + "."))
 						propertyName = propertyName.substring(propertyName
 								.indexOf('.') + 1);
@@ -560,47 +565,46 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 								BeanWrapperImpl bw2 = new BeanWrapperImpl(
 										type.newInstance());
 								bw2.setPropertyValue(subPropertyName,
-										ServletActionContext.getRequest()
-												.getParameter(parameterName));
-								String alias = CodecUtils.randomString(2);
+										parameterValues[0]);
+								value1 = bw2.getPropertyValue(subPropertyName);
+								if (parameterValues.length > 1) {
+									bw2.setPropertyValue(subPropertyName,
+											parameterValues[1]);
+									value2 = bw2
+											.getPropertyValue(subPropertyName);
+								}
+								String alias = CodecUtils.randomString(4);
 								dc.createAlias(propertyName, alias);
-								Object value = bw2
-										.getPropertyValue(subPropertyName);
-								if (value instanceof Date)
-									dc.add(Restrictions.between(alias + "."
-											+ subPropertyName,
-											DateUtils.beginOfDay((Date) value),
-											DateUtils.endOfDay((Date) value)));
-								else
-									dc.add(Restrictions.eq(alias + "."
-											+ subPropertyName, value));
+								dc.add(CriterionUtils
+										.operator(operator, alias + "."
+												+ subPropertyName, value1,
+												value2));
 							}
 						}
 					} else if (propertyNames.contains(propertyName)) {
-						String parameterValue = ServletActionContext
-								.getRequest().getParameter(parameterName);
 						Class type = bw.getPropertyType(propertyName);
-						Object value = null;
 						if (Persistable.class.isAssignableFrom(type)) {
 							BaseManager em = getEntityManager(type);
-							value = em.get(parameterValue);
-							if (value == null) {
+							Persistable p = em.get(parameterValues[0]);
+							if (p == null) {
 								try {
-									value = em.findOne(parameterValue);
+									p = em.findOne(parameterValues[0]);
 								} catch (Exception e) {
 
 								}
 							}
-							dc.add(Restrictions.eq(propertyName, value));
+							dc.add(Restrictions.eq(propertyName, p));
 						} else {
-							bw.setPropertyValue(propertyName, parameterValue);
-							value = bw.getPropertyValue(propertyName);
-							if (value instanceof Date)
-								dc.add(Restrictions.between(propertyName,
-										DateUtils.beginOfDay((Date) value),
-										DateUtils.endOfDay((Date) value)));
-							else
-								dc.add(Restrictions.eq(propertyName, value));
+							bw.setPropertyValue(propertyName,
+									parameterValues[0]);
+							value1 = bw.getPropertyValue(propertyName);
+							if (parameterValues.length > 1) {
+								bw.setPropertyValue(propertyName,
+										parameterValues[1]);
+								value2 = bw.getPropertyValue(propertyName);
+							}
+							dc.add(CriterionUtils.operator(operator,
+									propertyName, value1, value2));
 						}
 					}
 				}

@@ -43,6 +43,62 @@ public class CriterionUtils {
 		return c;
 	}
 
+	public static Criterion operator(String op, String name, Object value1,
+			Object value2) {
+		if ("between".equals(op)) {
+			if (value2 instanceof Date && DateUtils.isBeginOfDay((Date) value2))
+				value2 = DateUtils.endOfDay((Date) value2);
+			if (value1 != null && value2 != null)
+				return Restrictions.between(name, value1, value2);
+			else if (value1 != null)
+				return Restrictions.ge(name, value1);
+			else if (value2 != null)
+				return Restrictions.le(name, value2);
+			else
+				return null;
+		} else if ("notbetween".equals(op)) {
+			if (value2 instanceof Date && DateUtils.isBeginOfDay((Date) value2))
+				value2 = DateUtils.endOfDay((Date) value2);
+			if (value1 != null && value2 != null)
+				return Restrictions.or(Restrictions.lt(name, value1),
+						Restrictions.gt(name, value2));
+			else if (value1 != null)
+				return Restrictions.lt(name, value1);
+			else if (value2 != null)
+				return Restrictions.gt(name, value2);
+			else
+				return null;
+		} else if ("ge".equals(op)) {
+			return Restrictions.ge(name, value1);
+		} else if ("gt".equals(op)) {
+			if (value1 instanceof Date && DateUtils.isBeginOfDay((Date) value1))
+				return Restrictions.gt(name, DateUtils.endOfDay((Date) value1));
+			else
+				return Restrictions.gt(name, value1);
+		} else if ("le".equals(op)) {
+			if (value1 instanceof Date && DateUtils.isBeginOfDay((Date) value1))
+				return Restrictions.le(name, DateUtils.endOfDay((Date) value1));
+			else
+				return Restrictions.le(name, value1);
+		} else if ("lt".equals(op)) {
+			return Restrictions.lt(name, value1);
+		} else if ("neq".equals(op)) {
+			if (value1 instanceof Date && DateUtils.isBeginOfDay((Date) value1))
+				return Restrictions
+						.or(Restrictions.lt(name, value1),
+								Restrictions.gt(name,
+										DateUtils.endOfDay((Date) value1)));
+			else
+				return Restrictions.not(Restrictions.eq(name, value1));
+		} else {
+			if (value1 instanceof Date && DateUtils.isBeginOfDay((Date) value1))
+				return Restrictions.between(name, value1,
+						DateUtils.endOfDay((Date) value1));
+			else
+				return Restrictions.eq(name, value1);
+		}
+	}
+
 	public static Criterion matchTag(String tagFieldName, String tag) {
 		tag = tag.trim();
 		return Restrictions.or(Restrictions.eq(tagFieldName, tag),
