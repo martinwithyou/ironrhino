@@ -9,10 +9,16 @@ import java.lang.annotation.Target;
 @Target(TYPE)
 @Retention(RUNTIME)
 public @interface RichtableConfig {
-	
+
 	String formid() default "";
 
+	String order() default "";
+
 	boolean showPageSize() default true;
+
+	boolean searchable() default false;
+
+	boolean filterable() default false;
 
 	String actionColumnButtons() default "";
 
@@ -21,7 +27,7 @@ public @interface RichtableConfig {
 	String listHeader() default "";
 
 	String listFooter() default "";
-	
+
 	String formHeader() default "";
 
 	String formFooter() default "";

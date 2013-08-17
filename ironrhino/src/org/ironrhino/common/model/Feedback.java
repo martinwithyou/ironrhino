@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
@@ -14,10 +15,11 @@ import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@AutoConfig(searchable = true, order = "createDate desc")
+@AutoConfig
 @Searchable(type = "feedback")
 @Entity
 @Table(name = "common_feedback")
+@RichtableConfig(searchable = true,order = "createDate desc")
 public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 
 	private static final long serialVersionUID = 7857273372050062349L;

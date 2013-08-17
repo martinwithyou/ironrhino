@@ -103,7 +103,7 @@
 </#list>	
 <@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
-<@rtend readonly=readonly deletable=!readonly||readonlyConfig.deletable searchable=searchable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>
+<@rtend readonly=readonly deletable=!readonly||readonlyConfig.deletable searchable=searchable filterable=richtableConfig.filterable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>
 <#if !readonly && hasSelect>
 <div style="display: none;">
 <#list uiConfigs?keys as key>

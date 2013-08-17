@@ -9,17 +9,19 @@ import javax.persistence.Table;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.ReadonlyConfig;
+import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 
-@AutoConfig(order = "date desc", searchable = true)
+@AutoConfig
 @ReadonlyConfig(true)
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Searchable(type = "loginRecord")
 @Table(name = "loginrecord")
+@RichtableConfig(searchable = true, order = "date desc", filterable = true)
 public class LoginRecord extends BaseEntity {
 
 	private static final long serialVersionUID = -7691080078972338500L;

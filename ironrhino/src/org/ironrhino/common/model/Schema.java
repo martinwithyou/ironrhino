@@ -22,6 +22,7 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
+import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
@@ -33,11 +34,12 @@ import org.ironrhino.security.model.UserRole;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-@AutoConfig(searchable = true, order = "name asc")
+@AutoConfig
 @Searchable(type = "schema")
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "common_schema")
+@RichtableConfig(searchable = true, order = "name asc")
 public class Schema extends BaseEntity {
 
 	private static final long serialVersionUID = -8352037604269012984L;

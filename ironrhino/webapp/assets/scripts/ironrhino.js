@@ -35373,8 +35373,7 @@ Initialization.richtable = function() {
 					function() {
 						$(this).closest('form').submit();
 					}).on('click', '.richtable .action .filter', function() {
-						var f = $('#filter_'
-								+ $(this).closest('form').attr('id'));
+						var f = $(this).closest('form').next('form.criteria');
 						f.toggle();
 						if (f.is(':visible'))
 							$('html,body').animate({
@@ -35441,7 +35440,11 @@ Initialization.richtable = function() {
 
 			});
 }
-Observation.richtable = function(container) {
+Observation._richtable = function(container) {
+	$('form.criteria', container).each(function() {
+				$(this).data('replacement',
+						$(this).prev('form.richtable').attr('id'));
+			});
 	$('table.richtable', container)
 			.on(
 					'change',

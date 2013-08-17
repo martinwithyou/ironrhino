@@ -22,6 +22,7 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Recordable;
@@ -34,9 +35,10 @@ import org.jsoup.select.Elements;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Searchable(type = "page")
-@AutoConfig(searchable = true)
+@AutoConfig
 @Entity
 @Table(name = "common_page")
+@RichtableConfig(searchable = true)
 public class Page extends BaseEntity implements Recordable<UserDetails>,
 		Ordered<Page> {
 

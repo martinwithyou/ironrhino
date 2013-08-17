@@ -38,7 +38,6 @@ import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.hibernate.CriterionOperator;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
-import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.HiddenConfig;
 import org.ironrhino.core.metadata.Owner;
@@ -115,8 +114,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public boolean isSearchable() {
 		if (getEntityClass().getAnnotation(Searchable.class) != null)
 			return true;
-		AutoConfig ac = getEntityClass().getAnnotation(AutoConfig.class);
-		boolean searchable = (ac != null) && ac.searchable();
+		RichtableConfig rc = getClass().getAnnotation(RichtableConfig.class);
+		if (rc == null)
+			rc = getEntityClass().getAnnotation(RichtableConfig.class);
+		boolean searchable = (rc != null) && rc.searchable();
 		if (searchable)
 			return true;
 		else
@@ -144,16 +145,21 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	public RichtableConfigImpl getRichtableConfig() {
-		if (richtableConfig == null)
-			richtableConfig = new RichtableConfigImpl(getEntityClass()
-					.getAnnotation(RichtableConfig.class));
+		if (richtableConfig == null) {
+			RichtableConfig rc = getClass()
+					.getAnnotation(RichtableConfig.class);
+			if (rc == null)
+				rc = getEntityClass().getAnnotation(RichtableConfig.class);
+			richtableConfig = new RichtableConfigImpl(rc);
+		}
 		return richtableConfig;
 	}
 
 	public ReadonlyConfigImpl getReadonlyConfig() {
 		if (readonlyConfig == null) {
-			ReadonlyConfig rc = getEntityClass().getAnnotation(
-					ReadonlyConfig.class);
+			ReadonlyConfig rc = getClass().getAnnotation(ReadonlyConfig.class);
+			if (rc == null)
+				rc = getEntityClass().getAnnotation(ReadonlyConfig.class);
 			Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
 			if (rc == null && ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();
@@ -505,7 +511,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					&& !entry.getValue().isExcludedFromLike())
 				propertyNamesInLike.add(entry.getKey());
 		}
-		AutoConfig ac = getEntityClass().getAnnotation(AutoConfig.class);
 		boolean searchable = isSearchable();
 		if (searchable
 				&& StringUtils.isNumeric(keyword)
@@ -684,8 +689,12 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(dc);
-			if (ac != null && StringUtils.isNotBlank(ac.order())) {
-				String[] ar = ac.order().split(",");
+			RichtableConfig rc = getClass()
+					.getAnnotation(RichtableConfig.class);
+			if (rc == null)
+				rc = getEntityClass().getAnnotation(RichtableConfig.class);
+			if (rc != null && StringUtils.isNotBlank(rc.order())) {
+				String[] ar = rc.order().split(",");
 				for (String s : ar) {
 					String[] arr = s.split("\\s");
 					if (arr[arr.length - 1].equalsIgnoreCase("asc"))
@@ -1859,6 +1868,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		private static final long serialVersionUID = 7346213812241502993L;
 		private String formid = "";
+		private boolean filterable = false;
 		private boolean showPageSize = true;
 		private String actionColumnButtons = "";
 		private String bottomButtons = "";
@@ -1875,6 +1885,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (config == null)
 				return;
 			this.formid = config.formid();
+			this.filterable = config.filterable();
 			this.showPageSize = config.showPageSize();
 			this.actionColumnButtons = config.actionColumnButtons();
 			this.bottomButtons = config.bottomButtons();
@@ -1891,6 +1902,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public void setFormid(String formid) {
 			this.formid = formid;
+		}
+
+		public boolean isFilterable() {
+			return filterable;
+		}
+
+		public void setFilterable(boolean filterable) {
+			this.filterable = filterable;
 		}
 
 		public boolean isShowPageSize() {
