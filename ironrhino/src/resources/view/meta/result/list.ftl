@@ -11,7 +11,7 @@
 <#if richtableConfig.formid?has_content>
 <#assign formid><@richtableConfig.formid?interpret/></#assign>
 </#if>
-<@rtstart formid=formid entityName=entityName/>
+<@rtstart formid=formid entityName=entityName formHeader=richtableConfig.formHeader/>
 <#assign size=0>
 <#list uiConfigs?keys as key>
 	<#if !uiConfigs[key].hiddenInList>
@@ -97,7 +97,7 @@
 </#list>	
 <@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
-<@rtend readonly=readonly deletable=!readonly||readonlyConfig.deletable searchable=searchable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable/>
+<@rtend readonly=readonly deletable=!readonly||readonlyConfig.deletable searchable=searchable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=richtableConfig.formFooter/>
 <#if !readonly && hasSelect>
 <div style="display: none;">
 <#list uiConfigs?keys as key>
@@ -124,7 +124,6 @@
 </#list></div>
 </#if>
 <#if richtableConfig.listFooter?has_content>
-<#assign listFooter=richtableConfig.listFooter?interpret>
 <@richtableConfig.listFooter?interpret/>
 </#if>
 </body>

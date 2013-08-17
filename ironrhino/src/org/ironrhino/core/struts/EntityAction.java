@@ -1802,6 +1802,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private String bottomButtons = "";
 		private String listHeader = "";
 		private String listFooter = "";
+		private String formHeader = "";
+		private String formFooter = "";
 		private String rowDynamicAttributes = "";
 
 		public RichtableConfigImpl() {
@@ -1816,6 +1818,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			this.bottomButtons = config.bottomButtons();
 			this.listHeader = config.listHeader();
 			this.listFooter = config.listFooter();
+			this.formHeader = config.formHeader();
+			this.formFooter = config.formFooter();
 			this.rowDynamicAttributes = config.rowDynamicAttributes();
 		}
 
@@ -1865,6 +1869,22 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public void setListFooter(String listFooter) {
 			this.listFooter = listFooter;
+		}
+
+		public String getFormHeader() {
+			return formHeader;
+		}
+
+		public void setFormHeader(String formHeader) {
+			this.formHeader = formHeader;
+		}
+
+		public String getFormFooter() {
+			return formFooter;
+		}
+
+		public void setFormFooter(String formFooter) {
+			this.formFooter = formFooter;
 		}
 
 		public String getRowDynamicAttributes() {
