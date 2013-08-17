@@ -73,4 +73,8 @@ public @interface UiConfig {
 
 	String templateName() default ""; // for dictionary,schema
 
+	boolean excludedFromLike() default false;
+
+	boolean excludedFromCriterion() default false;
+
 }

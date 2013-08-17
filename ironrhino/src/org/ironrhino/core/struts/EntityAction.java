@@ -8,13 +8,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -270,7 +270,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 							basicannotation = f.getAnnotation(Basic.class);
 					} catch (Exception e) {
 					}
-				UiConfigImpl uci = new UiConfigImpl(uiConfig);
+				UiConfigImpl uci = new UiConfigImpl(pd.getPropertyType(),
+						uiConfig);
 				if (columnannotation != null && !columnannotation.nullable()
 						|| basicannotation != null
 						&& !basicannotation.optional())
@@ -499,10 +500,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public String list() {
 		final BaseManager entityManager = getEntityManager(getEntityClass());
 		Set<String> propertyNamesInLike = new HashSet<String>();
-		Collection<String> excludePropertyNamesInLike = getExcludePropertyNamesInLike();
 		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
 			if (entry.getValue().isSearchable()
-					&& !excludePropertyNamesInLike.contains(entry.getKey()))
+					&& !entry.getValue().isExcludedFromLike())
 				propertyNamesInLike.add(entry.getKey());
 		}
 		AutoConfig ac = getEntityClass().getAnnotation(AutoConfig.class);
@@ -558,7 +558,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				Set<String> propertyNames = getUiConfigs().keySet();
 				Map<String, String[]> parameterMap = ServletActionContext
 						.getRequest().getParameterMap();
-				Collection<String> excludePropertyNamesInCriterions = getExcludePropertyNamesInCriterion();
 				for (String parameterName : parameterMap.keySet()) {
 					String propertyName;
 					String[] parameterValues;
@@ -584,7 +583,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					if (propertyName.startsWith(getEntityName() + "."))
 						propertyName = propertyName.substring(propertyName
 								.indexOf('.') + 1);
-					if (excludePropertyNamesInCriterions.contains(propertyName))
+					if (isExcludedFromCriterion(propertyName))
 						continue;
 					CriterionOperator operator = null;
 					if (StringUtils.isNotBlank(operatorValue))
@@ -592,8 +591,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 								.toUpperCase());
 					if (operator == null)
 						operator = CriterionOperator.EQ;
-					if (parameterValues.length < operator
-							.getParametersSize())
+					if (parameterValues.length < operator.getParametersSize())
 						continue;
 					if (propertyName.indexOf('.') > 0) {
 						String subPropertyName = propertyName
@@ -725,15 +723,48 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	}
 
-	protected Collection<String> getExcludePropertyNamesInLike() {
-		return Collections.emptyList();
+	protected boolean isExcludedFromCriterion(String propertyName) {
+		UiConfigImpl config = getUiConfigs().get(propertyName);
+		return config != null && config.isExcludedFromCriterion();
 	}
 
-	protected Collection<String> getExcludePropertyNamesInCriterion() {
-		return Collections.emptyList();
+	public Map<String, UiConfigImpl> getPropertyNamesInCriterion() {
+		Map<String, UiConfigImpl> map = new LinkedHashMap<String, UiConfigImpl>();
+		try {
+			Class<?> idClass = getEntityClass().getMethod("getId")
+					.getReturnType();
+			if (idClass.equals(String.class)) {
+				UiConfigImpl uci = new UiConfigImpl();
+				uci.setPropertyType(idClass);
+				map.put("id", uci);
+			} else if (idClass.equals(Long.class)) {
+				UiConfigImpl uci = new UiConfigImpl();
+				uci.setPropertyType(idClass);
+				uci.addCssClass("long");
+				uci.addCssClass("positive");
+				uci.setInputType("number");
+				map.put("id", uci);
+			} else if (idClass.equals(Integer.class)) {
+				UiConfigImpl uci = new UiConfigImpl();
+				uci.setPropertyType(idClass);
+				uci.addCssClass("integer");
+				uci.addCssClass("positive");
+				uci.setInputType("number");
+				map.put("id", uci);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
+			if (!entry.getKey().endsWith("AsString")
+					&& !isExcludedFromCriterion(entry.getKey())
+					&& !CriterionOperator.getSupportedOperators(
+							entry.getValue().getPropertyType()).isEmpty())
+				map.put(entry.getKey(), entry.getValue());
+		}
+		return map;
 	}
-	
-	
+
 	@Override
 	public String input() {
 		if (getReadonlyConfig().isValue()) {
@@ -1415,6 +1446,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	public static class UiConfigImpl implements Serializable {
 		private static final long serialVersionUID = -5963246979386241924L;
+		private Class<?> propertyType;
 		private String id;
 		private String type = UiConfig.DEFAULT_TYPE;
 		private String inputType = UiConfig.DEFAULT_INPUT_TYPE;
@@ -1442,11 +1474,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private boolean searchable;
 		private String pickUrl = "";
 		private String templateName = "";
+		private boolean excludedFromLike = false;
+		private boolean excludedFromCriterion = false;
 
 		public UiConfigImpl() {
 		}
 
-		public UiConfigImpl(UiConfig config) {
+		public UiConfigImpl(Class<?> propertyType, UiConfig config) {
+			this.propertyType = propertyType;
 			if (config == null)
 				return;
 			if (StringUtils.isNotBlank(config.id()))
@@ -1491,6 +1526,32 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				cssClasses.add("regex");
 				dynamicAttributes.put("data-regex", this.regex);
 			}
+			this.excludedFromLike = config.excludedFromLike();
+			this.excludedFromCriterion = config.excludedFromCriterion();
+		}
+
+		public boolean isExcludedFromLike() {
+			return excludedFromLike;
+		}
+
+		public void setExcludedFromLike(boolean excludedFromLike) {
+			this.excludedFromLike = excludedFromLike;
+		}
+
+		public boolean isExcludedFromCriterion() {
+			return excludedFromCriterion;
+		}
+
+		public void setExcludedFromCriterion(boolean excludedFromCriterion) {
+			this.excludedFromCriterion = excludedFromCriterion;
+		}
+
+		public Class<?> getPropertyType() {
+			return propertyType;
+		}
+
+		public void setPropertyType(Class<?> propertyType) {
+			this.propertyType = propertyType;
 		}
 
 		public boolean isHiddenInList() {

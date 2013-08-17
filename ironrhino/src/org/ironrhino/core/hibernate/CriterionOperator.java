@@ -1,12 +1,15 @@
 package org.ironrhino.core.hibernate;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.model.Displayable;
+import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.util.DateUtils;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -42,6 +45,12 @@ public enum CriterionOperator implements Displayable {
 	},
 	LT(1) {
 		@Override
+		public boolean supports(Class<?> clazz) {
+			return super.supports(clazz)
+					&& !Persistable.class.isAssignableFrom(clazz);
+		}
+
+		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
 			if (value1 == null)
 				return null;
@@ -49,6 +58,12 @@ public enum CriterionOperator implements Displayable {
 		}
 	},
 	LE(1) {
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return super.supports(clazz)
+					&& !Persistable.class.isAssignableFrom(clazz);
+		}
+
 		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
 			if (value1 == null)
@@ -61,6 +76,12 @@ public enum CriterionOperator implements Displayable {
 	},
 	GT(1) {
 		@Override
+		public boolean supports(Class<?> clazz) {
+			return super.supports(clazz)
+					&& !Persistable.class.isAssignableFrom(clazz);
+		}
+
+		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
 			if (value1 == null)
 				return null;
@@ -72,6 +93,12 @@ public enum CriterionOperator implements Displayable {
 	},
 	GE(1) {
 		@Override
+		public boolean supports(Class<?> clazz) {
+			return super.supports(clazz)
+					&& !Persistable.class.isAssignableFrom(clazz);
+		}
+
+		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
 			if (value1 == null)
 				return null;
@@ -79,6 +106,12 @@ public enum CriterionOperator implements Displayable {
 		}
 	},
 	BETWEEN(2) {
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return super.supports(clazz)
+					&& !Persistable.class.isAssignableFrom(clazz);
+		}
+
 		@Override
 		public boolean isEffective(Class<?> clazz, String value1, String value2) {
 			return StringUtils.isNotBlank(value1)
@@ -100,6 +133,12 @@ public enum CriterionOperator implements Displayable {
 		}
 	},
 	NOTBETWEEN(2) {
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return super.supports(clazz)
+					&& !Persistable.class.isAssignableFrom(clazz);
+		}
+
 		@Override
 		public boolean isEffective(Class<?> clazz, String value1, String value2) {
 			return StringUtils.isNotBlank(value1)
@@ -123,6 +162,11 @@ public enum CriterionOperator implements Displayable {
 	},
 	ISNULL(0) {
 		@Override
+		public boolean supports(Class<?> clazz) {
+			return super.supports(clazz) && !clazz.isPrimitive();
+		}
+
+		@Override
 		public boolean isEffective(Class<?> clazz, String value1, String value2) {
 			return supports(clazz);
 		}
@@ -133,6 +177,11 @@ public enum CriterionOperator implements Displayable {
 		}
 	},
 	ISNOTNULL(0) {
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return super.supports(clazz) && !clazz.isPrimitive();
+		}
+
 		@Override
 		public boolean isEffective(Class<?> clazz, String value1, String value2) {
 			return supports(clazz);
@@ -277,11 +326,24 @@ public enum CriterionOperator implements Displayable {
 	}
 
 	public boolean supports(Class<?> clazz) {
-		return true;
+		return clazz.isPrimitive() || clazz.equals(String.class)
+				|| clazz.equals(Boolean.class)
+				|| Number.class.isAssignableFrom(clazz)
+				|| clazz.equals(Date.class)
+				|| Persistable.class.isAssignableFrom(clazz);
+	}
+
+	public static List<CriterionOperator> getSupportedOperators(Class<?> clazz) {
+		List<CriterionOperator> list = new ArrayList<CriterionOperator>();
+		for (CriterionOperator op : values())
+			if (op.supports(clazz))
+				list.add(op);
+		return list;
 	}
 
 	@Override
 	public String toString() {
 		return getDisplayName();
 	}
+
 }

@@ -21,6 +21,7 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
+import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Persistable;
@@ -56,29 +57,36 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@CaseInsensitive
 	@NaturalId
 	@Column(nullable = false)
+	@UiConfig(displayOrder = 1)
 	private String username;
 
 	@NotInCopy
 	@NotInJson
 	@Column(nullable = false)
+	@UiConfig(displayOrder = 2)
 	private String password;
 
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
+	@UiConfig(displayOrder = 3)
 	private String name;
 
 	@SearchableProperty(boost = 3)
 	@Column(unique = true)
+	@UiConfig(displayOrder = 4)
 	private String email;
 
 	@SearchableProperty
 	@NotInJson
+	@UiConfig(displayOrder = 5)
 	private String phone;
 
 	@NotInJson
+	@UiConfig(displayOrder = 6)
 	private boolean enabled = true;
 
 	@NotInCopy
 	@NotInJson
+	@UiConfig(hidden = true)
 	private Date createDate = new Date();
 
 	@NotInCopy
@@ -97,14 +105,17 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 
 	@NotInCopy
 	@NotInJson
+	@UiConfig(hidden = true)
 	private Date modifyDate;
 
 	@NotInCopy
 	@NotInJson
+	@UiConfig(hidden = true)
 	private String createUser;
 
 	@NotInCopy
 	@NotInJson
+	@UiConfig(hidden = true)
 	private String modifyUser;
 
 	@Override
