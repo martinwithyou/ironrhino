@@ -28,7 +28,7 @@ import org.ironrhino.security.model.UserRole;
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "oauth_client")
-@RichtableConfig(order = "name asc")
+@RichtableConfig(order = "name asc", filterable = true)
 public class Client extends BaseEntity implements Enableable {
 
 	private static final long serialVersionUID = -7297737795748467475L;
@@ -41,7 +41,7 @@ public class Client extends BaseEntity implements Enableable {
 	@Column(nullable = false)
 	private String name;
 
-	@UiConfig(displayOrder = 2, cssClass = "span4")
+	@UiConfig(displayOrder = 2, cssClass = "span4", excludedFromCriterion = true)
 	@Column(nullable = false)
 	private String secret = CodecUtils.nextId();
 
