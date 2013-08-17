@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -497,10 +498,12 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	@Override
 	public String list() {
 		final BaseManager entityManager = getEntityManager(getEntityClass());
-		Set<String> searchablePropertyNames = new HashSet<String>();
+		Set<String> propertyNamesInLike = new HashSet<String>();
+		Collection<String> excludePropertyNamesInLike = getExcludePropertyNamesInLike();
 		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
-			if (entry.getValue().isSearchable())
-				searchablePropertyNames.add(entry.getKey());
+			if (entry.getValue().isSearchable()
+					&& !excludePropertyNamesInLike.contains(entry.getKey()))
+				propertyNamesInLike.add(entry.getKey());
 		}
 		AutoConfig ac = getEntityClass().getAnnotation(AutoConfig.class);
 		boolean searchable = isSearchable();
@@ -555,6 +558,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				Set<String> propertyNames = getUiConfigs().keySet();
 				Map<String, String[]> parameterMap = ServletActionContext
 						.getRequest().getParameterMap();
+				Collection<String> excludePropertyNamesInCriterions = getExcludePropertyNamesInCriterion();
 				for (String parameterName : parameterMap.keySet()) {
 					String propertyName;
 					String[] parameterValues;
@@ -577,6 +581,11 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 										parameterName
 												+ CRITERION_OPERATOR_SUFFIX);
 					}
+					if (propertyName.startsWith(getEntityName() + "."))
+						propertyName = propertyName.substring(propertyName
+								.indexOf('.') + 1);
+					if (excludePropertyNamesInCriterions.contains(propertyName))
+						continue;
 					CriterionOperator operator = null;
 					if (StringUtils.isNotBlank(operatorValue))
 						operator = CriterionOperator.valueOf(operatorValue
@@ -586,9 +595,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					if (parameterValues.length < operator
 							.getEffectiveParameters())
 						continue;
-					if (propertyName.startsWith(getEntityName() + "."))
-						propertyName = propertyName.substring(propertyName
-								.indexOf('.') + 1);
 					if (propertyName.indexOf('.') > 0) {
 						String subPropertyName = propertyName
 								.substring(propertyName.indexOf('.') + 1);
@@ -646,7 +652,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 								dc.add(Restrictions.eq(propertyName, p));
 						} else {
 							if (!operator
-									.isEffective(type,
+									.isEffective(
+											type,
 											parameterValues.length > 0 ? parameterValues[0]
 													: null,
 											parameterValues.length > 1 ? parameterValues[1]
@@ -673,9 +680,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				e.printStackTrace();
 			}
 			if (searchable && StringUtils.isNotBlank(keyword)
-					&& searchablePropertyNames.size() > 0)
+					&& propertyNamesInLike.size() > 0)
 				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
-						searchablePropertyNames.toArray(new String[0])));
+						propertyNamesInLike.toArray(new String[0])));
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(dc);
@@ -716,6 +723,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	protected void prepare(DetachedCriteria dc) {
 
+	}
+
+	protected Collection<String> getExcludePropertyNamesInLike() {
+		return Collections.emptyList();
+	}
+
+	protected Collection<String> getExcludePropertyNamesInCriterion() {
+		return Collections.emptyList();
 	}
 
 	@Override

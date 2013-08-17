@@ -11,11 +11,14 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.ReadonlyConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
+import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 
-@AutoConfig(order = "date desc")
+@AutoConfig(order = "date desc", searchable = true)
 @ReadonlyConfig(true)
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
+@Searchable(type = "loginRecord")
 @Table(name = "loginrecord")
 public class LoginRecord extends BaseEntity {
 
@@ -23,15 +26,18 @@ public class LoginRecord extends BaseEntity {
 
 	@UiConfig(displayOrder = 1)
 	@Column(nullable = false)
+	@SearchableProperty
 	private String username;
 
 	@UiConfig(displayOrder = 2)
+	@SearchableProperty
 	private String address;
 
 	@UiConfig(displayOrder = 3)
 	private boolean failed;
 
 	@UiConfig(displayOrder = 4)
+	@SearchableProperty
 	private String cause;
 
 	@UiConfig(displayOrder = 5, width = "150px")
