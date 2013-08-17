@@ -308,7 +308,7 @@ public enum CriterionOperator implements Displayable {
 					Restrictions.isNotEmpty(name));
 		}
 	},
-	INCLUDE(0) {
+	INCLUDE(1) {
 
 		@Override
 		public boolean supports(Class<?> clazz) {
@@ -320,7 +320,7 @@ public enum CriterionOperator implements Displayable {
 			return Restrictions.like(name, (String) value1, MatchMode.ANYWHERE);
 		}
 	},
-	NOTINCLUDE(0) {
+	NOTINCLUDE(1) {
 
 		@Override
 		public boolean supports(Class<?> clazz) {
