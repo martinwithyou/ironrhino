@@ -242,22 +242,22 @@ ${formFooter!}
 <table class="table datagrid">
 	<tbody>
 		<tr>
-			<td>
-				<select class="required decrease">
+			<td style="width:25%;">
+				<select class="required decrease property">
 					<option value=""></option>
 					<#list propertyNamesInCriterion.entrySet() as entry>
-					<option value="${entry.key}" data-type="${entry.value.propertyType.simpleName}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-inputtype="${entry.value.inputType}" data-type="${entry.value.propertyType.simpleName}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
 					</#list>
 				</select>
 			</td>
-			<td>
-			<select>
+			<td style="width:25%;">
+			<select class="operator">
 			<#list statics['org.ironrhino.core.hibernate.CriterionOperator'].values() as op>
-			<option value="${op.name()}" data-size="${op.parametersSize}">${op.displayName}</option>
+			<option value="${op.name()}" data-parameters="${op.parametersSize}">${op.displayName}</option>
 			</#list>
 			</select>
 			</td>
-			<td><input type="text"/></td>
+			<td></td>
 			<td class="manipulate"><i class="icon-plus add"></i><i class="icon-minus remove"></i></td>
 		</tr>
 	</tbody>

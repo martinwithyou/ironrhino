@@ -739,31 +739,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	public Map<String, UiConfigImpl> getPropertyNamesInCriterion() {
 		Map<String, UiConfigImpl> map = new LinkedHashMap<String, UiConfigImpl>();
-		try {
-			Class<?> idClass = getEntityClass().getMethod("getId")
-					.getReturnType();
-			if (idClass.equals(String.class)) {
-				UiConfigImpl uci = new UiConfigImpl();
-				uci.setPropertyType(idClass);
-				map.put("id", uci);
-			} else if (idClass.equals(Long.class)) {
-				UiConfigImpl uci = new UiConfigImpl();
-				uci.setPropertyType(idClass);
-				uci.addCssClass("long");
-				uci.addCssClass("positive");
-				uci.setInputType("number");
-				map.put("id", uci);
-			} else if (idClass.equals(Integer.class)) {
-				UiConfigImpl uci = new UiConfigImpl();
-				uci.setPropertyType(idClass);
-				uci.addCssClass("integer");
-				uci.addCssClass("positive");
-				uci.setInputType("number");
-				map.put("id", uci);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
 			if (!entry.getKey().endsWith("AsString")
 					&& !isExcludedFromCriterion(entry.getKey())
