@@ -2,6 +2,7 @@ package org.ironrhino.core.hibernate;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.model.Displayable;
@@ -78,6 +79,12 @@ public enum CriterionOperator implements Displayable {
 	},
 	BETWEEN(2) {
 		@Override
+		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+			return StringUtils.isNotBlank(value1)
+					|| StringUtils.isNotBlank(value2);
+		}
+
+		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
 			if (value2 instanceof Date && DateUtils.isBeginOfDay((Date) value2))
 				value2 = DateUtils.endOfDay((Date) value2);
@@ -92,6 +99,12 @@ public enum CriterionOperator implements Displayable {
 		}
 	},
 	NOTBETWEEN(2) {
+		@Override
+		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+			return StringUtils.isNotBlank(value1)
+					|| StringUtils.isNotBlank(value2);
+		}
+
 		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
 			if (value2 instanceof Date && DateUtils.isBeginOfDay((Date) value2))
@@ -109,14 +122,90 @@ public enum CriterionOperator implements Displayable {
 	},
 	ISNULL(0) {
 		@Override
+		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+			return accepts(clazz);
+		}
+
+		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
 			return Restrictions.isNull(name);
 		}
 	},
 	ISNOTNULL(0) {
 		@Override
+		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+			return accepts(clazz);
+		}
+
+		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
 			return Restrictions.isNotNull(name);
+		}
+	},
+	ISEMPTY(0) {
+		@Override
+		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+			return accepts(clazz);
+		}
+
+		@Override
+		protected boolean accepts(Class<?> clazz) {
+			return clazz.equals(String.class);
+		}
+
+		@Override
+		public Criterion operator(String name, Object value1, Object value2) {
+			return Restrictions.eq(name, "");
+		}
+	},
+	ISNOTEMPTY(0) {
+		@Override
+		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+			return accepts(clazz);
+		}
+
+		@Override
+		protected boolean accepts(Class<?> clazz) {
+			return clazz.equals(String.class);
+		}
+
+		@Override
+		public Criterion operator(String name, Object value1, Object value2) {
+			return Restrictions.not(Restrictions.eq(name, ""));
+		}
+	},
+	ISBLANK(0) {
+		@Override
+		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+			return accepts(clazz);
+		}
+
+		@Override
+		protected boolean accepts(Class<?> clazz) {
+			return clazz.equals(String.class);
+		}
+
+		@Override
+		public Criterion operator(String name, Object value1, Object value2) {
+			return Restrictions.or(Restrictions.isNull(name),
+					Restrictions.eq(name, ""));
+		}
+	},
+	ISNOTBLANK(0) {
+		@Override
+		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+			return accepts(clazz);
+		}
+
+		@Override
+		protected boolean accepts(Class<?> clazz) {
+			return clazz.equals(String.class);
+		}
+
+		@Override
+		public Criterion operator(String name, Object value1, Object value2) {
+			return Restrictions.and(Restrictions.isNotNull(name),
+					Restrictions.not(Restrictions.eq(name, "")));
 		}
 	};
 
@@ -151,6 +240,18 @@ public enum CriterionOperator implements Displayable {
 
 	public int getEffectiveParameters() {
 		return effectiveParameters;
+	}
+
+	public boolean isEffective(Class<?> clazz, String value1, String value2) {
+		if (!accepts(clazz))
+			return false;
+		if (StringUtils.isBlank(value1))
+			return false;
+		return true;
+	}
+
+	protected boolean accepts(Class<?> clazz) {
+		return true;
 	}
 
 	@Override

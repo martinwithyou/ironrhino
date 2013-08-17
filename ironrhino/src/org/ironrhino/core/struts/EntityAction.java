@@ -85,6 +85,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	private static final long serialVersionUID = -8442983706126047413L;
 
+	public static final String CRITERION_OPERATOR_SUFFIX = "-op";
+
 	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
 
 	protected ResultPage resultPage;
@@ -551,21 +553,39 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						.newInstance());
 				bw.setConversionService(conversionService);
 				Set<String> propertyNames = getUiConfigs().keySet();
-				for (String parameterName : ServletActionContext.getRequest()
-						.getParameterMap().keySet()) {
-					String propertyName = parameterName;
-					String[] parameterValues = ServletActionContext
-							.getRequest().getParameterMap().get(parameterName);
+				Map<String, String[]> parameterMap = ServletActionContext
+						.getRequest().getParameterMap();
+				for (String parameterName : parameterMap.keySet()) {
+					String propertyName;
+					String[] parameterValues;
 					Object value1 = null;
 					Object value2 = null;
-					String operatorValue = ServletActionContext.getRequest()
-							.getParameter(parameterName + "-op");
+					String operatorValue;
+					if (parameterName.endsWith(CRITERION_OPERATOR_SUFFIX)) {
+						propertyName = parameterName.substring(0,
+								parameterName.length()
+										- CRITERION_OPERATOR_SUFFIX.length());
+						if (parameterMap.containsKey(propertyName))
+							continue;
+						parameterValues = new String[0];
+						operatorValue = parameterMap.get(parameterName)[0];
+					} else {
+						propertyName = parameterName;
+						parameterValues = parameterMap.get(parameterName);
+						operatorValue = ServletActionContext.getRequest()
+								.getParameter(
+										parameterName
+												+ CRITERION_OPERATOR_SUFFIX);
+					}
 					CriterionOperator operator = null;
 					if (StringUtils.isNotBlank(operatorValue))
 						operator = CriterionOperator.valueOf(operatorValue
 								.toUpperCase());
 					if (operator == null)
 						operator = CriterionOperator.EQ;
+					if (parameterValues.length < operator
+							.getEffectiveParameters())
+						continue;
 					if (propertyName.startsWith(getEntityName() + "."))
 						propertyName = propertyName.substring(propertyName
 								.indexOf('.') + 1);
@@ -580,9 +600,20 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 								BeanWrapperImpl bw2 = new BeanWrapperImpl(
 										type.newInstance());
 								bw2.setConversionService(conversionService);
-								bw2.setPropertyValue(subPropertyName,
-										parameterValues[0]);
-								value1 = bw2.getPropertyValue(subPropertyName);
+								if (!operator
+										.isEffective(
+												bw2.getPropertyType(subPropertyName),
+												parameterValues.length > 0 ? parameterValues[0]
+														: null,
+												parameterValues.length > 1 ? parameterValues[1]
+														: null))
+									continue;
+								if (parameterValues.length > 0) {
+									bw2.setPropertyValue(subPropertyName,
+											parameterValues[0]);
+									value1 = bw2
+											.getPropertyValue(subPropertyName);
+								}
 								if (parameterValues.length > 1) {
 									bw2.setPropertyValue(subPropertyName,
 											parameterValues[1]);
@@ -611,11 +642,21 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 								}
 							}
-							dc.add(Restrictions.eq(propertyName, p));
+							if (p != null)
+								dc.add(Restrictions.eq(propertyName, p));
 						} else {
-							bw.setPropertyValue(propertyName,
-									parameterValues[0]);
-							value1 = bw.getPropertyValue(propertyName);
+							if (!operator
+									.isEffective(type,
+											parameterValues.length > 0 ? parameterValues[0]
+													: null,
+											parameterValues.length > 1 ? parameterValues[1]
+													: null))
+								continue;
+							if (parameterValues.length > 0) {
+								bw.setPropertyValue(propertyName,
+										parameterValues[0]);
+								value1 = bw.getPropertyValue(propertyName);
+							}
 							if (parameterValues.length > 1) {
 								bw.setPropertyValue(propertyName,
 										parameterValues[1]);
