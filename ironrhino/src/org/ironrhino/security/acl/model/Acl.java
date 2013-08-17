@@ -17,7 +17,7 @@ import org.ironrhino.security.model.UserRole;
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "acl")
-@RichtableConfig(order = "role asc")
+@RichtableConfig(order = "role asc", filterable = true)
 public class Acl extends BaseEntity {
 
 	private static final long serialVersionUID = 7186455276739721437L;
