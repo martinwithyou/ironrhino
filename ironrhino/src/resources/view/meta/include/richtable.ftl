@@ -58,9 +58,7 @@
 </#if>
 </#list>
 </#if>
-<#if formHeader?has_content>
-<@formHeader?interpret/>
-</#if>
+${formHeader!}
 <table class="table table-hover table-striped table-bordered richtable<#if sortable> sortable</#if><#if columnfilterable> filtercolumn</#if><#if resizable> resizable</#if>">
 <thead>
 <tr>
@@ -230,8 +228,6 @@ ${list?size}${action.getText('record')}
 </span>
 </div>
 </div>
-<#if formFooter?has_content>
-<@formFooter?interpret/>
-</#if>
+${formFooter!}
 </form>
 </#macro>
