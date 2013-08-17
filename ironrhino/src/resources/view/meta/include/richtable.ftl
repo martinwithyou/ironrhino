@@ -1,4 +1,7 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false readonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true rowDynamicAttributes='' formHeader='' formFooter=''>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false readonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false filterable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true rowDynamicAttributes='' formHeader='' formFooter=''>
+<#if !formid?has_content>
+<#local formid=entityName+'_form'/>
+</#if>
 <@rtstart formid=formid action=action entityName=entityName resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable formHeader=formHeader>
 <#nested/>
 </@rtstart>
@@ -44,7 +47,42 @@
 </#list>
 <@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
-<@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deletable=deletable enableable=enableable searchable=searchable searchButtons=searchButtons showPageSize=showPageSize formFooter=formFooter/>
+<@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deletable=deletable enableable=enableable searchable=searchable filterable=filterable searchButtons=searchButtons showPageSize=showPageSize formFooter=formFooter/>
+<#if filterable>
+<#assign propertyNames=propertyNamesInCriterion>
+<#if propertyNames??&&propertyNames?keys?size gt 0>
+<form id="filter_${formid}" action="${actionBaseUrl}" method="post" class="ajax view" data-replacement="${formid}" style="display:none;">
+<table class="table datagrid">
+	<tbody>
+		<tr>
+			<td>
+				<select class="required decrease">
+					<option value=""></option>
+					<#list propertyNamesInCriterion.entrySet() as entry>
+					<option value="${entry.key}" data-type="${entry.value.propertyType.simpleName}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					</#list>
+				</select>
+			</td>
+			<td>
+			<select>
+			<#list statics['org.ironrhino.core.hibernate.CriterionOperator'].values() as op>
+			<option value="${op.name()}" data-size="${op.parametersSize}">${op.displayName}</option>
+			</#list>
+			</select>
+			</td>
+			<td><input type="text"/></td>
+			<td class="manipulate"><i class="icon-plus add"></i><i class="icon-minus remove"></i></td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="4" style="text-align:center;"><button type="submit" class="btn">${statics['org.ironrhino.core.struts.I18N'].getText('search')}</button></td>
+		</tr>
+	</tfoot>
+</table>
+</form>
+</#if>
+</#if>
 </#macro>
 
 <#macro rtstart formid='',action='',entityName='',resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true formHeader=''>
@@ -146,7 +184,7 @@ ${formHeader!}
 </tr>
 </#macro>
 
-<#macro rtend buttons='' readonly=false createable=true celleditable=true deletable=true enableable=false searchable=false searchButtons='' showPageSize=true formFooter=''>
+<#macro rtend buttons='' readonly=false createable=true celleditable=true deletable=true enableable=false searchable=false filterable=false searchButtons='' showPageSize=true formFooter=''>
 </tbody>
 </table>
 <div class="toolbar row-fluid">
@@ -205,6 +243,7 @@ ${formHeader!}
 </#if>
 <#if !readonly||deletable><button type="button" class="btn" data-action="delete" data-shown="selected" data-filterselector="<#if enableable>[data-enabled='false']</#if>:not([data-deletable='false'])">${action.getText("delete")}</button></#if>
 <button type="button" class="btn reload">${action.getText("reload")}</button>
+<#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
 </#if>
 </div>
 <div class="search span2">
