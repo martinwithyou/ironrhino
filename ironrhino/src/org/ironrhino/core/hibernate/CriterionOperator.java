@@ -255,7 +255,7 @@ public enum CriterionOperator implements Displayable {
 
 		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
-			return Restrictions.isEmpty(name);
+			return Restrictions.eq(name, "");
 		}
 	},
 	ISNOTEMPTY(0) {
@@ -271,7 +271,7 @@ public enum CriterionOperator implements Displayable {
 
 		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
-			return Restrictions.isNotEmpty(name);
+			return Restrictions.not(Restrictions.eq(name, ""));
 		}
 	},
 	ISBLANK(0) {
@@ -304,8 +304,7 @@ public enum CriterionOperator implements Displayable {
 
 		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
-			return Restrictions.and(Restrictions.isNotNull(name),
-					Restrictions.isNotEmpty(name));
+			return Restrictions.not(Restrictions.eqOrIsNull(name, ""));
 		}
 	},
 	INCLUDE(1) {
