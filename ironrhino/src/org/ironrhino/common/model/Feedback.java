@@ -19,7 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Searchable(type = "feedback")
 @Entity
 @Table(name = "common_feedback")
-@RichtableConfig(searchable = true, order = "createDate desc", filterable = true)
+@RichtableConfig(searchable = true, order = "createDate desc")
 public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 
 	private static final long serialVersionUID = 7857273372050062349L;

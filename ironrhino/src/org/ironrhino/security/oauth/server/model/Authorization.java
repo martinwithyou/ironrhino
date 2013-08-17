@@ -28,7 +28,7 @@ import org.ironrhino.security.model.UserRole;
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "oauth_authorization")
-@RichtableConfig(order = "createDate desc", filterable = true)
+@RichtableConfig(order = "createDate desc")
 public class Authorization extends BaseEntity {
 
 	public static final int DEFAULT_LIFETIME = 3600;

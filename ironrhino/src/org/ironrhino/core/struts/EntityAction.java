@@ -1843,7 +1843,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		private static final long serialVersionUID = 7346213812241502993L;
 		private String formid = "";
-		private boolean filterable = false;
+		private boolean filterable = true;
 		private boolean showPageSize = true;
 		private String actionColumnButtons = "";
 		private String bottomButtons = "";

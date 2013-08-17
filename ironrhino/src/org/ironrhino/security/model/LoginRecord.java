@@ -21,7 +21,7 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 @Entity
 @Searchable(type = "loginRecord")
 @Table(name = "loginrecord")
-@RichtableConfig(searchable = true, order = "date desc", filterable = true)
+@RichtableConfig(searchable = true, order = "date desc")
 public class LoginRecord extends BaseEntity {
 
 	private static final long serialVersionUID = -7691080078972338500L;

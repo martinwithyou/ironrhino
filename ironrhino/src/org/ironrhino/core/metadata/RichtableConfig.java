@@ -18,7 +18,7 @@ public @interface RichtableConfig {
 
 	boolean searchable() default false;
 
-	boolean filterable() default false;
+	boolean filterable() default true;
 
 	String actionColumnButtons() default "";
 

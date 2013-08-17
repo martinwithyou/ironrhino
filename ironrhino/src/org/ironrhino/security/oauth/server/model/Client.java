@@ -28,7 +28,7 @@ import org.ironrhino.security.model.UserRole;
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "oauth_client")
-@RichtableConfig(order = "name asc", filterable = true)
+@RichtableConfig(order = "name asc")
 public class Client extends BaseEntity implements Enableable {
 
 	private static final long serialVersionUID = -7297737795748467475L;
