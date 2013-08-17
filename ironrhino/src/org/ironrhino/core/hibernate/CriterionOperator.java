@@ -27,7 +27,8 @@ public enum CriterionOperator implements Displayable {
 					|| clazz.equals(Boolean.class)
 					|| Number.class.isAssignableFrom(clazz)
 					|| clazz.equals(Date.class)
-					|| Persistable.class.isAssignableFrom(clazz);
+					|| Persistable.class.isAssignableFrom(clazz)
+					|| clazz.isEnum();
 		}
 
 		@Override
@@ -51,7 +52,8 @@ public enum CriterionOperator implements Displayable {
 					|| clazz.equals(Boolean.class)
 					|| Number.class.isAssignableFrom(clazz)
 					|| clazz.equals(Date.class)
-					|| Persistable.class.isAssignableFrom(clazz);
+					|| Persistable.class.isAssignableFrom(clazz)
+					|| clazz.isEnum();
 		}
 
 		@Override
@@ -208,7 +210,8 @@ public enum CriterionOperator implements Displayable {
 			return clazz.equals(String.class) || clazz.equals(Boolean.class)
 					|| Number.class.isAssignableFrom(clazz)
 					|| clazz.equals(Date.class)
-					|| Persistable.class.isAssignableFrom(clazz);
+					|| Persistable.class.isAssignableFrom(clazz)
+					|| clazz.isEnum();
 		}
 
 		@Override
@@ -227,7 +230,8 @@ public enum CriterionOperator implements Displayable {
 			return clazz.equals(String.class) || clazz.equals(Boolean.class)
 					|| Number.class.isAssignableFrom(clazz)
 					|| clazz.equals(Date.class)
-					|| Persistable.class.isAssignableFrom(clazz);
+					|| Persistable.class.isAssignableFrom(clazz)
+					|| clazz.isEnum();
 		}
 
 		@Override
