@@ -150,6 +150,9 @@ ${formHeader!}
 </#macro>
 
 <#macro rtend buttons='' readonly=false createable=true celleditable=true deletable=true enableable=false searchable=false filterable=false searchButtons='' showPageSize=true formFooter=''>
+<#if filterable>
+<#local filterable=propertyNamesInCriterion??&&propertyNamesInCriterion?keys?size gt 0>
+</#if>
 </tbody>
 </table>
 <div class="toolbar row-fluid">
@@ -235,8 +238,6 @@ ${list?size}${action.getText('record')}
 ${formFooter!}
 </form>
 <#if filterable>
-<#assign propertyNames=propertyNamesInCriterion>
-<#if propertyNames??&&propertyNames?keys?size gt 0>
 <form action="${actionBaseUrl}" method="post" class="ajax view criteria" style="display:none;">
 <table class="table datagrid">
 	<tbody>
@@ -267,6 +268,5 @@ ${formFooter!}
 	</tfoot>
 </table>
 </form>
-</#if>
 </#if>
 </#macro>
