@@ -36439,13 +36439,13 @@ Observation._richtable = function(container) {
 			var option = $('option:selected', property);
 			var size = parseInt($('option:selected', t).data('parameters'));
 			var td = $('td:eq(2)', t.closest('tr'));
-			$(':input', td).remove();
+			$(':input,.removeonadd', td).remove();
 			if (size > 0) {
 				if ('select' == option.data('type')) {
 					var select = $('<select name="' + property.val()
 							+ '" class="removeonadd ' + option.data('class')
 							+ '"></select>').appendTo(td);
-					var map = $('option:selected', property).data('map');
+					var map = option.data('map');
 					map = map.substring(1, map.length - 1);
 					map = map.split(', ');
 					for (var i = 0; i < map.length; i++) {
@@ -36454,7 +36454,10 @@ Observation._richtable = function(container) {
 								+ '</option>').appendTo(select);
 					}
 				} else if ('listpick' == option.data('type')) {
-
+					$('<input id="filter_'+property.val()+'" type="hidden" name="'+property.val()+'"/><div class="listpick removeonadd" data-options="{\'url\':\''
+							+ option.data('pickurl')
+							+ '\',\'name\':\'this\',\'id\':\'#filter_'+property.val()+'\'}">...</div>')
+							.appendTo(td);
 				} else {
 					$('<input type="' + option.data('inputtype') + '" name="'
 							+ property.val() + '" class="removeonadd '

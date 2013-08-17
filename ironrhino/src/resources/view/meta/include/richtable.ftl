@@ -251,6 +251,8 @@ ${formFooter!}
 					<#elseif entry.value.type='dictionary' && selectDictionary??>
 					<#assign templateName><@entry.value.templateName?interpret /></#assign>
 					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-type="select" data-map="${statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getItemsAsMap(templateName)}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators('org.ironrhino.core.hibernate.CriterionOperator')}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					<#elseif entry.value.type='listpick'>
+					<option value="${entry.key}" data-type="listpick" data-pickurl="<@url value=entry.value.pickUrl/>" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
 					<#else>
 					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-inputtype="${entry.value.inputType}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
 					</#if>
