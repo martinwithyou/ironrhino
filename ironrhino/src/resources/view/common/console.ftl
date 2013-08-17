@@ -66,7 +66,7 @@ $(function(){
 	<ul class="thumbnails">
 	<#list triggers.entrySet() as entry>
 	<li class="span4">
-	<button type="button" class="btn btn-block" data-scope="${entry.value?string}"  data-expression="${entry.key}">${action.getText(entry.key)}</button>
+	<button type="button" class="btn btn-block" data-scope="${entry.value.name()}"  data-expression="${entry.key}">${action.getText(entry.key)}</button>
 	</li>
 	</#list>
 	</ul>
