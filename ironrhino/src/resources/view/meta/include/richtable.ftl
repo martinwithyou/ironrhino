@@ -246,7 +246,14 @@ ${formFooter!}
 				<select class="required decrease property">
 					<option value=""></option>
 					<#list propertyNamesInCriterion.entrySet() as entry>
-					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-inputtype="${entry.value.inputType}" data-type="${entry.value.propertyType.simpleName}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					<#if entry.value.propertyType.enum>
+					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-type="select" data-map="${statics['org.ironrhino.core.struts.I18N'].getTextForEnum(entry.value.propertyType)}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					<#elseif entry.value.type='dictionary' && selectDictionary??>
+					<#assign templateName><@entry.value.templateName?interpret /></#assign>
+					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-type="select" data-map="${statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getItemsAsMap(templateName)}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators('org.ironrhino.core.hibernate.CriterionOperator')}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					<#else>
+					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-inputtype="${entry.value.inputType}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					</#if>
 					</#list>
 				</select>
 			</td>

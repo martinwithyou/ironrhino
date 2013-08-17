@@ -36441,9 +36441,25 @@ Observation._richtable = function(container) {
 			var td = $('td:eq(2)', t.closest('tr'));
 			$(':input', td).remove();
 			if (size > 0) {
-				$('<input type="' + option.data('inputtype') + '" name="'
-						+ property.val() + '" class="removeonadd '
-						+ option.data('class') + '"/>').appendTo(td);
+				if ('select' == option.data('type')) {
+					var select = $('<select name="' + property.val()
+							+ '" class="removeonadd ' + option.data('class')
+							+ '"></select>').appendTo(td);
+					var map = $('option:selected', property).data('map');
+					map = map.substring(1, map.length - 1);
+					map = map.split(', ');
+					for (var i = 0; i < map.length; i++) {
+						var arr = map[i].split('=', 2);
+						$('<option value="' + arr[0] + '">' + arr[1]
+								+ '</option>').appendTo(select);
+					}
+				} else if ('listpick' == option.data('type')) {
+
+				} else {
+					$('<input type="' + option.data('inputtype') + '" name="'
+							+ property.val() + '" class="removeonadd '
+							+ option.data('class') + '"/>').appendTo(td);
+				}
 				if (size == 2)
 					$(':input', td).clone().appendTo(td).css('margin-left',
 							'10px');

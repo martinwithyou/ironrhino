@@ -1,6 +1,7 @@
 package org.ironrhino.core.hibernate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -57,12 +58,13 @@ public enum CriterionOperator implements Displayable {
 			if (value1 == null)
 				return null;
 			if (value1 instanceof Date && DateUtils.isBeginOfDay((Date) value1))
-				return Restrictions
+				return Restrictions.or(Restrictions.isNull(name), Restrictions
 						.or(Restrictions.lt(name, value1),
 								Restrictions.gt(name,
-										DateUtils.endOfDay((Date) value1)));
+										DateUtils.endOfDay((Date) value1))));
 			else
-				return Restrictions.not(Restrictions.eq(name, value1));
+				return Restrictions.or(Restrictions.isNull(name),
+						Restrictions.not(Restrictions.eq(name, value1)));
 		}
 	},
 	LT(1) {
@@ -253,7 +255,7 @@ public enum CriterionOperator implements Displayable {
 
 		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
-			return Restrictions.eq(name, "");
+			return Restrictions.isEmpty(name);
 		}
 	},
 	ISNOTEMPTY(0) {
@@ -269,7 +271,7 @@ public enum CriterionOperator implements Displayable {
 
 		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
-			return Restrictions.not(Restrictions.eq(name, ""));
+			return Restrictions.isNotEmpty(name);
 		}
 	},
 	ISBLANK(0) {
@@ -303,7 +305,7 @@ public enum CriterionOperator implements Displayable {
 		@Override
 		public Criterion operator(String name, Object value1, Object value2) {
 			return Restrictions.and(Restrictions.isNotNull(name),
-					Restrictions.not(Restrictions.eq(name, "")));
+					Restrictions.isNotEmpty(name));
 		}
 	},
 	INCLUDE(0) {
@@ -408,11 +410,23 @@ public enum CriterionOperator implements Displayable {
 	public abstract boolean supports(Class<?> clazz);
 
 	public static List<String> getSupportedOperators(Class<?> clazz) {
+		if (clazz == null)
+			return Collections.emptyList();
 		List<String> list = new ArrayList<String>();
 		for (CriterionOperator op : values())
 			if (op.supports(clazz))
 				list.add(op.name());
 		return list;
+	}
+
+	public static List<String> getSupportedOperators(String className) {
+		Class<?> clazz = null;
+		try {
+			clazz = Class.forName(className);
+		} catch (Exception e) {
+
+		}
+		return getSupportedOperators(clazz);
 	}
 
 	@Override
