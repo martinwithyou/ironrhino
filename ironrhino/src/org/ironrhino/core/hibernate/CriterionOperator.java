@@ -22,9 +22,7 @@ public enum CriterionOperator implements Displayable {
 		public boolean supports(Class<?> clazz) {
 			return clazz == short.class || clazz == int.class
 					|| clazz == long.class || clazz == float.class
-					|| clazz == double.class || clazz == boolean.class
-					|| clazz.equals(String.class)
-					|| clazz.equals(Boolean.class)
+					|| clazz == double.class || clazz.equals(String.class)
 					|| Number.class.isAssignableFrom(clazz)
 					|| clazz.equals(Date.class)
 					|| Persistable.class.isAssignableFrom(clazz)
@@ -47,9 +45,7 @@ public enum CriterionOperator implements Displayable {
 		public boolean supports(Class<?> clazz) {
 			return clazz == short.class || clazz == int.class
 					|| clazz == long.class || clazz == float.class
-					|| clazz == double.class || clazz == boolean.class
-					|| clazz.equals(String.class)
-					|| clazz.equals(Boolean.class)
+					|| clazz == double.class || clazz.equals(String.class)
 					|| Number.class.isAssignableFrom(clazz)
 					|| clazz.equals(Date.class)
 					|| Persistable.class.isAssignableFrom(clazz)
@@ -333,6 +329,38 @@ public enum CriterionOperator implements Displayable {
 		public Criterion operator(String name, Object value1, Object value2) {
 			return Restrictions.not(Restrictions.like(name, (String) value1,
 					MatchMode.ANYWHERE));
+		}
+	},
+	ISTRUE(0) {
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return clazz == boolean.class || clazz.equals(Boolean.class);
+		}
+
+		@Override
+		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+			return supports(clazz);
+		}
+
+		@Override
+		public Criterion operator(String name, Object value1, Object value2) {
+			return Restrictions.eq(name, true);
+		}
+	},
+	ISFALSE(0) {
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return clazz == boolean.class || clazz.equals(Boolean.class);
+		}
+
+		@Override
+		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+			return supports(clazz);
+		}
+
+		@Override
+		public Criterion operator(String name, Object value1, Object value2) {
+			return Restrictions.eq(name, false);
 		}
 	};
 
