@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.model.Displayable;
 import org.ironrhino.core.util.DateUtils;
@@ -123,7 +124,7 @@ public enum CriterionOperator implements Displayable {
 	ISNULL(0) {
 		@Override
 		public boolean isEffective(Class<?> clazz, String value1, String value2) {
-			return accepts(clazz);
+			return supports(clazz);
 		}
 
 		@Override
@@ -134,7 +135,7 @@ public enum CriterionOperator implements Displayable {
 	ISNOTNULL(0) {
 		@Override
 		public boolean isEffective(Class<?> clazz, String value1, String value2) {
-			return accepts(clazz);
+			return supports(clazz);
 		}
 
 		@Override
@@ -145,11 +146,11 @@ public enum CriterionOperator implements Displayable {
 	ISEMPTY(0) {
 		@Override
 		public boolean isEffective(Class<?> clazz, String value1, String value2) {
-			return accepts(clazz);
+			return supports(clazz);
 		}
 
 		@Override
-		protected boolean accepts(Class<?> clazz) {
+		public boolean supports(Class<?> clazz) {
 			return clazz.equals(String.class);
 		}
 
@@ -161,11 +162,11 @@ public enum CriterionOperator implements Displayable {
 	ISNOTEMPTY(0) {
 		@Override
 		public boolean isEffective(Class<?> clazz, String value1, String value2) {
-			return accepts(clazz);
+			return supports(clazz);
 		}
 
 		@Override
-		protected boolean accepts(Class<?> clazz) {
+		public boolean supports(Class<?> clazz) {
 			return clazz.equals(String.class);
 		}
 
@@ -177,11 +178,11 @@ public enum CriterionOperator implements Displayable {
 	ISBLANK(0) {
 		@Override
 		public boolean isEffective(Class<?> clazz, String value1, String value2) {
-			return accepts(clazz);
+			return supports(clazz);
 		}
 
 		@Override
-		protected boolean accepts(Class<?> clazz) {
+		public boolean supports(Class<?> clazz) {
 			return clazz.equals(String.class);
 		}
 
@@ -194,11 +195,11 @@ public enum CriterionOperator implements Displayable {
 	ISNOTBLANK(0) {
 		@Override
 		public boolean isEffective(Class<?> clazz, String value1, String value2) {
-			return accepts(clazz);
+			return supports(clazz);
 		}
 
 		@Override
-		protected boolean accepts(Class<?> clazz) {
+		public boolean supports(Class<?> clazz) {
 			return clazz.equals(String.class);
 		}
 
@@ -207,12 +208,37 @@ public enum CriterionOperator implements Displayable {
 			return Restrictions.and(Restrictions.isNotNull(name),
 					Restrictions.not(Restrictions.eq(name, "")));
 		}
+	},
+	INCLUDE(0) {
+
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return clazz.equals(String.class);
+		}
+
+		@Override
+		public Criterion operator(String name, Object value1, Object value2) {
+			return Restrictions.like(name, (String) value1, MatchMode.ANYWHERE);
+		}
+	},
+	NOTINCLUDE(0) {
+
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return clazz.equals(String.class);
+		}
+
+		@Override
+		public Criterion operator(String name, Object value1, Object value2) {
+			return Restrictions.not(Restrictions.like(name, (String) value1,
+					MatchMode.ANYWHERE));
+		}
 	};
 
-	private int effectiveParameters;
+	private int parametersSize;
 
-	private CriterionOperator(int effectiveParameters) {
-		this.effectiveParameters = effectiveParameters;
+	private CriterionOperator(int parametersSize) {
+		this.parametersSize = parametersSize;
 	}
 
 	public String getName() {
@@ -238,19 +264,19 @@ public enum CriterionOperator implements Displayable {
 
 	public abstract Criterion operator(String name, Object value1, Object value2);
 
-	public int getEffectiveParameters() {
-		return effectiveParameters;
+	public int getParametersSize() {
+		return parametersSize;
 	}
 
 	public boolean isEffective(Class<?> clazz, String value1, String value2) {
-		if (!accepts(clazz))
+		if (!supports(clazz))
 			return false;
 		if (StringUtils.isBlank(value1))
 			return false;
 		return true;
 	}
 
-	protected boolean accepts(Class<?> clazz) {
+	public boolean supports(Class<?> clazz) {
 		return true;
 	}
 

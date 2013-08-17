@@ -593,7 +593,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					if (operator == null)
 						operator = CriterionOperator.EQ;
 					if (parameterValues.length < operator
-							.getEffectiveParameters())
+							.getParametersSize())
 						continue;
 					if (propertyName.indexOf('.') > 0) {
 						String subPropertyName = propertyName
@@ -732,7 +732,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	protected Collection<String> getExcludePropertyNamesInCriterion() {
 		return Collections.emptyList();
 	}
-
+	
+	
 	@Override
 	public String input() {
 		if (getReadonlyConfig().isValue()) {
