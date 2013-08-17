@@ -13,7 +13,7 @@
 <button type="button" class="btn" data-view="input">${action.getText("create")}</button>
 <button type="button" class="btn confirm" data-action="save">${action.getText("save")}</button>
 <button type="button" class="btn" data-action="delete" data-shown="selected">${action.getText("delete")}</button>
-<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button>
+<button type="button" class="btn reload">${action.getText("reload")}</button>
 <#if treeNode?? && parentId??>
 <#if treeNode.parent??>
 <a class="btn ajax view" href="${actionBaseUrl+"?parentId="+treeNode.parent.id}">${action.getText("upward")}</a>

@@ -8,7 +8,7 @@
 <#assign bottomButtons='
 <button type="button" class="btn" data-view="input">${action.getText("create")}</button>
 <button type="button" class="btn" data-action="delete" data-shown="selected" data-filterselector="[data-enabled=\'false\']">${action.getText("delete")}</button>
-<button type="button" class="btn" data-action="reload">${action.getText("reload")}</button>
+<button type="button" class="btn reload">${action.getText("reload")}</button>
 '>
 <@richtable entityName="user" columns=columns searchable=true celleditable=false bottomButtons=bottomButtons/>
 </body>

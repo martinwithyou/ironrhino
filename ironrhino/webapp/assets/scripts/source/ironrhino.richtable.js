@@ -254,9 +254,7 @@ Richtable = {
 		if (action)
 			btn.addClass('clicked');
 		var view = $(btn).data('view');
-		if (action == 'reload')
-			$(form).submit();
-		else if (action == 'save')
+		if (action == 'save')
 			Richtable.save(event);
 		else if (action) {
 			if (!idparams) {
@@ -377,7 +375,7 @@ Richtable = {
 								onsuccess : function() {
 									$('td', row).removeClass('edited')
 											.removeData('oldvalue');
-									$('.btn[data-action="save"]', form)
+									$('[data-action="save"]', form)
 											.removeClass('btn-primary').hide();
 								}
 							});
@@ -392,7 +390,7 @@ Richtable = {
 		var btn = event.target;
 		if ($(btn).prop('tagName') != 'BUTTON' || $(btn).prop('tagName') != 'A')
 			btn = $(btn).closest('button,a');
-		if ($(btn).closest('.btn').hasClass('confirm')) {
+		if ($(btn).hasClass('confirm')) {
 			$.alerts.confirm($(btn).data('confirm')
 							|| MessageBundle.get('confirm.save'), MessageBundle
 							.get('select'), function(b) {
@@ -479,7 +477,7 @@ Richtable = {
 			cell.removeAttr('data-tooltip');
 		} else
 			cell.removeClass('edited');
-		var savebtn = $('.btn[data-action="save"]', cell.closest('form'));
+		var savebtn = $('[data-action="save"]', cell.closest('form'));
 		$('td.edited', cell.closest('form')).length ? savebtn
 				.addClass('btn-primary').show() : savebtn
 				.removeClass('btn-primary').hide();
@@ -542,62 +540,81 @@ Richtable = {
 	}
 };
 Initialization.richtable = function() {
-	$(document).on('click',
-			'.richtable .action button.btn,form.richtable a[rel="richtable"]',
-			Richtable.click).on('click', '.richtable .more', function(event) {
-		var form = $(event.target).closest('form');
-		if (!$('li.nextPage', form).length)
-			return;
-		$('.inputPage', form).val(function(i, v) {
-					return parseInt(v) + 1
-				});
-		$.ajax({
-			url : $(form).attr('action'),
-			type : $(form).attr('method'),
-			data : form.serialize(),
-			success : function(data) {
-				var html = data.replace(/<script(.|\s)*?\/script>/g, '');
-				var div = $('<div/>').html(html);
-				var append = false;
-				$('table.richtable tbody:eq(0) tr', div).each(function(i, v) {
-					if (!append) {
-						var id = $(v).data('rowid')
-								|| $(
-										'input[type="checkbox"],input[type="radio"]',
-										v).prop('value');
-						if (id) {
-							var rows = $('table.richtable tbody:eq(0) tr', form);
-							var exists = false;
-							for (var i = rows.length - 1; i >= 0; i--) {
-								if (($(rows[i]).data('rowid') || $(
-										'input[type="checkbox"],input[type="radio"]',
-										rows[i]).prop('value')) == id) {
-									exists = true;
-									break;
-								}
-							}
-							if (!exists)
-								append = true;
-						} else {
-							append = true;
-						}
+	$(document)
+			.on(
+					'click',
+					'.richtable .action [data-view],.richtable .action [data-action],form.richtable a[rel="richtable"]',
+					Richtable.click).on('click', '.richtable .action .reload',
+					function() {
+						$(this).closest('form').submit();
+					}).on('click', '.richtable .action .filter', function() {
+						var f = $('#filter_'
+								+ $(this).closest('form').attr('id'));
+						f.toggle();
+						if (f.is(':visible'))
+							$('html,body').animate({
+										scrollTop : f.offset().top - 50
+									}, 100);
+					}).on('click', '.richtable .more', function(event) {
+				var form = $(event.target).closest('form');
+				if (!$('li.nextPage', form).length)
+					return;
+				$('.inputPage', form).val(function(i, v) {
+							return parseInt(v) + 1
+						});
+				$.ajax({
+					url : $(form).attr('action'),
+					type : $(form).attr('method'),
+					data : form.serialize(),
+					success : function(data) {
+						var html = data
+								.replace(/<script(.|\s)*?\/script>/g, '');
+						var div = $('<div/>').html(html);
+						var append = false;
+						$('table.richtable tbody:eq(0) tr', div).each(
+								function(i, v) {
+									if (!append) {
+										var id = $(v).data('rowid')
+												|| $(
+														'input[type="checkbox"],input[type="radio"]',
+														v).prop('value');
+										if (id) {
+											var rows = $(
+													'table.richtable tbody:eq(0) tr',
+													form);
+											var exists = false;
+											for (var i = rows.length - 1; i >= 0; i--) {
+												if (($(rows[i]).data('rowid') || $(
+														'input[type="checkbox"],input[type="radio"]',
+														rows[i]).prop('value')) == id) {
+													exists = true;
+													break;
+												}
+											}
+											if (!exists)
+												append = true;
+										} else {
+											append = true;
+										}
+									}
+									if (append) {
+										$(v).appendTo($(
+												'table.richtable tbody', form));
+										_observe(v);
+									}
+								});
+						if (append)
+							Richtable.enhance($('table.richtable', form));
+						$('.pageSize', form).val($('table.richtable tbody tr',
+								form).length);
+						$('div.pagination', form).replaceWith($(
+								'div.pagination', div));
+						$('div.pagination ul', form).hide();
+						$('div.status', form).replaceWith($('div.status', div));
 					}
-					if (append) {
-						$(v).appendTo($('table.richtable tbody', form));
-						_observe(v);
-					}
 				});
-				if (append)
-					Richtable.enhance($('table.richtable', form));
-				$('.pageSize', form)
-						.val($('table.richtable tbody tr', form).length);
-				$('div.pagination', form).replaceWith($('div.pagination', div));
-				$('div.pagination ul', form).hide();
-				$('div.status', form).replaceWith($('div.status', div));
-			}
-		});
 
-	});
+			});
 }
 Observation.richtable = function(container) {
 	$('table.richtable', container)
@@ -623,7 +640,7 @@ Observation.richtable = function(container) {
 									});
 						}
 						var form = $(this).closest('form.richtable');
-						$('.toolbar .btn[data-shown]', form).each(function() {
+						$('.toolbar [data-shown]', form).each(function() {
 							var t = $(this);
 							var filter = t.data('filterselector');
 							var allmatch = t.data('allmatch');
