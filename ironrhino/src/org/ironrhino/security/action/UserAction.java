@@ -9,19 +9,12 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.LabelValue;
-import org.ironrhino.core.model.ResultPage;
-import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
-import org.ironrhino.core.struts.BaseAction;
+import org.ironrhino.core.struts.EntityAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.security.model.User;
@@ -40,15 +33,13 @@ import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
-public class UserAction extends BaseAction {
+public class UserAction extends EntityAction<User> {
 
 	private static final long serialVersionUID = -79191921685741502L;
 
 	private User user;
 
 	private List<LabelValue> roles;
-
-	private ResultPage<User> resultPage;
 
 	private String password;
 
@@ -89,47 +80,6 @@ public class UserAction extends BaseAction {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public ResultPage<User> getResultPage() {
-		return resultPage;
-	}
-
-	public void setResultPage(ResultPage<User> resultPage) {
-		this.resultPage = resultPage;
-	}
-
-	public void setUserManager(UserManager userManager) {
-		this.userManager = userManager;
-	}
-
-	@Override
-	public String execute() {
-		if (StringUtils.isBlank(keyword) || elasticSearchService == null) {
-			DetachedCriteria dc = userManager.detachedCriteria();
-			Criterion filtering = CriterionUtils.filter(user, "id", "username",
-					"name", "enabled");
-			if (filtering != null)
-				dc.add(filtering);
-			if (StringUtils.isNotBlank(keyword))
-				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
-						"username", "name", "email"));
-			dc.addOrder(Order.asc("username"));
-			if (resultPage == null)
-				resultPage = new ResultPage<User>();
-			resultPage.setCriteria(dc);
-			resultPage = userManager.findByResultPage(resultPage);
-		} else {
-			String query = keyword.trim();
-			ElasticSearchCriteria criteria = new ElasticSearchCriteria();
-			criteria.setQuery(query);
-			criteria.setTypes(new String[] { "user" });
-			if (resultPage == null)
-				resultPage = new ResultPage<User>();
-			resultPage.setCriteria(criteria);
-			resultPage = elasticSearchService.search(resultPage);
-		}
-		return LIST;
 	}
 
 	@Override
