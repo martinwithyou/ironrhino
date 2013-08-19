@@ -189,7 +189,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 			if (id.equals(t.getId())) {
 				return t;
 			} else {
-				T tt = (T) t.getDescendantOrSelfById(id);
+				T tt = t.getDescendantOrSelfById(id);
 				if (tt != null)
 					return tt;
 			}
@@ -206,7 +206,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 			if (name.equals(t.getName())) {
 				return t;
 			} else {
-				T tt = (T) t.getDescendantOrSelfByName(name);
+				T tt = t.getDescendantOrSelfByName(name);
 				if (tt != null)
 					return tt;
 			}
@@ -245,13 +245,13 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 		while (parent != null) {
 			if (parent.getId().equals(this.getId()))
 				return true;
-			parent = (T) parent.getParent();
+			parent = parent.getParent();
 		}
 		return false;
 	}
 
 	public boolean isDescendantOrSelfOf(T t) {
-		return t != null && t.isAncestorOrSelfOf((T)this);
+		return t != null && t.isAncestorOrSelfOf((T) this);
 	}
 
 	public T getAncestor(int level) {
@@ -261,7 +261,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 		while (parent != null) {
 			if (parent.getLevel() == level)
 				return parent;
-			parent = (T) parent.getParent();
+			parent = parent.getParent();
 		}
 		return null;
 	}

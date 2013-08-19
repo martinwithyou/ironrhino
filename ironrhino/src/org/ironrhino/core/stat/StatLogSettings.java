@@ -2,9 +2,9 @@ package org.ironrhino.core.stat;
 
 import java.io.File;
 
+import org.ironrhino.core.util.AppInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ironrhino.core.util.AppInfo;
 
 public class StatLogSettings {
 

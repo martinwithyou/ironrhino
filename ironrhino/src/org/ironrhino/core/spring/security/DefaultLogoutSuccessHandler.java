@@ -21,6 +21,7 @@ public class DefaultLogoutSuccessHandler extends
 		return useReferer;
 	}
 
+	@Override
 	public void setUseReferer(boolean useReferer) {
 		this.useReferer = useReferer;
 	}

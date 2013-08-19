@@ -371,10 +371,12 @@ public enum CriterionOperator implements Displayable {
 		this.parametersSize = parametersSize;
 	}
 
+	@Override
 	public String getName() {
 		return this.name();
 	}
 
+	@Override
 	public String getDisplayName() {
 		try {
 			return LocalizedTextUtil.findText(getClass(), name(), ActionContext

@@ -10,10 +10,12 @@ public enum Scope implements Displayable {
 	APPLICATION, // all jvm for this application
 	GLOBAL; // all jvm for all application
 
+	@Override
 	public String getName() {
 		return name();
 	}
 
+	@Override
 	public String getDisplayName() {
 		try {
 			return LocalizedTextUtil.findText(getClass(), name(), ActionContext

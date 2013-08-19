@@ -9,10 +9,12 @@ public enum Gender implements Displayable {
 
 	MALE, FEMALE;
 
+	@Override
 	public String getName() {
 		return this.name();
 	}
 
+	@Override
 	public String getDisplayName() {
 		try {
 			return LocalizedTextUtil.findText(getClass(), name(), ActionContext

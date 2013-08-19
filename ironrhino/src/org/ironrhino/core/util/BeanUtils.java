@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.model.BaseTreeableEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BeanUtils {
 

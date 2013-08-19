@@ -11,14 +11,14 @@ import javax.inject.Singleton;
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.SessionCompressorManager;
 import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.core.util.RequestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 @Named("cookieBased")

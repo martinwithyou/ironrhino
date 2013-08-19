@@ -7,10 +7,12 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 public enum SchemaFieldType implements Displayable {
 	SELECT, CHECKBOX, INPUT, GROUP;
+	@Override
 	public String getName() {
 		return name();
 	}
 
+	@Override
 	public String getDisplayName() {
 		try {
 			return LocalizedTextUtil.findText(getClass(), name(), ActionContext

@@ -118,6 +118,7 @@ public class UserAction extends EntityAction<User> {
 		return SUCCESS;
 	}
 
+	@Override
 	@Validations(regexFields = { @RegexFieldValidator(type = ValidatorType.FIELD, fieldName = "user.username", regex = User.USERNAME_REGEX, key = "validation.invalid") })
 	public String checkavailable() {
 		return makeEntityValid() ? NONE : INPUT;

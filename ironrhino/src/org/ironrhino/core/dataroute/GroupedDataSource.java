@@ -12,11 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.ironrhino.core.stat.Key;
 import org.ironrhino.core.stat.StatLog;
 import org.ironrhino.core.util.RoundRobin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.jdbc.datasource.AbstractDataSource;
