@@ -38,7 +38,7 @@ div.form-horizontal .controls,.controls.text {
 	}
 }
 td input,td textarea,td select,td .uneditable-input{
-	margin-bottom: 0px;
+	margin-bottom: 0px !important;
 }
 th.radio,th.checkbox,td.radio,td.checkbox{
 	padding: 0;
