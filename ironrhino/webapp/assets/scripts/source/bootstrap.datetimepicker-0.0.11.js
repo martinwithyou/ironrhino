@@ -326,6 +326,8 @@
 						left : offset.left,
 						right : offset.right
 					});
+			if(position='absolute' && $(document).height()-offset.top < 300)
+				$("html, body").animate({ scrollTop: $(document).height() }, 200);
 		},
 
 		notifyChange : function() {
