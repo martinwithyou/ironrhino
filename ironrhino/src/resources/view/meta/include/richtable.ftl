@@ -243,15 +243,19 @@ ${formFooter!}
 				<select class="required decrease property">
 					<option value=""></option>
 					<#list propertyNamesInCriterion.entrySet() as entry>
+					<#local label=entry.key/>
+					<#if entry.value.alias?has_content>
+						<#local label=entry.value.alias/>
+					</#if>
 					<#if entry.value.propertyType.enum>
-					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-type="select" data-map="${statics['org.ironrhino.core.struts.I18N'].getTextForEnum(entry.value.propertyType)}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-type="select" data-map="${statics['org.ironrhino.core.struts.I18N'].getTextForEnum(entry.value.propertyType)}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(label)}</option>
 					<#elseif entry.value.type='dictionary' && selectDictionary??>
 					<#assign templateName><@entry.value.templateName?interpret /></#assign>
-					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-type="select" data-map="${statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getItemsAsMap(templateName)}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators('org.ironrhino.core.hibernate.CriterionOperator')}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-type="select" data-map="${statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getItemsAsMap(templateName)}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators('org.ironrhino.core.hibernate.CriterionOperator')}">${statics['org.ironrhino.core.struts.I18N'].getText(label)}</option>
 					<#elseif entry.value.type='listpick'>
-					<option value="${entry.key}" data-type="listpick" data-pickurl="<@url value=entry.value.pickUrl/>" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					<option value="${entry.key}" data-type="listpick" data-pickurl="<@url value=entry.value.pickUrl/>" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(label)}</option>
 					<#else>
-					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-inputtype="${entry.value.inputType}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(entry.key)}</option>
+					<option value="${entry.key}" data-class="${entry.value.cssClass}" data-inputtype="${entry.value.inputType}" data-operators="${statics['org.ironrhino.core.hibernate.CriterionOperator'].getSupportedOperators(entry.value.propertyType)}">${statics['org.ironrhino.core.struts.I18N'].getText(label)}</option>
 					</#if>
 					</#list>
 				</select>
