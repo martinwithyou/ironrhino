@@ -515,13 +515,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			richtableConfig = getEntityClass().getAnnotation(
 					RichtableConfig.class);
 		final BaseManager entityManager = getEntityManager(getEntityClass());
-		Set<String> propertyNamesInLike = new HashSet<String>();
-		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
-			if (entry.getValue().isSearchable()
-					&& String.class.equals(entry.getValue().getPropertyType())
-					&& !entry.getValue().isExcludedFromLike())
-				propertyNamesInLike.add(entry.getKey());
-		}
 		Map<String, String> aliases = new HashMap<String, String>();
 		boolean searchable = isSearchable();
 		if (searchable
@@ -602,9 +595,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 								.toUpperCase());
 					if (operator == null)
 						operator = CriterionOperator.EQ;
-					if (parameterValues.length < operator.getParametersSize()
-							|| (operator == CriterionOperator.INCLUDE || operator == CriterionOperator.NOTINCLUDE)
-							&& !propertyNamesInLike.contains(propertyName))
+					if (parameterValues.length < operator.getParametersSize())
 						continue;
 					if (propertyName.indexOf('.') > 0) {
 						String subPropertyName = propertyName
@@ -693,6 +684,15 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+			Set<String> propertyNamesInLike = new HashSet<String>();
+			for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs()
+					.entrySet()) {
+				if (entry.getValue().isSearchable()
+						&& String.class.equals(entry.getValue()
+								.getPropertyType())
+						&& !entry.getValue().isExcludedFromLike())
+					propertyNamesInLike.add(entry.getKey());
 			}
 			if (searchable && StringUtils.isNotBlank(keyword)
 					&& propertyNamesInLike.size() > 0)
