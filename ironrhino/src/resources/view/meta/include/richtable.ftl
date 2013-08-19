@@ -235,7 +235,7 @@ ${list?size}${action.getText('record')}
 ${formFooter!}
 </form>
 <#if filterable>
-<form action="${actionBaseUrl}" method="post" class="ajax view criteria" style="display:none;">
+<form method="post" class="ajax view criteria" style="display:none;">
 <table class="table datagrid">
 	<tbody>
 		<tr>

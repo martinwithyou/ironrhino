@@ -617,8 +617,19 @@ Initialization.richtable = function() {
 }
 Observation._richtable = function(container) {
 	$('form.criteria', container).each(function() {
-		$(this).data('replacement', $(this).prev('form.richtable').attr('id'));
-		$('select.property', this).change(function() {
+		var t = $(this);
+		var f = t.prev('form.richtable');
+		t.attr('action', f.attr('action')).data('replacement', f.attr('id'));
+		$('input[type="hidden"]', f).clone().prependTo(t).each(function() {
+					var name = $(this).attr('name');
+					if (name.indexOf('.') > 0)
+						name = name.substring(name.indexOf('.') + 1);
+					$('select.property option', t).each(function() {
+								if ($(this).attr('value') == name)
+									$(this).remove();
+							});
+				});
+		$('select.property', t).change(function() {
 					var t = $(this);
 					var operator = $('select.operator', t.closest('tr'));
 					if (t.val()) {
@@ -648,7 +659,7 @@ Observation._richtable = function(container) {
 						$('option', operator).css('display', '');
 					}
 				});
-		$('select.operator', this).change(function() {
+		$('select.operator', t).change(function() {
 			var t = $(this);
 			var property = $('select.property', t.closest('tr'));
 			var option = $('option:selected', property);
@@ -669,10 +680,14 @@ Observation._richtable = function(container) {
 								+ '</option>').appendTo(select);
 					}
 				} else if ('listpick' == option.data('type')) {
-					$('<input id="filter_'+property.val()+'" type="hidden" name="'+property.val()+'"/><div class="listpick removeonadd" data-options="{\'url\':\''
+					$('<input id="filter_'
+							+ property.val()
+							+ '" type="hidden" name="'
+							+ property.val()
+							+ '"/><div class="listpick removeonadd" data-options="{\'url\':\''
 							+ option.data('pickurl')
-							+ '\',\'name\':\'this\',\'id\':\'#filter_'+property.val()+'\'}">...</div>')
-							.appendTo(td);
+							+ '\',\'name\':\'this\',\'id\':\'#filter_'
+							+ property.val() + '\'}">...</div>').appendTo(td);
 				} else {
 					$('<input type="' + option.data('inputtype') + '" name="'
 							+ property.val() + '" class="removeonadd '
