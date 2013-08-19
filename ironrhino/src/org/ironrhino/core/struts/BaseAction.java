@@ -39,6 +39,8 @@ public class BaseAction extends ActionSupport {
 
 	public static final String LIST = "list";
 	public static final String VIEW = "view";
+	public static final String PICK = "pick";
+	public static final String TABS = "tabs";
 	public static final String REFERER = "referer";
 	public static final String JSON = "json";
 	public static final String DYNAMICREPORTS = "dynamicreports";
@@ -175,16 +177,12 @@ public class BaseAction extends ActionSupport {
 
 	@Override
 	public String execute() {
-		return list();
+		return SUCCESS;
 	}
 
 	@Override
 	public String input() {
 		return INPUT;
-	}
-
-	public String list() {
-		return SUCCESS;
 	}
 
 	public String save() {
@@ -201,11 +199,11 @@ public class BaseAction extends ActionSupport {
 
 	public String pick() {
 		execute();
-		return "pick";
+		return PICK;
 	}
 
 	public String tabs() {
-		return "tabs";
+		return TABS;
 	}
 
 	@Before(priority = 20)

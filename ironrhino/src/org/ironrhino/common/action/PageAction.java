@@ -78,7 +78,7 @@ public class PageAction extends BaseAction {
 	}
 
 	@Override
-	public String list() {
+	public String execute() {
 		if (StringUtils.isBlank(keyword) || elasticSearchService == null) {
 			DetachedCriteria dc = pageManager.detachedCriteria();
 			Criterion filtering = CriterionUtils.filter(page, "id", "pagepath",

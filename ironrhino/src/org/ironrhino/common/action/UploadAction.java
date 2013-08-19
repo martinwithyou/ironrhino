@@ -179,7 +179,6 @@ public class UploadAction extends BaseAction {
 		return list();
 	}
 
-	@Override
 	public String list() {
 		if (folder == null) {
 			folder = getUid();

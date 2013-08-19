@@ -507,7 +507,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	@Override
-	public String list() {
+	public String execute() {
 		final BaseManager entityManager = getEntityManager(getEntityClass());
 		Set<String> propertyNamesInLike = new HashSet<String>();
 		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {

@@ -68,11 +68,6 @@ public class IssuePageAction extends BaseAction {
 
 	@Override
 	public String execute() {
-		return list();
-	}
-
-	@Override
-	public String list() {
 		if (resultPage == null)
 			resultPage = new ResultPage<Page>();
 		ElasticSearchCriteria criteria = new ElasticSearchCriteria();

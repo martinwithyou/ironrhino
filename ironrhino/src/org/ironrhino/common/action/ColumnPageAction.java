@@ -91,7 +91,6 @@ public class ColumnPageAction extends BaseAction {
 		return list();
 	}
 
-	@Override
 	public String list() {
 		columns = settingControl
 				.getStringArray(Constants.SETTING_KEY_CMS_PREFIX + getName()
