@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -58,6 +59,8 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.AnnotationUtils;
+import org.ironrhino.core.util.AppInfo;
+import org.ironrhino.core.util.AppInfo.Stage;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
@@ -86,6 +89,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	private static final long serialVersionUID = -8442983706126047413L;
 
+	private static Map<String, Map<String, UiConfigImpl>> cache = new ConcurrentHashMap<String, Map<String, UiConfigImpl>>(
+			50);
+
 	public static final String CRITERION_OPERATOR_SUFFIX = "-op";
 
 	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
@@ -97,8 +103,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	private String entityName;
 
 	private Map<String, Annotation> naturalIds;
-
-	private Map<String, UiConfigImpl> uiConfigs;
 
 	private RichtableConfigImpl richtableConfig;
 
@@ -214,6 +218,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	public Map<String, UiConfigImpl> getUiConfigs() {
+		String key = new StringBuilder(getEntityClass().getName()).append(",")
+				.append(getClass().getName()).toString();
+		Map<String, UiConfigImpl> uiConfigs = cache.get(key);
 		if (uiConfigs == null) {
 			Class clazz = getEntityClass();
 			Set<String> hides = new HashSet<String>();
@@ -459,6 +466,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					});
 			sortedMap.putAll(map);
 			uiConfigs = sortedMap;
+			if (AppInfo.getStage() != Stage.DEVELOPMENT)
+				cache.put(key, uiConfigs);
 		}
 		return uiConfigs;
 	}
