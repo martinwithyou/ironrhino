@@ -176,33 +176,33 @@ public class BaseAction extends ActionSupport {
 	}
 
 	@Override
-	public String execute() {
+	public String execute() throws Exception {
 		return SUCCESS;
 	}
 
 	@Override
-	public String input() {
+	public String input() throws Exception {
 		return INPUT;
 	}
 
-	public String save() {
+	public String save() throws Exception {
 		return SUCCESS;
 	}
 
-	public String view() {
+	public String view() throws Exception {
 		return VIEW;
 	}
 
-	public String delete() {
+	public String delete() throws Exception {
 		return SUCCESS;
 	}
 
-	public String pick() {
+	public String pick() throws Exception {
 		execute();
 		return PICK;
 	}
 
-	public String tabs() {
+	public String tabs() throws Exception {
 		return TABS;
 	}
 

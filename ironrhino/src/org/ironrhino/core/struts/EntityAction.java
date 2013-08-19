@@ -419,8 +419,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				}
 				if (columnannotation != null && columnannotation.unique())
 					uci.setUnique(true);
-				if (String.class == returnType
-						&& (searchableProperty != null || searchableId != null))
+				if (searchableProperty != null || searchableId != null)
 					uci.setSearchable(true);
 
 				if (getNaturalIds().containsKey(pd.getName())) {
@@ -507,14 +506,23 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	@Override
-	public String execute() {
+	public String execute() throws Exception {
+		BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass().newInstance());
+		bw.setConversionService(conversionService);
+		RichtableConfig richtableConfig = getClass().getAnnotation(
+				RichtableConfig.class);
+		if (richtableConfig == null)
+			richtableConfig = getEntityClass().getAnnotation(
+					RichtableConfig.class);
 		final BaseManager entityManager = getEntityManager(getEntityClass());
 		Set<String> propertyNamesInLike = new HashSet<String>();
 		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
 			if (entry.getValue().isSearchable()
+					&& String.class.equals(entry.getValue().getPropertyType())
 					&& !entry.getValue().isExcludedFromLike())
 				propertyNamesInLike.add(entry.getKey());
 		}
+		Map<String, String> aliases = new HashMap<String, String>();
 		boolean searchable = isSearchable();
 		if (searchable
 				&& StringUtils.isNumeric(keyword)
@@ -522,9 +530,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				&& (keyword.length() == 32 || keyword.length() >= 22
 						&& keyword.length() <= 24)) // keyword is id
 			try {
-				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
-						.newInstance());
-				bw.setConversionService(conversionService);
 				bw.setPropertyValue("id", keyword);
 				Serializable idvalue = (Serializable) bw.getPropertyValue("id");
 				if (idvalue != null) {
@@ -561,9 +566,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				}
 			}
 			try {
-				BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass()
-						.newInstance());
-				bw.setConversionService(conversionService);
 				Set<String> propertyNames = getUiConfigs().keySet();
 				Map<String, String[]> parameterMap = ServletActionContext
 						.getRequest().getParameterMap();
@@ -600,7 +602,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 								.toUpperCase());
 					if (operator == null)
 						operator = CriterionOperator.EQ;
-					if (parameterValues.length < operator.getParametersSize())
+					if (parameterValues.length < operator.getParametersSize()
+							|| (operator == CriterionOperator.INCLUDE || operator == CriterionOperator.NOTINCLUDE)
+							&& !propertyNamesInLike.contains(propertyName))
 						continue;
 					if (propertyName.indexOf('.') > 0) {
 						String subPropertyName = propertyName
@@ -633,8 +637,12 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 									value2 = bw2
 											.getPropertyValue(subPropertyName);
 								}
-								String alias = CodecUtils.randomString(4);
-								dc.createAlias(propertyName, alias);
+								String alias = aliases.get(propertyName);
+								if (alias == null) {
+									alias = CodecUtils.randomString(4);
+									dc.createAlias(propertyName, alias);
+									aliases.put(propertyName, alias);
+								}
 								Criterion criterion = operator
 										.operator(
 												alias + "." + subPropertyName,
@@ -693,30 +701,68 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(dc);
-			RichtableConfig rc = getClass()
-					.getAnnotation(RichtableConfig.class);
-			if (rc == null)
-				rc = getEntityClass().getAnnotation(RichtableConfig.class);
-			if (rc != null && StringUtils.isNotBlank(rc.order())) {
-				String[] ar = rc.order().split(",");
+
+			if (richtableConfig != null
+					&& StringUtils.isNotBlank(richtableConfig.order())) {
+				String[] ar = richtableConfig.order().split(",");
 				for (String s : ar) {
-					String[] arr = s.split("\\s");
-					if (arr[arr.length - 1].equalsIgnoreCase("asc"))
-						dc.addOrder(Order.asc(arr[arr.length - 2]));
-					else if (arr[arr.length - 1].equalsIgnoreCase("desc"))
-						dc.addOrder(Order.desc(arr[arr.length - 2]));
+					String[] arr = s.split("\\s+", 2);
+					String propertyName = arr[0];
+					if (propertyName.indexOf(".") > 0) {
+						String p1 = propertyName.substring(0,
+								propertyName.indexOf("."));
+						String p2 = propertyName.substring(propertyName
+								.indexOf(".") + 1);
+						Class type = bw.getPropertyType(p1);
+						if (Persistable.class.isAssignableFrom(type)) {
+							String alias = aliases.get(p1);
+							if (alias == null) {
+								alias = CodecUtils.randomString(4);
+								dc.createAlias(p1, alias);
+								aliases.put(p1, alias);
+							}
+							propertyName = alias + "." + p2;
+						}
+					}
+					if (arr.length == 2 && arr[1].equalsIgnoreCase("asc"))
+						dc.addOrder(Order.asc(propertyName));
+					else if (arr.length == 2 && arr[1].equalsIgnoreCase("desc"))
+						dc.addOrder(Order.desc(propertyName));
 					else
-						dc.addOrder(Order.asc(arr[arr.length - 1]));
+						dc.addOrder(Order.asc(propertyName));
 				}
 			} else if (Ordered.class.isAssignableFrom(getEntityClass()))
 				dc.addOrder(Order.asc("displayOrder"));
 			resultPage = entityManager.findByResultPage(resultPage);
 		} else {
+			Set<String> searchableProperties = new HashSet<String>();
+			for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs()
+					.entrySet()) {
+				if (entry.getValue().isSearchable())
+					searchableProperties.add(entry.getKey());
+			}
 			String query = keyword.trim();
 			ElasticSearchCriteria criteria = new ElasticSearchCriteria();
 			criteria.setQuery(query);
 			criteria.setTypes(new String[] { getEntityName() });
-			if (Ordered.class.isAssignableFrom(getEntityClass()))
+			if (richtableConfig != null
+					&& StringUtils.isNotBlank(richtableConfig.order())) {
+				String[] ar = richtableConfig.order().split(",");
+				for (String s : ar) {
+					String[] arr = s.split("\\s+", 2);
+					String propertyName = arr[0];
+					if (searchableProperties.contains(propertyName)) {
+						if (arr.length == 2 && arr[1].equalsIgnoreCase("asc"))
+							criteria.addSort(propertyName, false);
+						else if (arr.length == 2
+								&& arr[1].equalsIgnoreCase("desc"))
+							criteria.addSort(propertyName, true);
+						else
+							criteria.addSort(propertyName, false);
+					}
+				}
+			} else if (Ordered.class.isAssignableFrom(getEntityClass())
+					&& searchableProperties.contains("displayOrder"))
 				criteria.addSort("displayOrder", false);
 			if (resultPage == null)
 				resultPage = new ResultPage();
