@@ -25,6 +25,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -225,6 +226,15 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						|| pd.getWriteMethod() == null
 						&& pd.getReadMethod().getAnnotation(UiConfig.class) == null)
 					continue;
+				Transient trans = pd.getReadMethod().getAnnotation(
+						Transient.class);
+				if (trans == null)
+					try {
+						Field f = clazz.getDeclaredField(propertyName);
+						if (f != null)
+							trans = f.getAnnotation(Transient.class);
+					} catch (Exception e) {
+					}
 				SearchableProperty searchableProperty = pd.getReadMethod()
 						.getAnnotation(SearchableProperty.class);
 				if (searchableProperty == null)
@@ -282,6 +292,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					}
 				UiConfigImpl uci = new UiConfigImpl(pd.getPropertyType(),
 						uiConfig);
+				if (trans != null)
+					uci.setExcludedFromCriterion(true);
+				uci.setExcludedFromLike(true);
 				if (columnannotation != null && !columnannotation.nullable()
 						|| basicannotation != null
 						&& !basicannotation.optional())
