@@ -204,6 +204,10 @@ public class BaseAction extends ActionSupport {
 		return "pick";
 	}
 
+	public String tabs() {
+		return "tabs";
+	}
+
 	@Before(priority = 20)
 	public String preAction() throws Exception {
 		Authorize authorize = findAuthorize();
