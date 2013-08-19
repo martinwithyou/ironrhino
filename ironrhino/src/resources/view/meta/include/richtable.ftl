@@ -239,7 +239,7 @@ ${formFooter!}
 <table class="table datagrid">
 	<tbody>
 		<tr>
-			<td style="width:25%;">
+			<td style="width:30%;">
 				<select class="required decrease property">
 					<option value=""></option>
 					<#list propertyNamesInCriterion.entrySet() as entry>
@@ -260,7 +260,7 @@ ${formFooter!}
 					</#list>
 				</select>
 			</td>
-			<td style="width:25%;">
+			<td style="width:30%;text-align:right;">
 			<select class="operator">
 			<#list statics['org.ironrhino.core.hibernate.CriterionOperator'].values() as op>
 			<option value="${op.name()}" data-parameters="${op.parametersSize}">${op.displayName}</option>

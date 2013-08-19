@@ -28520,15 +28520,16 @@ $(function () {
  * the License. =========================================================
  */
 
-/**
- * changes 2.change find('.input-append') to
- * find('.input-append').length,find('.input-prepend') to
- * find('.input-prepend').length 3.if (icon && icon.length) 4.comment if
- * (!this.isInput) on event mousedown.datetimepicker 5.change
- * this.$element.outerHeight() to this.$element.outerHeight() + 5 6.exchange
- * Hour pattern HH and hh 7.comment this.set(); in hide()
- */
-
+// changes
+// 0.change find('.input-append') to find('.input-append').length
+// 1.change find('.input-prepend') to find('.input-prepend').length
+// 2.if (icon && icon.length)
+// 3.comment if (!this.isInput) on event mousedown.datetimepicker
+// 4.change this.$element.outerHeight() to this.$element.outerHeight() + 5
+// 5.exchange Hour pattern HH and hh
+// 6.comment this.set(); in hide()
+// 7.comment this.set(); in hide()
+// 8.add if(position='absolute' && $(document).height()-offset.top < 300)
 (function($) {
 
 	// Picker object
@@ -28826,8 +28827,11 @@ $(function () {
 						left : offset.left,
 						right : offset.right
 					});
-			if(position='absolute' && $(document).height()-offset.top < 300)
-				$("html, body").animate({ scrollTop: $(document).height() }, 200);
+			if (position = 'absolute'
+					&& $(document).height() - offset.top < 300)
+				$("html, body").animate({
+							scrollTop : $(document).height()
+						}, 200);
 		},
 
 		notifyChange : function() {
@@ -35516,8 +35520,9 @@ Observation._richtable = function(container) {
 							+ '\',\'name\':\'this\',\'id\':\'#filter_'
 							+ property.val() + '\'}">...</div>').appendTo(td);
 				} else {
-					$('<input type="' + option.data('inputtype') + '" name="'
-							+ property.val() + '" class="removeonadd '
+					$('<input type="' + (option.data('inputtype') || 'text')
+							+ '" name="' + property.val()
+							+ '" class="input-medium removeonadd '
 							+ option.data('class') + '"/>').appendTo(td);
 				}
 				if (size == 2)

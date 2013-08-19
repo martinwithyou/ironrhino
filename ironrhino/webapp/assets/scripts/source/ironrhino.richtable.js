@@ -689,8 +689,9 @@ Observation._richtable = function(container) {
 							+ '\',\'name\':\'this\',\'id\':\'#filter_'
 							+ property.val() + '\'}">...</div>').appendTo(td);
 				} else {
-					$('<input type="' + option.data('inputtype') + '" name="'
-							+ property.val() + '" class="removeonadd '
+					$('<input type="' + (option.data('inputtype') || 'text')
+							+ '" name="' + property.val()
+							+ '" class="input-medium removeonadd '
 							+ option.data('class') + '"/>').appendTo(td);
 				}
 				if (size == 2)
