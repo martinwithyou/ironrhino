@@ -218,8 +218,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	public Map<String, UiConfigImpl> getUiConfigs() {
-		String key = new StringBuilder(getEntityClass().getName()).append(",")
-				.append(getClass().getName()).toString();
+		String key = new StringBuilder(100).append(getEntityClass().getName())
+				.append(",").append(getClass().getName()).toString();
 		Map<String, UiConfigImpl> uiConfigs = cache.get(key);
 		if (uiConfigs == null) {
 			Class clazz = getEntityClass();
