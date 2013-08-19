@@ -44,11 +44,13 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 	protected String fullId;
 
 	@Column(nullable = false)
+	@SearchableProperty
 	protected String name;
 
 	@Column(name = "`level`")
 	protected int level;
 
+	@SearchableProperty
 	protected int displayOrder;
 
 	@ManyToOne(fetch = FetchType.LAZY)
