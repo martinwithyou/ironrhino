@@ -157,9 +157,13 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	public ReadonlyConfigImpl getReadonlyConfig() {
 		if (readonlyConfig == null) {
-			ReadonlyConfig rc = getClass().getAnnotation(ReadonlyConfig.class);
-			if (rc == null)
-				rc = getEntityClass().getAnnotation(ReadonlyConfig.class);
+			RichtableConfig rconfig = getClass().getAnnotation(
+					RichtableConfig.class);
+			if (rconfig == null)
+				rconfig = getEntityClass().getAnnotation(RichtableConfig.class);
+			ReadonlyConfig rc = null;
+			if (rconfig != null)
+				rc = rconfig.readonlyConfig();
 			Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
 			if (rc == null && ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();

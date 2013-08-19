@@ -14,10 +14,9 @@ import org.ironrhino.core.model.BaseEntity;
 
 @DataRoute("miscGroup")
 @AutoConfig
-@ReadonlyConfig(value = true, deletable = true)
 @Entity
 @Table(name = "common_record")
-@RichtableConfig(order = "recordDate desc")
+@RichtableConfig(order = "recordDate desc", readonlyConfig = @ReadonlyConfig(value = true, deletable = true))
 public class Record extends BaseEntity {
 
 	private static final long serialVersionUID = -8287907984213799302L;

@@ -24,11 +24,10 @@ import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 
 @AutoConfig
-@ReadonlyConfig(value = true, deletable = true)
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "oauth_authorization")
-@RichtableConfig(order = "createDate desc")
+@RichtableConfig(order = "createDate desc", readonlyConfig = @ReadonlyConfig(value = true, deletable = true))
 public class Authorization extends BaseEntity {
 
 	public static final int DEFAULT_LIFETIME = 3600;

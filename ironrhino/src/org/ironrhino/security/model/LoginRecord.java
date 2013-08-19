@@ -16,12 +16,11 @@ import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 
 @AutoConfig
-@ReadonlyConfig(true)
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Searchable(type = "loginRecord")
 @Table(name = "loginrecord")
-@RichtableConfig(searchable = true, order = "date desc")
+@RichtableConfig(searchable = true, order = "date desc", readonlyConfig = @ReadonlyConfig(true))
 public class LoginRecord extends BaseEntity {
 
 	private static final long serialVersionUID = -7691080078972338500L;

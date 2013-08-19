@@ -33,5 +33,7 @@ public @interface RichtableConfig {
 	String formFooter() default "";
 
 	String rowDynamicAttributes() default "";
+	
+	ReadonlyConfig readonlyConfig() default @ReadonlyConfig;
 
 }
