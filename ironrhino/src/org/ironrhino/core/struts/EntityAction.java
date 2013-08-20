@@ -88,7 +88,16 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	private static final long serialVersionUID = -8442983706126047413L;
 
-	private static Map<String, Map<String, UiConfigImpl>> cache = new ConcurrentHashMap<String, Map<String, UiConfigImpl>>(
+	private static Map<String, Map<String, UiConfigImpl>> uiConfigCache = new ConcurrentHashMap<String, Map<String, UiConfigImpl>>(
+			50);
+
+	private static Map<String, Map<String, UiConfigImpl>> propertyNamesInCriterionCache = new ConcurrentHashMap<String, Map<String, UiConfigImpl>>(
+			50);
+
+	private static Map<String, RichtableConfigImpl> richtableConfigCache = new ConcurrentHashMap<String, RichtableConfigImpl>(
+			50);
+
+	private static Map<String, ReadonlyConfigImpl> readonlyConfigCache = new ConcurrentHashMap<String, ReadonlyConfigImpl>(
 			50);
 
 	public static final String CRITERION_OPERATOR_SUFFIX = "-op";
@@ -103,10 +112,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	private Map<String, Annotation> naturalIds;
 
-	private RichtableConfigImpl richtableConfig;
-
-	private ReadonlyConfigImpl readonlyConfig;
-
 	@Autowired(required = false)
 	private transient ElasticSearchService<Persistable<?>> elasticSearchService;
 
@@ -116,10 +121,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public boolean isSearchable() {
 		if (getEntityClass().getAnnotation(Searchable.class) != null)
 			return true;
-		RichtableConfig rc = getClass().getAnnotation(RichtableConfig.class);
-		if (rc == null)
-			rc = getEntityClass().getAnnotation(RichtableConfig.class);
-		boolean searchable = (rc != null) && rc.searchable();
+		RichtableConfigImpl rc = getRichtableConfig();
+		boolean searchable = rc.isSearchable();
 		if (searchable)
 			return true;
 		else
@@ -147,17 +150,25 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	public RichtableConfigImpl getRichtableConfig() {
+		String key = new StringBuilder(100).append(getEntityClass().getName())
+				.append(",").append(getClass().getName()).toString();
+		RichtableConfigImpl richtableConfig = richtableConfigCache.get(key);
 		if (richtableConfig == null) {
 			RichtableConfig rc = getClass()
 					.getAnnotation(RichtableConfig.class);
 			if (rc == null)
 				rc = getEntityClass().getAnnotation(RichtableConfig.class);
 			richtableConfig = new RichtableConfigImpl(rc);
+			if (AppInfo.getStage() != Stage.DEVELOPMENT)
+				richtableConfigCache.put(key, richtableConfig);
 		}
 		return richtableConfig;
 	}
 
 	public ReadonlyConfigImpl getReadonlyConfig() {
+		String key = new StringBuilder(100).append(getEntityClass().getName())
+				.append(",").append(getClass().getName()).toString();
+		ReadonlyConfigImpl readonlyConfig = readonlyConfigCache.get(key);
 		if (readonlyConfig == null) {
 			RichtableConfig rconfig = getClass().getAnnotation(
 					RichtableConfig.class);
@@ -185,9 +196,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					readonlyConfig.setDeletable(false);
 				}
 			}
-			if (readonlyConfig == null) {
+			if (readonlyConfig == null)
 				readonlyConfig = new ReadonlyConfigImpl(rc);
-			}
+			if (AppInfo.getStage() != Stage.DEVELOPMENT)
+				readonlyConfigCache.put(key, readonlyConfig);
 		}
 		return readonlyConfig;
 	}
@@ -217,7 +229,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public Map<String, UiConfigImpl> getUiConfigs() {
 		String key = new StringBuilder(100).append(getEntityClass().getName())
 				.append(",").append(getClass().getName()).toString();
-		Map<String, UiConfigImpl> uiConfigs = cache.get(key);
+		Map<String, UiConfigImpl> uiConfigs = uiConfigCache.get(key);
 		if (uiConfigs == null) {
 			Class clazz = getEntityClass();
 			Set<String> hides = new HashSet<String>();
@@ -454,9 +466,32 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			sortedMap.putAll(map);
 			uiConfigs = sortedMap;
 			if (AppInfo.getStage() != Stage.DEVELOPMENT)
-				cache.put(key, uiConfigs);
+				uiConfigCache.put(key, uiConfigs);
 		}
 		return uiConfigs;
+	}
+
+	public Map<String, UiConfigImpl> getPropertyNamesInCriterion() {
+		String key = new StringBuilder(100).append(getEntityClass().getName())
+				.append(",").append(getClass().getName()).toString();
+		Map<String, UiConfigImpl> propertyNamesInCriterion = propertyNamesInCriterionCache
+				.get(key);
+		if (propertyNamesInCriterion == null) {
+			propertyNamesInCriterion = new LinkedHashMap<String, UiConfigImpl>();
+			for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs()
+					.entrySet()) {
+				if (!entry.getKey().endsWith("AsString")
+						&& !isExcludedFromCriterion(entry.getKey())
+						&& !CriterionOperator.getSupportedOperators(
+								entry.getValue().getPropertyType()).isEmpty())
+					propertyNamesInCriterion.put(entry.getKey(),
+							entry.getValue());
+			}
+			if (AppInfo.getStage() != Stage.DEVELOPMENT)
+				propertyNamesInCriterionCache
+						.put(key, propertyNamesInCriterion);
+		}
+		return propertyNamesInCriterion;
 	}
 
 	protected <T extends Persistable<?>> BaseManager<T> getEntityManager(
@@ -790,18 +825,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	protected boolean isExcludedFromCriterion(String propertyName) {
 		UiConfigImpl config = getUiConfigs().get(propertyName);
 		return config != null && config.isExcludedFromCriterion();
-	}
-
-	public Map<String, UiConfigImpl> getPropertyNamesInCriterion() {
-		Map<String, UiConfigImpl> map = new LinkedHashMap<String, UiConfigImpl>();
-		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
-			if (!entry.getKey().endsWith("AsString")
-					&& !isExcludedFromCriterion(entry.getKey())
-					&& !CriterionOperator.getSupportedOperators(
-							entry.getValue().getPropertyType()).isEmpty())
-				map.put(entry.getKey(), entry.getValue());
-		}
-		return map;
 	}
 
 	@Override
@@ -1900,6 +1923,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private String formid = "";
 		private boolean filterable = true;
 		private boolean showPageSize = true;
+		private boolean searchable;
 		private String actionColumnButtons = "";
 		private String bottomButtons = "";
 		private String listHeader = "";
@@ -1917,6 +1941,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			this.formid = config.formid();
 			this.filterable = config.filterable();
 			this.showPageSize = config.showPageSize();
+			this.searchable = config.searchable();
 			this.actionColumnButtons = config.actionColumnButtons();
 			this.bottomButtons = config.bottomButtons();
 			this.listHeader = config.listHeader();
@@ -1948,6 +1973,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public void setShowPageSize(boolean showPageSize) {
 			this.showPageSize = showPageSize;
+		}
+
+		public boolean isSearchable() {
+			return searchable;
+		}
+
+		public void setSearchable(boolean searchable) {
+			this.searchable = searchable;
 		}
 
 		public String getActionColumnButtons() {
