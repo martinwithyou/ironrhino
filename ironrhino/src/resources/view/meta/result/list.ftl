@@ -40,7 +40,7 @@
 						<#assign cellEdit='click,textarea'/>
 					<#elseif config.type=='checkbox'>
 						<#assign cellEdit='click,boolean'/>
-					<#elseif config.type=='select'>
+					<#elseif config.type=='enum'>
 						<#assign hasSelect=true>
 						<#assign cellEdit='click,select,rt_select_template_'+key/>
 					<#elseif config.type=='dictionary'>
@@ -109,16 +109,13 @@
 <#list uiConfigs?keys as key>
 	<#assign config=uiConfigs[key]>
 	<#if !config.hiddenInList>
-		<#if config.type=='select'>
+		<#if config.type=='enum'>
 		<textarea id="rt_select_template_${key}">
-		<select name="${entityName}.${key}">
-				<#if !config.required>
-				<option value=""></option>
-				</#if>
-				<#list lists[key] as var>
-				<option value="<#if config.listKey=='top'>${var?string}<#elseif config.listKey=='name' && var.name?is_method>${var.name()}<#else>${var[config.listKey]}</#if>"><#if config.listValue=='top'>${var?string}<#elseif config.listValue=='name' && var.name?is_method>${var.name()}<#else>${var[config.listValue]}</#if></option>
-				</#list>
-		</select>
+		<#if config.required>
+		<@s.select theme="simple" name=entityName+"."+key list="@${config.propertyType.name}@values()" listKey=config.listKey listValue=config.listValue/>
+		<#else>
+		<@s.select theme="simple" name=entityName+"."+key list="@${config.propertyType.name}@values()" listKey=config.listKey listValue=config.listValue headerKey="" headerValue=""/>
+		</#if>
 		</textarea>
 		<#elseif config.type=='dictionary' && selectDictionary??>
 		<textarea id="rt_select_template_${key}">

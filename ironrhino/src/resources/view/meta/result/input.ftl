@@ -33,12 +33,12 @@
 					<@s.hidden name=entityName+"."+key />
 					<@s.checkbox id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass disabled="true" dynamicAttributes=config.dynamicAttributes />
 				</#if>
-			<#elseif config.type=='select'>
+			<#elseif config.type=='enum'>
 				<#if !readonly>
-					<@s.select id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass list="lists."+key listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes/>
+					<@s.select id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass list="@${config.propertyType.name}@values()" listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes/>
 				<#else>
 					<@s.hidden name=entityName+"."+key value="%{${entityName+'.'+key+'.id'}}"/>
-					<@s.select id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass list="lists."+key listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" disabled="true" dynamicAttributes=config.dynamicAttributes />
+					<@s.select id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass disabled=true list="@${config.propertyType.name}@values()" listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes />
 				</#if>
 			<#elseif config.type=='listpick'>
 				<#if !readonly>

@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -107,8 +106,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	private RichtableConfigImpl richtableConfig;
 
 	private ReadonlyConfigImpl readonlyConfig;
-
-	private Map<String, List> lists;
 
 	@Autowired(required = false)
 	private transient ElasticSearchService<Persistable<?>> elasticSearchService;
@@ -308,23 +305,13 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					uci.setRequired(true);
 				Class<?> returnType = pd.getPropertyType();
 				if (returnType.isEnum()) {
-					uci.setType("select");
+					uci.setType("enum");
 					uci.setListKey("name");
 					try {
 						returnType.getMethod("getDisplayName");
 						uci.setListValue("displayName");
 					} catch (NoSuchMethodException e) {
 						uci.setListValue("name");
-					}
-					try {
-						if (lists == null)
-							lists = new HashMap<String, List>();
-						Method method = pd.getReadMethod().getReturnType()
-								.getMethod("values", new Class[0]);
-						lists.put(propertyName,
-								Arrays.asList((Enum[]) method.invoke(null)));
-					} catch (Exception e) {
-						log.error(e.getMessage(), e);
 					}
 					map.put(propertyName, uci);
 					continue;
@@ -470,10 +457,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				cache.put(key, uiConfigs);
 		}
 		return uiConfigs;
-	}
-
-	public Map<String, List> getLists() {
-		return lists;
 	}
 
 	protected <T extends Persistable<?>> BaseManager<T> getEntityManager(
