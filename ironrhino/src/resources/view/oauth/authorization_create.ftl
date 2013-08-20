@@ -9,14 +9,14 @@
 	<@s.hidden id="clientId" name="authorization.client.id"/>
 	<label class="control-label" for="client">${action.getText('client')}</label>
 	<div class="controls">
-	<span id="client"><#if authorization.client??>${authorization.client.name}<a class="remove" href="#">&times;</a></span><#else>...</#if></span>
+	<span id="client"><#if authorization.client??>${authorization.client.name}</#if></span>
 	</div>
 	</div>
 	<div class="control-group listpick" data-options="{'url':'<@url value="/user/pick?columns=username,name"/>','name':'#grantor','id':'#grantorId'}">
 	<@s.hidden id="grantorId" name="authorization.grantor.id" cssClass="required"/>
 	<label class="control-label" for="grantor">${action.getText('grantor')}</label>
 	<div class="controls">
-	<span id="grantor"><#if authorization.grantor??>${authorization.grantor.username}<a class="remove" href="#">&times;</a></span><#else>...</#if></span>
+	<span id="grantor"><#if authorization.grantor??>${authorization.grantor.username}</#if></span>
 	</div>
 	</div>
 	<@s.textfield label="%{getText('lifetime')}" name="authorization.lifetime" cssClass="required span1"/>

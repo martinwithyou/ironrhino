@@ -46,7 +46,7 @@
 						<@s.hidden id=id name=entityName+"."+key+".id" cssClass=config.cssClass/>
 						<label class="control-label" for="${id}-control">${action.getText(label)}</label>
 						<div class="controls">
-						<span id="${id}-control"><#if entity[key]??><#if entity[key].fullname??>${entity[key].fullname!}<#else>${entity[key]!}</#if><a class="remove" href="#">&times;</a><#else>...</#if></span>
+						<span id="${id}-control"><#if entity[key]??><#if entity[key].fullname??>${entity[key].fullname!}<#else>${entity[key]!}</#if></#if></span>
 						</div>
 					</div>
 				<#else>

@@ -8,7 +8,7 @@
 			expr = expr.substring(0, i);
 		return (expr == 'this') ? current : $(expr);
 	}
-	function val(expr, val) {// expr #id #id@attr .class@attr @attr
+	function val(expr, val, html) {// expr #id #id@attr .class@attr @attr
 		if (!expr)
 			return;
 		if (arguments.length > 1) {
@@ -19,7 +19,10 @@
 					ele.val(val);
 					Form.validate(ele);
 				} else {
-					ele.text(val);
+					if (html)
+						ele.html(val);
+					else
+						ele.text(val);
 				}
 			} else if (i == 0) {
 				current.attr(expr.substring(i + 1), val);
@@ -56,8 +59,9 @@
 		current = $(event.target).closest('.listpick');
 		var options = current.data('_options');
 		var nametarget = find(options.name);
-		val(options.name, nametarget.is(':input,td') ? '' : MessageBundle
-						.get('pick'));
+		val(options.name, nametarget.is(':input,td')
+						? ''
+						: '<i class="icon-list"></i>', true);
 		val(options.id, '');
 		$(this).remove();
 		event.stopPropagation();
@@ -83,9 +87,12 @@
 					remove.click(removeAction);
 				} else {
 					var text = val(options.name);
-					if (text && text.indexOf('...') < 0) {
-						$('<a class="remove" href="#">&times;</a>')
-								.appendTo(nametarget).click(removeAction);
+					if (text) {
+						if (text.indexOf('...') < 0)
+							$('<a class="remove" href="#">&times;</a>')
+									.appendTo(nametarget).click(removeAction);
+					} else if (!nametarget.is(':input,td')) {
+						val(options.name, '<i class="icon-list"></i>', true);
 					}
 				}
 			}
