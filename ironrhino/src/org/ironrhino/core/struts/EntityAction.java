@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -58,8 +57,6 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.AnnotationUtils;
-import org.ironrhino.core.util.AppInfo;
-import org.ironrhino.core.util.AppInfo.Stage;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
@@ -88,21 +85,17 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	private static final long serialVersionUID = -8442983706126047413L;
 
-	private static Map<String, Map<String, UiConfigImpl>> uiConfigCache = new ConcurrentHashMap<String, Map<String, UiConfigImpl>>(
-			50);
-
-	private static Map<String, Map<String, UiConfigImpl>> propertyNamesInCriterionCache = new ConcurrentHashMap<String, Map<String, UiConfigImpl>>(
-			50);
-
-	private static Map<String, RichtableConfigImpl> richtableConfigCache = new ConcurrentHashMap<String, RichtableConfigImpl>(
-			50);
-
-	private static Map<String, ReadonlyConfigImpl> readonlyConfigCache = new ConcurrentHashMap<String, ReadonlyConfigImpl>(
-			50);
-
 	public static final String CRITERION_OPERATOR_SUFFIX = "-op";
 
 	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
+
+	private ReadonlyConfigImpl readonlyConfig;
+
+	private RichtableConfigImpl richtableConfig;
+
+	private Map<String, UiConfigImpl> uiConfigs;
+
+	private Map<String, UiConfigImpl> propertyNamesInCriterion;
 
 	protected ResultPage resultPage;
 
@@ -150,25 +143,17 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	public RichtableConfigImpl getRichtableConfig() {
-		String key = new StringBuilder(100).append(getEntityClass().getName())
-				.append(",").append(getClass().getName()).toString();
-		RichtableConfigImpl richtableConfig = richtableConfigCache.get(key);
 		if (richtableConfig == null) {
 			RichtableConfig rc = getClass()
 					.getAnnotation(RichtableConfig.class);
 			if (rc == null)
 				rc = getEntityClass().getAnnotation(RichtableConfig.class);
 			richtableConfig = new RichtableConfigImpl(rc);
-			if (AppInfo.getStage() != Stage.DEVELOPMENT)
-				richtableConfigCache.put(key, richtableConfig);
 		}
 		return richtableConfig;
 	}
 
 	public ReadonlyConfigImpl getReadonlyConfig() {
-		String key = new StringBuilder(100).append(getEntityClass().getName())
-				.append(",").append(getClass().getName()).toString();
-		ReadonlyConfigImpl readonlyConfig = readonlyConfigCache.get(key);
 		if (readonlyConfig == null) {
 			RichtableConfig rconfig = getClass().getAnnotation(
 					RichtableConfig.class);
@@ -198,8 +183,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			}
 			if (readonlyConfig == null)
 				readonlyConfig = new ReadonlyConfigImpl(rc);
-			if (AppInfo.getStage() != Stage.DEVELOPMENT)
-				readonlyConfigCache.put(key, readonlyConfig);
 		}
 		return readonlyConfig;
 	}
@@ -227,9 +210,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	public Map<String, UiConfigImpl> getUiConfigs() {
-		String key = new StringBuilder(100).append(getEntityClass().getName())
-				.append(",").append(getClass().getName()).toString();
-		Map<String, UiConfigImpl> uiConfigs = uiConfigCache.get(key);
 		if (uiConfigs == null) {
 			Class clazz = getEntityClass();
 			Set<String> hides = new HashSet<String>();
@@ -465,17 +445,11 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					});
 			sortedMap.putAll(map);
 			uiConfigs = sortedMap;
-			if (AppInfo.getStage() != Stage.DEVELOPMENT)
-				uiConfigCache.put(key, uiConfigs);
 		}
 		return uiConfigs;
 	}
 
 	public Map<String, UiConfigImpl> getPropertyNamesInCriterion() {
-		String key = new StringBuilder(100).append(getEntityClass().getName())
-				.append(",").append(getClass().getName()).toString();
-		Map<String, UiConfigImpl> propertyNamesInCriterion = propertyNamesInCriterionCache
-				.get(key);
 		if (propertyNamesInCriterion == null) {
 			propertyNamesInCriterion = new LinkedHashMap<String, UiConfigImpl>();
 			for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs()
@@ -487,9 +461,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					propertyNamesInCriterion.put(entry.getKey(),
 							entry.getValue());
 			}
-			if (AppInfo.getStage() != Stage.DEVELOPMENT)
-				propertyNamesInCriterionCache
-						.put(key, propertyNamesInCriterion);
 		}
 		return propertyNamesInCriterion;
 	}
