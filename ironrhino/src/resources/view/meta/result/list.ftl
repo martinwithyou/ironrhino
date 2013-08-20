@@ -19,16 +19,17 @@
 </#if>
 <@rtstart formid=formid! entityName=entityName formHeader=formHeader!/>
 <#assign size=0>
-<#list uiConfigs?keys as key>
-	<#if !uiConfigs[key].hiddenInList>
+<#list uiConfigs.entrySet() as entry>
+	<#if !entry.value.hiddenInList>
 		<#assign size=size+1>
 	</#if>
 </#list>
 <#assign index=0>
 <#assign viewable=false>
 <#assign hasSelect=false>
-<#list uiConfigs?keys as key>
-		<#assign config=uiConfigs[key]>
+<#list uiConfigs.entrySet() as entry>
+		<#assign key=entry.key>
+		<#assign config=entry.value>
 		<#if !config.hiddenInList>
 			<#assign label=key>
 			<#if !(readonly||config.readonly) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
@@ -83,8 +84,9 @@
 </#if>
 </#if>
 <@rttbodytrstart entity=entity dynamicAttributes=rowDynamicAttributes/>
-<#list uiConfigs?keys as key>
-	<#assign config=uiConfigs[key]>
+<#list uiConfigs.entrySet() as entry>
+	<#assign key=entry.key>
+	<#assign config=entry.value>
 	<#if !config.hiddenInList>
 		<#assign value = entity[key]!>
 		<#if config.type=='dictionary' && selectDictionary??>
@@ -100,14 +102,15 @@
 		</#if>
 		<@rttbodytd entity=entity value=value template=uiConfigs[key].template cellDynamicAttributes=config.cellDynamicAttributes dynamicAttributes=dynamicAttributes/>
 	</#if>
-</#list>	
+</#list>
 <@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
 <@rtend readonly=readonly deletable=!readonly||readonlyConfig.deletable searchable=searchable filterable=richtableConfig.filterable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>
 <#if !readonly && hasSelect>
 <div style="display: none;">
-<#list uiConfigs?keys as key>
-	<#assign config=uiConfigs[key]>
+<#list uiConfigs.entrySet() as entry>
+	<#assign key=entry.key>
+	<#assign config=entry.value>
 	<#if !config.hiddenInList>
 		<#if config.type=='enum'>
 		<textarea id="rt_select_template_${key}">
