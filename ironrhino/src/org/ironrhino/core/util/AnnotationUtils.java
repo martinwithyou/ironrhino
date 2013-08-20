@@ -124,8 +124,8 @@ public class AnnotationUtils {
 		return map;
 	}
 
-	public static Map<String, Annotation> getAnnotatedPropertyNameAndAnnotations(
-			Class<?> clazz, Class<? extends Annotation> annotaionClass) {
+	public static <T extends Annotation> Map<String, T> getAnnotatedPropertyNameAndAnnotations(
+			Class<?> clazz, Class<T> annotaionClass) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("getAnnotatedPropertyNameAndAnnotations:");
 		sb.append(clazz.getName());
@@ -133,7 +133,7 @@ public class AnnotationUtils {
 		sb.append(annotaionClass.getName());
 		String key = sb.toString();
 		if (!cache.containsKey(key)) {
-			Map<String, Annotation> map = new HashMap<String, Annotation>();
+			Map<String, T> map = new HashMap<String, T>();
 			try {
 				Class<?> cls = clazz;
 				while (!cls.equals(Object.class)) {
@@ -157,7 +157,7 @@ public class AnnotationUtils {
 			}
 			cache.put(key, map);
 		}
-		return (Map<String, Annotation>) cache.get(key);
+		return (Map<String, T>) cache.get(key);
 	}
 
 	public static <T extends Annotation> T getAnnotation(Class<?> clazz,

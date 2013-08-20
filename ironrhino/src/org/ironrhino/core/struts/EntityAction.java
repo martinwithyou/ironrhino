@@ -3,7 +3,6 @@ package org.ironrhino.core.struts;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.io.StringWriter;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -103,7 +102,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	private String entityName;
 
-	private Map<String, Annotation> naturalIds;
+	private Map<String, NaturalId> naturalIds;
 
 	@Autowired(required = false)
 	private transient ElasticSearchService<Persistable<?>> elasticSearchService;
@@ -195,7 +194,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		return entityName;
 	}
 
-	public Map<String, Annotation> getNaturalIds() {
+	public Map<String, NaturalId> getNaturalIds() {
 		if (naturalIds != null)
 			return naturalIds;
 		naturalIds = AnnotationUtils.getAnnotatedPropertyNameAndAnnotations(
@@ -985,7 +984,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			}
 		}
 		Persistable persisted = null;
-		Map<String, Annotation> naturalIds = getNaturalIds();
+		Map<String, NaturalId> naturalIds = getNaturalIds();
 		boolean naturalIdMutable = isNaturalIdMutable();
 		boolean caseInsensitive = AnnotationUtils
 				.getAnnotatedPropertyNameAndAnnotations(getEntityClass(),
