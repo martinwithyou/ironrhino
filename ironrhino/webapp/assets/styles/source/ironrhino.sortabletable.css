@@ -1,6 +1,7 @@
 .sortcol{
 	padding-left: 10px !important;
-	text-align: center!important;;
+	text-align: center !important;
+	line-height: 200% !important;
 }
 .sortcol div.sort{
 	cursor: pointer;
@@ -11,7 +12,7 @@
 	position:absolute;
 	display: block;
 	left:0px;
-	top:8px;
+	top:10px;
 	width:0;
 	height:0;
 	border-width:4px;

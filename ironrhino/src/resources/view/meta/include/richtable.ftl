@@ -267,7 +267,7 @@ ${formFooter!}
 			</#list>
 			</select>
 			</td>
-			<td style="text-align:right;"></td>
+			<td style="text-align:center;"></td>
 			<td class="manipulate"><i class="icon-plus add"></i><i class="icon-minus remove"></i></td>
 		</tr>
 	</tbody>

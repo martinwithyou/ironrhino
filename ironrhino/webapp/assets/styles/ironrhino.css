@@ -8350,7 +8350,8 @@ ul.portal-column {
 
 .sortcol{
 	padding-left: 10px !important;
-	text-align: center!important;;
+	text-align: center !important;
+	line-height: 200% !important;
 }
 .sortcol div.sort{
 	cursor: pointer;
@@ -8361,7 +8362,7 @@ ul.portal-column {
 	position:absolute;
 	display: block;
 	left:0px;
-	top:8px;
+	top:10px;
 	width:0;
 	height:0;
 	border-width:4px;
@@ -8380,7 +8381,6 @@ table .resizeTitle {
 	float: left;
 	width: 95%;
 	text-align: center;
-	line-height:200%;
 }
 table .resizeBar {
 	padding: 0px;
@@ -8413,6 +8413,7 @@ table.richtable td,table.richtable th {
 table.richtable th {
 	min-width: 60px;
 	padding: 0.5em 0;
+	line-height: 200%;
 }
 table.richtable td {
 	word-wrap: break-word;
@@ -8480,7 +8481,11 @@ th.filtercolumn div.cmDiv
 	background: none;
 	border: 0;
 	float: left;
-	padding-left: 15px;
+	padding-left: 10px;
+}
+th.filtercolumn.sortcol div.cmDiv
+{
+	padding-top: 3px;
 }
 th.filtercolumn li.main
 {

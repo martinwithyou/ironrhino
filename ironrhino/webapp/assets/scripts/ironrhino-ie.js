@@ -37293,7 +37293,7 @@ Observation.editme = function(container) {
 						.addClass('filtercolumn');
 			if (!$('ul.filtercolumn', filtercolumn).length)
 				filtercolumn
-						.prepend('<ul class="filtercolumn"><li>...<ul class="listTarget"></ul></li></ul>');
+						.prepend('<ul class="filtercolumn"><li><i class="icon-th"></i><ul class="listTarget"></ul></li></ul>');
 			var hideInList = [];
 			var colsHidden = [];
 			for (var i = 0; i < cells.length; i++) {

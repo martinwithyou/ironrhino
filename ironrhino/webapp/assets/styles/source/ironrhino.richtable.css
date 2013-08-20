@@ -18,6 +18,7 @@ table.richtable td,table.richtable th {
 table.richtable th {
 	min-width: 60px;
 	padding: 0.5em 0;
+	line-height: 200%;
 }
 table.richtable td {
 	word-wrap: break-word;

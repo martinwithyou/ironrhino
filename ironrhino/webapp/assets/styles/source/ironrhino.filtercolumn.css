@@ -14,7 +14,11 @@ th.filtercolumn div.cmDiv
 	background: none;
 	border: 0;
 	float: left;
-	padding-left: 15px;
+	padding-left: 10px;
+}
+th.filtercolumn.sortcol div.cmDiv
+{
+	padding-top: 3px;
 }
 th.filtercolumn li.main
 {
