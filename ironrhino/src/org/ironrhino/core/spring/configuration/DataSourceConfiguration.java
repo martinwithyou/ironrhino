@@ -35,7 +35,7 @@ public class DataSourceConfiguration {
 	@Value("${dataSource.statementsCacheSize:50}")
 	private int statementsCacheSize;
 
-	@Value("${dataSource.idleConnectionTestPeriodInMinutes:120}")
+	@Value("${dataSource.idleConnectionTestPeriodInMinutes:1}")
 	private int idleConnectionTestPeriodInMinutes;
 
 	@Value("${dataSource.idleMaxAgeInMinutes:60}")
