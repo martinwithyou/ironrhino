@@ -14,8 +14,6 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.DateUtils;
@@ -30,8 +28,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-@Singleton
-@Named
 public class JdbcUpdateService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
