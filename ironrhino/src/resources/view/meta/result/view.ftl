@@ -5,8 +5,9 @@
 </head>
 <body>
 	<div class="form-horizontal">
-	<#list uiConfigs?keys as key>
-		<#assign config=uiConfigs[key]>
+	<#list uiConfigs.entrySet() as entry>
+		<#assign key=entry.key>
+		<#assign config=entry.value>
 		<#assign value=entity[key]!>
 		<#assign hidden=false>
 		<#if config.hiddenInView.value>

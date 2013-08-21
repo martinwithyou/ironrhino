@@ -5,9 +5,10 @@
 <#local index = 0>
 <#local size = columns?keys?size>
 <#list columns?keys as name>
+<#local config = columns[name]>
 <#local index = index+1>
-<#local cellName=((columns[name]['trimPrefix']??)?string('',entityName+'.'))+name>
-<@rttheadtd name=name alias=columns[name]['alias']! title=columns[name]['title']! class=columns[name]['cssClass']! width=columns[name]['width']! cellName=cellName cellEdit=columns[name]['cellEdit'] readonly=readonly resizable=(readonly&&index!=size||!readonly)&&resizable excludeIfNotEdited=columns[name]['excludeIfNotEdited']!false/>
+<#local cellName=((config['trimPrefix']??)?string('',entityName+'.'))+name>
+<@rttheadtd name=name alias=config['alias']! title=config['title']! class=config['cssClass']! width=config['width']! cellName=cellName cellEdit=config['cellEdit'] readonly=readonly resizable=(readonly&&index!=size||!readonly)&&resizable excludeIfNotEdited=config['excludeIfNotEdited']!false/>
 </#list>
 <@rtmiddle width=actionColumnWidth showActionColumn=actionColumnButtons?has_content||!readonly||viewable/>
 <#if resultPage??><#local list=resultPage.result></#if>
@@ -27,8 +28,9 @@
 </#if>
 <@rttbodytrstart entity=entity showCheckColumn=showCheckColumn multipleCheck=multipleCheck rowid=rowid dynamicAttributes=_rowDynamicAttributes/>
 <#list columns?keys as name>
-	<#if columns[name]['value']??>
-	<#local value=columns[name]['value']>
+	<#local config = columns[name]>
+	<#if config['value']??>
+	<#local value=config['value']>
 	<#else>
 	<#if !name?contains('.')>
 		<#local value=entity[name]!>
@@ -37,10 +39,10 @@
 	</#if>
 	</#if>
 	<#local dynamicAttributes={}>
-	<#if columns[name]['readonlyExpression']?has_content && columns[name]['readonlyExpression']?eval>
+	<#if config['readonlyExpression']?has_content && config['readonlyExpression']?eval>
 		<#local dynamicAttributes=dynamicAttributes+{'data-readonly':'true'}/>
 	</#if>
-	<@rttbodytd entity=entity value=value celleditable=columns[name]['cellEdit']?? template=columns[name]['template']! cellDynamicAttributes=columns[name]['dynamicAttributes'] dynamicAttributes=dynamicAttributes/>
+	<@rttbodytd entity=entity value=value celleditable=config['cellEdit']?? template=config['template']! cellDynamicAttributes=config['dynamicAttributes'] dynamicAttributes=dynamicAttributes/>
 </#list>
 <@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
