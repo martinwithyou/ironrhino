@@ -4,7 +4,7 @@ public interface LineHandler {
 
 	public boolean isWithHeader();
 
-	public char getSeperatorChar();
+	public String getSeperator();
 
 	public void handleLine(int index, String line);
 

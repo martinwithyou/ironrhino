@@ -124,14 +124,14 @@ public class QueryAction extends BaseAction {
 				}
 
 				@Override
-				public char getSeperatorChar() {
-					return ',';
+				public String getSeperator() {
+					return ",";
 				}
 
 				@Override
 				public void handleLine(int index, String line) {
 					writer.write(line);
-					writer.write('\n');
+					writer.write("\r\n");
 					if (index > 0 && index % 100 == 0)
 						writer.flush();
 				}
