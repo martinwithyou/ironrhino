@@ -35,7 +35,7 @@ import org.ironrhino.security.model.UserRole;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 @AutoConfig
-@Searchable(type = "schema")
+@Searchable
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "common_schema")

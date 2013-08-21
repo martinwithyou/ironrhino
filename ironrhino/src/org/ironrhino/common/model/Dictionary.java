@@ -39,7 +39,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 @PublishAware
 @AutoConfig
-@Searchable(type = "dictionary")
+@Searchable
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "common_dictionary")

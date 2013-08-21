@@ -41,7 +41,7 @@ import org.springframework.util.ClassUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 @AutoConfig
-@Searchable(type = "user")
+@Searchable
 @Entity
 @Table(name = "`user`")
 @RichtableConfig(order = "username asc")

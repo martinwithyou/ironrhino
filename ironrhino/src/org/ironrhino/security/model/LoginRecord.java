@@ -18,7 +18,7 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 @AutoConfig
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
-@Searchable(type = "loginRecord")
+@Searchable
 @Table(name = "loginrecord")
 @RichtableConfig(searchable = true, order = "date desc", readonlyConfig = @ReadonlyConfig(true))
 public class LoginRecord extends BaseEntity {

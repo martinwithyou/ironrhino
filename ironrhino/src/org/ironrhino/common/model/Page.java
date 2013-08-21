@@ -34,7 +34,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Searchable(type = "page")
+@Searchable
 @AutoConfig
 @Entity
 @Table(name = "common_page")

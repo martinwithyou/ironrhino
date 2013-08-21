@@ -16,7 +16,7 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @AutoConfig
-@Searchable(type = "feedback")
+@Searchable
 @Entity
 @Table(name = "common_feedback")
 @RichtableConfig(searchable = true, order = "createDate desc")

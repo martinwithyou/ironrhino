@@ -23,7 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @RecordAware
 @PublishAware
 @AutoConfig
-@Searchable(type = "setting")
+@Searchable
 @Entity
 @Table(name = "common_setting")
 @RichtableConfig(searchable = true, order = "key asc")

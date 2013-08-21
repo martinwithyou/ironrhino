@@ -18,7 +18,7 @@ import org.ironrhino.core.util.StringUtils;
 
 @PublishAware
 @AutoConfig
-@Searchable(type = "region")
+@Searchable
 @Entity
 @Table(name = "common_region")
 public class Region extends BaseTreeableEntity<Region> {
