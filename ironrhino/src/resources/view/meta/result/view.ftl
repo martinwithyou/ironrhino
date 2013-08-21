@@ -41,7 +41,11 @@
 					<img src="${value}"/>
 				</#if>
 			<#else>
-					<#if !config.template?has_content>
+					<#assign template=config.template/>
+					<#if config.viewTemplate!=''>
+					<#assign template=config.viewTemplate/>
+					</#if>
+					<#if !template?has_content>
 						<#if value??>
 							<#if value?is_boolean>
 								${action.getText(value?string)}
@@ -76,7 +80,7 @@
 							</#if>
 						</#if>
 					<#else>
-						<@config.template?interpret/>
+						<@template?interpret/>
 					</#if>
 			</#if>
 			</div>

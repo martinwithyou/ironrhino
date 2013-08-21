@@ -95,12 +95,16 @@
 		</#if>
 		<#assign dynamicAttributes={}>
 		<#if config.type=='listpick'&&!entityReadonly&&!config.readonly&&!(config.readonlyExpression?has_content&&config.readonlyExpression?eval)>
-			<#assign dynamicAttributes={"class":"listpick","data-cellvalue":(value.id?string)!,"data-options":"{'url':'"+uiConfigs[key].pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
+			<#assign dynamicAttributes={"class":"listpick","data-cellvalue":(value.id?string)!,"data-options":"{'url':'"+config.pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
 		</#if>
 		<#if config.readonlyExpression?has_content && config.readonlyExpression?eval>
 		<#assign dynamicAttributes=dynamicAttributes+{'data-readonly':'true'}/>
 		</#if>
-		<@rttbodytd entity=entity value=value template=uiConfigs[key].template cellDynamicAttributes=config.cellDynamicAttributes dynamicAttributes=dynamicAttributes/>
+		<#assign template=config.template/>
+		<#if config.listTemplate!=''>
+		<#assign template=config.listTemplate/>
+		</#if>
+		<@rttbodytd entity=entity value=value template=template cellDynamicAttributes=config.cellDynamicAttributes dynamicAttributes=dynamicAttributes/>
 	</#if>
 </#list>
 <@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly viewable=viewable entityReadonly=entityReadonly/>

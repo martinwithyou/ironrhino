@@ -55,6 +55,10 @@ public @interface UiConfig {
 
 	String template() default "";
 
+	String listTemplate() default "";
+
+	String viewTemplate() default "";
+
 	String width() default "";
 
 	String dynamicAttributes() default ""; // json map

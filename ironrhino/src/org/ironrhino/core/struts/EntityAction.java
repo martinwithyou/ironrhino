@@ -1500,6 +1500,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private boolean hiddenInInput;
 		private HiddenConfigImpl hiddenInView;
 		private String template;
+		private String listTemplate;
+		private String viewTemplate;
 		private String width;
 		private Map<String, String> dynamicAttributes = new HashMap<String, String>(
 				0);
@@ -1540,6 +1542,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			this.hiddenInInput = config.hiddenInInput();
 			this.hiddenInView = new HiddenConfigImpl(config.hiddenInView());
 			this.template = config.template();
+			this.listTemplate = config.listTemplate();
+			this.viewTemplate = config.viewTemplate();
 			this.width = config.width();
 			if (StringUtils.isNotBlank(config.dynamicAttributes()))
 				try {
@@ -1775,6 +1779,22 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 		public void setTemplate(String template) {
 			this.template = template;
+		}
+
+		public String getListTemplate() {
+			return listTemplate;
+		}
+
+		public void setListTemplate(String listTemplate) {
+			this.listTemplate = listTemplate;
+		}
+
+		public String getViewTemplate() {
+			return viewTemplate;
+		}
+
+		public void setViewTemplate(String viewTemplate) {
+			this.viewTemplate = viewTemplate;
 		}
 
 		public String getWidth() {
