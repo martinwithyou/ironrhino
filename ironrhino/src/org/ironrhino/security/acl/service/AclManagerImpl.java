@@ -15,7 +15,7 @@ import org.ironrhino.security.acl.model.Acl;
 import org.springframework.transaction.annotation.Transactional;
 
 @Singleton
-@Named("aclManager")
+@Named
 public class AclManagerImpl extends BaseManagerImpl<Acl> implements AclManager {
 
 	@Override

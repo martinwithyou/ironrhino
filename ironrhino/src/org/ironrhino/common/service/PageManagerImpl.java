@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 @Singleton
-@Named("pageManager")
+@Named
 public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		PageManager {
 

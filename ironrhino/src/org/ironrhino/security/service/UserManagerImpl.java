@@ -32,7 +32,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Singleton
-@Named("userManager")
+@Named
 @Primary
 @Remoting(UserDetailsService.class)
 public class UserManagerImpl extends BaseManagerImpl<User> implements

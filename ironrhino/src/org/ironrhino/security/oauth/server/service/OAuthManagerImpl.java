@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @Singleton
-@Named("oauthManager")
+@Named
 @Profile({ DEFAULT, DUAL, CLOUD })
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class OAuthManagerImpl implements OAuthManager {

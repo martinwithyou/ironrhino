@@ -7,7 +7,7 @@ import org.ironrhino.common.model.Schema;
 import org.ironrhino.core.service.BaseManagerImpl;
 
 @Singleton
-@Named("schemaManager")
+@Named
 public class SchemaManagerImpl extends BaseManagerImpl<Schema> implements
 		SchemaManager {
 

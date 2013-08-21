@@ -26,7 +26,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @Singleton
-@Named("pageViewService")
+@Named
 public class PageViewServiceImpl implements PageViewService {
 
 	public static final String KEY_PAGE_VIEW = "{pv}:";

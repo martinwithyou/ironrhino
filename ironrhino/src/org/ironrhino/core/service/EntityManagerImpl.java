@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 import org.ironrhino.core.model.Persistable;
 
 @Singleton
-@Named("entityManager")
+@Named
 public class EntityManagerImpl<T extends Persistable<?>> extends
 		BaseManagerImpl<T> implements EntityManager<T> {
 
