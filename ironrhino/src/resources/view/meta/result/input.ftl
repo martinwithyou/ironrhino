@@ -21,7 +21,7 @@
 		<#if config.alias??>
 			<#assign label=config.alias>
 		</#if>
-		<#assign readonly=naturalIds?keys?seq_contains(key)&&!naturalIdMutable&&!isnew||config.readonly||config.readonlyExpression?has_content&&config.readonlyExpression?eval>
+		<#assign readonly=naturalIds?keys?seq_contains(key)&&!naturalIdMutable&&!isnew||config.readonly.value||config.readonly.expression?has_content&&config.readonly.expression?eval>
 		<#if !(entity.new && readonly)>
 			<#assign id=(config.id?has_content)?string(config.id!,entityName+'-'+key)/>
 			<#if config.type=='textarea'>

@@ -40,7 +40,7 @@
 		</#if>
 		<#if !hidden>
 			<#assign label=key>
-			<#if !(readonly||config.readonly) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
+			<#if !(readonly||config.readonly.value) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
 				<#assign cellEdit=config.cellEdit!/>
 				<#if cellEdit==''>
 					<#if config.type=='input'>
@@ -106,10 +106,10 @@
 			<#assign value=getDictionaryLabel(templateName,value)/>	
 		</#if>
 		<#assign dynamicAttributes={}>
-		<#if config.type=='listpick'&&!entityReadonly&&!config.readonly&&!(config.readonlyExpression?has_content&&config.readonlyExpression?eval)>
+		<#if config.type=='listpick'&&!entityReadonly&&!config.readonly.value&&!(config.readonly.expression?has_content&&config.readonly.expression?eval)>
 			<#assign dynamicAttributes={"class":"listpick","data-cellvalue":(value.id?string)!,"data-options":"{'url':'"+config.pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
 		</#if>
-		<#if config.readonlyExpression?has_content && config.readonlyExpression?eval>
+		<#if config.readonly.expression?has_content && config.readonly.expression?eval>
 		<#assign dynamicAttributes=dynamicAttributes+{'data-readonly':'true'}/>
 		</#if>
 		<#assign template=config.template/>

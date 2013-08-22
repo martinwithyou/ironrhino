@@ -39,9 +39,7 @@ public @interface UiConfig {
 
 	boolean unique() default false;
 
-	boolean readonly() default false;
-
-	String readonlyExpression() default "";
+	ReadonlyConfig readonly() default @ReadonlyConfig;
 
 	boolean hidden() default false;
 

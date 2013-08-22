@@ -8,6 +8,7 @@ import javax.persistence.Table;
 
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.HiddenConfig;
+import org.ironrhino.core.metadata.ReadonlyConfig;
 import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
@@ -46,13 +47,13 @@ public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 	@UiConfig(displayOrder = 5, width = "100px")
 	private String domain;
 
-	@UiConfig(readonly = true, width = "150px")
+	@UiConfig(readonly = @ReadonlyConfig(true), width = "150px")
 	private Date createDate;
 
-	@UiConfig(readonly = true, width = "150px")
+	@UiConfig(readonly = @ReadonlyConfig(true), width = "150px")
 	private Date modifyDate;
 
-	@UiConfig(readonly = true, width = "80px")
+	@UiConfig(readonly = @ReadonlyConfig(true), width = "80px")
 	private String modifyUser;
 
 	public String getName() {

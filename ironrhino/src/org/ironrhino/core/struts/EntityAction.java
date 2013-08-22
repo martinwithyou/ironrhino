@@ -1064,15 +1064,15 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					}
 					UiConfigImpl uiConfig = uiConfigs.get(propertyName);
 					if (uiConfig == null
-							|| uiConfig.isReadonly()
+							|| uiConfig.getReadonly().isValue()
 							|| Persistable.class.isAssignableFrom(bwp
 									.getPropertyDescriptor(propertyName)
 									.getPropertyType()))
 						continue;
-					if (StringUtils
-							.isNotBlank(uiConfig.getReadonlyExpression())
-							&& checkFieldReadonly(
-									uiConfig.getReadonlyExpression(), entity,
+					if (StringUtils.isNotBlank(uiConfig.getReadonly()
+							.getExpression())
+							&& checkFieldReadonly(uiConfig.getReadonly()
+									.getExpression(), entity,
 									bwp.getPropertyValue(propertyName)))
 						continue;
 					editedPropertyNames.add(propertyName);
@@ -1162,18 +1162,17 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					}
 					UiConfigImpl uiConfig = uiConfigs.get(propertyName);
 					if (uiConfig == null
-							|| uiConfig.isReadonly()
+							|| uiConfig.getReadonly().isValue()
 							|| !naturalIdMutable
 							&& naturalIds.keySet().contains(propertyName)
 							|| Persistable.class.isAssignableFrom(bwp
 									.getPropertyDescriptor(propertyName)
 									.getPropertyType()))
 						continue;
-					if (StringUtils
-							.isNotBlank(uiConfig.getReadonlyExpression())
-							&& checkFieldReadonly(
-									uiConfig.getReadonlyExpression(),
-									persisted,
+					if (StringUtils.isNotBlank(uiConfig.getReadonly()
+							.getExpression())
+							&& checkFieldReadonly(uiConfig.getReadonly()
+									.getExpression(), persisted,
 									bwp.getPropertyValue(propertyName)))
 						continue;
 					editedPropertyNames.add(propertyName);
@@ -1191,16 +1190,17 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				UiConfigImpl uiConfig = getUiConfigs().get(propertyName);
 				Class type = bw.getPropertyDescriptor(propertyName)
 						.getPropertyType();
-				if (uiConfig.isReadonly() || !naturalIdMutable
+				if (uiConfig.getReadonly().isValue() || !naturalIdMutable
 						&& naturalIds.keySet().contains(propertyName)
 						&& !entity.isNew()
 						|| !Persistable.class.isAssignableFrom(type))
 					continue;
 				if (!entity.isNew()
-						&& StringUtils.isNotBlank(uiConfig
-								.getReadonlyExpression())
-						&& checkFieldReadonly(uiConfig.getReadonlyExpression(),
-								entity, bw.getPropertyValue(propertyName)))
+						&& StringUtils.isNotBlank(uiConfig.getReadonly()
+								.getExpression())
+						&& checkFieldReadonly(uiConfig.getReadonly()
+								.getExpression(), entity,
+								bw.getPropertyValue(propertyName)))
 					continue;
 				String parameterValue = ServletActionContext.getRequest()
 						.getParameter(getEntityName() + "." + propertyName);
@@ -1492,8 +1492,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private int maxlength;
 		private String regex;
 		private Set<String> cssClasses = new LinkedHashSet<>(0);
-		private boolean readonly;
-		private String readonlyExpression;
+		private ReadonlyConfigImpl readonly;
 		private int displayOrder = Integer.MAX_VALUE;
 		private String alias;
 		private HiddenConfigImpl hiddenInList;
@@ -1533,8 +1532,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			this.unique = config.unique();
 			this.maxlength = config.maxlength();
 			this.regex = config.regex();
-			this.readonly = config.readonly();
-			this.readonlyExpression = config.readonlyExpression();
+			this.readonly = new ReadonlyConfigImpl(config.readonly());
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.alias()))
 				this.alias = config.alias();
@@ -1757,20 +1755,12 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			return cssClasses;
 		}
 
-		public boolean isReadonly() {
+		public ReadonlyConfigImpl getReadonly() {
 			return readonly;
 		}
 
-		public void setReadonly(boolean readonly) {
+		public void setReadonly(ReadonlyConfigImpl readonly) {
 			this.readonly = readonly;
-		}
-
-		public String getReadonlyExpression() {
-			return readonlyExpression;
-		}
-
-		public void setReadonlyExpression(String readonlyExpression) {
-			this.readonlyExpression = readonlyExpression;
 		}
 
 		public String getTemplate() {
