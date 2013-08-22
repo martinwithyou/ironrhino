@@ -1,11 +1,13 @@
 package org.ironrhino.core.hibernate;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -14,6 +16,7 @@ import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.struts.AnnotationShadows.UiConfigImpl;
 import org.ironrhino.core.struts.EntityClassHelper;
+import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.springframework.beans.BeanWrapperImpl;
@@ -164,18 +167,33 @@ public class CriterionUtils {
 				} else if (propertyNames.contains(propertyName)) {
 					Class<?> type = bw.getPropertyType(propertyName);
 					if (Persistable.class.isAssignableFrom(type)) {
+						@SuppressWarnings("unchecked")
 						BaseManager<?> em = ApplicationContextUtils
-								.getEntityManager(entityClass);
-						Persistable<?> p = em.get(parameterValues[0]);
-						if (p == null) {
-							try {
-								p = em.findOne(parameterValues[0]);
-							} catch (Exception e) {
-
+								.getEntityManager((Class<? extends Persistable<?>>) type);
+						try {
+							BeanWrapperImpl bw2 = new BeanWrapperImpl(type);
+							bw2.setConversionService(conversionService);
+							bw2.setPropertyValue("id", parameterValues[0]);
+							Persistable<?> p = em.get((Serializable) bw2
+									.getPropertyValue("id"));
+							if (p == null) {
+								Map<String, NaturalId> naturalIds = AnnotationUtils
+										.getAnnotatedPropertyNameAndAnnotations(
+												type, NaturalId.class);
+								if (naturalIds.size() == 1) {
+									String name = naturalIds.entrySet()
+											.iterator().next().getKey();
+									bw2.setPropertyValue(name,
+											parameterValues[0]);
+									p = em.findOne((Serializable) bw2
+											.getPropertyValue(name));
+								}
 							}
+							if (p != null)
+								dc.add(Restrictions.eq(propertyName, p));
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-						if (p != null)
-							dc.add(Restrictions.eq(propertyName, p));
 					} else {
 						if (!operator.isEffective(type,
 								parameterValues.length > 0 ? parameterValues[0]
