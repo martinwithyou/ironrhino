@@ -41,7 +41,7 @@ import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.Hidden;
 import org.ironrhino.core.metadata.Owner;
 import org.ironrhino.core.metadata.Readonly;
-import org.ironrhino.core.metadata.Richtable;
+import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Ordered;
@@ -88,9 +88,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
 
-	private ReadonlyImpl readonlyConfig;
+	private ReadonlyImpl readonly;
 
-	private RichtableImpl richtableConfig;
+	private RichtableConfigImpl richtableConfig;
 
 	private Map<String, UiConfigImpl> uiConfigs;
 
@@ -113,7 +113,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public boolean isSearchable() {
 		if (getEntityClass().getAnnotation(Searchable.class) != null)
 			return true;
-		RichtableImpl rc = getRichtableConfig();
+		RichtableConfigImpl rc = getRichtableConfig();
 		boolean searchable = rc.isSearchable();
 		if (searchable)
 			return true;
@@ -141,26 +141,24 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		this.resultPage = resultPage;
 	}
 
-	public RichtableImpl getRichtableConfig() {
+	public RichtableConfigImpl getRichtableConfig() {
 		if (richtableConfig == null) {
-			Richtable rc = getClass()
-					.getAnnotation(Richtable.class);
+			RichtableConfig rc = getClass().getAnnotation(RichtableConfig.class);
 			if (rc == null)
-				rc = getEntityClass().getAnnotation(Richtable.class);
-			richtableConfig = new RichtableImpl(rc);
+				rc = getEntityClass().getAnnotation(RichtableConfig.class);
+			richtableConfig = new RichtableConfigImpl(rc);
 		}
 		return richtableConfig;
 	}
 
-	public ReadonlyImpl getReadonlyConfig() {
-		if (readonlyConfig == null) {
-			Richtable rconfig = getClass().getAnnotation(
-					Richtable.class);
+	public ReadonlyImpl getReadonly() {
+		if (readonly == null) {
+			RichtableConfig rconfig = getClass().getAnnotation(RichtableConfig.class);
 			if (rconfig == null)
-				rconfig = getEntityClass().getAnnotation(Richtable.class);
+				rconfig = getEntityClass().getAnnotation(RichtableConfig.class);
 			Readonly rc = null;
 			if (rconfig != null)
-				rc = rconfig.readonlyConfig();
+				rc = rconfig.readonly();
 			Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
 			if (rc == null && ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();
@@ -168,22 +166,22 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						&& owner.readonlyForOther()
 						&& !(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
 								.authorize(null, owner.supervisorRole(), null))) {
-					readonlyConfig = new ReadonlyImpl();
-					readonlyConfig.setValue(false);
+					readonly = new ReadonlyImpl();
+					readonly.setValue(false);
 					StringBuilder sb = new StringBuilder("!entity.");
 					sb.append(ownerProperty.getKey().propertyName())
 							.append("?? || entity.")
 							.append(ownerProperty.getKey().propertyName())
 							.append("!=authentication('principal')");
 					String expression = sb.toString();
-					readonlyConfig.setExpression(expression);
-					readonlyConfig.setDeletable(false);
+					readonly.setExpression(expression);
+					readonly.setDeletable(false);
 				}
 			}
-			if (readonlyConfig == null)
-				readonlyConfig = new ReadonlyImpl(rc);
+			if (readonly == null)
+				readonly = new ReadonlyImpl(rc);
 		}
-		return readonlyConfig;
+		return readonly;
 	}
 
 	// need call once before view
@@ -524,11 +522,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public String execute() throws Exception {
 		BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass().newInstance());
 		bw.setConversionService(conversionService);
-		Richtable richtableConfig = getClass().getAnnotation(
-				Richtable.class);
+		RichtableConfig richtableConfig = getClass().getAnnotation(RichtableConfig.class);
 		if (richtableConfig == null)
-			richtableConfig = getEntityClass().getAnnotation(
-					Richtable.class);
+			richtableConfig = getEntityClass().getAnnotation(RichtableConfig.class);
 		final BaseManager entityManager = getEntityManager(getEntityClass());
 		Map<String, String> aliases = new HashMap<String, String>();
 		boolean searchable = isSearchable();
@@ -804,7 +800,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	@Override
 	public String input() {
-		if (getReadonlyConfig().isValue()) {
+		if (getReadonly().isValue()) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
@@ -827,7 +823,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					}
 				}
 			}
-			if (checkEntityReadonly(getReadonlyConfig().getExpression(), entity)) {
+			if (checkEntityReadonly(getReadonly().getExpression(), entity)) {
 				addActionError(getText("access.denied"));
 				return ACCESSDENIED;
 			}
@@ -905,7 +901,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	@Override
 	public String save() {
-		if (getReadonlyConfig().isValue()) {
+		if (getReadonly().isValue()) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
@@ -930,7 +926,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					}
 				}
 			}
-			if (checkEntityReadonly(getReadonlyConfig().getExpression(), entity)) {
+			if (checkEntityReadonly(getReadonly().getExpression(), entity)) {
 				addActionError(getText("access.denied"));
 				return ACCESSDENIED;
 			}
@@ -1324,7 +1320,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	@Override
 	public String delete() {
-		if (getReadonlyConfig().isValue() && !getReadonlyConfig().isDeletable()) {
+		if (getReadonly().isValue() && !getReadonly().isDeletable()) {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
@@ -1360,7 +1356,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				}
 			}
 			boolean deletable = true;
-			String expression = getReadonlyConfig().getExpression();
+			String expression = getReadonly().getExpression();
 			if (ownerProperty != null || StringUtils.isNotBlank(expression)) {
 				for (Serializable uid : id) {
 					Persistable<?> en = entityManager.get(uid);
@@ -1385,7 +1381,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					}
 					if (StringUtils.isNotBlank(expression)
 							&& checkEntityReadonly(expression, en)
-							&& !getReadonlyConfig().isDeletable()) {
+							&& !getReadonly().isDeletable()) {
 						addActionError(getText("delete.forbidden",
 								new String[] { en.toString() }));
 						deletable = false;
@@ -1411,7 +1407,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	private String updateEnabled(boolean enabled) {
-		if (!isEnableable() || getReadonlyConfig().isValue())
+		if (!isEnableable() || getReadonly().isValue())
 			return ACCESSDENIED;
 		BaseManager<Persistable<?>> em = getEntityManager(getEntityClass());
 		String[] arr = getId();
@@ -1459,7 +1455,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 							continue;
 					}
 				}
-				String expression = getReadonlyConfig().getExpression();
+				String expression = getReadonly().getExpression();
 				if (StringUtils.isNotBlank(expression)
 						&& checkEntityReadonly(expression, (Persistable<?>) en))
 					continue;
@@ -1902,7 +1898,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	}
 
-	public static class RichtableImpl implements Serializable {
+	public static class RichtableConfigImpl implements Serializable {
 
 		private static final long serialVersionUID = 7346213812241502993L;
 		private String formid = "";
@@ -1917,10 +1913,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private String formFooter = "";
 		private String rowDynamicAttributes = "";
 
-		public RichtableImpl() {
+		public RichtableConfigImpl() {
 		}
 
-		public RichtableImpl(Richtable config) {
+		public RichtableConfigImpl(RichtableConfig config) {
 			if (config == null)
 				return;
 			this.formid = config.formid();

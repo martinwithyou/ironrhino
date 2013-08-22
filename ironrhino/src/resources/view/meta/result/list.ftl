@@ -4,7 +4,7 @@
 <title>${action.getText(entityName)}${action.getText('list')}</title>
 </head>
 <body>
-<#assign readonly=readonlyConfig.value>
+<#assign readonly=readonly.value>
 <#if richtableConfig.listHeader?has_content>
 <@richtableConfig.listHeader?interpret/>
 </#if>
@@ -75,7 +75,7 @@
 <#list resultPage.result as entity>
 <#assign index=index+1>
 <#assign entityReadonly = readonly/>
-<#if !entityReadonly && readonlyConfig.expression?has_content><#assign entityReadonly=readonlyConfig.expression?eval></#if>
+<#if !entityReadonly && readonly.expression?has_content><#assign entityReadonly=readonly.expression?eval></#if>
 <#assign rowDynamicAttributes={}>
 <#if richtableConfig.rowDynamicAttributes?has_content>
 <#assign rowDynamicAttributes><@richtableConfig.rowDynamicAttributes?interpret /></#assign>
@@ -87,7 +87,7 @@
 </#if>
 <#if !readonly&&entityReadonly>
 <#assign rowDynamicAttributes=rowDynamicAttributes+{"data-readonly":"true"}>
-<#if !readonlyConfig.deletable>
+<#if !readonly.deletable>
 <#assign rowDynamicAttributes=rowDynamicAttributes+{"data-deletable":"false"}>
 </#if>
 </#if>
@@ -121,7 +121,7 @@
 </#list>
 <@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
-<@rtend readonly=readonly deletable=!readonly||readonlyConfig.deletable searchable=searchable filterable=richtableConfig.filterable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>
+<@rtend readonly=readonly deletable=!readonly||readonly.deletable searchable=searchable filterable=richtableConfig.filterable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>
 <#if !readonly && hasSelect>
 <div style="display: none;">
 <#list uiConfigs.entrySet() as entry>

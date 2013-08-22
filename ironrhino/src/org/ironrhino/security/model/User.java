@@ -21,7 +21,7 @@ import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
-import org.ironrhino.core.metadata.Richtable;
+import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Enableable;
@@ -44,7 +44,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 @Searchable
 @Entity
 @Table(name = "`user`")
-@Richtable(order = "username asc")
+@RichtableConfig(order = "username asc")
 public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		Enableable {
 
