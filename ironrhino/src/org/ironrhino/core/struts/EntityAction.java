@@ -1496,8 +1496,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private String readonlyExpression;
 		private int displayOrder = Integer.MAX_VALUE;
 		private String alias;
-		private boolean hiddenInList;
-		private boolean hiddenInInput;
+		private HiddenConfigImpl hiddenInList;
+		private HiddenConfigImpl hiddenInInput;
 		private HiddenConfigImpl hiddenInView;
 		private String template;
 		private String listTemplate;
@@ -1538,8 +1538,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.alias()))
 				this.alias = config.alias();
-			this.hiddenInList = config.hiddenInList();
-			this.hiddenInInput = config.hiddenInInput();
+			this.hiddenInList = new HiddenConfigImpl(config.hiddenInList());
+			this.hiddenInInput = new HiddenConfigImpl(config.hiddenInInput());
 			this.hiddenInView = new HiddenConfigImpl(config.hiddenInView());
 			this.template = config.template();
 			this.listTemplate = config.listTemplate();
@@ -1595,19 +1595,19 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			this.propertyType = propertyType;
 		}
 
-		public boolean isHiddenInList() {
+		public HiddenConfigImpl getHiddenInList() {
 			return hiddenInList;
 		}
 
-		public void setHiddenInList(boolean hiddenInList) {
+		public void setHiddenInList(HiddenConfigImpl hiddenInList) {
 			this.hiddenInList = hiddenInList;
 		}
 
-		public boolean isHiddenInInput() {
+		public HiddenConfigImpl getHiddenInInput() {
 			return hiddenInInput;
 		}
 
-		public void setHiddenInInput(boolean hiddenInInput) {
+		public void setHiddenInInput(HiddenConfigImpl hiddenInInput) {
 			this.hiddenInInput = hiddenInInput;
 		}
 

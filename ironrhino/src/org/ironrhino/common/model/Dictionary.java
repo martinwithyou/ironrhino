@@ -23,6 +23,7 @@ import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
+import org.ironrhino.core.metadata.HiddenConfig;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
@@ -60,7 +61,7 @@ public class Dictionary extends BaseEntity {
 	private String description;
 
 	@SearchableComponent
-	@UiConfig(displayOrder = 3, hiddenInList = true)
+	@UiConfig(displayOrder = 3, hiddenInList = @HiddenConfig(true))
 	@Transient
 	private List<LabelValue> items = new ArrayList<LabelValue>();
 

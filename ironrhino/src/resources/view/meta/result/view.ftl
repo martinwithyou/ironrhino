@@ -9,10 +9,7 @@
 		<#assign key=entry.key>
 		<#assign config=entry.value>
 		<#assign value=entity[key]!>
-		<#assign hidden=false>
-		<#if config.hiddenInView.value>
-			<#assign hidden=true>
-		</#if>
+		<#assign hidden=config.hiddenInView.value>
 		<#if !hidden && config.hiddenInView.expression?has_content>
 			<#assign hidden=config.hiddenInView.expression?eval>
 		</#if>

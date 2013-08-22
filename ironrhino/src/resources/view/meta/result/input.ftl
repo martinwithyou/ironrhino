@@ -11,12 +11,16 @@
 	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
 		<#assign templateName><@config.templateName?interpret /></#assign>
-		<#if !config.hiddenInInput>
+		<#assign value=entity[key]!>
+		<#assign hidden=config.hiddenInInput.value>
+		<#if !hidden && config.hiddenInInput.expression?has_content>
+			<#assign hidden=config.hiddenInInput.expression?eval>
+		</#if>
+		<#if !hidden>
 		<#assign label=key>
 		<#if config.alias??>
 			<#assign label=config.alias>
 		</#if>
-		<#assign value=(entity[key])!/>
 		<#assign readonly=naturalIds?keys?seq_contains(key)&&!naturalIdMutable&&!isnew||config.readonly||config.readonlyExpression?has_content&&config.readonlyExpression?eval>
 		<#if !(entity.new && readonly)>
 			<#assign id=(config.id?has_content)?string(config.id!,entityName+'-'+key)/>

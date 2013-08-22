@@ -21,6 +21,7 @@ import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
+import org.ironrhino.core.metadata.HiddenConfig;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
@@ -59,9 +60,7 @@ public class Schema extends BaseEntity {
 	private boolean strict;
 
 	@SearchableComponent
-	// @UiConfig(displayOrder = 4, cellEdit = "none", excludeIfNotEdited = true,
-	// template = "${entity.getFieldsAsString()!}")
-	@UiConfig(displayOrder = 4, hiddenInList = true)
+	@UiConfig(displayOrder = 4, hiddenInList = @HiddenConfig(true))
 	@Transient
 	private List<SchemaField> fields = new ArrayList<SchemaField>();
 

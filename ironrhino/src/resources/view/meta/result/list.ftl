@@ -20,7 +20,11 @@
 <@rtstart formid=formid! entityName=entityName formHeader=formHeader!/>
 <#assign size=0>
 <#list uiConfigs.entrySet() as entry>
-	<#if !entry.value.hiddenInList>
+	<#assign hidden=entry.value.hiddenInList.value>
+	<#if !hidden && entry.value.hiddenInList.expression?has_content>
+	<#assign hidden=entry.value.hiddenInList.expression?eval/>
+	</#if>
+	<#if !hidden>
 		<#assign size=size+1>
 	</#if>
 </#list>
@@ -30,7 +34,11 @@
 <#list uiConfigs.entrySet() as entry>
 		<#assign key=entry.key>
 		<#assign config=entry.value>
-		<#if !config.hiddenInList>
+		<#assign hidden=config.hiddenInList.value>
+		<#if !hidden && config.hiddenInList.expression?has_content>
+		<#assign hidden=config.hiddenInList.expression?eval>
+		</#if>
+		<#if !hidden>
 			<#assign label=key>
 			<#if !(readonly||config.readonly) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
 				<#assign cellEdit=config.cellEdit!/>
@@ -87,7 +95,11 @@
 <#list uiConfigs.entrySet() as entry>
 	<#assign key=entry.key>
 	<#assign config=entry.value>
-	<#if !config.hiddenInList>
+	<#assign hidden=config.hiddenInList.value>
+	<#if !hidden && config.hiddenInList.expression?has_content>
+	<#assign hidden=config.hiddenInList.expression?eval>
+	</#if>
+	<#if !hidden>
 		<#assign value = entity[key]!>
 		<#if config.type=='dictionary' && selectDictionary??>
 			<#assign templateName><@config.templateName?interpret /></#assign>
@@ -115,7 +127,11 @@
 <#list uiConfigs.entrySet() as entry>
 	<#assign key=entry.key>
 	<#assign config=entry.value>
-	<#if !config.hiddenInList>
+	<#assign hidden=config.hiddenInList.value>
+	<#if !hidden && config.hiddenInList.expression?has_content>
+	<#assign hidden=config.hiddenInList.expression?eval/>
+	</#if>
+	<#if !hidden>
 		<#if config.type=='enum'>
 		<textarea id="rt_select_template_${key}">
 		<#if config.required>

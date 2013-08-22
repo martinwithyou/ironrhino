@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.metadata.HiddenConfig;
 import org.ironrhino.core.metadata.RichtableConfig;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
@@ -25,11 +26,11 @@ public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 	private static final long serialVersionUID = 7857273372050062349L;
 
 	@SearchableProperty(boost = 3)
-	@UiConfig(displayOrder = 1, hiddenInList = true)
+	@UiConfig(displayOrder = 1, hiddenInList = @HiddenConfig(true))
 	private String name;
 
 	@SearchableProperty(boost = 3)
-	@UiConfig(displayOrder = 2, hiddenInList = true)
+	@UiConfig(displayOrder = 2, hiddenInList = @HiddenConfig(true))
 	private String contact;
 
 	@SearchableProperty(boost = 3)
@@ -38,7 +39,7 @@ public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 	private String content;
 
 	@SearchableProperty(boost = 3)
-	@UiConfig(displayOrder = 4, hiddenInList = true, type = "textarea", maxlength = 4000)
+	@UiConfig(displayOrder = 4, hiddenInList = @HiddenConfig(true), type = "textarea", maxlength = 4000)
 	@Column(length = 4000)
 	private String comment;
 

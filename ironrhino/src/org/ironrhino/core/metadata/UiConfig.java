@@ -45,9 +45,9 @@ public @interface UiConfig {
 
 	boolean hidden() default false;
 
-	boolean hiddenInList() default false;
+	HiddenConfig hiddenInList() default @HiddenConfig;
 
-	boolean hiddenInInput() default false;
+	HiddenConfig hiddenInInput() default @HiddenConfig;
 
 	HiddenConfig hiddenInView() default @HiddenConfig;
 
