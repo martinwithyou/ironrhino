@@ -44,7 +44,7 @@
 		</#if>
 		<#if !hidden>
 			<#if treeable && column == 'name'||column == 'fullname'>
-				<#assign columns=columns+{column:{'template':r'<#if !entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parentId="+entity.id}" class="ajax view" data-replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
+				<#assign columns=columns+{column:{'template':r'<#if entity.leaf??&&!entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parentId="+entity.id}" class="ajax view" data-replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
 			<#else>
 				<#assign columns=columns+{column:{}}/>
 			</#if>

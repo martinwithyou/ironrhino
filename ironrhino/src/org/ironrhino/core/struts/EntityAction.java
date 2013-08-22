@@ -451,15 +451,19 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 								.getRequest().getParameter(parameterName);
 						BaseManager em = getEntityManager(type);
 						Persistable value = null;
-						if (subPropertyName.equals("id"))
-							value = em.get(parameterValue);
-						else
-							try {
-								value = em.findOne(subPropertyName,
-										parameterValue);
-							} catch (Exception e) {
-
-							}
+						BeanWrapperImpl bw2 = new BeanWrapperImpl(type);
+						bw2.setConversionService(conversionService);
+						if (subPropertyName.equals("id")) {
+							bw2.setPropertyValue("id", parameterValue);
+							value = em.get((Serializable) bw2
+									.getPropertyValue("id"));
+						} else {
+							bw2.setPropertyValue(subPropertyName,
+									parameterValue);
+							value = em.findOne(subPropertyName,
+									(Serializable) bw2
+											.getPropertyValue(subPropertyName));
+						}
 						bw.setPropertyValue(propertyName, value);
 					}
 				}
