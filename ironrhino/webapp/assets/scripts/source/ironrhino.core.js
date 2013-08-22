@@ -403,6 +403,8 @@ Ajax = {
 				_observe(r);
 			}
 			div.remove();
+			if (options.onsuccess)
+				options.onsuccess.apply(window);
 			Ajax.fire(target, 'onsuccess', data);
 		} else {
 			Ajax.jsonResult = data;
