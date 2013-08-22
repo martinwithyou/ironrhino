@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface RichtableConfig {
+public @interface Richtable {
 
 	String formid() default "";
 

@@ -41,7 +41,7 @@ import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.Hidden;
 import org.ironrhino.core.metadata.Owner;
 import org.ironrhino.core.metadata.Readonly;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Ordered;
@@ -90,7 +90,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	private ReadonlyImpl readonly;
 
-	private RichtableConfigImpl richtableConfig;
+	private RichtableImpl richtableConfig;
 
 	private Map<String, UiConfigImpl> uiConfigs;
 
@@ -113,7 +113,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public boolean isSearchable() {
 		if (getEntityClass().getAnnotation(Searchable.class) != null)
 			return true;
-		RichtableConfigImpl rc = getRichtableConfig();
+		RichtableImpl rc = getRichtableConfig();
 		boolean searchable = rc.isSearchable();
 		if (searchable)
 			return true;
@@ -141,21 +141,21 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		this.resultPage = resultPage;
 	}
 
-	public RichtableConfigImpl getRichtableConfig() {
+	public RichtableImpl getRichtableConfig() {
 		if (richtableConfig == null) {
-			RichtableConfig rc = getClass().getAnnotation(RichtableConfig.class);
+			Richtable rc = getClass().getAnnotation(Richtable.class);
 			if (rc == null)
-				rc = getEntityClass().getAnnotation(RichtableConfig.class);
-			richtableConfig = new RichtableConfigImpl(rc);
+				rc = getEntityClass().getAnnotation(Richtable.class);
+			richtableConfig = new RichtableImpl(rc);
 		}
 		return richtableConfig;
 	}
 
 	public ReadonlyImpl getReadonly() {
 		if (readonly == null) {
-			RichtableConfig rconfig = getClass().getAnnotation(RichtableConfig.class);
+			Richtable rconfig = getClass().getAnnotation(Richtable.class);
 			if (rconfig == null)
-				rconfig = getEntityClass().getAnnotation(RichtableConfig.class);
+				rconfig = getEntityClass().getAnnotation(Richtable.class);
 			Readonly rc = null;
 			if (rconfig != null)
 				rc = rconfig.readonly();
@@ -522,9 +522,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public String execute() throws Exception {
 		BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass().newInstance());
 		bw.setConversionService(conversionService);
-		RichtableConfig richtableConfig = getClass().getAnnotation(RichtableConfig.class);
+		Richtable richtableConfig = getClass().getAnnotation(Richtable.class);
 		if (richtableConfig == null)
-			richtableConfig = getEntityClass().getAnnotation(RichtableConfig.class);
+			richtableConfig = getEntityClass().getAnnotation(Richtable.class);
 		final BaseManager entityManager = getEntityManager(getEntityClass());
 		Map<String, String> aliases = new HashMap<String, String>();
 		boolean searchable = isSearchable();
@@ -1898,7 +1898,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	}
 
-	public static class RichtableConfigImpl implements Serializable {
+	public static class RichtableImpl implements Serializable {
 
 		private static final long serialVersionUID = 7346213812241502993L;
 		private String formid = "";
@@ -1913,10 +1913,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private String formFooter = "";
 		private String rowDynamicAttributes = "";
 
-		public RichtableConfigImpl() {
+		public RichtableImpl() {
 		}
 
-		public RichtableConfigImpl(RichtableConfig config) {
+		public RichtableImpl(Richtable config) {
 			if (config == null)
 				return;
 			this.formid = config.formid();

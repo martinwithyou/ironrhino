@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Hidden;
 import org.ironrhino.core.metadata.Readonly;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
@@ -21,7 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Searchable
 @Entity
 @Table(name = "common_feedback")
-@RichtableConfig(searchable = true, order = "createDate desc")
+@Richtable(searchable = true, order = "createDate desc")
 public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 
 	private static final long serialVersionUID = 7857273372050062349L;

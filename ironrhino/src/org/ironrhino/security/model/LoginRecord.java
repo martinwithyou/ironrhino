@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Readonly;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
@@ -20,7 +20,7 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 @Entity
 @Searchable
 @Table(name = "loginrecord")
-@RichtableConfig(searchable = true, order = "date desc", readonly = @Readonly(true))
+@Richtable(searchable = true, order = "date desc", readonly = @Readonly(true))
 public class LoginRecord extends BaseEntity {
 
 	private static final long serialVersionUID = -7691080078972338500L;

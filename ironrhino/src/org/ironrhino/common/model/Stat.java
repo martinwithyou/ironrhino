@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.ironrhino.core.dataroute.DataRoute;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.Readonly;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.stat.Key;
@@ -27,7 +27,7 @@ import org.ironrhino.core.stat.Value;
 @AutoConfig
 @Entity
 @Table(name = "common_stat")
-@RichtableConfig(readonly = @Readonly(true), order = "date desc")
+@Richtable(readonly = @Readonly(true), order = "date desc")
 public class Stat extends KeyValuePair implements Persistable<String> {
 
 	private static final long serialVersionUID = -1795832273603877285L;
