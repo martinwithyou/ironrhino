@@ -4,7 +4,6 @@
 <title>${action.getText(entityName)}${action.getText('list')}</title>
 </head>
 <body>
-<#assign readonly=readonly.value>
 <#if richtableConfig.listHeader?has_content>
 <@richtableConfig.listHeader?interpret/>
 </#if>
@@ -40,7 +39,7 @@
 		</#if>
 		<#if !hidden>
 			<#assign label=key>
-			<#if !(readonly||config.readonly.value) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
+			<#if !(readonly.value||config.readonly.value) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
 				<#assign cellEdit=config.cellEdit!/>
 				<#if cellEdit==''>
 					<#if config.type=='input'>
@@ -65,16 +64,16 @@
 				<#assign cellEdit=''/>
 			</#if>
 			<#assign index=index+1>
-			<@rttheadtd name=label alias=config['alias']! width=config['width']! title=config['title']! class=config['cssClass']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly excludeIfNotEdited=config.excludeIfNotEdited resizable=viewable||!(readonly&&index==size)/>
+			<@rttheadtd name=label alias=config['alias']! width=config['width']! title=config['title']! class=config['cssClass']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly.value excludeIfNotEdited=config.excludeIfNotEdited resizable=viewable||!(readonly.value&&index==size)/>
 		<#else>
 			<#assign viewable=true>
 		</#if>
 </#list>
-<@rtmiddle showActionColumn=richtableConfig.actionColumnButtons?has_content||!readonly||viewable/>
+<@rtmiddle showActionColumn=richtableConfig.actionColumnButtons?has_content||!readonly.value||viewable/>
 <#assign index=0>
 <#list resultPage.result as entity>
 <#assign index=index+1>
-<#assign entityReadonly = readonly/>
+<#assign entityReadonly = readonly.value/>
 <#if !entityReadonly && readonly.expression?has_content><#assign entityReadonly=readonly.expression?eval></#if>
 <#assign rowDynamicAttributes={}>
 <#if richtableConfig.rowDynamicAttributes?has_content>
@@ -85,7 +84,7 @@
 <#assign rowDynamicAttributes={}>
 </#if>
 </#if>
-<#if !readonly&&entityReadonly>
+<#if !readonly.value&&entityReadonly>
 <#assign rowDynamicAttributes=rowDynamicAttributes+{"data-readonly":"true"}>
 <#if !readonly.deletable>
 <#assign rowDynamicAttributes=rowDynamicAttributes+{"data-deletable":"false"}>
@@ -119,10 +118,10 @@
 		<@rttbodytd entity=entity value=value template=template cellDynamicAttributes=config.cellDynamicAttributes dynamicAttributes=dynamicAttributes/>
 	</#if>
 </#list>
-<@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
+<@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly.value viewable=viewable entityReadonly=entityReadonly/>
 </#list>
-<@rtend readonly=readonly deletable=!readonly||readonly.deletable searchable=searchable filterable=richtableConfig.filterable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>
-<#if !readonly && hasSelect>
+<@rtend readonly=readonly.value deletable=!readonly.value||readonly.deletable searchable=searchable filterable=richtableConfig.filterable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>
+<#if !readonly.value && hasSelect>
 <div style="display: none;">
 <#list uiConfigs.entrySet() as entry>
 	<#assign key=entry.key>
