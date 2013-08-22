@@ -965,6 +965,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	private boolean makeEntityValid() {
+		boolean fromList = "cell".equalsIgnoreCase(ServletActionContext
+				.getRequest().getHeader("X-Edit"));
 		Map<String, UiConfigImpl> uiConfigs = getUiConfigs();
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		entity = constructEntity();
@@ -1061,16 +1063,35 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					UiConfigImpl uiConfig = uiConfigs.get(propertyName);
 					if (uiConfig == null
 							|| uiConfig.getReadonly().isValue()
+							|| fromList
+							&& uiConfig.getHiddenInList().isValue()
+							|| !fromList
+							&& uiConfig.getHiddenInInput().isValue()
 							|| Persistable.class.isAssignableFrom(bwp
 									.getPropertyDescriptor(propertyName)
 									.getPropertyType()))
 						continue;
 					if (StringUtils.isNotBlank(uiConfig.getReadonly()
 							.getExpression())
-							&& checkFieldReadonly(uiConfig.getReadonly()
+							&& evalBoolean(uiConfig.getReadonly()
 									.getExpression(), entity,
 									bwp.getPropertyValue(propertyName)))
 						continue;
+					if (fromList) {
+						if (StringUtils.isNotBlank(uiConfig.getHiddenInList()
+								.getExpression())
+								&& evalBoolean(uiConfig.getHiddenInList()
+										.getExpression(), entity,
+										bwp.getPropertyValue(propertyName)))
+							continue;
+					} else {
+						if (StringUtils.isNotBlank(uiConfig.getHiddenInInput()
+								.getExpression())
+								&& evalBoolean(uiConfig.getHiddenInInput()
+										.getExpression(), entity,
+										bwp.getPropertyValue(propertyName)))
+							continue;
+					}
 					editedPropertyNames.add(propertyName);
 				}
 				for (String name : editedPropertyNames)
@@ -1159,6 +1180,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					UiConfigImpl uiConfig = uiConfigs.get(propertyName);
 					if (uiConfig == null
 							|| uiConfig.getReadonly().isValue()
+							|| fromList
+							&& uiConfig.getHiddenInList().isValue()
+							|| !fromList
+							&& uiConfig.getHiddenInInput().isValue()
 							|| !naturalIdMutable
 							&& naturalIds.keySet().contains(propertyName)
 							|| Persistable.class.isAssignableFrom(bwp
@@ -1167,10 +1192,25 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						continue;
 					if (StringUtils.isNotBlank(uiConfig.getReadonly()
 							.getExpression())
-							&& checkFieldReadonly(uiConfig.getReadonly()
+							&& evalBoolean(uiConfig.getReadonly()
 									.getExpression(), persisted,
 									bwp.getPropertyValue(propertyName)))
 						continue;
+					if (fromList) {
+						if (StringUtils.isNotBlank(uiConfig.getHiddenInList()
+								.getExpression())
+								&& evalBoolean(uiConfig.getHiddenInList()
+										.getExpression(), entity,
+										bwp.getPropertyValue(propertyName)))
+							continue;
+					} else {
+						if (StringUtils.isNotBlank(uiConfig.getHiddenInInput()
+								.getExpression())
+								&& evalBoolean(uiConfig.getHiddenInInput()
+										.getExpression(), entity,
+										bwp.getPropertyValue(propertyName)))
+							continue;
+					}
 					editedPropertyNames.add(propertyName);
 				}
 				for (String name : editedPropertyNames)
@@ -1194,9 +1234,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				if (!entity.isNew()
 						&& StringUtils.isNotBlank(uiConfig.getReadonly()
 								.getExpression())
-						&& checkFieldReadonly(uiConfig.getReadonly()
-								.getExpression(), entity,
-								bw.getPropertyValue(propertyName)))
+						&& evalBoolean(uiConfig.getReadonly().getExpression(),
+								entity, bw.getPropertyValue(propertyName)))
 					continue;
 				String parameterValue = ServletActionContext.getRequest()
 						.getParameter(getEntityName() + "." + propertyName);
@@ -1253,8 +1292,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		return false;
 	}
 
-	private boolean checkFieldReadonly(String expression,
-			Persistable<?> entity, Object value) {
+	private boolean evalBoolean(String expression, Persistable<?> entity,
+			Object value) {
 		if (StringUtils.isNotBlank(expression)) {
 			try {
 				Template template = new Template(null, "${(" + expression
