@@ -65,7 +65,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@NotInCopy
 	@NotInJson
 	@Column(nullable = false)
-	@UiConfig(displayOrder = 2, excludedFromLike = true, excludedFromCriterion = true)
+	@UiConfig(displayOrder = 2, excludedFromLike = true, excludedFromCriteria = true)
 	private String password;
 
 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)

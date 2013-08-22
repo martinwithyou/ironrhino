@@ -110,7 +110,7 @@ public class EntityClassHelper {
 				}
 			UiConfigImpl uci = new UiConfigImpl(pd.getPropertyType(), uiConfig);
 			if (trans != null)
-				uci.setExcludedFromCriterion(true);
+				uci.setExcludedFromCriteria(true);
 			uci.setExcludedFromLike(true);
 			if (columnannotation != null && !columnannotation.nullable()
 					|| basicannotation != null && !basicannotation.optional())
@@ -269,22 +269,22 @@ public class EntityClassHelper {
 		return sortedMap;
 	}
 
-	public static Map<String, UiConfigImpl> getPropertyNamesInCriterion(
-			Class<? extends Persistable<?>> entityClass) {
-		return getPropertyNamesInCriterion(getUiConfigs(entityClass));
-	}
-
-	public static Map<String, UiConfigImpl> getPropertyNamesInCriterion(
+	public static Map<String, UiConfigImpl> filterPropertyNamesInCriteria(
 			Map<String, UiConfigImpl> uiConfigs) {
 		Map<String, UiConfigImpl> propertyNamesInCriterion = new LinkedHashMap<String, UiConfigImpl>();
 		for (Map.Entry<String, UiConfigImpl> entry : uiConfigs.entrySet()) {
-			if (!entry.getValue().isExcludedFromCriterion()
+			if (!entry.getValue().isExcludedFromCriteria()
 					&& !entry.getKey().endsWith("AsString")
 					&& !CriterionOperator.getSupportedOperators(
 							entry.getValue().getPropertyType()).isEmpty())
 				propertyNamesInCriterion.put(entry.getKey(), entry.getValue());
 		}
 		return propertyNamesInCriterion;
+	}
+
+	public static Map<String, UiConfigImpl> getPropertyNamesInCriteria(
+			Class<? extends Persistable<?>> entityClass) {
+		return filterPropertyNamesInCriteria(getUiConfigs(entityClass));
 	}
 
 }

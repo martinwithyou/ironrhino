@@ -77,6 +77,6 @@ public @interface UiConfig {
 
 	boolean excludedFromLike() default false;
 
-	boolean excludedFromCriterion() default false;
+	boolean excludedFromCriteria() default false;
 
 }

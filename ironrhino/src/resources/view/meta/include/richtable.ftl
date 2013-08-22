@@ -150,7 +150,13 @@ ${formHeader!}
 
 <#macro rtend buttons='' readonly=false createable=true celleditable=true deletable=true enableable=false searchable=false filterable=true searchButtons='' showPageSize=true formFooter=''>
 <#if filterable>
-<#local filterable=propertyNamesInCriterion??&&propertyNamesInCriterion?keys?size gt 0>
+<#if !propertyNamesInCriteria?? && uiConfigs??>
+<#local propertyNamesInCriteria=statics['org.ironrhino.core.struts.EntityClassHelper'].filterPropertyNamesInCriteria(uiConfigs)>
+</#if>
+<#if !propertyNamesInCriteria?? && entityClass??>
+<#local propertyNamesInCriteria=statics['org.ironrhino.core.struts.EntityClassHelper'].getPropertyNamesInCriteria(entityClass)>
+</#if>
+<#local filterable=propertyNamesInCriteria??&&propertyNamesInCriteria?keys?size gt 0>
 </#if>
 </tbody>
 </table>
@@ -244,7 +250,7 @@ ${formFooter!}
 			<td style="width:30%;">
 				<select class="required decrease property">
 					<option value=""></option>
-					<#list propertyNamesInCriterion.entrySet() as entry>
+					<#list propertyNamesInCriteria.entrySet() as entry>
 					<#local label=entry.key/>
 					<#if entry.value.alias?has_content>
 						<#local label=entry.value.alias/>

@@ -76,8 +76,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	private Map<String, UiConfigImpl> uiConfigs;
 
-	private Map<String, UiConfigImpl> propertyNamesInCriterion;
-
 	protected ResultPage resultPage;
 
 	private Persistable entity;
@@ -191,13 +189,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		if (uiConfigs == null)
 			uiConfigs = EntityClassHelper.getUiConfigs(getEntityClass());
 		return uiConfigs;
-	}
-
-	public Map<String, UiConfigImpl> getPropertyNamesInCriterion() {
-		if (propertyNamesInCriterion == null)
-			propertyNamesInCriterion = EntityClassHelper
-					.getPropertyNamesInCriterion(getUiConfigs());
-		return propertyNamesInCriterion;
 	}
 
 	protected <T extends Persistable<?>> BaseManager<T> getEntityManager(
@@ -331,8 +322,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					if (propertyName.startsWith(getEntityName() + "."))
 						propertyName = propertyName.substring(propertyName
 								.indexOf('.') + 1);
-					if (getUiConfigs().get(propertyName)
-							.isExcludedFromCriterion())
+					UiConfigImpl config = getUiConfigs().get(propertyName);
+					if (config == null || config.isExcludedFromCriteria())
 						continue;
 					CriterionOperator operator = null;
 					if (StringUtils.isNotBlank(operatorValue))

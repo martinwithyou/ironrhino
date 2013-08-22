@@ -51,7 +51,7 @@ public class AnnotationShadows {
 		private String pickUrl = "";
 		private String templateName = "";
 		private boolean excludedFromLike = false;
-		private boolean excludedFromCriterion = false;
+		private boolean excludedFromCriteria = false;
 
 		public UiConfigImpl() {
 		}
@@ -104,7 +104,7 @@ public class AnnotationShadows {
 				dynamicAttributes.put("data-regex", this.regex);
 			}
 			this.excludedFromLike = config.excludedFromLike();
-			this.excludedFromCriterion = config.excludedFromCriterion();
+			this.excludedFromCriteria = config.excludedFromCriteria();
 		}
 
 		public boolean isExcludedFromLike() {
@@ -115,12 +115,12 @@ public class AnnotationShadows {
 			this.excludedFromLike = excludedFromLike;
 		}
 
-		public boolean isExcludedFromCriterion() {
-			return excludedFromCriterion;
+		public boolean isExcludedFromCriteria() {
+			return excludedFromCriteria;
 		}
 
-		public void setExcludedFromCriterion(boolean excludedFromCriterion) {
-			this.excludedFromCriterion = excludedFromCriterion;
+		public void setExcludedFromCriteria(boolean excludedFromCriteria) {
+			this.excludedFromCriteria = excludedFromCriteria;
 		}
 
 		public Class<?> getPropertyType() {

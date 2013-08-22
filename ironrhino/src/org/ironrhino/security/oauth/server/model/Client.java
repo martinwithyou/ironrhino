@@ -41,7 +41,7 @@ public class Client extends BaseEntity implements Enableable {
 	@Column(nullable = false)
 	private String name;
 
-	@UiConfig(displayOrder = 2, cssClass = "span4", excludedFromCriterion = true)
+	@UiConfig(displayOrder = 2, cssClass = "span4", excludedFromCriteria = true)
 	@Column(nullable = false)
 	private String secret = CodecUtils.nextId();
 
