@@ -14,12 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.ironrhino.core.hibernate.CriterionOperator;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CaseInsensitive;
@@ -66,23 +64,21 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	private static final long serialVersionUID = -8442983706126047413L;
 
-	public static final String CRITERION_OPERATOR_SUFFIX = "-op";
-
 	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
 
-	private ReadonlyImpl readonly;
+	private ReadonlyImpl _readonly;
 
-	private RichtableImpl richtableConfig;
+	private RichtableImpl _richtableConfig;
 
-	private Map<String, UiConfigImpl> uiConfigs;
+	private Map<String, UiConfigImpl> _uiConfigs;
+
+	private Persistable _entity;
+
+	private String _entityName;
+
+	private Map<String, NaturalId> _naturalIds;
 
 	protected ResultPage resultPage;
-
-	private Persistable entity;
-
-	private String entityName;
-
-	private Map<String, NaturalId> naturalIds;
 
 	@Autowired(required = false)
 	private transient ElasticSearchService<Persistable<?>> elasticSearchService;
@@ -110,7 +106,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	public Persistable getEntity() {
-		return entity;
+		return _entity;
 	}
 
 	public ResultPage getResultPage() {
@@ -122,17 +118,17 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	public RichtableImpl getRichtableConfig() {
-		if (richtableConfig == null) {
+		if (_richtableConfig == null) {
 			Richtable rc = getClass().getAnnotation(Richtable.class);
 			if (rc == null)
 				rc = getEntityClass().getAnnotation(Richtable.class);
-			richtableConfig = new RichtableImpl(rc);
+			_richtableConfig = new RichtableImpl(rc);
 		}
-		return richtableConfig;
+		return _richtableConfig;
 	}
 
 	public ReadonlyImpl getReadonly() {
-		if (readonly == null) {
+		if (_readonly == null) {
 			Richtable rconfig = getClass().getAnnotation(Richtable.class);
 			if (rconfig == null)
 				rconfig = getEntityClass().getAnnotation(Richtable.class);
@@ -146,37 +142,37 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						&& owner.readonlyForOther()
 						&& !(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
 								.authorize(null, owner.supervisorRole(), null))) {
-					readonly = new ReadonlyImpl();
-					readonly.setValue(false);
+					_readonly = new ReadonlyImpl();
+					_readonly.setValue(false);
 					StringBuilder sb = new StringBuilder("!entity.");
 					sb.append(ownerProperty.getKey().propertyName())
 							.append("?? || entity.")
 							.append(ownerProperty.getKey().propertyName())
 							.append("!=authentication('principal')");
 					String expression = sb.toString();
-					readonly.setExpression(expression);
-					readonly.setDeletable(false);
+					_readonly.setExpression(expression);
+					_readonly.setDeletable(false);
 				}
 			}
-			if (readonly == null)
-				readonly = new ReadonlyImpl(rc);
+			if (_readonly == null)
+				_readonly = new ReadonlyImpl(rc);
 		}
-		return readonly;
+		return _readonly;
 	}
 
 	public String getEntityName() {
-		if (entityName == null)
-			entityName = ActionContext.getContext().getActionInvocation()
+		if (_entityName == null)
+			_entityName = ActionContext.getContext().getActionInvocation()
 					.getProxy().getActionName();
-		return entityName;
+		return _entityName;
 	}
 
 	public Map<String, NaturalId> getNaturalIds() {
-		if (naturalIds == null)
-			naturalIds = AnnotationUtils
+		if (_naturalIds == null)
+			_naturalIds = AnnotationUtils
 					.getAnnotatedPropertyNameAndAnnotations(getEntityClass(),
 							NaturalId.class);
-		return naturalIds;
+		return _naturalIds;
 	}
 
 	public boolean isNaturalIdMutable() {
@@ -186,9 +182,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	public Map<String, UiConfigImpl> getUiConfigs() {
-		if (uiConfigs == null)
-			uiConfigs = EntityClassHelper.getUiConfigs(getEntityClass());
-		return uiConfigs;
+		if (_uiConfigs == null)
+			_uiConfigs = EntityClassHelper.getUiConfigs(getEntityClass());
+		return _uiConfigs;
 	}
 
 	protected <T extends Persistable<?>> BaseManager<T> getEntityManager(
@@ -206,15 +202,15 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (StringUtils.isNotBlank(getUid())) {
 				bw.setPropertyValue("id", getUid());
 				Serializable id = (Serializable) bw.getPropertyValue("id");
-				entity = entityManager.get(id);
-				if (entity == null && naturalIds.size() == 1) {
+				_entity = entityManager.get(id);
+				if (_entity == null && naturalIds.size() == 1) {
 					String naturalIdName = naturalIds.iterator().next();
 					bw.setPropertyValue(naturalIdName, getUid());
 					id = (Serializable) bw.getPropertyValue(naturalIdName);
-					entity = entityManager.findByNaturalId(id);
+					_entity = entityManager.findByNaturalId(id);
 				}
 			}
-			if (entity == null && naturalIds.size() > 0) {
+			if (_entity == null && naturalIds.size() > 0) {
 				Serializable[] paramters = new Serializable[naturalIds.size() * 2];
 				int i = 0;
 				boolean satisfied = true;
@@ -234,7 +230,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					i++;
 				}
 				if (satisfied)
-					entity = entityManager.findByNaturalId(paramters);
+					_entity = entityManager.findByNaturalId(paramters);
 			}
 
 		} catch (Exception e) {
@@ -293,147 +289,21 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					dc.add(Restrictions.eq(owner.propertyName(), ud));
 				}
 			}
-			try {
-				Set<String> propertyNames = getUiConfigs().keySet();
-				Map<String, String[]> parameterMap = ServletActionContext
-						.getRequest().getParameterMap();
-				for (String parameterName : parameterMap.keySet()) {
-					String propertyName;
-					String[] parameterValues;
-					Object value1 = null;
-					Object value2 = null;
-					String operatorValue;
-					if (parameterName.endsWith(CRITERION_OPERATOR_SUFFIX)) {
-						propertyName = parameterName.substring(0,
-								parameterName.length()
-										- CRITERION_OPERATOR_SUFFIX.length());
-						if (parameterMap.containsKey(propertyName))
-							continue;
-						parameterValues = new String[0];
-						operatorValue = parameterMap.get(parameterName)[0];
-					} else {
-						propertyName = parameterName;
-						parameterValues = parameterMap.get(parameterName);
-						operatorValue = ServletActionContext.getRequest()
-								.getParameter(
-										parameterName
-												+ CRITERION_OPERATOR_SUFFIX);
-					}
-					if (propertyName.startsWith(getEntityName() + "."))
-						propertyName = propertyName.substring(propertyName
-								.indexOf('.') + 1);
-					UiConfigImpl config = getUiConfigs().get(propertyName);
-					if (config == null || config.isExcludedFromCriteria())
-						continue;
-					CriterionOperator operator = null;
-					if (StringUtils.isNotBlank(operatorValue))
-						operator = CriterionOperator.valueOf(operatorValue
-								.toUpperCase());
-					if (operator == null)
-						operator = CriterionOperator.EQ;
-					if (parameterValues.length < operator.getParametersSize())
-						continue;
-					if (propertyName.indexOf('.') > 0) {
-						String subPropertyName = propertyName
-								.substring(propertyName.indexOf('.') + 1);
-						propertyName = propertyName.substring(0,
-								propertyName.indexOf('.'));
-						if (propertyNames.contains(propertyName)) {
-							Class type = bw.getPropertyType(propertyName);
-							if (Persistable.class.isAssignableFrom(type)) {
-								BeanWrapperImpl bw2 = new BeanWrapperImpl(
-										type.newInstance());
-								bw2.setConversionService(conversionService);
-								if (!operator
-										.isEffective(
-												bw2.getPropertyType(subPropertyName),
-												parameterValues.length > 0 ? parameterValues[0]
-														: null,
-												parameterValues.length > 1 ? parameterValues[1]
-														: null))
-									continue;
-								if (parameterValues.length > 0) {
-									bw2.setPropertyValue(subPropertyName,
-											parameterValues[0]);
-									value1 = bw2
-											.getPropertyValue(subPropertyName);
-								}
-								if (parameterValues.length > 1) {
-									bw2.setPropertyValue(subPropertyName,
-											parameterValues[1]);
-									value2 = bw2
-											.getPropertyValue(subPropertyName);
-								}
-								String alias = aliases.get(propertyName);
-								if (alias == null) {
-									alias = CodecUtils.randomString(4);
-									dc.createAlias(propertyName, alias);
-									aliases.put(propertyName, alias);
-								}
-								Criterion criterion = operator
-										.operator(
-												alias + "." + subPropertyName,
-												value1, value2);
-								if (criterion != null)
-									dc.add(criterion);
-							}
-						}
-					} else if (propertyNames.contains(propertyName)) {
-						Class type = bw.getPropertyType(propertyName);
-						if (Persistable.class.isAssignableFrom(type)) {
-							BaseManager em = getEntityManager(type);
-							Persistable p = em.get(parameterValues[0]);
-							if (p == null) {
-								try {
-									p = em.findOne(parameterValues[0]);
-								} catch (Exception e) {
-
-								}
-							}
-							if (p != null)
-								dc.add(Restrictions.eq(propertyName, p));
-						} else {
-							if (!operator
-									.isEffective(
-											type,
-											parameterValues.length > 0 ? parameterValues[0]
-													: null,
-											parameterValues.length > 1 ? parameterValues[1]
-													: null))
-								continue;
-							if (parameterValues.length > 0) {
-								bw.setPropertyValue(propertyName,
-										parameterValues[0]);
-								value1 = bw.getPropertyValue(propertyName);
-							}
-							if (parameterValues.length > 1) {
-								bw.setPropertyValue(propertyName,
-										parameterValues[1]);
-								value2 = bw.getPropertyValue(propertyName);
-							}
-							Criterion criterion = operator.operator(
-									propertyName, value1, value2);
-							if (criterion != null)
-								dc.add(criterion);
-						}
-					}
+			CriterionUtils.filter(dc, getEntityClass(), getUiConfigs());
+			if (searchable && StringUtils.isNotBlank(keyword)) {
+				Set<String> propertyNamesInLike = new HashSet<String>();
+				for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs()
+						.entrySet()) {
+					if (entry.getValue().isSearchable()
+							&& String.class.equals(entry.getValue()
+									.getPropertyType())
+							&& !entry.getValue().isExcludedFromLike())
+						propertyNamesInLike.add(entry.getKey());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+				if (propertyNamesInLike.size() > 0)
+					dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
+							propertyNamesInLike.toArray(new String[0])));
 			}
-			Set<String> propertyNamesInLike = new HashSet<String>();
-			for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs()
-					.entrySet()) {
-				if (entry.getValue().isSearchable()
-						&& String.class.equals(entry.getValue()
-								.getPropertyType())
-						&& !entry.getValue().isExcludedFromLike())
-					propertyNamesInLike.add(entry.getKey());
-			}
-			if (searchable && StringUtils.isNotBlank(keyword)
-					&& propertyNamesInLike.size() > 0)
-				dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
-						propertyNamesInLike.toArray(new String[0])));
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(dc);
@@ -525,7 +395,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			return ACCESSDENIED;
 		}
 		tryFindEntity();
-		if (entity != null && !entity.isNew()) {
+		if (_entity != null && !_entity.isNew()) {
 			Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
 			if (ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();
@@ -534,7 +404,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						&& (owner.isolate() || owner.readonlyForOther())) {
 					UserDetails ud = AuthzUtils.getUserDetails(ownerProperty
 							.getValue());
-					BeanWrapperImpl bwi = new BeanWrapperImpl(entity);
+					BeanWrapperImpl bwi = new BeanWrapperImpl(_entity);
 					bwi.setConversionService(conversionService);
 					Object value = bwi.getPropertyValue(owner.propertyName());
 					if (ud == null || value == null || !ud.equals(value)) {
@@ -543,20 +413,20 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					}
 				}
 			}
-			if (checkEntityReadonly(getReadonly().getExpression(), entity)) {
+			if (checkEntityReadonly(getReadonly().getExpression(), _entity)) {
 				addActionError(getText("access.denied"));
 				return ACCESSDENIED;
 			}
 		}
-		if (entity == null)
+		if (_entity == null)
 			try {
-				entity = getEntityClass().newInstance();
+				_entity = getEntityClass().newInstance();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
-		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
+		BeanWrapperImpl bw = new BeanWrapperImpl(_entity);
 		bw.setConversionService(conversionService);
-		if (entity != null && entity.isNew()) {
+		if (_entity != null && _entity.isNew()) {
 			Set<String> naturalIds = getNaturalIds().keySet();
 			if (getUid() != null && naturalIds.size() == 1) {
 				bw.setPropertyValue(naturalIds.iterator().next(), getUid());
@@ -615,7 +485,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			}
 
 		}
-		putEntityToValueStack(entity);
+		putEntityToValueStack(_entity);
 		return INPUT;
 	}
 
@@ -627,10 +497,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		}
 		if (!makeEntityValid())
 			return INPUT;
-		BeanWrapperImpl bwp = new BeanWrapperImpl(entity);
+		BeanWrapperImpl bwp = new BeanWrapperImpl(_entity);
 		bwp.setConversionService(conversionService);
 		Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
-		if (!entity.isNew()) {
+		if (!_entity.isNew()) {
 			if (ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();
 				if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
@@ -646,7 +516,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					}
 				}
 			}
-			if (checkEntityReadonly(getReadonly().getExpression(), entity)) {
+			if (checkEntityReadonly(getReadonly().getExpression(), _entity)) {
 				addActionError(getText("access.denied"));
 				return ACCESSDENIED;
 			}
@@ -675,7 +545,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			}
 		}
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
-		entityManager.save(entity);
+		entityManager.save(_entity);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
 	}
@@ -689,8 +559,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				.getRequest().getHeader("X-Edit"));
 		Map<String, UiConfigImpl> uiConfigs = getUiConfigs();
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
-		entity = constructEntity();
-		BeanWrapperImpl bw = new BeanWrapperImpl(entity);
+		_entity = constructEntity();
+		BeanWrapperImpl bw = new BeanWrapperImpl(_entity);
 		bw.setConversionService(conversionService);
 		for (Map.Entry<String, UiConfigImpl> entry : uiConfigs.entrySet()) {
 			String regex = entry.getValue().getRegex();
@@ -712,7 +582,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		boolean caseInsensitive = AnnotationUtils
 				.getAnnotatedPropertyNameAndAnnotations(getEntityClass(),
 						CaseInsensitive.class).size() > 0;
-		if (entity.isNew()) {
+		if (_entity.isNew()) {
 			if (naturalIds.size() > 0) {
 				Serializable[] args = new Serializable[naturalIds.size() * 2];
 				Iterator<String> it = naturalIds.keySet().iterator();
@@ -756,11 +626,11 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					}
 			}
 			try {
-				Persistable temp = entity;
-				entity = getEntityClass().newInstance();
+				Persistable temp = _entity;
+				_entity = getEntityClass().newInstance();
 				bw = new BeanWrapperImpl(temp);
 				bw.setConversionService(conversionService);
-				BeanWrapperImpl bwp = new BeanWrapperImpl(entity);
+				BeanWrapperImpl bwp = new BeanWrapperImpl(_entity);
 				bwp.setConversionService(conversionService);
 				Set<String> editedPropertyNames = new HashSet<String>();
 				String propertyName = null;
@@ -794,21 +664,21 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					if (StringUtils.isNotBlank(uiConfig.getReadonly()
 							.getExpression())
 							&& evalBoolean(uiConfig.getReadonly()
-									.getExpression(), entity,
+									.getExpression(), _entity,
 									bwp.getPropertyValue(propertyName)))
 						continue;
 					if (fromList) {
 						if (StringUtils.isNotBlank(uiConfig.getHiddenInList()
 								.getExpression())
 								&& evalBoolean(uiConfig.getHiddenInList()
-										.getExpression(), entity,
+										.getExpression(), _entity,
 										bwp.getPropertyValue(propertyName)))
 							continue;
 					} else {
 						if (StringUtils.isNotBlank(uiConfig.getHiddenInInput()
 								.getExpression())
 								&& evalBoolean(uiConfig.getHiddenInInput()
-										.getExpression(), entity,
+										.getExpression(), _entity,
 										bwp.getPropertyValue(propertyName)))
 							continue;
 					}
@@ -839,7 +709,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				persisted = entityManager.findOne(caseInsensitive, args);
 				entityManager.evict(persisted);
 				if (persisted != null
-						&& !persisted.getId().equals(entity.getId())) {
+						&& !persisted.getId().equals(_entity.getId())) {
 					it = naturalIds.keySet().iterator();
 					while (it.hasNext()) {
 						addFieldError(getEntityName() + "." + it.next(),
@@ -860,7 +730,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 										.getKey()));
 						entityManager.evict(persisted);
 						if (persisted != null
-								&& !persisted.getId().equals(entity.getId())) {
+								&& !persisted.getId().equals(_entity.getId())) {
 							addFieldError(
 									getEntityName() + "." + entry.getKey(),
 									getText("validation.already.exists"));
@@ -869,7 +739,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					}
 
 				if (persisted != null
-						&& !persisted.getId().equals(entity.getId())) {
+						&& !persisted.getId().equals(_entity.getId())) {
 					persisted = null;
 				}
 			}
@@ -920,14 +790,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						if (StringUtils.isNotBlank(uiConfig.getHiddenInList()
 								.getExpression())
 								&& evalBoolean(uiConfig.getHiddenInList()
-										.getExpression(), entity,
+										.getExpression(), _entity,
 										bwp.getPropertyValue(propertyName)))
 							continue;
 					} else {
 						if (StringUtils.isNotBlank(uiConfig.getHiddenInInput()
 								.getExpression())
 								&& evalBoolean(uiConfig.getHiddenInInput()
-										.getExpression(), entity,
+										.getExpression(), _entity,
 										bwp.getPropertyValue(propertyName)))
 							continue;
 					}
@@ -936,7 +806,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				for (String name : editedPropertyNames)
 					bwp.setPropertyValue(name, bw.getPropertyValue(name));
 				bw = bwp;
-				entity = persisted;
+				_entity = persisted;
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
@@ -948,14 +818,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						.getPropertyType();
 				if (uiConfig.getReadonly().isValue() || !naturalIdMutable
 						&& naturalIds.keySet().contains(propertyName)
-						&& !entity.isNew()
+						&& !_entity.isNew()
 						|| !Persistable.class.isAssignableFrom(type))
 					continue;
-				if (!entity.isNew()
+				if (!_entity.isNew()
 						&& StringUtils.isNotBlank(uiConfig.getReadonly()
 								.getExpression())
 						&& evalBoolean(uiConfig.getReadonly().getExpression(),
-								entity, bw.getPropertyValue(propertyName)))
+								_entity, bw.getPropertyValue(propertyName)))
 					continue;
 				String parameterValue = ServletActionContext.getRequest()
 						.getParameter(getEntityName() + "." + propertyName);
@@ -1054,7 +924,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	@Override
 	public String view() {
 		tryFindEntity();
-		if (entity == null)
+		if (_entity == null)
 			return NOTFOUND;
 		Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
 		if (ownerProperty != null) {
@@ -1064,7 +934,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					&& owner.isolate()) {
 				UserDetails ud = AuthzUtils.getUserDetails(ownerProperty
 						.getValue());
-				BeanWrapperImpl bwi = new BeanWrapperImpl(entity);
+				BeanWrapperImpl bwi = new BeanWrapperImpl(_entity);
 				bwi.setConversionService(conversionService);
 				Object value = bwi.getPropertyValue(owner.propertyName());
 				if (ud == null || value == null || !ud.equals(value)) {
@@ -1073,7 +943,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				}
 			}
 		}
-		putEntityToValueStack(entity);
+		putEntityToValueStack(_entity);
 		return VIEW;
 	}
 

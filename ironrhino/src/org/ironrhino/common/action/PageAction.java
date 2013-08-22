@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -81,10 +80,7 @@ public class PageAction extends BaseAction {
 	public String execute() {
 		if (StringUtils.isBlank(keyword) || elasticSearchService == null) {
 			DetachedCriteria dc = pageManager.detachedCriteria();
-			Criterion filtering = CriterionUtils.filter(page, "id", "pagepath",
-					"title");
-			if (filtering != null)
-				dc.add(filtering);
+			CriterionUtils.filter(dc, Page.class);
 			if (StringUtils.isNotBlank(keyword)) {
 				if (keyword.startsWith("tags:")) {
 					String tags = keyword.replace("tags:", "");
