@@ -26,7 +26,7 @@ import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
-import org.ironrhino.core.struts.EntityAction.UiConfigImpl;
+import org.ironrhino.core.struts.AnnotationShadows.UiConfigImpl;
 import org.ironrhino.core.util.AnnotationUtils;
 
 public class EntityClassHelper {
@@ -286,4 +286,5 @@ public class EntityClassHelper {
 		}
 		return propertyNamesInCriterion;
 	}
+
 }
