@@ -35,7 +35,14 @@
 <#assign columns={}>
 <#if columnNames??>
 	<#list columnNames as column>
-		<#if !uiConfigs?? || !uiConfigs[column].hiddenInList>
+		<#assign hidden=false>
+		<#if uiConfigs??>
+		<#assign hidden=uiConfigs[column].hiddenInList.value>
+		<#if !hidden && uiConfigs[column].hiddenInList.expression?has_content>
+		<#assign hidden=uiConfigs[column].hiddenInList.expression?eval/>
+		</#if>
+		</#if>
+		<#if !hidden>
 			<#if treeable && column == 'name'||column == 'fullname'>
 				<#assign columns=columns+{column:{'template':r'<#if !entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parentId="+entity.id}" class="ajax view" data-replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
 			<#else>
