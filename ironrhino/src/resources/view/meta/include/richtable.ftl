@@ -216,7 +216,7 @@ ${formHeader!}
 <div class="search span2">
 <#if searchable>
 <span class="input-append">
-    <input type="text" name="keyword" value="${keyword!?html}" placeholder="${action.getText('search')}"/><span class="add-on hidden-tablet hidden-phone"><i class="icon-search"></i></span>
+    <input type="text" name="keyword" value="${keyword!?html}" placeholder="${action.getText('search')}"/><span class="add-on hidden-tablet hidden-phone"><i class="icon-search clickable"></i></span>
 </span>
 </#if>
 <#if searchButtons!=''>

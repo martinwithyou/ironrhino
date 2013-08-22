@@ -141,15 +141,17 @@ a.remove:hover {
 .drophover { 
 	border: 2px dashed #333 !important; 
 }
-.datagrided [class*="icon-"]{
+.clickable[class*="icon-"],.datagrided [class*="icon-"]{
 	opacity: 0.6;
   	filter: alpha(opacity=60);
 	cursor:pointer;
-	margin: 3px;
 }
-.datagrided [class*="icon-"]:hover{
+.clickable[class*="icon-"]:hover,.datagrided [class*="icon-"]:hover{
 	opacity: 1;
   	filter: alpha(opacity=1);
+}
+.datagrided [class*="icon-"]{
+	margin: 3px;
 }
 /* tooltip start */
 [data-tooltip]{
