@@ -39,15 +39,15 @@ public @interface UiConfig {
 
 	boolean unique() default false;
 
-	ReadonlyConfig readonly() default @ReadonlyConfig;
+	Readonly readonly() default @Readonly;
 
 	boolean hidden() default false;
 
-	HiddenConfig hiddenInList() default @HiddenConfig;
+	Hidden hiddenInList() default @Hidden;
 
-	HiddenConfig hiddenInInput() default @HiddenConfig;
+	Hidden hiddenInInput() default @Hidden;
 
-	HiddenConfig hiddenInView() default @HiddenConfig;
+	Hidden hiddenInView() default @Hidden;
 
 	boolean searchable() default false;
 

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 @Target(METHOD)
 @Retention(RUNTIME)
-public @interface ReadonlyConfig {
+public @interface Readonly {
 
 	boolean value() default false; // all readonly
 

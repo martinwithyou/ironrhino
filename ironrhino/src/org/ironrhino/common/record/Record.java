@@ -7,8 +7,8 @@ import javax.persistence.Table;
 
 import org.ironrhino.core.dataroute.DataRoute;
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.ReadonlyConfig;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Readonly;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 
@@ -16,7 +16,7 @@ import org.ironrhino.core.model.BaseEntity;
 @AutoConfig
 @Entity
 @Table(name = "common_record")
-@RichtableConfig(order = "recordDate desc", readonlyConfig = @ReadonlyConfig(value = true, deletable = true))
+@Richtable(order = "recordDate desc", readonlyConfig = @Readonly(value = true, deletable = true))
 public class Record extends BaseEntity {
 
 	private static final long serialVersionUID = -8287907984213799302L;

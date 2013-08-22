@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 @Target(METHOD)
 @Retention(RUNTIME)
-public @interface HiddenConfig {
+public @interface Hidden {
 
 	boolean value() default false;
 

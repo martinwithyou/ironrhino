@@ -7,9 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.HiddenConfig;
-import org.ironrhino.core.metadata.ReadonlyConfig;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Hidden;
+import org.ironrhino.core.metadata.Readonly;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Recordable;
@@ -21,17 +21,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Searchable
 @Entity
 @Table(name = "common_feedback")
-@RichtableConfig(searchable = true, order = "createDate desc")
+@Richtable(searchable = true, order = "createDate desc")
 public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 
 	private static final long serialVersionUID = 7857273372050062349L;
 
 	@SearchableProperty(boost = 3)
-	@UiConfig(displayOrder = 1, hiddenInList = @HiddenConfig(true))
+	@UiConfig(displayOrder = 1, hiddenInList = @Hidden(true))
 	private String name;
 
 	@SearchableProperty(boost = 3)
-	@UiConfig(displayOrder = 2, hiddenInList = @HiddenConfig(true))
+	@UiConfig(displayOrder = 2, hiddenInList = @Hidden(true))
 	private String contact;
 
 	@SearchableProperty(boost = 3)
@@ -40,20 +40,20 @@ public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 	private String content;
 
 	@SearchableProperty(boost = 3)
-	@UiConfig(displayOrder = 4, hiddenInList = @HiddenConfig(true), type = "textarea", maxlength = 4000)
+	@UiConfig(displayOrder = 4, hiddenInList = @Hidden(true), type = "textarea", maxlength = 4000)
 	@Column(length = 4000)
 	private String comment;
 
 	@UiConfig(displayOrder = 5, width = "100px")
 	private String domain;
 
-	@UiConfig(readonly = @ReadonlyConfig(true), width = "150px")
+	@UiConfig(readonly = @Readonly(true), width = "150px")
 	private Date createDate;
 
-	@UiConfig(readonly = @ReadonlyConfig(true), width = "150px")
+	@UiConfig(readonly = @Readonly(true), width = "150px")
 	private Date modifyDate;
 
-	@UiConfig(readonly = @ReadonlyConfig(true), width = "80px")
+	@UiConfig(readonly = @Readonly(true), width = "80px")
 	private String modifyUser;
 
 	public String getName() {

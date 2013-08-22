@@ -38,10 +38,10 @@ import org.ironrhino.core.hibernate.CriterionOperator;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CaseInsensitive;
-import org.ironrhino.core.metadata.HiddenConfig;
+import org.ironrhino.core.metadata.Hidden;
 import org.ironrhino.core.metadata.Owner;
-import org.ironrhino.core.metadata.ReadonlyConfig;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Readonly;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Ordered;
@@ -88,9 +88,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	protected static Logger log = LoggerFactory.getLogger(EntityAction.class);
 
-	private ReadonlyConfigImpl readonlyConfig;
+	private ReadonlyImpl readonlyConfig;
 
-	private RichtableConfigImpl richtableConfig;
+	private RichtableImpl richtableConfig;
 
 	private Map<String, UiConfigImpl> uiConfigs;
 
@@ -113,7 +113,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public boolean isSearchable() {
 		if (getEntityClass().getAnnotation(Searchable.class) != null)
 			return true;
-		RichtableConfigImpl rc = getRichtableConfig();
+		RichtableImpl rc = getRichtableConfig();
 		boolean searchable = rc.isSearchable();
 		if (searchable)
 			return true;
@@ -141,24 +141,24 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		this.resultPage = resultPage;
 	}
 
-	public RichtableConfigImpl getRichtableConfig() {
+	public RichtableImpl getRichtableConfig() {
 		if (richtableConfig == null) {
-			RichtableConfig rc = getClass()
-					.getAnnotation(RichtableConfig.class);
+			Richtable rc = getClass()
+					.getAnnotation(Richtable.class);
 			if (rc == null)
-				rc = getEntityClass().getAnnotation(RichtableConfig.class);
-			richtableConfig = new RichtableConfigImpl(rc);
+				rc = getEntityClass().getAnnotation(Richtable.class);
+			richtableConfig = new RichtableImpl(rc);
 		}
 		return richtableConfig;
 	}
 
-	public ReadonlyConfigImpl getReadonlyConfig() {
+	public ReadonlyImpl getReadonlyConfig() {
 		if (readonlyConfig == null) {
-			RichtableConfig rconfig = getClass().getAnnotation(
-					RichtableConfig.class);
+			Richtable rconfig = getClass().getAnnotation(
+					Richtable.class);
 			if (rconfig == null)
-				rconfig = getEntityClass().getAnnotation(RichtableConfig.class);
-			ReadonlyConfig rc = null;
+				rconfig = getEntityClass().getAnnotation(Richtable.class);
+			Readonly rc = null;
 			if (rconfig != null)
 				rc = rconfig.readonlyConfig();
 			Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
@@ -168,7 +168,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 						&& owner.readonlyForOther()
 						&& !(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
 								.authorize(null, owner.supervisorRole(), null))) {
-					readonlyConfig = new ReadonlyConfigImpl();
+					readonlyConfig = new ReadonlyImpl();
 					readonlyConfig.setValue(false);
 					StringBuilder sb = new StringBuilder("!entity.");
 					sb.append(ownerProperty.getKey().propertyName())
@@ -181,7 +181,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				}
 			}
 			if (readonlyConfig == null)
-				readonlyConfig = new ReadonlyConfigImpl(rc);
+				readonlyConfig = new ReadonlyImpl(rc);
 		}
 		return readonlyConfig;
 	}
@@ -524,11 +524,11 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public String execute() throws Exception {
 		BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass().newInstance());
 		bw.setConversionService(conversionService);
-		RichtableConfig richtableConfig = getClass().getAnnotation(
-				RichtableConfig.class);
+		Richtable richtableConfig = getClass().getAnnotation(
+				Richtable.class);
 		if (richtableConfig == null)
 			richtableConfig = getEntityClass().getAnnotation(
-					RichtableConfig.class);
+					Richtable.class);
 		final BaseManager entityManager = getEntityManager(getEntityClass());
 		Map<String, String> aliases = new HashMap<String, String>();
 		boolean searchable = isSearchable();
@@ -1492,12 +1492,12 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private int maxlength;
 		private String regex;
 		private Set<String> cssClasses = new LinkedHashSet<>(0);
-		private ReadonlyConfigImpl readonly;
+		private ReadonlyImpl readonly;
 		private int displayOrder = Integer.MAX_VALUE;
 		private String alias;
-		private HiddenConfigImpl hiddenInList;
-		private HiddenConfigImpl hiddenInInput;
-		private HiddenConfigImpl hiddenInView;
+		private HiddenImpl hiddenInList;
+		private HiddenImpl hiddenInInput;
+		private HiddenImpl hiddenInView;
 		private String template;
 		private String listTemplate;
 		private String viewTemplate;
@@ -1532,13 +1532,13 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			this.unique = config.unique();
 			this.maxlength = config.maxlength();
 			this.regex = config.regex();
-			this.readonly = new ReadonlyConfigImpl(config.readonly());
+			this.readonly = new ReadonlyImpl(config.readonly());
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.alias()))
 				this.alias = config.alias();
-			this.hiddenInList = new HiddenConfigImpl(config.hiddenInList());
-			this.hiddenInInput = new HiddenConfigImpl(config.hiddenInInput());
-			this.hiddenInView = new HiddenConfigImpl(config.hiddenInView());
+			this.hiddenInList = new HiddenImpl(config.hiddenInList());
+			this.hiddenInInput = new HiddenImpl(config.hiddenInInput());
+			this.hiddenInView = new HiddenImpl(config.hiddenInView());
 			this.template = config.template();
 			this.listTemplate = config.listTemplate();
 			this.viewTemplate = config.viewTemplate();
@@ -1593,27 +1593,27 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			this.propertyType = propertyType;
 		}
 
-		public HiddenConfigImpl getHiddenInList() {
+		public HiddenImpl getHiddenInList() {
 			return hiddenInList;
 		}
 
-		public void setHiddenInList(HiddenConfigImpl hiddenInList) {
+		public void setHiddenInList(HiddenImpl hiddenInList) {
 			this.hiddenInList = hiddenInList;
 		}
 
-		public HiddenConfigImpl getHiddenInInput() {
+		public HiddenImpl getHiddenInInput() {
 			return hiddenInInput;
 		}
 
-		public void setHiddenInInput(HiddenConfigImpl hiddenInInput) {
+		public void setHiddenInInput(HiddenImpl hiddenInInput) {
 			this.hiddenInInput = hiddenInInput;
 		}
 
-		public HiddenConfigImpl getHiddenInView() {
+		public HiddenImpl getHiddenInView() {
 			return hiddenInView;
 		}
 
-		public void setHiddenInView(HiddenConfigImpl hiddenInView) {
+		public void setHiddenInView(HiddenImpl hiddenInView) {
 			this.hiddenInView = hiddenInView;
 		}
 
@@ -1755,11 +1755,11 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			return cssClasses;
 		}
 
-		public ReadonlyConfigImpl getReadonly() {
+		public ReadonlyImpl getReadonly() {
 			return readonly;
 		}
 
-		public void setReadonly(ReadonlyConfigImpl readonly) {
+		public void setReadonly(ReadonlyImpl readonly) {
 			this.readonly = readonly;
 		}
 
@@ -1821,17 +1821,17 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	}
 
-	public static class ReadonlyConfigImpl implements Serializable {
+	public static class ReadonlyImpl implements Serializable {
 
 		private static final long serialVersionUID = 6566440254646584026L;
 		private boolean value = false;
 		private String expression = "";
 		private boolean deletable = false;
 
-		public ReadonlyConfigImpl() {
+		public ReadonlyImpl() {
 		}
 
-		public ReadonlyConfigImpl(ReadonlyConfig config) {
+		public ReadonlyImpl(Readonly config) {
 			if (config == null)
 				return;
 			this.value = config.value();
@@ -1865,16 +1865,16 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	}
 
-	public static class HiddenConfigImpl implements Serializable {
+	public static class HiddenImpl implements Serializable {
 
 		private static final long serialVersionUID = 6566440254646584026L;
 		private boolean value = false;
 		private String expression = "";
 
-		public HiddenConfigImpl() {
+		public HiddenImpl() {
 		}
 
-		public HiddenConfigImpl(HiddenConfig config) {
+		public HiddenImpl(Hidden config) {
 			if (config == null)
 				return;
 			this.value = config.value();
@@ -1902,7 +1902,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	}
 
-	public static class RichtableConfigImpl implements Serializable {
+	public static class RichtableImpl implements Serializable {
 
 		private static final long serialVersionUID = 7346213812241502993L;
 		private String formid = "";
@@ -1917,10 +1917,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		private String formFooter = "";
 		private String rowDynamicAttributes = "";
 
-		public RichtableConfigImpl() {
+		public RichtableImpl() {
 		}
 
-		public RichtableConfigImpl(RichtableConfig config) {
+		public RichtableImpl(Richtable config) {
 			if (config == null)
 				return;
 			this.formid = config.formid();

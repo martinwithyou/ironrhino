@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface RichtableConfig {
+public @interface Richtable {
 
 	String formid() default "";
 
@@ -34,6 +34,6 @@ public @interface RichtableConfig {
 
 	String rowDynamicAttributes() default "";
 
-	ReadonlyConfig readonlyConfig() default @ReadonlyConfig;
+	Readonly readonlyConfig() default @Readonly;
 
 }

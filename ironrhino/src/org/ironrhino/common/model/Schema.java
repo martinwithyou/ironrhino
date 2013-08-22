@@ -21,9 +21,9 @@ import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
-import org.ironrhino.core.metadata.HiddenConfig;
+import org.ironrhino.core.metadata.Hidden;
 import org.ironrhino.core.metadata.NotInCopy;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
@@ -40,7 +40,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "common_schema")
-@RichtableConfig(searchable = true, order = "name asc")
+@Richtable(searchable = true, order = "name asc")
 public class Schema extends BaseEntity {
 
 	private static final long serialVersionUID = -8352037604269012984L;
@@ -60,7 +60,7 @@ public class Schema extends BaseEntity {
 	private boolean strict;
 
 	@SearchableComponent
-	@UiConfig(displayOrder = 4, hiddenInList = @HiddenConfig(true))
+	@UiConfig(displayOrder = 4, hiddenInList = @Hidden(true))
 	@Transient
 	private List<SchemaField> fields = new ArrayList<SchemaField>();
 

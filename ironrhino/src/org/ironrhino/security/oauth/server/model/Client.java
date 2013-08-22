@@ -16,7 +16,7 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Enableable;
@@ -28,7 +28,7 @@ import org.ironrhino.security.model.UserRole;
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "oauth_client")
-@RichtableConfig(order = "name asc")
+@Richtable(order = "name asc")
 public class Client extends BaseEntity implements Enableable {
 
 	private static final long serialVersionUID = -7297737795748467475L;

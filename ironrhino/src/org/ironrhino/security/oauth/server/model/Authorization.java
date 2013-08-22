@@ -15,8 +15,8 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
-import org.ironrhino.core.metadata.ReadonlyConfig;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Readonly;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.util.CodecUtils;
@@ -27,7 +27,7 @@ import org.ironrhino.security.model.UserRole;
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "oauth_authorization")
-@RichtableConfig(order = "createDate desc", readonlyConfig = @ReadonlyConfig(value = true, deletable = true))
+@Richtable(order = "createDate desc", readonlyConfig = @Readonly(value = true, deletable = true))
 public class Authorization extends BaseEntity {
 
 	public static final int DEFAULT_LIFETIME = 3600;

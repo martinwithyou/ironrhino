@@ -23,9 +23,9 @@ import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
-import org.ironrhino.core.metadata.HiddenConfig;
+import org.ironrhino.core.metadata.Hidden;
 import org.ironrhino.core.metadata.NotInCopy;
-import org.ironrhino.core.metadata.RichtableConfig;
+import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.LabelValue;
@@ -44,7 +44,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "common_dictionary")
-@RichtableConfig(searchable = true, order = "name asc")
+@Richtable(searchable = true, order = "name asc")
 public class Dictionary extends BaseEntity {
 
 	private static final long serialVersionUID = -8352037604261222984L;
@@ -61,7 +61,7 @@ public class Dictionary extends BaseEntity {
 	private String description;
 
 	@SearchableComponent
-	@UiConfig(displayOrder = 3, hiddenInList = @HiddenConfig(true))
+	@UiConfig(displayOrder = 3, hiddenInList = @Hidden(true))
 	@Transient
 	private List<LabelValue> items = new ArrayList<LabelValue>();
 
