@@ -66,20 +66,21 @@ public class CriterionUtils {
 								MatchMode.ANYWHERE))));
 	}
 
-	public static void filter(DetachedCriteria dc,
+	public static Map<String, String> filter(DetachedCriteria dc,
 			Class<? extends Persistable<?>> entityClass) {
-		filter(dc, entityClass, EntityClassHelper.getUiConfigs(entityClass));
+		return filter(dc, entityClass,
+				EntityClassHelper.getUiConfigs(entityClass));
 	}
 
-	public static void filter(DetachedCriteria dc,
+	public static Map<String, String> filter(DetachedCriteria dc,
 			Class<? extends Persistable<?>> entityClass,
 			Map<String, UiConfigImpl> uiConfigs) {
 		if (dc == null || entityClass == null || uiConfigs == null)
-			return;
+			return null;
+		Map<String, String> aliases = new HashMap<String, String>();
 		try {
 			ConversionService conversionService = ApplicationContextUtils
 					.getBean(ConversionService.class);
-			Map<String, String> aliases = new HashMap<String, String>();
 			Set<String> propertyNames = uiConfigs.keySet();
 			BeanWrapperImpl bw = new BeanWrapperImpl(entityClass.newInstance());
 			bw.setConversionService(conversionService);
@@ -224,6 +225,7 @@ public class CriterionUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return aliases;
 	}
 
 }

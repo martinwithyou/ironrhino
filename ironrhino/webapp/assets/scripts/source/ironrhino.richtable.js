@@ -681,13 +681,14 @@ Observation._richtable = function(container) {
 					}
 				} else if ('listpick' == option.data('type')) {
 					$('<input id="filter_'
-							+ property.val()
+							+ property.val().replace(/\./g, '_')
 							+ '" type="hidden" name="'
 							+ property.val()
 							+ '"/><div class="listpick removeonadd" data-options="{\'url\':\''
 							+ option.data('pickurl')
 							+ '\',\'name\':\'this\',\'id\':\'#filter_'
-							+ property.val() + '\'}"></div>').appendTo(td);
+							+ property.val().replace(/\./g, '_')
+							+ '\'}"></div>').appendTo(td);
 				} else {
 					$('<input type="' + (option.data('inputtype') || 'text')
 							+ '" name="' + property.val()
