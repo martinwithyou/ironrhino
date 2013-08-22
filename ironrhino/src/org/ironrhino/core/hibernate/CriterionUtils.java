@@ -121,8 +121,12 @@ public class CriterionUtils {
 					continue;
 				CriterionOperator operator = null;
 				if (StringUtils.isNotBlank(operatorValue))
-					operator = CriterionOperator.valueOf(operatorValue
-							.toUpperCase());
+					try {
+						operator = CriterionOperator.valueOf(operatorValue
+								.toUpperCase());
+					} catch (IllegalArgumentException e) {
+
+					}
 				if (operator == null)
 					operator = CriterionOperator.EQ;
 				if (parameterValues.length < operator.getParametersSize())

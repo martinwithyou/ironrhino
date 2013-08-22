@@ -281,7 +281,7 @@ ${formFooter!}
 	</tbody>
 	<tfoot>
 		<tr>
-			<td colspan="4" style="text-align:center;"><button type="submit" class="btn">${statics['org.ironrhino.core.struts.I18N'].getText('search')}</button></td>
+			<td colspan="4" style="text-align:center;"><button type="submit" class="btn btn-primary">${statics['org.ironrhino.core.struts.I18N'].getText('search')}</button> <button type="button" class="btn restore">${statics['org.ironrhino.core.struts.I18N'].getText('restore')}</button></td>
 		</tr>
 	</tfoot>
 </table>

@@ -36414,16 +36414,21 @@ Observation._richtable = function(container) {
 	$('form.criteria', container).each(function() {
 		var t = $(this);
 		var f = t.prev('form.richtable');
+		var entity = f.data('entity') || f.attr('action');
 		t.attr('action', f.attr('action')).data('replacement', f.attr('id'));
 		$('input[type="hidden"]', f).clone().prependTo(t).each(function() {
-					var name = $(this).attr('name');
-					if (name.indexOf('.') > 0)
-						name = name.substring(name.indexOf('.') + 1);
-					$('select.property option', t).each(function() {
-								if ($(this).attr('value') == name)
-									$(this).remove();
-							});
-				});
+			var name = $(this).attr('name');
+			if (name.indexOf('-op') == name.length - 3)
+				name = name.substring(0, name.length - 3);
+			if (name.indexOf(entity + '.') == 0)
+				name = name.substring(name.indexOf('.') + 1);
+			$('select.property option', t).each(function() {
+				var v = $(this).attr('value');
+				if (v == name || v.indexOf(name + '.') == 0
+						|| name.indexOf(v + '.') == 0)
+					$(this).remove();
+			});
+		});
 		$('select.property', t).change(function() {
 					var t = $(this);
 					var operator = $('select.operator', t.closest('tr'));
@@ -36496,6 +36501,26 @@ Observation._richtable = function(container) {
 				_observe(td);
 			}
 
+		});
+		$('button.restore', t).click(function() {
+			var b;
+			$(':input[name]', t).each(function() {
+				var h = $('input[type="hidden"][name="' + $(this).attr('name')
+								+ '"]', f);
+				if (h.length)
+					b = true;
+				h.remove();
+			});
+			if (b) {
+				$('.inputPage', f).val(1);
+				f.submit();
+			}
+			$('tbody tr', t).not(':eq(0)').remove();
+			$('tr select option', t).css('display', '');
+			$('tr td:eq(2)', t).text('');
+			$('select.property', t).val('');
+			$('select.operator', t).removeAttr('name');
+			t.hide();
 		});
 	});
 	$('table.richtable', container)
