@@ -112,7 +112,10 @@ public class CriterionUtils {
 				if (propertyName.startsWith(entityName + "."))
 					propertyName = propertyName.substring(propertyName
 							.indexOf('.') + 1);
-				UiConfigImpl config = uiConfigs.get(propertyName);
+				String s = propertyName;
+				if (s.indexOf('.') > 0)
+					s = s.substring(0, s.indexOf('.'));
+				UiConfigImpl config = uiConfigs.get(s);
 				if (config == null || config.isExcludedFromCriteria())
 					continue;
 				CriterionOperator operator = null;
