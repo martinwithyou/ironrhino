@@ -31233,6 +31233,8 @@ Observation.common = function(container) {
 					$.extend(options.headers, {
 								'X-Data-Type' : 'json'
 							});
+				else if (!$(this).data('replacement'))
+					options.replaceTitle = true;
 				options.onsuccess = function() {
 					Nav.activate(options.url);
 				};
