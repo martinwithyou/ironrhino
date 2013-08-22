@@ -17,6 +17,7 @@ import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.LabelValue;
+import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
@@ -44,6 +45,10 @@ public class PageAction extends BaseAction {
 
 	@Autowired(required = false)
 	private transient ElasticSearchService<Page> elasticSearchService;
+
+	public Class<? extends Persistable<?>> getEntityClass() {
+		return Page.class;
+	}
 
 	@com.opensymphony.xwork2.inject.Inject(value = "ironrhino.cmsPath", required = false)
 	public void setCmsPath(String val) {
@@ -80,7 +85,7 @@ public class PageAction extends BaseAction {
 	public String execute() {
 		if (StringUtils.isBlank(keyword) || elasticSearchService == null) {
 			DetachedCriteria dc = pageManager.detachedCriteria();
-			CriterionUtils.filter(dc, Page.class);
+			CriterionUtils.filter(dc, getEntityClass());
 			if (StringUtils.isNotBlank(keyword)) {
 				if (keyword.startsWith("tags:")) {
 					String tags = keyword.replace("tags:", "");

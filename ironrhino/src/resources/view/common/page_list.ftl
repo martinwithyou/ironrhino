@@ -12,6 +12,7 @@
 <button type="button" class="btn" data-view="input" data-windowoptions="{\'iframe\':true,\'width\':\'900px\'}">${action.getText("create")}</button>
 <button type="button" class="btn" data-action="delete" data-shown="selected">${action.getText("delete")}</button>
 <button type="button" class="btn reload">${action.getText("reload")}</button>
+<button type="button" class="btn filter">${action.getText("filter")}</button>
 '>
 <@richtable entityName="page" columns=columns actionColumnButtons=actionColumnButtons bottomButtons=bottomButtons celleditable=false searchable=true/>
 </body>

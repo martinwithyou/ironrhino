@@ -20,9 +20,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.CaseInsensitive;
+import org.ironrhino.core.metadata.Hidden;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.Richtable;
+import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Recordable;
@@ -48,50 +50,62 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	@Column(nullable = false)
 	@CaseInsensitive
 	@NaturalId(mutable = true)
+	@UiConfig(displayOrder = 1, alias = "path")
 	private String pagepath;
 
 	@SearchableProperty
+	@UiConfig(displayOrder = 2)
 	private String title;
 
 	@NotInJson
 	@Lob
+	@UiConfig(displayOrder = 3, excludedFromCriteria = true)
 	private String head;
 
 	@NotInJson
 	@SearchableProperty
 	@Lob
 	@Column(nullable = false)
+	@UiConfig(displayOrder = 4, hiddenInList = @Hidden(true))
 	private String content;
 
 	@SearchableProperty
+	@UiConfig(displayOrder = 5, width = "100px")
 	private int displayOrder;
 
 	@NotInJson
 	@Lob
+	@UiConfig(hidden = true)
 	private String draft;
 
+	@UiConfig(hidden = true)
 	private Date draftDate;
-
-	@NotInCopy
-	@SearchableProperty
-	private Date createDate;
-
-	@NotInCopy
-	@SearchableProperty
-	private Date modifyDate;
-
-	@NotInCopy
-	@SearchableProperty(include_in_all = false)
-	private String createUser;
-
-	@NotInCopy
-	@SearchableProperty(include_in_all = false)
-	private String modifyUser;
 
 	@NotInCopy
 	@SearchableProperty(index = Index.NOT_ANALYZED)
 	@Transient
+	@UiConfig(displayOrder = 6)
 	private Set<String> tags = new LinkedHashSet<String>(0);
+
+	@NotInCopy
+	@SearchableProperty
+	@UiConfig(displayOrder = 7)
+	private Date createDate;
+
+	@NotInCopy
+	@SearchableProperty
+	@UiConfig(displayOrder = 8)
+	private Date modifyDate;
+
+	@NotInCopy
+	@SearchableProperty(include_in_all = false)
+	@UiConfig(hidden = true)
+	private String createUser;
+
+	@NotInCopy
+	@SearchableProperty(include_in_all = false)
+	@UiConfig(hidden = true)
+	private String modifyUser;
 
 	public String getHead() {
 		return head;
