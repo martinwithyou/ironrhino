@@ -103,7 +103,7 @@ public class PermitAction extends BaseAction {
 								if (!BaseAction.class.isAssignableFrom(c))
 									continue;
 								if (EntityAction.class.equals(c)) {
-									Class<?> entityClass = ((AutoConfigPackageProvider) packageProvider)
+									Class<?> entityClass = AutoConfigPackageProvider
 											.getEntityClass(pc.getNamespace(),
 													ac.getName());
 									Authorize authorize = entityClass

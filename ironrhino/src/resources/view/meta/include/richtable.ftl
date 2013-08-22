@@ -1,4 +1,4 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false readonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false filterable=false searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true rowDynamicAttributes='' formHeader='' formFooter=''>
+<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false readonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false filterable=true searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true rowDynamicAttributes='' formHeader='' formFooter=''>
 <@rtstart formid=formid action=action entityName=entityName resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable formHeader=formHeader>
 <#nested/>
 </@rtstart>
@@ -148,7 +148,7 @@ ${formHeader!}
 </tr>
 </#macro>
 
-<#macro rtend buttons='' readonly=false createable=true celleditable=true deletable=true enableable=false searchable=false filterable=false searchButtons='' showPageSize=true formFooter=''>
+<#macro rtend buttons='' readonly=false createable=true celleditable=true deletable=true enableable=false searchable=false filterable=true searchButtons='' showPageSize=true formFooter=''>
 <#if filterable>
 <#local filterable=propertyNamesInCriterion??&&propertyNamesInCriterion?keys?size gt 0>
 </#if>

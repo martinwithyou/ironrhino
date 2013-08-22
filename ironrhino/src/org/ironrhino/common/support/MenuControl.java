@@ -62,7 +62,7 @@ public class MenuControl {
 				try {
 					Class<?> c = Class.forName(ac.getClassName());
 					if (EntityAction.class.equals(c)) {
-						Class<?> entityClass = ((AutoConfigPackageProvider) packageProvider)
+						Class<?> entityClass = AutoConfigPackageProvider
 								.getEntityClass(pc.getNamespace(), ac.getName());
 						Menu menu = entityClass.getAnnotation(Menu.class);
 						if (menu != null) {

@@ -382,7 +382,7 @@ public class AutoConfigPackageProvider implements PackageProvider {
 
 	}
 
-	private Map<String, Class<?>> entityClassURLMapping = new ConcurrentHashMap<String, Class<?>>();
+	private static Map<String, Class<?>> entityClassURLMapping = new ConcurrentHashMap<String, Class<?>>();
 
 	public String[] getNamespaceAndActionName(Class<?> cls,
 			String defaultNamespace) {
@@ -416,12 +416,12 @@ public class AutoConfigPackageProvider implements PackageProvider {
 		return new String[] { namespace, actionName, actionClass };
 	}
 
-	public Class<?> getEntityClass(String namespace, String actionName) {
+	public static Class<?> getEntityClass(String namespace, String actionName) {
 		return entityClassURLMapping.get(namespace
 				+ (namespace.endsWith("/") ? "" : "/") + actionName);
 	}
 
-	public String getEntityUrl(Class<?> entityClass) {
+	public static String getEntityUrl(Class<?> entityClass) {
 		for (Map.Entry<String, Class<?>> entry : entityClassURLMapping
 				.entrySet())
 			if (entry.getValue().equals(entityClass))
