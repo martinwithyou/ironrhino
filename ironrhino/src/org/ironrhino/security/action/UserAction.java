@@ -15,7 +15,6 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.LabelValue;
-import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
 import org.ironrhino.core.struts.EntityAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
@@ -23,7 +22,6 @@ import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 import org.ironrhino.security.service.UserManager;
 import org.ironrhino.security.service.UserRoleManager;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
@@ -54,9 +52,6 @@ public class UserAction extends EntityAction<User> {
 
 	@Inject
 	private transient UserRoleManager userRoleManager;
-
-	@Autowired(required = false)
-	private transient ElasticSearchService<User> elasticSearchService;
 
 	public List<LabelValue> getRoles() {
 		return roles;
