@@ -1119,21 +1119,24 @@ Observation.common = function(container) {
 						url = url.substring(url.indexOf('/'));
 					}
 					var params = form.serializeArray();
+					var realparams = [];
 					if (params) {
 						$.map(params, function(v, i) {
 									if (v.name == 'resultPage.pageNo')
 										v.name = 'pn';
 									else if (v.name == 'resultPage.pageSize')
 										v.name = 'ps';
-									else if (v.name == 'check') {
-										v.name = '';
-										v.value = '';
-									} else if (v.name == 'keyword' && !v.value) {
-										v.name = '';
-										v.value = '';
-									}
+									if (!(v.name == 'check'
+											|| v.name == 'keyword' && !v.value
+											|| v.name == 'pn' && v.value == '1' || v.name == 'ps'
+											&& v.value == '10'))
+										realparams.push({
+													name : v.name,
+													value : v.value
+												});
+
 								});
-						var param = $.param(params).replace(/(&=)/g, '');
+						var param = $.param(realparams);
 						if (param)
 							url += (url.indexOf('?') > 0 ? '&' : '?') + param;
 					}
