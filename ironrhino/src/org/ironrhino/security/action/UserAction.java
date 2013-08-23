@@ -2,8 +2,10 @@ package org.ironrhino.security.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -41,6 +43,8 @@ public class UserAction extends EntityAction<User> {
 
 	private List<LabelValue> roles;
 
+	private Set<String> hiddenRoles;
+
 	private String password;
 
 	private String confirmPassword;
@@ -56,6 +60,10 @@ public class UserAction extends EntityAction<User> {
 
 	public List<LabelValue> getRoles() {
 		return roles;
+	}
+
+	public Set<String> getHiddenRoles() {
+		return hiddenRoles;
 	}
 
 	public String getConfirmPassword() {
@@ -84,6 +92,12 @@ public class UserAction extends EntityAction<User> {
 
 	@Override
 	public String input() {
+		Map<String, String> map = userRoleManager.getAllRoles(true);
+		roles = new ArrayList<LabelValue>(map.size());
+		for (Map.Entry<String, String> entry : map.entrySet())
+			roles.add(new LabelValue(
+					StringUtils.isNotBlank(entry.getValue()) ? entry.getValue()
+							: getText(entry.getKey()), entry.getKey()));
 		String id = getUid();
 		if (StringUtils.isNotBlank(id)) {
 			user = userManager.get(id);
@@ -93,14 +107,15 @@ public class UserAction extends EntityAction<User> {
 		if (user == null) {
 			user = new User();
 		} else {
-
+			Set<String> userRoles = user.getRoles();
+			for (String r : userRoles) {
+				if (!map.containsKey(r)) {
+					if (hiddenRoles == null)
+						hiddenRoles = new LinkedHashSet<String>();
+					hiddenRoles.add(r);
+				}
+			}
 		}
-		Map<String, String> map = userRoleManager.getAllRoles(true);
-		roles = new ArrayList<LabelValue>(map.size());
-		for (Map.Entry<String, String> entry : map.entrySet())
-			roles.add(new LabelValue(
-					StringUtils.isNotBlank(entry.getValue()) ? entry.getValue()
-							: getText(entry.getKey()), entry.getKey()));
 		return INPUT;
 	}
 

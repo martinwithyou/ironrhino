@@ -19,7 +19,15 @@
 	<@s.textfield label="%{getText('email')}" name="user.email" type="email" cssClass="email checkavailable" dynamicAttributes={"data-checkurl":"${actionBaseUrl}/checkavailable"}/>
 	<@s.textfield label="%{getText('phone')}" name="user.phone"/>
 	<@s.checkbox label="%{getText('enabled')}" name="user.enabled" cssClass="custom" />
-	<@s.checkboxlist label="%{getText('role')}" name="user.roles" list="roles" listKey="value" listValue="label" cssClass="custom" />
+	<@s.checkboxlist label="%{getText('role')}" name="user.roles" list="roles" listKey="value" listValue="label" cssClass="custom">
+	<#if hiddenRoles??&&hiddenRoles?size gt 0>
+	<@s.param name="after">
+		<#list hiddenRoles as role>
+			<input type="hidden" name="user.roles" value="${role}"/>
+		</#list>
+	</@s.param>
+	</#if>
+	</@s.checkboxlist>
 	<@s.submit value="%{getText('save')}" />
 </@s.form>
 </body>
