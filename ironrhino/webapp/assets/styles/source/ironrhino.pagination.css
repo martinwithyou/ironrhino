@@ -37,9 +37,9 @@
 
 .toolbar input[name="keyword"]{
 	width:100px;
-	-moz-transition: width .5s ease-in;
-	-webkit-transition: width .5s ease-in;
-	transition: width .5s ease-in;
+	-moz-transition: width .2s ease-in .5s;
+	-webkit-transition: width .2s ease-in .5s;
+	transition: width .2s ease-in .5s;
 }
 .toolbar input[name="keyword"]:focus{
 	width:100%;
