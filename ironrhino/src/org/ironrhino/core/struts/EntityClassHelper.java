@@ -109,9 +109,10 @@ public class EntityClassHelper {
 				} catch (Exception e) {
 				}
 			UiConfigImpl uci = new UiConfigImpl(pd.getPropertyType(), uiConfig);
-			if (trans != null)
+			if (trans != null) {
 				uci.setExcludedFromCriteria(true);
-			uci.setExcludedFromLike(true);
+				uci.setExcludedFromLike(true);
+			}
 			if (columnannotation != null && !columnannotation.nullable()
 					|| basicannotation != null && !basicannotation.optional())
 				uci.setRequired(true);
