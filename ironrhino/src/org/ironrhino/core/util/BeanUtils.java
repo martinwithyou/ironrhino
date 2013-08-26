@@ -10,6 +10,8 @@ import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.core.convert.ConversionService;
 
 public class BeanUtils {
 
@@ -60,6 +62,19 @@ public class BeanUtils {
 			log.error("exception occurs", e);
 			return null;
 		}
+	}
+
+	public static Object convert(Class<?> beanClass, String propertyName,
+			String value) throws Exception {
+		return convert(beanClass.newInstance(), propertyName, value);
+	}
+
+	public static Object convert(Object bean, String propertyName, String value) {
+		BeanWrapperImpl bw = new BeanWrapperImpl(bean);
+		bw.setConversionService(ApplicationContextUtils
+				.getBean(ConversionService.class));
+		bw.setPropertyValue(propertyName, value);
+		return bw.getPropertyValue(propertyName);
 	}
 
 }
