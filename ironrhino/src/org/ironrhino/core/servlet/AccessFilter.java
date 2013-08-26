@@ -132,6 +132,7 @@ public class AccessFilter implements Filter {
 				MDC.put("session", " session:" + sessionId);
 		}
 		if (print && !uri.startsWith("/assets/")
+				&& !uri.startsWith("/remoting/")
 				&& request.getHeader("Last-Event-Id") == null)
 			accessLog.info("");
 
