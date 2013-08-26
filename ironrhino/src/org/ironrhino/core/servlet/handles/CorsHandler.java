@@ -16,8 +16,11 @@ import org.springframework.core.annotation.Order;
 @Order(Integer.MIN_VALUE + 1)
 public class CorsHandler implements AccessHandler {
 
-	@Value("${cors.open:true}")
-	private boolean open;
+	@Value("${cors.openForSameOrigin:true}")
+	private boolean openForSameOrigin;
+
+	@Value("${cors.xFrameOptions:SAMEORIGIN}")
+	private String xFrameOptions = "SAMEORIGIN";
 
 	@Override
 	public String getPattern() {
@@ -27,13 +30,14 @@ public class CorsHandler implements AccessHandler {
 	@Override
 	public boolean handle(HttpServletRequest request,
 			HttpServletResponse response) {
+		response.setHeader("X-Frame-Options", xFrameOptions);
 		String origin = request.getHeader("Origin");
 		if (StringUtils.isNotBlank(origin)) {
 			if (!("Upgrade".equalsIgnoreCase(request.getHeader("Connection")) && "WebSocket"
 					.equalsIgnoreCase(request.getHeader("Upgrade")))) {
 				String url = request.getRequestURL().toString();
-				if ((open || RequestUtils.isSameOrigin(url, origin))
-						&& !url.startsWith(origin)) {
+				if ((openForSameOrigin || RequestUtils
+						.isSameOrigin(url, origin)) && !url.startsWith(origin)) {
 					response.setHeader("Access-Control-Allow-Origin", origin);
 					response.setHeader("Access-Control-Allow-Credentials",
 							"true");
