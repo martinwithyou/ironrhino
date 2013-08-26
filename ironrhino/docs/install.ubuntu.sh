@@ -274,16 +274,35 @@ fi
 cd ironrhino
 OLDLANGUAGE=\$LANGUAGE
 LANGUAGE=en
+if [ -d .svn ];then
 svnupoutput=\`svn up\`
 echo "\$svnupoutput"
 if \$(echo "\$svnupoutput"|grep Updated >/dev/null 2>&1) ; then
 ant dist
 fi
+elif [ -d .git ];then
+git reset --hard
+git clean -df
+gitpulloutput=\`git pull\`
+echo "\$svnupoutput"
+if ! \$(echo "\$gitpulloutput"|grep up-to-date >/dev/null 2>&1) ; then
+ant dist
+fi
+fi
 if ! \$(ls -l target/ironrhino*.jar >/dev/null 2>&1) ; then
 ant dist
 fi
 cd ..
-cd \$app && svn up
+cd \$app
+if [ -d .svn ];then
+svn up
+elif [ -d .git ];then
+git reset --hard
+#git clean -f
+git pull
+else
+echo 'no svn or git'
+fi
 ant -Dserver.home=/home/$USER/tomcat8080 -Dwebapp.deploy.dir=/home/$USER/tomcat8080/webapps/ROOT deploy
 LANGUAGE=\$OLDLANGUAGE
 sleep 5
