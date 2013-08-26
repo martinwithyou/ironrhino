@@ -8169,6 +8169,9 @@ div.preview span.comment{
 .toolbar .status{
 	text-align:right;
 }
+.toolbar .pagination{
+	margin: 0;
+}
 .toolbar .pagination ul{
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;

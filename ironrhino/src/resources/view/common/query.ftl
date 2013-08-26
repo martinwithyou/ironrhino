@@ -87,7 +87,7 @@ $(function(){
 	<#if tables?? && tables?size gt 0>
 	<@s.param name="after">
 	<div style="display:inline-block;vertical-align:top;margin-left:20px;">
-	<@s.select id="tables" theme="simple" cssClass="chosen" list="tables" listKey="top" listValue="top" headerKey="" headerValue=""/>
+	<@s.select id="tables" theme="simple" cssClass="chosen input-medium" list="tables" listKey="top" listValue="top" headerKey="" headerValue=""/>
 	</div>
 	</@s.param>
 	</#if>
@@ -123,8 +123,9 @@ $(function(){
 			</tbody>
 		</table>
 		<div class="toolbar row">
-			<div class="pagination span5">
+			<div class="span5">
 				<#if resultPage.paginating>
+				<div class="pagination">
 				<ul>
 				<#if resultPage.first>
 				<li class="disabled firstPage"><a title="${action.getText('firstpage')}"><i class="icon-fast-backward"></i></a></li>
@@ -157,6 +158,7 @@ $(function(){
 				</select>
 				</li>
 				</ul>
+				</div>
 				</#if>
 			</div>
 			<div class="action span2">

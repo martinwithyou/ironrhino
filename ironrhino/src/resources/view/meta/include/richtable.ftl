@@ -161,8 +161,9 @@ ${formHeader!}
 </tbody>
 </table>
 <div class="toolbar row-fluid">
-<div class="pagination span4">
+<div class="span4">
 <#if resultPage?? && resultPage.paginating>
+<div class="pagination">
 <ul>
 <#if resultPage.first>
 <li class="disabled firstPage"><a title="${action.getText('firstpage')}"><i class="icon-fast-backward"></i></a></li>
@@ -200,6 +201,7 @@ ${formHeader!}
 </li>
 </#if>
 </ul>
+</div>
 </#if>
 </div>
 <div class="action span4">
