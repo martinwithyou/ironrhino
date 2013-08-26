@@ -53,8 +53,10 @@
 	          <#if !user.getAttribute('oauth_provider')??>
 	          <li><a href="<@url value="${ssoServerBase!}/user/password"/>" class="popmodal">${action.getText('change')}${action.getText('password')}</a></li>
 	          </#if>
+	          <#if !request.getAttribute("javax.servlet.request.X509Certificate")??>
 	          <li class="divider"></li>
 	          <li><a href="<@url value="${ssoServerBase!}/logout"/>">${action.getText('logout')}</a></li>
+	          </#if>
 	        </ul>
 		</div>
 		<div class="nav-collapse">
