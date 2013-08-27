@@ -40,36 +40,16 @@ public class ReflectionUtils {
 	}
 
 	public static String[] getParameterNames(Constructor<?> ctor) {
-		Annotation[][] annotations = ctor.getParameterAnnotations();
-		String[] names = new String[annotations.length];
-		boolean allbind = true;
-		loop: for (int i = 0; i < annotations.length; i++) {
-			Annotation[] arr = annotations[i];
-			for (Annotation a : arr) {
-				if (a instanceof Param) {
-					String s = ((Param) a).value();
-					if (StringUtils.isNotBlank(s)) {
-						names[i] = s;
-						continue loop;
-					}
-				}
-			}
-			allbind = false;
-		}
-		if (!allbind) {
-			String[] namesDiscovered = parameterNameDiscoverer
-					.getParameterNames(ctor);
-			if (namesDiscovered == null)
-				return null;
-			for (int i = 0; i < names.length; i++)
-				if (names[i] == null)
-					names[i] = namesDiscovered[i];
-		}
-		return names;
+		return getParameterNames(null, ctor);
 	}
 
 	public static String[] getParameterNames(Method method) {
-		Annotation[][] annotations = method.getParameterAnnotations();
+		return getParameterNames(method, null);
+	}
+
+	private static String[] getParameterNames(Method method, Constructor<?> ctor) {
+		Annotation[][] annotations = method != null ? method
+				.getParameterAnnotations() : ctor.getParameterAnnotations();
 		String[] names = new String[annotations.length];
 		boolean allbind = true;
 		loop: for (int i = 0; i < annotations.length; i++) {
@@ -86,8 +66,9 @@ public class ReflectionUtils {
 			allbind = false;
 		}
 		if (!allbind) {
-			String[] namesDiscovered = parameterNameDiscoverer
-					.getParameterNames(method);
+			String[] namesDiscovered = method != null ? parameterNameDiscoverer
+					.getParameterNames(method) : parameterNameDiscoverer
+					.getParameterNames(ctor);
 			if (namesDiscovered == null)
 				return null;
 			for (int i = 0; i < names.length; i++)
