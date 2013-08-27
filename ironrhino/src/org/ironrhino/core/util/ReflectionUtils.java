@@ -10,9 +10,12 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.ironrhino.core.metadata.Param;
 import org.springframework.aop.framework.Advised;
+import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 
@@ -37,11 +40,61 @@ public class ReflectionUtils {
 	}
 
 	public static String[] getParameterNames(Constructor<?> ctor) {
-		return parameterNameDiscoverer.getParameterNames(ctor);
+		Annotation[][] annotations = ctor.getParameterAnnotations();
+		String[] names = new String[annotations.length];
+		boolean allbind = true;
+		loop: for (int i = 0; i < annotations.length; i++) {
+			Annotation[] arr = annotations[i];
+			for (Annotation a : arr) {
+				if (a instanceof Param) {
+					String s = ((Param) a).value();
+					if (StringUtils.isNotBlank(s)) {
+						names[i] = s;
+						continue loop;
+					}
+				}
+			}
+			allbind = false;
+		}
+		if (!allbind) {
+			String[] namesDiscovered = parameterNameDiscoverer
+					.getParameterNames(ctor);
+			if (namesDiscovered == null)
+				return null;
+			for (int i = 0; i < names.length; i++)
+				if (names[i] == null)
+					names[i] = namesDiscovered[i];
+		}
+		return names;
 	}
 
 	public static String[] getParameterNames(Method method) {
-		return parameterNameDiscoverer.getParameterNames(method);
+		Annotation[][] annotations = method.getParameterAnnotations();
+		String[] names = new String[annotations.length];
+		boolean allbind = true;
+		loop: for (int i = 0; i < annotations.length; i++) {
+			Annotation[] arr = annotations[i];
+			for (Annotation a : arr) {
+				if (a instanceof Param) {
+					String s = ((Param) a).value();
+					if (StringUtils.isNotBlank(s)) {
+						names[i] = s;
+						continue loop;
+					}
+				}
+			}
+			allbind = false;
+		}
+		if (!allbind) {
+			String[] namesDiscovered = parameterNameDiscoverer
+					.getParameterNames(method);
+			if (namesDiscovered == null)
+				return null;
+			for (int i = 0; i < names.length; i++)
+				if (names[i] == null)
+					names[i] = namesDiscovered[i];
+		}
+		return names;
 	}
 
 	public static String[] getParameterNames(JoinPoint jp) {
@@ -53,34 +106,12 @@ public class ReflectionUtils {
 		try {
 			method = clz.getDeclaredMethod(sig.getName(),
 					sig.getParameterTypes());
-			String[] array = parameterNameDiscoverer.getParameterNames(method);
-			if (array == null) {
-				method = narrow(clz, method);
-				if (method != null)
-					array = parameterNameDiscoverer.getParameterNames(method);
-			}
-			return array;
+			if (method.isBridge())
+				method = BridgeMethodResolver.findBridgedMethod(method);
+			return getParameterNames(method);
 		} catch (Exception e) {
 			return null;
 		}
-	}
-
-	public static Method narrow(Class<?> clz, Method method) {
-		Method[] methods = clz.getMethods();
-		loop: for (Method m : methods) {
-			if (!m.getName().equals(method.getName()) || m.equals(method))
-				continue;
-			Class<?>[] p1 = method.getParameterTypes();
-			Class<?>[] p2 = m.getParameterTypes();
-			if (p1.length != p2.length)
-				continue loop;
-			for (int i = 0; i < p1.length; i++) {
-				if (!p1[i].isAssignableFrom(p2[i]))
-					continue loop;
-			}
-			return m;
-		}
-		return null;
 	}
 
 	@SuppressWarnings("unchecked")
