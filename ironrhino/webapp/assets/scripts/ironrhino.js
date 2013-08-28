@@ -16824,7 +16824,7 @@ function log() {
 					});
 				break;
 				case 'confirm':
-					$("#popup_message").after('<div id="popup_panel"><button id="popup_ok" class="btn">' + $.alerts.okButton + '</button> <button id="popup_cancel" class="btn">' + $.alerts.cancelButton + '</button></div>');
+					$("#popup_message").after('<div id="popup_panel"><button id="popup_ok" class="btn btn-primary">' + $.alerts.okButton + '</button> <button id="popup_cancel" class="btn">' + $.alerts.cancelButton + '</button></div>');
 					$("#popup_ok").click( function() {
 						$.alerts._hide();
 						if( callback ) callback(true);
