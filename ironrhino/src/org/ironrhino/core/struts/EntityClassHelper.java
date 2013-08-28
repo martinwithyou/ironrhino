@@ -163,32 +163,31 @@ public class EntityClassHelper {
 				if (StringUtils.isBlank(uci.getPickUrl())) {
 					String url = AutoConfigPackageProvider
 							.getEntityUrl(returnType);
-					if (url != null) {
-						StringBuilder sb = new StringBuilder(url);
-						sb.append("/pick");
-						Set<String> columns = new LinkedHashSet<String>();
-						columns.addAll(AnnotationUtils
-								.getAnnotatedPropertyNameAndAnnotations(
-										returnType, NaturalId.class).keySet());
-						for (String column : "fullname,name,description,code"
-								.split(","))
-							try {
-								if (returnType.getMethod(
-										"get" + StringUtils.capitalize(column),
-										new Class[0]) != null) {
-									if (!columns.contains("fullname")
-											&& column.equals("name")
-											|| !column.equals("name"))
-										columns.add(column);
-								}
-							} catch (NoSuchMethodException e) {
+					StringBuilder sb = url != null ? new StringBuilder(url)
+							: new StringBuilder("/").append(StringUtils
+									.uncapitalize(returnType.getSimpleName()));
+					sb.append("/pick");
+					Set<String> columns = new LinkedHashSet<String>();
+					columns.addAll(AnnotationUtils
+							.getAnnotatedPropertyNameAndAnnotations(returnType,
+									NaturalId.class).keySet());
+					for (String column : "fullname,name,description,code"
+							.split(","))
+						try {
+							if (returnType.getMethod(
+									"get" + StringUtils.capitalize(column),
+									new Class[0]) != null) {
+								if (!columns.contains("fullname")
+										&& column.equals("name")
+										|| !column.equals("name"))
+									columns.add(column);
 							}
-						if (!columns.isEmpty()) {
-							sb.append("?columns="
-									+ StringUtils.join(columns, ','));
+						} catch (NoSuchMethodException e) {
 						}
-						uci.setPickUrl(sb.toString());
+					if (!columns.isEmpty()) {
+						sb.append("?columns=" + StringUtils.join(columns, ','));
 					}
+					uci.setPickUrl(sb.toString());
 				}
 				map.put(propertyName, uci);
 				continue;
