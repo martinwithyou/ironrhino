@@ -30,8 +30,14 @@ td.middle {
 	font-size: 1em;
 }
 /*override bootstrap end*/
+body.main #content > #message{
+	margin-top: -20px;
+}
 body.main #content > ul.nav-tabs{
 	margin-top: -20px;
+}
+body.main #content > #message + ul.nav-tabs{
+	margin-top: 0;
 }
 body ::-webkit-scrollbar {
     width: 12px;
