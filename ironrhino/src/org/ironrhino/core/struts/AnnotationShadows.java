@@ -36,9 +36,9 @@ public class AnnotationShadows {
 		private HiddenImpl hiddenInList = new HiddenImpl();
 		private HiddenImpl hiddenInInput = new HiddenImpl();
 		private HiddenImpl hiddenInView = new HiddenImpl();
-		private String template;
-		private String listTemplate;
-		private String viewTemplate;
+		private String template = "";
+		private String listTemplate = "";
+		private String viewTemplate = "";
 		private String width;
 		private Map<String, String> dynamicAttributes = new HashMap<String, String>(
 				0);
