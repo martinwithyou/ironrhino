@@ -29,7 +29,7 @@ public class AnnotationShadows {
 		private boolean unique;
 		private int maxlength;
 		private String regex;
-		private Set<String> cssClasses = new LinkedHashSet<>(0);
+		private Set<String> cssClasses = new LinkedHashSet<String>(0);
 		private ReadonlyImpl readonly = new ReadonlyImpl();
 		private int displayOrder = Integer.MAX_VALUE;
 		private String alias;

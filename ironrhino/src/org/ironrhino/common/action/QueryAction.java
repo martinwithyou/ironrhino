@@ -87,7 +87,7 @@ public class QueryAction extends BaseAction {
 				}
 			}
 			if (resultPage == null) {
-				resultPage = new ResultPage<>();
+				resultPage = new ResultPage<Map<String, Object>>();
 			}
 			Map<String, String> copy = new HashMap<String, String>();
 			copy.putAll(paramMap);
