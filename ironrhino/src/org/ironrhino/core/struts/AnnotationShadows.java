@@ -30,12 +30,12 @@ public class AnnotationShadows {
 		private int maxlength;
 		private String regex;
 		private Set<String> cssClasses = new LinkedHashSet<>(0);
-		private ReadonlyImpl readonly;
+		private ReadonlyImpl readonly = new ReadonlyImpl();
 		private int displayOrder = Integer.MAX_VALUE;
 		private String alias;
-		private HiddenImpl hiddenInList;
-		private HiddenImpl hiddenInInput;
-		private HiddenImpl hiddenInView;
+		private HiddenImpl hiddenInList = new HiddenImpl();
+		private HiddenImpl hiddenInInput = new HiddenImpl();
+		private HiddenImpl hiddenInView = new HiddenImpl();
 		private String template;
 		private String listTemplate;
 		private String viewTemplate;
