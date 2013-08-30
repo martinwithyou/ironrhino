@@ -3,32 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
-	<task:scheduler id="taskScheduler" pool-size="5"/>
+	<task:scheduler id="taskScheduler" pool-size="${taskScheduler.poolSize:5}"/>
 	<task:annotation-driven executor="executorService" scheduler="taskScheduler"/>
-
-	<!--
-		<task:scheduled-tasks scheduler="taskScheduler">
-			<task:scheduled ref="dataSource" method="check" fixed-delay="30000"/>
-		</task:scheduled-tasks>
-		<task:scheduled-tasks scheduler="taskScheduler">
-			<task:scheduled ref="dailyBatchExecutor" method="execute" cron="0 5 0 * * ?"/>
-			<task:scheduled ref="weeklyBatchExecutor" method="execute" cron="0 50 23 ? * MON"/>
-		</task:scheduled-tasks>
-		<bean id="dailyBatchExecutor" autowire="byName"
-			class="org.ironrhino.common.support.BatchExecutor">
-			<property name="commands">
-				<list>
-					<value>statControl.archive()</value>
-				</list>
-			</property>
-		</bean>
-		<bean id="weeklyBatchExecutor" autowire="byName"
-			class="org.ironrhino.common.support.BatchExecutor">
-			<property name="commands">
-				<list>
-					<value>userManager.deleteDisabled()</value>
-				</list>
-			</property>
-		</bean>
-		-->
 </beans>
