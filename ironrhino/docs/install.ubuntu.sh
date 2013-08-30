@@ -297,6 +297,7 @@ fi
 cd ..
 cd \$app
 if [ -d .svn ];then
+svn revert .
 svn up
 elif [ -d .git ];then
 git reset --hard
