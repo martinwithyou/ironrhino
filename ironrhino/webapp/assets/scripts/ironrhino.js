@@ -33789,6 +33789,7 @@ function uploadFiles(files, filenames) {
 			},
 			success : function(data) {
 				ele.addClass('loaded');
+				ele.css('min-height', '');
 			}
 		};
 		if (url)
