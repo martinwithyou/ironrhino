@@ -56,7 +56,7 @@ public class RC4 {
 		}
 		if (defaultKey == null)
 			defaultKey = AppInfo.getAppName();
-		defaultKey = CodecUtils.fuzzify(AppInfo.getAppName());
+		defaultKey = CodecUtils.fuzzify(defaultKey);
 	}
 
 	private byte state[] = new byte[256];
