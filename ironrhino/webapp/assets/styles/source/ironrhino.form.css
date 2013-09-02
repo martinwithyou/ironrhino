@@ -192,12 +192,16 @@ input[type="checkbox"].custom + label.custom {
 	background-color: #fafafa;
 	border: 1px solid #cacece;
 	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
-	padding: 9px;
+	padding: 8px;
 	border-radius: 3px;
 	display: inline-block;
 	vertical-align: middle;
 	margin-bottom: 0;
 	position: relative;
+}
+
+input[type="checkbox"].custom + label.custom:hover {
+	background-color: #eaeaea;
 }
 
 input[type="checkbox"].custom + label.custom:active, input[type="checkbox"].custom:checked + label.custom:active {
@@ -213,9 +217,8 @@ input[type="checkbox"].custom:checked + label.custom {
 
 input[type="checkbox"].custom:checked + label.custom:after {
 	content: '\2714';
-	font-size: 14px;
 	position: absolute;
-	top: 0px;
+	top: -2px;
 	left: 3px;
 	color: #99a1a7;
 }
@@ -231,6 +234,10 @@ input[type="radio"].custom + label.custom {
 	vertical-align: middle;
 	margin-bottom: 0;
 	position: relative;
+}
+
+input[type="radio"].custom + label.custom:hover {
+	background-color: #eaeaea;
 }
 
 input[type="radio"].custom:checked + label.custom:after {
@@ -259,7 +266,7 @@ input[type="radio"].custom + label.custom:active, input[type="radio"].custom:che
 }
 
 .controls > label.custom {
-	margin: 5px 0;
+	margin: 6px 0;
 }
 .hero-unit .controls > label.custom {
 	margin: 0;
@@ -278,9 +285,7 @@ input[type="radio"].custom + label.custom:active, input[type="radio"].custom:che
 }
 .inline > label.custom {
 	margin-right: 5px;
-}
-.inline > label.custom {
-	margin-right: 5px;
+	margin-top: -3px;
 }
 
 select{
