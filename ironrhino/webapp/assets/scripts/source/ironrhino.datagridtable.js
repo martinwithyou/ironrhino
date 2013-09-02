@@ -78,7 +78,7 @@
 					});
 			$('option', this).each(function() {
 				var t = $(this);
-				t.css('display', '');
+				t.prop('disabled', false).css('display', '');
 				var selected = false;
 				for (var j = 0; j < selectedValues.length; j++) {
 					if (selectedValues[j]
@@ -88,7 +88,7 @@
 					}
 				}
 				if (selected)
-					t.css('display', 'none');
+					t.prop('disabled', true).css('display', 'none');
 			});
 		});
 		$('.datagrided tr', r).each(function(i) {
