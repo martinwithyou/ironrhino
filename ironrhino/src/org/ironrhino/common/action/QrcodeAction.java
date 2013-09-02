@@ -16,7 +16,7 @@ import org.ironrhino.core.util.ErrorMessage;
 import com.google.zxing.NotFoundException;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 
-@AutoConfig(namespace = "/", fileupload = "image/*")
+@AutoConfig(fileupload = "image/*")
 public class QrcodeAction extends BaseAction {
 
 	private static final long serialVersionUID = 8180265410790553918L;
