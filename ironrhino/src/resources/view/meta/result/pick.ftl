@@ -65,7 +65,7 @@
 '>
 <#else>
 <#assign bottomButtons=r'
-<button type="button" class="btn confirm" data-shown="selected">${action.getText("confirm")}</button>
+<button type="button" class="btn pick" data-shown="selected">${action.getText("confirm")}</button>
 <#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
 <#if treeable&&Parameters.parentId??>
 <a href="${href}<#if _parentId?? && _parentId gt 0>${href?contains("?")?string("&","?")+"parentId="+_parentId}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>

@@ -153,7 +153,7 @@
 								});
 
 					} else {
-						$(target).on('click', 'button.confirm', function() {
+						$(target).on('click', 'button.pick', function() {
 							var checkbox = $('tbody :checked', target);
 							var ids = [], names = [];
 							checkbox.each(function() {
