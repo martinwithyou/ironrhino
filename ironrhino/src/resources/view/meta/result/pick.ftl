@@ -59,16 +59,19 @@
 <#assign bottomButtons=r'
 <#if treeable&&Parameters.parentId??>
 <a href="${href}<#if _parentId?? && _parentId gt 0>${href?contains("?")?string("&","?")+"parentId="+_parentId}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>
+<#else>
+<#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
 </#if>
 '>
 <#else>
 <#assign bottomButtons=r'
-<button type="button" class="btn confirm">${action.getText("confirm")}</button>
+<button type="button" class="btn confirm" data-shown="selected">${action.getText("confirm")}</button>
+<#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
 <#if treeable&&Parameters.parentId??>
 <a href="${href}<#if _parentId?? && _parentId gt 0>${href?contains("?")?string("&","?")+"parentId="+_parentId}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>
 </#if>
 '>
 </#if>
-<@richtable entityName=entityName formid=entityName+"_pick_form" action=requestURI columns=columns bottomButtons=bottomButtons searchable=true readonly=true showCheckColumn=true multipleCheck=multiple columnfilterable=false resizable=false sortable=false showPageSize=false filterable=false/>
+<@richtable entityName=entityName formid=entityName+"_pick_form" action=requestURI columns=columns bottomButtons=bottomButtons searchable=true readonly=true showCheckColumn=true multipleCheck=multiple columnfilterable=false resizable=false sortable=false showPageSize=false/>
 </body>
 </html></#escape>
