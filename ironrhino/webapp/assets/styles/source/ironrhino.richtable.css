@@ -54,19 +54,3 @@ table.richtable td {
 	display: none;
 }
 /*override bootstrap end*/
-
-.ui-dialog .richtable .toolbar .pagination{
-	width:37%;
-}
-.ui-dialog .richtable .toolbar .action{
-	margin-left: 0;
-	width:20%;
-}
-.ui-dialog .richtable .toolbar .search{
-	margin-left: 0;
-	width:23%;
-}
-.ui-dialog .richtable .toolbar .status{
-	margin-left: 0;
-	width:20%;
-}
