@@ -30398,6 +30398,7 @@ Ajax = {
 								.indexOf('</title>'));
 				if (options.replaceTitle)
 					document.title = Ajax.title;
+				data = data.substring(data.indexOf('</title>') + 8);
 			}
 			var html = data.replace(/<script(.|\s)*?\/script>/g, '');
 			var div = $('<div/>').html(html);
@@ -34998,9 +34999,6 @@ Richtable = {
 			};
 			ajax({
 						url : url,
-						data : {
-							'decorator' : 'simple'
-						},
 						cache : false,
 						target : target,
 						replacement : '_window_:content',

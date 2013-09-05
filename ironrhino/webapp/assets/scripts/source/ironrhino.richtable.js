@@ -159,9 +159,6 @@ Richtable = {
 			};
 			ajax({
 						url : url,
-						data : {
-							'decorator' : 'simple'
-						},
 						cache : false,
 						target : target,
 						replacement : '_window_:content',
