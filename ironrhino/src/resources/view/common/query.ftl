@@ -116,7 +116,7 @@ $(function(){
 			<tr>
 				<td><button type="button" class="btn">${action.getText('view')}</button></td>
 				<#list row.entrySet() as entry>
-				<td><#if entry.value??><#if entry.value?is_boolean>${entry.value?string("1","0")}<#else>${entry.value?string}</#if></#if></td>
+				<td>${(entry.value?string)!}</td>
 				</#list>
 			</tr>
 			</#list>

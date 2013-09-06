@@ -528,12 +528,8 @@ public class JdbcQueryService {
 							}
 						}
 						Object[] arr = new Object[columnCount];
-						for (int i = 1; i <= columnCount; i++) {
-							Object value = JdbcUtils.getResultSetValue(rs, i);
-							if (value instanceof Boolean)
-								value = (Boolean) value ? 1 : 0;
-							arr[i - 1] = value;
-						}
+						for (int i = 1; i <= columnCount; i++)
+							arr[i - 1] = JdbcUtils.getResultSetValue(rs, i);
 						rh.handleRow(index, arr);
 					}
 				});
