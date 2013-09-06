@@ -4,13 +4,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -26,6 +24,7 @@ import org.ironrhino.core.struts.EntityAction;
 import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
+import org.ironrhino.core.util.ValueThenKeyComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -238,24 +237,18 @@ public class MenuControl {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private MenuNode assemble(final Map<String, Pair<Menu, Authorize>> mapping) {
 		MenuNode root = new MenuNode();
-		Map<String, Pair<Menu, Authorize>> sortedMap = new TreeMap<String, Pair<Menu, Authorize>>(
-				new Comparator<String>() {
+		List<Map.Entry<String, Pair<Menu, Authorize>>> list = new ArrayList<Map.Entry<String, Pair<Menu, Authorize>>>(
+				mapping.entrySet());
+		Collections.sort(list,
+				new ValueThenKeyComparator<String, Pair<Menu, Authorize>>() {
 					@Override
-					public int compare(String o1, String o2) {
-						Pair<Menu, Authorize> p1 = mapping.get(o1);
-						Pair<Menu, Authorize> p2 = mapping.get(o2);
-						if (p1 == null)
-							return -1;
-						if (p2 == null)
-							return 1;
-						int i = p1.getA().parents().length
-								- p2.getA().parents().length;
-						return i != 0 ? i : o1.compareTo(o2);
+					protected int compareValue(Pair<Menu, Authorize> a,
+							Pair<Menu, Authorize> b) {
+						return a.getA().parents().length
+								- b.getA().parents().length;
 					}
 				});
-		sortedMap.putAll(mapping);
-		for (Map.Entry<String, Pair<Menu, Authorize>> entry : sortedMap
-				.entrySet()) {
+		for (Map.Entry<String, Pair<Menu, Authorize>> entry : list) {
 			String url = entry.getKey();
 			Menu menu = entry.getValue().getA();
 			MenuNode node = new MenuNode();

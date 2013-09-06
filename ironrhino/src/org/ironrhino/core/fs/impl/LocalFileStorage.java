@@ -12,11 +12,11 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -24,6 +24,7 @@ import javax.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
 import org.ironrhino.core.fs.FileStorage;
+import org.ironrhino.core.util.ValueThenKeyComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -138,21 +139,19 @@ public class LocalFileStorage implements FileStorage {
 				return false;
 			}
 		});
-		Map<String, Boolean> sortedMap = new TreeMap<String, Boolean>(
-				new Comparator<String>() {
-					@Override
-					public int compare(String o1, String o2) {
-						Boolean b1 = map.get(o1);
-						Boolean b2 = map.get(o2);
-						if (b2 == null)
-							return -1;
-						if (b1 == null)
-							return 1;
-						int i = b2.compareTo(b1);
-						return i != 0 ? i : o1.compareTo(o2);
-					}
-				});
-		sortedMap.putAll(map);
+		List<Map.Entry<String, Boolean>> list = new ArrayList<Map.Entry<String, Boolean>>(
+				map.entrySet());
+		Collections.sort(list, comparator);
+		Map<String, Boolean> sortedMap = new LinkedHashMap<String, Boolean>();
+		for (Map.Entry<String, Boolean> entry : list)
+			sortedMap.put(entry.getKey(), entry.getValue());
 		return sortedMap;
 	}
+
+	private ValueThenKeyComparator<String, Boolean> comparator = new ValueThenKeyComparator<String, Boolean>() {
+		@Override
+		protected int compareValue(Boolean a, Boolean b) {
+			return b.compareTo(a);
+		}
+	};
 }

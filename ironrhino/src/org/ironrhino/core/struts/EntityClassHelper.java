@@ -3,15 +3,16 @@ package org.ironrhino.core.struts;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,6 +29,7 @@ import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.struts.AnnotationShadows.UiConfigImpl;
 import org.ironrhino.core.util.AnnotationUtils;
+import org.ironrhino.core.util.ValueThenKeyComparator;
 
 public class EntityClassHelper {
 
@@ -250,22 +252,12 @@ public class EntityClassHelper {
 			}
 			map.put(propertyName, uci);
 		}
-		Map<String, UiConfigImpl> sortedMap = new TreeMap<String, UiConfigImpl>(
-				new Comparator<String>() {
-					@Override
-					public int compare(String o1, String o2) {
-						UiConfigImpl uci1 = map.get(o1);
-						UiConfigImpl uci2 = map.get(o2);
-						if (uci1 == null)
-							return -1;
-						if (uci2 == null)
-							return 1;
-						int i = Integer.valueOf(uci1.getDisplayOrder())
-								.compareTo(uci2.getDisplayOrder());
-						return i != 0 ? i : o1.compareTo(o2);
-					}
-				});
-		sortedMap.putAll(map);
+		List<Map.Entry<String, UiConfigImpl>> list = new ArrayList<Map.Entry<String, UiConfigImpl>>(
+				map.entrySet());
+		Collections.sort(list, comparator);
+		Map<String, UiConfigImpl> sortedMap = new LinkedHashMap<String, UiConfigImpl>();
+		for (Map.Entry<String, UiConfigImpl> entry : list)
+			sortedMap.put(entry.getKey(), entry.getValue());
 		return sortedMap;
 	}
 
@@ -286,5 +278,12 @@ public class EntityClassHelper {
 			Class<? extends Persistable<?>> entityClass) {
 		return filterPropertyNamesInCriteria(getUiConfigs(entityClass));
 	}
+
+	private static ValueThenKeyComparator<String, UiConfigImpl> comparator = new ValueThenKeyComparator<String, UiConfigImpl>() {
+		@Override
+		protected int compareValue(UiConfigImpl a, UiConfigImpl b) {
+			return a.getDisplayOrder() - b.getDisplayOrder();
+		}
+	};
 
 }

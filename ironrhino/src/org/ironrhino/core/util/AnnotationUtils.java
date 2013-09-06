@@ -5,14 +5,15 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,13 @@ public class AnnotationUtils {
 
 	private static Map<String, Object> cache = new ConcurrentHashMap<String, Object>(
 			250);
+
+	private static ValueThenKeyComparator<Method, Integer> comparator = new ValueThenKeyComparator<Method, Integer>() {
+		@Override
+		protected int compareKey(Method a, Method b) {
+			return a.getName().compareTo(b.getName());
+		}
+	};
 
 	public static Method getAnnotatedMethod(Class<?> clazz,
 			Class<? extends Annotation> annotaionClass) {
@@ -54,18 +62,13 @@ public class AnnotationUtils {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Map<Method, Integer> tree = new TreeMap<Method, Integer>(
-					new Comparator<Method>() {
-						@Override
-						public int compare(Method o1, Method o2) {
-							int result = map.get(o1).compareTo(map.get(o2));
-							return result != 0 ? result : o1.hashCode()
-									- o2.hashCode();
-						}
-
-					});
-			tree.putAll(map);
-			cache.put(key, tree.keySet());
+			List<Map.Entry<Method, Integer>> list = new ArrayList<Map.Entry<Method, Integer>>(
+					map.entrySet());
+			Collections.sort(list, comparator);
+			Set<Method> methods = new LinkedHashSet<Method>();
+			for (Map.Entry<Method, Integer> entry : list)
+				methods.add(entry.getKey());
+			cache.put(key, methods);
 		}
 		return (Set<Method>) cache.get(key);
 	}

@@ -1,20 +1,21 @@
 package org.ironrhino.common.service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.Page;
@@ -26,6 +27,7 @@ import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.JsonUtils;
+import org.ironrhino.core.util.ValueThenKeyComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -287,10 +289,13 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			return map;
 		} else {
 			final Map<String, Integer> map = new HashMap<String, Integer>();
-			List<Page> list = findAll();
+			DetachedCriteria dc = detachedCriteria();
+			dc.add(Restrictions.like("tagsAsString", keyword,
+					MatchMode.ANYWHERE));
+			List<Page> list = findListByCriteria(dc);
 			for (Page p : list) {
 				for (String tag : p.getTags()) {
-					if (!tag.contains(keyword))
+					if (!tag.startsWith(keyword))
 						continue;
 					Integer count = map.get(tag);
 					if (count != null)
@@ -299,23 +304,15 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 						map.put(tag, 1);
 				}
 			}
-			Map<String, Integer> sortedMap = new TreeMap<String, Integer>(
-					new Comparator<String>() {
-						@Override
-						public int compare(String o1, String o2) {
-							Integer i1 = map.get(o1);
-							Integer i2 = map.get(o2);
-							if (i1 == null)
-								return 1;
-							if (i2 == null)
-								return -1;
-							int i = i2.compareTo(i1);
-							if (i == 0)
-								i = o1.compareTo(o2);
-							return i;
-						}
-					});
-			sortedMap.putAll(map);
+
+			List<Map.Entry<String, Integer>> _list = new ArrayList<Map.Entry<String, Integer>>(
+					map.entrySet());
+			Collections.sort(_list, ValueThenKeyComparator
+					.<String, Integer> getDefaultInstance());
+			Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+			for (Map.Entry<String, Integer> entry : _list) {
+				sortedMap.put(entry.getKey(), entry.getValue());
+			}
 			return sortedMap;
 		}
 
