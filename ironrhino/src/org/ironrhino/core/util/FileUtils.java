@@ -92,8 +92,7 @@ public class FileUtils {
 			Attributes attrs = mf.getMainAttributes();
 			if (attrs == null)
 				return null;
-			Map<String, String> map = new HashMap<String, String>(mf
-					.getMainAttributes().size());
+			Map<String, String> map = new HashMap<String, String>();
 			for (Map.Entry<Object, Object> entry : mf.getMainAttributes()
 					.entrySet())
 				map.put(entry.getKey().toString(), entry.getValue().toString());

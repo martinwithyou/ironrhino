@@ -375,7 +375,7 @@ public class PageViewServiceImpl implements PageViewService {
 		String key = sb.toString();
 		Set<String> set = stringRedisTemplate.opsForZSet().reverseRange(key, 0,
 				top - 1);
-		Map<String, Long> map = new LinkedHashMap<String, Long>(set.size());
+		Map<String, Long> map = new LinkedHashMap<String, Long>();
 		for (String member : set)
 			map.put(member, stringRedisTemplate.opsForZSet().score(key, member)
 					.longValue());

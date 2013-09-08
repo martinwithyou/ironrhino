@@ -38,7 +38,7 @@ public class OAuthTokenUtils {
 			}
 		}
 		if (tokens == null)
-			tokens = new HashMap<String, String>();
+			tokens = new HashMap<String, String>(2, 1);
 		if (token != null)
 			tokens.put(provider.getName(), token.getSource());
 		else

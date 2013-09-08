@@ -180,7 +180,8 @@ public class BarcodeUtils {
 		BufferedImage image = ImageIO.read(stream);
 		LuminanceSource source = new BufferedImageLuminanceSource(image);
 		BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-		Map<DecodeHintType, String> hints = new HashMap<DecodeHintType, String>();
+		Map<DecodeHintType, String> hints = new HashMap<DecodeHintType, String>(
+				2, 1);
 		hints.put(DecodeHintType.CHARACTER_SET, encoding);
 		Result result = new MultiFormatReader().decode(bitmap, hints);
 		return result.getText();

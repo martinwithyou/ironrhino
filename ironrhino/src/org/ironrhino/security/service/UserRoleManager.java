@@ -80,8 +80,7 @@ public class UserRoleManager {
 	public Map<String, String> getAllRoles(boolean excludeBuiltin) {
 		Set<String> staticRoles = getStaticRoles(excludeBuiltin);
 		Map<String, String> customRoles = getCustomRoles();
-		Map<String, String> roles = new LinkedHashMap<String, String>(
-				staticRoles.size() + customRoles.size());
+		Map<String, String> roles = new LinkedHashMap<String, String>();
 		for (String role : staticRoles)
 			roles.put(role, null);
 		roles.putAll(customRoles);

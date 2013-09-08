@@ -875,7 +875,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				Template template = new Template(null, "${(" + expression
 						+ ")?string!}", freemarkerManager.getConfig());
 				StringWriter sw = new StringWriter();
-				Map<String, Object> rootMap = new HashMap<String, Object>();
+				Map<String, Object> rootMap = new HashMap<String, Object>(2, 1);
 				rootMap.put("entity", entity);
 				template.process(rootMap, sw);
 				return sw.toString().equals("true");
@@ -893,7 +893,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				Template template = new Template(null, "${(" + expression
 						+ ")?string!}", freemarkerManager.getConfig());
 				StringWriter sw = new StringWriter();
-				Map<String, Object> rootMap = new HashMap<String, Object>();
+				Map<String, Object> rootMap = new HashMap<String, Object>(4, 1);
 				rootMap.put("entity", entity);
 				rootMap.put("value", value);
 				template.process(rootMap, sw);

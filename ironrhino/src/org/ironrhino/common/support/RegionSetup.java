@@ -123,7 +123,7 @@ public class RegionSetup {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Map<String, String> map = new HashMap<String, String>(lines.size());
+		Map<String, String> map = new HashMap<String, String>();
 		for (String line : lines) {
 			if (StringUtils.isBlank(line))
 				continue;

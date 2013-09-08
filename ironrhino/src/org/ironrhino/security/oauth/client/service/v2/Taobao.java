@@ -104,7 +104,7 @@ public class Taobao extends OAuth2Provider {
 	protected String invoke(String protectedURL, Map<String, String> params,
 			Map<String, String> headers) {
 		if (params == null)
-			params = new HashMap<String, String>();
+			params = new HashMap<String, String>(8);
 		params.put("format", "json");
 		params.put("v", "2.0");
 		params.put("sign_method", "md5");

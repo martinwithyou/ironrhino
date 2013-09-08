@@ -75,7 +75,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 			ActionMapping mapping = new ActionMapping();
 			mapping.setNamespace(DisplayPageAction.NAMESPACE);
 			mapping.setName(DisplayPageAction.ACTION_NAME);
-			Map<String, Object> params = new HashMap<String, Object>(3);
+			Map<String, Object> params = new HashMap<String, Object>(8);
 			try {
 				params.put(AbstractActionMapper.ID,
 						URLDecoder.decode(pagePath, encoding));
@@ -92,7 +92,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				ActionMapping mapping = new ActionMapping();
 				mapping.setNamespace(SeriesPageAction.NAMESPACE);
 				mapping.setName(SeriesPageAction.ACTION_NAME);
-				Map<String, Object> params = new HashMap<String, Object>(3);
+				Map<String, Object> params = new HashMap<String, Object>(8);
 				params.put("name", name);
 				String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);
 				if (StringUtils.isNumeric(pn))
@@ -119,7 +119,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				ActionMapping mapping = new ActionMapping();
 				mapping.setNamespace(ColumnPageAction.NAMESPACE);
 				mapping.setName(ColumnPageAction.ACTION_NAME);
-				Map<String, Object> params = new HashMap<String, Object>(3);
+				Map<String, Object> params = new HashMap<String, Object>(8);
 				params.put("name", name);
 				String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);
 				if (StringUtils.isNumeric(pn))
@@ -159,7 +159,7 @@ public class CmsActionMappingMatcher implements ActionMappingMatcher,
 				ActionMapping mapping = new ActionMapping();
 				mapping.setNamespace(IssuePageAction.NAMESPACE);
 				mapping.setName(IssuePageAction.ACTION_NAME);
-				Map<String, Object> params = new HashMap<String, Object>(3);
+				Map<String, Object> params = new HashMap<String, Object>(8);
 				params.put("name", name);
 				String pn = request.getParameter(ResultPage.PAGENO_PARAM_NAME);
 				if (StringUtils.isNumeric(pn))

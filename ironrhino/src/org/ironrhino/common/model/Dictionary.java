@@ -115,7 +115,7 @@ public class Dictionary extends BaseEntity {
 	@NotInCopy
 	public Map<String, String> getItemsAsMap() {
 		Map<String, String> map = new LinkedHashMap<String, String>(
-				items.size(), 1);
+				items.size() + 1, 1);
 		for (LabelValue lv : items)
 			if (StringUtils.isNotBlank(lv.getLabel())
 					&& StringUtils.isNotBlank(lv.getValue()))
@@ -126,8 +126,7 @@ public class Dictionary extends BaseEntity {
 	@UiConfig(hidden = true)
 	@NotInCopy
 	public Map<String, Map<String, String>> getItemsAsGroup() {
-		Map<String, Map<String, String>> map = new LinkedHashMap<String, Map<String, String>>(
-				items.size(), 1);
+		Map<String, Map<String, String>> map = new LinkedHashMap<String, Map<String, String>>();
 		String group = "";
 		for (LabelValue lv : items) {
 			if (StringUtils.isBlank(lv.getValue())) {

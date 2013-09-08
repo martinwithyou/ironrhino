@@ -70,7 +70,7 @@ public class TemplateProvider {
 	}
 
 	public Map<String, String> getAllSharedVariables() {
-		Map<String, String> allSharedVariables = new HashMap<String, String>();
+		Map<String, String> allSharedVariables = new HashMap<String, String>(8);
 		if (StringUtils.isNotBlank(base))
 			allSharedVariables.put("base", base);
 		if (StringUtils.isNotBlank(assetsBase))

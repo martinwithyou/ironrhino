@@ -298,8 +298,7 @@ public class InstallationManager {
 			String dependence = manifest.get(IRONRHINO_COMPONENT_DEPENDENCE);
 			if (StringUtils.isNotBlank(dependence)) {
 				String[] arr = dependence.split("\\s*,\\s*");
-				Map<String, String> map = new HashMap<String, String>(
-						arr.length);
+				Map<String, String> map = new HashMap<String, String>();
 				for (String s : arr) {
 					String[] arr2 = s.split(";", 2);
 					map.put(arr2[0], arr2.length > 1 ? arr2[1] : "1.0");

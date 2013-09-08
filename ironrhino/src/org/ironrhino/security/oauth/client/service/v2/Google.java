@@ -88,7 +88,7 @@ public class Google extends OAuth2Provider {
 	protected String invoke(String protectedURL, Map<String, String> params,
 			Map<String, String> headers) {
 		if (params == null)
-			params = new HashMap<String, String>();
+			params = new HashMap<String, String>(2, 1);
 		if (StringUtils.isNotBlank(getAccessKey()))
 			params.put("key", getAccessKey());
 		return super.invoke(protectedURL, params, headers);

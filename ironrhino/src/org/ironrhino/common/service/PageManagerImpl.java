@@ -84,7 +84,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			p = page;
 		}
 		p.setDraftDate(new Date());
-		Map<String, String> draft = new HashMap<String, String>();
+		Map<String, String> draft = new HashMap<String, String>(8);
 		draft.put("pagepath", page.getPagepath());
 		draft.put("title", page.getTitle());
 		draft.put("content", page.getContent());
@@ -310,9 +310,8 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 			Collections.sort(_list, ValueThenKeyComparator
 					.<String, Integer> getDefaultInstance());
 			Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
-			for (Map.Entry<String, Integer> entry : _list) {
+			for (Map.Entry<String, Integer> entry : _list)
 				sortedMap.put(entry.getKey(), entry.getValue());
-			}
 			return sortedMap;
 		}
 

@@ -34,7 +34,7 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 
 	private transient ServletContext context;
 
-	private Map<String, Object> attrMap = new HashMap<String, Object>();
+	private Map<String, Object> attrMap = new HashMap<String, Object>(8);
 
 	private long creationTime;
 

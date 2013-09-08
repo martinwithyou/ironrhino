@@ -10,7 +10,7 @@ public class SearchCriteria implements Serializable {
 
 	private String query;
 
-	private Map<String, Boolean> sorts = new LinkedHashMap<String, Boolean>(2);
+	private Map<String, Boolean> sorts = new LinkedHashMap<String, Boolean>(4,1);
 
 	public String getQuery() {
 		return query;

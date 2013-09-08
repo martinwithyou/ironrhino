@@ -82,7 +82,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 		Map<String, String> map = null;
 
 		if (isIncludeCallbackWhenRequestToken()) {
-			map = new HashMap<String, String>();
+			map = new HashMap<String, String>(2, 1);
 			map.put("oauth_callback", targetUrl);
 		}
 		if (isUseAuthorizationHeader()) {
@@ -123,7 +123,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 			OAuth1Token requestToken = restoreToken(request, "request");
 			removeToken(request, "request");
 			String oauth_verifier = request.getParameter("oauth_verifier");
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, String> map = new HashMap<String, String>(4, 1);
 			map.put("oauth_token", requestToken.getToken());
 			if (oauth_verifier != null)
 				map.put("oauth_verifier", oauth_verifier);
@@ -249,7 +249,7 @@ public abstract class OAuth1Provider extends AbstractOAuthProvider {
 					.append(Utils.percentEncode(entry.getValue()))
 					.append("\",");
 		sb.deleteCharAt(sb.length() - 1);
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<String, String>(2, 1);
 		map.put("Authorization", sb.toString());
 		return map;
 	}

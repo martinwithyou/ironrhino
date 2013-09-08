@@ -103,7 +103,7 @@ public class StatLog {
 	}
 
 	private static void write(boolean checkInterval) {
-		Map<Key, Value> temp = new HashMap<Key, Value>(data.size());
+		Map<Key, Value> temp = new HashMap<Key, Value>();
 		for (Map.Entry<Key, Value> entry : data.entrySet()) {
 			long current = System.currentTimeMillis();
 			Key key = entry.getKey();
