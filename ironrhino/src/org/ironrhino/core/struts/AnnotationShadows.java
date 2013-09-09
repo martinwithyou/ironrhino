@@ -36,6 +36,7 @@ public class AnnotationShadows {
 		private HiddenImpl hiddenInList = new HiddenImpl();
 		private HiddenImpl hiddenInInput = new HiddenImpl();
 		private HiddenImpl hiddenInView = new HiddenImpl();
+		private boolean shownInPick = false;
 		private String template = "";
 		private String listTemplate = "";
 		private String viewTemplate = "";
@@ -77,6 +78,7 @@ public class AnnotationShadows {
 			this.hiddenInList = new HiddenImpl(config.hiddenInList());
 			this.hiddenInInput = new HiddenImpl(config.hiddenInInput());
 			this.hiddenInView = new HiddenImpl(config.hiddenInView());
+			this.shownInPick = config.shownInPick();
 			this.template = config.template();
 			this.listTemplate = config.listTemplate();
 			this.viewTemplate = config.viewTemplate();
@@ -153,6 +155,14 @@ public class AnnotationShadows {
 
 		public void setHiddenInView(HiddenImpl hiddenInView) {
 			this.hiddenInView = hiddenInView;
+		}
+
+		public boolean isShownInPick() {
+			return shownInPick;
+		}
+
+		public void setShownInPick(boolean shownInPick) {
+			this.shownInPick = shownInPick;
 		}
 
 		public String getPickUrl() {

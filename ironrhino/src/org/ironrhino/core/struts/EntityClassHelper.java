@@ -33,8 +33,7 @@ import org.ironrhino.core.util.ValueThenKeyComparator;
 
 public class EntityClassHelper {
 
-	public static Map<String, UiConfigImpl> getUiConfigs(
-			Class<? extends Persistable<?>> entityClass) {
+	public static Map<String, UiConfigImpl> getUiConfigs(Class<?> entityClass) {
 		Map<String, NaturalId> naturalIds = AnnotationUtils
 				.getAnnotatedPropertyNameAndAnnotations(entityClass,
 						NaturalId.class);
@@ -173,19 +172,17 @@ public class EntityClassHelper {
 					columns.addAll(AnnotationUtils
 							.getAnnotatedPropertyNameAndAnnotations(returnType,
 									NaturalId.class).keySet());
-					for (String column : "fullname,name,description,code"
-							.split(","))
-						try {
-							if (returnType.getMethod(
-									"get" + StringUtils.capitalize(column),
-									new Class[0]) != null) {
-								if (!columns.contains("fullname")
-										&& column.equals("name")
-										|| !column.equals("name"))
-									columns.add(column);
-							}
-						} catch (NoSuchMethodException e) {
-						}
+					Map<String, UiConfigImpl> configs = getUiConfigs(returnType);
+					for (String column : "fullname,name,code".split(","))
+						if (configs.containsKey(column)
+								&& (!columns.contains("fullname")
+										&& column.equals("name") || !column
+											.equals("name")))
+							columns.add(column);
+					for (Map.Entry<String, UiConfigImpl> entry : configs
+							.entrySet())
+						if (entry.getValue().isShownInPick())
+							columns.add(entry.getKey());
 					if (!columns.isEmpty()) {
 						sb.append("?columns=" + StringUtils.join(columns, ','));
 					}

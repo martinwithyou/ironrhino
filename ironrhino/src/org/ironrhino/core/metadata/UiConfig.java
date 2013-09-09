@@ -49,6 +49,8 @@ public @interface UiConfig {
 
 	Hidden hiddenInView() default @Hidden;
 
+	boolean shownInPick() default false;
+
 	boolean searchable() default false;
 
 	String template() default "";
