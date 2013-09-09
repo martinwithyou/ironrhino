@@ -22,7 +22,7 @@
 			return sql
 					.replace(BLOCK_COMMENT, '<span class="comment">$&</span>')
 					.replace(LINE_COMMENT, '<span class="comment">$&</span>')
-					.replace(PARAMETER, '<strong>$&</strong>');
+					.replace(PARAMETER, '<strong>$1</strong>$2');
 		}
 	}
 	function preview(input) {
