@@ -115,10 +115,10 @@ public class JdbcQueryService {
 			if (databaseProduct == null)
 				databaseProduct = DatabaseProduct.parse(dbmd
 						.getDatabaseProductName());
-			keywords = databaseProduct.getKeywords();
 			String str = dbmd.getIdentifierQuoteString();
 			if (StringUtils.isNotBlank(str))
 				quoteString = str.trim().substring(0, 1);
+			keywords = databaseProduct.getKeywords();
 			if (keywords.isEmpty()) {
 				str = dbmd.getSQLKeywords();
 				if (StringUtils.isNotBlank(str))

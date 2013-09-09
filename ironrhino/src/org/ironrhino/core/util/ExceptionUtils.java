@@ -20,4 +20,27 @@ public class ExceptionUtils {
 			return t.getCause().toString();
 		}
 	}
+
+	public static String getRootMessage(Throwable t) {
+		int maxDepth = 10;
+		while (t.getCause() != null && maxDepth > 0) {
+			maxDepth--;
+			t = t.getCause();
+		}
+		return t.getMessage();
+	}
+
+	public static String getDetailMessage(Throwable t) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(t.getClass().getName()).append(":").append(t.getMessage());
+		int maxDepth = 10;
+		while (t.getCause() != null && maxDepth > 0) {
+			maxDepth--;
+			t = t.getCause();
+			sb.append("\n").append(t.getClass().getName());
+			if (sb.indexOf(t.getMessage()) < 0)
+				sb.append(":").append(t.getMessage());
+		}
+		return sb.toString();
+	}
 }

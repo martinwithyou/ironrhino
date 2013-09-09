@@ -4,11 +4,8 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +48,7 @@ public class JdbcUpdateService {
 
 	private String quoteString = "\"";
 
-	private List<String> keywords = new ArrayList<String>();
+	private boolean supportsBatchUpdates;
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -97,18 +94,13 @@ public class JdbcUpdateService {
 
 			}
 			DatabaseMetaData dbmd = con.getMetaData();
+			supportsBatchUpdates = dbmd.supportsBatchUpdates();
 			if (databaseProduct == null)
 				databaseProduct = DatabaseProduct.parse(dbmd
 						.getDatabaseProductName());
-			keywords = databaseProduct.getKeywords();
 			String str = dbmd.getIdentifierQuoteString();
 			if (StringUtils.isNotBlank(str))
 				quoteString = str.trim().substring(0, 1);
-			if (keywords.isEmpty()) {
-				str = dbmd.getSQLKeywords();
-				if (StringUtils.isNotBlank(str))
-					keywords.addAll(Arrays.asList(str.toUpperCase().split(",")));
-			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -240,6 +232,18 @@ public class JdbcUpdateService {
 			result[i] = update(sql[i], paramMap);
 		}
 		return result;
+	}
+
+	@Transactional
+	public int[] executeBatch(String[] sql) {
+		if (supportsBatchUpdates)
+			return jdbcTemplate.batchUpdate(sql);
+		else {
+			int[] result = new int[sql.length];
+			for (int i = 0; i < sql.length; i++)
+				result[i] = jdbcTemplate.update(sql[i]);
+			return result;
+		}
 	}
 
 	private static String appendFalseClause(String sql) {
