@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface Owner {
 
-	String propertyName();
+	String propertyName() default "createUser";
 
 	boolean isolate() default true;
 
