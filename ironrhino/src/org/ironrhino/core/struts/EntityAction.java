@@ -394,6 +394,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
+		return doInput();
+	}
+
+	protected String doInput() {
 		tryFindEntity();
 		if (_entity != null && !_entity.isNew()) {
 			Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
@@ -499,6 +503,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
+		return doSave();
+	}
+
+	protected String doSave() {
 		if (!makeEntityValid())
 			return INPUT;
 		BeanWrapperImpl bwp = new BeanWrapperImpl(_entity);
@@ -957,7 +965,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
-
+		return doDelete();
+	}
+	
+	protected String doDelete() {
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		String[] arr = getId();
 		Serializable[] id = (arr != null) ? new Serializable[arr.length]
@@ -1032,16 +1043,18 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	public String enable() {
+		if (!isEnableable() || getReadonly().isValue())
+			return ACCESSDENIED;
 		return updateEnabled(true);
 	}
 
 	public String disable() {
+		if (!isEnableable() || getReadonly().isValue())
+			return ACCESSDENIED;
 		return updateEnabled(false);
 	}
 
-	private String updateEnabled(boolean enabled) {
-		if (!isEnableable() || getReadonly().isValue())
-			return ACCESSDENIED;
+	protected String updateEnabled(boolean enabled) {
 		BaseManager<Persistable<?>> em = getEntityManager(getEntityClass());
 		String[] arr = getId();
 		Serializable[] id = (arr != null) ? new Serializable[arr.length]
