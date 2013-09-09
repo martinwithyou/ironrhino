@@ -455,6 +455,7 @@ public class AnnotationShadows {
 		private static final long serialVersionUID = 7346213812241502993L;
 		private String formid = "";
 		private boolean filterable = true;
+		private boolean celleditable = true;
 		private boolean showPageSize = true;
 		private boolean searchable;
 		private String actionColumnButtons = "";
@@ -473,6 +474,7 @@ public class AnnotationShadows {
 				return;
 			this.formid = config.formid();
 			this.filterable = config.filterable();
+			this.celleditable = config.celleditable();
 			this.showPageSize = config.showPageSize();
 			this.searchable = config.searchable();
 			this.actionColumnButtons = config.actionColumnButtons();
@@ -498,6 +500,14 @@ public class AnnotationShadows {
 
 		public void setFilterable(boolean filterable) {
 			this.filterable = filterable;
+		}
+
+		public boolean isCelleditable() {
+			return celleditable;
+		}
+
+		public void setCelleditable(boolean celleditable) {
+			this.celleditable = celleditable;
 		}
 
 		public boolean isShowPageSize() {

@@ -20,6 +20,8 @@ public @interface Richtable {
 
 	boolean filterable() default true;
 
+	boolean celleditable() default true;
+
 	String actionColumnButtons() default "";
 
 	String bottomButtons() default "";

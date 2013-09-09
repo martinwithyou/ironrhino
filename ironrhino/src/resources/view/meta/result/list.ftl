@@ -39,7 +39,7 @@
 		</#if>
 		<#if !hidden>
 			<#assign label=key>
-			<#if !(readonly.value||config.readonly.value) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
+			<#if richtableConfig.celleditable&&!(readonly.value||config.readonly.value) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
 				<#assign cellEdit=config.cellEdit!/>
 				<#if cellEdit==''>
 					<#if config.type=='input'>
@@ -105,17 +105,17 @@
 			<#assign value=getDictionaryLabel(templateName,value)/>	
 		</#if>
 		<#assign dynamicAttributes={}>
-		<#if config.type=='listpick'&&!entityReadonly&&!config.readonly.value&&!(config.readonly.expression?has_content&&config.readonly.expression?eval)>
+		<#if config.type=='listpick'&&richtableConfig.celleditable&&!entityReadonly&&!config.readonly.value&&!(config.readonly.expression?has_content&&config.readonly.expression?eval)>
 			<#assign dynamicAttributes={"class":"listpick","data-cellvalue":(value.id?string)!,"data-options":"{'url':'"+config.pickUrl+"','name':'this','id':'this@data-cellvalue'}"}>
 		</#if>
 		<#if config.readonly.expression?has_content && config.readonly.expression?eval>
 		<#assign dynamicAttributes=dynamicAttributes+{'data-readonly':'true'}/>
 		</#if>
 		<#assign template=config.template/>
-		<#if config.listTemplate!=''>
+		<#if config.listTemplate?has_content>
 		<#assign template=config.listTemplate/>
 		</#if>
-		<@rttbodytd entity=entity value=value template=template cellDynamicAttributes=config.cellDynamicAttributes dynamicAttributes=dynamicAttributes/>
+		<@rttbodytd entity=entity value=value celleditable=richtableConfig.celleditable template=template cellDynamicAttributes=config.cellDynamicAttributes dynamicAttributes=dynamicAttributes/>
 	</#if>
 </#list>
 <@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly.value viewable=viewable entityReadonly=entityReadonly/>

@@ -51,7 +51,7 @@
 
 <#macro rtstart formid='',action='',entityName='',resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true formHeader=''>
 <#local action=action?has_content?string(action,request.requestURI)>
-<form id="<#if formid?has_content>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view history"<#if actionBaseUrl!=action> data-actionbaseurl="${actionBaseUrl}"</#if><#if entityName!=action&&entityName!=''> data-entity="${entityName}"</#if>>
+<form id="<#if formid?has_content>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view history"<#if actionBaseUrl!=action> data-actionbaseurl="${actionBaseUrl}"</#if><#if entityName!=action&&entityName?has_content> data-entity="${entityName}"</#if>>
 <#nested/>
 <#if includeParameters>
 <#list Parameters?keys as name>
@@ -70,8 +70,8 @@ ${formHeader!}
 </#macro>
 
 <#macro rttheadtd name,alias='',title='',cellName='',cellEdit='',class='',width='',readonly=false,resizable=true,excludeIfNotEdited=false>
-<th<#if title!=''> title="${action.getText(title)}"</#if><#if excludeIfNotEdited||class!=''> class="<#if excludeIfNotEdited> excludeIfNotEdited</#if><#if class!=''> ${class}</#if>"</#if><#if width!=''> style="width:${width};"</#if><#if !readonly> data-cellName="${cellName}"</#if><#if cellEdit!=''> data-cellEdit="${cellEdit}"</#if>>
-<#if resizable><span class="resizeTitle"></#if><#if alias!=''>${action.getText(alias)}<#else>${action.getText(name)}</#if><#if resizable></span><span class="resizeBar visible-desktop"></span></#if>
+<th<#if title?has_content> title="${action.getText(title)}"</#if><#if excludeIfNotEdited||class?has_content> class="<#if excludeIfNotEdited> excludeIfNotEdited</#if><#if class?has_content> ${class}</#if>"</#if><#if width?has_content> style="width:${width};"</#if><#if !readonly> data-cellName="${cellName}"</#if><#if cellEdit?has_content> data-cellEdit="${cellEdit}"</#if>>
+<#if resizable><span class="resizeTitle"></#if><#if alias?has_content>${action.getText(alias)}<#else>${action.getText(name)}</#if><#if resizable></span><span class="resizeBar visible-desktop"></span></#if>
 </th>
 </#macro>
 <#macro rtmiddle width='50px' showActionColumn=true>
@@ -133,7 +133,7 @@ ${formHeader!}
 <#macro rttbodytrend entity buttons='' editable=true viewable=false entityReadonly=false>
 <#if buttons?has_content || editable || viewable>
 <td class="action">
-<#if buttons!=''>
+<#if buttons?has_content>
 <@buttons?interpret/>
 <#else>
 <#if viewable>
@@ -205,7 +205,7 @@ ${formHeader!}
 </#if>
 </div>
 <div class="action span4">
-<#if buttons!=''>
+<#if buttons?has_content>
 <@buttons?interpret/>
 <#else>
 <#if !readonly>
@@ -227,7 +227,7 @@ ${formHeader!}
     <input type="text" name="keyword" value="${keyword!?html}" placeholder="${action.getText('search')}"/><span class="add-on hidden-tablet hidden-phone"><i class="icon-search clickable"></i></span>
 </span>
 </#if>
-<#if searchButtons!=''>
+<#if searchButtons?has_content>
 <@searchButtons?interpret/>
 <#else>
 </#if>
