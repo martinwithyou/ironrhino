@@ -687,11 +687,11 @@ Observation._richtable = function(container) {
 							+ property.val().replace(/\./g, '_')
 							+ '" type="hidden" name="'
 							+ property.val()
-							+ '"/><div class="listpick removeonadd" data-options="{\'url\':\''
+							+ '" class="required"/><span class="listpick removeonadd" data-options="{\'url\':\''
 							+ option.data('pickurl')
 							+ '\',\'name\':\'this\',\'id\':\'#filter_'
 							+ property.val().replace(/\./g, '_')
-							+ '\'}"></div>').appendTo(td);
+							+ '\'}"></span>').appendTo(td);
 				} else {
 					$('<input type="' + (option.data('inputtype') || 'text')
 							+ '" name="' + property.val()

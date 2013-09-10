@@ -198,7 +198,7 @@ Message = {
 			var cgroup = field.closest('.control-group');
 			cgroup.addClass('error');
 			$('.field-error', field.parent()).remove();
-			if ($(field).is(':visible')) {
+			if (field.is(':visible')) {
 				var prompt = $('<div class="field-error removeonclick"><div class="field-error-content">'
 						+ msg + '</div><div>').insertAfter(field);
 				$('<div class="field-error-arrow"/>')
@@ -219,10 +219,19 @@ Message = {
 				prompt.animate({
 							"opacity" : 0.8
 						});
-			} else if (cgroup.length && $(field).is('[type="hidden"]')) {
-				$('.controls span', cgroup).text('');
-				$('<span class="field-error help-inline">' + msg + '</span>')
-						.appendTo($('.controls', cgroup));
+			} else if (field.is('[type="hidden"]')) {
+				if (cgroup.length) {
+					//$('.controls span', cgroup).text('');
+					$('<span class="field-error help-inline">' + msg
+							+ '</span>').appendTo($('.controls', cgroup));
+				} else {
+					if (field.next('.listpick,.treeselect').length) {
+						$('<span class="field-error help-inline" style="color:#b94a48;">'
+								+ msg + '</span>').insertAfter(field.next());
+					} else {
+						Message.showActionError(msg);
+					}
+				}
 			} else
 				Message.showActionError(msg);
 		} else
@@ -250,7 +259,8 @@ Form = {
 					&& !$(target).prop('disabled')) {
 				var value = $(target).val();
 				if ($(target).hasClass('required') && !value) {
-					if ($(target).prop('tagName') == 'SELECT')
+					if ($(target).prop('tagName') == 'SELECT'
+							|| $(target).is('[type="hidden"]'))
 						Message.showFieldError(target, null,
 								'selection.required');
 					else
