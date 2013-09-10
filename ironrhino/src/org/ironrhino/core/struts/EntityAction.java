@@ -239,8 +239,13 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	@Override
-	public String execute() throws Exception {
-		BeanWrapperImpl bw = new BeanWrapperImpl(getEntityClass().newInstance());
+	public String execute() {
+		BeanWrapperImpl bw;
+		try {
+			bw = new BeanWrapperImpl(getEntityClass().newInstance());
+		} catch (Exception e1) {
+			throw new RuntimeException(e1);
+		}
 		bw.setConversionService(conversionService);
 		Richtable richtableConfig = getClass().getAnnotation(Richtable.class);
 		if (richtableConfig == null)
@@ -967,7 +972,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		}
 		return doDelete();
 	}
-	
+
 	protected String doDelete() {
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
 		String[] arr = getId();
