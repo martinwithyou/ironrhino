@@ -65,7 +65,7 @@ public class AutoConfigResult extends FreemarkerResult {
 	}
 
 	private static Map<String, String> cache = new ConcurrentHashMap<String, String>(
-			250);
+			256);
 
 	@Override
 	protected String conditionalParse(String param, ActionInvocation invocation) {

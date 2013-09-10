@@ -24,7 +24,7 @@ import org.springframework.core.annotation.Order;
 public class AnnotationUtils {
 
 	private static Map<String, Object> cache = new ConcurrentHashMap<String, Object>(
-			250);
+			256);
 
 	private static ValueThenKeyComparator<Method, Integer> comparator = new ValueThenKeyComparator<Method, Integer>() {
 		@Override

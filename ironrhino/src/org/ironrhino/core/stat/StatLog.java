@@ -28,7 +28,7 @@ public class StatLog {
 	private static final Condition condition = timerLock.newCondition();
 
 	private static final ConcurrentHashMap<Key, Value> data = new ConcurrentHashMap<Key, Value>(
-			50);
+			64);
 
 	private static Thread writeThread;
 

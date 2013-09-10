@@ -40,8 +40,7 @@ public class DictionaryControl implements
 	public void refresh() {
 		entityManager.setEntityClass(Dictionary.class);
 		List<Dictionary> list = entityManager.findAll(Order.asc("name"));
-		Map<String, Dictionary> temp = new ConcurrentHashMap<String, Dictionary>(
-				list.size(), 1);
+		Map<String, Dictionary> temp = new ConcurrentHashMap<String, Dictionary>();
 		for (Dictionary d : list)
 			temp.put(d.getName(), d);
 		map = temp;

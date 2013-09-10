@@ -45,8 +45,7 @@ public class SettingControl implements
 	public void refresh() {
 		entityManager.setEntityClass(Setting.class);
 		List<Setting> list = entityManager.findAll(Order.asc("key"));
-		Map<String, Setting> temp = new ConcurrentHashMap<String, Setting>(
-				list.size(), 1);
+		Map<String, Setting> temp = new ConcurrentHashMap<String, Setting>();
 		for (Setting s : list)
 			temp.put(s.getKey(), s);
 		settings = temp;
