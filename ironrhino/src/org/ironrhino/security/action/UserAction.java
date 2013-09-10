@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.metadata.JsonConfig;
@@ -18,6 +19,7 @@ import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.struts.EntityAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
+import org.ironrhino.security.Constants;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 import org.ironrhino.security.service.UserManager;
@@ -46,6 +48,9 @@ public class UserAction extends EntityAction<User> {
 	private String password;
 
 	private String confirmPassword;
+
+	@Inject
+	private transient SettingControl settingControl;
 
 	@Inject
 	private transient UserManager userManager;
@@ -208,6 +213,9 @@ public class UserAction extends EntityAction<User> {
 	@InputConfig(methodName = "inputprofile")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "validation.required") }, emails = { @EmailValidator(fieldName = "user.email", key = "validation.invalid") })
 	public String profile() {
+		if (settingControl.getBooleanValue(
+				Constants.SETTING_KEY_USER_PROFILE_READONLY, false))
+			return ACCESSDENIED;
 		if (!makeEntityValid())
 			return INPUT;
 		User userInSession = AuthzUtils.getUserDetails();
