@@ -30251,7 +30251,7 @@ Message = {
 						});
 			} else if (field.is('[type="hidden"]')) {
 				if (cgroup.length) {
-					//$('.controls span', cgroup).text('');
+					// $('.controls span', cgroup).text('');
 					$('<span class="field-error help-inline">' + msg
 							+ '</span>').appendTo($('.controls', cgroup));
 				} else {
@@ -31317,9 +31317,9 @@ var Dialog = {
 			$(iframe).height(height);
 		}
 		d.dialog('option', 'position', 'center');
-		var height = d.height();
-		if (height > 600)
-			d.dialog('option', 'position', 'top');
+		// var height = d.height();
+		// if (height >= $(window).height())
+		// d.dialog('option', 'position', 'top');
 		d.dialog('moveToTop');
 	},
 	toggleMaximization : function(d) {
