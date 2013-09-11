@@ -4,7 +4,7 @@
 <title>${action.getText('profile')}</title>
 </head>
 <body>
-<#assign readonly=('true'==getSetting('user.profile.readonly','false'))/>
+<#assign readonly=getSetting?? && ('true'==getSetting('user.profile.readonly','false'))/>
 <@s.form action="${actionBaseUrl}/profile" method="post" cssClass="form-horizontal ajax">
 	<@s.hidden name="user.id"/>
 	<@s.textfield label="%{getText('name')}" name="user.name" cssClass="required" readonly=readonly/>

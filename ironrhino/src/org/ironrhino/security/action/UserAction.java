@@ -1,6 +1,7 @@
 package org.ironrhino.security.action;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -8,10 +9,10 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CurrentPassword;
 import org.ironrhino.core.metadata.JsonConfig;
@@ -24,6 +25,7 @@ import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 import org.ironrhino.security.service.UserManager;
 import org.ironrhino.security.service.UserRoleManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
@@ -49,8 +51,9 @@ public class UserAction extends EntityAction<User> {
 
 	private String confirmPassword;
 
-	@Inject
-	private transient SettingControl settingControl;
+	@Autowired(required = false)
+	@Named("settingControl")
+	private transient Object settingControl;
 
 	@Inject
 	private transient UserManager userManager;
@@ -213,9 +216,19 @@ public class UserAction extends EntityAction<User> {
 	@InputConfig(methodName = "inputprofile")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "validation.required") }, emails = { @EmailValidator(fieldName = "user.email", key = "validation.invalid") })
 	public String profile() {
-		if (settingControl.getBooleanValue(
-				Constants.SETTING_KEY_USER_PROFILE_READONLY, false))
-			return ACCESSDENIED;
+		if (settingControl != null) {
+			try {
+				Method m = settingControl.getClass().getMethod(
+						"getBooleanValue", String.class, boolean.class);
+				if ((Boolean) m.invoke(settingControl,
+						Constants.SETTING_KEY_USER_PROFILE_READONLY, false)) {
+					addActionError(getText("access.denied"));
+					return ACCESSDENIED;
+				}
+			} catch (Exception e) {
+
+			}
+		}
 		if (!makeEntityValid())
 			return INPUT;
 		User userInSession = AuthzUtils.getUserDetails();
