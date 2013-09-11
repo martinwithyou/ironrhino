@@ -21,7 +21,7 @@ table.richtable th {
 	line-height: 200%;
 }
 table.richtable td {
-	word-wrap: break-word;
+	word-wrap: break-all;
 	white-space: pre-wrap;
 }
 .richtable th,.richtable .toolbar .action {

@@ -8152,6 +8152,7 @@ div.preview{
 	display:inline-block;
 	overflow: auto;
 	white-space:pre-wrap;
+	word-break:break-all;
 	border: 1px solid #ccc;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -8425,7 +8426,7 @@ table.richtable th {
 	line-height: 200%;
 }
 table.richtable td {
-	word-wrap: break-word;
+	word-wrap: break-all;
 	white-space: pre-wrap;
 }
 .richtable th,.richtable .toolbar .action {

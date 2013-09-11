@@ -23,7 +23,7 @@
 			<div class="controls">
 			<#if config.type=='textarea'>
 				<#if value?has_content>
-				<div style="white-space:pre-wrap;"<#if config.cssClass?has_content> class="${config.cssClass}"</#if>>${value!}</div>
+				<div style="white-space:pre-wrap;word-break:break-all;"<#if config.cssClass?has_content> class="${config.cssClass}"</#if>>${value!}</div>
 				</#if>
 			<#elseif config.type=='dictionary'>
 				<#if displayDictionaryLabel??>
