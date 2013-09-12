@@ -310,7 +310,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		this.attributes = attributes;
 	}
 
-	@Column(name = "attributes", length = 5000)
+	@Column(name = "attributes", length = 4000)
 	@Access(AccessType.PROPERTY)
 	public String getAttributesAsString() {
 		if (attributes == null || attributes.isEmpty())
