@@ -307,7 +307,7 @@ public class PageViewServiceImpl implements PageViewService {
 		sb.append(type).append(":").append(day);
 		String key = sb.toString();
 		sb.append("_set");
-		if (stringRedisTemplate.opsForSet().add(sb.toString(), value)) {
+		if (stringRedisTemplate.opsForSet().add(sb.toString(), value) == 1) {
 			stringRedisTemplate.opsForValue().increment(key, 1);
 			return true;
 		}
