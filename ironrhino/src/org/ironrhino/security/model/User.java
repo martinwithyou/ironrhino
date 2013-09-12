@@ -166,7 +166,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 
 	@NotInCopy
 	@NotInJson
-	@Column(name = "roles")
+	@Column(name = "roles", length = 4000)
 	@Access(AccessType.PROPERTY)
 	public String getRolesAsString() {
 		if (roles.size() > 0)

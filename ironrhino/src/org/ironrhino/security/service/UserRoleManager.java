@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.ironrhino.core.security.role.UserRoleProvider;
 import org.ironrhino.core.util.ClassScaner;
 import org.ironrhino.security.model.UserRole;
 import org.springframework.context.ApplicationContext;

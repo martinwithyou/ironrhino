@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.cache.EvictCache;
 import org.ironrhino.core.remoting.Remoting;
+import org.ironrhino.core.security.role.UserRoleMapper;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.spring.security.FallbackUserDetailsService;
 import org.ironrhino.core.util.CodecUtils;

@@ -1,4 +1,4 @@
-package org.ironrhino.security.service;
+package org.ironrhino.core.security.role;
 
 import java.util.Map;
 

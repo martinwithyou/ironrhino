@@ -1,16 +1,16 @@
-package org.ironrhino.security.service;
+package org.ironrhino.core.security.role;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.ironrhino.security.model.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Named
 @Singleton
 public class UsernameRoleMapper implements UserRoleMapper {
 
 	@Override
-	public String[] map(User user) {
+	public String[] map(UserDetails user) {
 		return new String[] { map(user.getUsername()) };
 	}
 

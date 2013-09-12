@@ -30,7 +30,9 @@
 			<tr>
 				<td style="width:225px;">${action.getText('label')}</td>
 				<td style="width:225px;">${action.getText('value')}</td>
+				<#if !Parameters.brief??>
 				<td style="width:100px;">${action.getText('type')}</td>
+				</#if>
 				<td class="manipulate"></td>
 			</tr>
 		</thead>
@@ -42,11 +44,13 @@
 			<#list 0..size as index>
 			<tr class="linkage">
 				<td><@s.textfield theme="simple" name="dictionary.items[${index}].label"/></td>
-				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required showonadd linkage_component option"/></td>
+				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required showonadd linkage_component<#if !Parameters.brief??> option</#if>"/></td>
+				<#if !Parameters.brief??>
 				<td><select class="linkage_switch" style="width:100px;">
 						<option value="option">${action.getText('option')}</option>
 						<option value="group"<#if dictionary.items[index]?? && dictionary.items[index].value?? && !dictionary.items[index].value?has_content>selected="selected"</#if>>${action.getText('group')}</option>
 					</select></td>
+				</#if>
 				<td class="manipulate"></td>
 			</tr>
 			</#list>

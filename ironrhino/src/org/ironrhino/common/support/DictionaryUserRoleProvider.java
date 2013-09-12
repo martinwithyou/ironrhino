@@ -1,4 +1,4 @@
-package org.ironrhino.security.acl.component;
+package org.ironrhino.common.support;
 
 import java.util.Map;
 
@@ -7,20 +7,21 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.ironrhino.common.support.DictionaryControl;
-import org.ironrhino.security.service.UserRoleProvider;
+import org.ironrhino.core.security.role.UserRoleProvider;
 
 @Singleton
 @Named
 public class DictionaryUserRoleProvider implements UserRoleProvider {
 
-	public static final String DICTIONARY_NAME = "CustomRole";
+	public static final String DICTIONARY_NAME_CUSTOM_USER_ROLE = "CustomUserRole";
 
 	@Inject
 	private DictionaryControl dictionaryControl;
 
 	@Override
 	public Map<String, String> getRoles() {
-		return dictionaryControl.getItemsAsMap(DICTIONARY_NAME);
+		return dictionaryControl
+				.getItemsAsMap(DICTIONARY_NAME_CUSTOM_USER_ROLE);
 	}
 
 }
