@@ -51,6 +51,9 @@ public class UserAction extends EntityAction<User> {
 	@Value("${user.profile.readonly:false}")
 	private boolean userProfileReadonly;
 
+	@Value("${user.password.readonly:false}")
+	private boolean userPasswordReadonly;
+
 	@Inject
 	private transient UserManager userManager;
 
@@ -91,6 +94,10 @@ public class UserAction extends EntityAction<User> {
 
 	public boolean isUserProfileReadonly() {
 		return userProfileReadonly;
+	}
+
+	public boolean isUserPasswordReadonly() {
+		return userPasswordReadonly;
 	}
 
 	@Override
@@ -203,6 +210,10 @@ public class UserAction extends EntityAction<User> {
 	@CurrentPassword
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, trim = true, fieldName = "password", key = "validation.required") }, expressions = { @ExpressionValidator(expression = "password == confirmPassword", key = "confirmPassword.error") })
 	public String password() {
+		if (userPasswordReadonly) {
+			addActionError(getText("access.denied"));
+			return ACCESSDENIED;
+		}
 		User user = AuthzUtils.getUserDetails();
 		if (user != null) {
 			user.setLegiblePassword(password);

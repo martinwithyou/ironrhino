@@ -5,10 +5,10 @@
 </head>
 <body>
 <@s.form action="${actionBaseUrl}/password" method="post" cssClass="form-horizontal ajax focus reset">
-	<@s.password label="%{getText('currentPassword')}" name="currentPassword" cssClass="required" />
-	<@s.password label="%{getText('password')}" name="password" cssClass="required" />
-	<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" cssClass="required" />
-	<@s.submit value="%{getText('save')}" />
+	<@s.password label="%{getText('currentPassword')}" name="currentPassword" cssClass="required" readonly=userProfileReadonly/>
+	<@s.password label="%{getText('password')}" name="password" cssClass="required" readonly=userProfileReadonly/>
+	<@s.password label="%{getText('confirmPassword')}" name="confirmPassword" cssClass="required" readonly=userProfileReadonly/>
+	<@s.submit value="%{getText('save')}" disabled=userProfileReadonly/>
 </@s.form>
 </body>
 </html></#escape>
