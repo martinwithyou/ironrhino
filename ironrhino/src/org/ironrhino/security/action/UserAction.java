@@ -1,7 +1,6 @@
 package org.ironrhino.security.action;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -20,12 +18,11 @@ import org.ironrhino.core.model.LabelValue;
 import org.ironrhino.core.struts.EntityAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.BeanUtils;
-import org.ironrhino.security.Constants;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.model.UserRole;
 import org.ironrhino.security.service.UserManager;
 import org.ironrhino.security.service.UserRoleManager;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.validator.annotations.EmailValidator;
@@ -51,9 +48,8 @@ public class UserAction extends EntityAction<User> {
 
 	private String confirmPassword;
 
-	@Autowired(required = false)
-	@Named("settingControl")
-	private transient Object settingControl;
+	@Value("${user.profile.readonly:false}")
+	private boolean userProfileReadonly;
 
 	@Inject
 	private transient UserManager userManager;
@@ -91,6 +87,10 @@ public class UserAction extends EntityAction<User> {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public boolean isUserProfileReadonly() {
+		return userProfileReadonly;
 	}
 
 	@Override
@@ -216,18 +216,9 @@ public class UserAction extends EntityAction<User> {
 	@InputConfig(methodName = "inputprofile")
 	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "user.name", trim = true, key = "validation.required") }, emails = { @EmailValidator(fieldName = "user.email", key = "validation.invalid") })
 	public String profile() {
-		if (settingControl != null) {
-			try {
-				Method m = settingControl.getClass().getMethod(
-						"getBooleanValue", String.class, boolean.class);
-				if ((Boolean) m.invoke(settingControl,
-						Constants.SETTING_KEY_USER_PROFILE_READONLY, false)) {
-					addActionError(getText("access.denied"));
-					return ACCESSDENIED;
-				}
-			} catch (Exception e) {
-
-			}
+		if (userProfileReadonly) {
+			addActionError(getText("access.denied"));
+			return ACCESSDENIED;
 		}
 		if (!makeEntityValid())
 			return INPUT;
