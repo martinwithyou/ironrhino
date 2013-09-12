@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -236,7 +237,20 @@ public class JdbcUpdateService {
 
 	@Transactional
 	public int[] executeBatch(String[] sql) {
-		if (supportsBatchUpdates)
+		boolean batch = supportsBatchUpdates;
+		if (batch
+				&& (databaseProduct == DatabaseProduct.SYBASE || databaseProduct == DatabaseProduct.SQLSERVER)) {
+			for (int i = 0; i < sql.length; i++) {
+				if (i > 0
+						&& CREATE_OR_ALTER_PROCEDURE_OR_FUNCTION_PATTERN
+								.matcher(sql[i]).find()) {
+					// create/alter procedure/function must be the first command
+					batch = false;
+					break;
+				}
+			}
+		}
+		if (batch)
 			return jdbcTemplate.batchUpdate(sql);
 		else {
 			int[] result = new int[sql.length];
@@ -261,5 +275,9 @@ public class JdbcUpdateService {
 		}
 		return sql;
 	}
+
+	private static final Pattern CREATE_OR_ALTER_PROCEDURE_OR_FUNCTION_PATTERN = Pattern
+			.compile("(create|alter)\\s+(procedure|function)",
+					Pattern.CASE_INSENSITIVE);
 
 }
