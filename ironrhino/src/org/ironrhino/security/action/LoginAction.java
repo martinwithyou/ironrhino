@@ -85,7 +85,7 @@ public class LoginAction extends BaseAction {
 			else if (failed instanceof BadCredentialsException)
 				addFieldError("password", getText("user.bad.credentials"));
 			else if (failed instanceof CredentialsExpiredException)
-				addFieldError("password", getText("user.bad.expired"));
+				addFieldError("password", getText("user.credentials.expired"));
 			captchaManager.addCaptachaThreshold(request);
 			try {
 				usernamePasswordAuthenticationFilter.unsuccess(request,
