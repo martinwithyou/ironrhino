@@ -8436,20 +8436,20 @@ table.richtable td {
 	white-space:nowrap;
 	overflow:hidden;
 }
-.richtable input.text,.richtable textarea.text {
+.richtable tbody input.text,.richtable tbody textarea.text {
 	width: 90%;
 	margin: 0;
 }
-.richtable input.radio {
+.richtable tbody input.radio {
 	width: auto;
 	margin: 0;
 }
-.richtable select {
+.richtable tbody select {
 	width: 95%;
 	margin: 0;
 	padding-left: 0;
 }
-.richtable .selected td {
+.richtable tr.selected td {
 	background-color: #FFC !important;
 }
 .richtable td.edited{

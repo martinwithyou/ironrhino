@@ -52,15 +52,15 @@
 <#macro rtstart formid='',action='',entityName='',resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true formHeader=''>
 <#local action=action?has_content?string(action,request.requestURI)>
 <form id="<#if formid?has_content>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view history"<#if actionBaseUrl!=action> data-actionbaseurl="${actionBaseUrl}"</#if><#if entityName!=action&&entityName?has_content> data-entity="${entityName}"</#if>>
+${formHeader!}
 <#nested/>
 <#if includeParameters>
 <#list Parameters?keys as name>
-<#if name!='_'&&name!='pn'&&name!='ps'&&!name?starts_with('resultPage.')&&name!='keyword'&&name!='check'>
+<#if name!='_'&&name!='pn'&&name!='ps'&&!name?starts_with('resultPage.')&&name!='keyword'&&name!='check'&&!formHeader?contains(' name="'+name+'" ')>
 <input type="hidden" name="${name}" value="${Parameters[name]}" />
 </#if>
 </#list>
 </#if>
-${formHeader!}
 <table class="table table-hover table-striped table-bordered richtable<#if sortable> sortable</#if><#if columnfilterable> filtercolumn</#if><#if resizable> resizable</#if>">
 <thead>
 <tr>

@@ -798,21 +798,32 @@ Observation.common = function(container) {
 				var f = $(this).closest('form');
 				var data = {};
 				var url = f.attr('action');
+				var entity = f.data('entity');
 				if (url.indexOf('/') > -1) {
 					if (url.substring(url.lastIndexOf('/') + 1) == 'save')
 						url = url.substring(0, url.lastIndexOf('/')) + '/input';
+					if (!entity) {
+						entity = url.substring(0, url.lastIndexOf('/'));
+						if (entity.indexOf('/') > 0)
+							entity = entity.substring(entity.lastIndexOf('/')
+									+ 1);
+					}
 				} else if (url == 'save')
 					url = 'input';
-				var hid = $(':input[type=hidden][name$=".id"]', f);
+				var hid = $('input[type=hidden][name="' + entity + '.id"]', f);
 				if (hid.val())
 					data['id'] = hid.val();
 				data[t.attr('name')] = t.val();
+				$('input[type=hidden]:not(.nocheck)', f).each(function() {
+							data[$(this).attr('name')] = $(this).val();
+						});
 				ajax({
 							global : false,
 							quiet : true,
 							type : f.attr('method'),
 							url : url,
 							data : data,
+							target : f[0],
 							replacement : t.data('replacement')
 						});
 			});
