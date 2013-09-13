@@ -35528,6 +35528,8 @@ Observation._richtable = function(container) {
 					var select = $('<select name="' + property.val()
 							+ '" class="removeonadd ' + option.data('class')
 							+ '"></select>').appendTo(td);
+					if (!select.hasClass('required'))
+						$('<option value=""></option>').appendTo(select);
 					var map = option.data('map');
 					map = map.substring(1, map.length - 1);
 					map = map.split(', ');
