@@ -1,6 +1,6 @@
 /*override bootstrap start*/
 body.main {
-	padding-top: 80px;
+	padding-top: 60px;
 	padding-bottom: 10px;
 }
 body {
@@ -30,14 +30,8 @@ td.middle {
 	font-size: 1em;
 }
 /*override bootstrap end*/
-body.main #content > #message{
-	margin-top: -20px;
-}
-body.main #content > ul.nav-tabs{
-	margin-top: -20px;
-}
-body.main #content > #message + ul.nav-tabs{
-	margin-top: 0;
+body.main > #content > form {
+	padding-top: 20px;
 }
 body ::-webkit-scrollbar {
     width: 12px;
