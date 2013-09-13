@@ -13,9 +13,9 @@ import org.ironrhino.common.model.TreeNode;
 import org.ironrhino.common.support.TreeNodeControl;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.security.role.UserRole;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.struts.BaseAction;
-import org.ironrhino.security.model.UserRole;
 
 public class TreeNodeAction extends BaseAction {
 

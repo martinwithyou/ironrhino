@@ -29,9 +29,9 @@ import org.ironrhino.core.model.BaseEntity;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableComponent;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
+import org.ironrhino.core.security.role.UserRole;
 import org.ironrhino.core.struts.ValidationException;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.security.model.UserRole;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 

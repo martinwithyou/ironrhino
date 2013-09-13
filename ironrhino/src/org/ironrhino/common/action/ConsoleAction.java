@@ -12,10 +12,10 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.metadata.Scope;
+import org.ironrhino.core.security.role.UserRole;
 import org.ironrhino.core.spring.ApplicationContextConsole;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.JsonUtils;
-import org.ironrhino.security.model.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

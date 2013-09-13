@@ -10,9 +10,9 @@ import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.core.metadata.AutoConfig;
+import org.ironrhino.core.security.role.UserRole;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.AuthzUtils;
-import org.ironrhino.security.model.UserRole;
 
 @AutoConfig(namespace = DisplayPageAction.NAMESPACE, actionName = DisplayPageAction.ACTION_NAME)
 public class DisplayPageAction extends BaseAction {

@@ -9,8 +9,8 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.remoting.ServiceRegistry;
+import org.ironrhino.core.security.role.UserRole;
 import org.ironrhino.core.struts.BaseAction;
-import org.ironrhino.security.model.UserRole;
 
 @AutoConfig
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)

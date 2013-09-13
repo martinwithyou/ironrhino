@@ -7,11 +7,11 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.security.role.UserRole;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.struts.EntityAction;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.security.model.User;
-import org.ironrhino.security.model.UserRole;
 import org.ironrhino.security.oauth.server.model.Client;
 
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;

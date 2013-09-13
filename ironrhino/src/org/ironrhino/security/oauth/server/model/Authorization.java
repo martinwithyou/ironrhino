@@ -19,9 +19,9 @@ import org.ironrhino.core.metadata.Readonly;
 import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.BaseEntity;
+import org.ironrhino.core.security.role.UserRole;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
-import org.ironrhino.security.model.UserRole;
 
 @AutoConfig
 @Authorize(ifAllGranted = UserRole.ROLE_ADMINISTRATOR)

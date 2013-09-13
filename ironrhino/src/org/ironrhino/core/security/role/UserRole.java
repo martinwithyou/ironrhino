@@ -1,4 +1,4 @@
-package org.ironrhino.security.model;
+package org.ironrhino.core.security.role;
 
 public interface UserRole {
 

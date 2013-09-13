@@ -6,9 +6,9 @@ import javax.inject.Singleton;
 
 import org.ironrhino.core.metadata.Setup;
 import org.ironrhino.core.metadata.SetupParameter;
+import org.ironrhino.core.security.role.UserRole;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
-import org.ironrhino.security.model.UserRole;
 import org.ironrhino.security.service.UserManager;
 import org.springframework.core.Ordered;
 
