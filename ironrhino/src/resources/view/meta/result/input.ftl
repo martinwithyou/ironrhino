@@ -44,6 +44,20 @@
 					<@s.hidden name=entityName+"."+key value="%{${entityName+'.'+key+'.id'}}"/>
 					<@s.select id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass disabled=true list="@${config.propertyType.name}@values()" listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes />
 				</#if>
+			<#elseif config.type=='select'>
+				<#if !readonly>
+					<@s.select id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass list=config.optionsExpression?eval listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes/>
+				<#else>
+					<@s.hidden name=entityName+"."+key value="%{${entityName+'.'+key+'.id'}}"/>
+					<@s.select id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass disabled=true list=config.optionsExpression?eval listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes />
+				</#if>
+			<#elseif config.type=='multiselect'>
+				<#if !readonly>
+					<@s.select id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass list=config.optionsExpression?eval listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" multiple=true dynamicAttributes=config.dynamicAttributes/>
+				<#else>
+					<@s.hidden name=entityName+"."+key value="%{${entityName+'.'+key+'.id'}}"/>
+					<@s.select id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass disabled=true list=config.optionsExpression?eval listKey=config.listKey listValue=config.listValue headerKey="" multiple=true headerValue="" dynamicAttributes=config.dynamicAttributes />
+				</#if>	
 			<#elseif config.type=='listpick'>
 				<#if !readonly>
 					<div class="control-group listpick" data-options="{'url':'<@url value=config.pickUrl/>','name':'#${id}-control','id':'#${id}'}">

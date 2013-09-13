@@ -23,7 +23,7 @@ public @interface UiConfig {
 
 	String id() default "";
 
-	String type() default DEFAULT_TYPE; // input,textarea,enum,checkbox,listpick,dictionary,schema...
+	String type() default DEFAULT_TYPE; // input,textarea,enum,select,multiselect,checkbox,listpick,dictionary,schema...
 
 	String inputType() default DEFAULT_INPUT_TYPE; // text,password,email,number...
 
@@ -32,6 +32,8 @@ public @interface UiConfig {
 	String regex() default "";
 
 	String cssClass() default "";
+	
+	String thCssClass() default "";
 
 	int displayOrder() default Integer.MAX_VALUE;
 
@@ -72,6 +74,8 @@ public @interface UiConfig {
 	String listValue() default DEFAULT_LIST_VALUE;
 
 	String cellEdit() default "";
+
+	String optionsExpression() default ""; // for select,multiselect
 
 	String pickUrl() default "";// for listpick
 

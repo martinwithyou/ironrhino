@@ -30,6 +30,7 @@ public class AnnotationShadows {
 		private int maxlength;
 		private String regex;
 		private Set<String> cssClasses = new LinkedHashSet<String>(0);
+		private String thCssClass = "";
 		private ReadonlyImpl readonly = new ReadonlyImpl();
 		private int displayOrder = Integer.MAX_VALUE;
 		private String alias;
@@ -49,6 +50,7 @@ public class AnnotationShadows {
 		private String listValue = UiConfig.DEFAULT_LIST_VALUE;
 		private String cellEdit = "";
 		private boolean searchable;
+		private String optionsExpression = "";
 		private String pickUrl = "";
 		private String templateName = "";
 		private boolean excludedFromLike = false;
@@ -98,7 +100,9 @@ public class AnnotationShadows {
 			if (StringUtils.isNotBlank(config.cssClass()))
 				this.cssClasses.addAll(Arrays.asList(config.cssClass().split(
 						"\\s")));
+			this.thCssClass = config.thCssClass();
 			this.searchable = config.searchable();
+			this.optionsExpression = config.optionsExpression();
 			this.pickUrl = config.pickUrl();
 			this.templateName = config.templateName();
 			if (StringUtils.isNotBlank(this.regex)) {
@@ -303,6 +307,14 @@ public class AnnotationShadows {
 			return cssClasses;
 		}
 
+		public String getThCssClass() {
+			return thCssClass;
+		}
+
+		public void setThCssClass(String thCssClass) {
+			this.thCssClass = thCssClass;
+		}
+
 		public ReadonlyImpl getReadonly() {
 			return readonly;
 		}
@@ -357,6 +369,14 @@ public class AnnotationShadows {
 
 		public void setCellEdit(String cellEdit) {
 			this.cellEdit = cellEdit;
+		}
+
+		public String getOptionsExpression() {
+			return optionsExpression;
+		}
+
+		public void setOptionsExpression(String optionsExpression) {
+			this.optionsExpression = optionsExpression;
 		}
 
 		public boolean isSearchable() {

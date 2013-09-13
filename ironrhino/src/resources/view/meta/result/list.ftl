@@ -48,7 +48,7 @@
 						<#assign cellEdit='click,textarea'/>
 					<#elseif config.type=='checkbox'>
 						<#assign cellEdit='click,boolean'/>
-					<#elseif config.type=='enum'>
+					<#elseif config.type=='enum'||config.type=='select'>
 						<#assign hasSelect=true>
 						<#assign cellEdit='click,select,rt_select_template_'+key/>
 					<#elseif config.type=='dictionary'>
@@ -64,7 +64,7 @@
 				<#assign cellEdit=''/>
 			</#if>
 			<#assign index=index+1>
-			<@rttheadtd name=label alias=config['alias']! width=config['width']! title=config['title']! class=config['cssClass']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly.value excludeIfNotEdited=config.excludeIfNotEdited resizable=viewable||!(readonly.value&&index==size)/>
+			<@rttheadtd name=label alias=config['alias']! width=config['width']! title=config['title']! class=config['thCssClass']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly.value excludeIfNotEdited=config.excludeIfNotEdited resizable=viewable||!(readonly.value&&index==size)/>
 		<#else>
 			<#assign viewable=true>
 		</#if>
@@ -137,6 +137,14 @@
 		<@s.select theme="simple" name=entityName+"."+key list="@${config.propertyType.name}@values()" listKey=config.listKey listValue=config.listValue/>
 		<#else>
 		<@s.select theme="simple" name=entityName+"."+key list="@${config.propertyType.name}@values()" listKey=config.listKey listValue=config.listValue headerKey="" headerValue=""/>
+		</#if>
+		</textarea>
+		<#elseif config.type=='select'>
+		<textarea id="rt_select_template_${key}">
+		<#if config.required>
+		<@s.select theme="simple" name=entityName+"."+key list=config.optionsExpression?eval listKey=config.listKey listValue=config.listValue/>
+		<#else>
+		<@s.select theme="simple" name=entityName+"."+key list=config.optionsExpression?eval listKey=config.listKey listValue=config.listValue headerKey="" headerValue=""/>
 		</#if>
 		</textarea>
 		<#elseif config.type=='dictionary' && selectDictionary??>

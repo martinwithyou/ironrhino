@@ -8,7 +8,7 @@
 <#local config = columns[name]>
 <#local index = index+1>
 <#local cellName=((config['trimPrefix']??)?string('',entityName+'.'))+name>
-<@rttheadtd name=name alias=config['alias']! title=config['title']! class=config['cssClass']! width=config['width']! cellName=cellName cellEdit=config['cellEdit'] readonly=readonly resizable=(readonly&&index!=size||!readonly)&&resizable excludeIfNotEdited=config['excludeIfNotEdited']!false/>
+<@rttheadtd name=name alias=config['alias']! title=config['title']! class=config['thCssClass']! width=config['width']! cellName=cellName cellEdit=config['cellEdit'] readonly=readonly resizable=(readonly&&index!=size||!readonly)&&resizable excludeIfNotEdited=config['excludeIfNotEdited']!false/>
 </#list>
 <@rtmiddle width=actionColumnWidth showActionColumn=actionColumnButtons?has_content||!readonly||viewable/>
 <#if resultPage??><#local list=resultPage.result></#if>
