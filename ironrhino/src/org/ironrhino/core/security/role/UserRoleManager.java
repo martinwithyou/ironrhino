@@ -110,4 +110,11 @@ public class UserRoleManager {
 		return result;
 	}
 
+	public String displayRole(String role) {
+		if (StringUtils.isBlank(role))
+			return "";
+		Map<String, String> rolesMap = getAllRoles(false);
+		String name = rolesMap.get(role);
+		return StringUtils.isNotBlank(name) ? name : role;
+	}
 }

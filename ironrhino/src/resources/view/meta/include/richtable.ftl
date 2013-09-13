@@ -84,7 +84,7 @@ ${formHeader!}
 </#macro>
 
 <#macro rttbodytrstart entity showCheckColumn=true multipleCheck=true rowid='' dynamicAttributes...>
-<#if rowid==''>
+<#if !rowid?has_content>
 	<#local id=entity.id?string/>
 <#else>
 	<#local id><@rowid?interpret/></#local>
@@ -114,7 +114,7 @@ ${formHeader!}
 </#if>
 <#local dynamicAttributes=dynamicAttributes+cellDynamicAttributes>
 <td<#if celleditable><#if value??><#if value?is_boolean> data-cellvalue="${value?string}"</#if><#if value?is_hash&&value.displayName??> data-cellvalue="${value.name()}"</#if></#if></#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>><#rt>
-<#if template==''>
+<#if !template?has_content>
 	<#if value??>
 		<#if value?is_boolean>
 		${action.getText(value?string)}<#t>
