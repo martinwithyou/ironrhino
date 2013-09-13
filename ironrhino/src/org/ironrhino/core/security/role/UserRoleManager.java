@@ -16,6 +16,9 @@ import javax.inject.Singleton;
 import org.ironrhino.core.util.ClassScaner;
 import org.springframework.context.ApplicationContext;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+
 @Singleton
 @Named
 public class UserRoleManager {
@@ -81,7 +84,8 @@ public class UserRoleManager {
 		Map<String, String> customRoles = getCustomRoles();
 		Map<String, String> roles = new LinkedHashMap<String, String>();
 		for (String role : staticRoles)
-			roles.put(role, null);
+			roles.put(role, LocalizedTextUtil.findText(getClass(), role,
+					ActionContext.getContext().getLocale(), role, null));
 		roles.putAll(customRoles);
 		return roles;
 	}
