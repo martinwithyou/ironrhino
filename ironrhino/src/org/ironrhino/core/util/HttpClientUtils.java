@@ -2,13 +2,15 @@ package org.ironrhino.core.util;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.http.HttpVersion;
+import org.apache.http.Header;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -16,23 +18,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.BasicClientConnectionManager;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,98 +36,54 @@ public class HttpClientUtils {
 	private static Logger logger = LoggerFactory
 			.getLogger(HttpClientUtils.class);
 
-	static class HttpClientHolder {
-		static HttpClient httpClient = create();
+	private static Set<Header> DEFAULT_HEADERS = new HashSet<Header>();
+
+	static {
+		DEFAULT_HEADERS
+				.add(new BasicHeader(
+						"User-Agent",
+						"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.37 Safari/537.36"));
 	}
 
-	public static HttpClient getDefaultInstance() {
+	static class HttpClientHolder {
+		static CloseableHttpClient httpClient = create();
+	}
+
+	public static CloseableHttpClient getDefaultInstance() {
 		return HttpClientHolder.httpClient;
 	}
 
-	public static HttpClient create() {
+	public static CloseableHttpClient create() {
 		return create(false);
 	}
 
-	public static HttpClient create(boolean single) {
-		HttpParams params = new BasicHttpParams();
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		HttpProtocolParams.setContentCharset(params, "UTF-8");
-		HttpProtocolParams.setUserAgent(params, null);
-		HttpProtocolParams.setUseExpectContinue(params, true);
-		HttpConnectionParams.setConnectionTimeout(params, 10000);
-		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory
-				.getSocketFactory()));
-		schemeRegistry.register(new Scheme("https", 443, SSLSocketFactory
-				.getSocketFactory()));
-		ClientConnectionManager clientConnectionManager;
-		if (single)
-			clientConnectionManager = new BasicClientConnectionManager(
-					schemeRegistry);
-		else {
-			PoolingClientConnectionManager cm = new PoolingClientConnectionManager(
-					schemeRegistry, 60, TimeUnit.SECONDS);
-			cm.setDefaultMaxPerRoute(5);
-			cm.setMaxTotal(100);
-			clientConnectionManager = cm;
-		}
-		DefaultHttpClient httpclient = new DefaultHttpClient(
-				clientConnectionManager, params);
-		// httpclient.addRequestInterceptor(gzipHttpRequestInterceptor);
-		// httpclient.addResponseInterceptor(gzipHttpResponseInterceptor);
-		httpclient
-				.setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy());
-		httpclient.getParams().setParameter(
-				ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
-		return httpclient;
+	public static CloseableHttpClient create(boolean single) {
+		return create(single, 10000);
 	}
 
-	// private static HttpRequestInterceptor gzipHttpRequestInterceptor = new
-	// HttpRequestInterceptor() {
-	// public void process(final HttpRequest request, final HttpContext context)
-	// throws HttpException, IOException {
-	// if (!request.containsHeader("Accept-Encoding")) {
-	// request.addHeader("Accept-Encoding", "gzip");
-	// }
-	// }
-	// };
-	//
-	// private static HttpResponseInterceptor gzipHttpResponseInterceptor = new
-	// HttpResponseInterceptor() {
-	// public void process(final HttpResponse response,
-	// final HttpContext context) throws HttpException, IOException {
-	// HttpEntity entity = response.getEntity();
-	// Header ceheader = entity.getContentEncoding();
-	// if (ceheader != null) {
-	// HeaderElement[] codecs = ceheader.getElements();
-	// for (int i = 0; i < codecs.length; i++) {
-	// if (codecs[i].getName().equalsIgnoreCase("gzip")) {
-	// response.setEntity(new GzipDecompressingEntity(response
-	// .getEntity()));
-	// return;
-	// }
-	// }
-	// }
-	// }
-	// };
-	//
-	// private static class GzipDecompressingEntity extends HttpEntityWrapper {
-	// public GzipDecompressingEntity(final HttpEntity entity) {
-	// super(entity);
-	// }
-	//
-	// @Override
-	// public InputStream getContent() throws IOException,
-	// IllegalStateException {
-	// InputStream wrappedin = wrappedEntity.getContent();
-	// return new GZIPInputStream(wrappedin);
-	// }
-	//
-	// @Override
-	// public long getContentLength() {
-	// return -1;
-	// }
-	// }
+	@SuppressWarnings("resource")
+	public static CloseableHttpClient create(boolean single, int connectTimeout) {
+		HttpClientConnectionManager connManager;
+		if (single)
+			connManager = new BasicHttpClientConnectionManager();
+		else {
+			PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(
+					60, TimeUnit.SECONDS);
+			cm.setDefaultMaxPerRoute(5);
+			cm.setMaxTotal(100);
+			connManager = cm;
+		}
+		RequestConfig requestConfig = RequestConfig.custom()
+				.setCircularRedirectsAllowed(true)
+				.setConnectTimeout(connectTimeout)
+				.setExpectContinueEnabled(true).build();
+		CloseableHttpClient httpclient = HttpClientBuilder.create()
+				.setConnectionManager(connManager)
+				.setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
+				.setDefaultRequestConfig(requestConfig)
+				.setDefaultHeaders(DEFAULT_HEADERS).build();
+		return httpclient;
+	}
 
 	public static String getResponseText(String url) {
 		return getResponseText(url, null, "UTF-8");

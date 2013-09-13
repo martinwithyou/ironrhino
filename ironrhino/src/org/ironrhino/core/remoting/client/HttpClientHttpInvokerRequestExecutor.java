@@ -9,10 +9,9 @@ import javax.annotation.PreDestroy;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.springframework.remoting.httpinvoker.AbstractHttpInvokerRequestExecutor;
 import org.springframework.remoting.httpinvoker.HttpInvokerClientConfiguration;
@@ -23,19 +22,11 @@ public class HttpClientHttpInvokerRequestExecutor extends
 
 	private static final int DEFAULT_TIMEOUT = 5000;
 
-	private HttpClient httpClient;
+	private CloseableHttpClient httpClient;
 
 	public HttpClientHttpInvokerRequestExecutor() {
-		httpClient = HttpClientUtils.create();
-		setTimeout(DEFAULT_TIMEOUT);
+		httpClient = HttpClientUtils.create(false, DEFAULT_TIMEOUT);
 	}
-
-	public void setTimeout(int timeout) {
-		HttpConnectionParams.setConnectionTimeout(this.httpClient.getParams(),
-				timeout);
-	}
-
-	// slow than java.net.HttpURLConnection
 
 	@Override
 	protected RemoteInvocationResult doExecuteRequest(
@@ -59,7 +50,11 @@ public class HttpClientHttpInvokerRequestExecutor extends
 
 	@PreDestroy
 	public void destroy() {
-		httpClient.getConnectionManager().shutdown();
+		try {
+			httpClient.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

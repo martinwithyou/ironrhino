@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.spring.security.DefaultAuthenticationSuccessHandler;
+import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.core.util.UserAgent;
 import org.slf4j.Logger;
@@ -171,7 +172,11 @@ public class AccessFilter implements Filter {
 
 	@Override
 	public void destroy() {
-
+		try {
+			HttpClientUtils.getDefaultInstance().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
