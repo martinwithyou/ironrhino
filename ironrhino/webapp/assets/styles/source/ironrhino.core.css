@@ -1,6 +1,6 @@
 /*override bootstrap start*/
 body.main {
-	padding-top: 80px;
+	padding-top: 60px;
 	padding-bottom: 10px;
 }
 body {
@@ -30,7 +30,10 @@ td.middle {
 	font-size: 1em;
 }
 /*override bootstrap end*/
-body.main > #content > #message {
+body.main > #content > form:first-child, body.main > #content > #message:empty + form {
+	margin-top: 20px;
+}
+body.main > #content > form:first-child > .negative-margin:first-child, body.main > #content > #message:empty + form > .negative-margin:first-child {
 	margin-top: -20px;
 }
 body ::-webkit-scrollbar {
