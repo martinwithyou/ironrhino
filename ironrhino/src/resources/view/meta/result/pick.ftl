@@ -20,10 +20,9 @@
 	<#assign propertyNames=Parameters.columns?split(',')>
 	<#assign columnNames=[]>
 	<#if uiConfigs??>
-	<#list uiConfigs.entrySet() as entry>
-		<#assign column=entry.key>
-		<#if propertyNames?seq_contains(column)>
-		<#assign config=entry.value>
+	<#list propertyNames as column>
+		<#if uiConfigs[column]??>
+		<#assign config=uiConfigs[column]>
 		<#assign shown=!config.hiddenInList.value>
 		<#if shown && config.hiddenInList.expression?has_content>
 		<#assign shown=!config.hiddenInList.expression?eval/>
