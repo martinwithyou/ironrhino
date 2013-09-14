@@ -51,7 +51,7 @@
 
 <#macro rtstart formid='',action='',entityName='',resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true formHeader=''>
 <#local action=action?has_content?string(action,request.requestURI)>
-<form id="<#if formid?has_content>${formid}<#else>${entityName}_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view history"<#if actionBaseUrl!=action> data-actionbaseurl="${actionBaseUrl}"</#if><#if entityName!=action&&entityName?has_content> data-entity="${entityName}"</#if>>
+<form id="<#if formid?has_content>${formid}<#else>${entityName}<#if Parameters.tab?? && Parameters[Parameters.tab]??>_${Parameters.tab+'_'+Parameters[Parameters.tab]}</#if>_form</#if>" action="${getUrl(action)}" method="post" class="richtable ajax view history"<#if actionBaseUrl!=action> data-actionbaseurl="${actionBaseUrl}"</#if><#if entityName!=action&&entityName?has_content> data-entity="${entityName}"</#if>>
 ${formHeader!}
 <#nested/>
 <#if includeParameters>
