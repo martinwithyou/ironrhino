@@ -29,7 +29,7 @@
 	<li><strong style="display:block;padding-top: 8px;padding-bottom: 8px;line-height: 20px;padding-right: 12px;padding-left: 12px;margin-right: 2px;">${action.getText(propertyName)}:</strong></li>
 	<li class="active"><a href="#all" data-toggle="tab">${action.getText('all')}</a></li>
 	<#if config.type=='enum'>
-	<#assign values=statics[propertyType.name].values()>
+	<#assign values=statics[config.propertyType.name].values()>
 	<#list values as value>
 	<li><a href="#${propertyName+'-'+value.name()}" data-toggle="tab">${value.displayName}</a></li>
 	</#list>
