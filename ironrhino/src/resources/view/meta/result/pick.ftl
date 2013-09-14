@@ -17,9 +17,34 @@
 	<#assign multiple=true>
 </#if>
 <#if Parameters.columns??>
-	<#assign columnNames=Parameters.columns?split(',')>
+	<#assign propertyNames=Parameters.columns?split(',')>
+	<#assign columnNames=[]>
+	<#if uiConfigs??>
+	<#list uiConfigs.entrySet() as entry>
+		<#assign column=entry.key>
+		<#if propertyNames?seq_contains(column)>
+		<#assign config=entry.value>
+		<#assign shown=!config.hiddenInList.value>
+		<#if shown && config.hiddenInList.expression?has_content>
+		<#assign shown=!config.hiddenInList.expression?eval/>
+		</#if>
+		<#if shown>
+			<#assign columnNames=columnNames+[column]>
+		</#if>
+		</#if>
+	</#list>
+	<#else>
+	<#assign columnNames=propertyNames>
+	</#if>
 <#elseif uiConfigs??>
-	<#assign columnNames=uiConfigs?keys>
+	<#assign propertyNames=uiConfigs?keys>
+	<#assign columnNames=[]>
+	<#list uiConfigs.entrySet() as entry>
+		<#assign column=entry.key>
+		<#if (column=='name' && !propertyNames?seq_contains('fullname') || column=='fullname' || column=='code' || entry.value.shownInPick || naturalIds?? && naturalIds?keys?seq_contains(column))>
+			<#assign columnNames=columnNames+[column]>
+		</#if>
+	</#list>
 </#if>
 <#assign treeable = action.getParentId??>
 <#if treeable>
@@ -35,19 +60,10 @@
 <#assign columns={}>
 <#if columnNames??>
 	<#list columnNames as column>
-		<#assign hidden=false>
-		<#if uiConfigs??>
-		<#assign hidden=uiConfigs[column].hiddenInList.value>
-		<#if !hidden && uiConfigs[column].hiddenInList.expression?has_content>
-		<#assign hidden=uiConfigs[column].hiddenInList.expression?eval/>
-		</#if>
-		</#if>
-		<#if !hidden>
-			<#if treeable && column == 'name'||column == 'fullname'>
-				<#assign columns=columns+{column:{'template':r'<#if entity.leaf??&&!entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parentId="+entity.id}" class="ajax view" data-replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
-			<#else>
-				<#assign columns=columns+{column:{}}/>
-			</#if>
+		<#if treeable && column == 'name'||column == 'fullname'>
+			<#assign columns=columns+{column:{'template':r'<#if entity.leaf??&&!entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parentId="+entity.id}" class="ajax view" data-replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
+		<#else>
+			<#assign columns=columns+{column:{}}/>
 		</#if>
 	</#list>
 </#if>
