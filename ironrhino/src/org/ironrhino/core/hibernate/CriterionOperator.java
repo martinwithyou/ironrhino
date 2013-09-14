@@ -23,9 +23,10 @@ public enum CriterionOperator implements Displayable {
 		public boolean supports(Class<?> clazz) {
 			return clazz == short.class || clazz == int.class
 					|| clazz == long.class || clazz == float.class
-					|| clazz == double.class || clazz.equals(String.class)
+					|| clazz == double.class || clazz == boolean.class
+					|| clazz == Boolean.class
 					|| Number.class.isAssignableFrom(clazz)
-					|| clazz.equals(Date.class)
+					|| clazz.equals(String.class) || clazz.equals(Date.class)
 					|| Persistable.class.isAssignableFrom(clazz)
 					|| clazz.isEnum();
 		}
@@ -415,7 +416,8 @@ public enum CriterionOperator implements Displayable {
 			return Collections.emptyList();
 		List<String> list = new ArrayList<String>();
 		for (CriterionOperator op : values())
-			if (op.supports(clazz))
+			if (op.supports(clazz)
+					&& !(op == EQ && (clazz == Boolean.class || clazz == boolean.class)))
 				list.add(op.name());
 		return list;
 	}
