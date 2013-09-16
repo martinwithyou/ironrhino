@@ -273,7 +273,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 		if (id != null)
 			return id.intValue();
 		String fullname = getFullname(",");
-		return fullname != null ? getFullname().hashCode() : 0;
+		return fullname != null ? fullname.hashCode() : 0;
 	}
 
 	@Override
