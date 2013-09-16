@@ -31170,7 +31170,8 @@ Message = {
 					$(target).attr('id', 'form' + new Date().getTime());
 				var fid = $(target).attr('id');
 				if ($('#' + fid + '_message').length == 0)
-					$('<div id="' + fid + '_message"></div>')
+					$('<div id="' + fid
+							+ '_message" class="message-container"></div>')
 							.insertBefore(target);
 				msg = $('#' + fid + '_message');
 			}
@@ -31569,6 +31570,10 @@ Initialization.common = function() {
 			return;
 		}
 	});
+	$(document).on('click', '#message .close,.message-container .close',
+			function() {
+				$('#message,.message-container').filter(':empty').remove();
+			});
 	$(document).on('click', '.removeonclick', function() {
 				$(this).remove()
 			}).on('keyup', 'input,textarea', $.debounce(200, function(ev) {
