@@ -47,6 +47,9 @@
 </#if>
 <#assign treeable = action.getParentId??>
 <#if treeable>
+	<#if !columnNames?? || columnNames?size == 0>
+	<#assign columnNames=['fullname']>
+	</#if>
 	<#assign href=requestURI>
 	<#assign index=0>
 	<#list Parameters?keys as name>
