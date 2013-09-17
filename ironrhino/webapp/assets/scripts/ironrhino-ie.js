@@ -31191,6 +31191,8 @@ Message = {
 			$('.field-error', field.parent()).remove();
 			if (field.hasClass('sqleditor'))
 				field = field.next('.preview');
+			else if (field.hasClass('chzn-done'))
+				field = field.next('.chzn-container');
 			if (field.is(':visible')) {
 				var prompt = $('<div class="field-error removeonclick"><div class="field-error-content">'
 						+ msg + '</div><div>').insertAfter(field);
@@ -31248,7 +31250,7 @@ Form = {
 		if ($(target).prop('tagName') != 'FORM') {
 			$(target).closest('.control-group').removeClass('error');
 			$('.field-error', $(target).parent()).fadeIn().remove();
-			if ($(target).is(':visible,[type="hidden"],.sqleditor')
+			if ($(target).is(':visible,[type="hidden"],.sqleditor,.chzn-done')
 					&& !$(target).prop('disabled')) {
 				var value = $(target).val();
 				if ($(target).hasClass('required') && !value) {
