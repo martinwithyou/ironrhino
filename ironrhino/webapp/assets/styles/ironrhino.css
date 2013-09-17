@@ -7923,6 +7923,9 @@ textarea{
 	height: 150px;
 	resize: vertical;
 }
+input::-ms-reveal,input::-ms-clear {
+	display: none;
+}
 span.checkboxgroup{
 	display: inline-block;
 	margin:0 20px;
