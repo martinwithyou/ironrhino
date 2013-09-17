@@ -584,7 +584,10 @@ Initialization.common = function() {
 	});
 	$(document).on('click', '#message .close,.message-container .close',
 			function() {
-				$('#message,.message-container').filter(':empty').remove();
+				$('#message,.message-container').each(function(i, v) {
+							if (!$.trim($(v).text()))
+								$(v).remove();
+						});
 			});
 	$(document).on('click', '.removeonclick', function() {
 				$(this).remove()
@@ -1107,7 +1110,8 @@ Observation.common = function(container) {
 					var pushstate = false;
 					if (form.hasClass('history'))
 						pushstate = true;
-					if (form.parents('.ui-dialog,.tab-content').length)
+					if (options.pushState === false
+							|| form.parents('.ui-dialog,.tab-content').length)
 						pushstate = false;
 					if (pushstate && HISTORY_ENABLED) {
 						var url = form.attr('action');
@@ -1175,8 +1179,10 @@ Observation.common = function(container) {
 			$(this).bind('submit', function(e) {
 						var form = $(this);
 						var btn = $('.clicked', form).removeClass('clicked');
-						if (btn.hasClass('noajax') || btn.data('action'))
+						if (btn.hasClass('noajax'))
 							return true;
+						if (btn.data('action'))
+							options.pushState = false;
 						$(this).ajaxSubmit(options);
 						return false;
 					});
