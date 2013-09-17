@@ -72,6 +72,9 @@ body ::-webkit-scrollbar-thumb:window-inactive {
 #indicator.error {
 	background: #F00;
 }
+.btn:focus {
+    outline: none;
+}
 .btn-group .active{
 	cursor:default;
 }

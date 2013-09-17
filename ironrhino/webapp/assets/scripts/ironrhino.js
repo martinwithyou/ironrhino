@@ -30229,6 +30229,8 @@ Message = {
 			var cgroup = field.closest('.control-group');
 			cgroup.addClass('error');
 			$('.field-error', field.parent()).remove();
+			if (field.hasClass('sqleditor'))
+				field = field.next('.preview');
 			if (field.is(':visible')) {
 				var prompt = $('<div class="field-error removeonclick"><div class="field-error-content">'
 						+ msg + '</div><div>').insertAfter(field);
@@ -30286,7 +30288,7 @@ Form = {
 		if ($(target).prop('tagName') != 'FORM') {
 			$(target).closest('.control-group').removeClass('error');
 			$('.field-error', $(target).parent()).fadeIn().remove();
-			if ($(target).is(':visible') || $(target).is('[type="hidden"]')
+			if ($(target).is(':visible,[type="hidden"],.sqleditor')
 					&& !$(target).prop('disabled')) {
 				var value = $(target).val();
 				if ($(target).hasClass('required') && !value) {
@@ -31131,6 +31133,56 @@ Observation.common = function(container) {
 					Indicator.text = $(target).data('indicator');
 					$('button[type="submit"]', target).prop('disabled', true);
 					Ajax.fire(target, 'onloading');
+					var form = $(target);
+					var pushstate = false;
+					if (form.hasClass('history'))
+						pushstate = true;
+					if (form.parents('.ui-dialog,.tab-content').length)
+						pushstate = false;
+					if (pushstate && HISTORY_ENABLED) {
+						var url = form.attr('action');
+						var index = url.indexOf('://');
+						if (index > -1) {
+							url = url.substring(index + 3);
+							url = url.substring(url.indexOf('/'));
+						}
+						var params = form.serializeArray();
+						var realparams = [];
+						if (params) {
+							$.map(params, function(v, i) {
+										if (v.name == 'resultPage.pageNo')
+											v.name = 'pn';
+										else if (v.name == 'resultPage.pageSize')
+											v.name = 'ps';
+										if (!(v.name == 'check'
+												|| v.name == 'keyword'
+												&& !v.value || v.name == 'pn'
+												&& v.value == '1' || v.name == 'ps'
+												&& v.value == '10'))
+											realparams.push({
+														name : v.name,
+														value : v.value
+													});
+
+									});
+							var param = $.param(realparams);
+							if (param)
+								url += (url.indexOf('?') > 0 ? '&' : '?')
+										+ param;
+						}
+						var location = document.location.href;
+						if (SESSION_HISTORY_SUPPORT) {
+							history.replaceState({
+										url : location
+									}, '', location);
+							history.pushState(url, '', url);
+						} else {
+							var hash = url;
+							if (CONTEXT_PATH)
+								hash = hash.substring(CONTEXT_PATH.length);
+							$.history.load('!' + hash);
+						}
+					}
 				},
 				error : function() {
 					Form.focus(target);
@@ -31151,61 +31203,13 @@ Observation.common = function(container) {
 							'X-Data-Type' : 'json'
 						});
 			$(this).bind('submit', function(e) {
-				var btn = $('.clicked', this).removeClass('clicked');
-				if (btn.hasClass('noajax'))
-					return true;
-				var form = $(this);
-				var pushstate = false;
-				if (form.hasClass('history'))
-					pushstate = true;
-				if (btn.data('action')
-						|| form.parents('.ui-dialog,.tab-content').length)
-					pushstate = false;
-				if (pushstate && HISTORY_ENABLED) {
-					var url = form.attr('action');
-					var index = url.indexOf('://');
-					if (index > -1) {
-						url = url.substring(index + 3);
-						url = url.substring(url.indexOf('/'));
-					}
-					var params = form.serializeArray();
-					var realparams = [];
-					if (params) {
-						$.map(params, function(v, i) {
-									if (v.name == 'resultPage.pageNo')
-										v.name = 'pn';
-									else if (v.name == 'resultPage.pageSize')
-										v.name = 'ps';
-									if (!(v.name == 'check'
-											|| v.name == 'keyword' && !v.value
-											|| v.name == 'pn' && v.value == '1' || v.name == 'ps'
-											&& v.value == '10'))
-										realparams.push({
-													name : v.name,
-													value : v.value
-												});
-
-								});
-						var param = $.param(realparams);
-						if (param)
-							url += (url.indexOf('?') > 0 ? '&' : '?') + param;
-					}
-					var location = document.location.href;
-					if (SESSION_HISTORY_SUPPORT) {
-						history.replaceState({
-									url : location
-								}, '', location);
-						history.pushState(url, '', url);
-					} else {
-						var hash = url;
-						if (CONTEXT_PATH)
-							hash = hash.substring(CONTEXT_PATH.length);
-						$.history.load('!' + hash);
-					}
-				}
-				$(this).ajaxSubmit(options);
-				return false;
-			});
+						var form = $(this);
+						var btn = $('.clicked', form).removeClass('clicked');
+						if (btn.hasClass('noajax') || btn.data('action'))
+							return true;
+						$(this).ajaxSubmit(options);
+						return false;
+					});
 			return;
 		} else {
 			$(this).click(function() {
