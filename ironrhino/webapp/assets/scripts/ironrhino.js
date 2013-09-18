@@ -31213,7 +31213,7 @@ Observation.common = function(container) {
 						var btn = $('.clicked', form).removeClass('clicked');
 						if (btn.hasClass('noajax'))
 							return true;
-						if (btn.data('action'))
+						if (btn.hasClass('reload') || btn.data('action'))
 							options.pushState = false;
 						$(this).ajaxSubmit(options);
 						return false;
@@ -35061,7 +35061,7 @@ Richtable = {
 				if (reloadonclose
 						&& ($('#_window_ form.ajax').hasClass('forcereload') || !$('#_window_ form.ajax')
 								.hasClass('dontreload'))) {
-					$('[data-action]:eq(0)', form).addClass('clicked');
+					$('.action .reload', form).addClass('clicked');
 					$(form).submit();
 				}
 				win.html('').dialog('destroy').remove();
@@ -35414,7 +35414,8 @@ Initialization.richtable = function() {
 					'.richtable .action [data-view],.richtable .action [data-action],form.richtable a[rel="richtable"]',
 					Richtable.click).on('click', '.richtable .action .reload',
 					function() {
-						$(this).closest('form').submit();
+						$(this).closest('.reload').addClass('clicked')
+								.closest('form').submit();
 					}).on('click', '.richtable .action .filter', function() {
 						var f = $(this).closest('form').next('form.criteria');
 						f.toggle();

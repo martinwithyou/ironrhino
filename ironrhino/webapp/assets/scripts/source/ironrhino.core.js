@@ -1183,7 +1183,7 @@ Observation.common = function(container) {
 						var btn = $('.clicked', form).removeClass('clicked');
 						if (btn.hasClass('noajax'))
 							return true;
-						if (btn.data('action'))
+						if (btn.hasClass('reload') || btn.data('action'))
 							options.pushState = false;
 						$(this).ajaxSubmit(options);
 						return false;
