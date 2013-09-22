@@ -117,6 +117,9 @@ public class EntityClassHelper {
 			if (columnannotation != null && !columnannotation.nullable()
 					|| basicannotation != null && !basicannotation.optional())
 				uci.setRequired(true);
+			if (columnannotation != null && columnannotation.length() != 255
+					&& uci.getMaxlength() == 0)
+				uci.setMaxlength(columnannotation.length());
 			Class<?> returnType = pd.getPropertyType();
 			if (returnType.isEnum()) {
 				uci.setType("enum");
