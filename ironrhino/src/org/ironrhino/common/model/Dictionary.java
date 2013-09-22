@@ -117,8 +117,7 @@ public class Dictionary extends BaseEntity {
 		Map<String, String> map = new LinkedHashMap<String, String>(
 				items.size() + 1, 1);
 		for (LabelValue lv : items)
-			if (StringUtils.isNotBlank(lv.getLabel())
-					&& StringUtils.isNotBlank(lv.getValue()))
+			if (StringUtils.isNotBlank(lv.getValue()))
 				map.put(lv.getValue(), lv.getLabel());
 		return map;
 	}
@@ -195,11 +194,6 @@ public class Dictionary extends BaseEntity {
 						} else {
 							labels.add(label);
 						}
-					} else {
-						ValidationException ve = new ValidationException();
-						ve.addFieldError("dictionary.items[" + i + "].label",
-								"validation.required");
-						throw ve;
 					}
 
 				}

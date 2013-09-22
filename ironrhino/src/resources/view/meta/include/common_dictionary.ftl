@@ -10,13 +10,13 @@
 			<#local items = dictionary.items/>
 			<#if !dictionary.groupable>
 				<#list items as lv>
-				<option value="${lv.value}"<#if value=lv.value><#local exists=true> selected="selected"</#if>>${lv.label}</option>
+				<option value="${lv.value}"<#if value=lv.value><#local exists=true> selected="selected"</#if>>${lv.label?has_content?string(lv.label,lv.value)}</option>
 				</#list>
 			<#else>
 				<#local group = ""/>
 				<#local index = 0/>
 				<#list items as lv>
-					<#if !lv.value?? || !lv.value?has_content>
+					<#if !lv.value?has_content>
 						<#local label = lv.label/>
 						<#if (!label?has_content) && group?has_content>
 							<#local group = ""/>
@@ -31,7 +31,7 @@
 							</#if>
 						</#if>
 					<#else>
-						<option value="${lv.value}"<#if value=lv.value><#local exists=true> selected="selected"</#if>>${lv.label}</option>
+						<option value="${lv.value}"<#if value=lv.value><#local exists=true> selected="selected"</#if>>${lv.label?has_content?string(lv.label,lv.value)}</option>
 						<#if group?has_content && index==items?size-1>
 						</optgroup>
 						</#if>
@@ -65,14 +65,14 @@ ${getDictionaryLabel(dictionaryName,value)}<#t>
 			<#if !dictionary.groupable>
 				<#list items as lv>
 				<label for="${dictionaryName}-${index}" class="checkbox inline"><#t>
-				<input id="${dictionaryName}-${index}" type="checkbox" value="${lv.value}" class="custom"<#if value?seq_contains(lv.value)> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>${lv.label}<#t>
+				<input id="${dictionaryName}-${index}" type="checkbox" value="${lv.value}" class="custom"<#if value?seq_contains(lv.value)> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>${lv.label?has_content?string(lv.label,lv.value)}<#t>
 				</label><#t>
 				<#local index=index+1>
 				</#list>
 			<#else>
 				<#local group = ""/>
 				<#list items as lv>
-					<#if !lv.value?? || !lv.value?has_content>
+					<#if !lv.value?has_content>
 						<#local label = lv.label/>
 						<#if (!label?has_content) && group?has_content>
 							<#local group = ""/>
@@ -88,7 +88,7 @@ ${getDictionaryLabel(dictionaryName,value)}<#t>
 						</#if>
 					<#else>
 						<label for="${dictionaryName}-${index}" class="checkbox inline"><#t>
-						<input id="${dictionaryName}-${index}" type="checkbox" class="custom" value="${lv.value}"<#if value?seq_contains(lv.value)> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>${lv.label}<#t>
+						<input id="${dictionaryName}-${index}" type="checkbox" class="custom" value="${lv.value}"<#if value?seq_contains(lv.value)> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>${lv.label?has_content?string(lv.label,lv.value)}<#t>
 						</label><#t>
 						<#if group?has_content && index==items?size-1>
 						</span><#lt>

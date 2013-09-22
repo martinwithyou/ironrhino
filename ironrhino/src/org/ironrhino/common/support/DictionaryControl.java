@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
 import org.ironrhino.common.model.Dictionary;
 import org.ironrhino.core.event.EntityOperationEvent;
@@ -21,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 @Singleton
-@Named("dictionaryControl")
+@Named
 public class DictionaryControl implements
 		ApplicationListener<EntityOperationEvent> {
 
@@ -69,7 +70,8 @@ public class DictionaryControl implements
 			return null;
 		for (Map.Entry<String, String> entry : getItemsAsMap(name).entrySet()) {
 			if (value.equals(entry.getKey()))
-				return entry.getValue();
+				return StringUtils.isNotBlank(entry.getValue()) ? entry
+						.getValue() : entry.getKey();
 		}
 		return value;
 	}
