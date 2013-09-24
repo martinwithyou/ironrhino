@@ -14,7 +14,7 @@ import com.jolbox.bonecp.BoneCPDataSource;
 @Configuration
 public class DataSourceConfiguration {
 
-	@Value("${jdbc.driverClassName:com.mysql.jdbc.Driver}")
+	@Value("${jdbc.driverClassName:}")
 	private String driverClass;
 
 	@Value("${jdbc.url:jdbc:mysql:///${app.name}?createDatabaseIfNotExist=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=true&tinyInt1isBit=false}")
@@ -50,7 +50,8 @@ public class DataSourceConfiguration {
 	public @Bean(destroyMethod = "close")
 	DataSource dataSource() {
 		BoneCPDataSource ds = new BoneCPDataSource();
-		ds.setDriverClass(driverClass);
+		if (StringUtils.isNotBlank(driverClass))
+			ds.setDriverClass(driverClass);
 		ds.setJdbcUrl(jdbcUrl);
 		ds.setUsername(username);
 		ds.setPassword(password);
