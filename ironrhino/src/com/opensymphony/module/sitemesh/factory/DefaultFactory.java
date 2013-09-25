@@ -67,7 +67,7 @@ public class DefaultFactory extends BaseFactory {
     }
 
     /** Load configuration from file. */
-    private synchronized void loadConfig() {
+    private void loadConfig() {
         try {
             // Load and parse the sitemesh.xml file
             Element root = loadSitemeshXML();
