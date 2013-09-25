@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.ironrhino.core.util.NameableThreadFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,7 +20,9 @@ public class ExecutorServiceFactoryBean implements
 
 	@Override
 	public void afterPropertiesSet() {
-		executorService = Executors.newCachedThreadPool();
+		executorService = Executors
+				.newCachedThreadPool(new NameableThreadFactory(
+						"executorService"));
 	}
 
 	@Override

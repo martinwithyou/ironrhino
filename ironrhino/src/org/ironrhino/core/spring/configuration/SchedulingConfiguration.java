@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import org.ironrhino.core.util.NameableThreadFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,19 +39,21 @@ public class SchedulingConfiguration implements SchedulingConfigurer,
 		return taskExecutorThreadPool();
 	}
 
-	@Bean(destroyMethod = "shutdown")
-	public ScheduledExecutorService taskSchedulerThreadPool() {
-		return Executors.newScheduledThreadPool(taskSchedulerPoolSize);
-	}
-
 	@Bean
 	public TaskScheduler taskScheduler() {
 		return new ConcurrentTaskScheduler(taskSchedulerThreadPool());
 	}
 
 	@Bean(destroyMethod = "shutdown")
+	public ScheduledExecutorService taskSchedulerThreadPool() {
+		return Executors.newScheduledThreadPool(taskSchedulerPoolSize,
+				new NameableThreadFactory("taskScheduler"));
+	}
+
+	@Bean(destroyMethod = "shutdown")
 	public ExecutorService taskExecutorThreadPool() {
-		return Executors.newFixedThreadPool(taskSchedulerPoolSize);
+		return Executors.newFixedThreadPool(taskExecutorPoolSize,
+				new NameableThreadFactory("taskExecutor"));
 	}
 
 }
