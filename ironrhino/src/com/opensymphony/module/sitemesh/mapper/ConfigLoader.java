@@ -54,23 +54,10 @@ import java.util.Map;
  */
 public class ConfigLoader {
 
-    /**
-     * State visibile across threads stored in a single container so that we
-     * can efficiently atomically access it with the guarantee that we wont see
-     * a partially loaded configuration in the face of one thread reloading the
-     * configuration while others are trying to read it.
-     */
-    private static class State {
-
-        Map<String,Decorator> decorators = new HashMap<String,Decorator>();
-        PathMapper pathMapper = new PathMapper();
-    }
-
-    /**
-     * Mark volatile so that the installation of new versions is guaranteed to
-     * be visible across threads.
-     */
-    private volatile State state;
+    
+    private Map<String,Decorator> decorators = new HashMap<String,Decorator>();
+    
+    private PathMapper pathMapper = new PathMapper();
 
     private String configFileName = null;
 
@@ -81,7 +68,7 @@ public class ConfigLoader {
      */
     public ConfigLoader(File configFile) throws ServletException {
         this.configFileName = configFile.getName();
-        state = loadConfig();
+        loadConfig();
     }
 
     /**
@@ -90,28 +77,27 @@ public class ConfigLoader {
     public ConfigLoader(String configFileName, Config config) throws ServletException {
         this.config = config;
         this.configFileName = configFileName;
-        state = loadConfig();
+        loadConfig();
     }
 
     /**
      * Retrieve Decorator based on name specified in configuration file.
      */
     public Decorator getDecoratorByName(String name) throws ServletException {
-        return (Decorator) refresh().decorators.get(name);
+        return (Decorator) decorators.get(name);
     }
 
     /** Get name of Decorator mapped to given path. */
     public String getMappedName(String path) throws ServletException {
-        return refresh().pathMapper.get(path);
+        return pathMapper.get(path);
     }
 
     /**
      * Load configuration from file.
      */
-    private State loadConfig() throws ServletException {
+    private void loadConfig() throws ServletException {
         // The new state which we build up and atomically replace the old state
         // with atomically to avoid other threads seeing partial modifications.
-        State newState = new State();
         try {
             // Build a document from the file
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -128,9 +114,8 @@ public class ConfigLoader {
             document = builder.parse(is);
 
             // Parse the configuration document
-            parseConfig(newState, document);
+            parseConfig(document);
 
-            return newState;
         }
         catch (ParserConfigurationException e) {
             throw new ServletException("Could not get XML parser", e);
@@ -146,7 +131,7 @@ public class ConfigLoader {
         }
     }
 
-    private void parseConfig(State newState, Document document) {
+    private void parseConfig(Document document) {
         Element root = document.getDocumentElement();
 
         // get the default directory for the decorators
@@ -182,8 +167,8 @@ public class ConfigLoader {
                 }
 
                 // Get all <pattern>...</pattern> and <url-pattern>...</url-pattern> nodes and add a mapping
-                populatePathMapper(newState, decoratorElement.getElementsByTagName("pattern"), role, name);
-                populatePathMapper(newState, decoratorElement.getElementsByTagName("url-pattern"), role, name);
+                populatePathMapper(decoratorElement.getElementsByTagName("pattern"), role, name);
+                populatePathMapper(decoratorElement.getElementsByTagName("url-pattern"), role, name);
             } else {
                 // NOTE: Deprecated format
                 name = getContainedText(decoratorNodes.item(i), "decorator-name");
@@ -201,7 +186,7 @@ public class ConfigLoader {
                 String paramValue = getContainedText(paramNodes.item(ii), "param-value");
                 params.put(paramName, paramValue);
             }
-            storeDecorator(newState, new DefaultDecorator(name, page, uriPath, role, params));
+            storeDecorator(new DefaultDecorator(name, page, uriPath, role, params));
         }
 
         // Get (deprecated format) decorator-mappings
@@ -211,11 +196,11 @@ public class ConfigLoader {
             String name = getContainedText(mappingNodes.item(i), "decorator-name");
 
             // Get all <url-pattern>...</url-pattern> nodes and add a mapping
-            populatePathMapper(newState, n.getElementsByTagName("url-pattern"), null, name);
+            populatePathMapper(n.getElementsByTagName("url-pattern"), null, name);
         }
     }
 
-    private void populatePathMapper(State newState, NodeList patternNodes, String role, String name) {
+    private void populatePathMapper(NodeList patternNodes, String role, String name) {
         for (int j = 0; j < patternNodes.getLength(); j++) {
             Element p = (Element) patternNodes.item(j);
             Text patternText = (Text) p.getFirstChild();
@@ -225,9 +210,9 @@ public class ConfigLoader {
                     if (role != null) {
                         // concatenate name and role to allow more
                         // than one decorator per role
-                        newState.pathMapper.put(name + role, pattern);
+                        pathMapper.put(name + role, pattern);
                     } else {
-                        newState.pathMapper.put(name, pattern);
+                        pathMapper.put(name, pattern);
                     }
                 }
             }
@@ -252,18 +237,12 @@ public class ConfigLoader {
         }
     }
 
-    private void storeDecorator(State newState, Decorator d) {
+    private void storeDecorator(Decorator d) {
         if (d.getRole() != null) {
-            newState.decorators.put(d.getName() + d.getRole(), d);
+            decorators.put(d.getName() + d.getRole(), d);
         } else {
-            newState.decorators.put(d.getName(), d);
+            decorators.put(d.getName(), d);
         }
     }
 
-    /**
-     * Check if configuration file has been updated, and if so, reload.
-     */
-    private State refresh() throws ServletException {
-    	return state;
-    }
 }

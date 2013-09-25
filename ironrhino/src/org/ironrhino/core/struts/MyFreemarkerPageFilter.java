@@ -42,7 +42,6 @@ public class MyFreemarkerPageFilter extends SiteMeshFilter {
 	protected DecoratorSelector initDecoratorSelector(
 			SiteMeshWebAppContext webAppContext) {
 		Factory factory = Factory.getInstance(new Config(filterConfig));
-		factory.refresh();
 		return new MyFreemarkerMapper2DecoratorSelector(
 				factory.getDecoratorMapper());
 	}
