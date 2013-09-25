@@ -301,6 +301,7 @@ select:hover,select:focus{
 ::-ms-expand {
 	 display: none;
 }
+
 div.preview{
 	padding: 4px 6px;
 	display:inline-block;
@@ -318,4 +319,7 @@ div.preview{
 div.preview span.comment{
 	background-color:yellow;
 	color:#999;
+}
+div.sqleditor.preview{
+	min-width:90%;
 }
