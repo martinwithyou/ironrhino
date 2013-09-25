@@ -11,7 +11,6 @@ package com.opensymphony.module.sitemesh.mapper;
 
 import com.opensymphony.module.sitemesh.Config;
 import com.opensymphony.module.sitemesh.Decorator;
-import com.opensymphony.module.sitemesh.factory.DefaultFactory;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -62,25 +61,6 @@ public class ConfigLoader {
      * configuration while others are trying to read it.
      */
     private static class State {
-        /**
-         * Timestamp of the last time we checked for an update to the
-         * configuration file used to rate limit the frequency at which we check
-         * for efficiency.
-         */
-        long lastModificationCheck = System.currentTimeMillis();
-
-        /**
-         * Timestamp of the modification time of the configuration file when we
-         * generated the state.
-         */
-        long lastModified;
-
-        /**
-         * Whether a thread is currently checking if the configuration file has
-         * been modified and potentially reloading it and therefore others
-         * shouldn't attempt the same till it's done.
-         */
-        boolean checking = false;
 
         Map<String,Decorator> decorators = new HashMap<String,Decorator>();
         PathMapper pathMapper = new PathMapper();
@@ -92,7 +72,6 @@ public class ConfigLoader {
      */
     private volatile State state;
 
-    private File configFile = null;
     private String configFileName = null;
 
     private Config config = null;
@@ -101,7 +80,6 @@ public class ConfigLoader {
      * Create new ConfigLoader using supplied File.
      */
     public ConfigLoader(File configFile) throws ServletException {
-        this.configFile = configFile;
         this.configFileName = configFile.getName();
         state = loadConfig();
     }
@@ -112,9 +90,6 @@ public class ConfigLoader {
     public ConfigLoader(String configFileName, Config config) throws ServletException {
         this.config = config;
         this.configFileName = configFileName;
-        if (config.getServletContext().getRealPath(configFileName) != null) {
-            this.configFile = new File(config.getServletContext().getRealPath(configFileName));
-        }
         state = loadConfig();
     }
 
@@ -143,20 +118,14 @@ public class ConfigLoader {
             DocumentBuilder builder = factory.newDocumentBuilder();
 
             Document document;
-            if (configFile != null && configFile.canRead()) {
-                // Keep time we read the file to check if the file was modified
-                newState.lastModified = configFile.lastModified();
-                document = builder.parse(configFile);
-            } else {
-            	InputStream is = config.getServletContext().getResourceAsStream(configFileName);
-            	 if (is == null){
-                     is = getClass().getClassLoader().getResourceAsStream(configFileName);
-                 }
-                 if (is == null){
-                     is = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName);
-                 }
-                document = builder.parse(is);
+            InputStream is = config.getServletContext().getResourceAsStream(configFileName);
+            if (is == null){
+                is = getClass().getClassLoader().getResourceAsStream(configFileName);
+                }
+            if (is == null){
+                is = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFileName);
             }
+            document = builder.parse(is);
 
             // Parse the configuration document
             parseConfig(newState, document);
@@ -295,64 +264,6 @@ public class ConfigLoader {
      * Check if configuration file has been updated, and if so, reload.
      */
     private State refresh() throws ServletException {
-        // Read the current state just once since another thread can swap
-        // another version in at any time.
-        State currentState = state;
-        if (configFile == null) {
-            return currentState;
-        }
-
-        // Rate limit the stat'ing of the config file to find its
-        // modification time to once every five seconds to reduce the
-        // number of system calls made. We grab the monitor of currentState
-        // so that we can safely read the values shared across threads and
-        // so that only one thread is performing the modification check at
-        // a time.
-        long current = System.currentTimeMillis();
-        long oldLastModified;
-
-        boolean check = false;
-        synchronized (currentState) {
-            oldLastModified = currentState.lastModified;
-            if (!currentState.checking && current >= currentState.lastModificationCheck + DefaultFactory.configCheckMillis) {
-                currentState.lastModificationCheck = current;
-                currentState.checking = true;
-                check = true;
-            }
-        }
-
-        if (check) {
-            // Perform the file stat'ing system call without holding a lock
-            // on the current state.
-            State newState = null;
-            try {
-                long currentLastModified = configFile.lastModified();
-                if (currentLastModified != oldLastModified) {
-                    // The configuration file has been modified since we last
-                    // read it so reload the configuration without holding a
-                    // lock on the current state and then slam down the new
-                    // state for other threads to see. The State.checking flag
-                    // being set on currentState will prevent other threads
-                    // from attempting to reload the state while we are and
-                    // the new state will have the flag cleared so that we can
-                    // continue checking if the configuration file is modified.
-                    newState = loadConfig();
-                    state = newState;
-                    return newState;
-                }
-            } finally {
-                // In the event of a failure of the modification time check,
-                // or while reloading the configuration file, mark that we're no
-                // longer checking if the modification time or reloading so that
-                // we'll retry.
-                if (newState == null) {
-                    synchronized (currentState) {
-                        currentState.checking = false;
-                    }
-                }
-            }
-
-        }
-        return currentState;
+    	return state;
     }
 }

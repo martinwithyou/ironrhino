@@ -19,7 +19,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -46,10 +45,6 @@ public class DefaultFactory extends BaseFactory {
     String configFileName;
     private static final String DEFAULT_CONFIG_FILENAME = "/WEB-INF/sitemesh.xml";
 
-    File configFile;
-    long configLastModified;
-    private long configLastCheck = 0L;
-    public static long configCheckMillis = 3000L;
     Map<String,String> configProps = new HashMap<String,String>();
 
     String excludesFileName;
@@ -68,12 +63,6 @@ public class DefaultFactory extends BaseFactory {
           configFileName = initParamConfigFile;
         }
         
-        String configFilePath = config.getServletContext().getRealPath(configFileName);
-
-        if (configFilePath != null) { // disable config auto reloading for .war files
-            configFile = new File(configFilePath);
-        }
-
         loadConfig();
     }
 
@@ -90,10 +79,7 @@ public class DefaultFactory extends BaseFactory {
                     Element curr = (Element)sections.item(i);
                     NodeList children = curr.getChildNodes();
 
-                    if ("config-refresh".equalsIgnoreCase(curr.getTagName())) {
-                        String seconds = curr.getAttribute("seconds");
-                        configCheckMillis = Long.parseLong(seconds) * 1000L;
-                    } else if ("property".equalsIgnoreCase(curr.getTagName())) {
+                    if ("property".equalsIgnoreCase(curr.getTagName())) {
                         String name = curr.getAttribute("name");
                         String value = curr.getAttribute("value");
                         if (!"".equals(name) && !"".equals(value)) {
@@ -138,13 +124,8 @@ public class DefaultFactory extends BaseFactory {
 
         InputStream is = null;
 
-        if (configFile == null) {
-            is = config.getServletContext().getResourceAsStream(configFileName);
-        }
-        else if (configFile.exists() && configFile.canRead()) {
-            is = configFile.toURI().toURL().openStream();
-        }
-        
+        is = config.getServletContext().getResourceAsStream(configFileName);
+
         if (is == null){
             is = getClass().getClassLoader().getResourceAsStream(configFileName);
         }
@@ -164,8 +145,6 @@ public class DefaultFactory extends BaseFactory {
         if (is == null){
             throw new IllegalStateException("Cannot load default configuration from jar");
         }
-
-        if (configFile != null) configLastModified = configFile.lastModified();
 
         Document doc = builder.parse(is);
         Element root = doc.getDocumentElement();
@@ -279,12 +258,6 @@ public class DefaultFactory extends BaseFactory {
 
     /** Check if configuration file has been modified, and if so reload it. */
     public void refresh() {
-        long time = System.currentTimeMillis();
-        if (time - configLastCheck < configCheckMillis)
-            return;
-        configLastCheck = time;
-
-        if (configFile != null && configLastModified != configFile.lastModified()) loadConfig();
     }
 
     /**
