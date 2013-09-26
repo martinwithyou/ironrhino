@@ -15,7 +15,7 @@
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">
-					${hibernate.dialect:org.hibernate.dialect.MySQL5Dialect}
+					${hibernate.dialect:}
 				</prop>
 				<prop key="hibernate.max_fetch_depth">
 					${hibernate.max_fetch_depth:3}
