@@ -55,6 +55,9 @@ ${getDictionaryLabel(dictionaryName,value)}<#t>
 </#macro>
 
 <#macro checkDictionary dictionaryName value=[] dynamicAttributes...>
+	<#if value?? && !value?is_sequence>
+	<#local value=[value]/>
+	</#if>
 	<#if dynamicAttributes['dynamicAttributes']??>
 		<#local dynamicAttributes=dynamicAttributes+dynamicAttributes['dynamicAttributes']/>
 	</#if>
@@ -106,4 +109,56 @@ ${getDictionaryLabel(dictionaryName,value)}<#t>
 		<#local index = index+1/>
 		</#if>
 		</#list>
+</#macro>
+
+<#macro radioDictionary dictionaryName value="" dynamicAttributes...>
+	<#if dynamicAttributes['dynamicAttributes']??>
+		<#local dynamicAttributes=dynamicAttributes+dynamicAttributes['dynamicAttributes']/>
+	</#if>
+	<#local dictionary=statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dictionaryControl').getDictionary(dictionaryName)!>
+		<#local index = 0/>
+		<#if dictionary?? && dictionary.items?? && dictionary.items?size gt 0>
+			<#local items = dictionary.items/>
+			<#if !dictionary.groupable>
+				<#list items as lv>
+				<label for="${dictionaryName}-${index}" class="radio inline"><#t>
+				<input id="${dictionaryName}-${index}" type="radio" value="${lv.value}" class="custom"<#if value==lv.value> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>${lv.label?has_content?string(lv.label,lv.value)}<#t>
+				</label><#t>
+				<#local index=index+1>
+				</#list>
+			<#else>
+				<#local group = ""/>
+				<#list items as lv>
+					<#if !lv.value?has_content>
+						<#local label = lv.label/>
+						<#if (!label?has_content) && group?has_content>
+							<#local group = ""/>
+							</span><#lt>
+						<#else>
+							<#if group?has_content>
+								</span><#lt>
+							</#if>
+							<#local group = label/>
+							<#if group?has_content>
+								<span class="checkgroup"><label for="${dictionaryName}-${group}" class="group">${group}</label><#t>
+							</#if>
+						</#if>
+					<#else>
+						<label for="${dictionaryName}-${index}" class="radio inline"><#t>
+						<input id="${dictionaryName}-${index}" type="radio" class="custom" value="${lv.value}"<#if value==lv.value> checked="checked"</#if><#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>${lv.label?has_content?string(lv.label,lv.value)}<#t>
+						</label><#t>
+						<#if group?has_content && index==items?size-1>
+						</span><#lt>
+						</#if>
+					</#if>
+					<#local index = index+1/>
+				</#list>
+			</#if>
+		</#if>
+		<#if !dictionary?? || value?has_content && !(dictionary.itemsAsMap!)?keys?seq_contains(value)>
+		<label for="${dictionaryName}-${index}" class="radio inline"><#t>
+		<input id="${dictionaryName}-${index}" type="radio" class="custom" value="${value}"checked="checked"<#list dynamicAttributes?keys as attr><#if attr!='dynamicAttributes'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>${value}<#t>
+		</label><#t>
+		<#local index = index+1/>
+		</#if>
 </#macro>
