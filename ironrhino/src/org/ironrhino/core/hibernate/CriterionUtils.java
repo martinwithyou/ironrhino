@@ -91,8 +91,7 @@ public class CriterionUtils {
 			for (String parameterName : parameterMap.keySet()) {
 				String propertyName;
 				String[] parameterValues;
-				Object value1 = null;
-				Object value2 = null;
+				Object[] values;
 				String operatorValue;
 				if (parameterName.endsWith(CRITERION_OPERATOR_SUFFIX)) {
 					propertyName = parameterName.substring(
@@ -142,23 +141,16 @@ public class CriterionUtils {
 							BeanWrapperImpl bw2 = new BeanWrapperImpl(
 									type.newInstance());
 							bw2.setConversionService(conversionService);
-							if (!operator
-									.isEffective(
-											bw2.getPropertyType(subPropertyName),
-											parameterValues.length > 0 ? parameterValues[0]
-													: null,
-											parameterValues.length > 1 ? parameterValues[1]
-													: null))
+							if (!operator.isEffective(
+									bw2.getPropertyType(subPropertyName),
+									parameterValues))
 								continue;
-							if (parameterValues.length > 0) {
+							values = new Object[parameterValues.length];
+							for (int n = 0; n < values.length; n++) {
 								bw2.setPropertyValue(subPropertyName,
-										parameterValues[0]);
-								value1 = bw2.getPropertyValue(subPropertyName);
-							}
-							if (parameterValues.length > 1) {
-								bw2.setPropertyValue(subPropertyName,
-										parameterValues[1]);
-								value2 = bw2.getPropertyValue(subPropertyName);
+										parameterValues[n]);
+								values[n] = bw2
+										.getPropertyValue(subPropertyName);
 							}
 							String alias = aliases.get(propertyName);
 							if (alias == null) {
@@ -167,7 +159,7 @@ public class CriterionUtils {
 								aliases.put(propertyName, alias);
 							}
 							Criterion criterion = operator.operator(alias + "."
-									+ subPropertyName, value1, value2);
+									+ subPropertyName, values);
 							if (criterion != null)
 								dc.add(criterion);
 						}
@@ -209,18 +201,14 @@ public class CriterionUtils {
 								parameterValues.length > 1 ? parameterValues[1]
 										: null))
 							continue;
-						if (parameterValues.length > 0) {
+						values = new Object[parameterValues.length];
+						for (int n = 0; n < values.length; n++) {
 							bw.setPropertyValue(propertyName,
-									parameterValues[0]);
-							value1 = bw.getPropertyValue(propertyName);
-						}
-						if (parameterValues.length > 1) {
-							bw.setPropertyValue(propertyName,
-									parameterValues[1]);
-							value2 = bw.getPropertyValue(propertyName);
+									parameterValues[n]);
+							values[n] = bw.getPropertyValue(propertyName);
 						}
 						Criterion criterion = operator.operator(propertyName,
-								value1, value2);
+								values);
 						if (criterion != null)
 							dc.add(criterion);
 					}

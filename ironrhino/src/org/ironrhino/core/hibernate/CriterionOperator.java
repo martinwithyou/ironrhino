@@ -32,9 +32,10 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
-			if (value1 == null)
+		public Criterion operator(String name, Object... value) {
+			if (value == null || value.length == 0)
 				return null;
+			Object value1 = value[0];
 			if (value1 instanceof Date && DateUtils.isBeginOfDay((Date) value1))
 				return Restrictions.between(name, value1,
 						DateUtils.endOfDay((Date) value1));
@@ -55,9 +56,10 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
-			if (value1 == null)
+		public Criterion operator(String name, Object... value) {
+			if (value == null || value.length == 0)
 				return null;
+			Object value1 = value[0];
 			if (value1 instanceof Date && DateUtils.isBeginOfDay((Date) value1))
 				return Restrictions.or(Restrictions.isNull(name), Restrictions
 						.or(Restrictions.lt(name, value1),
@@ -79,9 +81,10 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
-			if (value1 == null)
+		public Criterion operator(String name, Object... value) {
+			if (value == null || value.length == 0)
 				return null;
+			Object value1 = value[0];
 			return Restrictions.lt(name, value1);
 		}
 	},
@@ -96,9 +99,10 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
-			if (value1 == null)
+		public Criterion operator(String name, Object... value) {
+			if (value == null || value.length == 0)
 				return null;
+			Object value1 = value[0];
 			if (value1 instanceof Date && DateUtils.isBeginOfDay((Date) value1))
 				return Restrictions.le(name, DateUtils.endOfDay((Date) value1));
 			else
@@ -116,9 +120,10 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
-			if (value1 == null)
+		public Criterion operator(String name, Object... value) {
+			if (value == null || value.length == 0)
 				return null;
+			Object value1 = value[0];
 			if (value1 instanceof Date && DateUtils.isBeginOfDay((Date) value1))
 				return Restrictions.gt(name, DateUtils.endOfDay((Date) value1));
 			else
@@ -136,9 +141,10 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
-			if (value1 == null)
+		public Criterion operator(String name, Object... value) {
+			if (value == null || value.length == 0)
 				return null;
+			Object value1 = value[0];
 			return Restrictions.ge(name, value1);
 		}
 	},
@@ -153,13 +159,22 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public boolean isEffective(Class<?> clazz, String value1, String value2) {
-			return StringUtils.isNotBlank(value1)
-					|| StringUtils.isNotBlank(value2);
+		public boolean isEffective(Class<?> clazz, String... value) {
+			return (value != null && value.length == 2)
+					&& (StringUtils.isNotBlank(value[0]) || StringUtils
+							.isNotBlank(value[1]));
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
+			Object value1 = null;
+			Object value2 = null;
+			if (value != null) {
+				if (value.length > 0)
+					value1 = value[0];
+				if (value.length > 1)
+					value2 = value[1];
+			}
 			if (value2 instanceof Date && DateUtils.isBeginOfDay((Date) value2))
 				value2 = DateUtils.endOfDay((Date) value2);
 			if (value1 != null && value2 != null)
@@ -183,13 +198,22 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public boolean isEffective(Class<?> clazz, String value1, String value2) {
-			return StringUtils.isNotBlank(value1)
-					|| StringUtils.isNotBlank(value2);
+		public boolean isEffective(Class<?> clazz, String... value) {
+			return (value != null && value.length == 2)
+					&& (StringUtils.isNotBlank(value[0]) || StringUtils
+							.isNotBlank(value[1]));
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
+			Object value1 = null;
+			Object value2 = null;
+			if (value != null) {
+				if (value.length > 0)
+					value1 = value[0];
+				if (value.length > 1)
+					value2 = value[1];
+			}
 			if (value2 instanceof Date && DateUtils.isBeginOfDay((Date) value2))
 				value2 = DateUtils.endOfDay((Date) value2);
 			if (value1 != null && value2 != null)
@@ -214,12 +238,12 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+		public boolean isEffective(Class<?> clazz, String... value) {
 			return supports(clazz);
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
 			return Restrictions.isNull(name);
 		}
 	},
@@ -234,18 +258,18 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+		public boolean isEffective(Class<?> clazz, String... value) {
 			return supports(clazz);
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
 			return Restrictions.isNotNull(name);
 		}
 	},
 	ISEMPTY(0) {
 		@Override
-		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+		public boolean isEffective(Class<?> clazz, String... value) {
 			return supports(clazz);
 		}
 
@@ -255,13 +279,13 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
 			return Restrictions.eq(name, "");
 		}
 	},
 	ISNOTEMPTY(0) {
 		@Override
-		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+		public boolean isEffective(Class<?> clazz, String... value) {
 			return supports(clazz);
 		}
 
@@ -271,13 +295,13 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
 			return Restrictions.not(Restrictions.eq(name, ""));
 		}
 	},
 	ISBLANK(0) {
 		@Override
-		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+		public boolean isEffective(Class<?> clazz, String... value) {
 			return supports(clazz);
 		}
 
@@ -287,14 +311,14 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
 			return Restrictions.or(Restrictions.isNull(name),
 					Restrictions.eq(name, ""));
 		}
 	},
 	ISNOTBLANK(0) {
 		@Override
-		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+		public boolean isEffective(Class<?> clazz, String... value) {
 			return supports(clazz);
 		}
 
@@ -304,7 +328,7 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
 			return Restrictions.not(Restrictions.eqOrIsNull(name, ""));
 		}
 	},
@@ -316,7 +340,10 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
+			if (value == null || value.length == 0)
+				return null;
+			Object value1 = value[0];
 			return Restrictions.like(name, (String) value1, MatchMode.ANYWHERE);
 		}
 	},
@@ -328,7 +355,10 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
+			if (value == null || value.length == 0)
+				return null;
+			Object value1 = value[0];
 			return Restrictions.not(Restrictions.like(name, (String) value1,
 					MatchMode.ANYWHERE));
 		}
@@ -340,12 +370,12 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+		public boolean isEffective(Class<?> clazz, String... value) {
 			return supports(clazz);
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
 			return Restrictions.eq(name, true);
 		}
 	},
@@ -356,12 +386,12 @@ public enum CriterionOperator implements Displayable {
 		}
 
 		@Override
-		public boolean isEffective(Class<?> clazz, String value1, String value2) {
+		public boolean isEffective(Class<?> clazz, String... value) {
 			return supports(clazz);
 		}
 
 		@Override
-		public Criterion operator(String name, Object value1, Object value2) {
+		public Criterion operator(String name, Object... value) {
 			return Restrictions.eq(name, false);
 		}
 	};
@@ -395,16 +425,16 @@ public enum CriterionOperator implements Displayable {
 		return null;
 	}
 
-	public abstract Criterion operator(String name, Object value1, Object value2);
+	public abstract Criterion operator(String name, Object... value);
 
 	public int getParametersSize() {
 		return parametersSize;
 	}
 
-	public boolean isEffective(Class<?> clazz, String value1, String value2) {
+	public boolean isEffective(Class<?> clazz, String... value) {
 		if (!supports(clazz))
 			return false;
-		if (StringUtils.isBlank(value1))
+		if (value == null || value.length == 0 || StringUtils.isBlank(value[0]))
 			return false;
 		return true;
 	}
