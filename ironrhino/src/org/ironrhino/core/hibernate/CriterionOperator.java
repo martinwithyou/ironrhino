@@ -394,6 +394,38 @@ public enum CriterionOperator implements Displayable {
 		public Criterion operator(String name, Object... value) {
 			return Restrictions.eq(name, false);
 		}
+	},
+	IN(-1) {
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return clazz.isEnum();
+		}
+
+		@Override
+		public boolean isEffective(Class<?> clazz, String... value) {
+			return supports(clazz) && value != null && value.length > 0;
+		}
+
+		@Override
+		public Criterion operator(String name, Object... value) {
+			return Restrictions.in(name, value);
+		}
+	},
+	NOTIN(-1) {
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return clazz.isEnum();
+		}
+
+		@Override
+		public boolean isEffective(Class<?> clazz, String... value) {
+			return supports(clazz) && value != null && value.length > 0;
+		}
+
+		@Override
+		public Criterion operator(String name, Object... value) {
+			return Restrictions.not(Restrictions.in(name, value));
+		}
 	};
 
 	private int parametersSize;

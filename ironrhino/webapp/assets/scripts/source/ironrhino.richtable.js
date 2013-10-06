@@ -669,7 +669,7 @@ Observation._richtable = function(container) {
 			var option = $('option:selected', property);
 			var size = parseInt($('option:selected', t).data('parameters'));
 			var td = $('td:eq(2)', t.closest('tr'));
-			$(':input,.removeonadd', td).remove();
+			$(':input,.removeonadd,label', td).remove();
 			if (size > 0) {
 				if ('select' == option.data('type')) {
 					var select = $('<select name="' + property.val()
@@ -682,8 +682,9 @@ Observation._richtable = function(container) {
 					map = map.split(', ');
 					for (var i = 0; i < map.length; i++) {
 						var arr = map[i].split('=', 2);
-						$('<option value="' + arr[0] + '">' + arr[1]
-								+ '</option>').appendTo(select);
+						$('<option value="' + arr[0] + '">'
+								+ (arr[1] || arr[0]) + '</option>')
+								.appendTo(select);
 					}
 				} else if ('listpick' == option.data('type')) {
 					$('<input id="filter_'
@@ -705,8 +706,27 @@ Observation._richtable = function(container) {
 					$(':input', td).clone().appendTo(td).css('margin-left',
 							'10px');
 				_observe(td);
-			}
+			} else if (size < 0 && 'select' == option.data('type')) {
 
+				var map = option.data('map');
+				map = map.substring(1, map.length - 1);
+				map = map.split(', ');
+				for (var i = 0; i < map.length; i++) {
+					var arr = map[i].split('=', 2);
+					var cbid = '-filter-' + property.val() + '-' + i;
+					$('<label for="'
+							+ cbid
+							+ '" class="checkbox inline"><input type="checkbox" name="'
+							+ property.val()
+							+ '" value="'
+							+ arr[0]
+							+ '" id="'
+							+ cbid
+							+ '" class="custom" style="display: none;" /><label class="custom" for="'
+							+ cbid + '"></label>' + (arr[1] || arr[0])
+							+ '</label>').appendTo(td);
+				}
+			}
 		});
 		$('button.restore', t).click(function() {
 			var b;
