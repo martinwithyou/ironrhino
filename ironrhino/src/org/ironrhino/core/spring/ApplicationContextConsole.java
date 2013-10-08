@@ -7,9 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,9 +25,9 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("applicationContextConsole")
+@Component
 public class ApplicationContextConsole implements
 		ApplicationListener<ExpressionEvent> {
 
@@ -40,13 +37,13 @@ public class ApplicationContextConsole implements
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
-	@Inject
+	@Autowired
 	private ConfigurableListableBeanFactory ctx;
 
 	@Autowired(required = false)
 	private ServletContext servletContext;
 
-	@Inject
+	@Autowired
 	private EventPublisher eventPublisher;
 
 	private Map<String, Object> beans = new HashMap<String, Object>();

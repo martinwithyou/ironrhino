@@ -4,9 +4,6 @@ import static org.ironrhino.core.metadata.Profiles.CLUSTER;
 
 import java.util.Map;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,6 +13,7 @@ import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.util.ExpressionUtils;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -26,8 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @see org.ironrhino.core.dataroute.GroupedDataSource
  */
 @Aspect
-@Singleton
-@Named
+@Component
 @Profile(CLUSTER)
 public class DataRouteAspect extends BaseAspect {
 

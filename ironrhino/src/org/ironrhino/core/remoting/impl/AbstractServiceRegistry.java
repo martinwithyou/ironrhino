@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.PreDestroy;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.ironrhino.core.event.InstanceLifecycleEvent;
 import org.ironrhino.core.event.InstanceShutdownEvent;
@@ -28,7 +28,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry,
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
-	@Inject
+	@Autowired
 	private ConfigurableApplicationContext ctx;
 
 	protected Map<String, List<String>> importServices = new ConcurrentHashMap<String, List<String>>();

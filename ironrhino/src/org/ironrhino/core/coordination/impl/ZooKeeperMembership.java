@@ -10,8 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
@@ -23,9 +21,9 @@ import org.ironrhino.core.zookeeper.WatchedEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("membership")
+@Component("membership")
 @Profile(CLUSTER)
 public class ZooKeeperMembership implements Membership, WatchedEventListener {
 

@@ -2,20 +2,17 @@ package org.ironrhino.core.throttle.impl;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.throttle.FrequencyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("frequencyService")
+@Component("frequencyService")
 public class DefaultFrequencyService implements FrequencyService {
 
 	private static final String NAMESPACE = "frequency:";
 
-	@Inject
+	@Autowired
 	private CacheManager cacheManager;
 
 	@Override

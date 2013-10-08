@@ -3,7 +3,7 @@ package org.ironrhino.common.action;
 import java.io.File;
 import java.util.List;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.ironrhino.common.support.InstallationManager;
 import org.ironrhino.common.support.InstallationManager.Component;
@@ -17,7 +17,7 @@ public class InstallAction extends BaseAction {
 
 	private File file;
 
-	@Inject
+	@Autowired
 	private InstallationManager installationManager;
 
 	public List<Component> getList() {

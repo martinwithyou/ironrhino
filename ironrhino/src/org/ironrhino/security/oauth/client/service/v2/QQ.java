@@ -1,17 +1,14 @@
 package org.ironrhino.security.oauth.client.service.v2;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-@Named("qq")
-@Singleton
+@Component
 public class QQ extends OAuth2Provider {
 
 	@Value("${qq.logo:http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_5.png}")

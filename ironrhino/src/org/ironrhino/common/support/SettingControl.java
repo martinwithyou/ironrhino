@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
@@ -21,9 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class SettingControl implements
 		ApplicationListener<EntityOperationEvent> {
 

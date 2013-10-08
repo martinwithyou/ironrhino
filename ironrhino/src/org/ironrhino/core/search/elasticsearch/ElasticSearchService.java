@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -36,10 +36,10 @@ public class ElasticSearchService<T> implements SearchService<T> {
 
 	protected Logger log = LoggerFactory.getLogger(ElasticSearchService.class);
 
-	@Inject
+	@Autowired
 	private Client client;
 
-	@Inject
+	@Autowired
 	private IndexManager indexManager;
 
 	public SearchRequestBuilder prepareSearch() {

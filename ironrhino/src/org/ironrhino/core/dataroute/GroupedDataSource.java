@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.sql.DataSource;
 
 import org.ironrhino.core.stat.Key;
@@ -56,7 +56,7 @@ public class GroupedDataSource extends AbstractDataSource implements
 
 	private int deadFailureThreshold = 3;
 
-	@Inject
+	@Autowired
 	private BeanFactory beanFactory;
 
 	public void setDeadFailureThreshold(int deadFailureThreshold) {

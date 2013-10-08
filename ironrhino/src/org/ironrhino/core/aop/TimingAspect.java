@@ -2,9 +2,6 @@ package org.ironrhino.core.aop;
 
 import java.util.Map;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,10 +9,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.util.ExpressionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 @Aspect
-@Singleton
-@Named
+@Component
 public class TimingAspect extends BaseAspect {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());

@@ -5,9 +5,6 @@ import static org.ironrhino.core.metadata.Profiles.CLUSTER;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
@@ -16,9 +13,9 @@ import org.ironrhino.core.coordination.LockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("lockService")
+@Component("lockService")
 @Profile(CLUSTER)
 public class ZooKeeperLockService implements LockService {
 

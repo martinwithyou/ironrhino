@@ -1,17 +1,14 @@
 package org.ironrhino.security.oauth.client.service.v1;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth1Provider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-@Named("sohu")
-@Singleton
+@Component
 public class Sohu extends OAuth1Provider {
 
 	@Value("${sohu.requestTokenUrl:http://api.t.sohu.com/oauth/request_token}")

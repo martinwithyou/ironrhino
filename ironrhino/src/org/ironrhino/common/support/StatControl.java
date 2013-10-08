@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -38,9 +35,9 @@ import org.ironrhino.core.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("statControl")
+@Component
 @SuppressWarnings("rawtypes")
 public class StatControl {
 

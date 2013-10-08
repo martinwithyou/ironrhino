@@ -2,9 +2,6 @@ package org.ironrhino.core.session;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -16,9 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("httpSessionFilter")
+@Component
 public class HttpSessionFilter implements Filter {
 
 	private static final String APPLIED_KEY = "APPLIED."
@@ -30,7 +28,7 @@ public class HttpSessionFilter implements Filter {
 
 	private ServletContext servletContext;
 
-	@Inject
+	@Autowired
 	private HttpSessionManager httpSessionManager;
 
 	private String[] excludePatterns;

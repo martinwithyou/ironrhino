@@ -1,12 +1,9 @@
 package org.ironrhino.core.service;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.model.Persistable;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class EntityManagerImpl<T extends Persistable<?>> extends
 		BaseManagerImpl<T> implements EntityManager<T> {
 

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,10 +37,10 @@ public class Oauth2Action extends BaseAction {
 
 	private static final long serialVersionUID = 8175470892708878896L;
 
-	@Inject
+	@Autowired
 	private transient OAuthManager oauthManager;
 
-	@Inject
+	@Autowired
 	private transient DefaultUsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
 
 	private String username;

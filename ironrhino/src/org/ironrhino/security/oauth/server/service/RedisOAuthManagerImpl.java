@@ -10,20 +10,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("oauthManager")
+@Component("oauthManager")
 @Profile(CLUSTER)
 public class RedisOAuthManagerImpl implements OAuthManager {
 
@@ -31,8 +29,8 @@ public class RedisOAuthManagerImpl implements OAuthManager {
 
 	private RedisTemplate<String, Client> clientRedisTemplate;
 
-	@Inject
-	@Named("stringRedisTemplate")
+	@Autowired
+	@Qualifier("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
 
 	private static final String NAMESPACE_AUTHORIZATION = "oauth:authorization";

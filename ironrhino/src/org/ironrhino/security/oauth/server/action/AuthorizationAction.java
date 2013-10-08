@@ -1,6 +1,6 @@
 package org.ironrhino.security.oauth.server.action;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.struts.EntityAction;
@@ -17,7 +17,7 @@ public class AuthorizationAction extends EntityAction<Authorization> {
 
 	private static final long serialVersionUID = 2920367147774798742L;
 
-	@Inject
+	@Autowired
 	private OAuthManager oauthManager;
 
 	private Authorization authorization;

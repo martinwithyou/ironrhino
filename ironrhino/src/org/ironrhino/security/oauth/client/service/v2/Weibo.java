@@ -1,17 +1,14 @@
 package org.ironrhino.security.oauth.client.service.v2;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-@Named("weibo")
-@Singleton
+@Component
 public class Weibo extends OAuth2Provider {
 
 	@Value("${weibo.logo:http://timg.sjs.sinajs.cn/t35/appstyle/opent/images/app/logo_zx.png}")

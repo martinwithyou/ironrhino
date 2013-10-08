@@ -3,19 +3,16 @@ package org.ironrhino.security.oauth.client.service.v2;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-@Named("google")
-@Singleton
+@Component
 public class Google extends OAuth2Provider {
 
 	@Value("${google.logo:http://www.google.com/images/logos/accounts_logo.gif}")

@@ -5,19 +5,17 @@ import static org.ironrhino.core.metadata.Profiles.DUAL;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.coordination.LockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("lockService")
+@Component("lockService")
 @Profile({ DUAL, CLOUD })
 public class RedisLockService implements LockService {
 
@@ -25,8 +23,8 @@ public class RedisLockService implements LockService {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
-	@Inject
-	@Named("stringRedisTemplate")
+	@Autowired
+	@Qualifier("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
 
 	@Value("${lockService.timeout:300}")

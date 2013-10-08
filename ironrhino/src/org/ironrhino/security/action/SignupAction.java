@@ -3,8 +3,6 @@ package org.ironrhino.security.action;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.ironrhino.common.support.SettingControl;
@@ -51,13 +49,13 @@ public class SignupAction extends BaseAction {
 
 	private String confirmPassword;
 
-	@Inject
+	@Autowired
 	private transient UserManager userManager;
 
-	@Inject
+	@Autowired
 	private transient SettingControl settingControl;
 
-	@Inject
+	@Autowired
 	private transient EventPublisher eventPublisher;
 
 	@Autowired(required = false)

@@ -9,15 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.coordination.Membership;
 import org.ironrhino.core.util.AppInfo;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("membership")
+@Component("membership")
 @Profile({ DEFAULT, DUAL, CLOUD })
 public class StandaloneMembership implements Membership {
 

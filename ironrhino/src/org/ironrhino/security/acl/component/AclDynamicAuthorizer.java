@@ -1,20 +1,17 @@
 package org.ironrhino.security.acl.component;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.security.dynauth.DynamicAuthorizer;
 import org.ironrhino.security.acl.model.Acl;
 import org.ironrhino.security.acl.service.AclManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class AclDynamicAuthorizer implements DynamicAuthorizer {
 
-	@Inject
+	@Autowired
 	private AclManager aclManager;
 
 	@Override

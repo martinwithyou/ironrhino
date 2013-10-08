@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.ActionListener;
@@ -67,10 +67,10 @@ public class IndexManagerImpl implements IndexManager {
 
 	private Map<Class, Map<String, Object>> schemaMapping;
 
-	@Inject
+	@Autowired
 	private Client client;
 
-	@Inject
+	@Autowired
 	private EntityManager entityManager;
 
 	private ObjectMapper objectMapper;

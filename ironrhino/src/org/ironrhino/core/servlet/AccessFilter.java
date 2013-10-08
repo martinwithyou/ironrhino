@@ -6,9 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -29,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class AccessFilter implements Filter {
 
 	private Logger accessLog = LoggerFactory.getLogger("access");
@@ -57,7 +54,7 @@ public class AccessFilter implements Filter {
 	@Autowired(required = false)
 	private List<AccessHandler> handlers;
 
-	@Inject
+	@Autowired
 	private HttpSessionManager httpSessionManager;
 
 	public void setExcludePatterns(String excludePatterns) {

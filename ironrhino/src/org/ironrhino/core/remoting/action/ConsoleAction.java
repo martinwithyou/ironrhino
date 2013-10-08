@@ -3,7 +3,7 @@ package org.ironrhino.core.remoting.action;
 import java.util.Collection;
 import java.util.Map;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -18,7 +18,7 @@ public class ConsoleAction extends BaseAction {
 
 	private static final long serialVersionUID = 8180265410790553918L;
 
-	@Inject
+	@Autowired
 	private transient ServiceRegistry serviceRegistry;
 
 	private Collection<String> hosts;

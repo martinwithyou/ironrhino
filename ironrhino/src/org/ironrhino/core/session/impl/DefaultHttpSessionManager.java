@@ -4,9 +4,6 @@ import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,10 +13,12 @@ import org.ironrhino.core.session.WrappedHttpSession;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.core.util.RequestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("httpSessionManager")
+@Component("httpSessionManager")
 public class DefaultHttpSessionManager implements HttpSessionManager {
 
 	private static final String SALT = "awpeqaidasdfaioiaoduifayzuxyaaokadoaifaodiaoi";
@@ -46,12 +45,12 @@ public class DefaultHttpSessionManager implements HttpSessionManager {
 	@Value("${httpSessionManager.defaultLocaleName:}")
 	private String defaultLocaleName;
 
-	@Inject
-	@Named("cookieBased")
+	@Autowired
+	@Qualifier("cookieBased")
 	private HttpSessionStore cookieBased;
 
-	@Inject
-	@Named("cacheBased")
+	@Autowired
+	@Qualifier("cacheBased")
 	private HttpSessionStore cacheBased;
 
 	@Value("${httpSessionManager.lifetime:" + DEFAULT_LIFETIME + "}")

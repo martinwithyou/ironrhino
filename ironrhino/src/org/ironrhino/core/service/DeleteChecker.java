@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -23,12 +20,13 @@ import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Tuple;
 import org.ironrhino.core.util.ErrorMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class DeleteChecker {
 
-	@Inject
+	@Autowired
 	private SessionFactory sessionFactory;
 
 	private Map<Class<?>, List<Tuple<Class<?>, String>>> mapping;

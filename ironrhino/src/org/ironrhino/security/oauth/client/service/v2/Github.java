@@ -1,17 +1,14 @@
 package org.ironrhino.security.oauth.client.service.v2;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-@Named("github")
-@Singleton
+@Component
 public class Github extends OAuth2Provider {
 
 	@Value("${github.logo:https://a248.e.akamai.net/assets.github.com/images/modules/header/logov7@4x-hover.png}")

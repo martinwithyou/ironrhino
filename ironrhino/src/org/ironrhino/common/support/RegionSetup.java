@@ -11,9 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.xml.namespace.NamespaceContext;
 
 import org.apache.commons.io.IOUtils;
@@ -27,6 +24,8 @@ import org.ironrhino.core.aop.PublishAspect;
 import org.ironrhino.core.metadata.Setup;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.XmlUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,15 +33,14 @@ import org.w3c.dom.NodeList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 
-@Named
-@Singleton
+@Component
 public class RegionSetup {
 
 	private Map<String, String> regionAreacodeMap;
 
 	private ListMultimap<String, String> regionCoordinateMap;
 
-	@Inject
+	@Autowired
 	private EntityManager<Region> entityManager;
 
 	@Setup

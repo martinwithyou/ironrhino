@@ -1,6 +1,6 @@
 package org.ironrhino.core.mail;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.ironrhino.core.rabbitmq.RabbitQueue;
 
@@ -8,7 +8,7 @@ public class RabbitSimpleMailMessageWrapperQueue extends
 		RabbitQueue<SimpleMailMessageWrapper> implements
 		SimpleMailMessageWrapperQueue {
 
-	@Inject
+	@Autowired
 	private MailSender mailSender;
 
 	@Override

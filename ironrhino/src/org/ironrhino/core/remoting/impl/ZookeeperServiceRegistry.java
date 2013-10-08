@@ -11,10 +11,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
@@ -27,11 +23,11 @@ import org.ironrhino.core.zookeeper.WatchedEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-@Singleton
-@Named("serviceRegistry")
+@Component("serviceRegistry")
 @Profile(CLUSTER)
 public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		WatchedEventListener {
@@ -41,7 +37,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 	@Autowired(required = false)
 	private ExecutorService executorService;
 
-	@Inject
+	@Autowired
 	private ZooKeeper zooKeeper;
 
 	@Value("${serviceRegistry.zooKeeperPath:" + DEFAULT_ZOOKEEPER_PATH + "}")

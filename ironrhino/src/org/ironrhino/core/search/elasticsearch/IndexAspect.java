@@ -2,7 +2,7 @@ package org.ironrhino.core.search.elasticsearch;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -23,7 +23,7 @@ public class IndexAspect implements Ordered {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Inject
+	@Autowired
 	private IndexManager indexManager;
 
 	private int order;

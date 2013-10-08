@@ -3,19 +3,16 @@ package org.ironrhino.security.acl.service;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.cache.EvictCache;
 import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.security.acl.model.Acl;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Singleton
-@Named
+@Component
 public class AclManagerImpl extends BaseManagerImpl<Acl> implements AclManager {
 
 	@Override

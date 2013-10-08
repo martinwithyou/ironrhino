@@ -3,9 +3,6 @@ package org.ironrhino.security.component;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,14 +20,14 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 @Primary
 public class AuthenticationSuccessHandler extends
 		DefaultAuthenticationSuccessHandler {
 
-	@Inject
+	@Autowired
 	private UserManager userManager;
 
 	@Autowired(required = false)

@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,9 +27,9 @@ import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
-@Named
-@Singleton
+@Component
 public class CmsActionMappingMatcher implements ActionMappingMatcher,
 		ApplicationListener<EntityOperationEvent> {
 

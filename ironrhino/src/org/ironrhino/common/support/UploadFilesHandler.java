@@ -6,9 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,17 +14,18 @@ import org.apache.commons.io.IOUtils;
 import org.ironrhino.common.action.UploadAction;
 import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.servlet.AccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 @Order(Integer.MIN_VALUE)
 public class UploadFilesHandler implements AccessHandler {
 
-	@Inject
+	@Autowired
 	private FileStorage fileStorage;
 
-	@Inject
+	@Autowired
 	private ServletContext servletContext;
 
 	private String pattern = "/assets" + UploadAction.UPLOAD_DIR + "/*";

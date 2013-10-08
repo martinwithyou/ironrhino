@@ -1,16 +1,13 @@
 package org.ironrhino.security.oauth.client.service.v2;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Named("ironrhino")
-@Singleton
+@Component
 public class Ironrhino extends OAuth2Provider {
 
 	@Value("${ironrhino.logo:http://localhost/assets/images/ironrhino-logo.jpg}")

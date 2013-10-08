@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.tuples.Pair;
@@ -41,7 +41,7 @@ public class PageViewAction extends BaseAction {
 
 	private Map<String, Long> dataMap;
 
-	@Inject
+	@Autowired
 	private transient PageViewService pageViewService;
 
 	public String getDomain() {

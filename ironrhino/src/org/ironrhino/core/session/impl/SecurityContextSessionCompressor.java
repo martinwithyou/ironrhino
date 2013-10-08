@@ -2,15 +2,12 @@ package org.ironrhino.core.session.impl;
 
 import java.security.cert.X509Certificate;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.session.SessionCompressor;
 import org.ironrhino.core.util.CodecUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -19,15 +16,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class SecurityContextSessionCompressor implements
 		SessionCompressor<SecurityContext> {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Inject
+	@Autowired
 	private UserDetailsService userDetailsService;
 
 	@Override

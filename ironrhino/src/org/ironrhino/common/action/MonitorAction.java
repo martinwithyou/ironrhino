@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.support.StatControl;
@@ -43,7 +43,7 @@ public class MonitorAction extends BaseAction {
 
 	private Chart chart;
 
-	@Inject
+	@Autowired
 	private transient StatControl statControl;
 
 	public boolean isLocalhost() {

@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -50,13 +50,13 @@ public class UploadAction extends BaseAction {
 
 	private Map<String, Boolean> files;
 
-	@Inject
+	@Autowired
 	private transient FileStorage fileStorage;
 
-	@Inject
+	@Autowired
 	private transient SettingControl settingControl;
 
-	@Inject
+	@Autowired
 	private transient TemplateProvider templateProvider;
 
 	private String suffix;

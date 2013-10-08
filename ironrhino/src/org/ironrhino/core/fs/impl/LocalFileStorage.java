@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
 import org.ironrhino.core.fs.FileStorage;
@@ -29,10 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-@Singleton
-@Named("fileStorage")
+@Component("fileStorage")
 @Profile({ DEFAULT, DUAL })
 public class LocalFileStorage implements FileStorage {
 

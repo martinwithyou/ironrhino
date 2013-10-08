@@ -17,30 +17,28 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
 import org.ironrhino.core.fs.FileStorage;
 import org.ironrhino.core.util.ValueThenKeyComparator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
 
 import com.google.common.io.Files;
 
-@Singleton
-@Named("fileStorage")
+@Component("fileStorage")
 @Profile({ CLOUD, CLUSTER })
 public class MongoFileStorage implements FileStorage {
 
 	@Value("${fileStorage.uri:file}")
 	protected String uri;
 
-	@Inject
+	@Autowired
 	private MongoTemplate mongoTemplate;
 
 	@PostConstruct

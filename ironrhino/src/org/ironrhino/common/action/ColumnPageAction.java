@@ -1,6 +1,6 @@
 package org.ironrhino.common.action;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.Constants;
@@ -23,10 +23,10 @@ public class ColumnPageAction extends BaseAction {
 	public static final String NAMESPACE = "/";
 	public static final String ACTION_NAME = "_column_page_";
 
-	@Inject
+	@Autowired
 	protected PageManager pageManager;
 
-	@Inject
+	@Autowired
 	protected SettingControl settingControl;
 
 	protected String column;

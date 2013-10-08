@@ -3,9 +3,6 @@ package org.ironrhino.security.component;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,21 +13,22 @@ import org.ironrhino.core.spring.security.DefaultAuthenticationFailureHandler;
 import org.ironrhino.core.util.RequestUtils;
 import org.ironrhino.security.model.LoginRecord;
 import org.ironrhino.security.service.UserManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 @Primary
 public class AuthenticationFailureHandler extends
 		DefaultAuthenticationFailureHandler {
 
-	@Inject
+	@Autowired
 	private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
 
-	@Inject
+	@Autowired
 	private UserManager userManager;
 
 	@Override

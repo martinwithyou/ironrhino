@@ -2,26 +2,23 @@ package org.ironrhino.core.session.impl;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
 import org.ironrhino.core.session.HttpSessionStore;
 import org.ironrhino.core.session.SessionCompressorManager;
 import org.ironrhino.core.session.WrappedHttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("cacheBased")
+@Component("cacheBased")
 public class CacheBasedHttpSessionStore implements HttpSessionStore {
 
 	public static final String CACHE_NAMESPACE = "session";
 
-	@Inject
+	@Autowired
 	private SessionCompressorManager sessionCompressorManager;
 
-	@Inject
+	@Autowired
 	private CacheManager cacheManager;
 
 	public void setCacheManager(CacheManager cacheManager) {

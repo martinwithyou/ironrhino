@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.Authorize;
@@ -38,7 +38,7 @@ public class ConsoleAction extends BaseAction {
 
 	private Object result;
 
-	@Inject
+	@Autowired
 	private transient ApplicationContextConsole applicationContextConsole;
 
 	public String getExpression() {

@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +15,7 @@ import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
 import org.ironrhino.security.oauth.server.service.OAuthManager;
 import org.ironrhino.security.service.UserManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,9 +24,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 @Order(Integer.MIN_VALUE + 1)
 public class OAuthHandler implements AccessHandler {
 
@@ -37,10 +35,10 @@ public class OAuthHandler implements AccessHandler {
 	@Value("${api.pattern:/user/self,/oauth2/tokeninfo,/oauth2/revoketoken}")
 	private String apiPattern;
 
-	@Inject
+	@Autowired
 	private OAuthManager oauthManager;
 
-	@Inject
+	@Autowired
 	private UserManager userManager;
 
 	@Override

@@ -3,7 +3,7 @@ package org.ironrhino.security.oauth.client.action;
 import java.net.URLEncoder;
 import java.util.List;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,16 +35,16 @@ public class ConnectAction extends BaseAction {
 
 	private List<OAuthProvider> providers;
 
-	@Inject
+	@Autowired
 	private transient UserManager userManager;
 
-	@Inject
+	@Autowired
 	private transient EventPublisher eventPublisher;
 
-	@Inject
+	@Autowired
 	private transient SettingControl settingControl;
 
-	@Inject
+	@Autowired
 	private transient OAuthProviderManager oauthProviderManager;
 
 	public List<OAuthProvider> getProviders() {

@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
 import org.slf4j.Logger;
@@ -22,10 +19,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
-@Singleton
-@Named("cacheManager")
+@Component("cacheManager")
 @Profile({ DUAL, CLOUD })
 public class RedisCacheManager implements CacheManager {
 

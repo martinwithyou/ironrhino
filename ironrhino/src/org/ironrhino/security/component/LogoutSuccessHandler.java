@@ -2,7 +2,7 @@ package org.ironrhino.security.component;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +16,7 @@ import org.springframework.security.core.Authentication;
 
 public class LogoutSuccessHandler extends DefaultLogoutSuccessHandler {
 
-	@Inject
+	@Autowired
 	private transient EventPublisher eventPublisher;
 
 	@Override

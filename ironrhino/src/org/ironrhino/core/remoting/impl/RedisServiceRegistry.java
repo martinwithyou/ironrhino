@@ -13,19 +13,16 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.remoting.ExportServicesEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("serviceRegistry")
+@Component("serviceRegistry")
 @Profile({ DUAL, CLOUD })
 public class RedisServiceRegistry extends AbstractServiceRegistry {
 
@@ -35,11 +32,11 @@ public class RedisServiceRegistry extends AbstractServiceRegistry {
 
 	private static final String NAMESPACE_HOSTS = NAMESPACE + "hosts:";
 
-	@Inject
-	@Named("stringRedisTemplate")
+	@Autowired
+	@Qualifier("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
 
-	@Inject
+	@Autowired
 	private EventPublisher eventPublisher;
 
 	@Autowired(required = false)

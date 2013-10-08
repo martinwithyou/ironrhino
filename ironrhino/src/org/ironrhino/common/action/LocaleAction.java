@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,10 +27,10 @@ public class LocaleAction extends BaseAction {
 
 	private Locale[] availableLocales;
 
-	@Inject
+	@Autowired
 	private SettingControl settingControl;
 
-	@Inject
+	@Autowired
 	private HttpSessionManager httpSessionManager;
 
 	public String getLang() {

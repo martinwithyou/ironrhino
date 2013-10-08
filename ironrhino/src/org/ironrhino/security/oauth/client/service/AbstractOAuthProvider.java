@@ -1,6 +1,6 @@
 package org.ironrhino.security.oauth.client.service;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.ironrhino.common.support.SettingControl;
 import org.ironrhino.security.oauth.client.model.Profile;
@@ -12,7 +12,7 @@ public abstract class AbstractOAuthProvider implements OAuthProvider {
 	protected static Logger logger = LoggerFactory
 			.getLogger(OAuthProvider.class);
 
-	@Inject
+	@Autowired
 	protected SettingControl settingControl;
 
 	protected boolean forceDisabled;

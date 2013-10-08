@@ -1,15 +1,12 @@
 package org.ironrhino.security.component;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.security.event.LogoutEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class SimpleLogoutEventListener implements
 		ApplicationListener<LogoutEvent> {
 

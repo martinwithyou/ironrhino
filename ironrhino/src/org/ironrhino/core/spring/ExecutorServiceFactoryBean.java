@@ -3,16 +3,13 @@ package org.ironrhino.core.spring;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.util.NameableThreadFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("executorService")
+@Component("executorService")
 public class ExecutorServiceFactoryBean implements
 		FactoryBean<ExecutorService>, InitializingBean, DisposableBean {
 

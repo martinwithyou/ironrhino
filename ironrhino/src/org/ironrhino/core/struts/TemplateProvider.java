@@ -7,8 +7,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -17,6 +15,7 @@ import org.ironrhino.core.struts.result.AutoConfigResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
@@ -24,8 +23,7 @@ import com.opensymphony.xwork2.inject.Container;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-@Singleton
-@Named
+@Component
 public class TemplateProvider {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());

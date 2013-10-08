@@ -2,7 +2,7 @@ package org.ironrhino.common.action;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -26,10 +26,10 @@ public class DisplayPageAction extends BaseAction {
 
 	private boolean preview;
 
-	@Inject
+	@Autowired
 	private transient PageManager pageManager;
 
-	@Inject
+	@Autowired
 	private transient SettingControl settingControl;
 
 	public boolean isPreview() {

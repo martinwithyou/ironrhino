@@ -1,6 +1,6 @@
 package org.ironrhino.common.action;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.Page;
@@ -22,7 +22,7 @@ public class IssuePageAction extends BaseAction {
 	public static final String NAMESPACE = "/";
 	public static final String ACTION_NAME = "_issue_page_";
 
-	@Inject
+	@Autowired
 	protected PageManager pageManager;
 
 	protected ResultPage<Page> resultPage;

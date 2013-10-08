@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -41,7 +41,7 @@ public class SetupAction extends BaseAction {
 	@Value("${" + SETUP_ENABLED_KEY + ":true}")
 	private boolean enabled;
 
-	@Inject
+	@Autowired
 	private ConfigurableApplicationContext ctx;
 
 	@Override

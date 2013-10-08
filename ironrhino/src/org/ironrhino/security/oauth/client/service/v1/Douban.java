@@ -2,18 +2,15 @@ package org.ironrhino.security.oauth.client.service.v1;
 
 import java.io.StringReader;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.util.XmlUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth1Provider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-@Named("douban")
-@Singleton
+@Component
 public class Douban extends OAuth1Provider {
 
 	@Value("${douban.requestTokenUrl:http://www.douban.com/service/auth/request_token}")

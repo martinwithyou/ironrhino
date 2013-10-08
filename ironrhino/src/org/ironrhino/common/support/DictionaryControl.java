@@ -6,9 +6,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
@@ -19,10 +16,11 @@ import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class DictionaryControl implements
 		ApplicationListener<EntityOperationEvent> {
 
@@ -30,7 +28,7 @@ public class DictionaryControl implements
 
 	private Map<String, Dictionary> map;
 
-	@Inject
+	@Autowired
 	private EntityManager<Dictionary> entityManager;
 
 	@PostConstruct

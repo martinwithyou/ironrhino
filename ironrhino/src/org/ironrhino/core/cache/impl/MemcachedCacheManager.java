@@ -11,8 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.MemcachedClientBuilder;
@@ -28,10 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-@Singleton
-@Named("cacheManager")
+@Component("cacheManager")
 @Profile(CLUSTER)
 public class MemcachedCacheManager implements CacheManager {
 

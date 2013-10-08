@@ -3,10 +3,6 @@ package org.ironrhino.common.record;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
@@ -18,16 +14,17 @@ import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.util.AuthzUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 @Aspect
-@Singleton
-@Named
+@Component
 public class RecordAspect implements Ordered {
 	private Logger log = LoggerFactory.getLogger(getClass());
 
-	@Inject
+	@Autowired
 	private SessionFactory sessionFactory;
 
 	public RecordAspect() {

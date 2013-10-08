@@ -3,8 +3,6 @@ package org.ironrhino.common.support;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.ironrhino.core.mail.MailService;
 import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.spring.ApplicationContextConsole;
@@ -20,7 +18,7 @@ public class BatchExecutor {
 
 	private List<String> commands = Collections.emptyList();
 
-	@Inject
+	@Autowired
 	private ApplicationContextConsole applicationContextConsole;
 
 	@Autowired(required = false)

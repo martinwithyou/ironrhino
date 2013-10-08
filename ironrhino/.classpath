@@ -28,7 +28,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-commons-annotations-4.0.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/httpclient-4.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/httpcore-4.3.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/inject-api-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/iText-2.1.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/iTextAsian-2.1.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javamail-1.4.jar"/>

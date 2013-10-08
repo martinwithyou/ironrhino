@@ -1,18 +1,15 @@
 package org.ironrhino.common.support;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.security.dynauth.DynamicAuthorizer;
 import org.ironrhino.core.util.AuthzUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class SettingDynamicAuthorizer implements DynamicAuthorizer {
 
-	@Inject
+	@Autowired
 	protected SettingControl settingControl;
 
 	@Override

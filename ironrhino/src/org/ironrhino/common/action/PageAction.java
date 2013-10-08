@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
@@ -38,7 +36,7 @@ public class PageAction extends BaseAction {
 
 	private ResultPage<Page> resultPage;
 
-	@Inject
+	@Autowired
 	private transient PageManager pageManager;
 
 	private String cmsPath = "/p/";

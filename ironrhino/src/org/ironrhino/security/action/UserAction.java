@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -54,10 +54,10 @@ public class UserAction extends EntityAction<User> {
 	@Value("${user.password.readonly:false}")
 	private boolean userPasswordReadonly;
 
-	@Inject
+	@Autowired
 	private transient UserManager userManager;
 
-	@Inject
+	@Autowired
 	private transient UserRoleManager userRoleManager;
 
 	public List<LabelValue> getRoles() {

@@ -2,10 +2,6 @@ package org.ironrhino.core.aop;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
@@ -14,17 +10,18 @@ import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.event.EventPublisher;
 import org.ironrhino.core.model.Persistable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Aspect
-@Singleton
-@Named
+@Component
 public class PublishAspect extends BaseAspect {
 
 	public PublishAspect() {
 		order = -1;
 	}
 
-	@Inject
+	@Autowired
 	private EventPublisher eventPublisher;
 
 	@AfterReturning(pointcut = "execution(java.util.List org.ironrhino.core.service.BaseManager.delete(*)) ", returning = "list")

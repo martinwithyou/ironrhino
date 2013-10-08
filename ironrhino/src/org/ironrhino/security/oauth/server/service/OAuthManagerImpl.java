@@ -8,10 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -22,16 +18,17 @@ import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.ironrhino.security.oauth.server.model.Authorization;
 import org.ironrhino.security.oauth.server.model.Client;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("oauthManager")
+@Component("oauthManager")
 @Profile({ DEFAULT, DUAL, CLOUD })
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class OAuthManagerImpl implements OAuthManager {
 
-	@Inject
+	@Autowired
 	private EntityManager entityManager;
 
 	private long expireTime = DEFAULT_EXPIRE_TIME;

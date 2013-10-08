@@ -8,8 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
@@ -18,9 +16,9 @@ import net.sf.ehcache.ObjectExistsException;
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CacheManager;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("cacheManager")
+@Component("cacheManager")
 @Profile(DEFAULT)
 public class EhCacheManager implements CacheManager {
 

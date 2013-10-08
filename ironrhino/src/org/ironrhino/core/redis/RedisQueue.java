@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.concurrent.BlockingDeque;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.ironrhino.core.util.ReflectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,7 +15,7 @@ public abstract class RedisQueue<T extends Serializable> implements
 
 	protected String queueName;
 
-	@Inject
+	@Autowired
 	private RedisTemplate<String, T> redisTemplate;
 
 	public void setQueueName(String queueName) {

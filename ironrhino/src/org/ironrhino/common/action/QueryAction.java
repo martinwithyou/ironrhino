@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +38,7 @@ public class QueryAction extends BaseAction {
 
 	protected ResultPage<Map<String, Object>> resultPage;
 
-	@Inject
+	@Autowired
 	protected transient JdbcQueryService jdbcQueryService;
 
 	public String getSql() {

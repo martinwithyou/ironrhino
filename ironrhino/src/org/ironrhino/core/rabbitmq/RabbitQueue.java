@@ -3,7 +3,7 @@ package org.ironrhino.core.rabbitmq;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.ironrhino.core.message.Queue;
 import org.ironrhino.core.util.ReflectionUtils;
@@ -12,10 +12,10 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 
 public abstract class RabbitQueue<T extends Serializable> implements Queue<T> {
 
-	@Inject
+	@Autowired
 	protected AmqpTemplate amqpTemplate;
 
-	@Inject
+	@Autowired
 	protected RabbitAdmin rabbitAdmin;
 
 	protected String queueName = "";

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -27,7 +27,7 @@ public class TreeNodeAction extends BaseAction {
 
 	private long root;
 
-	@Inject
+	@Autowired
 	private transient TreeNodeControl treeNodeControl;
 
 	private transient EntityManager<TreeNode> entityManager;

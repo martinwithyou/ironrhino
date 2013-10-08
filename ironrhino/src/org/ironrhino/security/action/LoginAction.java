@@ -1,6 +1,6 @@
 package org.ironrhino.security.action;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,10 +42,10 @@ public class LoginAction extends BaseAction {
 
 	private String username;
 
-	@Inject
+	@Autowired
 	private transient DefaultUsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
 
-	@Inject
+	@Autowired
 	private transient EventPublisher eventPublisher;
 
 	public String getUsername() {

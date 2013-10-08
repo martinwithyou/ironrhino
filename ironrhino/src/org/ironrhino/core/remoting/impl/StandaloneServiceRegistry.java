@@ -6,13 +6,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("serviceRegistry")
+@Component("serviceRegistry")
 @Profile(DEFAULT)
 public class StandaloneServiceRegistry extends AbstractServiceRegistry {
 

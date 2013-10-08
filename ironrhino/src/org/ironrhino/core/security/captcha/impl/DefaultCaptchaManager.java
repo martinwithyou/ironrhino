@@ -3,9 +3,6 @@ package org.ironrhino.core.security.captcha.impl;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,9 +11,10 @@ import org.ironrhino.core.metadata.Captcha;
 import org.ironrhino.core.security.captcha.CaptchaManager;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.RequestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("captchaManager")
+@Component("captchaManager")
 public class DefaultCaptchaManager implements CaptchaManager {
 
 	private static final char[] CHINESE_NUMBERS = "零壹贰叁肆伍陆柒捌玖".toCharArray();
@@ -33,7 +31,7 @@ public class DefaultCaptchaManager implements CaptchaManager {
 
 	public static final int CACHE_THRESHOLD_TIME_TO_LIVE = 3600;
 
-	@Inject
+	@Autowired
 	protected CacheManager cacheManager;
 
 	@Override

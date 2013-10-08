@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.common.model.tuples.Pair;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.Menu;
@@ -27,6 +24,7 @@ import org.ironrhino.core.util.BeanUtils;
 import org.ironrhino.core.util.ValueThenKeyComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.PackageProvider;
@@ -34,8 +32,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Container;
 
-@Singleton
-@Named("menuControl")
+@Component
 public class MenuControl {
 
 	private MenuNode tree;

@@ -4,20 +4,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.session.impl.DefaultSessionCompressor;
 import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-@Singleton
-@Named
+@Component
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class SessionCompressorManager {
 

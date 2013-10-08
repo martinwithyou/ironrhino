@@ -12,18 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.ErrorMessage;
 import org.ironrhino.core.util.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class InstallationManager {
 
 	public static final String IRONRHINO_COMPONENT_DEPENDENCE = "Ironrhino-Component-Dependence";
@@ -41,7 +39,7 @@ public class InstallationManager {
 	@Value("${installationManager.directory:}")
 	private String directory;
 
-	@Inject
+	@Autowired
 	private ServletContext servletContext;
 
 	public List<Component> getInstalledComponents() {

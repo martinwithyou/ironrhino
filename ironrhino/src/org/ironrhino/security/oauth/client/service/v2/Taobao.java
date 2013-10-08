@@ -8,20 +8,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth2Provider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-@Named("taobao")
-@Singleton
+@Component
 public class Taobao extends OAuth2Provider {
 
 	@Value("${taobao.logo:http://img01.taobaocdn.com/tps/i1/T1T2RZXf8nXXXXXXXX-140-35.png}")

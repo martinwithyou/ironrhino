@@ -1,13 +1,10 @@
 package org.ironrhino.common.service;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.common.model.Schema;
 import org.ironrhino.core.service.BaseManagerImpl;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class SchemaManagerImpl extends BaseManagerImpl<Schema> implements
 		SchemaManager {
 

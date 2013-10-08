@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.inject.Inject;
 
 import org.ironrhino.core.message.Topic;
 import org.ironrhino.core.metadata.Scope;
@@ -22,10 +21,10 @@ import org.springframework.beans.factory.annotation.Value;
 
 public abstract class RabbitTopic<T extends Serializable> implements Topic<T> {
 
-	@Inject
+	@Autowired
 	protected AmqpTemplate amqpTemplate;
 
-	@Inject
+	@Autowired
 	protected RabbitAdmin rabbitAdmin;
 
 	@Value("${rabbitmq.exchangeName:ironrhino}")

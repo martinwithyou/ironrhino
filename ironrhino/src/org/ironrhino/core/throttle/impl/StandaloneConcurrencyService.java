@@ -6,14 +6,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.throttle.ConcurrencyService;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("concurrencyService")
+@Component("concurrencyService")
 @Profile(DEFAULT)
 public class StandaloneConcurrencyService implements ConcurrencyService {
 

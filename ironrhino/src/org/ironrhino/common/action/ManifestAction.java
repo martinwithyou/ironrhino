@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -19,7 +19,7 @@ public class ManifestAction extends BaseAction {
 
 	private static final long serialVersionUID = -5865373753326653067L;
 
-	@Inject
+	@Autowired
 	private SettingControl settingControl;
 
 	private String version;

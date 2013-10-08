@@ -10,18 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.ClassScaner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
-@Singleton
-@Named
+@Component
 public class UserRoleManager {
 
 	private Set<String> staticRoles;

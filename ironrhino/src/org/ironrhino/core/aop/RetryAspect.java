@@ -1,15 +1,12 @@
 package org.ironrhino.core.aop;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
 
 @Aspect
-@Singleton
-@Named
+@Component
 public class RetryAspect extends BaseAspect {
 
 	public RetryAspect() {

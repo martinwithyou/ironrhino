@@ -4,9 +4,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,8 +16,8 @@ public class RedisCyclicSequence extends AbstractCyclicSequence {
 
 	public static final String KEY_SEQUENCE = "{seq}:";
 
-	@Inject
-	@Named("stringRedisTemplate")
+	@Autowired
+	@Qualifier("stringRedisTemplate")
 	private RedisTemplate<String, String> stringRedisTemplate;
 
 	private BoundValueOperations<String, String> boundValueOperations;

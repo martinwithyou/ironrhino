@@ -4,7 +4,6 @@ import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.inject.Inject;
 
 import org.ironrhino.core.redis.RedisQueue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ public class RedisSimpleMailMessageWrapperQueue extends
 	@Autowired(required = false)
 	private ExecutorService executorService;
 
-	@Inject
+	@Autowired
 	private MailSender mailSender;
 
 	private boolean stop;

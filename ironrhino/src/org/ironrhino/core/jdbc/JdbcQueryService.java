@@ -19,9 +19,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.model.ResultPage;
@@ -29,6 +26,7 @@ import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -39,15 +37,15 @@ import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Singleton
-@Named
+@Component
 public class JdbcQueryService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Inject
+	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

@@ -10,9 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -29,12 +26,12 @@ import org.ironrhino.core.service.BaseManagerImpl;
 import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.util.ValueThenKeyComparator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-@Singleton
-@Named
+@Component
 public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		PageManager {
 

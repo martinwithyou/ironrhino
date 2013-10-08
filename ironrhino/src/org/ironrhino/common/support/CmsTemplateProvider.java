@@ -4,27 +4,24 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Locale;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
 import org.ironrhino.core.struts.FallbackTemplateProvider;
 import org.ironrhino.core.struts.result.AutoConfigResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-@Singleton
-@Named
+@Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CmsTemplateProvider implements FallbackTemplateProvider {
 
-	@Inject
+	@Autowired
 	private PageManager pageManager;
 
 	private Configuration configuration;

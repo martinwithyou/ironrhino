@@ -1,9 +1,5 @@
 package org.ironrhino.core.event;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.metadata.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
@@ -12,13 +8,13 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("eventPublisher")
+@Component
 public class EventPublisher implements
 		ApplicationListener<ApplicationContextEvent> {
 
-	@Inject
+	@Autowired
 	private ApplicationEventPublisher publisher;
 
 	@Autowired(required = false)

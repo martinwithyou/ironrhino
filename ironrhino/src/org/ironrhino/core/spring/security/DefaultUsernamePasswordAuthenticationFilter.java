@@ -3,7 +3,7 @@ package org.ironrhino.core.spring.security;
 import java.io.IOException;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,10 +17,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class DefaultUsernamePasswordAuthenticationFilter extends
 		UsernamePasswordAuthenticationFilter {
 
-	@Inject
+	@Autowired
 	protected AuthenticationFailureHandler authenticationFailureHandler;
 
-	@Inject
+	@Autowired
 	protected AuthenticationSuccessHandler authenticationSuccessHandler;
 
 	public static final String TARGET_URL = "targetUrl";

@@ -6,9 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.cache.CheckCache;
 import org.ironrhino.core.cache.EvictCache;
@@ -26,10 +23,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Singleton
-@Named
+@Component
 @Primary
 @Remoting(UserDetailsService.class)
 public class UserManagerImpl extends BaseManagerImpl<User> implements

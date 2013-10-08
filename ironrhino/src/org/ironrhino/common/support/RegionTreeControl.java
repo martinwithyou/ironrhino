@@ -4,25 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.common.model.Region;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("regionTreeControl")
+@Component
 public class RegionTreeControl implements
 		ApplicationListener<EntityOperationEvent> {
 
 	private volatile Region regionTree;
 
-	@Inject
+	@Autowired
 	private EntityManager<Region> entityManager;
 
 	public void buildRegionTree() {

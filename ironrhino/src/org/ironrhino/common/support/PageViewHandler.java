@@ -3,9 +3,6 @@ package org.ironrhino.common.support;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,9 +12,9 @@ import org.ironrhino.core.session.HttpSessionManager;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 @Order(Integer.MIN_VALUE)
 public class PageViewHandler implements AccessHandler {
 
@@ -27,7 +24,7 @@ public class PageViewHandler implements AccessHandler {
 	@Autowired(required = false)
 	private ExecutorService executorService;
 
-	@Inject
+	@Autowired
 	private HttpSessionManager httpSessionManager;
 
 	@Override

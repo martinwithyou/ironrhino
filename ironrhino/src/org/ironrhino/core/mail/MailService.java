@@ -4,8 +4,6 @@ import java.io.StringWriter;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
-import javax.inject.Inject;
-
 import org.ironrhino.core.struts.TemplateProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +22,7 @@ public class MailService {
 	@Autowired(required = false)
 	private SimpleMailMessageWrapperQueue simpleMailMessageWrapperQueue;
 
-	@Inject
+	@Autowired
 	private MailSender mailSender;
 
 	@Autowired(required = false)

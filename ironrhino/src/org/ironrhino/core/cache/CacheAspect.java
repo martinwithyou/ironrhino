@@ -4,10 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -17,18 +13,19 @@ import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.aop.BaseAspect;
 import org.ironrhino.core.model.NullObject;
 import org.ironrhino.core.util.ExpressionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Aspect
-@Singleton
-@Named
+@Component
 public class CacheAspect extends BaseAspect {
 
 	private final static String MUTEX = "_MUTEX_";
 
 	private final static int DEFAULT_MUTEX_WAIT = 200;
 
-	@Inject
+	@Autowired
 	private CacheManager cacheManager;
 
 	@Value("${cacheAspect.mutex:true}")

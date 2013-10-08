@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.metadata.Authorize;
@@ -55,13 +55,13 @@ public class PermitAction extends BaseAction {
 
 	private String role;
 
-	@Inject
+	@Autowired
 	private transient AclManager aclManager;
 
-	@Inject
+	@Autowired
 	private transient UserManager userManager;
 
-	@Inject
+	@Autowired
 	private transient UserRoleManager userRoleManager;
 
 	@com.opensymphony.xwork2.inject.Inject("ironrhino-autoconfig")

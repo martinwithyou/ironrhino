@@ -2,7 +2,7 @@ package org.ironrhino.common.action;
 
 import java.util.Collection;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.Region;
@@ -23,7 +23,7 @@ public class RegionTreeAction extends BaseAction {
 
 	private long root;
 
-	@Inject
+	@Autowired
 	private transient RegionTreeControl regionTreeControl;
 
 	public long getRoot() {

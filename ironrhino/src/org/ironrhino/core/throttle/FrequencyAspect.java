@@ -2,23 +2,20 @@ package org.ironrhino.core.throttle;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ironrhino.core.aop.BaseAspect;
 import org.ironrhino.core.util.ErrorMessage;
 import org.ironrhino.core.util.ExpressionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Aspect
-@Singleton
-@Named
+@Component
 public class FrequencyAspect extends BaseAspect {
 
-	@Inject
+	@Autowired
 	private FrequencyService frequencyService;
 
 	public FrequencyAspect() {

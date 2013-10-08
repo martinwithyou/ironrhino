@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
@@ -62,10 +62,10 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 
 	private Class<T> entityClass;
 
-	@Inject
+	@Autowired
 	protected SessionFactory sessionFactory;
 
-	@Inject
+	@Autowired
 	private DeleteChecker deleteChecker;
 
 	public BaseManagerImpl() {

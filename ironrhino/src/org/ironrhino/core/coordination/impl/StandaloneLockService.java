@@ -7,14 +7,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.ironrhino.core.coordination.LockService;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("lockService")
+@Component("lockService")
 @Profile(DEFAULT)
 public class StandaloneLockService implements LockService {
 

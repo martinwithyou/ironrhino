@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 import org.ironrhino.core.metadata.Scope;
 import org.ironrhino.core.util.AppInfo;
@@ -25,10 +24,10 @@ public abstract class RedisTopic<T extends Serializable> implements
 
 	protected String channelName;
 
-	@Inject
+	@Autowired
 	private RedisMessageListenerContainer messageListenerContainer;
 
-	@Inject
+	@Autowired
 	private RedisTemplate redisTemplate;
 
 	@Autowired(required = false)

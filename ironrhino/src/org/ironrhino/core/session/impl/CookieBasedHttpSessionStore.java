@@ -5,9 +5,6 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,9 +16,10 @@ import org.ironrhino.core.util.NumberUtils;
 import org.ironrhino.core.util.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named("cookieBased")
+@Component("cookieBased")
 public class CookieBasedHttpSessionStore implements HttpSessionStore {
 
 	protected Logger log = LoggerFactory.getLogger(this.getClass());
@@ -32,7 +30,7 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 
 	private String sessionCookieName = DEFAULT_SESSION_COOKIE_NAME;
 
-	@Inject
+	@Autowired
 	private SessionCompressorManager sessionCompressorManager;
 
 	public void setSessionCookieName(String sessionCookieName) {

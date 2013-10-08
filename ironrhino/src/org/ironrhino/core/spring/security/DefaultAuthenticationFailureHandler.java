@@ -2,8 +2,6 @@ package org.ironrhino.core.spring.security;
 
 import java.io.IOException;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class DefaultAuthenticationFailureHandler implements
 		AuthenticationFailureHandler {
 

@@ -10,9 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.tuples.Pair;
 import org.ironrhino.common.util.Location;
@@ -24,9 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 public class PageViewServiceImpl implements PageViewService {
 
 	public static final String KEY_PAGE_VIEW = "{pv}:";

@@ -2,8 +2,6 @@ package org.ironrhino.core.servlet.handles;
 
 import java.io.IOException;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,9 +10,9 @@ import org.ironrhino.core.servlet.AccessHandler;
 import org.ironrhino.core.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@Named
+@Component
 @Order(Integer.MIN_VALUE)
 public class FirewallHandler implements AccessHandler {
 
