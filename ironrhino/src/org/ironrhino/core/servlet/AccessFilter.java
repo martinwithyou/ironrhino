@@ -2,7 +2,6 @@ package org.ironrhino.core.servlet;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,8 +27,8 @@ import org.ironrhino.core.util.UserAgent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 
 @Singleton
 @Named
@@ -55,10 +54,8 @@ public class AccessFilter implements Filter {
 
 	private List<String> excludePatternsList = Collections.emptyList();
 
-	private Collection<AccessHandler> handlers;
-
-	@Inject
-	private ApplicationContext ctx;
+	@Autowired(required = false)
+	private List<AccessHandler> handlers;
 
 	@Inject
 	private HttpSessionManager httpSessionManager;
@@ -84,7 +81,6 @@ public class AccessFilter implements Filter {
 		if (StringUtils.isNotBlank(excludePatterns))
 			excludePatternsList = Arrays.asList(excludePatterns
 					.split("\\s*,\\s*"));
-		handlers = ctx.getBeansOfType(AccessHandler.class).values();
 	}
 
 	@Override
@@ -137,25 +133,26 @@ public class AccessFilter implements Filter {
 				&& request.getHeader("Last-Event-Id") == null)
 			accessLog.info("");
 
-		for (AccessHandler handler : handlers) {
-			String pattern = handler.getPattern();
-			boolean matched = StringUtils.isBlank(pattern);
-			if (!matched) {
-				String[] arr = pattern.split("\\s*,\\s*");
-				for (String pa : arr)
-					if (org.ironrhino.core.util.StringUtils.matchesWildcard(
-							uri, pa)) {
-						matched = true;
-						break;
+		if (handlers != null)
+			for (AccessHandler handler : handlers) {
+				String pattern = handler.getPattern();
+				boolean matched = StringUtils.isBlank(pattern);
+				if (!matched) {
+					String[] arr = pattern.split("\\s*,\\s*");
+					for (String pa : arr)
+						if (org.ironrhino.core.util.StringUtils
+								.matchesWildcard(uri, pa)) {
+							matched = true;
+							break;
+						}
+				}
+				if (matched) {
+					if (handler.handle(request, response)) {
+						MDC.clear();
+						return;
 					}
-			}
-			if (matched) {
-				if (handler.handle(request, response)) {
-					MDC.clear();
-					return;
 				}
 			}
-		}
 
 		long start = System.currentTimeMillis();
 		chain.doFilter(req, resp);

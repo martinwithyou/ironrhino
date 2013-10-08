@@ -10,14 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.ClassScaner;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
@@ -28,15 +26,8 @@ public class UserRoleManager {
 
 	private Set<String> staticRoles;
 
-	private Collection<UserRoleProvider> providers;
-
-	@Inject
-	private ApplicationContext ctx;
-
-	@PostConstruct
-	public void init() {
-		providers = ctx.getBeansOfType(UserRoleProvider.class).values();
-	}
+	@Autowired(required = false)
+	private List<UserRoleProvider> userRoleProviders;
 
 	public Set<String> getStaticRoles(boolean excludeBuiltin) {
 		Set<String> roles = getStaticRoles();
@@ -74,11 +65,12 @@ public class UserRoleManager {
 
 	public Map<String, String> getCustomRoles() {
 		Map<String, String> customRoles = new LinkedHashMap<String, String>();
-		for (UserRoleProvider p : providers) {
-			Map<String, String> map = p.getRoles();
-			if (map != null)
-				customRoles.putAll(map);
-		}
+		if (userRoleProviders != null)
+			for (UserRoleProvider p : userRoleProviders) {
+				Map<String, String> map = p.getRoles();
+				if (map != null)
+					customRoles.putAll(map);
+			}
 		return customRoles;
 	}
 

@@ -4,11 +4,8 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -23,7 +20,6 @@ import org.ironrhino.core.spring.security.FallbackUserDetailsService;
 import org.ironrhino.core.util.CodecUtils;
 import org.ironrhino.security.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,18 +35,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserManagerImpl extends BaseManagerImpl<User> implements
 		UserManager {
 
-	@Inject
-	private ApplicationContext ctx;
-
-	private Collection<UserRoleMapper> mappers;
+	@Autowired(required = false)
+	private List<UserRoleMapper> userRoleMappers;
 
 	@Autowired(required = false)
 	private FallbackUserDetailsService fallbackUserDetailsService;
-
-	@PostConstruct
-	public void afterPropertiesSet() {
-		mappers = ctx.getBeansOfType(UserRoleMapper.class).values();
-	}
 
 	@Override
 	@Transactional
@@ -99,8 +88,8 @@ public class UserManagerImpl extends BaseManagerImpl<User> implements
 		auths.add(new SimpleGrantedAuthority(UserRole.ROLE_BUILTIN_USER));
 		for (String role : user.getRoles())
 			auths.add(new SimpleGrantedAuthority(role));
-		if (mappers != null)
-			for (UserRoleMapper mapper : mappers) {
+		if (userRoleMappers != null)
+			for (UserRoleMapper mapper : userRoleMappers) {
 				String[] roles = mapper.map(user);
 				if (roles != null)
 					for (String role : roles)

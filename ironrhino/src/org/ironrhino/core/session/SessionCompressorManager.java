@@ -1,11 +1,9 @@
 package org.ironrhino.core.session;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -14,7 +12,7 @@ import org.ironrhino.core.session.impl.DefaultSessionCompressor;
 import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -28,17 +26,10 @@ public class SessionCompressorManager {
 	private TypeReference<Map<String, String>> mapStringStringType = new TypeReference<Map<String, String>>() {
 	};
 
-	@Inject
-	private ApplicationContext ctx;
-
-	private Collection<SessionCompressor> compressors;
+	@Autowired(required = false)
+	private List<SessionCompressor> compressors;
 
 	private SessionCompressor defaultSessionCompressor = new DefaultSessionCompressor();
-
-	@PostConstruct
-	public void afterPropertiesSet() {
-		compressors = ctx.getBeansOfType(SessionCompressor.class).values();
-	}
 
 	public String compress(WrappedHttpSession session) {
 		Map<String, Object> map = session.getAttrMap();
@@ -49,11 +40,12 @@ public class SessionCompressorManager {
 			if (key == null || value == null)
 				continue;
 			SessionCompressor compressor = null;
-			for (SessionCompressor var : compressors)
-				if (var.supportsKey(key)) {
-					compressor = var;
-					break;
-				}
+			if (compressors != null)
+				for (SessionCompressor var : compressors)
+					if (var.supportsKey(key)) {
+						compressor = var;
+						break;
+					}
 			if (compressor == null)
 				compressor = defaultSessionCompressor;
 			try {
@@ -83,12 +75,13 @@ public class SessionCompressorManager {
 				for (Map.Entry<String, String> entry : compressedMap.entrySet()) {
 					String key = entry.getKey();
 					SessionCompressor compressor = null;
-					for (SessionCompressor var : compressors) {
-						if (var.supportsKey(key)) {
-							compressor = var;
-							break;
+					if (compressors != null)
+						for (SessionCompressor var : compressors) {
+							if (var.supportsKey(key)) {
+								compressor = var;
+								break;
+							}
 						}
-					}
 					if (compressor == null)
 						compressor = defaultSessionCompressor;
 					try {

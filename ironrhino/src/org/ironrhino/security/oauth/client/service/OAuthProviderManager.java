@@ -1,33 +1,25 @@
 package org.ironrhino.security.oauth.client.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Named
 @Singleton
 public class OAuthProviderManager {
 
-	@Inject
-	private ApplicationContext ctx;
-
-	private Collection<OAuthProvider> providers;
-
-	@PostConstruct
-	public void afterPropertiesSet() {
-		providers = ctx.getBeansOfType(OAuthProvider.class).values();
-	}
+	@Autowired(required = false)
+	private List<OAuthProvider> providers;
 
 	public List<OAuthProvider> getProviders() {
+		if (providers == null)
+			return Collections.emptyList();
 		List<OAuthProvider> list = new ArrayList<OAuthProvider>(
 				providers.size());
 		for (OAuthProvider p : providers)
@@ -38,7 +30,7 @@ public class OAuthProviderManager {
 	}
 
 	public OAuthProvider lookup(String id) {
-		if (StringUtils.isBlank(id))
+		if (providers == null || StringUtils.isBlank(id))
 			return null;
 		for (OAuthProvider p : providers)
 			if (p.isEnabled() && id.equals(p.getName()))
