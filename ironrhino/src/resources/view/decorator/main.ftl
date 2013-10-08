@@ -32,6 +32,16 @@
 </head>
 
 <body class="main<#if modernBrowser> render-location-qrcode</#if>">
+<#if !modernBrowser>
+<div class="container">
+<div class="alert">
+<button type="button" class="close" data-dismiss="alert">&times;</button>
+<#noescape>
+${action.getText('browser.warning')}
+</#noescape>
+</div>
+</div>
+</#if>
 <#include "include/top.ftl"/>
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 <div class="navbar navbar-fixed-top">
