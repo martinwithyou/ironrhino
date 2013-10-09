@@ -92,11 +92,12 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 			urlBuilder.setPort(serverPort);
 			urlBuilder.setContextPath(request.getContextPath());
 			urlBuilder.setPathInfo(getLoginFormUrl());
-			if (isForceHttps() && "http".equals(scheme)) {
+			if (isForceHttps() && "http".equals(scheme)
+					|| "https".equals(scheme)) {
+				urlBuilder.setScheme("https");
 				Integer httpsPort = getPortMapper().lookupHttpsPort(serverPort);
 				if (httpsPort == null)
 					httpsPort = 443;
-				urlBuilder.setScheme("https");
 				urlBuilder.setPort(httpsPort);
 			}
 			loginUrl = new StringBuilder(urlBuilder.getUrl());
