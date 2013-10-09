@@ -83,6 +83,8 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 			}
 			RedirectUrlBuilder urlBuilder = new RedirectUrlBuilder();
 			String scheme = request.getScheme();
+			if (StringUtils.isNotBlank(request.getHeader("X-Real-Scheme")))
+				scheme = request.getHeader("X-Real-Scheme");
 			int serverPort = getPortResolver().getServerPort(request);
 			urlBuilder.setScheme(scheme);
 			if (url != null)
