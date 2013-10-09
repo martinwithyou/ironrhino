@@ -94,6 +94,8 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 			urlBuilder.setPathInfo(getLoginFormUrl());
 			if (isForceHttps() && "http".equals(scheme)) {
 				Integer httpsPort = getPortMapper().lookupHttpsPort(serverPort);
+				if (httpsPort == null)
+					httpsPort = 443;
 				urlBuilder.setScheme("https");
 				urlBuilder.setPort(httpsPort);
 			}
@@ -116,6 +118,8 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 				urlBuilder.setServerName(url.getHost());
 				Integer httpsPort = getPortMapper().lookupHttpsPort(
 						url.getPort());
+				if (httpsPort == null)
+					httpsPort = 443;
 				urlBuilder.setPort(httpsPort);
 				urlBuilder.setPathInfo(url.getPath());
 				urlBuilder.setQuery(url.getQuery());
