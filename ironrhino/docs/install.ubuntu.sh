@@ -398,7 +398,7 @@ fi
 
 #install redis
 if ! which redis-server > /dev/null && ! $(ls -l redis-*.tar.gz >/dev/null 2>&1) ; then
-wget http://redis.googlecode.com/files/redis-2.6.14.tar.gz
+wget http://download.redis.io/releases/redis-2.6.16.tar.gz
 fi
 if $(ls -l redis-*.tar.gz >/dev/null 2>&1) ; then
 tar xvf redis-*.tar.gz >/dev/null && rm -rf redis-*.tar.gz
@@ -429,7 +429,7 @@ fi
 version="\$1"
 if [ ! -d redis-\$version ];then
 if [ ! -f redis-\$version.tar.gz ];then
-wget http://redis.googlecode.com/files/redis-\$version.tar.gz
+wget http://download.redis.io/releases/redis-\$version.tar.gz
 fi
 tar xf redis-\$version.tar.gz && rm -rf redis-\$version.tar.gz
 fi
