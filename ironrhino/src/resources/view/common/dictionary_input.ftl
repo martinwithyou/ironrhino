@@ -28,10 +28,10 @@
 		</style>
 		<thead>
 			<tr>
-				<td style="width:225px;">${action.getText('label')}</td>
-				<td style="width:225px;">${action.getText('value')}</td>
+				<td style="width:33%;">${action.getText('label')}</td>
+				<td style="width:33%;">${action.getText('value')}</td>
 				<#if !Parameters.brief??>
-				<td style="width:100px;">${action.getText('type')}</td>
+				<td style="width:15%;">${action.getText('type')}</td>
 				</#if>
 				<td class="manipulate"></td>
 			</tr>
