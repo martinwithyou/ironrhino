@@ -34739,21 +34739,22 @@ function uploadFiles(files, filenames) {
 (function($) {
 	$.fn.ajaxpanel = function() {
 		$(this).each(function() {
-					var t = $(this);
-					t.bind('load', function() {
-								ajaxpanel(t)
-							});
-					if (t.data('timeout')) {
-						setTimeout(function() {
-									ajaxpanel(t);
-								}, parseInt(t.data('timeout')));
-					} else if (t.data('interval')) {
-						setInterval(function() {
-									ajaxpanel(t);
-								}, parseInt(t.data('interval')));
-					} else if (!t.hasClass('manual'))
-						ajaxpanel(t);
-				});
+			var t = $(this);
+			t.bind('load', function() {
+				ajaxpanel(t)
+			});
+			if (t.data('timeout')) {
+				setTimeout(function() {
+					ajaxpanel(t);
+				}, parseInt(t.data('timeout')));
+			} else if (t.data('interval')) {
+				ajaxpanel(t);
+				setInterval(function() {
+					ajaxpanel(t);
+				}, parseInt(t.data('interval')));
+			} else if (!t.hasClass('manual'))
+				ajaxpanel(t);
+		});
 		return this;
 	};
 	function ajaxpanel(ele) {
@@ -34796,8 +34797,8 @@ function uploadFiles(files, filenames) {
 Observation.ajaxpanel = function(container) {
 	$('.ajaxpanel', container).ajaxpanel();
 	$('.ajaxpanel .load', container).click(function() {
-				$(this).closest('.ajaxpanel').trigger('load');
-			});
+		$(this).closest('.ajaxpanel').trigger('load');
+	});
 };
 (function($) {
 
