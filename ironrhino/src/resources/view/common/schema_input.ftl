@@ -8,12 +8,19 @@
 	<#if !schema.new>
 		<@s.hidden name="schema.id" />
 	</#if>
+	<#if Parameters.embedded??>
+	<@s.hidden name="schema.name"/>
+	<@s.hidden name="schema.description"/>
+	<@s.hidden name="schema.strict"/>
+	<#else>
 	<div class="row-fluid">
-		<div class="span4"><#if Parameters.brief??><@s.hidden name="schema.name"/><#else><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable input-medium"/></#if></div>
-		<div class="span5"><#if Parameters.brief??><@s.hidden name="schema.description" /><#else><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="schema.description"/></#if></div>
-		<div class="span3"><span>${action.getText('strict')}: </span><@s.checkbox theme="simple" name="schema.strict" cssClass="custom"/></div>
+		<div class="span4"><span>${action.getText('name')}: </span><#if Parameters.brief??><@s.hidden name="schema.name"/>${schema.name!}<#else><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable input-medium"/></#if></div>
+		<div class="span5"><span>${action.getText('description')}: </span><#if Parameters.brief??><@s.hidden name="schema.description" />${schema.description!}<#else><@s.textfield theme="simple" name="schema.description"/></#if></div>
+		<div class="span3"><span>${action.getText('strict')}: </span><#if Parameters.brief??><@s.hidden name="schema.strict" />${action.getText(schema.strict?string)}<#else><@s.checkbox theme="simple" name="schema.strict" cssClass="custom"/></#if></div>
 	</div>
-	<table class="datagrid table table-condensed">
+	</#if>
+	<table class="datagrid nullable table table-condensed">
+	<@s.hidden name="__datagrid_schema.fields" />
 		<style scoped>
 		tr.linkage{
 			background-color:#F5F5F5;

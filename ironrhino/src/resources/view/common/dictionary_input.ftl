@@ -8,16 +8,17 @@
 	<#if !dictionary.new>
 		<@s.hidden name="dictionary.id" />
 	</#if>
-	<#if Parameters.brief??>
+	<#if Parameters.embedded??>
 		<@s.hidden name="dictionary.name"/>
 		<@s.hidden name="dictionary.description" />
 	<#else>
 	<div class="row-fluid">
-		<div class="span5"><span>${action.getText('name')}: </span><@s.textfield theme="simple" name="dictionary.name" cssClass="required checkavailable"/></div>
-		<div class="span5"><span>${action.getText('description')}: </span><@s.textfield theme="simple" name="dictionary.description" /></div>
+		<div class="span5"><span>${action.getText('name')}: </span><#if Parameters.brief??><@s.hidden name="dictionary.name"/>${dictionary.name!}<#else><@s.textfield theme="simple" name="dictionary.name" cssClass="required checkavailable"/></#if></div>
+		<div class="span5"><span>${action.getText('description')}: </span><#if Parameters.brief??><@s.hidden name="dictionary.description"/>${dictionary.name!}<#else><@s.textfield theme="simple" name="dictionary.description" /></#if></div>
 	</div>
 	</#if>
-	<table class="datagrid table table-condensed">
+	<table class="datagrid nullable table table-condensed">
+	<@s.hidden name="__datagrid_dictionary.items" />
 		<style scoped>
 		tr.option{
 			background-color:#F5F5F5;
@@ -30,7 +31,7 @@
 			<tr>
 				<td style="width:33%;">${action.getText('label')}</td>
 				<td style="width:33%;">${action.getText('value')}</td>
-				<#if !Parameters.brief??>
+				<#if !(Parameters.brief??||Parameters.embedded??)>
 				<td style="width:15%;">${action.getText('type')}</td>
 				</#if>
 				<td class="manipulate"></td>
@@ -44,8 +45,8 @@
 			<#list 0..size as index>
 			<tr class="linkage">
 				<td><@s.textfield theme="simple" name="dictionary.items[${index}].label"/></td>
-				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required${(!Parameters.brief??)?string(' showonadd linkage_component option',' ')}"/></td>
-				<#if !Parameters.brief??>
+				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required${(!(Parameters.brief??||Parameters.embedded??))?string(' showonadd linkage_component option',' ')}"/></td>
+				<#if !(Parameters.brief??||Parameters.embedded??)>
 				<td><select class="linkage_switch" style="width:100px;">
 						<option value="option">${action.getText('option')}</option>
 						<option value="group"<#if dictionary.items[index]?? && dictionary.items[index].value?? && !dictionary.items[index].value?has_content>selected="selected"</#if>>${action.getText('group')}</option>

@@ -139,11 +139,7 @@ public class Schema extends BaseEntity {
 	@PrePersist
 	@PreUpdate
 	public void validate() {
-		if (fields == null || fields.size() == 0) {
-			ValidationException ve = new ValidationException();
-			ve.addActionError("validation.required");
-			throw ve;
-		} else {
+		if (fields != null && fields.size() > 0) {
 			boolean hasGroup = false;
 			boolean needApendBlankGroup = false;
 			Set<String> names = new HashSet<String>();

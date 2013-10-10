@@ -165,11 +165,7 @@ public class Dictionary extends BaseEntity {
 	@PrePersist
 	@PreUpdate
 	public void validate() {
-		if (items == null || items.size() == 0) {
-			ValidationException ve = new ValidationException();
-			ve.addActionError("validation.required");
-			throw ve;
-		} else {
+		if (items != null && items.size() > 0) {
 			Set<String> values = new HashSet<String>(items.size());
 			Set<String> labels = new HashSet<String>(items.size());
 			for (int i = 0; i < items.size(); i++) {
