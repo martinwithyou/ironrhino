@@ -51,7 +51,7 @@ cat>tomcat/conf/server.xml<<EOF
 <?xml version='1.0' encoding='utf-8'?>
 <Server port="\${port.shutdown}" shutdown="SHUTDOWN">
   <Service name="Catalina">
-    <Connector port="\${port.http}" protocol="org.apache.coyote.http11.Http11NioProtocol" connectionTimeout="20000" redirectPort="8443" URIEncoding="UTF-8" useBodyEncodingForURI="true" enableLookups="false" bindOnInit="false" server="ironrhino" maxPostSize="4194304"/>
+    <Connector port="\${port.http}" protocol="org.apache.coyote.http11.Http11NioProtocol" connectionTimeout="20000" redirectPort="8443" URIEncoding="UTF-8" useBodyEncodingForURI="true" enableLookups="false" bindOnInit="false" server="ironrhino" maxPostSize="4194304" maxThreads="1000"/>
     <Engine name="Catalina" defaultHost="localhost">
       <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="false">
       </Host>
