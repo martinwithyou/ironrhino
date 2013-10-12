@@ -231,6 +231,7 @@ public class UserAction extends EntityAction<User> {
 			addActionError(getText("access.denied"));
 			return ACCESSDENIED;
 		}
+		user.setId(AuthzUtils.<User> getUserDetails().getId());
 		if (!makeEntityValid())
 			return INPUT;
 		User userInSession = AuthzUtils.getUserDetails();

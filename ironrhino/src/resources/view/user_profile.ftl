@@ -5,9 +5,8 @@
 </head>
 <body>
 <@s.form action="${actionBaseUrl}/profile" method="post" cssClass="form-horizontal ajax">
-	<@s.hidden name="user.id"/>
 	<@s.textfield label="%{getText('name')}" name="user.name" cssClass="required" readonly=userProfileReadonly/>
-	<@s.textfield label="%{getText('email')}" name="user.email" type="email" cssClass="email checkavailable" readonly=userProfileReadonly/>
+	<@s.textfield label="%{getText('email')}" name="user.email" type="email" cssClass="email" readonly=userProfileReadonly/>
 	<@s.textfield label="%{getText('phone')}" name="user.phone" readonly=userProfileReadonly/>
 	<@s.submit value="%{getText('save')}" disabled=userProfileReadonly />
 </@s.form>
