@@ -42,7 +42,12 @@ public class HttpClientUtils {
 		DEFAULT_HEADERS
 				.add(new BasicHeader(
 						"User-Agent",
-						"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.37 Safari/537.36"));
+						"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.16 Safari/537.36"));
+		DEFAULT_HEADERS
+				.add(new BasicHeader("Accept",
+						"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"));
+		DEFAULT_HEADERS.add(new BasicHeader("Accept-Encoding",
+				"gzip,deflate,sdch"));
 	}
 
 	static class HttpClientHolder {
