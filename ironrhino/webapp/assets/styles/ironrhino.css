@@ -8313,6 +8313,12 @@ ul.portal-column {
 	-webkit-box-shadow: 0 0 10px rgba(189, 189, 189, 0.4);
 	-moz-box-shadow: 0 0 10px rgba(189, 189, 189, 0.4);
 	}
+.portal-column:first-of-type .portlet {
+	margin-left: 0;
+	}
+.portal-column:last-of-type .portlet {
+	margin-right: 0;
+	}
 .portlet-header { 
 	border:none;
 	padding:10px;
