@@ -44,8 +44,8 @@
 			</#if>
 			<#list 0..size as index>
 			<tr class="linkage">
-				<td><@s.textfield theme="simple" name="dictionary.items[${index}].label"/></td>
-				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" cssClass="required${(!(Parameters.brief??||Parameters.embedded??))?string(' showonadd linkage_component option',' ')}"/></td>
+				<td><@s.textfield theme="simple" name="dictionary.items[${index}].label" style="width:90%;"/></td>
+				<td><@s.textfield theme="simple" name="dictionary.items[${index}].value" style="width:90%;" cssClass="required${(!(Parameters.brief??||Parameters.embedded??))?string(' showonadd linkage_component option',' ')}"/></td>
 				<#if !(Parameters.brief??||Parameters.embedded??)>
 				<td><select class="linkage_switch" style="width:100px;">
 						<option value="option">${action.getText('option')}</option>
