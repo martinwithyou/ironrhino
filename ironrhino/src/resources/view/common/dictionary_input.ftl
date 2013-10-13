@@ -14,7 +14,7 @@
 	<#else>
 	<div class="row-fluid">
 		<div class="span5"><span>${action.getText('name')}: </span><#if Parameters.brief??><@s.hidden name="dictionary.name"/>${dictionary.name!}<#else><@s.textfield theme="simple" name="dictionary.name" cssClass="required checkavailable"/></#if></div>
-		<div class="span5"><span>${action.getText('description')}: </span><#if Parameters.brief??><@s.hidden name="dictionary.description"/>${dictionary.name!}<#else><@s.textfield theme="simple" name="dictionary.description" /></#if></div>
+		<div class="span5"><span>${action.getText('description')}: </span><#if Parameters.brief??><@s.hidden name="dictionary.description"/>${dictionary.description!}<#else><@s.textfield theme="simple" name="dictionary.description" /></#if></div>
 	</div>
 	</#if>
 	<table class="datagrid nullable table table-condensed">
@@ -30,7 +30,7 @@
 		<thead>
 			<tr>
 				<td style="width:33%;">${action.getText('label')}</td>
-				<td style="width:33%;">${action.getText('value')}</td>
+				<td>${action.getText('value')}</td>
 				<#if !(Parameters.brief??||Parameters.embedded??)>
 				<td style="width:15%;">${action.getText('type')}</td>
 				</#if>
