@@ -56,7 +56,7 @@ ${action.getText('browser.warning')}
 		<div class="btn-group pull-right">
 			<#assign user = authentication("principal")>
 	        <a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
-	          <i class="glyphicon glyphicon-user"></i>${user?string} <span class="caret"></span>
+	          <i class="glyphicon glyphicon-user"></i> ${user?string} <span class="caret"></span>
 	        </a>
 	        <ul class="dropdown-menu">
 	          <li><a href="<@url value="${ssoServerBase!}/user/profile"/>" class="popmodal">${action.getText('profile')}</a></li>
