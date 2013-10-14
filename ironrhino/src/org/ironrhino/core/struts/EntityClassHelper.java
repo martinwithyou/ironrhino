@@ -125,7 +125,7 @@ public class EntityClassHelper {
 				uci.setType("enum");
 				try {
 					returnType.getMethod("getName");
-					uci.setListValue("name");
+					uci.setListKey("name");
 				} catch (NoSuchMethodException e) {
 					uci.setListKey("top");
 				}
