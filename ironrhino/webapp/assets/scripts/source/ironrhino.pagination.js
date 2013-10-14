@@ -52,7 +52,7 @@
 								form.submit();
 								return false;
 							}
-						}).on('click', '.toolbar .icon-search',
+						}).on('click', '.toolbar .glyphicon-search',
 						function(event) {
 							var form = $(event.target).closest('form');
 							$('.inputPage', form).val(1);

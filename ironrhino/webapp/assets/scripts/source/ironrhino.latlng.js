@@ -4,8 +4,8 @@
 		if (!t.parent('.input-append').length)
 			t
 					.wrap('<div class="input-append"></div>')
-					.after('<span class="add-on"><i class="icon-map-marker" style="cursor:pointer;"></i></span>');
-		$('.icon-map-marker', t.next()).click(function() {
+					.after('<span class="add-on"><i class="glyphicon glyphicon-map-marker" style="cursor:pointer;"></i></span>');
+		$('.glyphicon-map-marker', t.next()).click(function() {
 			window.latlng_input = $(this).parent().prev();
 			if (!$('#_maps_window').length) {
 				var win = $('<div id="_maps_window" title="'

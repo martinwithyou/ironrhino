@@ -40,7 +40,7 @@
 					+ t.attr('name')
 					+ '" value="'
 					+ t.val()
-					+ '"/><span class="add-on"><i class="icon-chevron-down"></i></span></div>')
+					+ '"/><span class="add-on"><i class="glyphicon glyphicon-chevron-down"></i></span></div>')
 					.insertBefore(t);
 			$('input', div).width(t.width() - 27);
 			if (t.hasClass('required'))

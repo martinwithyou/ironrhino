@@ -13,10 +13,10 @@
 				var t = $(this);
 				if (!t.html()) {
 					if (t.parent().parent().prop('tagName') == 'THEAD') {
-						t.html('<i class="icon-plus add"></i>');
+						t.html('<i class="glyphicon glyphicon-plus add"></i>');
 					} else {
 						t
-								.html('<i class="icon-plus add"></i><i class="icon-minus remove"></i><i class="icon-arrow-up moveup"></i><i class="icon-arrow-down movedown"></i>');
+								.html('<i class="glyphicon glyphicon-plus add"></i><i class="glyphicon glyphicon-minus remove"></i><i class="glyphicon glyphicon-arrow-up moveup"></i><i class="glyphicon glyphicon-arrow-down movedown"></i>');
 					}
 				}
 			});

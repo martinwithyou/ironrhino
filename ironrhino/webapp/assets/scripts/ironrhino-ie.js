@@ -31636,7 +31636,7 @@ Initialization.common = function() {
 		});
 	}
 	if ($(document.body).hasClass('render-location-qrcode')) {
-		$('<div id="render-location-qrcode" style="width:15px;position:fixed;bottom:0;right:0;cursor:pointer;"><i class="icon-qrcode"></i></div>')
+		$('<div id="render-location-qrcode" style="width:15px;position:fixed;bottom:0;right:0;cursor:pointer;"><i class="glyphicon glyphicon-qrcode"></i></div>')
 				.appendTo(document.body);
 		$('#render-location-qrcode').click(function() {
 			var _this = $(this);
@@ -35186,10 +35186,10 @@ Observation.sortableTable = function(container) {
 				var t = $(this);
 				if (!t.html()) {
 					if (t.parent().parent().prop('tagName') == 'THEAD') {
-						t.html('<i class="icon-plus add"></i>');
+						t.html('<i class="glyphicon glyphicon-plus add"></i>');
 					} else {
 						t
-								.html('<i class="icon-plus add"></i><i class="icon-minus remove"></i><i class="icon-arrow-up moveup"></i><i class="icon-arrow-down movedown"></i>');
+								.html('<i class="glyphicon glyphicon-plus add"></i><i class="glyphicon glyphicon-minus remove"></i><i class="glyphicon glyphicon-arrow-up moveup"></i><i class="glyphicon glyphicon-arrow-down movedown"></i>');
 					}
 				}
 			});
@@ -35391,19 +35391,19 @@ Observation.datagridTable = function(container) {
 						});
 				$('.portlet', this)
 						.find('.portlet-header')
-						.append('<div class="portlet-icon"><a class="btn btn-fold"><i class="icon-chevron-up"></i></a><a class="btn btn-close"><i class="icon-remove"></i></a></div>')
+						.append('<div class="portlet-icon"><a class="btn btn-fold"><i class="glyphicon glyphicon-chevron-up"></i></a><a class="btn btn-close"><i class="glyphicon glyphicon-remove"></i></a></div>')
 				$('.portlet-header .btn-close', this).click(function() {
 							$(this).parents('.portlet:first').hide();
 						});
 				$('.portlet-header .btn-fold', this).click(function() {
-					$('i', this).toggleClass('icon-chevron-up')
-							.toggleClass('icon-chevron-down');
+					$('i', this).toggleClass('glyphicon-chevron-up')
+							.toggleClass('glyphicon-chevron-down');
 					$(this).parents('.portlet:first').find('.portlet-content')
 							.toggle();
 				});
 				$('.portlet', this).each(function() {
 					if ($('.ajaxpanel', $(this)).length) {
-						$('<a class="btn btn-refresh"><i class="icon-refresh"></i></a>')
+						$('<a class="btn btn-refresh"><i class="glyphicon glyphicon-refresh"></i></a>')
 								.insertBefore($('.portlet-header .btn-fold',
 										this)).click(function() {
 									$('.ajaxpanel', $(this).closest('.portlet'))
@@ -35546,7 +35546,7 @@ Observation.portal = function(container) {
 					+ t.attr('name')
 					+ '" value="'
 					+ t.val()
-					+ '"/><span class="add-on"><i class="icon-chevron-down"></i></span></div>')
+					+ '"/><span class="add-on"><i class="glyphicon glyphicon-chevron-down"></i></span></div>')
 					.insertBefore(t);
 			$('input', div).width(t.width() - 27);
 			if (t.hasClass('required'))
@@ -35820,7 +35820,7 @@ $(function() {
 								form.submit();
 								return false;
 							}
-						}).on('click', '.toolbar .icon-search',
+						}).on('click', '.toolbar .glyphicon-search',
 						function(event) {
 							var form = $(event.target).closest('form');
 							$('.inputPage', form).val(1);
@@ -36816,7 +36816,7 @@ Observation._richtable = function(container) {
 		var nametarget = find(options.name);
 		val(options.name, nametarget.is(':input,td')
 						? ''
-						: '<i class="icon-list"></i>', true);
+						: '<i class="glyphicon glyphicon-list"></i>', true);
 		val(options.id, '');
 		$(this).remove();
 		event.stopPropagation();
@@ -36848,7 +36848,7 @@ Observation._richtable = function(container) {
 							$('<a class="remove" href="#">&times;</a>')
 									.appendTo(nametarget).click(removeAction);
 					} else if (!nametarget.is(':input,td')) {
-						val(options.name, '<i class="icon-list"></i>', true);
+						val(options.name, '<i class="glyphicon glyphicon-list"></i>', true);
 					}
 				}
 			}
@@ -37012,7 +37012,7 @@ Observation.treeselect = function(container) {
 		var nametarget = find(options.name);
 		val(options.name, nametarget.is(':input,td')
 						? ''
-						: '<i class="icon-list"></i>', true);
+						: '<i class="glyphicon glyphicon-list"></i>', true);
 		val(options.id, '');
 		$(this).remove();
 		event.stopPropagation();
@@ -37043,7 +37043,7 @@ Observation.treeselect = function(container) {
 							$('<a class="remove" href="#">&times;</a>')
 									.appendTo(nametarget).click(removeAction);
 					} else if (!nametarget.is(':input,td')) {
-						val(options.name, '<i class="icon-list"></i>', true);
+						val(options.name, '<i class="glyphicon glyphicon-list"></i>', true);
 					}
 				}
 			}
@@ -37206,7 +37206,7 @@ Observation.listpick = function(container) {
 							+ CONTEXT_PATH
 							+ '/common/upload/pick\',\'id\':\'#'
 							+ t.attr('id')
-							+ '\',\'width\':400}"><i class="icon-th-list"></i></span>');
+							+ '\',\'width\':400}"><i class="glyphicon glyphicon-th-list"></i></span>');
 			if (t.val())
 				t.attr('data-content', '<img src="' + t.val() + '"/>');
 			t.change(function() {
@@ -37232,8 +37232,8 @@ Observation._imagepick = function(container) {
 		if (!t.parent('.input-append').length)
 			t
 					.wrap('<div class="input-append"></div>')
-					.after('<span class="add-on"><i class="icon-map-marker" style="cursor:pointer;"></i></span>');
-		$('.icon-map-marker', t.next()).click(function() {
+					.after('<span class="add-on"><i class="glyphicon glyphicon-map-marker" style="cursor:pointer;"></i></span>');
+		$('.glyphicon-map-marker', t.next()).click(function() {
 			window.latlng_input = $(this).parent().prev();
 			if (!$('#_maps_window').length) {
 				var win = $('<div id="_maps_window" title="'
@@ -37395,7 +37395,7 @@ Observation.editme = function(container) {
 						.addClass('filtercolumn');
 			if (!$('ul.filtercolumn', filtercolumn).length)
 				filtercolumn
-						.prepend('<ul class="filtercolumn"><li><i class="icon-th"></i><ul class="listTarget"></ul></li></ul>');
+						.prepend('<ul class="filtercolumn"><li><i class="glyphicon glyphicon-th"></i><ul class="listTarget"></ul></li></ul>');
 			var hideInList = [];
 			var colsHidden = [];
 			for (var i = 0; i < cells.length; i++) {

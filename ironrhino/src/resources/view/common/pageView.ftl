@@ -76,7 +76,7 @@ Initialization.pageView = function() {
 <@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"/>
-<i class="icon-arrow-right"></i>
+<i class="glyphicon glyphicon-arrow-right"></i>
 <@s.textfield label="%{getText('to')}" theme="simple" id="" name="to" cssClass="date"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
@@ -99,7 +99,7 @@ Initialization.pageView = function() {
 <@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"/>
-<i class="icon-arrow-right"></i>
+<i class="glyphicon glyphicon-arrow-right"></i>
 <@s.textfield label="%{getText('to')}" theme="simple" id="" name="to" cssClass="date"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
@@ -123,7 +123,7 @@ Initialization.pageView = function() {
 <@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"/>
-<i class="icon-arrow-right"></i>
+<i class="glyphicon glyphicon-arrow-right"></i>
 <@s.textfield label="%{getText('to')}" theme="simple" id="" name="to" cssClass="date"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
@@ -146,7 +146,7 @@ Initialization.pageView = function() {
 <@s.hidden name="domain" id=""/>
 <span>${action.getText('date')}${action.getText('range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" id="" name="from" cssClass="date"/>
-<i class="icon-arrow-right"></i>
+<i class="glyphicon glyphicon-arrow-right"></i>
 <@s.textfield label="%{getText('to')}" theme="simple" id="" name="to" cssClass="date"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>

@@ -19,19 +19,19 @@
 						});
 				$('.portlet', this)
 						.find('.portlet-header')
-						.append('<div class="portlet-icon"><a class="btn btn-fold"><i class="icon-chevron-up"></i></a><a class="btn btn-close"><i class="icon-remove"></i></a></div>')
+						.append('<div class="portlet-icon"><a class="btn btn-fold"><i class="glyphicon glyphicon-chevron-up"></i></a><a class="btn btn-close"><i class="glyphicon glyphicon-remove"></i></a></div>')
 				$('.portlet-header .btn-close', this).click(function() {
 							$(this).parents('.portlet:first').hide();
 						});
 				$('.portlet-header .btn-fold', this).click(function() {
-					$('i', this).toggleClass('icon-chevron-up')
-							.toggleClass('icon-chevron-down');
+					$('i', this).toggleClass('glyphicon-chevron-up')
+							.toggleClass('glyphicon-chevron-down');
 					$(this).parents('.portlet:first').find('.portlet-content')
 							.toggle();
 				});
 				$('.portlet', this).each(function() {
 					if ($('.ajaxpanel', $(this)).length) {
-						$('<a class="btn btn-refresh"><i class="icon-refresh"></i></a>')
+						$('<a class="btn btn-refresh"><i class="glyphicon glyphicon-refresh"></i></a>')
 								.insertBefore($('.portlet-header .btn-fold',
 										this)).click(function() {
 									$('.ajaxpanel', $(this).closest('.portlet'))

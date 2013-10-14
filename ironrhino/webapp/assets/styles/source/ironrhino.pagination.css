@@ -37,6 +37,9 @@
 	width: 60px;
 	height: 32px;
 }
+.toolbar .pagination a[href] .glyphicon{
+	color: #555;
+}
 
 .toolbar input[name="keyword"]{
 	width:100px;

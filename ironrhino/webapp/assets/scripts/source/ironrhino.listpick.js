@@ -61,7 +61,7 @@
 		var nametarget = find(options.name);
 		val(options.name, nametarget.is(':input,td')
 						? ''
-						: '<i class="icon-list"></i>', true);
+						: '<i class="glyphicon glyphicon-list"></i>', true);
 		val(options.id, '');
 		$(this).remove();
 		event.stopPropagation();
@@ -92,7 +92,7 @@
 							$('<a class="remove" href="#">&times;</a>')
 									.appendTo(nametarget).click(removeAction);
 					} else if (!nametarget.is(':input,td')) {
-						val(options.name, '<i class="icon-list"></i>', true);
+						val(options.name, '<i class="glyphicon glyphicon-list"></i>', true);
 					}
 				}
 			}

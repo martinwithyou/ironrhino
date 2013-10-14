@@ -10,7 +10,7 @@
 							+ CONTEXT_PATH
 							+ '/common/upload/pick\',\'id\':\'#'
 							+ t.attr('id')
-							+ '\',\'width\':400}"><i class="icon-th-list"></i></span>');
+							+ '\',\'width\':400}"><i class="glyphicon glyphicon-th-list"></i></span>');
 			if (t.val())
 				t.attr('data-content', '<img src="' + t.val() + '"/>');
 			t.change(function() {

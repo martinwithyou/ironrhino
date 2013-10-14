@@ -20,7 +20,7 @@
 <@s.hidden name="ctype"/>
 <span>${action.getText('date.range')}</span>
 <@s.textfield label="%{getText('from')}" theme="simple" name="from" cssClass="date"/>
-<i class="icon-arrow-right"></i>
+<i class="glyphicon glyphicon-arrow-right"></i>
 <@s.textfield label="%{getText('to')}" theme="simple" name="to" cssClass="date"/>
 <@s.submit value="%{getText('query')}" theme="simple"/>
 </form>
