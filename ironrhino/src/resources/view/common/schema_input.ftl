@@ -31,12 +31,12 @@
 		</style>
 		<thead>
 			<tr>
-				<td>${action.getText('name')}</td>
-				<td style="width:36%;">${action.getText('value')}</td>
-				<td>${action.getText('type')}</td>
-				<td>${action.getText('required')}</td>
-				<td>${action.getText('strict')}</td>
-				<td class="manipulate"></td>
+				<th>${action.getText('name')}</th>
+				<th style="width:36%;">${action.getText('value')}</th>
+				<th>${action.getText('type')}</th>
+				<th>${action.getText('required')}</th>
+				<th>${action.getText('strict')}</th>
+				<th class="manipulate"></th>
 			</tr>
 		</thead>
 		<tbody>

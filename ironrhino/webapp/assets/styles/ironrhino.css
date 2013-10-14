@@ -8371,6 +8371,18 @@ ul.portal-column {
 	text-align: center;
 	}
 
+.portlet-content .table th{
+	padding:6px 4px;
+}
+.portlet-content .table th,.portlet-content .table tr:first-child td{
+	border-top: 0;
+}
+.portlet-content .table th:first-child{
+	border-radius: 6px 0 0 6px;
+}
+.portlet-content .table th:last-child{
+	border-radius: 0 6px 6px 0;
+}
 .sortcol{
 	padding-left: 10px !important;
 	text-align: center !important;
