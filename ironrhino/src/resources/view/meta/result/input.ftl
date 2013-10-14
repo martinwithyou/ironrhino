@@ -39,7 +39,6 @@
 				</#if>
 			<#elseif config.type=='enum'>
 				<#if !readonly>
-				${config.propertyType.name} ${config.listKey} ${config.listValue}
 					<@s.select id=id label="%{getText('${label}')}" name=entityName+"."+key cssClass=config.cssClass list="@${config.propertyType.name}@values()" listKey=config.listKey listValue=config.listValue headerKey="" headerValue="" dynamicAttributes=config.dynamicAttributes/>
 				<#else>
 					<@s.hidden name=entityName+"."+key value="%{${entityName+'.'+key+'.id'}}"/>
