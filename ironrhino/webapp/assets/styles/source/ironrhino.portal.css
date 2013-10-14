@@ -5,7 +5,7 @@ ul.portal-column {
 	margin-left: 0;
 	list-style: none;
 	}
-.portal-column:first-of-type:nth-last-of-type(1) {
+.portal-column:only-of-type {
 	width: 100%;
 	}
 .portal-column:first-of-type:nth-last-of-type(2), .portal-column:first-of-type:nth-last-of-type(2) ~ .portal-column {

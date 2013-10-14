@@ -5,7 +5,7 @@
 </head>
 <body>
 <h3 style="text-align:center;"><#if date??>${date?string('yyyy-MM-dd')}<#else>${action.getText('total')}</#if></h3>
-<ul class="unstyled clearfix">
+<ul class="unstyled">
 	<#if dataMap??>
 	<#list dataMap?keys as key>
 	<li>
