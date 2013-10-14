@@ -215,7 +215,7 @@
 			</unzip>
 			<mkdir dir="${target.dir}/assets/META-INF/resources/assets" />
 			<copy todir="${target.dir}/assets/META-INF/resources/assets" preservelastmodified="true">
-				<fileset dir="${webapp.dir}/assets" includes="scripts/*.js,styles/*.css,**/images/**,components/*/**" excludes="components/*" />
+				<fileset dir="${webapp.dir}/assets" includes="scripts/*.js,styles/*.css,**/images/**,components/*/**,fonts/*/**" excludes="components/*" />
 			</copy>
 			<jar jarfile="${target.dir}/${assets-jar.name}" basedir="${target.dir}/assets">
 				<manifest>
