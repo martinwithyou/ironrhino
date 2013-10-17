@@ -12,7 +12,7 @@
 <div class="row">
 	<div class="span6 offset3">
 	<div class="hero-unit">
-	<@s.form method="post" action="signup" cssClass="ajax focus form-horizontal well">
+	<@s.form method="post" action="signup" cssClass="ajax focus form-horizontal well" style="border-width:10px;">
 		<@s.textfield label="%{getText('email')}" name="email" type="email" cssClass="span2 required checkavailable email" dynamicAttributes={"data-checkurl":"${getUrl('/signup/checkavailable')}"}/>
 		<@s.textfield label="%{getText('username')}" name="username" cssClass="span2 checkavailable regex" dynamicAttributes={"data-regex":"${statics['org.ironrhino.security.model.User'].USERNAME_REGEX_FOR_SIGNUP}","data-checkurl":"${getUrl('/signup/checkavailable')}"}/>
 		<@s.password label="%{getText('password')}" name="password" cssClass="required span2"/>
