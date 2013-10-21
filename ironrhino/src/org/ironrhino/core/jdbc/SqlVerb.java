@@ -8,7 +8,7 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 public enum SqlVerb implements Displayable {
 
-	SELECT, UPDATE, INSERT, MERGE, DELETE, CREATE, ALTER, DROP, CALL, RENAME, COMMENT, GRANT, REVOKE;
+	SELECT, UPDATE, INSERT, MERGE, DELETE, CREATE, ALTER, DROP, CALL, RENAME, COMMENT, GRANT, REVOKE, BACKUP;
 
 	@Override
 	public String getName() {
