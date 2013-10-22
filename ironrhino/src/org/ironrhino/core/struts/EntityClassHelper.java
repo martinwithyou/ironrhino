@@ -122,7 +122,7 @@ public class EntityClassHelper {
 			if (trans != null) {
 				uci.setExcludedFromCriteria(true);
 				uci.setExcludedFromLike(true);
-				uci.setExcludedFromOrder(true);
+				uci.setExcludedFromOrdering(true);
 			}
 			if (columnannotation != null && !columnannotation.nullable()
 					|| basicannotation != null && !basicannotation.optional())
@@ -131,7 +131,7 @@ public class EntityClassHelper {
 					&& uci.getMaxlength() == 0)
 				uci.setMaxlength(columnannotation.length());
 			if (lobcannotation != null || uci.getMaxlength() > 255)
-				uci.setExcludedFromOrder(true);
+				uci.setExcludedFromOrdering(true);
 			Class<?> returnType = pd.getPropertyType();
 			if (returnType.isEnum()) {
 				uci.setType("enum");

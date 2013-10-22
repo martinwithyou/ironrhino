@@ -85,6 +85,6 @@ public @interface UiConfig {
 
 	boolean excludedFromCriteria() default false;
 	
-	boolean excludedFromOrder() default false;
+	boolean excludedFromOrdering() default false;
 
 }

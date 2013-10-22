@@ -1,7 +1,6 @@
 package org.ironrhino.core.hibernate;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -69,18 +68,18 @@ public class CriterionUtils {
 								MatchMode.ANYWHERE))));
 	}
 
-	public static Map<String, String> filter(DetachedCriteria dc,
+	public static CriteriaState filter(DetachedCriteria dc,
 			Class<? extends Persistable<?>> entityClass) {
 		return filter(dc, entityClass,
 				EntityClassHelper.getUiConfigs(entityClass));
 	}
 
-	public static Map<String, String> filter(DetachedCriteria dc,
+	public static CriteriaState filter(DetachedCriteria dc,
 			Class<? extends Persistable<?>> entityClass,
 			Map<String, UiConfigImpl> uiConfigs) {
 		if (dc == null || entityClass == null || uiConfigs == null)
 			return null;
-		Map<String, String> aliases = new HashMap<String, String>();
+		CriteriaState state = new CriteriaState();
 		try {
 			ConversionService conversionService = ApplicationContextUtils
 					.getBean(ConversionService.class);
@@ -110,7 +109,7 @@ public class CriterionUtils {
 					if (s.indexOf('.') > 0)
 						s = s.substring(0, s.indexOf('.'));
 					UiConfigImpl config = uiConfigs.get(s);
-					if (config != null && !config.isExcludedFromOrder()) {
+					if (config != null && !config.isExcludedFromOrdering()) {
 						if (propertyName.indexOf('.') > 0) {
 							String subPropertyName = propertyName
 									.substring(propertyName.indexOf('.') + 1);
@@ -120,11 +119,13 @@ public class CriterionUtils {
 								Class<?> type = bw
 										.getPropertyType(propertyName);
 								if (Persistable.class.isAssignableFrom(type)) {
-									String alias = aliases.get(propertyName);
+									String alias = state.getAliases().get(
+											propertyName);
 									if (alias == null) {
 										alias = CodecUtils.randomString(4);
 										dc.createAlias(propertyName, alias);
-										aliases.put(propertyName, alias);
+										state.getAliases().put(propertyName,
+												alias);
 									}
 									if (desc)
 										dc.addOrder(Order.desc(alias + "."
@@ -132,6 +133,9 @@ public class CriterionUtils {
 									else
 										dc.addOrder(Order.asc(alias + "."
 												+ subPropertyName));
+									state.getOrderings()
+											.put(alias + "." + subPropertyName,
+													desc);
 								}
 							}
 						} else if (propertyNames.contains(propertyName)) {
@@ -139,6 +143,7 @@ public class CriterionUtils {
 								dc.addOrder(Order.desc(propertyName));
 							else
 								dc.addOrder(Order.asc(propertyName));
+							state.getOrderings().put(propertyName, desc);
 						}
 					}
 					continue;
@@ -202,16 +207,19 @@ public class CriterionUtils {
 								values[n] = bw2
 										.getPropertyValue(subPropertyName);
 							}
-							String alias = aliases.get(propertyName);
+							String alias = state.getAliases().get(propertyName);
 							if (alias == null) {
 								alias = CodecUtils.randomString(4);
 								dc.createAlias(propertyName, alias);
-								aliases.put(propertyName, alias);
+								state.getAliases().put(propertyName, alias);
 							}
 							Criterion criterion = operator.operator(alias + "."
 									+ subPropertyName, values);
-							if (criterion != null)
+							if (criterion != null) {
 								dc.add(criterion);
+								state.getCriteria().add(
+										alias + "." + subPropertyName);
+							}
 						}
 					}
 				} else if (propertyNames.contains(propertyName)) {
@@ -239,8 +247,10 @@ public class CriterionUtils {
 											.getPropertyValue(name));
 								}
 							}
-							if (p != null)
+							if (p != null) {
 								dc.add(Restrictions.eq(propertyName, p));
+								state.getCriteria().add(propertyName);
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -259,15 +269,17 @@ public class CriterionUtils {
 						}
 						Criterion criterion = operator.operator(propertyName,
 								values);
-						if (criterion != null)
+						if (criterion != null) {
 							dc.add(criterion);
+							state.getCriteria().add(propertyName);
+						}
 					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return aliases;
+		return state;
 	}
 
 }

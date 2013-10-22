@@ -12,6 +12,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.ironrhino.common.model.Page;
 import org.ironrhino.common.service.PageManager;
+import org.ironrhino.core.hibernate.CriteriaState;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.model.LabelValue;
@@ -83,7 +84,8 @@ public class PageAction extends BaseAction {
 	public String execute() {
 		if (StringUtils.isBlank(keyword) || elasticSearchService == null) {
 			DetachedCriteria dc = pageManager.detachedCriteria();
-			CriterionUtils.filter(dc, getEntityClass());
+			CriteriaState criteriaState = CriterionUtils.filter(dc,
+					getEntityClass());
 			if (StringUtils.isNotBlank(keyword)) {
 				if (keyword.startsWith("tags:")) {
 					String tags = keyword.replace("tags:", "");
@@ -95,8 +97,10 @@ public class PageAction extends BaseAction {
 							"pagepath", "title"));
 				}
 			}
-			dc.addOrder(Order.asc("displayOrder"));
-			dc.addOrder(Order.asc("pagepath"));
+			if (criteriaState == null || criteriaState.getOrderings().isEmpty()) {
+				dc.addOrder(Order.asc("displayOrder"));
+				dc.addOrder(Order.asc("pagepath"));
+			}
 			if (resultPage == null)
 				resultPage = new ResultPage<Page>();
 			resultPage.setCriteria(dc);

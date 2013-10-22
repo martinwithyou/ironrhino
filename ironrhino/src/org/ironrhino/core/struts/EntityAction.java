@@ -18,6 +18,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.ironrhino.core.hibernate.CriteriaState;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CaseInsensitive;
@@ -294,7 +295,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					dc.add(Restrictions.eq(owner.propertyName(), ud));
 				}
 			}
-			CriterionUtils.filter(dc, getEntityClass(), getUiConfigs());
+			CriteriaState criteriaState = CriterionUtils.filter(dc,
+					getEntityClass(), getUiConfigs());
 			if (searchable && StringUtils.isNotBlank(keyword)) {
 				Set<String> propertyNamesInLike = new HashSet<String>();
 				for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs()
@@ -312,38 +314,40 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(dc);
-
-			if (richtableConfig != null
-					&& StringUtils.isNotBlank(richtableConfig.order())) {
-				String[] ar = richtableConfig.order().split(",");
-				for (String s : ar) {
-					String[] arr = s.split("\\s+", 2);
-					String propertyName = arr[0];
-					if (propertyName.indexOf(".") > 0) {
-						String p1 = propertyName.substring(0,
-								propertyName.indexOf("."));
-						String p2 = propertyName.substring(propertyName
-								.indexOf(".") + 1);
-						Class type = bw.getPropertyType(p1);
-						if (Persistable.class.isAssignableFrom(type)) {
-							String alias = aliases.get(p1);
-							if (alias == null) {
-								alias = CodecUtils.randomString(4);
-								dc.createAlias(p1, alias);
-								aliases.put(p1, alias);
+			if (criteriaState == null || criteriaState.getOrderings().isEmpty()) {
+				if (richtableConfig != null
+						&& StringUtils.isNotBlank(richtableConfig.order())) {
+					String[] ar = richtableConfig.order().split(",");
+					for (String s : ar) {
+						String[] arr = s.split("\\s+", 2);
+						String propertyName = arr[0];
+						if (propertyName.indexOf(".") > 0) {
+							String p1 = propertyName.substring(0,
+									propertyName.indexOf("."));
+							String p2 = propertyName.substring(propertyName
+									.indexOf(".") + 1);
+							Class type = bw.getPropertyType(p1);
+							if (Persistable.class.isAssignableFrom(type)) {
+								String alias = aliases.get(p1);
+								if (alias == null) {
+									alias = CodecUtils.randomString(4);
+									dc.createAlias(p1, alias);
+									aliases.put(p1, alias);
+								}
+								propertyName = alias + "." + p2;
 							}
-							propertyName = alias + "." + p2;
 						}
+						if (arr.length == 2 && arr[1].equalsIgnoreCase("asc"))
+							dc.addOrder(Order.asc(propertyName));
+						else if (arr.length == 2
+								&& arr[1].equalsIgnoreCase("desc"))
+							dc.addOrder(Order.desc(propertyName));
+						else
+							dc.addOrder(Order.asc(propertyName));
 					}
-					if (arr.length == 2 && arr[1].equalsIgnoreCase("asc"))
-						dc.addOrder(Order.asc(propertyName));
-					else if (arr.length == 2 && arr[1].equalsIgnoreCase("desc"))
-						dc.addOrder(Order.desc(propertyName));
-					else
-						dc.addOrder(Order.asc(propertyName));
-				}
-			} else if (Ordered.class.isAssignableFrom(getEntityClass()))
-				dc.addOrder(Order.asc("displayOrder"));
+				} else if (Ordered.class.isAssignableFrom(getEntityClass()))
+					dc.addOrder(Order.asc("displayOrder"));
+			}
 			resultPage = entityManager.findByResultPage(resultPage);
 		} else {
 			Set<String> searchableProperties = new HashSet<String>();

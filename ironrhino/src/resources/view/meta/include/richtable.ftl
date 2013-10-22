@@ -291,11 +291,13 @@ ${formFooter!}
 				<select class="decrease property">
 					<option value=""></option>
 					<#list propertyNamesInCriteria.entrySet() as entry>
+					<#if !entry.value.excludedFromOrdering>
 					<#local label=entry.key/>
 					<#if entry.value.alias?has_content>
 						<#local label=entry.value.alias/>
 					</#if>
 					<option value="${entry.key}">${statics['org.ironrhino.core.struts.I18N'].getText(label)}</option>
+					</#if>
 					</#list>
 				</select>
 			</td>
