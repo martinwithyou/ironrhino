@@ -112,6 +112,7 @@ public class AnnotationShadows {
 			}
 			this.excludedFromLike = config.excludedFromLike();
 			this.excludedFromCriteria = config.excludedFromCriteria();
+			this.excludedFromOrder = config.excludedFromOrder();
 		}
 
 		public boolean isExcludedFromLike() {

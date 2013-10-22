@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
@@ -109,10 +110,19 @@ public class EntityClassHelper {
 						basicannotation = f.getAnnotation(Basic.class);
 				} catch (Exception e) {
 				}
+			Lob lobcannotation = pd.getReadMethod().getAnnotation(Lob.class);
+			if (lobcannotation == null)
+				try {
+					Field f = entityClass.getDeclaredField(propertyName);
+					if (f != null)
+						lobcannotation = f.getAnnotation(Lob.class);
+				} catch (Exception e) {
+				}
 			UiConfigImpl uci = new UiConfigImpl(pd.getPropertyType(), uiConfig);
 			if (trans != null) {
 				uci.setExcludedFromCriteria(true);
 				uci.setExcludedFromLike(true);
+				uci.setExcludedFromOrder(true);
 			}
 			if (columnannotation != null && !columnannotation.nullable()
 					|| basicannotation != null && !basicannotation.optional())
@@ -120,6 +130,8 @@ public class EntityClassHelper {
 			if (columnannotation != null && columnannotation.length() != 255
 					&& uci.getMaxlength() == 0)
 				uci.setMaxlength(columnannotation.length());
+			if (lobcannotation != null || uci.getMaxlength() > 255)
+				uci.setExcludedFromOrder(true);
 			Class<?> returnType = pd.getPropertyType();
 			if (returnType.isEnum()) {
 				uci.setType("enum");
