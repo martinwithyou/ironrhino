@@ -88,7 +88,7 @@ public class AppInfoListener implements ServletContextListener {
 						.getInstanceId(), AppInfo.getStage().toString(),
 				AppInfo.getAppHome(), AppInfo.getHostName(), AppInfo
 						.getHostAddress(),
-				defaultProfiles != null ? defaultProfiles : "");
+				defaultProfiles != null ? defaultProfiles : "default");
 	}
 
 	@Override
