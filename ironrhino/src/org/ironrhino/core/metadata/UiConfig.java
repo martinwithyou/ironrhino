@@ -84,5 +84,7 @@ public @interface UiConfig {
 	boolean excludedFromLike() default false;
 
 	boolean excludedFromCriteria() default false;
+	
+	boolean excludedFromOrder() default false;
 
 }

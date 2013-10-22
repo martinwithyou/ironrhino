@@ -55,6 +55,7 @@ public class AnnotationShadows {
 		private String templateName = "";
 		private boolean excludedFromLike = false;
 		private boolean excludedFromCriteria = false;
+		private boolean excludedFromOrder = false;
 
 		public UiConfigImpl() {
 		}
@@ -127,6 +128,14 @@ public class AnnotationShadows {
 
 		public void setExcludedFromCriteria(boolean excludedFromCriteria) {
 			this.excludedFromCriteria = excludedFromCriteria;
+		}
+
+		public boolean isExcludedFromOrder() {
+			return excludedFromOrder;
+		}
+
+		public void setExcludedFromOrder(boolean excludedFromOrder) {
+			this.excludedFromOrder = excludedFromOrder;
 		}
 
 		public Class<?> getPropertyType() {

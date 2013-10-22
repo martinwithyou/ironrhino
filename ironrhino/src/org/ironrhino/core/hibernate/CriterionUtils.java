@@ -11,6 +11,7 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
@@ -25,6 +26,8 @@ import org.springframework.core.convert.ConversionService;
 public class CriterionUtils {
 
 	public static final String CRITERION_OPERATOR_SUFFIX = "-op";
+
+	public static final String CRITERION_ORDER_SUFFIX = "-od";
 
 	public static Criterion like(String value, MatchMode mode, String... names) {
 		Criterion c = null;
@@ -93,6 +96,53 @@ public class CriterionUtils {
 				String[] parameterValues;
 				Object[] values;
 				String operatorValue;
+				if (parameterName.endsWith(CRITERION_ORDER_SUFFIX)) {
+					propertyName = parameterName.substring(
+							0,
+							parameterName.length()
+									- CRITERION_ORDER_SUFFIX.length());
+					String s = parameterMap.get(parameterName)[0];
+					Boolean desc = s.equalsIgnoreCase("desc");
+					if (propertyName.startsWith(entityName + "."))
+						propertyName = propertyName.substring(propertyName
+								.indexOf('.') + 1);
+					s = propertyName;
+					if (s.indexOf('.') > 0)
+						s = s.substring(0, s.indexOf('.'));
+					UiConfigImpl config = uiConfigs.get(s);
+					if (config != null && !config.isExcludedFromOrder()) {
+						if (propertyName.indexOf('.') > 0) {
+							String subPropertyName = propertyName
+									.substring(propertyName.indexOf('.') + 1);
+							propertyName = propertyName.substring(0,
+									propertyName.indexOf('.'));
+							if (propertyNames.contains(propertyName)) {
+								Class<?> type = bw
+										.getPropertyType(propertyName);
+								if (Persistable.class.isAssignableFrom(type)) {
+									String alias = aliases.get(propertyName);
+									if (alias == null) {
+										alias = CodecUtils.randomString(4);
+										dc.createAlias(propertyName, alias);
+										aliases.put(propertyName, alias);
+									}
+									if (desc)
+										dc.addOrder(Order.desc(alias + "."
+												+ subPropertyName));
+									else
+										dc.addOrder(Order.asc(alias + "."
+												+ subPropertyName));
+								}
+							}
+						} else if (propertyNames.contains(propertyName)) {
+							if (desc)
+								dc.addOrder(Order.desc(propertyName));
+							else
+								dc.addOrder(Order.asc(propertyName));
+						}
+					}
+					continue;
+				}
 				if (parameterName.endsWith(CRITERION_OPERATOR_SUFFIX)) {
 					propertyName = parameterName.substring(
 							0,
