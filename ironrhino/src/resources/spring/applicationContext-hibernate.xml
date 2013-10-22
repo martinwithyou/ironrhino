@@ -33,7 +33,7 @@
 					${hibernate.cache.use_second_level_cache:false}
 				</prop>
 				<prop key="hibernate.show_sql">
-					${hibernate.show_sql:false}
+					${hibernate.show_sql:true}
 				</prop>
 				<prop key="hibernate.hbm2ddl.auto">
 					${hibernate.hbm2ddl.auto:update}

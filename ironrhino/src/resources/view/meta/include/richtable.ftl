@@ -246,11 +246,11 @@ ${formFooter!}
 </form>
 <#if filterable>
 <form method="post" class="ajax view criteria" style="display:none;">
-<table class="table datagrid">
+<table class="table datagrid criteria">
 	<tbody>
 		<tr>
 			<td style="width:30%;">
-				<select class="required decrease property">
+				<select class="decrease property">
 					<option value=""></option>
 					<#list propertyNamesInCriteria.entrySet() as entry>
 					<#local label=entry.key/>
@@ -280,7 +280,33 @@ ${formFooter!}
 			</select>
 			</td>
 			<td style="text-align:center;"></td>
-			<td class="manipulate"><i class="glyphicon glyphicon-plus add"></i><i class="glyphicon glyphicon-minus remove"></i></td>
+			<td class="manipulate"></td>
+		</tr>
+	</tbody>
+</table>
+<table class="table datagrid ordering">
+	<tbody>
+		<tr>
+			<td style="width:30%;">
+				<select class="decrease property">
+					<option value=""></option>
+					<#list propertyNamesInCriteria.entrySet() as entry>
+					<#local label=entry.key/>
+					<#if entry.value.alias?has_content>
+						<#local label=entry.value.alias/>
+					</#if>
+					<option value="${entry.key}">${statics['org.ironrhino.core.struts.I18N'].getText(label)}</option>
+					</#list>
+				</select>
+			</td>
+			<td style="width:30%;text-align:right;">
+			<select class="ordering">
+			<option value="asc">${statics['org.ironrhino.core.struts.I18N'].getText('ascending')}</option>
+			<option value="desc">${statics['org.ironrhino.core.struts.I18N'].getText('descending')}</option>
+			</select>
+			</td>
+			<td style="text-align:center;"></td>
+			<td class="manipulate"></td>
 		</tr>
 	</tbody>
 	<tfoot>
