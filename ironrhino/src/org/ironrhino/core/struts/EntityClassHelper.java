@@ -124,6 +124,8 @@ public class EntityClassHelper {
 				uci.setExcludedFromLike(true);
 				uci.setExcludedFromOrdering(true);
 			}
+			if (lobcannotation != null)
+				uci.setExcludedFromCriteria(true);
 			if (columnannotation != null && !columnannotation.nullable()
 					|| basicannotation != null && !basicannotation.optional())
 				uci.setRequired(true);
