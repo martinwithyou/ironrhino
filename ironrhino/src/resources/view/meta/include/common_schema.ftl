@@ -89,10 +89,8 @@
 							<#else>
 								<#local persistValueArray=[]/>
 							</#if>
-							<#local i=0>
 							<#list field.values as value>
-								<label for="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${i}" class="checkbox inline removeonadd"><input id="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${i}" type="checkbox" name="${parameterNamePrefix}attributes[${index}].value" value="${value!?html}" class="textonadd custom ${dynamicAttributes['class']!}"<#list persistValueArray as tempValue><#if tempValue=value> checked="checked"<#break/></#if></#list><#list dynamicAttributes?keys as attr><#if attr!='class'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${value!?html}</label>
-								<#local i=i+1>
+								<label for="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${value_index}" class="checkbox inline removeonadd"><input id="${parameterNamePrefix?replace('.','_')}attributes_${index}_value_${value_index}" type="checkbox" name="${parameterNamePrefix}attributes[${index}].value" value="${value!?html}" class="textonadd custom ${dynamicAttributes['class']!}"<#list persistValueArray as tempValue><#if tempValue=value> checked="checked"<#break/></#if></#list><#list dynamicAttributes?keys as attr><#if attr!='class'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>>${value!?html}</label>
 							</#list>
 						<#elseif type=='INPUT'>
 							<input id="${parameterNamePrefix?replace('.','_')}attributes__${index}__value" type="text" name="${parameterNamePrefix}attributes[${index}].value"<#if persistValueExists> value="${persistValue?html}"</#if> class="<#if field.required>required</#if> ${dynamicAttributes['class']!}"<#list dynamicAttributes?keys as attr><#if attr!='class'> ${attr}="${dynamicAttributes[attr]?html}"</#if></#list>/>
