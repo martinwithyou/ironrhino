@@ -161,7 +161,6 @@
 		<#else>
 			<ul class="attributes">
 			<#local group = ""/>
-			<#local index = 0/>
 			<#list attributes as attr>
 				<#if !attr.value?? || !attr.value?has_content>
 					<#local name = attr.name/>
@@ -182,11 +181,10 @@
 					<#if !excludes?seq_contains(attr.name)>
 					<li><span class="name">${attr.name?html}:<span><span class="value">${attr.value?html}</span></li>
 					</#if>
-					<#if group?has_content && index==attributes?size-1>
+					<#if group?has_content && !attr_has_next>
 						</ul></li>
 					</#if>
 				</#if>
-				<#local index = index+1/>
 			</#list>
 			</ul>
 		</#if>
