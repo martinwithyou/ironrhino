@@ -51,11 +51,9 @@
 	<#assign columnNames=['fullname']>
 	</#if>
 	<#assign href=requestURI>
-	<#assign index=0>
 	<#list Parameters?keys as name>
 	<#if name!='_'&&name!='parentId'&&name!='keyword'>
-	<#assign href=href+(index==0)?string('?','&')+name+'='+Parameters[name]>
-	<#assign index=index+1>
+	<#assign href=href+(name_index==0)?string('?','&')+name+'='+Parameters[name]>
 	</#if>
 	</#list>
 </#if>

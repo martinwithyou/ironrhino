@@ -14,7 +14,6 @@
 				</#list>
 			<#else>
 				<#local group = ""/>
-				<#local index = 0/>
 				<#list items as lv>
 					<#if !lv.value?has_content>
 						<#local label = lv.label/>
@@ -32,11 +31,10 @@
 						</#if>
 					<#else>
 						<option value="${lv.value}"<#if value=lv.value><#local exists=true> selected="selected"</#if>>${lv.label?has_content?string(lv.label,lv.value)}</option>
-						<#if group?has_content && index==items?size-1>
+						<#if group?has_content && !lv_has_next>
 						</optgroup>
 						</#if>
 					</#if>
-					<#local index = index+1/>
 				</#list>
 			</#if>
 		</#if>

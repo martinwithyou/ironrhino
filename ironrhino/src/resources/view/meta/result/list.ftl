@@ -27,7 +27,6 @@
 		<#assign size=size+1>
 	</#if>
 </#list>
-<#assign index=0>
 <#assign viewable=false>
 <#assign hasSelect=false>
 <#list uiConfigs.entrySet() as entry>
@@ -63,16 +62,13 @@
 			<#else>
 				<#assign cellEdit=''/>
 			</#if>
-			<#assign index=index+1>
-			<@rttheadtd name=label alias=config['alias']! width=config['width']! title=config['title']! class=config['thCssClass']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly.value excludeIfNotEdited=config.excludeIfNotEdited resizable=viewable||!(readonly.value&&index==size)/>
+			<@rttheadtd name=label alias=config['alias']! width=config['width']! title=config['title']! class=config['thCssClass']! cellName=entityName+'.'+key cellEdit=cellEdit readonly=readonly.value excludeIfNotEdited=config.excludeIfNotEdited resizable=viewable||!(readonly.value&&!entry_has_next)/>
 		<#else>
 			<#assign viewable=true>
 		</#if>
 </#list>
 <@rtmiddle showActionColumn=richtableConfig.actionColumnButtons?has_content||!readonly.value||viewable/>
-<#assign index=0>
 <#list resultPage.result as entity>
-<#assign index=index+1>
 <#assign entityReadonly = readonly.value/>
 <#if !entityReadonly && readonly.expression?has_content><#assign entityReadonly=readonly.expression?eval></#if>
 <#assign rowDynamicAttributes={}>
