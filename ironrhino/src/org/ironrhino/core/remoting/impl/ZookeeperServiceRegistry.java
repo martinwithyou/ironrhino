@@ -196,12 +196,8 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		try {
 			Stat stat = zooKeeper.exists(node, false);
 			if (stat == null) {
-				try {
-					zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
-							CreateMode.EPHEMERAL);
-				} catch (NodeExistsException e) {
-
-				}
+				zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
+						CreateMode.EPHEMERAL);
 			} else {
 				zooKeeper.setData(node, data, stat.getVersion());
 			}
