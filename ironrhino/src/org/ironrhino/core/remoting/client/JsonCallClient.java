@@ -3,9 +3,7 @@ package org.ironrhino.core.remoting.client;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -19,9 +17,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.StringEntity;
-import org.ironrhino.core.remoting.Context;
 import org.ironrhino.core.remoting.ServiceRegistry;
-import org.ironrhino.core.security.util.Blowfish;
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.HttpClientUtils;
 import org.ironrhino.core.util.JsonUtils;
@@ -47,8 +43,6 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 
 	private String contextPath;
 
-	private String version;
-
 	private int maxRetryTimes = 3;
 
 	private List<String> asyncMethods;
@@ -69,10 +63,6 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 
 	public void setPort(int port) {
 		this.port = port;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
 	}
 
 	public void setContextPath(String contextPath) {
@@ -246,33 +236,6 @@ public class JsonCallClient extends RemoteInvocationBasedAccessor implements
 			sb.append(contextPath);
 		sb.append("/remoting/jsoncall/");
 		sb.append(serviceName);
-		boolean first = true;
-		if (StringUtils.isNotBlank(version)) {
-			if (first) {
-				sb.append('?');
-				first = false;
-			} else {
-				sb.append('&');
-			}
-			sb.append(Context.VERSION);
-			sb.append('=');
-			sb.append(version);
-		}
-		if (AppInfo.getStage() == AppInfo.Stage.PRODUCTION && port == 80)
-			try {
-				if (first) {
-					sb.append('?');
-					first = false;
-				} else {
-					sb.append('&');
-				}
-				sb.append(Context.KEY);
-				sb.append('=');
-				sb.append(URLEncoder.encode(Blowfish.encrypt(serviceName),
-						"UTF-8"));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
 		return sb.toString();
 	}
 

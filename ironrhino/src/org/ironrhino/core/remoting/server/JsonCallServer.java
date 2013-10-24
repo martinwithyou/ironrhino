@@ -3,16 +3,12 @@ package org.ironrhino.core.remoting.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ironrhino.core.remoting.Context;
 import org.ironrhino.core.remoting.ServiceRegistry;
-import org.ironrhino.core.security.util.Blowfish;
-import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,23 +36,11 @@ public class JsonCallServer implements HttpRequestHandler {
 					"Only Accept Post or Put Request");
 			return;
 		}
-		Map<String, String[]> map = request.getParameterMap();
-		if (map != null && map.size() > 0)
-			Context.PARAMETERS_MAP.set(map);
 		String uri = request.getRequestURI();
 		try {
 			String[] arr = uri.split("/");
 			String methodName = arr[arr.length - 1];
 			String interfaceName = arr[arr.length - 2];
-			if (AppInfo.getStage() == AppInfo.Stage.PRODUCTION
-					&& request.getServerPort() == 80
-					&& request.getAttribute("_OAUTH_REQUEST") == null) {
-				String s = Blowfish.decrypt(Context.get(Context.KEY));
-				if (!interfaceName.equals(s)) {
-					response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-					return;
-				}
-			}
 			Object bean = serviceRegistry.getExportServices()
 					.get(interfaceName);
 			if (bean == null) {
