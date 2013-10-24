@@ -31,7 +31,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/iText-2.1.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/iTextAsian-2.1.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javamail-1.4.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javassist-3.18.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/javassist-3.18.1.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jedis-2.1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jericho-html-3.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jsoup-1.7.2.jar"/>
@@ -101,7 +101,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-core-2.2.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jackson-databind-2.2.3.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jpa-api-2.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-core-4.2.6.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/hibernate-core-4.2.7.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mmseg4j-core-1.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/websocket-api-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
