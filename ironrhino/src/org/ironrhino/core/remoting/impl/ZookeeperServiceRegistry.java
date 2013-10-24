@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException.NodeExistsException;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
@@ -59,8 +60,12 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		try {
 			Stat stat = zooKeeper.exists(zooKeeperPath, false);
 			if (stat == null)
-				zooKeeper.create(zooKeeperPath, null,
-						ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+				try {
+					zooKeeper.create(zooKeeperPath, null,
+							ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+				} catch (NodeExistsException e) {
+
+				}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -68,8 +73,12 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		try {
 			Stat stat = zooKeeper.exists(servicesParentPath, false);
 			if (stat == null)
-				zooKeeper.create(servicesParentPath, null,
-						ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+				try {
+					zooKeeper.create(servicesParentPath, null,
+							ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+				} catch (NodeExistsException e) {
+
+				}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -77,8 +86,12 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		try {
 			Stat stat = zooKeeper.exists(hostsParentPath, false);
 			if (stat == null)
-				zooKeeper.create(hostsParentPath, null,
-						ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+				try {
+					zooKeeper.create(hostsParentPath, null,
+							ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+				} catch (NodeExistsException e) {
+
+				}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -126,7 +139,7 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 
 	private void doRegister(String serviceName, String host, int retryTimes) {
 		retryTimes--;
-		if (retryTimes < -1) {
+		if (retryTimes < 0) {
 			log.error("error register " + serviceName + "@" + host);
 			return;
 		}
@@ -135,12 +148,20 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		try {
 			Stat stat = zooKeeper.exists(node, false);
 			if (stat == null)
-				zooKeeper.create(node, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
-						CreateMode.PERSISTENT);
+				try {
+					zooKeeper.create(node, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
+							CreateMode.PERSISTENT);
+				} catch (NodeExistsException e) {
+
+				}
 			node = new StringBuilder(node).append('/').append(host).toString();
-			zooKeeper.create(node, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
-					CreateMode.EPHEMERAL);
-			onRegister(serviceName, host);
+			try {
+				zooKeeper.create(node, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
+						CreateMode.EPHEMERAL);
+				onRegister(serviceName, host);
+			} catch (NodeExistsException e) {
+
+			}
 		} catch (Exception e) {
 			try {
 				Thread.sleep(2000);
@@ -175,8 +196,12 @@ public class ZookeeperServiceRegistry extends AbstractServiceRegistry implements
 		try {
 			Stat stat = zooKeeper.exists(node, false);
 			if (stat == null) {
-				zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
-						CreateMode.EPHEMERAL);
+				try {
+					zooKeeper.create(node, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
+							CreateMode.EPHEMERAL);
+				} catch (NodeExistsException e) {
+
+				}
 			} else {
 				zooKeeper.setData(node, data, stat.getVersion());
 			}
