@@ -18,7 +18,7 @@
 		<@s.textfield label="%{getText('key')}" name="setting.key" cssClass="required checkavailable input-xxlarge"/>
 	</#if>
 	<#if Parameters.embedded??>
-	<@s.textarea label="%{getText('value')}" theme="simple" name="setting.value" cssStyle="width:95%;" maxlength="4000"/>
+	<@s.textarea label="%{getText('value')}" theme="simple" name="setting.value" cssStyle="width:95%;" cssClass="${Parameters.cssClass!}" maxlength="4000"/>
 	<#else>
 	<@s.textarea label="%{getText('value')}" name="setting.value" cssClass="input-xxlarge" maxlength="4000"/>
 	</#if>
