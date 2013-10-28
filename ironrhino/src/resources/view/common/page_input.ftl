@@ -1,3 +1,4 @@
+<#assign view=Parameters.view!/>
 <!DOCTYPE html>
 <#escape x as x?html><html>
 <head>
@@ -92,14 +93,14 @@ $(function() {
 <body>
 <@s.form id="form" action="${actionBaseUrl}/draft" method="post" cssClass="ajax form-horizontal" cssStyle="padding-top:13px;">
 	<@s.hidden name="page.id" />
-	<#if Parameters.embedded??>
+	<#if view=='embedded'>
 	<@s.hidden name="page.pagepath"/>
 	<@s.hidden name="page.displayOrder"/>
 	<@s.hidden name="page.tagsAsString"/>
 	<@s.hidden name="page.head"/>
 	<@s.hidden name="page.title"/>
 	<@s.textarea theme="simple" id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cssStyle="width:100%;height:320px;"/>
-	<#elseif Parameters.brief??>
+	<#elseif view=='brief'>
 	<@s.hidden name="page.pagepath"/>
 	<@s.hidden name="page.displayOrder"/>
 	<@s.hidden name="page.tagsAsString"/>
@@ -129,7 +130,8 @@ $(function() {
 	</#if>
 	<div class="form-actions">
 	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
-	<#if !Parameters.embedded??>
+	
+	<#if view!='embedded'>
 	<@s.submit id="draft" value="%{getText('draft')}" theme="simple"/>
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
 	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>

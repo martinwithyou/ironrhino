@@ -1,3 +1,4 @@
+<#assign view=Parameters.view!/>
 <!DOCTYPE html>
 <#escape x as x?html><html>
 <head>
@@ -8,21 +9,21 @@
 	<#if !setting.new>
 		<@s.hidden name="setting.id" />
 	</#if>
-	<#if Parameters.embedded??>
+	<#if view=='embedded'>
 		<@s.hidden name="setting.key"/>
 		<@s.hidden name="setting.description"/>
-	<#elseif Parameters.brief??>
+	<#elseif view=='brief'>
 		<@s.hidden name="setting.key"/>
 		<@s.textarea label="%{getText('description')}" name="setting.description" tabindex="-1" readonly=true cssClass="input-xxlarge" cssStyle="height:20px;border:none;resize:none;outline:none;"/>
 	<#else>
 		<@s.textfield label="%{getText('key')}" name="setting.key" cssClass="required checkavailable input-xxlarge"/>
 	</#if>
-	<#if Parameters.embedded??>
+	<#if view=='embedded'>
 	<@s.textarea label="%{getText('value')}" theme="simple" name="setting.value" cssStyle="width:95%;" cssClass="${Parameters.cssClass!}" maxlength="4000"/>
 	<#else>
 	<@s.textarea label="%{getText('value')}" name="setting.value" cssClass="input-xxlarge" maxlength="4000"/>
 	</#if>
-	<#if !Parameters.brief??&&!Parameters.embedded??>
+	<#if !(view=='embedded'||view=='brief')>
 		<@s.textarea label="%{getText('description')}" name="setting.description" cssClass="input-xxlarge" maxlength="4000"/>
 	</#if>
 	<@s.submit value="%{getText('save')}" />

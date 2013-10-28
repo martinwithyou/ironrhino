@@ -1,3 +1,4 @@
+<#assign view=Parameters.view!/>
 <!DOCTYPE html>
 <#escape x as x?html><html>
 <head>
@@ -8,15 +9,15 @@
 	<#if !schema.new>
 		<@s.hidden name="schema.id" />
 	</#if>
-	<#if Parameters.embedded??>
+	<#if view=='embedded'>
 	<@s.hidden name="schema.name"/>
 	<@s.hidden name="schema.description"/>
 	<@s.hidden name="schema.strict"/>
 	<#else>
 	<div class="row-fluid">
-		<div class="span4"><span>${action.getText('name')}: </span><#if Parameters.brief??><@s.hidden name="schema.name"/>${schema.name!}<#else><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable input-medium"/></#if></div>
-		<div class="span5"><span>${action.getText('description')}: </span><#if Parameters.brief??><@s.hidden name="schema.description" />${schema.description!}<#else><@s.textfield theme="simple" name="schema.description"/></#if></div>
-		<div class="span3"><span>${action.getText('strict')}: </span><#if Parameters.brief??><@s.hidden name="schema.strict" />${action.getText(schema.strict?string)}<#else><@s.checkbox theme="simple" name="schema.strict" cssClass="custom"/></#if></div>
+		<div class="span4"><span>${action.getText('name')}: </span><#if view=='brief'><@s.hidden name="schema.name"/>${schema.name!}<#else><@s.textfield theme="simple" name="schema.name" cssClass="required checkavailable input-medium"/></#if></div>
+		<div class="span5"><span>${action.getText('description')}: </span><#if view=='brief'><@s.hidden name="schema.description" />${schema.description!}<#else><@s.textfield theme="simple" name="schema.description"/></#if></div>
+		<div class="span3"><span>${action.getText('strict')}: </span><#if view=='brief'><@s.hidden name="schema.strict" />${action.getText(schema.strict?string)}<#else><@s.checkbox theme="simple" name="schema.strict" cssClass="custom"/></#if></div>
 	</div>
 	</#if>
 	<table class="datagrid nullable table table-condensed">
