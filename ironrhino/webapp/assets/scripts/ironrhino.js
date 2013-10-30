@@ -34557,7 +34557,9 @@ Observation.datagridTable = function(container) {
 					.addClass('clearfix')
 					.each(
 							function() {
-								$('.portal-column', this).sortable({
+								var portal = $(this);
+								var savable = portal.hasClass('savable');
+								$('.portal-column', portal).sortable({
 									connectWith : '.portal-column',
 									handle : '.portlet-header',
 									opacity : 0.6,
@@ -34565,24 +34567,70 @@ Observation.datagridTable = function(container) {
 										var col = $(event.target);
 										if (col.hasClass('empty'))
 											col.removeClass('empty');
+										if (savable)
+											portal.portal('layout', 'save');
 									},
 									remove : function(event, ui) {
 										var col = $(event.target);
 										if ($('.portlet', col).length == 0)
 											col.addClass('empty');
+										if (savable)
+											portal.portal('layout', 'save');
+									},
+									sort : function(event, ui) {
+										if (savable)
+											portal.portal('layout', 'save');
 									}
 								});
-								$('.portlet', this)
-										.find('.portlet-header')
-										.append(
-												'<div class="portlet-icon"><a class="btn btn-fold"><i class="glyphicon glyphicon-chevron-up"></i></a><a class="btn btn-close"><i class="glyphicon glyphicon-remove"></i></a></div>')
-								$('.portlet-header .btn-close', this).click(
-										function() {
-											$(this).closest('.portlet')
-													.remove();
-										});
-								$('.portlet-header .btn-fold', this)
-										.click(
+								$('.portlet', portal)
+										.each(
+												function() {
+													var header = $(
+															'.portlet-header',
+															this);
+													header
+															.append('<div class="portlet-icon"><a class="btn btn-fold"><i class="glyphicon glyphicon-chevron-up"></i></a><a class="btn btn-close"><i class="glyphicon glyphicon-remove"></i></a></div>');
+													if ($('.ajaxpanel', $(this)).length) {
+														$(
+																'<a class="btn btn-refresh"><i class="glyphicon glyphicon-refresh"></i></a>')
+																.insertBefore(
+																		$(
+																				'.portlet-header .btn-fold',
+																				this));
+													}
+												});
+								portal
+										.on(
+												'click',
+												'.portlet-header .btn-close',
+												function() {
+													var p = $(this).closest(
+															'.portlet');
+													var id = p.attr('id');
+													if (savable
+															&& window.localStorage
+															&& id) {
+														var hidden = localStorage[document.location.pathname
+																+ '_portal-hidden'];
+														if (hidden) {
+															var hidden = hidden
+																	.split(',');
+															if ($.inArray(id,
+																	hidden) < 0)
+																hidden.push(id);
+														} else {
+															hidden = [ id ];
+														}
+														localStorage[document.location.pathname
+																+ '_portal-hidden'] = hidden
+																.join(',');
+													}
+													p.remove();
+													addRestoreButton(portal);
+												})
+										.on(
+												'click',
+												'.portlet-header .btn-fold',
 												function() {
 													$('i', this)
 															.toggleClass(
@@ -34590,65 +34638,39 @@ Observation.datagridTable = function(container) {
 															.toggleClass(
 																	'glyphicon-chevron-down');
 													$(this)
-															.parents(
-																	'.portlet:first')
+															.closest('.portlet')
 															.find(
 																	'.portlet-content')
 															.toggle();
-												});
-								$('.portlet', this)
-										.each(
+												})
+										.on(
+												'click',
+												'.portlet-header .btn-refresh',
 												function() {
-													if ($('.ajaxpanel', $(this)).length) {
-														$(
-																'<a class="btn btn-refresh"><i class="glyphicon glyphicon-refresh"></i></a>')
-																.insertBefore(
-																		$(
-																				'.portlet-header .btn-fold',
-																				this))
-																.click(
-																		function() {
-																			$(
-																					'.ajaxpanel',
-																					$(
-																							this)
-																							.closest(
-																									'.portlet'))
-																					.trigger(
-																							'load');
-																		});
-													}
+													$(
+															'.ajaxpanel',
+															$(this).closest(
+																	'.portlet'))
+															.trigger('load');
+												}).on(
+												'click',
+												'.portal-footer .restore',
+												function() {
+													$(this).closest('.portal')
+															.portal('layout',
+																	'restore');
 												});
-
 								if (window.localStorage) {
 									var layout = localStorage[document.location.pathname
 											+ '_portal-layout'];
-									if (layout)
-										$(this).portal('layout', layout);
-								}
-								var t = $(this);
-								if (t.hasClass('savable')) {
-									t
-											.append('<div class="portal-footer"><button class="btn save">'
-													+ MessageBundle.get('save')
-													+ '</button></div>');
-									if (localStorage
-											&& localStorage[document.location.pathname
-													+ '_portal-layout'])
-										t.find('.portal-footer').append(
-												' <button class="btn restore">'
-														+ MessageBundle
-																.get('restore')
-														+ '</button>');
-									$('.portal-footer .save', t).click(
-											function() {
-												t.portal('layout', 'save');
-												Message.showMessage('success');
-											});
-									$('.portal-footer .restore', t).click(
-											function() {
-												t.portal('layout', 'restore')
-											});
+									var hidden = localStorage[document.location.pathname
+											+ '_portal-hidden'];
+									if (layout || hidden) {
+										$(this).portal('layout', 'render',
+												layout, hidden);
+										if (savable)
+											addRestoreButton(portal);
+									}
 								}
 							});
 			return this;
@@ -34669,46 +34691,56 @@ Observation.datagridTable = function(container) {
 				if (arguments[1] == 'save') {
 					if (localStorage) {
 						localStorage[document.location.pathname
-								+ '_portal-layout'] = this.portal('layout');
-						var footer = this.eq(0).find('.portal-footer');
-						if (!footer.find('.restore').length) {
-							footer.append(' <button class="btn restore">'
-									+ MessageBundle.get('restore')
-									+ '</button>');
-							var t = this;
-							$('.restore', footer).click(function() {
-								t.portal('layout', 'restore')
-							});
-						}
+								+ '_portal-layout'] = this.eq(0).portal(
+								'layout');
+						addRestoreButton(this.eq(0));
 					}
 				} else if (arguments[1] == 'restore') {
 					delete localStorage[document.location.pathname
 							+ '_portal-layout'];
+					delete localStorage[document.location.pathname
+							+ '_portal-hidden'];
 					document.location.reload();
-				} else {
-					var layout = $.parseJSON(arguments[1]);
+				} else if (arguments[1] == 'render') {
+					var layout = $.parseJSON(arguments[2] || '[]');
+					var hidden = arguments[3];
+					hidden = hidden ? hidden.split(',') : [];
+					$('.portlet', this).each(function() {
+						var t = $(this);
+						var id = t.attr('id');
+						if (id && $.inArray(id, hidden) > -1)
+							t.remove();
+					});
 					for ( var i = 0; i < layout.length; i++) {
 						$('.portal-column:eq(' + i + ')', this).each(
 								function() {
 									var portlets = layout[i];
 									for ( var j = 0; j < portlets.length; j++) {
-										$('#' + portlets[j]).addClass('sorted')
-												.appendTo(this).show();
+										$('#' + portlets[j]).appendTo(this)
+												.show();
 									}
 								});
 					}
-					$('.portlet', this).each(function() {
-						var t = $(this);
-						if (t.hasClass('sorted'))
-							t.removeClass('sorted');
-						else
-							t.remove();
-					});
 				}
 				return this;
 			}
 		}
 	};
+
+	function addRestoreButton(portal) {
+		if (!portal.find('.portal-footer .restore').length) {
+			var footer = portal.find('.portal-footer');
+			if (!footer.length)
+				footer = $(
+						'<div class="portal-footer"><button class="btn restore">'
+								+ MessageBundle.get('restore')
+								+ '</button></div>').appendTo(portal);
+			if (!footer.find('.restore').length)
+				footer.append('<button class="btn restore">'
+						+ MessageBundle.get('restore') + '</button> ');
+		}
+	}
+
 })(jQuery);
 
 Observation._portal = function(container) {
