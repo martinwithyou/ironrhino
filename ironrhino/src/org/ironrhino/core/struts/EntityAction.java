@@ -282,7 +282,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				&& ownerProperty.getKey().isolate()
 				|| (!searchable || StringUtils.isBlank(keyword) || (searchable && elasticSearchService == null))) {
 			DetachedCriteria dc = entityManager.detachedCriteria();
-			prepare(dc);
 			if (ownerProperty != null) {
 				Owner owner = ownerProperty.getKey();
 				if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
@@ -297,6 +296,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			}
 			CriteriaState criteriaState = CriterionUtils.filter(dc,
 					getEntityClass(), getUiConfigs());
+			prepare(dc, criteriaState);
 			if (searchable && StringUtils.isNotBlank(keyword)) {
 				Set<String> propertyNamesInLike = new HashSet<String>();
 				for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs()
@@ -393,7 +393,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		return LIST;
 	}
 
-	protected void prepare(DetachedCriteria dc) {
+	protected void prepare(DetachedCriteria dc, CriteriaState criteriaState) {
 
 	}
 
