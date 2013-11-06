@@ -77,8 +77,6 @@ public class CriterionUtils {
 	public static CriteriaState filter(DetachedCriteria dc,
 			Class<? extends Persistable<?>> entityClass,
 			Map<String, UiConfigImpl> uiConfigs) {
-		if (dc == null || entityClass == null || uiConfigs == null)
-			return null;
 		CriteriaState state = new CriteriaState();
 		try {
 			ConversionService conversionService = ApplicationContextUtils
