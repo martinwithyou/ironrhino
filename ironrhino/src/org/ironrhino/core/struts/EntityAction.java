@@ -314,7 +314,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			if (resultPage == null)
 				resultPage = new ResultPage();
 			resultPage.setCriteria(dc);
-			if (criteriaState == null || criteriaState.getOrderings().isEmpty()) {
+			if (criteriaState.getOrderings().isEmpty()) {
 				if (richtableConfig != null
 						&& StringUtils.isNotBlank(richtableConfig.order())) {
 					String[] ar = richtableConfig.order().split(",");

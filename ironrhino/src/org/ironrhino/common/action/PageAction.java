@@ -97,7 +97,7 @@ public class PageAction extends BaseAction {
 							"pagepath", "title"));
 				}
 			}
-			if (criteriaState == null || criteriaState.getOrderings().isEmpty()) {
+			if (criteriaState.getOrderings().isEmpty()) {
 				dc.addOrder(Order.asc("displayOrder"));
 				dc.addOrder(Order.asc("pagepath"));
 			}
