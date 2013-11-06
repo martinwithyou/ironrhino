@@ -19,6 +19,7 @@
 					<entry key="discovery.zen.ping.multicast.enabled" value="false" />
 					<entry key="index.number_of_shards" value="1" />
 					<entry key="index.number_of_replicas" value="0" />
+					<entry key="threadpool.bulk.queue_size" value="${elasticSearch.threadpool.bulk.queue_size:1000}" />
 					<entry key="index.analysis.analyzer.default.type" value="mmseg" />
 				</map>
 			</property>
@@ -37,6 +38,7 @@
 					<entry key="discovery.zen.ping.multicast.enabled" value="true" />
 					<entry key="index.number_of_shards" value="1" />
 					<entry key="index.number_of_replicas" value="0" />
+					<entry key="threadpool.bulk.queue_size" value="${elasticSearch.threadpool.bulk.queue_size:1000}" />
 					<entry key="index.analysis.analyzer.default.type" value="mmseg" />
 				</map>
 			</property>
@@ -55,6 +57,7 @@
 					<entry key="discovery.zen.ping.multicast.enabled" value="false" />
 					<entry key="index.number_of_shards" value="1" />
 					<entry key="index.number_of_replicas" value="0" />
+					<entry key="threadpool.bulk.queue_size" value="${elasticSearch.threadpool.bulk.queue_size:1000}" />
 					<entry key="index.analysis.analyzer.default.type" value="mmseg" />
 					<entry key="gateway.type" value="none" />
 					<entry key="index.store.type" value="memory" />
