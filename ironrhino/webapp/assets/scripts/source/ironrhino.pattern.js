@@ -12,7 +12,7 @@
 							+ ($(this).data('options') || '{}')))());
 					if (options.cols < 2 || options.cols > 5)
 						return;
-					var pattern = $(this);
+					var pattern = $(this).addClass('pattern');
 					var line = $('<div class="line"></div>').appendTo(pattern);
 					var cell = $(
 							'<div class="cell"><div class="circle"><div class="dot"></div></div></div>')
@@ -66,10 +66,19 @@
 	}
 
 	function connect(dot1, dot2, color) {
+		var modal = $(dot1).closest('.modal-body');
 		var x1 = $(dot1).offset().left + $(dot1).width() / 2;
+		if (modal.length)
+			x1 -= modal.offset().left;
 		var y1 = $(dot1).offset().top + $(dot1).height() / 2;
+		if (modal.length)
+			y1 -= modal.offset().top;
 		var x2 = $(dot2).offset().left + $(dot2).width() / 2;
+		if (modal.length)
+			x2 -= modal.offset().left;
 		var y2 = $(dot2).offset().top + $(dot2).height() / 2;
+		if (modal.length)
+			y2 -= modal.offset().top;
 		var thickness = $(dot1).width() / 2;
 		var length = Math.sqrt(((x2 - x1) * (x2 - x1))
 				+ ((y2 - y1) * (y2 - y1)));
@@ -96,7 +105,3 @@
 		});
 	}
 })(jQuery);
-
-Observation.pattern = function(container) {
-	$('.pattern', container).pattern();
-};

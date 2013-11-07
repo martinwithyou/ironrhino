@@ -21,7 +21,8 @@ MessageBundle = {
 		'confirm.action' : 'please confirm this action?',
 		'unsupported.browser' : 'unsupported browser',
 		'action.denied' : 'requested action denied',
-		'maximum.exceeded' : '{0} , exceed maximum {1}'
+		'maximum.exceeded' : '{0} , exceed maximum {1}',
+		'pattern.coords.invalid' : 'number of coords should be greater or equal than {0} and less or equals than {1}'
 	},
 	'zh_CN' : {
 		'ajax.loading' : '正在加载...',
@@ -57,15 +58,16 @@ MessageBundle = {
 		'false' : '否',
 		'unsupported.browser' : '你使用的浏览器不支持该功能',
 		'action.denied' : '你拒绝了请求',
-		'maximum.exceeded' : '{0} ,超过最大限制数{1}'
+		'maximum.exceeded' : '{0} ,超过最大限制数{1}',
+		'pattern.coords.invalid' : '选中的坐标数必须大于等于{0}并且小于等于{1}'
 	},
 	get : function() {
 		var key = arguments[0];
 		var lang = MessageBundle.lang();
 		var msg = MessageBundle[lang][key];
-		if (typeof(msg) == 'undefined')
+		if (typeof (msg) == 'undefined')
 			msg = key;
-		for (var i = 1; i < arguments.length; i++)
+		for ( var i = 1; i < arguments.length; i++)
 			msg = msg.replace('{' + (i - 1) + '}', arguments[i]);
 		return msg;
 	},

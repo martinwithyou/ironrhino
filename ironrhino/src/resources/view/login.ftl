@@ -15,7 +15,7 @@
 	<@s.form id="login" action="login" method="post" cssClass="ajax focus form-horizontal well" style="border-width:10px;">
 		<@s.hidden id="targetUrl" name="targetUrl" />
 		<@s.textfield label="%{getText('username')}" name="username" cssClass="required span2"/>
-		<@s.password label="%{getText('password')}" name="password" cssClass="required span2"/>
+		<@s.password label="%{getText('password')}" name="password" cssClass="required span2 input-pattern submit"/>
 		<@s.checkbox label="%{getText('rememberme')}" name="rememberme" cssClass="custom"/>
 		<@captcha/>
 		<@s.submit value="%{getText('login')}" cssClass="btn-primary">

@@ -66,6 +66,8 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.latlng.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.filtercolumn.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.pattern.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.patterninput.js" />
 			</filelist>
 		</concat>
 		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-ie.js" encoding="utf-8" fixlastline="yes">
@@ -120,6 +122,8 @@
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.latlng.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.editme.js" />
 				<file name="${webapp.dir}/assets/scripts/source/ironrhino.filtercolumn.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.pattern.js" />
+				<file name="${webapp.dir}/assets/scripts/source/ironrhino.patterninput.js" />
 			</filelist>
 		</concat>
 		<concat destfile="${webapp.dir}/assets/scripts/ironrhino-lite.js" encoding="utf-8" fixlastline="yes">
@@ -177,6 +181,7 @@
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.richtable.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.filtercolumn.css" />
 				<file name="${webapp.dir}/assets/styles/source/ironrhino.treearea.css" />
+				<file name="${webapp.dir}/assets/styles/source/ironrhino.pattern.css" />
 				<file name="${webapp.dir}/assets/styles/source/bootstrap-responsive.css" />
 			</filelist>
 		</concat>
