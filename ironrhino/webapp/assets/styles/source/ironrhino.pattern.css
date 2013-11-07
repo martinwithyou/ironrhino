@@ -1,9 +1,3 @@
-div.pattern	div.line{
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-	}
 div.pattern	div.cell{
 		float:left;
 		position: relative;

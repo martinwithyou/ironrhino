@@ -156,6 +156,13 @@ a.remove:hover {
 	opacity: 1;
   	filter: alpha(opacity=1);
 }
+.unselectable{
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
 .datagrided [class*="icon-"]{
 	margin: 3px;
 }

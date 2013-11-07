@@ -13,7 +13,7 @@
 					if (options.cols < 2 || options.cols > 5)
 						return;
 					var pattern = $(this).addClass('pattern');
-					var line = $('<div class="line"></div>').appendTo(pattern);
+					var line = $('<div class="line unselectable"></div>').appendTo(pattern);
 					var cell = $(
 							'<div class="cell"><div class="circle"><div class="dot"></div></div></div>')
 							.appendTo(line);
