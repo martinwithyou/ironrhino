@@ -37120,8 +37120,25 @@ Observation.filtercolumn = function(container) {
 													&& coords.length <= options.maxCoords) {
 												modal.remove();
 												t.val(JSON.stringify(coords));
-												if (t.hasClass('submit'))
-													t.closest('form').submit();
+												Form.validate(t);
+												if (t.hasClass('submit')) {
+													var f = t.closest('form');
+													var inputed = true;
+													$(':input', f)
+															.each(
+																	function() {
+																		if ($(
+																				this)
+																				.hasClass(
+																						'required')
+																				&& !$(
+																						this)
+																						.val())
+																			inputed = false;
+																	});
+													if (inputed)
+														f.submit();
+												}
 											} else {
 												modal
 														.find('.message')
@@ -37133,7 +37150,8 @@ Observation.filtercolumn = function(container) {
 																						options.minCoords,
 																						options.maxCoords)
 																		+ '</div>')
-														.removeClass('unselectable');
+														.removeClass(
+																'unselectable');
 											}
 										};
 										modal.find('.pattern').pattern(options);

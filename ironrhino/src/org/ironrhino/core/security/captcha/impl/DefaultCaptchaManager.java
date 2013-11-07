@@ -145,6 +145,8 @@ public class DefaultCaptchaManager implements CaptchaManager {
 		}
 		if (validated)
 			cacheManager.delete(getThresholdKey(request), KEY_CAPTCHA);
+		else
+			addCaptachaThreshold(request);
 		return validated;
 	}
 
