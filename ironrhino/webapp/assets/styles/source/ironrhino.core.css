@@ -219,6 +219,12 @@ div.text-core{
 .modal-close ~ .modal-body{
 	padding-top: 0;
 }
+.modal-large{
+	position: absolute;
+}
+.modal-large .modal-body{
+	max-height: none;
+}
 @media (min-width: 980px) and (max-width: 1024px) {
   .hidden-pad {
     display: none !important;

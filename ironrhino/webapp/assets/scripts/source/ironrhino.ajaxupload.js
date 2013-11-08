@@ -13,7 +13,8 @@
 		if (!options.progress) {
 			progress = $('#_uploadprogress');
 			if (!progress.length)
-				progress = $('<progress id="_uploadprogress" style="position: fixed;z-index: 10001;left: 45%;top: 0px;width: 100px;" min="0" max="100" value="0">0</progress>')
+				progress = $(
+						'<progress id="_uploadprogress" style="position: fixed;z-index: 10001;left: 45%;top: 0px;width: 100px;" min="0" max="100" value="0">0</progress>')
 						.appendTo(document.body);
 		} else {
 			progress = $(options.progress);
@@ -33,7 +34,7 @@
 		}
 		if (progress && progress.length) {
 			xhr.onload = function() {
-				progress.val(100).html(100).hide();
+				progress.val(100).html(100).remove();
 			};
 			if ("upload" in xhr) {
 				xhr.upload.onprogress = function(event) {
@@ -47,19 +48,19 @@
 		if (typeof options.data == 'string') {
 			var arr = options.data.split('&');
 			options.data = {};
-			for (var i = 0; i < arr.length; i++) {
+			for ( var i = 0; i < arr.length; i++) {
 				var arr2 = arr[i].split('=', 2);
 				options.data[arr2[0]] = arr2.length == 2 ? arr2[1] : '';
 			}
 		}
 		if (!!window.FormData) {
 			var formData = new FormData();
-			for (var i = 0; i < files.length; i++)
+			for ( var i = 0; i < files.length; i++)
 				formData.append(options.name, files[i]);
 			if (options.data)
 				$.each(options.data, function(k, v) {
-							formData.append(k, v);
-						});
+					formData.append(k, v);
+				});
 			xhr.send(formData);
 			return true;
 		} else {
@@ -70,7 +71,7 @@
 				window.BlobBuilder = window.WebKitBlobBuilder;
 			if (typeof FileReader != 'undefined'
 					&& typeof BlobBuilder != 'undefined') {
-				for (var i = 0; i < files.length; i++) {
+				for ( var i = 0; i < files.length; i++) {
 					var f = files[i];
 					var reader = new FileReader();
 					reader.sourceFile = f;
@@ -78,18 +79,22 @@
 					var boundary = 'xxxxxxxxx';
 					var body = new BlobBuilder();
 					if (options.data) {
-						$.each(options.data, function(k, v) {
-							var bb = new BlobBuilder();
-							bb.append('--');
-							bb.append(boundary);
-							bb.append('\r\n');
-							bb.append('Content-Disposition: form-data; name="');
-							bb.append(k);
-							bb.append('" ');
-							bb.append(v);
-							bb.append('\r\n');
-							body.append(bb.getBlob());
-						});
+						$
+								.each(
+										options.data,
+										function(k, v) {
+											var bb = new BlobBuilder();
+											bb.append('--');
+											bb.append(boundary);
+											bb.append('\r\n');
+											bb
+													.append('Content-Disposition: form-data; name="');
+											bb.append(k);
+											bb.append('" ');
+											bb.append(v);
+											bb.append('\r\n');
+											body.append(bb.getBlob());
+										});
 					}
 					reader.onload = function(evt) {
 						var f = evt.target.sourceFile;
@@ -144,7 +149,7 @@
 			var bb = new BlobBuilder();
 			var frs = new FileReaderSync();
 			var files = event.data;
-			for (var i = 0; i < files.length; i++) {
+			for ( var i = 0; i < files.length; i++) {
 				bb.append('--');
 				bb.append(boundary);
 				bb.append('\r\n');
@@ -165,7 +170,7 @@
 			return bb.getBlob();
 		} else if (files[0].getAsBinary) {
 			var body = '';
-			for (var i = 0; i < files.length; i++) {
+			for ( var i = 0; i < files.length; i++) {
 				body += '--' + boundary + '\r\n';
 				body += 'Content-Disposition: form-data; name=' + name
 						+ '; filename=' + files[i].name + '\r\n';
