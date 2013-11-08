@@ -6,7 +6,7 @@
 $(function(){
 	$(document).on('click','#result tbody .btn',function(){
 		if(!$('#row-modal').length)
-			var modal = $('<div id="row-modal" class="modal" style="z-index:10000;"><div style="padding: 5px 5px 0 0;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div><div  id="row-modal-body" class="modal-body" style="min-height:300px;max-height:600px;"></div></div>')
+			var modal = $('<div id="row-modal" class="modal" style="z-index:10000;"><div class="modal-close"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div><div id="row-modal-body" class="modal-body" style="min-height:300px;max-height:600px;"></div></div>')
 									.appendTo(document.body).fadeIn().find('button.close').click(function() {
 						$(this).closest('.modal').fadeOut().remove();
 					});

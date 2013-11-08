@@ -209,6 +209,16 @@ a.remove:hover {
 div.text-core{
 	display:inline-block;
 }
+.modal-close{
+	height: 15px;
+}
+.modal-close .close{
+	height: 15px;
+	padding-right: 2px;
+}
+.modal-close ~ .modal-body{
+	padding-top: 0;
+}
 @media (min-width: 980px) and (max-width: 1024px) {
   .hidden-pad {
     display: none !important;

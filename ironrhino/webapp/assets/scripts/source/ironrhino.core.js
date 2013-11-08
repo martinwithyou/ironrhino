@@ -674,7 +674,7 @@ Initialization.common = function() {
 							var _this = $(this);
 							_this.hide();
 							var modal = $(
-									'<div class="modal" style="z-index:10000;"><div style="padding: 5px 5px 0 0;"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div><div class="modal-body" style="max-height:600px;"><div class="location-qrcode">'
+									'<div class="modal" style="z-index:10000;"><div class="modal-close"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button></div><div class="modal-body" style="max-height:600px;"><div class="location-qrcode">'
 											+ document.location.href
 											+ '</div></div></div>').appendTo(
 									document.body);
