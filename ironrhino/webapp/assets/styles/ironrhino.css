@@ -8199,6 +8199,7 @@ div.text-core{
 }
 .modal-close .close{
 	height: 15px;
+	line-height: 15px;
 	padding-right: 2px;
 }
 .modal-close ~ .modal-body{
