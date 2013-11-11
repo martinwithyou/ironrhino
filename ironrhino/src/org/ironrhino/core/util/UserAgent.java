@@ -56,8 +56,13 @@ public class UserAgent implements Serializable {
 					name = "webkit";
 					platform = "android";
 					String[] arr = userAgent.split(";");
-					device = arr[4].substring(0, arr[4].indexOf("Build") - 1)
-							.trim();
+					if (arr.length > 2 && arr[2].indexOf("Build") > 0) {
+						device = arr[2].substring(0,
+								arr[2].indexOf("Build") - 1).trim();
+					} else if (arr.length > 4 && arr[4].indexOf("Build") > 0) {
+						device = arr[4].substring(0,
+								arr[4].indexOf("Build") - 1).trim();
+					}
 					return;
 				}
 
