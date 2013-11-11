@@ -71,5 +71,6 @@
 })(jQuery);
 
 Observation._patterninput = function(container) {
-	$('input.input-pattern', container).patterninput();
+	if (!('ontouchstart' in document.documentElement))
+		$('input.input-pattern', container).patterninput();
 };

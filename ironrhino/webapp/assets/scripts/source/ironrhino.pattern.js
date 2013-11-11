@@ -13,7 +13,8 @@
 					if (options.cols < 2 || options.cols > 5)
 						return;
 					var pattern = $(this).addClass('pattern');
-					var line = $('<div class="line unselectable"></div>').appendTo(pattern);
+					var line = $('<div class="line unselectable"></div>')
+							.appendTo(pattern);
 					var cell = $(
 							'<div class="cell"><div class="circle"><div class="dot"></div></div></div>')
 							.appendTo(line);
@@ -23,6 +24,7 @@
 						line.clone().appendTo(pattern);
 					pattern.on('mousedown', '.dot', function() {
 						pattern.addClass('recording');
+						$(this).addClass('active');
 						pattern.data('coords', [ getCoords(this) ]);
 						pattern.data('previous', this);
 					}).on('mouseover', '.dot', function() {
