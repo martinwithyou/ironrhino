@@ -50,18 +50,16 @@
 														f.submit();
 												}
 											} else {
-												modal
+												var msg = modal
 														.find('.message')
 														.html(
-																'<div class="alert alert-error unselectable">'
+																'<div class="alert alert-error unselectable" style="padding:0;">'
 																		+ MessageBundle
 																				.get(
 																						'pattern.coords.invalid',
 																						options.minCoords,
 																						options.maxCoords)
-																		+ '</div>')
-														.removeClass(
-																'unselectable');
+																		+ '</div>');
 											}
 										};
 										modal.find('.pattern').pattern(options);
@@ -71,6 +69,5 @@
 })(jQuery);
 
 Observation._patterninput = function(container) {
-	if (!('ontouchstart' in document.documentElement))
-		$('input.input-pattern', container).patterninput();
+	$('input.input-pattern', container).patterninput();
 };

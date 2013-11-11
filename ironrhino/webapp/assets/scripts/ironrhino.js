@@ -29957,7 +29957,7 @@ MessageBundle = {
 		'unsupported.browser' : 'unsupported browser',
 		'action.denied' : 'requested action denied',
 		'maximum.exceeded' : '{0} , exceed maximum {1}',
-		'pattern.coords.invalid' : 'number of coords should be greater or equal than {0} and less or equals than {1}'
+		'pattern.coords.invalid' : 'coords should be between {0} and {1}'
 	},
 	'zh_CN' : {
 		'ajax.loading' : '正在加载...',
@@ -29994,7 +29994,7 @@ MessageBundle = {
 		'unsupported.browser' : '你使用的浏览器不支持该功能',
 		'action.denied' : '你拒绝了请求',
 		'maximum.exceeded' : '{0} ,超过最大限制数{1}',
-		'pattern.coords.invalid' : '选中的坐标数必须大于等于{0}并且小于等于{1}'
+		'pattern.coords.invalid' : '坐标数必须在{0}和{1}之间'
 	},
 	get : function() {
 		var key = arguments[0];
@@ -37030,36 +37030,104 @@ Observation.filtercolumn = function(container) {
 						cell.clone().appendTo(line);
 					for ( var i = 0; i < options.rows - 1; i++)
 						line.clone().appendTo(pattern);
-					pattern.on('mousedown', '.dot', function() {
-						pattern.addClass('recording');
-						$(this).addClass('active');
-						pattern.data('coords', [ getCoords(this) ]);
-						pattern.data('previous', this);
-					}).on('mouseover', '.dot', function() {
-						var previous = pattern.data('previous');
-						if (!pattern.hasClass('recording') || previous == this)
-							return;
-						$(this).addClass('active');
-						connect(previous, this, options.pathColor);
-						pattern.data('coords').push(getCoords(this));
-						pattern.data('previous', this);
-					}).on('mouseout', '.dot', function() {
-						$(this).removeClass('active');
-					}).on(
-							'mouseup',
-							function() {
-								if (pattern.hasClass('recording')) {
+					var modal = pattern.closest('.modal');
+					if (modal.length)
+						modal.css({
+							'width' : '300px',
+							'left' : '50%',
+							'margin-left' : '-150px',
+							'top' : '50%',
+							'margin-top' : '-150px'
+						});
+					if (!('ontouchstart' in document.documentElement)) {
+						pattern.on('mousedown', '.dot', function() {
+							pattern.addClass('recording');
+							$(this).addClass('active');
+							pattern.data('coords', [ getCoords(this) ]);
+							pattern.data('previous', this);
+						}).on(
+								'mouseover',
+								'.dot',
+								function() {
+									var previous = pattern.data('previous');
+									if (!pattern.hasClass('recording')
+											|| previous == this)
+										return;
+									$(this).addClass('active');
+									connect(previous, this, options.pathColor);
+									pattern.data('coords')
+											.push(getCoords(this));
+									pattern.data('previous', this);
+								}).on('mouseout', '.dot', function() {
+							$(this).removeClass('active');
+						}).on(
+								'mouseup',
+								function() {
+									if (pattern.hasClass('recording')) {
+										var coords = pattern.data('coords');
+										pattern.removeClass('recording')
+												.removeData('previous')
+												.removeData('coords').find(
+														'div.path').remove();
+										if (options.oncomplete)
+											options.oncomplete(coords);
+									}
+								});
+					} else {
+						pattern.bind(
+								'touchmove',
+								function(ev) {
+									ev.preventDefault();
+									var dot = getTouchedDot(
+											ev.originalEvent.touches[0],
+											pattern);
+
+									if (!dot)
+										return;
+									var previous = pattern.data('previous');
+									if (dot == previous)
+										return;
+									if (previous == null) {
+										pattern.data('coords',
+												[ getCoords(dot) ]);
+										pattern.data('previous', dot);
+									} else {
+										connect(previous, dot,
+												options.pathColor);
+										pattern.data('coords').push(
+												getCoords(dot));
+										pattern.data('previous', dot);
+									}
+								}).bind(
+								'touchend',
+								function(ev) {
+									ev.preventDefault();
 									var coords = pattern.data('coords');
-									pattern.removeClass('recording')
-											.removeData('previous').removeData(
-													'coords').find('div.path')
-											.remove();
-									if (options.oncomplete)
-										options.oncomplete(coords);
-								}
-							});
+									if (coords) {
+										pattern.removeData('previous')
+												.removeData('coords').find(
+														'div.path').remove();
+										if (options.oncomplete)
+											options.oncomplete(coords);
+									}
+								});
+					}
 				});
 	};
+
+	function getTouchedDot(touch, pattern) {
+		var x = touch.pageX;
+		var y = touch.pageY;
+		var dot = null;
+		$('.dot', pattern).each(function() {
+			var t = $(this);
+			var xx = x - t.offset().left;
+			var yy = y - t.offset().top;
+			if (xx >= 0 && xx <= t.width() && yy >= 0 && yy <= t.height())
+				dot = this;
+		});
+		return dot;
+	}
 
 	function getCoords(dot) {
 		var pattern = $(dot).closest('.pattern');
@@ -37167,18 +37235,16 @@ Observation.filtercolumn = function(container) {
 														f.submit();
 												}
 											} else {
-												modal
+												var msg = modal
 														.find('.message')
 														.html(
-																'<div class="alert alert-error unselectable">'
+																'<div class="alert alert-error unselectable" style="padding:0;">'
 																		+ MessageBundle
 																				.get(
 																						'pattern.coords.invalid',
 																						options.minCoords,
 																						options.maxCoords)
-																		+ '</div>')
-														.removeClass(
-																'unselectable');
+																		+ '</div>');
 											}
 										};
 										modal.find('.pattern').pattern(options);
@@ -37188,7 +37254,6 @@ Observation.filtercolumn = function(container) {
 })(jQuery);
 
 Observation._patterninput = function(container) {
-	if (!('ontouchstart' in document.documentElement))
-		$('input.input-pattern', container).patterninput();
+	$('input.input-pattern', container).patterninput();
 };
 
