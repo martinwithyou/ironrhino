@@ -27,6 +27,8 @@
 				var file = new File(basedir+'/' + path);
         		var parent = file.getParentFile();
         		var files = parent.listFiles();
+				if(!files)
+					continue;
         		for(var i=0;i<files.length;i++){
         			var f = files[i];
         			var filename2 = f.getName();
