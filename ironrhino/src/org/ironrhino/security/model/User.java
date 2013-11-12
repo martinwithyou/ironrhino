@@ -38,8 +38,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.ClassUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 @AutoConfig
 @Searchable
 @Entity
@@ -322,8 +320,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		if (StringUtils.isNotBlank(str))
 			try {
 				attributes = JsonUtils.fromJson(str,
-						new TypeReference<Map<String, String>>() {
-						});
+						JsonUtils.STRING_MAP_TYPE);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

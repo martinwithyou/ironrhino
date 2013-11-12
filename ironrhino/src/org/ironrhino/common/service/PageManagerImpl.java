@@ -29,8 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 @Component
 public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		PageManager {
@@ -118,8 +116,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 	public void pullDraft(Page page) {
 		try {
 			Map<String, String> map = JsonUtils.fromJson(page.getDraft(),
-					new TypeReference<Map<String, String>>() {
-					});
+					JsonUtils.STRING_MAP_TYPE);
 			page.setPagepath(map.get("pagepath"));
 			page.setTitle(map.get("title"));
 			page.setContent(map.get("content"));

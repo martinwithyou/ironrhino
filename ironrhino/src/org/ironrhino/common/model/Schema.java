@@ -45,6 +45,9 @@ public class Schema extends BaseEntity {
 
 	private static final long serialVersionUID = -8352037604269012984L;
 
+	private static final TypeReference<List<SchemaField>> TYPE_LIST = new TypeReference<List<SchemaField>>() {
+	};
+
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 1)
 	@Column(nullable = false)
@@ -112,9 +115,7 @@ public class Schema extends BaseEntity {
 	public void setFieldsAsString(String str) {
 		if (StringUtils.isNotBlank(str))
 			try {
-				fields = JsonUtils.fromJson(str,
-						new TypeReference<List<SchemaField>>() {
-						});
+				fields = JsonUtils.fromJson(str, TYPE_LIST);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

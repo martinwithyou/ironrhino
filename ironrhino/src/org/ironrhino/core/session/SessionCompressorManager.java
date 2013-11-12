@@ -12,16 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 @Component
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class SessionCompressorManager {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
-
-	private TypeReference<Map<String, String>> mapStringStringType = new TypeReference<Map<String, String>>() {
-	};
 
 	@Autowired(required = false)
 	private List<SessionCompressor> compressors;
@@ -62,7 +57,8 @@ public class SessionCompressorManager {
 		if (StringUtils.isNotBlank(str)) {
 			Map<String, String> compressedMap = null;
 			try {
-				compressedMap = JsonUtils.fromJson(str, mapStringStringType);
+				compressedMap = JsonUtils.fromJson(str,
+						JsonUtils.STRING_MAP_TYPE);
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				session.invalidate();

@@ -22,8 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 @Component("serviceRegistry")
 @Profile(CLUSTER)
 public class ZooKeeperServiceRegistry extends AbstractServiceRegistry implements
@@ -151,8 +149,7 @@ public class ZooKeeperServiceRegistry extends AbstractServiceRegistry implements
 			byte[] data = curatorFramework.getData().forPath(path);
 			String sdata = new String(data);
 			Map<String, String> map = JsonUtils.fromJson(sdata,
-					new TypeReference<Map<String, String>>() {
-					});
+					JsonUtils.STRING_MAP_TYPE);
 			Map<String, String> services = new TreeMap<String, String>();
 			services.putAll(map);
 			return services;

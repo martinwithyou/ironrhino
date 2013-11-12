@@ -5,6 +5,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Lob;
 
@@ -28,6 +30,12 @@ public class JsonUtils {
 	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static String[] ACCEPT_DATE_FORMATS = { DEFAULT_DATE_FORMAT,
 			"yyyy-MM-dd'T'HH:mm:ss", "yyyy/MM/dd", "yyyy-MM-dd" };
+
+	public static final TypeReference<List<String>> STRING_LIST_TYPE = new TypeReference<List<String>>() {
+	};
+
+	public static final TypeReference<Map<String, String>> STRING_MAP_TYPE = new TypeReference<Map<String, String>>() {
+	};
 
 	private static Logger log = LoggerFactory.getLogger(JsonUtils.class);
 

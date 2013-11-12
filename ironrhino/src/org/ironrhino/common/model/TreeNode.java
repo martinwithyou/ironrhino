@@ -22,8 +22,6 @@ import org.ironrhino.core.model.Attribute;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.util.JsonUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 @PublishAware
 @AutoConfig
 @Entity
@@ -90,8 +88,7 @@ public class TreeNode extends BaseTreeableEntity<TreeNode> implements
 		if (StringUtils.isNotBlank(str))
 			try {
 				Map<String, String> map = JsonUtils.fromJson(str,
-						new TypeReference<Map<String, String>>() {
-						});
+						JsonUtils.STRING_MAP_TYPE);
 				attributes = new ArrayList<Attribute>(map.size());
 				for (Map.Entry<String, String> entry : map.entrySet())
 					attributes.add(new Attribute(entry.getKey(), entry

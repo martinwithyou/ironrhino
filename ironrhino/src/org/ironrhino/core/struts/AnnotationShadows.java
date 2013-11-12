@@ -14,8 +14,6 @@ import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.util.JsonUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 public class AnnotationShadows {
 
 	public static class UiConfigImpl implements Serializable {
@@ -90,8 +88,7 @@ public class AnnotationShadows {
 				try {
 					this.dynamicAttributes = JsonUtils.fromJson(
 							config.dynamicAttributes(),
-							new TypeReference<Map<String, String>>() {
-							});
+							JsonUtils.STRING_MAP_TYPE);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -15,8 +15,6 @@ import org.ironrhino.security.oauth.client.service.OAuthProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 public class OAuthTokenUtils {
 
 	private static Logger logger = LoggerFactory
@@ -31,8 +29,7 @@ public class OAuthTokenUtils {
 		if (StringUtils.isNotBlank(str)) {
 			try {
 				tokens = JsonUtils.fromJson(str,
-						new TypeReference<Map<String, String>>() {
-						});
+						JsonUtils.STRING_MAP_TYPE);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -54,8 +51,7 @@ public class OAuthTokenUtils {
 		if (StringUtils.isNotBlank(str)) {
 			try {
 				tokens = JsonUtils.fromJson(str,
-						new TypeReference<Map<String, String>>() {
-						});
+						JsonUtils.STRING_MAP_TYPE);
 				if (tokens != null) {
 					String tokenString = tokens.get(provider.getName());
 					if (StringUtils.isNotBlank(tokenString)) {

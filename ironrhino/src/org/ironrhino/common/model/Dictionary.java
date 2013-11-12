@@ -49,6 +49,9 @@ public class Dictionary extends BaseEntity {
 
 	private static final long serialVersionUID = -8352037604261222984L;
 
+	private static final TypeReference<List<LabelValue>> TYPE_LIST = new TypeReference<List<LabelValue>>() {
+	};
+
 	@SearchableProperty(boost = 3)
 	@UiConfig(displayOrder = 1)
 	@CaseInsensitive
@@ -103,9 +106,7 @@ public class Dictionary extends BaseEntity {
 	public void setItemsAsString(String str) {
 		if (StringUtils.isNotBlank(str))
 			try {
-				items = JsonUtils.fromJson(str,
-						new TypeReference<List<LabelValue>>() {
-						});
+				items = JsonUtils.fromJson(str, TYPE_LIST);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
