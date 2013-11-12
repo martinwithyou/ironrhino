@@ -15,13 +15,8 @@
 		</property>
 	</bean>
 	<bean id="eventPublisher" class="org.ironrhino.core.event.EventPublisher"/>
-	<bean id="zooKeeper" class="org.apache.zookeeper.ZooKeeper" destroy-method="close" >
-		<constructor-arg index="0" value="127.0.0.1:2181"/>
-		<constructor-arg index="1" value="10000"/>
-		<constructor-arg index="2" ref="defaultWatcher"/>
-	</bean>
-	<bean id="defaultWatcher" class="org.ironrhino.core.zookeeper.DefaultWatcher" />
-	<bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.ZookeeperServiceRegistry" />
+	<bean id="zookeeperConfiguration" class="org.ironrhino.core.zookeeper.ZooKeeperConfiguration" />
+	<bean id="serviceRegistry" class="org.ironrhino.core.remoting.impl.ZooKeeperServiceRegistry" />
 	<bean id="userDetailsServiceHessian" class="org.ironrhino.core.remoting.client.HessianClient"
 		p:serviceInterface="org.springframework.security.core.userdetails.UserDetailsService" />
 	<bean id="userDetailsServiceHttpInvoker" class="org.ironrhino.core.remoting.client.HttpInvokerClient"

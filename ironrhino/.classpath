@@ -62,7 +62,6 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-net-3.2.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/commons-pool-1.6.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jasperreports-5.5.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/zookeeper-recipes-lock-3.4.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-aop-3.2.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-aspects-3.2.5.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/spring-beans-3.2.5.jar"/>
@@ -104,6 +103,9 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/jpa-api-2.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/mmseg4j-core-1.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/websocket-api-1.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/curator-client-2.3.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/curator-framework-2.3.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/curator-recipes-2.3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="webapp/WEB-INF/classes"/>
 </classpath>

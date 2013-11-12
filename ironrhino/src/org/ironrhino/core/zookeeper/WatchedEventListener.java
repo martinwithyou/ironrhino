@@ -8,7 +8,7 @@ public interface WatchedEventListener {
 
 	public void onNodeChildrenChanged(String path, List<String> children);
 
-	public void onNodeCreated(String path);
+	public void onNodeCreated(String path, byte[] data);
 
 	public void onNodeDeleted(String path);
 

@@ -30,39 +30,58 @@ public class RedisLockService implements LockService {
 	@Value("${lockService.timeout:300}")
 	private int timeout = 300;
 
+	private StandaloneLockService standaloneLockService = new StandaloneLockService();
+
 	@Override
 	public boolean tryLock(String name) {
-		String key = NAMESPACE + name;
-		boolean success = stringRedisTemplate.opsForValue()
-				.setIfAbsent(key, "");
-		if (success)
-			stringRedisTemplate.expire(key, timeout, TimeUnit.SECONDS);
-		return success;
+		if (standaloneLockService.tryLock(name)) {
+			String key = NAMESPACE + name;
+			boolean success = stringRedisTemplate.opsForValue().setIfAbsent(
+					key, "");
+			if (success)
+				stringRedisTemplate.expire(key, timeout, TimeUnit.SECONDS);
+			else
+				standaloneLockService.unlock(name);
+			return success;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
-	public boolean tryLock(String name, long timeout, TimeUnit unit)
-			throws InterruptedException {
+	public boolean tryLock(String name, long timeout, TimeUnit unit) {
 		if (timeout <= 0)
 			return tryLock(name);
-		String key = NAMESPACE + name;
-		boolean success = stringRedisTemplate.opsForValue()
-				.setIfAbsent(key, "");
-		long millisTimeout = unit.toMillis(timeout);
-		long start = System.currentTimeMillis();
-		while (!success) {
-			Thread.sleep(100);
-			if ((System.currentTimeMillis() - start) >= millisTimeout)
-				break;
-			success = stringRedisTemplate.opsForValue().setIfAbsent(key, "");
+		if (standaloneLockService.tryLock(name, timeout, unit)) {
+			String key = NAMESPACE + name;
+			boolean success = stringRedisTemplate.opsForValue().setIfAbsent(
+					key, "");
+			long millisTimeout = unit.toMillis(timeout);
+			long start = System.currentTimeMillis();
+			while (!success) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					return false;
+				}
+				if ((System.currentTimeMillis() - start) >= millisTimeout)
+					break;
+				success = stringRedisTemplate.opsForValue()
+						.setIfAbsent(key, "");
+			}
+			if (success)
+				stringRedisTemplate.expire(key, timeout, TimeUnit.SECONDS);
+			else
+				standaloneLockService.unlock(name);
+			return success;
+		} else {
+			return false;
 		}
-		if (success)
-			stringRedisTemplate.expire(key, timeout, TimeUnit.SECONDS);
-		return success;
 	}
 
 	@Override
 	public void lock(String name) {
+		standaloneLockService.lock(name);
 		String key = NAMESPACE + name;
 		boolean success = stringRedisTemplate.opsForValue()
 				.setIfAbsent(key, "");
@@ -81,6 +100,7 @@ public class RedisLockService implements LockService {
 
 	@Override
 	public void unlock(String name) {
+		standaloneLockService.unlock(name);
 		String key = NAMESPACE + name;
 		stringRedisTemplate.delete(key);
 	}

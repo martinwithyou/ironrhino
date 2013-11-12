@@ -28,14 +28,17 @@ public class StandaloneLockService implements LockService {
 	}
 
 	@Override
-	public boolean tryLock(String name, long timeout, TimeUnit unit)
-			throws InterruptedException {
+	public boolean tryLock(String name, long timeout, TimeUnit unit) {
 		Lock lock = locks.get(name);
 		if (lock == null) {
 			locks.putIfAbsent(name, new ReentrantLock());
 			lock = locks.get(name);
 		}
-		return lock.tryLock(timeout, unit);
+		try {
+			return lock.tryLock(timeout, unit);
+		} catch (InterruptedException e) {
+			return false;
+		}
 	}
 
 	@Override
@@ -51,9 +54,7 @@ public class StandaloneLockService implements LockService {
 	@Override
 	public void unlock(String name) {
 		Lock lock = locks.get(name);
-		if (lock == null)
-			throw new IllegalArgumentException("Lock '" + name
-					+ " ' doesn't exists");
-		lock.unlock();
+		if (lock != null)
+			lock.unlock();
 	}
 }
