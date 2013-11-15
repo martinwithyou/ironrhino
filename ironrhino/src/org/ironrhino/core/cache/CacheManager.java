@@ -6,9 +6,9 @@ import java.util.concurrent.TimeUnit;
 
 public interface CacheManager {
 
-	public static final String DEFAULT_TIME_TO_LIVE = "3600";
+	String DEFAULT_TIME_TO_LIVE = "3600";
 
-	public static final String DEFAULT_TIME_TO_IDLE = "-1";
+	String DEFAULT_TIME_TO_IDLE = "-1";
 
 	public void put(String key, Object value, int timeToLive,
 			TimeUnit timeUnit, String namespace);

@@ -6,7 +6,7 @@ import org.ironrhino.core.metadata.Captcha;
 
 public interface CaptchaManager {
 
-	public static final String KEY_CAPTCHA = "captcha";
+	String KEY_CAPTCHA = "captcha";
 
 	public String getChallenge(HttpServletRequest request, String token);
 

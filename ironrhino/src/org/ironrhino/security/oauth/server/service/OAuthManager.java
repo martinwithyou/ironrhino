@@ -8,7 +8,7 @@ import org.ironrhino.security.oauth.server.model.Client;
 
 public interface OAuthManager {
 
-	public static final long DEFAULT_EXPIRE_TIME = 14 * 24 * 3600;
+	long DEFAULT_EXPIRE_TIME = 14 * 24 * 3600;
 
 	public Authorization generate(Client client, String redirectUri,
 			String scope, String responseType) throws Exception;

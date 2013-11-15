@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface ServiceRegistry {
 
-	public static final int DEFAULT_PORT = 8080;
+	int DEFAULT_PORT = 8080;
 
 	public Map<String, Object> getExportServices();
 

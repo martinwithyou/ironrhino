@@ -11,13 +11,13 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface UiConfig {
 
-	public static final String DEFAULT_TYPE = "input";
+	String DEFAULT_TYPE = "input";
 
-	public static final String DEFAULT_INPUT_TYPE = "text";
+	String DEFAULT_INPUT_TYPE = "text";
 
-	public static final String DEFAULT_LIST_KEY = "id";
+	String DEFAULT_LIST_KEY = "id";
 
-	public static final String DEFAULT_LIST_VALUE = "name";
+	String DEFAULT_LIST_VALUE = "name";
 
 	String alias() default "";
 
@@ -32,7 +32,7 @@ public @interface UiConfig {
 	String regex() default "";
 
 	String cssClass() default "";
-	
+
 	String thCssClass() default "";
 
 	int displayOrder() default Integer.MAX_VALUE;
@@ -84,7 +84,7 @@ public @interface UiConfig {
 	boolean excludedFromLike() default false;
 
 	boolean excludedFromCriteria() default false;
-	
+
 	boolean excludedFromOrdering() default false;
 
 }
