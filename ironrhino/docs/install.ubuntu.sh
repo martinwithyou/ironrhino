@@ -201,6 +201,7 @@ if [ ! -f /etc/nginx/sites-enabled/default ]; then
 cat>/etc/nginx/sites-enabled/default<<EOF
 gzip_min_length  1024;
 gzip_types       text/xml text/css text/javascript application/x-javascript;
+limit_conn_zone  \$binary_remote_addr zone=addr:10m;
 upstream  backend  {
     server   localhost:8080;
     server   localhost:8081;
@@ -219,6 +220,7 @@ server {
              proxy_set_header  X-Forwarded-For  \$proxy_add_x_forwarded_for;
              proxy_set_header  X-Real-IP  \$remote_addr;
              proxy_set_header  Host \$http_host;
+             limit_conn addr   8;
      }
 }
 EOF
