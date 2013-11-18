@@ -38,7 +38,7 @@ public class ZooKeeperLockService implements LockService {
 	@Override
 	public boolean tryLock(String name) {
 		if (standaloneLockService.tryLock(name)) {
-			return tryLock(name, 10, TimeUnit.MILLISECONDS);
+			return tryLock(name, 0, TimeUnit.MILLISECONDS);
 		} else {
 			return false;
 		}
