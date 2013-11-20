@@ -260,7 +260,7 @@
 			copy = project.createTask('copy');
 			fs = project.createDataType('fileset');
 			fs.setDir(new File(basedir+'/target'));
-			var includes = 'ironrhino-assets-'+version+'.jar,ironrhino-core-'+version+'.jar,ironrhino-hibernate-config-'+version+'.jar,ironrhino-security-'+version+'.jar,ironrhino-security-config-'+version+'.jar,ironrhino-sitemesh-config-'+version+'.jar';
+			var includes = 'ironrhino-assets-'+version+'.jar,ironrhino-core-'+version+'.jar,ironrhino-hibernate-config-'+version+'.jar,ironrhino-security-'+version+'.jar,ironrhino-security-config-'+version+'.jar,ironrhino-sitemesh-config-'+version+'.jar,';
 			if(features.indexOf('search')>=0)
 				includes += 'ironrhino-search-config-'+version+'.jar';
 			if(features.indexOf('redis')>=0)
