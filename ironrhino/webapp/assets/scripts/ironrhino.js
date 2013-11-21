@@ -29970,7 +29970,7 @@ MessageBundle = {
 		'integer' : '请填写整数',
 		'integer.positive' : '请填写正整数',
 		'double' : '请填写数字',
-		'double.positive' : '请填写大于零的数字',
+		'double.positive' : '请填写大于零的数值',
 		'save.and.create' : '保存并新建',
 		'no.selection' : '没有选中',
 		'no.modification' : '没有更改',
@@ -30341,16 +30341,26 @@ Form = {
 					return true;
 				} else if ($(target).hasClass('double') && value) {
 					if ($(target).hasClass('positive')
-							&& (!value.match(/^[+]?\d+(\.\d+)?$/) || !$(target)
+							&& (!value.match(/^[+]?\d+\.?(\d+)?$/) || !$(target)
 									.hasClass('zero')
 									&& parseFloat(value) == 0)) {
 						Message.showFieldError(target, null, 'double.positive');
 						return false;
 					}
 					if (!$(target).hasClass('positive')
-							&& !value.match(/^[-+]?\d+(\.\d+)?$/)) {
+							&& !value.match(/^[-+]?\d+\.?(\d+)?$/)) {
 						Message.showFieldError(target, null, 'double');
 						return false;
+					}
+					var i = value.indexOf('.');
+					if (i > -1) {
+						var decimal = value.substring(i + 1);
+						var scale = parseInt($(target).data('scale') || '2');
+						if (decimal.length > scale) {
+							value = value.substring(0, i + 1)
+									+ decimal.substring(0, scale);
+							$(target).val(value);
+						}
 					}
 				}
 				return true;

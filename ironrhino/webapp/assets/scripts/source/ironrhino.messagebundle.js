@@ -35,7 +35,7 @@ MessageBundle = {
 		'integer' : '请填写整数',
 		'integer.positive' : '请填写正整数',
 		'double' : '请填写数字',
-		'double.positive' : '请填写大于零的数字',
+		'double.positive' : '请填写大于零的数值',
 		'save.and.create' : '保存并新建',
 		'no.selection' : '没有选中',
 		'no.modification' : '没有更改',
