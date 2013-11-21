@@ -6,6 +6,7 @@ import java.util.Map;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.OptimisticLockingFailureException;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -31,7 +32,10 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 				Object action = invocation.getAction();
 				if (action instanceof ValidationAware) {
 					ValidationAware validationAwareAction = (ValidationAware) action;
-					if (e instanceof ValidationException) {
+					if (e instanceof OptimisticLockingFailureException) {
+						validationAwareAction.addActionError(findText(
+								"try.again.later", null));
+					} else if (e instanceof ValidationException) {
 						ValidationException ve = (ValidationException) e;
 						for (String s : ve.getActionMessages())
 							validationAwareAction.addActionMessage(findText(s,
