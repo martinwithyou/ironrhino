@@ -181,6 +181,8 @@ public class PageAction extends BaseAction {
 		if (!page.isNew()) {
 			Page temp = page;
 			page = pageManager.get(page.getId());
+			pageManager.evict(page);
+			page.setVersion(temp.getVersion());
 			page.setPagepath(temp.getPagepath());
 			page.setTags(temp.getTags());
 			page.setDisplayOrder(temp.getDisplayOrder());

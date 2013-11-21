@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.NaturalId;
@@ -106,6 +107,9 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	@SearchableProperty(include_in_all = false)
 	@UiConfig(hidden = true)
 	private String modifyUser;
+	
+	@Version
+	private int version;
 
 	public String getHead() {
 		return head;
@@ -235,6 +239,14 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	public void setModifyUser(String modifyUser) {
 		this.modifyUser = modifyUser;
+	}
+	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	public String abbreviate(int size) {
