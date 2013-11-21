@@ -2,6 +2,7 @@ package org.ironrhino.core.security.role;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -10,9 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.ClassScaner;
+import org.ironrhino.core.util.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -22,6 +27,27 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 public class UserRoleManager {
 
 	private Set<String> staticRoles;
+
+	@Value("${userRoleManager.rolesMutex:}")
+	private String rolesMutex;
+
+	private List<List<String>> rolesMutexList = Collections.emptyList();
+
+	@PostConstruct
+	public void init() {
+		if (StringUtils.isNotBlank(rolesMutex)) {
+			String[] arr1 = rolesMutex.split(";");
+			rolesMutexList = new ArrayList<List<String>>(arr1.length);
+			for (String s : arr1) {
+				String[] arr2 = s.split(",");
+				if (arr2.length > 1) {
+					List<String> list = new ArrayList<String>(arr2.length);
+					list.addAll(Arrays.asList(arr2));
+					rolesMutexList.add(list);
+				}
+			}
+		}
+	}
 
 	@Autowired(required = false)
 	private List<UserRoleProvider> userRoleProviders;
@@ -105,5 +131,21 @@ public class UserRoleManager {
 		Map<String, String> rolesMap = getAllRoles(false);
 		String name = rolesMap.get(role);
 		return StringUtils.isNotBlank(name) ? name : role;
+	}
+
+	public void checkMutex(Collection<String> roles) {
+		if (roles != null && roles.size() > 0 && rolesMutexList.size() > 0) {
+			for (List<String> group : rolesMutexList) {
+				List<String> includes = new ArrayList<String>();
+				for (String role : roles)
+					if (group.contains(role))
+						includes.add(role);
+				if (includes.size() > 1) {
+					throw new ErrorMessage("validation.mutex.violation",
+							new Object[] { StringUtils.join(
+									displayRoles(includes), ",") });
+				}
+			}
+		}
 	}
 }

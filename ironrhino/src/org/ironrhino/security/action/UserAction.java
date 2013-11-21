@@ -192,6 +192,12 @@ public class UserAction extends EntityAction<User> {
 				user.setLegiblePassword(password);
 			userManager.evict(user);
 		}
+		try {
+			userRoleManager.checkMutex(user.getRoles());
+		} catch (Exception e) {
+			addFieldError("user.roles", e.getLocalizedMessage());
+			return false;
+		}
 		return true;
 	}
 

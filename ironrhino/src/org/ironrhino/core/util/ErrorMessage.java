@@ -1,5 +1,11 @@
 package org.ironrhino.core.util;
 
+import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.struts.ExceptionInterceptor;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+
 public class ErrorMessage extends RuntimeException {
 
 	private static final long serialVersionUID = 6808322631499170777L;
@@ -31,6 +37,20 @@ public class ErrorMessage extends RuntimeException {
 	@Override
 	public String getMessage() {
 		return message;
+	}
+
+	@Override
+	public String getLocalizedMessage() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(LocalizedTextUtil.findText(ExceptionInterceptor.class,
+				message, ActionContext.getContext().getLocale(), message, args));
+		if (StringUtils.isNotBlank(submessage)) {
+			sb.append(" : ");
+			sb.append(LocalizedTextUtil.findText(ExceptionInterceptor.class,
+					submessage, ActionContext.getContext().getLocale(),
+					submessage, args));
+		}
+		return sb.toString();
 	}
 
 	public void setMessage(String message) {

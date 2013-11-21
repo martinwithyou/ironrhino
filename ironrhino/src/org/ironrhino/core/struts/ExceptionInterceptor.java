@@ -3,7 +3,6 @@ package org.ironrhino.core.struts;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,15 +47,8 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 						}
 					} else {
 						if (e instanceof ErrorMessage) {
-							ErrorMessage err = (ErrorMessage) e;
-							StringBuilder sb = new StringBuilder();
-							sb.append(findText(err.getMessage(), err.getArgs()));
-							String submessage = err.getSubmessage();
-							if (StringUtils.isNotBlank(submessage)) {
-								sb.append(" : ");
-								sb.append(findText(submessage, null));
-							}
-							validationAwareAction.addActionError(sb.toString());
+							validationAwareAction.addActionError(e
+									.getLocalizedMessage());
 						} else {
 							String msg = findText(e.getMessage(), null);
 							if (msg == null)
