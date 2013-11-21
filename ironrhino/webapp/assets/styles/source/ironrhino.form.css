@@ -91,6 +91,9 @@ span.checkboxgroup{
 	margin-right:5px;
 	height:10px;
 }
+.action-error strong.force-override{
+	cursor: pointer;
+}
 .field-error.removeonclick {
 	position: absolute;
 	top: 300px;

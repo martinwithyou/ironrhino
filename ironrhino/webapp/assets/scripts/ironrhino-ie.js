@@ -31565,13 +31565,13 @@ function _observe(container) {
 $(_init);
 
 Initialization.common = function() {
-	$(document).ajaxStart(function() {
-		Indicator.show()
-	});
-	$(document).ajaxError(function() {
-		Indicator.showError()
-	});
 	$(document)
+			.ajaxStart(function() {
+				Indicator.show()
+			})
+			.ajaxError(function() {
+				Indicator.showError()
+			})
 			.ajaxSuccess(
 					function(ev, xhr) {
 						Indicator.hide();
@@ -31592,48 +31592,54 @@ Initialization.common = function() {
 							}
 							return;
 						}
-					});
-	$(document).on('click', '#message .close,.message-container .close',
-			function() {
-				$('#message,.message-container').each(function(i, v) {
-					if (!$.trim($(v).text()))
-						$(v).remove();
-				});
+					}).on('click', '#message .close,.message-container .close',
+					function() {
+						$('#message,.message-container').each(function(i, v) {
+							if (!$.trim($(v).text()))
+								$(v).remove();
+						});
+					}).on('click', '.removeonclick', function() {
+				$(this).remove()
+			}).on(
+					'keyup',
+					'input,textarea',
+					$.debounce(200, function(ev) {
+						if (!$(this).hasClass('email')
+								&& !$(this).hasClass('regex')
+								&& ev.keyCode != 13)
+							if ($(this).val())
+								Form.validate(this);
+						return true;
+					})).on(
+					'focusout',
+					'input,textarea',
+					function(ev) {
+						// if (this.value != this.defaultValue)
+						if ($(this).hasClass('email')
+								|| $(this).hasClass('regex')
+								|| !$(this).hasClass('required'))
+							Form.validate(this);
+						return true;
+					}).on('change', 'select', function() {
+				Form.validate(this);
+				return true;
+			}).on(
+					'dblclick',
+					'.ui-dialog-titlebar',
+					function() {
+						Dialog.toggleMaximization($('.ui-dialog-content', $(
+								this).closest('.ui-dialog')));
+					}).on('mouseenter', '.popover,.tooltip', function() {
+				$(this).remove()
+			}).on('click', ':submit', function(e) {
+				$(this).addClass('clicked');
+			}).on('click', '.action-error strong.force-override', function(e) {
+				var msgcontainer = $(e.target).closest('.message-container');
+				var form = msgcontainer.next('form');
+				$('input[type="hidden"].version', form).remove();
+				msgcontainer.fadeOut().remove();
+				form.submit();
 			});
-	$(document).on('click', '.removeonclick', function() {
-		$(this).remove()
-	}).on(
-			'keyup',
-			'input,textarea',
-			$.debounce(200, function(ev) {
-				if (!$(this).hasClass('email') && !$(this).hasClass('regex')
-						&& ev.keyCode != 13)
-					if ($(this).val())
-						Form.validate(this);
-				return true;
-			})).on(
-			'focusout',
-			'input,textarea',
-			function(ev) {
-				// if (this.value != this.defaultValue)
-				if ($(this).hasClass('email') || $(this).hasClass('regex')
-						|| !$(this).hasClass('required'))
-					Form.validate(this);
-				return true;
-			}).on('change', 'select', function() {
-		Form.validate(this);
-		return true;
-	}).on(
-			'dblclick',
-			'.ui-dialog-titlebar',
-			function() {
-				Dialog.toggleMaximization($('.ui-dialog-content', $(this)
-						.closest('.ui-dialog')));
-			}).on('mouseenter', '.popover,.tooltip', function() {
-		$(this).remove()
-	}).on('click', ':submit', function(e) {
-		$(this).addClass('clicked');
-	});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
 	Nav.init();
@@ -32186,7 +32192,12 @@ Observation.common = function(container) {
 					function() {
 						var target = this;
 						var _opt = ajaxOptions({
-							'target' : target
+							'target' : target,
+							onsuccess : function(data) {
+								var version = $('input[type="hidden"].version',
+										target);
+								version.val(parseInt(version.val() || '0') + 1);
+							}
 						});
 						if (this.tagName == 'FORM') {
 							var options = {

@@ -91,9 +91,9 @@ $(function() {
 </script>
 </head>
 <body>
-<@s.form id="form" action="${actionBaseUrl}/draft" method="post" cssClass="ajax view form-horizontal" cssStyle="padding-top:13px;">
+<@s.form id="form" action="${actionBaseUrl}/draft" method="post" cssClass="ajax form-horizontal" cssStyle="padding-top:13px;">
 	<@s.hidden name="page.id" />
-	<@s.hidden name="page.version" />
+	<@s.hidden name="page.version" cssClass="version" />
 	<#if view=='embedded'>
 	<@s.hidden name="page.pagepath"/>
 	<@s.hidden name="page.displayOrder"/>

@@ -181,8 +181,10 @@ public class PageAction extends BaseAction {
 		if (!page.isNew()) {
 			Page temp = page;
 			page = pageManager.get(page.getId());
-			pageManager.evict(page);
-			page.setVersion(temp.getVersion());
+			if (temp.getVersion() > 0 && temp.getVersion() < page.getVersion()) {
+				addActionError(getText("validation.version.conflict"));
+				return INPUT;
+			}
 			page.setPagepath(temp.getPagepath());
 			page.setTags(temp.getTags());
 			page.setDisplayOrder(temp.getDisplayOrder());
