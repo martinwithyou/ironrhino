@@ -11,7 +11,6 @@
 	<property name="test.src.dir" location="${basedir}/test/src" />
 	<property name="test.classes.dir" location="${basedir}/test/classes" />
 	<property name="test.results.dir" location="${basedir}/test/results" />
-	<property name="reference.dir" location="${basedir}/docs/reference" />
 	<property name="war.name" value="ironrhino.war" />
 
 	<path id="lib.classpath">
@@ -82,117 +81,11 @@
 
 	<import file="build.compress.xml" />
 
-	<target name="doc.clean" description="Delete temporary and distribution directories for docs">
-		<delete dir="${reference.dir}/pdf" />
-		<delete dir="${reference.dir}/html_single" />
-		<delete dir="${reference.dir}/html" />
-		<delete dir="${reference.dir}/lib" />
-	</target>
-	<target name="doc.prepare" description="Extra preparation for the documentation">
-		<unzip src="${reference.dir}/docbook-reference-libs.zip" dest="${reference.dir}/" />
-		<fail message="XSLT supporting lib not installed. Please see docs/reference/readme.txt for instructions.">
-			<condition>
-				<not>
-					<available file="${reference.dir}/lib" />
-				</not>
-			</condition>
-		</fail>
-	</target>
-	<target name="doc.pdf" depends="doc.prepare" description="Compile reference documentation to pdf">
-		<mkdir dir="${reference.dir}/pdf/images" />
-		<copy todir="${reference.dir}/pdf/images">
-			<fileset dir="${reference.dir}/src/images">
-				<include name="*.gif" />
-				<include name="*.svg" />
-				<include name="*.jpg" />
-				<include name="*.png" />
-			</fileset>
-		</copy>
-		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${reference.dir}">
-			<classpath>
-				<fileset dir="${reference.dir}/lib">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-			<arg value="-o" />
-			<arg value="${reference.dir}/pdf/docbook_fop.tmp" />
-			<arg value="${reference.dir}/src/reference.xml" />
-			<arg value="${reference.dir}/styles/fopdf.xsl" />
-		</java>
-		<java classname="org.apache.fop.apps.Fop" fork="true" maxmemory="256m" dir="${reference.dir}">
-			<classpath>
-				<fileset dir="${reference.dir}/lib">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-			<arg value="${reference.dir}/pdf/docbook_fop.tmp" />
-			<arg value="${reference.dir}/pdf/ironrhino-reference.pdf" />
-		</java>
-		<delete file="${reference.dir}/pdf/docbook_fop.tmp" />
-	</target>
-	<target name="doc.html" depends="doc.prepare" description="Compile reference documentation to chunked html">
-		<mkdir dir="${reference.dir}/html/images" />
-		<copy todir="${reference.dir}/html/images">
-			<fileset dir="${reference.dir}/src/images">
-				<include name="*.gif" />
-				<include name="*.svg" />
-				<include name="*.jpg" />
-				<include name="*.png" />
-			</fileset>
-		</copy>
-		<copy todir="${reference.dir}/styles">
-			<fileset dir="${reference.dir}/styles">
-				<include name="*.css" />
-			</fileset>
-		</copy>
-		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${reference.dir}/html/">
-			<classpath>
-				<fileset dir="${reference.dir}/lib">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-			<arg value="${reference.dir}/src/reference.xml" />
-			<arg value="${reference.dir}/styles/html_chunk.xsl" />
-		</java>
-	</target>
-	<target name="doc.htmlsingle" depends="doc.prepare" description="Compile reference documentation to single html">
-		<mkdir dir="${reference.dir}/html_single/images" />
-		<copy todir="${reference.dir}/html_single/images">
-			<fileset dir="${reference.dir}/src/images">
-				<include name="*.gif" />
-				<include name="*.svg" />
-				<include name="*.jpg" />
-				<include name="*.png" />
-			</fileset>
-		</copy>
-		<copy todir="${reference.dir}/html_single/">
-			<fileset dir="${reference.dir}/styles">
-				<include name="*.css" />
-			</fileset>
-		</copy>
-		<java classname="com.icl.saxon.StyleSheet" fork="true" dir="${reference.dir}">
-			<classpath>
-				<fileset dir="${reference.dir}/lib">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-			<arg value="-o" />
-			<arg value="${reference.dir}/html_single/index.html" />
-			<arg value="${reference.dir}/src/reference.xml" />
-			<arg value="${reference.dir}/styles/html.xsl" />
-		</java>
-	</target>
-	<target name="doc.all" depends="doc.html,doc.htmlsingle,doc.pdf" description="Generate and copy reference documentation">
-		<move file="${reference.dir}/pdf" todir="${target.dir}/docs" />
-		<move file="${reference.dir}/html_single" todir="${target.dir}/docs" />
-		<move file="${reference.dir}/html" todir="${target.dir}/docs" />
-	</target>
-
 	<target name="dist">
 		<antcall target="compile" />
 		<antcall target="jar" />
 	</target>
-	
+
 	<target name="create" depends="dist">
 		<script language="javascript">
 			<![CDATA[
@@ -283,7 +176,11 @@
 			echo.perform();
 			echo = project.createTask("echo");
 			echo.setFile(new File(projectSrc+'/resources/view/decorator/include/nav.ftl'));
-			echo.setMessage('<ul class="nav">\n  <li><a href="<@url value="/"/>">${action.getText("index")}</a></li>\n  <@authorize ifAnyGranted="ROLE_ADMINISTRATOR">\n  <li><a href="<@url value="/user"/>">${action.getText("user")}</a></li>\n</@authorize>\n</ul>');
+			echo.setMessage('<ul class="nav">\n  <li>
+					<a href="<@url value="/"/>">${action.getText("index")}</a>
+				</li>\n  <@authorize ifAnyGranted="ROLE_ADMINISTRATOR">\n  <li>
+						<a href="<@url value="/user"/>">${action.getText("user")}</a>
+					</li>\n</@authorize>\n</ul>');
 			echo.perform();
 			copy = project.createTask("copy");
 			copy.setTofile(new File(projectDir+'/build.xml'));
@@ -319,7 +216,7 @@
 			println('created project ['+projectName+'] at '+new File(projectDir).getCanonicalPath()+' ,you can import this project into eclipse .');
 			println('*********************************');
 			]]>
-		</script>	
+		</script>
 	</target>
 
 </project>

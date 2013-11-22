@@ -1,9 +1,0 @@
-<chapter id="misc-cms">
-  <title>内容管理系统</title>
-    <para>
-    	访问 /common/page (需要管理员权限)
-    	如果有一个path为 /test的page,则通过  /p/test可以访问到此页面,如果需要在其他ftl模板里面包含它,则使用macro <![CDATA[<@includePage path="/test"/>]]>
-    </para>
-</chapter>
-
-
