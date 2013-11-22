@@ -2,6 +2,7 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('signup.forgot')}</title>
+<meta name="body_class" content="welcome" />
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 <meta name="decorator" content="simple" />
 <meta http-equiv="refresh" content="0; url=<@url value="/"/>" />
@@ -13,7 +14,7 @@
 	<div class="span6 offset3">
 	<div class="hero-unit">
 	<h2 class="caption">${action.getText('signup.forgot')}</h2>
-	<@s.form method="post" action="forgot" cssClass="ajax reset form-horizontal well" style="border-width:10px;">
+	<@s.form method="post" action="forgot" cssClass="ajax reset form-horizontal well">
 		<@s.textfield label="%{getText('email')}" name="email" type="email" cssClass="required email"/>
 		<@captcha/>
 		<@s.submit value="%{getText('confirm')}"  cssClass="btn-primary">

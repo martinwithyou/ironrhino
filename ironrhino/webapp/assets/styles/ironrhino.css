@@ -7988,6 +7988,12 @@ body.main {
 	padding-top: 60px;
 	padding-bottom: 10px;
 }
+@media (max-width: 979px) {
+  body.main{
+	padding-top: 0;
+	padding-bottom: 0;
+  }
+}
 body {
 	padding-top: 0;
 	padding-bottom: 0;
@@ -8021,9 +8027,28 @@ body.main > #content > form:first-child {
 body.main > #content > form:first-child > .negative-margin:first-child {
 	margin-top: -20px;
 }
-.hero-unit .caption {
+body.welcome {
+	padding-top: 10%;
+	background: #DEDEDE;
+	background: linear-gradient(to bottom, #EFEFEF, #DEDEDE, #EFEFEF);	
+}
+@media (orientation:landscape) and (max-height: 400px) {
+  body.welcome {
+	padding-top: 0;
+  }
+}
+@media (max-width: 400px),(min-width: 768px) and (max-width: 979px) {
+  .hero-unit{
+	padding-left: 10px;
+	padding-right: 10px;
+  }
+}
+body.welcome .hero-unit .caption {
 	text-align: center;
 	margin-top: -40px;
+}
+body.welcome .hero-unit form {
+	border-width:10px;
 } 
 body ::-webkit-scrollbar {
     width: 12px;
@@ -8204,7 +8229,7 @@ div.text-core{
 .modal-close .close{
 	height: 15px;
 	line-height: 15px;
-	padding-right: 2px;
+	padding-right: 0;
 }
 .modal-close ~ .modal-body{
 	padding-top: 0;

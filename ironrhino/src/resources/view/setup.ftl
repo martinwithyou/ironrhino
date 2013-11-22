@@ -2,6 +2,7 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('setup')}</title>
+<meta name="body_class" content="welcome" />
 </head>
 <body>
 <div class="row">

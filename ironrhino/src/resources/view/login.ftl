@@ -2,6 +2,7 @@
 <#escape x as x?html><html>
 <head>
 <title>${action.getText('login')}</title>
+<meta name="body_class" content="welcome" />
 <@authorize ifAnyGranted="ROLE_BUILTIN_USER">
 <meta name="decorator" content="simple" />
 <meta http-equiv="refresh" content="0; url=<@url value="/"/>" />
@@ -13,7 +14,7 @@
 	<div class="span6 offset3">
 	<div class="hero-unit">
 	<h2 class="caption">${action.getText('login')}</h2>
-	<@s.form id="login" action="login" method="post" cssClass="ajax focus form-horizontal well" style="border-width:10px;">
+	<@s.form id="login" action="login" method="post" cssClass="ajax focus form-horizontal well">
 		<@s.hidden id="targetUrl" name="targetUrl" />
 		<@s.textfield label="%{getText('username')}" name="username" cssClass="required span2"/>
 		<@s.password label="%{getText('password')}" name="password" cssClass="required span2 input-pattern submit"/>
