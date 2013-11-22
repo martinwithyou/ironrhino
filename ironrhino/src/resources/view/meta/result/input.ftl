@@ -8,6 +8,9 @@
 	<#if !isnew>
 	<@s.hidden name="${entityName}.id" />
 	</#if>
+	<#if versionPropertyName??>
+	<@s.hidden name="${entityName+'.'+versionPropertyName}" cssClass="version" />
+	</#if>
 	<#list uiConfigs?keys as key>
 		<#assign config=uiConfigs[key]>
 		<#assign templateName><@config.templateName?interpret /></#assign>

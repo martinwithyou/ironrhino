@@ -109,7 +109,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	private String modifyUser;
 	
 	@Version
-	private int version;
+	private int version = -1;
 
 	public String getHead() {
 		return head;

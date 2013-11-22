@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Version;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
@@ -174,6 +176,12 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					.getAnnotatedPropertyNameAndAnnotations(getEntityClass(),
 							NaturalId.class);
 		return _naturalIds;
+	}
+
+	public String getVersionPropertyName() {
+		Set<String> names = AnnotationUtils.getAnnotatedPropertyNames(
+				getEntityClass(), Version.class);
+		return names.isEmpty() ? null : names.iterator().next();
 	}
 
 	public boolean isNaturalIdMutable() {
@@ -770,6 +778,18 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 							.getPropertyValue("id"));
 				BeanWrapperImpl bwp = new BeanWrapperImpl(persisted);
 				bwp.setConversionService(conversionService);
+				String versionPropertyName = getVersionPropertyName();
+				if (versionPropertyName != null) {
+					int versionInDb = (Integer) bwp
+							.getPropertyValue(versionPropertyName);
+					int versionInUi = (Integer) bw
+							.getPropertyValue(versionPropertyName);
+					if (versionInUi > -1 && versionInUi < versionInDb) {
+						addActionError(getText("validation.version.conflict"));
+						return false;
+					}
+				}
+
 				Set<String> editedPropertyNames = new HashSet<String>();
 				String propertyName = null;
 				for (String parameterName : ServletActionContext.getRequest()

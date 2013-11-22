@@ -20,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.NaturalId;
@@ -46,6 +47,16 @@ public class EntityClassHelper {
 			String propertyName = pd.getName();
 			if (pd.getReadMethod() == null || pd.getWriteMethod() == null
 					&& pd.getReadMethod().getAnnotation(UiConfig.class) == null)
+				continue;
+			Version version = pd.getReadMethod().getAnnotation(Version.class);
+			if (version == null)
+				try {
+					Field f = entityClass.getDeclaredField(propertyName);
+					if (f != null)
+						version = f.getAnnotation(Version.class);
+				} catch (Exception e) {
+				}
+			if (version != null)
 				continue;
 			Transient trans = pd.getReadMethod().getAnnotation(Transient.class);
 			if (trans == null)
