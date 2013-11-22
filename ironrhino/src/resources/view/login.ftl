@@ -12,6 +12,7 @@
 <div class="row">
 	<div class="span6 offset3">
 	<div class="hero-unit">
+	<h2 class="caption">${action.getText('login')}</h2>
 	<@s.form id="login" action="login" method="post" cssClass="ajax focus form-horizontal well" style="border-width:10px;">
 		<@s.hidden id="targetUrl" name="targetUrl" />
 		<@s.textfield label="%{getText('username')}" name="username" cssClass="required span2"/>

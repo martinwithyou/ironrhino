@@ -36,6 +36,10 @@ body.main > #content > form:first-child {
 body.main > #content > form:first-child > .negative-margin:first-child {
 	margin-top: -20px;
 }
+.hero-unit .caption {
+	text-align: center;
+	margin-top: -40px;
+} 
 body ::-webkit-scrollbar {
     width: 12px;
 }

@@ -7,6 +7,7 @@
 <div class="row">
 	<div class="span6 offset3">
 	<div class="hero-unit">
+	<h2 class="caption">${action.getText('setup')}</h2>
 	<@s.form method="post" action="setup" cssClass="ajax focus form-horizontal well">
 		<#list setupParameters as p>
 		<#if p.type=='boolean'>

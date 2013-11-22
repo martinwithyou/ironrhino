@@ -12,6 +12,7 @@
 <div class="row">
 	<div class="span6 offset3">
 	<div class="hero-unit">
+	<h2 class="caption">${action.getText('signup.forgot')}</h2>
 	<@s.form method="post" action="forgot" cssClass="ajax reset form-horizontal well" style="border-width:10px;">
 		<@s.textfield label="%{getText('email')}" name="email" type="email" cssClass="required email"/>
 		<@captcha/>

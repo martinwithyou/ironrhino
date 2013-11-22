@@ -76,13 +76,6 @@ ${action.getText('browser.warning')}
   </div>
 </div>
 </@authorize>
-<@authorize ifNotGranted="ROLE_BUILTIN_USER">
-<div class="container">
-<h1 style="text-align:center;margin:10px 0;">
-${title}
-</h1>
-</div>
-</@authorize>
 <div id="content" class="container">
 <#if action.hasActionMessages() || action.hasActionErrors()>
 <div id="message">
