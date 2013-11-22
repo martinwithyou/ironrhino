@@ -135,6 +135,10 @@ fi
 
 if [ ! -f upgrade_tomcat.sh ]; then
 cat>upgrade_tomcat.sh<<EOF
+if [ -n "\$SUDO_USER" ];then
+	echo please do not run with sudo
+	exit 1
+fi
 version=\`tomcat8080/bin/version.sh|grep 'Server version'|awk -F '/' '{print \$2}'|tr -d ' '\`
 if [ "\$1" = "" ] || [ "\$1" = "-help" ] || [ "\$1" = "--help" ];  then
     echo "current version is \$version, if you want to upgrade, please run \$0 version"
@@ -231,6 +235,11 @@ fi
 #generate deploy.sh
 if [ ! -f deploy.sh ]; then
 cat>deploy.sh<<EOF
+#must not run with sudo
+if [ -n "\$SUDO_USER" ];then
+	echo please do not run with sudo
+	exit 1
+fi
 if [ "\$1" = "" ] || [ "\$1" = "-help" ] || [ "\$1" = "--help" ];  then
     echo "please run \$0 name"
     exit 1
@@ -325,6 +334,10 @@ fi
 #generate rollback.sh
 if [ ! -f rollback.sh ]; then
 cat>rollback.sh<<EOF
+if [ -n "\$SUDO_USER" ];then
+	echo please do not run with sudo
+	exit 1
+fi
 if [ "\$1" = "" ] || [ "\$1" = "-help" ] || [ "\$1" = "--help" ];  then
     echo "please run \$0 name"
     exit 1
@@ -347,7 +360,7 @@ fi
 #generate backup.sh
 if [ ! -f backup.sh ]; then
 cat>backup.sh<<EOF
-date=`date +%Y-%m-%d`
+date=\`date +%Y-%m-%d\`
 backupdir=/home/$USER/backup/\$date
 if test ! -d \$backupdir
 then  mkdir -p \$backupdir
