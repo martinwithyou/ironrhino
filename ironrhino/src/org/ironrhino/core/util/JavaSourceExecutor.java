@@ -30,7 +30,17 @@ import javax.tools.ToolProvider;
 
 public class JavaSourceExecutor {
 
-	public static void execute(String code) throws Exception {
+	public static void execute(String code, String... args) throws Exception {
+		Class<?> clazz = compile(code);
+		Method method = clazz.getMethod("main", new Class[] { String[].class });
+		if (method.getReturnType() == Void.TYPE) {
+			int mod = method.getModifiers();
+			if (Modifier.isStatic(mod) && Modifier.isPublic(mod))
+				method.invoke(null, new Object[] { args });
+		}
+	}
+
+	public static Class<?> compile(String code) throws Exception {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 		StandardJavaFileManager stdFileManager = compiler
 				.getStandardFileManager(null, null, null);
@@ -78,15 +88,8 @@ public class JavaSourceExecutor {
 			}
 			throw new RuntimeException(sb.toString());
 		}
-		Class<?> clazz = ByteArrayClassLoader.getInstance().loadClass(
+		return ByteArrayClassLoader.getInstance().loadClass(
 				source.getClassName());
-		Object instance = clazz.newInstance();
-		Method method = clazz.getMethod("run", new Class[0]);
-		if (method.getReturnType() == Void.TYPE) {
-			int mod = method.getModifiers();
-			if (!Modifier.isStatic(mod) && Modifier.isPublic(mod))
-				method.invoke(instance);
-		}
 	}
 
 	private static String complete(String code) {
@@ -96,7 +99,7 @@ public class JavaSourceExecutor {
 			StringBuilder sb = new StringBuilder();
 			sb.append("public class ");
 			sb.append(className);
-			sb.append("{public void run(){");
+			sb.append("{public static void main(String... args){");
 			sb.append(code);
 			sb.append("}}");
 			code = sb.toString();
