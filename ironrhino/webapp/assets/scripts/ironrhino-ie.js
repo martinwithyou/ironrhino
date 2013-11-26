@@ -32324,6 +32324,9 @@ Observation.common = function(container) {
 														&& ($(this).hasClass(
 																'history') || !($(this)
 																.data('replacement')))) {
+													$('.ui-dialog:visible')
+															.children()
+															.remove();
 													var hash = this.href;
 													if (UrlUtils
 															.isSameDomain(hash)) {
