@@ -44,7 +44,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "common_dictionary")
-@Richtable(searchable = true, order = "name asc")
+@Richtable(searchable = true, order = "name asc", exportable = true, importable = true)
 public class Dictionary extends BaseEntity {
 
 	private static final long serialVersionUID = -8352037604261222984L;

@@ -27,7 +27,7 @@
 		<#assign size=size+1>
 	</#if>
 </#list>
-<#assign viewable=false>
+<#assign viewable=richtableConfig.exportable>
 <#assign hasSelect=false>
 <#list uiConfigs.entrySet() as entry>
 		<#assign key=entry.key>

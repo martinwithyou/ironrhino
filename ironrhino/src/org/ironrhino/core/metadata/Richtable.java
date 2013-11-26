@@ -18,6 +18,10 @@ public @interface Richtable {
 
 	boolean searchable() default false;
 
+	boolean exportable() default false;
+
+	boolean importable() default false;
+
 	boolean filterable() default true;
 
 	boolean celleditable() default true;

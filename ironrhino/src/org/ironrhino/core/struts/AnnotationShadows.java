@@ -485,6 +485,8 @@ public class AnnotationShadows {
 		private boolean celleditable = true;
 		private boolean showPageSize = true;
 		private boolean searchable;
+		private boolean exportable;
+		private boolean importable;
 		private String actionColumnButtons = "";
 		private String bottomButtons = "";
 		private String listHeader = "";
@@ -504,6 +506,8 @@ public class AnnotationShadows {
 			this.celleditable = config.celleditable();
 			this.showPageSize = config.showPageSize();
 			this.searchable = config.searchable();
+			this.exportable = config.exportable();
+			this.importable = config.importable();
 			this.actionColumnButtons = config.actionColumnButtons();
 			this.bottomButtons = config.bottomButtons();
 			this.listHeader = config.listHeader();
@@ -551,6 +555,22 @@ public class AnnotationShadows {
 
 		public void setSearchable(boolean searchable) {
 			this.searchable = searchable;
+		}
+
+		public boolean isExportable() {
+			return exportable;
+		}
+
+		public void setExportable(boolean exportable) {
+			this.exportable = exportable;
+		}
+
+		public boolean isImportable() {
+			return importable;
+		}
+
+		public void setImportable(boolean importable) {
+			this.importable = importable;
 		}
 
 		public String getActionColumnButtons() {

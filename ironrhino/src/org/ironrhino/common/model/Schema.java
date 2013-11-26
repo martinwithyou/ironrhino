@@ -40,7 +40,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
 @Entity
 @Table(name = "common_schema")
-@Richtable(searchable = true, order = "name asc")
+@Richtable(searchable = true, order = "name asc", exportable = true, importable = true)
 public class Schema extends BaseEntity {
 
 	private static final long serialVersionUID = -8352037604269012984L;

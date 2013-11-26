@@ -1,16 +1,20 @@
 package org.ironrhino.core.struts;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Version;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -24,6 +28,7 @@ import org.ironrhino.core.hibernate.CriteriaState;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CaseInsensitive;
+import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.Owner;
 import org.ironrhino.core.metadata.Readonly;
 import org.ironrhino.core.metadata.Richtable;
@@ -38,6 +43,7 @@ import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.struts.AnnotationShadows.HiddenImpl;
 import org.ironrhino.core.struts.AnnotationShadows.ReadonlyImpl;
 import org.ironrhino.core.struts.AnnotationShadows.RichtableImpl;
 import org.ironrhino.core.struts.AnnotationShadows.UiConfigImpl;
@@ -45,6 +51,7 @@ import org.ironrhino.core.util.AnnotationUtils;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.CodecUtils;
+import org.ironrhino.core.util.JsonUtils;
 import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -209,15 +216,34 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			bw.setConversionService(conversionService);
 			Set<String> naturalIds = getNaturalIds().keySet();
 			if (StringUtils.isNotBlank(getUid())) {
-				bw.setPropertyValue("id", getUid());
-				Serializable id = (Serializable) bw.getPropertyValue("id");
-				_entity = entityManager.get(id);
-				if (_entity == null && naturalIds.size() == 1) {
-					String naturalIdName = naturalIds.iterator().next();
-					bw.setPropertyValue(naturalIdName, getUid());
-					id = (Serializable) bw.getPropertyValue(naturalIdName);
-					_entity = entityManager.findByNaturalId(id);
+				String uid = getUid();
+				if (uid.indexOf('.') > 0) {
+					bw.setPropertyValue("id",
+							uid.substring(0, uid.indexOf('.')));
+					_entity = entityManager.get((Serializable) bw
+							.getPropertyValue("id"));
+					if (_entity == null && naturalIds.size() == 1) {
+						String naturalIdName = naturalIds.iterator().next();
+						bw.setPropertyValue(naturalIdName,
+								uid.substring(0, uid.indexOf('.')));
+						_entity = entityManager
+								.findByNaturalId((Serializable) bw
+										.getPropertyValue(naturalIdName));
+					}
 				}
+				if (_entity == null) {
+					bw.setPropertyValue("id", uid);
+					_entity = entityManager.get((Serializable) bw
+							.getPropertyValue("id"));
+					if (_entity == null && naturalIds.size() == 1) {
+						String naturalIdName = naturalIds.iterator().next();
+						bw.setPropertyValue(naturalIdName, uid);
+						_entity = entityManager
+								.findByNaturalId((Serializable) bw
+										.getPropertyValue(naturalIdName));
+					}
+				}
+
 			}
 			if (_entity == null && naturalIds.size() > 0) {
 				Serializable[] paramters = new Serializable[naturalIds.size() * 2];
@@ -986,6 +1012,56 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		}
 		putEntityToValueStack(_entity);
 		return VIEW;
+	}
+
+	public String export() throws IOException {
+		if (!getRichtableConfig().isExportable())
+			return NOTFOUND;
+		tryFindEntity();
+		if (_entity == null)
+			return NOTFOUND;
+		BeanWrapperImpl bwi = new BeanWrapperImpl(_entity);
+		Tuple<Owner, Class<? extends UserDetails>> ownerProperty = getOwnerProperty();
+		if (ownerProperty != null) {
+			Owner owner = ownerProperty.getKey();
+			if (!(StringUtils.isNotBlank(owner.supervisorRole()) && AuthzUtils
+					.authorize(null, owner.supervisorRole(), null))
+					&& owner.isolate()) {
+				UserDetails ud = AuthzUtils.getUserDetails(ownerProperty
+						.getValue());
+				bwi.setConversionService(conversionService);
+				Object value = bwi.getPropertyValue(owner.propertyName());
+				if (ud == null || value == null || !ud.equals(value)) {
+					addActionError(getText("access.denied"));
+					return ACCESSDENIED;
+				}
+			}
+		}
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		Set<String> notInJsons = AnnotationUtils.getAnnotatedPropertyNames(
+				getEntityClass(), NotInJson.class);
+		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
+			if (notInJsons.contains(entry.getKey()))
+				continue;
+			Object value = bwi.getPropertyValue(entry.getKey());
+			if (value == null)
+				continue;
+			HiddenImpl hidden = entry.getValue().getHiddenInView();
+			if (hidden.isValue()
+					|| StringUtils.isNotBlank(hidden.getExpression())
+					&& evalBoolean(hidden.getExpression(), _entity, value))
+				continue;
+			if (value instanceof Persistable)
+				value = String.valueOf(value);
+			map.put(entry.getKey(), value);
+		}
+		String json = JsonUtils.toJson(map);
+		HttpServletResponse response = ServletActionContext.getResponse();
+		PrintWriter out = response.getWriter();
+		out.print(json);
+		out.flush();
+		out.close();
+		return NONE;
 	}
 
 	@Override
