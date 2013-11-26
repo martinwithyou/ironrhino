@@ -22,7 +22,8 @@ MessageBundle = {
 		'unsupported.browser' : 'unsupported browser',
 		'action.denied' : 'requested action denied',
 		'maximum.exceeded' : '{0} , exceed maximum {1}',
-		'pattern.coords.invalid' : 'coords should be between {0} and {1}'
+		'pattern.coords.invalid' : 'coords should be between {0} and {1}',
+		'data.invalid' : 'data invalid,please check it.'
 	},
 	'zh_CN' : {
 		'ajax.loading' : '正在加载...',
@@ -46,6 +47,7 @@ MessageBundle = {
 		'pick' : '请挑选',
 		'save' : '保存',
 		'restore' : '还原',
+		'import' : '导入',
 		'cancel' : '取消',
 		'error' : '错误',
 		'success' : '操作成功',
@@ -59,7 +61,8 @@ MessageBundle = {
 		'unsupported.browser' : '你使用的浏览器不支持该功能',
 		'action.denied' : '你拒绝了请求',
 		'maximum.exceeded' : '{0} ,超过最大限制数{1}',
-		'pattern.coords.invalid' : '坐标数必须在{0}和{1}之间'
+		'pattern.coords.invalid' : '坐标数必须在{0}和{1}之间',
+		'data.invalid' : '数据错误,请检查'
 	},
 	get : function() {
 		var key = arguments[0];

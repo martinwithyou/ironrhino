@@ -3,9 +3,14 @@
 <#escape x as x?html><html>
 <head>
 <title><#if dictionary.new>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText('dictionary')}</title>
+<script>
+Observation.importableform = function(container) {
+	$('form.importable', importableform).importableform();
+};
+</script>
 </head>
 <body>
-<@s.form action="${actionBaseUrl}/save" method="post" cssClass="ajax" cssStyle="text-align:center;">
+<@s.form action="${actionBaseUrl}/save" method="post" cssClass="ajax${view?has_content?string('',' importable')}" cssStyle="text-align:center;">
 	<#if !dictionary.new>
 		<@s.hidden name="dictionary.id" />
 	</#if>

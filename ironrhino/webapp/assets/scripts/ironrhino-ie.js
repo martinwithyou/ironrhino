@@ -30920,7 +30920,8 @@ MessageBundle = {
 		'unsupported.browser' : 'unsupported browser',
 		'action.denied' : 'requested action denied',
 		'maximum.exceeded' : '{0} , exceed maximum {1}',
-		'pattern.coords.invalid' : 'coords should be between {0} and {1}'
+		'pattern.coords.invalid' : 'coords should be between {0} and {1}',
+		'data.invalid' : 'data invalid,please check it.'
 	},
 	'zh_CN' : {
 		'ajax.loading' : '正在加载...',
@@ -30944,6 +30945,7 @@ MessageBundle = {
 		'pick' : '请挑选',
 		'save' : '保存',
 		'restore' : '还原',
+		'import' : '导入',
 		'cancel' : '取消',
 		'error' : '错误',
 		'success' : '操作成功',
@@ -30957,7 +30959,8 @@ MessageBundle = {
 		'unsupported.browser' : '你使用的浏览器不支持该功能',
 		'action.denied' : '你拒绝了请求',
 		'maximum.exceeded' : '{0} ,超过最大限制数{1}',
-		'pattern.coords.invalid' : '坐标数必须在{0}和{1}之间'
+		'pattern.coords.invalid' : '坐标数必须在{0}和{1}之间',
+		'data.invalid' : '数据错误,请检查'
 	},
 	get : function() {
 		var key = arguments[0];
@@ -37147,6 +37150,217 @@ Observation._richtable = function(container) {
 		Richtable.enhance(this);
 	});
 };
+(function($) {
+	var BLOCK_COMMENT = new RegExp('/\\*(?:.|[\\n\\r])*?\\*/', 'g');
+	var LINE_COMMENT = new RegExp('\r?\n?\\s*--.*\r?(\n|$)', 'g');
+	var PARAMETER = new RegExp('(:\\w*)(,|;|\\)|\\s|\\||\\+|$)', 'g');
+	$.sqleditor = {
+		extractParameters : function(sql) {
+			sql = $.sqleditor.clearComments(sql);
+			var params = [];
+			var result;
+			while ((result = PARAMETER.exec(sql))) {
+				var param = result[1].substring(1);
+				if ($.inArray(param, params) == -1)
+					params.push(param);
+			}
+			return params;
+		},
+		clearComments : function(sql) {
+			return $.trim(sql.replace(BLOCK_COMMENT, '').replace(LINE_COMMENT,
+					'\n'));
+		},
+		highlight : function(sql) {
+			return sql.replace(PARAMETER, '<strong>$1</strong>$2').replace(
+					BLOCK_COMMENT, '<span class="comment">$&</span>').replace(
+					LINE_COMMENT, '<span class="comment">$&</span>');
+		}
+	}
+	function preview(input) {
+		var t = $(input).hide();
+		var p = t.next('div.preview');
+		if (!p.length) {
+			p = $('<div class="preview"></div>').insertAfter(t);
+			if (!(t.prop('readonly') || t.prop('disabled')))
+				p.click(function() {
+							$(this).hide().prev('.sqleditor:input').show()
+									.focus();
+						});
+		}
+		p.width(t.width()).css('height', t.height() + 'px').html($.sqleditor
+				.highlight(t.val())).show();
+
+	}
+	$.fn.sqleditor = function() {
+		$(this).each(function() {
+					var t = $(this);
+					if (t.is(':input')) {
+						preview(t);
+						t.blur(function() {
+									preview(t)
+								});
+					} else {
+						t.addClass('preview').html($.sqleditor.highlight(t
+								.text()));
+					}
+				});
+		return this;
+	};
+})(jQuery);
+
+Observation.sqleditor = function(container) {
+	$('.sqleditor', container).sqleditor();
+};
+(function($) {
+
+	$.fn.importableform = function() {
+		this.each(function() {
+			var t = $(this);
+			var button = $(
+					' <button type="button" class="btn">'
+							+ MessageBundle.get('import') + '</button>')
+					.appendTo($('.form-actions', t)).click(
+							function() {
+								$('<input type="file"/>').appendTo(t).hide()
+										.change(function() {
+											fill(this.files, t);
+											$(this).remove();
+										}).click();
+							});
+			$(t).bind('dragover', function(e) {
+				$(this).addClass('drophover');
+				return false;
+			}).bind('dragleave', function(e) {
+				$(this).removeClass('drophover');
+				return false;
+			}).get(0).ondrop = function(e) {
+				e.preventDefault();
+				$(this).removeClass('drophover');
+				fill(e.dataTransfer.files, t);
+				return true;
+			};
+		});
+		return this;
+	}
+
+	function fill(files, form) {
+		var maximum = parseInt(form.data('maximum') || 1024 * 1024);
+		var file = files[0];
+		if (file.size > maximum) {
+			Message.showActionError(MessageBundle.get('maximum.exceeded',
+					file.size, maximum));
+			return;
+		}
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			var data;
+			var json = e.target.result;
+			try {
+				var data = $.parseJSON(json);
+			} catch (e) {
+				Message.showActionError(MessageBundle.get('data.invalid'));
+				return;
+			}
+			$(':input:not([readonly])', form).each(function() {
+				var input = $(this);
+				var name = input.attr('name');
+				if (!name || name.indexOf('__') > 0 || name.indexOf('[') > 0)
+					return;
+				var value = data[name];
+				if (!value && name.indexOf('.') > 0)
+					value = data[name.substring(name.indexOf('.') + 1)];
+				bind_value(value, input);
+			});
+			$('table.datagrided', form).each(function() {
+				var t = $(this);
+				if (t.parents('.datagrided').length)
+					return;
+				var name = $(':input', $('tbody tr:eq(0)', t)).attr('name');
+				var i = name.indexOf('[');
+				if (i > 0) {
+					var prefix = name.substring(0, i);
+					var list = data[prefix];
+					var j = prefix.indexOf('.');
+					if (!list && j > 0)
+						list = data[prefix.substring(j + 1)];
+					if (list instanceof Array) {
+						bind_datagrid(list, t, 1);
+					}
+				}
+
+			});
+			$(':submit:eq(0)', form).focus();
+		}
+		reader.readAsText(file);
+	}
+
+	function bind_datagrid(list, datagrid, currentlevel) {
+		if (!list || !list.length || !datagrid)
+			return;
+		var rows = datagrid.children('tbody').children('tr');
+		rows.each(function(n, v) {
+			if (n >= list.length)
+				$(this).remove();
+		});
+		var k = list.length - rows.length;
+		while (k > 0) {
+			$('.manipulate .add', rows.last()).click();
+			k--;
+		}
+		setTimeout(function() {
+			rows.each(function(n, v) {
+				var rowdata = list[n];
+				$(':input:not([readonly])', v).each(
+						function() {
+							var name = $(this).attr('name');
+							if (!name)
+								return;
+							if (name.split('[').length - 1 > currentlevel)
+								return;
+							var index = -1;
+							for ( var x = 0; x < currentlevel; x++)
+								index = name.indexOf(']', index + 1);
+							if (name.lastIndexOf(']') != name.length - 1) {
+								name = name.substring(index + 2);
+								var v = rowdata[name];
+								bind_value(v, $(this));
+							} else {
+								var v = list[parseInt(name.substring(name
+										.lastIndexOf('[') + 1, name
+										.lastIndexOf(']')))];
+								bind_value(v, $(this));
+							}
+
+						});
+				$('td > .datagrided', v).each(function(k, dg) {
+					var name = $(':input[name]', dg).attr('name');
+					var index = -1;
+					for ( var x = 0; x < currentlevel; x++)
+						index = name.indexOf(']', index + 1);
+					name = name.substring(index + 2);
+					name = name.substring(0, name.indexOf('['));
+					bind_datagrid(rowdata[name], $(dg), currentlevel + 1);
+				});
+
+			});
+		}, 1000);
+	}
+
+	function bind_value(value, input) {
+		if (typeof value != 'undefined') {
+			if (value === true || value === false)
+				input.prop('checked', value);
+			else
+				input.val(value);
+		}
+	}
+
+})(jQuery);
+
+if (window.FileReader)
+	Observation.importableform = function(container) {
+		$('form.importable', container).importableform();
+	};
 (function($) {
 	$.fn.treearea = function(treeoptions) {
 		treeoptions = treeoptions || {};
