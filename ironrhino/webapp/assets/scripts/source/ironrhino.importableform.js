@@ -90,47 +90,57 @@
 				$(this).remove();
 		});
 		var k = list.length - rows.length;
-		while (k > 0) {
-			$('.manipulate .add', rows.last()).click();
-			k--;
-		}
-		setTimeout(function() {
-			rows.each(function(n, v) {
-				var rowdata = list[n];
-				$(':input:not([readonly])', v).each(
-						function() {
-							var name = $(this).attr('name');
-							if (!name)
-								return;
-							if (name.split('[').length - 1 > currentlevel)
-								return;
-							var index = -1;
-							for ( var x = 0; x < currentlevel; x++)
-								index = name.indexOf(']', index + 1);
-							if (name.lastIndexOf(']') != name.length - 1) {
-								name = name.substring(index + 2);
-								var v = rowdata[name];
-								bind_value(v, $(this));
-							} else {
-								var v = list[parseInt(name.substring(name
-										.lastIndexOf('[') + 1, name
-										.lastIndexOf(']')))];
-								bind_value(v, $(this));
-							}
+		datagrid
+				.datagridTable('addRows', k)
+				.children('tbody')
+				.children('tr')
+				.each(
+						function(n, v) {
+							var rowdata = list[n];
+							$(':input:not([readonly])', v)
+									.each(
+											function() {
+												var name = $(this).attr('name');
+												if (!name)
+													return;
+												if (name.split('[').length - 1 > currentlevel)
+													return;
+												var index = -1;
+												for ( var x = 0; x < currentlevel; x++)
+													index = name.indexOf(']',
+															index + 1);
+												if (name.lastIndexOf(']') != name.length - 1) {
+													name = name
+															.substring(index + 2);
+													var v = rowdata[name];
+													bind_value(v, $(this));
+												} else {
+													var v = list[parseInt(name
+															.substring(
+																	name
+																			.lastIndexOf('[') + 1,
+																	name
+																			.lastIndexOf(']')))];
+													bind_value(v, $(this));
+												}
+
+											});
+							$('td > .datagrided', v).each(
+									function(k, dg) {
+										var name = $(':input[name]', dg).attr(
+												'name');
+										var index = -1;
+										for ( var x = 0; x < currentlevel; x++)
+											index = name
+													.indexOf(']', index + 1);
+										name = name.substring(index + 2);
+										name = name.substring(0, name
+												.indexOf('['));
+										bind_datagrid(rowdata[name], $(dg),
+												currentlevel + 1);
+									});
 
 						});
-				$('td > .datagrided', v).each(function(k, dg) {
-					var name = $(':input[name]', dg).attr('name');
-					var index = -1;
-					for ( var x = 0; x < currentlevel; x++)
-						index = name.indexOf(']', index + 1);
-					name = name.substring(index + 2);
-					name = name.substring(0, name.indexOf('['));
-					bind_datagrid(rowdata[name], $(dg), currentlevel + 1);
-				});
-
-			});
-		}, 1000);
 	}
 
 	function bind_value(value, input) {
@@ -139,6 +149,7 @@
 				input.prop('checked', value);
 			else
 				input.val(value);
+			input.trigger('change');
 		}
 	}
 
