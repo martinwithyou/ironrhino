@@ -37410,10 +37410,8 @@ Observation.sqleditor = function(container) {
 					value = data[name.substring(name.indexOf('.') + 1)];
 				bind_value(value, input);
 			});
-			$('table.datagrided', form).each(function() {
+			filter(form, 'table.datagrided').each(function() {
 				var t = $(this);
-				if (t.parents('.datagrided').length)
-					return;
 				var name = $(':input', $('tbody tr:eq(0)', t)).attr('name');
 				var i = name.indexOf('[');
 				if (i > 0) {
@@ -37477,7 +37475,7 @@ Observation.sqleditor = function(container) {
 												}
 
 											});
-							$('td > .datagrided', v).each(
+							filter($(v), 'table.datagrided').each(
 									function(k, dg) {
 										var name = $(':input[name]', dg).attr(
 												'name');
@@ -37512,6 +37510,19 @@ Observation.sqleditor = function(container) {
 			if (input.hasClass('chosen'))
 				input.trigger('chosen:updated.chosen');
 		}
+	}
+
+	function filter(container, selector) {
+		return $(selector, container).filter(function() {
+			var count = 0, parent = $(this);
+			while ((parent = parent.parent()).length) {
+				if (parent[0] == container[0])
+					break;
+				if (parent.is(selector))
+					count++;
+			}
+			return count == 0;
+		});
 	}
 
 })(jQuery);
