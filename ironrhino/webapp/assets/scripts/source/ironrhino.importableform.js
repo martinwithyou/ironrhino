@@ -145,11 +145,20 @@
 
 	function bind_value(value, input) {
 		if (typeof value != 'undefined') {
-			if (value === true || value === false)
+			if (input.is('select[multiple]')) {
+				if (typeof value == 'string')
+					value = value.split(',');
+				$('option', input).prop('selected', false).each(function() {
+					if ($.inArray($(this).attr('value'), value) > -1)
+						$(this).prop('selected', true);
+				});
+			} else if (input.is('input[type="checkbox"]'))
 				input.prop('checked', value);
 			else
 				input.val(value);
 			input.trigger('change');
+			if (input.hasClass('chosen'))
+				input.trigger('chosen:updated.chosen');
 		}
 	}
 
