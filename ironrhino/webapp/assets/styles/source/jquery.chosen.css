@@ -1,3 +1,6 @@
+/*
+ * add border-radius: 4px; to .chosen-container-multi .chosen-choices
+ */
 /* @group Base */
 .chosen-container {
   position: relative;
@@ -209,6 +212,9 @@
   background-image: -o-linear-gradient(#eeeeee 1%, #ffffff 15%);
   background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);
   cursor: text;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 .chosen-container-multi .chosen-choices li {
   float: left;
