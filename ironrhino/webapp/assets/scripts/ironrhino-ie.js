@@ -32025,7 +32025,17 @@ Observation.common = function(container) {
 		var t = $(this);
 		t.carousel((new Function("return " + (t.data('options') || '{}')))());
 	});
-
+	$(':input[data-helpurl]', container)
+			.each(
+					function() {
+						var t = $(this);
+						var href = '<a href="'
+								+ t.data('helpurl')
+								+ '" style="padding-left: 5px;" target="_blank"><span class="glyphicon glyphicon-question-sign"></span></a>'
+						href = $(href).insertAfter(t);
+						if (t.is('textarea'))
+							href.find('span').css('vertical-align', 'top');
+					});
 	$('.tiped', container).each(
 			function() {
 				var t = $(this);
