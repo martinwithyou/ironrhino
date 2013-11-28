@@ -36733,12 +36733,12 @@ Richtable = {
 				language : MessageBundle.lang().replace('_', '-')
 			};
 			if (type == 'datetime') {
-				option.format = t.data('format') || 'yyyy-MM-dd HH:mm:ss';
+				option.format = input.data('format') || 'yyyy-MM-dd HH:mm:ss';
 			} else if (type == 'time') {
-				option.format = t.data('format') || 'HH:mm:ss';
+				option.format = input.data('format') || 'HH:mm:ss';
 				option.pickDate = false;
 			} else {
-				option.format = t.data('format') || 'yyyy-MM-dd';
+				option.format = input.data('format') || 'yyyy-MM-dd';
 				option.pickTime = false;
 			}
 			input.addClass(type).datetimepicker(option).bind('hide',

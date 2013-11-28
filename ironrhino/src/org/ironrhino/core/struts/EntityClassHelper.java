@@ -19,6 +19,8 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
@@ -253,9 +255,25 @@ public class EntityClassHelper {
 						uci.getDynamicAttributes().put("min", "0");
 				}
 			} else if (Date.class.isAssignableFrom(returnType)) {
-				uci.addCssClass("date");
+				Temporal temporal = pd.getReadMethod().getAnnotation(
+						Temporal.class);
+				if (temporal == null)
+					try {
+						Field f = entityClass.getDeclaredField(propertyName);
+						if (f != null)
+							temporal = f.getAnnotation(Temporal.class);
+					} catch (Exception e) {
+					}
+				String temporalType = "date";
+				if (temporal != null)
+					if (temporal.value() == TemporalType.TIMESTAMP)
+						temporalType = "datetime";
+					else if (temporal.value() == TemporalType.TIME)
+						temporalType = "time";
+				uci.addCssClass(temporalType);
+				//uci.setInputType(temporalType);
 				if (StringUtils.isBlank(uci.getCellEdit()))
-					uci.setCellEdit("click,date");
+					uci.setCellEdit("click," + temporalType);
 			} else if (String.class == returnType
 					&& pd.getName().toLowerCase().contains("email")
 					&& !pd.getName().contains("Password")) {
