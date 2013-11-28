@@ -16,7 +16,10 @@
 <#if richtableConfig.formFooter?has_content>
 <#assign formFooter><@richtableConfig.formFooter?interpret/></#assign>
 </#if>
-<@rtstart formid=formid! entityName=entityName formHeader=formHeader!/>
+<#if versionPropertyName??>
+<#assign dynamicAttributes={"data-versionproperty":versionPropertyName}>
+</#if>
+<@rtstart formid=formid! entityName=entityName formHeader=formHeader! dynamicAttributes=dynamicAttributes!/>
 <#assign size=0>
 <#list uiConfigs.entrySet() as entry>
 	<#assign hidden=entry.value.hiddenInList.value>
@@ -85,6 +88,9 @@
 <#if !readonly.deletable>
 <#assign rowDynamicAttributes=rowDynamicAttributes+{"data-deletable":"false"}>
 </#if>
+</#if>
+<#if versionPropertyName??>
+<#assign rowDynamicAttributes=rowDynamicAttributes+{"data-version":entity[versionPropertyName]}>
 </#if>
 <@rttbodytrstart entity=entity dynamicAttributes=rowDynamicAttributes/>
 <#list uiConfigs.entrySet() as entry>

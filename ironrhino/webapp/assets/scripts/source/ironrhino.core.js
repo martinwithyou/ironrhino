@@ -600,15 +600,18 @@ Initialization.common = function() {
 							}
 							return;
 						}
-					}).on('click', '#message .close,.message-container .close',
+					})
+			.on('click', '#message .close,.message-container .close',
 					function() {
 						$('#message,.message-container').each(function(i, v) {
 							if (!$.trim($(v).text()))
 								$(v).remove();
 						});
-					}).on('click', '.removeonclick', function() {
+					})
+			.on('click', '.removeonclick', function() {
 				$(this).remove()
-			}).on(
+			})
+			.on(
 					'keyup',
 					'input,textarea',
 					$.debounce(200, function(ev) {
@@ -618,7 +621,8 @@ Initialization.common = function() {
 							if ($(this).val())
 								Form.validate(this);
 						return true;
-					})).on(
+					}))
+			.on(
 					'focusout',
 					'input,textarea',
 					function(ev) {
@@ -628,26 +632,43 @@ Initialization.common = function() {
 								|| !$(this).hasClass('required'))
 							Form.validate(this);
 						return true;
-					}).on('change', 'select', function() {
+					})
+			.on('change', 'select', function() {
 				Form.validate(this);
 				return true;
-			}).on(
+			})
+			.on(
 					'dblclick',
 					'.ui-dialog-titlebar',
 					function() {
 						Dialog.toggleMaximization($('.ui-dialog-content', $(
 								this).closest('.ui-dialog')));
-					}).on('mouseenter', '.popover,.tooltip', function() {
+					})
+			.on('mouseenter', '.popover,.tooltip', function() {
 				$(this).remove()
-			}).on('click', ':submit', function(e) {
+			})
+			.on('click', ':submit', function(e) {
 				$(this).addClass('clicked');
-			}).on('click', '.action-error strong.force-override', function(e) {
-				var msgcontainer = $(e.target).closest('.message-container');
-				var form = msgcontainer.next('form');
-				$('input[type="hidden"].version', form).remove();
-				msgcontainer.fadeOut().remove();
-				form.submit();
-			});
+			})
+			.on(
+					'click',
+					'.action-error strong.force-override',
+					function(e) {
+						var msgcontainer = $(e.target).closest(
+								'.message-container');
+						if (msgcontainer.length) {
+							var form = msgcontainer.next('form');
+							$('input[type="hidden"].version', form).remove();
+							msgcontainer.fadeOut().remove();
+							form.submit();
+						} else {
+							var button = $('button[data-action="save"]:visible');
+							$('tr', button.closest('form')).removeData(
+									'version').removeAttr('data-version');
+							button.click();
+						}
+
+					});
 	$.alerts.okButton = MessageBundle.get('confirm');
 	$.alerts.cancelButton = MessageBundle.get('cancel');
 	Nav.init();

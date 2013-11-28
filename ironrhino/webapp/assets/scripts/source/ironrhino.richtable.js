@@ -386,6 +386,7 @@ Richtable = {
 	save : function(event) {
 		var action = function() {
 			var form = $(event.target).closest('form');
+			var versionproperty = form.data('versionproperty');
 			var modified = false;
 			var theadCells = $('.richtable thead:eq(0) th');
 			$
@@ -395,15 +396,19 @@ Richtable = {
 								var row = this;
 								if ($('td.edited', row).length) {
 									modified = true;
-									var params = {};
 									var entity = form.data('entity')
 											|| form.attr('action');
+									var params = {};
+									var version = $(row).data('version');
+									if (version != undefined)
+										params[entity
+												+ '.'
+												+ (versionproperty || 'version')] = version;
 									params[entity + '.id'] = $(this).data(
 											'rowid')
 											|| $(
 													'input[type="checkbox"]:eq(0)',
 													this).val();
-									;
 									$
 											.each(
 													row.cells,
@@ -439,6 +444,9 @@ Richtable = {
 										onsuccess : function() {
 											$('td', row).removeClass('edited')
 													.removeData('oldvalue');
+											if (version != undefined)
+												$(row).data('version',
+														version + 1);
 											$('[data-action="save"]', form)
 													.removeClass('btn-primary')
 													.hide();
