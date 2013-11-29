@@ -70,6 +70,14 @@ public class SqlUtils {
 		return names;
 	}
 
+	public static String trimOrderby(String sql) {
+		Matcher m = ORDERBY_PATTERN.matcher(sql);
+		return m.replaceAll("");
+	}
+
+	private static final Pattern ORDERBY_PATTERN = Pattern.compile(
+			"\\s+order\\s+by\\s+.+$", Pattern.CASE_INSENSITIVE);
+
 	private static final Pattern PARAMETER_PATTERN = Pattern
 			.compile("(:\\w*)(,|;|\\)|\\s|\\||\\+|$)");
 

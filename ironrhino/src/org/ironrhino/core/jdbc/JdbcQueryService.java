@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
@@ -268,7 +267,7 @@ public class JdbcQueryService {
 		while (sql.contains(alias))
 			alias += "0";
 		StringBuilder sb = new StringBuilder("select count(*) from (")
-				.append(trimOrderby(sql)).append(") ").append(alias);
+				.append(SqlUtils.trimOrderby(sql)).append(") ").append(alias);
 		return namedParameterJdbcTemplate.queryForObject(sb.toString(),
 				paramMap, Long.class);
 	}
@@ -533,11 +532,6 @@ public class JdbcQueryService {
 				});
 	}
 
-	private static String trimOrderby(String sql) {
-		Matcher m = ORDERBY_PATTERN.matcher(sql);
-		return m.replaceAll("");
-	}
-
 	private boolean hasLimit(String sql) {
 		if (databaseProduct == DatabaseProduct.MYSQL
 				|| databaseProduct == DatabaseProduct.POSTGRESQL
@@ -558,9 +552,6 @@ public class JdbcQueryService {
 		}
 		return false;
 	}
-
-	private static final Pattern ORDERBY_PATTERN = Pattern.compile(
-			"\\s+order\\s+by\\s+.+$", Pattern.CASE_INSENSITIVE);
 
 	private static final Pattern LIMIT_PATTERN = Pattern.compile(
 			"\\s+limit\\s+\\d+", Pattern.CASE_INSENSITIVE);
