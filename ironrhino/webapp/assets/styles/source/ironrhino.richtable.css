@@ -1,6 +1,9 @@
 #_window_ form{
 	padding-top : 20px;
 }
+#_window_ form textarea.input-xxlarge,#_window_ form input.input-xxlarge {
+	width: 515px;
+}
 table.richtable thead {
 	background: #DEDEDE;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EFEFEF), to(#EFEFEF), color-stop(.5,#DEDEDE));
