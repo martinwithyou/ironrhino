@@ -176,11 +176,7 @@
 			echo.perform();
 			echo = project.createTask("echo");
 			echo.setFile(new File(projectSrc+'/resources/view/decorator/include/nav.ftl'));
-			echo.setMessage('<ul class="nav">\n  <li>
-					<a href="<@url value="/"/>">${action.getText("index")}</a>
-				</li>\n  <@authorize ifAnyGranted="ROLE_ADMINISTRATOR">\n  <li>
-						<a href="<@url value="/user"/>">${action.getText("user")}</a>
-					</li>\n</@authorize>\n</ul>');
+			echo.setMessage('<ul class="nav">\n  <li><a href="<@url value="/"/>">${action.getText("index")}</a></li>\n  <@authorize ifAnyGranted="ROLE_ADMINISTRATOR">\n  <li><a href="<@url value="/user"/>">${action.getText("user")}</a></li>\n</@authorize>\n</ul>');
 			echo.perform();
 			copy = project.createTask("copy");
 			copy.setTofile(new File(projectDir+'/build.xml'));
