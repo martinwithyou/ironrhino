@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +20,7 @@ import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.security.role.UserRole;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.ErrorMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
@@ -124,14 +124,19 @@ public class QueryAction extends BaseAction {
 				}
 
 				@Override
-				public String getSeperator() {
+				public String getColumnSeperator() {
 					return ",";
+				}
+
+				@Override
+				public String getLineSeperator() {
+					return "\r\n";
 				}
 
 				@Override
 				public void handleLine(int index, String line) {
 					writer.write(line);
-					writer.write("\r\n");
+					writer.write(getLineSeperator());
 					if (index > 0 && index % 100 == 0)
 						writer.flush();
 				}

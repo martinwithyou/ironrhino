@@ -484,7 +484,7 @@ public class JdbcQueryService {
 
 			@Override
 			public void handleRow(int index, Object[] row) {
-				String seperator = lh.getSeperator();
+				String seperator = lh.getColumnSeperator();
 				String[] arr = new String[row.length];
 				for (int i = 0; i < arr.length; i++) {
 					Object value = row[i];
