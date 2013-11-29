@@ -266,8 +266,8 @@ public class JdbcQueryService {
 		String alias = "tfc";
 		while (sql.contains(alias))
 			alias += "0";
-		StringBuilder sb = new StringBuilder("select count(*) from (")
-				.append(SqlUtils.trimOrderby(sql)).append(") ").append(alias);
+		StringBuilder sb = new StringBuilder("select count(*) from (\n")
+				.append(SqlUtils.trimOrderby(sql)).append("\n) ").append(alias);
 		return namedParameterJdbcTemplate.queryForObject(sb.toString(),
 				paramMap, Long.class);
 	}
