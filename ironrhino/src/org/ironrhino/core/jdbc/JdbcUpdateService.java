@@ -112,7 +112,7 @@ public class JdbcUpdateService {
 
 	@Transactional
 	public void validate(String sql) {
-		sql = SqlUtils.refineSql(sql);
+		sql = SqlUtils.trim(sql);
 		Set<String> names = SqlUtils.extractParameters(sql);
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		for (String name : names)

@@ -10,12 +10,11 @@ import org.apache.commons.lang3.StringUtils;
 
 public class SqlUtils {
 
-	public static String refineSql(String sql) {
+	public static String trim(String sql) {
 		sql = sql.trim();
-		if (sql.endsWith(";"))
+		while (sql.endsWith(";"))
 			sql = sql.substring(0, sql.length() - 1);
-		return new StringBuilder(sql.length() + 2).append("\n").append(sql)
-				.append("\n").toString();
+		return sql;
 	}
 
 	public static String clearComments(String sql) {

@@ -158,7 +158,7 @@ public class JdbcQueryService {
 
 	@Transactional(readOnly = true)
 	public void validate(String sql) {
-		sql = SqlUtils.refineSql(sql);
+		sql = SqlUtils.trim(sql);
 		Set<String> names = SqlUtils.extractParameters(sql);
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		for (String name : names)
@@ -262,7 +262,7 @@ public class JdbcQueryService {
 
 	@Transactional(readOnly = true)
 	public long count(String sql, Map<String, ?> paramMap) {
-		sql = SqlUtils.refineSql(sql);
+		sql = SqlUtils.trim(sql);
 		String alias = "tfc";
 		while (sql.contains(alias))
 			alias += "0";
@@ -286,9 +286,11 @@ public class JdbcQueryService {
 	@Transactional(readOnly = true)
 	public List<Map<String, Object>> query(String sql, Map<String, ?> paramMap,
 			final int limit, final int offset) {
-		sql = SqlUtils.refineSql(sql);
+		sql = SqlUtils.trim(sql);
 		if (hasLimit(sql))
 			return namedParameterJdbcTemplate.queryForList(sql, paramMap);
+		sql = new StringBuilder(sql.length() + 2).append('\n').append(sql)
+				.append('\n').toString();
 		if (databaseProduct == DatabaseProduct.MYSQL
 				|| databaseProduct == DatabaseProduct.POSTGRESQL
 				|| databaseProduct == DatabaseProduct.H2) {
@@ -448,7 +450,7 @@ public class JdbcQueryService {
 		QueryCriteria criteria = resultPage.getCriteria();
 		String sql = criteria.getQuery();
 		Map<String, ?> paramMap = criteria.getParameters();
-		sql = SqlUtils.refineSql(sql);
+		sql = SqlUtils.trim(sql);
 		validateAndConvertTypes(sql, paramMap);
 		boolean hasLimit = hasLimit(sql);
 		resultPage.setPaginating(!hasLimit);
@@ -533,6 +535,7 @@ public class JdbcQueryService {
 	}
 
 	private boolean hasLimit(String sql) {
+		sql = SqlUtils.clearComments(sql);
 		if (databaseProduct == DatabaseProduct.MYSQL
 				|| databaseProduct == DatabaseProduct.POSTGRESQL
 				|| databaseProduct == DatabaseProduct.H2
