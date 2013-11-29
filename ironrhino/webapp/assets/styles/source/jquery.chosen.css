@@ -1,5 +1,6 @@
 /*
  * add border-radius: 4px; to .chosen-container-multi .chosen-choices
+ * change border-radius: 5px to 4px on .chosen-container-single .chosen-single
  */
 /* @group Base */
 .chosen-container {
@@ -43,7 +44,7 @@
   padding: 0 0 0 8px;
   height: 23px;
   border: 1px solid #aaa;
-  border-radius: 5px;
+  border-radius: 4px;
   background-color: #fff;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #ffffff), color-stop(50%, #f6f6f6), color-stop(52%, #eeeeee), color-stop(100%, #f4f4f4));
   background: -webkit-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
