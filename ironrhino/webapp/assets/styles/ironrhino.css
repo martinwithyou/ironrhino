@@ -8364,6 +8364,9 @@ span.checkboxgroup{
 	margin-right:5px;
 	height:10px;
 }
+.control-group.error .glyphicon {
+	color: #b94a48;
+}
 .action-error strong.force-override{
 	cursor: pointer;
 }
