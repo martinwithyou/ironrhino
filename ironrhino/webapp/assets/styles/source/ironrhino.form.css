@@ -91,7 +91,7 @@ span.checkboxgroup{
 	margin-right:5px;
 	height:10px;
 }
-.control-group.error .glyphicon {
+.control-group.error .glyphicon,span.field-error {
 	color: #b94a48;
 }
 .action-error strong.force-override{
