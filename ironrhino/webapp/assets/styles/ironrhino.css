@@ -1,5 +1,6 @@
 /* changes
 remove .ui-accordion .ui-menu .ui-autocomplete .ui-spinner .ui-slider .ui-tab .ui-tooltip .ui-progressbar .ui-toolbar bootstrap wijmo
+.ui-widget remove font-family
 .ui-dialog remove overflow:hidden position: fixed;
 .ui-dialog .ui-dialog-content remove overflow:auto;
 .ui-dialog-title .ui-dialog-title remove margin-top margin-bottom;
@@ -219,9 +220,11 @@ border:none;
 
 /* Component containers
 ----------------------------------*/
+/*
 .ui-widget {   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:13px; }
 .ui-widget .ui-widget { font-size: 1em; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 1em; }
+*/
 .ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff url(images/ui-bg_glass_75_ffffff_1x400.png) 50% 50% repeat-x; color: #404040; }
 .ui-widget-content a { color: #404040; }
 .ui-widget-header {
@@ -8602,6 +8605,9 @@ div.preview span.comment{
 	background-color:yellow;
 	color:#999;
 }
+div.preview strong{
+	color: #d14;
+}
 div.sqleditor.preview{
 	min-width:90%;
 }
@@ -8670,8 +8676,8 @@ div.sqleditor.preview{
 	line-height: 30px;
 }
 .toolbar .pagination li.disabled a i{
-	filter: Alpha(Opacity=20); 
-	opacity: 0.20;
+	filter: Alpha(Opacity=50); 
+	opacity: 0.50;
 }
 .toolbar .pagination li.firstPage a{
   -webkit-border-radius: 3px 0 0 3px;

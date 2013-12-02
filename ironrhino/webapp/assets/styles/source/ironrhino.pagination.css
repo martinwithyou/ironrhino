@@ -63,8 +63,8 @@
 	line-height: 30px;
 }
 .toolbar .pagination li.disabled a i{
-	filter: Alpha(Opacity=20); 
-	opacity: 0.20;
+	filter: Alpha(Opacity=50); 
+	opacity: 0.50;
 }
 .toolbar .pagination li.firstPage a{
   -webkit-border-radius: 3px 0 0 3px;

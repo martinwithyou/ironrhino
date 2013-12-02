@@ -20,8 +20,9 @@
 		},
 		highlight : function(sql) {
 			return sql.replace(PARAMETER, '<strong>$1</strong>$2').replace(
-					BLOCK_COMMENT, '<span class="comment">$&</span>').replace(
-					LINE_COMMENT, '<span class="comment">$&</span>');
+					/\?/g, '<strong>$&</strong>').replace(BLOCK_COMMENT,
+					'<span class="comment">$&</span>').replace(LINE_COMMENT,
+					'<span class="comment">$&</span>');
 		}
 	}
 	function preview(input) {
