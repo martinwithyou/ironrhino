@@ -83,7 +83,7 @@ $(function(){
 </head>
 <body>
 <@s.form id="query-form" action="${actionBaseUrl}" method="post" cssClass="form-horizontal ajax view history">
-	<@s.textarea label="sql" name="sql" cssClass="required span8 sqleditor" placeholder="select username,name,email from user where username=:username">
+	<@s.textarea label="sql" name="sql" cssClass="required span8 sqleditor codeblock" placeholder="select username,name,email from user where username=:username">
 	<#if tables?? && tables?size gt 0>
 	<@s.param name="after">
 	<div style="display:inline-block;vertical-align:top;margin-left:20px;">

@@ -30,7 +30,7 @@
 		var t = $(input).hide();
 		var p = t.next('div.preview');
 		if (!p.length) {
-			p = $('<div class="preview"></div>').insertAfter(t);
+			p = $('<div class="preview codeblock"></div>').insertAfter(t);
 			if (!(t.prop('readonly') || t.prop('disabled')))
 				p.click(function() {
 							$(this).hide().prev('.sqleditor:input').show()
@@ -38,24 +38,24 @@
 						});
 		}
 		p.width(t.width()).css('height', t.height() + 'px').html($.sqleditor
-						.highlight(t.val())).show();
+				.highlight(t.val())).show();
 
 	}
 	$.fn.sqleditor = function() {
 		$(this).each(function() {
-					var t = $(this);
-					if (t.is(':input')) {
-						preview(t);
-						t.blur(function() {
-									preview(t)
-								}).change(function() {
-									preview(t)
-								});
-					} else {
-						t.addClass('preview').html($.sqleditor.highlight(t
-								.text()));
-					}
-				});
+			var t = $(this);
+			if (t.is(':input')) {
+				preview(t);
+				t.blur(function() {
+							preview(t)
+						}).change(function() {
+							preview(t)
+						});
+			} else {
+				t.addClass('preview codeblock').html($.sqleditor.highlight(t
+						.text()));
+			}
+		});
 		return this;
 	};
 })(jQuery);

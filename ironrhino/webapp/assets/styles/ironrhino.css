@@ -8206,6 +8206,9 @@ a.remove:hover {
 .datagrided [class*="icon-"]{
 	margin: 3px;
 }
+.codeblock{
+	font-family: consolas;
+}
 /* tooltip start */
 [data-tooltip]{
 	position: relative;
