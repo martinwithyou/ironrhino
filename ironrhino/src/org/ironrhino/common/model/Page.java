@@ -91,23 +91,27 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	@NotInCopy
 	@SearchableProperty
 	@UiConfig(displayOrder = 7)
+	@Column(updatable = false)
 	private Date createDate;
 
 	@NotInCopy
 	@SearchableProperty
 	@UiConfig(displayOrder = 8)
+	@Column(insertable = false)
 	private Date modifyDate;
 
 	@NotInCopy
 	@SearchableProperty(include_in_all = false)
 	@UiConfig(hidden = true)
+	@Column(updatable = false)
 	private String createUser;
 
 	@NotInCopy
 	@SearchableProperty(include_in_all = false)
 	@UiConfig(hidden = true)
+	@Column(insertable = false)
 	private String modifyUser;
-	
+
 	@Version
 	private int version = -1;
 
@@ -240,7 +244,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	public void setModifyUser(String modifyUser) {
 		this.modifyUser = modifyUser;
 	}
-	
+
 	public int getVersion() {
 		return version;
 	}

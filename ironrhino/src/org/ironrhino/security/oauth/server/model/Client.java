@@ -64,10 +64,12 @@ public class Client extends BaseEntity implements Enableable {
 
 	@NotInCopy
 	@UiConfig(hidden = true)
+	@Column(insertable = false)
 	private Date modifyDate;
 
 	@NotInCopy
 	@UiConfig(hidden = true)
+	@Column(updatable = false)
 	private Date createDate = new Date();
 
 	public String getName() {

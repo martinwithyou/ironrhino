@@ -71,12 +71,12 @@ public class Authorization extends BaseEntity {
 
 	@NotInCopy
 	@UiConfig(hidden = true)
-	@Column(nullable = false)
+	@Column(nullable = false, insertable = false)
 	private Date modifyDate = new Date();
 
 	@NotInCopy
 	@UiConfig(hidden = true)
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	private Date createDate = new Date();
 
 	public String getAccessToken() {

@@ -87,6 +87,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@NotInCopy
 	@NotInJson
 	@UiConfig(hidden = true)
+	@Column(updatable = false)
 	private Date createDate = new Date();
 
 	@NotInCopy
@@ -106,16 +107,19 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	@NotInCopy
 	@NotInJson
 	@UiConfig(hidden = true)
+	@Column(insertable = false)
 	private Date modifyDate;
 
 	@NotInCopy
 	@NotInJson
 	@UiConfig(hidden = true)
+	@Column(updatable = false)
 	private String createUser;
 
 	@NotInCopy
 	@NotInJson
 	@UiConfig(hidden = true)
+	@Column(insertable = false)
 	private String modifyUser;
 
 	@Override
@@ -319,8 +323,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 	public void setAttributesAsString(String str) {
 		if (StringUtils.isNotBlank(str))
 			try {
-				attributes = JsonUtils.fromJson(str,
-						JsonUtils.STRING_MAP_TYPE);
+				attributes = JsonUtils.fromJson(str, JsonUtils.STRING_MAP_TYPE);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -48,12 +48,15 @@ public class Feedback extends BaseEntity implements Recordable<UserDetails> {
 	private String domain;
 
 	@UiConfig(readonly = @Readonly(true), width = "150px")
+	@Column(updatable = false)
 	private Date createDate;
 
 	@UiConfig(readonly = @Readonly(true), width = "150px")
+	@Column(insertable = false)
 	private Date modifyDate;
 
 	@UiConfig(readonly = @Readonly(true), width = "80px")
+	@Column(insertable = false)
 	private String modifyUser;
 
 	public String getName() {
