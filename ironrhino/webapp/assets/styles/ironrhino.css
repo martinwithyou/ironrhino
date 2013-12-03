@@ -8588,6 +8588,7 @@ select:hover,select:focus{
 }
 
 div.preview{
+	margin-bottom: -5px;
 	padding: 4px 6px;
 	display:inline-block;
 	overflow: auto;
