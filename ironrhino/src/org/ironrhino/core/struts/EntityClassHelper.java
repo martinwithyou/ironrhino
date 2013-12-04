@@ -271,7 +271,7 @@ public class EntityClassHelper {
 					else if (temporal.value() == TemporalType.TIME)
 						temporalType = "time";
 				uci.addCssClass(temporalType);
-				//uci.setInputType(temporalType);
+				// uci.setInputType(temporalType);
 				if (StringUtils.isBlank(uci.getCellEdit()))
 					uci.setCellEdit("click," + temporalType);
 			} else if (String.class == returnType
@@ -311,8 +311,23 @@ public class EntityClassHelper {
 			if (!entry.getValue().isExcludedFromCriteria()
 					&& !entry.getKey().endsWith("AsString")
 					&& !CriterionOperator.getSupportedOperators(
-							entry.getValue().getPropertyType()).isEmpty())
-				propertyNamesInCriterion.put(entry.getKey(), entry.getValue());
+							entry.getValue().getPropertyType()).isEmpty()) {
+				UiConfigImpl config = entry.getValue();
+				Set<String> cssClasses = config.getCssClasses();
+				if (cssClasses.contains("date")) {
+					config.getCssClasses().clear();
+					config.getCssClasses().add("date");
+				} else if (cssClasses.contains("datetime")) {
+					config.getCssClasses().clear();
+					config.getCssClasses().add("datetime");
+				} else if (cssClasses.contains("time")) {
+					config.getCssClasses().clear();
+					config.getCssClasses().add("time");
+				} else {
+					config.getCssClasses().clear();
+				}
+				propertyNamesInCriterion.put(entry.getKey(), config);
+			}
 		}
 		return propertyNamesInCriterion;
 	}
