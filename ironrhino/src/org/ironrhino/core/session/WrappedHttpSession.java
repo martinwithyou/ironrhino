@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.util.IteratorEnumeration;
 import org.ironrhino.core.util.RequestUtils;
 
 public class WrappedHttpSession implements Serializable, HttpSession {
@@ -165,9 +165,8 @@ public class WrappedHttpSession implements Serializable, HttpSession {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Enumeration<String> getAttributeNames() {
-		return new IteratorEnumeration(attrMap.keySet().iterator());
+		return new IteratorEnumeration<String>(attrMap.keySet().iterator());
 	}
 
 	@Override
