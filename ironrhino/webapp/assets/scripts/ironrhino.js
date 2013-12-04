@@ -36200,7 +36200,7 @@ Observation._richtable = function(container) {
 (function($) {
 	var BLOCK_COMMENT = new RegExp('/\\*(?:.|[\\n\\r])*?\\*/', 'g');
 	var LINE_COMMENT = new RegExp('\r?\n?\\s*--.*\r?(\n|$)', 'g');
-	var PARAMETER = new RegExp('(:\\w*)(,|;|\\)|\\s|\\||\\+|$)', 'g');
+	var PARAMETER = new RegExp('(:(\\w|[^\\sx00-xff])*)(,|;|\\)|\\s|\\||\\+|$)', 'g');
 	$.sqleditor = {
 		extractParameters : function(sql) {
 			sql = $.sqleditor.clearComments(sql);
@@ -36218,7 +36218,7 @@ Observation._richtable = function(container) {
 					'\n'));
 		},
 		highlight : function(sql) {
-			return sql.replace(PARAMETER, '<strong>$1</strong>$2').replace(
+			return sql.replace(PARAMETER, '<strong>$1</strong>$3').replace(
 					/\?/g, '<strong>$&</strong>').replace(BLOCK_COMMENT,
 					'<span class="comment">$&</span>').replace(LINE_COMMENT,
 					'<span class="comment">$&</span>');
