@@ -1,6 +1,6 @@
 /*
  * add border-radius: 4px; to .chosen-container-multi .chosen-choices
- * change border-radius: 5px to 4px on .chosen-container-single .chosen-single
+ * change border-radius: 5px to 4px;height: 20px;line-height: 23px;padding: 4px 6px; on .chosen-container-single .chosen-single
  */
 /* @group Base */
 .chosen-container {
@@ -41,8 +41,8 @@
   position: relative;
   display: block;
   overflow: hidden;
-  padding: 0 0 0 8px;
-  height: 23px;
+  padding: 4px 6px;
+  height: 20px;
   border: 1px solid #aaa;
   border-radius: 4px;
   background-color: #fff;
@@ -56,7 +56,7 @@
   color: #444;
   text-decoration: none;
   white-space: nowrap;
-  line-height: 24px;
+  line-height: 20px;
 }
 .chosen-container-single .chosen-default {
   color: #999;
