@@ -53,6 +53,12 @@ table.richtable td {
 .richtable td.edited{
 	background-color: #fff3f0 !important;
 }
+table.richtable a .glyphicon {
+	color: #404040;
+}
+table.richtable a:hover .glyphicon ,table.richtable a:focus .glyphicon  {
+	color: #005580;
+}
 .toolbar .btn[data-shown],.toolbar .btn[data-action="save"]{
 	display: none;
 }
