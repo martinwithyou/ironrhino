@@ -213,8 +213,8 @@ ${formHeader!}
 <#if createable><button type="button" class="btn" data-view="input">${action.getText("create")}</button></#if>
 <#if celleditable><button type="button" class="btn confirm" data-action="save">${action.getText("save")}</button></#if>
 <#if enableable>
-<button type="button" class="btn confirm hidden-pad" data-action="enable" data-shown="selected" data-filterselector="[data-enabled='false']:not([data-readonly='true'])">${action.getText("enable")}</button>
-<button type="button" class="btn confirm hidden-pad" data-action="disable" data-shown="selected" data-filterselector="[data-enabled='true']:not([data-readonly='true'])">${action.getText("disable")}</button>
+<button type="button" class="btn confirm" data-action="enable" data-shown="selected" data-filterselector="[data-enabled='false']:not([data-readonly='true'])">${action.getText("enable")}</button>
+<button type="button" class="btn confirm" data-action="disable" data-shown="selected" data-filterselector="[data-enabled='true']:not([data-readonly='true'])">${action.getText("disable")}</button>
 </#if>
 </#if>
 <#if !readonly||deletable><button type="button" class="btn" data-action="delete" data-shown="selected" data-filterselector="<#if enableable>[data-enabled='false']</#if>:not([data-deletable='false'])">${action.getText("delete")}</button></#if>
