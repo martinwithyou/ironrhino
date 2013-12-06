@@ -346,7 +346,7 @@ public class User extends BaseEntity implements UserDetails, Recordable<User>,
 				clazz = (Class<? extends Persistable<?>>) Class
 						.forName(className);
 			} catch (ClassNotFoundException e) {
-				throw new IllegalArgumentException(className + "not found");
+				throw new IllegalArgumentException(className + " not found");
 			}
 		}
 		return (clazz != null) ? getExtra(clazz) : null;
