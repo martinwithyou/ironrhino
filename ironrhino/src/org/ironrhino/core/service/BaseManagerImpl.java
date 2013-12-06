@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
@@ -21,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
-import org.hibernate.NaturalIdLoadAccess;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.ScrollMode;
@@ -50,6 +48,7 @@ import org.ironrhino.core.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
@@ -396,24 +395,27 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			objects = arr;
 		}
 		if (objects.length == 1) {
+			Criteria c = sessionFactory.getCurrentSession().createCriteria(
+					getEntityClass());
 			Set<String> naturalIds = AnnotationUtils.getAnnotatedPropertyNames(
 					getEntityClass(), NaturalId.class);
 			if (naturalIds.size() != 1)
 				throw new IllegalArgumentException(
 						"@NaturalId must and only be one");
-			return (T) sessionFactory.getCurrentSession()
-					.byNaturalId(getEntityClass())
-					.using(naturalIds.iterator().next(), objects[0]).load();
+			c.add(Restrictions.eq(naturalIds.iterator().next(), objects[0]));
+			c.setMaxResults(1);
+			return (T) c.uniqueResult();
 		}
 		if (objects.length == 0 || objects.length % 2 != 0)
 			throw new IllegalArgumentException("parameter size must be even");
-		NaturalIdLoadAccess naturalIdLoadAccess = sessionFactory
-				.getCurrentSession().byNaturalId(getEntityClass());
+		Criteria c = sessionFactory.getCurrentSession().createCriteria(
+				getEntityClass());
 		int doubles = objects.length / 2;
 		for (int i = 0; i < doubles; i++)
-			naturalIdLoadAccess.using(String.valueOf(objects[2 * i]),
-					objects[2 * i + 1]);
-		return (T) naturalIdLoadAccess.load();
+			c.add(Restrictions.eq(String.valueOf(objects[2 * i]),
+					objects[2 * i + 1]));
+		c.setMaxResults(1);
+		return (T) c.uniqueResult();
 	}
 
 	@Override
