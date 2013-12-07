@@ -109,9 +109,9 @@
 			var mkdir = project.createTask('mkdir');
 			mkdir.setDir(new File(projectDir));
 			mkdir.perform();
-			mkdir.setDir(new File(projectSrc+'/'+projectPackage.replaceAll('\\.','/')));
+			mkdir.setDir(new File(projectSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')));
 			mkdir.perform();
-			mkdir.setDir(new File(testSrc+'/'+projectPackage.replaceAll('\\.','/')+'/test'));
+			mkdir.setDir(new File(testSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')+'/test'));
 			mkdir.perform();
 			mkdir.setDir(new File(projectLib));
 			mkdir.perform();
