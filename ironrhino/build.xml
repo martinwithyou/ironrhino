@@ -143,8 +143,6 @@
 				excludes+='jasperreports-*.jar,commons-digester-*.jar,commons-collections-*.jar,dynamicreports-core-*.jar,poi-*.jar,iText*.jar,struts2-jasperreports-plugin-*.jar,';
 			if(features.indexOf('zxing')<0)
 				excludes+='zxing-*.jar,';
-			if(features.indexOf('xstream')<0)
-				excludes+='xstream-*.jar,kxml2-*.jar,xmlpull-*.jar';
 			if(excludes)
 			fs.setExcludes(excludes);
 			copy.addFileset(fs);

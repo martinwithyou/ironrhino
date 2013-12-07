@@ -2,7 +2,8 @@ package org.ironrhino.security.oauth.client.service.v1;
 
 import java.io.StringReader;
 
-import org.ironrhino.core.util.XmlUtils;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.ironrhino.security.oauth.client.model.Profile;
 import org.ironrhino.security.oauth.client.service.OAuth1Provider;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,8 +56,9 @@ public class Douban extends OAuth1Provider {
 
 	@Override
 	protected Profile getProfileFromContent(String content) throws Exception {
-		Document doc = XmlUtils.getDocumentBuilder().parse(
-				new InputSource(new StringReader(content)));
+		Document doc = DocumentBuilderFactory.newInstance()
+				.newDocumentBuilder()
+				.parse(new InputSource(new StringReader(content)));
 		String uid = doc.getElementsByTagName("db:uid").item(0)
 				.getTextContent();
 		String displayName = doc.getElementsByTagName("title").item(0)

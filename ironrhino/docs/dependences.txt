@@ -4,5 +4,4 @@ rabbitmq		rabbitmq-client-*.jar spring-rabbit-*.jar spring-amqp-*.jar
 mongodb			mongo-java-driver-*.jar	spring-data-mongodb-*.jar spring-data-commons-*.jar
 zookeeper		zookeeper-*.jar curator-*.jar
 jasperreports   jasperreports-*.jar commons-digester-*.jar commons-collections-*.jar dynamicreports-core-*.jar poi-*.jar iText*.jar struts2-jasperreports-plugin-*.jar
-xstream			xstream-*.jar kxml2-*.jar xmlpull-*.jar
 zxing			zxing-*.jar

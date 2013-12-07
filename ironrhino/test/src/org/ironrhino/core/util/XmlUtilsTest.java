@@ -1,7 +1,6 @@
 package org.ironrhino.core.util;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,16 +8,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.Test;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+public class XmlUtilsTest {
 
-public class XStreamUtilsTest {
-
-	@XStreamAlias("user")
+	@XmlRootElement
 	public static class User implements Serializable {
 
 		private static final long serialVersionUID = -7632092470064636390L;
@@ -76,7 +75,7 @@ public class XStreamUtilsTest {
 
 	}
 
-	@XStreamAlias("name")
+	@XmlRootElement
 	public static class Name implements Serializable {
 
 		private static final long serialVersionUID = 2600540506012485655L;
@@ -117,7 +116,7 @@ public class XStreamUtilsTest {
 	}
 
 	@Test
-	public void test() {
+	public void test() throws Exception {
 		User user = new User();
 		user.setUsername("test");
 		user.setPassword("password");
@@ -127,9 +126,8 @@ public class XStreamUtilsTest {
 		name.setFirst("hello");
 		name.setLast("world");
 		names.add(name);
-		String xml = XStreamUtils.toXml(user);
-		assertTrue(xml.startsWith("<user>"));
-		User u = XStreamUtils.fromXml(xml, User.class);
+		String xml = XmlUtils.toXml(user);
+		User u = XmlUtils.fromXml(xml, User.class);
 		assertEquals(user.getUsername(), u.getUsername());
 		assertEquals(user.getPassword(), u.getPassword());
 		assertEquals(user.isEnabled(), u.isEnabled());
