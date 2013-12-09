@@ -38,7 +38,7 @@ public class AuthorizedWebSocket {
 			if (s.isOpen())
 				try {
 					if (roles.length == 0
-							|| AuthzUtils.authorize(
+							|| AuthzUtils.authorizeUserDetails(
 									(UserDetails) s.getUserProperties().get(
 											USER_PROPERTIES_NAME_USER), null,
 									StringUtils.join(roles, ","), null))

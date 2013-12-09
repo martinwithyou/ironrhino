@@ -31,20 +31,20 @@ public class AuthzUtils {
 		}
 	}
 
-	public static boolean authorize(UserDetails user, String ifAllGranted,
-			String ifAnyGranted, String ifNotGranted) {
-		return authorize(getRoleNames(user), ifAllGranted, ifAnyGranted,
-				ifNotGranted);
-	}
-
 	public static boolean authorize(String ifAllGranted, String ifAnyGranted,
 			String ifNotGranted) {
-		return authorize(getRoleNames(), ifAllGranted, ifAnyGranted,
+		return authorizeRoles(getRoleNames(), ifAllGranted, ifAnyGranted,
 				ifNotGranted);
 	}
 
-	public static boolean authorize(List<String> roles, String ifAllGranted,
-			String ifAnyGranted, String ifNotGranted) {
+	public static boolean authorizeUserDetails(UserDetails user,
+			String ifAllGranted, String ifAnyGranted, String ifNotGranted) {
+		return authorizeRoles(getRoleNamesFromUserDetails(user), ifAllGranted,
+				ifAnyGranted, ifNotGranted);
+	}
+
+	public static boolean authorizeRoles(List<String> roles,
+			String ifAllGranted, String ifAnyGranted, String ifNotGranted) {
 		if (StringUtils.isNotBlank(ifAllGranted)) {
 			String[] arr = ifAllGranted.split("\\s*,\\s*");
 			for (String s : arr)
@@ -82,7 +82,7 @@ public class AuthzUtils {
 		return roleNames;
 	}
 
-	public static List<String> getRoleNames(UserDetails user) {
+	public static List<String> getRoleNamesFromUserDetails(UserDetails user) {
 		List<String> roleNames = new ArrayList<String>();
 		Collection<? extends GrantedAuthority> authz = user.getAuthorities();
 		if (authz != null)
