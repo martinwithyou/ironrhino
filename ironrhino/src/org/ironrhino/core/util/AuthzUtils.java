@@ -31,9 +31,20 @@ public class AuthzUtils {
 		}
 	}
 
+	public static boolean authorize(UserDetails user, String ifAllGranted,
+			String ifAnyGranted, String ifNotGranted) {
+		return authorize(getRoleNames(user), ifAllGranted, ifAnyGranted,
+				ifNotGranted);
+	}
+
 	public static boolean authorize(String ifAllGranted, String ifAnyGranted,
 			String ifNotGranted) {
-		List<String> roles = getRoleNames();
+		return authorize(getRoleNames(), ifAllGranted, ifAnyGranted,
+				ifNotGranted);
+	}
+
+	public static boolean authorize(List<String> roles, String ifAllGranted,
+			String ifAnyGranted, String ifNotGranted) {
 		if (StringUtils.isNotBlank(ifAllGranted)) {
 			String[] arr = ifAllGranted.split("\\s*,\\s*");
 			for (String s : arr)
@@ -59,16 +70,24 @@ public class AuthzUtils {
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static List<String> getRoleNames() {
 		List<String> roleNames = new ArrayList<String>();
 		if (SecurityContextHolder.getContext().getAuthentication() != null) {
-			Collection<GrantedAuthority> authz = (Collection<GrantedAuthority>) SecurityContextHolder
+			Collection<? extends GrantedAuthority> authz = SecurityContextHolder
 					.getContext().getAuthentication().getAuthorities();
 			if (authz != null)
 				for (GrantedAuthority var : authz)
 					roleNames.add(var.getAuthority());
 		}
+		return roleNames;
+	}
+
+	public static List<String> getRoleNames(UserDetails user) {
+		List<String> roleNames = new ArrayList<String>();
+		Collection<? extends GrantedAuthority> authz = user.getAuthorities();
+		if (authz != null)
+			for (GrantedAuthority var : authz)
+				roleNames.add(var.getAuthority());
 		return roleNames;
 	}
 
