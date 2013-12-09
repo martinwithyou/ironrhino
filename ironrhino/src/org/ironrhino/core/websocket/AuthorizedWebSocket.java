@@ -17,14 +17,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 public class AuthorizedWebSocket {
 
-	public static final String USER_PROPERTIES_NAME_USER = "user";
+	public static final String USER_PROPERTIES_NAME_USERNAME = "username";
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	private final Set<Session> sessions = Collections
 			.newSetFromMap(new ConcurrentHashMap<Session, Boolean>());
@@ -38,10 +43,14 @@ public class AuthorizedWebSocket {
 			if (s.isOpen())
 				try {
 					if (roles.length == 0
-							|| AuthzUtils.authorizeUserDetails(
-									(UserDetails) s.getUserProperties().get(
-											USER_PROPERTIES_NAME_USER), null,
-									StringUtils.join(roles, ","), null))
+							|| AuthzUtils
+									.authorizeUserDetails(
+											userDetailsService
+													.loadUserByUsername((String) s
+															.getUserProperties()
+															.get(USER_PROPERTIES_NAME_USERNAME)),
+											null, StringUtils.join(roles, ","),
+											null))
 						s.getBasicRemote().sendText(message);
 				} catch (IOException e) {
 					logger.error(e.getMessage(), e);
@@ -51,7 +60,7 @@ public class AuthorizedWebSocket {
 	@OnMessage
 	public void onMessage(Session session, String message) {
 		logger.info("received from {} : {}",
-				session.getUserProperties().get(USER_PROPERTIES_NAME_USER),
+				session.getUserProperties().get(USER_PROPERTIES_NAME_USERNAME),
 				message);
 	}
 
@@ -74,7 +83,8 @@ public class AuthorizedWebSocket {
 				logger.error(e.getMessage(), e);
 			}
 		} else {
-			session.getUserProperties().put(USER_PROPERTIES_NAME_USER, user);
+			session.getUserProperties().put(USER_PROPERTIES_NAME_USERNAME,
+					user.getUsername());
 			sessions.add(session);
 		}
 	}
