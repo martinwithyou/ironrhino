@@ -93,7 +93,9 @@
 							$('<a class="remove" href="#">&times;</a>')
 									.appendTo(nametarget).click(removeAction);
 					} else if (!nametarget.is(':input,td')) {
-						val(options.name, '<i class="glyphicon glyphicon-list"></i>', true);
+						val(options.name,
+								'<i class="glyphicon glyphicon-list"></i>',
+								true);
 					}
 				}
 			}

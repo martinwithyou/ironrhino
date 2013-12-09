@@ -591,7 +591,11 @@ Initialization.common = function() {
 			}
 			return;
 		}
-	}).on('click', '#message .close,.message-container .close', function() {
+	}).keyup(function(e) {
+				if (e.keyCode == 27)
+					$('.modal:visible button.close').click();
+			}).on('click', '#message .close,.message-container .close',
+			function() {
 				$('#message,.message-container').each(function(i, v) {
 							if (!$.trim($(v).text()))
 								$(v).remove();
