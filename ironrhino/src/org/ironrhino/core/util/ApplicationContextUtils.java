@@ -1,24 +1,19 @@
 package org.ironrhino.core.util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
 import org.ironrhino.core.service.EntityManager;
+import org.ironrhino.core.servlet.AppInfoListener;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class ApplicationContextUtils {
 
-	private static ApplicationContext applicationContext;
-
 	public static ApplicationContext getApplicationContext() {
-		if (applicationContext == null)
-			applicationContext = WebApplicationContextUtils
-					.getWebApplicationContext(ServletActionContext
-							.getServletContext());
-		return applicationContext;
+		return WebApplicationContextUtils
+				.getWebApplicationContext(AppInfoListener.SERVLET_CONTEXT);
 	}
 
 	@SuppressWarnings("unchecked")

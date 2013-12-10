@@ -160,6 +160,9 @@ public class ElasticSearchService<T> implements SearchService<T> {
 			srb.setTypes(types);
 		QueryBuilder qb = criteria.getQueryBuilder();
 		String query = criteria.getQuery();
+		if (qb == null && StringUtils.isBlank(query))
+			throw new NullPointerException(
+					"queryBuilder is null and queryString is blank");
 		if (qb == null && StringUtils.isNotBlank(query)) {
 			if (wildcardQueryPattern.matcher(query).matches()) {
 				String[] arr = query.split(":", 2);
@@ -171,9 +174,6 @@ public class ElasticSearchService<T> implements SearchService<T> {
 				qb = qsqb;
 			}
 		}
-		if (qb == null)
-			throw new NullPointerException(
-					"queryBuilder is null and queryString is blank");
 		srb.setQuery(qb);
 		Map<String, Boolean> sorts = criteria.getSorts();
 		for (Map.Entry<String, Boolean> entry : sorts.entrySet())

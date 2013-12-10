@@ -19,10 +19,14 @@ import org.springframework.core.io.Resource;
 
 public class AppInfoListener implements ServletContextListener {
 
+	public static volatile ServletContext SERVLET_CONTEXT;
+
 	private Logger logger;
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
+		if (SERVLET_CONTEXT == null)
+			SERVLET_CONTEXT = event.getServletContext();
 		Properties appProperties = getAppProperties();
 		String defaultProfiles = null;
 		if (StringUtils
@@ -45,10 +49,9 @@ public class AppInfoListener implements ServletContextListener {
 				}
 			}
 		}
-		ServletContext ctx = event.getServletContext();
 		String name = appProperties.getProperty(AppInfo.KEY_APP_NAME);
 		if (StringUtils.isBlank(name))
-			name = ctx.getServletContextName();
+			name = SERVLET_CONTEXT.getServletContextName();
 		if (StringUtils.isNotBlank(name))
 			AppInfo.setAppName(name);
 		String version = appProperties.getProperty(AppInfo.KEY_APP_VERSION);
@@ -59,7 +62,7 @@ public class AppInfoListener implements ServletContextListener {
 			AppInfo.setAppHome(home);
 		System.setProperty(AppInfo.KEY_APP_HOME, AppInfo.getAppHome());
 		System.setProperty(AppInfo.KEY_APP_NAME, AppInfo.getAppName());
-		String context = ctx.getRealPath("/");
+		String context = SERVLET_CONTEXT.getRealPath("/");
 		if (context == null)
 			context = "";
 		System.setProperty("app.context", context);
@@ -99,6 +102,7 @@ public class AppInfoListener implements ServletContextListener {
 				AppInfo.getInstanceId(), AppInfo.getStage().toString(),
 				AppInfo.getAppHome(), AppInfo.getHostName(),
 				AppInfo.getHostAddress());
+		SERVLET_CONTEXT = null;
 	}
 
 	private Properties getAppProperties() {

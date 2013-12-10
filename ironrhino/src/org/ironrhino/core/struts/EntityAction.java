@@ -193,7 +193,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	public boolean isNaturalIdMutable() {
 		return getNaturalIds().size() > 0
-				&& ((NaturalId) getNaturalIds().values().iterator().next())
+				&& getNaturalIds().values().iterator().next()
 						.mutable();
 	}
 

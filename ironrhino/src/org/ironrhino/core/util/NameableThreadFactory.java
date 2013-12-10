@@ -30,6 +30,7 @@ public class NameableThreadFactory implements ThreadFactory {
 		namePrefix = sb.toString();
 	}
 
+	@Override
 	public Thread newThread(Runnable r) {
 		Thread t = new Thread(group, r, namePrefix
 				+ threadNumber.getAndIncrement(), 0);
