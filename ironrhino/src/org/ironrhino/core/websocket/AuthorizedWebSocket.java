@@ -42,7 +42,7 @@ public class AuthorizedWebSocket {
 
 	public void broadcast(String message, String... roles) {
 		for (Session s : sessions)
-			if (s.isOpen())
+			if (s.isOpen()) {
 				try {
 					if (roles.length == 0
 							|| AuthzUtils
@@ -57,6 +57,9 @@ public class AuthorizedWebSocket {
 				} catch (IOException e) {
 					logger.error(e.getMessage(), e);
 				}
+			} else {
+				sessions.remove(s);
+			}
 	}
 
 	public void broadcast(String message, Predicate<UserDetails> p) {
