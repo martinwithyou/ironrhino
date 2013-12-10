@@ -16,6 +16,7 @@ import javax.websocket.Session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.AuthzUtils;
+import org.ironrhino.core.util.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,19 @@ public class AuthorizedWebSocket {
 															.get(USER_PROPERTIES_NAME_USERNAME)),
 											null, StringUtils.join(roles, ","),
 											null))
+						s.getBasicRemote().sendText(message);
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
+				}
+	}
+
+	public void broadcast(String message, Predicate<UserDetails> p) {
+		for (Session s : sessions)
+			if (s.isOpen())
+				try {
+					if (p.evaluate(userDetailsService
+							.loadUserByUsername((String) s.getUserProperties()
+									.get(USER_PROPERTIES_NAME_USERNAME))))
 						s.getBasicRemote().sendText(message);
 				} catch (IOException e) {
 					logger.error(e.getMessage(), e);
