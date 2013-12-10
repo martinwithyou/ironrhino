@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.PreDestroy;
 import javax.websocket.CloseReason;
 import javax.websocket.CloseReason.CloseCodes;
 import javax.websocket.OnClose;
@@ -97,11 +98,23 @@ public class AuthorizedWebSocket {
 	@OnError
 	public void onError(Session session, Throwable err) {
 		sessions.remove(session);
-		try {
-			session.close(new CloseReason(CloseCodes.CLOSED_ABNORMALLY, err
-					.getMessage()));
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+		logger.error(err.getMessage(), err);
+		if (session.isOpen())
+			try {
+				session.close(new CloseReason(CloseCodes.CLOSED_ABNORMALLY, err
+						.getMessage()));
+			} catch (IOException e) {
+			}
+	}
+
+	@PreDestroy
+	public void destroy() {
+		for (Session s : sessions) {
+			if (s.isOpen())
+				try {
+					s.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, ""));
+				} catch (IOException e) {
+				}
 		}
 	}
 }
