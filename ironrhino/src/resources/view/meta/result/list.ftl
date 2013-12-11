@@ -19,7 +19,7 @@
 <#if richtableConfig.celleditable&&versionPropertyName??>
 <#assign dynamicAttributes={"data-versionproperty":versionPropertyName}>
 </#if>
-<@rtstart formid=formid! entityName=entityName formHeader=formHeader! dynamicAttributes=dynamicAttributes!/>
+<@rtstart formid=formid! entityName=entityName formHeader=formHeader! showCheckColumn=richtableConfig.showCheckColumn dynamicAttributes=dynamicAttributes!/>
 <#assign size=0>
 <#list uiConfigs.entrySet() as entry>
 	<#assign hidden=entry.value.hiddenInList.value>
@@ -70,7 +70,7 @@
 			<#assign viewable=true>
 		</#if>
 </#list>
-<@rtmiddle showActionColumn=richtableConfig.actionColumnButtons?has_content||!readonly.value||viewable/>
+<@rtmiddle showActionColumn=richtableConfig.showActionColumn && (richtableConfig.actionColumnButtons?has_content||!readonly.value||viewable)/>
 <#list resultPage.result as entity>
 <#assign entityReadonly = readonly.value/>
 <#if !entityReadonly && readonly.expression?has_content><#assign entityReadonly=readonly.expression?eval></#if>
@@ -92,7 +92,7 @@
 <#if richtableConfig.celleditable&&versionPropertyName??>
 <#assign rowDynamicAttributes=rowDynamicAttributes+{"data-version":entity[versionPropertyName]}>
 </#if>
-<@rttbodytrstart entity=entity dynamicAttributes=rowDynamicAttributes/>
+<@rttbodytrstart entity=entity showCheckColumn=richtableConfig.showCheckColumn dynamicAttributes=rowDynamicAttributes/>
 <#list uiConfigs.entrySet() as entry>
 	<#assign key=entry.key>
 	<#assign config=entry.value>
@@ -120,9 +120,9 @@
 		<@rttbodytd entity=entity value=value celleditable=richtableConfig.celleditable template=template cellDynamicAttributes=config.cellDynamicAttributes dynamicAttributes=dynamicAttributes/>
 	</#if>
 </#list>
-<@rttbodytrend entity=entity buttons=richtableConfig.actionColumnButtons! editable=!readonly.value viewable=viewable entityReadonly=entityReadonly/>
+<@rttbodytrend entity=entity showActionColumn=richtableConfig.showActionColumn buttons=richtableConfig.actionColumnButtons! editable=!readonly.value viewable=viewable entityReadonly=entityReadonly/>
 </#list>
-<@rtend readonly=readonly.value deletable=!readonly.value||readonly.deletable searchable=searchable filterable=richtableConfig.filterable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>
+<@rtend showBottomButtons=richtableConfig.showBottomButtons readonly=readonly.value deletable=!readonly.value||readonly.deletable searchable=searchable filterable=richtableConfig.filterable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>
 <#if !readonly.value && hasSelect>
 <div style="display: none;">
 <#list uiConfigs.entrySet() as entry>

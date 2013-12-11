@@ -15,6 +15,12 @@ public @interface Richtable {
 	String order() default "";
 
 	boolean showPageSize() default true;
+	
+	boolean showCheckColumn() default true;
+	
+	boolean showActionColumn() default true;
+	
+	boolean showBottomButtons() default true;
 
 	boolean searchable() default false;
 

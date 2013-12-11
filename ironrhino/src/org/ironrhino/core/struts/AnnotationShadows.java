@@ -484,6 +484,9 @@ public class AnnotationShadows {
 		private boolean filterable = true;
 		private boolean celleditable = true;
 		private boolean showPageSize = true;
+		private boolean showCheckColumn = true;
+		private boolean showActionColumn = true;
+		private boolean showBottomButtons = true;
 		private boolean searchable;
 		private boolean exportable;
 		private boolean importable;
@@ -505,6 +508,9 @@ public class AnnotationShadows {
 			this.filterable = config.filterable();
 			this.celleditable = config.celleditable();
 			this.showPageSize = config.showPageSize();
+			this.showCheckColumn = config.showCheckColumn();
+			this.showActionColumn = config.showActionColumn();
+			this.showBottomButtons = config.showBottomButtons();
 			this.searchable = config.searchable();
 			this.exportable = config.exportable();
 			this.importable = config.importable();
@@ -547,6 +553,30 @@ public class AnnotationShadows {
 
 		public void setShowPageSize(boolean showPageSize) {
 			this.showPageSize = showPageSize;
+		}
+
+		public boolean isShowCheckColumn() {
+			return showCheckColumn;
+		}
+
+		public void setShowCheckColumn(boolean showCheckColumn) {
+			this.showCheckColumn = showCheckColumn;
+		}
+
+		public boolean isShowActionColumn() {
+			return showActionColumn;
+		}
+
+		public void setShowActionColumn(boolean showActionColumn) {
+			this.showActionColumn = showActionColumn;
+		}
+
+		public boolean isShowBottomButtons() {
+			return showBottomButtons;
+		}
+
+		public void setShowBottomButtons(boolean showBottomButtons) {
+			this.showBottomButtons = showBottomButtons;
 		}
 
 		public boolean isSearchable() {

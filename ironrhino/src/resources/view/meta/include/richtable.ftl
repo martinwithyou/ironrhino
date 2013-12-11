@@ -1,4 +1,4 @@
-<#macro richtable columns entityName formid='' action='' actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false readonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false filterable=true searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true rowDynamicAttributes='' formHeader='' formFooter=''>
+<#macro richtable columns entityName formid='' action='' showActionColumn=true showBottomButtons=true actionColumnWidth='50px' actionColumnButtons='' bottomButtons='' rowid='' resizable=true sortable=true readonly=false readonlyExpression="" createable=true viewable=false celleditable=true deletable=true enableable=false searchable=false filterable=true searchButtons='' includeParameters=true showPageSize=true showCheckColumn=true multipleCheck=true columnfilterable=true rowDynamicAttributes='' formHeader='' formFooter=''>
 <@rtstart formid=formid action=action entityName=entityName resizable=resizable sortable=sortable includeParameters=includeParameters showCheckColumn=showCheckColumn multipleCheck=multipleCheck columnfilterable=columnfilterable formHeader=formHeader>
 <#nested/>
 </@rtstart>
@@ -8,7 +8,7 @@
 <#local cellName=((config['trimPrefix']??)?string('',entityName+'.'))+name>
 <@rttheadtd name=name alias=config['alias']! title=config['title']! class=config['thCssClass']! width=config['width']! cellName=cellName cellEdit=config['cellEdit'] readonly=readonly resizable=(readonly&&name_has_next||!readonly)&&resizable excludeIfNotEdited=config['excludeIfNotEdited']!false/>
 </#list>
-<@rtmiddle width=actionColumnWidth showActionColumn=actionColumnButtons?has_content||!readonly||viewable/>
+<@rtmiddle width=actionColumnWidth showActionColumn=showActionColumn&&(actionColumnButtons?has_content||!readonly||viewable)/>
 <#if resultPage??><#local list=resultPage.result></#if>
 <#list list as entity>
 <#local entityReadonly = !readonly && readonlyExpression?has_content && readonlyExpression?eval />
@@ -42,9 +42,9 @@
 	</#if>
 	<@rttbodytd entity=entity value=value celleditable=config['cellEdit']?? template=config['template']! cellDynamicAttributes=config['dynamicAttributes'] dynamicAttributes=dynamicAttributes/>
 </#list>
-<@rttbodytrend entity=entity buttons=actionColumnButtons editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
+<@rttbodytrend entity=entity showActionColumn=showActionColumn buttons=actionColumnButtons editable=!readonly viewable=viewable entityReadonly=entityReadonly/>
 </#list>
-<@rtend buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deletable=deletable enableable=enableable searchable=searchable filterable=filterable searchButtons=searchButtons showPageSize=showPageSize formFooter=formFooter/>
+<@rtend showBottomButtons=showBottomButtons buttons=bottomButtons readonly=readonly createable=createable celleditable=celleditable deletable=deletable enableable=enableable searchable=searchable filterable=filterable searchButtons=searchButtons showPageSize=showPageSize formFooter=formFooter/>
 </#macro>
 
 <#macro rtstart formid='',action='',entityName='',resizable=true,sortable=true,includeParameters=true showCheckColumn=true multipleCheck=true columnfilterable=true formHeader='' dynamicAttributes...>
@@ -131,8 +131,8 @@ ${formHeader!}
 </td>
 </#macro>
 
-<#macro rttbodytrend entity buttons='' editable=true viewable=false entityReadonly=false>
-<#if buttons?has_content || editable || viewable>
+<#macro rttbodytrend entity showActionColumn=true buttons='' editable=true viewable=false entityReadonly=false>
+<#if showActionColumn && (buttons?has_content || editable || viewable)>
 <td class="action">
 <#if buttons?has_content>
 <@buttons?interpret/>
@@ -149,7 +149,7 @@ ${formHeader!}
 </tr>
 </#macro>
 
-<#macro rtend buttons='' readonly=false createable=true celleditable=true deletable=true enableable=false searchable=false filterable=true searchButtons='' showPageSize=true formFooter=''>
+<#macro rtend showBottomButtons=true buttons='' readonly=false createable=true celleditable=true deletable=true enableable=false searchable=false filterable=true searchButtons='' showPageSize=true formFooter=''>
 <#if filterable>
 <#if !propertyNamesInCriteria?? && uiConfigs??>
 <#local propertyNamesInCriteria=statics['org.ironrhino.core.struts.EntityClassHelper'].filterPropertyNamesInCriteria(uiConfigs)>
@@ -162,7 +162,7 @@ ${formHeader!}
 </tbody>
 </table>
 <div class="toolbar row-fluid">
-<div class="span4">
+<div class="span<#if showBottomButtons>4<#else>6</#if>">
 <#if resultPage?? && resultPage.paginating>
 <div class="pagination">
 <ul>
@@ -205,6 +205,7 @@ ${formHeader!}
 </div>
 </#if>
 </div>
+<#if showBottomButtons>
 <div class="action span4">
 <#if buttons?has_content>
 <@buttons?interpret/>
@@ -222,7 +223,8 @@ ${formHeader!}
 <#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
 </#if>
 </div>
-<div class="search span2">
+</#if>
+<div class="search span<#if showBottomButtons>2<#else>3</#if>">
 <#if searchable>
 <span class="input-append">
     <input type="text" name="keyword" value="${keyword!?html}" placeholder="${action.getText('search')}"/><span class="add-on hidden-tablet hidden-phone"><i class="glyphicon glyphicon-search clickable"></i></span>
@@ -233,7 +235,7 @@ ${formHeader!}
 <#else>
 </#if>
 </div>
-<div class="status span2">
+<div class="status span<#if showBottomButtons>2<#else>3</#if>">
 <span>
 <#if resultPage??>
 ${resultPage.totalResults} ${action.getText('record')}
