@@ -30,6 +30,12 @@ td.middle {
 	opacity: 1;
 	filter: alpha(opacity=100);
 }
+.modal {
+	z-index: 2050;
+}
+.modal-backdrop {
+	z-index: 2040;
+}
 /*override bootstrap end*/
 /*override jqueryui start*/
 .ui-widget{

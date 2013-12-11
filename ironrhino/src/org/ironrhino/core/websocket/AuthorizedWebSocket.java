@@ -120,7 +120,7 @@ public class AuthorizedWebSocket {
 			try {
 				session.close(new CloseReason(CloseCodes.CLOSED_ABNORMALLY, err
 						.getMessage()));
-			} catch (IOException e) {
+			} catch (IllegalStateException | IOException e) {
 			}
 	}
 
@@ -130,7 +130,7 @@ public class AuthorizedWebSocket {
 			if (s.isOpen())
 				try {
 					s.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, ""));
-				} catch (IOException e) {
+				} catch (IllegalStateException | IOException e) {
 				}
 		}
 	}

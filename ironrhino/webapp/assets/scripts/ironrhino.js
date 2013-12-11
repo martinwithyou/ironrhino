@@ -30714,10 +30714,14 @@ Initialization.common = function() {
 			return;
 		}
 	}).keyup(function(e) {
-				if (e.keyCode == 27)
-					$('.modal:visible button.close').click();
-			}).on('click', '#message .close,.message-container .close',
-			function() {
+		if (e.keyCode == 27) {
+			if ($('.modal:visible').length)
+				$('.modal:visible').last().find('.close').click();
+			else if ($('.ui-dialog:visible').length)
+				$('.ui-dialog:visible').last()
+						.find('.ui-dialog-titlebar-close').click();
+		}
+	}).on('click', '#message .close,.message-container .close', function() {
 				$('#message,.message-container').each(function(i, v) {
 							if (!$.trim($(v).text()))
 								$(v).remove();
