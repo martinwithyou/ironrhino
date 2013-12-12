@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.ActionListener;
@@ -31,6 +30,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.search.SearchHit;
+import org.hibernate.Session;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.Trigger;
 import org.ironrhino.core.model.Persistable;
@@ -49,6 +49,7 @@ import org.ironrhino.core.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -564,7 +565,7 @@ public class IndexManagerImpl implements IndexManager {
 		final AtomicLong indexed = new AtomicLong();
 		entityManager.iterate(20, new IterateCallback() {
 			@Override
-			public void process(Object[] entityArray) {
+			public void process(Object[] entityArray,Session session) {
 				BulkRequestBuilder bulkRequest = client.prepareBulk();
 				indexed.addAndGet(entityArray.length);
 				for (Object obj : entityArray) {

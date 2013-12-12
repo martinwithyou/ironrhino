@@ -692,7 +692,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			for (int i = 0; i < index; i++) {
 				arr[i] = buffer[i];
 			}
-			callback.process(arr);
+			callback.process(arr, hibernateSession);
 			Arrays.fill(buffer, null);
 			hibernateSession.clear();
 			int result = index;

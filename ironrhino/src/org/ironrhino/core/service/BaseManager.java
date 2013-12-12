@@ -3,6 +3,7 @@ package org.ironrhino.core.service;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.ironrhino.core.model.BaseTreeableEntity;
@@ -66,7 +67,7 @@ public interface BaseManager<T extends Persistable<?>> {
 			DetachedCriteria... dc);
 
 	public static interface IterateCallback {
-		public void process(Object[] entityArray);
+		public void process(Object[] entityArray,Session session);
 	}
 
 }
