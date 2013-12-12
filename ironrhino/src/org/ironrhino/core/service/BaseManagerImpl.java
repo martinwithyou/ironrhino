@@ -694,6 +694,7 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			}
 			callback.process(arr, hibernateSession);
 			Arrays.fill(buffer, null);
+			hibernateSession.flush();
 			hibernateSession.clear();
 			int result = index;
 			index = 0;
