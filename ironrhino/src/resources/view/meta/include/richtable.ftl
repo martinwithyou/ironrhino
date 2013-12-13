@@ -66,7 +66,7 @@ ${formHeader!}
 <thead>
 <tr>
 <#if showCheckColumn>
-<th class="nosort <#if multipleCheck>checkbox<#else>radio</#if>" style="width:40px;"><#if multipleCheck><input type="checkbox" class="checkbox custom"/></#if></th>
+<th class="nosort <#if multipleCheck>checkbox<#else>radio</#if>"><#if multipleCheck><input type="checkbox" class="checkbox custom"/></#if></th>
 </#if>
 </#macro>
 

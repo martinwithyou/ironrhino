@@ -8897,9 +8897,13 @@ table.richtable td,table.richtable th {
 	word-break: break-all;
 }
 table.richtable th {
-	min-width: 60px;
+	min-width: 50px;
 	padding: 0.5em 0;
 	line-height: 200%;
+}
+table.richtable th.checkbox,table.richtable th.radio {
+	max-width: 50px;
+	width: 50px;
 }
 table.richtable td {
 	word-wrap: break-all;
