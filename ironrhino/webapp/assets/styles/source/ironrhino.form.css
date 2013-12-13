@@ -324,7 +324,7 @@ div.preview{
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
 }
 div.preview span.comment{
-	background-color:yellow;
+	font-style: italic;
 	color:#999;
 }
 div.preview strong{
