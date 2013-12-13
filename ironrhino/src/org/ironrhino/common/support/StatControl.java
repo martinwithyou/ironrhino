@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.annotation.Resource;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -43,12 +45,8 @@ public class StatControl {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
 
+	@Resource
 	private EntityManager<Stat> entityManager;
-
-	public void setEntityManager(EntityManager<Stat> entityManager) {
-		entityManager.setEntityClass(Stat.class);
-		this.entityManager = entityManager;
-	}
 
 	@Scheduled(cron = "0 5 0 * * ?")
 	public void archive() {

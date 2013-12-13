@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
@@ -16,7 +17,6 @@ import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +28,7 @@ public class DictionaryControl implements
 
 	private Map<String, Dictionary> map;
 
-	@Autowired
+	@Resource
 	private EntityManager<Dictionary> entityManager;
 
 	@PostConstruct

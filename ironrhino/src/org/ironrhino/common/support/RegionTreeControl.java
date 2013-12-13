@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.ironrhino.common.model.Region;
 import org.ironrhino.core.event.EntityOperationEvent;
 import org.ironrhino.core.event.EntityOperationType;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.util.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class RegionTreeControl implements
 
 	private volatile Region regionTree;
 
-	@Autowired
+	@Resource
 	private EntityManager<Region> entityManager;
 
 	public void buildRegionTree() {

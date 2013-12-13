@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.ActionListener;
@@ -71,7 +72,7 @@ public class IndexManagerImpl implements IndexManager {
 	@Autowired
 	private Client client;
 
-	@Autowired
+	@Resource
 	private EntityManager entityManager;
 
 	private ObjectMapper objectMapper;

@@ -30,7 +30,7 @@ public class JsonResult implements Result {
 	private String generateJson(ActionInvocation invocation) {
 		Object action = invocation.getAction();
 		Method method = BeanUtils.findDeclaredMethod(action.getClass(),
-				invocation.getProxy().getMethod(), null);
+				invocation.getProxy().getMethod(), new Class[0]);
 		JsonConfig jsonConfig = method.getAnnotation(JsonConfig.class);
 		if (jsonConfig != null && StringUtils.isNotBlank(jsonConfig.root())) {
 			Object value = invocation.getStack().findValue(jsonConfig.root());

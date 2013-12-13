@@ -26,7 +26,7 @@ public class SessionFactoryBean extends
 	}
 
 	@Override
-	public void setAnnotatedClasses(Class<?>[] annotatedClasses) {
+	public void setAnnotatedClasses(Class<?>... annotatedClasses) {
 		this.annotatedClasses = annotatedClasses;
 	}
 

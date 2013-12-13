@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Order;
@@ -29,11 +30,8 @@ public class SettingControl implements
 
 	private Map<String, Setting> settings;
 
+	@Resource
 	private EntityManager<Setting> entityManager;
-
-	public void setEntityManager(EntityManager<Setting> entityManager) {
-		this.entityManager = entityManager;
-	}
 
 	@PostConstruct
 	public void afterPropertiesSet() {

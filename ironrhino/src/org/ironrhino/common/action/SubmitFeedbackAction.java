@@ -1,6 +1,6 @@
 package org.ironrhino.common.action;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.common.model.Feedback;
@@ -23,7 +23,7 @@ public class SubmitFeedbackAction extends BaseAction {
 
 	private String content;
 
-	@Autowired
+	@Resource
 	private EntityManager<Feedback> entityManager;
 
 	public String getDomain() {
