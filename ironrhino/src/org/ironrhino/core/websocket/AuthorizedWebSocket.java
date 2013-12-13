@@ -114,19 +114,20 @@ public class AuthorizedWebSocket {
 
 	@OnError
 	public void onError(Session session, Throwable err) {
-		sessions.remove(session);
 		if (err instanceof IOException) {
 			if (logger.isDebugEnabled())
 				logger.debug(err.getMessage(), err);
+			sessions.remove(session);
+			if (session.isOpen())
+				try {
+					session.close(new CloseReason(CloseCodes.CLOSED_ABNORMALLY,
+							err.getMessage()));
+				} catch (IllegalStateException | IOException e) {
+				}
 		} else {
 			logger.error(err.getMessage(), err);
 		}
-		if (session.isOpen())
-			try {
-				session.close(new CloseReason(CloseCodes.CLOSED_ABNORMALLY, err
-						.getMessage()));
-			} catch (IllegalStateException | IOException e) {
-			}
+
 	}
 
 	@PreDestroy
