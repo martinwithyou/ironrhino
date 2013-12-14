@@ -1,7 +1,7 @@
 <ul class="nav">
   <li><a href="<@url value="/"/>" class="ajax view">${action.getText('index')}</a></li>
   <@authorize ifAnyGranted="ROLE_ADMINISTRATOR">
-  <li><a href="<@url value="/user"/>" class="ajax view">${action.getText('user')}</a></li>
+  <li><a href="<@url value="${ssoServerBase!}/user"/>" class="ajax view">${action.getText('user')}</a></li>
   <li><a href="<@url value="/common/region"/>" class="ajax view">${action.getText('region')}</a></li>
   <li><a href="<@url value="/common/treeNode"/>" class="ajax view">${action.getText('treeNode')}</a></li>
   <li><a href="<@url value="/common/setting"/>" class="ajax view">${action.getText('setting')}</a></li>
