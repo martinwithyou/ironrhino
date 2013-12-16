@@ -207,6 +207,10 @@ a.remove:hover {
 .codeblock{
 	font-family: consolas;
 }
+.ellipsis{
+	max-height: 40px;
+	overflow: hidden !important;
+}
 /* tooltip start */
 [data-tooltip]{
 	position: relative;
