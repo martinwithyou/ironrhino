@@ -32385,7 +32385,7 @@ var Nav = {
 	},
 	activate : function(url) {
 		url = UrlUtils.absolutize(url);
-		$('.nav:not(.nav-tabs) li').removeClass('active');
+		$('.nav:not(.nav-tabs) li').removeClass('active open');
 		$('.nav:not(.nav-tabs) li a').each(function() {
 					if (this.href == url || url.indexOf(this.href + '?') == 0) {
 						Nav.indicate($(this));
