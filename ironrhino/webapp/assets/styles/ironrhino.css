@@ -8121,6 +8121,9 @@ body ::-webkit-scrollbar-thumb:window-inactive {
 #indicator.error {
 	background: #F00;
 }
+#nav-breadcrumb {
+	font-size: 1.1em;
+}
 .btn:focus,a:focus {
     outline: none;
 }

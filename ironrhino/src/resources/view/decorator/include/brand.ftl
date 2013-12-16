@@ -1,1 +1,1 @@
-<a class="brand" href="<@url value="/"/>">${action.getText(statics['org.ironrhino.core.util.AppInfo'].getAppName())?cap_first}</a>
+<a class="brand" href="<@url value="/"/>"><#assign defaultBrand=action.getText(statics['org.ironrhino.core.util.AppInfo'].getAppName())?cap_first/><#if printSetting??><@printSetting key="brand" default=defaultBrand/><#else>${defaultBrand}</#if></a>
