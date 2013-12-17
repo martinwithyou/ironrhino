@@ -134,8 +134,38 @@ public class AppInfo {
 		return STAGE;
 	}
 
+	public static boolean matchesStage(Object required) {
+		Stage stage = null;
+		if (required instanceof Stage)
+			stage = (Stage) required;
+		else if (required instanceof String)
+			try {
+				stage = Stage.valueOf(((String) required).toUpperCase());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		if (stage == null)
+			return false;
+		return AppInfo.getStage() == stage;
+	}
+
 	public static RunLevel getRunLevel() {
 		return RUNLEVEL;
+	}
+
+	public static boolean matchesRunLevel(Object required) {
+		RunLevel level = null;
+		if (required instanceof RunLevel)
+			level = (RunLevel) required;
+		else if (required instanceof String)
+			try {
+				level = RunLevel.valueOf(((String) required).toUpperCase());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		if (level == null)
+			return false;
+		return AppInfo.getRunLevel().compareTo(level) >= 0;
 	}
 
 	public static String getAppName() {

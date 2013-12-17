@@ -1,3 +1,15 @@
+<#macro stageConditional value>
+	<#if statics['org.ironrhino.core.util.AppInfo'].matchesStage(value)>
+		<#nested>
+	</#if>
+</#macro>
+
+<#macro runLevelConditional value>
+	<#if statics['org.ironrhino.core.util.AppInfo'].matchesRunLevel(value)>
+		<#nested>
+	</#if>
+</#macro>
+
 <#macro authorize ifAllGranted="" ifAnyGranted="" ifNotGranted="" authorizer="" resource="">
 	<#if statics['org.ironrhino.core.util.AuthzUtils'].authorize(ifAllGranted,ifAnyGranted,ifNotGranted) || (authorizer!="" &&  statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dynamicAuthorizerManager').authorize(authorizer,statics['org.ironrhino.core.util.AuthzUtils'].getUserDetails(),resource))>
 		<#nested>

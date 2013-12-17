@@ -14,8 +14,7 @@ public class RunLevelCondition implements Condition {
 	public boolean matches(ConditionContext ctx, AnnotatedTypeMetadata md) {
 		Map<String, Object> attributes = md
 				.getAnnotationAttributes(RunLevelConditional.class.getName());
-		return AppInfo.getRunLevel().compareTo(
-				(RunLevel) attributes.get("value")) >= 0;
+		return AppInfo.matchesRunLevel((RunLevel) attributes.get("value"));
 	}
 
 }
