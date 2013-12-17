@@ -63,7 +63,7 @@ public class AppInfo {
 		RunLevel r = null;
 		if (runlevel != null)
 			try {
-				r = RunLevel.valueOf(stage.toUpperCase());
+				r = RunLevel.valueOf(runlevel.toUpperCase());
 			} catch (Exception e) {
 			}
 		if (r != null)
