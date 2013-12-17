@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.spring.configuration.CustomAnnotationTypeFilter;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -69,14 +70,14 @@ public class ClassScaner {
 			Class<? extends Annotation>... annotations) {
 		ClassScaner cs = new ClassScaner();
 		for (Class<? extends Annotation> anno : annotations)
-			cs.addIncludeFilter(new AnnotationTypeFilter(anno));
+			cs.addIncludeFilter(new CustomAnnotationTypeFilter(anno));
 		return cs.doScan(basePackage);
 	}
 
 	public static Set<Class<?>> scanAnnotated(String[] basePackages,
 			Class<? extends Annotation> annotation) {
 		ClassScaner cs = new ClassScaner();
-		cs.addIncludeFilter(new AnnotationTypeFilter(annotation));
+		cs.addIncludeFilter(new CustomAnnotationTypeFilter(annotation));
 		Set<Class<?>> classes = new HashSet<Class<?>>();
 		for (String s : basePackages)
 			classes.addAll(cs.doScan(s));
@@ -88,7 +89,7 @@ public class ClassScaner {
 			Class<? extends Annotation>... annotations) {
 		ClassScaner cs = new ClassScaner();
 		for (Class<? extends Annotation> anno : annotations)
-			cs.addIncludeFilter(new AnnotationTypeFilter(anno));
+			cs.addIncludeFilter(new CustomAnnotationTypeFilter(anno));
 		Set<Class<?>> classes = new HashSet<Class<?>>();
 		for (String s : basePackages)
 			classes.addAll(cs.doScan(s));

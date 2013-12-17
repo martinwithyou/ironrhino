@@ -13,7 +13,7 @@ public class StageCondition implements Condition {
 	public boolean matches(ConditionContext ctx, AnnotatedTypeMetadata md) {
 		Map<String, Object> attributes = md
 				.getAnnotationAttributes(StageConditional.class.getName());
-		return AppInfo.getStage().equals(attributes.get("value"));
+		return AppInfo.getStage() == attributes.get("value");
 	}
 
 }

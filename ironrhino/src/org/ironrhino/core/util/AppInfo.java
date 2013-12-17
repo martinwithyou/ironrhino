@@ -134,7 +134,7 @@ public class AppInfo {
 		return STAGE;
 	}
 
-	public static RunLevel getRunlevel() {
+	public static RunLevel getRunLevel() {
 		return RUNLEVEL;
 	}
 
