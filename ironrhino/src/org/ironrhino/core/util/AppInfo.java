@@ -10,6 +10,8 @@ public class AppInfo {
 
 	public static final String KEY_STAGE = "STAGE";
 
+	public static final String KEY_RUNLEVEL = "RUNLEVEL";
+
 	public static final String KEY_APP_NAME = "app.name";
 
 	public static final String KEY_APP_HOME = "app.home";
@@ -36,6 +38,8 @@ public class AppInfo {
 
 	private static final Stage STAGE;
 
+	private static final RunLevel RUNLEVEL;
+
 	private static final String HOSTNAME;
 
 	private static final String HOSTADDRESS;
@@ -55,7 +59,17 @@ public class AppInfo {
 			STAGE = s;
 		else
 			STAGE = Stage.PRODUCTION;
-
+		String runlevel = getEnv(KEY_STAGE);
+		RunLevel r = null;
+		if (runlevel != null)
+			try {
+				r = RunLevel.valueOf(stage.toUpperCase());
+			} catch (Exception e) {
+			}
+		if (r != null)
+			RUNLEVEL = r;
+		else
+			RUNLEVEL = RunLevel.NORMAL;
 		String name = null;
 		String address = "127.0.0.1";
 		try {
@@ -120,6 +134,10 @@ public class AppInfo {
 		return STAGE;
 	}
 
+	public static RunLevel getRunlevel() {
+		return RUNLEVEL;
+	}
+
 	public static String getAppName() {
 		return name;
 	}
@@ -175,6 +193,10 @@ public class AppInfo {
 
 	public static enum Stage {
 		DEVELOPMENT, TEST, PREPARATION, PRODUCTION
+	}
+
+	public static enum RunLevel {
+		LOW, NORMAL, HIGH
 	}
 
 }
