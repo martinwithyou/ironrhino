@@ -59,7 +59,7 @@ public class AppInfo {
 			STAGE = s;
 		else
 			STAGE = Stage.PRODUCTION;
-		String runlevel = getEnv(KEY_STAGE);
+		String runlevel = getEnv(KEY_RUNLEVEL);
 		RunLevel r = null;
 		if (runlevel != null)
 			try {
