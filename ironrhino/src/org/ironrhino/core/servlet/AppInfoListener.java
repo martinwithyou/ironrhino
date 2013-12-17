@@ -86,22 +86,22 @@ public class AppInfoListener implements ServletContextListener {
 		logger = LoggerFactory.getLogger(getClass());
 		logger.info("default timezone {}", TimeZone.getDefault().getID());
 		logger.info(
-				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={},profiles={}",
+				"app.name={},app.version={},app.instanceid={},app.stage={},app.runlevel={},app.home={},hostname={},hostaddress={},profiles={}",
 				AppInfo.getAppName(), AppInfo.getAppVersion(), AppInfo
 						.getInstanceId(), AppInfo.getStage().toString(),
-				AppInfo.getAppHome(), AppInfo.getHostName(), AppInfo
-						.getHostAddress(),
+				AppInfo.getRunLevel().toString(), AppInfo.getAppHome(), AppInfo
+						.getHostName(), AppInfo.getHostAddress(),
 				defaultProfiles != null ? defaultProfiles : "default");
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 		logger.info(
-				"app.name={},app.version={},app.instanceid={},app.stage={},app.home={},hostname={},hostaddress={} is shutdown",
-				AppInfo.getAppName(), AppInfo.getAppVersion(),
-				AppInfo.getInstanceId(), AppInfo.getStage().toString(),
-				AppInfo.getAppHome(), AppInfo.getHostName(),
-				AppInfo.getHostAddress());
+				"app.name={},app.version={},app.instanceid={},app.stage={},app.runlevel={},app.home={},hostname={},hostaddress={} is shutdown",
+				AppInfo.getAppName(), AppInfo.getAppVersion(), AppInfo
+						.getInstanceId(), AppInfo.getStage().toString(),
+				AppInfo.getRunLevel().toString(), AppInfo.getAppHome(), AppInfo
+						.getHostName(), AppInfo.getHostAddress());
 		SERVLET_CONTEXT = null;
 	}
 
