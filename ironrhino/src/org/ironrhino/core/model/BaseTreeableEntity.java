@@ -7,7 +7,9 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,7 +21,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.ForeignKey;
 import org.ironrhino.core.metadata.CaseInsensitive;
 import org.ironrhino.core.metadata.NotInCopy;
 import org.ironrhino.core.metadata.NotInJson;
@@ -54,8 +55,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 	protected int displayOrder;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "parentId")
-	@ForeignKey(name = "none")
+	@JoinColumn(name = "parentId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
 	protected T parent;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "parent")

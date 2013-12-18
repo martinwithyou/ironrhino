@@ -3,14 +3,15 @@ package org.ironrhino.security.oauth.server.model;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
@@ -55,8 +56,7 @@ public class Client extends BaseEntity implements Enableable {
 	@NotInCopy
 	@UiConfig(displayOrder = 5, width = "200px")
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "owner")
-	@ForeignKey(name = "none")
+	@JoinColumn(name = "owner", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
 	private User owner;
 
 	@UiConfig(displayOrder = 6, width = "80px")
