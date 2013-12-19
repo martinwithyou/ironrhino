@@ -10,15 +10,15 @@
 	</#if>
 </#macro>
 
-<#macro authorize ifAllGranted="" ifAnyGranted="" ifNotGranted="" authorizer="" resource="">
-	<#if statics['org.ironrhino.core.util.AuthzUtils'].authorize(ifAllGranted,ifAnyGranted,ifNotGranted) || (authorizer!="" &&  statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dynamicAuthorizerManager').authorize(authorizer,statics['org.ironrhino.core.util.AuthzUtils'].getUserDetails(),resource))>
-		<#nested>
-	</#if>
-</#macro>
-
 <#function authentication property>
   <#return statics['org.ironrhino.core.util.AuthzUtils'].authentication(property)>
 </#function>
+
+<#macro authorize ifAllGranted="" ifAnyGranted="" ifNotGranted="" authorizer="" resource="">
+	<#if statics['org.ironrhino.core.util.AuthzUtils'].authorize(ifAllGranted,ifAnyGranted,ifNotGranted) || (authorizer!="" &&  statics['org.ironrhino.core.util.ApplicationContextUtils'].getBean('dynamicAuthorizerManager').authorize(authorizer,authentication("principal"),resource))>
+		<#nested>
+	</#if>
+</#macro>
 
 <#macro cache key scope="application" timeToIdle="-1" timeToLive="3600">
 <#local keyExists=statics['org.ironrhino.core.cache.CacheContext'].eval(key)??>
