@@ -162,7 +162,7 @@ public class JdbcQueryService {
 		Set<String> names = SqlUtils.extractParameters(sql);
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		for (String name : names)
-			paramMap.put(name, "0");
+			paramMap.put(name, "19700101");
 		validateAndConvertTypes(sql, paramMap);
 		if (restricted) {
 			for (String table : SqlUtils.extractTables(sql, quoteString)) {
@@ -243,7 +243,7 @@ public class JdbcQueryService {
 								|| error.indexOf("time") > 0)
 							paramMap.put(
 									paramName,
-									value.equals("0") ? new Date() : DateUtils
+									value.equals("19700101") ? new Date() : DateUtils
 											.parse(value));
 						validateAndConvertTypes(sql, paramMap);
 						return;
