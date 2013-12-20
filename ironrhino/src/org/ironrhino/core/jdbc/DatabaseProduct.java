@@ -148,8 +148,7 @@ public enum DatabaseProduct {
 			StringBuilder sb = new StringBuilder(getJdbcUrlPrefix());
 			sb.append(":");
 			sb.append(StringUtils.isNotBlank(host) ? host : "localhost");
-			if (port > 0 && port != getDefaultPort())
-				sb.append(":").append(port);
+			sb.append(":").append(port);
 			sb.append("/").append(databaseName);
 			if (StringUtils.isNotBlank(params)) {
 				if (!params.startsWith("?"))
