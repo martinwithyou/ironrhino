@@ -8,10 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PreDestroy;
 import javax.websocket.CloseReason;
 import javax.websocket.CloseReason.CloseCodes;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
 import org.apache.commons.lang3.StringUtils;
@@ -75,14 +71,12 @@ public class AuthorizedWebSocket {
 				}
 	}
 
-	@OnMessage
 	public void onMessage(Session session, String message) {
 		logger.info("received from {} : {}",
 				session.getUserProperties().get(USER_PROPERTIES_NAME_USERNAME),
 				message);
 	}
 
-	@OnOpen
 	public void onOpen(Session session) {
 		UserDetails user = null;
 		Object principal = session.getUserPrincipal();
@@ -107,12 +101,10 @@ public class AuthorizedWebSocket {
 		}
 	}
 
-	@OnClose
 	public void onClose(Session session) {
 		sessions.remove(session);
 	}
 
-	@OnError
 	public void onError(Session session, Throwable err) {
 		if (err instanceof IOException) {
 			if (logger.isDebugEnabled())
