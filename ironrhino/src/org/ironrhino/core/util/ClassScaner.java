@@ -10,7 +10,6 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.spring.configuration.CustomAnnotationTypeFilter;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -169,8 +168,7 @@ public class ClassScaner {
 				}
 			}
 		} catch (IOException ex) {
-			throw new BeanDefinitionStoreException(
-					"I/O failure during classpath scanning " + resource, ex);
+			ex.printStackTrace();
 		}
 		return classes;
 	}

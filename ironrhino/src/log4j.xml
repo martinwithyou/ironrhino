@@ -48,7 +48,7 @@
 		</layout>
 	</appender>
    
-	<logger name="org.springframework.aop.framework.Cglib2AopProxy" additivity="true">
+	<logger name="org.springframework.core.io.support.PathMatchingResourcePatternResolver" additivity="true">
 		<level value="ERROR"/>
 	</logger>
 	<logger name="com.opensymphony.xwork2.ognl.OgnlValueStack" additivity="true">
