@@ -50,10 +50,11 @@ public class EntityClassHelper {
 			if (pd.getReadMethod() == null || pd.getWriteMethod() == null
 					&& pd.getReadMethod().getAnnotation(UiConfig.class) == null)
 				continue;
+			Class<?> declaredClass = pd.getReadMethod().getDeclaringClass();
 			Version version = pd.getReadMethod().getAnnotation(Version.class);
 			if (version == null)
 				try {
-					Field f = entityClass.getDeclaredField(propertyName);
+					Field f = declaredClass.getDeclaredField(propertyName);
 					if (f != null)
 						version = f.getAnnotation(Version.class);
 				} catch (Exception e) {
@@ -63,7 +64,7 @@ public class EntityClassHelper {
 			Transient trans = pd.getReadMethod().getAnnotation(Transient.class);
 			if (trans == null)
 				try {
-					Field f = entityClass.getDeclaredField(propertyName);
+					Field f = declaredClass.getDeclaredField(propertyName);
 					if (f != null)
 						trans = f.getAnnotation(Transient.class);
 				} catch (Exception e) {
@@ -72,7 +73,7 @@ public class EntityClassHelper {
 					.getAnnotation(SearchableProperty.class);
 			if (searchableProperty == null)
 				try {
-					Field f = entityClass.getDeclaredField(propertyName);
+					Field f = declaredClass.getDeclaredField(propertyName);
 					if (f != null)
 						searchableProperty = f
 								.getAnnotation(SearchableProperty.class);
@@ -82,7 +83,7 @@ public class EntityClassHelper {
 					SearchableId.class);
 			if (searchableId == null)
 				try {
-					Field f = entityClass.getDeclaredField(propertyName);
+					Field f = declaredClass.getDeclaredField(propertyName);
 					if (f != null)
 						searchableId = f.getAnnotation(SearchableId.class);
 				} catch (Exception e) {
@@ -91,7 +92,7 @@ public class EntityClassHelper {
 					.getAnnotation(UiConfig.class);
 			if (uiConfig == null)
 				try {
-					Field f = entityClass.getDeclaredField(propertyName);
+					Field f = declaredClass.getDeclaredField(propertyName);
 					if (f != null)
 						uiConfig = f.getAnnotation(UiConfig.class);
 				} catch (Exception e) {
@@ -109,7 +110,7 @@ public class EntityClassHelper {
 					Column.class);
 			if (columnannotation == null)
 				try {
-					Field f = entityClass.getDeclaredField(propertyName);
+					Field f = declaredClass.getDeclaredField(propertyName);
 					if (f != null)
 						columnannotation = f.getAnnotation(Column.class);
 				} catch (Exception e) {
@@ -118,7 +119,7 @@ public class EntityClassHelper {
 					Basic.class);
 			if (basicannotation == null)
 				try {
-					Field f = entityClass.getDeclaredField(propertyName);
+					Field f = declaredClass.getDeclaredField(propertyName);
 					if (f != null)
 						basicannotation = f.getAnnotation(Basic.class);
 				} catch (Exception e) {
@@ -126,7 +127,7 @@ public class EntityClassHelper {
 			Lob lobcannotation = pd.getReadMethod().getAnnotation(Lob.class);
 			if (lobcannotation == null)
 				try {
-					Field f = entityClass.getDeclaredField(propertyName);
+					Field f = declaredClass.getDeclaredField(propertyName);
 					if (f != null)
 						lobcannotation = f.getAnnotation(Lob.class);
 				} catch (Exception e) {
@@ -169,7 +170,7 @@ public class EntityClassHelper {
 						.getAnnotation(JoinColumn.class);
 				if (joincolumnannotation == null)
 					try {
-						Field f = entityClass.getDeclaredField(propertyName);
+						Field f = declaredClass.getDeclaredField(propertyName);
 						if (f != null)
 							joincolumnannotation = f
 									.getAnnotation(JoinColumn.class);
@@ -182,7 +183,7 @@ public class EntityClassHelper {
 						ManyToOne.class);
 				if (manyToOne == null)
 					try {
-						Field f = entityClass.getDeclaredField(propertyName);
+						Field f = declaredClass.getDeclaredField(propertyName);
 						if (f != null)
 							manyToOne = f.getAnnotation(ManyToOne.class);
 					} catch (Exception e) {
@@ -259,7 +260,7 @@ public class EntityClassHelper {
 						Temporal.class);
 				if (temporal == null)
 					try {
-						Field f = entityClass.getDeclaredField(propertyName);
+						Field f = declaredClass.getDeclaredField(propertyName);
 						if (f != null)
 							temporal = f.getAnnotation(Temporal.class);
 					} catch (Exception e) {

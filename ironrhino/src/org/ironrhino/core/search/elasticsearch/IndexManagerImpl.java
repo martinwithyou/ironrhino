@@ -179,7 +179,8 @@ public class IndexManagerImpl implements IndexManager {
 						.getAnnotation(SearchableComponent.class);
 			}
 			try {
-				Field f = c.getDeclaredField(name);
+				Field f = pd.getReadMethod().getDeclaringClass()
+						.getDeclaredField(name);
 				if (f != null) {
 					if (searchableId == null)
 						searchableId = f.getAnnotation(SearchableId.class);
@@ -566,7 +567,7 @@ public class IndexManagerImpl implements IndexManager {
 		final AtomicLong indexed = new AtomicLong();
 		entityManager.iterate(20, new IterateCallback() {
 			@Override
-			public void process(Object[] entityArray,Session session) {
+			public void process(Object[] entityArray, Session session) {
 				BulkRequestBuilder bulkRequest = client.prepareBulk();
 				indexed.addAndGet(entityArray.length);
 				for (Object obj : entityArray) {
