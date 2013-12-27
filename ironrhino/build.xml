@@ -117,6 +117,10 @@
 			mkdir.perform();
 			mkdir.setDir(new File(webappLib));
 			mkdir.perform();
+			var echo = project.createTask("echo");
+			echo.setFile(new File(projectSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')+'/package-info.java'));
+			echo.setMessage('@AutoConfig(namespace = "/")\npackage '+projectPackage+';\nimport org.ironrhino.core.metadata.AutoConfig;');
+			echo.perform();
 			var copy = project.createTask('copy');
 			var fs = project.createDataType('fileset');
 			fs.setDir(new File(basedir+'/lib'));
