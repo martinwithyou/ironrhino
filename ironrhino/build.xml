@@ -111,6 +111,12 @@
 			mkdir.perform();
 			mkdir.setDir(new File(projectSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')));
 			mkdir.perform();
+			mkdir.setDir(new File(projectSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')+'/model'));
+			mkdir.perform();
+			mkdir.setDir(new File(projectSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')+'/service'));
+			mkdir.perform();
+			mkdir.setDir(new File(projectSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')+'/action'));
+			mkdir.perform();
 			mkdir.setDir(new File(testSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')+'/test'));
 			mkdir.perform();
 			mkdir.setDir(new File(projectLib));
