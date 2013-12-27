@@ -121,6 +121,10 @@
 			echo.setFile(new File(projectSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')+'/package-info.java'));
 			echo.setMessage('@AutoConfig(namespace = "/")\npackage '+projectPackage+';\nimport org.ironrhino.core.metadata.AutoConfig;');
 			echo.perform();
+			echo = project.createTask("echo");
+			echo.setFile(new File(projectSrc+'/resources/i18n/'+projectName+'/messages_zh_CN.properties'));
+			echo.setMessage('#'+projectName+'='+projectName);
+			echo.perform();
 			var copy = project.createTask('copy');
 			var fs = project.createDataType('fileset');
 			fs.setDir(new File(basedir+'/lib'));
