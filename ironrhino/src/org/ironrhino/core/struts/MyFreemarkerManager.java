@@ -21,6 +21,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.context.support.ServletContextResourcePatternResolver;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.cache.StrongCacheStorage;
@@ -44,6 +45,8 @@ public class MyFreemarkerManager extends FreemarkerManager {
 		// Configuration configuration =
 		// super.createConfiguration(servletContext);
 		/** super.createConfiguration(servletContext) start **/
+		if (AppInfo.getStage() == Stage.DEVELOPMENT)
+			LocalizedTextUtil.setReloadBundles(true);
 		MyConfiguration configuration = new MyConfiguration();
 		configuration
 				.setTemplateExceptionHandler(AppInfo.getStage() == Stage.PRODUCTION ? TemplateExceptionHandler.IGNORE_HANDLER
