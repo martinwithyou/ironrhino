@@ -31609,7 +31609,7 @@ function ajaxOptions(options) {
 }
 
 function ajax(options) {
-	$.ajax(ajaxOptions(options));
+	return $.ajax(ajaxOptions(options));
 }
 
 var CONTEXT_PATH = $('meta[name="context_path"]').attr('content') || '';
