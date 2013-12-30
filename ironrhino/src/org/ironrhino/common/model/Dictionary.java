@@ -16,6 +16,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.NaturalId;
@@ -53,7 +54,7 @@ public class Dictionary extends BaseEntity {
 	};
 
 	@SearchableProperty(boost = 3)
-	@UiConfig(displayOrder = 1)
+	@UiConfig(displayOrder = 1, width = "300px")
 	@CaseInsensitive
 	@NaturalId(mutable = true)
 	@Column(nullable = false)
@@ -67,6 +68,9 @@ public class Dictionary extends BaseEntity {
 	@UiConfig(displayOrder = 3, hiddenInList = @Hidden(true))
 	@Transient
 	private List<LabelValue> items = new ArrayList<LabelValue>();
+
+	@Version
+	private int version = -1;
 
 	public String getName() {
 		return name;
@@ -110,6 +114,14 @@ public class Dictionary extends BaseEntity {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	@UiConfig(hidden = true)

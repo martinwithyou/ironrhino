@@ -9,6 +9,7 @@
 	<#if !schema.new>
 		<@s.hidden name="schema.id" />
 	</#if>
+	<@s.hidden name="schema.version" cssClass="version" />
 	<#if view=='embedded'>
 	<@s.hidden name="schema.name"/>
 	<@s.hidden name="schema.description"/>

@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.NaturalId;
 import org.ironrhino.common.record.RecordAware;
@@ -67,6 +68,9 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 	@UiConfig(hidden = true)
 	@Column(insertable = false)
 	private String modifyUser;
+
+	@Version
+	private int version = -1;
 
 	public Setting() {
 
@@ -147,6 +151,14 @@ public class Setting extends BaseEntity implements Recordable<UserDetails> {
 	public void setModifyUserDetails(UserDetails user) {
 		if (user != null)
 			modifyUser = user.getUsername();
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 }

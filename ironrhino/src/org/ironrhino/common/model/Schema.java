@@ -15,6 +15,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.NaturalId;
@@ -49,7 +50,7 @@ public class Schema extends BaseEntity {
 	};
 
 	@SearchableProperty(boost = 3)
-	@UiConfig(displayOrder = 1)
+	@UiConfig(displayOrder = 1, width = "300px")
 	@Column(nullable = false)
 	@CaseInsensitive
 	@NaturalId(mutable = true)
@@ -59,13 +60,16 @@ public class Schema extends BaseEntity {
 	@UiConfig(displayOrder = 2)
 	private String description;
 
-	@UiConfig(displayOrder = 3)
+	@UiConfig(displayOrder = 3, width = "100px")
 	private boolean strict;
 
 	@SearchableComponent
 	@UiConfig(displayOrder = 4, hiddenInList = @Hidden(true))
 	@Transient
 	private List<SchemaField> fields = new ArrayList<SchemaField>();
+
+	@Version
+	private int version = -1;
 
 	public Schema() {
 
@@ -119,6 +123,14 @@ public class Schema extends BaseEntity {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	public Schema merge(Schema other) {

@@ -7,8 +7,9 @@
 <body>
 <@s.form action="${actionBaseUrl}/save" method="post" cssClass="ajax form-horizontal${view?has_content?string('',' importable')}">
 	<#if !setting.new>
-		<@s.hidden name="setting.id" />
+		<@s.hidden name="setting.id"/>
 	</#if>
+	<@s.hidden name="setting.version" cssClass="version"/>
 	<#if view=='embedded'>
 		<@s.hidden name="setting.key"/>
 		<@s.hidden name="setting.description"/>

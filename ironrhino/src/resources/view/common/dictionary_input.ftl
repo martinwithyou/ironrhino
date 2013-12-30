@@ -9,6 +9,7 @@
 	<#if !dictionary.new>
 		<@s.hidden name="dictionary.id" />
 	</#if>
+	<@s.hidden name="dictionary.version" cssClass="version"/>
 	<#if view=='embedded'>
 		<@s.hidden name="dictionary.name"/>
 		<@s.hidden name="dictionary.description" />
