@@ -35189,9 +35189,9 @@ Richtable = {
 					$(':input:visible', inputform).filter(function(i) {
 						return $(this).attr('name')
 								&& !($(this).val() || $(this).hasClass('date')
-										|| $(	this).hasClass('datetime')
-										|| $(	this).hasClass('time') || $(this)
-										.prop(	'tagName') == 'BUTTON');
+										|| $(this).hasClass('datetime')
+										|| $(this).hasClass('time') || $(this)
+										.prop('tagName') == 'BUTTON');
 					}).eq(0).focus();
 					if (!inputform.hasClass('keepopen')) {
 						$(':input', inputform).change(function(e) {
@@ -35214,10 +35214,10 @@ Richtable = {
 						if (create) {
 							$('button[type="submit"]', inputform)
 									.addClass('btn-primary')
-									.after(	' <button type="submit" class="btn save_and_create">'
-													+ MessageBundle
-															.get('save.and.create')
-													+ '</button>');
+									.after(' <button type="submit" class="btn save_and_create">'
+											+ MessageBundle
+													.get('save.and.create')
+											+ '</button>');
 							$('.save_and_create', inputform).click(function() {
 										$('form.ajax').addClass('reset');
 									});
@@ -35244,7 +35244,7 @@ Richtable = {
 										.hasClass('save_and_create'))
 									// setTimeout(function()
 									// {
-									$(		'#_window_').dialog('close');
+									$('#_window_').dialog('close');
 								// }, 1000);
 
 							};
@@ -35450,7 +35450,7 @@ Richtable = {
 			var versionproperty = form.data('versionproperty');
 			var modified = false;
 			var theadCells = $('.richtable thead:eq(0) th');
-			$.each($('.richtable tbody')[0].rows, function() {
+			$('.richtable tbody tr', form).each(function() {
 				var row = this;
 				if ($('td.edited', row).length) {
 					modified = true;
@@ -35694,7 +35694,7 @@ Initialization.richtable = function() {
 													form);
 											var exists = false;
 											for (var i = rows.length - 1; i >= 0; i--) {
-												if (($(	rows[i]).data('rowid') || $(
+												if (($(rows[i]).data('rowid') || $(
 														'input[type="checkbox"],input[type="radio"]',
 														rows[i]).prop('value')) == id) {
 													exists = true;
@@ -35708,19 +35708,17 @@ Initialization.richtable = function() {
 										}
 									}
 									if (append) {
-										$(v)
-												.appendTo($(
-																'table.richtable tbody',
-																form));
+										$(v).appendTo($(
+												'table.richtable tbody', form));
 										_observe(v);
 									}
 								});
 						if (append)
 							Richtable.enhance($('table.richtable', form));
 						$('.pageSize', form).val($('table.richtable tbody tr',
-										form).length);
+								form).length);
 						$('div.pagination', form).replaceWith($(
-										'div.pagination', div));
+								'div.pagination', div));
 						$('div.pagination ul', form).hide();
 						$('div.status', form).replaceWith($('div.status', div));
 					}
@@ -35797,37 +35795,34 @@ Observation._richtable = function(container) {
 			if (size > 0) {
 				if ('select' == option.data('type')) {
 					var select = $('<select name="' + property.val()
-									+ '" class="removeonadd '
-									+ option.data('class') + '"></select>')
-							.appendTo(td);
+							+ '" class="removeonadd ' + option.data('class')
+							+ '"></select>').appendTo(td);
 					if (!select.hasClass('required'))
-						$(		'<option value=""></option>').appendTo(select);
+						$('<option value=""></option>').appendTo(select);
 					var map = option.data('map');
 					map = map.substring(1, map.length - 1);
 					map = map.split(', ');
 					for (var i = 0; i < map.length; i++) {
 						var arr = map[i].split('=', 2);
-						$(		'<option value="' + arr[0] + '">'
-										+ (arr[1] || arr[0]) + '</option>')
+						$('<option value="' + arr[0] + '">'
+								+ (arr[1] || arr[0]) + '</option>')
 								.appendTo(select);
 					}
 				} else if ('listpick' == option.data('type')) {
-					$(		'<input id="filter_'
-									+ property.val().replace(/\./g, '_')
-									+ '" type="hidden" name="'
-									+ property.val()
-									+ '" class="required"/><span class="listpick removeonadd" data-options="{\'url\':\''
-									+ option.data('pickurl')
-									+ '\',\'name\':\'this\',\'id\':\'#filter_'
-									+ property.val().replace(/\./g, '_')
-									+ '\'}"></span>').appendTo(td);
+					$('<input id="filter_'
+							+ property.val().replace(/\./g, '_')
+							+ '" type="hidden" name="'
+							+ property.val()
+							+ '" class="required"/><span class="listpick removeonadd" data-options="{\'url\':\''
+							+ option.data('pickurl')
+							+ '\',\'name\':\'this\',\'id\':\'#filter_'
+							+ property.val().replace(/\./g, '_')
+							+ '\'}"></span>').appendTo(td);
 				} else {
-					$(		'<input type="'
-									+ (option.data('inputtype') || 'text')
-									+ '" name="' + property.val()
-									+ '" class="input-medium removeonadd '
-									+ option.data('class') + '"/>')
-							.appendTo(td);
+					$('<input type="' + (option.data('inputtype') || 'text')
+							+ '" name="' + property.val()
+							+ '" class="input-medium removeonadd '
+							+ option.data('class') + '"/>').appendTo(td);
 				}
 				if (size == 2)
 					$(':input', td).clone().appendTo(td).css('margin-left',
@@ -35841,17 +35836,17 @@ Observation._richtable = function(container) {
 				for (var i = 0; i < map.length; i++) {
 					var arr = map[i].split('=', 2);
 					var cbid = '-filter-' + property.val() + '-' + i;
-					$(		'<label for="'
-									+ cbid
-									+ '" class="checkbox inline"><input type="checkbox" name="'
-									+ property.val()
-									+ '" value="'
-									+ arr[0]
-									+ '" id="'
-									+ cbid
-									+ '" class="custom" style="display: none;" /><label class="custom" for="'
-									+ cbid + '"></label>' + (arr[1] || arr[0])
-									+ '</label>').appendTo(td);
+					$('<label for="'
+							+ cbid
+							+ '" class="checkbox inline"><input type="checkbox" name="'
+							+ property.val()
+							+ '" value="'
+							+ arr[0]
+							+ '" id="'
+							+ cbid
+							+ '" class="custom" style="display: none;" /><label class="custom" for="'
+							+ cbid + '"></label>' + (arr[1] || arr[0])
+							+ '</label>').appendTo(td);
 				}
 			}
 		});
