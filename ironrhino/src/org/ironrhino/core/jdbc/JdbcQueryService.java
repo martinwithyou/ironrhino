@@ -339,51 +339,36 @@ public class JdbcQueryService {
 			return namedParameterJdbcTemplate.queryForList(sb.toString(),
 					paramMap);
 		} else if (databaseProduct == DatabaseProduct.ORACLE) {
-			if (databaseMajorVersion < 12) {
-				StringBuilder sb = new StringBuilder(sql.length() + 100);
-				if (offset > 0) {
-					sb.append("select * from ( select row_.*, rownum rownum_ from ( ");
-				} else {
-					sb.append("select * from ( ");
-				}
-				sb.append(sql);
-				if (offset > 0) {
-					sb.append(" ) row_ ) where rownum_ <= " + (limit + offset)
-							+ " and rownum_ > " + offset);
-				} else {
-					sb.append(" ) where rownum <= " + limit);
-				}
-				List<Map<String, Object>> list = namedParameterJdbcTemplate
-						.queryForList(sb.toString(), paramMap);
-				if (offset > 0) {
-					String columnName = null;
-					for (Map<String, Object> map : list) {
-						if (columnName == null)
-							for (String s : map.keySet())
-								if (s.equalsIgnoreCase("rownum_")) {
-									columnName = s;
-									break;
-								}
-						map.remove(columnName);
-					}
-				}
-				return list;
+			if (databaseMajorVersion >= 12)
+				return limitOffsetForSQL2008(sql, paramMap, limit, offset);
+			StringBuilder sb = new StringBuilder(sql.length() + 100);
+			if (offset > 0) {
+				sb.append("select * from ( select row_.*, rownum rownum_ from ( ");
 			} else {
-				StringBuilder sb = new StringBuilder(sql.length()
-						+ (offset > 0 ? 30 : 20));
-				sb.append(sql);
-				if (offset > 0) {
-					sb.append(" offset ");
-					sb.append(offset);
-					sb.append(" rows fetch next ");
-				} else {
-					sb.append(" fetch first ");
-				}
-				sb.append(limit);
-				sb.append(" rows only");
-				return namedParameterJdbcTemplate.queryForList(sb.toString(),
-						paramMap);
+				sb.append("select * from ( ");
 			}
+			sb.append(sql);
+			if (offset > 0) {
+				sb.append(" ) row_ ) where rownum_ <= " + (limit + offset)
+						+ " and rownum_ > " + offset);
+			} else {
+				sb.append(" ) where rownum <= " + limit);
+			}
+			List<Map<String, Object>> list = namedParameterJdbcTemplate
+					.queryForList(sb.toString(), paramMap);
+			if (offset > 0) {
+				String columnName = null;
+				for (Map<String, Object> map : list) {
+					if (columnName == null)
+						for (String s : map.keySet())
+							if (s.equalsIgnoreCase("rownum_")) {
+								columnName = s;
+								break;
+							}
+					map.remove(columnName);
+				}
+			}
+			return list;
 		} else if (databaseProduct == DatabaseProduct.DB2) {
 			StringBuilder sb = new StringBuilder(
 					sql.length() + offset > 0 ? 200 : 20);
@@ -417,16 +402,7 @@ public class JdbcQueryService {
 			}
 			return list;
 		} else if (databaseProduct == DatabaseProduct.DERBY) {
-			StringBuilder sb = new StringBuilder(sql.length() + 50);
-			sb.append(sql);
-			if (offset == 0)
-				sb.append(" fetch first ");
-			else
-				sb.append(" offset ").append(offset)
-						.append(" rows fetch next ");
-			sb.append(limit).append(" rows only");
-			return namedParameterJdbcTemplate.queryForList(sb.toString(),
-					paramMap);
+			return limitOffsetForSQL2008(sql, paramMap, limit, offset);
 		}
 
 		if (databaseProduct == DatabaseProduct.SQLSERVER
@@ -593,6 +569,19 @@ public class JdbcQueryService {
 			return ROWNUM_PATTERN.matcher(sql).find();
 		}
 		return false;
+	}
+
+	private List<Map<String, Object>> limitOffsetForSQL2008(String sql,
+			Map<String, ?> paramMap, int limit, int offset) {
+		StringBuilder sb = new StringBuilder(sql.length() + offset > 0 ? 45
+				: 30);
+		sb.append(sql);
+		if (offset == 0)
+			sb.append(" fetch first ");
+		else
+			sb.append(" offset ").append(offset).append(" rows fetch next ");
+		sb.append(limit).append(" rows only");
+		return namedParameterJdbcTemplate.queryForList(sb.toString(), paramMap);
 	}
 
 	private static final Pattern LIMIT_PATTERN = Pattern.compile(
