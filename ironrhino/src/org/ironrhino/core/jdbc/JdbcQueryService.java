@@ -339,35 +339,51 @@ public class JdbcQueryService {
 			return namedParameterJdbcTemplate.queryForList(sb.toString(),
 					paramMap);
 		} else if (databaseProduct == DatabaseProduct.ORACLE) {
-			StringBuilder sb = new StringBuilder(sql.length() + 100);
-			if (offset > 0) {
-				sb.append("select * from ( select row_.*, rownum rownum_ from ( ");
-			} else {
-				sb.append("select * from ( ");
-			}
-			sb.append(sql);
-			if (offset > 0) {
-				sb.append(" ) row_ ) where rownum_ <= " + (limit + offset)
-						+ " and rownum_ > " + offset);
-			} else {
-				sb.append(" ) where rownum <= " + limit);
-			}
-			List<Map<String, Object>> list = namedParameterJdbcTemplate
-					.queryForList(sb.toString(), paramMap);
-			if (offset > 0) {
-				String columnName = null;
-				for (Map<String, Object> map : list) {
-					if (columnName == null)
-						for (String s : map.keySet())
-							if (s.equalsIgnoreCase("rownum_")) {
-								columnName = s;
-								break;
-							}
-					map.remove(columnName);
+			if (databaseMajorVersion < 12) {
+				StringBuilder sb = new StringBuilder(sql.length() + 100);
+				if (offset > 0) {
+					sb.append("select * from ( select row_.*, rownum rownum_ from ( ");
+				} else {
+					sb.append("select * from ( ");
 				}
+				sb.append(sql);
+				if (offset > 0) {
+					sb.append(" ) row_ ) where rownum_ <= " + (limit + offset)
+							+ " and rownum_ > " + offset);
+				} else {
+					sb.append(" ) where rownum <= " + limit);
+				}
+				List<Map<String, Object>> list = namedParameterJdbcTemplate
+						.queryForList(sb.toString(), paramMap);
+				if (offset > 0) {
+					String columnName = null;
+					for (Map<String, Object> map : list) {
+						if (columnName == null)
+							for (String s : map.keySet())
+								if (s.equalsIgnoreCase("rownum_")) {
+									columnName = s;
+									break;
+								}
+						map.remove(columnName);
+					}
+				}
+				return list;
+			} else {
+				StringBuilder sb = new StringBuilder(sql.length()
+						+ (offset > 0 ? 30 : 20));
+				sb.append(sql);
+				if (offset > 0) {
+					sb.append(" offset ");
+					sb.append(offset);
+					sb.append(" rows fetch next ");
+				} else {
+					sb.append(" fetch first ");
+				}
+				sb.append(limit);
+				sb.append(" rows only");
+				return namedParameterJdbcTemplate.queryForList(sb.toString(),
+						paramMap);
 			}
-			return list;
-
 		} else if (databaseProduct == DatabaseProduct.DB2) {
 			StringBuilder sb = new StringBuilder(
 					sql.length() + offset > 0 ? 200 : 20);
