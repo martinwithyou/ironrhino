@@ -51,6 +51,10 @@ public class JdbcQueryService {
 
 	private DatabaseProduct databaseProduct;
 
+	private int databaseMajorVersion;
+
+	private int databaseMinorVersion;
+
 	@Value("${jdbcQueryService.restricted:true}")
 	private boolean restricted = true;
 
@@ -79,6 +83,22 @@ public class JdbcQueryService {
 
 	public DatabaseProduct getDatabaseProduct() {
 		return databaseProduct;
+	}
+
+	public int getDatabaseMajorVersion() {
+		return databaseMajorVersion;
+	}
+
+	public void setDatabaseMajorVersion(int databaseMajorVersion) {
+		this.databaseMajorVersion = databaseMajorVersion;
+	}
+
+	public int getDatabaseMinorVersion() {
+		return databaseMinorVersion;
+	}
+
+	public void setDatabaseMinorVersion(int databaseMinorVersion) {
+		this.databaseMinorVersion = databaseMinorVersion;
 	}
 
 	public void setQueryTimeout(int queryTimeout) {
@@ -112,6 +132,10 @@ public class JdbcQueryService {
 			if (databaseProduct == null)
 				databaseProduct = DatabaseProduct.parse(dbmd
 						.getDatabaseProductName());
+			if (databaseMajorVersion == 0)
+				databaseMajorVersion = dbmd.getDatabaseMajorVersion();
+			if (databaseMinorVersion == 0)
+				databaseMinorVersion = dbmd.getDatabaseMinorVersion();
 			String str = dbmd.getIdentifierQuoteString();
 			if (StringUtils.isNotBlank(str))
 				quoteString = str.trim().substring(0, 1);
@@ -241,10 +265,9 @@ public class JdbcQueryService {
 						else if (error.indexOf("timestamp") > 0
 								|| error.indexOf("date") > 0
 								|| error.indexOf("time") > 0)
-							paramMap.put(
-									paramName,
-									value.equals("19700101") ? new Date() : DateUtils
-											.parse(value));
+							paramMap.put(paramName,
+									value.equals("19700101") ? new Date()
+											: DateUtils.parse(value));
 						validateAndConvertTypes(sql, paramMap);
 						return;
 					}
