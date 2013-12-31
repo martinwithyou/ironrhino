@@ -552,10 +552,13 @@ public class JdbcQueryService {
 	private boolean hasLimit(String sql) {
 		sql = SqlUtils.clearComments(sql);
 		if (databaseProduct == DatabaseProduct.MYSQL
-				|| databaseProduct == DatabaseProduct.POSTGRESQL
 				|| databaseProduct == DatabaseProduct.H2
 				|| databaseProduct == DatabaseProduct.HSQL) {
 			return LIMIT_PATTERN.matcher(sql).find();
+		} else if (databaseProduct == DatabaseProduct.POSTGRESQL) {
+			return LIMIT_PATTERN.matcher(sql).find()
+					|| FIRST_PATTERN.matcher(sql).find()
+					|| NEXT_PATTERN.matcher(sql).find();
 		} else if (databaseProduct == DatabaseProduct.DB2
 				|| databaseProduct == DatabaseProduct.INFORMIX) {
 			return FIRST_PATTERN.matcher(sql).find();
@@ -566,7 +569,10 @@ public class JdbcQueryService {
 				|| databaseProduct == DatabaseProduct.SYBASE) {
 			return TOP_PATTERN.matcher(sql).find();
 		} else if (databaseProduct == DatabaseProduct.ORACLE) {
-			return ROWNUM_PATTERN.matcher(sql).find();
+			return ROWNUM_PATTERN.matcher(sql).find()
+					|| databaseMajorVersion >= 12
+					&& (FIRST_PATTERN.matcher(sql).find() || NEXT_PATTERN
+							.matcher(sql).find());
 		}
 		return false;
 	}
