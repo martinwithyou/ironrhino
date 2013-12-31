@@ -343,14 +343,14 @@ public class JdbcQueryService {
 				return limitOffsetForSQL2008(sql, paramMap, limit, offset);
 			StringBuilder sb = new StringBuilder(sql.length() + 100);
 			if (offset > 0) {
-				sb.append("select * from ( select row_.*, rownum rownum_ from ( ");
+				sb.append("select * from ( select row_.*, rownum rownum_9527 from ( ");
 			} else {
 				sb.append("select * from ( ");
 			}
 			sb.append(sql);
 			if (offset > 0) {
-				sb.append(" ) row_ ) where rownum_ <= " + (limit + offset)
-						+ " and rownum_ > " + offset);
+				sb.append(" ) row_ ) where rownum_9527 <= " + (limit + offset)
+						+ " and rownum_9527 > " + offset);
 			} else {
 				sb.append(" ) where rownum <= " + limit);
 			}
@@ -361,7 +361,7 @@ public class JdbcQueryService {
 				for (Map<String, Object> map : list) {
 					if (columnName == null)
 						for (String s : map.keySet())
-							if (s.equalsIgnoreCase("rownum_")) {
+							if (s.equalsIgnoreCase("rownum_9527")) {
 								columnName = s;
 								break;
 							}
