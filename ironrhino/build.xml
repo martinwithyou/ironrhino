@@ -123,16 +123,29 @@
 			mkdir.perform();
 			mkdir.setDir(new File(webappLib));
 			mkdir.perform();
-			var echo = project.createTask("echo");
-			echo.setFile(new File(projectSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')+'/package-info.java'));
-			echo.setMessage('@AutoConfig(namespace = "/")\npackage '+projectPackage+';\nimport org.ironrhino.core.metadata.AutoConfig;');
-			echo.perform();
-			echo = project.createTask("echo");
-			echo.setFile(new File(projectSrc+'/resources/i18n/'+projectName+'/messages_zh_CN.properties'));
-			echo.setMessage('#'+projectName+'='+projectName);
-			echo.perform();
+			var file = new File(projectSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')+'/package-info.java');
+			if(!file.exists){
+				var echo = project.createTask("echo");
+				echo.setFile(file);
+				echo.setMessage('@AutoConfig(namespace = "/")\npackage '+projectPackage+';\nimport org.ironrhino.core.metadata.AutoConfig;');
+				echo.perform();
+			}
+			var file = new File(projectSrc+'/resources/i18n/'+projectName+'/messages_zh_CN.properties');
+			if(!file.exists){
+				echo = project.createTask("echo");
+				echo.setFile(file);
+				echo.setMessage('#'+projectName+'='+projectName);
+				echo.perform();
+			}
 			var copy = project.createTask('copy');
 			var fs = project.createDataType('fileset');
+			fs.setDir(new File(basedir+'/.settings'));
+			fs.setIncludes('*');
+			copy.addFileset(fs);
+			copy.setTodir(new File(projectDir+'/.settings'));
+			copy.perform();
+			copy = project.createTask('copy');
+			fs = project.createDataType('fileset');
 			fs.setDir(new File(basedir+'/lib'));
 			fs.setIncludes('*.jar');
 			copy.addFileset(fs);
@@ -182,14 +195,20 @@
 			copy.addFileset(fs);
 			copy.setTodir(new File(webappLib));
 			copy.perform();
-			var echo = project.createTask("echo");
-			echo.setFile(new File(projectSrc+'/ironrhino.properties'));
-			echo.setMessage('app.name='+projectName+'\napp.basePackage='+projectPackage);
-			echo.perform();
-			echo = project.createTask("echo");
-			echo.setFile(new File(projectSrc+'/resources/view/decorator/include/nav.ftl'));
-			echo.setMessage('<ul class="nav">\n  <li><a href="<@url value="/"/>">${action.getText("index")}</a></li>\n  <@authorize ifAnyGranted="ROLE_ADMINISTRATOR">\n  <li><a href="<@url value="/user"/>">${action.getText("user")}</a></li>\n</@authorize>\n</ul>');
-			echo.perform();
+			file = new File(projectSrc+'/ironrhino.properties');
+			if(!file.exists){
+				var echo = project.createTask("echo");
+				echo.setFile(new File(projectSrc+'/ironrhino.properties'));
+				echo.setMessage('app.name='+projectName+'\napp.basePackage='+projectPackage);
+				echo.perform();
+			}
+			file = new File(projectSrc+'/resources/view/decorator/include/nav.ftl');
+			if(!file.exists){
+				echo = project.createTask("echo");
+				echo.setFile(file);
+				echo.setMessage('<ul class="nav">\n  <li><a href="<@url value="/"/>">${action.getText("index")}</a></li>\n  <@authorize ifAnyGranted="ROLE_ADMINISTRATOR">\n  <li><a href="<@url value="/user"/>">${action.getText("user")}</a></li>\n</@authorize>\n</ul>');
+				echo.perform();
+			}
 			copy = project.createTask("copy");
 			copy.setTofile(new File(projectDir+'/build.xml'));
 			copy.setFile(new File(basedir+'/build.project.xml'));
@@ -216,10 +235,13 @@
 			for(var i=0;i<files.length;i++)
 				classpath.push('	<classpathentry kind="lib" path="webapp/WEB-INF/lib/'+files[i].getName()+'"/>');
 			classpath.push('</classpath>');
-			echo = project.createTask("echo");
-			echo.setFile(new File(projectDir+'/.classpath'));
-			echo.setMessage(classpath.join('\n'));
-			echo.perform();
+			file = new File(projectDir+'/.classpath');
+			if(!file.exists){
+				echo = project.createTask("echo");
+				echo.setFile(file);
+				echo.setMessage(classpath.join('\n'));
+				echo.perform();
+			}
 			println('*********************************');
 			println('created project ['+projectName+'] at '+new File(projectDir).getCanonicalPath()+' ,you can import this project into eclipse .');
 			println('*********************************');
