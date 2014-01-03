@@ -193,8 +193,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	public boolean isNaturalIdMutable() {
 		return getNaturalIds().size() > 0
-				&& getNaturalIds().values().iterator().next()
-						.mutable();
+				&& getNaturalIds().values().iterator().next().mutable();
 	}
 
 	public Map<String, UiConfigImpl> getUiConfigs() {
@@ -618,12 +617,21 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		BeanWrapperImpl bw = new BeanWrapperImpl(_entity);
 		bw.setConversionService(conversionService);
 		for (Map.Entry<String, UiConfigImpl> entry : uiConfigs.entrySet()) {
-			String regex = entry.getValue().getRegex();
-			if (StringUtils.isNotBlank(regex)) {
-				Object value = bw.getPropertyValue(entry.getKey());
-				if (value instanceof String) {
-					String str = (String) value;
-					if (StringUtils.isNotBlank(str) && !str.matches(regex)) {
+			Object value = bw.getPropertyValue(entry.getKey());
+			if (value instanceof String) {
+				String str = (String) value;
+				if (StringUtils.isNotBlank(str)) {
+					int maxlength = entry.getValue().getMaxlength();
+					if (maxlength > 0 && str.length() > maxlength) {
+						addFieldError(
+								getEntityName() + "." + entry.getKey(),
+								getText("validation.maxlength.violation",
+										new String[] { String
+												.valueOf(maxlength) }));
+						return false;
+					}
+					String regex = entry.getValue().getRegex();
+					if (StringUtils.isNotBlank(regex) && !str.matches(regex)) {
 						addFieldError(getEntityName() + "." + entry.getKey(),
 								getText("validation.invalid"));
 						return false;
