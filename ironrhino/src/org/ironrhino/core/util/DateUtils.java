@@ -1,7 +1,6 @@
 package org.ironrhino.core.util;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -79,7 +78,7 @@ public class DateUtils {
 
 	public static Date parseDate10(String string) {
 		try {
-			return new SimpleDateFormat(DATE10).parse(string);
+			return DATE10_DF.parse(string);
 		} catch (ParseException e) {
 			return null;
 		}
@@ -87,7 +86,7 @@ public class DateUtils {
 
 	public static Date parseDate8(String string) {
 		try {
-			return new SimpleDateFormat(DATE8).parse(string);
+			return DATE8_DF.parse(string);
 		} catch (ParseException e) {
 			return null;
 		}
@@ -95,7 +94,7 @@ public class DateUtils {
 
 	public static Date parseDatetime(String string) {
 		try {
-			return new SimpleDateFormat(DATETIME).parse(string);
+			return DATETIME_DF.parse(string);
 		} catch (ParseException e) {
 			return null;
 		}
@@ -103,7 +102,7 @@ public class DateUtils {
 
 	public static Date parseDatetimeISO(String string) {
 		try {
-			return new SimpleDateFormat(DATETIME_ISO).parse(string);
+			return DATETIME_ISO_DF.parse(string);
 		} catch (ParseException e) {
 			return null;
 		}
@@ -111,7 +110,7 @@ public class DateUtils {
 
 	public static Date parse(String string, String pattern) {
 		try {
-			return new SimpleDateFormat(pattern).parse(string);
+			return FastDateFormat.getInstance(pattern).parse(string);
 		} catch (ParseException e) {
 			return null;
 		}
@@ -120,7 +119,7 @@ public class DateUtils {
 	public static Date parse(String string) {
 		for (String format : ACCEPT_DATE_FORMATS) {
 			try {
-				return new SimpleDateFormat(format).parse(string);
+				return FastDateFormat.getInstance(format).parse(string);
 			} catch (ParseException e) {
 				continue;
 			}
@@ -259,8 +258,8 @@ public class DateUtils {
 		private boolean leap;
 		final static String chineseNumber[] = { "一", "二", "三", "四", "五", "六",
 				"七", "八", "九", "十", "十一", "十二" };
-		static SimpleDateFormat chineseDateFormat = new SimpleDateFormat(
-				"yyyy年MM月dd日");
+		static FastDateFormat chineseDateFormat = FastDateFormat
+				.getInstance("yyyy年MM月dd日");
 		final static long[] lunarInfo = new long[] { 0x04bd8, 0x04ae0, 0x0a570,
 				0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
 				0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0,
