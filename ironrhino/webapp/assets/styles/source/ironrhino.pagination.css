@@ -8,6 +8,17 @@
 .toolbar .status{
 	text-align:right;
 }
+@media (max-width: 767px) {
+.toolbar .action{
+	text-align:left;
+}
+.toolbar .search{
+	padding-top: 4px;
+}
+.toolbar .status{
+	text-align:left;
+}
+}
 .toolbar .pagination{
 	margin: 0;
 }

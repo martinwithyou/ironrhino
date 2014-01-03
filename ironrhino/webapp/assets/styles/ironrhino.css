@@ -8634,6 +8634,17 @@ div.sqleditor.preview{
 .toolbar .status{
 	text-align:right;
 }
+@media (max-width: 767px) {
+.toolbar .action{
+	text-align:left;
+}
+.toolbar .search{
+	padding-top: 4px;
+}
+.toolbar .status{
+	text-align:left;
+}
+}
 .toolbar .pagination{
 	margin: 0;
 }
@@ -8915,7 +8926,7 @@ table.richtable td {
 	word-wrap: break-all;
 	white-space: pre-wrap;
 }
-.richtable th,.richtable .toolbar .action {
+.richtable th {
 	text-align: center;
 }
 .richtable table td.action{

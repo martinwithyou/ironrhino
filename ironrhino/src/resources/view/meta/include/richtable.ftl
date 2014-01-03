@@ -227,7 +227,7 @@ ${formHeader!}
 <div class="search span<#if showBottomButtons>2<#else>3</#if>">
 <#if searchable>
 <span class="input-append">
-    <input type="text" name="keyword" value="${keyword!?html}" placeholder="${action.getText('search')}"/><span class="add-on hidden-tablet hidden-phone"><i class="glyphicon glyphicon-search clickable"></i></span>
+    <input type="text" name="keyword" value="${keyword!?html}" placeholder="${action.getText('search')}"/><span class="add-on"><i class="glyphicon glyphicon-search clickable"></i></span>
 </span>
 </#if>
 <#if searchButtons?has_content>

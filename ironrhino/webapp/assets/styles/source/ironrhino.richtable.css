@@ -31,7 +31,7 @@ table.richtable td {
 	word-wrap: break-all;
 	white-space: pre-wrap;
 }
-.richtable th,.richtable .toolbar .action {
+.richtable th {
 	text-align: center;
 }
 .richtable table td.action{
