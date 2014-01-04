@@ -162,9 +162,8 @@ ${formHeader!}
 </tbody>
 </table>
 <div class="toolbar row-fluid">
-<div class="span<#if showBottomButtons>4<#else>6</#if>">
+<div class="pagination span<#if showBottomButtons>4<#else>6</#if>">
 <#if resultPage?? && resultPage.paginating>
-<div class="pagination">
 <ul>
 <#if resultPage.first>
 <li class="disabled firstPage"><a title="${action.getText('firstpage')}"><i class="glyphicon glyphicon-fast-backward"></i></a></li>
@@ -180,7 +179,7 @@ ${formHeader!}
 <li class="nextPage"><a title="${action.getText('nextpage')}" href="${resultPage.renderUrl(resultPage.nextPage)}"><i class="glyphicon glyphicon-step-forward"></i></a></li>
 <li class="lastPage"><a title="${action.getText('lastpage')}" href="${resultPage.renderUrl(resultPage.totalPage)}"><i class="glyphicon glyphicon-fast-forward"></i></a></li>
 </#if>
-<li>
+<li class="pageNo">
 <span class="input-append">
     <input type="text" name="resultPage.pageNo" value="${resultPage.pageNo}" class="inputPage integer positive" title="${action.getText('currentpage')}"/><span class="add-on totalPage"><span class="divider">/</span><strong title="${action.getText('totalpage')}">${resultPage.totalPage}</strong></span>
 </span>
@@ -202,7 +201,6 @@ ${formHeader!}
 </li>
 </#if>
 </ul>
-</div>
 </#if>
 </div>
 <#if showBottomButtons>
@@ -238,9 +236,9 @@ ${formHeader!}
 <div class="status span<#if showBottomButtons>2<#else>3</#if>">
 <span>
 <#if resultPage??>
-${resultPage.totalResults} ${action.getText('record')}
+${resultPage.totalResults}<span class="recordLabel"> ${action.getText('record')}</span>
 <#else>
-${list?size}${action.getText('record')}
+${list?size}<span class="recordLabel"> ${action.getText('record')}</span>
 </#if>
 </span>
 </div>
