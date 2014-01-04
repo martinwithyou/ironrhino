@@ -622,6 +622,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				String str = (String) value;
 				if (StringUtils.isNotBlank(str)) {
 					int maxlength = entry.getValue().getMaxlength();
+					if (maxlength == 0)
+						maxlength = 255;
 					if (maxlength > 0 && str.length() > maxlength) {
 						addFieldError(
 								getEntityName() + "." + entry.getKey(),

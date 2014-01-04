@@ -115,21 +115,20 @@ public class EntityClassHelper {
 						columnannotation = f.getAnnotation(Column.class);
 				} catch (Exception e) {
 				}
-			Basic basicannotation = pd.getReadMethod().getAnnotation(
-					Basic.class);
-			if (basicannotation == null)
+			Basic basic = pd.getReadMethod().getAnnotation(Basic.class);
+			if (basic == null)
 				try {
 					Field f = declaredClass.getDeclaredField(propertyName);
 					if (f != null)
-						basicannotation = f.getAnnotation(Basic.class);
+						basic = f.getAnnotation(Basic.class);
 				} catch (Exception e) {
 				}
-			Lob lobcannotation = pd.getReadMethod().getAnnotation(Lob.class);
-			if (lobcannotation == null)
+			Lob lob = pd.getReadMethod().getAnnotation(Lob.class);
+			if (lob == null)
 				try {
 					Field f = declaredClass.getDeclaredField(propertyName);
 					if (f != null)
-						lobcannotation = f.getAnnotation(Lob.class);
+						lob = f.getAnnotation(Lob.class);
 				} catch (Exception e) {
 				}
 			UiConfigImpl uci = new UiConfigImpl(pd.getPropertyType(), uiConfig);
@@ -138,15 +137,18 @@ public class EntityClassHelper {
 				uci.setExcludedFromLike(true);
 				uci.setExcludedFromOrdering(true);
 			}
-			if (lobcannotation != null)
+			if (lob != null) {
 				uci.setExcludedFromCriteria(true);
+				if (uci.getMaxlength() == 0)
+					uci.setMaxlength(2 * 1024 * 1024);
+			}
 			if (columnannotation != null && !columnannotation.nullable()
-					|| basicannotation != null && !basicannotation.optional())
+					|| basic != null && !basic.optional())
 				uci.setRequired(true);
 			if (columnannotation != null && columnannotation.length() != 255
 					&& uci.getMaxlength() == 0)
 				uci.setMaxlength(columnannotation.length());
-			if (lobcannotation != null || uci.getMaxlength() > 255)
+			if (lob != null || uci.getMaxlength() > 255)
 				uci.setExcludedFromOrdering(true);
 			Class<?> returnType = pd.getPropertyType();
 			if (returnType.isEnum()) {
