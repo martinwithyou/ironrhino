@@ -1,15 +1,23 @@
 package org.ironrhino.core.spring.configuration;
 
+import java.sql.Statement;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.jdbc.DatabaseProduct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.jolbox.bonecp.BoneCPDataSource;
+import com.jolbox.bonecp.ConnectionHandle;
+import com.jolbox.bonecp.hooks.AbstractConnectionHook;
 
 @Configuration
 public class DataSourceConfiguration {
@@ -47,6 +55,9 @@ public class DataSourceConfiguration {
 	@Value("${jdbc.connectionTestStatement:}")
 	private String connectionTestStatement;
 
+	@Value("${jdbc.QueryExecuteTimeLimitInMs:5000}")
+	private long queryExecuteTimeLimitInMs;
+
 	public @Bean(destroyMethod = "close")
 	DataSource dataSource() {
 		BoneCPDataSource ds = new BoneCPDataSource();
@@ -61,6 +72,8 @@ public class DataSourceConfiguration {
 		ds.setIdleConnectionTestPeriodInMinutes(idleConnectionTestPeriodInMinutes);
 		ds.setIdleMaxAgeInMinutes(idleMaxAgeInMinutes);
 		ds.setMaxConnectionAgeInSeconds(maxConnectionAgeInSeconds);
+		ds.setConnectionHook(new MyConnectionHook());
+		ds.setQueryExecuteTimeLimitInMs(queryExecuteTimeLimitInMs);
 		DatabaseProduct databaseProduct = DatabaseProduct.parse(jdbcUrl);
 		if (StringUtils.isBlank(connectionTestStatement)
 				&& databaseProduct != null)
@@ -72,6 +85,23 @@ public class DataSourceConfiguration {
 	public @Bean
 	JdbcTemplate jdbcTemplate() {
 		return new JdbcTemplate(dataSource());
+	}
+
+	protected static class MyConnectionHook extends AbstractConnectionHook {
+
+		private Logger logger = LoggerFactory.getLogger("access-warn");
+
+		public void onQueryExecuteTimeLimitExceeded(ConnectionHandle handle,
+				Statement statement, String sql, Map<Object, Object> logParams,
+				long timeElapsedInNs) {
+			boolean withParams = logParams != null && logParams.size() > 0;
+			StringBuilder sb = new StringBuilder(40);
+			sb.append("	executed /**/ {} /**/ in {} ms");
+			if (withParams)
+				sb.append(" with {}");
+			logger.warn(sb.toString(), sql,
+					TimeUnit.NANOSECONDS.toMillis(timeElapsedInNs), logParams);
+		}
 	}
 
 }

@@ -71,7 +71,7 @@
 		<level value="INFO"/>
 		<appender-ref ref="ACCESS"/>
 	</logger>
-	<logger name="access-warn" additivity="false">
+	<logger name="access-warn" additivity="true">
 		<level value="WARN"/>
 		<appender-ref ref="ACCESS-WARN"/>
 	</logger>
