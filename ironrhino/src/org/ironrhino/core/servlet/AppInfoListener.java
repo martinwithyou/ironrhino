@@ -11,6 +11,7 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.util.AppInfo;
+import org.ironrhino.core.util.AppInfo.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.AbstractEnvironment;
@@ -62,6 +63,8 @@ public class AppInfoListener implements ServletContextListener {
 			AppInfo.setAppHome(home);
 		System.setProperty(AppInfo.KEY_APP_HOME, AppInfo.getAppHome());
 		System.setProperty(AppInfo.KEY_APP_NAME, AppInfo.getAppName());
+		System.setProperty("hibernate.logger.level",
+				AppInfo.getStage() == Stage.DEVELOPMENT ? "TRACE" : "INFO");
 		String context = SERVLET_CONTEXT.getRealPath("/");
 		if (context == null)
 			context = "";

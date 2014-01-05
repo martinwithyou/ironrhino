@@ -63,6 +63,12 @@
 	<logger name="com.opensymphony.xwork2.config.providers.XmlConfigurationProvider" additivity="true">
 		<level value="ERROR"/>
 	</logger>
+	<logger name="org.hibernate.SQL" additivity="true">
+		<level value="${hibernate.logger.level}"/>
+	</logger>
+	<logger name="org.hibernate.type.descriptor.sql.BasicBinder" additivity="true">
+		<level value="${hibernate.logger.level}"/>
+	</logger>
 	<logger name="org.ironrhino.core.remoting" additivity="false">
 		<level value="INFO"/>
 		<appender-ref ref="REMOTING"/>
