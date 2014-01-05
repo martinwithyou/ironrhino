@@ -44,7 +44,7 @@
 		<param name="encoding" value="utf-8"/>
 		<param name="threshold" value="WARN"/>
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d%X{username}@%X{remoteAddr} %X{method}%X{url}%X{userAgent}%X{referer} %m%n"/>
+			<param name="ConversionPattern" value="%d%X{username}@%X{remoteAddr} %X{method}%X{url}%X{userAgent}%X{referer}	%m%n"/>
 		</layout>
 	</appender>
    

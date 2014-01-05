@@ -96,7 +96,7 @@ public class DataSourceConfiguration {
 				long timeElapsedInNs) {
 			boolean withParams = logParams != null && logParams.size() > 0;
 			StringBuilder sb = new StringBuilder(40);
-			sb.append("	executed /**/ {} /**/ in {} ms");
+			sb.append(" executed /**/ {} /**/ in {} ms");
 			if (withParams)
 				sb.append(" with {}");
 			logger.warn(sb.toString(), sql,
