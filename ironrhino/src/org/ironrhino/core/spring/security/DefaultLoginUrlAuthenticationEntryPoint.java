@@ -48,6 +48,9 @@ public class DefaultLoginUrlAuthenticationEntryPoint extends
 			if (savedRequest instanceof DefaultSavedRequest) {
 				DefaultSavedRequest dsr = (DefaultSavedRequest) savedRequest;
 				String queryString = dsr.getQueryString();
+				// remove jquery ajax parameter
+				if (StringUtils.isNotBlank(queryString))
+					queryString = queryString.replaceFirst("&?_=\\d{13}", "");
 				if (StringUtils.isBlank(queryString)) {
 					targetUrl = dsr.getRequestURL();
 				} else {
