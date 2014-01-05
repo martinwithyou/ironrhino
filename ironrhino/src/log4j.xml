@@ -23,6 +23,14 @@
 			<param name="ConversionPattern" value="%d %c %p%X{url} %m%n"/>
 		</layout>
 	</appender>
+	<appender name="HIBERNATE" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="${app.home}/logs/hibernate.log"/>
+		<param name="encoding" value="utf-8"/>
+		<param name="threshold" value="ALL"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %c %p %m%n"/>
+		</layout>
+	</appender>
 	<appender name="REMOTING" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="${app.home}/logs/remoting.log"/>
 		<param name="encoding" value="utf-8"/>
@@ -65,9 +73,11 @@
 	</logger>
 	<logger name="org.hibernate.SQL" additivity="true">
 		<level value="${hibernate.logger.level}"/>
+		<appender-ref ref="HIBERNATE"/>
 	</logger>
 	<logger name="org.hibernate.type.descriptor.sql.BasicBinder" additivity="true">
 		<level value="${hibernate.logger.level}"/>
+		<appender-ref ref="HIBERNATE"/>
 	</logger>
 	<logger name="org.ironrhino.core.remoting" additivity="false">
 		<level value="INFO"/>
