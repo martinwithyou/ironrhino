@@ -1,5 +1,7 @@
 package org.ironrhino.core.util;
 
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.service.BaseManager;
@@ -28,6 +30,14 @@ public class ApplicationContextUtils {
 	public static <T> T getBean(Class<T> t) {
 		try {
 			return getApplicationContext().getBean(t);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public static <T> Map<String, T> getBeansOfType(Class<T> t) {
+		try {
+			return getApplicationContext().getBeansOfType(t);
 		} catch (Exception e) {
 			return null;
 		}

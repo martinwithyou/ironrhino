@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,6 +29,7 @@ import org.ironrhino.core.hibernate.CriteriaState;
 import org.ironrhino.core.hibernate.CriterionUtils;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.CaseInsensitive;
+import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.metadata.NotInJson;
 import org.ironrhino.core.metadata.Owner;
 import org.ironrhino.core.metadata.Readonly;
@@ -43,7 +45,9 @@ import org.ironrhino.core.search.SearchService.Mapper;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
+import org.ironrhino.core.security.role.UserRole;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.service.BaseTreeControl;
 import org.ironrhino.core.struts.AnnotationShadows.HiddenImpl;
 import org.ironrhino.core.struts.AnnotationShadows.ReadonlyImpl;
 import org.ironrhino.core.struts.AnnotationShadows.RichtableImpl;
@@ -1263,6 +1267,60 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			addActionMessage(getText("operate.success"));
 		}
 		return SUCCESS;
+	}
+
+	@JsonConfig(root = "children")
+	@Authorize(ifAnyGranted = UserRole.ROLE_BUILTIN_USER)
+	public String children() {
+		if (!isTreeable())
+			return NOTFOUND;
+		long root = 0;
+		try {
+			root = Long.valueOf(ServletActionContext.getRequest().getParameter(
+					"root"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		BaseTreeableEntity parent;
+		BaseTreeControl baseTreeControl = null;
+		Collection<BaseTreeControl> baseTreeControls = ApplicationContextUtils
+				.getBeansOfType(BaseTreeControl.class).values();
+		for (BaseTreeControl btc : baseTreeControls)
+			if (btc.getTree().getClass() == getEntityClass()) {
+				baseTreeControl = btc;
+				break;
+			}
+		if (baseTreeControl != null) {
+			if (root < 1)
+				parent = baseTreeControl.getTree();
+			else
+				parent = baseTreeControl.getTree()
+						.getDescendantOrSelfById(root);
+			if (parent != null)
+				children = parent.getChildren();
+		} else {
+			BaseManager entityManager = getEntityManager(getEntityClass());
+			if (root < 1) {
+				DetachedCriteria dc = entityManager.detachedCriteria();
+				dc.add(Restrictions.isNull("parent"))
+						.addOrder(Order.asc("displayOrder"))
+						.addOrder(Order.asc("name"));
+				children = entityManager.findListByCriteria(dc);
+			} else {
+				parent = (BaseTreeableEntity) entityManager.get(root);
+				if (parent != null)
+					children = parent.getChildren();
+			}
+		}
+		ServletActionContext.getResponse().setHeader("Cache-Control",
+				"max-age=86400");
+		return JSON;
+	}
+
+	private Collection<Persistable> children;
+
+	public Collection<Persistable> getChildren() {
+		return children;
 	}
 
 	@Override
