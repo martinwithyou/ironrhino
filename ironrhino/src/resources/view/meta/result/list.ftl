@@ -4,6 +4,22 @@
 <title>${action.getText(entityName)}${action.getText('list')}</title>
 </head>
 <body>
+<#if treeable && parentEntity?? && parentEntity.id?? && parentEntity.id gt 0>
+<ul class="breadcrumb">
+	<li>
+    	<a href="${actionBaseUrl}" class="ajax view">${action.getText(entityName)}</a> <span class="divider">/</span>
+	</li>
+	<#if parentEntity.level gt 1>
+	<#list 1..parentEntity.level-1 as level>
+	<#assign ancestor=parentEntity.getAncestor(level)>
+	<li>
+    	<a href="${actionBaseUrl}?parent=${ancestor.id?string}" class="ajax view">${ancestor.name}</a> <span class="divider">/</span>
+	</li>
+	</#list>
+	</#if>
+	<li class="active">${parentEntity.name}</li>
+</ul>
+</#if>
 <#if richtableConfig.listHeader?has_content>
 <@richtableConfig.listHeader?interpret/>
 </#if>
@@ -120,10 +136,6 @@
 		<@rttbodytd entity=entity value=value celleditable=richtableConfig.celleditable template=template cellDynamicAttributes=config.cellDynamicAttributes dynamicAttributes=dynamicAttributes/>
 	</#if>
 </#list>
-<#assign actionColumnButtons=richtableConfig.actionColumnButtons!>
-<#if !actionColumnButtons?has_content && treeable>
-<#assign actionColumnButtons=r'<button type="button" class="btn" data-view="input">${action.getText("edit")}</button> <a class="btn ajax view" href="${actionBaseUrl}?parent=${entity.id}">${action.getText("enter")}</a>'>
-</#if>
 <@rttbodytrend entity=entity showActionColumn=richtableConfig.showActionColumn buttons=actionColumnButtons editable=!readonly.value viewable=viewable entityReadonly=entityReadonly/>
 </#list>
 <@rtend showBottomButtons=richtableConfig.showBottomButtons readonly=readonly.value deletable=!readonly.value||readonly.deletable searchable=searchable filterable=richtableConfig.filterable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>

@@ -97,6 +97,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	protected Long parent;
 
+	protected BaseTreeableEntity parentEntity;
+
 	@Autowired(required = false)
 	private transient ElasticSearchService<Persistable<?>> elasticSearchService;
 
@@ -144,6 +146,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	public void setParent(Long parent) {
 		this.parent = parent;
+	}
+
+	public BaseTreeableEntity getParentEntity() {
+		return parentEntity;
 	}
 
 	public RichtableImpl getRichtableConfig() {
@@ -350,11 +356,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					getEntityClass(), getUiConfigs());
 			prepare(dc, criteriaState);
 			if (isTreeable()) {
-				if (parent == null || parent < 1)
+				if (parent == null || parent < 1) {
 					dc.add(Restrictions.isNull("parent"));
-				else
+				} else {
+					parentEntity = (BaseTreeableEntity) entityManager
+							.get(parent);
 					dc.createAlias("parent", "_p_").add(
 							Restrictions.eq("_p_.id", parent));
+				}
 			}
 			if (searchable && StringUtils.isNotBlank(keyword)) {
 				Set<String> propertyNamesInLike = new HashSet<String>();

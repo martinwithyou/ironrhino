@@ -22,12 +22,14 @@ import org.ironrhino.core.metadata.UiConfig;
 import org.ironrhino.core.model.Attributable;
 import org.ironrhino.core.model.Attribute;
 import org.ironrhino.core.model.BaseTreeableEntity;
+import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.util.JsonUtils;
 
 @PublishAware
 @AutoConfig
 @Entity
 @Table(name = "common_treenode")
+@Searchable
 public class TreeNode extends BaseTreeableEntity<TreeNode> implements
 		Attributable {
 
