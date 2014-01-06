@@ -8,7 +8,7 @@
 	<#if !isnew>
 	<@s.hidden name="${entityName}.id" />
 	<#else>
-	<#if treeable>
+	<#if treeable??&&treeable>
 	<@s.hidden name="parent"/>
 	</#if>
 	</#if>

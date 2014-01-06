@@ -4,7 +4,7 @@
 <title>${action.getText(entityName)}${action.getText('list')}</title>
 </head>
 <body>
-<#if treeable && parentEntity?? && parentEntity.id?? && parentEntity.id gt 0>
+<#if treeable?? && treeable && parentEntity?? && parentEntity.id?? && parentEntity.id gt 0>
 <ul class="breadcrumb">
 	<li>
     	<a href="${actionBaseUrl}" class="ajax view">${action.getText(entityName)}</a> <span class="divider">/</span>
