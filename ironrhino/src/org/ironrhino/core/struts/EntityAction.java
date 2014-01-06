@@ -1309,7 +1309,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		Collection<BaseTreeControl> baseTreeControls = ApplicationContextUtils
 				.getBeansOfType(BaseTreeControl.class).values();
 		for (BaseTreeControl btc : baseTreeControls)
-			if (btc.getTree().getClass() == getEntityClass()) {
+			if (btc.getTree().getClass().equals(getEntityClass())) {
 				baseTreeControl = btc;
 				break;
 			}
