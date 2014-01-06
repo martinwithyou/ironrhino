@@ -7,6 +7,10 @@
 <@s.form action="${actionBaseUrl}/save" method="post" cssClass="ajax form-horizontal${richtableConfig.importable?string(' importable','')}">
 	<#if !isnew>
 	<@s.hidden name="${entityName}.id" />
+	<#else>
+	<#if treeable>
+	<@s.hidden name="parent" value="${Parameters.parent!}"/>
+	</#if>
 	</#if>
 	<#if versionPropertyName??>
 	<@s.hidden name="${entityName+'.'+versionPropertyName}" cssClass="version" />

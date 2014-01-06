@@ -33,6 +33,7 @@ import org.ironrhino.core.metadata.Owner;
 import org.ironrhino.core.metadata.Readonly;
 import org.ironrhino.core.metadata.Richtable;
 import org.ironrhino.core.metadata.UiConfig;
+import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.model.Enableable;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
@@ -113,6 +114,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	public boolean isEnableable() {
 		return Enableable.class.isAssignableFrom(getEntityClass());
+	}
+
+	public boolean isTreeable() {
+		return BaseTreeableEntity.class.isAssignableFrom(getEntityClass());
 	}
 
 	public Persistable getEntity() {
@@ -330,6 +335,23 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			CriteriaState criteriaState = CriterionUtils.filter(dc,
 					getEntityClass(), getUiConfigs());
 			prepare(dc, criteriaState);
+			if (isTreeable()) {
+				Persistable parent = null;
+				try {
+					BeanWrapperImpl bwt = new BeanWrapperImpl(getEntityClass()
+							.newInstance());
+					bwt.setPropertyValue("id", ServletActionContext
+							.getRequest().getParameter("parent"));
+					parent = getEntityManager(getEntityClass()).get(
+							(Serializable) bwt.getPropertyValue("id"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if (parent == null)
+					dc.add(Restrictions.isNull("parent"));
+				else
+					dc.add(Restrictions.eq("parent", parent));
+			}
 			if (searchable && StringUtils.isNotBlank(keyword)) {
 				Set<String> propertyNamesInLike = new HashSet<String>();
 				for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs()
@@ -584,6 +606,20 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				}
 				bwp.setPropertyValue(ownerProperty.getKey().propertyName(), ud);
 			}
+			if (isTreeable()) {
+				try {
+					BeanWrapperImpl bwt = new BeanWrapperImpl(getEntityClass()
+							.newInstance());
+					bwt.setPropertyValue("id", ServletActionContext
+							.getRequest().getParameter("parent"));
+					BaseTreeableEntity parent = (BaseTreeableEntity) getEntityManager(
+							getEntityClass()).get(
+							(Serializable) bwt.getPropertyValue("id"));
+					((BaseTreeableEntity) _entity).setParent(parent);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
@@ -599,6 +635,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			}
 		}
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
+
 		entityManager.save(_entity);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;

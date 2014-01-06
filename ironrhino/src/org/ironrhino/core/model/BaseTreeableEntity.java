@@ -42,16 +42,20 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 	protected Long id;
 
 	@Column(unique = false)
+	@UiConfig(hidden = true)
 	protected String fullId;
 
 	@Column(nullable = false)
+	@UiConfig(displayOrder = 1)
 	@SearchableProperty
 	protected String name;
 
 	@Column(name = "`level`")
+	@UiConfig(hidden = true)
 	protected int level;
 
 	@SearchableProperty
+	@UiConfig(displayOrder = 2)
 	protected int displayOrder;
 
 	@ManyToOne(fetch = FetchType.LAZY)
