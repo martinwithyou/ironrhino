@@ -795,9 +795,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				log.error(e.getMessage(), e);
 			}
 		} else {
-			if (isTreeable()) {
-				// TODO check name
-			}
 			if (naturalIdMutable && naturalIds.size() > 0) {
 				Serializable[] args = new Serializable[naturalIds.size() * 2];
 				Iterator<String> it = naturalIds.keySet().iterator();
@@ -1338,8 +1335,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					children = parentEntity.getChildren();
 			}
 		}
-		ServletActionContext.getResponse().setHeader("Cache-Control",
-				"max-age=86400");
 		return JSON;
 	}
 
