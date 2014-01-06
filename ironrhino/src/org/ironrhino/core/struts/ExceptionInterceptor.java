@@ -6,6 +6,7 @@ import java.util.Map;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -35,6 +36,10 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 					if (e instanceof OptimisticLockingFailureException) {
 						validationAwareAction.addActionError(findText(
 								"try.again.later", null));
+					} else if (e instanceof DataIntegrityViolationException) {
+						validationAwareAction.addActionError(findText(
+								"validation.already.exists", null));
+						log.error(e.getMessage(), e);
 					} else if (e instanceof ValidationException) {
 						ValidationException ve = (ValidationException) e;
 						for (String s : ve.getActionMessages())
