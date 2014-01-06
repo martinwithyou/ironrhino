@@ -20,17 +20,17 @@ public class RegionTreeAction extends BaseAction {
 
 	private boolean async = true;
 
-	private long root;
+	private long parent;
 
 	@Autowired
 	private transient BaseTreeControl<Region> regionTreeControl;
 
-	public long getRoot() {
-		return root;
+	public long getParent() {
+		return parent;
 	}
 
-	public void setRoot(long root) {
-		this.root = root;
+	public void setParent(long parent) {
+		this.parent = parent;
 	}
 
 	public boolean isAsync() {
@@ -48,11 +48,10 @@ public class RegionTreeAction extends BaseAction {
 	@JsonConfig(root = "children")
 	public String children() {
 		Region region;
-		if (root < 1)
+		if (parent < 1)
 			region = regionTreeControl.getTree();
 		else
-			region = regionTreeControl.getTree().getDescendantOrSelfById(
-					root);
+			region = regionTreeControl.getTree().getDescendantOrSelfById(parent);
 		if (region != null)
 			children = region.getChildren();
 		ServletActionContext.getResponse().setHeader("Cache-Control",
@@ -64,11 +63,11 @@ public class RegionTreeAction extends BaseAction {
 	public String execute() {
 		if (!async) {
 			Region region;
-			if (root < 1)
+			if (parent < 1)
 				region = regionTreeControl.getTree();
 			else
-				region = regionTreeControl.getTree()
-						.getDescendantOrSelfById(root);
+				region = regionTreeControl.getTree().getDescendantOrSelfById(
+						parent);
 			children = region.getChildren();
 		}
 		return SUCCESS;

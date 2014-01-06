@@ -69,7 +69,7 @@
 						.appendTo(treearea);
 		var url = treeoptions.url;
 		if (id > 0)
-			url += '?root=' + id;
+			url += '?parent=' + id;
 		if (!treeoptions.cache)
 			url += (url.indexOf('?') > -1 ? '&' : '?') + 'r=' + Math.random();
 		$.getJSON(url, function(data) {

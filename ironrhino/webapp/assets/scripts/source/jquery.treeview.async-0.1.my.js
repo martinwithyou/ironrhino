@@ -17,16 +17,16 @@
  * to data('treenode',this), change this.text to (this.name) 3.add <a> out of
  * <span> 4.add setting.onclick to <span> 5.if settings.unique=true will call
  * toggle on siblings,if not add $this.hasClass('collapsable') will load
- * siblings's data
+ * siblings's data,change parameter name from root to parent
  */
 ;
 (function($) {
 	var fullname;
 	function load(settings, root, child, container) {
-		if(root == 0)
-		fullname = settings.value;
+		if (root == 0)
+			fullname = settings.value;
 		$.getJSON(settings.url, {
-					root : root
+					parent : root
 				}, function(response) {
 					function createNode(parent) {
 						var parentTreenode = $(parent).parent('li')
@@ -74,10 +74,12 @@
 						for (var i = 0; i < list.length; i++) {
 							var t = $(list.get(i));
 							var name = t.data('treenode').name;
-							if (name && fullname.indexOf(name + settings.separator) == 0) {
+							if (name
+									&& fullname.indexOf(name
+											+ settings.separator) == 0) {
 								fullname = fullname.substring(name.length
 										+ settings.separator.length);
-								$('.hitarea',t).click();
+								$('.hitarea', t).click();
 								break;
 							}
 						}

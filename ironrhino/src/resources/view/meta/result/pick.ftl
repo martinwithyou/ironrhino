@@ -45,14 +45,13 @@
 		</#if>
 	</#list>
 </#if>
-<#assign treeable = action.getParentId??>
 <#if treeable>
 	<#if !columnNames?? || columnNames?size == 0>
 	<#assign columnNames=['fullname']>
 	</#if>
 	<#assign href=requestURI>
 	<#list Parameters?keys as name>
-	<#if name!='_'&&name!='parentId'&&name!='keyword'>
+	<#if name!='_'&&name!='parent'&&name!='keyword'>
 	<#assign href=href+(name_index==0)?string('?','&')+name+'='+Parameters[name]>
 	</#if>
 	</#list>
@@ -61,7 +60,7 @@
 <#if columnNames??>
 	<#list columnNames as column>
 		<#if treeable && column == 'name'||column == 'fullname'>
-			<#assign columns=columns+{column:{'template':r'<#if entity.leaf??&&!entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parentId="+entity.id}" class="ajax view" data-replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
+			<#assign columns=columns+{column:{'template':r'<#if entity.leaf??&&!entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parent="+entity.id}" class="ajax view" data-replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
 		<#else>
 			<#assign columns=columns+{column:{}}/>
 		</#if>
@@ -69,12 +68,12 @@
 </#if>
 <#if treeable>
 <#assign _entity=entityName?eval!>
-<#if _entity?? && _entity.parent??><#assign _parentId=_entity.parent.id><#else><#assign _parentId=0></#if>
+<#if _entity?? && _entity.parent??><#assign _parent=_entity.parent.id><#else><#assign _parent=0></#if>
 </#if>
 <#if !multiple>
 <#assign bottomButtons=r'
-<#if treeable&&Parameters.parentId??>
-<a href="${href}<#if _parentId?? && _parentId gt 0>${href?contains("?")?string("&","?")+"parentId="+_parentId}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>
+<#if treeable&&Parameters.parent??>
+<a href="${href}<#if _parent?? && _parent gt 0>${href?contains("?")?string("&","?")+"parent="+_parent}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>
 <#else>
 <#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
 </#if>
@@ -83,8 +82,8 @@
 <#assign bottomButtons=r'
 <button type="button" class="btn pick" data-shown="selected">${action.getText("confirm")}</button>
 <#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
-<#if treeable&&Parameters.parentId??>
-<a href="${href}<#if _parentId?? && _parentId gt 0>${href?contains("?")?string("&","?")+"parentId="+_parentId}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>
+<#if treeable&&Parameters.parent??>
+<a href="${href}<#if _parent?? && _parent gt 0>${href?contains("?")?string("&","?")+"parent="+_parent}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>
 </#if>
 '>
 </#if>

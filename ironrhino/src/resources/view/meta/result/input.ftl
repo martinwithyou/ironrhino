@@ -9,7 +9,7 @@
 	<@s.hidden name="${entityName}.id" />
 	<#else>
 	<#if treeable>
-	<@s.hidden name="parent" value="${Parameters.parent!}"/>
+	<@s.hidden name="parent"/>
 	</#if>
 	</#if>
 	<#if versionPropertyName??>
@@ -94,6 +94,34 @@
 				</#if>
 				</div>
 				</div>
+			<#elseif config.type=='attributes'>
+				<div class="control-group">
+				<label class="control-label" for="${id}">${action.getText(label)}</label>
+				<div class="controls">
+				<table class="datagrid table table-condensed nullable">
+					<thead>
+						<tr>
+							<td>${action.getText('name')}</td>
+							<td>${action.getText('value')}</td>
+							<td class="manipulate"></td>
+						</tr>
+					</thead>
+					<tbody>
+						<#assign size = 0>
+						<#if entity.attributes?? && entity.attributes?size gt 0>
+							<#assign size = entity.attributes?size-1>
+						</#if>
+						<#list 0..size as index>
+						<tr>
+							<td><@s.textfield theme="simple" name="${entityName}.attributes[${index}].name"/></td>
+							<td><@s.textfield theme="simple" name="${entityName}.attributes[${index}].value"/></td>
+							<td class="manipulate"></td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+				</div>
+				</div>	
 			<#elseif config.type=='schema'>
 				<#if editAttributes??>
 					<div id="editAttributes">

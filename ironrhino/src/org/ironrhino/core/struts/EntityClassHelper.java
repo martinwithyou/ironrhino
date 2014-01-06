@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.hibernate.CriterionOperator;
 import org.ironrhino.core.metadata.UiConfig;
+import org.ironrhino.core.model.Attributable;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableId;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
@@ -132,6 +133,10 @@ public class EntityClassHelper {
 				} catch (Exception e) {
 				}
 			UiConfigImpl uci = new UiConfigImpl(pd.getPropertyType(), uiConfig);
+			if (Attributable.class.isAssignableFrom(entityClass)
+					&& pd.getName().equals("attributes")) {
+				uci.setType("attributes");
+			}
 			if (trans != null) {
 				uci.setExcludedFromCriteria(true);
 				uci.setExcludedFromLike(true);

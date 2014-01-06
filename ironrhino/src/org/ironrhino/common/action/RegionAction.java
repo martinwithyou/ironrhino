@@ -41,7 +41,7 @@ public class RegionAction extends BaseAction {
 
 	private Region region;
 
-	private Long parentId;
+	private Long parent;
 
 	private transient EntityManager<Region> entityManager;
 
@@ -86,12 +86,12 @@ public class RegionAction extends BaseAction {
 		return list;
 	}
 
-	public Long getParentId() {
-		return parentId;
+	public Long getParent() {
+		return parent;
 	}
 
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
+	public void setParent(Long parent) {
+		this.parent = parent;
 	}
 
 	public Region getRegion() {
@@ -110,8 +110,8 @@ public class RegionAction extends BaseAction {
 	@Override
 	public String execute() {
 		if (StringUtils.isBlank(keyword) || elasticSearchService == null) {
-			if (parentId != null && parentId > 0) {
-				region = entityManager.get(parentId);
+			if (parent != null && parent > 0) {
+				region = entityManager.get(parent);
 			} else {
 				region = new Region();
 				DetachedCriteria dc = entityManager.detachedCriteria();
@@ -156,10 +156,10 @@ public class RegionAction extends BaseAction {
 	public String save() {
 		Collection<Region> siblings = null;
 		if (region.isNew()) {
-			if (parentId != null) {
-				Region parent = entityManager.get(parentId);
-				region.setParent(parent);
-				siblings = parent.getChildren();
+			if (parent != null) {
+				Region parentRegion = entityManager.get(parent);
+				region.setParent(parentRegion);
+				siblings = parentRegion.getChildren();
 			} else {
 				DetachedCriteria dc = entityManager.detachedCriteria();
 				dc.add(Restrictions.isNull("parent"));

@@ -8,7 +8,7 @@
 	<#if !region.new>
 		<@s.hidden name="region.id" />
 	</#if>
-	<@s.hidden name="parentId" />
+	<@s.hidden name="parent" />
 	<@s.textfield label="%{getText('name')}" name="region.name" cssClass="required"/>
 	<@s.textfield label="%{getText('coordinate')}" name="region.coordinate.latLngAsString" cssClass="latlng" dynamicAttributes={"data-address":"${region.fullname!}"}/>
 	<@s.textfield label="%{getText('areacode')}" name="region.areacode" maxlength="6"/>

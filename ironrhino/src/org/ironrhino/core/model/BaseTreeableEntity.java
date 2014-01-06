@@ -46,7 +46,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 	protected String fullId;
 
 	@Column(nullable = false)
-	@UiConfig(displayOrder = 1)
+	@UiConfig(displayOrder = 1, width = "200px", cssClass = "checkavailable")
 	@SearchableProperty
 	protected String name;
 
@@ -55,7 +55,7 @@ public class BaseTreeableEntity<T extends BaseTreeableEntity<T>> extends
 	protected int level;
 
 	@SearchableProperty
-	@UiConfig(displayOrder = 2)
+	@UiConfig(displayOrder = 1000, width = "100px")
 	protected int displayOrder;
 
 	@ManyToOne(fetch = FetchType.LAZY)

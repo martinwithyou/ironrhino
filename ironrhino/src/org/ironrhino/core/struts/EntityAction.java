@@ -95,6 +95,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	protected ResultPage resultPage;
 
+	protected Long parent;
+
 	@Autowired(required = false)
 	private transient ElasticSearchService<Persistable<?>> elasticSearchService;
 
@@ -134,6 +136,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	public void setResultPage(ResultPage resultPage) {
 		this.resultPage = resultPage;
+	}
+
+	public Long getParent() {
+		return parent;
+	}
+
+	public void setParent(Long parent) {
+		this.parent = parent;
 	}
 
 	public RichtableImpl getRichtableConfig() {
@@ -340,21 +350,11 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 					getEntityClass(), getUiConfigs());
 			prepare(dc, criteriaState);
 			if (isTreeable()) {
-				Persistable parent = null;
-				try {
-					BeanWrapperImpl bwt = new BeanWrapperImpl(getEntityClass()
-							.newInstance());
-					bwt.setPropertyValue("id", ServletActionContext
-							.getRequest().getParameter("parent"));
-					parent = getEntityManager(getEntityClass()).get(
-							(Serializable) bwt.getPropertyValue("id"));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				if (parent == null)
+				if (parent == null || parent < 1)
 					dc.add(Restrictions.isNull("parent"));
 				else
-					dc.add(Restrictions.eq("parent", parent));
+					dc.createAlias("parent", "_p_").add(
+							Restrictions.eq("_p_.id", parent));
 			}
 			if (searchable && StringUtils.isNotBlank(keyword)) {
 				Set<String> propertyNamesInLike = new HashSet<String>();
@@ -610,20 +610,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				}
 				bwp.setPropertyValue(ownerProperty.getKey().propertyName(), ud);
 			}
-			if (isTreeable()) {
-				try {
-					BeanWrapperImpl bwt = new BeanWrapperImpl(getEntityClass()
-							.newInstance());
-					bwt.setPropertyValue("id", ServletActionContext
-							.getRequest().getParameter("parent"));
-					BaseTreeableEntity parent = (BaseTreeableEntity) getEntityManager(
-							getEntityClass()).get(
-							(Serializable) bwt.getPropertyValue("id"));
-					((BaseTreeableEntity) _entity).setParent(parent);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			if (isTreeable())
+				((BaseTreeableEntity) _entity)
+						.setParent((BaseTreeableEntity) getEntityManager(
+								getEntityClass()).get(parent));
 		}
 
 		for (Map.Entry<String, UiConfigImpl> entry : getUiConfigs().entrySet()) {
@@ -639,7 +629,6 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 			}
 		}
 		BaseManager<Persistable<?>> entityManager = getEntityManager(getEntityClass());
-
 		entityManager.save(_entity);
 		addActionMessage(getText("save.success"));
 		return SUCCESS;
@@ -797,6 +786,9 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				log.error(e.getMessage(), e);
 			}
 		} else {
+			if (isTreeable()) {
+				// TODO check name
+			}
 			if (naturalIdMutable && naturalIds.size() > 0) {
 				Serializable[] args = new Serializable[naturalIds.size() * 2];
 				Iterator<String> it = naturalIds.keySet().iterator();
@@ -927,6 +919,38 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				_entity = persisted;
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
+			}
+		}
+		if (isTreeable()) {
+			Collection siblings = null;
+			BaseTreeableEntity treeEntity = (BaseTreeableEntity) _entity;
+			BaseTreeableEntity parentEntity = (BaseTreeableEntity) entityManager
+					.get(parent);
+			if (parentEntity == null) {
+				DetachedCriteria dc = entityManager.detachedCriteria();
+				dc.add(Restrictions.isNull("parent"));
+				dc.addOrder(Order.asc("displayOrder"));
+				dc.addOrder(Order.asc("name"));
+				siblings = entityManager.findListByCriteria(dc);
+			} else {
+				siblings = parentEntity.getChildren();
+			}
+			for (Object o : siblings) {
+				BaseTreeableEntity sibling = (BaseTreeableEntity) o;
+				if (!treeEntity.isNew()
+						&& sibling.getId().equals(treeEntity.getId()))
+					continue;
+				String name = sibling.getName();
+				if (name.equals(treeEntity.getName())
+						|| AnnotationUtils
+								.getAnnotatedPropertyNameAndAnnotations(
+										getEntityClass(), CaseInsensitive.class)
+								.containsKey("name")
+						&& name.equalsIgnoreCase(treeEntity.getName())) {
+					addFieldError(getEntityName() + ".name",
+							getText("validation.already.exists"));
+					return false;
+				}
 			}
 		}
 		try {
@@ -1274,14 +1298,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	public String children() {
 		if (!isTreeable())
 			return NOTFOUND;
-		long root = 0;
-		try {
-			root = Long.valueOf(ServletActionContext.getRequest().getParameter(
-					"root"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		BaseTreeableEntity parent;
+		BaseTreeableEntity parentEntity;
 		BaseTreeControl baseTreeControl = null;
 		Collection<BaseTreeControl> baseTreeControls = ApplicationContextUtils
 				.getBeansOfType(BaseTreeControl.class).values();
@@ -1291,25 +1308,25 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				break;
 			}
 		if (baseTreeControl != null) {
-			if (root < 1)
-				parent = baseTreeControl.getTree();
+			if (parent == null || parent < 1)
+				parentEntity = baseTreeControl.getTree();
 			else
-				parent = baseTreeControl.getTree()
-						.getDescendantOrSelfById(root);
-			if (parent != null)
-				children = parent.getChildren();
+				parentEntity = baseTreeControl.getTree()
+						.getDescendantOrSelfById(parent);
+			if (parentEntity != null)
+				children = parentEntity.getChildren();
 		} else {
 			BaseManager entityManager = getEntityManager(getEntityClass());
-			if (root < 1) {
+			if (parent == null || parent < 1) {
 				DetachedCriteria dc = entityManager.detachedCriteria();
 				dc.add(Restrictions.isNull("parent"))
 						.addOrder(Order.asc("displayOrder"))
 						.addOrder(Order.asc("name"));
 				children = entityManager.findListByCriteria(dc);
 			} else {
-				parent = (BaseTreeableEntity) entityManager.get(root);
-				if (parent != null)
-					children = parent.getChildren();
+				parentEntity = (BaseTreeableEntity) entityManager.get(parent);
+				if (parentEntity != null)
+					children = parentEntity.getChildren();
 			}
 		}
 		ServletActionContext.getResponse().setHeader("Cache-Control",
