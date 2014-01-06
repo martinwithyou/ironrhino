@@ -4,18 +4,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.ironrhino.common.model.TreeNode;
-import org.ironrhino.common.support.TreeNodeControl;
 import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.JsonConfig;
 import org.ironrhino.core.security.role.UserRole;
+import org.ironrhino.core.service.BaseTreeControl;
 import org.ironrhino.core.service.EntityManager;
 import org.ironrhino.core.struts.BaseAction;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class TreeNodeAction extends BaseAction {
 
@@ -28,7 +27,7 @@ public class TreeNodeAction extends BaseAction {
 	private long root;
 
 	@Autowired
-	private transient TreeNodeControl treeNodeControl;
+	private transient BaseTreeControl<TreeNode> treeNodeControl;
 
 	private transient EntityManager<TreeNode> entityManager;
 

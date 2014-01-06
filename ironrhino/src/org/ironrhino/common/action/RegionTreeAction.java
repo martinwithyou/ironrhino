@@ -2,15 +2,14 @@ package org.ironrhino.common.action;
 
 import java.util.Collection;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.model.Region;
-import org.ironrhino.common.support.RegionTreeControl;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.JsonConfig;
+import org.ironrhino.core.service.BaseTreeControl;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.HtmlUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig(namespace = "/", actionName = "region")
 public class RegionTreeAction extends BaseAction {
@@ -24,7 +23,7 @@ public class RegionTreeAction extends BaseAction {
 	private long root;
 
 	@Autowired
-	private transient RegionTreeControl regionTreeControl;
+	private transient BaseTreeControl<Region> regionTreeControl;
 
 	public long getRoot() {
 		return root;
@@ -50,9 +49,9 @@ public class RegionTreeAction extends BaseAction {
 	public String children() {
 		Region region;
 		if (root < 1)
-			region = regionTreeControl.getRegionTree();
+			region = regionTreeControl.getTree();
 		else
-			region = regionTreeControl.getRegionTree().getDescendantOrSelfById(
+			region = regionTreeControl.getTree().getDescendantOrSelfById(
 					root);
 		if (region != null)
 			children = region.getChildren();
@@ -66,9 +65,9 @@ public class RegionTreeAction extends BaseAction {
 		if (!async) {
 			Region region;
 			if (root < 1)
-				region = regionTreeControl.getRegionTree();
+				region = regionTreeControl.getTree();
 			else
-				region = regionTreeControl.getRegionTree()
+				region = regionTreeControl.getTree()
 						.getDescendantOrSelfById(root);
 			children = region.getChildren();
 		}
@@ -80,7 +79,7 @@ public class RegionTreeAction extends BaseAction {
 	}
 
 	public Region getRegionTree() {
-		return regionTreeControl.getRegionTree();
+		return regionTreeControl.getTree();
 	}
 
 	public String getTreeViewHtml() {
