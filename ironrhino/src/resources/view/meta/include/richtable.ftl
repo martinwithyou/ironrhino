@@ -143,7 +143,7 @@ ${formHeader!}
 <#if editable && !entityReadonly>
 <button type="button" class="btn" data-view="input">${action.getText("edit")}</button>
 </#if>
-<#if treeable>
+<#if treeable??&&treeable>
 <a class="btn ajax view" href="${actionBaseUrl}?parent=${entity.id}">${action.getText("enter")}</a>
 </#if>
 </#if>
@@ -220,7 +220,7 @@ ${formHeader!}
 </#if>
 </#if>
 <#if !readonly||deletable><button type="button" class="btn" data-action="delete" data-shown="selected" data-filterselector="<#if enableable>[data-enabled='false']</#if>:not([data-deletable='false'])">${action.getText("delete")}</button></#if>
-<#if treeable && parentEntity??>
+<#if treeable??&&treeable&&parentEntity??>
 <#if parentEntity.parent??>
 <a class="btn ajax view" href="${actionBaseUrl+"?parent="+parentEntity.parent.id}">${action.getText("upward")}</a>
 <#else>

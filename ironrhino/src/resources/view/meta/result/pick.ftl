@@ -45,6 +45,9 @@
 		</#if>
 	</#list>
 </#if>
+<#if !treeable??>
+<#assign treeable = action.getParent??>
+</#if>
 <#if treeable>
 	<#if !columnNames?? || columnNames?size == 0>
 	<#assign columnNames=['fullname']>
