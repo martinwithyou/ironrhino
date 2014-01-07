@@ -53,43 +53,49 @@
 	<#assign columnNames=['fullname']>
 	</#if>
 	<#assign href=requestURI>
-	<#list Parameters?keys as name>
-	<#if name!='_'&&name!='parent'&&name!='keyword'>
-	<#assign href=href+(name_index==0)?string('?','&')+name+'='+Parameters[name]>
+	<#if request.queryString??>
+		<#assign params=request.queryString?split('&')/>
+		<#list params as param>
+		<#if !(param?starts_with('_=')||param?starts_with('parent=')||param?starts_with('keyword='))>
+		<#assign href=href+(param_index==0)?string('?','&')+param>
+		</#if>
+		</#list>
 	</#if>
-	</#list>
 </#if>
 <#assign columns={}>
 <#if columnNames??>
 	<#list columnNames as column>
 		<#if treeable && column == 'name'||column == 'fullname'>
-			<#assign columns=columns+{column:{'template':r'<#if entity.leaf??&&!entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parent="+entity.id}" class="ajax view" data-replacement="${entityName}_pick_form">${value}</a><#else>${value}</#if>'}}/>
+			<#assign columns=columns+{column:{'template':r'<#if entity.leaf??&&!entity.leaf><a href="${href}${href?contains("?")?string("&","?")+"parent="+entity.id}" class="ajax view" data-replacement="${entityName}_pick">${value}</a><#else>${value}</#if>'}}/>
 		<#else>
 			<#assign columns=columns+{column:{}}/>
 		</#if>
 	</#list>
 </#if>
 <#if treeable>
-<#assign _entity=entityName?eval!>
-<#if _entity?? && _entity.parent??><#assign _parent=_entity.parent.id><#else><#assign _parent=0></#if>
-</#if>
-<#if !multiple>
-<#assign bottomButtons=r'
-<#if treeable&&Parameters.parent??>
-<a href="${href}<#if _parent?? && _parent gt 0>${href?contains("?")?string("&","?")+"parent="+_parent}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>
+<#assign _parent=0>
+<#if parentEntity??>
+	<#if parentEntity.parent??>
+	<#assign _parent=parentEntity.parent.id>
+	</#if>
 <#else>
-<#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
+	<#assign _entity=entityName?eval!>
+	<#if _entity?? && _entity.parent??><#assign _parent=_entity.parent.id></#if>
+	</#if>
 </#if>
-'>
+<#if multiple>
+<#assign bottomButtons=r'<button type="button" class="btn pick" data-shown="selected">${action.getText("confirm")}</button> '/>
 <#else>
-<#assign bottomButtons=r'
-<button type="button" class="btn pick" data-shown="selected">${action.getText("confirm")}</button>
-<#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
+<#assign bottomButtons=''/>
+</#if>
+<#assign bottomButtons=bottomButtons+r'
 <#if treeable&&Parameters.parent??>
-<a href="${href}<#if _parent?? && _parent gt 0>${href?contains("?")?string("&","?")+"parent="+_parent}</#if>" class="btn ajax view" data-replacement="${entityName}_pick_form">${action.getText("upward")}</a>
+<a href="${href}<#if _parent?? && _parent gt 0>${href?contains("?")?string("&","?")+"parent="+_parent}</#if>" class="btn ajax view" data-replacement="${entityName}_pick">${action.getText("upward")}</a>
 </#if>
+<#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
 '>
-</#if>
-<@richtable entityName=entityName formid=entityName+"_pick_form" action=requestURI columns=columns bottomButtons=bottomButtons searchable=true readonly=true showCheckColumn=true multipleCheck=multiple columnfilterable=false resizable=false sortable=false showPageSize=false/>
+<div id="${entityName}_pick">
+<@richtable entityName=entityName formid=entityName+'_pick_form' action=requestURI columns=columns bottomButtons=bottomButtons searchable=true readonly=true showCheckColumn=true multipleCheck=multiple columnfilterable=false resizable=false sortable=false showPageSize=false/>
+</div>
 </body>
 </html></#escape>
