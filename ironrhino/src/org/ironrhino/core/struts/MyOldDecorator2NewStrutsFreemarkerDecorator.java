@@ -38,9 +38,7 @@ public class MyOldDecorator2NewStrutsFreemarkerDecorator extends
 					writer.append("<title>").append(content.getTitle())
 							.append("</title>");
 					content.getTitle();
-					writer.append("<div id=\"content\">");
 					content.writeBody(writer);
-					writer.append("</div>");
 					writer.flush();
 					return;
 				} catch (Exception e) {
