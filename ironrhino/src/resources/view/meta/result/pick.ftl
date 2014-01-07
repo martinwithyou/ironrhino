@@ -80,7 +80,10 @@
 	</#if>
 <#else>
 	<#assign _entity=entityName?eval!>
-	<#if _entity?? && _entity.parent??><#assign _parent=_entity.parent.id></#if>
+	<#if _entity??>
+	<#assign parentEntity=_entity>
+	<#if _entity.parent??><#assign _parent=_entity.parent.id></#if>
+	</#if>
 	</#if>
 </#if>
 <#if multiple>
@@ -95,6 +98,22 @@
 <#if filterable><button type="button" class="btn filter">${action.getText("filter")}</button></#if>
 '>
 <div id="${entityName}_pick">
+<#if _parent?? && parentEntity?? && parentEntity.id?? && parentEntity.id gt 0>
+<ul class="breadcrumb">
+	<li>
+    	<a href="${href}" class="ajax view">${action.getText(entityName)}</a> <span class="divider">/</span>
+	</li>
+	<#if parentEntity.level gt 1>
+	<#list 1..parentEntity.level-1 as level>
+	<#assign ancestor=parentEntity.getAncestor(level)>
+	<li>
+    	<a href="${href}<#if _parent?? && _parent gt 0>${href?contains("?")?string("&","?")+"parent="+ancestor.id}</#if>" class="ajax view">${ancestor.name}</a> <span class="divider">/</span>
+	</li>
+	</#list>
+	</#if>
+	<li class="active">${parentEntity.name}</li>
+</ul>
+</#if>
 <@richtable entityName=entityName formid=entityName+'_pick_form' action=requestURI columns=columns bottomButtons=bottomButtons searchable=true readonly=true showCheckColumn=true multipleCheck=multiple columnfilterable=false resizable=false sortable=false showPageSize=false/>
 </div>
 </body>
