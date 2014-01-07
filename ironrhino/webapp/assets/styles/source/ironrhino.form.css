@@ -77,6 +77,14 @@ textarea{
 input::-ms-reveal,input::-ms-clear {
 	display: none;
 }
+input[type="file"]::-webkit-file-upload-button{
+   float: right;
+   border: 1px solid #aaaaaa;
+   border-radius: 4px;
+   padding-top:4px;
+   padding-bottom:4px;
+   background: linear-gradient(to bottom, #EFEFEF, #DEDEDE, #EFEFEF);
+}
 span.checkboxgroup{
 	display: inline-block;
 	margin:0 20px;

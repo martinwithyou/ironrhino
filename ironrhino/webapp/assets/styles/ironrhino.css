@@ -8369,6 +8369,14 @@ textarea{
 input::-ms-reveal,input::-ms-clear {
 	display: none;
 }
+input[type="file"]::-webkit-file-upload-button{
+   float: right;
+   border: 1px solid #aaaaaa;
+   border-radius: 4px;
+   padding-top:4px;
+   padding-bottom:4px;
+   background: linear-gradient(to bottom, #EFEFEF, #DEDEDE, #EFEFEF);
+}
 span.checkboxgroup{
 	display: inline-block;
 	margin:0 20px;
@@ -8638,6 +8646,9 @@ div.sqleditor.preview{
 .toolbar .pagination .pageNo{
 	display: none;
 }
+.toolbar .status .recordLabel{
+	display: none;
+}
 .toolbar .pagination[class*="span"]{
 	width:30%;
 	float: left;
@@ -8653,11 +8664,6 @@ div.sqleditor.preview{
 .toolbar .status[class*="span"]{
 	width:10%;
 	float: left;
-}
-}
-@media (min-width: 480px) and (max-width: 639px) {
-.toolbar .status .recordLabel{
-	display: none;
 }
 }
 @media (max-width: 479px) {
