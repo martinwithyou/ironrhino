@@ -136,7 +136,7 @@
 		<@rttbodytd entity=entity value=value celleditable=richtableConfig.celleditable template=template cellDynamicAttributes=config.cellDynamicAttributes dynamicAttributes=dynamicAttributes/>
 	</#if>
 </#list>
-<@rttbodytrend entity=entity showActionColumn=richtableConfig.showActionColumn buttons=actionColumnButtons editable=!readonly.value viewable=viewable entityReadonly=entityReadonly/>
+<@rttbodytrend entity=entity showActionColumn=richtableConfig.showActionColumn buttons=richtableConfig.actionColumnButtons editable=!readonly.value viewable=viewable entityReadonly=entityReadonly/>
 </#list>
 <@rtend showBottomButtons=richtableConfig.showBottomButtons readonly=readonly.value deletable=!readonly.value||readonly.deletable searchable=searchable filterable=richtableConfig.filterable showPageSize=richtableConfig.showPageSize! buttons=richtableConfig.bottomButtons! enableable=enableable formFooter=formFooter!/>
 <#if !readonly.value && hasSelect>
