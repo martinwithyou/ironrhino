@@ -47,7 +47,7 @@ public class EhCacheManager implements CacheManager {
 			return;
 		Cache cache = getCache(namespace, true);
 		if (cache != null)
-			cache.put(new Element(key, value, null,
+			cache.put(new Element(key, value, timeToLive <= 0 ? true : null,
 					timeToIdle > 0 ? (int) timeUnit.toSeconds(timeToIdle)
 							: null,
 					timeToIdle <= 0 && timeToLive > 0 ? (int) timeUnit
@@ -100,7 +100,8 @@ public class EhCacheManager implements CacheManager {
 			return;
 		Cache cache = getCache(namespace, true);
 		for (Map.Entry<String, Object> entry : map.entrySet())
-			cache.put(new Element(entry.getKey(), entry.getValue(), null, null,
+			cache.put(new Element(entry.getKey(), entry.getValue(),
+					timeToLive <= 0 ? true : null, null,
 					timeToLive > 0 ? (int) timeUnit.toSeconds(timeToLive)
 							: null));
 	}
@@ -144,8 +145,9 @@ public class EhCacheManager implements CacheManager {
 			return false;
 		Cache cache = getCache(namespace, true);
 		if (cache != null)
-			return cache.putIfAbsent(new Element(key, value, null, null,
-					(int) timeUnit.toSeconds(timeToLive))) == null;
+			return cache.putIfAbsent(new Element(key, value,
+					timeToLive <= 0 ? true : null, null, (int) timeUnit
+							.toSeconds(timeToLive))) == null;
 		else
 			return false;
 	}
@@ -158,14 +160,15 @@ public class EhCacheManager implements CacheManager {
 		Cache cache = getCache(namespace, true);
 		if (cache != null) {
 			Element element = cache.putIfAbsent(new Element(key,
-					new Long(delta), null, null, (int) timeUnit
-							.toSeconds(timeToLive)));
+					new Long(delta), timeToLive <= 0 ? true : null, null,
+					(int) timeUnit.toSeconds(timeToLive)));
 			if (element == null) {
 				return delta;
 			} else {
 				long value = ((long) element.getObjectValue()) + delta;
-				cache.put(new Element(key, new Long(value), null, null,
-						(int) timeUnit.toSeconds(timeToLive)));
+				cache.put(new Element(key, new Long(value),
+						timeToLive <= 0 ? true : null, null, (int) timeUnit
+								.toSeconds(timeToLive)));
 				return value;
 			}
 		} else
