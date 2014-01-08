@@ -288,7 +288,7 @@ cd ironrhino
 OLDLANGUAGE=\$LANGUAGE
 LANGUAGE=en
 if [ -d .svn ];then
-svnupoutput=\`svn up\`
+svnupoutput=\`svn up --force\`
 echo "\$svnupoutput"
 if \$(echo "\$svnupoutput"|grep Updated >/dev/null 2>&1) ; then
 ant dist
@@ -309,7 +309,7 @@ cd ..
 cd \$app
 if [ -d .svn ];then
 svn revert -R .
-svn up
+svn up --force
 elif [ -d .git ];then
 git reset --hard
 #git clean -f
