@@ -149,7 +149,7 @@ public class DateUtils {
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		cal.add(Calendar.MILLISECOND, -1);
+		cal.add(Calendar.SECOND, -1);
 		return cal.getTime();
 	}
 
