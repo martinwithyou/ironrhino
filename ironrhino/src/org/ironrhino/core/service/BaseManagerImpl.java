@@ -115,16 +115,13 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 						&& entity.getLevel() != 1 || entity.getParent() != null
 						&& (entity.getLevel() - entity.getParent().getLevel() != 1 || !entity
 								.getFullId().startsWith(
-										entity.getParent().getFullId() + ".")))
+										entity.getParent().getFullId())))
 						&& entity.isHasChildren();
 
 			}
-			String fullId;
-			if (entity.getParent() == null)
-				fullId = String.valueOf(entity.getId());
-			else
-				fullId = (entity.getParent()).getFullId() + "."
-						+ String.valueOf(entity.getId());
+			String fullId = String.valueOf(entity.getId()) + ".";
+			if (entity.getParent() != null)
+				fullId = entity.getParent().getFullId() + fullId;
 			entity.setFullId(fullId);
 			entity.setLevel(fullId.split("\\.").length);
 			session.saveOrUpdate(obj);
@@ -537,17 +534,22 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			if (te.getId() == null && StringUtils.isNotBlank(te.getFullId())) {
 				// workaround for javassist-3.16.x
 				String fullId = te.getFullId();
+				if (fullId.endsWith("."))
+					fullId = fullId.substring(0, fullId.length() - 1);
 				String id = fullId.substring(fullId.lastIndexOf('.') + 1);
 				te.setId(Long.valueOf(id));
 			}
+			String fullId = r.getFullId();
+			if (fullId.endsWith("."))
+				fullId = fullId.substring(0, fullId.length() - 1);
 			if (te.getId() == 0) {
-				if (r.getFullId().indexOf('.') < 0)
+				if (fullId.indexOf('.') < 0)
 					isChild = true;
 			} else {
-				if (r.getFullId().indexOf('.') > 0
-						&& te.getFullId().equals(
-								r.getFullId().substring(0,
-										r.getFullId().lastIndexOf('.'))))
+				if (fullId.indexOf('.') > 0
+						&& te.getFullId()
+								.equals(fullId.substring(0,
+										fullId.lastIndexOf('.') + 1)))
 					isChild = true;
 			}
 			if (isChild) {

@@ -67,6 +67,8 @@ public class BaseTreeControl<T extends BaseTreeableEntity<T>> implements
 	private synchronized void create(T treeNode) {
 		T parent;
 		String fullId = treeNode.getFullId();
+		if (fullId.endsWith("."))
+			fullId = fullId.substring(0, fullId.length() - 1);
 		if (treeNode.getId().toString().equals(fullId)) {
 			parent = tree;
 		} else {
@@ -97,6 +99,8 @@ public class BaseTreeControl<T extends BaseTreeableEntity<T>> implements
 		if (!t.getFullId().equals(treeNode.getFullId())) {
 			t.getParent().getChildren().remove(t);
 			String str = treeNode.getFullId();
+			if (str.endsWith("."))
+				str = str.substring(0, str.length() - 1);
 			long newParentId = 0;
 			if (str.indexOf('.') > 0) {
 				str = str.substring(0, str.lastIndexOf('.'));
@@ -122,8 +126,8 @@ public class BaseTreeControl<T extends BaseTreeableEntity<T>> implements
 	private void resetChildren(T treeNode) {
 		if (treeNode.isHasChildren())
 			for (T r : treeNode.getChildren()) {
-				String fullId = (r.getParent()).getFullId() + "."
-						+ String.valueOf(r.getId());
+				String fullId = (r.getParent()).getFullId()
+						+ String.valueOf(r.getId()) + ".";
 				r.setFullId(fullId);
 				r.setLevel(fullId.split("\\.").length);
 				resetChildren(r);
