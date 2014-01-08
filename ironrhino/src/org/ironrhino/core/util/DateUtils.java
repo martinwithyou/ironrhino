@@ -33,7 +33,7 @@ public class DateUtils {
 	private static final FastDateFormat DATETIME_ISO_DF = FastDateFormat
 			.getInstance(DATETIME_ISO);
 
-	public static final String TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSSS";
+	public static final String TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSS";
 
 	private static final FastDateFormat TIMESTAMP_DF = FastDateFormat
 			.getInstance(TIMESTAMP);
@@ -100,6 +100,14 @@ public class DateUtils {
 		}
 	}
 
+	public static Date parseTimestamp(String string) {
+		try {
+			return TIMESTAMP_DF.parse(string);
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+
 	public static Date parseDatetimeISO(String string) {
 		try {
 			return DATETIME_ISO_DF.parse(string);
@@ -149,7 +157,7 @@ public class DateUtils {
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		cal.add(Calendar.SECOND, -1);
+		cal.add(Calendar.MILLISECOND, -501); // 501 for mysql
 		return cal.getTime();
 	}
 
