@@ -33,15 +33,20 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 				Object action = invocation.getAction();
 				if (action instanceof ValidationAware) {
 					ValidationAware validationAwareAction = (ValidationAware) action;
-					if (e instanceof OptimisticLockingFailureException) {
+					Throwable cause = e.getCause();
+					if (e instanceof OptimisticLockingFailureException
+							|| cause instanceof OptimisticLockingFailureException) {
 						validationAwareAction.addActionError(findText(
 								"try.again.later", null));
-					} else if (e instanceof DataIntegrityViolationException) {
+					} else if (e instanceof DataIntegrityViolationException
+							|| cause instanceof DataIntegrityViolationException) {
 						validationAwareAction.addActionError(findText(
 								"validation.already.exists", null));
 						log.error(e.getMessage(), e);
-					} else if (e instanceof ValidationException) {
-						ValidationException ve = (ValidationException) e;
+					} else if (e instanceof ValidationException
+							|| cause instanceof ValidationException) {
+						ValidationException ve = (ValidationException) ((e instanceof ValidationException) ? e
+								: cause);
 						for (String s : ve.getActionMessages())
 							validationAwareAction.addActionMessage(findText(s,
 									null));
@@ -54,17 +59,17 @@ public class ExceptionInterceptor extends AbstractInterceptor {
 								validationAwareAction.addFieldError(
 										entry.getKey(), findText(s, null));
 						}
+					} else if (e instanceof ErrorMessage) {
+						ErrorMessage em = (ErrorMessage) ((e instanceof ErrorMessage) ? e
+								: cause);
+						validationAwareAction.addActionError(em
+								.getLocalizedMessage());
 					} else {
-						if (e instanceof ErrorMessage) {
-							validationAwareAction.addActionError(e
-									.getLocalizedMessage());
-						} else {
-							String msg = findText(e.getMessage(), null);
-							if (msg == null)
-								msg = e.toString();
-							validationAwareAction.addActionError(msg);
-							log.error(e.getMessage(), e);
-						}
+						String msg = findText(e.getMessage(), null);
+						if (msg == null)
+							msg = e.toString();
+						validationAwareAction.addActionError(msg);
+						log.error(e.getMessage(), e);
 					}
 				}
 				result = BaseAction.ERROR;
