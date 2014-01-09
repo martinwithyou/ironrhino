@@ -3,11 +3,14 @@ package org.ironrhino.core.hibernate;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.persistence.Entity;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.cfg.AvailableSettings;
+import org.ironrhino.core.hibernate.dialect.MyDialectResolver;
 import org.ironrhino.core.util.ClassScaner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,11 @@ public class SessionFactoryBean extends
 
 	@Override
 	public void afterPropertiesSet() throws IOException {
+		Properties properties = getHibernateProperties();
+		if (StringUtils.isBlank(properties
+				.getProperty(AvailableSettings.DIALECT_RESOLVERS)))
+			properties.put(AvailableSettings.DIALECT_RESOLVERS,
+					MyDialectResolver.class.getName());
 		Set<Class<?>> classes = ClassScaner.scanAnnotated(
 				ClassScaner.getAppPackages(), Entity.class);
 		if (annotatedClasses != null)
