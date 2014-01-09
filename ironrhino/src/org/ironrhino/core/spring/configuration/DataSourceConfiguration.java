@@ -40,7 +40,7 @@ public class DataSourceConfiguration {
 	@Value("${dataSource.initialSize:5}")
 	private int minConnectionsPerPartition;
 
-	@Value("${dataSource.statementsCacheSize:5}")
+	@Value("${dataSource.statementsCacheSize:0}")
 	private int statementsCacheSize;
 
 	@Value("${dataSource.idleConnectionTestPeriodInMinutes:1}")
