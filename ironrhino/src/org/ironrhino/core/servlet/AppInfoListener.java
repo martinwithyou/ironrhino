@@ -65,6 +65,12 @@ public class AppInfoListener implements ServletContextListener {
 		System.setProperty(AppInfo.KEY_APP_NAME, AppInfo.getAppName());
 		System.setProperty("hibernate.logger.level",
 				AppInfo.getStage() == Stage.DEVELOPMENT ? "TRACE" : "INFO");
+		System.setProperty(
+				"console.logger.level",
+				AppInfo.getStage() == Stage.PRODUCTION
+						&& (System.getProperty("os.name") == null || !System
+								.getProperty("os.name").startsWith("Windows")) ? "ERROR"
+						: "INFO");
 		String context = SERVLET_CONTEXT.getRealPath("/");
 		if (context == null)
 			context = "";
