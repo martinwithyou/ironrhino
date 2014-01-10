@@ -11,7 +11,6 @@
 	<appender name="APPLICATION" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="${app.home}/logs/application.log"/>
 		<param name="encoding" value="utf-8"/>
-		<param name="threshold" value="INFO"/>
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d %t %c %p %X{session}%X{url} %m%n"/>
 		</layout>
