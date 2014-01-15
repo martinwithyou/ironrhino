@@ -40,13 +40,13 @@ public class DataSourceConfiguration {
 	@Value("${dataSource.initialSize:5}")
 	private int minConnectionsPerPartition;
 
-	@Value("${dataSource.statementsCacheSize:0}")
+	@Value("${dataSource.statementsCacheSize:10}")
 	private int statementsCacheSize;
 
-	@Value("${dataSource.idleConnectionTestPeriodInMinutes:1}")
+	@Value("${dataSource.idleConnectionTestPeriodInMinutes:10}")
 	private int idleConnectionTestPeriodInMinutes;
 
-	@Value("${dataSource.idleMaxAgeInMinutes:60}")
+	@Value("${dataSource.idleMaxAgeInMinutes:30}")
 	private int idleMaxAgeInMinutes;
 
 	@Value("${dataSource.maxConnectionAgeInSeconds:14400}")
