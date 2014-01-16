@@ -31,12 +31,12 @@
 	<property name="server.shutdown.cmd" value="${server.home}/bin/shutdown.${cmd.suffix}" />
 
 	<path id="lib.classpath">
+		<fileset dir="${webapp.dir}/WEB-INF/lib">
+					<include name="*.jar" />
+				</fileset>
 		<fileset dir="${lib.dir}">
 			<exclude name="closure*.jar" />
 			<exclude name="yuicompressor*.jar" />
-		</fileset>
-		<fileset dir="${webapp.dir}/WEB-INF/lib">
-			<include name="*.jar" />
 		</fileset>
 	</path>
 
