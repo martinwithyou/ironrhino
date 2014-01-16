@@ -39,16 +39,13 @@ public class Main {
 	private void launchJetty() throws Exception {
 		ProtectionDomain protectionDomain = Main.class.getProtectionDomain();
 		URL warUrl = protectionDomain.getCodeSource().getLocation();
-
 		System.out.println(warUrl.getPath());
-
 		List<URL> jarUrls = extractJettyJarsFromWar(warUrl.getPath());
-
 		ClassLoader urlClassLoader = new URLClassLoader(
 				(URL[]) jarUrls.toArray(new URL[jarUrls.size()]));
 		Thread.currentThread().setContextClassLoader(urlClassLoader);
-
-		Class<?> jettyUtil = urlClassLoader.loadClass("bootstrap.JettyLauncher");
+		Class<?> jettyUtil = urlClassLoader
+				.loadClass("bootstrap.JettyLauncher");
 		Method mainMethod = jettyUtil.getMethod("start",
 				new Class[] { URL.class });
 		mainMethod.invoke(null, new Object[] { warUrl });
@@ -57,24 +54,19 @@ public class Main {
 	private List<URL> extractJettyJarsFromWar(String warPath)
 			throws IOException {
 		try (JarFile jarFile = new JarFile(warPath)) {
-
 			List<URL> jarUrls = new ArrayList<URL>();
-
-			InputStream inStream = null;
-			try {
-				for (String entryPath : this.jettyJars) {
-					File tmpFile;
-					try {
-						tmpFile = File.createTempFile(
-								entryPath.replaceAll("/", "_"), "war");
-					} catch (IOException e) {
-						String tmpdir = System.getProperty("java.io.tmpdir");
-						throw new IOException("Failed to extract " + entryPath
-								+ " to " + tmpdir, e);
-					}
-					JarEntry jarEntry = jarFile.getJarEntry(entryPath);
-					inStream = jarFile.getInputStream(jarEntry);
-
+			for (String entryPath : this.jettyJars) {
+				File tmpFile;
+				try {
+					tmpFile = File.createTempFile(
+							entryPath.replaceAll("/", "_"), "war");
+				} catch (IOException e) {
+					String tmpdir = System.getProperty("java.io.tmpdir");
+					throw new IOException("Failed to extract " + entryPath
+							+ " to " + tmpdir, e);
+				}
+				JarEntry jarEntry = jarFile.getJarEntry(entryPath);
+				try (InputStream inStream = jarFile.getInputStream(jarEntry)) {
 					OutputStream outStream = new FileOutputStream(tmpFile);
 					try {
 						byte[] buffer = new byte[8192];
@@ -90,12 +82,6 @@ public class Main {
 					tmpFile.deleteOnExit();
 
 					jarUrls.add(tmpFile.toURI().toURL());
-				}
-			} catch (Exception exc) {
-				exc.printStackTrace();
-			} finally {
-				if (inStream != null) {
-					inStream.close();
 				}
 			}
 			return jarUrls;
