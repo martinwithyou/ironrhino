@@ -48,7 +48,7 @@ public class Main {
 				(URL[]) jarUrls.toArray(new URL[jarUrls.size()]));
 		Thread.currentThread().setContextClassLoader(urlClassLoader);
 
-		Class<?> jettyUtil = urlClassLoader.loadClass("start.JettyLauncher");
+		Class<?> jettyUtil = urlClassLoader.loadClass("bootstrap.JettyLauncher");
 		Method mainMethod = jettyUtil.getMethod("start",
 				new Class[] { URL.class });
 		mainMethod.invoke(null, new Object[] { warUrl });
