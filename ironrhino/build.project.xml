@@ -81,6 +81,8 @@
 					var tofile = new File(basedir,path);
 	        		if(!file.exists()){
 	        			var parent = file.getParentFile();
+						if(!parent.exists())
+							continue;
 	        			var files = parent.listFiles();
 	        			for(var i=0;i<files.length;i++){
 	        				var f = files[i];
