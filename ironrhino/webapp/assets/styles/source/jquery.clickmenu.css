@@ -14,14 +14,14 @@
 	padding: 2px;
 	border: 1px solid black;
 	background-color: #eee;
-	min-width: 60px; /* ie doesnt know this :/ */
+	min-width: 100px; /* ie doesnt know this :/ */
 	//float: left;/*ie again*/
 	//width: 100%;/*and again*/
 }
 .clickMenu div.outerbox
 {
 	display: none;
-	min-width: 66px; /* firefox produces animation-flickering when the box is bigger than this :/ */
+	min-width: 106px; /* firefox produces animation-flickering when the box is bigger than this :/ */
 }
 .clickMenu div.inner
 {
@@ -52,7 +52,7 @@
 .clickMenu li.main li
 {
 	z-index: 2;
-	min-width: 60px;
+	min-width: 100px;
 }
 .clickMenu li.hover
 {
