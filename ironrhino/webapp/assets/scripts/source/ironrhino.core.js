@@ -784,24 +784,27 @@ Observation.common = function(container) {
 							t.val($.trim(t.val()));
 						}, 50);
 			}).each(function() {
-				if (!$(this).attr('autocomplete'))
-					$(this).attr('autocomplete', 'off');
-				var maxlength = $(this).attr('maxlength');
-				if (!maxlength || maxlength > 3000) {
-					if ($(this).hasClass('date'))
-						$(this).attr('maxlength', '10');
-					else if ($(this).hasClass('datetime'))
-						$(this).attr('maxlength', '19');
-					else if ($(this).hasClass('time'))
-						$(this).attr('maxlength', '8');
-					else if ($(this).hasClass('integer'))
-						$(this).attr('maxlength', '11');
-					else if ($(this).hasClass('long'))
-						$(this).attr('maxlength', '20');
-					else if ($(this).hasClass('double'))
-						$(this).attr('maxlength', '22');
-					else
-						$(this).attr('maxlength', '255');
+				var t = $(this);
+				if (!t.attr('autocomplete'))
+					t.attr('autocomplete', 'off');
+				if (!t.hasClass('unlimited')) {
+					var maxlength = t.attr('maxlength');
+					if (!maxlength || maxlength > 3000) {
+						if (t.hasClass('date'))
+							t.attr('maxlength', '10');
+						else if (t.hasClass('datetime'))
+							t.attr('maxlength', '19');
+						else if (t.hasClass('time'))
+							t.attr('maxlength', '8');
+						else if (t.hasClass('integer'))
+							t.attr('maxlength', '11');
+						else if (t.hasClass('long'))
+							t.attr('maxlength', '20');
+						else if (t.hasClass('double'))
+							t.attr('maxlength', '22');
+						else
+							t.attr('maxlength', '255');
+					}
 				}
 			});
 	if (MODERN_BROWSER)
