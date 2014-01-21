@@ -11,9 +11,10 @@
 								}, parseInt(t.data('timeout')));
 					} else if (t.data('interval')) {
 						ajaxpanel(t);
-						setInterval(function() {
+						var _interval = setInterval(function() {
 									ajaxpanel(t);
 								}, parseInt(t.data('interval')));
+						t.addClass('intervaled').data('_interval', _interval);
 					} else if (!t.hasClass('manual'))
 						ajaxpanel(t);
 				});

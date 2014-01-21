@@ -403,6 +403,9 @@ Ajax = {
 				var r = $('#' + key);
 				if (key == Ajax.defaultRepacement && !r.length)
 					r = $('body');
+				$('.intervaled', r).each(function() {
+							clearInterval($(this).data('_interval'));
+						});
 				if (!options.quiet && r.length) {
 					var pin = $('.pin', r);
 					var top = pin.length ? pin.offset().top : r.offset().top;
@@ -1096,8 +1099,10 @@ Observation.common = function(container) {
 					}, {
 						wmode : 'transparent'
 					});
-			if (t.data('_interval'))
+			if (t.hasClass('intervaled')) {
+				t.removeClass('intervaled');
 				clearInterval(parseInt(t.data('_interval')));
+			}
 			if (t.data('interval')) {
 				var _interval = setInterval(function() {
 							if (t.data('quiet')) {
@@ -1114,7 +1119,7 @@ Observation.common = function(container) {
 								document.getElementById(id).reload(data);
 							}
 						}, parseInt(t.data('interval')));
-				t.data('_interval', _interval);
+				t.addClass('intervaled').data('_interval', _interval);
 			}
 		});
 
