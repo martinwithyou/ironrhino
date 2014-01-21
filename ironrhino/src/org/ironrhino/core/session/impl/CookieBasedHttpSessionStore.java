@@ -41,7 +41,7 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 	public void initialize(WrappedHttpSession session) {
 		String cookie = getCookie(session);
 		if (StringUtils.isNotBlank(cookie)) {
-			cookie = Blowfish.decrypt(cookie);
+			cookie = Blowfish.decryptWithSalt(cookie, session.getId());
 			String creationTime = NumberUtils.decimalToX(62,
 					BigInteger.valueOf(session.getCreationTime()));
 			if (cookie.startsWith("{") || cookie.startsWith(creationTime)) {
@@ -62,7 +62,8 @@ public class CookieBasedHttpSessionStore implements HttpSessionStore {
 			String creationTime = NumberUtils.decimalToX(62,
 					BigInteger.valueOf(session.getCreationTime()));
 			String cookie = creationTime + sessionString;
-			saveCookie(session, Blowfish.encrypt(cookie));
+			saveCookie(session,
+					Blowfish.encryptWithSalt(cookie, session.getId()));
 		} else
 			clearCookie(session);
 	}

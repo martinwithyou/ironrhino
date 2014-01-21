@@ -113,6 +113,19 @@ public class Blowfish {
 		return encrypt(str, null);
 	}
 
+	public static String encryptWithSalt(String str, String salt) {
+		String key = DigestUtils.md5Hex(defaultKey + salt).substring(0,
+				KEY_LENGTH);
+		Blowfish blowfish = new Blowfish(key);
+		try {
+			return new String(Base64.encodeBase64(blowfish.encrypt(str
+					.getBytes("UTF-8"))), "UTF-8");
+		} catch (Exception ex) {
+			log.error("encrypt exception!", ex);
+			return "";
+		}
+	}
+
 	public static String encrypt(String str, String key) {
 		if (str == null)
 			return null;
@@ -129,6 +142,19 @@ public class Blowfish {
 
 	public static String decrypt(String str) {
 		return decrypt(str, null);
+	}
+
+	public static String decryptWithSalt(String str, String salt) {
+		String key = DigestUtils.md5Hex(defaultKey + salt).substring(0,
+				KEY_LENGTH);
+		Blowfish blowfish = new Blowfish(key);
+		try {
+			return new String(blowfish.decrypt(Base64.decodeBase64(str
+					.getBytes("UTF-8"))), "UTF-8");
+		} catch (Exception ex) {
+			log.error("decrypt exception!", ex);
+			return "";
+		}
 	}
 
 	public static String decrypt(String str, String key) {
