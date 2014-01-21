@@ -30942,7 +30942,7 @@ Observation.common = function(container) {
 					t.attr('autocomplete', 'off');
 				if (!t.hasClass('unlimited')) {
 					var maxlength = t.attr('maxlength');
-					if (!maxlength || maxlength > 3000) {
+					if (!maxlength || maxlength > 4000) {
 						if (t.hasClass('date'))
 							t.attr('maxlength', '10');
 						else if (t.hasClass('datetime'))
