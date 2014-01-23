@@ -27,6 +27,7 @@ public class AnnotationShadows {
 		private boolean unique;
 		private int maxlength;
 		private String regex;
+		private boolean trim = true;
 		private Set<String> cssClasses = new LinkedHashSet<String>(0);
 		private String thCssClass = "";
 		private ReadonlyImpl readonly = new ReadonlyImpl();
@@ -72,6 +73,7 @@ public class AnnotationShadows {
 			this.unique = config.unique();
 			this.maxlength = config.maxlength();
 			this.regex = config.regex();
+			this.trim = config.trim();
 			this.readonly = new ReadonlyImpl(config.readonly());
 			this.displayOrder = config.displayOrder();
 			if (StringUtils.isNotBlank(config.alias()))
@@ -278,6 +280,14 @@ public class AnnotationShadows {
 
 		public void setRegex(String regex) {
 			this.regex = regex;
+		}
+
+		public boolean isTrim() {
+			return trim;
+		}
+
+		public void setTrim(boolean trim) {
+			this.trim = trim;
 		}
 
 		public String getListKey() {

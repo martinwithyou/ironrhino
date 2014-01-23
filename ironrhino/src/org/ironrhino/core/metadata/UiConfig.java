@@ -30,6 +30,8 @@ public @interface UiConfig {
 	int maxlength() default 0;
 
 	String regex() default "";
+	
+	boolean trim() default true;
 
 	String cssClass() default "";
 
