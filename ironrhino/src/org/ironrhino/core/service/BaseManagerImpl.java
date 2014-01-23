@@ -27,6 +27,7 @@ import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
@@ -36,7 +37,6 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.internal.CriteriaImpl.OrderEntry;
 import org.ironrhino.core.model.BaseTreeableEntity;
-import org.ironrhino.core.model.IdAssigned;
 import org.ironrhino.core.model.Ordered;
 import org.ironrhino.core.model.Persistable;
 import org.ironrhino.core.model.Recordable;
@@ -85,13 +85,27 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 	@Override
 	@Transactional
 	public void save(T obj) {
-		ReflectionUtils.processCallback(obj, obj.isNew() ? PrePersist.class
+		boolean isnew = obj.isNew();
+		GenericGenerator genericGenerator = AnnotationUtils
+				.getAnnotatedPropertyNameAndAnnotations(obj.getClass(),
+						GenericGenerator.class).get("id");
+		boolean idAssigned = genericGenerator != null
+				&& "assigned".equals(genericGenerator.strategy());
+		if (idAssigned) {
+			Serializable id = obj.getId();
+			if (id == null)
+				throw new IllegalArgumentException(obj + " must have an ID");
+			DetachedCriteria dc = detachedCriteria();
+			dc.add(Restrictions.eq("id", id));
+			isnew = countByCriteria(dc) == 0;
+		}
+		ReflectionUtils.processCallback(obj, isnew ? PrePersist.class
 				: PreUpdate.class);
 		if (obj instanceof Recordable) {
 			Recordable r = (Recordable) obj;
 			Date date = new Date();
 			UserDetails user = AuthzUtils.getUserDetails();
-			if (obj.isNew()) {
+			if (isnew) {
 				r.setCreateDate(date);
 				r.setCreateUserDetails(user);
 			} else {
@@ -132,11 +146,14 @@ public abstract class BaseManagerImpl<T extends Persistable<?>> implements
 			}
 			return;
 		}
-		if (obj instanceof IdAssigned)
-			session.save(obj);
+		if (idAssigned)
+			if (isnew)
+				session.save(obj);
+			else
+				session.update(obj);
 		else
 			session.saveOrUpdate(obj);
-		ReflectionUtils.processCallback(obj, obj.isNew() ? PostPersist.class
+		ReflectionUtils.processCallback(obj, isnew ? PostPersist.class
 				: PostUpdate.class);
 	}
 
