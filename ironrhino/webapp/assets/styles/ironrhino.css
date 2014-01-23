@@ -1537,6 +1537,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 /*
  * add border-radius: 4px; to .chosen-container-multi .chosen-choices
  * change border-radius: 5px to 4px;height: 20px;line-height: 23px;padding: 4px 6px; on .chosen-container-single .chosen-single
+ * change * div b : 2px to 5px;
  */
 /* @group Base */
 .chosen-container {
@@ -8967,6 +8968,7 @@ table.richtable td {
 }
 .richtable tbody input.text,.richtable tbody textarea.text {
 	width: 90%;
+	width: calc(100% - 13px);
 	margin: 0;
 }
 .richtable tbody input.radio {
@@ -8975,6 +8977,7 @@ table.richtable td {
 }
 .richtable tbody select {
 	width: 95%;
+	width: calc(100% - 13px);
 	margin: 0;
 	padding-left: 0;
 }

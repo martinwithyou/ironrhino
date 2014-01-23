@@ -40,6 +40,7 @@ table.richtable td {
 }
 .richtable tbody input.text,.richtable tbody textarea.text {
 	width: 90%;
+	width: calc(100% - 13px);
 	margin: 0;
 }
 .richtable tbody input.radio {
@@ -48,6 +49,7 @@ table.richtable td {
 }
 .richtable tbody select {
 	width: 95%;
+	width: calc(100% - 13px);
 	margin: 0;
 	padding-left: 0;
 }
