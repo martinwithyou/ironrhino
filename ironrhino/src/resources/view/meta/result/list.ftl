@@ -59,7 +59,7 @@
 			<#assign label=key>
 			<#if richtableConfig.celleditable&&!(readonly.value||config.readonly.value) && !(naturalIds?keys?seq_contains(key)&&!naturalIdMutable)>
 				<#assign cellEdit=config.cellEdit!/>
-				<#if cellEdit==''>
+				<#if cellEdit=='' && !(idAssigned && key=='id')>
 					<#if config.type=='input'>
 						<#assign cellEdit='click'/>
 					<#elseif config.type=='textarea'>

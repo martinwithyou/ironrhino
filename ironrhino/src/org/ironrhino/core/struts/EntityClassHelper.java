@@ -25,6 +25,7 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 import org.ironrhino.core.hibernate.CriterionOperator;
 import org.ironrhino.core.metadata.UiConfig;
@@ -39,6 +40,11 @@ import org.ironrhino.core.util.ValueThenKeyComparator;
 public class EntityClassHelper {
 
 	public static Map<String, UiConfigImpl> getUiConfigs(Class<?> entityClass) {
+		GenericGenerator genericGenerator = AnnotationUtils
+				.getAnnotatedPropertyNameAndAnnotations(entityClass,
+						GenericGenerator.class).get("id");
+		boolean idAssigned = genericGenerator != null
+				&& "assigned".equals(genericGenerator.strategy());
 		Map<String, NaturalId> naturalIds = AnnotationUtils
 				.getAnnotatedPropertyNameAndAnnotations(entityClass,
 						NaturalId.class);
@@ -101,7 +107,8 @@ public class EntityClassHelper {
 
 			if (uiConfig != null && uiConfig.hidden())
 				continue;
-			if ("new".equals(propertyName) || "id".equals(propertyName)
+			if ("new".equals(propertyName) || !idAssigned
+					&& "id".equals(propertyName)
 					|| "class".equals(propertyName)
 					|| "fieldHandler".equals(propertyName)
 					|| pd.getReadMethod() == null
@@ -133,6 +140,8 @@ public class EntityClassHelper {
 				} catch (Exception e) {
 				}
 			UiConfigImpl uci = new UiConfigImpl(pd.getPropertyType(), uiConfig);
+			if (idAssigned && propertyName.equals("id"))
+				uci.addCssClass("required checkavailable");
 			if (Attributable.class.isAssignableFrom(entityClass)
 					&& pd.getName().equals("attributes")) {
 				uci.setType("attributes");

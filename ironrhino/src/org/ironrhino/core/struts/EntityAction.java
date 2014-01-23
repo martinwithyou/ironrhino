@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -126,6 +127,14 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 
 	public boolean isTreeable() {
 		return BaseTreeableEntity.class.isAssignableFrom(getEntityClass());
+	}
+
+	public boolean isIdAssigned() {
+		GenericGenerator genericGenerator = AnnotationUtils
+				.getAnnotatedPropertyNameAndAnnotations(getEntityClass(),
+						GenericGenerator.class).get("id");
+		return genericGenerator != null
+				&& "assigned".equals(genericGenerator.strategy());
 	}
 
 	public Persistable getEntity() {
@@ -648,6 +657,7 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 	}
 
 	private boolean makeEntityValid() {
+		boolean idAssigned = isIdAssigned();
 		boolean fromList = "cell".equalsIgnoreCase(ServletActionContext
 				.getRequest().getHeader("X-Edit"));
 		Map<String, UiConfigImpl> uiConfigs = getUiConfigs();
@@ -691,7 +701,19 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 		boolean caseInsensitive = AnnotationUtils
 				.getAnnotatedPropertyNameAndAnnotations(getEntityClass(),
 						CaseInsensitive.class).size() > 0;
-		if (_entity.isNew()) {
+		boolean isnew = _entity.isNew();
+		if (idAssigned)
+			isnew = "true".equals(ServletActionContext.getRequest()
+					.getParameter("_isnew"));
+		if (isnew) {
+			if (idAssigned) {
+				persisted = entityManager.get(_entity.getId());
+				if (persisted != null) {
+					addFieldError(getEntityName() + ".id",
+							getText("validation.already.exists"));
+					return false;
+				}
+			}
 			if (naturalIds.size() > 0) {
 				Serializable[] args = new Serializable[naturalIds.size() * 2];
 				Iterator<String> it = naturalIds.keySet().iterator();
@@ -792,6 +814,8 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 							continue;
 					}
 					editedPropertyNames.add(propertyName);
+					if (idAssigned && isnew)
+						editedPropertyNames.add("id");
 				}
 				for (String name : editedPropertyNames)
 					bwp.setPropertyValue(name, bw.getPropertyValue(name));
@@ -970,11 +994,10 @@ public class EntityAction<EN extends Persistable<?>> extends BaseAction {
 				Class type = bw.getPropertyDescriptor(propertyName)
 						.getPropertyType();
 				if (uiConfig.getReadonly().isValue() || !naturalIdMutable
-						&& naturalIds.keySet().contains(propertyName)
-						&& !_entity.isNew()
+						&& naturalIds.keySet().contains(propertyName) && !isnew
 						|| !Persistable.class.isAssignableFrom(type))
 					continue;
-				if (!_entity.isNew()
+				if (!isnew
 						&& StringUtils.isNotBlank(uiConfig.getReadonly()
 								.getExpression())
 						&& evalBoolean(uiConfig.getReadonly().getExpression(),

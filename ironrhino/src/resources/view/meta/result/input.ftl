@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <#escape x as x?html><html>
 <head>
-<title><#if !entity??><#assign entity=entityName?eval></#if><#assign isnew = !entity??||entity.new/><#if isnew>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText(entityName)}</title>
+<title><#if !entity??><#assign entity=entityName?eval></#if><#assign isnew = !entity??||entity.new/><#assign isnew = !entity??||entity.new/><#if idAssigned><#assign isnew=!entity??||!entity.id?has_content/></#if><#if isnew>${action.getText('create')}<#else>${action.getText('edit')}</#if>${action.getText(entityName)}</title>
 </head>
 <body>
 <@s.form action="${actionBaseUrl}/save" method="post" cssClass="ajax form-horizontal${richtableConfig.importable?string(' importable','')}">
 	<#if !isnew>
+	<#if !idAssigned>
 	<@s.hidden name="${entityName}.id" />
+	</#if>
 	<#else>
+	<#if idAssigned>
+	<input type="hidden" name="_isnew" value="true" />
+	</#if>
 	<#if treeable??&&treeable>
 	<@s.hidden name="parent"/>
 	</#if>
@@ -29,6 +34,9 @@
 			<#assign label=config.alias>
 		</#if>
 		<#assign readonly=naturalIds?keys?seq_contains(key)&&!naturalIdMutable&&!isnew||config.readonly.value||config.readonly.expression?has_content&&config.readonly.expression?eval>
+		<#if !isnew&&idAssigned&&key=='id'>
+		<#assign readonly=true/>
+		</#if>
 		<#if !(entity.new && readonly)>
 			<#assign id=(config.id?has_content)?string(config.id!,entityName+'-'+key)/>
 			<#if config.type=='textarea'>
