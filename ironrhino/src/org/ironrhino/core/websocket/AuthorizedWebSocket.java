@@ -91,7 +91,7 @@ public class AuthorizedWebSocket {
 				session.getBasicRemote().sendText("access.denied");
 				session.close(new CloseReason(CloseCodes.NORMAL_CLOSURE,
 						"access.denied"));
-			} catch (IOException e) {
+			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
 		} else {
