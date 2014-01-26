@@ -124,14 +124,14 @@
 			mkdir.setDir(new File(webappLib));
 			mkdir.perform();
 			var file = new File(projectSrc+'/'+new java.lang.String(projectPackage).replaceAll('\\.','/')+'/package-info.java');
-			if(!file.exists){
+			if(!file.exists()){
 				var echo = project.createTask("echo");
 				echo.setFile(file);
 				echo.setMessage('@AutoConfig(namespace = "/")\npackage '+projectPackage+';\nimport org.ironrhino.core.metadata.AutoConfig;');
 				echo.perform();
 			}
 			var file = new File(projectSrc+'/resources/i18n/'+projectName+'/messages_zh_CN.properties');
-			if(!file.exists){
+			if(!file.exists()){
 				echo = project.createTask("echo");
 				echo.setFile(file);
 				echo.setMessage('#'+projectName+'='+projectName);
@@ -196,14 +196,14 @@
 			copy.setTodir(new File(webappLib));
 			copy.perform();
 			file = new File(projectSrc+'/ironrhino.properties');
-			if(!file.exists){
+			if(!file.exists()){
 				var echo = project.createTask("echo");
 				echo.setFile(new File(projectSrc+'/ironrhino.properties'));
 				echo.setMessage('app.name='+projectName+'\napp.basePackage='+projectPackage);
 				echo.perform();
 			}
 			file = new File(projectSrc+'/resources/view/decorator/include/nav.ftl');
-			if(!file.exists){
+			if(!file.exists()){
 				echo = project.createTask("echo");
 				echo.setFile(file);
 				echo.setMessage('<ul class="nav">\n  <li><a href="<@url value="/"/>">${action.getText("index")}</a></li>\n  <@authorize ifAnyGranted="ROLE_ADMINISTRATOR">\n  <li><a href="<@url value="/user"/>">${action.getText("user")}</a></li>\n</@authorize>\n</ul>');
@@ -236,7 +236,7 @@
 				classpath.push('	<classpathentry kind="lib" path="webapp/WEB-INF/lib/'+files[i].getName()+'"/>');
 			classpath.push('</classpath>');
 			file = new File(projectDir+'/.classpath');
-			if(!file.exists){
+			if(!file.exists()){
 				echo = project.createTask("echo");
 				echo.setFile(file);
 				echo.setMessage(classpath.join('\n'));
