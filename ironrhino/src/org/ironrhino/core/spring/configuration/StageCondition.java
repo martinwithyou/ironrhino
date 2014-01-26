@@ -15,8 +15,6 @@ public class StageCondition implements Condition {
 	}
 
 	public static boolean matches(Stage stage) {
-		if (stage == null)
-			return true;
 		return AppInfo.getStage() == stage;
 	}
 }

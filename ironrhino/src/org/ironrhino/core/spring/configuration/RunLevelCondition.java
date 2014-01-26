@@ -15,8 +15,6 @@ public class RunLevelCondition implements Condition {
 	}
 
 	public static boolean matches(RunLevel runLevel) {
-		if (runLevel == null)
-			return true;
 		return AppInfo.getRunLevel().compareTo(runLevel) >= 0;
 	}
 
