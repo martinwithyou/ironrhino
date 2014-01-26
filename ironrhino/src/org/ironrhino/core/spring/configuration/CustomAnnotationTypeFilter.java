@@ -53,6 +53,13 @@ public class CustomAnnotationTypeFilter extends AnnotationTypeFilter {
 				&& !ClassPresentCondition.matches((String) attributes
 						.get("value")))
 			return false;
+		attributes = metadata
+				.getAnnotationAttributes(ResourcePresentConditional.class
+						.getName());
+		if (attributes != null
+				&& !ResourcePresentCondition.matches((String) attributes
+						.get("value")))
+			return false;
 		return true;
 	}
 
