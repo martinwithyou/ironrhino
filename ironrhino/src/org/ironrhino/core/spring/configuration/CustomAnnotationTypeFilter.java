@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 
-import org.ironrhino.core.util.AppInfo;
+import org.ironrhino.core.util.AppInfo.RunLevel;
+import org.ironrhino.core.util.AppInfo.Stage;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
@@ -37,12 +38,20 @@ public class CustomAnnotationTypeFilter extends AnnotationTypeFilter {
 		Map<String, Object> attributes = metadata
 				.getAnnotationAttributes(RunLevelConditional.class.getName());
 		if (attributes != null
-				&& !AppInfo.matchesRunLevel(attributes.get("value")))
+				&& !RunLevelCondition.matches((RunLevel) attributes
+						.get("value")))
 			return false;
 		attributes = metadata.getAnnotationAttributes(StageConditional.class
 				.getName());
 		if (attributes != null
-				&& !AppInfo.matchesStage(attributes.get("value")))
+				&& !StageCondition.matches((Stage) attributes.get("value")))
+			return false;
+		attributes = metadata
+				.getAnnotationAttributes(ClassPresentConditional.class
+						.getName());
+		if (attributes != null
+				&& !ClassPresentCondition.matches((String) attributes
+						.get("value")))
 			return false;
 		return true;
 	}

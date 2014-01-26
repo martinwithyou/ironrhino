@@ -1,7 +1,5 @@
 package org.ironrhino.core.spring.configuration;
 
-import java.util.Map;
-
 import org.ironrhino.core.util.AppInfo;
 import org.ironrhino.core.util.AppInfo.RunLevel;
 import org.springframework.context.annotation.Condition;
@@ -12,9 +10,14 @@ public class RunLevelCondition implements Condition {
 
 	@Override
 	public boolean matches(ConditionContext ctx, AnnotatedTypeMetadata md) {
-		Map<String, Object> attributes = md
-				.getAnnotationAttributes(RunLevelConditional.class.getName());
-		return AppInfo.matchesRunLevel((RunLevel) attributes.get("value"));
+		return matches((RunLevel) md.getAnnotationAttributes(
+				RunLevelConditional.class.getName()).get("value"));
+	}
+
+	public static boolean matches(RunLevel runLevel) {
+		if (runLevel == null)
+			return true;
+		return AppInfo.getRunLevel().compareTo(runLevel) >= 0;
 	}
 
 }
