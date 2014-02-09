@@ -31,6 +31,7 @@ import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
 import org.ironrhino.core.service.BaseManager;
+import org.ironrhino.core.spring.configuration.ClassPresentConditional;
 import org.ironrhino.core.util.ApplicationContextUtils;
 import org.ironrhino.core.util.AuthzUtils;
 import org.ironrhino.core.util.JsonUtils;
@@ -43,6 +44,7 @@ import org.springframework.util.ClassUtils;
 @Entity
 @Table(name = "`user`")
 @Richtable(order = "username asc")
+@ClassPresentConditional("org.ironrhino.security.service.UserManagerImpl")
 public class User extends BaseEntity implements UserDetails, Recordable<User>,
 		Enableable {
 
