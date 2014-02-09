@@ -38,13 +38,15 @@ public class CustomAnnotationTypeFilter extends AnnotationTypeFilter {
 		Map<String, Object> attributes = metadata
 				.getAnnotationAttributes(RunLevelConditional.class.getName());
 		if (attributes != null
-				&& !RunLevelCondition.matches((RunLevel) attributes
-						.get("value")))
+				&& !RunLevelCondition.matches(
+						(RunLevel) attributes.get("value"),
+						(Boolean) attributes.get("negated")))
 			return false;
 		attributes = metadata.getAnnotationAttributes(StageConditional.class
 				.getName());
 		if (attributes != null
-				&& !StageCondition.matches((Stage) attributes.get("value")))
+				&& !StageCondition.matches((Stage) attributes.get("value"),
+						(Boolean) attributes.get("negated")))
 			return false;
 		attributes = metadata
 				.getAnnotationAttributes(ClassPresentConditional.class
