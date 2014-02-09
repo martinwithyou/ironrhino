@@ -22,4 +22,9 @@ public class StageCondition implements Condition {
 		boolean b = AppInfo.getStage() == stage;
 		return b && !negated || !b && negated;
 	}
+
+	public static boolean matches(String s, boolean negated) {
+		return matches(Stage.valueOf(s), negated);
+	}
+
 }

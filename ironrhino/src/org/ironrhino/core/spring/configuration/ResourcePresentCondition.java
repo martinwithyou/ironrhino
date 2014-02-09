@@ -18,6 +18,8 @@ public class ResourcePresentCondition implements Condition {
 	}
 
 	public static boolean matches(String value, boolean negated) {
+		if (value.startsWith("/"))
+			value = value.substring(1);
 		boolean b = ResourcePresentCondition.class.getClassLoader()
 				.getResource(value) != null;
 		return b && !negated || !b && negated;

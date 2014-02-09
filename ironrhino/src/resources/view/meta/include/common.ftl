@@ -1,11 +1,23 @@
-<#macro stageConditional value>
-	<#if statics['org.ironrhino.core.util.AppInfo'].matchesStage(value)>
+<#macro stageConditional value negated=false>
+	<#if statics['org.ironrhino.core.spring.configuration.StageCondition'].matches(value,negated)>
 		<#nested>
 	</#if>
 </#macro>
 
-<#macro runLevelConditional value>
-	<#if statics['org.ironrhino.core.util.AppInfo'].matchesRunLevel(value)>
+<#macro runLevelConditional value negated=false>
+	<#if statics['org.ironrhino.core.spring.configuration.RunLevelCondition'].matches(value,negated)>
+		<#nested>
+	</#if>
+</#macro>
+
+<#macro classPresentConditional value negated=false>
+	<#if statics['org.ironrhino.core.spring.configuration.ClassPresentCondition'].matches(value,negated)>
+		<#nested>
+	</#if>
+</#macro>
+
+<#macro resourcePresentConditional value negated=false>
+	<#if statics['org.ironrhino.core.spring.configuration.ResourcePresentCondition'].matches(value,negated)>
 		<#nested>
 	</#if>
 </#macro>
