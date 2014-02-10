@@ -6,6 +6,8 @@ import javax.servlet.ServletContext;
 import org.apache.struts2.sitemesh.OldDecorator2NewStrutsFreemarkerDecorator;
 import org.apache.struts2.sitemesh.StrutsSiteMeshFactory;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.ironrhino.core.spring.configuration.ResourcePresentConditional;
+import org.springframework.stereotype.Component;
 
 import com.opensymphony.module.sitemesh.Config;
 import com.opensymphony.module.sitemesh.Factory;
@@ -14,6 +16,8 @@ import com.opensymphony.sitemesh.webapp.SiteMeshFilter;
 import com.opensymphony.sitemesh.webapp.SiteMeshWebAppContext;
 import com.opensymphony.xwork2.inject.Inject;
 
+@Component("sitemesh")
+@ResourcePresentConditional("resources/sitemesh/sitemesh.xml")
 public class MyFreemarkerPageFilter extends SiteMeshFilter {
 	/*
 	 * @see com.opensymphony.module.sitemesh.Factory.SITEMESH_FACTORY
