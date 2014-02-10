@@ -24,9 +24,12 @@ public class AccessDeniedResult extends AutoConfigResult {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		HttpServletResponse response = ServletActionContext.getResponse();
 		if (AuthzUtils.getUserDetails() == null) {
-			response.sendRedirect(response
-					.encodeRedirectURL(defaultLoginUrlAuthenticationEntryPoint
-							.buildRedirectUrlToLoginPage(request)));
+			if (defaultLoginUrlAuthenticationEntryPoint != null)
+				response.sendRedirect(response
+						.encodeRedirectURL(defaultLoginUrlAuthenticationEntryPoint
+								.buildRedirectUrlToLoginPage(request)));
+			else
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} else {
 			String finalLocation = conditionalParse(location, invocation);
 			doExecute(finalLocation, invocation);
