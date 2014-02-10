@@ -1,12 +1,18 @@
 package org.ironrhino.core.spring.configuration;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 public class ResourcePresentCondition implements Condition {
+
+	private static ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
 	@Override
 	public boolean matches(ConditionContext ctx, AnnotatedTypeMetadata metadata) {
@@ -18,10 +24,17 @@ public class ResourcePresentCondition implements Condition {
 	}
 
 	public static boolean matches(String value, boolean negated) {
-		if (value.startsWith("/"))
-			value = value.substring(1);
-		boolean b = ResourcePresentCondition.class.getClassLoader()
-				.getResource(value) != null;
+		boolean b = false;
+		try {
+			Resource[] resources = resourcePatternResolver.getResources(value);
+			for (Resource r : resources)
+				if (r.exists()) {
+					b = true;
+					break;
+				}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return b && !negated || !b && negated;
 	}
 

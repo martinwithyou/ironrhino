@@ -4,6 +4,7 @@ import java.security.cert.X509Certificate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.session.SessionCompressor;
+import org.ironrhino.core.spring.configuration.ResourcePresentConditional;
 import org.ironrhino.core.util.CodecUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.stereotype.Component;
 
 @Component
+@ResourcePresentConditional("classpath*:resources/spring/applicationContext-security*.xml")
 public class SecurityContextSessionCompressor implements
 		SessionCompressor<SecurityContext> {
 
