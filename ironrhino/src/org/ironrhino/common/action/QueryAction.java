@@ -18,12 +18,14 @@ import org.ironrhino.core.metadata.Authorize;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.model.ResultPage;
 import org.ironrhino.core.security.role.UserRole;
+import org.ironrhino.core.spring.configuration.ResourcePresentConditional;
 import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @AutoConfig
 @Authorize(ifAnyGranted = UserRole.ROLE_ADMINISTRATOR)
+@ResourcePresentConditional("resources/spring/applicationContext-hibernate.xml")
 public class QueryAction extends BaseAction {
 
 	private static final long serialVersionUID = 8180265410790553918L;

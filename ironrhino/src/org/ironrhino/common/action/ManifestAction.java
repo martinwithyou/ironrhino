@@ -5,16 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.ironrhino.common.Constants;
 import org.ironrhino.common.support.SettingControl;
-import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.struts.BaseAction;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@AutoConfig(namespace = "/")
+//@AutoConfig(namespace = "/")
 public class ManifestAction extends BaseAction {
 
 	private static final long serialVersionUID = -5865373753326653067L;

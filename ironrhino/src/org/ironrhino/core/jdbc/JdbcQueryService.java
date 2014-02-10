@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ironrhino.core.model.ResultPage;
+import org.ironrhino.core.spring.configuration.ResourcePresentConditional;
 import org.ironrhino.core.util.DateUtils;
 import org.ironrhino.core.util.ErrorMessage;
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@ResourcePresentConditional("resources/spring/applicationContext-hibernate.xml")
 public class JdbcQueryService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());

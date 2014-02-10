@@ -20,6 +20,7 @@ import com.jolbox.bonecp.ConnectionHandle;
 import com.jolbox.bonecp.hooks.AbstractConnectionHook;
 
 @Configuration
+@ResourcePresentConditional("resources/spring/applicationContext-hibernate.xml")
 public class DataSourceConfiguration {
 
 	@Value("${jdbc.driverClassName:}")
