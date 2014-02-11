@@ -1,5 +1,6 @@
 package org.ironrhino.security.oauth.client.service.v2;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -99,7 +100,7 @@ public class Taobao extends OAuth2Provider {
 
 	@Override
 	protected String invoke(String protectedURL, Map<String, String> params,
-			Map<String, String> headers) {
+			Map<String, String> headers) throws IOException {
 		if (params == null)
 			params = new HashMap<String, String>(8);
 		params.put("format", "json");

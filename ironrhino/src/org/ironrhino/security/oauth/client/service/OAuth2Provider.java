@@ -1,5 +1,6 @@
 package org.ironrhino.security.oauth.client.service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -214,7 +215,7 @@ public abstract class OAuth2Provider extends AbstractOAuthProvider {
 	}
 
 	protected String invoke(String protectedURL, Map<String, String> params,
-			Map<String, String> headers) {
+			Map<String, String> headers) throws IOException {
 		return HttpClientUtils.getResponseText(protectedURL, params, headers);
 	}
 

@@ -1,5 +1,6 @@
 package org.ironrhino.core.util;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,13 +29,8 @@ import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class HttpClientUtils {
-
-	private static Logger logger = LoggerFactory
-			.getLogger(HttpClientUtils.class);
 
 	private static Set<Header> DEFAULT_HEADERS = new HashSet<Header>();
 
@@ -90,125 +86,111 @@ public class HttpClientUtils {
 		return httpclient;
 	}
 
-	public static String getResponseText(String url) {
+	public static String getResponseText(String url) throws IOException {
 		return getResponseText(url, null, "UTF-8");
 	}
 
-	public static String getResponseText(String url, Map<String, String> params) {
+	public static String getResponseText(String url, Map<String, String> params)
+			throws IOException {
 		return getResponseText(url, params, "UTF-8");
 	}
 
 	public static String getResponseText(String url,
-			Map<String, String> params, Map<String, String> headers) {
+			Map<String, String> params, Map<String, String> headers)
+			throws IOException {
 		return getResponseText(url, params, headers, "UTF-8");
 	}
 
 	public static String getResponseText(String url,
-			Map<String, String> params, String encoding) {
+			Map<String, String> params, String encoding) throws IOException {
 		return getResponseText(url, params, null, encoding);
 	}
 
 	public static String getResponseText(String url,
 			Map<String, String> params, Map<String, String> headers,
-			String encoding) {
+			String encoding) throws IOException {
 		HttpGet httpRequest = null;
-		try {
-			StringBuilder sb = new StringBuilder(url);
-			if (params != null && params.size() > 0) {
-				sb.append(url.indexOf('?') < 0 ? '?' : '&');
-				for (Map.Entry<String, String> entry : params.entrySet()) {
-					sb.append(entry.getKey())
-							.append("=")
-							.append(URLEncoder.encode(entry.getValue(),
-									encoding)).append("&");
-				}
-				sb.deleteCharAt(sb.length() - 1);
+		StringBuilder sb = new StringBuilder(url);
+		if (params != null && params.size() > 0) {
+			sb.append(url.indexOf('?') < 0 ? '?' : '&');
+			for (Map.Entry<String, String> entry : params.entrySet()) {
+				sb.append(entry.getKey()).append("=")
+						.append(URLEncoder.encode(entry.getValue(), encoding))
+						.append("&");
 			}
-			httpRequest = new HttpGet(sb.toString());
-			if (headers != null && headers.size() > 0)
-				for (Map.Entry<String, String> entry : headers.entrySet())
-					httpRequest.addHeader(entry.getKey(), entry.getValue());
-			return getDefaultInstance().execute(httpRequest,
-					new BasicResponseHandler());
-		} catch (Exception e) {
-			httpRequest.abort();
-			logger.error(e.getMessage(), e);
+			sb.deleteCharAt(sb.length() - 1);
 		}
-		return null;
+		httpRequest = new HttpGet(sb.toString());
+		if (headers != null && headers.size() > 0)
+			for (Map.Entry<String, String> entry : headers.entrySet())
+				httpRequest.addHeader(entry.getKey(), entry.getValue());
+		return getDefaultInstance().execute(httpRequest,
+				new BasicResponseHandler());
 	}
 
-	public static String postResponseText(String url, Map<String, String> params) {
+	public static String postResponseText(String url, Map<String, String> params)
+			throws IOException {
 		return postResponseText(url, params, "UTF-8");
 	}
 
 	public static String postResponseText(String url,
-			Map<String, String> params, Map<String, String> headers) {
+			Map<String, String> params, Map<String, String> headers)
+			throws IOException {
 		return postResponseText(url, params, headers, "UTF-8");
 	}
 
 	public static String postResponseText(String url,
-			Map<String, String> params, String encoding) {
+			Map<String, String> params, String encoding) throws IOException {
 		return postResponseText(url, params, null, encoding);
 	}
 
 	public static String postResponseText(String url,
 			Map<String, String> params, Map<String, String> headers,
-			String encoding) {
+			String encoding) throws IOException {
 		HttpPost httpRequest = new HttpPost(url);
-		try {
-			if (params != null && params.size() > 0) {
-				List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-				for (Map.Entry<String, String> entry : params.entrySet())
-					nvps.add(new BasicNameValuePair(entry.getKey(), entry
-							.getValue()));
-				httpRequest.setEntity(new UrlEncodedFormEntity(nvps, encoding));
-			}
-			if (headers != null && headers.size() > 0)
-				for (Map.Entry<String, String> entry : headers.entrySet())
-					httpRequest.addHeader(entry.getKey(), entry.getValue());
-			return getDefaultInstance().execute(httpRequest,
-					new BasicResponseHandler());
-		} catch (Exception e) {
-			httpRequest.abort();
-			logger.error(e.getMessage(), e);
+		if (params != null && params.size() > 0) {
+			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+			for (Map.Entry<String, String> entry : params.entrySet())
+				nvps.add(new BasicNameValuePair(entry.getKey(), entry
+						.getValue()));
+			httpRequest.setEntity(new UrlEncodedFormEntity(nvps, encoding));
 		}
-		return null;
+		if (headers != null && headers.size() > 0)
+			for (Map.Entry<String, String> entry : headers.entrySet())
+				httpRequest.addHeader(entry.getKey(), entry.getValue());
+		return getDefaultInstance().execute(httpRequest,
+				new BasicResponseHandler());
 	}
 
 	public static String postResponseText(String url, String body,
-			Map<String, String> headers, String encoding) {
+			Map<String, String> headers, String encoding) throws IOException {
 		HttpPost httpRequest = new HttpPost(url);
-		try {
-			httpRequest.setEntity(new StringEntity(body, encoding));
-			if (headers != null && headers.size() > 0)
-				for (Map.Entry<String, String> entry : headers.entrySet())
-					httpRequest.addHeader(entry.getKey(), entry.getValue());
-			return getDefaultInstance().execute(httpRequest,
-					new BasicResponseHandler());
-		} catch (Exception e) {
-			httpRequest.abort();
-			logger.error(e.getMessage(), e);
-		}
-		return null;
+		httpRequest.setEntity(new StringEntity(body, encoding));
+		if (headers != null && headers.size() > 0)
+			for (Map.Entry<String, String> entry : headers.entrySet())
+				httpRequest.addHeader(entry.getKey(), entry.getValue());
+		return getDefaultInstance().execute(httpRequest,
+				new BasicResponseHandler());
 	}
 
-	public static String post(String url, String entity) {
+	public static String post(String url, String entity) throws IOException {
 		return invoke("POST", url, entity);
 	}
 
-	public static String put(String url, String entity) {
+	public static String put(String url, String entity) throws IOException {
 		return invoke("PUT", url, entity);
 	}
 
-	public static String delete(String url) {
+	public static String delete(String url) throws IOException {
 		return invoke("DELETE", url, null);
 	}
 
-	public static String get(String url) {
+	public static String get(String url) throws IOException {
 		return invoke("GET", url, null);
 	}
 
-	private static String invoke(String method, String url, String entity) {
+	private static String invoke(String method, String url, String entity)
+			throws IOException {
 		HttpRequestBase httpRequest = null;
 		if (method.equalsIgnoreCase("GET"))
 			httpRequest = new HttpGet(url);
@@ -218,17 +200,11 @@ public class HttpClientUtils {
 			httpRequest = new HttpPut(url);
 		else if (method.equalsIgnoreCase("DELETE"))
 			httpRequest = new HttpDelete(url);
-		try {
-			if (entity != null)
-				((HttpEntityEnclosingRequestBase) httpRequest)
-						.setEntity(new StringEntity(entity, "UTF-8"));
-			return getDefaultInstance().execute(httpRequest,
-					new BasicResponseHandler());
-		} catch (Exception e) {
-			httpRequest.abort();
-			logger.error(e.getMessage(), e);
-		}
-		return null;
+		if (entity != null)
+			((HttpEntityEnclosingRequestBase) httpRequest)
+					.setEntity(new StringEntity(entity, "UTF-8"));
+		return getDefaultInstance().execute(httpRequest,
+				new BasicResponseHandler());
 	}
 
 }
