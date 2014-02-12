@@ -34804,13 +34804,13 @@ Observation.sortableTable = function(container) {
 			current.after(r);
 		if (!skipRename)
 			rename(row.closest('tbody'));
-		$('.chzn-container', r).remove();
-		$('.chzn-done', r).removeClass('chzn-done').show();
-		if (typeof $.fn.chosen != 'undefined')
-			$('.chosen', r).chosen({
+		if (typeof $.fn.chosen != 'undefined') {
+			$('.chosen-container', r).remove();
+			$('.chosen', r).show().data('chosen', false).chosen({
 						placeholder_text : MessageBundle.get('select'),
 						no_results_text : ' '
 					});
+		}
 		$('select.textonadd,div.combobox', r).each(function() {
 			$(this).replaceWith('<input type="text" name="'
 					+ ($(this).attr('name') || $(':input', this).attr('name'))
