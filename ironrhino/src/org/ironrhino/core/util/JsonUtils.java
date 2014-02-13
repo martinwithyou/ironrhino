@@ -1,5 +1,6 @@
 package org.ironrhino.core.util;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,9 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -95,12 +98,13 @@ public class JsonUtils {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T fromJson(String json, TypeReference<T> type)
-			throws Exception {
+			throws JsonParseException, JsonMappingException, IOException {
 		return (T) objectMapper.readValue(json, type);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T fromJson(String json, Class<T> cls) throws Exception {
+	public static <T> T fromJson(String json, Class<T> cls)
+			throws JsonParseException, JsonMappingException, IOException {
 		if (Date.class.isAssignableFrom(cls)) {
 			if (org.apache.commons.lang3.StringUtils.isNumeric(json)) {
 				Calendar cal = Calendar.getInstance();
@@ -123,7 +127,8 @@ public class JsonUtils {
 		}
 	}
 
-	public static <T> T fromJson(String json, Type type) throws Exception {
+	public static <T> T fromJson(String json, Type type)
+			throws JsonParseException, JsonMappingException, IOException {
 		return objectMapper.readValue(json, objectMapper
 				.getDeserializationConfig().getTypeFactory()
 				.constructType(type));
