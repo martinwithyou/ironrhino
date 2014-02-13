@@ -77,7 +77,7 @@ public class IndexAspect implements Ordered {
 	private ActionListener<DeleteResponse> deleteResponseActionListener = new ActionListener<DeleteResponse>() {
 		@Override
 		public void onResponse(DeleteResponse response) {
-			if (response.isNotFound())
+			if (!response.isFound())
 				logger.warn("index is not found where deleting{} of {} ",
 						response.getId(), response.getType());
 		}
