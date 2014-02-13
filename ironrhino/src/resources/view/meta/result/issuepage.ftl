@@ -16,7 +16,7 @@
 	<h3 class="title" style="text-align:center;">${page.title!}</h3>
 	<div class="date" style="text-align:center;">${page.createDate?date}</div>
 	<div class="content">
-		<@includePage path="${page.pagepath}"/>
+		<@includePage path="${page.path}"/>
 	</div>
 </div>
 </#if>

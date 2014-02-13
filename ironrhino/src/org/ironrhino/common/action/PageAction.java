@@ -94,12 +94,12 @@ public class PageAction extends BaseAction {
 						dc.add(CriterionUtils.matchTag("tagsAsString", tag));
 				} else {
 					dc.add(CriterionUtils.like(keyword, MatchMode.ANYWHERE,
-							"pagepath", "title"));
+							"path", "title"));
 				}
 			}
 			if (criteriaState.getOrderings().isEmpty()) {
 				dc.addOrder(Order.asc("displayOrder"));
-				dc.addOrder(Order.asc("pagepath"));
+				dc.addOrder(Order.asc("path"));
 			}
 			if (resultPage == null)
 				resultPage = new ResultPage<Page>();
@@ -121,7 +121,7 @@ public class PageAction extends BaseAction {
 			criteria.setQuery(query);
 			criteria.setTypes(new String[] { "page" });
 			criteria.addSort("displayOrder", false);
-			criteria.addSort("pagepath", false);
+			criteria.addSort("path", false);
 			if (resultPage == null)
 				resultPage = new ResultPage<Page>();
 			resultPage.setCriteria(criteria);
@@ -142,13 +142,13 @@ public class PageAction extends BaseAction {
 		} else if (page != null) {
 			if (page.getId() != null)
 				page = pageManager.get(page.getId());
-			else if (page.getPagepath() != null)
-				page = pageManager.findByNaturalId(page.getPagepath());
+			else if (page.getPath() != null)
+				page = pageManager.findByNaturalId(page.getPath());
 		}
 		if (page == null) {
 			page = new Page();
 			if (StringUtils.isNotBlank(id))
-				page.setPagepath(id.startsWith("/") ? id : "/" + id);
+				page.setPath(id.startsWith("/") ? id : "/" + id);
 			if (StringUtils.isNotBlank(keyword) && keyword.startsWith("tags:")) {
 				String tags = keyword.replace("tags:", "");
 				tags = tags.replace(" AND ", ",");
@@ -160,7 +160,7 @@ public class PageAction extends BaseAction {
 					if (pageManager.getByPath(path) == null)
 						break;
 				}
-				page.setPagepath(path);
+				page.setPath(path);
 				page.setTagsAsString(tags);
 			}
 		} else {
@@ -174,7 +174,7 @@ public class PageAction extends BaseAction {
 
 	@Override
 	@JsonConfig(propertyName = "page")
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.pagepath", trim = true, key = "validation.required") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.path", trim = true, key = "validation.required") })
 	public String save() {
 		if (!makeEntityValid())
 			return INPUT;
@@ -185,7 +185,7 @@ public class PageAction extends BaseAction {
 				addActionError(getText("validation.version.conflict"));
 				return INPUT;
 			}
-			page.setPagepath(temp.getPagepath());
+			page.setPath(temp.getPath());
 			page.setTags(temp.getTags());
 			page.setDisplayOrder(temp.getDisplayOrder());
 			page.setTitle(temp.getTitle());
@@ -199,7 +199,7 @@ public class PageAction extends BaseAction {
 
 	@JsonConfig(propertyName = "page")
 	@Validations(requiredStrings = {
-			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.pagepath", trim = true, key = "validation.required"),
+			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.path", trim = true, key = "validation.required"),
 			@RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.content", trim = true, key = "validation.required") })
 	public String draft() {
 		if (!makeEntityValid())
@@ -210,28 +210,26 @@ public class PageAction extends BaseAction {
 		return INPUT;
 	}
 
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.pagepath", trim = true, key = "validation.required") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "page.path", trim = true, key = "validation.required") })
 	public String checkavailable() {
 		return makeEntityValid() ? NONE : INPUT;
 	}
 
 	private boolean makeEntityValid() {
-		String path = page.getPagepath().trim().toLowerCase();
+		String path = page.getPath().trim().toLowerCase();
 		if (!path.startsWith("/"))
 			path = "/" + path;
-		page.setPagepath(path);
+		page.setPath(path);
 		if (page.isNew()) {
-			if (pageManager.findByNaturalId(page.getPagepath()) != null) {
-				addFieldError("page.pagepath",
-						getText("validation.already.exists"));
+			if (pageManager.findByNaturalId(page.getPath()) != null) {
+				addFieldError("page.path", getText("validation.already.exists"));
 				return false;
 			}
 		} else {
 			Page p = pageManager.get(page.getId());
-			if (!page.getPagepath().equals(p.getPagepath())
-					&& pageManager.findByNaturalId(page.getPagepath()) != null) {
-				addFieldError("page.pagepath",
-						getText("validation.already.exists"));
+			if (!page.getPath().equals(p.getPath())
+					&& pageManager.findByNaturalId(page.getPath()) != null) {
+				addFieldError("page.path", getText("validation.already.exists"));
 				return false;
 			}
 		}

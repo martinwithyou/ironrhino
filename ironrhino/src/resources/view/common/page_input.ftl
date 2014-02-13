@@ -46,7 +46,7 @@ $(function() {
 		var page = Ajax.jsonResult.page;
 		if(page){
 			var date = page.draftDate;
-			var path = page.pagepath;
+			var path = page.path;
 			$('#page_id').val(page.id);
 			$('#page_path').val(path);
 			path = CONTEXT_PATH+cmsPath+path;
@@ -73,7 +73,7 @@ $(function() {
 				}
 		},60000);
 		},1500);
-		$('input[name="page.pagepath"],input[name="page.title"]').keyup(function(){
+		$('input[name="page.path"],input[name="page.title"]').keyup(function(){
 			$('#form').addClass('dirty');
 		});
 		$('#drop').click(function(){
@@ -95,14 +95,14 @@ $(function() {
 	<@s.hidden name="page.id" />
 	<@s.hidden name="page.version" cssClass="version" />
 	<#if view=='embedded'>
-	<@s.hidden name="page.pagepath"/>
+	<@s.hidden name="page.path"/>
 	<@s.hidden name="page.displayOrder"/>
 	<@s.hidden name="page.tagsAsString"/>
 	<@s.hidden name="page.head"/>
 	<@s.hidden name="page.title"/>
 	<@s.textarea theme="simple" id="page_content" label="%{getText('content')}" labelposition="top" name="page.content" cssStyle="width:100%;height:320px;"/>
 	<#elseif view=='brief'>
-	<@s.hidden name="page.pagepath"/>
+	<@s.hidden name="page.path"/>
 	<@s.hidden name="page.displayOrder"/>
 	<@s.hidden name="page.tagsAsString"/>
 	<@s.hidden name="page.head"/>
@@ -116,7 +116,7 @@ $(function() {
 	</ul>
 	<div class="tab-content">
 	<div id="_page_base" class="tab-pane active">
-	<@s.textfield id="page_path" label="%{getText('path')}" name="page.pagepath" cssClass="required checkavailable" cssStyle="width:600px;"/>
+	<@s.textfield id="page_path" label="%{getText('path')}" name="page.path" cssClass="required checkavailable" cssStyle="width:600px;"/>
 	<@s.textfield label="%{getText('displayOrder')}" name="page.displayOrder" type="number" cssClass="integer"/>
 	<@s.textfield label="%{getText('tag')}" name="page.tagsAsString"  cssClass="tags" dynamicAttributes={"data-source":"${actionBaseUrl}/suggest"} cssStyle="width:600px;"/>
 	<@s.textfield label="%{getText('title')}" name="page.title" cssStyle="width:600px;"/>
@@ -137,14 +137,14 @@ $(function() {
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
 	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>
 	<#if page.id??>
-	<a class="btn" id="preview" href="${getUrl(cmsPath+page.pagepath)}?preview=true" target="_blank">${action.getText('preview')}</a>
+	<a class="btn" id="preview" href="${getUrl(cmsPath+page.path)}?preview=true" target="_blank">${action.getText('preview')}</a>
 	<#else>
 	<a class="btn" id="preview" target="_blank">${action.getText('preview')}</a>
 	</#if>
 	<@s.submit id="drop" value="%{getText('drop')}" theme="simple"/>
 	</span>
 	<#if page.id??>
-	<a class="btn" id="view" href="${getUrl(cmsPath+page.pagepath)}" target="_blank">${action.getText('view')}</a>
+	<a class="btn" id="view" href="${getUrl(cmsPath+page.path)}" target="_blank">${action.getText('view')}</a>
 	<#else>
 	<a class="btn" id="view" target="_blank">${action.getText('view')}</a>
 	</#if>

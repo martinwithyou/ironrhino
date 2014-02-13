@@ -38,7 +38,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 
 	@Override
 	@Transactional
-	@EvictCache(key = "${page.pagepath}", namespace = "page", renew = "${page}")
+	@EvictCache(key = "${page.path}", namespace = "page", renew = "${page}")
 	public void save(Page page) {
 		page.setDraft(null);
 		page.setDraftDate(null);
@@ -47,23 +47,23 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 
 	@Override
 	@Transactional
-	@EvictCache(key = "${page.pagepath}", namespace = "page")
+	@EvictCache(key = "${page.path}", namespace = "page")
 	public void delete(Page page) {
 		super.delete(page);
 	}
 
 	@Override
 	@Transactional
-	@EvictCache(key = "${key = [];foreach (page : retval) { key.add(page.pagepath); } return key;}", namespace = "page")
+	@EvictCache(key = "${key = [];foreach (page : retval) { key.add(page.path); } return key;}", namespace = "page")
 	public List<Page> delete(Serializable... id) {
 		return super.delete(id);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	@CheckCache(key = "${pagepath}", namespace = "page", eternal = true)
-	public Page getByPath(String pagepath) {
-		Page page = findByNaturalId(pagepath);
+	@CheckCache(key = "${path}", namespace = "page", eternal = true)
+	public Page getByPath(String path) {
+		Page page = findByNaturalId(path);
 		if (page != null)
 			page.setDraft(null);
 		return page;
@@ -80,7 +80,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		}
 		p.setDraftDate(new Date());
 		Map<String, String> draft = new HashMap<String, String>(8);
-		draft.put("pagepath", page.getPagepath());
+		draft.put("path", page.getPath());
 		draft.put("title", page.getTitle());
 		draft.put("content", page.getContent());
 		p.setDraft(JsonUtils.toJson(draft));
@@ -117,7 +117,7 @@ public class PageManagerImpl extends BaseManagerImpl<Page> implements
 		try {
 			Map<String, String> map = JsonUtils.fromJson(page.getDraft(),
 					JsonUtils.STRING_MAP_TYPE);
-			page.setPagepath(map.get("pagepath"));
+			page.setPath(map.get("path"));
 			page.setTitle(map.get("title"));
 			page.setContent(map.get("content"));
 		} catch (Exception e) {

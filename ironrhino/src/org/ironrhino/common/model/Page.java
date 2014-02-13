@@ -52,7 +52,7 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 	@CaseInsensitive
 	@NaturalId(mutable = true)
 	@UiConfig(displayOrder = 1, alias = "path")
-	private String pagepath;
+	private String path;
 
 	@SearchableProperty
 	@UiConfig(displayOrder = 2)
@@ -132,12 +132,12 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 		this.displayOrder = displayOrder;
 	}
 
-	public String getPagepath() {
-		return pagepath;
+	public String getPath() {
+		return path;
 	}
 
-	public void setPagepath(String pagepath) {
-		this.pagepath = pagepath;
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public String getTitle() {
@@ -318,6 +318,6 @@ public class Page extends BaseEntity implements Recordable<UserDetails>,
 
 	@Override
 	public String toString() {
-		return this.pagepath;
+		return this.path;
 	}
 }
