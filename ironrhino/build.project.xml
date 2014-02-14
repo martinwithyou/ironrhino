@@ -299,19 +299,22 @@
 					revision = revision || (''+file.lastModified());
 					if(revision.length==13)
 						revision = revision.substring(0,10);
-					var replaceregexp = project.createTask('replaceregexp');
-					replaceregexp.setEncoding('utf-8');
-					replaceregexp.setPreserveLastModified(true);
-					var fs = project.createDataType("fileset");
-	      			fs.setDir(new File(project.getProperty('webapp.dir')+'/WEB-INF/classes/resources/view/decorator'));
-	      			fs.setIncludes('**/*.ftl');
-	      			replaceregexp.addFileset(fs);
-	      			var namearr = name.split('\\.');
-	      			var match = '/'+dir.getName()+'/'+namearr[0]+'(.*)\\.'+namearr[1];
-	      			var replace = '/'+dir.getName()+'/'+namearr[0]+'\\1\\.'+namearr[1]+'?'+revision;
-	        		replaceregexp.setMatch(match);
-	        		replaceregexp.setReplace(replace);
-	        		replaceregexp.perform();
+					var dir = new File(project.getProperty('webapp.dir')+'/WEB-INF/classes/resources/view/decorator');
+					if(dir.exists()){
+						var replaceregexp = project.createTask('replaceregexp');
+						replaceregexp.setEncoding('utf-8');
+						replaceregexp.setPreserveLastModified(true);
+						var fs = project.createDataType("fileset");
+		      			fs.setDir(dir);
+		      			fs.setIncludes('**/*.ftl');
+		      			replaceregexp.addFileset(fs);
+		      			var namearr = name.split('\\.');
+		      			var match = '/'+dir.getName()+'/'+namearr[0]+'(.*)\\.'+namearr[1];
+		      			var replace = '/'+dir.getName()+'/'+namearr[0]+'\\1\\.'+namearr[1]+'?'+revision;
+		        		replaceregexp.setMatch(match);
+		        		replaceregexp.setReplace(replace);
+		        		replaceregexp.perform();
+					}
 				}
 			}
 			]]>
@@ -319,7 +322,7 @@
 	</target>
 	<target name="reset-append-revision-for-assets">
 		<copy todir="${webapp.dir}/WEB-INF/classes/resources/view/decorator"
-			preservelastmodified="true" overwrite="true">
+			preservelastmodified="true" overwrite="true" failonerror="false">
 			<fileset dir="${src.dir}/resources/view/decorator">
 				<include name="**/*.ftl" />
 			</fileset>
