@@ -19,6 +19,7 @@ public class NumberUtils {
 		NumberFormat nf = NumberFormat.getIntegerInstance();
 		nf.setGroupingUsed(false);
 		nf.setMinimumFractionDigits(fractionDigits);
+		nf.setRoundingMode(RoundingMode.DOWN);
 		return nf.format(value);
 	}
 
