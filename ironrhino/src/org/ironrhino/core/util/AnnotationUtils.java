@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.ironrhino.core.model.NullObject;
+import org.ironrhino.core.util.AppInfo.Stage;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.core.annotation.Order;
 
@@ -50,11 +52,11 @@ public class AnnotationUtils {
 		sb.append(',');
 		sb.append(annotaionClass.getName());
 		String key = sb.toString();
-		if (!cache.containsKey(key)) {
+		Set<Method> methods = (Set<Method>) cache.get(key);
+		if (methods == null || AppInfo.getStage() == Stage.DEVELOPMENT) {
 			final Map<Method, Integer> map = new HashMap<Method, Integer>();
 			try {
-				Method[] methods = clazz.getMethods();
-				for (Method m : methods)
+				for (Method m : clazz.getMethods())
 					if (m.getAnnotation(annotaionClass) != null) {
 						Order o = m.getAnnotation(Order.class);
 						map.put(m, o != null ? o.value() : 0);
@@ -65,12 +67,12 @@ public class AnnotationUtils {
 			List<Map.Entry<Method, Integer>> list = new ArrayList<Map.Entry<Method, Integer>>(
 					map.entrySet());
 			Collections.sort(list, comparator);
-			Set<Method> methods = new LinkedHashSet<Method>();
+			methods = new LinkedHashSet<Method>();
 			for (Map.Entry<Method, Integer> entry : list)
 				methods.add(entry.getKey());
 			cache.put(key, methods);
 		}
-		return (Set<Method>) cache.get(key);
+		return methods;
 	}
 
 	public static Set<String> getAnnotatedPropertyNames(Class<?> clazz,
@@ -81,8 +83,9 @@ public class AnnotationUtils {
 		sb.append(',');
 		sb.append(annotaionClass.getName());
 		String key = sb.toString();
-		if (!cache.containsKey(key)) {
-			Set<String> set = new HashSet<String>();
+		Set<String> set = (Set<String>) cache.get(key);
+		if (set == null || AppInfo.getStage() == Stage.DEVELOPMENT) {
+			set = new HashSet<String>();
 			try {
 				Class<?> cls = clazz;
 				while (!cls.equals(Object.class)) {
@@ -103,7 +106,7 @@ public class AnnotationUtils {
 			}
 			cache.put(key, set);
 		}
-		return (Set<String>) cache.get(key);
+		return set;
 	}
 
 	@SafeVarargs
@@ -135,8 +138,9 @@ public class AnnotationUtils {
 		sb.append(',');
 		sb.append(annotaionClass.getName());
 		String key = sb.toString();
-		if (!cache.containsKey(key)) {
-			Map<String, T> map = new HashMap<String, T>();
+		Map<String, T> map = (Map<String, T>) cache.get(key);
+		if (map == null || AppInfo.getStage() == Stage.DEVELOPMENT) {
+			map = new HashMap<String, T>();
 			try {
 				Class<?> cls = clazz;
 				while (!cls.equals(Object.class)) {
@@ -160,7 +164,7 @@ public class AnnotationUtils {
 			}
 			cache.put(key, map);
 		}
-		return (Map<String, T>) cache.get(key);
+		return map;
 	}
 
 	public static <T extends Annotation> T getAnnotation(Class<?> clazz,
@@ -178,18 +182,18 @@ public class AnnotationUtils {
 			sb.append(')');
 		}
 		String key = sb.toString();
-		if (!cache.containsKey(key)) {
+		Object annotation = cache.get(key);
+		if (annotation == null || AppInfo.getStage() == Stage.DEVELOPMENT) {
 			Method method = org.springframework.beans.BeanUtils.findMethod(
 					clazz, methodName, paramTypes);
-			Object annotation = method != null ? method
-					.getAnnotation(annotationClass) : null;
+			annotation = method != null ? method.getAnnotation(annotationClass)
+					: null;
 			if (annotation == null)
-				annotation = "null";
+				annotation = NullObject.get();
 			cache.put(key, annotation);
 		}
-		Object v = cache.get(key);
-		if (v instanceof Annotation)
-			return (T) v;
+		if (annotation instanceof Annotation)
+			return (T) annotation;
 		return null;
 	}
 
