@@ -84,7 +84,7 @@ public class AutoConfigResult extends FreemarkerResult {
 			templateName = getTemplateName(namespace, actionName, result, false);
 			location = cache.get(templateName);
 			if (location == null
-					|| AppInfo.getStage() == AppInfo.Stage.DEVELOPMENT) {
+					|| AppInfo.getStage() == Stage.DEVELOPMENT) {
 				ServletContext context = ServletActionContext
 						.getServletContext();
 				URL url = null;
@@ -125,8 +125,7 @@ public class AutoConfigResult extends FreemarkerResult {
 								.append("/meta/result/").append(result)
 								.append(".ftl").toString();
 				}
-				if (AppInfo.getStage() == Stage.PRODUCTION)
-					cache.put(templateName, location);
+				cache.put(templateName, location);
 			}
 		}
 		styleHolder.remove();
@@ -135,7 +134,7 @@ public class AutoConfigResult extends FreemarkerResult {
 
 	public static String getTemplateLocation(String templateName) {
 		String location = cache.get(templateName);
-		if (location == null || AppInfo.getStage() == AppInfo.Stage.DEVELOPMENT) {
+		if (location == null || AppInfo.getStage() == Stage.DEVELOPMENT) {
 			ServletContext context = ServletActionContext.getServletContext();
 			URL url = null;
 			location = new StringBuilder().append(ftlLocation)
@@ -153,8 +152,7 @@ public class AutoConfigResult extends FreemarkerResult {
 			}
 			if (url == null)
 				location = "";
-			if (AppInfo.getStage() == Stage.PRODUCTION)
-				cache.put(templateName, location);
+			cache.put(templateName, location);
 		}
 		return StringUtils.isEmpty(location) ? null : location;
 	}

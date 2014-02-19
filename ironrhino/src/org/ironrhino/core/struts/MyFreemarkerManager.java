@@ -86,7 +86,7 @@ public class MyFreemarkerManager extends FreemarkerManager {
 		configuration.setDateTimeFormat("yyyy-MM-dd HH:mm:ss");
 		configuration.setNumberFormat("0.##");
 		configuration.setURLEscapingCharset("UTF-8");
-		if (AppInfo.getStage() == AppInfo.Stage.DEVELOPMENT)
+		if (AppInfo.getStage() == Stage.DEVELOPMENT)
 			configuration.setSetting(Configuration.TEMPLATE_UPDATE_DELAY_KEY,
 					"5");
 		configuration.setCacheStorage(new StrongCacheStorage());
