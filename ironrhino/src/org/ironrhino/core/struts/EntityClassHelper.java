@@ -339,7 +339,7 @@ public class EntityClassHelper {
 			for (Map.Entry<String, UiConfigImpl> entry : list)
 				sortedMap.put(entry.getKey(), entry.getValue());
 			map = sortedMap;
-			cache.put(entityClass, map);
+			cache.put(entityClass, Collections.unmodifiableMap(map));
 		}
 		return map;
 	}

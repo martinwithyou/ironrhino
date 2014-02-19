@@ -70,7 +70,7 @@ public class AnnotationUtils {
 			methods = new LinkedHashSet<Method>();
 			for (Map.Entry<Method, Integer> entry : list)
 				methods.add(entry.getKey());
-			cache.put(key, methods);
+			cache.put(key, Collections.unmodifiableSet(methods));
 		}
 		return methods;
 	}
@@ -104,7 +104,7 @@ public class AnnotationUtils {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			cache.put(key, set);
+			cache.put(key, Collections.unmodifiableSet(set));
 		}
 		return set;
 	}
@@ -162,7 +162,7 @@ public class AnnotationUtils {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			cache.put(key, map);
+			cache.put(key, Collections.unmodifiableMap(map));
 		}
 		return map;
 	}
