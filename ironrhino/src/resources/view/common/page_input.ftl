@@ -37,29 +37,29 @@ $(function() {
 		});
 		var form = $('#form');
 		form[0].onsuccess = function(){
-		if($('#form').attr('action').indexOf('save')>0 && window.parent!=window){
-				$('.ui-dialog-titlebar-close',$('#_window_ ',window.parent.document).closest('.ui-dialog')).click();
-				return;
-			}
-		$('#form').removeClass('dirty')
-		ed.isNotDirty = 1;
-		var page = Ajax.jsonResult.page;
-		if(page){
-			var date = page.draftDate;
-			var path = page.path;
-			$('#page_id').val(page.id);
-			$('#page_path').val(path);
-			path = CONTEXT_PATH+cmsPath+path;
-			if(date){
-				//save draft 
-				$('.draft').show();
-				$('.draftDate').text(date);
-				$('#preview').attr('href',path+'?preview=true');
-			}else{
-				//save
-				$('.draft').hide();
-				$('#view').attr('href',path);
-			}
+		$('#form').removeClass('dirty');
+			ed.isNotDirty = 1;
+			if($('#form').attr('action').indexOf('save')>0 && window.parent!=window){
+					$('.ui-dialog-titlebar-close',$('#_window_ ',window.parent.document).closest('.ui-dialog')).click();
+					return;
+				}
+			var page = Ajax.jsonResult.page;
+			if(page){
+				var date = page.draftDate;
+				var path = page.path;
+				$('#page_id').val(page.id);
+				$('#page_path').val(path);
+				path = CONTEXT_PATH+cmsPath+path;
+				if(date){
+					//save draft 
+					$('.draft').show();
+					$('.draftDate').text(date);
+					$('#preview').attr('href',path+'?preview=true');
+				}else{
+					//save
+					$('.draft').hide();
+					$('#view').attr('href',path);
+				}
 			}else{
 				document.location.href=document.location.href;
 			}
@@ -133,7 +133,9 @@ $(function() {
 	<@s.submit id="save" value="%{getText('save')}" theme="simple"/>
 	
 	<#if view!='embedded'>
+	<#if page?? && !page.new>
 	<@s.submit id="draft" value="%{getText('draft')}" theme="simple"/>
+	</#if>
 	<span class="draft" <#if !draft>style="display: none;"</#if>>
 	${action.getText('draftDate')}:<span class="draftDate"><#if page.draftDate??>${page.draftDate?datetime}</#if></span>
 	<#if page.id??>
